@@ -327,6 +327,39 @@ export function registerTests(api: TestApi): void {
     }
   });
 
+  api.test("tokenization/SBD expected outputs", async () => {
+    const { segmentSentencesUAX29, segmentWordsUAX29 } = await importTextfacts();
+    const fixtureRoot = new URL("../../fixtures/tokenization-sbd/", getRepoRootUrl());
+    const slices = JSON.parse(
+      await readTextFile(new URL("slices.json", fixtureRoot)),
+    ) as TokenizationSbdSliceManifest;
+
+    for (const slice of slices.slices) {
+      const expected = JSON.parse(
+        await readTextFile(new URL(`expected/${slice.id}.json`, fixtureRoot)),
+      ) as TokenizationSbdExpectedOutput;
+      const text = materializeTokenizationSbdSource(slice.source);
+      api.assertDeepEqual(
+        projectSpanAnnotations(
+          text,
+          [...segmentWordsUAX29(text)],
+          "uax29-word-boundary-token",
+          "token",
+        ),
+        expected.tokens,
+      );
+      api.assertDeepEqual(
+        projectSpanAnnotations(
+          text,
+          [...segmentSentencesUAX29(text)],
+          "uax29-sentence",
+          "sentence",
+        ),
+        expected.sentences,
+      );
+    }
+  });
+
   api.test("UAX14 LineBreakTest", async () => {
     const { lineBreakPositions } = await importTextfacts();
     const data = await readUcdTestFile("auxiliary/LineBreakTest.txt");
@@ -1668,6 +1701,52 @@ function parseScriptExtensionsFile(
     ranges.push({ start, end, scripts });
   }
   return ranges;
+}
+
+interface TokenizationSbdSliceManifest {
+  slices: TokenizationSbdSlice[];
+}
+
+interface TokenizationSbdSlice {
+  id: string;
+  source: TokenizationSbdSource;
+}
+
+type TokenizationSbdSource =
+  | { kind: "text"; text: string }
+  | { kind: "utf16-code-units"; units: string[] };
+
+interface TokenizationSbdExpectedOutput {
+  tokens: TokenizationSbdExpectedAnnotation[];
+  sentences: TokenizationSbdExpectedAnnotation[];
+}
+
+interface TokenizationSbdExpectedAnnotation {
+  id: string;
+  kind: "uax29-word-boundary-token" | "uax29-sentence";
+  startCU: number;
+  endCU: number;
+  text: string;
+}
+
+function materializeTokenizationSbdSource(source: TokenizationSbdSource): string {
+  if (source.kind === "text") return source.text;
+  return String.fromCharCode(...source.units.map((unit) => Number.parseInt(unit, 16)));
+}
+
+function projectSpanAnnotations(
+  text: string,
+  spans: Array<{ startCU: number; endCU: number }>,
+  kind: TokenizationSbdExpectedAnnotation["kind"],
+  prefix: "token" | "sentence",
+): TokenizationSbdExpectedAnnotation[] {
+  return spans.map((span, index) => ({
+    id: `${prefix}-${index + 1}`,
+    kind,
+    startCU: span.startCU,
+    endCU: span.endCU,
+    text: text.slice(span.startCU, span.endCU),
+  }));
 }
 
 interface ConfusableEntry {
