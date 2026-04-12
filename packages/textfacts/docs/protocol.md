@@ -16,7 +16,7 @@ This makes it reliable to serialize text without guessing whether it is I‑JSON
 `packTextV1` returns a deterministic, schema’d bundle of facts that are **always I‑JSON conformant** and therefore JCS‑hashable.
 
 ```ts
-import { packTextV1, packTextV1Sha256 } from "textfacts/protocol";
+import { packTextV1, packTextV1Sha256 } from "@ismail-elkorchi/textfacts/protocol";
 
 const pack = packTextV1("A\uD800B", { includeInputText: true });
 const digest = await packTextV1Sha256("A\uD800B", { includeInputText: true });
@@ -44,7 +44,7 @@ ToolSpec objects provide **machine‑readable contracts** for agent tools withou
 
 ### Usage
 ```ts
-import { listToolSpecs, getToolSpec } from "textfacts/toolspec";
+import { listToolSpecs, getToolSpec } from "@ismail-elkorchi/textfacts/toolspec";
 
 const specs = listToolSpecs();
 const packSpec = getToolSpec("packTextV1");
@@ -52,7 +52,7 @@ const packSpec = getToolSpec("packTextV1");
 
 ### Schemas
 ToolSpec schemas are draft‑2020‑12 JSON Schema with explicit `$schema`.
-When possible, they reuse the JSON Schemas from `textfacts/schema`.
+When possible, they reuse the JSON Schemas from `@ismail-elkorchi/textfacts/schema`.
 
 ### Interop Coverage
 Every ToolSpec entry must have at least one interop case. If not, the tool must be
@@ -72,7 +72,7 @@ Example:
 textfacts does **not** implement an MCP server, but it provides a small adapter that maps ToolSpec objects into MCP‑style tool definitions.
 
 ```ts
-import { getToolSpec, toMcpTool } from "textfacts/toolspec";
+import { getToolSpec, toMcpTool } from "@ismail-elkorchi/textfacts/toolspec";
 
 const spec = getToolSpec("packTextV1");
 const mcpTool = toMcpTool(spec);

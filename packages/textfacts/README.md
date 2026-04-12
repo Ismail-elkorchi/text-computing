@@ -17,8 +17,8 @@ Every result object includes a provenance block that pins the exact Unicode vers
 **Examples**
 Node (npm):
 ```ts
-import { segmentWordsUAX29 } from "textfacts/segment";
-import { wordFrequencies } from "textfacts/facts";
+import { segmentWordsUAX29 } from "@ismail-elkorchi/textfacts/segment";
+import { wordFrequencies } from "@ismail-elkorchi/textfacts/facts";
 
 const text = "Hello, world!";
 const segments = [...segmentWordsUAX29(text)];
@@ -30,7 +30,7 @@ console.log(freq.provenance);
 
 Bun (npm):
 ```ts
-import { segmentGraphemes } from "textfacts/segment";
+import { segmentGraphemes } from "@ismail-elkorchi/textfacts/segment";
 
 for (const span of segmentGraphemes("Cafe\u0301")) {
   console.log(span);
@@ -48,7 +48,7 @@ console.log(spans);
 
 Browser (ESM bundler):
 ```ts
-import { wordNgrams } from "textfacts/facts";
+import { wordNgrams } from "@ismail-elkorchi/textfacts/facts";
 
 const text = "to be or not to be";
 const result = wordNgrams(text, { n: 2 });
@@ -57,7 +57,7 @@ console.log(result.items);
 
 Normalization (UAX #15):
 ```ts
-import { normalize } from "textfacts/normalize";
+import { normalize } from "@ismail-elkorchi/textfacts/normalize";
 
 const normalized = normalize("Cafe\u0301", "NFC");
 console.log(normalized); // "Café"
@@ -65,7 +65,7 @@ console.log(normalized); // "Café"
 
 Agent-first pack:
 ```ts
-import { analyzeText } from "textfacts/pack";
+import { analyzeText } from "@ismail-elkorchi/textfacts/pack";
 
 const pack = analyzeText("a a b", { topK: 2 });
 console.log(pack.frequencies.words);

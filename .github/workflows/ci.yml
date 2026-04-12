@@ -52,7 +52,7 @@ jobs:
         run: npm run lint
 
       - name: Repo Audit (coherence file refresh)
-        run: npm -w textfacts exec -- node tools/repo/audit.mjs --write
+        run: npm -w @ismail-elkorchi/textfacts exec -- node tools/repo/audit.mjs --write
 
       - name: Repo Audit (no drift)
         run: git diff --exit-code -- packages/textfacts/docs/coherence-report.md
@@ -67,10 +67,10 @@ jobs:
         run: npm run test:all
 
       - name: Interop Verify
-        run: npm -w textfacts exec -- node tools/interop/verify.mjs
+        run: npm -w @ismail-elkorchi/textfacts exec -- node tools/interop/verify.mjs
 
       - name: Docs Audit
-        run: npm -w textfacts exec -- node tools/docs/audit.mjs
+        run: npm -w @ismail-elkorchi/textfacts exec -- node tools/docs/audit.mjs
 
       - name: Generated Files (no drift)
         run: git diff --exit-code

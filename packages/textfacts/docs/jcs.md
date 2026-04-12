@@ -44,7 +44,7 @@ Errors are raised as `TextfactsError` with deterministic codes:
 ## Example
 
 ```ts
-import { jcsCanonicalize, jcsSha256Hex } from "textfacts/jcs";
+import { jcsCanonicalize, jcsSha256Hex } from "@ismail-elkorchi/textfacts/jcs";
 
 const value = { b: [true, false, null], a: 1 };
 

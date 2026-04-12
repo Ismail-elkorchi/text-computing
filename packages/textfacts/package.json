@@ -1,5 +1,5 @@
 {
-  "name": "textfacts",
+  "name": "@ismail-elkorchi/textfacts",
   "version": "0.1.0",
   "description": "Deterministic, Unicode-pinned text facts. No ML, no heuristics.",
   "type": "module",
