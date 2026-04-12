@@ -1,0 +1,521 @@
+{
+  "schemaVersion": 1,
+  "scope": "tokenization-sbd",
+  "capturedDate": "2026-04-13",
+  "offsetUnits": "utf16-code-unit",
+  "comparator": {
+    "name": "wink-nlp",
+    "version": "2.4.0",
+    "runtime": "Node.js v24.14.0",
+    "model": {
+      "name": "wink-eng-lite-web-model",
+      "version": "1.8.1"
+    },
+    "command": "node capture over fixtures/tokenization-sbd/slices.json using wink-nlp and wink-eng-lite-web-model",
+    "license": "MIT",
+    "artifactSurface": "diagnostic token and sentence spans"
+  },
+  "slices": [
+    {
+      "sliceId": "empty-string",
+      "status": "captured",
+      "tokens": [],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 0,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "sliceId": "ascii-two-sentences",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 5,
+          "text": "Hello"
+        },
+        {
+          "id": "token-2",
+          "startCU": 6,
+          "endCU": 11,
+          "text": "world"
+        },
+        {
+          "id": "token-3",
+          "startCU": 11,
+          "endCU": 12,
+          "text": "."
+        },
+        {
+          "id": "token-4",
+          "startCU": 13,
+          "endCU": 17,
+          "text": "This"
+        },
+        {
+          "id": "token-5",
+          "startCU": 18,
+          "endCU": 20,
+          "text": "is"
+        },
+        {
+          "id": "token-6",
+          "startCU": 21,
+          "endCU": 25,
+          "text": "text"
+        },
+        {
+          "id": "token-7",
+          "startCU": 25,
+          "endCU": 26,
+          "text": "."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 12,
+          "text": "Hello world."
+        },
+        {
+          "id": "sentence-2",
+          "startCU": 13,
+          "endCU": 26,
+          "text": "This is text."
+        }
+      ]
+    },
+    {
+      "sliceId": "combining-mark",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 5,
+          "text": "Café"
+        },
+        {
+          "id": "token-2",
+          "startCU": 6,
+          "endCU": 11,
+          "text": "costs"
+        },
+        {
+          "id": "token-3",
+          "startCU": 12,
+          "endCU": 13,
+          "text": "5"
+        },
+        {
+          "id": "token-4",
+          "startCU": 13,
+          "endCU": 14,
+          "text": "€"
+        },
+        {
+          "id": "token-5",
+          "startCU": 14,
+          "endCU": 15,
+          "text": "."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 15,
+          "text": "Café costs 5€."
+        }
+      ]
+    },
+    {
+      "sliceId": "emoji-zwj",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 2,
+          "text": "👩"
+        },
+        {
+          "id": "token-2",
+          "startCU": 2,
+          "endCU": 3,
+          "text": "‍"
+        },
+        {
+          "id": "token-3",
+          "startCU": 3,
+          "endCU": 5,
+          "text": "💻"
+        },
+        {
+          "id": "token-4",
+          "startCU": 6,
+          "endCU": 11,
+          "text": "wrote"
+        },
+        {
+          "id": "token-5",
+          "startCU": 12,
+          "endCU": 16,
+          "text": "code"
+        },
+        {
+          "id": "token-6",
+          "startCU": 16,
+          "endCU": 17,
+          "text": "."
+        },
+        {
+          "id": "token-7",
+          "startCU": 18,
+          "endCU": 20,
+          "text": "🧪"
+        },
+        {
+          "id": "token-8",
+          "startCU": 21,
+          "endCU": 27,
+          "text": "passed"
+        },
+        {
+          "id": "token-9",
+          "startCU": 27,
+          "endCU": 28,
+          "text": "."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 17,
+          "text": "👩‍💻 wrote code."
+        },
+        {
+          "id": "sentence-2",
+          "startCU": 18,
+          "endCU": 28,
+          "text": "🧪 passed."
+        }
+      ]
+    },
+    {
+      "sliceId": "japanese-cjk",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 18,
+          "text": "私は学生です。よろしくお願いします。"
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 18,
+          "text": "私は学生です。よろしくお願いします。"
+        }
+      ]
+    },
+    {
+      "sliceId": "arabic",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 5,
+          "text": "مرحبا"
+        },
+        {
+          "id": "token-2",
+          "startCU": 6,
+          "endCU": 13,
+          "text": "بالعالم"
+        },
+        {
+          "id": "token-3",
+          "startCU": 13,
+          "endCU": 14,
+          "text": "."
+        },
+        {
+          "id": "token-4",
+          "startCU": 15,
+          "endCU": 18,
+          "text": "هذا"
+        },
+        {
+          "id": "token-5",
+          "startCU": 19,
+          "endCU": 21,
+          "text": "نص"
+        },
+        {
+          "id": "token-6",
+          "startCU": 21,
+          "endCU": 22,
+          "text": "."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 14,
+          "text": "مرحبا بالعالم."
+        },
+        {
+          "id": "sentence-2",
+          "startCU": 15,
+          "endCU": 22,
+          "text": "هذا نص."
+        }
+      ]
+    },
+    {
+      "sliceId": "thai-no-space",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 20,
+          "text": "ภาษาไทยไม่มีเว้นวรรค"
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 20,
+          "text": "ภาษาไทยไม่มีเว้นวรรค"
+        }
+      ]
+    },
+    {
+      "sliceId": "unpaired-high-surrogate",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 1,
+          "text": "a"
+        },
+        {
+          "id": "token-2",
+          "startCU": 1,
+          "endCU": 2,
+          "text": "\ud800"
+        },
+        {
+          "id": "token-3",
+          "startCU": 2,
+          "endCU": 3,
+          "text": "b"
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 3,
+          "text": "a\ud800b"
+        }
+      ]
+    },
+    {
+      "sliceId": "abbreviation-ambiguity",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 3,
+          "text": "Dr."
+        },
+        {
+          "id": "token-2",
+          "startCU": 4,
+          "endCU": 9,
+          "text": "Smith"
+        },
+        {
+          "id": "token-3",
+          "startCU": 10,
+          "endCU": 17,
+          "text": "arrived"
+        },
+        {
+          "id": "token-4",
+          "startCU": 18,
+          "endCU": 20,
+          "text": "at"
+        },
+        {
+          "id": "token-5",
+          "startCU": 21,
+          "endCU": 22,
+          "text": "3"
+        },
+        {
+          "id": "token-6",
+          "startCU": 23,
+          "endCU": 27,
+          "text": "p.m."
+        },
+        {
+          "id": "token-7",
+          "startCU": 28,
+          "endCU": 30,
+          "text": "He"
+        },
+        {
+          "id": "token-8",
+          "startCU": 31,
+          "endCU": 35,
+          "text": "left"
+        },
+        {
+          "id": "token-9",
+          "startCU": 35,
+          "endCU": 36,
+          "text": "."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 27,
+          "text": "Dr. Smith arrived at 3 p.m."
+        },
+        {
+          "id": "sentence-2",
+          "startCU": 28,
+          "endCU": 36,
+          "text": "He left."
+        }
+      ]
+    },
+    {
+      "sliceId": "newline-boundary",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 3,
+          "text": "One"
+        },
+        {
+          "id": "token-2",
+          "startCU": 4,
+          "endCU": 8,
+          "text": "line"
+        },
+        {
+          "id": "token-3",
+          "startCU": 8,
+          "endCU": 9,
+          "text": "."
+        },
+        {
+          "id": "token-4",
+          "startCU": 9,
+          "endCU": 10,
+          "text": "\n"
+        },
+        {
+          "id": "token-5",
+          "startCU": 10,
+          "endCU": 14,
+          "text": "Next"
+        },
+        {
+          "id": "token-6",
+          "startCU": 15,
+          "endCU": 19,
+          "text": "line"
+        },
+        {
+          "id": "token-7",
+          "startCU": 19,
+          "endCU": 20,
+          "text": "."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 9,
+          "text": "One line."
+        },
+        {
+          "id": "sentence-2",
+          "startCU": 10,
+          "endCU": 20,
+          "text": "Next line."
+        }
+      ]
+    },
+    {
+      "sliceId": "repeated-short-words",
+      "status": "captured",
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 2,
+          "text": "ha"
+        },
+        {
+          "id": "token-2",
+          "startCU": 3,
+          "endCU": 5,
+          "text": "ha"
+        },
+        {
+          "id": "token-3",
+          "startCU": 6,
+          "endCU": 9,
+          "text": "ha."
+        },
+        {
+          "id": "token-4",
+          "startCU": 10,
+          "endCU": 12,
+          "text": "ha"
+        },
+        {
+          "id": "token-5",
+          "startCU": 13,
+          "endCU": 16,
+          "text": "ha."
+        }
+      ],
+      "sentences": [
+        {
+          "id": "sentence-1",
+          "startCU": 0,
+          "endCU": 16,
+          "text": "ha ha ha. ha ha."
+        }
+      ]
+    }
+  ]
+}

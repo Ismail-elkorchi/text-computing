@@ -17,5 +17,27 @@
       "artifactSurface": "UAX #29 word and sentence boundary spans"
     }
   ],
-  "diagnosticTools": []
+  "diagnosticTools": [
+    {
+      "name": "spaCy",
+      "version": "3.8.14",
+      "command": "python capture over fixtures/tokenization-sbd/slices.json using spacy.blank(\"xx\") and sentencizer",
+      "license": "MIT",
+      "artifactSurface": "diagnostic token and sentence spans"
+    },
+    {
+      "name": "wink-nlp",
+      "version": "2.4.0",
+      "command": "node capture over fixtures/tokenization-sbd/slices.json using wink-nlp and wink-eng-lite-web-model",
+      "license": "MIT",
+      "artifactSurface": "diagnostic token and sentence spans"
+    },
+    {
+      "name": "wink-eng-lite-web-model",
+      "version": "1.8.1",
+      "command": "loaded by wink-nlp for tokenizer and sentence diagnostics",
+      "license": "MIT",
+      "artifactSurface": "English model used by wink-nlp diagnostics"
+    }
+  ]
 }
