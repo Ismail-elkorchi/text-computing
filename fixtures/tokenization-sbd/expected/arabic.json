@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "arabic",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "arabic",
+    "sha256": "fb359b615b9e1fe4f0970a663160edf1c14e46092ab26e4ce43eabb9f332dc6b"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 5,
+      "text": "مرحبا"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 6,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 13,
+      "text": "بالعالم"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 13,
+      "endCU": 14,
+      "text": "."
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 14,
+      "endCU": 15,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 18,
+      "text": "هذا"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 18,
+      "endCU": 19,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 19,
+      "endCU": 21,
+      "text": "نص"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 15,
+      "text": "مرحبا بالعالم. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 15,
+      "endCU": 22,
+      "text": "هذا نص."
+    }
+  ]
+}

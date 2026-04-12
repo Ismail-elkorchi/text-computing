@@ -2,73 +2,147 @@
   "schemaVersion": 1,
   "scope": "tokenization-sbd",
   "offsetUnits": "utf16-code-unit",
-  "expectedOutputStatus": "not-recorded",
+  "expectedOutputStatus": "recorded",
   "slices": [
     {
       "id": "empty-string",
       "purpose": "empty-input behavior",
-      "source": { "kind": "text", "text": "" },
-      "checks": ["empty-input", "repeated-run"]
+      "source": {
+        "kind": "text",
+        "text": ""
+      },
+      "checks": [
+        "empty-input",
+        "repeated-run"
+      ]
     },
     {
       "id": "ascii-two-sentences",
       "purpose": "basic Latin words and two sentence boundaries",
-      "source": { "kind": "text", "text": "Hello world. This is text." },
-      "checks": ["word-boundaries", "sentence-boundaries", "repeated-run"]
+      "source": {
+        "kind": "text",
+        "text": "Hello world. This is text."
+      },
+      "checks": [
+        "word-boundaries",
+        "sentence-boundaries",
+        "repeated-run"
+      ]
     },
     {
       "id": "combining-mark",
       "purpose": "combining mark span accounting",
-      "source": { "kind": "text", "text": "Café costs 5€." },
-      "checks": ["unicode", "span-accounting"]
+      "source": {
+        "kind": "text",
+        "text": "Café costs 5€."
+      },
+      "checks": [
+        "unicode",
+        "span-accounting"
+      ]
     },
     {
       "id": "emoji-zwj",
       "purpose": "emoji and zero-width-joiner span accounting",
-      "source": { "kind": "text", "text": "👩‍💻 wrote code. 🧪 passed." },
-      "checks": ["unicode", "span-accounting", "sentence-boundaries"]
+      "source": {
+        "kind": "text",
+        "text": "👩‍💻 wrote code. 🧪 passed."
+      },
+      "checks": [
+        "unicode",
+        "span-accounting",
+        "sentence-boundaries"
+      ]
     },
     {
       "id": "japanese-cjk",
       "purpose": "CJK punctuation and no-space script behavior",
-      "source": { "kind": "text", "text": "私は学生です。よろしくお願いします。" },
-      "checks": ["multilingual", "sentence-boundaries"]
+      "source": {
+        "kind": "text",
+        "text": "私は学生です。よろしくお願いします。"
+      },
+      "checks": [
+        "multilingual",
+        "sentence-boundaries"
+      ]
     },
     {
       "id": "arabic",
       "purpose": "right-to-left script with sentence punctuation",
-      "source": { "kind": "text", "text": "مرحبا بالعالم. هذا نص." },
-      "checks": ["multilingual", "word-boundaries", "sentence-boundaries"]
+      "source": {
+        "kind": "text",
+        "text": "مرحبا بالعالم. هذا نص."
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries"
+      ]
     },
     {
       "id": "thai-no-space",
       "purpose": "no-space script input without claiming dictionary segmentation",
-      "source": { "kind": "text", "text": "ภาษาไทยไม่มีเว้นวรรค" },
-      "checks": ["multilingual", "documented-difference"]
+      "source": {
+        "kind": "text",
+        "text": "ภาษาไทยไม่มีเว้นวรรค"
+      },
+      "checks": [
+        "multilingual",
+        "documented-difference"
+      ]
     },
     {
       "id": "unpaired-high-surrogate",
       "purpose": "malformed UTF-16 representation without lossy replacement",
-      "source": { "kind": "utf16-code-units", "units": ["0061", "D800", "0062"] },
-      "checks": ["malformed-text", "span-accounting"]
+      "source": {
+        "kind": "utf16-code-units",
+        "units": [
+          "0061",
+          "D800",
+          "0062"
+        ]
+      },
+      "checks": [
+        "malformed-text",
+        "span-accounting"
+      ]
     },
     {
       "id": "abbreviation-ambiguity",
       "purpose": "sentence-boundary ambiguity around abbreviations",
-      "source": { "kind": "text", "text": "Dr. Smith arrived at 3 p.m. He left." },
-      "checks": ["sentence-boundaries", "documented-difference"]
+      "source": {
+        "kind": "text",
+        "text": "Dr. Smith arrived at 3 p.m. He left."
+      },
+      "checks": [
+        "sentence-boundaries",
+        "documented-difference"
+      ]
     },
     {
       "id": "newline-boundary",
       "purpose": "newline handling across sentence-boundary spans",
-      "source": { "kind": "text", "text": "One line.\nNext line." },
-      "checks": ["sentence-boundaries", "span-accounting"]
+      "source": {
+        "kind": "text",
+        "text": "One line.\nNext line."
+      },
+      "checks": [
+        "sentence-boundaries",
+        "span-accounting"
+      ]
     },
     {
       "id": "repeated-short-words",
       "purpose": "determinism on repeated short tokens",
-      "source": { "kind": "text", "text": "ha ha ha. ha ha." },
-      "checks": ["word-boundaries", "sentence-boundaries", "repeated-run"]
+      "source": {
+        "kind": "text",
+        "text": "ha ha ha. ha ha."
+      },
+      "checks": [
+        "word-boundaries",
+        "sentence-boundaries",
+        "repeated-run"
+      ]
     }
   ]
 }

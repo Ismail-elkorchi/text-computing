@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "unpaired-high-surrogate",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "unpaired-high-surrogate",
+    "sha256": "0b5d3769960b5130965a85195ddd6df7ce11d1e83dab545c6f9c650dee6c87e7"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 1,
+      "text": "a"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 1,
+      "endCU": 2,
+      "text": "\ud800"
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 2,
+      "endCU": 3,
+      "text": "b"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 3,
+      "text": "a\ud800b"
+    }
+  ]
+}
