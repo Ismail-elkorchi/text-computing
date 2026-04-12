@@ -71,6 +71,10 @@ for (const slice of slices.slices) {
 
 const expectedSchema = await readJson("schemas/tokenization-sbd-expected-v1.schema.json");
 const validateExpected = ajv.compile(expectedSchema);
+const textdocAnnotationSetSchema = await readJson(
+  "schemas/textdoc-token-sentence-annotation-set-v1.schema.json",
+);
+const validateTextdocAnnotationSet = ajv.compile(textdocAnnotationSetSchema);
 const expectedDir = "fixtures/tokenization-sbd/expected";
 const expectedFiles = (await readdir(expectedDir)).filter((file) => file.endsWith(".json")).sort();
 if (slices.expectedOutputStatus === "recorded" && expectedFiles.length !== sliceIds.size) {
@@ -122,6 +126,24 @@ for (const file of expectedFiles) {
         process.exit(1);
       }
     }
+  }
+  const textdocAnnotationSet = {
+    schemaVersion: 1,
+    documentId: `tokenization-sbd:${data.sliceId}`,
+    source: {
+      id: data.source.sliceId,
+      sha256: data.source.sha256,
+    },
+    unicodeVersion: data.unicodeVersion,
+    units: data.units,
+    tokens: data.tokens,
+    sentences: data.sentences,
+    ...(data.notes ? { notes: data.notes } : {}),
+  };
+  if (!validateTextdocAnnotationSet(textdocAnnotationSet)) {
+    console.error(`${dataPath} cannot be represented by the textdoc token/sentence annotation set schema`);
+    console.error(JSON.stringify(validateTextdocAnnotationSet.errors, null, 2));
+    process.exit(1);
   }
   expectedSliceIds.add(data.sliceId);
 }

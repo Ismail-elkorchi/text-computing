@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textdoc-token-sentence-annotation-set-v1.schema.json",
+  "title": "textdoc token and sentence annotation set v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "documentId", "units", "tokens", "sentences"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "documentId": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "unicodeVersion": { "type": "string", "minLength": 1 },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "const": "utf16-code-unit" }
+      }
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/tokenAnnotation" }
+    },
+    "sentences": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/sentenceAnnotation" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "spanBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "startCU", "endCU"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 0 },
+        "text": { "type": "string" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "tokenAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/spanBase" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "enum": ["uax29-word-boundary-token", "lexical-token"] }
+          }
+        }
+      ]
+    },
+    "sentenceAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/spanBase" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "uax29-sentence" }
+          }
+        }
+      ]
+    }
+  }
+}
