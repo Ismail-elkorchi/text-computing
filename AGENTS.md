@@ -2,7 +2,7 @@
 
 ## Repository Inventory
 - `packages/`: workspace packages.
-- `packages/textfacts/`: current publishable `textfacts` implementation.
+- `packages/textfacts/`: current publishable `@ismail-elkorchi/textfacts` implementation.
 - `packages/textfacts/src/`: library implementation.
 - `packages/textfacts/mod.ts`: primary package entrypoint.
 - `packages/textfacts/schemas/`: JSON Schema registry.

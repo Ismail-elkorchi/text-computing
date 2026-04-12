@@ -2,11 +2,11 @@
 
 `text-computing` is the public workspace for deterministic text computing packages.
 
-The current publishable package is `textfacts`. Its implementation now lives in `packages/textfacts`.
+The current publishable npm package is `@ismail-elkorchi/textfacts`. Its implementation lives in `packages/textfacts`.
 
 ## Packages
 
-- `textfacts` — deterministic, Unicode-pinned text facts.
+- `@ismail-elkorchi/textfacts` — deterministic, Unicode-pinned text facts.
 - `@ismail-elkorchi/textdoc` — document annotation container package placeholder.
 - `@ismail-elkorchi/textpack` — text resource package placeholder.
 - `@ismail-elkorchi/textrules` — deterministic rules package placeholder.
