@@ -2,7 +2,7 @@
 
 Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
 
-The current publishable package is `textfacts`, with source and package-local tools under `packages/textfacts`.
+The current publishable npm package is `@ismail-elkorchi/textfacts`, with source and package-local tools under `packages/textfacts`.
 
 **Prerequisites**
 - Node.js 24+
@@ -39,7 +39,7 @@ npm run schema:validate
 Validates JSON Schemas against the 2020-12 meta-schema and enforces I-JSON safety.
 
 **Documentation boundaries**
-- `packages/textfacts/docs/` contains usage and reference documentation for `textfacts`.
+- `packages/textfacts/docs/` contains usage and reference documentation for `@ismail-elkorchi/textfacts`.
 - `packages/textfacts/src/`, `packages/textfacts/schemas/`, `packages/textfacts/interop/`, `packages/textfacts/scripts/`, `packages/textfacts/tools/`, `packages/textfacts/test/`, and `packages/textfacts/testdata/` contain implementation and verification.
 
 **Interop suite**
