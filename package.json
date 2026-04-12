@@ -4,6 +4,7 @@
   "description": "Deterministic, Unicode-pinned text facts. No ML, no heuristics.",
   "type": "module",
   "sideEffects": false,
+  "workspaces": ["packages/*"],
   "exports": {
     ".": {
       "types": "./dist/mod.d.ts",
@@ -99,10 +100,11 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/build.mjs && node scripts/rewrite-dist-import-specifiers.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/build.mjs && node scripts/rewrite-dist-import-specifiers.mjs && npm run -s build:workspaces",
+    "build:workspaces": "npm run --workspaces --if-present build",
     "build:test": "node scripts/build-test.mjs && node scripts/rewrite-test-import-specifiers.mjs",
     "gen:unicode": "node tools/unicode/gen-tables.js && node tools/unicode/gen-normalization.js && node tools/unicode/gen-casefold.js && node tools/unicode/gen-scripts.js && node tools/unicode/gen-security.js && node tools/uca/gen-ducet.mjs",
-    "lint": "biome check src test scripts mod.ts package.json tsconfig.json tsconfig.build.json tsconfig.test.json deno.json biome.json --files-ignore-unknown=true",
+    "lint": "biome check src test scripts packages mod.ts package.json tsconfig.json tsconfig.build.json tsconfig.test.json deno.json biome.json --files-ignore-unknown=true",
     "format": "biome format --write .",
     "schema:validate": "node tools/schema/validate.mjs",
     "check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
@@ -117,7 +119,8 @@
     "test:bun": "if command -v bun >/dev/null 2>&1; then bun test test/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
     "test:deno": "deno test --allow-read test/deno.test.ts",
     "test:browser": "node scripts/browser-smoke.mjs",
-    "test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser"
+    "test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run -s test:workspaces",
+    "test:workspaces": "npm run --workspaces --if-present test"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",

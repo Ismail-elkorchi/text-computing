@@ -2,6 +2,7 @@
 
 ## Repository Inventory
 - `src/`: library implementation.
+- `packages/`: first-wave workspace package scaffolds.
 - `mod.ts`: primary entrypoint.
 - `schemas/`: JSON Schema registry.
 - `interop/`: interop fixtures and manifest.

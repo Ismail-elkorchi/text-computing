@@ -101,6 +101,9 @@ console.log(pack.provenance);
 **Project status**
 v0.1.0 (alpha): UAX #29 segmentation, UAX #15 normalization, and deterministic word facts + starter agent packs.
 
+**Repository direction**
+This repository is becoming the `text-computing` workspace. The current root package remains the `textfacts` implementation while first-wave workspace scaffolds land under `packages/`.
+
 ## Docs and Project Records
 - [Documentation index](docs/INDEX.md)
 - [Contributing guide](CONTRIBUTING.md)
