@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "emoji-zwj",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "emoji-zwj",
+    "sha256": "9003eb706b028e4ba670718456f9051697b8d89234a8a63311064138cb4fd88c"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 5,
+      "text": "👩‍💻"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 6,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 11,
+      "text": "wrote"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 11,
+      "endCU": 12,
+      "text": " "
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 12,
+      "endCU": 16,
+      "text": "code"
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 17,
+      "text": "."
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 17,
+      "endCU": 18,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 18,
+      "endCU": 20,
+      "text": "🧪"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 20,
+      "endCU": 21,
+      "text": " "
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 27,
+      "text": "passed"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 27,
+      "endCU": 28,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 18,
+      "text": "👩‍💻 wrote code. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 18,
+      "endCU": 28,
+      "text": "🧪 passed."
+    }
+  ]
+}

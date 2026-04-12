@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "newline-boundary",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "newline-boundary",
+    "sha256": "21a9a72c32ee4d03455e9eafa592e395a1ce07d9a380ba7c255d7b261f13fc13"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 3,
+      "text": "One"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 3,
+      "endCU": 4,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 4,
+      "endCU": 8,
+      "text": "line"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 8,
+      "endCU": 9,
+      "text": "."
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 9,
+      "endCU": 10,
+      "text": "\n"
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 14,
+      "text": "Next"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 14,
+      "endCU": 15,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 19,
+      "text": "line"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 19,
+      "endCU": 20,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 10,
+      "text": "One line.\n"
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 10,
+      "endCU": 20,
+      "text": "Next line."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "empty-string",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "empty-string",
+    "sha256": "f1460171a81f1c6af7c15ec775e7a8d291d4bfc7043f94a0855dad7962e10c8d"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [],
+  "sentences": []
+}

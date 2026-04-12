@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "thai-no-space",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "thai-no-space",
+    "sha256": "8bf71a3fe2c620e3d422cdb288fa13297ea139eedfee1af1f7fe32e8e7a55a30"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 1,
+      "text": "ภ"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 1,
+      "endCU": 2,
+      "text": "า"
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 2,
+      "endCU": 3,
+      "text": "ษ"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 3,
+      "endCU": 4,
+      "text": "า"
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 4,
+      "endCU": 5,
+      "text": "ไ"
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 6,
+      "text": "ท"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 7,
+      "text": "ย"
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 7,
+      "endCU": 8,
+      "text": "ไ"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 8,
+      "endCU": 10,
+      "text": "ม่"
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 12,
+      "text": "มี"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 12,
+      "endCU": 13,
+      "text": "เ"
+    },
+    {
+      "id": "token-12",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 13,
+      "endCU": 15,
+      "text": "ว้"
+    },
+    {
+      "id": "token-13",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": "น"
+    },
+    {
+      "id": "token-14",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 17,
+      "text": "ว"
+    },
+    {
+      "id": "token-15",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 17,
+      "endCU": 18,
+      "text": "ร"
+    },
+    {
+      "id": "token-16",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 18,
+      "endCU": 19,
+      "text": "ร"
+    },
+    {
+      "id": "token-17",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 19,
+      "endCU": 20,
+      "text": "ค"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 20,
+      "text": "ภาษาไทยไม่มีเว้นวรรค"
+    }
+  ]
+}

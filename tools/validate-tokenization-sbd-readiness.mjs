@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 
 const artifactPairs = [
@@ -10,15 +11,36 @@ const artifactPairs = [
     schemaPath: "schemas/tokenization-sbd-tool-versions-v1.schema.json",
     dataPath: "fixtures/tokenization-sbd/tool-versions.json",
   },
-  {
-    schemaPath: "schemas/tokenization-sbd-expected-v1.schema.json",
-  },
 ];
 
 const ajv = new Ajv({ allErrors: true, strict: true });
 
 async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
+}
+
+function stableStringify(value) {
+  if (Array.isArray(value)) return `[${value.map((item) => stableStringify(item)).join(",")}]`;
+  if (value && typeof value === "object") {
+    const entries = Object.entries(value).sort(([left], [right]) => left.localeCompare(right));
+    const serializedEntries = entries.map(
+      ([key, item]) => `${JSON.stringify(key)}:${stableStringify(item)}`,
+    );
+    return `{${serializedEntries.join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function sourceSha256(source) {
+  return createHash("sha256").update(stableStringify(source), "utf8").digest("hex");
+}
+
+function materializeSource(source) {
+  if (source.kind === "text") return source.text;
+  if (source.kind === "utf16-code-units") {
+    return String.fromCharCode(...source.units.map((unit) => Number.parseInt(unit, 16)));
+  }
+  throw new Error(`Unsupported tokenization/SBD source kind: ${source.kind}`);
 }
 
 for (const pair of artifactPairs) {
@@ -37,12 +59,80 @@ for (const pair of artifactPairs) {
 
 const slices = await readJson("fixtures/tokenization-sbd/slices.json");
 const sliceIds = new Set();
+const slicesById = new Map();
 for (const slice of slices.slices) {
   if (sliceIds.has(slice.id)) {
     console.error(`Duplicate tokenization/SBD slice id: ${slice.id}`);
     process.exit(1);
   }
   sliceIds.add(slice.id);
+  slicesById.set(slice.id, slice);
+}
+
+const expectedSchema = await readJson("schemas/tokenization-sbd-expected-v1.schema.json");
+const validateExpected = ajv.compile(expectedSchema);
+const expectedDir = "fixtures/tokenization-sbd/expected";
+const expectedFiles = (await readdir(expectedDir)).filter((file) => file.endsWith(".json")).sort();
+if (slices.expectedOutputStatus === "recorded" && expectedFiles.length !== sliceIds.size) {
+  console.error(
+    `Tokenization/SBD expected outputs are recorded, but ${expectedFiles.length} files exist for ${sliceIds.size} slices.`,
+  );
+  process.exit(1);
+}
+
+const expectedSliceIds = new Set();
+for (const file of expectedFiles) {
+  const dataPath = `${expectedDir}/${file}`;
+  const data = await readJson(dataPath);
+  if (!validateExpected(data)) {
+    console.error(`${dataPath} failed schemas/tokenization-sbd-expected-v1.schema.json`);
+    console.error(JSON.stringify(validateExpected.errors, null, 2));
+    process.exit(1);
+  }
+  const expectedFileName = `${data.sliceId}.json`;
+  if (file !== expectedFileName) {
+    console.error(`${dataPath} must be named ${expectedFileName}`);
+    process.exit(1);
+  }
+  const slice = slicesById.get(data.sliceId);
+  if (!slice) {
+    console.error(`${dataPath} references unknown slice ${data.sliceId}`);
+    process.exit(1);
+  }
+  if (data.source.sliceId !== data.sliceId) {
+    console.error(`${dataPath} source.sliceId does not match sliceId`);
+    process.exit(1);
+  }
+  const expectedHash = sourceSha256(slice.source);
+  if (data.source.sha256 !== expectedHash) {
+    console.error(`${dataPath} source hash ${data.source.sha256} does not match ${expectedHash}`);
+    process.exit(1);
+  }
+  const text = materializeSource(slice.source);
+  for (const section of ["tokens", "sentences"]) {
+    for (const span of data[section]) {
+      if (span.endCU < span.startCU || span.endCU > text.length) {
+        console.error(`${dataPath} contains invalid ${section} span ${span.id}`);
+        process.exit(1);
+      }
+      if (span.text !== undefined && span.text !== text.slice(span.startCU, span.endCU)) {
+        console.error(
+          `${dataPath} contains ${section} span ${span.id} text that does not match its offsets`,
+        );
+        process.exit(1);
+      }
+    }
+  }
+  expectedSliceIds.add(data.sliceId);
+}
+
+if (slices.expectedOutputStatus === "recorded") {
+  for (const sliceId of sliceIds) {
+    if (!expectedSliceIds.has(sliceId)) {
+      console.error(`Tokenization/SBD expected outputs are missing slice ${sliceId}`);
+      process.exit(1);
+    }
+  }
 }
 
 const toolVersions = await readJson("fixtures/tokenization-sbd/tool-versions.json");

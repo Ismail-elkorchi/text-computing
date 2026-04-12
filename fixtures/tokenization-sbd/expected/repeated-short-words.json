@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "repeated-short-words",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "repeated-short-words",
+    "sha256": "239608ceed67c5b3d90732d416070c12ba4f230d29b3df38bb154cc803e41e0d"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 2,
+      "text": "ha"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 2,
+      "endCU": 3,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 3,
+      "endCU": 5,
+      "text": "ha"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 6,
+      "text": " "
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 8,
+      "text": "ha"
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 8,
+      "endCU": 9,
+      "text": "."
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 9,
+      "endCU": 10,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 12,
+      "text": "ha"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 12,
+      "endCU": 13,
+      "text": " "
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 13,
+      "endCU": 15,
+      "text": "ha"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 16,
+      "text": "ha ha ha. ha ha."
+    }
+  ]
+}

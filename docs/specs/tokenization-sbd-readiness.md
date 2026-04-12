@@ -15,6 +15,7 @@ Tokenization and sentence-boundary behavior starts only after these repository a
 - tool/version schema: [`schemas/tokenization-sbd-tool-versions-v1.schema.json`](../../schemas/tokenization-sbd-tool-versions-v1.schema.json)
 - comparison-output schema: [`schemas/tokenization-sbd-comparison-v1.schema.json`](../../schemas/tokenization-sbd-comparison-v1.schema.json)
 - diagnostic comparison outputs: [`fixtures/tokenization-sbd/comparisons/`](../../fixtures/tokenization-sbd/comparisons/)
+- expected outputs: [`fixtures/tokenization-sbd/expected/`](../../fixtures/tokenization-sbd/expected/)
 - output-difference policy: [`docs/decisions/tokenization-sbd-output-differences.md`](../decisions/tokenization-sbd-output-differences.md)
 
 ## Offset policy
@@ -40,6 +41,8 @@ Each expected-output document contains:
 - `tokens`: ordered token or word-boundary-token spans;
 - `sentences`: ordered sentence-boundary spans;
 - `notes`: optional explanatory notes for ambiguity or documented output differences.
+
+`source.sha256` is the SHA-256 digest of the slice `source` object serialized as canonical JSON with object keys sorted lexicographically.
 
 ## Fixture slice policy
 

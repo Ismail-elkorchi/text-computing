@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "abbreviation-ambiguity",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "abbreviation-ambiguity",
+    "sha256": "eb9dcd0377efd4afc2495c003ae99a7bb0c268aac42cdac3a5dbe5cb6a15b198"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 2,
+      "text": "Dr"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 2,
+      "endCU": 3,
+      "text": "."
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 3,
+      "endCU": 4,
+      "text": " "
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 4,
+      "endCU": 9,
+      "text": "Smith"
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 9,
+      "endCU": 10,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 17,
+      "text": "arrived"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 17,
+      "endCU": 18,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 18,
+      "endCU": 20,
+      "text": "at"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 20,
+      "endCU": 21,
+      "text": " "
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": "3"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 22,
+      "endCU": 23,
+      "text": " "
+    },
+    {
+      "id": "token-12",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 23,
+      "endCU": 26,
+      "text": "p.m"
+    },
+    {
+      "id": "token-13",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 26,
+      "endCU": 27,
+      "text": "."
+    },
+    {
+      "id": "token-14",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 27,
+      "endCU": 28,
+      "text": " "
+    },
+    {
+      "id": "token-15",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 28,
+      "endCU": 30,
+      "text": "He"
+    },
+    {
+      "id": "token-16",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 30,
+      "endCU": 31,
+      "text": " "
+    },
+    {
+      "id": "token-17",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 31,
+      "endCU": 35,
+      "text": "left"
+    },
+    {
+      "id": "token-18",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 35,
+      "endCU": 36,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 4,
+      "text": "Dr. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 4,
+      "endCU": 28,
+      "text": "Smith arrived at 3 p.m. "
+    },
+    {
+      "id": "sentence-3",
+      "kind": "uax29-sentence",
+      "startCU": 28,
+      "endCU": 36,
+      "text": "He left."
+    }
+  ]
+}
