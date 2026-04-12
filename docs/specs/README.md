@@ -7,3 +7,4 @@ A specification document must state its scope, version, normative language, and 
 ## Documents
 
 - [`tokenization-sbd-readiness.md`](tokenization-sbd-readiness.md)
+- [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
