@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/tokenization-sbd-expected-v1.schema.json",
+  "title": "Tokenization and sentence boundary expected output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sliceId", "unicodeVersion", "source", "units", "tokens", "sentences"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "sliceId": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "unicodeVersion": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sliceId", "sha256"],
+      "properties": {
+        "sliceId": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "const": "utf16-code-unit" }
+      }
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/spanAnnotation" }
+    },
+    "sentences": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/spanAnnotation" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "spanAnnotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "startCU", "endCU"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "kind": {
+          "enum": ["uax29-word-boundary-token", "lexical-token", "uax29-sentence"]
+        },
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 0 },
+        "text": { "type": "string" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

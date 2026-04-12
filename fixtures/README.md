@@ -7,3 +7,7 @@ This directory stores repository-level fixture material used by package tests an
 - `generated/` contains generated artifacts that are checked in only when a repository command requires them.
 - `reports/` contains validation reports.
 - `quarantine/` contains inputs withheld from required checks until their expected behavior is specified.
+
+## Fixture sets
+
+- [`tokenization-sbd/`](tokenization-sbd/)

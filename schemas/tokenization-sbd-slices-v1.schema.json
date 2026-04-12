@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/tokenization-sbd-slices-v1.schema.json",
+  "title": "Tokenization and sentence boundary slice manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "scope", "offsetUnits", "expectedOutputStatus", "slices"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "scope": { "const": "tokenization-sbd" },
+    "offsetUnits": { "const": "utf16-code-unit" },
+    "expectedOutputStatus": { "enum": ["not-recorded", "partial", "recorded"] },
+    "slices": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/slice" }
+    }
+  },
+  "definitions": {
+    "slice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "purpose", "source", "checks"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "purpose": { "type": "string", "minLength": 1 },
+        "source": {
+          "oneOf": [
+            { "$ref": "#/definitions/textSource" },
+            { "$ref": "#/definitions/utf16CodeUnitSource" }
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "textSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "const": "text" },
+        "text": { "type": "string" }
+      }
+    },
+    "utf16CodeUnitSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "units"],
+      "properties": {
+        "kind": { "const": "utf16-code-units" },
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[0-9A-F]{4}$" }
+        }
+      }
+    }
+  }
+}

@@ -24,6 +24,7 @@ Run repository checks from the workspace root:
 npm run -s lint
 npm run -s build
 npm run -s schema:validate
+npm run -s check:fixtures
 npm run -s test:all
 ```
 
