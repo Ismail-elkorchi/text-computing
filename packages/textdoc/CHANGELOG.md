@@ -2,4 +2,4 @@
 
 ## 0.0.0
 
-- Establish package workspace metadata; no public API beyond the package identity export.
+- Establish package workspace metadata and a minimal token/sentence annotation type contract.
