@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "scope": "tokenization-sbd",
+  "primaryReferences": [
+    {
+      "name": "Unicode Standard Annex #29",
+      "version": "Unicode 17.0.0",
+      "url": "https://unicode.org/reports/tr29/",
+      "artifactSurface": "word and sentence boundary rules"
+    }
+  ],
+  "packagesUnderTest": [
+    {
+      "name": "@ismail-elkorchi/textfacts",
+      "version": "0.1.0",
+      "source": "packages/textfacts/package.json",
+      "artifactSurface": "UAX #29 word and sentence boundary spans"
+    }
+  ],
+  "diagnosticTools": []
+}
