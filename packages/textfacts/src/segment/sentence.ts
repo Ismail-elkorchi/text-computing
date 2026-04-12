@@ -3,7 +3,12 @@ import { createProvenance } from "../core/provenance.ts";
 import type { SegmentIterable, Span, TextInput } from "../core/types.ts";
 import { IMPLEMENTATION_ID } from "../core/version.ts";
 import { SentenceBreakPropertyId, getSentenceBreakPropertyId } from "../unicode/sentence.ts";
-import { collectCodePoints } from "./internal.ts";
+import {
+  collectCodePointProperties,
+  collectCodePoints,
+  collectSkipIndexes,
+  segmentSpansByCodePointBoundaries,
+} from "./internal.ts";
 import { createSegmentIterable } from "./segment-iterable.ts";
 
 /**
@@ -48,30 +53,12 @@ export function segmentSentencesUAX29(
     const count = codePoints.length;
     if (count === 0) return;
 
-    const props = new Int32Array(count);
-    for (let i = 0; i < count; i += 1) {
-      const cp = codePoints[i] ?? 0;
-      props[i] = getSentenceBreakPropertyId(cp);
-    }
+    const props = collectCodePointProperties(codePoints, getSentenceBreakPropertyId);
 
     const isSkippable = (prop: number) =>
       prop === SentenceBreakPropertyId.Extend || prop === SentenceBreakPropertyId.Format;
 
-    const prevNonSkip = new Int32Array(count);
-    let last = -1;
-    for (let i = 0; i < count; i += 1) {
-      const prop = props[i] ?? 0;
-      if (!isSkippable(prop)) last = i;
-      prevNonSkip[i] = last;
-    }
-
-    const nextNonSkip = new Int32Array(count);
-    let next = -1;
-    for (let i = count - 1; i >= 0; i -= 1) {
-      const prop = props[i] ?? 0;
-      if (!isSkippable(prop)) next = i;
-      nextNonSkip[i] = next;
-    }
+    const { prevNonSkip, nextNonSkip } = collectSkipIndexes(props, isSkippable);
 
     const isSep = (prop: number) =>
       prop === SentenceBreakPropertyId.Sep ||
@@ -227,16 +214,7 @@ export function segmentSentencesUAX29(
       return false;
     };
 
-    let startCU = 0;
-    for (let i = 1; i < count; i += 1) {
-      if (shouldBreak(i)) {
-        const boundary = codeUnitStarts[i] ?? text.length;
-        yield { startCU, endCU: boundary };
-        startCU = boundary;
-      }
-    }
-
-    yield { startCU, endCU: text.length };
+    yield* segmentSpansByCodePointBoundaries(text, codeUnitStarts, count, shouldBreak);
   };
 
   return createSegmentIterable(generate, provenance);

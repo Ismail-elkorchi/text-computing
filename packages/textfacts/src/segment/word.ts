@@ -4,7 +4,14 @@ import type { SegmentIterable, Span, TextInput } from "../core/types.ts";
 import { IMPLEMENTATION_ID } from "../core/version.ts";
 import { isExtendedPictographic } from "../unicode/emoji.ts";
 import { WordBreakPropertyId, getWordBreakPropertyId } from "../unicode/word.ts";
-import { collectCodePoints } from "./internal.ts";
+import {
+  collectCodePointFlags,
+  collectCodePointProperties,
+  collectCodePoints,
+  collectSkipAwareRunCounts,
+  collectSkipIndexes,
+  segmentSpansByCodePointBoundaries,
+} from "./internal.ts";
 import { createSegmentIterable } from "./segment-iterable.ts";
 
 /**
@@ -49,49 +56,20 @@ export function segmentWordsUAX29(
     const count = codePoints.length;
     if (count === 0) return;
 
-    const props = new Int32Array(count);
-    const extPict = new Uint8Array(count);
-    for (let i = 0; i < count; i += 1) {
-      const cp = codePoints[i] ?? 0;
-      props[i] = getWordBreakPropertyId(cp);
-      extPict[i] = isExtendedPictographic(cp) ? 1 : 0;
-    }
+    const props = collectCodePointProperties(codePoints, getWordBreakPropertyId);
+    const extPict = collectCodePointFlags(codePoints, isExtendedPictographic);
 
     const isSkippable = (prop: number) =>
       prop === WordBreakPropertyId.Extend ||
       prop === WordBreakPropertyId.Format ||
       prop === WordBreakPropertyId.ZWJ;
 
-    const prevNonSkip = new Int32Array(count);
-    let last = -1;
-    for (let i = 0; i < count; i += 1) {
-      const prop = props[i] ?? 0;
-      if (!isSkippable(prop)) last = i;
-      prevNonSkip[i] = last;
-    }
-
-    const nextNonSkip = new Int32Array(count);
-    let next = -1;
-    for (let i = count - 1; i >= 0; i -= 1) {
-      const prop = props[i] ?? 0;
-      if (!isSkippable(prop)) next = i;
-      nextNonSkip[i] = next;
-    }
-
-    const riCountAt = new Int32Array(count);
-    for (let i = 0; i < count; i += 1) {
-      const prop = props[i] ?? 0;
-      if (prop === WordBreakPropertyId.Regional_Indicator) {
-        const prevIndex = i > 0 ? (prevNonSkip[i - 1] ?? -1) : -1;
-        if (prevIndex >= 0 && (props[prevIndex] ?? 0) === WordBreakPropertyId.Regional_Indicator) {
-          riCountAt[i] = (riCountAt[prevIndex] ?? 0) + 1;
-        } else {
-          riCountAt[i] = 1;
-        }
-      } else {
-        riCountAt[i] = 0;
-      }
-    }
+    const { prevNonSkip, nextNonSkip } = collectSkipIndexes(props, isSkippable);
+    const riCountAt = collectSkipAwareRunCounts(
+      props,
+      prevNonSkip,
+      WordBreakPropertyId.Regional_Indicator,
+    );
 
     const isNewline = (prop: number) =>
       prop === WordBreakPropertyId.Newline ||
@@ -237,16 +215,7 @@ export function segmentWordsUAX29(
       return true;
     };
 
-    let startCU = 0;
-    for (let i = 1; i < count; i += 1) {
-      if (shouldBreak(i)) {
-        const boundary = codeUnitStarts[i] ?? text.length;
-        yield { startCU, endCU: boundary };
-        startCU = boundary;
-      }
-    }
-
-    yield { startCU, endCU: text.length };
+    yield* segmentSpansByCodePointBoundaries(text, codeUnitStarts, count, shouldBreak);
   };
 
   return createSegmentIterable(generate, provenance);
