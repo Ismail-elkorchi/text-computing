@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textpack",
   "version": "0.0.0",
-  "description": "Workspace scaffold for text resource packs.",
+  "description": "Text resource package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

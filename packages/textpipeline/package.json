@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textpipeline",
   "version": "0.0.0",
-  "description": "Workspace scaffold for deterministic text pipelines.",
+  "description": "Deterministic text pipeline package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

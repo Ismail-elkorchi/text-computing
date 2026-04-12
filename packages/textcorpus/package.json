@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textcorpus",
   "version": "0.0.0",
-  "description": "Workspace scaffold for deterministic corpus features.",
+  "description": "Deterministic corpus feature package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

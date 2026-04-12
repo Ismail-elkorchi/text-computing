@@ -1,6 +1,8 @@
 # Contributing
 
-Thanks for helping improve textfacts. This repo is TypeScript-first and intentionally zero-runtime-deps.
+Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
+
+The current publishable package is `textfacts`, with source and package-local tools under `packages/textfacts`.
 
 **Prerequisites**
 - Node.js 24+
@@ -21,13 +23,13 @@ Build emits `.d.ts` via TypeScript and ESM JS via esbuild.
 
 **Tests**
 ```sh
-npm run test:node
-npm run test:bun
-npm run test:deno
-npm run test:browser
+npm -w textfacts run test:node
+npm -w textfacts run test:bun
+npm -w textfacts run test:deno
+npm -w textfacts run test:browser
 ```
 
-All tests run offline. Unicode conformance test files are vendored under `testdata/unicode/17.0.0`.
+All tests run offline. Unicode conformance test files are vendored under `packages/textfacts/testdata/unicode/17.0.0`.
 
 **Schema validation**
 ```sh
@@ -37,18 +39,18 @@ npm run schema:validate
 Validates JSON Schemas against the 2020-12 meta-schema and enforces I-JSON safety.
 
 **Documentation boundaries**
-- `docs/` contains usage and reference documentation.
-- `src/`, `schemas/`, `interop/`, `scripts/`, `tools/`, `test/`, and `testdata/` contain implementation and verification.
+- `packages/textfacts/docs/` contains usage and reference documentation for `textfacts`.
+- `packages/textfacts/src/`, `packages/textfacts/schemas/`, `packages/textfacts/interop/`, `packages/textfacts/scripts/`, `packages/textfacts/tools/`, `packages/textfacts/test/`, and `packages/textfacts/testdata/` contain implementation and verification.
 
 **Interop suite**
 ```sh
-node tools/interop/verify.mjs
+npm -w textfacts exec -- node tools/interop/verify.mjs
 ```
 
 Regenerating fixtures (dev-time):
 ```sh
 npm run build
-node tools/interop/verify.mjs --write
+npm -w textfacts exec -- node tools/interop/verify.mjs --write
 ```
 
 **Formatting and linting (Biome)**
@@ -62,7 +64,7 @@ npm run format
 npm run check:static
 ```
 
-Runs TypeScript static gates for shipped source (`noUnusedLocals` + `noUnusedParameters`) without emitting artifacts.
+Runs TypeScript static checks for shipped source (`noUnusedLocals` + `noUnusedParameters`) without emitting artifacts.
 
 **Updating Unicode tables**
 ```sh
@@ -70,8 +72,8 @@ npm run gen:unicode
 ```
 
 That script downloads the pinned Unicode data files (17.0.0) and regenerates compact tables under:
-- `src/unicode/generated` (UAX #29 + emoji + Indic)
-- `src/normalize/generated` (UAX #15 normalization data)
+- `packages/textfacts/src/unicode/generated` (UAX #29 + emoji + Indic)
+- `packages/textfacts/src/normalize/generated` (UAX #15 normalization data)
 
 **Code style**
 - ESM only

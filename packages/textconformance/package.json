@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textconformance",
   "version": "0.0.0",
-  "description": "Workspace scaffold for conformance reports.",
+  "description": "Conformance report package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

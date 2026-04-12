@@ -1,3 +1,3 @@
 # `@ismail-elkorchi/textrules`
 
-Workspace scaffold for deterministic text rules.
+Deterministic text rules package.

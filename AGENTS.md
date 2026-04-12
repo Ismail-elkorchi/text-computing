@@ -1,31 +1,32 @@
 # AGENTS Runbook
 
 ## Repository Inventory
-- `src/`: library implementation.
-- `packages/`: first-wave workspace package scaffolds.
-- `mod.ts`: primary entrypoint.
-- `schemas/`: JSON Schema registry.
-- `interop/`: interop fixtures and manifest.
-- `scripts/`: utility scripts.
-- `tools/`: verification and audit tools.
-- `test/`, `testdata/`: automated tests and pinned vectors.
-- `docs/`: usage and reference documentation.
+- `packages/`: workspace packages.
+- `packages/textfacts/`: current publishable `textfacts` implementation.
+- `packages/textfacts/src/`: library implementation.
+- `packages/textfacts/mod.ts`: primary package entrypoint.
+- `packages/textfacts/schemas/`: JSON Schema registry.
+- `packages/textfacts/interop/`: interop fixtures and manifest.
+- `packages/textfacts/scripts/`: package utility scripts.
+- `packages/textfacts/tools/`: verification and audit tools.
+- `packages/textfacts/test/`, `packages/textfacts/testdata/`: automated tests and pinned vectors.
+- `packages/textfacts/docs/`: usage and reference documentation.
 
 ## Pre-flight (MUST)
 - Read this file.
-- Capture baseline context:
+- Capture starting context:
   - `git rev-parse HEAD`
   - `git status --porcelain`
-- Read `README.md`, `CONTRIBUTING.md`, and relevant `docs/` pages for the task.
+- Read `README.md`, `CONTRIBUTING.md`, and relevant package docs for the task.
 
 ## Verification (MUST)
-- Run all required checks:
+- Run all required checks from the workspace root:
   - `npm run -s lint`
   - `npm run -s build`
   - `npm run -s schema:validate`
   - `npm run -s test:all`
 - Run repository coherence check:
-  - `node tools/repo/audit.mjs --write`
+  - `npm -w textfacts exec -- node tools/repo/audit.mjs --write`
 
 ## Execution Rules
 - Keep edits scoped to library behavior and verification.
@@ -34,11 +35,11 @@
 - Do not delete source files unless ownership and intent are explicit.
 
 ## Documentation Rule
-- `docs/` is practical documentation for usage and reference.
+- Package `docs/` directories are practical documentation for usage and reference.
 
 ## Quick Checklist
 - [ ] Read this file.
-- [ ] Capture baseline state.
+- [ ] Capture starting state.
 - [ ] Apply minimal edits.
 - [ ] Run required verification commands.
 - [ ] Report changed files and command results.

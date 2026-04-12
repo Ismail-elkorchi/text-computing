@@ -1,3 +1,3 @@
 # `@ismail-elkorchi/textpipeline`
 
-Workspace scaffold for deterministic text pipelines.
+Deterministic text pipeline package.

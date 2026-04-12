@@ -13,6 +13,5 @@
     "useDefineForClassFields": true,
     "forceConsistentCasingInFileNames": true,
     "types": []
-  },
-  "include": ["src", "mod.ts"]
+  }
 }
