@@ -26,3 +26,12 @@ npm run -s build
 npm run -s schema:validate
 npm run -s test:all
 ```
+
+## Repository structure
+
+- [`.changeset/`](.changeset/) — release change note configuration and entries.
+- [`docs/specs/`](docs/specs/) — public specifications and repository-level contracts.
+- [`docs/rfcs/`](docs/rfcs/) — public design proposals before acceptance.
+- [`docs/decisions/`](docs/decisions/) — accepted public technical decisions.
+- [`fixtures/`](fixtures/) — repository-level fixture inputs, expected outputs, reports, generated artifacts, and quarantined inputs.
+- [`schemas/`](schemas/) — repository-level JSON Schemas.

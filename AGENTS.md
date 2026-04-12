@@ -1,6 +1,10 @@
 # AGENTS Runbook
 
 ## Repository Inventory
+- `.changeset/`: release change note configuration and entries.
+- `docs/specs/`, `docs/rfcs/`, `docs/decisions/`: public specifications, proposals, and decision records.
+- `fixtures/`: repository-level fixture material.
+- `schemas/`: repository-level JSON Schemas.
 - `packages/`: workspace packages.
 - `packages/textfacts/`: current publishable `@ismail-elkorchi/textfacts` implementation.
 - `packages/textfacts/src/`: library implementation.
