@@ -64,7 +64,7 @@ import {
   integrityProfile,
   scanIntegrityFindings,
   toWellFormedUnicode,
-} from "textfacts/integrity";
+} from "@ismail-elkorchi/textfacts/integrity";
 
 const text = "A\u200D\u2060\u202E\uFE0F\uFDD0B";
 

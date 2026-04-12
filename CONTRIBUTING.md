@@ -23,10 +23,10 @@ Build emits `.d.ts` via TypeScript and ESM JS via esbuild.
 
 **Tests**
 ```sh
-npm -w textfacts run test:node
-npm -w textfacts run test:bun
-npm -w textfacts run test:deno
-npm -w textfacts run test:browser
+npm -w @ismail-elkorchi/textfacts run test:node
+npm -w @ismail-elkorchi/textfacts run test:bun
+npm -w @ismail-elkorchi/textfacts run test:deno
+npm -w @ismail-elkorchi/textfacts run test:browser
 ```
 
 All tests run offline. Unicode conformance test files are vendored under `packages/textfacts/testdata/unicode/17.0.0`.
@@ -44,13 +44,13 @@ Validates JSON Schemas against the 2020-12 meta-schema and enforces I-JSON safet
 
 **Interop suite**
 ```sh
-npm -w textfacts exec -- node tools/interop/verify.mjs
+npm -w @ismail-elkorchi/textfacts exec -- node tools/interop/verify.mjs
 ```
 
 Regenerating fixtures (dev-time):
 ```sh
 npm run build
-npm -w textfacts exec -- node tools/interop/verify.mjs --write
+npm -w @ismail-elkorchi/textfacts exec -- node tools/interop/verify.mjs --write
 ```
 
 **Formatting and linting (Biome)**

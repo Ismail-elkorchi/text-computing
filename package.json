@@ -11,12 +11,12 @@
   "scripts": {
     "build": "npm run --workspaces --if-present build",
     "lint": "npm run --workspaces --if-present lint",
-    "schema:validate": "npm -w textfacts run schema:validate",
+    "schema:validate": "npm -w @ismail-elkorchi/textfacts run schema:validate",
     "check:static": "npm run --workspaces --if-present check:static",
-    "check:pack": "npm -w textfacts run check:pack",
-    "check:publint": "npm -w textfacts run check:publint",
-    "check:attw": "npm -w textfacts run check:attw",
-    "check:jsr": "npm -w textfacts run check:jsr",
+    "check:pack": "npm -w @ismail-elkorchi/textfacts run check:pack",
+    "check:publint": "npm -w @ismail-elkorchi/textfacts run check:publint",
+    "check:attw": "npm -w @ismail-elkorchi/textfacts run check:attw",
+    "check:jsr": "npm -w @ismail-elkorchi/textfacts run check:jsr",
     "check:quality": "npm run check:static && npm run check:pack && npm run check:publint && npm run check:attw && npm run check:jsr",
     "test:all": "npm run --workspaces --if-present test",
     "test:workspaces": "npm run --workspaces --if-present test"

@@ -19,7 +19,7 @@ It provides **deterministic ordering** for agent workflows without relying on pl
 ## API
 
 ```ts
-import { ucaCompare, ucaSortKeyHex, ucaStableSort } from "textfacts/collation";
+import { ucaCompare, ucaSortKeyHex, ucaStableSort } from "@ismail-elkorchi/textfacts/collation";
 
 const a = "café";
 const b = "cafe\u0301";

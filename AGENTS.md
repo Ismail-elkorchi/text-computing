@@ -26,7 +26,7 @@
   - `npm run -s schema:validate`
   - `npm run -s test:all`
 - Run repository coherence check:
-  - `npm -w textfacts exec -- node tools/repo/audit.mjs --write`
+  - `npm -w @ismail-elkorchi/textfacts exec -- node tools/repo/audit.mjs --write`
 
 ## Execution Rules
 - Keep edits scoped to library behavior and verification.
