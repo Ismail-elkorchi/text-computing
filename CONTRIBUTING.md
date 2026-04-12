@@ -39,6 +39,8 @@ npm run schema:validate
 Validates JSON Schemas against the 2020-12 meta-schema and enforces I-JSON safety.
 
 **Documentation boundaries**
+- `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
+- `fixtures/` and `schemas/` contain repository-level validation material.
 - `packages/textfacts/docs/` contains usage and reference documentation for `@ismail-elkorchi/textfacts`.
 - `packages/textfacts/src/`, `packages/textfacts/schemas/`, `packages/textfacts/interop/`, `packages/textfacts/scripts/`, `packages/textfacts/tools/`, `packages/textfacts/test/`, and `packages/textfacts/testdata/` contain implementation and verification.
 
