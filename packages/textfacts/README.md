@@ -39,7 +39,7 @@ for (const span of segmentGraphemes("Cafe\u0301")) {
 
 Deno (JSR):
 ```ts
-import { segmentSentencesUAX29 } from "jsr:@textfacts/textfacts/segment";
+import { segmentSentencesUAX29 } from "jsr:@ismail-elkorchi/textfacts/segment";
 
 const text = "One. Two? Three!";
 const spans = [...segmentSentencesUAX29(text)];
