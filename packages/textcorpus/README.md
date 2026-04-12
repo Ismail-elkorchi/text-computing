@@ -1,3 +1,3 @@
 # `@ismail-elkorchi/textcorpus`
 
-Workspace scaffold for deterministic corpus features.
+Deterministic corpus feature package.

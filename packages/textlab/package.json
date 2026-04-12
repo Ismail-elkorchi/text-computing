@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textlab",
   "version": "0.0.0",
-  "description": "Workspace scaffold for text-computing inspection commands.",
+  "description": "Text-computing inspection command package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

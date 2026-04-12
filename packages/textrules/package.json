@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textrules",
   "version": "0.0.0",
-  "description": "Workspace scaffold for deterministic text rules.",
+  "description": "Deterministic text rules package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

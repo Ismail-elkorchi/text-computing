@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textprotocol",
   "version": "0.0.0",
-  "description": "Workspace scaffold for text-computing result envelopes.",
+  "description": "Text-computing result envelope package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

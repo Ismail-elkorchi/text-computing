@@ -1,3 +1,3 @@
 # `@ismail-elkorchi/textdoc`
 
-Workspace scaffold for document annotation containers.
+Document annotation container package.

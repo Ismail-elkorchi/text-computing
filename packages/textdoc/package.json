@@ -1,7 +1,7 @@
 {
   "name": "@ismail-elkorchi/textdoc",
   "version": "0.0.0",
-  "description": "Workspace scaffold for document annotation containers.",
+  "description": "Document annotation container package.",
   "type": "module",
   "private": true,
   "sideEffects": false,

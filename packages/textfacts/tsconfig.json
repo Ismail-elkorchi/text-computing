@@ -1,7 +1,18 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "noEmit": true
+    "target": "ES2024",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "lib": ["ES2024", "DOM"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": []
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src", "mod.ts"]
 }

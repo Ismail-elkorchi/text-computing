@@ -1,3 +1,3 @@
 # `@ismail-elkorchi/textprotocol`
 
-Workspace scaffold for text-computing result envelopes.
+Text-computing result envelope package.
