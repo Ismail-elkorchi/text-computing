@@ -1,0 +1,387 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textdoc-document-v1.schema.json",
+  "title": "textdoc document annotation model v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentId",
+    "revision",
+    "textLengthCU",
+    "units",
+    "views",
+    "layers"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "documentId": { "type": "string", "minLength": 1 },
+    "revision": { "type": "string", "minLength": 1 },
+    "textLengthCU": { "type": "integer", "minimum": 0 },
+    "text": { "type": "string" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "unicodeVersion": { "type": "string", "minLength": 1 },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "const": "utf16-code-unit" }
+      }
+    },
+    "views": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/view" }
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/layer" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "referenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/referenceRef" }
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["source", "analysis"] },
+        "description": { "type": "string", "minLength": 1 },
+        "derivedFrom": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["active", "superseded", "retracted"] },
+        "supersedes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "supersededBy": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "spanTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "startCU", "endCU"],
+      "properties": {
+        "kind": { "const": "span" },
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "documentTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "document" }
+      }
+    },
+    "annotationTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "annotationId"],
+      "properties": {
+        "kind": { "const": "annotation" },
+        "annotationId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "target": {
+      "oneOf": [
+        { "$ref": "#/definitions/spanTarget" },
+        { "$ref": "#/definitions/documentTarget" },
+        { "$ref": "#/definitions/annotationTarget" }
+      ]
+    },
+    "stringAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rank", "value"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "rank": { "type": "integer", "minimum": 1 },
+        "value": { "type": "string", "minLength": 1 },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "minLength": 1 }
+      }
+    },
+    "morphologyAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rank", "features"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "rank": { "type": "integer", "minimum": 1 },
+        "features": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/feature" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "annotationBase": {
+      "type": "object",
+      "required": ["id", "kind", "lifecycle", "targets"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature"]
+        },
+        "lifecycle": { "$ref": "#/definitions/lifecycle" },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/target" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "provenance": { "$ref": "#/definitions/provenance" }
+      }
+    },
+    "tokenAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["tokenKind"],
+          "properties": {
+            "kind": { "const": "token" },
+            "tokenKind": { "enum": ["uax29-word-boundary-token", "lexical-token"] },
+            "text": { "type": "string" },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "$ref": "#/definitions/spanTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "sentenceAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["sentenceKind"],
+          "properties": {
+            "kind": { "const": "sentence" },
+            "sentenceKind": { "const": "uax29-sentence" },
+            "text": { "type": "string" },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "$ref": "#/definitions/spanTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "posAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["tagSet", "alternatives"],
+          "properties": {
+            "kind": { "const": "pos" },
+            "tagSet": { "type": "string", "minLength": 1 },
+            "alternatives": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/stringAlternative" }
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "lemmaAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["alternatives"],
+          "properties": {
+            "kind": { "const": "lemma" },
+            "alternatives": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/stringAlternative" }
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "morphologyAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["alternatives"],
+          "properties": {
+            "kind": { "const": "morphology" },
+            "alternatives": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/morphologyAlternative" }
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "entityAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["label"],
+          "properties": {
+            "kind": { "const": "entity" },
+            "label": { "type": "string", "minLength": 1 },
+            "normalized": { "type": "string", "minLength": 1 },
+            "text": { "type": "string" },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/spanTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "corpusFeatureAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["featureName"],
+          "properties": {
+            "kind": { "const": "corpus-feature" },
+            "featureName": { "type": "string", "minLength": 1 },
+            "formula": { "type": "string", "minLength": 1 },
+            "value": { "type": "string", "minLength": 1 },
+            "numericValue": { "type": "number" }
+          }
+        }
+      ]
+    },
+    "annotation": {
+      "oneOf": [
+        { "$ref": "#/definitions/tokenAnnotation" },
+        { "$ref": "#/definitions/sentenceAnnotation" },
+        { "$ref": "#/definitions/posAnnotation" },
+        { "$ref": "#/definitions/lemmaAnnotation" },
+        { "$ref": "#/definitions/morphologyAnnotation" },
+        { "$ref": "#/definitions/entityAnnotation" },
+        { "$ref": "#/definitions/corpusFeatureAnnotation" }
+      ]
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "viewId", "annotations"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature"]
+        },
+        "viewId": { "type": "string", "minLength": 1 },
+        "allowSpanOverlap": { "type": "boolean" },
+        "annotations": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/annotation" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

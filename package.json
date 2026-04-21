@@ -12,7 +12,7 @@
     "build": "npm run --workspaces --if-present build",
     "lint": "npm run --workspaces --if-present lint",
     "schema:validate": "npm -w @ismail-elkorchi/textfacts run schema:validate",
-    "check:fixtures": "node tools/validate-tokenization-sbd-readiness.mjs",
+    "check:fixtures": "node tools/validate-tokenization-sbd-readiness.mjs && node tools/validate-textdoc-document-model.mjs",
     "check:static": "npm run --workspaces --if-present check:static",
     "check:pack": "npm -w @ismail-elkorchi/textfacts run check:pack",
     "check:publint": "npm -w @ismail-elkorchi/textfacts run check:publint",

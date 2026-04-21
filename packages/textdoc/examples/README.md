@@ -1,4 +1,7 @@
-# @ismail-elkorchi/textdoc examples
+# `@ismail-elkorchi/textdoc` examples
 
-This directory will contain runnable examples after the package exposes reviewed behavior beyond the
-token/sentence annotation type contract.
+Curated structural examples for the document annotation model live under
+[`../../../fixtures/textdoc/`](../../../fixtures/textdoc/).
+
+This package directory remains reserved for runnable examples after the repository-level document
+contract is exercised by multiple task packages.

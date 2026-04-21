@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:annotation-model",
+  "revision": "2026-04-21",
+  "textLengthCU": 31,
+  "text": "New York hosts example corpora.",
+  "source": {
+    "id": "fixture:textdoc:annotation-model",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "unicodeVersion": "17.0.0",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "source",
+      "description": "Original source text"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "analysis",
+      "description": "Deterministic annotation view",
+      "derivedFrom": ["source-view"]
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-token",
+      "kind": "token",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 3
+            }
+          ],
+          "text": "New"
+        },
+        {
+          "id": "token-2",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 4,
+              "endCU": 8
+            }
+          ],
+          "text": "York"
+        },
+        {
+          "id": "token-3",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 9,
+              "endCU": 14
+            }
+          ],
+          "text": "hosts"
+        },
+        {
+          "id": "token-4",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 15,
+              "endCU": 22
+            }
+          ],
+          "text": "example"
+        },
+        {
+          "id": "token-5",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 23,
+              "endCU": 30
+            }
+          ],
+          "text": "corpora"
+        },
+        {
+          "id": "token-6",
+          "kind": "token",
+          "tokenKind": "uax29-word-boundary-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 30,
+              "endCU": 31
+            }
+          ],
+          "text": "."
+        }
+      ]
+    },
+    {
+      "id": "layer-sentence",
+      "kind": "sentence",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "sentence-1",
+          "kind": "sentence",
+          "sentenceKind": "uax29-sentence",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 31
+            }
+          ],
+          "text": "New York hosts example corpora."
+        }
+      ]
+    },
+    {
+      "id": "layer-pos",
+      "kind": "pos",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "pos-3-initial",
+          "kind": "pos",
+          "tagSet": "ud-v2-upos",
+          "lifecycle": {
+            "state": "superseded",
+            "supersededBy": "pos-3-final",
+            "reason": "Initial lexical guess replaced after rule evaluation"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-3"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "pos-3-initial-alt-1",
+              "rank": 1,
+              "value": "NOUN"
+            }
+          ]
+        },
+        {
+          "id": "pos-3-final",
+          "kind": "pos",
+          "tagSet": "ud-v2-upos",
+          "lifecycle": {
+            "state": "active",
+            "supersedes": ["pos-3-initial"]
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-3"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "pos-3-final-alt-1",
+              "rank": 1,
+              "value": "VERB"
+            },
+            {
+              "id": "pos-3-final-alt-2",
+              "rank": 2,
+              "value": "NOUN",
+              "notes": ["Retained as an explicit ambiguity alternative"]
+            }
+          ],
+          "provenance": {
+            "references": [
+              {
+                "kind": "rule",
+                "id": "pos:verb-after-proper-noun"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "layer-lemma",
+      "kind": "lemma",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "lemma-3",
+          "kind": "lemma",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-3"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "lemma-3-alt-1",
+              "rank": 1,
+              "value": "host"
+            },
+            {
+              "id": "lemma-3-alt-2",
+              "rank": 2,
+              "value": "hosts",
+              "notes": ["Surface-form lemma retained for explicit ambiguity"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layer-morphology",
+      "kind": "morphology",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "morph-3",
+          "kind": "morphology",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-3"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "morph-3-alt-1",
+              "rank": 1,
+              "features": [
+                {
+                  "name": "upos",
+                  "value": "VERB"
+                },
+                {
+                  "name": "tense",
+                  "value": "Pres"
+                },
+                {
+                  "name": "number",
+                  "value": "Sing"
+                }
+              ]
+            },
+            {
+              "id": "morph-3-alt-2",
+              "rank": 2,
+              "features": [
+                {
+                  "name": "upos",
+                  "value": "NOUN"
+                },
+                {
+                  "name": "number",
+                  "value": "Plur"
+                }
+              ],
+              "notes": ["Alternative kept because the token is ambiguous in isolation"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layer-entity",
+      "kind": "entity",
+      "viewId": "analysis-view",
+      "allowSpanOverlap": true,
+      "annotations": [
+        {
+          "id": "entity-1",
+          "kind": "entity",
+          "label": "GPE",
+          "normalized": "New York",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 8
+            }
+          ],
+          "text": "New York"
+        }
+      ]
+    },
+    {
+      "id": "layer-corpus-feature",
+      "kind": "corpus-feature",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "corpus-1",
+          "kind": "corpus-feature",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "document"
+            }
+          ],
+          "featureName": "bm25-length-normalization",
+          "formula": "bm25",
+          "numericValue": 1.4
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "This fixture is structural. It is not a claim that all task runtimes are implemented."
+  ]
+}
