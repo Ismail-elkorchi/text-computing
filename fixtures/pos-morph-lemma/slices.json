@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "expectedOutputStatus": "schema-defined",
+  "slices": [
+    {
+      "id": "en-unknown-word",
+      "languageHint": "en",
+      "phenomena": ["unknown-word"],
+      "source": {
+        "kind": "text",
+        "text": "The florped host signs."
+      },
+      "notes": ["Unknown token forces explicit fallback behavior."]
+    },
+    {
+      "id": "es-multiword-token",
+      "languageHint": "es",
+      "phenomena": ["multiword-token"],
+      "source": {
+        "kind": "text",
+        "text": "Del juez vino."
+      },
+      "notes": ["Contraction slice for multiword-token handling."]
+    },
+    {
+      "id": "fr-clitic-historical",
+      "languageHint": "fr",
+      "phenomena": ["clitic", "historical-spelling"],
+      "source": {
+        "kind": "text",
+        "text": "L'hoste s'escrist."
+      },
+      "notes": ["Historical spelling and clitic boundary pressure in one slice."]
+    },
+    {
+      "id": "code-switch-en-fr",
+      "languageHint": "en+fr",
+      "phenomena": ["code-switching"],
+      "source": {
+        "kind": "text",
+        "text": "Le host signs ici."
+      },
+      "notes": ["Mixed-language slice for asymmetric analyses."]
+    }
+  ]
+}
