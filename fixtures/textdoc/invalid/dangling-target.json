@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:invalid-dangling-target",
+  "revision": "2026-04-21",
+  "textLengthCU": 4,
+  "text": "Test",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "source"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "analysis",
+      "derivedFrom": ["source-view"]
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-pos",
+      "kind": "pos",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "pos-1",
+          "kind": "pos",
+          "tagSet": "ud-v2-upos",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-missing"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "pos-1-alt-1",
+              "rank": 1,
+              "value": "NOUN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

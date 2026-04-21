@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:invalid-overlap",
+  "revision": "2026-04-21",
+  "textLengthCU": 6,
+  "text": "ab cde",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "source"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "analysis",
+      "derivedFrom": ["source-view"]
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-token",
+      "kind": "token",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 3
+            }
+          ],
+          "text": "ab "
+        },
+        {
+          "id": "token-2",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 2,
+              "endCU": 6
+            }
+          ],
+          "text": " cde"
+        }
+      ]
+    }
+  ]
+}

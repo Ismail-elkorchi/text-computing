@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:invalid-lifecycle",
+  "revision": "2026-04-21",
+  "textLengthCU": 5,
+  "text": "hosts",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "source"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "analysis",
+      "derivedFrom": ["source-view"]
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-token",
+      "kind": "token",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 5
+            }
+          ],
+          "text": "hosts"
+        }
+      ]
+    },
+    {
+      "id": "layer-pos",
+      "kind": "pos",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "pos-1-old",
+          "kind": "pos",
+          "tagSet": "ud-v2-upos",
+          "lifecycle": {
+            "state": "superseded",
+            "supersededBy": "pos-1-new"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-1"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "pos-1-old-alt-1",
+              "rank": 1,
+              "value": "NOUN"
+            }
+          ]
+        },
+        {
+          "id": "pos-1-new",
+          "kind": "pos",
+          "tagSet": "ud-v2-upos",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-1"
+            }
+          ],
+          "alternatives": [
+            {
+              "id": "pos-1-new-alt-1",
+              "rank": 1,
+              "value": "VERB"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:invalid-dangling-view",
+  "revision": "2026-04-21",
+  "textLengthCU": 4,
+  "text": "Test",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "source"
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-token",
+      "kind": "token",
+      "viewId": "missing-view",
+      "annotations": [
+        {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 4
+            }
+          ],
+          "text": "Test"
+        }
+      ]
+    }
+  ]
+}
