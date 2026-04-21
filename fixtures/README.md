@@ -15,6 +15,7 @@ validation.
 
 - [`tokenization-sbd/`](tokenization-sbd/)
 - [`pos-morph-lemma/`](pos-morph-lemma/) — readiness slices, pack-backed lexicon fixtures, and recorded goldens for issue `#10`.
+- [`rule-backed-ner/`](rule-backed-ner/) — readiness slices and comparator freeze for issue `#13`.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue

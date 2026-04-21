@@ -8,4 +8,5 @@ Decision records should name the affected package or repository area, the date, 
 
 - [`package-boundary-ownership.md`](package-boundary-ownership.md)
 - [`pos-morph-lemma-output-differences.md`](pos-morph-lemma-output-differences.md)
+- [`rule-backed-ner-output-differences.md`](rule-backed-ner-output-differences.md)
 - [`tokenization-sbd-output-differences.md`](tokenization-sbd-output-differences.md)
