@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "packId": "pack:invalid-missing-license",
+  "packageName": "@ismail-elkorchi/textpack-invalid-missing-license",
+  "version": "0.0.0",
+  "resources": [
+    {
+      "resourceId": "abbrev-en-missing-license",
+      "lookupKey": "abbreviation.en.missing-license",
+      "kind": "abbreviation-list",
+      "path": "fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt",
+      "language": "en",
+      "overlayPrecedence": 10,
+      "licenseId": "license-missing",
+      "provenanceId": "prov-hand-curated"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "license-cc0",
+      "spdx": "CC0-1.0"
+    }
+  ],
+  "provenance": [
+    {
+      "id": "prov-hand-curated",
+      "origin": "repository-fixture"
+    }
+  ],
+  "entrypoints": {
+    "manifest": "fixtures/textpack/invalid/missing-license.json"
+  },
+  "tests": {
+    "smoke": ["fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt"],
+    "lookup": ["lookup:abbreviation-list:en"],
+    "overlay": ["overlay:abbreviation-list:en"]
+  }
+}

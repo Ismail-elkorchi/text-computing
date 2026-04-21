@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "packId": "pack:en-legal",
+  "packageName": "@ismail-elkorchi/textpack-en-legal",
+  "version": "0.0.0",
+  "resources": [
+    {
+      "resourceId": "stopwords-en-legal",
+      "lookupKey": "stopwords.en.core",
+      "kind": "stopwords",
+      "path": "fixtures/textpack/resources/textpack-en-legal/stopwords.en.legal.txt",
+      "language": "en",
+      "profiles": ["legal"],
+      "overlayPrecedence": 50,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    },
+    {
+      "resourceId": "gazetteer-en-legal",
+      "lookupKey": "gazetteer.en.courts",
+      "kind": "gazetteer",
+      "path": "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv",
+      "language": "en",
+      "profiles": ["legal"],
+      "overlayPrecedence": 50,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "license-cc0",
+      "spdx": "CC0-1.0",
+      "attribution": "Prepared for repository fixtures."
+    }
+  ],
+  "provenance": [
+    {
+      "id": "prov-hand-curated",
+      "origin": "repository-fixture",
+      "version": "2026-04-21",
+      "createdBy": "text-computing"
+    }
+  ],
+  "entrypoints": {
+    "manifest": "fixtures/textpack/manifests/textpack-en-legal.json",
+    "resourceRoot": "fixtures/textpack/resources"
+  },
+  "tests": {
+    "smoke": [
+      "fixtures/textpack/resources/textpack-en-legal/stopwords.en.legal.txt"
+    ],
+    "lookup": [
+      "lookup:stopwords:en:legal",
+      "lookup:gazetteer:en:legal"
+    ],
+    "overlay": [
+      "overlay:stopwords:en:legal"
+    ]
+  }
+}

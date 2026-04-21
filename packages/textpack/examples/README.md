@@ -1,3 +1,7 @@
-# @ismail-elkorchi/textpack examples
+# `@ismail-elkorchi/textpack` examples
 
-This directory will contain runnable examples after the package exposes reviewed behavior beyond its package identity export.
+Curated resource manifests and fixture resources live under
+[`../../../fixtures/textpack/`](../../../fixtures/textpack/).
+
+This package directory remains reserved for runnable consumer examples after multiple task packages
+use the shared pack contract.

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "packId": "pack:en-core",
+  "packageName": "@ismail-elkorchi/textpack-en-core",
+  "version": "0.0.0",
+  "resources": [
+    {
+      "resourceId": "stopwords-en-core",
+      "lookupKey": "stopwords.en.core",
+      "kind": "stopwords",
+      "path": "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
+      "language": "en",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    },
+    {
+      "resourceId": "abbrev-en-core",
+      "lookupKey": "abbreviation.en.core",
+      "kind": "abbreviation-list",
+      "path": "fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt",
+      "language": "en",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    },
+    {
+      "resourceId": "lexicon-en-core",
+      "lookupKey": "lexicon.en.core",
+      "kind": "lexicon",
+      "path": "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
+      "language": "en",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "license-cc0",
+      "spdx": "CC0-1.0",
+      "attribution": "Prepared for repository fixtures."
+    }
+  ],
+  "provenance": [
+    {
+      "id": "prov-hand-curated",
+      "origin": "repository-fixture",
+      "version": "2026-04-21",
+      "createdBy": "text-computing"
+    }
+  ],
+  "entrypoints": {
+    "manifest": "fixtures/textpack/manifests/textpack-en-core.json",
+    "resourceRoot": "fixtures/textpack/resources"
+  },
+  "tests": {
+    "smoke": [
+      "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"
+    ],
+    "lookup": [
+      "lookup:stopwords:en",
+      "lookup:lexicon:en"
+    ],
+    "overlay": [
+      "overlay:stopwords:en"
+    ]
+  }
+}
