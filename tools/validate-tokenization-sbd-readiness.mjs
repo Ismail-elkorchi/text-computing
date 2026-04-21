@@ -75,6 +75,11 @@ const textdocAnnotationSetSchema = await readJson(
   "schemas/textdoc-token-sentence-annotation-set-v1.schema.json",
 );
 const validateTextdocAnnotationSet = ajv.compile(textdocAnnotationSetSchema);
+const resultEnvelopeSchema = await readJson("schemas/textprotocol-result-envelope-v1.schema.json");
+const validateResultEnvelope = ajv.compile(resultEnvelopeSchema);
+const conformanceReportSchema = await readJson("schemas/textconformance-report-v1.schema.json");
+const validateConformanceReport = ajv.compile(conformanceReportSchema);
+const toolVersions = await readJson("fixtures/tokenization-sbd/tool-versions.json");
 const expectedDir = "fixtures/tokenization-sbd/expected";
 const expectedFiles = (await readdir(expectedDir)).filter((file) => file.endsWith(".json")).sort();
 if (slices.expectedOutputStatus === "recorded" && expectedFiles.length !== sliceIds.size) {
@@ -145,6 +150,74 @@ for (const file of expectedFiles) {
     console.error(JSON.stringify(validateTextdocAnnotationSet.errors, null, 2));
     process.exit(1);
   }
+  const resultEnvelope = {
+    schemaId: "urn:ismail-elkorchi:textprotocol:result-envelope:v1",
+    schemaVersion: 1,
+    producer: {
+      package: "@ismail-elkorchi/textfacts",
+      version: toolVersions.packagesUnderTest.find(
+        (entry) => entry.name === "@ismail-elkorchi/textfacts",
+      )?.version,
+    },
+    payloadKind: "textdoc-token-sentence-annotation-set",
+    payload: textdocAnnotationSet,
+    provenance: {
+      source: {
+        id: data.source.sliceId,
+        sha256: data.source.sha256,
+      },
+      references: [
+        {
+          kind: "fixture-slice",
+          id: data.sliceId,
+        },
+      ],
+    },
+    diagnostics: (data.notes ?? []).map((note, noteIndex) => ({
+      code: `tokenization-sbd-note-${noteIndex + 1}`,
+      severity: "info",
+      message: note,
+    })),
+  };
+  if (!validateResultEnvelope(resultEnvelope)) {
+    console.error(`${dataPath} cannot be represented by the textprotocol result envelope schema`);
+    console.error(JSON.stringify(validateResultEnvelope.errors, null, 2));
+    process.exit(1);
+  }
+  const conformanceReport = {
+    schemaId: "urn:ismail-elkorchi:textconformance:report:v1",
+    schemaVersion: 1,
+    reportId: `tokenization-sbd:${data.sliceId}`,
+    subject: {
+      kind: "textprotocol-result-envelope",
+      id: `tokenization-sbd:${data.sliceId}`,
+      schemaId: resultEnvelope.schemaId,
+    },
+    generatedAt: "2026-04-21T00:00:00.000Z",
+    summary: {
+      pass: 1,
+      fail: 0,
+      notRun: 0,
+    },
+    checks: [
+      {
+        checkId: "tokenization-sbd-envelope-roundtrip-shape",
+        status: "pass",
+        message: "Recorded expected output is representable as textdoc and wrapped in a result envelope.",
+        evidenceRefs: [
+          `fixtures/tokenization-sbd/expected/${data.sliceId}.json`,
+          "schemas/textdoc-token-sentence-annotation-set-v1.schema.json",
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+        ],
+      },
+    ],
+    notes: data.notes,
+  };
+  if (!validateConformanceReport(conformanceReport)) {
+    console.error(`${dataPath} cannot be referenced by the textconformance report schema`);
+    console.error(JSON.stringify(validateConformanceReport.errors, null, 2));
+    process.exit(1);
+  }
   expectedSliceIds.add(data.sliceId);
 }
 
@@ -157,7 +230,6 @@ if (slices.expectedOutputStatus === "recorded") {
   }
 }
 
-const toolVersions = await readJson("fixtures/tokenization-sbd/tool-versions.json");
 const diagnosticToolKeys = new Set(
   toolVersions.diagnosticTools.map((tool) => `${tool.name}@${tool.version}`),
 );

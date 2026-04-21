@@ -14,9 +14,12 @@ Tokenization and sentence-boundary behavior starts only after these repository a
 - slice schema: [`schemas/tokenization-sbd-slices-v1.schema.json`](../../schemas/tokenization-sbd-slices-v1.schema.json)
 - tool/version schema: [`schemas/tokenization-sbd-tool-versions-v1.schema.json`](../../schemas/tokenization-sbd-tool-versions-v1.schema.json)
 - comparison-output schema: [`schemas/tokenization-sbd-comparison-v1.schema.json`](../../schemas/tokenization-sbd-comparison-v1.schema.json)
+- result-envelope schema: [`schemas/textprotocol-result-envelope-v1.schema.json`](../../schemas/textprotocol-result-envelope-v1.schema.json)
+- conformance-report schema: [`schemas/textconformance-report-v1.schema.json`](../../schemas/textconformance-report-v1.schema.json)
 - diagnostic comparison outputs: [`fixtures/tokenization-sbd/comparisons/`](../../fixtures/tokenization-sbd/comparisons/)
 - expected outputs: [`fixtures/tokenization-sbd/expected/`](../../fixtures/tokenization-sbd/expected/)
 - output-difference policy: [`docs/decisions/tokenization-sbd-output-differences.md`](../decisions/tokenization-sbd-output-differences.md)
+- package-boundary decision: [`docs/decisions/package-boundary-ownership.md`](../decisions/package-boundary-ownership.md)
 
 ## Offset policy
 
@@ -57,3 +60,12 @@ The tool/version manifest records normative references, package-under-test versi
 ## Diagnostic comparison outputs
 
 Diagnostic comparison outputs are snapshots from pinned tools, not normative expected outputs. They are used to document external behavior before package behavior changes. At least one Python or JVM comparator and one JavaScript comparator must be present before issue #9 feature code starts.
+
+## Result-envelope proof
+
+Repository verification also derives a `textdoc` annotation set from every
+recorded expected output, wraps that annotation set in a `textprotocol`
+result envelope, and references the envelope from a `textconformance` report.
+
+The proof is executable through `npm run check:fixtures`; it is not maintained
+as a duplicated checked-in artifact set.

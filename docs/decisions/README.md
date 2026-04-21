@@ -6,4 +6,5 @@ Decision records should name the affected package or repository area, the date, 
 
 ## Records
 
+- [`package-boundary-ownership.md`](package-boundary-ownership.md)
 - [`tokenization-sbd-output-differences.md`](tokenization-sbd-output-differences.md)
