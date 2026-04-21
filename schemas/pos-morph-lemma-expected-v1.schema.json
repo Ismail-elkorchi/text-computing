@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/pos-morph-lemma-expected-v1.schema.json",
+  "title": "POS, morphology, and lemma expected output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sliceId", "source", "document"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "sliceId": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sliceId"],
+      "properties": {
+        "sliceId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "document": {
+      "$ref": "textdoc-document-v1.schema.json"
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

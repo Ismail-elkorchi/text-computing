@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/pos-morph-lemma-slices-v1.schema.json",
+  "title": "POS, morphology, and lemma readiness slices v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "expectedOutputStatus", "slices"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "expectedOutputStatus": { "enum": ["schema-defined", "recorded"] },
+    "slices": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/slice" }
+    }
+  },
+  "definitions": {
+    "slice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "languageHint", "phenomena", "source"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "languageHint": { "type": "string", "minLength": 1 },
+        "phenomena": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "unknown-word",
+              "multiword-token",
+              "clitic",
+              "historical-spelling",
+              "code-switching"
+            ]
+          }
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "text"],
+          "properties": {
+            "kind": { "const": "text" },
+            "text": { "type": "string" }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}
