@@ -1,0 +1,69 @@
+{
+  "entries": [
+    {
+      "surface": "del",
+      "analyses": [
+        {
+          "ruleId": "lexicon:es:del:adp",
+          "pos": "ADP",
+          "lemma": "de",
+          "morphology": [{ "name": "AdpType", "value": "Prep" }],
+          "notes": ["Contraction keeps the prepositional component explicit."]
+        },
+        {
+          "ruleId": "lexicon:es:del:det",
+          "pos": "DET",
+          "lemma": "el",
+          "morphology": [
+            { "name": "Definite", "value": "Def" },
+            { "name": "Gender", "value": "Masc" },
+            { "name": "Number", "value": "Sing" },
+            { "name": "PronType", "value": "Art" }
+          ],
+          "notes": ["Contraction keeps the article component explicit."]
+        }
+      ]
+    },
+    {
+      "surface": "juez",
+      "analyses": [
+        {
+          "ruleId": "lexicon:es:juez:noun",
+          "pos": "NOUN",
+          "lemma": "juez",
+          "morphology": [
+            { "name": "Gender", "value": "Masc" },
+            { "name": "Number", "value": "Sing" }
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "vino",
+      "analyses": [
+        {
+          "ruleId": "lexicon:es:vino:verb",
+          "pos": "VERB",
+          "lemma": "venir",
+          "morphology": [
+            { "name": "Mood", "value": "Ind" },
+            { "name": "Number", "value": "Sing" },
+            { "name": "Person", "value": "3" },
+            { "name": "Tense", "value": "Past" },
+            { "name": "VerbForm", "value": "Fin" }
+          ]
+        },
+        {
+          "ruleId": "lexicon:es:vino:noun",
+          "pos": "NOUN",
+          "lemma": "vino",
+          "morphology": [
+            { "name": "Gender", "value": "Masc" },
+            { "name": "Number", "value": "Sing" }
+          ],
+          "notes": ["Without broader context, the surface also matches the noun vino."]
+        }
+      ]
+    }
+  ]
+}

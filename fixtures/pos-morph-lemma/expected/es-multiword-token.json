@@ -1,0 +1,755 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "es-multiword-token",
+  "source": {
+    "sliceId": "es-multiword-token",
+    "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "pos-morph-lemma:es-multiword-token",
+    "revision": "pos-morph-lemma-v1",
+    "textLengthCU": 14,
+    "text": "Del juez vino.",
+    "source": {
+      "id": "es-multiword-token",
+      "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      {
+        "id": "source-view",
+        "kind": "source",
+        "description": "Original source text for POS, lemma, and morphology analysis."
+      },
+      {
+        "id": "analysis-view",
+        "kind": "analysis",
+        "description": "Deterministic textrules POS, lemma, and morphology annotations.",
+        "derivedFrom": [
+          "source-view"
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 3
+              }
+            ],
+            "text": "Del",
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 4,
+                "endCU": 8
+              }
+            ],
+            "text": "juez",
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 9,
+                "endCU": 13
+              }
+            ],
+            "text": "vino",
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 13,
+                "endCU": 14
+              }
+            ],
+            "text": ".",
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 14
+              }
+            ],
+            "text": "Del juez vino.",
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "sentence-boundary:terminal-punctuation-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pos",
+        "kind": "pos",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-1:pos:1",
+                "rank": 1,
+                "value": "ADP",
+                "notes": [
+                  "Contraction keeps the prepositional component explicit."
+                ]
+              },
+              {
+                "id": "token-1:pos:2",
+                "rank": 2,
+                "value": "DET",
+                "notes": [
+                  "Contraction keeps the article component explicit."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:del:adp"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:del:det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-2:pos:1",
+                "rank": 1,
+                "value": "NOUN"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:juez:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-3:pos:1",
+                "rank": 1,
+                "value": "VERB"
+              },
+              {
+                "id": "token-3:pos:2",
+                "rank": 2,
+                "value": "NOUN",
+                "notes": [
+                  "Without broader context, the surface also matches the noun vino."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:vino:verb"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:vino:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-4:pos:1",
+                "rank": 1,
+                "value": "PUNCT"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "lemmas",
+        "kind": "lemma",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:lemma:1",
+                "rank": 1,
+                "value": "de",
+                "notes": [
+                  "Contraction keeps the prepositional component explicit."
+                ]
+              },
+              {
+                "id": "token-1:lemma:2",
+                "rank": 2,
+                "value": "el",
+                "notes": [
+                  "Contraction keeps the article component explicit."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:del:adp"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:del:det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:lemma:1",
+                "rank": 1,
+                "value": "juez"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:juez:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:lemma:1",
+                "rank": 1,
+                "value": "venir"
+              },
+              {
+                "id": "token-3:lemma:2",
+                "rank": 2,
+                "value": "vino",
+                "notes": [
+                  "Without broader context, the surface also matches the noun vino."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:vino:verb"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:vino:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-4:lemma:1",
+                "rank": 1,
+                "value": "."
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "morphology",
+        "kind": "morphology",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "AdpType",
+                    "value": "Prep"
+                  }
+                ],
+                "notes": [
+                  "Contraction keeps the prepositional component explicit."
+                ]
+              },
+              {
+                "id": "token-1:morphology:2",
+                "rank": 2,
+                "features": [
+                  {
+                    "name": "Definite",
+                    "value": "Def"
+                  },
+                  {
+                    "name": "Gender",
+                    "value": "Masc"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "PronType",
+                    "value": "Art"
+                  }
+                ],
+                "notes": [
+                  "Contraction keeps the article component explicit."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:del:adp"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:del:det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Gender",
+                    "value": "Masc"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  }
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:juez:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Mood",
+                    "value": "Ind"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "Person",
+                    "value": "3"
+                  },
+                  {
+                    "name": "Tense",
+                    "value": "Past"
+                  },
+                  {
+                    "name": "VerbForm",
+                    "value": "Fin"
+                  }
+                ]
+              },
+              {
+                "id": "token-3:morphology:2",
+                "rank": 2,
+                "features": [
+                  {
+                    "name": "Gender",
+                    "value": "Masc"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  }
+                ],
+                "notes": [
+                  "Without broader context, the surface also matches the noun vino."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "es-multiword-token",
+                "sha256": "ac670f72316e79642eb59aaaaf436b2906791cceff7ff39df70c29b8744238ee"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-es-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:vino:verb"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:es:vino:noun"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "phenomenon:multiword-token"
+    ]
+  },
+  "notes": [
+    "multiword-token:Surface contraction Del keeps ambiguity explicit across POS, lemma, and morphology."
+  ]
+}

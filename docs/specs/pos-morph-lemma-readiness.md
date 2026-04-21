@@ -39,7 +39,7 @@ They cover:
 
 ## Expected-output format
 
-Future recorded outputs must validate against
+Recorded outputs validate against
 [`../../schemas/pos-morph-lemma-expected-v1.schema.json`](../../schemas/pos-morph-lemma-expected-v1.schema.json),
 which wraps a `textdoc` document containing token, sentence, POS, lemma, and morphology layers for a
 single slice.
@@ -52,4 +52,5 @@ Frozen comparator versions live in
 ## Verification
 
 `npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, expected-output
-schema, and required readiness documentation headings before any feature PR for issue `#10`.
+schema, required readiness documentation headings, pack-backed lexicon fixtures, and the recorded
+goldens produced by `@ismail-elkorchi/textrules`.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "expectedOutputStatus": "schema-defined",
+  "expectedOutputStatus": "recorded",
   "slices": [
     {
       "id": "en-unknown-word",

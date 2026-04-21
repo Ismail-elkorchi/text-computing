@@ -13,7 +13,8 @@
       "additionalProperties": false,
       "required": ["sliceId"],
       "properties": {
-        "sliceId": { "type": "string", "minLength": 1 }
+        "sliceId": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
       }
     },
     "document": {
