@@ -1,0 +1,109 @@
+{
+  "entries": [
+    {
+      "surface": "l'",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fr:l':det",
+          "pos": "DET",
+          "lemma": "le",
+          "morphology": [
+            { "name": "Definite", "value": "Def" },
+            { "name": "PronType", "value": "Art" }
+          ],
+          "notes": ["Elided article remains explicit at the token layer."]
+        }
+      ]
+    },
+    {
+      "surface": "hoste",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fr:hoste:noun-surface",
+          "pos": "NOUN",
+          "lemma": "hoste",
+          "morphology": [{ "name": "Number", "value": "Sing" }],
+          "notes": ["Historical spelling remains available as a surface-preserving lemma."]
+        },
+        {
+          "ruleId": "lexicon:fr:hoste:noun-modernized",
+          "pos": "NOUN",
+          "lemma": "hôte",
+          "morphology": [{ "name": "Number", "value": "Sing" }],
+          "notes": ["Modernized lemma remains explicit instead of replacing the historical form."]
+        }
+      ]
+    },
+    {
+      "surface": "s'",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fr:s':pron",
+          "pos": "PRON",
+          "lemma": "se",
+          "morphology": [
+            { "name": "Person", "value": "3" },
+            { "name": "PronType", "value": "Prs" },
+            { "name": "Reflex", "value": "Yes" }
+          ],
+          "notes": ["Reflexive clitic remains explicit at the token layer."]
+        }
+      ]
+    },
+    {
+      "surface": "escrist",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fr:escrist:verb-surface",
+          "pos": "VERB",
+          "lemma": "escrire",
+          "morphology": [
+            { "name": "Mood", "value": "Ind" },
+            { "name": "Number", "value": "Sing" },
+            { "name": "Person", "value": "3" },
+            { "name": "Tense", "value": "Past" },
+            { "name": "VerbForm", "value": "Fin" }
+          ],
+          "notes": ["Historical orthography remains explicit as a lemma alternative."]
+        },
+        {
+          "ruleId": "lexicon:fr:escrist:verb-modernized",
+          "pos": "VERB",
+          "lemma": "écrire",
+          "morphology": [
+            { "name": "Mood", "value": "Ind" },
+            { "name": "Number", "value": "Sing" },
+            { "name": "Person", "value": "3" },
+            { "name": "Tense", "value": "Past" },
+            { "name": "VerbForm", "value": "Fin" }
+          ],
+          "notes": ["Modernized lemma remains explicit instead of replacing the historical form."]
+        }
+      ]
+    },
+    {
+      "surface": "le",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fr:le:det",
+          "pos": "DET",
+          "lemma": "le",
+          "morphology": [
+            { "name": "Definite", "value": "Def" },
+            { "name": "PronType", "value": "Art" }
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "ici",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fr:ici:adv",
+          "pos": "ADV",
+          "lemma": "ici"
+        }
+      ]
+    }
+  ]
+}

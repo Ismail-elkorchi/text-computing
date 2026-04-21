@@ -1,0 +1,52 @@
+{
+  "entries": [
+    {
+      "surface": "the",
+      "analyses": [
+        {
+          "ruleId": "lexicon:en:the:det",
+          "pos": "DET",
+          "lemma": "the",
+          "morphology": [
+            { "name": "Definite", "value": "Def" },
+            { "name": "PronType", "value": "Art" }
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "host",
+      "analyses": [
+        {
+          "ruleId": "lexicon:en:host:noun",
+          "pos": "NOUN",
+          "lemma": "host",
+          "morphology": [{ "name": "Number", "value": "Sing" }]
+        }
+      ]
+    },
+    {
+      "surface": "signs",
+      "analyses": [
+        {
+          "ruleId": "lexicon:en:signs:verb",
+          "pos": "VERB",
+          "lemma": "sign",
+          "morphology": [
+            { "name": "Number", "value": "Sing" },
+            { "name": "Person", "value": "3" },
+            { "name": "Tense", "value": "Pres" },
+            { "name": "VerbForm", "value": "Fin" }
+          ]
+        },
+        {
+          "ruleId": "lexicon:en:signs:noun",
+          "pos": "NOUN",
+          "lemma": "sign",
+          "morphology": [{ "name": "Number", "value": "Plur" }],
+          "notes": ["Surface form remains ambiguous without a broader syntactic model."]
+        }
+      ]
+    }
+  ]
+}

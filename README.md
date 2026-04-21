@@ -9,7 +9,7 @@ The current publishable npm package is `@ismail-elkorchi/textfacts`. Its impleme
 - `@ismail-elkorchi/textfacts` — deterministic, Unicode-pinned text facts.
 - `@ismail-elkorchi/textdoc` — document annotation container package.
 - `@ismail-elkorchi/textpack` — text resource package.
-- `@ismail-elkorchi/textrules` — deterministic rules package placeholder.
+- `@ismail-elkorchi/textrules` — deterministic rules package with POS, lemma, and morphology slice validation.
 - `@ismail-elkorchi/textpipeline` — deterministic pipeline package placeholder.
 - `@ismail-elkorchi/textcorpus` — corpus feature package placeholder.
 - `@ismail-elkorchi/textprotocol` — result envelope package.

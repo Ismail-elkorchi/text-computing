@@ -1,0 +1,861 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "en-unknown-word",
+  "source": {
+    "sliceId": "en-unknown-word",
+    "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "pos-morph-lemma:en-unknown-word",
+    "revision": "pos-morph-lemma-v1",
+    "textLengthCU": 23,
+    "text": "The florped host signs.",
+    "source": {
+      "id": "en-unknown-word",
+      "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      {
+        "id": "source-view",
+        "kind": "source",
+        "description": "Original source text for POS, lemma, and morphology analysis."
+      },
+      {
+        "id": "analysis-view",
+        "kind": "analysis",
+        "description": "Deterministic textrules POS, lemma, and morphology annotations.",
+        "derivedFrom": [
+          "source-view"
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 3
+              }
+            ],
+            "text": "The",
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 4,
+                "endCU": 11
+              }
+            ],
+            "text": "florped",
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 12,
+                "endCU": 16
+              }
+            ],
+            "text": "host",
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 17,
+                "endCU": 22
+              }
+            ],
+            "text": "signs",
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 22,
+                "endCU": 23
+              }
+            ],
+            "text": ".",
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 23
+              }
+            ],
+            "text": "The florped host signs.",
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "sentence-boundary:terminal-punctuation-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pos",
+        "kind": "pos",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-1:pos:1",
+                "rank": 1,
+                "value": "DET"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:the:det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-2:pos:1",
+                "rank": 1,
+                "value": "ADJ",
+                "notes": [
+                  "Suffix backoff keeps the surface form as an adjective candidate."
+                ]
+              },
+              {
+                "id": "token-2:pos:2",
+                "rank": 2,
+                "value": "VERB",
+                "notes": [
+                  "Suffix backoff emits a participial verb alternative."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "fallback:suffix-ed:adjective"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "fallback:suffix-ed:verb"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-3:pos:1",
+                "rank": 1,
+                "value": "NOUN"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:host:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-4:pos:1",
+                "rank": 1,
+                "value": "VERB"
+              },
+              {
+                "id": "token-4:pos:2",
+                "rank": 2,
+                "value": "NOUN",
+                "notes": [
+                  "Surface form remains ambiguous without a broader syntactic model."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:signs:verb"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:signs:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-5:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-5"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-5:pos:1",
+                "rank": 1,
+                "value": "PUNCT"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "lemmas",
+        "kind": "lemma",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:lemma:1",
+                "rank": 1,
+                "value": "the"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:the:det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:lemma:1",
+                "rank": 1,
+                "value": "florped",
+                "notes": [
+                  "Suffix backoff keeps the surface form as an adjective candidate."
+                ]
+              },
+              {
+                "id": "token-2:lemma:2",
+                "rank": 2,
+                "value": "florp",
+                "notes": [
+                  "Suffix backoff emits a participial verb alternative."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "fallback:suffix-ed:adjective"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "fallback:suffix-ed:verb"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:lemma:1",
+                "rank": 1,
+                "value": "host"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:host:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-4:lemma:1",
+                "rank": 1,
+                "value": "sign"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:signs:verb"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:signs:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-5:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-5"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-5:lemma:1",
+                "rank": 1,
+                "value": "."
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "morphology",
+        "kind": "morphology",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Definite",
+                    "value": "Def"
+                  },
+                  {
+                    "name": "PronType",
+                    "value": "Art"
+                  }
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:the:det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Degree",
+                    "value": "Pos"
+                  }
+                ],
+                "notes": [
+                  "Suffix backoff keeps the surface form as an adjective candidate."
+                ]
+              },
+              {
+                "id": "token-2:morphology:2",
+                "rank": 2,
+                "features": [
+                  {
+                    "name": "Tense",
+                    "value": "Past"
+                  },
+                  {
+                    "name": "VerbForm",
+                    "value": "Part"
+                  }
+                ],
+                "notes": [
+                  "Suffix backoff emits a participial verb alternative."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "fallback:suffix-ed:adjective"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "fallback:suffix-ed:verb"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  }
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:host:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-4:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "Person",
+                    "value": "3"
+                  },
+                  {
+                    "name": "Tense",
+                    "value": "Pres"
+                  },
+                  {
+                    "name": "VerbForm",
+                    "value": "Fin"
+                  }
+                ]
+              },
+              {
+                "id": "token-4:morphology:2",
+                "rank": 2,
+                "features": [
+                  {
+                    "name": "Number",
+                    "value": "Plur"
+                  }
+                ],
+                "notes": [
+                  "Surface form remains ambiguous without a broader syntactic model."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "en-unknown-word",
+                "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-en-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:signs:verb"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:en:signs:noun"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "phenomenon:unknown-word"
+    ]
+  },
+  "notes": [
+    "unknown-word:Unknown token florped uses suffix backoff analyses."
+  ]
+}

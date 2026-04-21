@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "packId": "pack:pos-core",
+  "packageName": "@ismail-elkorchi/textpack-pos-core",
+  "version": "0.0.0",
+  "resources": [
+    {
+      "resourceId": "lexicon-en-core",
+      "lookupKey": "lexicon.pos.en.core",
+      "kind": "lexicon",
+      "path": "fixtures/pos-morph-lemma/resources/textpack-pos-core/en.lexicon.json",
+      "language": "en",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    },
+    {
+      "resourceId": "lexicon-es-core",
+      "lookupKey": "lexicon.pos.es.core",
+      "kind": "lexicon",
+      "path": "fixtures/pos-morph-lemma/resources/textpack-pos-core/es.lexicon.json",
+      "language": "es",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    },
+    {
+      "resourceId": "lexicon-fr-core",
+      "lookupKey": "lexicon.pos.fr.core",
+      "kind": "lexicon",
+      "path": "fixtures/pos-morph-lemma/resources/textpack-pos-core/fr.lexicon.json",
+      "language": "fr",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "license-cc0",
+      "spdx": "CC0-1.0",
+      "attribution": "Prepared for repository fixtures."
+    }
+  ],
+  "provenance": [
+    {
+      "id": "prov-hand-curated",
+      "origin": "repository-fixture",
+      "version": "2026-04-21",
+      "createdBy": "text-computing"
+    }
+  ],
+  "entrypoints": {
+    "manifest": "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
+    "resourceRoot": "fixtures/pos-morph-lemma/resources"
+  },
+  "tests": {
+    "smoke": [
+      "fixtures/pos-morph-lemma/resources/textpack-pos-core/en.lexicon.json"
+    ],
+    "lookup": [
+      "lookup:lexicon:en",
+      "lookup:lexicon:es",
+      "lookup:lexicon:fr"
+    ],
+    "overlay": [
+      "overlay:lexicon:en"
+    ]
+  }
+}

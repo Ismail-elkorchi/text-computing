@@ -14,7 +14,7 @@ validation.
 ## Fixture sets
 
 - [`tokenization-sbd/`](tokenization-sbd/)
-- [`pos-morph-lemma/`](pos-morph-lemma/) — readiness slices and comparator freeze for issue `#10`.
+- [`pos-morph-lemma/`](pos-morph-lemma/) — readiness slices, pack-backed lexicon fixtures, and recorded goldens for issue `#10`.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue

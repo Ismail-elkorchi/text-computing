@@ -1,0 +1,884 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "fr-clitic-historical",
+  "source": {
+    "sliceId": "fr-clitic-historical",
+    "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "pos-morph-lemma:fr-clitic-historical",
+    "revision": "pos-morph-lemma-v1",
+    "textLengthCU": 18,
+    "text": "L'hoste s'escrist.",
+    "source": {
+      "id": "fr-clitic-historical",
+      "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      {
+        "id": "source-view",
+        "kind": "source",
+        "description": "Original source text for POS, lemma, and morphology analysis."
+      },
+      {
+        "id": "analysis-view",
+        "kind": "analysis",
+        "description": "Deterministic textrules POS, lemma, and morphology annotations.",
+        "derivedFrom": [
+          "source-view"
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 2
+              }
+            ],
+            "text": "L'",
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            },
+            "notes": [
+              "Elided clitic boundary is preserved as a token-level split."
+            ]
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 2,
+                "endCU": 7
+              }
+            ],
+            "text": "hoste",
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 8,
+                "endCU": 10
+              }
+            ],
+            "text": "s'",
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            },
+            "notes": [
+              "Elided clitic boundary is preserved as a token-level split."
+            ]
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 10,
+                "endCU": 17
+              }
+            ],
+            "text": "escrist",
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 17,
+                "endCU": 18
+              }
+            ],
+            "text": ".",
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 18
+              }
+            ],
+            "text": "L'hoste s'escrist.",
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "sentence-boundary:terminal-punctuation-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pos",
+        "kind": "pos",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-1:pos:1",
+                "rank": 1,
+                "value": "DET",
+                "notes": [
+                  "Elided article remains explicit at the token layer."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:l':det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-2:pos:1",
+                "rank": 1,
+                "value": "NOUN",
+                "notes": [
+                  "Historical spelling remains available as a surface-preserving lemma."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:hoste:noun-surface"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:hoste:noun-modernized"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-3:pos:1",
+                "rank": 1,
+                "value": "PRON",
+                "notes": [
+                  "Reflexive clitic remains explicit at the token layer."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:s':pron"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-4:pos:1",
+                "rank": 1,
+                "value": "VERB",
+                "notes": [
+                  "Historical orthography remains explicit as a lemma alternative."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:escrist:verb-surface"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:escrist:verb-modernized"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-5:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-5"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-5:pos:1",
+                "rank": 1,
+                "value": "PUNCT"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "lemmas",
+        "kind": "lemma",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:lemma:1",
+                "rank": 1,
+                "value": "le",
+                "notes": [
+                  "Elided article remains explicit at the token layer."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:l':det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:lemma:1",
+                "rank": 1,
+                "value": "hoste",
+                "notes": [
+                  "Historical spelling remains available as a surface-preserving lemma."
+                ]
+              },
+              {
+                "id": "token-2:lemma:2",
+                "rank": 2,
+                "value": "hôte",
+                "notes": [
+                  "Modernized lemma remains explicit instead of replacing the historical form."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:hoste:noun-surface"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:hoste:noun-modernized"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:lemma:1",
+                "rank": 1,
+                "value": "se",
+                "notes": [
+                  "Reflexive clitic remains explicit at the token layer."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:s':pron"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-4:lemma:1",
+                "rank": 1,
+                "value": "escrire",
+                "notes": [
+                  "Historical orthography remains explicit as a lemma alternative."
+                ]
+              },
+              {
+                "id": "token-4:lemma:2",
+                "rank": 2,
+                "value": "écrire",
+                "notes": [
+                  "Modernized lemma remains explicit instead of replacing the historical form."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:escrist:verb-surface"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:escrist:verb-modernized"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-5:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-5"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-5:lemma:1",
+                "rank": 1,
+                "value": "."
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "morphology",
+        "kind": "morphology",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Definite",
+                    "value": "Def"
+                  },
+                  {
+                    "name": "PronType",
+                    "value": "Art"
+                  }
+                ],
+                "notes": [
+                  "Elided article remains explicit at the token layer."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:l':det"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  }
+                ],
+                "notes": [
+                  "Historical spelling remains available as a surface-preserving lemma."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:hoste:noun-surface"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:hoste:noun-modernized"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Person",
+                    "value": "3"
+                  },
+                  {
+                    "name": "PronType",
+                    "value": "Prs"
+                  },
+                  {
+                    "name": "Reflex",
+                    "value": "Yes"
+                  }
+                ],
+                "notes": [
+                  "Reflexive clitic remains explicit at the token layer."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:s':pron"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-4:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Mood",
+                    "value": "Ind"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "Person",
+                    "value": "3"
+                  },
+                  {
+                    "name": "Tense",
+                    "value": "Past"
+                  },
+                  {
+                    "name": "VerbForm",
+                    "value": "Fin"
+                  }
+                ],
+                "notes": [
+                  "Historical orthography remains explicit as a lemma alternative."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fr-clitic-historical",
+                "sha256": "9b721661c7838fb70f8bd0a171d35507ab69223a4ff946856615d0f2d16834c0"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-core:lexicon-fr-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:escrist:verb-surface"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fr:escrist:verb-modernized"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "phenomenon:clitic",
+      "phenomenon:historical-spelling"
+    ]
+  },
+  "notes": [
+    "clitic-token:Clitic token L' preserves an apostrophe boundary.",
+    "clitic-token:Clitic token s' preserves an apostrophe boundary.",
+    "historical-spelling:Historical surface escrist keeps surface-preserving and normalized analyses.",
+    "historical-spelling:Historical surface hoste keeps surface-preserving and normalized analyses."
+  ]
+}
