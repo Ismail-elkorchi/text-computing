@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "packId": "pack:overlay-conflict-a",
+  "packageName": "@ismail-elkorchi/textpack-overlay-conflict-a",
+  "version": "0.0.0",
+  "resources": [
+    {
+      "resourceId": "stopwords-en-conflict-a",
+      "lookupKey": "stopwords.en.conflict",
+      "kind": "stopwords",
+      "path": "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
+      "language": "en",
+      "overlayPrecedence": 40,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "license-cc0",
+      "spdx": "CC0-1.0"
+    }
+  ],
+  "provenance": [
+    {
+      "id": "prov-hand-curated",
+      "origin": "repository-fixture"
+    }
+  ],
+  "entrypoints": {
+    "manifest": "fixtures/textpack/invalid/overlay-conflict-a.json"
+  },
+  "tests": {
+    "smoke": ["fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"],
+    "lookup": ["lookup:stopwords:en"],
+    "overlay": ["overlay:stopwords:en"]
+  }
+}

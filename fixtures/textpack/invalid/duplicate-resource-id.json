@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "packId": "pack:invalid-duplicate",
+  "packageName": "@ismail-elkorchi/textpack-invalid-duplicate",
+  "version": "0.0.0",
+  "resources": [
+    {
+      "resourceId": "stopwords-en-duplicate",
+      "lookupKey": "stopwords.en.duplicate",
+      "kind": "stopwords",
+      "path": "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
+      "language": "en",
+      "overlayPrecedence": 10,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    },
+    {
+      "resourceId": "stopwords-en-duplicate",
+      "lookupKey": "stopwords.en.duplicate.overlay",
+      "kind": "stopwords",
+      "path": "fixtures/textpack/resources/textpack-en-legal/stopwords.en.legal.txt",
+      "language": "en",
+      "overlayPrecedence": 20,
+      "licenseId": "license-cc0",
+      "provenanceId": "prov-hand-curated"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "license-cc0",
+      "spdx": "CC0-1.0"
+    }
+  ],
+  "provenance": [
+    {
+      "id": "prov-hand-curated",
+      "origin": "repository-fixture"
+    }
+  ],
+  "entrypoints": {
+    "manifest": "fixtures/textpack/invalid/duplicate-resource-id.json"
+  },
+  "tests": {
+    "smoke": ["fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"],
+    "lookup": ["lookup:stopwords:en"],
+    "overlay": ["overlay:stopwords:en"]
+  }
+}
