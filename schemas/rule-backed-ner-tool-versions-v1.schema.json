@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/rule-backed-ner-tool-versions-v1.schema.json",
+  "title": "Rule-backed NER comparator versions v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "targetLabelPolicy",
+    "targetLabels",
+    "allowNestedSpans",
+    "allowOverlapDiagnostics",
+    "comparators"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "targetLabelPolicy": { "type": "string", "minLength": 1 },
+    "targetLabels": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "enum": ["PER", "ORG", "LOC"] }
+    },
+    "allowNestedSpans": { "const": true },
+    "allowOverlapDiagnostics": { "const": true },
+    "comparators": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/definitions/comparator" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "comparator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "runtime", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "runtime": { "enum": ["python", "javascript", "jvm"] },
+        "version": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "modelVersion": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

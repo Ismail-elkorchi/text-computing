@@ -9,6 +9,8 @@ A specification document must state its scope, version, normative language, and 
 - [`tokenization-sbd-readiness.md`](tokenization-sbd-readiness.md)
 - [`pos-morph-lemma-readiness.md`](pos-morph-lemma-readiness.md) — readiness gate for issue `#10`.
 - [`nlp-pos-morph-lemma-research-ledger.md`](nlp-pos-morph-lemma-research-ledger.md) — research ledger for POS, lemma, and morphology readiness.
+- [`rule-backed-ner-readiness.md`](rule-backed-ner-readiness.md) — readiness gate for issue `#13`.
+- [`nlp-rule-backed-ner-research-ledger.md`](nlp-rule-backed-ner-research-ledger.md) — research ledger for rule-backed NER readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`textdoc-document-annotation-model.md`](textdoc-document-annotation-model.md) — structural contract for the document annotation model used by issue `#11`.
 - [`textpack-resource-manifest.md`](textpack-resource-manifest.md) — manifest and lookup contract for issue `#12`.

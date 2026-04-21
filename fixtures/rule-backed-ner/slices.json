@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "expectedOutputStatus": "schema-defined",
+  "allowedFixturePolicy": "repository-authored-public-safe-v1",
+  "slices": [
+    {
+      "id": "org-alias-ibm",
+      "languageHint": "en",
+      "phenomena": ["alias"],
+      "fixtureClass": "repository-authored",
+      "source": {
+        "kind": "text",
+        "text": "International Business Machines (IBM) hired Alice Smith."
+      },
+      "notes": ["Alias slice for full-name and short-name organization mentions."]
+    },
+    {
+      "id": "nested-uc-berkeley",
+      "languageHint": "en",
+      "phenomena": ["nested-span", "overlapping-span"],
+      "fixtureClass": "repository-authored",
+      "source": {
+        "kind": "text",
+        "text": "The University of California, Berkeley campus reopened."
+      },
+      "notes": ["Nested and overlapping entity slice with organization and location readings."]
+    },
+    {
+      "id": "capitalization-apple-false-match",
+      "languageHint": "en",
+      "phenomena": ["capitalization-ambiguity", "false-match"],
+      "fixtureClass": "repository-authored",
+      "source": {
+        "kind": "text",
+        "text": "apple growers protested outside Apple in New York."
+      },
+      "notes": ["Lowercase common noun should remain non-entity while Apple and New York stay eligible."]
+    }
+  ]
+}
