@@ -63,15 +63,6 @@ const normalized = normalize("Cafe\u0301", "NFC");
 console.log(normalized); // "Café"
 ```
 
-Agent-first pack:
-```ts
-import { analyzeText } from "@ismail-elkorchi/textfacts/pack";
-
-const pack = analyzeText("a a b", { topK: 2 });
-console.log(pack.frequencies.words);
-console.log(pack.provenance);
-```
-
 **Provenance fields**
 ```ts
 {
@@ -99,7 +90,8 @@ console.log(pack.provenance);
 - Streaming-friendly iterables for segmentation (no token arrays unless you materialize them).
 
 **Project status**
-v0.1.0 (alpha): UAX #29 segmentation, UAX #15 normalization, and deterministic word facts + starter agent packs.
+v0.1.0 (alpha): UAX #29 segmentation, UAX #15 normalization, deterministic word facts, and
+Unicode integrity/IDNA helpers.
 
 ## Docs and Project Records
 - [Documentation index](https://github.com/Ismail-elkorchi/text-computing/blob/main/packages/textfacts/docs/INDEX.md)

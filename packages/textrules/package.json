@@ -8,6 +8,12 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "dependencies": {
+    "@ismail-elkorchi/textconformance": "0.0.0",
+    "@ismail-elkorchi/textdoc": "0.0.0",
+    "@ismail-elkorchi/textpack": "0.0.0",
+    "@ismail-elkorchi/textprotocol": "0.0.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
     "test": "tsc -p tsconfig.json --noEmit && node test/index.test.ts"

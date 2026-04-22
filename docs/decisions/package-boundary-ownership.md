@@ -20,9 +20,14 @@ growth starts.
   `@ismail-elkorchi/textconformance`.
 - New pack/resource manifest and loader contracts land in
   `@ismail-elkorchi/textpack`.
-- `@ismail-elkorchi/textfacts` may keep its existing single-text utilities, but
-  new public repository-level envelope, resource, or conformance responsibilities
-  do not expand there.
+- `@ismail-elkorchi/textfacts` keeps its single-text deterministic utilities and
+  its legacy public `pack`/`protocol`/`schema` helpers for now, but new public
+  repository-level envelope, resource, or conformance responsibilities do not
+  expand there.
+- Pack and corpus-style helpers in `@ismail-elkorchi/textfacts` are frozen as a
+  legacy surface until a dedicated owner package lands.
+- Workspace packages import each other through package names, not sibling source
+  paths.
 
 ## Consequences
 
@@ -30,6 +35,8 @@ growth starts.
   envelopes and referenced by `textconformance` reports.
 - Later work for issues `#11`, `#12`, `#10`, `#13`, and `#14` follows the same
   package boundary.
+- `textrules` and later workspace packages consume sibling contracts through
+  package entrypoints, which keeps workspace boundaries testable.
 
 ## Validation evidence
 

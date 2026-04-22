@@ -5,6 +5,7 @@
 - Agent-first FactPack (`analyzeText`, `analyzeCorpus`)
 - Canonical JSON helpers + determinism hashing utilities
 - Offline Unicode conformance test data vendored in-repo
+- Freeze legacy pack/corpus helpers in `textfacts`; new cross-package orchestration work lands in dedicated owner packages.
 
 ## 0.1.0
 - Initial release
