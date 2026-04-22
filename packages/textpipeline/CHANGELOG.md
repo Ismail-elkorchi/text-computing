@@ -2,4 +2,4 @@
 
 ## 0.0.0
 
-- Establish package workspace metadata; no public API beyond the package identity export.
+- Add the deterministic processor descriptor contract, synchronous runner, and trace payload shape.
