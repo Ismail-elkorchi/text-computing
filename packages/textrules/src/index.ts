@@ -14,20 +14,20 @@ import {
   type TextDocReferenceRef,
   type TextDocStringAlternative,
   type TextDocView,
-} from "../../textdoc/src/index.ts";
+} from "@ismail-elkorchi/textdoc";
 import {
   conformanceReportSchemaId,
   conformanceReportSchemaVersion,
   type TextConformanceCheckStatus,
   type TextConformanceReportV1,
-} from "../../textconformance/src/index.ts";
+} from "@ismail-elkorchi/textconformance";
 import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
   type TextProtocolDiagnostic,
   type TextProtocolResultEnvelopeV1,
-} from "../../textprotocol/src/index.ts";
-import type { TextPackResolvedResource } from "../../textpack/src/index.ts";
+} from "@ismail-elkorchi/textprotocol";
+import type { TextPackResolvedResource } from "@ismail-elkorchi/textpack";
 
 export const packageName = "@ismail-elkorchi/textrules" as const;
 export const posMorphLemmaRevision = "pos-morph-lemma-v1" as const;

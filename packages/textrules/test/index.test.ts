@@ -1,6 +1,6 @@
-import { isTextConformanceReportV1 } from "../../textconformance/src/index.ts";
-import { isTextDocDocumentV1 } from "../../textdoc/src/index.ts";
-import { isTextProtocolResultEnvelopeV1 } from "../../textprotocol/src/index.ts";
+import { isTextConformanceReportV1 } from "@ismail-elkorchi/textconformance";
+import { isTextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
+import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   analyzePosMorphLemma,
   createPosMorphLemmaConformanceReport,
