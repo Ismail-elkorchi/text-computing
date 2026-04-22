@@ -2,7 +2,7 @@
 
 `text-computing` is the public workspace for deterministic text computing packages.
 
-The current publishable npm package is `@ismail-elkorchi/textfacts`. Its implementation lives in `packages/textfacts`.
+The current non-private workspace package is `@ismail-elkorchi/textfacts`. Its implementation lives in `packages/textfacts`.
 
 ## Packages
 

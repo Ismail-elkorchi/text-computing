@@ -1,3 +1,7 @@
 # @ismail-elkorchi/textprotocol examples
 
-This directory will contain runnable examples after the package exposes reviewed behavior beyond its package identity export.
+Runnable examples are not published yet.
+
+The package already exposes the `textprotocol-result-envelope-v1` contract. Future examples in this
+directory should wrap repository fixture outputs with explicit producer metadata, provenance, and
+diagnostics.
