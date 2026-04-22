@@ -1,3 +1,4 @@
 # @ismail-elkorchi/textpipeline examples
 
-This directory will contain runnable examples after the package exposes reviewed behavior beyond its package identity export.
+This directory will contain runnable examples that compose `TextDocDocumentV1` inputs with
+deterministic processor descriptors and serialized `textpipeline-trace` outputs.

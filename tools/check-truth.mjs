@@ -50,6 +50,20 @@ const checks = [
       "will contain runnable examples after the package exposes reviewed behavior beyond its package identity export",
     ],
   },
+  {
+    path: "README.md",
+    forbidden: ["@ismail-elkorchi/textpipeline` — deterministic pipeline package placeholder."],
+  },
+  {
+    path: "packages/textpipeline/CHANGELOG.md",
+    forbidden: ["no public API beyond the package identity export"],
+  },
+  {
+    path: "packages/textpipeline/examples/README.md",
+    forbidden: [
+      "will contain runnable examples after the package exposes reviewed behavior beyond its package identity export",
+    ],
+  },
 ];
 
 async function main() {

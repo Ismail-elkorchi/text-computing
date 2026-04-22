@@ -3,6 +3,18 @@
     "target": "ES2024",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "baseUrl": ".",
+    "paths": {
+      "@ismail-elkorchi/textfacts": ["packages/textfacts/src/index.ts"],
+      "@ismail-elkorchi/textdoc": ["packages/textdoc/src/index.ts"],
+      "@ismail-elkorchi/textpack": ["packages/textpack/src/index.ts"],
+      "@ismail-elkorchi/textrules": ["packages/textrules/src/index.ts"],
+      "@ismail-elkorchi/textpipeline": ["packages/textpipeline/src/index.ts"],
+      "@ismail-elkorchi/textcorpus": ["packages/textcorpus/src/index.ts"],
+      "@ismail-elkorchi/textprotocol": ["packages/textprotocol/src/index.ts"],
+      "@ismail-elkorchi/textconformance": ["packages/textconformance/src/index.ts"],
+      "@ismail-elkorchi/textlab": ["packages/textlab/src/index.ts"]
+    },
     "allowImportingTsExtensions": true,
     "lib": ["ES2024", "DOM"],
     "strict": true,

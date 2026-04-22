@@ -10,7 +10,7 @@ The current non-private workspace package is `@ismail-elkorchi/textfacts`. Its i
 - `@ismail-elkorchi/textdoc` — document annotation container package.
 - `@ismail-elkorchi/textpack` — text resource package.
 - `@ismail-elkorchi/textrules` — deterministic rules package with POS, lemma, and morphology slice validation.
-- `@ismail-elkorchi/textpipeline` — deterministic pipeline package placeholder.
+- `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
 - `@ismail-elkorchi/textcorpus` — corpus feature package placeholder.
 - `@ismail-elkorchi/textprotocol` — result envelope package.
 - `@ismail-elkorchi/textconformance` — conformance report package.

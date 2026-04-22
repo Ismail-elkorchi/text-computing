@@ -1,16 +1,20 @@
 {
   "name": "@ismail-elkorchi/textpipeline",
   "version": "0.0.0",
-  "description": "Deterministic text pipeline package.",
+  "description": "Deterministic text pipeline processor contract package.",
   "type": "module",
   "private": true,
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts"
   },
+  "dependencies": {
+    "@ismail-elkorchi/textdoc": "0.0.0",
+    "@ismail-elkorchi/textprotocol": "0.0.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
-    "test": "tsc -p tsconfig.json --noEmit"
+    "test": "tsc -p tsconfig.json --noEmit && node test/index.test.ts"
   },
   "license": "MIT"
 }
