@@ -9,6 +9,13 @@ const checks = [
     forbidden: ["current publishable npm package"],
   },
   {
+    path: "README.md",
+    forbidden: [
+      "@ismail-elkorchi/textcorpus` — corpus feature package placeholder.",
+      "@ismail-elkorchi/textlab` — inspection command package placeholder.",
+    ],
+  },
+  {
     path: "CONTRIBUTING.md",
     forbidden: ["current publishable npm package"],
   },

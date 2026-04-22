@@ -3,18 +3,19 @@
 `text-computing` is the public workspace for deterministic text computing packages.
 
 The current non-private workspace package is `@ismail-elkorchi/textfacts`. Its implementation lives in `packages/textfacts`.
+Current implementation status is tracked in [`docs/specs/support-status.md`](docs/specs/support-status.md).
 
 ## Packages
 
 - `@ismail-elkorchi/textfacts` — deterministic, Unicode-pinned text facts.
 - `@ismail-elkorchi/textdoc` — document annotation container package.
 - `@ismail-elkorchi/textpack` — text resource package.
-- `@ismail-elkorchi/textrules` — deterministic rules package with POS, lemma, and morphology slice validation.
+- `@ismail-elkorchi/textrules` — deterministic rules package.
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
-- `@ismail-elkorchi/textcorpus` — corpus feature package placeholder.
+- `@ismail-elkorchi/textcorpus` — corpus feature package.
 - `@ismail-elkorchi/textprotocol` — result envelope package.
 - `@ismail-elkorchi/textconformance` — conformance report package.
-- `@ismail-elkorchi/textlab` — inspection command package placeholder.
+- `@ismail-elkorchi/textlab` — inspection command package.
 
 ## Development
 
