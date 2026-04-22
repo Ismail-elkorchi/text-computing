@@ -1,16 +1,20 @@
 {
   "name": "@ismail-elkorchi/textcorpus",
   "version": "0.0.0",
-  "description": "Deterministic corpus feature package.",
+  "description": "Deterministic corpus collection and fingerprint package.",
   "type": "module",
   "private": true,
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts"
   },
+  "dependencies": {
+    "@ismail-elkorchi/textdoc": "0.0.0",
+    "@ismail-elkorchi/textfacts": "0.1.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
-    "test": "tsc -p tsconfig.json --noEmit"
+    "test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textfacts/dist/mod.js ]; then npm -w @ismail-elkorchi/textfacts run build >/dev/null; fi && node test/index.test.ts"
   },
   "license": "MIT"
 }

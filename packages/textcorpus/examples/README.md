@@ -1,3 +1,4 @@
 # @ismail-elkorchi/textcorpus examples
 
-This directory will contain runnable examples after the package exposes reviewed behavior beyond its package identity export.
+This directory will contain runnable examples that build `TextCorpusCollectionV1` inputs from
+`textdoc` token layers and inspect deterministic corpus fingerprints.

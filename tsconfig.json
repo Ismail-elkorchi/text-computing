@@ -5,7 +5,8 @@
     "moduleResolution": "NodeNext",
     "baseUrl": ".",
     "paths": {
-      "@ismail-elkorchi/textfacts": ["packages/textfacts/src/index.ts"],
+      "@ismail-elkorchi/textfacts": ["packages/textfacts/mod.ts"],
+      "@ismail-elkorchi/textfacts/*": ["packages/textfacts/src/*/mod.ts"],
       "@ismail-elkorchi/textdoc": ["packages/textdoc/src/index.ts"],
       "@ismail-elkorchi/textpack": ["packages/textpack/src/index.ts"],
       "@ismail-elkorchi/textrules": ["packages/textrules/src/index.ts"],

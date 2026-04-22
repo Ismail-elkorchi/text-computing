@@ -71,6 +71,16 @@ const checks = [
       "will contain runnable examples after the package exposes reviewed behavior beyond its package identity export",
     ],
   },
+  {
+    path: "packages/textcorpus/CHANGELOG.md",
+    forbidden: ["no public API beyond the package identity export"],
+  },
+  {
+    path: "packages/textcorpus/examples/README.md",
+    forbidden: [
+      "will contain runnable examples after the package exposes reviewed behavior beyond its package identity export",
+    ],
+  },
 ];
 
 async function main() {

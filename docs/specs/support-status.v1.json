@@ -28,8 +28,8 @@
     },
     {
       "name": "@ismail-elkorchi/textcorpus",
-      "status": "absent",
-      "scope": "Only the workspace scaffold exists; no public corpus contract or behavior is implemented yet."
+      "status": "implemented",
+      "scope": "Explicit-token corpus collections, metadata slicing, and deterministic fingerprint indexing are implemented; TF-IDF and BM25 are still absent."
     },
     {
       "name": "@ismail-elkorchi/textprotocol",
