@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "name": "@ismail-elkorchi/textfacts",
+      "status": "implemented",
+      "scope": "Deterministic single-text kernel. Legacy public pack/protocol/schema helpers are frozen; new cross-package growth does not land here."
+    },
+    {
+      "name": "@ismail-elkorchi/textdoc",
+      "status": "implemented",
+      "scope": "Document containers, lifecycle, provenance, and annotation-layer validation are implemented."
+    },
+    {
+      "name": "@ismail-elkorchi/textpack",
+      "status": "implemented",
+      "scope": "Manifest validation, licensed fixture resources, overlay precedence, and conflict diagnostics are implemented."
+    },
+    {
+      "name": "@ismail-elkorchi/textrules",
+      "status": "implemented",
+      "scope": "Rule-backed POS, lemma, and morphology behavior is implemented only for the frozen issue #10 slices."
+    },
+    {
+      "name": "@ismail-elkorchi/textpipeline",
+      "status": "implemented",
+      "scope": "The synchronous deterministic processor contract and execution trace are implemented; async, streaming, batching, and caching are still absent."
+    },
+    {
+      "name": "@ismail-elkorchi/textcorpus",
+      "status": "absent",
+      "scope": "Only the workspace scaffold exists; no public corpus contract or behavior is implemented yet."
+    },
+    {
+      "name": "@ismail-elkorchi/textprotocol",
+      "status": "implemented",
+      "scope": "Result-envelope types, runtime guards, and repository schema are implemented."
+    },
+    {
+      "name": "@ismail-elkorchi/textconformance",
+      "status": "implemented",
+      "scope": "Machine-readable conformance reports and runtime guards are implemented."
+    },
+    {
+      "name": "@ismail-elkorchi/textlab",
+      "status": "absent",
+      "scope": "Only the workspace scaffold exists; no public inspection-command behavior is implemented yet."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "nlp-tokenization-sbd",
+      "status": "implemented",
+      "scope": "Frozen fixtures, expected outputs, comparator captures, and executable behavior are present for the current slices."
+    },
+    {
+      "id": "nlp-document-annotation-model",
+      "status": "implemented",
+      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, and round-trip validation are implemented."
+    },
+    {
+      "id": "nlp-pack-resource-manifest",
+      "status": "implemented",
+      "scope": "Resource-manifest validation, licensed fixtures, and overlay-conflict policy are implemented."
+    },
+    {
+      "id": "nlp-pos-morph-lemma",
+      "status": "implemented",
+      "scope": "Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices."
+    },
+    {
+      "id": "nlp-rule-backed-ner",
+      "status": "readiness-only",
+      "scope": "Research, slices, comparator versions, label policy, and expected-output schema are frozen; behavior is not implemented yet."
+    },
+    {
+      "id": "nlp-corpus-tfidf-bm25",
+      "status": "absent",
+      "scope": "No public readiness artifacts or feature behavior are implemented yet."
+    }
+  ]
+}
