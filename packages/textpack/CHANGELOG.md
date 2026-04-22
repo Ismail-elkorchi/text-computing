@@ -2,4 +2,5 @@
 
 ## 0.0.0
 
-- Establish package workspace metadata; no public API beyond the package identity export.
+- Establish package workspace metadata.
+- Add the `textpack-manifest-v1` contract, manifest guards, and deterministic resource lookup ordering.

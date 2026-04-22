@@ -2,7 +2,7 @@
 
 Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
 
-The current publishable npm package is `@ismail-elkorchi/textfacts`, with source and package-local tools under `packages/textfacts`.
+The current non-private workspace package is `@ismail-elkorchi/textfacts`, with source and package-local tools under `packages/textfacts`.
 
 **Prerequisites**
 - Node.js 24+
@@ -36,7 +36,8 @@ All tests run offline. Unicode conformance test files are vendored under `packag
 npm run schema:validate
 ```
 
-Validates JSON Schemas against the 2020-12 meta-schema and enforces I-JSON safety.
+Validates repository-level schemas against their declared JSON Schema drafts, validates
+`packages/textfacts/schemas/*.schema.json` against draft 2020-12, and enforces I-JSON safety.
 
 **Fixture validation**
 ```sh
