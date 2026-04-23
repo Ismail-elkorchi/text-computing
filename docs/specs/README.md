@@ -11,6 +11,8 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-pos-morph-lemma-research-ledger.md`](nlp-pos-morph-lemma-research-ledger.md) — research ledger for POS, lemma, and morphology readiness.
 - [`rule-backed-ner-readiness.md`](rule-backed-ner-readiness.md) — readiness gate for issue `#13`.
 - [`nlp-rule-backed-ner-research-ledger.md`](nlp-rule-backed-ner-research-ledger.md) — research ledger for rule-backed NER readiness.
+- [`corpus-tfidf-bm25-readiness.md`](corpus-tfidf-bm25-readiness.md) — readiness gate for issue `#14`.
+- [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.

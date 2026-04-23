@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "corpusId": "corpus-tfidf-bm25-smoke",
+  "formulaSet": [
+    "tf.raw-count",
+    "df.document-count",
+    "tfidf.sklearn-smooth-raw",
+    "bm25.okapi.k1-1.5.b-0.75"
+  ],
+  "documentOrder": [
+    "doc-a",
+    "doc-b",
+    "doc-c",
+    "doc-empty"
+  ],
+  "termOrder": [
+    "alpha",
+    "beta",
+    "delta",
+    "gamma"
+  ],
+  "tolerance": 1e-12,
+  "documents": [
+    {
+      "id": "doc-a",
+      "length": 3,
+      "tf": [
+        {
+          "term": "alpha",
+          "value": 1
+        },
+        {
+          "term": "beta",
+          "value": 2
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "alpha",
+          "value": 1.5108256237659907
+        },
+        {
+          "term": "beta",
+          "value": 3.83258146374831
+        }
+      ]
+    },
+    {
+      "id": "doc-b",
+      "length": 2,
+      "tf": [
+        {
+          "term": "alpha",
+          "value": 1
+        },
+        {
+          "term": "gamma",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "alpha",
+          "value": 1.5108256237659907
+        },
+        {
+          "term": "gamma",
+          "value": 1.916290731874155
+        }
+      ]
+    },
+    {
+      "id": "doc-c",
+      "length": 1,
+      "tf": [
+        {
+          "term": "delta",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "delta",
+          "value": 1.916290731874155
+        }
+      ]
+    },
+    {
+      "id": "doc-empty",
+      "length": 0,
+      "tf": [],
+      "tfidf": []
+    }
+  ],
+  "queries": [
+    {
+      "id": "alpha-beta",
+      "bm25": [
+        {
+          "docId": "doc-a",
+          "score": 0.9159976869050851
+        },
+        {
+          "docId": "doc-b",
+          "score": 0
+        },
+        {
+          "docId": "doc-c",
+          "score": 0
+        },
+        {
+          "docId": "doc-empty",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "id": "delta",
+      "bm25": [
+        {
+          "docId": "doc-a",
+          "score": 0
+        },
+        {
+          "docId": "doc-b",
+          "score": 0
+        },
+        {
+          "docId": "doc-c",
+          "score": 0.9968210122202397
+        },
+        {
+          "docId": "doc-empty",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "id": "missing",
+      "bm25": [
+        {
+          "docId": "doc-a",
+          "score": 0
+        },
+        {
+          "docId": "doc-b",
+          "score": 0
+        },
+        {
+          "docId": "doc-c",
+          "score": 0
+        },
+        {
+          "docId": "doc-empty",
+          "score": 0
+        }
+      ]
+    }
+  ]
+}

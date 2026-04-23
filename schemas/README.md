@@ -16,6 +16,10 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`rule-backed-ner-slices-v1.schema.json`](rule-backed-ner-slices-v1.schema.json) — readiness slice schema for issue `#13`.
 - [`rule-backed-ner-tool-versions-v1.schema.json`](rule-backed-ner-tool-versions-v1.schema.json) — frozen comparator/version schema for issue `#13`.
 - [`rule-backed-ner-comparison-v1.schema.json`](rule-backed-ner-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#13`.
+- [`corpus-tfidf-bm25-expected-v1.schema.json`](corpus-tfidf-bm25-expected-v1.schema.json) — expected-output schema for issue `#14`.
+- [`corpus-tfidf-bm25-slices-v1.schema.json`](corpus-tfidf-bm25-slices-v1.schema.json) — readiness corpus schema for issue `#14`.
+- [`corpus-tfidf-bm25-tool-versions-v1.schema.json`](corpus-tfidf-bm25-tool-versions-v1.schema.json) — frozen formula/comparator schema for issue `#14`.
+- [`corpus-tfidf-bm25-comparison-v1.schema.json`](corpus-tfidf-bm25-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#14`.
 - [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.
 - [`textdoc-document-v1.schema.json`](textdoc-document-v1.schema.json) — document annotation model schema for issue `#11`.

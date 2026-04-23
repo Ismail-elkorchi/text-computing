@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-corpus-tfidf-bm25",
+  "expectedOutputStatus": "recorded",
+  "corpora": [
+    {
+      "id": "corpus-tfidf-bm25-smoke",
+      "description": "Small explicit-token corpus covering shared terms, repeated terms, singleton terms, an empty document, and missing-query terms.",
+      "tokenPolicy": "tokens are predeclared lower-case lexical tokens; no tokenization is performed by this readiness fixture",
+      "phenomena": [
+        "repeated-term",
+        "shared-term",
+        "singleton-term",
+        "empty-document",
+        "missing-query-term",
+        "stable-ordering"
+      ],
+      "documents": [
+        {
+          "id": "doc-a",
+          "tokens": [
+            "alpha",
+            "beta",
+            "beta"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "news"
+          }
+        },
+        {
+          "id": "doc-b",
+          "tokens": [
+            "alpha",
+            "gamma"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "news"
+          }
+        },
+        {
+          "id": "doc-c",
+          "tokens": [
+            "delta"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "note"
+          }
+        },
+        {
+          "id": "doc-empty",
+          "tokens": [],
+          "metadata": {
+            "language": "en",
+            "genre": "empty-control"
+          }
+        }
+      ],
+      "queries": [
+        {
+          "id": "alpha-beta",
+          "tokens": [
+            "alpha",
+            "beta"
+          ]
+        },
+        {
+          "id": "delta",
+          "tokens": [
+            "delta"
+          ]
+        },
+        {
+          "id": "missing",
+          "tokens": [
+            "missing"
+          ]
+        }
+      ]
+    }
+  ]
+}

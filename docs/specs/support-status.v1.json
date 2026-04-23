@@ -75,8 +75,8 @@
     },
     {
       "id": "nlp-corpus-tfidf-bm25",
-      "status": "absent",
-      "scope": "No public readiness artifacts or feature behavior are implemented yet."
+      "status": "readiness-only",
+      "scope": "Formula policy, explicit-token corpus slices, expected outputs, comparator captures, and numeric tolerance are frozen; behavior is not implemented yet."
     }
   ]
 }

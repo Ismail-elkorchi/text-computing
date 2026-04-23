@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "comparator": {
+    "name": "Natural",
+    "version": "8.1.1",
+    "runtime": "javascript"
+  },
+  "corpusId": "corpus-tfidf-bm25-smoke",
+  "documentOrder": [
+    "doc-a",
+    "doc-b",
+    "doc-c",
+    "doc-empty"
+  ],
+  "outputs": {
+    "terms": [
+      "alpha",
+      "beta",
+      "delta",
+      "gamma",
+      "missing"
+    ],
+    "tfidf": {
+      "doc-a": {
+        "alpha": 1.2876820724517808,
+        "beta": 3.386294361119891
+      },
+      "doc-b": {
+        "alpha": 1.2876820724517808,
+        "gamma": 1.6931471805599454
+      },
+      "doc-c": {
+        "delta": 1.6931471805599454
+      },
+      "doc-empty": {}
+    }
+  },
+  "notes": [
+    "Natural default tf-idf is comparator evidence only; it is not the canonical expected formula for this issue."
+  ]
+}
