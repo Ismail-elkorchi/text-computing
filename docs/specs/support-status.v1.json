@@ -19,7 +19,7 @@
     {
       "name": "@ismail-elkorchi/textrules",
       "status": "implemented",
-      "scope": "Rule-backed POS, lemma, and morphology behavior is implemented only for the frozen issue #10 slices."
+      "scope": "Rule-backed POS, lemma, morphology, and NER behavior is implemented only for the frozen issue #10 and #13 slices."
     },
     {
       "name": "@ismail-elkorchi/textpipeline",
@@ -70,8 +70,8 @@
     },
     {
       "id": "nlp-rule-backed-ner",
-      "status": "readiness-only",
-      "scope": "Research, multilingual slices, comparator captures, recorded expected outputs, label policy, and conflict policy are frozen; behavior is not implemented yet."
+      "status": "implemented",
+      "scope": "Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures."
     },
     {
       "id": "nlp-corpus-tfidf-bm25",
