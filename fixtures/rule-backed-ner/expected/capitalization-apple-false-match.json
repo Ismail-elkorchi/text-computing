@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "capitalization-apple-false-match",
+  "source": {
+    "sliceId": "capitalization-apple-false-match",
+    "sha256": "062d60907a05f40bf5f7aaa7463f2ff4fb24c8a14445c5b64e554b98c4fc9970"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "rule-backed-ner:capitalization-apple-false-match",
+    "revision": "rule-backed-ner-v1",
+    "textLengthCU": 50,
+    "text": "apple growers protested outside Apple in New York.",
+    "source": {
+      "id": "capitalization-apple-false-match",
+      "sha256": "062d60907a05f40bf5f7aaa7463f2ff4fb24c8a14445c5b64e554b98c4fc9970"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      { "id": "source-view", "kind": "source" },
+      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 5 }], "text": "apple" },
+          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 6, "endCU": 13 }], "text": "growers" },
+          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 14, "endCU": 23 }], "text": "protested" },
+          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 24, "endCU": 31 }], "text": "outside" },
+          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 37 }], "text": "Apple" },
+          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 38, "endCU": 40 }], "text": "in" },
+          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 41, "endCU": 44 }], "text": "New" },
+          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 45, "endCU": 49 }], "text": "York" },
+          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 49, "endCU": 50 }], "text": "." }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 50 }], "text": "apple growers protested outside Apple in New York." }
+        ]
+      },
+      {
+        "id": "entities",
+        "kind": "entity",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 37 }], "label": "ORG", "text": "Apple" },
+          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 41, "endCU": 49 }], "label": "LOC", "text": "New York" }
+        ]
+      }
+    ],
+    "notes": [
+      "Lowercase common noun remains non-entity; only Apple and New York are labeled."
+    ]
+  },
+  "notes": [
+    "Lowercase common noun remains non-entity; only Apple and New York are labeled."
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "nested-uc-berkeley",
+  "source": {
+    "sliceId": "nested-uc-berkeley",
+    "sha256": "7aeef927b4179c7f84d6d2ef14b134c5c2faeb9b8e38b42aa1160336121f7321"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "rule-backed-ner:nested-uc-berkeley",
+    "revision": "rule-backed-ner-v1",
+    "textLengthCU": 55,
+    "text": "The University of California, Berkeley campus reopened.",
+    "source": {
+      "id": "nested-uc-berkeley",
+      "sha256": "7aeef927b4179c7f84d6d2ef14b134c5c2faeb9b8e38b42aa1160336121f7321"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      { "id": "source-view", "kind": "source" },
+      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 3 }], "text": "The" },
+          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 4, "endCU": 14 }], "text": "University" },
+          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 15, "endCU": 17 }], "text": "of" },
+          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 18, "endCU": 28 }], "text": "California" },
+          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 28, "endCU": 29 }], "text": "," },
+          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 30, "endCU": 38 }], "text": "Berkeley" },
+          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 39, "endCU": 45 }], "text": "campus" },
+          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 46, "endCU": 54 }], "text": "reopened" },
+          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 54, "endCU": 55 }], "text": "." }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 55 }], "text": "The University of California, Berkeley campus reopened." }
+        ]
+      },
+      {
+        "id": "entities",
+        "kind": "entity",
+        "viewId": "analysis-view",
+        "allowSpanOverlap": true,
+        "annotations": [
+          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 4, "endCU": 38 }], "label": "ORG", "text": "University of California, Berkeley" },
+          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 30, "endCU": 38 }], "label": "LOC", "text": "Berkeley" }
+        ]
+      }
+    ],
+    "notes": [
+      "Readiness golden preserves a nested Berkeley location span inside the larger organization span."
+    ]
+  },
+  "notes": [
+    "Readiness golden preserves a nested Berkeley location span inside the larger organization span."
+  ]
+}

@@ -71,7 +71,7 @@
     {
       "id": "nlp-rule-backed-ner",
       "status": "readiness-only",
-      "scope": "Research, slices, comparator versions, label policy, and expected-output schema are frozen; behavior is not implemented yet."
+      "scope": "Research, multilingual slices, comparator captures, recorded expected outputs, label policy, and conflict policy are frozen; behavior is not implemented yet."
     },
     {
       "id": "nlp-corpus-tfidf-bm25",

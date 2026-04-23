@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "org-alias-ibm",
+  "source": {
+    "sliceId": "org-alias-ibm",
+    "sha256": "fb127c9470f6a713c90570f09e81735f729375e8b6f9eecb939c42dde3066a4d"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "rule-backed-ner:org-alias-ibm",
+    "revision": "rule-backed-ner-v1",
+    "textLengthCU": 56,
+    "text": "International Business Machines (IBM) hired Alice Smith.",
+    "source": {
+      "id": "org-alias-ibm",
+      "sha256": "fb127c9470f6a713c90570f09e81735f729375e8b6f9eecb939c42dde3066a4d"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      {
+        "id": "source-view",
+        "kind": "source"
+      },
+      {
+        "id": "analysis-view",
+        "kind": "analysis",
+        "derivedFrom": ["source-view"]
+      }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 13 }], "text": "International" },
+          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 14, "endCU": 22 }], "text": "Business" },
+          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 23, "endCU": 31 }], "text": "Machines" },
+          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 33 }], "text": "(" },
+          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 33, "endCU": 36 }], "text": "IBM" },
+          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 36, "endCU": 37 }], "text": ")" },
+          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 38, "endCU": 43 }], "text": "hired" },
+          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 44, "endCU": 49 }], "text": "Alice" },
+          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 50, "endCU": 55 }], "text": "Smith" },
+          { "id": "token-10", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 55, "endCU": 56 }], "text": "." }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 56 }], "text": "International Business Machines (IBM) hired Alice Smith." }
+        ]
+      },
+      {
+        "id": "entities",
+        "kind": "entity",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 31 }], "label": "ORG", "text": "International Business Machines" },
+          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 33, "endCU": 36 }], "label": "ORG", "text": "IBM" },
+          { "id": "entity-3", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 44, "endCU": 55 }], "label": "PER", "text": "Alice Smith" }
+        ]
+      }
+    ],
+    "notes": [
+      "Readiness golden keeps canonical organization name and acronym as separate ORG spans."
+    ]
+  },
+  "notes": [
+    "Readiness golden keeps canonical organization name and acronym as separate ORG spans."
+  ]
+}

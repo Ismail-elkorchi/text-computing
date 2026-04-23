@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "scope": "rule-backed-ner",
+  "capturedDate": "2026-04-23",
+  "offsetUnits": "utf16-code-unit",
+  "comparator": {
+    "name": "compromise",
+    "version": "14.15.0",
+    "runtime": "Node.js v24.14.0",
+    "command": "node capture over fixtures/rule-backed-ner/slices.json using compromise 14.15.0",
+    "license": "MIT",
+    "artifactSurface": "diagnostic English organization/person/place spans from heuristic grouping output"
+  },
+  "slices": [
+    {
+      "sliceId": "org-alias-ibm",
+      "status": "captured",
+      "entities": [
+        {
+          "id": "entity-1",
+          "startCU": 0,
+          "endCU": 37,
+          "text": "International Business Machines (IBM)",
+          "label": "Organization",
+          "mappedLabel": "ORG"
+        },
+        {
+          "id": "entity-2",
+          "startCU": 44,
+          "endCU": 56,
+          "text": "Alice Smith.",
+          "label": "Person",
+          "mappedLabel": "PER"
+        }
+      ]
+    },
+    {
+      "sliceId": "nested-uc-berkeley",
+      "status": "captured",
+      "entities": [
+        {
+          "id": "entity-1",
+          "startCU": 4,
+          "endCU": 29,
+          "text": "University of California,",
+          "label": "Organization",
+          "mappedLabel": "ORG"
+        }
+      ]
+    },
+    {
+      "sliceId": "capitalization-apple-false-match",
+      "status": "captured",
+      "entities": [
+        {
+          "id": "entity-1",
+          "startCU": 41,
+          "endCU": 50,
+          "text": "New York.",
+          "label": "Place",
+          "mappedLabel": "LOC"
+        }
+      ]
+    },
+    {
+      "sliceId": "org-alias-onu-madrid",
+      "status": "not-run",
+      "reason": "Frozen compromise 14.15.0 comparator is used only as an English heuristic baseline for this readiness gate.",
+      "entities": []
+    },
+    {
+      "sliceId": "person-location-ar-rabat",
+      "status": "not-run",
+      "reason": "Frozen compromise 14.15.0 comparator is used only as an English heuristic baseline for this readiness gate.",
+      "entities": []
+    }
+  ]
+}

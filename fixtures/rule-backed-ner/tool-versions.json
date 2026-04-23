@@ -1,7 +1,11 @@
 {
   "schemaVersion": 1,
   "targetLabelPolicy": "rule-backed-ner-v1",
-  "targetLabels": ["PER", "ORG", "LOC"],
+  "targetLabels": [
+    "PER",
+    "ORG",
+    "LOC"
+  ],
   "allowNestedSpans": true,
   "allowOverlapDiagnostics": true,
   "comparators": [
@@ -13,19 +17,13 @@
       "modelVersion": "3.8.0"
     },
     {
-      "name": "wink-nlp",
-      "runtime": "javascript",
-      "version": "2.4.0",
-      "model": "wink-eng-lite-web-model",
-      "modelVersion": "1.8.1"
-    },
-    {
       "name": "compromise",
       "runtime": "javascript",
       "version": "14.15.0"
     }
   ],
   "notes": [
-    "Comparator versions are frozen for readiness; feature work must record any later changes explicitly."
+    "Frozen comparators are diagnostic baselines, not normative truth.",
+    "The frozen comparator set is English-first; multilingual slices remain mandatory and may appear as not-run in comparator captures when a comparator is outside its declared language surface."
   ]
 }
