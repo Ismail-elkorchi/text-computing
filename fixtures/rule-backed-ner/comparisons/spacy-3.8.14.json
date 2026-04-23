@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "scope": "rule-backed-ner",
+  "capturedDate": "2026-04-23",
+  "offsetUnits": "utf16-code-unit",
+  "comparator": {
+    "name": "spaCy",
+    "version": "3.8.14",
+    "runtime": "Python 3.13",
+    "model": {
+      "name": "en_core_web_sm",
+      "version": "3.8.0"
+    },
+    "command": "python capture over fixtures/rule-backed-ner/slices.json using spaCy 3.8.14 and en_core_web_sm 3.8.0",
+    "license": "MIT",
+    "artifactSurface": "diagnostic English entity spans with native labels and repository label mapping"
+  },
+  "slices": [
+    {
+      "sliceId": "org-alias-ibm",
+      "status": "captured",
+      "entities": [
+        {
+          "id": "entity-1",
+          "startCU": 0,
+          "endCU": 31,
+          "text": "International Business Machines",
+          "label": "ORG",
+          "mappedLabel": "ORG"
+        },
+        {
+          "id": "entity-2",
+          "startCU": 33,
+          "endCU": 36,
+          "text": "IBM",
+          "label": "ORG",
+          "mappedLabel": "ORG"
+        },
+        {
+          "id": "entity-3",
+          "startCU": 44,
+          "endCU": 55,
+          "text": "Alice Smith",
+          "label": "PERSON",
+          "mappedLabel": "PER"
+        }
+      ]
+    },
+    {
+      "sliceId": "nested-uc-berkeley",
+      "status": "captured",
+      "entities": [
+        {
+          "id": "entity-1",
+          "startCU": 0,
+          "endCU": 28,
+          "text": "The University of California",
+          "label": "ORG",
+          "mappedLabel": "ORG"
+        },
+        {
+          "id": "entity-2",
+          "startCU": 30,
+          "endCU": 38,
+          "text": "Berkeley",
+          "label": "ORG",
+          "mappedLabel": "ORG"
+        }
+      ]
+    },
+    {
+      "sliceId": "capitalization-apple-false-match",
+      "status": "captured",
+      "entities": [
+        {
+          "id": "entity-1",
+          "startCU": 32,
+          "endCU": 37,
+          "text": "Apple",
+          "label": "ORG",
+          "mappedLabel": "ORG"
+        },
+        {
+          "id": "entity-2",
+          "startCU": 41,
+          "endCU": 49,
+          "text": "New York",
+          "label": "GPE",
+          "mappedLabel": "LOC"
+        }
+      ]
+    },
+    {
+      "sliceId": "org-alias-onu-madrid",
+      "status": "not-run",
+      "reason": "Frozen English model en_core_web_sm is not declared for the Spanish readiness slice.",
+      "entities": []
+    },
+    {
+      "sliceId": "person-location-ar-rabat",
+      "status": "not-run",
+      "reason": "Frozen English model en_core_web_sm is not declared for the Arabic readiness slice.",
+      "entities": []
+    }
+  ]
+}

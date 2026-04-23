@@ -3,8 +3,8 @@
 ## Why this document exists
 
 Issue `#13` does not permit behavior until the repository records entity label policy, allowed
-fixture policy, expected-output format, and documented output differences. This document defines
-that readiness gate.
+fixture policy, expected-output format, documented output differences, and committed diagnostic
+comparators. This document defines that readiness gate.
 
 ## Target representation
 
@@ -12,8 +12,7 @@ The readiness target is:
 
 - `textdoc-document-v1` for stored annotations;
 - `textprotocol-result-envelope-v1` for serialized outputs; and
-- ambiguity-aware `entity` annotations with explicit provenance and deterministic conflict
-  diagnostics.
+- `textconformance-report-v1` for machine-readable verification references.
 
 ## Label policy
 
@@ -26,12 +25,10 @@ The current rule-backed NER label policy is intentionally narrow:
 
 Consequences:
 
-- The current public label policy does **not** add `MISC`, `NORP`, `PRODUCT`, `EVENT`, `DATE`, or
+- The current public label policy does **not** add `MISC`, `NORP`, `PRODUCT`, `EVENT`, or
   toolkit-specific labels merely because an external comparator exposes them.
-- Nested and overlapping entity spans remain legal in the repository representation even if a
-  comparator emits only flat spans.
-- Comparator-specific label names must be mapped explicitly to `PER`, `ORG`, or `LOC` when they
-  fall inside the supported scope, and documented as non-failure differences when they do not.
+- Comparator-specific label names must be mapped explicitly to `PER`, `ORG`, or `LOC` when
+  they fall inside the supported scope and documented as non-failure differences when they do not.
 
 ## Allowed fixture policy
 
@@ -44,7 +41,7 @@ Only these fixture classes are allowed for issue `#13` readiness and later quali
 The repository does **not** allow:
 
 - copied evaluation passages whose redistribution status is unclear;
-- private workbench notes, prompts, or unpublished evaluation bundles; or
+- unpublished planning notes, prompts, or evaluation bundles; or
 - hidden gold outputs produced by opaque external systems.
 
 ## Input slices
@@ -54,24 +51,65 @@ The canonical readiness slices live in
 
 They cover:
 
-- nested spans;
-- overlapping spans;
 - aliases;
-- capitalization ambiguity; and
-- false matches.
+- capitalization ambiguity;
+- false matches;
+- nested and overlapping spans;
+- a non-English Latin-script slice; and
+- a non-Latin-script slice.
+
+## Rule priority and tie-break policy
+
+The frozen readiness policy for future feature work is:
+
+1. exact-case canonical-name and alias matches outrank case-folded fallbacks;
+2. longer spans win inside the same rule family when two matches start at different lengths;
+3. unresolved same-priority overlap becomes an explicit diagnostic instead of a silent drop; and
+4. lowercase common nouns do not become `ORG` matches purely because a case-insensitive alias
+   exists elsewhere in the lexicon.
+
+## Overlap and nested-span policy
+
+- Nested spans are legal in repository outputs and must round-trip through `textdoc`.
+- Any expected artifact that contains overlapping or nested entity spans must set
+  `allowSpanOverlap: true` on the entity layer.
+- Flat comparator outputs are diagnostic evidence only; they do not narrow the repository
+  representation.
 
 ## Expected-output format
 
-Future recorded outputs must validate against
-[`../../schemas/rule-backed-ner-expected-v1.schema.json`](../../schemas/rule-backed-ner-expected-v1.schema.json),
-which wraps a `textdoc` document containing token, sentence, and entity layers for a single slice.
+Recorded expected outputs live in
+[`../../fixtures/rule-backed-ner/expected/`](../../fixtures/rule-backed-ner/expected/).
+
+Each expected artifact validates against
+[`../../schemas/rule-backed-ner-expected-v1.schema.json`](../../schemas/rule-backed-ner-expected-v1.schema.json)
+and records:
+
+- source text and source hash;
+- token and sentence layers over the frozen text; and
+- entity annotations using the `PER` / `ORG` / `LOC` label policy.
 
 ## Comparator freeze
 
 Frozen comparator versions live in
 [`../../fixtures/rule-backed-ner/tool-versions.json`](../../fixtures/rule-backed-ner/tool-versions.json).
 
+The current frozen comparator set is English-first:
+
+- `spaCy 3.8.14` with `en_core_web_sm 3.8.0`;
+- `compromise 14.15.0`.
+
+## Comparator outputs
+
+Committed comparator captures live in
+[`../../fixtures/rule-backed-ner/comparisons/`](../../fixtures/rule-backed-ner/comparisons/).
+
+Comparator outputs are diagnostic evidence, not normative expected outputs. A slice may appear as
+`not-run` in a comparator capture when that frozen comparator is outside its declared language
+surface; the not-run reason is itself part of the committed artifact.
+
 ## Verification
 
-`npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, expected-output
-schema, and required readiness documentation headings before any feature PR for issue `#13`.
+`npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, committed
+comparator outputs, recorded expected outputs, required readiness documentation headings, and
+result-envelope/conformance representability before any feature PR for issue `#13`.

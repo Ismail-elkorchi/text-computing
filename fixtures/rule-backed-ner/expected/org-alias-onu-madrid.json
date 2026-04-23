@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "org-alias-onu-madrid",
+  "source": {
+    "sliceId": "org-alias-onu-madrid",
+    "sha256": "599e9d6a299d9447d91e71c9df4becae62e21f9cae9717f501bfcd509e87a903"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "rule-backed-ner:org-alias-onu-madrid",
+    "revision": "rule-backed-ner-v1",
+    "textLengthCU": 73,
+    "text": "La Organización de las Naciones Unidas (ONU) abrió una oficina en Madrid.",
+    "source": {
+      "id": "org-alias-onu-madrid",
+      "sha256": "599e9d6a299d9447d91e71c9df4becae62e21f9cae9717f501bfcd509e87a903"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      { "id": "source-view", "kind": "source" },
+      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 2 }], "text": "La" },
+          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 3, "endCU": 15 }], "text": "Organización" },
+          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 16, "endCU": 18 }], "text": "de" },
+          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 19, "endCU": 22 }], "text": "las" },
+          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 23, "endCU": 31 }], "text": "Naciones" },
+          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 38 }], "text": "Unidas" },
+          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 39, "endCU": 40 }], "text": "(" },
+          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 40, "endCU": 43 }], "text": "ONU" },
+          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 43, "endCU": 44 }], "text": ")" },
+          { "id": "token-10", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 45, "endCU": 50 }], "text": "abrió" },
+          { "id": "token-11", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 51, "endCU": 54 }], "text": "una" },
+          { "id": "token-12", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 55, "endCU": 62 }], "text": "oficina" },
+          { "id": "token-13", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 63, "endCU": 65 }], "text": "en" },
+          { "id": "token-14", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 66, "endCU": 72 }], "text": "Madrid" },
+          { "id": "token-15", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 72, "endCU": 73 }], "text": "." }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 73 }], "text": "La Organización de las Naciones Unidas (ONU) abrió una oficina en Madrid." }
+        ]
+      },
+      {
+        "id": "entities",
+        "kind": "entity",
+        "viewId": "analysis-view",
+        "annotations": [
+          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 3, "endCU": 38 }], "label": "ORG", "text": "Organización de las Naciones Unidas" },
+          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 40, "endCU": 43 }], "label": "ORG", "text": "ONU" },
+          { "id": "entity-3", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 66, "endCU": 72 }], "label": "LOC", "text": "Madrid" }
+        ]
+      }
+    ],
+    "notes": [
+      "Non-English Latin-script slice keeps both the full organization name and the ONU acronym."
+    ]
+  },
+  "notes": [
+    "Non-English Latin-script slice keeps both the full organization name and the ONU acronym."
+  ]
+}

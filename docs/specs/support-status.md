@@ -32,5 +32,5 @@ changes.
 | `nlp-document-annotation-model` | `implemented` | The document model, invalid-reference policy, lifecycle/provenance support, and round-trip validation are implemented. |
 | `nlp-pack-resource-manifest` | `implemented` | Resource-manifest validation, licensed fixtures, and overlay-conflict policy are implemented. |
 | `nlp-pos-morph-lemma` | `implemented` | Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices. |
-| `nlp-rule-backed-ner` | `readiness-only` | Research, slices, comparator versions, label policy, and expected-output schema are frozen; behavior is not implemented yet. |
+| `nlp-rule-backed-ner` | `readiness-only` | Research, multilingual slices, comparator captures, recorded expected outputs, label policy, and conflict policy are frozen; behavior is not implemented yet. |
 | `nlp-corpus-tfidf-bm25` | `absent` | No public readiness artifacts or feature behavior are implemented yet. |

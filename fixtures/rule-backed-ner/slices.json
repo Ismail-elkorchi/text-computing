@@ -1,40 +1,85 @@
 {
   "schemaVersion": 1,
-  "expectedOutputStatus": "schema-defined",
+  "expectedOutputStatus": "recorded",
   "allowedFixturePolicy": "repository-authored-public-safe-v1",
   "slices": [
     {
       "id": "org-alias-ibm",
       "languageHint": "en",
-      "phenomena": ["alias"],
+      "phenomena": [
+        "alias"
+      ],
       "fixtureClass": "repository-authored",
       "source": {
         "kind": "text",
         "text": "International Business Machines (IBM) hired Alice Smith."
       },
-      "notes": ["Alias slice for full-name and short-name organization mentions."]
+      "notes": [
+        "English alias slice with separate canonical organization, acronym, and person spans."
+      ]
     },
     {
       "id": "nested-uc-berkeley",
       "languageHint": "en",
-      "phenomena": ["nested-span", "overlapping-span"],
+      "phenomena": [
+        "nested-span",
+        "overlapping-span"
+      ],
       "fixtureClass": "repository-authored",
       "source": {
         "kind": "text",
         "text": "The University of California, Berkeley campus reopened."
       },
-      "notes": ["Nested and overlapping entity slice with organization and location readings."]
+      "notes": [
+        "Nested readiness slice preserves Berkeley as a location inside the larger organization span."
+      ]
     },
     {
       "id": "capitalization-apple-false-match",
       "languageHint": "en",
-      "phenomena": ["capitalization-ambiguity", "false-match"],
+      "phenomena": [
+        "capitalization-ambiguity",
+        "false-match"
+      ],
       "fixtureClass": "repository-authored",
       "source": {
         "kind": "text",
         "text": "apple growers protested outside Apple in New York."
       },
-      "notes": ["Lowercase common noun should remain non-entity while Apple and New York stay eligible."]
+      "notes": [
+        "Lowercase common noun remains non-entity while Apple and New York stay eligible."
+      ]
+    },
+    {
+      "id": "org-alias-onu-madrid",
+      "languageHint": "es",
+      "phenomena": [
+        "alias",
+        "latin-script-non-english"
+      ],
+      "fixtureClass": "repository-authored",
+      "source": {
+        "kind": "text",
+        "text": "La Organización de las Naciones Unidas (ONU) abrió una oficina en Madrid."
+      },
+      "notes": [
+        "Non-English Latin-script slice with canonical organization name, acronym alias, and Madrid location."
+      ]
+    },
+    {
+      "id": "person-location-ar-rabat",
+      "languageHint": "ar",
+      "phenomena": [
+        "non-latin-script"
+      ],
+      "fixtureClass": "repository-authored",
+      "source": {
+        "kind": "text",
+        "text": "زار علي الرباط."
+      },
+      "notes": [
+        "Non-Latin-script slice with explicit person and location spans in Arabic."
+      ]
     }
   ]
 }
