@@ -29,7 +29,7 @@
     {
       "name": "@ismail-elkorchi/textcorpus",
       "status": "implemented",
-      "scope": "Explicit-token corpus collections, metadata slicing, and deterministic fingerprint indexing are implemented; TF-IDF and BM25 are still absent."
+      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, and frozen-scope TF-IDF/BM25 scoring are implemented."
     },
     {
       "name": "@ismail-elkorchi/textprotocol",
@@ -75,8 +75,8 @@
     },
     {
       "id": "nlp-corpus-tfidf-bm25",
-      "status": "readiness-only",
-      "scope": "Formula policy, explicit-token corpus slices, expected outputs, comparator captures, and numeric tolerance are frozen; behavior is not implemented yet."
+      "status": "implemented",
+      "scope": "Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus."
     }
   ]
 }

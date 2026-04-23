@@ -9,11 +9,22 @@ import {
 
 export const packageName = "@ismail-elkorchi/textcorpus" as const;
 export const textCorpusCollectionSchemaVersion = 1 as const;
+export const textCorpusScoringSchemaVersion = 1 as const;
 export const textCorpusTokenSource = "explicit-textdoc-token-layer" as const;
+export const textCorpusTfRawCountFormula = "tf.raw-count" as const;
+export const textCorpusDfDocumentCountFormula = "df.document-count" as const;
+export const textCorpusTfidfSklearnSmoothRawFormula = "tfidf.sklearn-smooth-raw" as const;
+export const textCorpusBm25OkapiFormula = "bm25.okapi.k1-1.5.b-0.75" as const;
 
 export type PackageName = typeof packageName;
 export type TextCorpusCollectionSchemaVersion = typeof textCorpusCollectionSchemaVersion;
+export type TextCorpusScoringSchemaVersion = typeof textCorpusScoringSchemaVersion;
 export type TextCorpusTokenSource = typeof textCorpusTokenSource;
+export type TextCorpusFormulaId =
+  | typeof textCorpusTfRawCountFormula
+  | typeof textCorpusDfDocumentCountFormula
+  | typeof textCorpusTfidfSklearnSmoothRawFormula
+  | typeof textCorpusBm25OkapiFormula;
 
 export interface TextCorpusEntry {
   readonly id: string;
@@ -61,6 +72,50 @@ export interface TextCorpusFingerprintIndex {
   readonly docFingerprints: Readonly<Record<string, readonly string[]>>;
   readonly index: Readonly<Record<string, readonly string[]>>;
   readonly truncated?: boolean;
+}
+
+export interface TextCorpusQuery {
+  readonly id: string;
+  readonly tokens: readonly string[];
+}
+
+export interface TextCorpusTermValue {
+  readonly term: string;
+  readonly value: number;
+}
+
+export interface TextCorpusDocumentScore {
+  readonly docId: string;
+  readonly score: number;
+}
+
+export interface TextCorpusDocumentTermScores {
+  readonly id: string;
+  readonly length: number;
+  readonly tf: readonly TextCorpusTermValue[];
+  readonly tfidf: readonly TextCorpusTermValue[];
+}
+
+export interface TextCorpusQueryScores {
+  readonly id: string;
+  readonly bm25: readonly TextCorpusDocumentScore[];
+}
+
+export interface TextCorpusScoringOptions {
+  readonly queries?: readonly TextCorpusQuery[];
+  readonly tolerance?: number;
+}
+
+export interface TextCorpusScoringResultV1 {
+  readonly schemaVersion: TextCorpusScoringSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly formulaSet: readonly TextCorpusFormulaId[];
+  readonly documentOrder: readonly string[];
+  readonly termOrder: readonly string[];
+  readonly tolerance: number;
+  readonly documents: readonly TextCorpusDocumentTermScores[];
+  readonly queries: readonly TextCorpusQueryScores[];
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -174,6 +229,83 @@ function getEntryTokenTexts(entry: TextCorpusEntry): readonly string[] {
     .map((annotation) => resolveTokenText(entry.document, annotation));
 }
 
+function compareTerms(left: string, right: string): number {
+  return left.localeCompare(right);
+}
+
+function countTerms(tokens: readonly string[]): ReadonlyMap<string, number> {
+  const counts = new Map<string, number>();
+  for (const token of tokens) {
+    counts.set(token, (counts.get(token) ?? 0) + 1);
+  }
+  return counts;
+}
+
+function validateQueries(queries: readonly TextCorpusQuery[]): void {
+  const seen = new Set<string>();
+  for (const query of queries) {
+    if (!isNonEmptyString(query.id)) {
+      throw new TypeError("textcorpus query id must be a non-empty string");
+    }
+    if (seen.has(query.id)) {
+      throw new Error(`duplicate textcorpus query id: ${query.id}`);
+    }
+    seen.add(query.id);
+    if (!Array.isArray(query.tokens) || !query.tokens.every((token) => typeof token === "string")) {
+      throw new TypeError(`textcorpus query ${query.id} tokens must be a string array`);
+    }
+  }
+}
+
+function smoothSklearnIdf(documentCount: number, documentFrequency: number): number {
+  return Math.log((1 + documentCount) / (1 + documentFrequency)) + 1;
+}
+
+function bm25OkapiIdf(documentCount: number, documentFrequency: number): number {
+  if (documentFrequency <= 0) return 0;
+  return Math.log((documentCount - documentFrequency + 0.5) / (documentFrequency + 0.5));
+}
+
+function bm25OkapiScore(
+  termFrequency: number,
+  documentLength: number,
+  averageDocumentLength: number,
+  idf: number,
+): number {
+  if (termFrequency <= 0 || averageDocumentLength <= 0 || idf === 0) return 0;
+  const k1 = 1.5;
+  const b = 0.75;
+  const denominator = termFrequency + k1 * (1 - b + b * (documentLength / averageDocumentLength));
+  if (denominator === 0) return 0;
+  return idf * ((termFrequency * (k1 + 1)) / denominator);
+}
+
+function isTermValueArray(value: unknown): value is readonly TextCorpusTermValue[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        isRecord(entry) &&
+        typeof entry.term === "string" &&
+        typeof entry.value === "number" &&
+        Number.isFinite(entry.value),
+    )
+  );
+}
+
+function isDocumentScoreArray(value: unknown): value is readonly TextCorpusDocumentScore[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        isRecord(entry) &&
+        isNonEmptyString(entry.docId) &&
+        typeof entry.score === "number" &&
+        Number.isFinite(entry.score),
+    )
+  );
+}
+
 function validateEntry(entry: TextCorpusEntry): void {
   if (!isNonEmptyString(entry.id)) {
     throw new TypeError("textcorpus entry id must be a non-empty string");
@@ -249,6 +381,47 @@ export function isTextCorpusFingerprintIndex(
       (entry) => Array.isArray(entry) && entry.every((docId) => isNonEmptyString(docId)),
     ) &&
     (value.truncated === undefined || typeof value.truncated === "boolean")
+  );
+}
+
+export function isTextCorpusScoringResultV1(value: unknown): value is TextCorpusScoringResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusScoringSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    Array.isArray(value.formulaSet) &&
+    value.formulaSet.every(
+      (entry) =>
+        entry === textCorpusTfRawCountFormula ||
+        entry === textCorpusDfDocumentCountFormula ||
+        entry === textCorpusTfidfSklearnSmoothRawFormula ||
+        entry === textCorpusBm25OkapiFormula,
+    ) &&
+    Array.isArray(value.documentOrder) &&
+    value.documentOrder.every((entry) => isNonEmptyString(entry)) &&
+    Array.isArray(value.termOrder) &&
+    value.termOrder.every((entry) => typeof entry === "string") &&
+    typeof value.tolerance === "number" &&
+    value.tolerance >= 0 &&
+    Array.isArray(value.documents) &&
+    value.documents.every(
+      (entry) =>
+        isRecord(entry) &&
+        isNonEmptyString(entry.id) &&
+        typeof entry.length === "number" &&
+        Number.isInteger(entry.length) &&
+        entry.length >= 0 &&
+        isTermValueArray(entry.tf) &&
+        isTermValueArray(entry.tfidf),
+    ) &&
+    Array.isArray(value.queries) &&
+    value.queries.every(
+      (entry) =>
+        isRecord(entry) &&
+        isNonEmptyString(entry.id) &&
+        isDocumentScoreArray(entry.bm25),
+    )
   );
 }
 
@@ -409,5 +582,87 @@ export function buildTextCorpusFingerprintIndex(
     docFingerprints,
     index: normalizedIndex,
     ...(truncated ? { truncated: true } : {}),
+  };
+}
+
+export function computeTextCorpusScoring(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusScoringOptions = {},
+): TextCorpusScoringResultV1 {
+  if (!isTextCorpusCollectionV1(collection)) {
+    throw new TypeError("textcorpus collection must satisfy TextCorpusCollectionV1");
+  }
+
+  const queries = options.queries ?? [];
+  validateQueries(queries);
+  const documentOrder = collection.entries.map((entry) => entry.id);
+  const tokenLists = collection.entries.map((entry) => getEntryTokenTexts(entry));
+  const termCounts = tokenLists.map((tokens) => countTerms(tokens));
+  const termSet = new Set<string>();
+  const documentFrequency = new Map<string, number>();
+
+  for (const counts of termCounts) {
+    for (const term of counts.keys()) {
+      termSet.add(term);
+      documentFrequency.set(term, (documentFrequency.get(term) ?? 0) + 1);
+    }
+  }
+
+  const termOrder = [...termSet].sort(compareTerms);
+  const documentCount = collection.entries.length;
+  const averageDocumentLength =
+    tokenLists.reduce((sum, tokens) => sum + tokens.length, 0) / Math.max(1, documentCount);
+
+  const documents = collection.entries.map((entry, index) => {
+    const counts = termCounts[index] ?? new Map<string, number>();
+    const tf: TextCorpusTermValue[] = [];
+    const tfidf: TextCorpusTermValue[] = [];
+    for (const term of termOrder) {
+      const count = counts.get(term) ?? 0;
+      if (count === 0) continue;
+      tf.push({ term, value: count });
+      const df = documentFrequency.get(term) ?? 0;
+      tfidf.push({ term, value: count * smoothSklearnIdf(documentCount, df) });
+    }
+    return {
+      id: entry.id,
+      length: tokenLists[index]?.length ?? 0,
+      tf,
+      tfidf,
+    };
+  });
+
+  const queryScores = queries.map((query) => ({
+    id: query.id,
+    bm25: collection.entries.map((entry, index) => {
+      const counts = termCounts[index] ?? new Map<string, number>();
+      const documentLength = tokenLists[index]?.length ?? 0;
+      const score = query.tokens.reduce((sum, term) => {
+        const df = documentFrequency.get(term) ?? 0;
+        const idf = bm25OkapiIdf(documentCount, df);
+        return sum + bm25OkapiScore(counts.get(term) ?? 0, documentLength, averageDocumentLength, idf);
+      }, 0);
+      return {
+        docId: entry.id,
+        score,
+      };
+    }),
+  }));
+
+  return {
+    schemaVersion: textCorpusScoringSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    formulaSet: [
+      textCorpusTfRawCountFormula,
+      textCorpusDfDocumentCountFormula,
+      textCorpusTfidfSklearnSmoothRawFormula,
+      textCorpusBm25OkapiFormula,
+    ],
+    documentOrder,
+    termOrder,
+    tolerance: options.tolerance ?? 1e-12,
+    documents,
+    queries: queryScores,
   };
 }

@@ -19,7 +19,7 @@ changes.
 | `@ismail-elkorchi/textpack` | `implemented` | Manifest validation, licensed fixture resources, overlay precedence, and conflict diagnostics are implemented. |
 | `@ismail-elkorchi/textrules` | `implemented` | Rule-backed POS, lemma, morphology, and NER behavior is implemented only for the frozen issue #10 and #13 slices. |
 | `@ismail-elkorchi/textpipeline` | `implemented` | The synchronous deterministic processor contract and execution trace are implemented; async, streaming, batching, and caching are still absent. |
-| `@ismail-elkorchi/textcorpus` | `implemented` | Explicit-token corpus collections, metadata slicing, and deterministic fingerprint indexing are implemented; TF-IDF and BM25 are still absent. |
+| `@ismail-elkorchi/textcorpus` | `implemented` | Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, and frozen-scope TF-IDF/BM25 scoring are implemented. |
 | `@ismail-elkorchi/textprotocol` | `implemented` | Result-envelope types, runtime guards, and repository schema are implemented. |
 | `@ismail-elkorchi/textconformance` | `implemented` | Machine-readable conformance reports and runtime guards are implemented. |
 | `@ismail-elkorchi/textlab` | `absent` | Only the workspace scaffold exists; no public inspection-command behavior is implemented yet. |
@@ -33,4 +33,4 @@ changes.
 | `nlp-pack-resource-manifest` | `implemented` | Resource-manifest validation, licensed fixtures, and overlay-conflict policy are implemented. |
 | `nlp-pos-morph-lemma` | `implemented` | Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices. |
 | `nlp-rule-backed-ner` | `implemented` | Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures. |
-| `nlp-corpus-tfidf-bm25` | `readiness-only` | Formula policy, explicit-token corpus slices, expected outputs, comparator captures, and numeric tolerance are frozen; behavior is not implemented yet. |
+| `nlp-corpus-tfidf-bm25` | `implemented` | Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus. |
