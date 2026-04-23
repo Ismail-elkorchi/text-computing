@@ -9,4 +9,4 @@ This fixture set records readiness artifacts for issue `#13`.
 - `expected/` stores recorded goldens that validate against
   `schemas/rule-backed-ner-expected-v1.schema.json`.
 
-This readiness set does not yet claim implemented named entity behavior.
+This fixture set is the frozen evidence surface for the implemented rule-backed NER behavior over the declared slices.

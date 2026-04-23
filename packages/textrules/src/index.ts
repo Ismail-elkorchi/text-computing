@@ -5,6 +5,7 @@ import {
   type TextDocDocumentSentenceAnnotation,
   type TextDocDocumentTokenAnnotation,
   type TextDocDocumentV1,
+  type TextDocEntityAnnotation,
   type TextDocFeature,
   type TextDocLayer,
   type TextDocLemmaAnnotation,
@@ -32,10 +33,13 @@ import type { TextPackResolvedResource } from "@ismail-elkorchi/textpack";
 export const packageName = "@ismail-elkorchi/textrules" as const;
 export const posMorphLemmaRevision = "pos-morph-lemma-v1" as const;
 export const posMorphLemmaTagSet = "ud-v2-upos" as const;
+export const ruleBackedNerRevision = "rule-backed-ner-v1" as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
 export type TextRulesPosMorphLemmaTagSet = typeof posMorphLemmaTagSet;
+export type TextRulesRuleBackedNerRevision = typeof ruleBackedNerRevision;
+export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
 
 export type TextRulesPosMorphLemmaPhenomenon =
   | "unknown-word"
@@ -72,6 +76,31 @@ export interface TextRulesLexiconResource {
   readonly entries: readonly TextRulesLexiconEntry[];
 }
 
+export interface TextRulesEntityEntry {
+  readonly id: string;
+  readonly surface: string;
+  readonly label: TextRulesEntityLabel;
+  readonly normalized?: string;
+  readonly aliases?: readonly string[];
+  readonly caseFoldFallback?: boolean;
+  readonly notes?: readonly string[];
+}
+
+export interface TextRulesEntityResourceData {
+  readonly entries: readonly TextRulesEntityEntry[];
+}
+
+export interface TextRulesEntityResource {
+  readonly packId: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly resourceId: string;
+  readonly lookupKey: string;
+  readonly language?: string;
+  readonly overlayPrecedence: number;
+  readonly entries: readonly TextRulesEntityEntry[];
+}
+
 export interface TextRulesTokenSpan {
   readonly id: string;
   readonly tokenKind: "lexical-token";
@@ -105,6 +134,17 @@ export interface TextRulesPosMorphLemmaResult {
   readonly diagnostics: readonly TextProtocolDiagnostic[];
 }
 
+export interface TextRulesRuleBackedNerInput {
+  readonly document: TextDocDocumentV1;
+  readonly languageHint?: string;
+  readonly allowSpanOverlap?: boolean;
+}
+
+export interface TextRulesRuleBackedNerResult {
+  readonly document: TextDocDocumentV1;
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+}
+
 export interface TextRulesResultEnvelopeOptions {
   readonly producerVersion: string;
   readonly referenceId?: string;
@@ -124,6 +164,17 @@ interface TextRulesResolvedAnalysis extends TextRulesLexiconAnalysis {
 type TextRulesPosLayer = TextDocLayer<TextDocPosAnnotation>;
 type TextRulesLemmaLayer = TextDocLayer<TextDocLemmaAnnotation>;
 type TextRulesMorphologyLayer = TextDocLayer<TextDocMorphologyAnnotation>;
+type TextRulesEntityLayer = TextDocLayer<TextDocEntityAnnotation>;
+
+interface TextRulesEntityMatch {
+  readonly entry: TextRulesEntityEntry;
+  readonly resource: TextRulesEntityResource;
+  readonly startCU: number;
+  readonly endCU: number;
+  readonly text: string;
+  readonly priority: number;
+  readonly matchedSurface: string;
+}
 
 const punctuationCharacters = new Set([".", "!", "?"]);
 const apostropheCharacters = new Set(["'", "’"]);
@@ -154,6 +205,10 @@ function isApostrophe(char: string): boolean {
 
 function normalizeSurface(value: string): string {
   return value.trim().toLocaleLowerCase("und");
+}
+
+function isTextRulesEntityLabel(value: unknown): value is TextRulesEntityLabel {
+  return value === "PER" || value === "ORG" || value === "LOC";
 }
 
 function compareFeatures(left: TextDocFeature, right: TextDocFeature): number {
@@ -194,6 +249,19 @@ function selectResources(
   resources: readonly TextRulesLexiconResource[],
   languageHint: string | undefined,
 ): readonly TextRulesLexiconResource[] {
+  const requestedLanguages = normalizeLanguageHint(languageHint);
+  if (requestedLanguages.length === 0) return resources;
+
+  return resources.filter((resource) => {
+    if (resource.language === undefined) return true;
+    return requestedLanguages.includes(normalizeSurface(resource.language));
+  });
+}
+
+function selectEntityResources(
+  resources: readonly TextRulesEntityResource[],
+  languageHint: string | undefined,
+): readonly TextRulesEntityResource[] {
   const requestedLanguages = normalizeLanguageHint(languageHint);
   if (requestedLanguages.length === 0) return resources;
 
@@ -592,6 +660,21 @@ function createDocumentViews(): readonly TextDocView[] {
   ];
 }
 
+function entityDocumentViews(document: TextDocDocumentV1): readonly TextDocView[] {
+  if (document.views.some((view) => view.id === "analysis-view")) return document.views;
+  return [
+    ...document.views,
+    {
+      id: "analysis-view",
+      kind: "analysis",
+      description: "Deterministic textrules rule-backed named entity annotations.",
+      derivedFrom: document.views.some((view) => view.id === "source-view")
+        ? ["source-view"]
+        : document.views.slice(0, 1).map((view) => view.id),
+    },
+  ];
+}
+
 function sortDiagnostics(diagnostics: readonly TextProtocolDiagnostic[]): readonly TextProtocolDiagnostic[] {
   return [...diagnostics].sort(
     (left, right) =>
@@ -612,6 +695,193 @@ function annotationProvenance(
     },
     references: uniqueReferences(references),
   };
+}
+
+function documentHasLayerKind(document: TextDocDocumentV1, kind: "token" | "sentence"): boolean {
+  return document.layers.some((layer) => layer.kind === kind && layer.annotations.length >= 1);
+}
+
+function isBoundaryCodeUnit(value: string | undefined): boolean {
+  return value === undefined || !/[\p{Letter}\p{Number}]/u.test(value);
+}
+
+function hasEntityBoundary(text: string, startCU: number, endCU: number): boolean {
+  return isBoundaryCodeUnit(text[startCU - 1]) && isBoundaryCodeUnit(text[endCU]);
+}
+
+function findSurfaceMatches(
+  text: string,
+  searchText: string,
+  entry: TextRulesEntityEntry,
+  resource: TextRulesEntityResource,
+  priority: number,
+): readonly TextRulesEntityMatch[] {
+  const matches: TextRulesEntityMatch[] = [];
+  let cursor = 0;
+
+  while (cursor <= text.length) {
+    const startCU = text.indexOf(searchText, cursor);
+    if (startCU < 0) break;
+    const endCU = startCU + searchText.length;
+    if (hasEntityBoundary(text, startCU, endCU)) {
+      matches.push({
+        entry,
+        resource,
+        startCU,
+        endCU,
+        text: text.slice(startCU, endCU),
+        priority,
+        matchedSurface: searchText,
+      });
+    }
+    cursor = Math.max(endCU, startCU + 1);
+  }
+
+  return matches;
+}
+
+function findCaseFoldSurfaceMatches(
+  text: string,
+  searchText: string,
+  entry: TextRulesEntityEntry,
+  resource: TextRulesEntityResource,
+): readonly TextRulesEntityMatch[] {
+  const normalizedText = text.toLocaleLowerCase("und");
+  const normalizedSearch = searchText.toLocaleLowerCase("und");
+  const matches: TextRulesEntityMatch[] = [];
+  let cursor = 0;
+
+  while (cursor <= normalizedText.length) {
+    const startCU = normalizedText.indexOf(normalizedSearch, cursor);
+    if (startCU < 0) break;
+    const endCU = startCU + normalizedSearch.length;
+    if (hasEntityBoundary(text, startCU, endCU)) {
+      matches.push({
+        entry,
+        resource,
+        startCU,
+        endCU,
+        text: text.slice(startCU, endCU),
+        priority: 1,
+        matchedSurface: searchText,
+      });
+    }
+    cursor = Math.max(endCU, startCU + 1);
+  }
+
+  return matches;
+}
+
+function compareEntityMatches(left: TextRulesEntityMatch, right: TextRulesEntityMatch): number {
+  return (
+    left.startCU - right.startCU ||
+    left.priority - right.priority ||
+    right.endCU - right.startCU - (left.endCU - left.startCU) ||
+    left.entry.label.localeCompare(right.entry.label) ||
+    right.resource.overlayPrecedence - left.resource.overlayPrecedence ||
+    left.entry.id.localeCompare(right.entry.id) ||
+    left.resource.resourceId.localeCompare(right.resource.resourceId)
+  );
+}
+
+function entityMatchesOverlap(left: TextRulesEntityMatch, right: TextRulesEntityMatch): boolean {
+  return left.startCU < right.endCU && right.startCU < left.endCU;
+}
+
+function collectEntityMatches(
+  text: string,
+  resources: readonly TextRulesEntityResource[],
+): readonly TextRulesEntityMatch[] {
+  const matchesByKey = new Map<string, TextRulesEntityMatch>();
+
+  for (const resource of resources) {
+    for (const entry of resource.entries) {
+      const surfaces = [entry.surface, ...(entry.aliases ?? [])];
+      for (const surface of surfaces) {
+        if (surface.length === 0) continue;
+        const exactMatches = findSurfaceMatches(text, surface, entry, resource, 0);
+        const fallbackMatches =
+          entry.caseFoldFallback === true
+            ? findCaseFoldSurfaceMatches(text, surface, entry, resource)
+            : [];
+        for (const match of [...exactMatches, ...fallbackMatches]) {
+          const key = `${match.startCU}:${match.endCU}:${match.entry.label}:${match.entry.id}`;
+          const existing = matchesByKey.get(key);
+          if (!existing || compareEntityMatches(match, existing) < 0) {
+            matchesByKey.set(key, match);
+          }
+        }
+      }
+    }
+  }
+
+  return [...matchesByKey.values()].sort(compareEntityMatches);
+}
+
+function filterEntityOverlaps(
+  matches: readonly TextRulesEntityMatch[],
+  allowSpanOverlap: boolean,
+): {
+  readonly matches: readonly TextRulesEntityMatch[];
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+} {
+  if (allowSpanOverlap) return { matches, diagnostics: [] };
+
+  const accepted: TextRulesEntityMatch[] = [];
+  const diagnostics: TextProtocolDiagnostic[] = [];
+  for (const match of matches) {
+    const overlappingMatch = accepted.find((entry) => entityMatchesOverlap(entry, match));
+    if (!overlappingMatch) {
+      accepted.push(match);
+      continue;
+    }
+    diagnostics.push({
+      code: "entity-overlap-suppressed",
+      severity: "warning",
+      message: `Suppressed ${match.entry.label} span ${match.startCU}-${match.endCU} because it overlaps ${overlappingMatch.entry.label} span ${overlappingMatch.startCU}-${overlappingMatch.endCU}.`,
+    });
+  }
+
+  return { matches: accepted, diagnostics };
+}
+
+function createEntityAnnotations(
+  matches: readonly TextRulesEntityMatch[],
+  document: TextDocDocumentV1,
+): readonly TextDocEntityAnnotation[] {
+  return matches.map((match, index) => ({
+    id: `entity-${index + 1}`,
+    kind: "entity",
+    lifecycle: {
+      state: "active",
+    },
+    targets: [
+      {
+        kind: "span",
+        startCU: match.startCU,
+        endCU: match.endCU,
+      },
+    ],
+    label: match.entry.label,
+    text: match.text,
+    ...(match.entry.normalized ? { normalized: match.entry.normalized } : {}),
+    provenance: {
+      ...(document.source ? { source: document.source } : {}),
+      references: [
+        {
+          kind: "textpack-resource",
+          id: `${match.resource.packId}:${match.resource.resourceId}`,
+        },
+        {
+          kind: "textrules-rule",
+          id: match.entry.id,
+        },
+      ],
+    },
+    ...(match.entry.notes
+      ? { notes: [...match.entry.notes, `matched-surface:${match.matchedSurface}`] }
+      : { notes: [`matched-surface:${match.matchedSurface}`] }),
+  }));
 }
 
 export function isTextRulesLexiconAnalysis(value: unknown): value is TextRulesLexiconAnalysis {
@@ -642,12 +912,34 @@ export function isTextRulesLexiconEntry(value: unknown): value is TextRulesLexic
   );
 }
 
+export function isTextRulesEntityEntry(value: unknown): value is TextRulesEntityEntry {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.surface) &&
+    isTextRulesEntityLabel(value.label) &&
+    (value.normalized === undefined || isNonEmptyString(value.normalized)) &&
+    (value.aliases === undefined || isStringArray(value.aliases)) &&
+    (value.caseFoldFallback === undefined || typeof value.caseFoldFallback === "boolean") &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
 export function isTextRulesLexiconResourceData(value: unknown): value is TextRulesLexiconResourceData {
   return (
     isRecord(value) &&
     Array.isArray(value.entries) &&
     value.entries.length >= 1 &&
     value.entries.every((entry) => isTextRulesLexiconEntry(entry))
+  );
+}
+
+export function isTextRulesEntityResourceData(value: unknown): value is TextRulesEntityResourceData {
+  return (
+    isRecord(value) &&
+    Array.isArray(value.entries) &&
+    value.entries.length >= 1 &&
+    value.entries.every((entry) => isTextRulesEntityEntry(entry))
   );
 }
 
@@ -673,6 +965,71 @@ export function createTextRulesLexiconResource(
         ...(analysis.notes ? { notes: analysis.notes } : {}),
       })),
     })),
+  };
+}
+
+export function createTextRulesEntityResource(
+  resource: TextPackResolvedResource,
+  data: TextRulesEntityResourceData,
+): TextRulesEntityResource {
+  return {
+    packId: resource.packId,
+    packageName: resource.packageName,
+    version: resource.version,
+    resourceId: resource.resourceId,
+    lookupKey: resource.lookupKey,
+    overlayPrecedence: resource.overlayPrecedence,
+    ...(resource.language ? { language: resource.language } : {}),
+    entries: data.entries.map((entry) => ({
+      id: entry.id,
+      surface: entry.surface,
+      label: entry.label,
+      ...(entry.normalized ? { normalized: entry.normalized } : {}),
+      ...(entry.aliases ? { aliases: [...entry.aliases].sort() } : {}),
+      ...(entry.caseFoldFallback === undefined ? {} : { caseFoldFallback: entry.caseFoldFallback }),
+      ...(entry.notes ? { notes: entry.notes } : {}),
+    })),
+  };
+}
+
+export function analyzeRuleBackedNer(
+  input: TextRulesRuleBackedNerInput,
+  resources: readonly TextRulesEntityResource[],
+): TextRulesRuleBackedNerResult {
+  const document = input.document;
+  if (document.text === undefined) {
+    throw new TypeError("rule-backed NER requires document.text so offsets can be matched deterministically");
+  }
+  if (!documentHasLayerKind(document, "token")) {
+    throw new TypeError("rule-backed NER requires an existing token layer");
+  }
+  if (!documentHasLayerKind(document, "sentence")) {
+    throw new TypeError("rule-backed NER requires an existing sentence layer");
+  }
+
+  const selectedResources = selectEntityResources(resources, input.languageHint);
+  const rawMatches = collectEntityMatches(document.text, selectedResources);
+  const { matches, diagnostics } = filterEntityOverlaps(rawMatches, input.allowSpanOverlap === true);
+  const entityAnnotations = createEntityAnnotations(matches, document);
+  const entityLayer: TextRulesEntityLayer = {
+    id: "entities",
+    kind: "entity",
+    viewId: "analysis-view",
+    ...(input.allowSpanOverlap === true ? { allowSpanOverlap: true } : {}),
+    annotations: entityAnnotations,
+    notes: [
+      "Rule-backed NER emits only the frozen PER/ORG/LOC label set for declared resources.",
+    ],
+  };
+
+  return {
+    document: {
+      ...document,
+      revision: ruleBackedNerRevision,
+      views: entityDocumentViews(document),
+      layers: [...document.layers.filter((layer) => layer.id !== "entities"), entityLayer],
+    },
+    diagnostics: sortDiagnostics(diagnostics),
   };
 }
 
@@ -940,6 +1297,87 @@ export function createPosMorphLemmaConformanceReport(
         message: options.matchesExpected
           ? "Generated output matches the recorded expected artifact."
           : "Generated output diverges from the recorded expected artifact.",
+        evidenceRefs: [options.expectedArtifactPath],
+      },
+    ],
+    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
+  };
+}
+
+export function createRuleBackedNerResultEnvelope(
+  result: TextRulesRuleBackedNerResult,
+  options: TextRulesResultEnvelopeOptions,
+): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
+  return {
+    schemaId: resultEnvelopeSchemaId,
+    schemaVersion: resultEnvelopeSchemaVersion,
+    producer: {
+      package: packageName,
+      version: options.producerVersion,
+    },
+    payloadKind: textDocDocumentPayloadKind,
+    payload: result.document,
+    provenance: {
+      ...(result.document.source ? { source: result.document.source } : {}),
+      references: [
+        {
+          kind: "textdoc-document",
+          id: result.document.documentId,
+        },
+        ...(options.referenceId
+          ? [
+              {
+                kind: "fixture-slice",
+                id: options.referenceId,
+              } as const,
+            ]
+          : []),
+      ],
+    },
+    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
+  };
+}
+
+export function createRuleBackedNerConformanceReport(
+  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
+  options: TextRulesConformanceReportOptions,
+): TextConformanceReportV1 {
+  const expectedStatus = conformanceStatus(options.matchesExpected);
+
+  return {
+    schemaId: conformanceReportSchemaId,
+    schemaVersion: conformanceReportSchemaVersion,
+    reportId: `rule-backed-ner:${envelope.payload.documentId}`,
+    subject: {
+      kind: "textprotocol-result-envelope",
+      id: envelope.payload.documentId,
+      schemaId: envelope.schemaId,
+    },
+    generatedAt: options.generatedAt ?? "2026-04-23T00:00:00.000Z",
+    summary: {
+      pass: options.matchesExpected ? 3 : 2,
+      fail: options.matchesExpected ? 0 : 1,
+      notRun: 0,
+    },
+    checks: [
+      {
+        checkId: "textdoc-document-shape",
+        status: "pass",
+        message: "Rule-backed NER output is stored as a textdoc entity layer.",
+        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
+      },
+      {
+        checkId: "textprotocol-envelope-shape",
+        status: "pass",
+        message: "Rule-backed NER output is wrapped in the public result envelope.",
+        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
+      },
+      {
+        checkId: "expected-output-match",
+        status: expectedStatus,
+        message: options.matchesExpected
+          ? "Generated entity output matches the recorded expected artifact."
+          : "Generated entity output diverges from the recorded expected artifact.",
         evidenceRefs: [options.expectedArtifactPath],
       },
     ],
