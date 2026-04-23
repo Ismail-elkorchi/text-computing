@@ -19,7 +19,7 @@ changes.
 | `@ismail-elkorchi/textpack` | `implemented` | Manifest validation, licensed fixture resources, overlay precedence, and conflict diagnostics are implemented. |
 | `@ismail-elkorchi/textrules` | `implemented` | Rule-backed POS, lemma, and morphology behavior is implemented only for the frozen issue #10 slices. |
 | `@ismail-elkorchi/textpipeline` | `implemented` | The synchronous deterministic processor contract and execution trace are implemented; async, streaming, batching, and caching are still absent. |
-| `@ismail-elkorchi/textcorpus` | `absent` | Only the workspace scaffold exists; no public corpus contract or behavior is implemented yet. |
+| `@ismail-elkorchi/textcorpus` | `implemented` | Explicit-token corpus collections, metadata slicing, and deterministic fingerprint indexing are implemented; TF-IDF and BM25 are still absent. |
 | `@ismail-elkorchi/textprotocol` | `implemented` | Result-envelope types, runtime guards, and repository schema are implemented. |
 | `@ismail-elkorchi/textconformance` | `implemented` | Machine-readable conformance reports and runtime guards are implemented. |
 | `@ismail-elkorchi/textlab` | `absent` | Only the workspace scaffold exists; no public inspection-command behavior is implemented yet. |
