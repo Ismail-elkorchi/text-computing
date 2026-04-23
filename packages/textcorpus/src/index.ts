@@ -1,4 +1,4 @@
-import { formatU64Hex, hash64Text, type Hash64AlgoId } from "@ismail-elkorchi/textfacts";
+import { formatU64Hex, hash64Text, type Hash64AlgoId } from "@ismail-elkorchi/textfacts/hash";
 import {
   isTextDocDocumentV1,
   type TextDocDocumentTokenAnnotation,

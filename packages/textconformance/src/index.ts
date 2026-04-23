@@ -39,6 +39,19 @@ export interface TextConformanceReportV1 {
   readonly notes?: readonly string[];
 }
 
+export interface TextConformanceRunnerCheck {
+  readonly checkId: string;
+  readonly evidenceRefs?: readonly string[];
+  run(): TextConformanceCheckStatus | TextConformanceCheckV1;
+}
+
+export interface TextConformanceRunnerOptions {
+  readonly reportId: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly generatedAt?: string;
+  readonly notes?: readonly string[];
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -97,4 +110,72 @@ export function isTextConformanceReportV1(value: unknown): value is TextConforma
     (value.notes === undefined ||
       (Array.isArray(value.notes) && value.notes.every((entry) => isNonEmptyString(entry))))
   );
+}
+
+function summarizeChecks(checks: readonly TextConformanceCheckV1[]): TextConformanceSummaryV1 {
+  let pass = 0;
+  let fail = 0;
+  let notRun = 0;
+  for (const check of checks) {
+    if (check.status === "pass") pass += 1;
+    if (check.status === "fail") fail += 1;
+    if (check.status === "not-run") notRun += 1;
+  }
+  return { pass, fail, notRun };
+}
+
+function normalizeRunnerCheckResult(
+  check: TextConformanceRunnerCheck,
+  result: TextConformanceCheckStatus | TextConformanceCheckV1,
+): TextConformanceCheckV1 {
+  if (typeof result === "string") {
+    return {
+      checkId: check.checkId,
+      status: result,
+      ...(check.evidenceRefs ? { evidenceRefs: check.evidenceRefs } : {}),
+    };
+  }
+
+  return {
+    ...result,
+    checkId: result.checkId || check.checkId,
+    ...(result.evidenceRefs ?? check.evidenceRefs
+      ? { evidenceRefs: result.evidenceRefs ?? check.evidenceRefs }
+      : {}),
+  };
+}
+
+export function runTextConformanceChecks(
+  checks: readonly TextConformanceRunnerCheck[],
+  options: TextConformanceRunnerOptions,
+): TextConformanceReportV1 {
+  const normalizedChecks = checks.map((check) => {
+    if (!isNonEmptyString(check.checkId)) {
+      throw new TypeError("conformance check id must be a non-empty string");
+    }
+    if (typeof check.run !== "function") {
+      throw new TypeError(`conformance check ${check.checkId} must expose a run function`);
+    }
+    const result = normalizeRunnerCheckResult(check, check.run());
+    if (!isTextConformanceCheckV1(result)) {
+      throw new TypeError(`conformance check ${check.checkId} returned an invalid check result`);
+    }
+    return result;
+  });
+
+  const report: TextConformanceReportV1 = {
+    schemaId: conformanceReportSchemaId,
+    schemaVersion: conformanceReportSchemaVersion,
+    reportId: options.reportId,
+    subject: options.subject,
+    generatedAt: options.generatedAt ?? "1970-01-01T00:00:00.000Z",
+    summary: summarizeChecks(normalizedChecks),
+    checks: normalizedChecks,
+    ...(options.notes ? { notes: options.notes } : {}),
+  };
+
+  if (!isTextConformanceReportV1(report)) {
+    throw new TypeError("conformance runner produced an invalid report");
+  }
+  return report;
 }

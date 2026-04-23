@@ -3,80 +3,215 @@
   "packages": [
     {
       "name": "@ismail-elkorchi/textfacts",
-      "status": "implemented",
-      "scope": "Deterministic single-text kernel. Legacy public pack/protocol/schema helpers are frozen; new cross-package growth does not land here."
+      "status": "beta",
+      "scope": "Deterministic single-text kernel. Legacy public pack/protocol/schema helpers are frozen; new cross-package growth does not land here.",
+      "evidence": [
+        "Unicode conformance tests",
+        "published package metadata",
+        "multi-runtime tests"
+      ],
+      "limitations": [
+        "New cross-package protocol/resource growth is frozen outside textfacts",
+        "Locale tailoring breadth remains limited"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textdoc",
-      "status": "implemented",
-      "scope": "Document containers, lifecycle, provenance, and annotation-layer validation are implemented."
+      "status": "slice-proven",
+      "scope": "Document containers, lifecycle, provenance, and annotation-layer validation are implemented.",
+      "evidence": [
+        "document-model fixtures",
+        "invalid-reference validator",
+        "runtime guards",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "No dependency tree, coreference chain, or relation graph conventions are production-grade yet",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textpack",
-      "status": "implemented",
-      "scope": "Manifest validation, licensed fixture resources, overlay precedence, and conflict diagnostics are implemented."
+      "status": "slice-proven",
+      "scope": "Manifest validation, licensed fixture resources, overlay precedence, and conflict diagnostics are implemented.",
+      "evidence": [
+        "resource manifest fixtures",
+        "overlay conflict tests",
+        "provenance/license validation",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "No broad multilingual resource marketplace or vetting workflow is implemented",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textrules",
-      "status": "implemented",
-      "scope": "Rule-backed POS, lemma, morphology, and NER behavior is implemented only for the frozen issue #10 and #13 slices."
+      "status": "slice-proven",
+      "scope": "Rule-backed POS, lemma, morphology, and NER behavior is implemented only for the frozen issue #10 and #13 slices.",
+      "evidence": [
+        "POS/morph/lemma frozen slices",
+        "rule-backed NER frozen slices",
+        "textdoc/protocol/conformance tests",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "Behavior is limited to curated fixtures and small hand-authored resources",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textpipeline",
-      "status": "implemented",
-      "scope": "The synchronous deterministic processor contract and execution trace are implemented; async, streaming, batching, and caching are still absent."
+      "status": "slice-proven",
+      "scope": "The synchronous deterministic processor contract and execution trace are implemented; async, streaming, batching, and caching are still absent.",
+      "evidence": [
+        "processor ordering tests",
+        "trace validation",
+        "missing-requirement diagnostics",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "No async, streaming, batching, cache, or distributed execution",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textcorpus",
-      "status": "implemented",
-      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, and frozen-scope TF-IDF/BM25 scoring are implemented."
+      "status": "slice-proven",
+      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, and frozen-scope TF-IDF/BM25 scoring are implemented.",
+      "evidence": [
+        "explicit-token corpus tests",
+        "fingerprint index tests",
+        "frozen TF-IDF/BM25 corpus",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "No full IR index, query language, ranking evaluation, snippets, or large corpora",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textprotocol",
-      "status": "implemented",
-      "scope": "Result-envelope types, runtime guards, and repository schema are implemented."
+      "status": "slice-proven",
+      "scope": "Result-envelope types, runtime guards, and repository schema are implemented.",
+      "evidence": [
+        "result-envelope schema",
+        "runtime guards",
+        "repository fixture validation",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "No version-negotiation or transport protocol is standardized",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textconformance",
-      "status": "implemented",
-      "scope": "Machine-readable conformance reports and runtime guards are implemented."
+      "status": "slice-proven",
+      "scope": "Machine-readable conformance reports and runtime guards are implemented.",
+      "evidence": [
+        "conformance report schema",
+        "runtime guards",
+        "minimal synchronous runner tests",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "Runner behavior is minimal and not a full benchmark harness yet",
+        "Package remains private until broader release gates pass"
+      ]
     },
     {
       "name": "@ismail-elkorchi/textlab",
-      "status": "absent",
-      "scope": "Only the workspace scaffold exists; no public inspection-command behavior is implemented yet."
+      "status": "scaffold",
+      "scope": "Only the workspace scaffold exists; no public inspection-command behavior is implemented yet.",
+      "evidence": [
+        "workspace package scaffold",
+        "dist export readiness metadata"
+      ],
+      "limitations": [
+        "No public CLI or inspection behavior exists",
+        "Package remains private until broader release gates pass"
+      ]
     }
   ],
   "tasks": [
     {
       "id": "nlp-tokenization-sbd",
-      "status": "implemented",
-      "scope": "Frozen fixtures, expected outputs, comparator captures, and executable behavior are present for the current slices."
+      "status": "slice-proven",
+      "scope": "Frozen fixtures, expected outputs, comparator captures, and executable behavior are present for the current slices.",
+      "evidence": [
+        "frozen tokenization/SBD fixtures",
+        "expected outputs",
+        "comparator captures"
+      ],
+      "limitations": [
+        "Not a broad multilingual tokenizer benchmark suite"
+      ]
     },
     {
       "id": "nlp-document-annotation-model",
-      "status": "implemented",
-      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, and round-trip validation are implemented."
+      "status": "slice-proven",
+      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, and round-trip validation are implemented.",
+      "evidence": [
+        "document model example",
+        "invalid fixtures",
+        "round-trip validation"
+      ],
+      "limitations": [
+        "No full syntactic dependency/coreference/relation graph standard yet"
+      ]
     },
     {
       "id": "nlp-pack-resource-manifest",
-      "status": "implemented",
-      "scope": "Resource-manifest validation, licensed fixtures, and overlay-conflict policy are implemented."
+      "status": "slice-proven",
+      "scope": "Resource-manifest validation, licensed fixtures, and overlay-conflict policy are implemented.",
+      "evidence": [
+        "manifest fixtures",
+        "licensed resource fixtures",
+        "overlay conflict cases"
+      ],
+      "limitations": [
+        "No public resource review workflow or registry is implemented"
+      ]
     },
     {
       "id": "nlp-pos-morph-lemma",
-      "status": "implemented",
-      "scope": "Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices."
+      "status": "slice-proven",
+      "scope": "Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices.",
+      "evidence": [
+        "frozen POS/morph/lemma slices",
+        "expected outputs",
+        "package tests"
+      ],
+      "limitations": [
+        "Not a trained or broad multilingual tagger; fixture-bound deterministic behavior only"
+      ]
     },
     {
       "id": "nlp-rule-backed-ner",
-      "status": "implemented",
-      "scope": "Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures."
+      "status": "slice-proven",
+      "scope": "Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures.",
+      "evidence": [
+        "frozen rule-backed NER slices",
+        "expected outputs",
+        "comparator captures"
+      ],
+      "limitations": [
+        "Only PER/ORG/LOC and small curated resources are covered"
+      ]
     },
     {
       "id": "nlp-corpus-tfidf-bm25",
-      "status": "implemented",
-      "scope": "Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus."
+      "status": "slice-proven",
+      "scope": "Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus.",
+      "evidence": [
+        "explicit-token corpus fixture",
+        "scikit-learn/rank-bm25/Natural captures",
+        "numeric tolerance tests"
+      ],
+      "limitations": [
+        "No full retrieval engine, query parser, snippets, or relevance benchmark"
+      ]
     }
   ]
 }

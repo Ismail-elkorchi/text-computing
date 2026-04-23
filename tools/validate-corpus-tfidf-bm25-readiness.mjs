@@ -137,8 +137,8 @@ expect(comparisonRuntimes.has("python") || comparisonRuntimes.has("jvm"), "Compa
 const supportStatus = await readJson("docs/specs/support-status.v1.json");
 const task = supportStatus.tasks.find((entry) => entry.id === "nlp-corpus-tfidf-bm25");
 expect(
-  task?.status === "readiness-only" || task?.status === "implemented",
-  "Support status must mark nlp-corpus-tfidf-bm25 as readiness-only or implemented.",
+  task?.status === "readiness-only" || task?.status === "slice-proven",
+  "Support status must mark nlp-corpus-tfidf-bm25 as readiness-only or slice-proven.",
 );
 
 console.log("Corpus TF-IDF/BM25 readiness artifacts OK.");
