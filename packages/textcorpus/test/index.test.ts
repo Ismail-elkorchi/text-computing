@@ -1,17 +1,21 @@
 import type { TextDocDocumentV1, TextDocLayer } from "@ismail-elkorchi/textdoc";
 import {
   buildTextCorpusFingerprintIndex,
+  computeTextCorpusScoring,
   createTextCorpusCollection,
   isTextCorpusCollectionV1,
   isTextCorpusFingerprintIndex,
+  isTextCorpusScoringResultV1,
   packageName,
   sliceTextCorpusByMetadata,
   textCorpusCollectionSchemaVersion,
+  textCorpusScoringSchemaVersion,
   type TextCorpusEntry,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textcorpus";
 const expectedSchemaVersion: typeof textCorpusCollectionSchemaVersion = 1;
+const expectedScoringSchemaVersion: typeof textCorpusScoringSchemaVersion = 1;
 
 function createDocument(
   documentId: string,
@@ -231,5 +235,151 @@ if (!sharedDocIds) {
   throw new Error("fingerprint index should record shared shingles across documents");
 }
 
+const emptyEntry: TextCorpusEntry = {
+  id: "doc-empty",
+  document: createDocument("doc:empty", "r1", "", []),
+  viewId: "analysis-view",
+  tokenLayerId: "tokens",
+  metadata: {
+    language: "en",
+    genre: "empty-control",
+  },
+};
+
+const scoringAlphaEntry: TextCorpusEntry = {
+  ...alphaEntry,
+  document: createDocument("doc:score-a", "r1", "alpha beta beta", ["alpha", "beta", "beta"]),
+};
+
+const scoringBetaEntry: TextCorpusEntry = {
+  ...betaEntry,
+  document: createDocument("doc:score-b", "r1", "alpha gamma", ["alpha", "gamma"]),
+};
+
+const scoringDeltaEntry: TextCorpusEntry = {
+  id: "doc-c",
+  document: createDocument("doc:score-c", "r1", "delta", ["delta"]),
+  viewId: "analysis-view",
+  tokenLayerId: "tokens",
+  metadata: {
+    language: "en",
+    genre: "note",
+  },
+};
+
+const scoringCollection = createTextCorpusCollection([scoringAlphaEntry, scoringBetaEntry, scoringDeltaEntry, emptyEntry], {
+  corpusId: "corpus-tfidf-bm25-smoke",
+});
+
+const scoringResult = computeTextCorpusScoring(scoringCollection, {
+  tolerance: 1e-12,
+  queries: [
+    { id: "alpha-beta", tokens: ["alpha", "beta"] },
+    { id: "delta", tokens: ["delta"] },
+    { id: "missing", tokens: ["missing"] },
+  ],
+});
+
+if (scoringResult.schemaVersion !== textCorpusScoringSchemaVersion) {
+  throw new Error("textcorpus scoring result should use the scoring schema version");
+}
+
+if (!isTextCorpusScoringResultV1(scoringResult)) {
+  throw new Error("textcorpus scoring result should satisfy the runtime contract");
+}
+
+if (scoringResult.documentOrder.join(",") !== "doc-a,doc-b,doc-c,doc-empty") {
+  throw new Error("scoring output should preserve deterministic collection document order");
+}
+
+if (scoringResult.termOrder.join(",") !== "alpha,beta,delta,gamma") {
+  throw new Error("scoring output should expose deterministic lexical term order");
+}
+
+function expectNear(actual: number | undefined, expected: number, message: string): void {
+  if (actual === undefined || Math.abs(actual - expected) > scoringResult.tolerance) {
+    throw new Error(`${message}: expected ${expected}, got ${actual}`);
+  }
+}
+
+function documentScores(documentId: string) {
+  const document = scoringResult.documents.find((entry) => entry.id === documentId);
+  if (!document) throw new Error(`missing scoring document ${documentId}`);
+  return document;
+}
+
+function termValue(values: readonly { readonly term: string; readonly value: number }[], term: string): number | undefined {
+  return values.find((entry) => entry.term === term)?.value;
+}
+
+expectNear(termValue(documentScores("doc-a").tf, "beta"), 2, "doc-a beta raw tf");
+expectNear(
+  termValue(documentScores("doc-a").tfidf, "alpha"),
+  1.5108256237659907,
+  "doc-a alpha smooth tf-idf",
+);
+expectNear(
+  termValue(documentScores("doc-a").tfidf, "beta"),
+  3.83258146374831,
+  "doc-a beta smooth tf-idf",
+);
+expectNear(
+  termValue(documentScores("doc-b").tfidf, "gamma"),
+  1.916290731874155,
+  "doc-b gamma smooth tf-idf",
+);
+
+if (documentScores("doc-empty").length !== 0 || documentScores("doc-empty").tf.length !== 0) {
+  throw new Error("empty document should remain present with zero term values");
+}
+
+function queryScores(queryId: string) {
+  const query = scoringResult.queries.find((entry) => entry.id === queryId);
+  if (!query) throw new Error(`missing scoring query ${queryId}`);
+  return query.bm25;
+}
+
+function queryScore(queryId: string, docId: string): number | undefined {
+  return queryScores(queryId).find((entry) => entry.docId === docId)?.score;
+}
+
+expectNear(queryScore("alpha-beta", "doc-a"), 0.9159976869050851, "alpha-beta BM25 doc-a");
+expectNear(queryScore("alpha-beta", "doc-b"), 0, "alpha-beta BM25 doc-b");
+expectNear(queryScore("delta", "doc-c"), 0.9968210122202397, "delta BM25 doc-c");
+for (const score of queryScores("missing")) {
+  expectNear(score.score, 0, `missing query score for ${score.docId}`);
+}
+
+const repeatedScoringResult = computeTextCorpusScoring(scoringCollection, {
+  tolerance: 1e-12,
+  queries: [{ id: "alpha-beta", tokens: ["alpha", "beta"] }],
+});
+const repeatedScoringResultAgain = computeTextCorpusScoring(scoringCollection, {
+  tolerance: 1e-12,
+  queries: [{ id: "alpha-beta", tokens: ["alpha", "beta"] }],
+});
+
+if (JSON.stringify(repeatedScoringResult) !== JSON.stringify(repeatedScoringResultAgain)) {
+  throw new Error("corpus scoring should be deterministic for identical inputs");
+}
+
+let duplicateQueryRejected = false;
+try {
+  computeTextCorpusScoring(scoringCollection, {
+    queries: [
+      { id: "alpha-beta", tokens: ["alpha"] },
+      { id: "alpha-beta", tokens: ["beta"] },
+    ],
+  });
+} catch (error) {
+  duplicateQueryRejected =
+    error instanceof Error && error.message === "duplicate textcorpus query id: alpha-beta";
+}
+
+if (!duplicateQueryRejected) {
+  throw new Error("textcorpus scoring should reject duplicate query ids");
+}
+
 void expectedPackageName;
 void expectedSchemaVersion;
+void expectedScoringSchemaVersion;
