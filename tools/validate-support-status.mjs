@@ -13,10 +13,10 @@ function renderStatusTable(
   label,
   rows,
 ) {
-  const lines = [`## ${heading}`, "", `| ${label} | Status | Scope |`, "| --- | --- | --- |"];
+  const lines = [`## ${heading}`, "", `| ${label} | Status | Scope | Evidence | Limitations |`, "| --- | --- | --- | --- | --- |"];
   for (const row of rows) {
     const id = "name" in row ? row.name : row.id;
-    lines.push(`| \`${id}\` | \`${row.status}\` | ${row.scope} |`);
+    lines.push(`| \`${id}\` | \`${row.status}\` | ${row.scope} | ${row.evidence.join("<br>")} | ${row.limitations.join("<br>")} |`);
   }
   return lines.join("\n");
 }
@@ -31,9 +31,11 @@ function renderMarkdown(statusDocument) {
     "",
     "## Status labels",
     "",
-    "- `implemented` — public API and executable proof exist for the declared scope.",
+    "- `scaffold` — workspace or package shell exists, but no ratified behavior exists yet.",
     "- `readiness-only` — frozen artifacts exist, but behavior is not implemented yet.",
-    "- `absent` — only a scaffold exists or no ratified public surface exists yet.",
+    "- `slice-proven` — executable behavior exists only for declared frozen slices or fixtures.",
+    "- `beta` — broader package behavior exists with multi-runtime or conformance evidence, but production support is not yet claimed.",
+    "- `production-candidate` — broad support, conformance, packaging, and operational evidence are available for the declared scope.",
     "",
     renderStatusTable("Package status", "Package", statusDocument.packages),
     "",

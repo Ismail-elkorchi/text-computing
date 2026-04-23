@@ -6,15 +6,24 @@
   "private": true,
   "sideEffects": false,
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "dependencies": {
     "@ismail-elkorchi/textdoc": "0.0.0",
     "@ismail-elkorchi/textfacts": "0.1.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit",
-    "test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textfacts/dist/mod.js ]; then npm -w @ismail-elkorchi/textfacts run build >/dev/null; fi && node test/index.test.ts"
+    "build": "tsc -p tsconfig.build.json",
+    "test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textfacts/dist/mod.js ]; then npm -w @ismail-elkorchi/textfacts run build >/dev/null; fi && node test/index.test.ts",
+    "prepack": "npm run build"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ]
 }

@@ -9,12 +9,12 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run --workspaces --if-present build",
+    "build": "npm -w @ismail-elkorchi/textfacts run -s build && npm -w @ismail-elkorchi/textdoc run -s build && npm -w @ismail-elkorchi/textpack run -s build && npm -w @ismail-elkorchi/textprotocol run -s build && npm -w @ismail-elkorchi/textconformance run -s build && npm -w @ismail-elkorchi/textpipeline run -s build && npm -w @ismail-elkorchi/textrules run -s build && npm -w @ismail-elkorchi/textcorpus run -s build && npm -w @ismail-elkorchi/textlab run -s build",
     "lint": "npm run --workspaces --if-present lint && npm run -s check:truth && npm run -s check:boundaries",
     "check:truth": "node tools/check-truth.mjs",
     "check:boundaries": "node tools/check-boundaries.mjs",
     "schema:validate": "node tools/validate-repo-schemas.mjs && npm -w @ismail-elkorchi/textfacts run schema:validate",
-    "check:fixtures": "node tools/validate-tokenization-sbd-readiness.mjs && node tools/validate-textdoc-document-model.mjs && node tools/validate-textpack-resources.mjs && node tools/validate-pos-morph-lemma-readiness.mjs && node tools/validate-pos-morph-lemma-feature.mjs && node tools/validate-rule-backed-ner-readiness.mjs && node tools/validate-corpus-tfidf-bm25-readiness.mjs && node tools/validate-support-status.mjs",
+    "check:fixtures": "node tools/validate-tokenization-sbd-readiness.mjs && node tools/validate-textdoc-document-model.mjs && node tools/validate-textpack-resources.mjs && node tools/validate-pos-morph-lemma-readiness.mjs && node tools/validate-pos-morph-lemma-feature.mjs && node tools/validate-rule-backed-ner-readiness.mjs && node tools/validate-corpus-tfidf-bm25-readiness.mjs && node tools/validate-support-status.mjs && npm run -s check:package-readiness",
     "check:static": "npm run --workspaces --if-present check:static",
     "check:pack": "npm -w @ismail-elkorchi/textfacts run check:pack",
     "check:publint": "npm -w @ismail-elkorchi/textfacts run check:publint",
@@ -22,7 +22,8 @@
     "check:jsr": "npm -w @ismail-elkorchi/textfacts run check:jsr",
     "check:quality": "npm run check:static && npm run check:fixtures && npm run check:pack && npm run check:publint && npm run check:attw && npm run check:jsr",
     "test:all": "npm run --workspaces --if-present test",
-    "test:workspaces": "npm run --workspaces --if-present test"
+    "test:workspaces": "npm run --workspaces --if-present test",
+    "check:package-readiness": "node tools/validate-package-readiness.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",

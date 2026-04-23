@@ -15,6 +15,8 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
+- [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.
+- [`next-wave-readiness-roadmap.md`](next-wave-readiness-roadmap.md) — readiness order for dependency parsing, relation extraction, coreference, entity linking, retrieval, and inspection tooling.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.
 - [`textdoc-document-annotation-model.md`](textdoc-document-annotation-model.md) — structural contract for the document annotation model used by issue `#11`.
 - [`textpipeline-processor-contract.md`](textpipeline-processor-contract.md) — deterministic processor ordering and trace contract.

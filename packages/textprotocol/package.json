@@ -6,11 +6,20 @@
   "private": true,
   "sideEffects": false,
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit",
-    "test": "tsc -p tsconfig.json --noEmit"
+    "build": "tsc -p tsconfig.build.json",
+    "test": "tsc -p tsconfig.json --noEmit",
+    "prepack": "npm run build"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ]
 }
