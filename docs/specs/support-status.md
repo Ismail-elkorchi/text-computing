@@ -33,4 +33,4 @@ changes.
 | `nlp-pack-resource-manifest` | `implemented` | Resource-manifest validation, licensed fixtures, and overlay-conflict policy are implemented. |
 | `nlp-pos-morph-lemma` | `implemented` | Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices. |
 | `nlp-rule-backed-ner` | `implemented` | Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures. |
-| `nlp-corpus-tfidf-bm25` | `absent` | No public readiness artifacts or feature behavior are implemented yet. |
+| `nlp-corpus-tfidf-bm25` | `readiness-only` | Formula policy, explicit-token corpus slices, expected outputs, comparator captures, and numeric tolerance are frozen; behavior is not implemented yet. |

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "comparator": {
+    "name": "scikit-learn+rank-bm25",
+    "version": "scikit-learn 1.8.0; rank-bm25 0.2.2",
+    "runtime": "python"
+  },
+  "corpusId": "corpus-tfidf-bm25-smoke",
+  "documentOrder": [
+    "doc-a",
+    "doc-b",
+    "doc-c",
+    "doc-empty"
+  ],
+  "outputs": {
+    "terms": [
+      "alpha",
+      "beta",
+      "delta",
+      "gamma"
+    ],
+    "tfidf": {
+      "doc-a": {
+        "alpha": 1.5108256237659907,
+        "beta": 3.83258146374831
+      },
+      "doc-b": {
+        "alpha": 1.5108256237659907,
+        "gamma": 1.916290731874155
+      },
+      "doc-c": {
+        "delta": 1.916290731874155
+      },
+      "doc-empty": {}
+    },
+    "bm25": {
+      "alpha-beta": {
+        "doc-a": 0.9159976869050851,
+        "doc-b": 0,
+        "doc-c": 0,
+        "doc-empty": 0
+      },
+      "delta": {
+        "doc-a": 0,
+        "doc-b": 0,
+        "doc-c": 0.9968210122202397,
+        "doc-empty": 0
+      },
+      "missing": {
+        "doc-a": 0,
+        "doc-b": 0,
+        "doc-c": 0,
+        "doc-empty": 0
+      }
+    }
+  },
+  "notes": [
+    "Captured in a temporary Python environment from the explicit token lists."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-corpus-tfidf-bm25",
+  "formulas": [
+    {
+      "id": "tf.raw-count",
+      "description": "Raw count of a term in a document."
+    },
+    {
+      "id": "df.document-count",
+      "description": "Number of documents containing the term at least once."
+    },
+    {
+      "id": "tfidf.sklearn-smooth-raw",
+      "description": "Raw term frequency multiplied by scikit-learn smooth idf with no vector normalization."
+    },
+    {
+      "id": "bm25.okapi.k1-1.5.b-0.75",
+      "description": "Okapi BM25 using k1=1.5 and b=0.75 over explicit token counts.",
+      "parameters": {
+        "k1": 1.5,
+        "b": 0.75
+      }
+    }
+  ],
+  "comparators": [
+    {
+      "name": "scikit-learn",
+      "package": "scikit-learn",
+      "version": "1.8.0",
+      "runtime": "python",
+      "scope": [
+        "tfidf.sklearn-smooth-raw"
+      ],
+      "notes": [
+        "Registry query on 2026-04-23 reported 1.8.0 as latest."
+      ]
+    },
+    {
+      "name": "rank-bm25",
+      "package": "rank-bm25",
+      "version": "0.2.2",
+      "runtime": "python",
+      "scope": [
+        "bm25.okapi.k1-1.5.b-0.75"
+      ],
+      "notes": [
+        "Registry query on 2026-04-23 reported 0.2.2 as latest."
+      ]
+    },
+    {
+      "name": "Natural",
+      "package": "natural",
+      "version": "8.1.1",
+      "runtime": "javascript",
+      "scope": [
+        "tfidf.natural-default"
+      ],
+      "notes": [
+        "Registry query on 2026-04-23 reported 8.1.1 as latest. Natural default idf differs from the canonical expected formula."
+      ]
+    }
+  ]
+}
