@@ -29,11 +29,11 @@ function addJsExtension(spec) {
 
 function rewriteImports(source) {
   return source
-    .replace(/(from\s+["'])([^"']+)(["'])/g, (match, prefix, spec, suffix) => {
+    .replace(/(from\s+["'])([^"']+)(["'])/g, (_match, prefix, spec, suffix) => {
       const updated = addJsExtension(spec);
       return `${prefix}${updated}${suffix}`;
     })
-    .replace(/(import\s+["'])([^"']+)(["'])/g, (match, prefix, spec, suffix) => {
+    .replace(/(import\s+["'])([^"']+)(["'])/g, (_match, prefix, spec, suffix) => {
       const updated = addJsExtension(spec);
       return `${prefix}${updated}${suffix}`;
     });

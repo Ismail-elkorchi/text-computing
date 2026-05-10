@@ -164,7 +164,6 @@ export function registerTests(api: TestApi): void {
     const {
       analyzeText,
       buildVariantIndex,
-      canonicalModelStringify,
       compareProfiles,
       confusableSkeleton,
       diffText,
