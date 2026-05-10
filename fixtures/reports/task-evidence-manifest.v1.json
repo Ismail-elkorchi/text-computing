@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "tasks": [
+    {
+      "taskId": "nlp-tokenization-sbd",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for frozen tokenization and sentence-boundary fixtures only; not broad multilingual tokenizer coverage.",
+      "reportPath": "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/tokenization-sbd-readiness.md",
+        "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+        "fixtures/tokenization-sbd/slices.json",
+        "fixtures/tokenization-sbd/tool-versions.json",
+        "schemas/tokenization-sbd-expected-v1.schema.json",
+        "tools/validate-tokenization-sbd-readiness.mjs"
+      ],
+      "comparatorRefs": [
+        "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+        "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
+      ],
+      "knownGaps": [
+        "Not a broad multilingual tokenizer benchmark suite.",
+        "Language-specific segmentation beyond the frozen slices remains future work."
+      ]
+    },
+    {
+      "taskId": "nlp-document-annotation-model",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for the current document annotation model fixture and invalid-reference cases only.",
+      "reportPath": "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/textdoc-document-annotation-model.md",
+        "fixtures/textdoc/examples/document-annotation-model-v1.json",
+        "fixtures/textdoc/invalid/dangling-target.json",
+        "fixtures/textdoc/invalid/dangling-view.json",
+        "fixtures/textdoc/invalid/lifecycle-mismatch.json",
+        "fixtures/textdoc/invalid/overlap-without-policy.json",
+        "tools/validate-textdoc-document-model.mjs"
+      ],
+      "comparatorRefs": [],
+      "knownGaps": [
+        "No full dependency tree, coreference chain, relation graph, or entity-linking convention is production-grade yet."
+      ]
+    },
+    {
+      "taskId": "nlp-pack-resource-manifest",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for current textpack manifest/resource validation and overlay-conflict fixtures only.",
+      "reportPath": "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/textpack-resource-manifest.md",
+        "fixtures/textpack/manifests/textpack-en-core.json",
+        "fixtures/textpack/manifests/textpack-en-legal.json",
+        "fixtures/textpack/invalid/duplicate-resource-id.json",
+        "fixtures/textpack/invalid/missing-license.json",
+        "fixtures/textpack/invalid/missing-provenance.json",
+        "fixtures/textpack/invalid/overlay-conflict-a.json",
+        "fixtures/textpack/invalid/overlay-conflict-b.json",
+        "tools/validate-textpack-resources.mjs"
+      ],
+      "comparatorRefs": [],
+      "knownGaps": [
+        "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented."
+      ]
+    },
+    {
+      "taskId": "nlp-pos-morph-lemma",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+      "reportPath": "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/pos-morph-lemma-readiness.md",
+        "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
+        "fixtures/pos-morph-lemma/slices.json",
+        "fixtures/pos-morph-lemma/tool-versions.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
+        "schemas/pos-morph-lemma-expected-v1.schema.json",
+        "tools/validate-pos-morph-lemma-feature.mjs"
+      ],
+      "comparatorRefs": [],
+      "knownGaps": [
+        "No committed comparator-output capture files are present for this task.",
+        "Not a trained or broad multilingual tagger; behavior remains fixture-bound."
+      ]
+    },
+    {
+      "taskId": "nlp-rule-backed-ner",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+      "reportPath": "fixtures/reports/nlp-rule-backed-ner/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/rule-backed-ner-readiness.md",
+        "docs/specs/nlp-rule-backed-ner-research-ledger.md",
+        "fixtures/rule-backed-ner/slices.json",
+        "fixtures/rule-backed-ner/tool-versions.json",
+        "schemas/rule-backed-ner-expected-v1.schema.json",
+        "tools/validate-rule-backed-ner-readiness.mjs"
+      ],
+      "comparatorRefs": [
+        "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
+        "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
+      ],
+      "knownGaps": [
+        "Only PER, ORG, LOC, and small curated resources are covered.",
+        "Broader labels, entity linking, and large multilingual datasets remain future work."
+      ]
+    },
+    {
+      "taskId": "nlp-corpus-tfidf-bm25",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only.",
+      "reportPath": "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/corpus-tfidf-bm25-readiness.md",
+        "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md",
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/corpus-tfidf-bm25/tool-versions.json",
+        "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+        "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+      ],
+      "comparatorRefs": [
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+      ],
+      "knownGaps": [
+        "No full retrieval engine, query parser, snippets, relevance benchmark, or large-corpus performance proof is implemented."
+      ]
+    }
+  ]
+}

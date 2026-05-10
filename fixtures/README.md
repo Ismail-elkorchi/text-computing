@@ -7,7 +7,7 @@ validation.
 - `expected/` contains expected outputs.
 - `generated/` contains generated artifacts that are checked in only when a repository command
   requires them.
-- `reports/` contains validation reports.
+- `reports/` contains persisted task evidence reports and their manifest.
 - `quarantine/` contains inputs withheld from required checks until their expected behavior is
   specified.
 
@@ -21,3 +21,5 @@ validation.
   `#11`.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue
   `#12`.
+- [`reports/`](reports/) — persisted task evidence manifest and `TextConformanceReportV1`
+  artifacts for current slice-proven task surfaces.

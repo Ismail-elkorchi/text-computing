@@ -1,0 +1,60 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-document-annotation-model",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-document-annotation-model",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "summary": {
+    "pass": 4,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "document-model-fixture-recorded",
+      "status": "pass",
+      "message": "A valid document annotation model fixture is committed.",
+      "evidenceRefs": [
+        "fixtures/textdoc/examples/document-annotation-model-v1.json",
+        "schemas/textdoc-document-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "invalid-reference-policy-tested",
+      "status": "pass",
+      "message": "Invalid reference, lifecycle, and overlap cases are committed.",
+      "evidenceRefs": [
+        "fixtures/textdoc/invalid/dangling-target.json",
+        "fixtures/textdoc/invalid/dangling-view.json",
+        "fixtures/textdoc/invalid/lifecycle-mismatch.json",
+        "fixtures/textdoc/invalid/overlap-without-policy.json"
+      ]
+    },
+    {
+      "checkId": "result-envelope-and-report-proof",
+      "status": "pass",
+      "message": "The document fixture is validated as result-envelope and conformance-report compatible.",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "schemas/textconformance-report-v1.schema.json",
+        "tools/validate-textdoc-document-model.mjs"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status records current document-model limits.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "docs/specs/task-coverage-matrix.md"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists current document-model evidence; dependency, relation, and coreference conventions remain future work."
+  ]
+}

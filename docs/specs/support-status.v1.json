@@ -113,6 +113,7 @@
         "conformance report schema",
         "runtime guards",
         "minimal synchronous runner tests",
+        "fixtures/reports/task-evidence-manifest.v1.json",
         "dist export readiness metadata"
       ],
       "limitations": [
@@ -142,7 +143,8 @@
       "evidence": [
         "frozen tokenization/SBD fixtures",
         "expected outputs",
-        "comparator captures"
+        "comparator captures",
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
       "limitations": [
         "Not a broad multilingual tokenizer benchmark suite"
@@ -155,7 +157,8 @@
       "evidence": [
         "document model example",
         "invalid fixtures",
-        "round-trip validation"
+        "round-trip validation",
+        "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
       ],
       "limitations": [
         "No full syntactic dependency/coreference/relation graph standard yet"
@@ -168,7 +171,8 @@
       "evidence": [
         "manifest fixtures",
         "licensed resource fixtures",
-        "overlay conflict cases"
+        "overlay conflict cases",
+        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
       ],
       "limitations": [
         "No public resource review workflow or registry is implemented"
@@ -181,7 +185,8 @@
       "evidence": [
         "frozen POS/morph/lemma slices",
         "expected outputs",
-        "package tests"
+        "package tests",
+        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
       ],
       "limitations": [
         "Not a trained or broad multilingual tagger; fixture-bound deterministic behavior only"
@@ -194,7 +199,8 @@
       "evidence": [
         "frozen rule-backed NER slices",
         "expected outputs",
-        "comparator captures"
+        "comparator captures",
+        "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
       ],
       "limitations": [
         "Only PER/ORG/LOC and small curated resources are covered"
@@ -207,7 +213,8 @@
       "evidence": [
         "explicit-token corpus fixture",
         "scikit-learn/rank-bm25/Natural captures",
-        "numeric tolerance tests"
+        "numeric tolerance tests",
+        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
       "limitations": [
         "No full retrieval engine, query parser, snippets, or relevance benchmark"
