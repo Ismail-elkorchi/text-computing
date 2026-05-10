@@ -1,0 +1,67 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-rule-backed-ner",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-rule-backed-ner",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "readiness-fixtures-recorded",
+      "status": "pass",
+      "message": "Frozen rule-backed NER slices and tool versions are committed.",
+      "evidenceRefs": [
+        "fixtures/rule-backed-ner/slices.json",
+        "fixtures/rule-backed-ner/tool-versions.json"
+      ]
+    },
+    {
+      "checkId": "expected-outputs-recorded",
+      "status": "pass",
+      "message": "Expected outputs validate through the readiness validator.",
+      "evidenceRefs": [
+        "schemas/rule-backed-ner-expected-v1.schema.json",
+        "tools/validate-rule-backed-ner-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "comparator-captures-recorded",
+      "status": "pass",
+      "message": "Python and JavaScript diagnostic comparator captures are committed.",
+      "evidenceRefs": [
+        "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
+        "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
+      ]
+    },
+    {
+      "checkId": "result-envelope-and-report-proof",
+      "status": "pass",
+      "message": "Generated entity outputs are validated as result-envelope and conformance-report compatible.",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "schemas/textconformance-report-v1.schema.json",
+        "tools/validate-rule-backed-ner-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status remains limited to PER/ORG/LOC frozen slices.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "docs/specs/task-coverage-matrix.md"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists current rule-backed NER evidence; it does not add broader label, entity-linking, or dataset support."
+  ]
+}

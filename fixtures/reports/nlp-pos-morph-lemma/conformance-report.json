@@ -1,0 +1,76 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-pos-morph-lemma",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-pos-morph-lemma",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 1
+  },
+  "checks": [
+    {
+      "checkId": "readiness-fixtures-recorded",
+      "status": "pass",
+      "message": "Frozen POS/morph/lemma slices and tool versions are committed.",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/slices.json",
+        "fixtures/pos-morph-lemma/tool-versions.json"
+      ]
+    },
+    {
+      "checkId": "expected-outputs-recorded",
+      "status": "pass",
+      "message": "Expected outputs validate through the feature validator.",
+      "evidenceRefs": [
+        "schemas/pos-morph-lemma-expected-v1.schema.json",
+        "tools/validate-pos-morph-lemma-feature.mjs"
+      ]
+    },
+    {
+      "checkId": "pack-backed-resources-recorded",
+      "status": "pass",
+      "message": "Pack-backed lexicon fixtures used by the deterministic analyzer are committed.",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
+        "fixtures/pos-morph-lemma/README.md"
+      ]
+    },
+    {
+      "checkId": "result-envelope-and-report-proof",
+      "status": "pass",
+      "message": "Generated outputs are validated as result-envelope and conformance-report compatible.",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "schemas/textconformance-report-v1.schema.json",
+        "tools/validate-pos-morph-lemma-feature.mjs"
+      ]
+    },
+    {
+      "checkId": "comparator-output-captures",
+      "status": "not-run",
+      "message": "Frozen comparator versions exist, but committed comparator-output capture files are not claimed for this task.",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/tool-versions.json",
+        "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status remains limited to frozen deterministic slices.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "docs/specs/task-coverage-matrix.md"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists current fixture-bound POS/morph/lemma evidence and explicitly records the comparator-output capture gap."
+  ]
+}

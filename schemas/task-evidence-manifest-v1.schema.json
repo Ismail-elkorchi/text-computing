@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/task-evidence-manifest-v1.schema.json",
+  "title": "Task evidence manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "generatedAt", "tasks"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "minLength": 1 },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/taskEvidence" }
+    }
+  },
+  "definitions": {
+    "taskEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskId",
+        "supportStatus",
+        "claimBoundary",
+        "reportPath",
+        "evidenceRefs",
+        "knownGaps"
+      ],
+      "properties": {
+        "taskId": { "type": "string", "minLength": 1 },
+        "supportStatus": { "type": "string", "minLength": 1 },
+        "claimBoundary": { "type": "string", "minLength": 1 },
+        "reportPath": {
+          "type": "string",
+          "pattern": "^fixtures/reports/[a-z0-9-]+/conformance-report\\.json$"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "comparatorRefs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "knownGaps": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

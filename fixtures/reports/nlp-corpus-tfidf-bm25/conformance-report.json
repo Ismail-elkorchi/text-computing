@@ -1,0 +1,66 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-corpus-tfidf-bm25",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-corpus-tfidf-bm25",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "readiness-corpus-recorded",
+      "status": "pass",
+      "message": "Frozen explicit-token corpus and formula/version artifacts are committed.",
+      "evidenceRefs": [
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/corpus-tfidf-bm25/tool-versions.json"
+      ]
+    },
+    {
+      "checkId": "expected-outputs-recorded",
+      "status": "pass",
+      "message": "Expected TF-IDF/BM25 outputs validate through the readiness validator.",
+      "evidenceRefs": [
+        "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+        "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "comparator-captures-recorded",
+      "status": "pass",
+      "message": "Python and JavaScript diagnostic comparator captures are committed.",
+      "evidenceRefs": [
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+      ]
+    },
+    {
+      "checkId": "numeric-tolerance-recorded",
+      "status": "pass",
+      "message": "The readiness validator enforces the recorded numeric tolerance.",
+      "evidenceRefs": [
+        "docs/specs/corpus-tfidf-bm25-readiness.md",
+        "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status remains limited to the frozen explicit-token corpus.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "docs/specs/task-coverage-matrix.md"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists current corpus scoring evidence; it does not add a full retrieval engine."
+  ]
+}

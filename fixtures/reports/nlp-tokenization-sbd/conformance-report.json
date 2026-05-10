@@ -1,0 +1,67 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-tokenization-sbd",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-tokenization-sbd",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "readiness-fixtures-recorded",
+      "status": "pass",
+      "message": "Frozen tokenization/SBD slice and tool-version artifacts are present.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/slices.json",
+        "fixtures/tokenization-sbd/tool-versions.json"
+      ]
+    },
+    {
+      "checkId": "expected-output-contract-recorded",
+      "status": "pass",
+      "message": "Expected outputs validate through the repository readiness validator.",
+      "evidenceRefs": [
+        "schemas/tokenization-sbd-expected-v1.schema.json",
+        "tools/validate-tokenization-sbd-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "comparator-captures-recorded",
+      "status": "pass",
+      "message": "Python and JavaScript diagnostic comparator captures are committed.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+        "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
+      ]
+    },
+    {
+      "checkId": "result-envelope-and-report-proof",
+      "status": "pass",
+      "message": "Expected outputs are validated as result-envelope and conformance-report compatible.",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "schemas/textconformance-report-v1.schema.json",
+        "tools/validate-tokenization-sbd-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status remains limited to frozen slices.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "docs/specs/task-coverage-matrix.md"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists existing slice evidence; it does not expand tokenizer support."
+  ]
+}
