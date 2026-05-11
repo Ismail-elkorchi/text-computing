@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "scope": "conllu-dependency",
+  "standards": [
+    {
+      "name": "Universal Dependencies CoNLL-U format",
+      "url": "https://universaldependencies.org/format.html",
+      "version": "UD v2",
+      "role": "Primary file-format contract."
+    },
+    {
+      "name": "Universal Dependencies guidelines",
+      "url": "https://universaldependencies.org/guidelines.html",
+      "version": "UD v2",
+      "role": "Primary dependency relation and annotation guideline source."
+    },
+    {
+      "name": "Universal Dependencies v2 paper",
+      "url": "https://aclanthology.org/2020.lrec-1.497/",
+      "version": "LREC 2020",
+      "role": "Peer-reviewed system/reference paper for UD v2."
+    }
+  ],
+  "validators": [
+    {
+      "name": "UniversalDependencies/tools validator",
+      "url": "https://github.com/UniversalDependencies/tools",
+      "version": "unfrozen-readiness-reference",
+      "role": "Future external format validator reference before importer/exporter behavior lands."
+    }
+  ],
+  "futureComparators": [
+    {
+      "name": "UD-capable Python parser/exporter",
+      "runtime": "python",
+      "role": "Future dependency-arc comparator after readiness artifacts are frozen."
+    },
+    {
+      "name": "UD-capable JavaScript parser/exporter",
+      "runtime": "javascript",
+      "role": "Future TypeScript ecosystem comparator after readiness artifacts are frozen."
+    }
+  ]
+}

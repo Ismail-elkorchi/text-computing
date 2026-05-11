@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/conllu-dependency-tool-versions-v1.schema.json",
+  "title": "CoNLL-U dependency readiness public source and tool versions v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "scope",
+    "standards",
+    "validators",
+    "futureComparators"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "scope": { "const": "conllu-dependency" },
+    "standards": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/definitions/source" }
+    },
+    "validators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/source" }
+    },
+    "futureComparators": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "runtime", "role"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "runtime": {
+            "enum": ["javascript", "python", "jvm", "other"]
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "url",
+        "version",
+        "role"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

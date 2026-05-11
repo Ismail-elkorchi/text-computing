@@ -20,9 +20,12 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`corpus-tfidf-bm25-slices-v1.schema.json`](corpus-tfidf-bm25-slices-v1.schema.json) — readiness corpus schema for issue `#14`.
 - [`corpus-tfidf-bm25-tool-versions-v1.schema.json`](corpus-tfidf-bm25-tool-versions-v1.schema.json) — frozen formula/comparator schema for issue `#14`.
 - [`corpus-tfidf-bm25-comparison-v1.schema.json`](corpus-tfidf-bm25-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#14`.
+- [`conllu-dependency-slices-v1.schema.json`](conllu-dependency-slices-v1.schema.json) — CoNLL-U / UD readiness fixture schema.
+- [`conllu-dependency-tool-versions-v1.schema.json`](conllu-dependency-tool-versions-v1.schema.json) — public source, validator, and future comparator role schema for CoNLL-U / UD readiness.
 - [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.
 - [`textdoc-document-v1.schema.json`](textdoc-document-v1.schema.json) — document annotation model schema for issue `#11`.
+- [`textdoc-dependency-target-v1.schema.json`](textdoc-dependency-target-v1.schema.json) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.
 - [`textpipeline-trace-v1.schema.json`](textpipeline-trace-v1.schema.json) — deterministic processor trace schema.
 - [`textpack-manifest-v1.schema.json`](textpack-manifest-v1.schema.json) — pack manifest schema for issue `#12`.
 - [`support-status-v1.schema.json`](support-status-v1.schema.json) — canonical package and task support-status schema.

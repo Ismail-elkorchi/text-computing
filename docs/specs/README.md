@@ -13,11 +13,14 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-rule-backed-ner-research-ledger.md`](nlp-rule-backed-ner-research-ledger.md) — research ledger for rule-backed NER readiness.
 - [`corpus-tfidf-bm25-readiness.md`](corpus-tfidf-bm25-readiness.md) — readiness gate for issue `#14`.
 - [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
+- [`conllu-dependency-readiness.md`](conllu-dependency-readiness.md) — readiness gate for CoNLL-U / Universal Dependencies import-export and dependency-target annotation work.
+- [`nlp-conllu-dependency-research-ledger.md`](nlp-conllu-dependency-research-ledger.md) — research ledger for CoNLL-U / UD readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
 - [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.
 - [`next-wave-readiness-roadmap.md`](next-wave-readiness-roadmap.md) — readiness order for dependency parsing, relation extraction, coreference, entity linking, retrieval, and inspection tooling.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.
+- [`textdoc-dependency-target-contract.md`](textdoc-dependency-target-contract.md) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.
 - [`textdoc-document-annotation-model.md`](textdoc-document-annotation-model.md) — structural contract for the document annotation model used by issue `#11`.
 - [`textpipeline-processor-contract.md`](textpipeline-processor-contract.md) — deterministic processor ordering and trace contract.
 - [`textpack-resource-manifest.md`](textpack-resource-manifest.md) — manifest and lookup contract for issue `#12`.

@@ -2,6 +2,8 @@
 
 This roadmap defines the next implementation gates after the current slice-proven foundation. It exists to prevent closed issues from being mistaken for broad NLP parity.
 
+The CoNLL-U / UD interchange row is now tracked as `readiness-only` in support status. That means public readiness artifacts exist, not importer/exporter or dependency parser behavior.
+
 ## Gate rules
 
 - No next-wave feature code starts without a public research ledger, frozen fixtures, comparator versions, expected-output schema, negative controls, and support-status entry.
@@ -13,7 +15,7 @@ This roadmap defines the next implementation gates after the current slice-prove
 
 | Order | Task surface | Owning package(s) | Readiness artifacts required before code |
 | --- | --- | --- | --- |
-| 1 | CoNLL-U / UD import-export and dependency annotation model | `textdoc`, `textprotocol`, `textconformance` | UD/CoNLL-U research ledger, valid/invalid CoNLL-U fixtures, dependency-target schema, round-trip tests. |
+| 1 | CoNLL-U / UD import-export and dependency annotation model | `textdoc`, `textprotocol`, `textconformance` | UD/CoNLL-U research ledger, valid/invalid CoNLL-U fixtures, dependency-target schema, and round-trip evidence plan. |
 | 2 | Deterministic dependency parsing baseline | `textrules`, `textpipeline`, `textdoc` | Comparator captures from UD-capable tools, language slices, expected dependency arcs, documented non-failure differences. |
 | 3 | Chunking and relation extraction | `textrules`, `textdoc`, `textconformance` | Typed relation schema, span evidence policy, negative controls, comparator/corpus freeze. |
 | 4 | Entity linking | `textrules`, `textpack`, `textdoc` | Canonical entity identifier model, NIL policy, KB provenance fixture, disambiguation negative controls. |
