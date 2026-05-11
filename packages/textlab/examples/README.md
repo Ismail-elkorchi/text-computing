@@ -1,3 +1,3 @@
 # @ismail-elkorchi/textlab examples
 
-This directory will contain runnable examples after the package exposes reviewed behavior beyond its package identity export.
+This directory will contain runnable examples for support-status inspection and later report rendering.

@@ -21,7 +21,7 @@ The CoNLL-U / UD interchange row is now tracked as fixture-scope `slice-proven` 
 | 4 | Entity linking | `textrules`, `textpack`, `textdoc` | Canonical entity identifier model, NIL policy, KB provenance fixture, disambiguation negative controls. |
 | 5 | Coreference | `textdoc`, `textrules`, `textconformance` | Mention/chain schema, ambiguity/loss policy, multilingual corpus slices, comparator captures. |
 | 6 | Full retrieval | `textcorpus`, `textpipeline`, `textconformance` | Inverted-index contract, query model, BM25 explanation format, snippets, relevance judgments, and performance budgets. |
-| 7 | `textlab` inspection tools | `textlab`, all public packages | CLI command contract, fixture replay commands, annotation query examples, and report rendering tests. |
+| 7 | `textlab` inspection tools | `textlab`, all public packages | Support-status inspection is present; remaining gates are fixture replay commands, annotation query examples, report rendering tests, and comparator replay. |
 
 ## Research evidence requirements
 

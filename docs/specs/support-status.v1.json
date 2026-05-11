@@ -123,15 +123,15 @@
     },
     {
       "name": "@ismail-elkorchi/textlab",
-      "status": "scaffold",
-      "scope": "Only the workspace scaffold exists; no public inspection-command behavior is implemented yet.",
+      "status": "slice-proven",
+      "scope": "Support-status summary API and CLI are implemented for the repository support-status JSON.",
       "evidence": [
-        "workspace package scaffold",
-        "dist export readiness metadata"
+        "packages/textlab/src/index.ts",
+        "packages/textlab/src/cli.ts",
+        "packages/textlab/test/index.test.mjs"
       ],
       "limitations": [
-        "No public CLI or inspection behavior exists",
-        "Package remains private until broader release gates pass"
+        "No full conformance report renderer, comparator replay UI, annotation query engine, or corpus browser is implemented"
       ]
     }
   ],
