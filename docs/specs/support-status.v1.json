@@ -219,6 +219,22 @@
       "limitations": [
         "No full retrieval engine, query parser, snippets, or relevance benchmark"
       ]
+    },
+    {
+      "id": "nlp-conllu-dependency-readiness",
+      "status": "readiness-only",
+      "scope": "CoNLL-U/UD import-export and dependency-target annotation readiness artifacts exist; no importer, exporter, dependency parser, or broad UD treebank behavior is implemented.",
+      "evidence": [
+        "CoNLL-U/UD research ledger",
+        "valid and invalid CoNLL-U fixtures",
+        "textdoc dependency-target contract",
+        "fixture and schema validator"
+      ],
+      "limitations": [
+        "No CoNLL-U importer or exporter behavior is implemented",
+        "No dependency parser or parser comparator capture is implemented",
+        "No broad UD treebank or language coverage is claimed"
+      ]
     }
   ]
 }

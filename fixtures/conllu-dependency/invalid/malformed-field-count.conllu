@@ -1,0 +1,5 @@
+# sent_id = invalid-malformed-field-count
+# text = Bad field count.
+1	Bad	bad	ADJ	JJ	_	2	amod	_
+2	count	count	NOUN	NN	Number=Sing	0	root	_	SpaceAfter=No
+3	.	.	PUNCT	.	_	2	punct	_	_

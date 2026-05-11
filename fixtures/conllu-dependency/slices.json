@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "scope": "conllu-dependency",
+  "conlluVersion": "UD-v2-CoNLL-U",
+  "readinessStatus": "readiness-only",
+  "expectedRoundTripStatus": "planned",
+  "fixtures": {
+    "valid": [
+      {
+        "id": "en-basic",
+        "path": "fixtures/conllu-dependency/valid/en-basic.conllu",
+        "language": "en",
+        "phenomena": [
+          "basic-dependency-tree",
+          "root-arc",
+          "punctuation-arc",
+          "enhanced-dependencies"
+        ],
+        "roundTripPlan": {
+          "import": "planned",
+          "export": "planned",
+          "annotationContract": "textdoc-dependency-target-v1"
+        },
+        "notes": [
+          "Repository-authored English smoke fixture for dependency target mapping."
+        ]
+      },
+      {
+        "id": "es-mwt",
+        "path": "fixtures/conllu-dependency/valid/es-mwt.conllu",
+        "language": "es",
+        "phenomena": [
+          "multiword-token",
+          "morphological-features",
+          "non-english-latin-script",
+          "punctuation-arc"
+        ],
+        "roundTripPlan": {
+          "import": "planned",
+          "export": "planned",
+          "annotationContract": "textdoc-dependency-target-v1"
+        },
+        "notes": [
+          "Repository-authored Spanish fixture for multiword-token readiness."
+        ]
+      }
+    ],
+    "invalid": [
+      {
+        "id": "dangling-head",
+        "path": "fixtures/conllu-dependency/invalid/dangling-head.conllu",
+        "reason": "A token HEAD points to a token id that does not exist in the same sentence.",
+        "mustFail": "dangling-head"
+      },
+      {
+        "id": "missing-root",
+        "path": "fixtures/conllu-dependency/invalid/missing-root.conllu",
+        "reason": "The sentence has no token whose HEAD is 0.",
+        "mustFail": "root-count"
+      },
+      {
+        "id": "malformed-field-count",
+        "path": "fixtures/conllu-dependency/invalid/malformed-field-count.conllu",
+        "reason": "A token line does not contain the ten required CoNLL-U columns.",
+        "mustFail": "field-count"
+      }
+    ]
+  }
+}

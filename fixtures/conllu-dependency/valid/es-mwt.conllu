@@ -1,0 +1,10 @@
+# sent_id = es-mwt-1
+# text = Vámonos al mar.
+1-2	Vámonos	_	_	_	_	_	_	_	_
+1	Vamos	ir	VERB	_	Mood=Imp|Number=Plur|Person=1	0	root	0:root	_
+2	nos	nosotros	PRON	_	Case=Acc|Number=Plur|Person=1	1	obj	1:obj	_
+3-4	al	_	_	_	_	_	_	_	_
+3	a	a	ADP	_	_	5	case	5:case	_
+4	el	el	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	5	det	5:det	_
+5	mar	mar	NOUN	_	Gender=Masc|Number=Sing	1	obl	1:obl	SpaceAfter=No
+6	.	.	PUNCT	_	_	1	punct	1:punct	_
