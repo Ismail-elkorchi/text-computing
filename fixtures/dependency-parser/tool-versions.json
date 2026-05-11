@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "scope": "dependency-parser",
+  "standards": [
+    {
+      "name": "Universal Dependencies CoNLL-U format",
+      "url": "https://universaldependencies.org/format.html",
+      "version": "UD v2",
+      "role": "Defines HEAD, DEPREL, basic dependency tree, enhanced dependency field, and row constraints."
+    },
+    {
+      "name": "Universal Dependencies guidelines",
+      "url": "https://universaldependencies.org/guidelines.html",
+      "version": "UD v2",
+      "role": "Defines relation and annotation guidance used to interpret dependency labels."
+    }
+  ],
+  "comparators": [
+    {
+      "name": "spaCy DependencyParser",
+      "version": "3.8.x documentation snapshot",
+      "runtime": "python",
+      "model": {
+        "name": "model-dependent",
+        "version": "not-vendored"
+      },
+      "license": "MIT",
+      "artifactSurface": "Token.head, Token.dep, Doc.sents",
+      "executionStatus": "capability-recorded",
+      "capturePath": "fixtures/dependency-parser/comparisons/spacy-3.8.json"
+    },
+    {
+      "name": "Stanza DepparseProcessor",
+      "version": "1.11.x documentation snapshot",
+      "runtime": "python",
+      "model": {
+        "name": "model-dependent",
+        "version": "not-vendored"
+      },
+      "license": "Apache-2.0",
+      "artifactSurface": "UD-style head and dependency relation fields",
+      "executionStatus": "capability-recorded",
+      "capturePath": "fixtures/dependency-parser/comparisons/stanza-1.11.json"
+    },
+    {
+      "name": "JavaScript NLP baseline",
+      "version": "2026-05 readiness review",
+      "runtime": "javascript",
+      "license": "not-applicable",
+      "artifactSurface": "No committed broad dependency-parser comparator was identified for this readiness gate.",
+      "executionStatus": "capability-recorded",
+      "capturePath": "fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json"
+    }
+  ],
+  "executionPolicy": "Executed model-output captures are required before parser feature code; this readiness gate records comparator capabilities and absence/gap evidence only."
+}

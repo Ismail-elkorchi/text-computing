@@ -15,6 +15,8 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
 - [`conllu-dependency-readiness.md`](conllu-dependency-readiness.md) — fixture-scope CoNLL-U / Universal Dependencies import-export round-trip gate.
 - [`nlp-conllu-dependency-research-ledger.md`](nlp-conllu-dependency-research-ledger.md) — research ledger for CoNLL-U / UD round-trip work.
+- [`dependency-parser-readiness.md`](dependency-parser-readiness.md) — readiness gate for deterministic dependency parsing before parser behavior exists.
+- [`nlp-dependency-parser-research-ledger.md`](nlp-dependency-parser-research-ledger.md) — research ledger for dependency parser readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
 - [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.

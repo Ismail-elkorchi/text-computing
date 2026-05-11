@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "scope": "dependency-parser",
+  "supportStatus": "readiness-only",
+  "expectedOutputStatus": "recorded",
+  "comparatorStatus": "capability-recorded",
+  "fixtures": [
+    {
+      "id": "en-basic",
+      "language": "en",
+      "sourceConlluPath": "fixtures/conllu-dependency/valid/en-basic.conllu",
+      "expectedPath": "fixtures/dependency-parser/expected/en-basic.json",
+      "phenomena": [
+        "root-arc",
+        "subject-arc",
+        "object-arc",
+        "punctuation-arc"
+      ],
+      "notes": [
+        "Small English transitive sentence with one verbal root."
+      ]
+    },
+    {
+      "id": "es-mwt",
+      "language": "es",
+      "sourceConlluPath": "fixtures/conllu-dependency/valid/es-mwt.conllu",
+      "expectedPath": "fixtures/dependency-parser/expected/es-mwt.json",
+      "phenomena": [
+        "root-arc",
+        "object-arc",
+        "oblique-arc",
+        "punctuation-arc",
+        "multiword-token",
+        "morphologically-rich-form",
+        "non-english-latin-script"
+      ],
+      "notes": [
+        "Spanish multiword-token fixture exercises word rows distinct from surface token ranges."
+      ]
+    }
+  ]
+}
