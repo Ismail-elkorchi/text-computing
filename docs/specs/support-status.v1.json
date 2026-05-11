@@ -26,7 +26,7 @@
         "dist export readiness metadata"
       ],
       "limitations": [
-        "No dependency tree, coreference chain, or relation graph conventions are production-grade yet",
+        "Dependency tree round-trip is limited to CoNLL-U fixture import/export; coreference chain and relation graph conventions are not production-grade yet",
         "Package remains private until broader release gates pass"
       ]
     },
@@ -221,17 +221,17 @@
       ]
     },
     {
-      "id": "nlp-conllu-dependency-readiness",
-      "status": "readiness-only",
-      "scope": "CoNLL-U/UD import-export and dependency-target annotation readiness artifacts exist; no importer, exporter, dependency parser, or broad UD treebank behavior is implemented.",
+      "id": "nlp-conllu-dependency-roundtrip",
+      "status": "slice-proven",
+      "scope": "CoNLL-U/UD import-export round-trip behavior exists only for the frozen repository-authored fixtures; no dependency parser or broad UD treebank behavior is implemented.",
       "evidence": [
         "CoNLL-U/UD research ledger",
         "valid and invalid CoNLL-U fixtures",
         "textdoc dependency-target contract",
-        "fixture and schema validator"
+        "recorded round-trip expected outputs",
+        "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
       ],
       "limitations": [
-        "No CoNLL-U importer or exporter behavior is implemented",
         "No dependency parser or parser comparator capture is implemented",
         "No broad UD treebank or language coverage is claimed"
       ]

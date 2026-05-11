@@ -1,8 +1,11 @@
 import {
   documentSchemaVersion,
+  exportTextDocDocumentV1ToConllu,
+  importConlluToTextDocDocumentV1,
   isTextDocDocumentV1,
   isTextDocSpanInRange,
   packageName,
+  TextDocConlluError,
   textDocDocumentPayloadKind,
   toTextDocDocumentV1,
   tokenSentenceAnnotationSchemaVersion,
@@ -45,6 +48,18 @@ const issueNineAnnotationSet: TextDocTokenSentenceAnnotationSet = {
 };
 
 const convertedDocument = toTextDocDocumentV1(issueNineAnnotationSet);
+const conlluFixture = [
+  "# sent_id = textdoc-conllu-1",
+  "# text = They buy books.",
+  "1\tThey\tthey\tPRON\tPRP\tCase=Nom|Number=Plur\t2\tnsubj\t2:nsubj\t_",
+  "2\tbuy\tbuy\tVERB\tVBP\tNumber=Plur|Person=3|Tense=Pres\t0\troot\t0:root\t_",
+  "3\tbooks\tbook\tNOUN\tNNS\tNumber=Plur\t2\tobj\t2:obj\tSpaceAfter=No",
+  "4\t.\t.\tPUNCT\t.\t_\t2\tpunct\t2:punct\t_",
+].join("\n");
+const conlluDocument = importConlluToTextDocDocumentV1(conlluFixture, {
+  documentId: "textdoc:test:conllu",
+  sourceId: "textdoc-conllu-smoke",
+});
 
 const issueElevenDocument: TextDocDocumentV1 = {
   schemaVersion: documentSchemaVersion,
@@ -118,6 +133,29 @@ if (!isTextDocDocumentV1(convertedDocument)) {
 
 if (!isTextDocDocumentV1(issueElevenDocument)) {
   throw new Error("issue #11 document example should satisfy the document model shape");
+}
+
+if (!isTextDocDocumentV1(conlluDocument)) {
+  throw new Error("CoNLL-U import should satisfy the document model shape");
+}
+
+if (exportTextDocDocumentV1ToConllu(conlluDocument) !== conlluFixture) {
+  throw new Error("CoNLL-U export should preserve the fixture text");
+}
+
+if (!conlluDocument.layers.some((layer) => layer.kind === "dependency")) {
+  throw new Error("CoNLL-U import should create a dependency layer");
+}
+
+let invalidConlluRejected = false;
+try {
+  importConlluToTextDocDocumentV1("1\tToo\tfew\tfields");
+} catch (error) {
+  invalidConlluRejected = error instanceof TextDocConlluError && error.code === "field-count";
+}
+
+if (!invalidConlluRejected) {
+  throw new Error("CoNLL-U import should reject malformed rows with a stable code");
 }
 
 void expectedPackageName;

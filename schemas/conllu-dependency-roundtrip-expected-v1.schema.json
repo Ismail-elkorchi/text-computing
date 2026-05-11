@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/conllu-dependency-roundtrip-expected-v1.schema.json",
+  "title": "CoNLL-U dependency round-trip expected output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "sourcePath",
+    "documentId",
+    "exportedConllu",
+    "expectedCounts"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "fixtureId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "sourcePath": {
+      "type": "string",
+      "pattern": "^fixtures/conllu-dependency/valid/[a-z0-9-]+\\.conllu$"
+    },
+    "documentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exportedConllu": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expectedCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sentences",
+        "tokens",
+        "dependencyNodes",
+        "dependencies"
+      ],
+      "properties": {
+        "sentences": { "type": "integer", "minimum": 1 },
+        "tokens": { "type": "integer", "minimum": 1 },
+        "dependencyNodes": { "type": "integer", "minimum": 1 },
+        "dependencies": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

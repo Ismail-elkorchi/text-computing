@@ -126,6 +126,27 @@
       "knownGaps": [
         "No full retrieval engine, query parser, snippets, relevance benchmark, or large-corpus performance proof is implemented."
       ]
+    },
+    {
+      "taskId": "nlp-conllu-dependency-roundtrip",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only.",
+      "reportPath": "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/conllu-dependency-readiness.md",
+        "docs/specs/nlp-conllu-dependency-research-ledger.md",
+        "docs/specs/textdoc-dependency-target-contract.md",
+        "fixtures/conllu-dependency/slices.json",
+        "fixtures/conllu-dependency/expected/en-basic.json",
+        "fixtures/conllu-dependency/expected/es-mwt.json",
+        "schemas/conllu-dependency-roundtrip-expected-v1.schema.json",
+        "tools/validate-conllu-dependency-readiness.mjs"
+      ],
+      "comparatorRefs": [],
+      "knownGaps": [
+        "No dependency parser or parser comparator capture is implemented.",
+        "No broad UD treebank or language coverage is claimed."
+      ]
     }
   ]
 }

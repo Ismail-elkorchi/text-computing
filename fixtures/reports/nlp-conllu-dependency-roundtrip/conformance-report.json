@@ -1,0 +1,69 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-conllu-dependency-roundtrip",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-conllu-dependency-roundtrip",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-11T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "valid-fixtures-import",
+      "status": "pass",
+      "message": "Frozen valid CoNLL-U fixtures import to TextDocDocumentV1 dependency layers.",
+      "evidenceRefs": [
+        "fixtures/conllu-dependency/valid/en-basic.conllu",
+        "fixtures/conllu-dependency/valid/es-mwt.conllu",
+        "schemas/textdoc-document-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "exports-preserve-fixtures",
+      "status": "pass",
+      "message": "Exported CoNLL-U strings match the recorded expected outputs for the frozen fixtures.",
+      "evidenceRefs": [
+        "fixtures/conllu-dependency/expected/en-basic.json",
+        "fixtures/conllu-dependency/expected/es-mwt.json"
+      ]
+    },
+    {
+      "checkId": "invalid-fixtures-diagnosed",
+      "status": "pass",
+      "message": "Invalid fixtures fail with stable machine-readable diagnostics.",
+      "evidenceRefs": [
+        "fixtures/conllu-dependency/invalid/dangling-head.conllu",
+        "fixtures/conllu-dependency/invalid/malformed-field-count.conllu",
+        "fixtures/conllu-dependency/invalid/missing-root.conllu"
+      ]
+    },
+    {
+      "checkId": "protocol-conformance-proof",
+      "status": "pass",
+      "message": "Round-trip outputs validate through result-envelope and conformance-report schemas.",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "schemas/textconformance-report-v1.schema.json",
+        "tools/validate-conllu-dependency-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status excludes dependency parser and broad UD treebank behavior.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "docs/specs/task-coverage-matrix.md"
+      ]
+    }
+  ],
+  "notes": [
+    "This report records CoNLL-U import/export round-trip evidence only; it does not add dependency parser behavior."
+  ]
+}

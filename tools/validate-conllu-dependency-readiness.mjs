@@ -1,5 +1,12 @@
 import Ajv from "ajv";
 import { readFile } from "node:fs/promises";
+import {
+  exportTextDocDocumentV1ToConllu,
+  importConlluToTextDocDocumentV1,
+  isTextDocDocumentV1,
+  TextDocConlluError,
+  textDocConlluRoundTripPayloadKind,
+} from "../packages/textdoc/src/index.ts";
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 
@@ -127,15 +134,24 @@ function dependencyTargetsFromSentences(sentences) {
 const slicesSchemaPath = "schemas/conllu-dependency-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/conllu-dependency-tool-versions-v1.schema.json";
 const dependencyTargetSchemaPath = "schemas/textdoc-dependency-target-v1.schema.json";
+const expectedSchemaPath = "schemas/conllu-dependency-roundtrip-expected-v1.schema.json";
+const textdocSchemaPath = "schemas/textdoc-document-v1.schema.json";
+const resultEnvelopeSchemaPath = "schemas/textprotocol-result-envelope-v1.schema.json";
+const conformanceReportSchemaPath = "schemas/textconformance-report-v1.schema.json";
 
 const validateSlices = ajv.compile(await readJson(slicesSchemaPath));
 const validateToolVersions = ajv.compile(await readJson(toolVersionsSchemaPath));
 const validateDependencyTarget = ajv.compile(await readJson(dependencyTargetSchemaPath));
+const validateExpected = ajv.compile(await readJson(expectedSchemaPath));
+const validateTextdoc = ajv.compile(await readJson(textdocSchemaPath));
+const validateResultEnvelope = ajv.compile(await readJson(resultEnvelopeSchemaPath));
+const validateConformanceReport = ajv.compile(await readJson(conformanceReportSchemaPath));
 
 const slicesPath = "fixtures/conllu-dependency/slices.json";
 const toolVersionsPath = "fixtures/conllu-dependency/tool-versions.json";
 const slices = await readJson(slicesPath);
 const toolVersions = await readJson(toolVersionsPath);
+const textdocPackage = await readJson("packages/textdoc/package.json");
 
 expect(validateSlices(slices), `${slicesPath} failed ${slicesSchemaPath}`, validateSlices.errors);
 expect(
@@ -143,8 +159,12 @@ expect(
   `${toolVersionsPath} failed ${toolVersionsSchemaPath}`,
   validateToolVersions.errors,
 );
-expect(slices.readinessStatus === "readiness-only", "CoNLL-U readiness status must remain readiness-only.");
-expect(slices.expectedRoundTripStatus === "planned", "CoNLL-U readiness cannot claim recorded round-trip outputs yet.");
+expect(slices.supportStatus === "slice-proven", "CoNLL-U round-trip support status must be slice-proven.");
+expect(slices.expectedRoundTripStatus === "recorded", "CoNLL-U round-trip requires recorded expected outputs.");
+
+function countLayer(document, kind) {
+  return document.layers.find((layer) => layer.kind === kind)?.annotations.length ?? 0;
+}
 
 const seenFixtureIds = new Set();
 const seenPhenomena = new Set();
@@ -160,6 +180,110 @@ for (const fixture of slices.fixtures.valid) {
     validateDependencyTarget(dependencyTarget),
     `${fixture.path} synthesized dependency target failed ${dependencyTargetSchemaPath}`,
     validateDependencyTarget.errors,
+  );
+
+  const expected = await readJson(fixture.expectedPath);
+  expect(validateExpected(expected), `${fixture.expectedPath} failed ${expectedSchemaPath}`, validateExpected.errors);
+  expect(expected.fixtureId === fixture.id, `${fixture.expectedPath} fixtureId must match ${fixture.id}.`);
+  expect(expected.sourcePath === fixture.path, `${fixture.expectedPath} sourcePath must match ${fixture.path}.`);
+
+  const document = importConlluToTextDocDocumentV1(text, {
+    documentId: expected.documentId,
+    sourceId: fixture.id,
+  });
+  expect(isTextDocDocumentV1(document), `${fixture.path} did not import to TextDocDocumentV1.`);
+  expect(validateTextdoc(document), `${fixture.path} imported document failed ${textdocSchemaPath}`, validateTextdoc.errors);
+  expect(countLayer(document, "sentence") === expected.expectedCounts.sentences, `${fixture.path} sentence count mismatch.`);
+  expect(countLayer(document, "token") === expected.expectedCounts.tokens, `${fixture.path} token count mismatch.`);
+  expect(
+    countLayer(document, "dependency-node") === expected.expectedCounts.dependencyNodes,
+    `${fixture.path} dependency-node count mismatch.`,
+  );
+  expect(
+    countLayer(document, "dependency") === expected.expectedCounts.dependencies,
+    `${fixture.path} dependency count mismatch.`,
+  );
+
+  const exported = exportTextDocDocumentV1ToConllu(document);
+  expect(exported === expected.exportedConllu, `${fixture.path} exported CoNLL-U does not match expected output.`);
+  expect(exported === text.trimEnd(), `${fixture.path} exported CoNLL-U must preserve the frozen fixture text.`);
+
+  const resultEnvelope = {
+    schemaId: "urn:ismail-elkorchi:textprotocol:result-envelope:v1",
+    schemaVersion: 1,
+    producer: {
+      package: textdocPackage.name,
+      version: textdocPackage.version,
+    },
+    payloadKind: textDocConlluRoundTripPayloadKind,
+    payload: {
+      document,
+      exportedConllu: exported,
+    },
+    provenance: {
+      source: {
+        id: fixture.path,
+      },
+      references: [
+        {
+          kind: "schema",
+          id: textdocSchemaPath,
+        },
+        {
+          kind: "fixture",
+          id: fixture.expectedPath,
+        },
+      ],
+    },
+  };
+  expect(
+    validateResultEnvelope(resultEnvelope),
+    `${fixture.path} round-trip result failed ${resultEnvelopeSchemaPath}`,
+    validateResultEnvelope.errors,
+  );
+
+  const conformanceReport = {
+    schemaId: "urn:ismail-elkorchi:textconformance:report:v1",
+    schemaVersion: 1,
+    reportId: `conllu-roundtrip:${fixture.id}`,
+    subject: {
+      kind: "textprotocol-result-envelope",
+      id: expected.documentId,
+      schemaId: resultEnvelope.schemaId,
+    },
+    generatedAt: "2026-05-11T00:00:00.000Z",
+    summary: {
+      pass: 4,
+      fail: 0,
+      notRun: 0,
+    },
+    checks: [
+      {
+        checkId: "imported-document-valid",
+        status: "pass",
+        evidenceRefs: [fixture.path, textdocSchemaPath],
+      },
+      {
+        checkId: "export-preserves-fixture",
+        status: "pass",
+        evidenceRefs: [fixture.path, fixture.expectedPath],
+      },
+      {
+        checkId: "result-envelope-valid",
+        status: "pass",
+        evidenceRefs: [resultEnvelopeSchemaPath],
+      },
+      {
+        checkId: "no-parser-claim",
+        status: "pass",
+        evidenceRefs: ["docs/specs/conllu-dependency-readiness.md"],
+      },
+    ],
+  };
+  expect(
+    validateConformanceReport(conformanceReport),
+    `${fixture.path} round-trip conformance report failed ${conformanceReportSchemaPath}`,
+    validateConformanceReport.errors,
   );
 }
 
@@ -180,11 +304,14 @@ for (const fixture of slices.fixtures.invalid) {
   const text = await readText(fixture.path);
   let failed = false;
   try {
-    parseConllu(text, fixture.path);
+    importConlluToTextDocDocumentV1(text, {
+      documentId: `conllu-dependency:${fixture.id}`,
+      sourceId: fixture.id,
+    });
   } catch (error) {
     failed = true;
     expect(
-      error instanceof Error && error.message.includes(fixture.mustFail),
+      error instanceof TextDocConlluError && error.code === fixture.mustFail,
       `${fixture.path} failed for unexpected reason: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
@@ -232,7 +359,7 @@ for (const heading of [
 }
 
 const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-conllu-dependency-readiness");
-expect(task?.status === "readiness-only", "Support status must mark nlp-conllu-dependency-readiness as readiness-only.");
+const task = supportStatus.tasks.find((entry) => entry.id === "nlp-conllu-dependency-roundtrip");
+expect(task?.status === "slice-proven", "Support status must mark nlp-conllu-dependency-roundtrip as slice-proven.");
 
-console.log("CoNLL-U dependency readiness artifacts OK.");
+console.log("CoNLL-U dependency round-trip artifacts OK.");

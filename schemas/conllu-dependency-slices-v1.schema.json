@@ -8,7 +8,7 @@
     "schemaVersion",
     "scope",
     "conlluVersion",
-    "readinessStatus",
+    "supportStatus",
     "expectedRoundTripStatus",
     "fixtures"
   ],
@@ -16,7 +16,9 @@
     "schemaVersion": { "const": 1 },
     "scope": { "const": "conllu-dependency" },
     "conlluVersion": { "const": "UD-v2-CoNLL-U" },
-    "readinessStatus": { "const": "readiness-only" },
+    "supportStatus": {
+      "enum": ["readiness-only", "slice-proven"]
+    },
     "expectedRoundTripStatus": {
       "enum": ["planned", "recorded"]
     },
@@ -62,6 +64,7 @@
         "path",
         "language",
         "phenomena",
+        "expectedPath",
         "roundTripPlan"
       ],
       "properties": {
@@ -70,6 +73,10 @@
           "pattern": "^[a-z0-9-]+$"
         },
         "path": { "$ref": "#/definitions/fixturePath" },
+        "expectedPath": {
+          "type": "string",
+          "pattern": "^fixtures/conllu-dependency/expected/[a-z0-9-]+\\.json$"
+        },
         "language": {
           "type": "string",
           "minLength": 2

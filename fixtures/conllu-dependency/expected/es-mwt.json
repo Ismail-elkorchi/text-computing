@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "es-mwt",
+  "sourcePath": "fixtures/conllu-dependency/valid/es-mwt.conllu",
+  "documentId": "conllu-dependency:es-mwt",
+  "exportedConllu": "# sent_id = es-mwt-1\n# text = Vámonos al mar.\n1-2\tVámonos\t_\t_\t_\t_\t_\t_\t_\t_\n1\tVamos\tir\tVERB\t_\tMood=Imp|Number=Plur|Person=1\t0\troot\t0:root\t_\n2\tnos\tnosotros\tPRON\t_\tCase=Acc|Number=Plur|Person=1\t1\tobj\t1:obj\t_\n3-4\tal\t_\t_\t_\t_\t_\t_\t_\t_\n3\ta\ta\tADP\t_\t_\t5\tcase\t5:case\t_\n4\tel\tel\tDET\t_\tDefinite=Def|Gender=Masc|Number=Sing|PronType=Art\t5\tdet\t5:det\t_\n5\tmar\tmar\tNOUN\t_\tGender=Masc|Number=Sing\t1\tobl\t1:obl\tSpaceAfter=No\n6\t.\t.\tPUNCT\t_\t_\t1\tpunct\t1:punct\t_",
+  "expectedCounts": {
+    "sentences": 1,
+    "tokens": 4,
+    "dependencyNodes": 8,
+    "dependencies": 6
+  }
+}

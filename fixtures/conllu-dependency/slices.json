@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "scope": "conllu-dependency",
   "conlluVersion": "UD-v2-CoNLL-U",
-  "readinessStatus": "readiness-only",
-  "expectedRoundTripStatus": "planned",
+  "supportStatus": "slice-proven",
+  "expectedRoundTripStatus": "recorded",
   "fixtures": {
     "valid": [
       {
         "id": "en-basic",
         "path": "fixtures/conllu-dependency/valid/en-basic.conllu",
+        "expectedPath": "fixtures/conllu-dependency/expected/en-basic.json",
         "language": "en",
         "phenomena": [
           "basic-dependency-tree",
@@ -28,6 +29,7 @@
       {
         "id": "es-mwt",
         "path": "fixtures/conllu-dependency/valid/es-mwt.conllu",
+        "expectedPath": "fixtures/conllu-dependency/expected/es-mwt.json",
         "language": "es",
         "phenomena": [
           "multiword-token",

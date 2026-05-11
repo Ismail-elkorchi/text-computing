@@ -190,7 +190,7 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature"]
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature", "dependency-node", "dependency"]
         },
         "lifecycle": { "$ref": "#/definitions/lifecycle" },
         "targets": {
@@ -235,6 +235,10 @@
             "kind": { "const": "sentence" },
             "sentenceKind": { "const": "uax29-sentence" },
             "text": { "type": "string" },
+            "sourceComments": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
             "targets": {
               "type": "array",
               "minItems": 1,
@@ -351,6 +355,86 @@
         }
       ]
     },
+    "conlluFields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "form", "lemma", "upos", "xpos", "feats", "head", "deprel", "deps", "misc"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "form": { "type": "string" },
+        "lemma": { "type": "string" },
+        "upos": { "type": "string" },
+        "xpos": { "type": "string" },
+        "feats": { "type": "string" },
+        "head": { "type": "string" },
+        "deprel": { "type": "string" },
+        "deps": { "type": "string" },
+        "misc": { "type": "string" }
+      }
+    },
+    "dependencyNodeAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["nodeKind", "sentenceId", "sourceOrder", "fields"],
+          "properties": {
+            "kind": { "const": "dependency-node" },
+            "nodeKind": { "enum": ["word", "multiword-token", "empty-node"] },
+            "sentenceId": { "type": "string", "minLength": 1 },
+            "sourceOrder": { "type": "integer", "minimum": 0 },
+            "fields": { "$ref": "#/definitions/conlluFields" },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "oneOf": [
+                  { "$ref": "#/definitions/spanTarget" },
+                  { "$ref": "#/definitions/annotationTarget" },
+                  { "$ref": "#/definitions/documentTarget" }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "dependencyAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["dependentNodeId", "headNodeId", "relation", "source"],
+          "properties": {
+            "kind": { "const": "dependency" },
+            "dependentNodeId": { "type": "string", "minLength": 1 },
+            "headNodeId": {
+              "type": ["string", "null"],
+              "minLength": 1
+            },
+            "relation": { "type": "string", "minLength": 1 },
+            "source": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sentenceId", "conlluId", "conlluHead", "conlluDeprel", "conlluDeps"],
+              "properties": {
+                "sentenceId": { "type": "string", "minLength": 1 },
+                "conlluId": { "type": "string", "minLength": 1 },
+                "conlluHead": { "type": "string" },
+                "conlluDeprel": { "type": "string", "minLength": 1 },
+                "conlluDeps": { "type": "string" }
+              }
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          }
+        }
+      ]
+    },
     "annotation": {
       "oneOf": [
         { "$ref": "#/definitions/tokenAnnotation" },
@@ -359,7 +443,9 @@
         { "$ref": "#/definitions/lemmaAnnotation" },
         { "$ref": "#/definitions/morphologyAnnotation" },
         { "$ref": "#/definitions/entityAnnotation" },
-        { "$ref": "#/definitions/corpusFeatureAnnotation" }
+        { "$ref": "#/definitions/corpusFeatureAnnotation" },
+        { "$ref": "#/definitions/dependencyNodeAnnotation" },
+        { "$ref": "#/definitions/dependencyAnnotation" }
       ]
     },
     "layer": {
@@ -369,7 +455,7 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature"]
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature", "dependency-node", "dependency"]
         },
         "viewId": { "type": "string", "minLength": 1 },
         "allowSpanOverlap": { "type": "boolean" },

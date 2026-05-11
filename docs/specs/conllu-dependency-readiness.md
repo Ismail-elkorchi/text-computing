@@ -1,24 +1,24 @@
-# CoNLL-U dependency readiness
+# CoNLL-U dependency round-trip
 
-- **Status:** Readiness-only
-- **Scope:** CoNLL-U / Universal Dependencies import-export and dependency-target annotation preparation
+- **Status:** Slice-proven for frozen fixtures
+- **Scope:** CoNLL-U / Universal Dependencies import-export round-trip over repository-authored fixtures
 - **Owning packages:** `textdoc`, `textprotocol`, `textconformance`
-- **No behavior claim:** This document does not implement a dependency parser, CoNLL-U importer, or CoNLL-U exporter.
+- **No parser claim:** This document does not implement a dependency parser or broad Universal Dependencies treebank support.
 
 ## Why this document exists
 
-Dependency parsing and CoNLL-U interchange require stronger contracts than prose examples. This readiness gate records the public standard sources, the minimal valid and invalid fixture shapes, and the target annotation contract that later implementation must satisfy before any parser or importer/exporter behavior is claimed.
+Dependency parsing and CoNLL-U interchange require stronger contracts than prose examples. This document records the public standard sources, the valid and invalid fixture shapes, the dependency annotation contract, and the fixture-scope import/export round-trip proof.
 
 ## Readiness boundary
 
-This gate freezes only:
+This gate proves only:
 
 - the public CoNLL-U fixture directory shape;
 - valid and invalid smoke fixtures;
 - the dependency-target annotation contract for `textdoc`;
-- the planned round-trip evidence path through `textprotocol` and `textconformance`.
+- the recorded round-trip evidence path through `textprotocol` and `textconformance`.
 
-It does not freeze broad Universal Dependencies treebank coverage, parser accuracy, or language support.
+It does not prove broad Universal Dependencies treebank coverage, parser accuracy, or language support.
 
 ## Fixture policy
 
@@ -28,16 +28,16 @@ Fixtures under `fixtures/conllu-dependency/invalid/` are negative controls. They
 
 ## Dependency-target contract
 
-The dependency-target readiness contract is `schemas/textdoc-dependency-target-v1.schema.json`. A dependency target maps one dependent token id to either a head token id or `null` for root. Each edge keeps its originating CoNLL-U sentence id, token id, HEAD, and DEPREL value.
+The dependency-target contract is `schemas/textdoc-dependency-target-v1.schema.json`. A dependency target maps one dependent token id to either a head token id or `null` for root. Each edge keeps its originating CoNLL-U sentence id, token id, HEAD, and DEPREL value.
 
-The contract is intentionally separate from parser behavior. It defines what an imported or produced dependency edge must be able to express, not how that edge is inferred.
+The contract is intentionally separate from parser behavior. It defines what an imported or produced dependency edge expresses, not how that edge is inferred.
 
 ## Round-trip evidence plan
 
-Later implementation must prove:
+Current fixture-scope implementation proves:
 
-1. valid CoNLL-U fixtures import to deterministic `textdoc` token and dependency targets;
-2. exported CoNLL-U preserves token ids, HEAD, DEPREL, and sentence boundaries for the declared fixture scope;
+1. valid CoNLL-U fixtures import to deterministic `textdoc` token, dependency-node, and dependency layers;
+2. exported CoNLL-U preserves token ids, HEAD, DEPREL, DEPS, MWT rows, comments, and sentence boundaries for the declared fixture scope;
 3. invalid fixtures fail with machine-readable diagnostics;
 4. each round-trip proof is wrapped in `textprotocol` and reported through `textconformance`.
 
