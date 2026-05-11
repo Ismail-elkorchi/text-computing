@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "scope": "dependency-parser",
+  "capturedDate": "2026-05-11",
+  "comparator": {
+    "name": "spaCy DependencyParser",
+    "version": "3.8.x documentation snapshot",
+    "runtime": "python",
+    "artifactSurface": "Token.head, Token.dep, Doc.sents"
+  },
+  "executionStatus": "capability-recorded",
+  "slices": [
+    {
+      "fixtureId": "en-basic",
+      "status": "output-not-captured",
+      "expectedArcPath": "fixtures/dependency-parser/expected/en-basic.json",
+      "reason": "Model runtime and language model are not vendored in this repository."
+    },
+    {
+      "fixtureId": "es-mwt",
+      "status": "output-not-captured",
+      "expectedArcPath": "fixtures/dependency-parser/expected/es-mwt.json",
+      "reason": "Model runtime and language model are not vendored in this repository."
+    }
+  ],
+  "notes": [
+    "The public documentation records a transition-based parser surface. This file does not claim executed output."
+  ]
+}

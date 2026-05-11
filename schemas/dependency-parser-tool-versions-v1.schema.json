@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/dependency-parser-tool-versions-v1.schema.json",
+  "title": "Dependency parser readiness tool versions v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "scope",
+    "standards",
+    "comparators",
+    "executionPolicy"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "scope": { "const": "dependency-parser" },
+    "standards": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/definitions/source" }
+    },
+    "comparators": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/definitions/comparator" }
+    },
+    "executionPolicy": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "definitions": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "url", "version", "role"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "pattern": "^https://" },
+        "version": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 }
+      }
+    },
+    "comparator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "runtime",
+        "license",
+        "artifactSurface",
+        "executionStatus",
+        "capturePath"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "runtime": { "enum": ["python", "jvm", "javascript", "other"] },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "minLength": 1 }
+          }
+        },
+        "license": { "type": "string", "minLength": 1 },
+        "artifactSurface": { "type": "string", "minLength": 1 },
+        "executionStatus": {
+          "enum": [
+            "capability-recorded",
+            "executed"
+          ]
+        },
+        "capturePath": {
+          "type": "string",
+          "pattern": "^fixtures/dependency-parser/comparisons/[a-z0-9.-]+\\.json$"
+        }
+      }
+    }
+  }
+}

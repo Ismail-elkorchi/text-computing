@@ -16,7 +16,7 @@ The CoNLL-U / UD interchange row is now tracked as fixture-scope `slice-proven` 
 | Order | Task surface | Owning package(s) | Readiness artifacts required before code |
 | --- | --- | --- | --- |
 | 1 | CoNLL-U / UD import-export and dependency annotation model | `textdoc`, `textprotocol`, `textconformance` | Completed for frozen repository-authored fixtures; broaden only with explicit fixture and license gates. |
-| 2 | Deterministic dependency parsing baseline | `textrules`, `textpipeline`, `textdoc` | Comparator captures from UD-capable tools, language slices, expected dependency arcs, documented non-failure differences. |
+| 2 | Deterministic dependency parsing baseline | `textrules`, `textpipeline`, `textdoc` | Readiness-only expected arcs and comparator capability records are present; executed parser comparator captures are still required before feature code. |
 | 3 | Chunking and relation extraction | `textrules`, `textdoc`, `textconformance` | Typed relation schema, span evidence policy, negative controls, comparator/corpus freeze. |
 | 4 | Entity linking | `textrules`, `textpack`, `textdoc` | Canonical entity identifier model, NIL policy, KB provenance fixture, disambiguation negative controls. |
 | 5 | Coreference | `textdoc`, `textrules`, `textconformance` | Mention/chain schema, ambiguity/loss policy, multilingual corpus slices, comparator captures. |
