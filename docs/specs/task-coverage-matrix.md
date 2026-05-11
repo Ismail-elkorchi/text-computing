@@ -14,7 +14,7 @@ This matrix is the public correction to broad “implemented” readings of the 
 | Pipeline execution | `slice-proven` | Deterministic synchronous processor trace | Needs streaming, batching, async, caching, error recovery, and long-running workflow semantics. |
 | Conformance | `slice-proven` | Report schema, runtime guards, and minimal synchronous runner | Needs diff format, benchmark separation, claim registry, and broader suite orchestration. |
 | Inspection tooling | `scaffold` | `textlab` workspace package only | Needs CLI/API for corpus inspection, annotation querying, comparator replay, and LLM/agent evidence workflows. |
-| Dependency parsing and CoNLL-U/UD interchange | `readiness-only` | CoNLL-U/UD research ledger, valid/invalid CoNLL-U fixtures, and dependency-target contract | Needs importer/exporter behavior, parser comparator captures, broader UD slices, and round-trip implementation. |
+| Dependency parsing and CoNLL-U/UD interchange | `slice-proven` for CoNLL-U I/O only | CoNLL-U/UD research ledger, valid/invalid CoNLL-U fixtures, expected round-trip outputs, and dependency-target contract | Needs parser comparator captures, broader UD slices, and dependency parser implementation. |
 | Relation extraction | `scaffold` | No public task artifacts | Needs typed relation schema, evidence-span policy, negative controls, and comparator/corpus freeze. |
 | Coreference | `scaffold` | No public task artifacts | Needs mention/chain schema, ambiguity/loss policy, language coverage, and comparator/corpus freeze. |
 | Entity linking | `scaffold` | No public task artifacts | Needs canonical entity id model, NIL policy, KB provenance, and benchmark freeze. |

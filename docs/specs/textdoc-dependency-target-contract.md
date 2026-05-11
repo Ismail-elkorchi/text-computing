@@ -1,14 +1,14 @@
 # textdoc dependency target contract
 
-- **Status:** Readiness-only
-- **Scope:** Minimal dependency-edge target shape for later CoNLL-U import-export and dependency parsing work
+- **Status:** Slice-proven for frozen CoNLL-U round-trip fixtures
+- **Scope:** Minimal dependency-edge target shape for CoNLL-U import-export and later dependency parsing work
 - **Schema:** `schemas/textdoc-dependency-target-v1.schema.json`
 
 ## Contract boundary
 
-This contract defines the dependency edge shape that later `textdoc` documents must be able to carry. It is not a parser, scorer, importer, exporter, or Universal Dependencies completeness claim.
+This contract defines the dependency edge shape that `textdoc` documents carry for the frozen CoNLL-U round-trip fixtures. It is not a parser, scorer, or Universal Dependencies completeness claim.
 
-The schema is separate from `schemas/textdoc-document-v1.schema.json` until the dependency annotation model is implemented. This prevents readiness artifacts from silently widening the production document model.
+The repository-level document schema now accepts dependency-node and dependency layers for the frozen round-trip scope. That support must not be read as dependency parser behavior.
 
 ## Target model
 

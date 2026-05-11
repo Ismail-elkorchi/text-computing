@@ -13,8 +13,8 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-rule-backed-ner-research-ledger.md`](nlp-rule-backed-ner-research-ledger.md) — research ledger for rule-backed NER readiness.
 - [`corpus-tfidf-bm25-readiness.md`](corpus-tfidf-bm25-readiness.md) — readiness gate for issue `#14`.
 - [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
-- [`conllu-dependency-readiness.md`](conllu-dependency-readiness.md) — readiness gate for CoNLL-U / Universal Dependencies import-export and dependency-target annotation work.
-- [`nlp-conllu-dependency-research-ledger.md`](nlp-conllu-dependency-research-ledger.md) — research ledger for CoNLL-U / UD readiness.
+- [`conllu-dependency-readiness.md`](conllu-dependency-readiness.md) — fixture-scope CoNLL-U / Universal Dependencies import-export round-trip gate.
+- [`nlp-conllu-dependency-research-ledger.md`](nlp-conllu-dependency-research-ledger.md) — research ledger for CoNLL-U / UD round-trip work.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
 - [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.
