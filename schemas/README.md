@@ -24,6 +24,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`conllu-dependency-slices-v1.schema.json`](conllu-dependency-slices-v1.schema.json) — CoNLL-U / UD readiness fixture schema.
 - [`conllu-dependency-tool-versions-v1.schema.json`](conllu-dependency-tool-versions-v1.schema.json) — public source, validator, and future comparator role schema for CoNLL-U / UD readiness.
 - [`conllu-dependency-roundtrip-expected-v1.schema.json`](conllu-dependency-roundtrip-expected-v1.schema.json) — expected-output schema for fixture-scope CoNLL-U round-trip behavior.
+- [`conllu-validator-capture-v1.schema.json`](conllu-validator-capture-v1.schema.json) — external CoNLL-U validator capture schema.
 - [`dependency-parser-slices-v1.schema.json`](dependency-parser-slices-v1.schema.json) — readiness slice schema for dependency-parser work.
 - [`dependency-parser-expected-v1.schema.json`](dependency-parser-expected-v1.schema.json) — expected dependency-arc schema for parser readiness.
 - [`dependency-parser-tool-versions-v1.schema.json`](dependency-parser-tool-versions-v1.schema.json) — comparator capability and standard source schema for parser readiness.

@@ -8,3 +8,4 @@
 4	el	el	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	5	det	5:det	_
 5	mar	mar	NOUN	_	Gender=Masc|Number=Sing	1	obl	1:obl	SpaceAfter=No
 6	.	.	PUNCT	_	_	1	punct	1:punct	_
+

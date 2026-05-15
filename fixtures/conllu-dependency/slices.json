@@ -7,6 +7,27 @@
   "fixtures": {
     "valid": [
       {
+        "id": "ar-nonlatin",
+        "path": "fixtures/conllu-dependency/valid/ar-nonlatin.conllu",
+        "expectedPath": "fixtures/conllu-dependency/expected/ar-nonlatin.json",
+        "language": "ar",
+        "phenomena": [
+          "basic-dependency-tree",
+          "root-arc",
+          "punctuation-arc",
+          "morphological-features",
+          "non-english-latin-script"
+        ],
+        "roundTripPlan": {
+          "import": "planned",
+          "export": "planned",
+          "annotationContract": "textdoc-dependency-target-v1"
+        },
+        "notes": [
+          "Repository-authored Arabic smoke fixture for non-Latin dependency target mapping."
+        ]
+      },
+      {
         "id": "en-basic",
         "path": "fixtures/conllu-dependency/valid/en-basic.conllu",
         "expectedPath": "fixtures/conllu-dependency/expected/en-basic.json",
@@ -49,6 +70,12 @@
     ],
     "invalid": [
       {
+        "id": "bad-head-format",
+        "path": "fixtures/conllu-dependency/invalid/bad-head-format.conllu",
+        "reason": "A token HEAD is not an integer value.",
+        "mustFail": "head-format"
+      },
+      {
         "id": "dangling-head",
         "path": "fixtures/conllu-dependency/invalid/dangling-head.conllu",
         "reason": "A token HEAD points to a token id that does not exist in the same sentence.",
@@ -61,10 +88,22 @@
         "mustFail": "root-count"
       },
       {
+        "id": "multiple-roots",
+        "path": "fixtures/conllu-dependency/invalid/multiple-roots.conllu",
+        "reason": "The sentence has more than one token whose HEAD is 0.",
+        "mustFail": "root-count"
+      },
+      {
         "id": "malformed-field-count",
         "path": "fixtures/conllu-dependency/invalid/malformed-field-count.conllu",
         "reason": "A token line does not contain the ten required CoNLL-U columns.",
         "mustFail": "field-count"
+      },
+      {
+        "id": "missing-deprel",
+        "path": "fixtures/conllu-dependency/invalid/missing-deprel.conllu",
+        "reason": "A token line uses '_' where a basic dependency relation is required.",
+        "mustFail": "deprel-missing"
       }
     ]
   }

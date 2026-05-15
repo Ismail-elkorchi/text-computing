@@ -15,6 +15,7 @@ This gate proves only:
 
 - the public CoNLL-U fixture directory shape;
 - valid and invalid smoke fixtures;
+- external CoNLL-U validator output for every frozen fixture;
 - the dependency-target annotation contract for `textdoc`;
 - the recorded round-trip evidence path through `textprotocol` and `textconformance`.
 
@@ -22,9 +23,11 @@ It does not prove broad Universal Dependencies treebank coverage, parser accurac
 
 ## Fixture policy
 
-Fixtures under `fixtures/conllu-dependency/valid/` are repository-authored smoke inputs. They exercise basic dependency trees, root arcs, punctuation arcs, enhanced dependency columns, morphology columns, and multiword tokens.
+Fixtures under `fixtures/conllu-dependency/valid/` are repository-authored smoke inputs. They exercise basic dependency trees, root arcs, punctuation arcs, enhanced dependency columns, morphology columns, multiword tokens, and a non-Latin Arabic fixture.
 
-Fixtures under `fixtures/conllu-dependency/invalid/` are negative controls. They must fail for the declared reason before importer/exporter behavior can claim conformance.
+Fixtures under `fixtures/conllu-dependency/invalid/` are negative controls. They must fail for the declared reason before importer/exporter behavior can claim conformance. The current negative controls cover dangling heads, malformed field counts, missing roots, multiple roots, invalid HEAD values, and missing dependency relations.
+
+External validator captures live under `fixtures/conllu-dependency/validation/`. They record UniversalDependencies/tools outcomes for every frozen valid and invalid fixture.
 
 ## Dependency-target contract
 
@@ -39,7 +42,8 @@ Current fixture-scope implementation proves:
 1. valid CoNLL-U fixtures import to deterministic `textdoc` token, dependency-node, and dependency layers;
 2. exported CoNLL-U preserves token ids, HEAD, DEPREL, DEPS, MWT rows, comments, and sentence boundaries for the declared fixture scope;
 3. invalid fixtures fail with machine-readable diagnostics;
-4. each round-trip proof is wrapped in `textprotocol` and reported through `textconformance`.
+4. UniversalDependencies/tools accepts every valid fixture and rejects every invalid fixture;
+5. each round-trip proof is wrapped in `textprotocol` and reported through `textconformance`.
 
 ## Verification
 

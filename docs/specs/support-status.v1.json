@@ -229,6 +229,7 @@
       "evidence": [
         "CoNLL-U/UD research ledger",
         "valid and invalid CoNLL-U fixtures",
+        "external UniversalDependencies/tools validator capture",
         "textdoc dependency-target contract",
         "recorded round-trip expected outputs",
         "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
