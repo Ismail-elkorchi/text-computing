@@ -49,8 +49,14 @@ single slice.
 Frozen comparator versions live in
 [`../../fixtures/pos-morph-lemma/tool-versions.json`](../../fixtures/pos-morph-lemma/tool-versions.json).
 
+Committed comparator captures live in
+[`../../fixtures/pos-morph-lemma/comparisons/`](../../fixtures/pos-morph-lemma/comparisons/).
+
+This gate includes executed spaCy output over the frozen slices. Stanza `1.12.0`, wink-nlp, and
+compromise remain recorded comparator surfaces until bounded capture runners are added.
+
 ## Verification
 
-`npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, expected-output
-schema, required readiness documentation headings, pack-backed lexicon fixtures, and the recorded
-goldens produced by `@ismail-elkorchi/textrules`.
+`npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, executed spaCy
+capture, expected-output schema, required readiness documentation headings, pack-backed lexicon
+fixtures, and the recorded goldens produced by `@ismail-elkorchi/textrules`.

@@ -19,10 +19,10 @@ const TASKS = {
       ["node", "tools/validate-pos-morph-lemma-readiness.mjs"],
       ["node", "tools/validate-pos-morph-lemma-feature.mjs"],
     ],
-    comparisonDir: null,
-    comparisonSchema: null,
+    comparisonDir: "fixtures/pos-morph-lemma/comparisons",
+    comparisonSchema: "schemas/pos-morph-lemma-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"],
-    knownGap: "No committed external comparator capture exists yet for POS/morph/lemma.",
+    knownGap: "Only spaCy has committed executed POS/morph/lemma comparator output in this gate.",
   },
   "rule-backed-ner": {
     taskId: "nlp-rule-backed-ner",
