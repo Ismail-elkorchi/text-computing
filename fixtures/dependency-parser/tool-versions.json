@@ -18,15 +18,15 @@
   "comparators": [
     {
       "name": "spaCy DependencyParser",
-      "version": "3.8.x documentation snapshot",
+      "version": "3.8.14",
       "runtime": "python",
       "model": {
-        "name": "model-dependent",
-        "version": "not-vendored"
+        "name": "en_core_web_sm / es_core_news_sm",
+        "version": "3.8.0"
       },
       "license": "MIT",
       "artifactSurface": "Token.head, Token.dep, Doc.sents",
-      "executionStatus": "capability-recorded",
+      "executionStatus": "executed",
       "capturePath": "fixtures/dependency-parser/comparisons/spacy-3.8.json"
     },
     {
@@ -52,5 +52,5 @@
       "capturePath": "fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json"
     }
   ],
-  "executionPolicy": "Executed model-output captures are required before parser feature code; this readiness gate records comparator capabilities and absence/gap evidence only."
+  "executionPolicy": "At least one executed dependency-parser comparator capture is now required before this readiness gate passes. Additional parser feature work still requires broader comparator captures and explicit non-failure differences."
 }

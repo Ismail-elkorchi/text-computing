@@ -144,7 +144,7 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No dependency parser or parser comparator capture is implemented.",
+        "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
         "No broad UD treebank or language coverage is claimed."
       ]
     }

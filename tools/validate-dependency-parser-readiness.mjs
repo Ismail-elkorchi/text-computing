@@ -72,6 +72,62 @@ function parseConlluArcs(text, sourcePath) {
   return sentences[0];
 }
 
+function comparableArcs(arcs) {
+  return arcs.map((arc) => ({
+    dependent: arc.dependent,
+    head: arc.head,
+    relation: arc.relation,
+  }));
+}
+
+function compareExpectedArcs(expectedArcs, outputArcs) {
+  const actualArcs = comparableArcs(outputArcs);
+  if (expectedArcs.length !== actualArcs.length) {
+    return {
+      matchesExpected: false,
+      differences: [
+        {
+          kind: "tokenization-mismatch",
+          expectedTokenCount: expectedArcs.length,
+          actualTokenCount: actualArcs.length,
+          message: "Comparator token count differs from frozen CoNLL-U integer word rows.",
+        },
+      ],
+    };
+  }
+
+  const outputByDependent = new Map(outputArcs.map((arc) => [arc.dependent, arc]));
+  const differences = [];
+  for (const expected of expectedArcs) {
+    const actual = outputByDependent.get(expected.dependent);
+    if (actual === undefined) {
+      differences.push({
+        kind: "missing-dependent",
+        dependent: expected.dependent,
+        expectedHead: expected.head,
+        expectedRelation: expected.relation,
+      });
+      continue;
+    }
+    if (actual.head !== expected.head || actual.relation !== expected.relation) {
+      differences.push({
+        kind: "arc-mismatch",
+        dependent: expected.dependent,
+        expectedHead: expected.head,
+        expectedRelation: expected.relation,
+        actualHead: actual.head,
+        actualRelation: actual.relation,
+        ...(typeof actual.text === "string" ? { actualText: actual.text } : {}),
+      });
+    }
+  }
+
+  return {
+    matchesExpected: differences.length === 0,
+    differences,
+  };
+}
+
 const slicesSchemaPath = "schemas/dependency-parser-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/dependency-parser-tool-versions-v1.schema.json";
 const expectedSchemaPath = "schemas/dependency-parser-expected-v1.schema.json";
@@ -96,8 +152,8 @@ expect(
 expect(slices.supportStatus === "readiness-only", "Dependency parser support status must remain readiness-only.");
 expect(slices.expectedOutputStatus === "recorded", "Dependency parser expected arcs must be recorded.");
 expect(
-  slices.comparatorStatus === "capability-recorded",
-  "Dependency parser comparator status must remain capability-recorded until executed captures exist.",
+  slices.comparatorStatus === "executed-captures-recorded",
+  "Dependency parser comparator status must record executed captures before more parser work.",
 );
 
 const requiredPhenomena = new Set([
@@ -120,8 +176,10 @@ for (const phenomenon of requiredPhenomena) {
   expect(seenPhenomena.has(phenomenon), `Dependency parser readiness is missing ${phenomenon}.`);
 }
 
+const expectedByFixtureId = new Map();
 for (const fixture of slices.fixtures) {
   const expected = await readJson(fixture.expectedPath);
+  expectedByFixtureId.set(fixture.id, expected);
   expect(validateExpected(expected), `${fixture.expectedPath} failed ${expectedSchemaPath}`, validateExpected.errors);
   expect(expected.fixtureId === fixture.id, `${fixture.expectedPath} fixtureId must match ${fixture.id}.`);
   expect(
@@ -157,6 +215,7 @@ expect(
   "Dependency parser readiness requires a JavaScript gap/capability record.",
 );
 
+let executedComparatorCount = 0;
 for (const comparator of toolVersions.comparators) {
   expect(await fileExists(comparator.capturePath), `${comparator.capturePath} does not exist.`);
   const comparison = await readJson(comparator.capturePath);
@@ -173,6 +232,13 @@ for (const comparator of toolVersions.comparators) {
     comparison.executionStatus === comparator.executionStatus,
     `${comparator.capturePath} executionStatus must match tool-versions.json.`,
   );
+  if (comparison.executionStatus === "executed") {
+    executedComparatorCount += 1;
+    expect(
+      Array.isArray(comparison.dependencies) && comparison.dependencies.length > 0,
+      `${comparator.capturePath} must record installed comparator dependencies.`,
+    );
+  }
   for (const slice of comparison.slices) {
     const fixture = fixturesById.get(slice.fixtureId);
     expect(fixture !== undefined, `${comparator.capturePath} references unknown fixture ${slice.fixtureId}.`);
@@ -183,9 +249,26 @@ for (const comparator of toolVersions.comparators) {
     if (comparison.executionStatus === "capability-recorded") {
       expect(slice.status === "output-not-captured", `${comparator.capturePath} must not imply executed output.`);
       expect(slice.reason, `${comparator.capturePath} must explain missing output for ${slice.fixtureId}.`);
+    } else {
+      const expected = expectedByFixtureId.get(slice.fixtureId);
+      expect(expected !== undefined, `${comparator.capturePath} missing expected arcs for ${slice.fixtureId}.`);
+      expect(slice.status === "captured", `${comparator.capturePath} must mark ${slice.fixtureId} as captured.`);
+      expect(Array.isArray(slice.outputArcs), `${comparator.capturePath} must include outputArcs for ${slice.fixtureId}.`);
+      const comparisonResult = compareExpectedArcs(expected.arcs, slice.outputArcs);
+      expect(
+        slice.matchesExpected === comparisonResult.matchesExpected,
+        `${comparator.capturePath} matchesExpected mismatch for ${slice.fixtureId}.`,
+        comparisonResult,
+      );
+      expect(
+        JSON.stringify(slice.differences ?? []) === JSON.stringify(comparisonResult.differences),
+        `${comparator.capturePath} differences mismatch for ${slice.fixtureId}.`,
+        comparisonResult,
+      );
     }
   }
 }
+expect(executedComparatorCount >= 1, "Dependency parser readiness requires at least one executed comparator capture.");
 
 const comparisonDir = "fixtures/dependency-parser/comparisons";
 const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
@@ -209,7 +292,7 @@ const researchLedger = await readText("docs/specs/nlp-dependency-parser-research
 for (const heading of [
   "## Scope",
   "## Primary sources",
-  "## Comparator capability evidence",
+  "## Comparator evidence",
   "## Comparator limitations",
   "## Readiness consequences",
 ]) {
@@ -228,6 +311,14 @@ expect(task?.status === "readiness-only", "Support status must mark nlp-dependen
 expect(
   task.evidence.includes("docs/specs/dependency-parser-readiness.md"),
   "Support status evidence must cite dependency-parser-readiness.md.",
+);
+expect(
+  task.evidence.includes("fixtures/dependency-parser/comparisons/spacy-3.8.json"),
+  "Support status evidence must cite the executed spaCy comparator capture.",
+);
+expect(
+  !task.limitations.some((limitation) => limitation.includes("No executed parser comparator outputs are committed")),
+  "Support status must not retain the stale no-executed-comparator limitation.",
 );
 
 console.log("Dependency parser readiness artifacts OK.");

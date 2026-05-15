@@ -3,7 +3,7 @@
   "scope": "dependency-parser",
   "supportStatus": "readiness-only",
   "expectedOutputStatus": "recorded",
-  "comparatorStatus": "capability-recorded",
+  "comparatorStatus": "executed-captures-recorded",
   "fixtures": [
     {
       "id": "en-basic",

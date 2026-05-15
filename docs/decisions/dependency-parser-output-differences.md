@@ -11,6 +11,11 @@ fixture scope:
 - Root convention mismatch: a comparator may expose root as self-head, null head, or index `0`; public outputs must normalize this explicitly.
 - Non-projective behavior: parser algorithms may differ on non-projective arcs; no non-projective support is claimed yet.
 
+## Recorded differences for frozen fixtures
+
+- spaCy emits `dobj` for `books` in the English fixture where the frozen UD-style expected arc uses `obj`.
+- spaCy emits Spanish surface-token arcs for `Vámonos al mar.` instead of the frozen CoNLL-U integer word rows.
+
 ## Not acceptable as silent differences
 
 - Dropping arcs without diagnostics.

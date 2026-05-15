@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "dependency-parser",
-  "capturedDate": "2026-05-11",
+  "capturedDate": "2026-05-15",
   "comparator": {
     "name": "JavaScript NLP baseline",
     "version": "2026-05 readiness review",
