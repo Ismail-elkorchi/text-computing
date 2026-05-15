@@ -1,0 +1,6 @@
+# sent_id = invalid-missing-deprel
+# text = Missing relation.
+1	Missing	missing	ADJ	JJ	_	2	_	_	_
+2	relation	relation	NOUN	NN	Number=Sing	0	root	_	SpaceAfter=No
+3	.	.	PUNCT	.	_	2	punct	_	_
+

@@ -19,7 +19,9 @@ The immediate task is not to build a parser. The immediate task is to make sure 
 
 ## Comparator and validator evidence
 
-The readiness gate records the official UD format and guideline sources as standard references. It also records the public UD tools repository as a future validation reference.
+The readiness gate records the official UD format and guideline sources as standard references. It also records an executed UniversalDependencies/tools validator capture at commit `ee98e50bfc59b5a1a7e5024d7edbad148a992894`.
+
+The executed capture is format/syntax evidence only. It proves that the frozen valid fixtures are accepted by the external validator and that the frozen invalid fixtures are rejected. It does not prove parser accuracy or broad Universal Dependencies treebank coverage.
 
 Parser comparator captures are intentionally not claimed in this gate. Dependency parser comparators must be frozen in a later feature gate before parser behavior is implemented.
 
@@ -36,7 +38,9 @@ Parser comparator captures are intentionally not claimed in this gate. Dependenc
 The current validator proves:
 
 - valid fixtures parse according to the subset checked by the readiness gate;
+- valid fixtures pass the recorded external UniversalDependencies/tools validation capture;
 - invalid fixtures fail for the declared reason;
+- invalid fixtures fail the recorded external UniversalDependencies/tools validation capture;
 - dependency targets validate against `schemas/textdoc-dependency-target-v1.schema.json`;
 - valid fixtures round-trip through `textdoc`, `textprotocol`, and `textconformance`;
 - support status marks the task as `slice-proven` only for the frozen fixtures, not parser behavior.

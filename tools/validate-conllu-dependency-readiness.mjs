@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import {
   exportTextDocDocumentV1ToConllu,
   importConlluToTextDocDocumentV1,
@@ -135,6 +135,7 @@ const slicesSchemaPath = "schemas/conllu-dependency-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/conllu-dependency-tool-versions-v1.schema.json";
 const dependencyTargetSchemaPath = "schemas/textdoc-dependency-target-v1.schema.json";
 const expectedSchemaPath = "schemas/conllu-dependency-roundtrip-expected-v1.schema.json";
+const validatorCaptureSchemaPath = "schemas/conllu-validator-capture-v1.schema.json";
 const textdocSchemaPath = "schemas/textdoc-document-v1.schema.json";
 const resultEnvelopeSchemaPath = "schemas/textprotocol-result-envelope-v1.schema.json";
 const conformanceReportSchemaPath = "schemas/textconformance-report-v1.schema.json";
@@ -143,6 +144,7 @@ const validateSlices = ajv.compile(await readJson(slicesSchemaPath));
 const validateToolVersions = ajv.compile(await readJson(toolVersionsSchemaPath));
 const validateDependencyTarget = ajv.compile(await readJson(dependencyTargetSchemaPath));
 const validateExpected = ajv.compile(await readJson(expectedSchemaPath));
+const validateValidatorCapture = ajv.compile(await readJson(validatorCaptureSchemaPath));
 const validateTextdoc = ajv.compile(await readJson(textdocSchemaPath));
 const validateResultEnvelope = ajv.compile(await readJson(resultEnvelopeSchemaPath));
 const validateConformanceReport = ajv.compile(await readJson(conformanceReportSchemaPath));
@@ -161,6 +163,66 @@ expect(
 );
 expect(slices.supportStatus === "slice-proven", "CoNLL-U round-trip support status must be slice-proven.");
 expect(slices.expectedRoundTripStatus === "recorded", "CoNLL-U round-trip requires recorded expected outputs.");
+
+const externalFixtureExpectations = new Map();
+for (const fixture of slices.fixtures.valid) {
+  externalFixtureExpectations.set(fixture.id, {
+    path: fixture.path,
+    language: fixture.language,
+    expectedStatus: "pass",
+  });
+}
+for (const fixture of slices.fixtures.invalid) {
+  externalFixtureExpectations.set(fixture.id, {
+    path: fixture.path,
+    language: fixture.language ?? "en",
+    expectedStatus: "fail",
+  });
+}
+
+const validationDir = "fixtures/conllu-dependency/validation";
+const validationFiles = (await readdir(validationDir)).filter((file) => file.endsWith(".json")).sort();
+expect(validationFiles.length >= 1, "CoNLL-U readiness requires at least one external validator capture.");
+
+let executedValidatorCaptureCount = 0;
+for (const file of validationFiles) {
+  const path = `${validationDir}/${file}`;
+  const capture = await readJson(path);
+  expect(validateValidatorCapture(capture), `${path} failed ${validatorCaptureSchemaPath}`, validateValidatorCapture.errors);
+  const validator = toolVersions.validators.find(
+    (entry) => entry.name === capture.validator.name && entry.commit === capture.validator.commit,
+  );
+  expect(validator !== undefined, `${path} validator is not listed in tool-versions.json.`);
+  expect(validator?.executionStatus === "executed", `${path} must correspond to an executed validator.`);
+  expect(validator?.capturePath === path, `${path} must match capturePath in tool-versions.json.`);
+  executedValidatorCaptureCount += 1;
+
+  const seenExternalFixtureIds = new Set();
+  for (const result of capture.fixtures) {
+    const expected = externalFixtureExpectations.get(result.fixtureId);
+    expect(expected !== undefined, `${path} references unknown fixture ${result.fixtureId}.`);
+    expect(!seenExternalFixtureIds.has(result.fixtureId), `${path} duplicates fixture ${result.fixtureId}.`);
+    seenExternalFixtureIds.add(result.fixtureId);
+    expect(result.path === expected.path, `${path} fixture ${result.fixtureId} path mismatch.`);
+    expect(result.language === expected.language, `${path} fixture ${result.fixtureId} language mismatch.`);
+    expect(result.expectedStatus === expected.expectedStatus, `${path} fixture ${result.fixtureId} expectedStatus mismatch.`);
+    if (result.expectedStatus === "pass") {
+      expect(result.exitCode === 0, `${path} fixture ${result.fixtureId} must pass external validation.`);
+      expect(result.status === "passed-as-expected", `${path} fixture ${result.fixtureId} status mismatch.`);
+    } else {
+      expect(result.exitCode > 0, `${path} fixture ${result.fixtureId} must fail external validation.`);
+      expect(result.status === "failed-as-expected", `${path} fixture ${result.fixtureId} status mismatch.`);
+    }
+  }
+  for (const fixtureId of externalFixtureExpectations.keys()) {
+    expect(seenExternalFixtureIds.has(fixtureId), `${path} is missing fixture ${fixtureId}.`);
+  }
+}
+
+expect(
+  executedValidatorCaptureCount >= 1,
+  "CoNLL-U readiness requires at least one executed external validator capture.",
+);
 
 function countLayer(document, kind) {
   return document.layers.find((layer) => layer.kind === kind)?.annotations.length ?? 0;

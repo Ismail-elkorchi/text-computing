@@ -4,3 +4,4 @@
 2	buy	buy	VERB	VBP	Number=Plur|Person=3|Tense=Pres	0	root	0:root	_
 3	books	book	NOUN	NNS	Number=Plur	2	obj	2:obj	SpaceAfter=No
 4	.	.	PUNCT	.	_	2	punct	2:punct	_
+

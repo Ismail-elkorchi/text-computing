@@ -41,10 +41,10 @@ const TASKS = {
   conllu: {
     taskId: "nlp-conllu-dependency-roundtrip",
     validatorCommands: [["node", "tools/validate-conllu-dependency-readiness.mjs"]],
-    comparisonDir: null,
-    comparisonSchema: null,
+    comparisonDir: "fixtures/conllu-dependency/validation",
+    comparisonSchema: "schemas/conllu-validator-capture-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"],
-    knownGap: "No external CoNLL-U validator capture exists yet.",
+    knownGap: "External CoNLL-U evidence is validator-format evidence only; it is not parser-accuracy evidence.",
   },
   "dependency-parser": {
     taskId: "nlp-dependency-parser",
@@ -148,7 +148,7 @@ function makeValidatorRun({ config, command, commandResult, repoHead, dirty }) {
 }
 
 function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash, repoHead, dirty }) {
-  const comparator = comparison.comparator ?? {};
+  const comparator = comparison.comparator ?? comparison.validator ?? {};
   return {
     schemaId: "urn:ismail-elkorchi:evidence:run:v1",
     schemaVersion: 1,
@@ -168,7 +168,7 @@ function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash,
     ],
     comparator: {
       name: String(comparator.name ?? "unknown"),
-      version: String(comparator.version ?? "unknown"),
+      version: String(comparator.version ?? comparator.commit ?? "unknown"),
       runtime: String(comparator.runtime ?? "unknown"),
       ...(comparator.model ? { model: comparator.model } : {}),
       ...(comparator.license ? { license: comparator.license } : {}),

@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "scope": "conllu-dependency",
+  "capturedDate": "2026-05-15",
+  "validator": {
+    "name": "UniversalDependencies/tools validator",
+    "url": "https://github.com/UniversalDependencies/tools",
+    "commit": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
+    "runtime": "Python 3.13.7",
+    "command": "python validate.py --lang <fixture-language> --level 2 <fixture>",
+    "license": "GPL-2.0",
+    "artifactSurface": "CoNLL-U format and syntax validation diagnostics"
+  },
+  "dependencies": [
+    {
+      "name": "python",
+      "version": "3.13.7",
+      "role": "runtime used for local validator execution"
+    },
+    {
+      "name": "udapi",
+      "version": "0.5.2",
+      "role": "validator runtime dependency"
+    },
+    {
+      "name": "regex",
+      "version": "2026.5.9",
+      "role": "validator runtime dependency"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixtureId": "ar-nonlatin",
+      "path": "fixtures/conllu-dependency/valid/ar-nonlatin.conllu",
+      "language": "ar",
+      "expectedStatus": "pass",
+      "exitCode": 0,
+      "status": "passed-as-expected",
+      "summary": [
+        "*** PASSED ***"
+      ]
+    },
+    {
+      "fixtureId": "en-basic",
+      "path": "fixtures/conllu-dependency/valid/en-basic.conllu",
+      "language": "en",
+      "expectedStatus": "pass",
+      "exitCode": 0,
+      "status": "passed-as-expected",
+      "summary": [
+        "*** PASSED ***"
+      ]
+    },
+    {
+      "fixtureId": "es-mwt",
+      "path": "fixtures/conllu-dependency/valid/es-mwt.conllu",
+      "language": "es",
+      "expectedStatus": "pass",
+      "exitCode": 0,
+      "status": "passed-as-expected",
+      "summary": [
+        "*** PASSED ***"
+      ]
+    },
+    {
+      "fixtureId": "bad-head-format",
+      "path": "fixtures/conllu-dependency/invalid/bad-head-format.conllu",
+      "language": "en",
+      "expectedStatus": "fail",
+      "exitCode": 1,
+      "status": "failed-as-expected",
+      "summary": [
+        "[L2 FORMAT invalid-head] Invalid HEAD: 'x'.",
+        "[L2 SYNTAX unknown-head] Undefined HEAD (no such ID): 'x'.",
+        "*** FAILED *** with 2 errors"
+      ]
+    },
+    {
+      "fixtureId": "dangling-head",
+      "path": "fixtures/conllu-dependency/invalid/dangling-head.conllu",
+      "language": "en",
+      "expectedStatus": "fail",
+      "exitCode": 1,
+      "status": "failed-as-expected",
+      "summary": [
+        "[L2 SYNTAX unknown-head] Undefined HEAD (no such ID): '9'.",
+        "*** FAILED *** with 1 errors"
+      ]
+    },
+    {
+      "fixtureId": "missing-root",
+      "path": "fixtures/conllu-dependency/invalid/missing-root.conllu",
+      "language": "en",
+      "expectedStatus": "fail",
+      "exitCode": 1,
+      "status": "failed-as-expected",
+      "summary": [
+        "[L2 SYNTAX non-tree] Non-tree structure. Words 1,2,3 are not reachable from the root 0.",
+        "*** FAILED *** with 1 errors"
+      ]
+    },
+    {
+      "fixtureId": "multiple-roots",
+      "path": "fixtures/conllu-dependency/invalid/multiple-roots.conllu",
+      "language": "en",
+      "expectedStatus": "fail",
+      "exitCode": 1,
+      "status": "failed-as-expected",
+      "summary": [
+        "[L2 SYNTAX multiple-roots] Multiple root words: [1, 2]",
+        "*** FAILED *** with 1 errors"
+      ]
+    },
+    {
+      "fixtureId": "malformed-field-count",
+      "path": "fixtures/conllu-dependency/invalid/malformed-field-count.conllu",
+      "language": "en",
+      "expectedStatus": "fail",
+      "exitCode": 1,
+      "status": "failed-as-expected",
+      "summary": [
+        "[L1 FORMAT number-of-columns] The line has 9 columns but 10 are expected.",
+        "*** FAILED *** with 1 errors"
+      ]
+    },
+    {
+      "fixtureId": "missing-deprel",
+      "path": "fixtures/conllu-dependency/invalid/missing-deprel.conllu",
+      "language": "en",
+      "expectedStatus": "fail",
+      "exitCode": 1,
+      "status": "failed-as-expected",
+      "summary": [
+        "[L2 SYNTAX invalid-deprel] Invalid DEPREL value '_'. Only lowercase English letters or a colon are expected.",
+        "*** FAILED *** with 1 errors"
+      ]
+    }
+  ],
+  "notes": [
+    "This capture validates fixture format and syntax only; it does not evaluate dependency parser accuracy."
+  ]
+}
+

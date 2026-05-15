@@ -25,8 +25,11 @@
     {
       "name": "UniversalDependencies/tools validator",
       "url": "https://github.com/UniversalDependencies/tools",
-      "version": "unfrozen-readiness-reference",
-      "role": "Future external format validator reference before importer/exporter behavior lands."
+      "version": "2026-05-15 snapshot",
+      "commit": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
+      "executionStatus": "executed",
+      "capturePath": "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json",
+      "role": "Executed external format and syntax validator for frozen CoNLL-U fixtures."
     }
   ],
   "futureComparators": [

@@ -133,7 +133,9 @@
           "enum": [
             "dangling-head",
             "root-count",
-            "field-count"
+            "field-count",
+            "head-format",
+            "deprel-missing"
           ]
         }
       }

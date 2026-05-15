@@ -7,9 +7,9 @@
     "id": "nlp-conllu-dependency-roundtrip",
     "schemaId": "docs/specs/support-status.v1.json"
   },
-  "generatedAt": "2026-05-11T00:00:00.000Z",
+  "generatedAt": "2026-05-15T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -19,6 +19,7 @@
       "status": "pass",
       "message": "Frozen valid CoNLL-U fixtures import to TextDocDocumentV1 dependency layers.",
       "evidenceRefs": [
+        "fixtures/conllu-dependency/valid/ar-nonlatin.conllu",
         "fixtures/conllu-dependency/valid/en-basic.conllu",
         "fixtures/conllu-dependency/valid/es-mwt.conllu",
         "schemas/textdoc-document-v1.schema.json"
@@ -29,6 +30,7 @@
       "status": "pass",
       "message": "Exported CoNLL-U strings match the recorded expected outputs for the frozen fixtures.",
       "evidenceRefs": [
+        "fixtures/conllu-dependency/expected/ar-nonlatin.json",
         "fixtures/conllu-dependency/expected/en-basic.json",
         "fixtures/conllu-dependency/expected/es-mwt.json"
       ]
@@ -38,9 +40,21 @@
       "status": "pass",
       "message": "Invalid fixtures fail with stable machine-readable diagnostics.",
       "evidenceRefs": [
+        "fixtures/conllu-dependency/invalid/bad-head-format.conllu",
         "fixtures/conllu-dependency/invalid/dangling-head.conllu",
         "fixtures/conllu-dependency/invalid/malformed-field-count.conllu",
-        "fixtures/conllu-dependency/invalid/missing-root.conllu"
+        "fixtures/conllu-dependency/invalid/missing-deprel.conllu",
+        "fixtures/conllu-dependency/invalid/missing-root.conllu",
+        "fixtures/conllu-dependency/invalid/multiple-roots.conllu"
+      ]
+    },
+    {
+      "checkId": "external-validator-capture",
+      "status": "pass",
+      "message": "UniversalDependencies/tools accepts every frozen valid fixture and rejects every frozen invalid fixture.",
+      "evidenceRefs": [
+        "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json",
+        "schemas/conllu-validator-capture-v1.schema.json"
       ]
     },
     {

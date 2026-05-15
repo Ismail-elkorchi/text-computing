@@ -1,0 +1,6 @@
+# sent_id = invalid-bad-head-format
+# text = Bad head.
+1	Bad	bad	ADJ	JJ	_	2	amod	_	_
+2	head	head	NOUN	NN	Number=Sing	x	root	_	SpaceAfter=No
+3	.	.	PUNCT	.	_	2	punct	_	_
+
