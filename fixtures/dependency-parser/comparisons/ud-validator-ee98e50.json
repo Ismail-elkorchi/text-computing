@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "scope": "dependency-parser",
+  "capturedDate": "2026-05-15",
+  "comparator": {
+    "name": "UniversalDependencies/tools validator",
+    "version": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
+    "runtime": "other",
+    "artifactSurface": "CoNLL-U HEAD/DEPREL row validation for frozen expected arcs"
+  },
+  "executionStatus": "executed",
+  "dependencies": [
+    {
+      "name": "python",
+      "version": "3.13.7",
+      "role": "runtime used for local validator execution"
+    },
+    {
+      "name": "udapi",
+      "version": "0.5.2",
+      "role": "validator runtime dependency"
+    },
+    {
+      "name": "regex",
+      "version": "2026.5.9",
+      "role": "validator runtime dependency"
+    }
+  ],
+  "slices": [
+    {
+      "fixtureId": "en-basic",
+      "status": "captured",
+      "expectedArcPath": "fixtures/dependency-parser/expected/en-basic.json",
+      "matchesExpected": true,
+      "outputArcs": [
+        { "dependent": "1", "head": "2", "relation": "nsubj" },
+        { "dependent": "2", "head": "0", "relation": "root" },
+        { "dependent": "3", "head": "2", "relation": "obj" },
+        { "dependent": "4", "head": "2", "relation": "punct" }
+      ],
+      "differences": []
+    },
+    {
+      "fixtureId": "es-mwt",
+      "status": "captured",
+      "expectedArcPath": "fixtures/dependency-parser/expected/es-mwt.json",
+      "matchesExpected": true,
+      "outputArcs": [
+        { "dependent": "1", "head": "0", "relation": "root" },
+        { "dependent": "2", "head": "1", "relation": "obj" },
+        { "dependent": "3", "head": "5", "relation": "case" },
+        { "dependent": "4", "head": "5", "relation": "det" },
+        { "dependent": "5", "head": "1", "relation": "obl" },
+        { "dependent": "6", "head": "1", "relation": "punct" }
+      ],
+      "differences": []
+    }
+  ],
+  "notes": [
+    "This is direct UD/CoNLL-U fixture validation evidence, not dependency parser model-output evidence.",
+    "The output arcs are copied from repository-authored CoNLL-U integer word rows after the external validator accepted the fixtures."
+  ]
+}

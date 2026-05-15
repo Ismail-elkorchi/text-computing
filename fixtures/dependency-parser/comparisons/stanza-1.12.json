@@ -4,7 +4,7 @@
   "capturedDate": "2026-05-15",
   "comparator": {
     "name": "Stanza DepparseProcessor",
-    "version": "1.11.x documentation snapshot",
+    "version": "1.12.0 documentation snapshot",
     "runtime": "python",
     "artifactSurface": "UD-style head and dependency relation fields"
   },
@@ -14,13 +14,13 @@
       "fixtureId": "en-basic",
       "status": "output-not-captured",
       "expectedArcPath": "fixtures/dependency-parser/expected/en-basic.json",
-      "reason": "The Stanza runtime depends on heavyweight model assets that are not vendored in this repository."
+      "reason": "The Stanza runtime depends on model assets that are not vendored in this repository."
     },
     {
       "fixtureId": "es-mwt",
       "status": "output-not-captured",
       "expectedArcPath": "fixtures/dependency-parser/expected/es-mwt.json",
-      "reason": "The Stanza runtime depends on heavyweight model assets that are not vendored in this repository."
+      "reason": "The Stanza runtime depends on model assets that are not vendored in this repository."
     }
   ],
   "notes": [

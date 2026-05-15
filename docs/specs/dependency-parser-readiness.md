@@ -10,8 +10,8 @@ This document freezes the minimum public contract required before parser code is
 - Task id: `nlp-dependency-parser`
 - Status: `readiness-only`
 - Owning packages: `textrules`, `textpipeline`, `textdoc`, `textconformance`
-- Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures plus one executed spaCy model-output capture
-- Current non-proof: no parser model, heuristic parser, broad UD corpus support, broad UD treebank coverage, Stanza execution, or JavaScript parser comparator
+- Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, one executed spaCy model-output capture, and one direct UD/CoNLL-U validator capture
+- Current non-proof: no parser model, heuristic parser, broad UD corpus support, broad UD treebank coverage, Stanza model execution, or JavaScript parser comparator
 
 ## Input slices
 
@@ -44,7 +44,8 @@ This gate records:
 
 - Universal Dependencies format and guideline sources;
 - an executed Python spaCy comparator capture with pinned runtime/model versions;
-- a non-executed Stanza capability record;
+- a non-executed Stanza 1.12.0 capability record;
+- an executed UniversalDependencies/tools validation capture for the frozen CoNLL-U rows;
 - the absence of a committed JavaScript dependency-parser comparator for this gate;
 - the rule that broader executed comparator outputs must be added before parser behavior is merged.
 
@@ -54,7 +55,8 @@ Files under `fixtures/dependency-parser/comparisons/*.json` distinguish executed
 records and ecosystem gaps.
 
 - `spacy-3.8.json` records executed outputs from pinned spaCy package and model versions.
-- `stanza-1.11.json` records a non-executed Stanza capability surface.
+- `stanza-1.12.json` records a non-executed Stanza capability surface.
+- `ud-validator-ee98e50.json` records direct UD/CoNLL-U validation of the frozen expected arcs. It is not parser model-output evidence.
 - `javascript-gap-2026-05.json` records the absence of a committed JavaScript comparator for this gate.
 
 The next feature gate must extend these records with broader executed captures before feature code.

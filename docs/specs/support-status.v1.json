@@ -124,14 +124,16 @@
     {
       "name": "@ismail-elkorchi/textlab",
       "status": "slice-proven",
-      "scope": "Support-status summary API and CLI are implemented for the repository support-status JSON.",
+      "scope": "Support-status, task-evidence, and conformance-report summary APIs and CLI commands are implemented for repository evidence files.",
       "evidence": [
         "packages/textlab/src/index.ts",
         "packages/textlab/src/cli.ts",
-        "packages/textlab/test/index.test.mjs"
+        "packages/textlab/test/index.test.mjs",
+        "fixtures/reports/task-evidence-manifest.v1.json",
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
       "limitations": [
-        "No full conformance report renderer, comparator replay UI, annotation query engine, or corpus browser is implemented"
+        "No comparator replay UI, rich diff renderer, annotation query engine, or corpus browser is implemented"
       ]
     }
   ],
@@ -242,18 +244,21 @@
     {
       "id": "nlp-dependency-parser",
       "status": "readiness-only",
-      "scope": "Expected dependency arcs and one executed spaCy comparator capture exist for frozen fixtures; no parser behavior is implemented.",
+      "scope": "Expected dependency arcs, one executed spaCy parser capture, and one direct UD/CoNLL-U validator capture exist for frozen fixtures; no parser behavior is implemented.",
       "evidence": [
         "docs/specs/dependency-parser-readiness.md",
         "fixtures/dependency-parser/slices.json",
         "fixtures/dependency-parser/expected/en-basic.json",
         "fixtures/dependency-parser/expected/es-mwt.json",
         "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+        "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+        "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json",
         "fixtures/dependency-parser/tool-versions.json",
         "docs/decisions/dependency-parser-output-differences.md"
       ],
       "limitations": [
-        "Only spaCy has executed outputs; Stanza and JavaScript parser comparison remain gap/capability records",
+        "Only spaCy has executed parser model-output; Stanza model execution and JavaScript parser comparison remain gap/capability records",
+        "The UD validator capture is fixture-format evidence, not parser model-output evidence",
         "No dependency parser implementation or broad UD treebank support is claimed"
       ]
     }
