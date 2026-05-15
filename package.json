@@ -31,7 +31,10 @@
     "compare:conllu": "node tools/compare/run.mjs conllu",
     "compare:dependency-parser": "node tools/compare/run.mjs dependency-parser",
     "compare:all": "node tools/compare/run.mjs all",
-    "evidence:all": "npm run -s compare:all && npm run -s check:fixtures"
+    "coverage:all": "npm run -s build && node tools/check-coverage.mjs",
+    "fuzz:semantic": "npm run -s build && node tools/fuzz/semantic.mjs",
+    "fuzz:all": "npm run -s fuzz:semantic",
+    "evidence:all": "npm run -s compare:all && npm run -s check:fixtures && npm run -s coverage:all && npm run -s fuzz:all"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",

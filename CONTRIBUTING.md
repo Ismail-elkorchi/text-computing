@@ -46,6 +46,14 @@ npm run check:fixtures
 
 Validates repository-level readiness fixture artifacts.
 
+**Coverage and fuzz signals**
+```sh
+npm run coverage:all
+npm run fuzz:all
+```
+
+Coverage is a V8 signal over the current document, protocol, pack, pipeline, and conformance package surfaces. Fuzzing is deterministic semantic fuzzing over document round-trips, result envelopes, pack lookup, pipeline determinism, and conformance summaries.
+
 **Documentation boundaries**
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
 - `fixtures/` and `schemas/` contain repository-level validation material.

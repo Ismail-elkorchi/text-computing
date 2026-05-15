@@ -27,6 +27,8 @@ npm run -s build
 npm run -s schema:validate
 npm run -s check:fixtures
 npm run -s test:all
+npm run -s coverage:all
+npm run -s fuzz:all
 ```
 
 ## Repository structure
