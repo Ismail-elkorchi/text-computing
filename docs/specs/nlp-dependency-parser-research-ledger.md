@@ -3,7 +3,8 @@
 ## Scope
 
 This ledger covers readiness for a deterministic dependency parsing baseline. It does not claim parser
-behavior. The current gate freezes expected arcs and comparator capability contracts.
+behavior. The current gate freezes expected arcs, one executed comparator capture, and remaining
+capability/gap records.
 
 ## Primary sources
 
@@ -20,16 +21,17 @@ behavior. The current gate freezes expected arcs and comparator capability contr
 - Universal Dependencies v2 overview paper: `https://arxiv.org/abs/2004.10643`
   - Relevance: describes UD v2 as a multilingual treebank collection and annotation framework.
 
-## Comparator capability evidence
+## Comparator evidence
 
-- `fixtures/dependency-parser/comparisons/spacy-3.8.json` records the spaCy parser artifact surface.
+- `fixtures/dependency-parser/comparisons/spacy-3.8.json` records executed spaCy parser outputs for the
+  frozen slices.
 - `fixtures/dependency-parser/comparisons/stanza-1.11.json` records the Stanza parser artifact surface.
 - `fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json` records that no committed JavaScript
   dependency-parser comparator is available in this readiness gate.
 
 ## Comparator limitations
 
-- No external model-output capture is committed in this gate.
+- Only the spaCy comparator has committed model-output capture in this gate.
 - spaCy/Stanza behavior is model- and language-package-dependent.
 - Installing Stanza for local capture was rejected for this gate because it pulls a heavyweight Torch/CUDA stack.
 - JavaScript ecosystem comparison remains a gap to revisit before feature implementation.
@@ -38,5 +40,5 @@ behavior. The current gate freezes expected arcs and comparator capability contr
 
 - Parser feature code must not start from the assumption that CoNLL-U I/O equals parsing.
 - Parser output must target `textdoc` dependency annotations and pass through `textprotocol` and `textconformance`.
-- Executed comparator captures are mandatory before a parser feature PR.
+- Additional executed comparator captures are mandatory before a parser feature PR.
 - The first parser implementation must preserve ambiguity or diagnostic failures rather than silently choosing arcs.

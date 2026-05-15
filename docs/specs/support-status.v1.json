@@ -232,24 +232,25 @@
         "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
       ],
       "limitations": [
-        "No dependency parser or parser comparator capture is implemented",
+        "CoNLL-U round-trip artifacts do not implement dependency parser behavior",
         "No broad UD treebank or language coverage is claimed"
       ]
     },
     {
       "id": "nlp-dependency-parser",
       "status": "readiness-only",
-      "scope": "Expected dependency arcs and comparator capability records exist for frozen fixtures; no parser behavior is implemented.",
+      "scope": "Expected dependency arcs and one executed spaCy comparator capture exist for frozen fixtures; no parser behavior is implemented.",
       "evidence": [
         "docs/specs/dependency-parser-readiness.md",
         "fixtures/dependency-parser/slices.json",
         "fixtures/dependency-parser/expected/en-basic.json",
         "fixtures/dependency-parser/expected/es-mwt.json",
+        "fixtures/dependency-parser/comparisons/spacy-3.8.json",
         "fixtures/dependency-parser/tool-versions.json",
         "docs/decisions/dependency-parser-output-differences.md"
       ],
       "limitations": [
-        "No executed parser comparator outputs are committed",
+        "Only spaCy has executed outputs; Stanza and JavaScript parser comparison remain gap/capability records",
         "No dependency parser implementation or broad UD treebank support is claimed"
       ]
     }

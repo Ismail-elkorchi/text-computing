@@ -6,7 +6,7 @@ Current status:
 
 - `readiness-only`;
 - expected arcs are derived from repository-authored CoNLL-U fixture rows;
-- comparator files record public comparator capability contracts, not executed model-output captures;
+- comparator files include one executed spaCy model-output capture and remaining non-executed capability/gap records;
 - no dependency parser behavior or broad Universal Dependencies support is claimed.
 
-The next feature gate must add executed comparator captures before parser behavior is merged.
+The next feature gate must broaden comparator captures before parser behavior is merged.
