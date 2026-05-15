@@ -23,7 +23,15 @@
     "check:quality": "npm run check:static && npm run check:fixtures && npm run check:pack && npm run check:publint && npm run check:attw && npm run check:jsr",
     "test:all": "npm run --workspaces --if-present test",
     "test:workspaces": "npm run --workspaces --if-present test",
-    "check:package-readiness": "node tools/validate-package-readiness.mjs"
+    "check:package-readiness": "node tools/validate-package-readiness.mjs",
+    "compare:tokenization-sbd": "node tools/compare/run.mjs tokenization-sbd",
+    "compare:pos-morph-lemma": "node tools/compare/run.mjs pos-morph-lemma",
+    "compare:rule-backed-ner": "node tools/compare/run.mjs rule-backed-ner",
+    "compare:corpus-tfidf-bm25": "node tools/compare/run.mjs corpus-tfidf-bm25",
+    "compare:conllu": "node tools/compare/run.mjs conllu",
+    "compare:dependency-parser": "node tools/compare/run.mjs dependency-parser",
+    "compare:all": "node tools/compare/run.mjs all",
+    "evidence:all": "npm run -s compare:all && npm run -s check:fixtures"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
