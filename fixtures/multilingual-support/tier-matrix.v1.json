@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "scope": "multilingual-support",
+  "tiers": [
+    {
+      "name": "unicode-invariant",
+      "status": "present",
+      "definition": "Behavior is defined by Unicode-pinned algorithms and should be invariant across human languages unless a later resource/profile layer says otherwise.",
+      "claimBoundary": "Applies to implemented Unicode primitives and exact offset accounting only.",
+      "evidenceRefs": [
+        "packages/textfacts/testdata/unicode/17.0.0",
+        "fixtures/tokenization-sbd/slices.json",
+        "fixtures/tokenization-sbd/expected/arabic.json",
+        "fixtures/tokenization-sbd/expected/japanese-cjk.json",
+        "fixtures/tokenization-sbd/expected/thai-no-space.json"
+      ],
+      "limitations": [
+        "Unicode-invariant does not mean language-aware tokenization, morphology, parsing, or named-entity support."
+      ]
+    },
+    {
+      "name": "fixture-proven",
+      "status": "partial",
+      "definition": "Behavior is proven only for named frozen fixtures and their expected outputs.",
+      "claimBoundary": "No behavior claim extends beyond the listed fixture slices.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/slices.json",
+        "fixtures/conllu-dependency/slices.json",
+        "fixtures/pos-morph-lemma/slices.json",
+        "fixtures/rule-backed-ner/slices.json"
+      ],
+      "limitations": [
+        "The fixture set is intentionally small and not a language coverage benchmark."
+      ]
+    },
+    {
+      "name": "resource-backed",
+      "status": "partial",
+      "definition": "Behavior is backed by declared resources, licenses, provenance, and deterministic lookup rules.",
+      "claimBoundary": "Current public resource proof is manifest/lookup behavior, not a broad multilingual resource registry.",
+      "evidenceRefs": [
+        "fixtures/textpack/manifests/textpack-en-core.json",
+        "fixtures/textpack/manifests/textpack-en-legal.json",
+        "fixtures/textpack/README.md"
+      ],
+      "limitations": [
+        "Current resource fixtures are not a multilingual resource inventory."
+      ]
+    },
+    {
+      "name": "comparator-backed",
+      "status": "partial",
+      "definition": "Behavior or evidence has been compared against at least one named external tool/version.",
+      "claimBoundary": "Comparator evidence is diagnostic and does not override the repository contract.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+        "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json",
+        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+        "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json"
+      ],
+      "limitations": [
+        "Comparator-backed does not mean agreement with every external toolkit or every language."
+      ]
+    },
+    {
+      "name": "corpus-backed",
+      "status": "partial",
+      "definition": "Behavior is backed by frozen corpus/document fixtures and expected aggregate outputs.",
+      "claimBoundary": "Current corpus proof is explicit-token TF-IDF/BM25 over a small fixture corpus.",
+      "evidenceRefs": [
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+      ],
+      "limitations": [
+        "No broad multilingual corpus benchmark, IR relevance set, or large-corpus performance proof is implemented."
+      ]
+    }
+  ],
+  "scriptFixtures": [
+    {
+      "id": "hi-devanagari-smoke",
+      "language": "hi",
+      "script": "Devanagari",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/hi-devanagari-smoke.txt",
+      "sha256": "e4414dd7407728d4d605a346059530ad5210dd771a0af6737966a8f4d95049ed",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "ru-cyrillic-smoke",
+      "language": "ru",
+      "script": "Cyrillic",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/ru-cyrillic-smoke.txt",
+      "sha256": "a3fb346688a2ef124f7fec3c76f552b448357c301d5c85f3be2d3f7df066a3b3",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "he-hebrew-rtl-smoke",
+      "language": "he",
+      "script": "Hebrew",
+      "direction": "rtl",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/he-hebrew-rtl-smoke.txt",
+      "sha256": "a8f660aacd3ff90f5191f2eef2500b6eaa9cbb31d92a670ccefbd5c1648ae2b6",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only RTL script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "am-ethiopic-smoke",
+      "language": "am",
+      "script": "Ethiopic",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/am-ethiopic-smoke.txt",
+      "sha256": "fdbaa26cae8bd0a082356dc587fb6277ab104295bd8f1e731308612533c13b70",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    }
+  ],
+  "notes": [
+    "This matrix prevents claims from escalating from Unicode or smoke-fixture evidence to broad language support.",
+    "New language/script fixtures must move through task-specific expected-output and comparator gates before their behavior is claimed."
+  ]
+}

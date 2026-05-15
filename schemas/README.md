@@ -29,6 +29,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`dependency-parser-expected-v1.schema.json`](dependency-parser-expected-v1.schema.json) — expected dependency-arc schema for parser readiness.
 - [`dependency-parser-tool-versions-v1.schema.json`](dependency-parser-tool-versions-v1.schema.json) — comparator capability and standard source schema for parser readiness.
 - [`dependency-parser-comparison-v1.schema.json`](dependency-parser-comparison-v1.schema.json) — comparator capability/capture schema for parser readiness.
+- [`multilingual-support-tiers-v1.schema.json`](multilingual-support-tiers-v1.schema.json) — multilingual support-tier matrix schema.
 - [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.
 - [`textdoc-document-v1.schema.json`](textdoc-document-v1.schema.json) — document annotation model schema for issue `#11`.

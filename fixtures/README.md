@@ -19,6 +19,7 @@ validation.
 - [`corpus-tfidf-bm25/`](corpus-tfidf-bm25/) — explicit-token corpus slices, formula goldens, and comparator captures for issue `#14`.
 - [`conllu-dependency/`](conllu-dependency/) — valid, invalid, and expected-output CoNLL-U fixtures for dependency-target round-trip work.
 - [`dependency-parser/`](dependency-parser/) — readiness-only expected dependency arcs and comparator capability records for parser work.
+- [`multilingual-support/`](multilingual-support/) — support-tier matrix and readiness-only script fixtures for multilingual evidence control.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue
