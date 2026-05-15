@@ -31,7 +31,7 @@
     },
     {
       "name": "Stanza DepparseProcessor",
-      "version": "1.11.x documentation snapshot",
+      "version": "1.12.0 documentation snapshot",
       "runtime": "python",
       "model": {
         "name": "model-dependent",
@@ -40,7 +40,16 @@
       "license": "Apache-2.0",
       "artifactSurface": "UD-style head and dependency relation fields",
       "executionStatus": "capability-recorded",
-      "capturePath": "fixtures/dependency-parser/comparisons/stanza-1.11.json"
+      "capturePath": "fixtures/dependency-parser/comparisons/stanza-1.12.json"
+    },
+    {
+      "name": "UniversalDependencies/tools validator",
+      "version": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
+      "runtime": "other",
+      "license": "GPL-2.0",
+      "artifactSurface": "CoNLL-U HEAD/DEPREL row validation for frozen expected arcs",
+      "executionStatus": "executed",
+      "capturePath": "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
     },
     {
       "name": "JavaScript NLP baseline",
@@ -52,5 +61,5 @@
       "capturePath": "fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json"
     }
   ],
-  "executionPolicy": "At least one executed dependency-parser comparator capture is now required before this readiness gate passes. Additional parser feature work still requires broader comparator captures and explicit non-failure differences."
+  "executionPolicy": "At least one executed parser model-output capture and one direct UD/CoNLL-U validation capture are required before this readiness gate passes. Additional parser feature work still requires broader comparator captures and explicit non-failure differences."
 }

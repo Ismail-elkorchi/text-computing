@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 import {
+  isTextlabTaskEvidenceManifest,
   isTextlabSupportStatusDocument,
+  renderConformanceReportSummary,
+  renderEvidenceManifestSummary,
   renderSupportStatusSummary,
+  summarizeConformanceReport,
+  summarizeEvidenceManifest,
   summarizeSupportStatus,
 } from "./index.js";
 
@@ -16,10 +21,14 @@ function usage(): string {
   return [
     "Usage:",
     "  textlab support-status [path]",
+    "  textlab evidence [path]",
+    "  textlab conformance-report <path>",
     "  textlab --help",
     "",
     "Commands:",
     "  support-status  Render a deterministic summary of docs/specs/support-status.v1.json.",
+    "  evidence        Render a deterministic summary of fixtures/reports/task-evidence-manifest.v1.json.",
+    "  conformance-report  Render a deterministic summary of one conformance report.",
     "",
   ].join("\n");
 }
@@ -34,7 +43,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     };
   }
 
-  if (command !== "support-status") {
+  if (command !== "support-status" && command !== "evidence" && command !== "conformance-report") {
     return {
       exitCode: 2,
       stdout: "",
@@ -46,11 +55,23 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     return {
       exitCode: 2,
       stdout: "",
-      stderr: `Too many arguments for support-status.\n${usage()}`,
+      stderr: `Too many arguments for ${command}.\n${usage()}`,
     };
   }
 
-  const path = pathArg ?? "docs/specs/support-status.v1.json";
+  if (command === "conformance-report" && pathArg === undefined) {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `Missing path for conformance-report.\n${usage()}`,
+    };
+  }
+
+  const path =
+    pathArg ??
+    (command === "support-status"
+      ? "docs/specs/support-status.v1.json"
+      : "fixtures/reports/task-evidence-manifest.v1.json");
   let parsed: unknown;
   try {
     parsed = JSON.parse(await readFile(path, "utf8"));
@@ -59,23 +80,55 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     return {
       exitCode: 1,
       stdout: "",
-      stderr: `Failed to read support status from ${path}: ${message}`,
+      stderr: `Failed to read ${command} from ${path}: ${message}`,
     };
   }
 
-  if (!isTextlabSupportStatusDocument(parsed)) {
+  if (command === "support-status") {
+    if (!isTextlabSupportStatusDocument(parsed)) {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid support status document: ${path}`,
+      };
+    }
+
+    return {
+      exitCode: 0,
+      stdout: renderSupportStatusSummary(summarizeSupportStatus(parsed)),
+      stderr: "",
+    };
+  }
+
+  if (command === "evidence") {
+    if (!isTextlabTaskEvidenceManifest(parsed)) {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid task evidence manifest: ${path}`,
+      };
+    }
+
+    return {
+      exitCode: 0,
+      stdout: renderEvidenceManifestSummary(summarizeEvidenceManifest(parsed)),
+      stderr: "",
+    };
+  }
+
+  try {
+    return {
+      exitCode: 0,
+      stdout: renderConformanceReportSummary(summarizeConformanceReport(parsed)),
+      stderr: "",
+    };
+  } catch {
     return {
       exitCode: 1,
       stdout: "",
-      stderr: `Invalid support status document: ${path}`,
+      stderr: `Invalid conformance report: ${path}`,
     };
   }
-
-  return {
-    exitCode: 0,
-    stdout: renderSupportStatusSummary(summarizeSupportStatus(parsed)),
-    stderr: "",
-  };
 }
 
 const isMain = process.argv[1] !== undefined && import.meta.url === new URL(`file://${process.argv[1]}`).href;

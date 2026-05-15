@@ -5,6 +5,7 @@
 These differences are acceptable only after they are recorded in comparator captures and bounded by the
 fixture scope:
 
+- UD validator exact match: direct CoNLL-U validator acceptance proves fixture-format consistency, not parser prediction behavior.
 - Tokenization mismatch: a comparator may segment a surface form differently from the frozen CoNLL-U fixture.
 - Multiword-token handling: a comparator may emit arcs over syntactic word rows, surface tokens, or both.
 - Label-set mismatch: a comparator may emit language-specific labels or model labels requiring explicit mapping.
