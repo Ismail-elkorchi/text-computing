@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 1
   },
@@ -53,11 +53,22 @@
     },
     {
       "checkId": "comparator-output-captures",
-      "status": "not-run",
-      "message": "Frozen comparator versions exist, but committed comparator-output capture files are not claimed for this task.",
+      "status": "pass",
+      "message": "An executed spaCy comparator-output capture is committed for the frozen slices.",
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/tool-versions.json",
-        "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+        "schemas/pos-morph-lemma-comparison-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "additional-comparator-captures",
+      "status": "not-run",
+      "message": "Stanza, wink-nlp, and compromise POS/morph/lemma captures are not committed in this gate.",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/tool-versions.json",
+        "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
+        "docs/decisions/pos-morph-lemma-output-differences.md"
       ]
     },
     {
@@ -71,6 +82,6 @@
     }
   ],
   "notes": [
-    "This report persists current fixture-bound POS/morph/lemma evidence and explicitly records the comparator-output capture gap."
+    "This report persists current fixture-bound POS/morph/lemma evidence and records that only spaCy has committed executed comparator output."
   ]
 }

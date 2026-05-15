@@ -36,7 +36,12 @@
         "runtime": { "enum": ["python", "javascript", "jvm"] },
         "version": { "type": "string", "minLength": 1 },
         "model": { "type": "string", "minLength": 1 },
-        "modelVersion": { "type": "string", "minLength": 1 }
+        "modelVersion": { "type": "string", "minLength": 1 },
+        "executionStatus": {
+          "enum": ["executed", "capability-recorded", "deferred"]
+        },
+        "capturePath": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
       }
     }
   }

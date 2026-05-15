@@ -31,7 +31,9 @@ claim that the repository has already matched the comparator behavior.
 ## Comparator freeze rationale
 
 - `spaCy 3.8.14` is the Python comparator surface because it exposes POS, lemma, and morphology in a
-  mature pipeline with widely used annotations.
+  mature pipeline with widely used annotations. Executed output is committed for the frozen slices.
+- `Stanza 1.12.0` is recorded as a Python comparator target, but execution is deferred until a
+  bounded CPU installation path is available for this repository gate.
 - `wink-nlp 2.4.0` with `wink-eng-lite-web-model 1.8.1` is the JavaScript comparator surface
   because it is lightweight, deterministic in deployment, and relevant to the TypeScript ecosystem.
 - `compromise 14.15.0` remains a second JavaScript comparator because it exposes a simplified tag

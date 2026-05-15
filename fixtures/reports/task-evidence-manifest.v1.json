@@ -74,13 +74,17 @@
         "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
         "fixtures/pos-morph-lemma/slices.json",
         "fixtures/pos-morph-lemma/tool-versions.json",
+        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
         "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
         "schemas/pos-morph-lemma-expected-v1.schema.json",
+        "schemas/pos-morph-lemma-comparison-v1.schema.json",
         "tools/validate-pos-morph-lemma-feature.mjs"
       ],
-      "comparatorRefs": [],
+      "comparatorRefs": [
+        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
+      ],
       "knownGaps": [
-        "No committed comparator-output capture files are present for this task.",
+        "Only spaCy has committed executed comparator output for this task.",
         "Not a trained or broad multilingual tagger; behavior remains fixture-bound."
       ]
     },

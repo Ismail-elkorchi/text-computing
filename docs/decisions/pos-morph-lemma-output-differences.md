@@ -26,3 +26,8 @@ The following differences are recorded and must not be treated as automatic fail
 5. **Unknown words**
    - Comparators may emit fallback tags such as `X`, language-specific coarse tags, or no lemma.
    - Readiness requirement: unknown handling must be testable and provenance-bearing.
+6. **Model-scope mismatch**
+   - A comparator may have one strong language/model surface and weaker behavior on code-switching or
+     historical slices.
+   - Readiness requirement: the capture must record model choice and must not upgrade the support
+     claim beyond the frozen slice.

@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
 
@@ -23,15 +23,18 @@ function expect(condition, message, details) {
 const slicesSchemaPath = "schemas/pos-morph-lemma-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/pos-morph-lemma-tool-versions-v1.schema.json";
 const expectedSchemaPath = "schemas/pos-morph-lemma-expected-v1.schema.json";
+const comparisonSchemaPath = "schemas/pos-morph-lemma-comparison-v1.schema.json";
 const textdocSchemaPath = "schemas/textdoc-document-v1.schema.json";
 
 const slicesSchema = await readJson(slicesSchemaPath);
 const toolVersionsSchema = await readJson(toolVersionsSchemaPath);
 const expectedSchema = await readJson(expectedSchemaPath);
+const comparisonSchema = await readJson(comparisonSchemaPath);
 const textdocSchema = await readJson(textdocSchemaPath);
 
 const validateSlices = ajv.compile(slicesSchema);
 const validateToolVersions = ajv.compile(toolVersionsSchema);
+const validateComparison = ajv.compile(comparisonSchema);
 ajv.addSchema(textdocSchema, textdocSchema.$id);
 ajv.compile(expectedSchema);
 
@@ -80,6 +83,32 @@ expect(
   runtimes.has("python") || runtimes.has("jvm"),
   "POS/morph/lemma readiness requires at least one frozen Python or JVM comparator.",
 );
+
+const comparisonDir = "fixtures/pos-morph-lemma/comparisons";
+const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
+expect(comparisonFiles.length >= 1, "POS/morph/lemma readiness requires at least one comparator capture.");
+
+let executedCaptureCount = 0;
+for (const file of comparisonFiles) {
+  const path = `${comparisonDir}/${file}`;
+  const comparison = await readJson(path);
+  expect(validateComparison(comparison), `${path} failed ${comparisonSchemaPath}`, validateComparison.errors);
+  const comparator = toolVersions.comparators.find(
+    (entry) => entry.name === comparison.comparator.name && entry.version === comparison.comparator.version,
+  );
+  expect(comparator !== undefined, `${path} comparator is not listed in tool-versions.json.`);
+  if (comparator?.capturePath !== undefined) {
+    expect(comparator.capturePath === path, `${path} must match capturePath in tool-versions.json.`);
+  }
+  expect(comparator?.executionStatus === "executed", `${path} must correspond to an executed comparator.`);
+  executedCaptureCount += 1;
+  const sliceIdsInCapture = new Set(comparison.slices.map((slice) => slice.sliceId));
+  for (const sliceId of sliceIds) {
+    expect(sliceIdsInCapture.has(sliceId), `${path} is missing slice ${sliceId}.`);
+  }
+}
+
+expect(executedCaptureCount >= 1, "POS/morph/lemma readiness requires at least one executed comparator capture.");
 
 const readinessDoc = await readText("docs/specs/pos-morph-lemma-readiness.md");
 const researchLedger = await readText("docs/specs/nlp-pos-morph-lemma-research-ledger.md");
