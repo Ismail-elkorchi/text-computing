@@ -1,0 +1,75 @@
+{
+  "schemaId": "urn:ismail-elkorchi:evidence:run:v1",
+  "schemaVersion": 1,
+  "runId": "evidence-run:nlp-tokenization-sbd:spacy:2026-05-15",
+  "taskId": "nlp-tokenization-sbd",
+  "repo": {
+    "headSha": "c7ce8573fcf4eebca103035fa2c0a78fc9bff40c",
+    "dirty": false,
+    "branch": "main",
+    "remote": "origin"
+  },
+  "generatedAt": "2026-05-15T00:00:00.000Z",
+  "inputs": [
+    {
+      "role": "fixture",
+      "path": "fixtures/tokenization-sbd/slices.json",
+      "sha256": "40566a20f7369b813d18c097499da900dff09c31ffd532546976a0a439fc830b"
+    },
+    {
+      "role": "expected",
+      "path": "fixtures/tokenization-sbd/expected/ascii-two-sentences.json",
+      "sha256": "290a67c0e463c5e039b1023d27de85b0864ce6ecb2e180b1f095c582b41ecf6d"
+    },
+    {
+      "role": "comparison",
+      "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+      "sha256": "e41ce2fc42b62f35cee9d5da762e8d8a7c8ca8892f193d00bdce5cde05db88c0"
+    },
+    {
+      "role": "schema",
+      "path": "schemas/tokenization-sbd-expected-v1.schema.json",
+      "sha256": "48b590fbeb046c90e5d1a4c8c219c6e1f0764c017364047b0ef5d8df95ab63b1"
+    }
+  ],
+  "comparator": {
+    "name": "spaCy",
+    "version": "3.8.14",
+    "runtime": "Python 3.13.7",
+    "license": "MIT",
+    "source": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json"
+  },
+  "command": {
+    "argv": ["python", "capture-tokenization-sbd.py"],
+    "cwd": "."
+  },
+  "runtime": {
+    "name": "python",
+    "version": "3.13.7",
+    "platform": "linux"
+  },
+  "environment": {
+    "node": "24.14.0"
+  },
+  "execution": {
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "",
+    "durationMs": 0
+  },
+  "status": "pass",
+  "outputs": [
+    {
+      "kind": "comparison-capture",
+      "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+      "sha256": "e41ce2fc42b62f35cee9d5da762e8d8a7c8ca8892f193d00bdce5cde05db88c0"
+    }
+  ],
+  "differences": [],
+  "conformanceReportRefs": [
+    "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+  ],
+  "notes": [
+    "Schema example for the public evidence-run contract; comparator replay commands are added separately."
+  ]
+}

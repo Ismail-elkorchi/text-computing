@@ -1,0 +1,28 @@
+{
+  "schemaId": "urn:ismail-elkorchi:evidence:run:v1",
+  "schemaVersion": 1,
+  "runId": "invalid",
+  "taskId": "nlp-tokenization-sbd",
+  "generatedAt": "2026-05-15T00:00:00.000Z",
+  "inputs": [],
+  "comparator": {
+    "name": "spaCy",
+    "version": "3.8.14",
+    "runtime": "Python"
+  },
+  "command": {
+    "argv": ["python"]
+  },
+  "runtime": {
+    "name": "python",
+    "version": "3.13.7"
+  },
+  "environment": {},
+  "execution": {
+    "exitCode": 0
+  },
+  "status": "pass",
+  "outputs": [],
+  "differences": [],
+  "conformanceReportRefs": []
+}

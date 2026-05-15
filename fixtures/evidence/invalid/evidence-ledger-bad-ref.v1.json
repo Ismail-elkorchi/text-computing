@@ -1,0 +1,31 @@
+{
+  "schemaId": "urn:ismail-elkorchi:evidence:ledger:v1",
+  "schemaVersion": 1,
+  "ledgerId": "invalid-ledger",
+  "generatedAt": "2026-05-15T00:00:00.000Z",
+  "repo": {
+    "headSha": "c7ce8573fcf4eebca103035fa2c0a78fc9bff40c",
+    "dirty": false
+  },
+  "tasks": [
+    {
+      "taskId": "nlp-tokenization-sbd",
+      "status": "current",
+      "runRefs": [
+        {
+          "runId": "missing-run",
+          "path": "fixtures/evidence/valid/missing.json",
+          "taskId": "nlp-tokenization-sbd",
+          "status": "pass",
+          "repoHeadSha": "c7ce8573fcf4eebca103035fa2c0a78fc9bff40c",
+          "comparator": {
+            "name": "spaCy",
+            "version": "3.8.14"
+          }
+        }
+      ],
+      "conformanceReportRefs": [],
+      "knownGaps": []
+    }
+  ]
+}
