@@ -1,10 +1,11 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readdir, readFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import Ajv from "ajv";
 
 const ROOT = process.cwd();
+const REPLAY_MANIFEST_PATH = "fixtures/reports/evidence-replay.v1.json";
 const TASKS = {
   "tokenization-sbd": {
     taskId: "nlp-tokenization-sbd",
@@ -83,7 +84,8 @@ const TASKS = {
   },
 };
 
-const taskArg = process.argv[2] ?? "all";
+const writeMode = process.argv.includes("--write");
+const taskArg = process.argv.find((arg, index) => index > 1 && !arg.startsWith("--")) ?? "all";
 const taskNames = taskArg === "all" ? Object.keys(TASKS) : [taskArg];
 
 function fail(message, details) {
@@ -99,6 +101,17 @@ async function readJson(relativePath) {
 async function sha256(relativePath) {
   const data = await readFile(path.join(ROOT, relativePath));
   return createHash("sha256").update(data).digest("hex");
+}
+
+function stableStringify(value) {
+  if (Array.isArray(value)) return `[${value.map((entry) => stableStringify(entry)).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.entries(value)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, entry]) => `${JSON.stringify(key)}:${stableStringify(entry)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
 }
 
 function runCommand(command) {
@@ -235,10 +248,12 @@ function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash,
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateEvidenceRun = ajv.compile(await readJson("schemas/evidence-run-v1.schema.json"));
+const validateEvidenceReplay = ajv.compile(await readJson("schemas/evidence-replay-v1.schema.json"));
 const schemaValidators = new Map();
 const repoHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim();
 const dirty = execFileSync("git", ["status", "--porcelain"], { cwd: ROOT, encoding: "utf8" }).trim().length > 0;
 const summaries = [];
+const replayTasks = [];
 
 for (const taskName of taskNames) {
   const config = TASKS[taskName];
@@ -247,6 +262,7 @@ for (const taskName of taskNames) {
   }
 
   let runCount = 0;
+  const validatorRefs = [];
   for (const command of config.validatorCommands) {
     const commandResult = runCommand(command);
     const run = makeValidatorRun({ config, command, commandResult, repoHead, dirty });
@@ -256,6 +272,11 @@ for (const taskName of taskNames) {
     if (!validateEvidenceRun(run)) {
       fail(`${taskName} generated validator evidence run failed schema validation`, validateEvidenceRun.errors);
     }
+    validatorRefs.push({
+      argv: command,
+      path: command[1],
+      sha256: run.inputs[0].sha256,
+    });
     runCount += 1;
   }
 
@@ -272,6 +293,7 @@ for (const taskName of taskNames) {
     validateComparison = schemaValidators.get(config.comparisonSchema);
   }
 
+  const comparisonRefs = [];
   for (const file of files) {
     const comparison = await readJson(file);
     if (!validateComparison(comparison)) {
@@ -289,17 +311,72 @@ for (const taskName of taskNames) {
     if (!validateEvidenceRun(run)) {
       fail(`${taskName} generated comparison evidence run failed schema validation`, validateEvidenceRun.errors);
     }
+    comparisonRefs.push({
+      path: file,
+      sha256: comparisonHash,
+      comparator: {
+        name: run.comparator.name,
+        version: run.comparator.version,
+        runtime: run.comparator.runtime,
+        ...(run.comparator.model ? { model: run.comparator.model } : {}),
+        ...(run.comparator.license ? { license: run.comparator.license } : {}),
+      },
+      status: run.status,
+    });
     runCount += 1;
   }
 
-  summaries.push({
+  const summary = {
     task: taskName,
     taskId: config.taskId,
     validators: config.validatorCommands.length,
     comparisons: files.length,
     evidenceRuns: runCount,
     status: config.knownGap && files.length === 0 ? "gap-recorded" : "ok",
+  };
+  summaries.push(summary);
+  replayTasks.push({
+    task: taskName,
+    taskId: config.taskId,
+    status: summary.status,
+    validators: validatorRefs,
+    comparisons: comparisonRefs,
+    conformanceReportRefs: config.conformanceReportRefs,
+    ...(config.knownGap ? { knownGap: config.knownGap } : {}),
   });
+}
+
+const replayManifest = {
+  schemaVersion: 1,
+  generatedAt: "2026-05-16T00:00:00.000Z",
+  tasks: replayTasks,
+};
+
+if (!validateEvidenceReplay(replayManifest)) {
+  fail("Generated evidence replay manifest failed schema validation", validateEvidenceReplay.errors);
+}
+
+if (taskArg === "all") {
+  if (writeMode) {
+    await mkdir(path.dirname(path.join(ROOT, REPLAY_MANIFEST_PATH)), { recursive: true });
+    await writeFile(path.join(ROOT, REPLAY_MANIFEST_PATH), `${JSON.stringify(replayManifest, null, 2)}\n`);
+  } else {
+    const committedManifest = await readJson(REPLAY_MANIFEST_PATH);
+    if (!validateEvidenceReplay(committedManifest)) {
+      fail(`${REPLAY_MANIFEST_PATH} failed schema validation`, validateEvidenceReplay.errors);
+    }
+    if (stableStringify(committedManifest) !== stableStringify(replayManifest)) {
+      fail(`${REPLAY_MANIFEST_PATH} is stale; run npm run -s compare:write and review the diff`);
+    }
+  }
+} else if (!writeMode) {
+  const committedManifest = await readJson(REPLAY_MANIFEST_PATH);
+  const committedTasks = new Map(committedManifest.tasks.map((task) => [task.task, task]));
+  for (const replayTask of replayTasks) {
+    if (stableStringify(committedTasks.get(replayTask.task)) !== stableStringify(replayTask)) {
+      fail(`${REPLAY_MANIFEST_PATH} is stale for ${replayTask.task}; run npm run -s compare:write and review the diff`);
+    }
+  }
 }
 
 console.log(JSON.stringify({ schemaVersion: 1, repoHead, dirty, summaries }, null, 2));
