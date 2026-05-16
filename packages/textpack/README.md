@@ -14,5 +14,20 @@ It defines:
 - manifest entrypoints and runnable test references.
 
 `@ismail-elkorchi/textpack` does not execute rules or widen core task packages. It records
-deterministic resource metadata and lookup ordering so rule-backed packages can consume packs
-without inventing their own manifest shape.
+deterministic resource metadata, lookup ordering, and pure resource-content loaders so rule-backed
+packages can consume packs without inventing their own manifest or file parsing shape.
+
+## Resource loading
+
+Resource loading is pure: callers provide resource content by manifest path. The package does not
+read files, open network connections, or execute pack code.
+
+The current loader surface covers committed fixture formats:
+
+- line-delimited stopwords;
+- line-delimited abbreviation lists;
+- TSV lexicons with `key=value` attributes; and
+- TSV gazetteers with labels.
+
+Loaded entries preserve the resolved resource metadata, license reference, provenance reference,
+line number, normalized lookup token, and deterministic overlay order.

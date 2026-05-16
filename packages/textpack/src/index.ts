@@ -99,6 +99,45 @@ export interface TextPackLookupResult {
   readonly diagnostics: readonly TextPackLookupDiagnostic[];
 }
 
+export type TextPackResourceLoadDiagnosticCode =
+  | "resource-content-missing"
+  | "malformed-resource-row"
+  | "duplicate-resource-entry";
+
+export interface TextPackResourceLoadDiagnostic {
+  readonly code: TextPackResourceLoadDiagnosticCode;
+  readonly packId: string;
+  readonly resourceId: string;
+  readonly path: string;
+  readonly line?: number;
+  readonly message: string;
+}
+
+export interface TextPackLoadedEntry {
+  readonly value: string;
+  readonly lookupToken: string;
+  readonly line: number;
+  readonly attributes: Readonly<Record<string, string>>;
+  readonly label?: string;
+}
+
+export interface TextPackLoadedResource {
+  readonly resource: TextPackResolvedResource;
+  readonly entries: readonly TextPackLoadedEntry[];
+}
+
+export type TextPackResourceContentSource = ReadonlyMap<string, string> | Readonly<Record<string, string>>;
+
+export interface TextPackLoadResult {
+  readonly resources: readonly TextPackLoadedResource[];
+  readonly diagnostics: readonly (TextPackLookupDiagnostic | TextPackResourceLoadDiagnostic)[];
+}
+
+export interface TextPackEntryLookupMatch {
+  readonly resource: TextPackResolvedResource;
+  readonly entry: TextPackLoadedEntry;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -122,6 +161,54 @@ function isTextPackResourceKind(value: unknown): value is TextPackResourceKind {
 
 export function normalizeTextPackLookupToken(value: string): string {
   return value.trim().toLowerCase();
+}
+
+function textPackContentForPath(source: TextPackResourceContentSource, resourcePath: string): string | undefined {
+  const maybeMap = source as ReadonlyMap<string, string>;
+  if (typeof maybeMap.get === "function") return maybeMap.get(resourcePath);
+  return (source as Readonly<Record<string, string | undefined>>)[resourcePath];
+}
+
+function splitTextPackResourceLines(content: string): readonly string[] {
+  return content.split(/\r\n|\n|\r/u);
+}
+
+function parseTextPackAttributes(
+  cells: readonly string[],
+  resource: TextPackResolvedResource,
+  line: number,
+  diagnostics: TextPackResourceLoadDiagnostic[],
+): Record<string, string> {
+  const attributes: Record<string, string> = {};
+  for (const cell of cells) {
+    const separator = cell.indexOf("=");
+    if (separator <= 0 || separator === cell.length - 1) {
+      diagnostics.push({
+        code: "malformed-resource-row",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        path: resource.path,
+        line,
+        message: `Resource ${resource.resourceId} contains a malformed attribute at line ${line}.`,
+      });
+      continue;
+    }
+    const key = cell.slice(0, separator).trim();
+    const value = cell.slice(separator + 1).trim();
+    if (key.length === 0 || value.length === 0) {
+      diagnostics.push({
+        code: "malformed-resource-row",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        path: resource.path,
+        line,
+        message: `Resource ${resource.resourceId} contains an empty attribute at line ${line}.`,
+      });
+      continue;
+    }
+    attributes[key] = value;
+  }
+  return attributes;
 }
 
 export function isTextPackLicenseRef(value: unknown): value is TextPackLicenseRef {
@@ -311,4 +398,162 @@ export function resolveTextPackResources(
   }
 
   return { resources, diagnostics };
+}
+
+export function parseTextPackResourceContent(
+  resource: TextPackResolvedResource,
+  content: string,
+): {
+  readonly entries: readonly TextPackLoadedEntry[];
+  readonly diagnostics: readonly TextPackResourceLoadDiagnostic[];
+} {
+  const diagnostics: TextPackResourceLoadDiagnostic[] = [];
+  const entries: TextPackLoadedEntry[] = [];
+  const seenLookupTokens = new Set<string>();
+
+  for (const [lineIndex, rawLine] of splitTextPackResourceLines(content).entries()) {
+    const line = lineIndex + 1;
+    const trimmed = rawLine.trim();
+    if (trimmed.length === 0) continue;
+
+    const cells = trimmed.split("\t").map((cell) => cell.trim());
+    const value = cells[0] ?? "";
+    if (value.length === 0) {
+      diagnostics.push({
+        code: "malformed-resource-row",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        path: resource.path,
+        line,
+        message: `Resource ${resource.resourceId} contains an empty value at line ${line}.`,
+      });
+      continue;
+    }
+
+    let label: string | undefined;
+    let attributes: Record<string, string> = {};
+
+    if (resource.kind === "lexicon") {
+      if (cells.length < 2) {
+        diagnostics.push({
+          code: "malformed-resource-row",
+          packId: resource.packId,
+          resourceId: resource.resourceId,
+          path: resource.path,
+          line,
+          message: `Lexicon resource ${resource.resourceId} must contain attributes at line ${line}.`,
+        });
+        continue;
+      }
+      const diagnosticCount = diagnostics.length;
+      attributes = parseTextPackAttributes(cells.slice(1), resource, line, diagnostics);
+      if (diagnostics.length > diagnosticCount) continue;
+    } else if (resource.kind === "gazetteer") {
+      label = cells[1];
+      if (label === undefined || label.length === 0) {
+        diagnostics.push({
+          code: "malformed-resource-row",
+          packId: resource.packId,
+          resourceId: resource.resourceId,
+          path: resource.path,
+          line,
+          message: `Gazetteer resource ${resource.resourceId} must contain a label at line ${line}.`,
+        });
+        continue;
+      }
+      const diagnosticCount = diagnostics.length;
+      attributes = parseTextPackAttributes(cells.slice(2), resource, line, diagnostics);
+      if (diagnostics.length > diagnosticCount) continue;
+    } else if (cells.length > 1) {
+      diagnostics.push({
+        code: "malformed-resource-row",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        path: resource.path,
+        line,
+        message: `Line ${line} in ${resource.resourceId} must contain a single value.`,
+      });
+      continue;
+    }
+
+    const lookupToken = normalizeTextPackLookupToken(value);
+    if (seenLookupTokens.has(lookupToken)) {
+      diagnostics.push({
+        code: "duplicate-resource-entry",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        path: resource.path,
+        line,
+        message: `Resource ${resource.resourceId} repeats lookup entry ${value} at line ${line}.`,
+      });
+      continue;
+    }
+    seenLookupTokens.add(lookupToken);
+
+    entries.push({
+      value,
+      lookupToken,
+      line,
+      attributes,
+      ...(label ? { label } : {}),
+    });
+  }
+
+  return { entries, diagnostics };
+}
+
+export function loadTextPackResources(
+  manifests: readonly TextPackManifestV1[],
+  request: TextPackLookupRequest,
+  contents: TextPackResourceContentSource,
+): TextPackLoadResult {
+  const resolved = resolveTextPackResources(manifests, request);
+  const diagnostics: (TextPackLookupDiagnostic | TextPackResourceLoadDiagnostic)[] = [
+    ...resolved.diagnostics,
+  ];
+  const resources: TextPackLoadedResource[] = [];
+
+  for (const resource of resolved.resources) {
+    const content = textPackContentForPath(contents, resource.path);
+    if (content === undefined) {
+      diagnostics.push({
+        code: "resource-content-missing",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        path: resource.path,
+        message: `Resource content is missing for ${resource.path}.`,
+      });
+      continue;
+    }
+
+    const parsed = parseTextPackResourceContent(resource, content);
+    diagnostics.push(...parsed.diagnostics);
+    resources.push({
+      resource,
+      entries: parsed.entries,
+    });
+  }
+
+  return { resources, diagnostics };
+}
+
+export function lookupTextPackLoadedEntries(
+  resources: readonly TextPackLoadedResource[],
+  value: string,
+): readonly TextPackEntryLookupMatch[] {
+  const lookupToken = normalizeTextPackLookupToken(value);
+  const matches: TextPackEntryLookupMatch[] = [];
+
+  for (const resource of resources) {
+    for (const entry of resource.entries) {
+      if (entry.lookupToken === lookupToken) {
+        matches.push({
+          resource: resource.resource,
+          entry,
+        });
+      }
+    }
+  }
+
+  return matches;
 }

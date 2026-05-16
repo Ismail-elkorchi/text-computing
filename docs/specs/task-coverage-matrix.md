@@ -7,7 +7,7 @@ This matrix is the public correction to broad “implemented” readings of the 
 | Unicode text facts | `beta` | Unicode-pinned `textfacts` implementation and multi-runtime tests | Locale tailoring breadth and broad applied NLP integration remain limited. |
 | Tokenization/SBD | `slice-proven` | Frozen fixtures, expected outputs, and comparator captures | Needs larger multilingual, domain, script, emoji, and noisy-text benchmark suites. |
 | Document annotation model | `slice-proven` | `textdoc` document model, lifecycle, graph annotation fixtures, invalid-reference tests | Needs broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions. |
-| Resource packs | `slice-proven` | `textpack` manifests, license/provenance checks, overlay diagnostics | Needs public registry workflow, resource vetting, broad multilingual packs, and update policy. |
+| Resource packs | `slice-proven` | `textpack` manifests, fixture content loaders, license/provenance checks, overlay diagnostics | Needs public registry workflow, resource vetting, broad multilingual packs, and update policy. |
 | POS/morph/lemma | `slice-proven` | Frozen issue `#10` slices and deterministic `textrules` tests | Needs UD-scale corpora, richer morphology, language packs, ambiguity policy, and comparator sweeps. |
 | Rule-backed NER | `slice-proven` | Frozen issue `#13` slices and PER/ORG/LOC rule tests | Needs broader labels, nested/overlap policy at scale, gazetteer governance, multilingual datasets, and entity linking. |
 | Corpus TF-IDF/BM25 | `slice-proven` | Frozen explicit-token corpus and comparator captures | Needs larger corpora, relevance-linked retrieval evaluation, field weighting, and performance tests. |
