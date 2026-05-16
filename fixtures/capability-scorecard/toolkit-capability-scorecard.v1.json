@@ -342,6 +342,30 @@
         "tools/validate-dependency-parser-feature.mjs"
       ],
       "nextGate": "Add broader UD treebank slices, performance thresholds, and JavaScript gap resolution before wider parser behavior."
+    },
+    {
+      "taskId": "nlp-relation-extraction",
+      "supportStatus": "readiness-only",
+      "languageTier": "fixture-proven",
+      "evidenceRefs": [
+        "docs/specs/relation-extraction-readiness.md",
+        "fixtures/relation-extraction/slices.json",
+        "fixtures/reports/nlp-relation-extraction/conformance-report.json",
+        "tools/validate-relation-extraction-readiness.mjs"
+      ],
+      "nextGate": "Record expected outputs and executed comparator captures before feature behavior."
+    },
+    {
+      "taskId": "nlp-coreference",
+      "supportStatus": "readiness-only",
+      "languageTier": "fixture-proven",
+      "evidenceRefs": [
+        "docs/specs/coreference-readiness.md",
+        "fixtures/coreference/slices.json",
+        "fixtures/reports/nlp-coreference/conformance-report.json",
+        "tools/validate-coreference-readiness.mjs"
+      ],
+      "nextGate": "Record expected outputs and executed comparator captures before feature behavior."
     }
   ],
   "releaseGates": [

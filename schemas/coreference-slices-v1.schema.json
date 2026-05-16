@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/coreference-slices-v1.schema.json",
+  "title": "Coreference readiness slices v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "supportStatus",
+    "expectedOutputStatus",
+    "comparatorStatus",
+    "allowedFixturePolicy",
+    "chainPolicy",
+    "fixtures",
+    "negativeControls"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "taskId": { "const": "nlp-coreference" },
+    "supportStatus": { "const": "readiness-only" },
+    "expectedOutputStatus": { "const": "schema-defined" },
+    "comparatorStatus": { "const": "capability-recorded" },
+    "allowedFixturePolicy": { "type": "string", "minLength": 1 },
+    "chainPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mentionKinds", "ambiguityPolicy", "lossPolicy"],
+      "properties": {
+        "mentionKinds": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["proper", "nominal", "pronoun", "singleton"]
+          }
+        },
+        "ambiguityPolicy": { "type": "string", "minLength": 1 },
+        "lossPolicy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/definitions/fixture" }
+    },
+    "negativeControls": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/definitions/negativeControl" }
+    }
+  },
+  "definitions": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "const": "text" },
+        "text": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "language", "script", "fixtureClass", "phenomena", "source"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "language": { "type": "string", "minLength": 2 },
+        "script": { "type": "string", "minLength": 4 },
+        "fixtureClass": {
+          "enum": ["repository-authored", "public-domain", "cc0-compatible"]
+        },
+        "phenomena": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "proper-mention",
+              "nominal-mention",
+              "pronoun-link",
+              "singleton-control",
+              "ambiguous-pronoun",
+              "split-antecedent-control",
+              "non-english-latin-script",
+              "non-latin-script",
+              "right-to-left-script"
+            ]
+          }
+        },
+        "source": { "$ref": "#/definitions/source" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "negativeControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "expectedFailure"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "expectedFailure": {
+          "enum": [
+            "ambiguous-antecedent",
+            "singleton-not-linked",
+            "cataphora-unresolved",
+            "split-antecedent-unsupported"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

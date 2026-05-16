@@ -287,6 +287,42 @@
         "JavaScript parser comparison remains a gap/capability record",
         "The UD validator capture is fixture-format evidence, not parser model-output evidence"
       ]
+    },
+    {
+      "id": "nlp-relation-extraction",
+      "status": "readiness-only",
+      "scope": "Typed relation extraction schemas, readiness fixtures, negative controls, and public support boundaries are recorded; no feature behavior is implemented.",
+      "evidence": [
+        "docs/specs/relation-extraction-readiness.md",
+        "docs/specs/nlp-relation-extraction-research-ledger.md",
+        "fixtures/relation-extraction/slices.json",
+        "schemas/relation-extraction-slices-v1.schema.json",
+        "schemas/relation-extraction-expected-v1.schema.json",
+        "tools/validate-relation-extraction-readiness.mjs",
+        "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+      ],
+      "limitations": [
+        "No recorded expected outputs, executed comparator captures, feature behavior, or corpus evaluation are implemented",
+        "Current fixtures are repository-authored short texts only"
+      ]
+    },
+    {
+      "id": "nlp-coreference",
+      "status": "readiness-only",
+      "scope": "Mention and chain schemas, readiness fixtures, negative controls, and public support boundaries are recorded; no feature behavior is implemented.",
+      "evidence": [
+        "docs/specs/coreference-readiness.md",
+        "docs/specs/nlp-coreference-research-ledger.md",
+        "fixtures/coreference/slices.json",
+        "schemas/coreference-slices-v1.schema.json",
+        "schemas/coreference-expected-v1.schema.json",
+        "tools/validate-coreference-readiness.mjs",
+        "fixtures/reports/nlp-coreference/conformance-report.json"
+      ],
+      "limitations": [
+        "No recorded expected outputs, executed comparator captures, feature behavior, or corpus evaluation are implemented",
+        "Current fixtures are repository-authored short texts only"
+      ]
     }
   ]
 }

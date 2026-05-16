@@ -20,6 +20,8 @@ validation.
 - [`retrieval/`](retrieval/) — explicit-token retrieval slice, expected hits, snippets, and explain output.
 - [`conllu-dependency/`](conllu-dependency/) — valid, invalid, and expected-output CoNLL-U fixtures for dependency-target round-trip work.
 - [`dependency-parser/`](dependency-parser/) — frozen expected dependency arcs, comparator captures, and feature evidence for parser work.
+- [`relation-extraction/`](relation-extraction/) — readiness-only typed relation fixtures and negative controls.
+- [`coreference/`](coreference/) — readiness-only mention/chain fixtures and negative controls.
 - [`multilingual-support/`](multilingual-support/) — support-tier matrix and readiness-only script fixtures for multilingual evidence control.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.
