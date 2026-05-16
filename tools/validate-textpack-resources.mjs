@@ -1,14 +1,15 @@
 import Ajv from "ajv";
 import { access, readFile } from "node:fs/promises";
+import {
+  loadTextPackResources,
+  lookupTextPackLoadedEntries,
+  resolveTextPackResources,
+} from "../packages/textpack/src/index.ts";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
 
 async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
-}
-
-function normalizeToken(value) {
-  return value.trim().toLowerCase();
 }
 
 function pushError(errors, code, message) {
@@ -69,102 +70,6 @@ function validateManifestSemantics(manifest) {
   return errors;
 }
 
-function resolveResources(manifests, request) {
-  const requestLanguage =
-    request.language === undefined ? undefined : normalizeToken(request.language);
-  const requestProfile =
-    request.profile === undefined ? undefined : normalizeToken(request.profile);
-  const resources = [];
-  const diagnostics = [];
-
-  for (const manifest of manifests) {
-    const licensesById = new Map(manifest.licenses.map((license) => [license.id, license]));
-    const provenanceById = new Map(manifest.provenance.map((record) => [record.id, record]));
-
-    for (const resource of manifest.resources) {
-      if (resource.kind !== request.kind) continue;
-
-      const resourceLanguage =
-        resource.language === undefined ? undefined : normalizeToken(resource.language);
-      const resourceProfiles = [...(resource.profiles ?? [])].map((entry) => normalizeToken(entry));
-
-      if (
-        requestLanguage !== undefined &&
-        resourceLanguage !== undefined &&
-        requestLanguage !== resourceLanguage
-      ) {
-        diagnostics.push({
-          code: "language-mismatch",
-          resourceId: resource.resourceId,
-          packId: manifest.packId,
-        });
-        continue;
-      }
-
-      if (requestProfile !== undefined) {
-        if (resourceProfiles.length > 0 && !resourceProfiles.includes(requestProfile)) {
-          diagnostics.push({
-            code: "profile-mismatch",
-            resourceId: resource.resourceId,
-            packId: manifest.packId,
-          });
-          continue;
-        }
-      } else if (resourceProfiles.length > 0) {
-        continue;
-      }
-
-      const license = licensesById.get(resource.licenseId);
-      const provenance = provenanceById.get(resource.provenanceId);
-      if (!license || !provenance) continue;
-
-      resources.push({
-        packId: manifest.packId,
-        packageName: manifest.packageName,
-        version: manifest.version,
-        resourceId: resource.resourceId,
-        lookupKey: resource.lookupKey,
-        kind: resource.kind,
-        path: resource.path,
-        overlayPrecedence: resource.overlayPrecedence,
-        license,
-        provenance,
-        ...(resource.language ? { language: resource.language } : {}),
-        ...(resource.profiles ? { profiles: resource.profiles } : {}),
-      });
-    }
-  }
-
-  resources.sort((left, right) => {
-    return (
-      right.overlayPrecedence - left.overlayPrecedence ||
-      left.packId.localeCompare(right.packId) ||
-      left.resourceId.localeCompare(right.resourceId)
-    );
-  });
-
-  for (let index = 0; index < resources.length; index += 1) {
-    const left = resources[index];
-    if (!left) continue;
-    for (let otherIndex = index + 1; otherIndex < resources.length; otherIndex += 1) {
-      const right = resources[otherIndex];
-      if (!right) continue;
-      if (
-        normalizeToken(left.lookupKey) === normalizeToken(right.lookupKey) &&
-        left.overlayPrecedence === right.overlayPrecedence
-      ) {
-        diagnostics.push({
-          code: "overlay-conflict",
-          resourceId: right.resourceId,
-          packId: right.packId,
-        });
-      }
-    }
-  }
-
-  return { resources, diagnostics };
-}
-
 const manifestSchema = await readJson("schemas/textpack-manifest-v1.schema.json");
 const validateManifest = ajv.compile(manifestSchema);
 
@@ -173,6 +78,7 @@ const validManifestPaths = [
   "fixtures/textpack/manifests/textpack-en-legal.json",
 ];
 const validManifests = [];
+const resourceContents = {};
 
 for (const manifestPath of validManifestPaths) {
   const manifest = await readJson(manifestPath);
@@ -191,12 +97,13 @@ for (const manifestPath of validManifestPaths) {
 
   for (const resource of manifest.resources) {
     await ensurePathExists(resource.path);
+    resourceContents[resource.path] = await readFile(resource.path, "utf8");
   }
 
   validManifests.push(manifest);
 }
 
-const legalStopwordsLookup = resolveResources(validManifests, {
+const legalStopwordsLookup = resolveTextPackResources(validManifests, {
   kind: "stopwords",
   language: "en",
   profile: "legal",
@@ -220,7 +127,60 @@ if (
   process.exit(1);
 }
 
-const profileMismatchLookup = resolveResources(validManifests, {
+const loadedLegalStopwords = loadTextPackResources(
+  validManifests,
+  {
+    kind: "stopwords",
+    language: "en",
+    profile: "legal",
+  },
+  resourceContents,
+);
+if (loadedLegalStopwords.diagnostics.length > 0) {
+  console.error("Valid stopword resources must load without diagnostics.");
+  console.error(JSON.stringify(loadedLegalStopwords, null, 2));
+  process.exit(1);
+}
+
+const legalStopwordMatches = lookupTextPackLoadedEntries(loadedLegalStopwords.resources, "thereof");
+if (legalStopwordMatches[0]?.resource.resourceId !== "stopwords-en-legal") {
+  console.error("Loaded legal stopword lookup failed.");
+  console.error(JSON.stringify(legalStopwordMatches, null, 2));
+  process.exit(1);
+}
+
+const loadedLexicon = loadTextPackResources(
+  validManifests,
+  { kind: "lexicon", language: "en" },
+  resourceContents,
+);
+const hostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST")[0]?.entry;
+if (hostEntry?.attributes.lemma !== "host" || hostEntry.attributes.pos !== "VERB") {
+  console.error("Loaded lexicon attribute lookup failed.");
+  console.error(JSON.stringify(loadedLexicon, null, 2));
+  process.exit(1);
+}
+
+const loadedGazetteer = loadTextPackResources(
+  validManifests,
+  { kind: "gazetteer", language: "en", profile: "legal" },
+  resourceContents,
+);
+const courtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "supreme court")[0]?.entry;
+if (courtEntry?.label !== "ORG") {
+  console.error("Loaded gazetteer label lookup failed.");
+  console.error(JSON.stringify(loadedGazetteer, null, 2));
+  process.exit(1);
+}
+
+const missingContent = loadTextPackResources(validManifests, { kind: "stopwords" }, {});
+if (!missingContent.diagnostics.some((entry) => entry.code === "resource-content-missing")) {
+  console.error("Missing resource content must produce an explicit diagnostic.");
+  console.error(JSON.stringify(missingContent, null, 2));
+  process.exit(1);
+}
+
+const profileMismatchLookup = resolveTextPackResources(validManifests, {
   kind: "gazetteer",
   language: "en",
   profile: "medical",
@@ -231,7 +191,7 @@ if (!profileMismatchLookup.diagnostics.some((entry) => entry.code === "profile-m
   process.exit(1);
 }
 
-const languageMismatchLookup = resolveResources(validManifests, {
+const languageMismatchLookup = resolveTextPackResources(validManifests, {
   kind: "stopwords",
   language: "fr",
   profile: "legal",
@@ -283,7 +243,7 @@ for (const manifest of overlayConflictManifests) {
     process.exit(1);
   }
 }
-const overlayConflictLookup = resolveResources(overlayConflictManifests, {
+const overlayConflictLookup = resolveTextPackResources(overlayConflictManifests, {
   kind: "stopwords",
   language: "en",
 });

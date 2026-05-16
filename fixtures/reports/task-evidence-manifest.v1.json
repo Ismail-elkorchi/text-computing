@@ -50,7 +50,7 @@
     {
       "taskId": "nlp-pack-resource-manifest",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for current textpack manifest/resource validation and overlay-conflict fixtures only.",
+      "claimBoundary": "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only.",
       "reportPath": "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/textpack-resource-manifest.md",

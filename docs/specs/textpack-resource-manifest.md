@@ -21,7 +21,7 @@ Each manifest records:
 - runnable test references; and
 - shared `licenses` and `provenance` registries referenced by the resource entries.
 
-## Overlay and mismatch policy
+## Loading, overlay, and mismatch policy
 
 Resource lookup is deterministic:
 
@@ -33,6 +33,16 @@ Resource lookup is deterministic:
 - successful candidates are ordered by descending `overlayPrecedence`, then `packId`, then
   `resourceId`.
 
+Resource loading is deterministic and side-effect-free:
+
+- callers provide resource file content by manifest path;
+- stopwords and abbreviation lists load as one value per non-empty line;
+- lexicons load from TSV rows with a surface value followed by `key=value` attributes;
+- gazetteers load from TSV rows with a surface value followed by a label and optional `key=value`
+  attributes; and
+- loaded-entry lookup uses normalized lowercase tokens while preserving original values, line
+  numbers, resource metadata, license references, and provenance references.
+
 The repository treats these conditions as failures or diagnostics:
 
 - duplicate `resourceId` values within one manifest are invalid;
@@ -40,6 +50,8 @@ The repository treats these conditions as failures or diagnostics:
 - two resolved resources that share the same normalized `lookupKey` and `overlayPrecedence`
   produce an overlay-conflict diagnostic; and
 - language/profile mismatches are recorded as diagnostics, not silently ignored.
+- malformed resource rows, duplicate loaded entries, and missing resource content are explicit
+  loader diagnostics.
 
 ## Fixture inventory
 
@@ -56,5 +68,6 @@ Negative controls live under `fixtures/textpack/invalid/`.
 ## Verification
 
 `npm run -s check:fixtures` validates the pack manifest schema, checks licensed fixture paths,
-rejects duplicate or missing references, exercises overlay conflicts, and proves deterministic
-lookup behavior with recorded provenance.
+rejects duplicate or missing references, exercises overlay conflicts, loads the committed stopword,
+lexicon, and gazetteer resources, and proves deterministic lookup behavior with recorded
+provenance.

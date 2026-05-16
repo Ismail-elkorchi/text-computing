@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 4,
+    "pass": 5,
     "fail": 0,
     "notRun": 0
   },
@@ -46,6 +46,19 @@
       ]
     },
     {
+      "checkId": "resource-loading-proof-recorded",
+      "status": "pass",
+      "message": "The textpack resource validator loads stopword, lexicon, and gazetteer fixture content through the package loader.",
+      "evidenceRefs": [
+        "packages/textpack/src/index.ts",
+        "packages/textpack/test/index.test.ts",
+        "tools/validate-textpack-resources.mjs",
+        "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
+        "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
+        "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv"
+      ]
+    },
+    {
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status records current resource-manifest limits.",
@@ -56,6 +69,6 @@
     }
   ],
   "notes": [
-    "This report persists current pack/resource evidence; it does not create a public resource registry."
+    "This report persists current pack/resource evidence, including fixture-bound content loading; it does not create a public resource registry."
   ]
 }
