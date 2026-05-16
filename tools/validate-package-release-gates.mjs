@@ -88,6 +88,8 @@ for (const entry of gates.packages) {
     `${entry.packageName} must list every required release gate.`,
   );
   if (entry.releaseTrack === "private-unreleased") {
+    expect(entry.releaseReadiness === "blocked", `${entry.packageName} private-unreleased package must be release-blocked.`);
+    expect(entry.releaseBlockers.length >= 1, `${entry.packageName} private-unreleased package must list release blockers.`);
     expect(packageJson.private === true, `${entry.packageName} must remain private while releaseTrack is private-unreleased.`);
     expect(packageJson.version === "0.0.0", `${entry.packageName} private-unreleased version must remain 0.0.0.`);
     expect(
@@ -96,6 +98,8 @@ for (const entry of gates.packages) {
     );
   } else {
     expect(entry.releaseTrack === "public-beta", `${entry.packageName} has unknown release track ${entry.releaseTrack}.`);
+    expect(entry.releaseReadiness === "publishable", `${entry.packageName} public-beta package must be marked publishable.`);
+    expect(entry.releaseBlockers.length === 0, `${entry.packageName} public-beta package must not list release blockers.`);
     expect(packageJson.private !== true, `${entry.packageName} public-beta package must not be private.`);
     expect(support.status === "beta", `${entry.packageName} public-beta package must be beta in support status.`);
   }

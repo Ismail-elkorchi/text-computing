@@ -135,8 +135,8 @@
     {
       "id": "release-readiness",
       "label": "Release readiness",
-      "measurement": "Packages pass metadata, build, export, and package-quality checks.",
-      "gate": "Package adoption claims require release gates to pass.",
+      "measurement": "Packages record metadata, build, export, package-quality checks, release-readiness state, and release blockers.",
+      "gate": "Package adoption claims require release-readiness evidence, not only a gate-name checklist.",
       "evidenceRequired": [
         "docs/specs/package-release-gates.md",
         "fixtures/package-release/gates.v1.json",
