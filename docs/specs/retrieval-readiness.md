@@ -26,9 +26,13 @@ Expected output validates against
 and records:
 
 - parsed query tokens;
+- required and prohibited lexical query operators;
+- metadata field filters;
 - positive BM25 hits;
 - deterministic snippets;
 - per-term explain values;
+- deterministic index JSON round-trip behavior;
+- bounded large-corpus ordering behavior;
 - missing-query controls.
 
 ## Verification

@@ -65,6 +65,32 @@
       ]
     },
     {
+      "id": "news-beta-without-delta",
+      "raw": "+beta genre:news -delta",
+      "tokens": ["beta", "news", "delta"],
+      "hits": [
+        {
+          "docId": "doc-a",
+          "score": 0.9159976869050851,
+          "snippet": {
+            "text": "alpha beta beta",
+            "tokenStart": 0,
+            "tokenEnd": 3,
+            "highlightedTerms": ["beta"]
+          },
+          "explain": [
+            {
+              "term": "beta",
+              "tf": 2,
+              "df": 1,
+              "idf": 0.8472978603872037,
+              "contribution": 0.9159976869050851
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "missing",
       "raw": "missing",
       "tokens": ["missing"],

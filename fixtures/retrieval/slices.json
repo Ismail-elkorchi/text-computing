@@ -6,14 +6,20 @@
   "expectedPath": "fixtures/retrieval/expected/retrieval-smoke.json",
   "features": [
     "query-parser",
+    "query-operator-must",
+    "query-operator-must-not",
+    "metadata-field-filter",
     "inverted-index",
     "bm25-ranking",
     "snippet",
     "explain",
+    "index-json-round-trip",
+    "bounded-large-corpus-test",
     "missing-query-control",
     "stable-ordering"
   ],
   "notes": [
-    "Retrieval uses the explicit-token corpus already frozen for TF-IDF/BM25 evidence."
+    "Retrieval uses the explicit-token corpus already frozen for TF-IDF/BM25 evidence.",
+    "Fielded retrieval currently treats metadata field clauses as filters and scores only non-field, non-prohibited lexical query terms."
   ]
 }
