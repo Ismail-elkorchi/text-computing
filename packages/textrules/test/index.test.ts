@@ -1,9 +1,17 @@
 import { isTextConformanceReportV1 } from "@ismail-elkorchi/textconformance";
-import { isTextDocDocumentV1, type TextDocDocumentV1, type TextDocEntityAnnotation } from "@ismail-elkorchi/textdoc";
+import {
+  isTextDocDocumentV1,
+  type TextDocDependencyAnnotation,
+  type TextDocDocumentV1,
+  type TextDocEntityAnnotation,
+} from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
+  analyzeDependencyParser,
+  createDependencyParserConformanceReport,
+  createDependencyParserResultEnvelope,
   createRuleBackedNerConformanceReport,
   createRuleBackedNerResultEnvelope,
   createTextRulesEntityResource,
@@ -460,4 +468,107 @@ const flatNestedResult = analyzeRuleBackedNer(
 
 if (!flatNestedResult.diagnostics.some((diagnostic) => diagnostic.code === "entity-overlap-suppressed")) {
   throw new Error("suppressed nested spans should emit an explicit overlap diagnostic");
+}
+
+const expectedDependencyParser = {
+  "en-basic": {
+    text: "They buy books.",
+    languageHint: "en",
+    arcs: [
+      { dependent: "1", head: "2", relation: "nsubj" },
+      { dependent: "2", head: "0", relation: "root" },
+      { dependent: "3", head: "2", relation: "obj" },
+      { dependent: "4", head: "2", relation: "punct" },
+    ],
+  },
+  "es-mwt": {
+    text: "Vámonos al mar.",
+    languageHint: "es",
+    arcs: [
+      { dependent: "1", head: "0", relation: "root" },
+      { dependent: "2", head: "1", relation: "obj" },
+      { dependent: "3", head: "5", relation: "case" },
+      { dependent: "4", head: "5", relation: "det" },
+      { dependent: "5", head: "1", relation: "obl" },
+      { dependent: "6", head: "1", relation: "punct" },
+    ],
+  },
+  "ar-nonlatin": {
+    text: "كتب الطالب الدرس.",
+    languageHint: "ar",
+    arcs: [
+      { dependent: "1", head: "0", relation: "root" },
+      { dependent: "2", head: "1", relation: "nsubj" },
+      { dependent: "3", head: "1", relation: "obj" },
+      { dependent: "4", head: "1", relation: "punct" },
+    ],
+  },
+} as const;
+
+type DependencyParserSliceId = keyof typeof expectedDependencyParser;
+
+function dependencyProjection(document: TextDocDocumentV1): readonly {
+  readonly dependent: string;
+  readonly head: string;
+  readonly relation: string;
+}[] {
+  const dependencyLayer = document.layers.find((layer) => layer.kind === "dependency");
+  if (!dependencyLayer) return [];
+  return dependencyLayer.annotations.map((annotation) => {
+    const dependency = annotation as TextDocDependencyAnnotation;
+    return {
+      dependent: dependency.source.conlluId,
+      head: dependency.source.conlluHead,
+      relation: dependency.relation,
+    };
+  });
+}
+
+for (const sliceId of Object.keys(expectedDependencyParser) as DependencyParserSliceId[]) {
+  const expectedOutput = expectedDependencyParser[sliceId];
+  const parserResult = analyzeDependencyParser({
+    documentId: `dependency-parser:${sliceId}`,
+    text: expectedOutput.text,
+    sourceId: sliceId,
+    languageHint: expectedOutput.languageHint,
+  });
+
+  if (!isTextDocDocumentV1(parserResult.document)) {
+    throw new Error(`dependency parser result for ${sliceId} should satisfy textdoc`);
+  }
+
+  if (JSON.stringify(dependencyProjection(parserResult.document)) !== JSON.stringify(expectedOutput.arcs)) {
+    throw new Error(`dependency parser arcs for ${sliceId} should match the recorded expected output`);
+  }
+
+  const parserEnvelope = createDependencyParserResultEnvelope(parserResult, {
+    producerVersion: "0.0.0",
+    referenceId: sliceId,
+  });
+  if (!isTextProtocolResultEnvelopeV1(parserEnvelope)) {
+    throw new Error(`dependency parser envelope for ${sliceId} should satisfy textprotocol`);
+  }
+
+  const parserReport = createDependencyParserConformanceReport(parserEnvelope, {
+    expectedArtifactPath: `fixtures/dependency-parser/expected/${sliceId}.json`,
+    matchesExpected: true,
+  });
+  if (!isTextConformanceReportV1(parserReport)) {
+    throw new Error(`dependency parser report for ${sliceId} should satisfy textconformance`);
+  }
+}
+
+const unsupportedDependencyResult = analyzeDependencyParser({
+  documentId: "dependency-parser:unsupported",
+  text: "Unseen sentence.",
+  sourceId: "unsupported",
+  languageHint: "en",
+});
+
+if (
+  !unsupportedDependencyResult.diagnostics.some(
+    (diagnostic) => diagnostic.code === "unsupported-dependency-pattern",
+  )
+) {
+  throw new Error("unsupported dependency parser input should emit a diagnostic");
 }

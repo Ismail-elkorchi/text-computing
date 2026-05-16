@@ -23,7 +23,7 @@ The readiness gate records the official UD format and guideline sources as stand
 
 The executed capture is format/syntax evidence only. It proves that the frozen valid fixtures are accepted by the external validator and that the frozen invalid fixtures are rejected. It does not prove parser accuracy or broad Universal Dependencies treebank coverage.
 
-Parser comparator captures are intentionally not claimed in this gate. Dependency parser comparators must be frozen in a later feature gate before parser behavior is implemented.
+Parser comparator captures are intentionally not claimed in this CoNLL-U round-trip gate. Dependency parser comparator and feature evidence lives in the separate dependency-parser gate.
 
 ## Legacy-debt constraints
 

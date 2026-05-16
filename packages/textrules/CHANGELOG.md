@@ -5,3 +5,4 @@
 - Establish package workspace metadata.
 - Add deterministic POS, lemma, and morphology behavior for the frozen issue `#10` slices.
 - Add deterministic rule-backed NER behavior for the frozen issue `#13` slices.
+- Add deterministic dependency-parser behavior for the frozen dependency slices.

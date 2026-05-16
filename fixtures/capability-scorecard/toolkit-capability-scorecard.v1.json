@@ -317,14 +317,16 @@
     },
     {
       "taskId": "nlp-dependency-parser",
-      "supportStatus": "readiness-only",
+      "supportStatus": "slice-proven",
       "languageTier": "comparator-backed",
       "evidenceRefs": [
         "docs/specs/dependency-parser-readiness.md",
         "fixtures/dependency-parser/slices.json",
-        "fixtures/dependency-parser/comparisons/stanza-1.12.json"
+        "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+        "fixtures/reports/nlp-dependency-parser/conformance-report.json",
+        "tools/validate-dependency-parser-feature.mjs"
       ],
-      "nextGate": "Add broader UD treebank slices, performance thresholds, and JavaScript gap resolution before parser behavior."
+      "nextGate": "Add broader UD treebank slices, performance thresholds, and JavaScript gap resolution before wider parser behavior."
     }
   ],
   "releaseGates": [

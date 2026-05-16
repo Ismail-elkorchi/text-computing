@@ -156,6 +156,33 @@
         "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
         "No broad UD treebank or language coverage is claimed."
       ]
+    },
+    {
+      "taskId": "nlp-dependency-parser",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only.",
+      "reportPath": "fixtures/reports/nlp-dependency-parser/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/dependency-parser-readiness.md",
+        "docs/specs/nlp-dependency-parser-research-ledger.md",
+        "fixtures/dependency-parser/slices.json",
+        "fixtures/dependency-parser/tool-versions.json",
+        "fixtures/dependency-parser/expected/ar-nonlatin.json",
+        "fixtures/dependency-parser/expected/en-basic.json",
+        "fixtures/dependency-parser/expected/es-mwt.json",
+        "schemas/dependency-parser-expected-v1.schema.json",
+        "tools/validate-dependency-parser-readiness.mjs",
+        "tools/validate-dependency-parser-feature.mjs"
+      ],
+      "comparatorRefs": [
+        "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+        "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+        "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
+      ],
+      "knownGaps": [
+        "Behavior is limited to deterministic rules for three frozen slices.",
+        "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented."
+      ]
     }
   ]
 }

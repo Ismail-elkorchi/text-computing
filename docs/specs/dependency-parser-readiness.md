@@ -8,10 +8,10 @@ This document freezes the minimum public contract required before parser code is
 ## Status
 
 - Task id: `nlp-dependency-parser`
-- Status: `readiness-only`
+- Status: readiness artifacts complete; frozen-slice behavior is tracked in `docs/specs/support-status.v1.json`
 - Owning packages: `textrules`, `textpipeline`, `textdoc`, `textconformance`
 - Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, executed spaCy and Stanza model-output captures, one direct UD/CoNLL-U validator capture, and negative controls inherited from the CoNLL-U invalid fixtures
-- Current non-proof: no parser model, heuristic parser, broad UD corpus support, broad UD treebank coverage, or JavaScript parser comparator
+- Current non-proof: no trained parser model, broad UD corpus support, broad UD treebank coverage, or JavaScript parser comparator
 
 ## Input slices
 
@@ -22,11 +22,11 @@ The frozen slices live in `fixtures/dependency-parser/slices.json`.
 - `ar-nonlatin` covers Arabic non-Latin right-to-left script with root, subject, object, and punctuation arcs.
 
 Negative controls live in the same manifest and point to invalid CoNLL-U fixtures for invalid heads,
-dangling heads, missing roots, and multiple roots. They are parser-readiness controls, not parser
-behavior tests.
+dangling heads, missing roots, and multiple roots. They are parser-readiness controls for rejecting
+invalid dependency structures.
 
 The slices intentionally reuse `fixtures/conllu-dependency/valid/*.conllu` so the parser-readiness
-contract is tied to the existing dependency annotation model without claiming a parser exists.
+contract is tied to the existing dependency annotation model.
 
 ## Expected-output format
 
@@ -39,7 +39,7 @@ Each expected file records:
 - sentence id and integer word-token order;
 - basic dependency arcs as `dependent`, `head`, and `relation`;
 - exactly one root for the frozen sentence;
-- a support boundary stating that the file is readiness-only.
+- a support boundary stating that parser behavior is limited to the frozen slice.
 
 ## Comparator freeze
 

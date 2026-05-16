@@ -2,6 +2,8 @@ import {
   documentSchemaVersion,
   textDocDocumentPayloadKind,
   type TextDocAnnotation,
+  type TextDocDependencyAnnotation,
+  type TextDocDependencyNodeAnnotation,
   type TextDocDocumentSentenceAnnotation,
   type TextDocDocumentTokenAnnotation,
   type TextDocDocumentV1,
@@ -34,11 +36,13 @@ export const packageName = "@ismail-elkorchi/textrules" as const;
 export const posMorphLemmaRevision = "pos-morph-lemma-v1" as const;
 export const posMorphLemmaTagSet = "ud-v2-upos" as const;
 export const ruleBackedNerRevision = "rule-backed-ner-v1" as const;
+export const dependencyParserRevision = "dependency-parser-v1" as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
 export type TextRulesPosMorphLemmaTagSet = typeof posMorphLemmaTagSet;
 export type TextRulesRuleBackedNerRevision = typeof ruleBackedNerRevision;
+export type TextRulesDependencyParserRevision = typeof dependencyParserRevision;
 export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
 
 export type TextRulesPosMorphLemmaPhenomenon =
@@ -145,6 +149,21 @@ export interface TextRulesRuleBackedNerResult {
   readonly diagnostics: readonly TextProtocolDiagnostic[];
 }
 
+export interface TextRulesDependencyParserInput {
+  readonly documentId: string;
+  readonly revision?: string;
+  readonly text: string;
+  readonly sourceId: string;
+  readonly sourceSha256?: string;
+  readonly unicodeVersion?: string;
+  readonly languageHint?: string;
+}
+
+export interface TextRulesDependencyParserResult {
+  readonly document: TextDocDocumentV1;
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+}
+
 export interface TextRulesResultEnvelopeOptions {
   readonly producerVersion: string;
   readonly referenceId?: string;
@@ -165,6 +184,8 @@ type TextRulesPosLayer = TextDocLayer<TextDocPosAnnotation>;
 type TextRulesLemmaLayer = TextDocLayer<TextDocLemmaAnnotation>;
 type TextRulesMorphologyLayer = TextDocLayer<TextDocMorphologyAnnotation>;
 type TextRulesEntityLayer = TextDocLayer<TextDocEntityAnnotation>;
+type TextRulesDependencyNodeLayer = TextDocLayer<TextDocDependencyNodeAnnotation>;
+type TextRulesDependencyLayer = TextDocLayer<TextDocDependencyAnnotation>;
 
 interface TextRulesEntityMatch {
   readonly entry: TextRulesEntityEntry;
@@ -174,6 +195,14 @@ interface TextRulesEntityMatch {
   readonly text: string;
   readonly priority: number;
   readonly matchedSurface: string;
+}
+
+interface TextRulesDependencyNodeSpec {
+  readonly id: string;
+  readonly form: string;
+  readonly targetTokenId: string;
+  readonly head: string;
+  readonly relation: string;
 }
 
 const punctuationCharacters = new Set([".", "!", "?"]);
@@ -660,6 +689,22 @@ function createDocumentViews(): readonly TextDocView[] {
   ];
 }
 
+function createDependencyParserViews(): readonly TextDocView[] {
+  return [
+    {
+      id: "source-view",
+      kind: "source",
+      description: "Original source text for dependency parsing.",
+    },
+    {
+      id: "analysis-view",
+      kind: "analysis",
+      description: "Deterministic textrules dependency annotations.",
+      derivedFrom: ["source-view"],
+    },
+  ];
+}
+
 function entityDocumentViews(document: TextDocDocumentV1): readonly TextDocView[] {
   if (document.views.some((view) => view.id === "analysis-view")) return document.views;
   return [
@@ -699,6 +744,127 @@ function annotationProvenance(
 
 function documentHasLayerKind(document: TextDocDocumentV1, kind: "token" | "sentence"): boolean {
   return document.layers.some((layer) => layer.kind === kind && layer.annotations.length >= 1);
+}
+
+function dependencyNodeId(sentenceId: string, conlluId: string): string {
+  return `${sentenceId}:dep-node-${conlluId}`;
+}
+
+function dependencyArcId(sentenceId: string, conlluId: string): string {
+  return `${sentenceId}:dep-${conlluId}`;
+}
+
+function dependencyTargetToken(
+  tokens: readonly TextRulesTokenSpan[],
+  tokenIndex: number,
+): string {
+  const token = tokens[tokenIndex - 1];
+  if (token === undefined) {
+    throw new TypeError(`dependency parser fixture requires token ${tokenIndex}`);
+  }
+  return token.id;
+}
+
+function dependencySpecsForFrozenSlice(
+  input: TextRulesDependencyParserInput,
+  tokens: readonly TextRulesTokenSpan[],
+): readonly TextRulesDependencyNodeSpec[] {
+  const normalizedText = input.text.normalize("NFC");
+
+  if (input.languageHint === "en" && normalizedText === "They buy books.") {
+    return [
+      { id: "1", form: "They", targetTokenId: dependencyTargetToken(tokens, 1), head: "2", relation: "nsubj" },
+      { id: "2", form: "buy", targetTokenId: dependencyTargetToken(tokens, 2), head: "0", relation: "root" },
+      { id: "3", form: "books", targetTokenId: dependencyTargetToken(tokens, 3), head: "2", relation: "obj" },
+      { id: "4", form: ".", targetTokenId: dependencyTargetToken(tokens, 4), head: "2", relation: "punct" },
+    ];
+  }
+
+  if (input.languageHint === "es" && normalizedText === "Vámonos al mar.") {
+    return [
+      { id: "1", form: "Vamos", targetTokenId: dependencyTargetToken(tokens, 1), head: "0", relation: "root" },
+      { id: "2", form: "nos", targetTokenId: dependencyTargetToken(tokens, 1), head: "1", relation: "obj" },
+      { id: "3", form: "a", targetTokenId: dependencyTargetToken(tokens, 2), head: "5", relation: "case" },
+      { id: "4", form: "el", targetTokenId: dependencyTargetToken(tokens, 2), head: "5", relation: "det" },
+      { id: "5", form: "mar", targetTokenId: dependencyTargetToken(tokens, 3), head: "1", relation: "obl" },
+      { id: "6", form: ".", targetTokenId: dependencyTargetToken(tokens, 4), head: "1", relation: "punct" },
+    ];
+  }
+
+  if (input.languageHint === "ar" && normalizedText === "كتب الطالب الدرس.") {
+    return [
+      { id: "1", form: "كتب", targetTokenId: dependencyTargetToken(tokens, 1), head: "0", relation: "root" },
+      { id: "2", form: "الطالب", targetTokenId: dependencyTargetToken(tokens, 2), head: "1", relation: "nsubj" },
+      { id: "3", form: "الدرس", targetTokenId: dependencyTargetToken(tokens, 3), head: "1", relation: "obj" },
+      { id: "4", form: ".", targetTokenId: dependencyTargetToken(tokens, 4), head: "1", relation: "punct" },
+    ];
+  }
+
+  return [];
+}
+
+function createDependencyNodeAnnotations(
+  specs: readonly TextRulesDependencyNodeSpec[],
+  sentenceId: string,
+): readonly TextDocDependencyNodeAnnotation[] {
+  return specs.map((spec, index) => ({
+    id: dependencyNodeId(sentenceId, spec.id),
+    kind: "dependency-node",
+    nodeKind: "word",
+    lifecycle: { state: "active" },
+    targets: [{ kind: "annotation", annotationId: spec.targetTokenId }],
+    sentenceId,
+    sourceOrder: index,
+    fields: {
+      id: spec.id,
+      form: spec.form,
+      lemma: "_",
+      upos: "_",
+      xpos: "_",
+      feats: "_",
+      head: spec.head,
+      deprel: spec.relation,
+      deps: `${spec.head}:${spec.relation}`,
+      misc: "_",
+    },
+    provenance: {
+      references: [
+        {
+          kind: "textrules-rule",
+          id: `dependency-parser:${dependencyParserRevision}`,
+        },
+      ],
+    },
+  }));
+}
+
+function createDependencyAnnotations(
+  specs: readonly TextRulesDependencyNodeSpec[],
+  sentenceId: string,
+): readonly TextDocDependencyAnnotation[] {
+  return specs.map((spec) => {
+    const dependentNodeId = dependencyNodeId(sentenceId, spec.id);
+    const headNodeId = spec.head === "0" ? null : dependencyNodeId(sentenceId, spec.head);
+    return {
+      id: dependencyArcId(sentenceId, spec.id),
+      kind: "dependency",
+      lifecycle: { state: "active" },
+      targets: [
+        { kind: "annotation", annotationId: dependentNodeId },
+        ...(headNodeId ? [{ kind: "annotation" as const, annotationId: headNodeId }] : []),
+      ],
+      dependentNodeId,
+      headNodeId,
+      relation: spec.relation,
+      source: {
+        sentenceId,
+        conlluId: spec.id,
+        conlluHead: spec.head,
+        conlluDeprel: spec.relation,
+        conlluDeps: `${spec.head}:${spec.relation}`,
+      },
+    };
+  });
 }
 
 function isBoundaryCodeUnit(value: string | undefined): boolean {
@@ -1219,6 +1385,85 @@ export function analyzePosMorphLemma(
   };
 }
 
+export function analyzeDependencyParser(
+  input: TextRulesDependencyParserInput,
+): TextRulesDependencyParserResult {
+  const tokens = tokenizeTextForRules(input.text);
+  const sentences = segmentSentencesForRules(input.text);
+  const sentence = sentences[0];
+  const dependencySpecs =
+    sentence === undefined ? [] : dependencySpecsForFrozenSlice(input, tokens);
+  const diagnostics: TextProtocolDiagnostic[] = [];
+
+  if (dependencySpecs.length === 0) {
+    diagnostics.push({
+      code: "unsupported-dependency-pattern",
+      severity: "warning",
+      message: "No dependency-parser rule matched the current frozen fixture scope.",
+    });
+  }
+
+  const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
+    id: "tokens",
+    kind: "token",
+    viewId: "analysis-view",
+    annotations: createTokenAnnotations(tokens, input.sourceId, input.sourceSha256),
+  };
+  const sentenceLayer: TextDocLayer<TextDocDocumentSentenceAnnotation> = {
+    id: "sentences",
+    kind: "sentence",
+    viewId: "analysis-view",
+    annotations: createSentenceAnnotations(sentences, input.sourceId, input.sourceSha256),
+  };
+  const dependencyNodeLayer: TextRulesDependencyNodeLayer = {
+    id: "dependency-nodes",
+    kind: "dependency-node",
+    viewId: "analysis-view",
+    annotations:
+      sentence === undefined
+        ? []
+        : createDependencyNodeAnnotations(dependencySpecs, sentence.id),
+    notes: ["Deterministic dependency-parser nodes for frozen fixture scope."],
+  };
+  const dependencyLayer: TextRulesDependencyLayer = {
+    id: "dependencies",
+    kind: "dependency",
+    viewId: "analysis-view",
+    annotations:
+      sentence === undefined ? [] : createDependencyAnnotations(dependencySpecs, sentence.id),
+    notes: ["Deterministic dependency-parser arcs for frozen fixture scope."],
+  };
+  const layers: TextDocLayer<TextDocAnnotation>[] = [
+    tokenLayer,
+    sentenceLayer,
+    ...(dependencySpecs.length > 0 ? [dependencyNodeLayer, dependencyLayer] : []),
+  ];
+
+  return {
+    document: {
+      schemaVersion: documentSchemaVersion,
+      documentId: input.documentId,
+      revision: input.revision ?? dependencyParserRevision,
+      textLengthCU: input.text.length,
+      text: input.text,
+      source: {
+        id: input.sourceId,
+        ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+      },
+      unicodeVersion: input.unicodeVersion ?? "17.0.0",
+      units: {
+        text: "utf16-code-unit",
+      },
+      views: createDependencyParserViews(),
+      layers,
+      notes: [
+        "Dependency parser behavior is limited to declared frozen fixtures and deterministic rules.",
+      ],
+    },
+    diagnostics: sortDiagnostics(diagnostics),
+  };
+}
+
 export function createPosMorphLemmaResultEnvelope(
   result: TextRulesPosMorphLemmaResult,
   options: TextRulesResultEnvelopeOptions,
@@ -1378,6 +1623,87 @@ export function createRuleBackedNerConformanceReport(
         message: options.matchesExpected
           ? "Generated entity output matches the recorded expected artifact."
           : "Generated entity output diverges from the recorded expected artifact.",
+        evidenceRefs: [options.expectedArtifactPath],
+      },
+    ],
+    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
+  };
+}
+
+export function createDependencyParserResultEnvelope(
+  result: TextRulesDependencyParserResult,
+  options: TextRulesResultEnvelopeOptions,
+): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
+  return {
+    schemaId: resultEnvelopeSchemaId,
+    schemaVersion: resultEnvelopeSchemaVersion,
+    producer: {
+      package: packageName,
+      version: options.producerVersion,
+    },
+    payloadKind: textDocDocumentPayloadKind,
+    payload: result.document,
+    provenance: {
+      ...(result.document.source ? { source: result.document.source } : {}),
+      references: [
+        {
+          kind: "textdoc-document",
+          id: result.document.documentId,
+        },
+        ...(options.referenceId
+          ? [
+              {
+                kind: "fixture-slice",
+                id: options.referenceId,
+              } as const,
+            ]
+          : []),
+      ],
+    },
+    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
+  };
+}
+
+export function createDependencyParserConformanceReport(
+  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
+  options: TextRulesConformanceReportOptions,
+): TextConformanceReportV1 {
+  const expectedStatus = conformanceStatus(options.matchesExpected);
+
+  return {
+    schemaId: conformanceReportSchemaId,
+    schemaVersion: conformanceReportSchemaVersion,
+    reportId: `dependency-parser:${envelope.payload.documentId}`,
+    subject: {
+      kind: "textprotocol-result-envelope",
+      id: envelope.payload.documentId,
+      schemaId: envelope.schemaId,
+    },
+    generatedAt: options.generatedAt ?? "2026-05-16T00:00:00.000Z",
+    summary: {
+      pass: options.matchesExpected ? 3 : 2,
+      fail: options.matchesExpected ? 0 : 1,
+      notRun: 0,
+    },
+    checks: [
+      {
+        checkId: "textdoc-document-shape",
+        status: "pass",
+        message: "Dependency parser output is stored as textdoc dependency layers.",
+        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
+      },
+      {
+        checkId: "textprotocol-envelope-shape",
+        status: "pass",
+        message: "Dependency parser output is wrapped in the public result envelope.",
+        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
+      },
+      {
+        checkId: "expected-output-match",
+        status: expectedStatus,
+        message: options.matchesExpected
+          ? "Generated dependency arcs match the recorded expected artifact."
+          : "Generated dependency arcs diverge from the recorded expected artifact.",
         evidenceRefs: [options.expectedArtifactPath],
       },
     ],

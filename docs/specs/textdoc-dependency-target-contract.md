@@ -35,7 +35,7 @@ For CoNLL-U:
 
 ## Non-goals
 
-- no dependency parser behavior;
+- no dependency parser behavior defined by this document;
 - no treebank-scale Universal Dependencies support claim;
 - no enhanced-dependency graph semantics beyond preserving the originating CoNLL-U columns;
 - no malformed-input recovery policy beyond rejecting current invalid fixtures.

@@ -13,7 +13,7 @@
     { "dependent": "4", "head": "1", "relation": "punct" }
   ],
   "rootCount": 1,
-  "supportBoundary": "Readiness-only expected arcs; no parser behavior is implemented or claimed.",
+  "supportBoundary": "Frozen-slice expected arcs; parser behavior is implemented only for this declared fixture scope.",
   "notes": [
     "Arcs are copied from the repository-authored Arabic CoNLL-U fixture."
   ]
