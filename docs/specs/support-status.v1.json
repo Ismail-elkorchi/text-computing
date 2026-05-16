@@ -49,8 +49,9 @@
     {
       "name": "@ismail-elkorchi/textrules",
       "status": "slice-proven",
-      "scope": "Rule-backed POS, lemma, morphology, and NER behavior is implemented only for the frozen issue #10 and #13 slices.",
+      "scope": "Reusable lexical token-pattern primitives are implemented; rule-backed POS, lemma, morphology, and NER behavior is implemented only for the frozen issue #10 and #13 slices.",
       "evidence": [
+        "primitive matcher tests",
         "POS/morph/lemma frozen slices",
         "rule-backed NER frozen slices",
         "textdoc/protocol/conformance tests",
