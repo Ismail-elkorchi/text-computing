@@ -5,8 +5,13 @@ import {
   isTextPipelineTraceV1,
   packageName,
   runTextPipeline,
+  runTextPipelineAsync,
+  runTextPipelineBatch,
+  runTextPipelineBatchAsync,
+  runTextPipelineStream,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
+  type TextPipelineAsyncProcessor,
   type TextPipelineProcessor,
 } from "../src/index.ts";
 
@@ -278,6 +283,145 @@ try {
 
 if (!undeclaredOutputRejected) {
   throw new Error("processors should not emit undeclared view ids");
+}
+
+const asyncAlpha: TextPipelineAsyncProcessor = createProcessor("async-alpha", {
+  emits: {
+    views: ["async-alpha-view"],
+    layers: ["async-alpha-layer"],
+  },
+  apply(document) {
+    return appendAnalysisArtifacts(
+      document,
+      `${document.revision}>async-alpha`,
+      "async-alpha-view",
+      "async-alpha-layer",
+      "lemma",
+    );
+  },
+});
+
+const asyncRun = await runTextPipelineAsync(baseDocument, [asyncAlpha]);
+if (
+  asyncRun.trace.entries[0]?.status !== "applied" ||
+  asyncRun.document.revision !== "r0>async-alpha"
+) {
+  throw new Error("async pipeline execution should preserve applied trace semantics");
+}
+
+const cacheStore = new Map<string, TextDocDocumentV1>();
+const cache = {
+  get(key: string): TextDocDocumentV1 | undefined {
+    return cacheStore.get(key);
+  },
+  set(key: string, document: TextDocDocumentV1): void {
+    cacheStore.set(key, document);
+  },
+};
+let cachedProcessorRuns = 0;
+const cachedProcessor: TextPipelineAsyncProcessor = {
+  descriptor: {
+    id: "cached",
+    version: "1.0.0",
+    emits: {
+      views: ["cached-view"],
+      layers: ["cached-layer"],
+    },
+    purity: "pure",
+    parallelSafe: true,
+  },
+  run(document) {
+    cachedProcessorRuns += 1;
+    return {
+      document: appendAnalysisArtifacts(
+        document,
+        `${document.revision}>cached`,
+        "cached-view",
+        "cached-layer",
+        "lemma",
+      ),
+    };
+  },
+};
+
+const firstCachedRun = await runTextPipelineAsync(baseDocument, [cachedProcessor], {}, { cache });
+const secondCachedRun = await runTextPipelineAsync(baseDocument, [cachedProcessor], {}, { cache });
+if (
+  firstCachedRun.trace.entries[0]?.status !== "applied" ||
+  secondCachedRun.trace.entries[0]?.status !== "cached" ||
+  cachedProcessorRuns !== 1
+) {
+  throw new Error("async pipeline cache should replay cached documents with explicit trace status");
+}
+
+const contextCachedRun = await runTextPipelineAsync(
+  baseDocument,
+  [cachedProcessor],
+  { profiles: ["profile:other"] },
+  { cache },
+);
+if (contextCachedRun.trace.entries[0]?.status !== "applied" || cacheStore.size !== 2) {
+  throw new Error("pipeline cache keys should include context profiles and packs");
+}
+
+const batchRun = runTextPipelineBatch([baseDocument, { ...baseDocument, documentId: "doc:pipeline:2" }], [alpha]);
+if (batchRun.map((entry) => entry.document.revision).join(",") !== "r0>alpha,r0>alpha") {
+  throw new Error("batch execution should run documents deterministically in input order");
+}
+
+const asyncBatchRun = await runTextPipelineBatchAsync(
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:3" }],
+  [asyncAlpha],
+);
+if (asyncBatchRun.map((entry) => entry.document.documentId).join(",") !== "doc:pipeline,doc:pipeline:3") {
+  throw new Error("async batch execution should preserve document order");
+}
+
+const streamedDocumentIds: string[] = [];
+for await (const run of runTextPipelineStream([baseDocument], [asyncAlpha])) {
+  streamedDocumentIds.push(run.document.documentId);
+}
+if (streamedDocumentIds.join(",") !== "doc:pipeline") {
+  throw new Error("stream execution should yield runs in input order");
+}
+
+const failureRun = await runTextPipelineAsync(
+  baseDocument,
+  [
+    {
+      descriptor: {
+        id: "fails",
+        version: "1.0.0",
+        purity: "pure",
+        parallelSafe: true,
+      },
+      run() {
+        throw new Error("fixture failure");
+      },
+    },
+  ],
+  {},
+  { errorPolicy: "continue" },
+);
+if (
+  failureRun.trace.entries[0]?.status !== "failed" ||
+  failureRun.trace.entries[0].diagnostics?.[0]?.code !== "textpipeline.processor-error" ||
+  failureRun.document.revision !== baseDocument.revision
+) {
+  throw new Error("continue error policy should record failed processors without changing the document");
+}
+
+const abortController = new AbortController();
+abortController.abort();
+let abortedRunRejected = false;
+try {
+  await runTextPipelineAsync(baseDocument, [asyncAlpha], {}, { signal: abortController.signal });
+} catch (error) {
+  abortedRunRejected = error instanceof Error && error.message === "textpipeline run aborted";
+}
+
+if (!abortedRunRejected) {
+  throw new Error("aborted async pipeline runs should reject deterministically");
 }
 
 void expectedPackageName;

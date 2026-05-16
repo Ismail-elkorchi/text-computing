@@ -65,15 +65,17 @@
     {
       "name": "@ismail-elkorchi/textpipeline",
       "status": "slice-proven",
-      "scope": "The synchronous deterministic processor contract and execution trace are implemented; async, streaming, batching, and caching are still absent.",
+      "scope": "The deterministic processor contract includes synchronous, asynchronous, batch, stream, cancellation, caller-provided cache-hit tracing, and continue-on-error execution hooks.",
       "evidence": [
         "processor ordering tests",
+        "async/batch/stream execution tests",
+        "cache-hit and failure-recovery tests",
         "trace validation",
         "missing-requirement diagnostics",
         "dist export readiness metadata"
       ],
       "limitations": [
-        "No async, streaming, batching, cache, or distributed execution",
+        "No remote orchestration, distributed scheduling, durable cache storage, or worker pool execution",
         "Package remains private until broader release gates pass"
       ]
     },
