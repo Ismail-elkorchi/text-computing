@@ -65,6 +65,22 @@ const TASKS = {
     conformanceReportRefs: ["fixtures/reports/nlp-retrieval/conformance-report.json"],
     knownGap: "Retrieval behavior remains limited to a frozen explicit-token corpus; this command validates feature output without external comparator captures.",
   },
+  "relation-extraction": {
+    taskId: "nlp-relation-extraction",
+    validatorCommands: [["node", "tools/validate-relation-extraction-readiness.mjs"]],
+    comparisonDir: null,
+    comparisonSchema: null,
+    conformanceReportRefs: ["fixtures/reports/nlp-relation-extraction/conformance-report.json"],
+    knownGap: "Relation extraction is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior.",
+  },
+  coreference: {
+    taskId: "nlp-coreference",
+    validatorCommands: [["node", "tools/validate-coreference-readiness.mjs"]],
+    comparisonDir: null,
+    comparisonSchema: null,
+    conformanceReportRefs: ["fixtures/reports/nlp-coreference/conformance-report.json"],
+    knownGap: "Coreference is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior.",
+  },
 };
 
 const taskArg = process.argv[2] ?? "all";

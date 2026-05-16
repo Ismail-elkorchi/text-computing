@@ -17,9 +17,9 @@ The CoNLL-U / UD interchange and dependency parser rows are now tracked as fixtu
 | --- | --- | --- | --- |
 | 1 | CoNLL-U / UD import-export and dependency annotation model | `textdoc`, `textprotocol`, `textconformance` | Completed for frozen repository-authored fixtures; broaden only with explicit fixture and license gates. |
 | 2 | Deterministic dependency parsing baseline | `textrules`, `textpipeline`, `textdoc` | Completed for frozen en-basic, es-mwt, and ar-nonlatin slices; broaden only with explicit UD slices, comparator captures, and performance gates. |
-| 3 | Chunking and relation extraction | `textrules`, `textdoc`, `textconformance` | Typed relation schema, span evidence policy, negative controls, comparator/corpus freeze. |
+| 3 | Chunking and relation extraction | `textrules`, `textdoc`, `textconformance` | Relation extraction readiness-only schemas, fixtures, and negative controls are present; feature work still requires recorded expected outputs and executed comparator captures. |
 | 4 | Entity linking | `textrules`, `textpack`, `textdoc` | Canonical entity identifier model, NIL policy, KB provenance fixture, disambiguation negative controls. |
-| 5 | Coreference | `textdoc`, `textrules`, `textconformance` | Mention/chain schema, ambiguity/loss policy, multilingual corpus slices, comparator captures. |
+| 5 | Coreference | `textdoc`, `textrules`, `textconformance` | Coreference readiness-only schemas, fixtures, and negative controls are present; feature work still requires recorded expected outputs and executed comparator captures. |
 | 6 | Full retrieval | `textcorpus`, `textpipeline`, `textconformance` | Query parsing, inverted-index lookup, BM25 explanation, snippets, and frozen-corpus validation are present; broaden only with relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance budgets. |
 | 7 | `textlab` inspection tools | `textlab`, all public packages | Support-status inspection is present; remaining gates are fixture replay commands, annotation query examples, report rendering tests, and comparator replay. |
 

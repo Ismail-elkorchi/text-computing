@@ -30,6 +30,10 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`dependency-parser-expected-v1.schema.json`](dependency-parser-expected-v1.schema.json) — expected dependency-arc schema for parser readiness.
 - [`dependency-parser-tool-versions-v1.schema.json`](dependency-parser-tool-versions-v1.schema.json) — comparator capability and standard source schema for parser readiness.
 - [`dependency-parser-comparison-v1.schema.json`](dependency-parser-comparison-v1.schema.json) — comparator capability/capture schema for parser readiness.
+- [`relation-extraction-slices-v1.schema.json`](relation-extraction-slices-v1.schema.json) — readiness fixture schema for relation extraction.
+- [`relation-extraction-expected-v1.schema.json`](relation-extraction-expected-v1.schema.json) — expected-output schema for future relation extraction behavior.
+- [`coreference-slices-v1.schema.json`](coreference-slices-v1.schema.json) — readiness fixture schema for coreference.
+- [`coreference-expected-v1.schema.json`](coreference-expected-v1.schema.json) — expected-output schema for future coreference behavior.
 - [`multilingual-support-tiers-v1.schema.json`](multilingual-support-tiers-v1.schema.json) — multilingual support-tier matrix schema.
 - [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.

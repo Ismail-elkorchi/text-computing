@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-relation-extraction",
+  "supportStatus": "readiness-only",
+  "expectedOutputStatus": "schema-defined",
+  "comparatorStatus": "capability-recorded",
+  "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
+  "relationLabelPolicy": {
+    "labels": ["employed-by", "located-in", "part-of", "no-relation"],
+    "argumentPolicy": "A relation must name at least two textdoc span-backed arguments with explicit roles.",
+    "evidencePolicy": "A relation must carry one or more evidence spans; cooccurrence without an evidence cue is a negative control."
+  },
+  "fixtures": [
+    {
+      "id": "en-employment",
+      "language": "en",
+      "script": "Latn",
+      "fixtureClass": "repository-authored",
+      "phenomena": ["intra-sentence-relation", "prepositional-cue"],
+      "source": {
+        "kind": "text",
+        "text": "Mira works for Northwind Labs in Boston."
+      }
+    },
+    {
+      "id": "en-cross-sentence",
+      "language": "en",
+      "script": "Latn",
+      "fixtureClass": "repository-authored",
+      "phenomena": ["cross-sentence-evidence", "appositive-cue"],
+      "source": {
+        "kind": "text",
+        "text": "Northwind Labs opened a clinic. The Boston facility is part of the company."
+      }
+    },
+    {
+      "id": "es-location",
+      "language": "es",
+      "script": "Latn",
+      "fixtureClass": "repository-authored",
+      "phenomena": ["intra-sentence-relation", "non-english-latin-script"],
+      "source": {
+        "kind": "text",
+        "text": "El archivo central está en Sevilla."
+      }
+    },
+    {
+      "id": "ar-location",
+      "language": "ar",
+      "script": "Arab",
+      "fixtureClass": "repository-authored",
+      "phenomena": ["intra-sentence-relation", "non-latin-script", "right-to-left-script"],
+      "source": {
+        "kind": "text",
+        "text": "يقع المتحف في الرباط."
+      }
+    },
+    {
+      "id": "en-no-relation",
+      "language": "en",
+      "script": "Latn",
+      "fixtureClass": "repository-authored",
+      "phenomena": ["cooccurrence-control", "negated-relation"],
+      "source": {
+        "kind": "text",
+        "text": "Mira visited Northwind Labs but does not work for it."
+      }
+    }
+  ],
+  "negativeControls": [
+    {
+      "id": "cooccurrence-without-cue",
+      "expectedFailure": "cooccurrence-without-relation",
+      "notes": ["Two mentions in one sentence are insufficient without a relation cue."]
+    },
+    {
+      "id": "negated-employment",
+      "expectedFailure": "negated-relation",
+      "notes": ["Negated employment wording must not become an employed-by relation."]
+    }
+  ]
+}

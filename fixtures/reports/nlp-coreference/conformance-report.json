@@ -1,0 +1,57 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-coreference",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-coreference",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-16T00:00:00.000Z",
+  "summary": {
+    "pass": 4,
+    "fail": 0,
+    "notRun": 1
+  },
+  "checks": [
+    {
+      "checkId": "readiness-fixtures-recorded",
+      "status": "pass",
+      "message": "Coreference readiness fixtures and negative controls are committed.",
+      "evidenceRefs": ["fixtures/coreference/slices.json"]
+    },
+    {
+      "checkId": "schemas-recorded",
+      "status": "pass",
+      "message": "Coreference readiness and expected-output schemas are committed.",
+      "evidenceRefs": [
+        "schemas/coreference-slices-v1.schema.json",
+        "schemas/coreference-expected-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "readiness-doc-recorded",
+      "status": "pass",
+      "message": "Public readiness and research-ledger documents describe the support boundary.",
+      "evidenceRefs": [
+        "docs/specs/coreference-readiness.md",
+        "docs/specs/nlp-coreference-research-ledger.md"
+      ]
+    },
+    {
+      "checkId": "validator-recorded",
+      "status": "pass",
+      "message": "A repository validator checks the readiness artifacts.",
+      "evidenceRefs": ["tools/validate-coreference-readiness.mjs"]
+    },
+    {
+      "checkId": "feature-code",
+      "status": "not-run",
+      "message": "No coreference feature behavior is implemented in this readiness gate.",
+      "evidenceRefs": ["docs/specs/coreference-readiness.md"]
+    }
+  ],
+  "notes": [
+    "This report records readiness-only evidence and does not claim coreference behavior."
+  ]
+}
