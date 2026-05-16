@@ -18,12 +18,68 @@ import {
   createPosMorphLemmaConformanceReport,
   createPosMorphLemmaResultEnvelope,
   createTextRulesLexiconResource,
+  matchTextRulesTokenPattern,
+  matchTextRulesTokenPatterns,
   packageName,
+  rewriteTextRulesTokenTexts,
+  tokenizeTextRulesText,
   type TextRulesEntityResourceData,
   type TextRulesLexiconResourceData,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textrules";
+
+const primitiveTokens = tokenizeTextRulesText("New York courts sign.");
+const placePattern = {
+  ruleId: "primitive:place:new-york",
+  atoms: [
+    { kind: "literal", value: "new", capture: "city-prefix" },
+    { kind: "literal", value: "york", capture: "city-suffix" },
+  ],
+} as const;
+
+const placeMatches = matchTextRulesTokenPattern(primitiveTokens, placePattern);
+if (
+  placeMatches.length !== 1 ||
+  placeMatches[0]?.text !== "New York" ||
+  placeMatches[0].captures.map((capture) => capture.value).join(",") !== "New,York"
+) {
+  throw new Error("primitive token-pattern matching should preserve deterministic captures");
+}
+
+const primitiveMatches = matchTextRulesTokenPatterns(primitiveTokens, [
+  {
+    ruleId: "primitive:any-court",
+    atoms: [
+      { kind: "any", capture: "modifier" },
+      { kind: "one-of", values: ["court", "courts"], capture: "head" },
+    ],
+  },
+  placePattern,
+]);
+if (primitiveMatches.map((match) => match.ruleId).join(",") !==
+  "primitive:place:new-york,primitive:any-court") {
+  throw new Error("primitive matches should sort by start offset, length, and rule id");
+}
+
+const primitiveRewrite = rewriteTextRulesTokenTexts(primitiveTokens, [
+  {
+    ruleId: "primitive:rewrite:new-york",
+    pattern: placePattern,
+    replacement: ["NYC"],
+  },
+  {
+    ruleId: "primitive:rewrite:courts",
+    pattern: {
+      ruleId: "primitive:match:courts",
+      atoms: [{ kind: "literal", value: "courts" }],
+    },
+    replacement: ["court"],
+  },
+]);
+if (primitiveRewrite.tokens.join(" ") !== "NYC court sign .") {
+  throw new Error("primitive token rewrites should apply left-to-right without hidden state");
+}
 
 const englishResourceData: TextRulesLexiconResourceData = {
   entries: [

@@ -176,6 +176,63 @@ export interface TextRulesConformanceReportOptions {
   readonly notes?: readonly string[];
 }
 
+export type TextRulesPatternAtom =
+  | {
+      readonly kind: "literal";
+      readonly value: string;
+      readonly capture?: string;
+    }
+  | {
+      readonly kind: "one-of";
+      readonly values: readonly string[];
+      readonly capture?: string;
+    }
+  | {
+      readonly kind: "any";
+      readonly capture?: string;
+    };
+
+export interface TextRulesTokenPattern {
+  readonly ruleId: string;
+  readonly atoms: readonly TextRulesPatternAtom[];
+  readonly caseSensitive?: boolean;
+}
+
+export interface TextRulesPatternCapture {
+  readonly name: string;
+  readonly tokenId: string;
+  readonly value: string;
+  readonly startCU: number;
+  readonly endCU: number;
+}
+
+export interface TextRulesPatternMatch {
+  readonly ruleId: string;
+  readonly startTokenIndex: number;
+  readonly endTokenIndexExclusive: number;
+  readonly startCU: number;
+  readonly endCU: number;
+  readonly text: string;
+  readonly captures: readonly TextRulesPatternCapture[];
+}
+
+export interface TextRulesTokenTextRewriteRule {
+  readonly ruleId: string;
+  readonly pattern: TextRulesTokenPattern;
+  readonly replacement: readonly string[];
+}
+
+export interface TextRulesTokenTextRewrite {
+  readonly ruleId: string;
+  readonly match: TextRulesPatternMatch;
+  readonly replacement: readonly string[];
+}
+
+export interface TextRulesTokenTextRewriteResult {
+  readonly tokens: readonly string[];
+  readonly rewrites: readonly TextRulesTokenTextRewrite[];
+}
+
 interface TextRulesResolvedAnalysis extends TextRulesLexiconAnalysis {
   readonly resourceRefs: readonly TextDocReferenceRef[];
 }
@@ -496,6 +553,142 @@ function tokenizeTextForRules(text: string): readonly TextRulesTokenSpan[] {
   }
 
   return tokens;
+}
+
+export function tokenizeTextRulesText(text: string): readonly TextRulesTokenSpan[] {
+  return tokenizeTextForRules(text);
+}
+
+function normalizePatternValue(value: string, caseSensitive: boolean): string {
+  return caseSensitive ? value : normalizeSurface(value);
+}
+
+function patternAtomMatches(
+  atom: TextRulesPatternAtom,
+  token: TextRulesTokenSpan,
+  caseSensitive: boolean,
+): boolean {
+  if (atom.kind === "any") return true;
+
+  const tokenText = normalizePatternValue(token.text, caseSensitive);
+  if (atom.kind === "literal") {
+    return tokenText === normalizePatternValue(atom.value, caseSensitive);
+  }
+
+  return atom.values.some((value) => tokenText === normalizePatternValue(value, caseSensitive));
+}
+
+function comparePatternMatches(left: TextRulesPatternMatch, right: TextRulesPatternMatch): number {
+  const leftLength = left.endTokenIndexExclusive - left.startTokenIndex;
+  const rightLength = right.endTokenIndexExclusive - right.startTokenIndex;
+  return (
+    left.startTokenIndex - right.startTokenIndex ||
+    rightLength - leftLength ||
+    left.ruleId.localeCompare(right.ruleId) ||
+    left.endTokenIndexExclusive - right.endTokenIndexExclusive
+  );
+}
+
+export function matchTextRulesTokenPattern(
+  tokens: readonly TextRulesTokenSpan[],
+  pattern: TextRulesTokenPattern,
+): readonly TextRulesPatternMatch[] {
+  if (pattern.atoms.length === 0) return [];
+
+  const matches: TextRulesPatternMatch[] = [];
+  const caseSensitive = pattern.caseSensitive === true;
+  for (let startIndex = 0; startIndex <= tokens.length - pattern.atoms.length; startIndex += 1) {
+    const captures: TextRulesPatternCapture[] = [];
+    let matched = true;
+
+    for (let atomIndex = 0; atomIndex < pattern.atoms.length; atomIndex += 1) {
+      const atom = pattern.atoms[atomIndex];
+      const token = tokens[startIndex + atomIndex];
+      if (atom === undefined || token === undefined || !patternAtomMatches(atom, token, caseSensitive)) {
+        matched = false;
+        break;
+      }
+
+      if (atom.capture !== undefined) {
+        captures.push({
+          name: atom.capture,
+          tokenId: token.id,
+          value: token.text,
+          startCU: token.startCU,
+          endCU: token.endCU,
+        });
+      }
+    }
+
+    if (!matched) continue;
+    const first = tokens[startIndex];
+    const last = tokens[startIndex + pattern.atoms.length - 1];
+    if (first === undefined || last === undefined) continue;
+    matches.push({
+      ruleId: pattern.ruleId,
+      startTokenIndex: startIndex,
+      endTokenIndexExclusive: startIndex + pattern.atoms.length,
+      startCU: first.startCU,
+      endCU: last.endCU,
+      text: tokens
+        .slice(startIndex, startIndex + pattern.atoms.length)
+        .map((token) => token.text)
+        .join(" "),
+      captures,
+    });
+  }
+
+  return matches.sort(comparePatternMatches);
+}
+
+export function matchTextRulesTokenPatterns(
+  tokens: readonly TextRulesTokenSpan[],
+  patterns: readonly TextRulesTokenPattern[],
+): readonly TextRulesPatternMatch[] {
+  return patterns
+    .flatMap((pattern) => [...matchTextRulesTokenPattern(tokens, pattern)])
+    .sort(comparePatternMatches);
+}
+
+export function rewriteTextRulesTokenTexts(
+  tokens: readonly TextRulesTokenSpan[],
+  rules: readonly TextRulesTokenTextRewriteRule[],
+): TextRulesTokenTextRewriteResult {
+  const matchesByRule = rules.flatMap((rule) =>
+    matchTextRulesTokenPattern(tokens, rule.pattern).map((match) => ({
+      rule,
+      match,
+    })),
+  );
+  const orderedMatches = matchesByRule.sort(
+    (left, right) => comparePatternMatches(left.match, right.match) || left.rule.ruleId.localeCompare(right.rule.ruleId),
+  );
+  const rewrittenTokens: string[] = [];
+  const rewrites: TextRulesTokenTextRewrite[] = [];
+  let cursor = 0;
+
+  while (cursor < tokens.length) {
+    const selected = orderedMatches.find((entry) => entry.match.startTokenIndex === cursor);
+    if (selected === undefined) {
+      const token = tokens[cursor];
+      if (token !== undefined) rewrittenTokens.push(token.text);
+      cursor += 1;
+      continue;
+    }
+
+    rewrittenTokens.push(...selected.rule.replacement);
+    rewrites.push({
+      ruleId: selected.rule.ruleId,
+      match: selected.match,
+      replacement: selected.rule.replacement,
+    });
+    cursor = selected.match.endTokenIndexExclusive;
+  }
+
+  return {
+    tokens: rewrittenTokens,
+    rewrites,
+  };
 }
 
 function segmentSentencesForRules(text: string): readonly TextRulesSentenceSpan[] {
