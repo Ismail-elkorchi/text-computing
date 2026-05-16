@@ -22,6 +22,10 @@ export type TextDocLayerKind =
   | "lemma"
   | "morphology"
   | "entity"
+  | "relation"
+  | "coreference-mention"
+  | "coreference-chain"
+  | "entity-link"
   | "corpus-feature"
   | "dependency-node"
   | "dependency";
@@ -189,6 +193,44 @@ export interface TextDocEntityAnnotation extends TextDocAnnotationBase {
   readonly text?: string;
 }
 
+export interface TextDocRelationArgument {
+  readonly role: string;
+  readonly annotationId: string;
+}
+
+export interface TextDocRelationAnnotation extends TextDocAnnotationBase {
+  readonly kind: "relation";
+  readonly relationType: string;
+  readonly arguments: readonly TextDocRelationArgument[];
+}
+
+export interface TextDocCoreferenceMentionAnnotation extends TextDocAnnotationBase {
+  readonly kind: "coreference-mention";
+  readonly mentionType: string;
+  readonly text?: string;
+}
+
+export interface TextDocCoreferenceChainAnnotation extends TextDocAnnotationBase {
+  readonly kind: "coreference-chain";
+  readonly mentionIds: readonly string[];
+  readonly representativeMentionId?: string;
+}
+
+export interface TextDocEntityLinkRef {
+  readonly namespace: string;
+  readonly id: string;
+}
+
+export interface TextDocEntityLinkNil {
+  readonly reason: string;
+}
+
+export interface TextDocEntityLinkAnnotation extends TextDocAnnotationBase {
+  readonly kind: "entity-link";
+  readonly link?: TextDocEntityLinkRef;
+  readonly nil?: TextDocEntityLinkNil;
+}
+
 export interface TextDocCorpusFeatureAnnotation extends TextDocAnnotationBase {
   readonly kind: "corpus-feature";
   readonly featureName: string;
@@ -239,6 +281,10 @@ export type TextDocAnnotation =
   | TextDocLemmaAnnotation
   | TextDocMorphologyAnnotation
   | TextDocEntityAnnotation
+  | TextDocRelationAnnotation
+  | TextDocCoreferenceMentionAnnotation
+  | TextDocCoreferenceChainAnnotation
+  | TextDocEntityLinkAnnotation
   | TextDocCorpusFeatureAnnotation
   | TextDocDependencyNodeAnnotation
   | TextDocDependencyAnnotation;
@@ -325,6 +371,10 @@ function isTextDocLayerKind(value: unknown): value is TextDocLayerKind {
     value === "lemma" ||
     value === "morphology" ||
     value === "entity" ||
+    value === "relation" ||
+    value === "coreference-mention" ||
+    value === "coreference-chain" ||
+    value === "entity-link" ||
     value === "corpus-feature" ||
     value === "dependency-node" ||
     value === "dependency"
@@ -472,6 +522,18 @@ export function isTextDocMorphologyAlternative(
   );
 }
 
+export function isTextDocRelationArgument(value: unknown): value is TextDocRelationArgument {
+  return isRecord(value) && isNonEmptyString(value.role) && isNonEmptyString(value.annotationId);
+}
+
+export function isTextDocEntityLinkRef(value: unknown): value is TextDocEntityLinkRef {
+  return isRecord(value) && isNonEmptyString(value.namespace) && isNonEmptyString(value.id);
+}
+
+export function isTextDocEntityLinkNil(value: unknown): value is TextDocEntityLinkNil {
+  return isRecord(value) && isNonEmptyString(value.reason);
+}
+
 function isTextDocAnnotationBase(value: unknown): value is TextDocAnnotationBase {
   return (
     isRecord(value) &&
@@ -547,6 +609,49 @@ export function isTextDocAnnotation(value: unknown): value is TextDocAnnotation 
       value.targets.every((target) => isTextDocTargetOfKind(target, "span")) &&
       (annotation.normalized === undefined || isNonEmptyString(annotation.normalized)) &&
       (annotation.text === undefined || isNonEmptyString(annotation.text))
+    );
+  }
+
+  if (annotation.kind === "relation") {
+    return (
+      isNonEmptyString(annotation.relationType) &&
+      Array.isArray(annotation.arguments) &&
+      annotation.arguments.length >= 2 &&
+      annotation.arguments.every((entry: unknown) => isTextDocRelationArgument(entry)) &&
+      value.targets.every((target) => isTextDocTargetOfKind(target, "annotation"))
+    );
+  }
+
+  if (annotation.kind === "coreference-mention") {
+    return (
+      isNonEmptyString(annotation.mentionType) &&
+      value.targets.every(
+        (target) => target.kind === "span" || target.kind === "annotation",
+      ) &&
+      (annotation.text === undefined || isNonEmptyString(annotation.text))
+    );
+  }
+
+  if (annotation.kind === "coreference-chain") {
+    return (
+      Array.isArray(annotation.mentionIds) &&
+      annotation.mentionIds.length >= 1 &&
+      annotation.mentionIds.every((entry: unknown) => isNonEmptyString(entry)) &&
+      (annotation.representativeMentionId === undefined ||
+        isNonEmptyString(annotation.representativeMentionId)) &&
+      value.targets.every((target) => isTextDocTargetOfKind(target, "annotation"))
+    );
+  }
+
+  if (annotation.kind === "entity-link") {
+    const hasLink = annotation.link !== undefined;
+    const hasNil = annotation.nil !== undefined;
+    return (
+      hasLink !== hasNil &&
+      (annotation.link === undefined || isTextDocEntityLinkRef(annotation.link)) &&
+      (annotation.nil === undefined || isTextDocEntityLinkNil(annotation.nil)) &&
+      value.targets.length === 1 &&
+      value.targets.every((target) => isTextDocTargetOfKind(target, "annotation"))
     );
   }
 

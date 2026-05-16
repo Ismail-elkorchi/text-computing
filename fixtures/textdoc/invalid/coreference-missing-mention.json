@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "documentId": "doc:annotation-model",
+  "documentId": "doc:invalid-coreference-missing-mention",
   "revision": "2026-04-21",
   "textLengthCU": 31,
   "text": "New York hosts example corpora.",
@@ -420,13 +420,13 @@
           "targets": [
             {
               "kind": "annotation",
-              "annotationId": "coref-mention-1"
+              "annotationId": "coref-mention-missing"
             }
           ],
           "mentionIds": [
-            "coref-mention-1"
+            "coref-mention-missing"
           ],
-          "representativeMentionId": "coref-mention-1"
+          "representativeMentionId": "coref-mention-missing"
         }
       ]
     },

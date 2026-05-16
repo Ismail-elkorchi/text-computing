@@ -36,11 +36,15 @@
         "fixtures/textdoc/invalid/dangling-view.json",
         "fixtures/textdoc/invalid/lifecycle-mismatch.json",
         "fixtures/textdoc/invalid/overlap-without-policy.json",
+        "fixtures/textdoc/invalid/dangling-relation-argument.json",
+        "fixtures/textdoc/invalid/coreference-missing-mention.json",
+        "fixtures/textdoc/invalid/entity-link-target-kind.json",
+        "fixtures/textdoc/invalid/dependency-cycle.json",
         "tools/validate-textdoc-document-model.mjs"
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No full dependency tree, coreference chain, relation graph, or entity-linking convention is production-grade yet."
+        "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work."
       ]
     },
     {

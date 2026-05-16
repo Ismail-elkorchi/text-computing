@@ -190,7 +190,7 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature", "dependency-node", "dependency"]
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "relation", "coreference-mention", "coreference-chain", "entity-link", "corpus-feature", "dependency-node", "dependency"]
         },
         "lifecycle": { "$ref": "#/definitions/lifecycle" },
         "targets": {
@@ -339,6 +339,135 @@
         }
       ]
     },
+    "relationArgument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "annotationId"],
+      "properties": {
+        "role": { "type": "string", "minLength": 1 },
+        "annotationId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "relationAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["relationType", "arguments"],
+          "properties": {
+            "kind": { "const": "relation" },
+            "relationType": { "type": "string", "minLength": 1 },
+            "arguments": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "$ref": "#/definitions/relationArgument" }
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "coreferenceMentionAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["mentionType"],
+          "properties": {
+            "kind": { "const": "coreference-mention" },
+            "mentionType": { "type": "string", "minLength": 1 },
+            "text": { "type": "string" },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  { "$ref": "#/definitions/spanTarget" },
+                  { "$ref": "#/definitions/annotationTarget" }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "coreferenceChainAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["mentionIds"],
+          "properties": {
+            "kind": { "const": "coreference-chain" },
+            "mentionIds": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "representativeMentionId": { "type": "string", "minLength": 1 },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          }
+        }
+      ]
+    },
+    "entityLinkRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace", "id"],
+      "properties": {
+        "namespace": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "entityLinkNil": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "entityLinkAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "entity-link" },
+            "link": { "$ref": "#/definitions/entityLinkRef" },
+            "nil": { "$ref": "#/definitions/entityLinkNil" },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "$ref": "#/definitions/annotationTarget" }
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["link"],
+              "properties": {
+                "link": { "$ref": "#/definitions/entityLinkRef" }
+              }
+            },
+            {
+              "required": ["nil"],
+              "properties": {
+                "nil": { "$ref": "#/definitions/entityLinkNil" }
+              }
+            }
+          ]
+        }
+      ]
+    },
     "corpusFeatureAnnotation": {
       "allOf": [
         { "$ref": "#/definitions/annotationBase" },
@@ -443,6 +572,10 @@
         { "$ref": "#/definitions/lemmaAnnotation" },
         { "$ref": "#/definitions/morphologyAnnotation" },
         { "$ref": "#/definitions/entityAnnotation" },
+        { "$ref": "#/definitions/relationAnnotation" },
+        { "$ref": "#/definitions/coreferenceMentionAnnotation" },
+        { "$ref": "#/definitions/coreferenceChainAnnotation" },
+        { "$ref": "#/definitions/entityLinkAnnotation" },
         { "$ref": "#/definitions/corpusFeatureAnnotation" },
         { "$ref": "#/definitions/dependencyNodeAnnotation" },
         { "$ref": "#/definitions/dependencyAnnotation" }
@@ -455,7 +588,7 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "corpus-feature", "dependency-node", "dependency"]
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "relation", "coreference-mention", "coreference-chain", "entity-link", "corpus-feature", "dependency-node", "dependency"]
         },
         "viewId": { "type": "string", "minLength": 1 },
         "allowSpanOverlap": { "type": "boolean" },

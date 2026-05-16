@@ -26,12 +26,16 @@
     {
       "checkId": "invalid-reference-policy-tested",
       "status": "pass",
-      "message": "Invalid reference, lifecycle, and overlap cases are committed.",
+      "message": "Invalid reference, lifecycle, overlap, relation, coreference, entity-link, and dependency graph cases are committed.",
       "evidenceRefs": [
         "fixtures/textdoc/invalid/dangling-target.json",
         "fixtures/textdoc/invalid/dangling-view.json",
         "fixtures/textdoc/invalid/lifecycle-mismatch.json",
-        "fixtures/textdoc/invalid/overlap-without-policy.json"
+        "fixtures/textdoc/invalid/overlap-without-policy.json",
+        "fixtures/textdoc/invalid/dangling-relation-argument.json",
+        "fixtures/textdoc/invalid/coreference-missing-mention.json",
+        "fixtures/textdoc/invalid/entity-link-target-kind.json",
+        "fixtures/textdoc/invalid/dependency-cycle.json"
       ]
     },
     {
@@ -55,6 +59,6 @@
     }
   ],
   "notes": [
-    "This report persists current document-model evidence; dependency, relation, and coreference conventions remain future work."
+    "This report persists current document-model evidence; graph conventions are slice-proven for the committed fixtures only and do not claim broad relation extraction, coreference resolution, entity linking, or parser behavior."
   ]
 }

@@ -48,6 +48,14 @@ function validateAlternativeRanks(annotation, errors) {
   }
 }
 
+function annotationEntry(annotationsById, annotationId) {
+  return annotationsById.get(annotationId);
+}
+
+function referencedAnnotationKind(annotationsById, annotationId) {
+  return annotationEntry(annotationsById, annotationId)?.annotation.kind;
+}
+
 function validateDocumentSemantics(document) {
   const errors = [];
 
@@ -201,11 +209,112 @@ function validateDocumentSemantics(document) {
         }
       }
 
-    if (target.kind === "document" && layer.kind !== "corpus-feature") {
+      if (
+        target.kind === "document" &&
+        layer.kind !== "corpus-feature" &&
+        layer.kind !== "dependency-node"
+      ) {
         pushError(
           errors,
           "document-target-kind-mismatch",
           `Only corpus-feature annotations may target the whole document (${annotation.id}).`,
+        );
+      }
+    }
+
+    if (annotation.kind === "relation") {
+      for (const argument of annotation.arguments) {
+        const targetKind = referencedAnnotationKind(annotationsById, argument.annotationId);
+        if (!targetKind) {
+          pushError(
+            errors,
+            "dangling-relation-argument",
+            `Relation ${annotation.id} argument ${argument.role} references missing annotation ${argument.annotationId}.`,
+          );
+        }
+      }
+      const targetIds = new Set(
+        annotation.targets
+          .filter((target) => target.kind === "annotation")
+          .map((target) => target.annotationId),
+      );
+      for (const argument of annotation.arguments) {
+        if (!targetIds.has(argument.annotationId)) {
+          pushError(
+            errors,
+            "relation-target-argument-mismatch",
+            `Relation ${annotation.id} must target argument annotation ${argument.annotationId}.`,
+          );
+        }
+      }
+    }
+
+    if (annotation.kind === "coreference-chain") {
+      const targetIds = new Set(
+        annotation.targets
+          .filter((target) => target.kind === "annotation")
+          .map((target) => target.annotationId),
+      );
+      for (const mentionId of annotation.mentionIds) {
+        const mentionKind = referencedAnnotationKind(annotationsById, mentionId);
+        if (!mentionKind) {
+          pushError(
+            errors,
+            "dangling-coreference-mention",
+            `Coreference chain ${annotation.id} references missing mention ${mentionId}.`,
+          );
+        } else if (mentionKind !== "coreference-mention") {
+          pushError(
+            errors,
+            "coreference-mention-kind-mismatch",
+            `Coreference chain ${annotation.id} references ${mentionId}, but it is ${mentionKind}.`,
+          );
+        }
+        if (!targetIds.has(mentionId)) {
+          pushError(
+            errors,
+            "coreference-target-mention-mismatch",
+            `Coreference chain ${annotation.id} must target mention ${mentionId}.`,
+          );
+        }
+      }
+      if (
+        annotation.representativeMentionId &&
+        !annotation.mentionIds.includes(annotation.representativeMentionId)
+      ) {
+        pushError(
+          errors,
+          "representative-mention-not-in-chain",
+          `Coreference chain ${annotation.id} representative ${annotation.representativeMentionId} is not in mentionIds.`,
+        );
+      }
+    }
+
+    if (annotation.kind === "entity-link") {
+      const target = annotation.targets[0];
+      if (target?.kind !== "annotation") {
+        pushError(errors, "entity-link-target-kind", `Entity-link ${annotation.id} must target an entity annotation.`);
+      } else {
+        const targetKind = referencedAnnotationKind(annotationsById, target.annotationId);
+        if (!targetKind) {
+          pushError(
+            errors,
+            "dangling-entity-link-target",
+            `Entity-link ${annotation.id} references missing annotation ${target.annotationId}.`,
+          );
+        } else if (targetKind !== "entity") {
+          pushError(
+            errors,
+            "entity-link-target-kind",
+            `Entity-link ${annotation.id} must target entity annotations, not ${targetKind}.`,
+          );
+        }
+      }
+      if ((annotation.link === undefined) === (annotation.nil === undefined)) {
+        pushError(
+          errors,
+          "entity-link-resolution-mismatch",
+          `Entity-link ${annotation.id} must declare exactly one of link or nil.`,
         );
       }
     }
@@ -279,6 +388,92 @@ function validateDocumentSemantics(document) {
           `Replacement ${replacement.id} must list ${annotation.id} in supersedes.`,
         );
       }
+    }
+  }
+
+  const dependencyNodes = new Map();
+  for (const { annotation } of annotationsById.values()) {
+    if (annotation.kind === "dependency-node") {
+      dependencyNodes.set(annotation.id, annotation);
+    }
+  }
+
+  const dependencyByDependent = new Map();
+  for (const { annotation } of annotationsById.values()) {
+    if (annotation.kind !== "dependency") continue;
+    const dependent = dependencyNodes.get(annotation.dependentNodeId);
+    if (!dependent) {
+      pushError(
+        errors,
+        "dangling-dependent-node",
+        `Dependency ${annotation.id} references missing dependent node ${annotation.dependentNodeId}.`,
+      );
+    } else if (dependent.sentenceId !== annotation.source.sentenceId) {
+      pushError(
+        errors,
+        "dependency-sentence-mismatch",
+        `Dependency ${annotation.id} source sentence does not match dependent node sentence.`,
+      );
+    }
+    if (annotation.headNodeId !== null) {
+      const head = dependencyNodes.get(annotation.headNodeId);
+      if (!head) {
+        pushError(
+          errors,
+          "dangling-head-node",
+          `Dependency ${annotation.id} references missing head node ${annotation.headNodeId}.`,
+        );
+      } else if (dependent && head.sentenceId !== dependent.sentenceId) {
+        pushError(
+          errors,
+          "dependency-cross-sentence-head",
+          `Dependency ${annotation.id} crosses sentence boundary from ${dependent.sentenceId} to ${head.sentenceId}.`,
+        );
+      }
+    }
+    if (dependencyByDependent.has(annotation.dependentNodeId)) {
+      pushError(
+        errors,
+        "duplicate-dependent-arc",
+        `Dependency node ${annotation.dependentNodeId} has more than one dependency arc.`,
+      );
+    }
+    dependencyByDependent.set(annotation.dependentNodeId, annotation);
+  }
+
+  const rootsBySentence = new Map();
+  for (const dependency of dependencyByDependent.values()) {
+    if (dependency.headNodeId !== null) continue;
+    rootsBySentence.set(
+      dependency.source.sentenceId,
+      (rootsBySentence.get(dependency.source.sentenceId) ?? 0) + 1,
+    );
+  }
+  for (const node of dependencyNodes.values()) {
+    if (node.nodeKind !== "word") continue;
+    if (!rootsBySentence.has(node.sentenceId)) {
+      pushError(
+        errors,
+        "missing-dependency-root",
+        `Dependency sentence ${node.sentenceId} has no root arc.`,
+      );
+    }
+  }
+
+  for (const dependency of dependencyByDependent.values()) {
+    const seen = new Set();
+    let cursor = dependency;
+    while (cursor?.headNodeId) {
+      if (seen.has(cursor.dependentNodeId)) {
+        pushError(
+          errors,
+          "dependency-cycle",
+          `Dependency graph contains a cycle at node ${cursor.dependentNodeId}.`,
+        );
+        break;
+      }
+      seen.add(cursor.dependentNodeId);
+      cursor = dependencyByDependent.get(cursor.headNodeId);
     }
   }
 
@@ -366,7 +561,7 @@ const conformanceReport = {
     {
       checkId: "textdoc-document-semantics",
       status: "pass",
-      message: "Document fixture satisfies view, target, overlap, and lifecycle rules.",
+      message: "Document fixture satisfies view, target, graph, overlap, and lifecycle rules.",
       evidenceRefs: [validFixturePath, "docs/specs/textdoc-document-annotation-model.md"],
     },
     {
@@ -406,6 +601,22 @@ const invalidCases = [
   {
     path: "fixtures/textdoc/invalid/lifecycle-mismatch.json",
     expectedCode: "superseded-by-link-mismatch",
+  },
+  {
+    path: "fixtures/textdoc/invalid/dangling-relation-argument.json",
+    expectedCode: "dangling-relation-argument",
+  },
+  {
+    path: "fixtures/textdoc/invalid/coreference-missing-mention.json",
+    expectedCode: "dangling-coreference-mention",
+  },
+  {
+    path: "fixtures/textdoc/invalid/entity-link-target-kind.json",
+    expectedCode: "entity-link-target-kind",
+  },
+  {
+    path: "fixtures/textdoc/invalid/dependency-cycle.json",
+    expectedCode: "dependency-cycle",
   },
 ];
 
