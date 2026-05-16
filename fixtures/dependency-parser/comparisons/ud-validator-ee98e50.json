@@ -54,6 +54,19 @@
         { "dependent": "6", "head": "1", "relation": "punct" }
       ],
       "differences": []
+    },
+    {
+      "fixtureId": "ar-nonlatin",
+      "status": "captured",
+      "expectedArcPath": "fixtures/dependency-parser/expected/ar-nonlatin.json",
+      "matchesExpected": true,
+      "outputArcs": [
+        { "dependent": "1", "head": "0", "relation": "root" },
+        { "dependent": "2", "head": "1", "relation": "nsubj" },
+        { "dependent": "3", "head": "1", "relation": "obj" },
+        { "dependent": "4", "head": "1", "relation": "punct" }
+      ],
+      "differences": []
     }
   ],
   "notes": [

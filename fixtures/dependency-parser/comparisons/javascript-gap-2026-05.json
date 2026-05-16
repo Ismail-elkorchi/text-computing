@@ -21,6 +21,12 @@
       "status": "output-not-captured",
       "expectedArcPath": "fixtures/dependency-parser/expected/es-mwt.json",
       "reason": "No JavaScript comparator with a comparable dependency-parser surface is committed for this readiness gate."
+    },
+    {
+      "fixtureId": "ar-nonlatin",
+      "status": "output-not-captured",
+      "expectedArcPath": "fixtures/dependency-parser/expected/ar-nonlatin.json",
+      "reason": "No JavaScript comparator with a comparable dependency-parser surface is committed for this readiness gate."
     }
   ],
   "notes": [

@@ -31,15 +31,15 @@
     },
     {
       "name": "Stanza DepparseProcessor",
-      "version": "1.12.0 documentation snapshot",
+      "version": "1.12.0",
       "runtime": "python",
       "model": {
-        "name": "model-dependent",
-        "version": "not-vendored"
+        "name": "downloaded Stanza default models for en/es/ar",
+        "version": "2026-05-16 download"
       },
       "license": "Apache-2.0",
       "artifactSurface": "UD-style head and dependency relation fields",
-      "executionStatus": "capability-recorded",
+      "executionStatus": "executed",
       "capturePath": "fixtures/dependency-parser/comparisons/stanza-1.12.json"
     },
     {

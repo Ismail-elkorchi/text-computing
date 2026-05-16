@@ -244,10 +244,11 @@
     {
       "id": "nlp-dependency-parser",
       "status": "readiness-only",
-      "scope": "Expected dependency arcs, one executed spaCy parser capture, and one direct UD/CoNLL-U validator capture exist for frozen fixtures; no parser behavior is implemented.",
+      "scope": "Expected dependency arcs, executed spaCy and Stanza parser captures, one direct UD/CoNLL-U validator capture, and negative controls exist for frozen fixtures; no parser behavior is implemented.",
       "evidence": [
         "docs/specs/dependency-parser-readiness.md",
         "fixtures/dependency-parser/slices.json",
+        "fixtures/dependency-parser/expected/ar-nonlatin.json",
         "fixtures/dependency-parser/expected/en-basic.json",
         "fixtures/dependency-parser/expected/es-mwt.json",
         "fixtures/dependency-parser/comparisons/spacy-3.8.json",
@@ -257,7 +258,8 @@
         "docs/decisions/dependency-parser-output-differences.md"
       ],
       "limitations": [
-        "Only spaCy has executed parser model-output; Stanza model execution and JavaScript parser comparison remain gap/capability records",
+        "spaCy and Stanza executed parser model-output captures are limited to frozen slices",
+        "JavaScript parser comparison remains a gap/capability record",
         "The UD validator capture is fixture-format evidence, not parser model-output evidence",
         "No dependency parser implementation or broad UD treebank support is claimed"
       ]
