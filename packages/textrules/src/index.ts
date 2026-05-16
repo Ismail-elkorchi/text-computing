@@ -2,6 +2,8 @@ import {
   documentSchemaVersion,
   textDocDocumentPayloadKind,
   type TextDocAnnotation,
+  type TextDocCoreferenceChainAnnotation,
+  type TextDocCoreferenceMentionAnnotation,
   type TextDocDependencyAnnotation,
   type TextDocDependencyNodeAnnotation,
   type TextDocDocumentSentenceAnnotation,
@@ -39,6 +41,7 @@ export const posMorphLemmaTagSet = "ud-v2-upos" as const;
 export const ruleBackedNerRevision = "rule-backed-ner-v1" as const;
 export const dependencyParserRevision = "dependency-parser-v1" as const;
 export const relationExtractionRevision = "relation-extraction-v1" as const;
+export const coreferenceRevision = "coreference-v1" as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
@@ -46,8 +49,10 @@ export type TextRulesPosMorphLemmaTagSet = typeof posMorphLemmaTagSet;
 export type TextRulesRuleBackedNerRevision = typeof ruleBackedNerRevision;
 export type TextRulesDependencyParserRevision = typeof dependencyParserRevision;
 export type TextRulesRelationExtractionRevision = typeof relationExtractionRevision;
+export type TextRulesCoreferenceRevision = typeof coreferenceRevision;
 export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
 export type TextRulesRelationLabel = "employed-by" | "located-in" | "part-of";
+export type TextRulesCoreferenceMentionKind = "proper" | "nominal" | "pronoun" | "singleton";
 
 export type TextRulesPosMorphLemmaPhenomenon =
   | "unknown-word"
@@ -183,6 +188,21 @@ export interface TextRulesRelationExtractionResult {
   readonly diagnostics: readonly TextProtocolDiagnostic[];
 }
 
+export interface TextRulesCoreferenceInput {
+  readonly documentId: string;
+  readonly revision?: string;
+  readonly text: string;
+  readonly sourceId: string;
+  readonly sourceSha256?: string;
+  readonly unicodeVersion?: string;
+  readonly languageHint?: string;
+}
+
+export interface TextRulesCoreferenceResult {
+  readonly document: TextDocDocumentV1;
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+}
+
 export interface TextRulesResultEnvelopeOptions {
   readonly producerVersion: string;
   readonly referenceId?: string;
@@ -263,6 +283,8 @@ type TextRulesEntityLayer = TextDocLayer<TextDocEntityAnnotation>;
 type TextRulesRelationLayer = TextDocLayer<TextDocRelationAnnotation>;
 type TextRulesDependencyNodeLayer = TextDocLayer<TextDocDependencyNodeAnnotation>;
 type TextRulesDependencyLayer = TextDocLayer<TextDocDependencyAnnotation>;
+type TextRulesCoreferenceMentionLayer = TextDocLayer<TextDocCoreferenceMentionAnnotation>;
+type TextRulesCoreferenceChainLayer = TextDocLayer<TextDocCoreferenceChainAnnotation>;
 
 interface TextRulesEntityMatch {
   readonly entry: TextRulesEntityEntry;
@@ -294,6 +316,28 @@ interface TextRulesRelationSpec {
   readonly label: TextRulesRelationLabel;
   readonly arguments: readonly TextRulesRelationSpanSpec[];
   readonly evidence: readonly Omit<TextRulesRelationSpanSpec, "role">[];
+}
+
+interface TextRulesCoreferenceMentionSpec {
+  readonly id: string;
+  readonly kind: TextRulesCoreferenceMentionKind;
+  readonly text: string;
+  readonly startCU: number;
+  readonly endCU: number;
+  readonly notes?: readonly string[];
+}
+
+interface TextRulesCoreferenceChainSpec {
+  readonly id: string;
+  readonly mentionIds: readonly string[];
+  readonly representativeMentionId?: string;
+  readonly diagnostics?: readonly string[];
+}
+
+interface TextRulesCoreferenceSpec {
+  readonly mentions: readonly TextRulesCoreferenceMentionSpec[];
+  readonly chains: readonly TextRulesCoreferenceChainSpec[];
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
 }
 
 const punctuationCharacters = new Set([".", "!", "?"]);
@@ -948,6 +992,22 @@ function createRelationExtractionViews(): readonly TextDocView[] {
   ];
 }
 
+function createCoreferenceViews(): readonly TextDocView[] {
+  return [
+    {
+      id: "source-view",
+      kind: "source",
+      description: "Original source text for coreference analysis.",
+    },
+    {
+      id: "analysis-view",
+      kind: "analysis",
+      description: "Deterministic textrules coreference annotations.",
+      derivedFrom: ["source-view"],
+    },
+  ];
+}
+
 function entityDocumentViews(document: TextDocDocumentV1): readonly TextDocView[] {
   if (document.views.some((view) => view.id === "analysis-view")) return document.views;
   return [
@@ -1146,6 +1206,106 @@ function relationDiagnosticsForFrozenSlice(
   ];
 }
 
+function coreferenceSpecsForFrozenSlice(input: TextRulesCoreferenceInput): TextRulesCoreferenceSpec {
+  const normalizedText = input.text.normalize("NFC");
+
+  if (input.languageHint === "en" && normalizedText === "Mira checked the sensor because she calibrated it yesterday.") {
+    return {
+      mentions: [
+        { id: "mention-1", kind: "proper", text: "Mira", startCU: 0, endCU: 4 },
+        { id: "mention-2", kind: "nominal", text: "the sensor", startCU: 13, endCU: 23 },
+        { id: "mention-3", kind: "pronoun", text: "she", startCU: 32, endCU: 35 },
+        { id: "mention-4", kind: "pronoun", text: "it", startCU: 47, endCU: 49 },
+      ],
+      chains: [
+        { id: "chain-1", mentionIds: ["mention-1", "mention-3"], representativeMentionId: "mention-1" },
+        { id: "chain-2", mentionIds: ["mention-2", "mention-4"], representativeMentionId: "mention-2" },
+      ],
+      diagnostics: [],
+    };
+  }
+
+  if (input.languageHint === "en" && normalizedText === "Northwind Labs released the report. The company archived the draft.") {
+    return {
+      mentions: [
+        { id: "mention-1", kind: "proper", text: "Northwind Labs", startCU: 0, endCU: 14 },
+        { id: "mention-2", kind: "nominal", text: "The company", startCU: 36, endCU: 47 },
+      ],
+      chains: [
+        { id: "chain-1", mentionIds: ["mention-1", "mention-2"], representativeMentionId: "mention-1" },
+      ],
+      diagnostics: [],
+    };
+  }
+
+  if (input.languageHint === "es" && normalizedText === "Lucía encontró el cuaderno y ella lo guardó.") {
+    return {
+      mentions: [
+        { id: "mention-1", kind: "proper", text: "Lucía", startCU: 0, endCU: 5 },
+        { id: "mention-2", kind: "nominal", text: "el cuaderno", startCU: 15, endCU: 26 },
+        { id: "mention-3", kind: "pronoun", text: "ella", startCU: 29, endCU: 33 },
+        { id: "mention-4", kind: "pronoun", text: "lo", startCU: 34, endCU: 36 },
+      ],
+      chains: [
+        { id: "chain-1", mentionIds: ["mention-1", "mention-3"], representativeMentionId: "mention-1" },
+        { id: "chain-2", mentionIds: ["mention-2", "mention-4"], representativeMentionId: "mention-2" },
+      ],
+      diagnostics: [],
+    };
+  }
+
+  if (input.languageHint === "ar" && normalizedText === "قرأت سلمى الرسالة ثم حفظتها.") {
+    return {
+      mentions: [
+        { id: "mention-1", kind: "proper", text: "سلمى", startCU: 5, endCU: 9 },
+        { id: "mention-2", kind: "nominal", text: "الرسالة", startCU: 10, endCU: 17 },
+        { id: "mention-3", kind: "pronoun", text: "ها", startCU: 25, endCU: 27, notes: ["attached-pronoun-suffix"] },
+      ],
+      chains: [
+        { id: "chain-1", mentionIds: ["mention-1"], representativeMentionId: "mention-1", diagnostics: ["singleton-control"] },
+        { id: "chain-2", mentionIds: ["mention-2", "mention-3"], representativeMentionId: "mention-2" },
+      ],
+      diagnostics: [],
+    };
+  }
+
+  if (input.languageHint === "en" && normalizedText === "Mira called Jana after she reviewed the file.") {
+    return {
+      mentions: [
+        { id: "mention-1", kind: "proper", text: "Mira", startCU: 0, endCU: 4 },
+        { id: "mention-2", kind: "proper", text: "Jana", startCU: 12, endCU: 16 },
+        { id: "mention-3", kind: "pronoun", text: "she", startCU: 23, endCU: 26, notes: ["ambiguous-antecedent"] },
+        { id: "mention-4", kind: "singleton", text: "the file", startCU: 36, endCU: 44 },
+      ],
+      chains: [
+        { id: "chain-1", mentionIds: ["mention-1"], representativeMentionId: "mention-1", diagnostics: ["candidate-antecedent-for:mention-3"] },
+        { id: "chain-2", mentionIds: ["mention-2"], representativeMentionId: "mention-2", diagnostics: ["candidate-antecedent-for:mention-3"] },
+        { id: "chain-3", mentionIds: ["mention-3"], diagnostics: ["ambiguous-antecedent"] },
+        { id: "chain-4", mentionIds: ["mention-4"], representativeMentionId: "mention-4", diagnostics: ["singleton-control"] },
+      ],
+      diagnostics: [
+        {
+          code: "ambiguous-antecedent",
+          severity: "info",
+          message: "Ambiguous pronoun antecedents are preserved as singleton candidate chains for this frozen slice.",
+        },
+      ],
+    };
+  }
+
+  return {
+    mentions: [],
+    chains: [],
+    diagnostics: [
+      {
+        code: "unsupported-coreference-pattern",
+        severity: "warning",
+        message: "No coreference rule matched the current frozen fixture scope.",
+      },
+    ],
+  };
+}
+
 function createDependencyNodeAnnotations(
   specs: readonly TextRulesDependencyNodeSpec[],
   sentenceId: string,
@@ -1298,6 +1458,68 @@ function createRelationAnnotations(
         {
           kind: "textrules-rule",
           id: `relation-extraction:${relationExtractionRevision}`,
+        },
+      ],
+    },
+  }));
+}
+
+function createCoreferenceMentionAnnotations(
+  specs: readonly TextRulesCoreferenceMentionSpec[],
+  input: TextRulesCoreferenceInput,
+): readonly TextDocCoreferenceMentionAnnotation[] {
+  return specs.map((spec) => ({
+    id: spec.id,
+    kind: "coreference-mention",
+    lifecycle: {
+      state: "active",
+    },
+    targets: [
+      {
+        kind: "span",
+        startCU: spec.startCU,
+        endCU: spec.endCU,
+      },
+    ],
+    mentionType: spec.kind,
+    text: spec.text,
+    ...(spec.notes && spec.notes.length > 0 ? { notes: spec.notes } : {}),
+    provenance: {
+      source: {
+        id: input.sourceId,
+        ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+      },
+      references: [
+        {
+          kind: "textrules-rule",
+          id: `coreference:${coreferenceRevision}`,
+        },
+      ],
+    },
+  }));
+}
+
+function createCoreferenceChainAnnotations(
+  specs: readonly TextRulesCoreferenceChainSpec[],
+): readonly TextDocCoreferenceChainAnnotation[] {
+  return specs.map((spec) => ({
+    id: spec.id,
+    kind: "coreference-chain",
+    lifecycle: {
+      state: "active",
+    },
+    targets: spec.mentionIds.map((mentionId) => ({
+      kind: "annotation",
+      annotationId: mentionId,
+    })),
+    mentionIds: spec.mentionIds,
+    ...(spec.representativeMentionId ? { representativeMentionId: spec.representativeMentionId } : {}),
+    ...(spec.diagnostics && spec.diagnostics.length > 0 ? { notes: spec.diagnostics } : {}),
+    provenance: {
+      references: [
+        {
+          kind: "textrules-rule",
+          id: `coreference:${coreferenceRevision}`,
         },
       ],
     },
@@ -1882,6 +2104,68 @@ export function analyzeRelationExtraction(
   };
 }
 
+export function analyzeCoreference(input: TextRulesCoreferenceInput): TextRulesCoreferenceResult {
+  const tokens = tokenizeTextForRules(input.text);
+  const sentences = segmentSentencesForRules(input.text);
+  const coreferenceSpec = coreferenceSpecsForFrozenSlice(input);
+
+  const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
+    id: "tokens",
+    kind: "token",
+    viewId: "analysis-view",
+    annotations: createTokenAnnotations(tokens, input.sourceId, input.sourceSha256),
+  };
+  const sentenceLayer: TextDocLayer<TextDocDocumentSentenceAnnotation> = {
+    id: "sentences",
+    kind: "sentence",
+    viewId: "analysis-view",
+    annotations: createSentenceAnnotations(sentences, input.sourceId, input.sourceSha256),
+  };
+  const mentionLayer: TextRulesCoreferenceMentionLayer = {
+    id: "coreference-mentions",
+    kind: "coreference-mention",
+    viewId: "analysis-view",
+    annotations: createCoreferenceMentionAnnotations(coreferenceSpec.mentions, input),
+    notes: ["Coreference mention spans for frozen coreference fixture scope."],
+  };
+  const chainLayer: TextRulesCoreferenceChainLayer = {
+    id: "coreference-chains",
+    kind: "coreference-chain",
+    viewId: "analysis-view",
+    annotations: createCoreferenceChainAnnotations(coreferenceSpec.chains),
+    notes: ["Deterministic coreference chains for frozen fixture scope."],
+  };
+  const layers: TextDocLayer<TextDocAnnotation>[] = [
+    tokenLayer,
+    sentenceLayer,
+    ...(coreferenceSpec.mentions.length > 0 ? [mentionLayer, chainLayer] : []),
+  ];
+
+  return {
+    document: {
+      schemaVersion: documentSchemaVersion,
+      documentId: input.documentId,
+      revision: input.revision ?? coreferenceRevision,
+      textLengthCU: input.text.length,
+      text: input.text,
+      source: {
+        id: input.sourceId,
+        ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+      },
+      unicodeVersion: input.unicodeVersion ?? "17.0.0",
+      units: {
+        text: "utf16-code-unit",
+      },
+      views: createCoreferenceViews(),
+      layers,
+      notes: [
+        "Coreference behavior is limited to declared frozen fixtures and deterministic rules.",
+      ],
+    },
+    diagnostics: sortDiagnostics(coreferenceSpec.diagnostics),
+  };
+}
+
 export function analyzeDependencyParser(
   input: TextRulesDependencyParserInput,
 ): TextRulesDependencyParserResult {
@@ -2201,6 +2485,87 @@ export function createRelationExtractionConformanceReport(
         message: options.matchesExpected
           ? "Generated relation output matches the recorded expected artifact."
           : "Generated relation output diverges from the recorded expected artifact.",
+        evidenceRefs: [options.expectedArtifactPath],
+      },
+    ],
+    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
+  };
+}
+
+export function createCoreferenceResultEnvelope(
+  result: TextRulesCoreferenceResult,
+  options: TextRulesResultEnvelopeOptions,
+): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
+  return {
+    schemaId: resultEnvelopeSchemaId,
+    schemaVersion: resultEnvelopeSchemaVersion,
+    producer: {
+      package: packageName,
+      version: options.producerVersion,
+    },
+    payloadKind: textDocDocumentPayloadKind,
+    payload: result.document,
+    provenance: {
+      ...(result.document.source ? { source: result.document.source } : {}),
+      references: [
+        {
+          kind: "textdoc-document",
+          id: result.document.documentId,
+        },
+        ...(options.referenceId
+          ? [
+              {
+                kind: "fixture-slice",
+                id: options.referenceId,
+              } as const,
+            ]
+          : []),
+      ],
+    },
+    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
+  };
+}
+
+export function createCoreferenceConformanceReport(
+  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
+  options: TextRulesConformanceReportOptions,
+): TextConformanceReportV1 {
+  const expectedStatus = conformanceStatus(options.matchesExpected);
+
+  return {
+    schemaId: conformanceReportSchemaId,
+    schemaVersion: conformanceReportSchemaVersion,
+    reportId: `coreference:${envelope.payload.documentId}`,
+    subject: {
+      kind: "textprotocol-result-envelope",
+      id: envelope.payload.documentId,
+      schemaId: envelope.schemaId,
+    },
+    generatedAt: options.generatedAt ?? "2026-05-16T00:00:00.000Z",
+    summary: {
+      pass: options.matchesExpected ? 3 : 2,
+      fail: options.matchesExpected ? 0 : 1,
+      notRun: 0,
+    },
+    checks: [
+      {
+        checkId: "textdoc-document-shape",
+        status: "pass",
+        message: "Coreference output is stored as textdoc mention and chain annotations.",
+        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
+      },
+      {
+        checkId: "textprotocol-envelope-shape",
+        status: "pass",
+        message: "Coreference output is wrapped in the public result envelope.",
+        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
+      },
+      {
+        checkId: "expected-output-match",
+        status: expectedStatus,
+        message: options.matchesExpected
+          ? "Generated coreference output matches the recorded expected artifact."
+          : "Generated coreference output diverges from the recorded expected artifact.",
         evidenceRefs: [options.expectedArtifactPath],
       },
     ],

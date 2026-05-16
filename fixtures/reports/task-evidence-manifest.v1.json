@@ -29,6 +29,32 @@
       ]
     },
     {
+      "taskId": "nlp-coreference",
+      "supportStatus": "slice-proven",
+      "claimBoundary": "Slice-proven for deterministic mention and chain outputs over frozen repository-authored short-text slices only.",
+      "reportPath": "fixtures/reports/nlp-coreference/conformance-report.json",
+      "evidenceRefs": [
+        "docs/specs/coreference-readiness.md",
+        "docs/specs/nlp-coreference-research-ledger.md",
+        "fixtures/coreference/slices.json",
+        "fixtures/coreference/expected/ar-pronoun.json",
+        "fixtures/coreference/expected/en-ambiguous.json",
+        "fixtures/coreference/expected/en-nominal.json",
+        "fixtures/coreference/expected/en-pronoun.json",
+        "fixtures/coreference/expected/es-pronoun.json",
+        "schemas/coreference-slices-v1.schema.json",
+        "schemas/coreference-expected-v1.schema.json",
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test/index.test.ts",
+        "tools/validate-coreference-readiness.mjs"
+      ],
+      "comparatorRefs": [],
+      "knownGaps": [
+        "No executed external comparator captures or corpus evaluation are implemented for coreference.",
+        "Behavior is limited to repository-authored frozen short-text slices."
+      ]
+    },
+    {
       "taskId": "nlp-corpus-tfidf-bm25",
       "supportStatus": "slice-proven",
       "claimBoundary": "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only.",

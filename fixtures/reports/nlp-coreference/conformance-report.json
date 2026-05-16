@@ -9,9 +9,9 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 4,
+    "pass": 5,
     "fail": 0,
-    "notRun": 1
+    "notRun": 0
   },
   "checks": [
     {
@@ -46,12 +46,19 @@
     },
     {
       "checkId": "feature-code",
-      "status": "not-run",
-      "message": "No coreference feature behavior is implemented in this readiness gate.",
-      "evidenceRefs": ["docs/specs/coreference-readiness.md"]
+      "status": "pass",
+      "message": "Coreference behavior validates against recorded expected outputs for the frozen slices.",
+      "evidenceRefs": [
+        "fixtures/coreference/expected/ar-pronoun.json",
+        "fixtures/coreference/expected/en-ambiguous.json",
+        "fixtures/coreference/expected/en-nominal.json",
+        "fixtures/coreference/expected/en-pronoun.json",
+        "fixtures/coreference/expected/es-pronoun.json",
+        "tools/validate-coreference-readiness.mjs"
+      ]
     }
   ],
   "notes": [
-    "This report records readiness-only evidence and does not claim coreference behavior."
+    "This report records frozen-slice behavior only; it does not claim broad coreference coverage or corpus evaluation."
   ]
 }

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-coreference",
+  "sliceId": "en-nominal",
+  "mentions": [
+    {
+      "id": "mention-1",
+      "kind": "proper",
+      "target": {
+        "startCU": 0,
+        "endCU": 14,
+        "text": "Northwind Labs"
+      }
+    },
+    {
+      "id": "mention-2",
+      "kind": "nominal",
+      "target": {
+        "startCU": 36,
+        "endCU": 47,
+        "text": "The company"
+      }
+    }
+  ],
+  "chains": [
+    {
+      "id": "chain-1",
+      "mentionIds": ["mention-1", "mention-2"]
+    }
+  ]
+}

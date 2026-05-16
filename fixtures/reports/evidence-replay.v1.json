@@ -326,14 +326,14 @@
             "tools/validate-coreference-readiness.mjs"
           ],
           "path": "tools/validate-coreference-readiness.mjs",
-          "sha256": "fd27506da6fe596c8fee9bfd2e20ae0ac51f111c9bf2c8a1e401f5216117c002"
+          "sha256": "920511809357a205f81fd7b290eb68ca356fe2981dcfc90db6a66b3b0544ead3"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-coreference/conformance-report.json"
       ],
-      "knownGap": "Coreference is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior."
+      "knownGap": "Coreference behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures."
     }
   ]
 }

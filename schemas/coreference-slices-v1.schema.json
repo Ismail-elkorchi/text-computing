@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/coreference-slices-v1.schema.json",
-  "title": "Coreference readiness slices v1",
+  "title": "Coreference slices v1",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -18,8 +18,8 @@
   "properties": {
     "schemaVersion": { "const": 1 },
     "taskId": { "const": "nlp-coreference" },
-    "supportStatus": { "const": "readiness-only" },
-    "expectedOutputStatus": { "const": "schema-defined" },
+    "supportStatus": { "const": "slice-proven" },
+    "expectedOutputStatus": { "const": "recorded" },
     "comparatorStatus": { "const": "capability-recorded" },
     "allowedFixturePolicy": { "type": "string", "minLength": 1 },
     "chainPolicy": {

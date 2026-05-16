@@ -32,8 +32,8 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`dependency-parser-comparison-v1.schema.json`](dependency-parser-comparison-v1.schema.json) — comparator capability/capture schema for parser readiness.
 - [`relation-extraction-slices-v1.schema.json`](relation-extraction-slices-v1.schema.json) — readiness fixture schema for relation extraction.
 - [`relation-extraction-expected-v1.schema.json`](relation-extraction-expected-v1.schema.json) — expected-output schema for future relation extraction behavior.
-- [`coreference-slices-v1.schema.json`](coreference-slices-v1.schema.json) — readiness fixture schema for coreference.
-- [`coreference-expected-v1.schema.json`](coreference-expected-v1.schema.json) — expected-output schema for future coreference behavior.
+- [`coreference-slices-v1.schema.json`](coreference-slices-v1.schema.json) — fixture schema for coreference.
+- [`coreference-expected-v1.schema.json`](coreference-expected-v1.schema.json) — expected-output schema for frozen coreference behavior.
 - [`multilingual-support-tiers-v1.schema.json`](multilingual-support-tiers-v1.schema.json) — multilingual support-tier matrix schema.
 - [`performance-gates-v1.schema.json`](performance-gates-v1.schema.json) — performance gate requirement schema.
 - [`package-release-gates-v1.schema.json`](package-release-gates-v1.schema.json) — package release gate schema.

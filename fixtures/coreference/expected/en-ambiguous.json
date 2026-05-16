@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-coreference",
+  "sliceId": "en-ambiguous",
+  "mentions": [
+    {
+      "id": "mention-1",
+      "kind": "proper",
+      "target": {
+        "startCU": 0,
+        "endCU": 4,
+        "text": "Mira"
+      }
+    },
+    {
+      "id": "mention-2",
+      "kind": "proper",
+      "target": {
+        "startCU": 12,
+        "endCU": 16,
+        "text": "Jana"
+      }
+    },
+    {
+      "id": "mention-3",
+      "kind": "pronoun",
+      "target": {
+        "startCU": 23,
+        "endCU": 26,
+        "text": "she"
+      }
+    },
+    {
+      "id": "mention-4",
+      "kind": "singleton",
+      "target": {
+        "startCU": 36,
+        "endCU": 44,
+        "text": "the file"
+      }
+    }
+  ],
+  "chains": [
+    {
+      "id": "chain-1",
+      "mentionIds": ["mention-1"],
+      "diagnostics": ["candidate-antecedent-for:mention-3"]
+    },
+    {
+      "id": "chain-2",
+      "mentionIds": ["mention-2"],
+      "diagnostics": ["candidate-antecedent-for:mention-3"]
+    },
+    {
+      "id": "chain-3",
+      "mentionIds": ["mention-3"],
+      "diagnostics": ["ambiguous-antecedent"]
+    },
+    {
+      "id": "chain-4",
+      "mentionIds": ["mention-4"],
+      "diagnostics": ["singleton-control"]
+    }
+  ]
+}

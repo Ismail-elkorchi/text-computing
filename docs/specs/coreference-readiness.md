@@ -3,22 +3,23 @@
 ## Why this document exists
 
 Coreference can silently erase ambiguity by forcing one antecedent where the text does not justify one.
-This readiness gate records mention, chain, ambiguity, and loss policies before any behavior is added.
+This gate records mention, chain, ambiguity, and loss policies and validates frozen-slice behavior against
+recorded expected outputs.
 
 ## Status
 
 - Task id: `nlp-coreference`
-- Status: `readiness-only`
+- Status: `slice-proven`
 - Owning packages: `textdoc`, `textrules`, `textconformance`
-- Current proof: public schemas, readiness fixtures, negative controls, and conformance report exist
-- Current non-proof: no coreference runtime behavior exists
+- Current proof: public schemas, frozen fixtures, recorded expected outputs, package tests, and a conformance report exist
+- Current non-proof: executed external comparator captures and corpus evaluation are not implemented
 
 ## Target representation
 
 The target representation is:
 
 - `textdoc-document-v1` for mention spans and chain annotations;
-- `coreference-expected-v1` for frozen expected outputs in a later feature gate;
+- `coreference-expected-v1` for frozen expected outputs;
 - `textprotocol-result-envelope-v1` for serialized outputs; and
 - `textconformance-report-v1` for machine-readable verification references.
 
@@ -65,13 +66,13 @@ They cover:
 
 This gate records comparator capability only. It does not commit executed comparator outputs.
 
-Future feature work must freeze comparator versions and corpus slices before behavior is added. Candidate
+Future expansion must freeze comparator versions and corpus slices before wider behavior is added. Candidate
 comparators include mature NLP systems with coreference or mention-clustering surfaces, but their outputs
 are diagnostic evidence and do not define repository semantics.
 
 ## Expected-output format
 
-Future expected outputs must validate against
+Expected outputs validate against
 [`../../schemas/coreference-expected-v1.schema.json`](../../schemas/coreference-expected-v1.schema.json).
 
 The schema requires mention ids, mention kinds, span targets, chain ids, chain membership, and optional

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-coreference",
+  "sliceId": "ar-pronoun",
+  "mentions": [
+    {
+      "id": "mention-1",
+      "kind": "proper",
+      "target": {
+        "startCU": 5,
+        "endCU": 9,
+        "text": "سلمى"
+      }
+    },
+    {
+      "id": "mention-2",
+      "kind": "nominal",
+      "target": {
+        "startCU": 10,
+        "endCU": 17,
+        "text": "الرسالة"
+      }
+    },
+    {
+      "id": "mention-3",
+      "kind": "pronoun",
+      "target": {
+        "startCU": 25,
+        "endCU": 27,
+        "text": "ها"
+      }
+    }
+  ],
+  "chains": [
+    {
+      "id": "chain-1",
+      "mentionIds": ["mention-1"],
+      "diagnostics": ["singleton-control"]
+    },
+    {
+      "id": "chain-2",
+      "mentionIds": ["mention-2", "mention-3"]
+    }
+  ]
+}

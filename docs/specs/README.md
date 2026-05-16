@@ -20,7 +20,7 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-dependency-parser-research-ledger.md`](nlp-dependency-parser-research-ledger.md) — research ledger for dependency parser readiness.
 - [`relation-extraction-readiness.md`](relation-extraction-readiness.md) — typed relation extraction gate.
 - [`nlp-relation-extraction-research-ledger.md`](nlp-relation-extraction-research-ledger.md) — research ledger for relation extraction readiness.
-- [`coreference-readiness.md`](coreference-readiness.md) — readiness-only mention and chain gate.
+- [`coreference-readiness.md`](coreference-readiness.md) — frozen-slice mention and chain gate.
 - [`nlp-coreference-research-ledger.md`](nlp-coreference-research-ledger.md) — research ledger for coreference readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
