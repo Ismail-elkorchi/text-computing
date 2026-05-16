@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/toolkit-capability-scorecard-v1.schema.json",
+  "title": "Toolkit capability scorecard v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "claimPolicy",
+    "supportGradeOrder",
+    "languageTiers",
+    "axes",
+    "packageRows",
+    "taskRows",
+    "releaseGates",
+    "antiMetricPolicy"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "minLength": 1 },
+    "claimPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "blockedTermSetId"],
+      "properties": {
+        "rule": { "type": "string", "minLength": 1 },
+        "blockedTermSetId": { "const": "comparative-marketing-v1" }
+      }
+    },
+    "supportGradeOrder": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "scaffold",
+          "readiness-only",
+          "slice-proven",
+          "beta",
+          "production-candidate"
+        ]
+      }
+    },
+    "languageTiers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/languageTier" }
+    },
+    "axes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/axis" }
+    },
+    "packageRows": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/packageRow" }
+    },
+    "taskRows": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/taskRow" }
+    },
+    "releaseGates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/releaseGate" }
+    },
+    "antiMetricPolicy": { "type": "string", "minLength": 1 }
+  },
+  "definitions": {
+    "languageTier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "minimumEvidence"],
+      "properties": {
+        "id": {
+          "enum": [
+            "unicode-invariant",
+            "fixture-proven",
+            "resource-backed",
+            "comparator-backed",
+            "corpus-backed"
+          ]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "minimumEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "axis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "measurement", "gate", "evidenceRequired"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "label": { "type": "string", "minLength": 1 },
+        "measurement": { "type": "string", "minLength": 1 },
+        "gate": { "type": "string", "minLength": 1 },
+        "evidenceRequired": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "packageRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageName",
+        "supportStatus",
+        "evidenceRefs",
+        "nextGate"
+      ],
+      "properties": {
+        "packageName": { "type": "string", "minLength": 1 },
+        "supportStatus": { "$ref": "#/definitions/supportStatus" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "nextGate": { "type": "string", "minLength": 1 }
+      }
+    },
+    "taskRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskId",
+        "supportStatus",
+        "languageTier",
+        "evidenceRefs",
+        "nextGate"
+      ],
+      "properties": {
+        "taskId": { "type": "string", "minLength": 1 },
+        "supportStatus": { "$ref": "#/definitions/supportStatus" },
+        "languageTier": {
+          "enum": [
+            "unicode-invariant",
+            "fixture-proven",
+            "resource-backed",
+            "comparator-backed",
+            "corpus-backed"
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "nextGate": { "type": "string", "minLength": 1 }
+      }
+    },
+    "releaseGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "evidenceRequired"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "description": { "type": "string", "minLength": 1 },
+        "evidenceRequired": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "supportStatus": {
+      "enum": [
+        "scaffold",
+        "readiness-only",
+        "slice-proven",
+        "beta",
+        "production-candidate"
+      ]
+    },
+    "repositoryRef": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(docs|fixtures|packages|schemas|tools)/"
+    }
+  }
+}
