@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "documentId": "doc:annotation-model",
+  "documentId": "doc:invalid-entity-link-target-kind",
   "revision": "2026-04-21",
   "textLengthCU": 31,
   "text": "New York hosts example corpora.",
@@ -444,7 +444,7 @@
           "targets": [
             {
               "kind": "annotation",
-              "annotationId": "entity-1"
+              "annotationId": "token-1"
             }
           ],
           "link": {

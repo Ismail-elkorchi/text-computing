@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "documentId": "doc:annotation-model",
+  "documentId": "doc:invalid-dangling-relation-argument",
   "revision": "2026-04-21",
   "textLengthCU": 31,
   "text": "New York hosts example corpora.",
@@ -359,7 +359,7 @@
             },
             {
               "kind": "annotation",
-              "annotationId": "token-3"
+              "annotationId": "missing-token"
             }
           ],
           "relationType": "located-event-subject",
@@ -370,7 +370,7 @@
             },
             {
               "role": "predicate",
-              "annotationId": "token-3"
+              "annotationId": "missing-token"
             }
           ],
           "provenance": {

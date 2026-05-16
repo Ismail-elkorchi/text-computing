@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "documentId": "doc:annotation-model",
+  "documentId": "doc:invalid-dependency-cycle",
   "revision": "2026-04-21",
   "textLengthCU": 31,
   "text": "New York hosts example corpora.",
@@ -473,6 +473,130 @@
           "featureName": "bm25-length-normalization",
           "formula": "bm25",
           "numericValue": 1.4
+        }
+      ]
+    },
+    {
+      "id": "layer-dependency-node",
+      "kind": "dependency-node",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "dep-node-1",
+          "kind": "dependency-node",
+          "nodeKind": "word",
+          "sentenceId": "sentence-1",
+          "sourceOrder": 1,
+          "fields": {
+            "id": "1",
+            "form": "New",
+            "lemma": "New",
+            "upos": "PROPN",
+            "xpos": "_",
+            "feats": "_",
+            "head": "2",
+            "deprel": "dep",
+            "deps": "_",
+            "misc": "_"
+          },
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-1"
+            }
+          ]
+        },
+        {
+          "id": "dep-node-2",
+          "kind": "dependency-node",
+          "nodeKind": "word",
+          "sentenceId": "sentence-1",
+          "sourceOrder": 2,
+          "fields": {
+            "id": "2",
+            "form": "York",
+            "lemma": "York",
+            "upos": "PROPN",
+            "xpos": "_",
+            "feats": "_",
+            "head": "1",
+            "deprel": "dep",
+            "deps": "_",
+            "misc": "_"
+          },
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layer-dependency",
+      "kind": "dependency",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "dep-1",
+          "kind": "dependency",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "dep-node-1"
+            },
+            {
+              "kind": "annotation",
+              "annotationId": "dep-node-2"
+            }
+          ],
+          "dependentNodeId": "dep-node-1",
+          "headNodeId": "dep-node-2",
+          "relation": "dep",
+          "source": {
+            "sentenceId": "sentence-1",
+            "conlluId": "1",
+            "conlluHead": "2",
+            "conlluDeprel": "dep",
+            "conlluDeps": "_"
+          }
+        },
+        {
+          "id": "dep-2",
+          "kind": "dependency",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "dep-node-2"
+            },
+            {
+              "kind": "annotation",
+              "annotationId": "dep-node-1"
+            }
+          ],
+          "dependentNodeId": "dep-node-2",
+          "headNodeId": "dep-node-1",
+          "relation": "dep",
+          "source": {
+            "sentenceId": "sentence-1",
+            "conlluId": "2",
+            "conlluHead": "1",
+            "conlluDeprel": "dep",
+            "conlluDeps": "_"
+          }
         }
       ]
     }

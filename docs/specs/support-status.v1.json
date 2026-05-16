@@ -18,7 +18,7 @@
     {
       "name": "@ismail-elkorchi/textdoc",
       "status": "slice-proven",
-      "scope": "Document containers, lifecycle, provenance, and annotation-layer validation are implemented.",
+      "scope": "Document containers, lifecycle, provenance, annotation-layer validation, and fixture-level graph annotation conventions are implemented.",
       "evidence": [
         "document-model fixtures",
         "invalid-reference validator",
@@ -26,7 +26,7 @@
         "dist export readiness metadata"
       ],
       "limitations": [
-        "Dependency tree round-trip is limited to CoNLL-U fixture import/export; coreference chain and relation graph conventions are not production-grade yet",
+        "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, and parser behavior are not production-grade yet",
         "Package remains private until broader release gates pass"
       ]
     },
@@ -157,7 +157,7 @@
     {
       "id": "nlp-document-annotation-model",
       "status": "slice-proven",
-      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, and round-trip validation are implemented.",
+      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and round-trip validation are implemented.",
       "evidence": [
         "document model example",
         "invalid fixtures",
@@ -165,7 +165,7 @@
         "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
       ],
       "limitations": [
-        "No full syntactic dependency/coreference/relation graph standard yet"
+        "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work"
       ]
     },
     {

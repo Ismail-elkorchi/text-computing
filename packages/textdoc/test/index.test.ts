@@ -60,6 +60,124 @@ const conlluDocument = importConlluToTextDocDocumentV1(conlluFixture, {
   documentId: "textdoc:test:conllu",
   sourceId: "textdoc-conllu-smoke",
 });
+const graphFixtureDocument: TextDocDocumentV1 = {
+  schemaVersion: documentSchemaVersion,
+  documentId: "doc:graph-runtime",
+  revision: "2026-05-16",
+  textLengthCU: 5,
+  text: "Alice",
+  units: {
+    text: "utf16-code-unit",
+  },
+  views: [
+    {
+      id: "source-view",
+      kind: "source",
+    },
+    {
+      id: "analysis-view",
+      kind: "analysis",
+      derivedFrom: ["source-view"],
+    },
+  ],
+  layers: [
+    {
+      id: "tokens",
+      kind: "token",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "token-1",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+          text: "Alice",
+        },
+      ],
+    },
+    {
+      id: "entities",
+      kind: "entity",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "entity-1",
+          kind: "entity",
+          label: "PER",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+          text: "Alice",
+        },
+      ],
+    },
+    {
+      id: "relations",
+      kind: "relation",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "relation-1",
+          kind: "relation",
+          relationType: "mentions",
+          lifecycle: { state: "active" },
+          targets: [
+            { kind: "annotation", annotationId: "entity-1" },
+            { kind: "annotation", annotationId: "token-1" },
+          ],
+          arguments: [
+            { role: "entity", annotationId: "entity-1" },
+            { role: "surface", annotationId: "token-1" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "coreference-mentions",
+      kind: "coreference-mention",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "mention-1",
+          kind: "coreference-mention",
+          mentionType: "proper",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "entity-1" }],
+          text: "Alice",
+        },
+      ],
+    },
+    {
+      id: "coreference-chains",
+      kind: "coreference-chain",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "chain-1",
+          kind: "coreference-chain",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "mention-1" }],
+          mentionIds: ["mention-1"],
+          representativeMentionId: "mention-1",
+        },
+      ],
+    },
+    {
+      id: "entity-links",
+      kind: "entity-link",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "link-1",
+          kind: "entity-link",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "entity-1" }],
+          nil: { reason: "fixture-no-kb" },
+        },
+      ],
+    },
+  ],
+};
 
 const issueElevenDocument: TextDocDocumentV1 = {
   schemaVersion: documentSchemaVersion,
@@ -133,6 +251,16 @@ if (!isTextDocDocumentV1(convertedDocument)) {
 
 if (!isTextDocDocumentV1(issueElevenDocument)) {
   throw new Error("issue #11 document example should satisfy the document model shape");
+}
+
+if (!isTextDocDocumentV1(graphFixtureDocument)) {
+  throw new Error("graph fixture should satisfy the document model runtime guard");
+}
+
+for (const requiredKind of ["relation", "coreference-mention", "coreference-chain", "entity-link"]) {
+  if (!graphFixtureDocument.layers.some((layer) => layer.kind === requiredKind)) {
+    throw new Error(`graph fixture should include ${requiredKind} layer`);
+  }
 }
 
 if (!isTextDocDocumentV1(conlluDocument)) {

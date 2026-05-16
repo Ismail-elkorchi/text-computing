@@ -17,7 +17,10 @@ It demonstrates that one document can hold:
 - POS alternatives, including a superseded analysis and its active successor;
 - lemma alternatives;
 - morphology alternatives;
-- entity spans; and
+- entity spans;
+- relation annotations with role-bearing argument references;
+- coreference mention and chain annotations;
+- entity-link annotations with canonical or NIL resolution; and
 - corpus-feature annotations.
 
 ## Invalid-reference policy
@@ -28,6 +31,11 @@ The document model rejects:
 - view lineage references that do not resolve to an existing earlier view;
 - annotation targets of kind `annotation` that do not resolve to an annotation id in the same
   document;
+- relation arguments that do not resolve to annotations targeted by the relation;
+- coreference chains that reference missing mentions or omit declared mentions from their targets;
+- entity links that target non-entity annotations or declare neither/both canonical and NIL
+  resolution;
+- dependency graphs with dangling nodes, cross-sentence heads, duplicate dependent arcs, or cycles;
 - span targets whose offsets fall outside `textLengthCU`;
 - overlapping active span annotations inside a layer unless that layer declares
   `allowSpanOverlap: true`; and
