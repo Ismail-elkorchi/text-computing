@@ -1,14 +1,21 @@
 import type { TextDocDocumentV1, TextDocLayer } from "@ismail-elkorchi/textdoc";
 import {
   buildTextCorpusFingerprintIndex,
+  buildTextCorpusRetrievalIndex,
   computeTextCorpusScoring,
   createTextCorpusCollection,
   isTextCorpusCollectionV1,
   isTextCorpusFingerprintIndex,
+  isTextCorpusParsedQuery,
+  isTextCorpusRetrievalIndexV1,
+  isTextCorpusRetrievalResultV1,
   isTextCorpusScoringResultV1,
   packageName,
+  parseTextCorpusQuery,
+  searchTextCorpusRetrievalIndex,
   sliceTextCorpusByMetadata,
   textCorpusCollectionSchemaVersion,
+  textCorpusRetrievalSchemaVersion,
   textCorpusScoringSchemaVersion,
   type TextCorpusEntry,
 } from "../src/index.ts";
@@ -16,6 +23,7 @@ import {
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textcorpus";
 const expectedSchemaVersion: typeof textCorpusCollectionSchemaVersion = 1;
 const expectedScoringSchemaVersion: typeof textCorpusScoringSchemaVersion = 1;
+const expectedRetrievalSchemaVersion: typeof textCorpusRetrievalSchemaVersion = 1;
 
 function createDocument(
   documentId: string,
@@ -380,6 +388,77 @@ if (!duplicateQueryRejected) {
   throw new Error("textcorpus scoring should reject duplicate query ids");
 }
 
+const retrievalIndex = buildTextCorpusRetrievalIndex(scoringCollection);
+
+if (retrievalIndex.schemaVersion !== textCorpusRetrievalSchemaVersion) {
+  throw new Error("retrieval index should use the retrieval schema version");
+}
+
+if (!isTextCorpusRetrievalIndexV1(retrievalIndex)) {
+  throw new Error("retrieval index should satisfy the runtime contract");
+}
+
+if (retrievalIndex.termOrder.join(",") !== "alpha,beta,delta,gamma") {
+  throw new Error("retrieval index should preserve deterministic term ordering");
+}
+
+const parsedQuery = parseTextCorpusQuery("Alpha beta", { id: "alpha-beta" });
+if (!isTextCorpusParsedQuery(parsedQuery) || parsedQuery.tokens.join(",") !== "alpha,beta") {
+  throw new Error("query parser should normalize query text to lower-case lexical tokens");
+}
+
+const retrievalResult = searchTextCorpusRetrievalIndex(
+  retrievalIndex,
+  [
+    parsedQuery,
+    parseTextCorpusQuery("delta", { id: "delta" }),
+    parseTextCorpusQuery("missing", { id: "missing" }),
+  ],
+  { topK: 3, snippetWindow: 1 },
+);
+
+if (retrievalResult.schemaVersion !== textCorpusRetrievalSchemaVersion) {
+  throw new Error("retrieval result should use the retrieval schema version");
+}
+
+if (!isTextCorpusRetrievalResultV1(retrievalResult)) {
+  throw new Error("retrieval result should satisfy the runtime contract");
+}
+
+function retrievalHits(queryId: string) {
+  const queryResult = retrievalResult.results.find((entry) => entry.query.id === queryId);
+  if (!queryResult) throw new Error(`missing retrieval query ${queryId}`);
+  return queryResult.hits;
+}
+
+const alphaBetaHits = retrievalHits("alpha-beta");
+if (alphaBetaHits.map((hit) => hit.docId).join(",") !== "doc-a") {
+  throw new Error("alpha-beta retrieval should return only positive-score hits");
+}
+expectNear(alphaBetaHits[0]?.score, 0.9159976869050851, "alpha-beta retrieval doc-a");
+if (alphaBetaHits[0]?.snippet?.text !== "alpha beta beta") {
+  throw new Error("retrieval snippet should expose the local token window");
+}
+const betaExplain = alphaBetaHits[0]?.explain.find((entry) => entry.term === "beta");
+expectNear(betaExplain?.contribution, 0.9159976869050851, "alpha-beta beta contribution");
+
+const deltaHits = retrievalHits("delta");
+if (deltaHits.map((hit) => hit.docId).join(",") !== "doc-c") {
+  throw new Error("delta retrieval should return doc-c");
+}
+expectNear(deltaHits[0]?.score, 0.9968210122202397, "delta retrieval doc-c");
+
+if (retrievalHits("missing").length !== 0) {
+  throw new Error("missing query should return no positive-score hits");
+}
+
+const repeatedRetrieval = searchTextCorpusRetrievalIndex(retrievalIndex, [parsedQuery], { topK: 3 });
+const repeatedRetrievalAgain = searchTextCorpusRetrievalIndex(retrievalIndex, [parsedQuery], { topK: 3 });
+if (JSON.stringify(repeatedRetrieval) !== JSON.stringify(repeatedRetrievalAgain)) {
+  throw new Error("retrieval output should be deterministic for identical inputs");
+}
+
 void expectedPackageName;
 void expectedSchemaVersion;
 void expectedScoringSchemaVersion;
+void expectedRetrievalSchemaVersion;

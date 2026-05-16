@@ -78,15 +78,16 @@
     {
       "name": "@ismail-elkorchi/textcorpus",
       "status": "slice-proven",
-      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, and frozen-scope TF-IDF/BM25 scoring are implemented.",
+      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval are implemented.",
       "evidence": [
         "explicit-token corpus tests",
         "fingerprint index tests",
         "frozen TF-IDF/BM25 corpus",
+        "frozen retrieval fixture",
         "dist export readiness metadata"
       ],
       "limitations": [
-        "No full IR index, query language, ranking evaluation, snippets, or large corpora",
+        "No large-corpus index, fielded query language, relevance benchmark, streaming retrieval, or broad multilingual retrieval fixture set",
         "Package remains private until broader release gates pass"
       ]
     },
@@ -221,7 +222,26 @@
         "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
       "limitations": [
-        "No full retrieval engine, query parser, snippets, or relevance benchmark"
+        "No large-corpus relevance benchmark, fielded weighting, or performance proof"
+      ]
+    },
+    {
+      "id": "nlp-retrieval",
+      "status": "slice-proven",
+      "scope": "Deterministic query parsing, inverted-index lookup, BM25 ranking, snippets, and explain output exist only for the frozen explicit-token corpus.",
+      "evidence": [
+        "docs/specs/retrieval-readiness.md",
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/expected/retrieval-smoke.json",
+        "schemas/retrieval-expected-v1.schema.json",
+        "packages/textcorpus/src/index.ts",
+        "packages/textcorpus/test/index.test.ts",
+        "tools/validate-retrieval-feature.mjs",
+        "fixtures/reports/nlp-retrieval/conformance-report.json"
+      ],
+      "limitations": [
+        "No large-corpus index, fielded query language, relevance benchmark, streaming index, or broad multilingual retrieval fixture set is implemented",
+        "Behavior uses explicit tokens from the frozen corpus fixture"
       ]
     },
     {

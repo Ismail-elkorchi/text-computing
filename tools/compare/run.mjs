@@ -57,6 +57,14 @@ const TASKS = {
     conformanceReportRefs: ["fixtures/reports/nlp-dependency-parser/conformance-report.json"],
     knownGap: "Dependency parser behavior remains limited to frozen slices; this command validates comparator captures and feature output.",
   },
+  retrieval: {
+    taskId: "nlp-retrieval",
+    validatorCommands: [["node", "tools/validate-retrieval-feature.mjs"]],
+    comparisonDir: null,
+    comparisonSchema: null,
+    conformanceReportRefs: ["fixtures/reports/nlp-retrieval/conformance-report.json"],
+    knownGap: "Retrieval behavior remains limited to a frozen explicit-token corpus; this command validates feature output without external comparator captures.",
+  },
 };
 
 const taskArg = process.argv[2] ?? "all";

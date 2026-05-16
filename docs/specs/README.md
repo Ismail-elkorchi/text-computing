@@ -13,6 +13,7 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-rule-backed-ner-research-ledger.md`](nlp-rule-backed-ner-research-ledger.md) — research ledger for rule-backed NER readiness.
 - [`corpus-tfidf-bm25-readiness.md`](corpus-tfidf-bm25-readiness.md) — readiness gate for issue `#14`.
 - [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
+- [`retrieval-readiness.md`](retrieval-readiness.md) — frozen-scope retrieval gate over explicit-token corpus fixtures.
 - [`conllu-dependency-readiness.md`](conllu-dependency-readiness.md) — fixture-scope CoNLL-U / Universal Dependencies import-export round-trip gate.
 - [`nlp-conllu-dependency-research-ledger.md`](nlp-conllu-dependency-research-ledger.md) — research ledger for CoNLL-U / UD round-trip work.
 - [`dependency-parser-readiness.md`](dependency-parser-readiness.md) — readiness gate and frozen-slice evidence for deterministic dependency parsing.

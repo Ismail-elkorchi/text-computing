@@ -212,9 +212,10 @@
       "supportStatus": "slice-proven",
       "evidenceRefs": [
         "docs/specs/textcorpus-collection-contract.md",
-        "fixtures/corpus-tfidf-bm25/slices.json"
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/retrieval/slices.json"
       ],
-      "nextGate": "Add retrieval readiness before query, snippet, and relevance behavior."
+      "nextGate": "Add relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance thresholds."
     },
     {
       "packageName": "@ismail-elkorchi/textprotocol",
@@ -303,7 +304,21 @@
         "docs/specs/corpus-tfidf-bm25-readiness.md",
         "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
-      "nextGate": "Add retrieval readiness with query, snippet, and relevance fixtures."
+      "nextGate": "Add larger corpora, relevance-linked retrieval evaluation, field weighting, and performance thresholds."
+    },
+    {
+      "taskId": "nlp-retrieval",
+      "supportStatus": "slice-proven",
+      "languageTier": "corpus-backed",
+      "evidenceRefs": [
+        "docs/specs/retrieval-readiness.md",
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/expected/retrieval-smoke.json",
+        "schemas/retrieval-expected-v1.schema.json",
+        "fixtures/reports/nlp-retrieval/conformance-report.json",
+        "tools/validate-retrieval-feature.mjs"
+      ],
+      "nextGate": "Add relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance thresholds."
     },
     {
       "taskId": "nlp-conllu-dependency-roundtrip",
