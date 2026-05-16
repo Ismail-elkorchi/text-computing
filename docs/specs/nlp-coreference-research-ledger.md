@@ -2,8 +2,9 @@
 
 ## Scope
 
-This ledger covers readiness for mention detection and coreference-chain representation over explicit
-text spans. It does not define discourse parsing, entity linking, or learned model training.
+This ledger covers frozen-slice behavior for mention detection and coreference-chain representation over
+explicit text spans. It does not define discourse parsing, entity linking, learned model training, or broad
+corpus behavior.
 
 ## Primary sources
 
@@ -35,4 +36,5 @@ instead of hidden behind one flat score.
 - Mention spans remain first-class.
 - Singleton mentions are preserved unless a later expected artifact explicitly excludes them.
 - Ambiguity becomes diagnostics rather than silent resolution.
-- Feature code must wait for expected outputs and executed comparator captures.
+- Frozen-slice behavior must stay limited to recorded expected outputs until executed comparator captures
+  and broader corpus slices are committed.

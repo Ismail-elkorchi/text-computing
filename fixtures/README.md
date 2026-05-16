@@ -21,7 +21,7 @@ validation.
 - [`conllu-dependency/`](conllu-dependency/) — valid, invalid, and expected-output CoNLL-U fixtures for dependency-target round-trip work.
 - [`dependency-parser/`](dependency-parser/) — frozen expected dependency arcs, comparator captures, and feature evidence for parser work.
 - [`relation-extraction/`](relation-extraction/) — readiness-only typed relation fixtures and negative controls.
-- [`coreference/`](coreference/) — readiness-only mention/chain fixtures and negative controls.
+- [`coreference/`](coreference/) — frozen mention/chain fixtures, expected outputs, and negative controls.
 - [`multilingual-support/`](multilingual-support/) — support-tier matrix and readiness-only script fixtures for multilingual evidence control.
 - [`performance/`](performance/) — performance gate requirements for future operational claims.
 - [`package-release/`](package-release/) — package release-track and release-gate requirements.

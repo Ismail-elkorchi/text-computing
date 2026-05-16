@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-coreference",
+  "sliceId": "es-pronoun",
+  "mentions": [
+    {
+      "id": "mention-1",
+      "kind": "proper",
+      "target": {
+        "startCU": 0,
+        "endCU": 5,
+        "text": "Lucía"
+      }
+    },
+    {
+      "id": "mention-2",
+      "kind": "nominal",
+      "target": {
+        "startCU": 15,
+        "endCU": 26,
+        "text": "el cuaderno"
+      }
+    },
+    {
+      "id": "mention-3",
+      "kind": "pronoun",
+      "target": {
+        "startCU": 29,
+        "endCU": 33,
+        "text": "ella"
+      }
+    },
+    {
+      "id": "mention-4",
+      "kind": "pronoun",
+      "target": {
+        "startCU": 34,
+        "endCU": 36,
+        "text": "lo"
+      }
+    }
+  ],
+  "chains": [
+    {
+      "id": "chain-1",
+      "mentionIds": ["mention-1", "mention-3"]
+    },
+    {
+      "id": "chain-2",
+      "mentionIds": ["mention-2", "mention-4"]
+    }
+  ]
+}

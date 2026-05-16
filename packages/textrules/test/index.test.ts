@@ -1,6 +1,8 @@
 import { isTextConformanceReportV1 } from "@ismail-elkorchi/textconformance";
 import {
   isTextDocDocumentV1,
+  type TextDocCoreferenceChainAnnotation,
+  type TextDocCoreferenceMentionAnnotation,
   type TextDocDependencyAnnotation,
   type TextDocDocumentV1,
   type TextDocEntityAnnotation,
@@ -8,10 +10,13 @@ import {
 } from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
+  analyzeCoreference,
   analyzeRelationExtraction,
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
   analyzeDependencyParser,
+  createCoreferenceConformanceReport,
+  createCoreferenceResultEnvelope,
   createDependencyParserConformanceReport,
   createDependencyParserResultEnvelope,
   createRelationExtractionConformanceReport,
@@ -699,6 +704,169 @@ const unsupportedRelation = analyzeRelationExtraction({
 
 if (!unsupportedRelation.diagnostics.some((diagnostic) => diagnostic.code === "unsupported-relation-pattern")) {
   throw new Error("unsupported relation text should emit an explicit diagnostic");
+}
+
+const expectedCoreference = {
+  "en-pronoun": {
+    text: "Mira checked the sensor because she calibrated it yesterday.",
+    languageHint: "en",
+    mentions: [
+      { id: "mention-1", kind: "proper", target: { startCU: 0, endCU: 4, text: "Mira" } },
+      { id: "mention-2", kind: "nominal", target: { startCU: 13, endCU: 23, text: "the sensor" } },
+      { id: "mention-3", kind: "pronoun", target: { startCU: 32, endCU: 35, text: "she" } },
+      { id: "mention-4", kind: "pronoun", target: { startCU: 47, endCU: 49, text: "it" } },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1", "mention-3"] },
+      { id: "chain-2", mentionIds: ["mention-2", "mention-4"] },
+    ],
+  },
+  "en-nominal": {
+    text: "Northwind Labs released the report. The company archived the draft.",
+    languageHint: "en",
+    mentions: [
+      { id: "mention-1", kind: "proper", target: { startCU: 0, endCU: 14, text: "Northwind Labs" } },
+      { id: "mention-2", kind: "nominal", target: { startCU: 36, endCU: 47, text: "The company" } },
+    ],
+    chains: [{ id: "chain-1", mentionIds: ["mention-1", "mention-2"] }],
+  },
+  "es-pronoun": {
+    text: "Lucía encontró el cuaderno y ella lo guardó.",
+    languageHint: "es",
+    mentions: [
+      { id: "mention-1", kind: "proper", target: { startCU: 0, endCU: 5, text: "Lucía" } },
+      { id: "mention-2", kind: "nominal", target: { startCU: 15, endCU: 26, text: "el cuaderno" } },
+      { id: "mention-3", kind: "pronoun", target: { startCU: 29, endCU: 33, text: "ella" } },
+      { id: "mention-4", kind: "pronoun", target: { startCU: 34, endCU: 36, text: "lo" } },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1", "mention-3"] },
+      { id: "chain-2", mentionIds: ["mention-2", "mention-4"] },
+    ],
+  },
+  "ar-pronoun": {
+    text: "قرأت سلمى الرسالة ثم حفظتها.",
+    languageHint: "ar",
+    mentions: [
+      { id: "mention-1", kind: "proper", target: { startCU: 5, endCU: 9, text: "سلمى" } },
+      { id: "mention-2", kind: "nominal", target: { startCU: 10, endCU: 17, text: "الرسالة" } },
+      { id: "mention-3", kind: "pronoun", target: { startCU: 25, endCU: 27, text: "ها" } },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1"], diagnostics: ["singleton-control"] },
+      { id: "chain-2", mentionIds: ["mention-2", "mention-3"] },
+    ],
+  },
+  "en-ambiguous": {
+    text: "Mira called Jana after she reviewed the file.",
+    languageHint: "en",
+    mentions: [
+      { id: "mention-1", kind: "proper", target: { startCU: 0, endCU: 4, text: "Mira" } },
+      { id: "mention-2", kind: "proper", target: { startCU: 12, endCU: 16, text: "Jana" } },
+      { id: "mention-3", kind: "pronoun", target: { startCU: 23, endCU: 26, text: "she" } },
+      { id: "mention-4", kind: "singleton", target: { startCU: 36, endCU: 44, text: "the file" } },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1"], diagnostics: ["candidate-antecedent-for:mention-3"] },
+      { id: "chain-2", mentionIds: ["mention-2"], diagnostics: ["candidate-antecedent-for:mention-3"] },
+      { id: "chain-3", mentionIds: ["mention-3"], diagnostics: ["ambiguous-antecedent"] },
+      { id: "chain-4", mentionIds: ["mention-4"], diagnostics: ["singleton-control"] },
+    ],
+  },
+} as const;
+
+type CoreferenceSliceId = keyof typeof expectedCoreference;
+
+function coreferenceProjection(document: TextDocDocumentV1) {
+  const mentionLayer = document.layers.find((layer) => layer.id === "coreference-mentions");
+  const chainLayer = document.layers.find((layer) => layer.id === "coreference-chains");
+  if (!mentionLayer || !chainLayer) throw new Error("coreference document is missing expected layers");
+  return {
+    mentions: mentionLayer.annotations.map((annotation) => {
+      const mention = annotation as TextDocCoreferenceMentionAnnotation;
+      const target = mention.targets[0];
+      if (!target || target.kind !== "span") throw new Error(`bad coreference mention target ${mention.id}`);
+      return {
+        id: mention.id,
+        kind: mention.mentionType,
+        target: {
+          startCU: target.startCU,
+          endCU: target.endCU,
+          text: mention.text,
+        },
+      };
+    }),
+    chains: chainLayer.annotations.map((annotation) => {
+      const chain = annotation as TextDocCoreferenceChainAnnotation;
+      return {
+        id: chain.id,
+        mentionIds: chain.mentionIds,
+        ...(chain.notes && chain.notes.length > 0 ? { diagnostics: chain.notes } : {}),
+      };
+    }),
+  };
+}
+
+for (const sliceId of Object.keys(expectedCoreference) as CoreferenceSliceId[]) {
+  const expectedOutput = expectedCoreference[sliceId];
+  const coreferenceResult = analyzeCoreference({
+    documentId: `coreference:${sliceId}`,
+    text: expectedOutput.text,
+    sourceId: sliceId,
+    languageHint: expectedOutput.languageHint,
+  });
+
+  if (!isTextDocDocumentV1(coreferenceResult.document)) {
+    throw new Error(`coreference result for ${sliceId} should satisfy textdoc`);
+  }
+
+  if (
+    JSON.stringify(coreferenceProjection(coreferenceResult.document)) !==
+    JSON.stringify({
+      mentions: expectedOutput.mentions,
+      chains: expectedOutput.chains,
+    })
+  ) {
+    throw new Error(`coreference output for ${sliceId} should match the recorded expected output`);
+  }
+
+  const coreferenceEnvelope = createCoreferenceResultEnvelope(coreferenceResult, {
+    producerVersion: "0.0.0",
+    referenceId: sliceId,
+  });
+  if (!isTextProtocolResultEnvelopeV1(coreferenceEnvelope)) {
+    throw new Error(`coreference envelope for ${sliceId} should satisfy textprotocol`);
+  }
+
+  const coreferenceReport = createCoreferenceConformanceReport(coreferenceEnvelope, {
+    expectedArtifactPath: `fixtures/coreference/expected/${sliceId}.json`,
+    matchesExpected: true,
+  });
+  if (!isTextConformanceReportV1(coreferenceReport)) {
+    throw new Error(`coreference report for ${sliceId} should satisfy textconformance`);
+  }
+}
+
+const unsupportedCoreference = analyzeCoreference({
+  documentId: "coreference:unsupported",
+  text: "The archive opened at noon.",
+  sourceId: "unsupported",
+  languageHint: "en",
+});
+
+if (!unsupportedCoreference.diagnostics.some((diagnostic) => diagnostic.code === "unsupported-coreference-pattern")) {
+  throw new Error("unsupported coreference text should emit an explicit diagnostic");
+}
+
+const ambiguousCoreference = analyzeCoreference({
+  documentId: "coreference:ambiguous",
+  text: expectedCoreference["en-ambiguous"].text,
+  sourceId: "en-ambiguous",
+  languageHint: "en",
+});
+
+if (!ambiguousCoreference.diagnostics.some((diagnostic) => diagnostic.code === "ambiguous-antecedent")) {
+  throw new Error("ambiguous coreference slice should emit an explicit ambiguity diagnostic");
 }
 
 const expectedDependencyParser = {

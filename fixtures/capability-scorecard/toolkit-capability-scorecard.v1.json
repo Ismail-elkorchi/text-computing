@@ -369,15 +369,21 @@
     },
     {
       "taskId": "nlp-coreference",
-      "supportStatus": "readiness-only",
+      "supportStatus": "slice-proven",
       "languageTier": "fixture-proven",
       "evidenceRefs": [
         "docs/specs/coreference-readiness.md",
         "fixtures/coreference/slices.json",
+        "fixtures/coreference/expected/ar-pronoun.json",
+        "fixtures/coreference/expected/en-ambiguous.json",
+        "fixtures/coreference/expected/en-nominal.json",
+        "fixtures/coreference/expected/en-pronoun.json",
+        "fixtures/coreference/expected/es-pronoun.json",
         "fixtures/reports/nlp-coreference/conformance-report.json",
+        "packages/textrules/test/index.test.ts",
         "tools/validate-coreference-readiness.mjs"
       ],
-      "nextGate": "Record expected outputs and executed comparator captures before feature behavior."
+      "nextGate": "Add executed external comparator captures and corpus evaluation before wider coreference behavior."
     }
   ],
   "releaseGates": [

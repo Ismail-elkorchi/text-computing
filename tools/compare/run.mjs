@@ -80,7 +80,7 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-coreference/conformance-report.json"],
-    knownGap: "Coreference is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior.",
+    knownGap: "Coreference behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures.",
   },
 };
 

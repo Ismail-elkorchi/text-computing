@@ -8,3 +8,4 @@
 - Add deterministic dependency-parser behavior for the frozen dependency slices.
 - Add reusable lexical token-pattern matching, capture, and token-text rewrite primitives.
 - Add deterministic typed relation extraction for frozen repository-authored slices.
+- Add deterministic coreference mention and chain output for frozen repository-authored slices.

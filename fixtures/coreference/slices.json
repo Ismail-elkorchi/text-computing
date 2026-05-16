@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "taskId": "nlp-coreference",
-  "supportStatus": "readiness-only",
-  "expectedOutputStatus": "schema-defined",
+  "supportStatus": "slice-proven",
+  "expectedOutputStatus": "recorded",
   "comparatorStatus": "capability-recorded",
   "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
   "chainPolicy": {
