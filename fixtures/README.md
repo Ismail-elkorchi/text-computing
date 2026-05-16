@@ -23,6 +23,7 @@ validation.
 - [`relation-extraction/`](relation-extraction/) — readiness-only typed relation fixtures and negative controls.
 - [`coreference/`](coreference/) — readiness-only mention/chain fixtures and negative controls.
 - [`multilingual-support/`](multilingual-support/) — support-tier matrix and readiness-only script fixtures for multilingual evidence control.
+- [`performance/`](performance/) — performance gate requirements for future operational claims.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue

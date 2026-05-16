@@ -35,6 +35,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`coreference-slices-v1.schema.json`](coreference-slices-v1.schema.json) — readiness fixture schema for coreference.
 - [`coreference-expected-v1.schema.json`](coreference-expected-v1.schema.json) — expected-output schema for future coreference behavior.
 - [`multilingual-support-tiers-v1.schema.json`](multilingual-support-tiers-v1.schema.json) — multilingual support-tier matrix schema.
+- [`performance-gates-v1.schema.json`](performance-gates-v1.schema.json) — performance gate requirement schema.
 - [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.
 - [`textdoc-document-v1.schema.json`](textdoc-document-v1.schema.json) — document annotation model schema for issue `#11`.

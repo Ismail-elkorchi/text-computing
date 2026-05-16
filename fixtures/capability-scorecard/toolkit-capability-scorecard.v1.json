@@ -125,6 +125,9 @@
       "measurement": "Throughput, memory, and scale thresholds are declared before broad operational claims.",
       "gate": "Broad corpus or pipeline claims require performance regression thresholds.",
       "evidenceRequired": [
+        "docs/specs/performance-gates.md",
+        "fixtures/performance/gates.v1.json",
+        "tools/validate-performance-gates.mjs",
         "tools/check-coverage.mjs",
         "tools/fuzz/semantic.mjs"
       ]

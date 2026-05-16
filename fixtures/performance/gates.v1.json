@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "scope": "performance-gates",
+  "status": "thresholds-defined",
+  "gates": [
+    {
+      "id": "textdoc-roundtrip",
+      "packageName": "@ismail-elkorchi/textdoc",
+      "surface": "Document validation and round-trip serialization",
+      "dimensions": ["throughput", "memory", "regression-threshold"],
+      "scalePolicy": "Future broad document claims require batch fixtures with declared document count, token count, annotation count, and maximum serialized size.",
+      "regressionPolicy": "Future measurements must store baseline environment, command, input hash, and threshold before becoming required checks.",
+      "evidenceRefs": ["tools/check-coverage.mjs", "tools/fuzz/semantic.mjs"],
+      "limitations": ["Current gate records measurement requirements; it does not persist timing or memory measurements."]
+    },
+    {
+      "id": "textpipeline-determinism",
+      "packageName": "@ismail-elkorchi/textpipeline",
+      "surface": "Synchronous processor execution",
+      "dimensions": ["throughput", "memory", "streaming", "regression-threshold"],
+      "scalePolicy": "Streaming, async, batching, and cache claims require separate fixture classes and replay commands.",
+      "regressionPolicy": "Future measurements must fail on threshold regression only after a stable benchmark host policy exists.",
+      "evidenceRefs": ["docs/specs/textpipeline-processor-contract.md", "tools/fuzz/semantic.mjs"],
+      "limitations": ["Current implementation is synchronous and in-memory."]
+    },
+    {
+      "id": "textcorpus-retrieval",
+      "packageName": "@ismail-elkorchi/textcorpus",
+      "surface": "Corpus scoring and retrieval",
+      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "scalePolicy": "Large-corpus claims require document-count, token-count, query-count, and index-size thresholds.",
+      "regressionPolicy": "Future retrieval measurements must pin corpus hash, query hash, formula, and ordering policy.",
+      "evidenceRefs": ["fixtures/retrieval/slices.json", "tools/validate-retrieval-feature.mjs"],
+      "limitations": ["Current retrieval proof uses a small explicit-token corpus only."]
+    },
+    {
+      "id": "textpack-lookup",
+      "packageName": "@ismail-elkorchi/textpack",
+      "surface": "Pack manifest validation and resource lookup",
+      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "scalePolicy": "Broad resource-pack claims require resource-count, overlay-count, and lookup-count thresholds.",
+      "regressionPolicy": "Future measurements must include duplicate and overlay-conflict controls.",
+      "evidenceRefs": ["docs/specs/textpack-resource-manifest.md", "tools/validate-textpack-resources.mjs"],
+      "limitations": ["Current resource fixtures are small contract fixtures."]
+    },
+    {
+      "id": "textconformance-reporting",
+      "packageName": "@ismail-elkorchi/textconformance",
+      "surface": "Conformance report validation and summarization",
+      "dimensions": ["throughput", "memory", "regression-threshold"],
+      "scalePolicy": "Broad conformance claims require report-count, check-count, evidence-ref-count, and render-size thresholds.",
+      "regressionPolicy": "Future measurements must distinguish validation cost from report rendering cost.",
+      "evidenceRefs": ["fixtures/reports/task-evidence-manifest.v1.json", "tools/validate-task-evidence-reports.mjs"],
+      "limitations": ["Current runner behavior is minimal and not a benchmark harness."]
+    }
+  ],
+  "notes": [
+    "This file records performance gate requirements before broad operational claims.",
+    "It intentionally avoids unstable wall-clock assertions until benchmark-host policy is defined."
+  ]
+}
