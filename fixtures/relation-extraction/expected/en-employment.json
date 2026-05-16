@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-relation-extraction",
+  "sliceId": "en-employment",
+  "relations": [
+    {
+      "id": "relation-1",
+      "label": "employed-by",
+      "arguments": [
+        {
+          "role": "employee",
+          "target": {
+            "startCU": 0,
+            "endCU": 4,
+            "text": "Mira"
+          }
+        },
+        {
+          "role": "employer",
+          "target": {
+            "startCU": 15,
+            "endCU": 29,
+            "text": "Northwind Labs"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "startCU": 5,
+          "endCU": 14,
+          "text": "works for"
+        }
+      ]
+    },
+    {
+      "id": "relation-2",
+      "label": "located-in",
+      "arguments": [
+        {
+          "role": "entity",
+          "target": {
+            "startCU": 15,
+            "endCU": 29,
+            "text": "Northwind Labs"
+          }
+        },
+        {
+          "role": "place",
+          "target": {
+            "startCU": 33,
+            "endCU": 39,
+            "text": "Boston"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "startCU": 30,
+          "endCU": 32,
+          "text": "in"
+        }
+      ]
+    }
+  ]
+}

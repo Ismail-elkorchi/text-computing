@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-relation-extraction",
+  "sliceId": "es-location",
+  "relations": [
+    {
+      "id": "relation-1",
+      "label": "located-in",
+      "arguments": [
+        {
+          "role": "entity",
+          "target": {
+            "startCU": 3,
+            "endCU": 18,
+            "text": "archivo central"
+          }
+        },
+        {
+          "role": "place",
+          "target": {
+            "startCU": 27,
+            "endCU": 34,
+            "text": "Sevilla"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "startCU": 19,
+          "endCU": 26,
+          "text": "está en"
+        }
+      ]
+    }
+  ]
+}

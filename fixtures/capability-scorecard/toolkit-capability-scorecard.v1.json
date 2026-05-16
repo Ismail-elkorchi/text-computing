@@ -351,15 +351,21 @@
     },
     {
       "taskId": "nlp-relation-extraction",
-      "supportStatus": "readiness-only",
+      "supportStatus": "slice-proven",
       "languageTier": "fixture-proven",
       "evidenceRefs": [
         "docs/specs/relation-extraction-readiness.md",
         "fixtures/relation-extraction/slices.json",
+        "fixtures/relation-extraction/expected/en-employment.json",
+        "fixtures/relation-extraction/expected/en-cross-sentence.json",
+        "fixtures/relation-extraction/expected/es-location.json",
+        "fixtures/relation-extraction/expected/ar-location.json",
+        "fixtures/relation-extraction/expected/en-no-relation.json",
         "fixtures/reports/nlp-relation-extraction/conformance-report.json",
+        "packages/textrules/test/index.test.ts",
         "tools/validate-relation-extraction-readiness.mjs"
       ],
-      "nextGate": "Record expected outputs and executed comparator captures before feature behavior."
+      "nextGate": "Add executed external comparator captures and corpus evaluation before wider relation extraction behavior."
     },
     {
       "taskId": "nlp-coreference",

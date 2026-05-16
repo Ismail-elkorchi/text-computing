@@ -15,43 +15,53 @@
   },
   "checks": [
     {
-      "checkId": "readiness-fixtures-recorded",
+      "checkId": "frozen-fixtures",
       "status": "pass",
-      "message": "Relation extraction readiness fixtures and negative controls are committed.",
-      "evidenceRefs": ["fixtures/relation-extraction/slices.json"]
+      "message": "Relation extraction frozen fixtures and negative controls are committed.",
+      "evidenceRefs": [
+        "fixtures/relation-extraction/slices.json"
+      ]
     },
     {
-      "checkId": "schemas-recorded",
+      "checkId": "expected-output",
       "status": "pass",
-      "message": "Relation extraction readiness and expected-output schemas are committed.",
+      "message": "Relation extraction expected outputs are recorded for each frozen slice.",
+      "evidenceRefs": [
+        "fixtures/relation-extraction/expected/en-employment.json",
+        "fixtures/relation-extraction/expected/en-cross-sentence.json",
+        "fixtures/relation-extraction/expected/es-location.json",
+        "fixtures/relation-extraction/expected/ar-location.json",
+        "fixtures/relation-extraction/expected/en-no-relation.json"
+      ]
+    },
+    {
+      "checkId": "schema-validation",
+      "status": "pass",
+      "message": "Relation extraction slice and expected-output schemas validate.",
       "evidenceRefs": [
         "schemas/relation-extraction-slices-v1.schema.json",
         "schemas/relation-extraction-expected-v1.schema.json"
       ]
     },
     {
-      "checkId": "readiness-doc-recorded",
+      "checkId": "feature-validator",
       "status": "pass",
-      "message": "Public readiness and research-ledger documents describe the support boundary.",
+      "message": "Generated relation extraction outputs match recorded expected artifacts.",
       "evidenceRefs": [
-        "docs/specs/relation-extraction-readiness.md",
-        "docs/specs/nlp-relation-extraction-research-ledger.md"
+        "tools/validate-relation-extraction-readiness.mjs",
+        "packages/textrules/test/index.test.ts"
       ]
     },
     {
-      "checkId": "validator-recorded",
-      "status": "pass",
-      "message": "A repository validator checks the readiness artifacts.",
-      "evidenceRefs": ["tools/validate-relation-extraction-readiness.mjs"]
-    },
-    {
-      "checkId": "feature-code",
+      "checkId": "external-comparator-captures",
       "status": "not-run",
-      "message": "No relation extraction feature behavior is implemented in this readiness gate.",
-      "evidenceRefs": ["docs/specs/relation-extraction-readiness.md"]
+      "message": "No executed external relation extraction comparator captures are committed in this gate.",
+      "evidenceRefs": [
+        "docs/specs/nlp-relation-extraction-research-ledger.md"
+      ]
     }
   ],
   "notes": [
-    "This report records readiness-only evidence and does not claim relation extraction behavior."
+    "This report records slice-proven relation extraction evidence for frozen repository-authored short texts only; it does not claim external comparator-backed or corpus-level relation extraction behavior."
   ]
 }

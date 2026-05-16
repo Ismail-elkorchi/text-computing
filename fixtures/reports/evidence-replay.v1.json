@@ -306,14 +306,14 @@
             "tools/validate-relation-extraction-readiness.mjs"
           ],
           "path": "tools/validate-relation-extraction-readiness.mjs",
-          "sha256": "7c238d324e21a6e06b0dad99c2fb28a737fe65277e3c15aca210924132e3def7"
+          "sha256": "6d7b928e92ccca8b202de9869a9d8c1dd6210bc42218035475431691bbafcbd3"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-relation-extraction/conformance-report.json"
       ],
-      "knownGap": "Relation extraction is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior."
+      "knownGap": "Relation extraction behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures."
     },
     {
       "task": "coreference",
