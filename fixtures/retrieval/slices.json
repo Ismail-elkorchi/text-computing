@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-retrieval",
+  "supportStatus": "slice-proven",
+  "corpusRef": "fixtures/corpus-tfidf-bm25/slices.json#corpus-tfidf-bm25-smoke",
+  "expectedPath": "fixtures/retrieval/expected/retrieval-smoke.json",
+  "features": [
+    "query-parser",
+    "inverted-index",
+    "bm25-ranking",
+    "snippet",
+    "explain",
+    "missing-query-control",
+    "stable-ordering"
+  ],
+  "notes": [
+    "Retrieval uses the explicit-token corpus already frozen for TF-IDF/BM25 evidence."
+  ]
+}

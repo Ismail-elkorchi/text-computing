@@ -2,7 +2,7 @@
 
 This roadmap defines the next implementation gates after the current slice-proven foundation. It exists to prevent closed issues from being mistaken for broad NLP parity.
 
-The CoNLL-U / UD interchange row is now tracked as fixture-scope `slice-proven` in support status. That means import/export round-trip behavior exists for frozen repository-authored fixtures, not dependency parser behavior.
+The CoNLL-U / UD interchange and dependency parser rows are now tracked as fixture-scope `slice-proven` in support status. That means import/export round-trip behavior and deterministic parser arcs exist for frozen repository-authored fixtures, not broad UD treebank behavior.
 
 ## Gate rules
 
@@ -16,11 +16,11 @@ The CoNLL-U / UD interchange row is now tracked as fixture-scope `slice-proven` 
 | Order | Task surface | Owning package(s) | Readiness artifacts required before code |
 | --- | --- | --- | --- |
 | 1 | CoNLL-U / UD import-export and dependency annotation model | `textdoc`, `textprotocol`, `textconformance` | Completed for frozen repository-authored fixtures; broaden only with explicit fixture and license gates. |
-| 2 | Deterministic dependency parsing baseline | `textrules`, `textpipeline`, `textdoc` | Readiness-only expected arcs and one executed spaCy comparator capture are present; broader executed comparator captures are still required before feature code. |
+| 2 | Deterministic dependency parsing baseline | `textrules`, `textpipeline`, `textdoc` | Completed for frozen en-basic, es-mwt, and ar-nonlatin slices; broaden only with explicit UD slices, comparator captures, and performance gates. |
 | 3 | Chunking and relation extraction | `textrules`, `textdoc`, `textconformance` | Typed relation schema, span evidence policy, negative controls, comparator/corpus freeze. |
 | 4 | Entity linking | `textrules`, `textpack`, `textdoc` | Canonical entity identifier model, NIL policy, KB provenance fixture, disambiguation negative controls. |
 | 5 | Coreference | `textdoc`, `textrules`, `textconformance` | Mention/chain schema, ambiguity/loss policy, multilingual corpus slices, comparator captures. |
-| 6 | Full retrieval | `textcorpus`, `textpipeline`, `textconformance` | Inverted-index contract, query model, BM25 explanation format, snippets, relevance judgments, and performance budgets. |
+| 6 | Full retrieval | `textcorpus`, `textpipeline`, `textconformance` | Query parsing, inverted-index lookup, BM25 explanation, snippets, and frozen-corpus validation are present; broaden only with relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance budgets. |
 | 7 | `textlab` inspection tools | `textlab`, all public packages | Support-status inspection is present; remaining gates are fixture replay commands, annotation query examples, report rendering tests, and comparator replay. |
 
 ## Research evidence requirements

@@ -1,0 +1,66 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-retrieval",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-retrieval",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-16T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "fixture-recorded",
+      "status": "pass",
+      "message": "Frozen retrieval slice and expected output are committed.",
+      "evidenceRefs": [
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/expected/retrieval-smoke.json"
+      ]
+    },
+    {
+      "checkId": "schema-recorded",
+      "status": "pass",
+      "message": "Expected retrieval output validates against a repository schema.",
+      "evidenceRefs": [
+        "schemas/retrieval-expected-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "feature-output-proof",
+      "status": "pass",
+      "message": "Retrieval index, query parsing, ranking, snippets, and explain output pass feature validation.",
+      "evidenceRefs": [
+        "packages/textcorpus/src/index.ts",
+        "packages/textcorpus/test/index.test.ts",
+        "tools/validate-retrieval-feature.mjs"
+      ]
+    },
+    {
+      "checkId": "corpus-link-recorded",
+      "status": "pass",
+      "message": "Retrieval behavior is tied to the explicit-token corpus fixture used for TF-IDF/BM25 evidence.",
+      "evidenceRefs": [
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status remains limited to the frozen retrieval corpus.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists retrieval evidence for a frozen explicit-token corpus only; it does not add large-corpus or relevance-benchmark support."
+  ]
+}

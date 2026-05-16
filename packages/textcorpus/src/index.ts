@@ -10,6 +10,7 @@ import {
 export const packageName = "@ismail-elkorchi/textcorpus" as const;
 export const textCorpusCollectionSchemaVersion = 1 as const;
 export const textCorpusScoringSchemaVersion = 1 as const;
+export const textCorpusRetrievalSchemaVersion = 1 as const;
 export const textCorpusTokenSource = "explicit-textdoc-token-layer" as const;
 export const textCorpusTfRawCountFormula = "tf.raw-count" as const;
 export const textCorpusDfDocumentCountFormula = "df.document-count" as const;
@@ -19,6 +20,7 @@ export const textCorpusBm25OkapiFormula = "bm25.okapi.k1-1.5.b-0.75" as const;
 export type PackageName = typeof packageName;
 export type TextCorpusCollectionSchemaVersion = typeof textCorpusCollectionSchemaVersion;
 export type TextCorpusScoringSchemaVersion = typeof textCorpusScoringSchemaVersion;
+export type TextCorpusRetrievalSchemaVersion = typeof textCorpusRetrievalSchemaVersion;
 export type TextCorpusTokenSource = typeof textCorpusTokenSource;
 export type TextCorpusFormulaId =
   | typeof textCorpusTfRawCountFormula
@@ -116,6 +118,80 @@ export interface TextCorpusScoringResultV1 {
   readonly tolerance: number;
   readonly documents: readonly TextCorpusDocumentTermScores[];
   readonly queries: readonly TextCorpusQueryScores[];
+}
+
+export interface TextCorpusParsedQuery {
+  readonly id: string;
+  readonly raw: string;
+  readonly tokens: readonly string[];
+}
+
+export interface TextCorpusParseQueryOptions {
+  readonly id?: string;
+}
+
+export interface TextCorpusPosting {
+  readonly docId: string;
+  readonly positions: readonly number[];
+}
+
+export interface TextCorpusRetrievalDocument {
+  readonly id: string;
+  readonly length: number;
+  readonly tokens: readonly string[];
+}
+
+export interface TextCorpusRetrievalIndexV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly formula: typeof textCorpusBm25OkapiFormula;
+  readonly documentOrder: readonly string[];
+  readonly termOrder: readonly string[];
+  readonly averageDocumentLength: number;
+  readonly documents: readonly TextCorpusRetrievalDocument[];
+  readonly invertedIndex: Readonly<Record<string, readonly TextCorpusPosting[]>>;
+}
+
+export interface TextCorpusRetrievalTermExplanation {
+  readonly term: string;
+  readonly tf: number;
+  readonly df: number;
+  readonly idf: number;
+  readonly contribution: number;
+}
+
+export interface TextCorpusRetrievalSnippet {
+  readonly text: string;
+  readonly tokenStart: number;
+  readonly tokenEnd: number;
+  readonly highlightedTerms: readonly string[];
+}
+
+export interface TextCorpusRetrievalHit {
+  readonly docId: string;
+  readonly score: number;
+  readonly snippet?: TextCorpusRetrievalSnippet;
+  readonly explain: readonly TextCorpusRetrievalTermExplanation[];
+}
+
+export interface TextCorpusRetrievalQueryResult {
+  readonly query: TextCorpusParsedQuery;
+  readonly hits: readonly TextCorpusRetrievalHit[];
+}
+
+export interface TextCorpusRetrievalSearchOptions {
+  readonly topK?: number;
+  readonly snippetWindow?: number;
+  readonly includeZeroScores?: boolean;
+}
+
+export interface TextCorpusRetrievalResultV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly formula: typeof textCorpusBm25OkapiFormula;
+  readonly results: readonly TextCorpusRetrievalQueryResult[];
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -306,6 +382,32 @@ function isDocumentScoreArray(value: unknown): value is readonly TextCorpusDocum
   );
 }
 
+function isPostingArray(value: unknown): value is readonly TextCorpusPosting[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        isRecord(entry) &&
+        isNonEmptyString(entry.docId) &&
+        Array.isArray(entry.positions) &&
+        entry.positions.every((position) => Number.isInteger(position) && position >= 0),
+    )
+  );
+}
+
+function isRetrievalDocument(value: unknown): value is TextCorpusRetrievalDocument {
+  if (!isRecord(value)) return false;
+  const length = value.length;
+  return (
+    isNonEmptyString(value.id) &&
+    typeof length === "number" &&
+    Number.isInteger(length) &&
+    length >= 0 &&
+    Array.isArray(value.tokens) &&
+    value.tokens.every((token) => typeof token === "string")
+  );
+}
+
 function validateEntry(entry: TextCorpusEntry): void {
   if (!isNonEmptyString(entry.id)) {
     throw new TypeError("textcorpus entry id must be a non-empty string");
@@ -421,6 +523,62 @@ export function isTextCorpusScoringResultV1(value: unknown): value is TextCorpus
         isRecord(entry) &&
         isNonEmptyString(entry.id) &&
         isDocumentScoreArray(entry.bm25),
+    )
+  );
+}
+
+export function isTextCorpusParsedQuery(value: unknown): value is TextCorpusParsedQuery {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    typeof value.raw === "string" &&
+    Array.isArray(value.tokens) &&
+    value.tokens.every((token) => typeof token === "string")
+  );
+}
+
+export function isTextCorpusRetrievalIndexV1(value: unknown): value is TextCorpusRetrievalIndexV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    value.formula === textCorpusBm25OkapiFormula &&
+    Array.isArray(value.documentOrder) &&
+    value.documentOrder.every((entry) => isNonEmptyString(entry)) &&
+    Array.isArray(value.termOrder) &&
+    value.termOrder.every((entry) => typeof entry === "string") &&
+    typeof value.averageDocumentLength === "number" &&
+    Number.isFinite(value.averageDocumentLength) &&
+    value.averageDocumentLength >= 0 &&
+    Array.isArray(value.documents) &&
+    value.documents.every((entry) => isRetrievalDocument(entry)) &&
+    isRecord(value.invertedIndex) &&
+    Object.values(value.invertedIndex).every((entry) => isPostingArray(entry))
+  );
+}
+
+export function isTextCorpusRetrievalResultV1(value: unknown): value is TextCorpusRetrievalResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    value.formula === textCorpusBm25OkapiFormula &&
+    Array.isArray(value.results) &&
+    value.results.every(
+      (entry) =>
+        isRecord(entry) &&
+        isTextCorpusParsedQuery(entry.query) &&
+        Array.isArray(entry.hits) &&
+        entry.hits.every(
+          (hit) =>
+            isRecord(hit) &&
+            isNonEmptyString(hit.docId) &&
+            typeof hit.score === "number" &&
+            Number.isFinite(hit.score) &&
+            Array.isArray(hit.explain),
+        ),
     )
   );
 }
@@ -664,5 +822,181 @@ export function computeTextCorpusScoring(
     tolerance: options.tolerance ?? 1e-12,
     documents,
     queries: queryScores,
+  };
+}
+
+function normalizeQueryTokens(raw: string): readonly string[] {
+  return raw
+    .normalize("NFC")
+    .toLocaleLowerCase("und")
+    .split(/[^\p{Letter}\p{Number}]+/u)
+    .filter((token) => token.length > 0);
+}
+
+export function parseTextCorpusQuery(
+  raw: string,
+  options: TextCorpusParseQueryOptions = {},
+): TextCorpusParsedQuery {
+  if (typeof raw !== "string") {
+    throw new TypeError("textcorpus query raw text must be a string");
+  }
+  const tokens = normalizeQueryTokens(raw);
+  const id = options.id ?? `query:${tokens.join("-") || "empty"}`;
+  if (!isNonEmptyString(id)) {
+    throw new TypeError("textcorpus parsed query id must be a non-empty string");
+  }
+  return { id, raw, tokens };
+}
+
+export function buildTextCorpusRetrievalIndex(
+  collection: TextCorpusCollectionV1,
+): TextCorpusRetrievalIndexV1 {
+  if (!isTextCorpusCollectionV1(collection)) {
+    throw new TypeError("textcorpus collection must satisfy TextCorpusCollectionV1");
+  }
+
+  const documents = collection.entries.map((entry) => {
+    const tokens = getEntryTokenTexts(entry);
+    return {
+      id: entry.id,
+      length: tokens.length,
+      tokens,
+    };
+  });
+  const documentOrder = documents.map((document) => document.id);
+  const postingsByTerm = new Map<string, Map<string, number[]>>();
+
+  for (const document of documents) {
+    for (const [position, token] of document.tokens.entries()) {
+      let postings = postingsByTerm.get(token);
+      if (postings === undefined) {
+        postings = new Map<string, number[]>();
+        postingsByTerm.set(token, postings);
+      }
+      const positions = postings.get(document.id) ?? [];
+      positions.push(position);
+      postings.set(document.id, positions);
+    }
+  }
+
+  const termOrder = [...postingsByTerm.keys()].sort(compareTerms);
+  const invertedIndex: Record<string, readonly TextCorpusPosting[]> = {};
+  for (const term of termOrder) {
+    const postings = postingsByTerm.get(term) ?? new Map<string, number[]>();
+    invertedIndex[term] = [...postings.entries()]
+      .sort(([leftDocId], [rightDocId]) => leftDocId.localeCompare(rightDocId))
+      .map(([docId, positions]) => ({ docId, positions }));
+  }
+
+  const averageDocumentLength =
+    documents.reduce((sum, document) => sum + document.length, 0) / Math.max(1, documents.length);
+
+  return {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    formula: textCorpusBm25OkapiFormula,
+    documentOrder,
+    termOrder,
+    averageDocumentLength,
+    documents,
+    invertedIndex,
+  };
+}
+
+function uniqueQueryTokens(tokens: readonly string[]): readonly string[] {
+  return [...new Set(tokens)].sort(compareTerms);
+}
+
+function positionsForTerm(index: TextCorpusRetrievalIndexV1, term: string, docId: string): readonly number[] {
+  return index.invertedIndex[term]?.find((posting) => posting.docId === docId)?.positions ?? [];
+}
+
+function createRetrievalSnippet(
+  document: TextCorpusRetrievalDocument,
+  queryTokens: readonly string[],
+  windowSize: number,
+): TextCorpusRetrievalSnippet | undefined {
+  const queryTokenSet = new Set(queryTokens);
+  const matchedPositions = document.tokens.flatMap((token, position) => (queryTokenSet.has(token) ? [position] : []));
+  if (matchedPositions.length === 0) return undefined;
+  const effectiveWindow = Math.max(0, Math.floor(windowSize));
+  const tokenStart = Math.max(0, Math.min(...matchedPositions) - effectiveWindow);
+  const tokenEnd = Math.min(document.tokens.length, Math.max(...matchedPositions) + effectiveWindow + 1);
+  const snippetTokens = document.tokens.slice(tokenStart, tokenEnd);
+  return {
+    text: snippetTokens.join(" "),
+    tokenStart,
+    tokenEnd,
+    highlightedTerms: [...new Set(snippetTokens.filter((token) => queryTokenSet.has(token)))].sort(compareTerms),
+  };
+}
+
+function scoreRetrievalDocument(
+  index: TextCorpusRetrievalIndexV1,
+  document: TextCorpusRetrievalDocument,
+  queryTokens: readonly string[],
+): {
+  readonly score: number;
+  readonly explain: readonly TextCorpusRetrievalTermExplanation[];
+} {
+  const explain = uniqueQueryTokens(queryTokens).map((term) => {
+    const positions = positionsForTerm(index, term, document.id);
+    const tf = positions.length;
+    const df = index.invertedIndex[term]?.length ?? 0;
+    const idf = bm25OkapiIdf(index.documents.length, df);
+    const contribution = bm25OkapiScore(tf, document.length, index.averageDocumentLength, idf);
+    return { term, tf, df, idf, contribution };
+  });
+  return {
+    score: explain.reduce((sum, entry) => sum + entry.contribution, 0),
+    explain,
+  };
+}
+
+export function searchTextCorpusRetrievalIndex(
+  index: TextCorpusRetrievalIndexV1,
+  queries: readonly TextCorpusParsedQuery[],
+  options: TextCorpusRetrievalSearchOptions = {},
+): TextCorpusRetrievalResultV1 {
+  if (!isTextCorpusRetrievalIndexV1(index)) {
+    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
+  }
+  if (!Array.isArray(queries) || !queries.every((query) => isTextCorpusParsedQuery(query))) {
+    throw new TypeError("textcorpus retrieval queries must be parsed query objects");
+  }
+  const topK = Math.max(0, Math.floor(options.topK ?? 10));
+  const snippetWindow = Math.max(0, Math.floor(options.snippetWindow ?? 2));
+  const documentById = new Map(index.documents.map((document) => [document.id, document]));
+
+  const results = queries.map((query) => {
+    const hits = index.documentOrder.flatMap((docId) => {
+      const document = documentById.get(docId);
+      if (document === undefined) return [];
+      const scored = scoreRetrievalDocument(index, document, query.tokens);
+      if (!options.includeZeroScores && scored.score <= 0) return [];
+      const snippet = createRetrievalSnippet(document, query.tokens, snippetWindow);
+      return [
+        {
+          docId,
+          score: scored.score,
+          ...(snippet ? { snippet } : {}),
+          explain: scored.explain,
+        },
+      ];
+    });
+    hits.sort((left, right) => right.score - left.score || left.docId.localeCompare(right.docId));
+    return {
+      query,
+      hits: hits.slice(0, topK),
+    };
+  });
+
+  return {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    corpusId: index.corpusId,
+    tokenSource: textCorpusTokenSource,
+    formula: textCorpusBm25OkapiFormula,
+    results,
   };
 }
