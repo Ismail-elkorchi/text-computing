@@ -321,9 +321,10 @@
       "languageTier": "comparator-backed",
       "evidenceRefs": [
         "docs/specs/dependency-parser-readiness.md",
-        "fixtures/dependency-parser/slices.json"
+        "fixtures/dependency-parser/slices.json",
+        "fixtures/dependency-parser/comparisons/stanza-1.12.json"
       ],
-      "nextGate": "Add executed parser comparator breadth and negative controls before parser behavior."
+      "nextGate": "Add broader UD treebank slices, performance thresholds, and JavaScript gap resolution before parser behavior."
     }
   ],
   "releaseGates": [

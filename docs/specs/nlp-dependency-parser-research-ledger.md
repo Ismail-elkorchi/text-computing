@@ -3,8 +3,8 @@
 ## Scope
 
 This ledger covers readiness for a deterministic dependency parsing baseline. It does not claim parser
-behavior. The current gate freezes expected arcs, one executed comparator capture, and remaining
-capability/gap records.
+behavior. The current gate freezes expected arcs, executed spaCy and Stanza comparator captures, direct
+UD/CoNLL-U validation, negative controls, and a JavaScript ecosystem gap record.
 
 ## Primary sources
 
@@ -25,16 +25,15 @@ capability/gap records.
 
 - `fixtures/dependency-parser/comparisons/spacy-3.8.json` records executed spaCy parser outputs for the
   frozen slices.
-- `fixtures/dependency-parser/comparisons/stanza-1.12.json` records the Stanza 1.12.0 parser artifact surface.
+- `fixtures/dependency-parser/comparisons/stanza-1.12.json` records executed Stanza 1.12.0 parser outputs for the frozen slices.
 - `fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json` records direct UD/CoNLL-U validation of the frozen expected arcs. It is fixture-format evidence, not parser model-output evidence.
 - `fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json` records that no committed JavaScript
   dependency-parser comparator is available in this readiness gate.
 
 ## Comparator limitations
 
-- Only the spaCy comparator has committed parser model-output capture in this gate.
-- spaCy/Stanza behavior is model- and language-package-dependent.
-- Stanza 1.12.0 execution remains uncommitted for this gate because its runtime depends on model assets that are not vendored in this repository.
+- spaCy and Stanza behavior is model- and language-package-dependent.
+- The Stanza capture depends on downloaded model assets; those model files are not vendored in this repository.
 - The UD validator capture proves frozen CoNLL-U row validity and expected-arc consistency; it does not prove parser behavior.
 - JavaScript ecosystem comparison remains a gap to revisit before feature implementation.
 
@@ -42,5 +41,5 @@ capability/gap records.
 
 - Parser feature code must not start from the assumption that CoNLL-U I/O equals parsing.
 - Parser output must target `textdoc` dependency annotations and pass through `textprotocol` and `textconformance`.
-- Additional executed comparator captures are mandatory before a parser feature PR.
+- Broader corpus and language slices are mandatory before a parser feature PR.
 - The first parser implementation must preserve ambiguity or diagnostic failures rather than silently choosing arcs.

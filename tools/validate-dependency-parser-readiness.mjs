@@ -158,10 +158,13 @@ expect(
 
 const requiredPhenomena = new Set([
   "root-arc",
+  "subject-arc",
   "object-arc",
   "punctuation-arc",
   "multiword-token",
   "non-english-latin-script",
+  "non-latin-script",
+  "right-to-left-script",
 ]);
 const seenPhenomena = new Set();
 const fixturesById = new Map();
@@ -174,6 +177,19 @@ for (const fixture of slices.fixtures) {
 }
 for (const phenomenon of requiredPhenomena) {
   expect(seenPhenomena.has(phenomenon), `Dependency parser readiness is missing ${phenomenon}.`);
+}
+
+const negativeControlsById = new Map();
+for (const control of slices.negativeControls) {
+  expect(!negativeControlsById.has(control.id), `Duplicate dependency parser negative control id: ${control.id}`);
+  negativeControlsById.set(control.id, control);
+  expect(await fileExists(control.sourceConlluPath), `${control.sourceConlluPath} does not exist.`);
+}
+for (const expectedFailure of ["invalid-head", "dangling-head", "missing-root", "multiple-roots"]) {
+  expect(
+    slices.negativeControls.some((control) => control.expectedFailure === expectedFailure),
+    `Dependency parser readiness is missing negative control ${expectedFailure}.`,
+  );
 }
 
 const expectedByFixtureId = new Map();
@@ -216,6 +232,9 @@ expect(
 );
 
 let executedComparatorCount = 0;
+const parserModelExecutedFixtures = new Set();
+let stanzaExecuted = false;
+let directUdValidationExecuted = false;
 for (const comparator of toolVersions.comparators) {
   expect(await fileExists(comparator.capturePath), `${comparator.capturePath} does not exist.`);
   const comparison = await readJson(comparator.capturePath);
@@ -238,6 +257,8 @@ for (const comparator of toolVersions.comparators) {
       Array.isArray(comparison.dependencies) && comparison.dependencies.length > 0,
       `${comparator.capturePath} must record installed comparator dependencies.`,
     );
+    if (comparison.comparator.name === "Stanza DepparseProcessor") stanzaExecuted = true;
+    if (comparison.comparator.name === "UniversalDependencies/tools validator") directUdValidationExecuted = true;
   }
   for (const slice of comparison.slices) {
     const fixture = fixturesById.get(slice.fixtureId);
@@ -254,6 +275,9 @@ for (const comparator of toolVersions.comparators) {
       expect(expected !== undefined, `${comparator.capturePath} missing expected arcs for ${slice.fixtureId}.`);
       expect(slice.status === "captured", `${comparator.capturePath} must mark ${slice.fixtureId} as captured.`);
       expect(Array.isArray(slice.outputArcs), `${comparator.capturePath} must include outputArcs for ${slice.fixtureId}.`);
+      if (comparison.comparator.name !== "UniversalDependencies/tools validator") {
+        parserModelExecutedFixtures.add(slice.fixtureId);
+      }
       const comparisonResult = compareExpectedArcs(expected.arcs, slice.outputArcs);
       expect(
         slice.matchesExpected === comparisonResult.matchesExpected,
@@ -269,6 +293,14 @@ for (const comparator of toolVersions.comparators) {
   }
 }
 expect(executedComparatorCount >= 1, "Dependency parser readiness requires at least one executed comparator capture.");
+expect(stanzaExecuted, "Dependency parser readiness requires an executed Stanza comparator capture.");
+expect(directUdValidationExecuted, "Dependency parser readiness requires direct UD/CoNLL-U validation capture.");
+for (const fixtureId of fixturesById.keys()) {
+  expect(
+    parserModelExecutedFixtures.has(fixtureId),
+    `Dependency parser readiness requires at least one executed parser model-output capture for ${fixtureId}.`,
+  );
+}
 
 const comparisonDir = "fixtures/dependency-parser/comparisons";
 const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
@@ -317,8 +349,16 @@ expect(
   "Support status evidence must cite the executed spaCy comparator capture.",
 );
 expect(
+  task.evidence.includes("fixtures/dependency-parser/comparisons/stanza-1.12.json"),
+  "Support status evidence must cite the executed Stanza comparator capture.",
+);
+expect(
   !task.limitations.some((limitation) => limitation.includes("No executed parser comparator outputs are committed")),
   "Support status must not retain the stale no-executed-comparator limitation.",
+);
+expect(
+  !task.limitations.some((limitation) => limitation.includes("Stanza model execution")),
+  "Support status must not retain the stale Stanza execution limitation.",
 );
 
 console.log("Dependency parser readiness artifacts OK.");

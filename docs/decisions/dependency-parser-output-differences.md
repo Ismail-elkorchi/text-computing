@@ -16,6 +16,9 @@ fixture scope:
 
 - spaCy emits `dobj` for `books` in the English fixture where the frozen UD-style expected arc uses `obj`.
 - spaCy emits Spanish surface-token arcs for `Vámonos al mar.` instead of the frozen CoNLL-U integer word rows.
+- Stanza matches the English frozen expected arcs.
+- Stanza emits Spanish surface-token arcs for `Vámonos al mar.` instead of the frozen CoNLL-U integer word rows.
+- Stanza labels Arabic `الطالب` as `obj` where the frozen CoNLL-U fixture labels it `nsubj`.
 
 ## Not acceptable as silent differences
 

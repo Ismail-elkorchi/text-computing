@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-dependency-parser",
+  "fixtureId": "ar-nonlatin",
+  "sourceConlluPath": "fixtures/conllu-dependency/valid/ar-nonlatin.conllu",
+  "documentId": "dependency-parser:ar-nonlatin",
+  "sentenceId": "ar-nonlatin-1",
+  "tokenOrder": ["1", "2", "3", "4"],
+  "arcs": [
+    { "dependent": "1", "head": "0", "relation": "root" },
+    { "dependent": "2", "head": "1", "relation": "nsubj" },
+    { "dependent": "3", "head": "1", "relation": "obj" },
+    { "dependent": "4", "head": "1", "relation": "punct" }
+  ],
+  "rootCount": 1,
+  "supportBoundary": "Readiness-only expected arcs; no parser behavior is implemented or claimed.",
+  "notes": [
+    "Arcs are copied from the repository-authored Arabic CoNLL-U fixture."
+  ]
+}
