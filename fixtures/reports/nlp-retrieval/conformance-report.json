@@ -61,6 +61,6 @@
     }
   ],
   "notes": [
-    "This report persists retrieval evidence for a frozen explicit-token corpus only; it does not add large-corpus or relevance-benchmark support."
+    "This report persists retrieval evidence for a frozen explicit-token corpus and bounded package-level query-control tests only; it does not add streaming index, durable storage, relevance-benchmark, or broad multilingual support."
   ]
 }

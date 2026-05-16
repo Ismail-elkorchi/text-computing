@@ -138,7 +138,7 @@
     {
       "taskId": "nlp-retrieval",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for retrieval over the frozen explicit-token corpus only.",
+      "claimBoundary": "Slice-proven for retrieval over the frozen explicit-token corpus and bounded package-level query-control tests only.",
       "reportPath": "fixtures/reports/nlp-retrieval/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/retrieval-readiness.md",
@@ -150,8 +150,8 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No large-corpus index, fielded query language, relevance benchmark, streaming index, or broad multilingual retrieval fixture set is implemented.",
-        "Behavior uses explicit tokens from the frozen corpus fixture."
+        "No streaming retrieval, durable index storage, relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set is implemented.",
+        "Behavior uses explicit tokens from the frozen corpus fixture plus bounded package-level tests."
       ]
     },
     {

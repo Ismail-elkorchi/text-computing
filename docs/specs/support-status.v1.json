@@ -82,16 +82,19 @@
     {
       "name": "@ismail-elkorchi/textcorpus",
       "status": "slice-proven",
-      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval are implemented.",
+      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval with query operators, metadata filters, and index JSON round-trips are implemented.",
       "evidence": [
         "explicit-token corpus tests",
         "fingerprint index tests",
         "frozen TF-IDF/BM25 corpus",
         "frozen retrieval fixture",
+        "retrieval query-operator tests",
+        "retrieval index JSON round-trip tests",
+        "bounded large-corpus ordering tests",
         "dist export readiness metadata"
       ],
       "limitations": [
-        "No large-corpus index, fielded query language, relevance benchmark, streaming retrieval, or broad multilingual retrieval fixture set",
+        "No streaming retrieval, durable index storage, relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set",
         "Package remains private until broader release gates pass"
       ]
     },
@@ -237,7 +240,7 @@
     {
       "id": "nlp-retrieval",
       "status": "slice-proven",
-      "scope": "Deterministic query parsing, inverted-index lookup, BM25 ranking, snippets, and explain output exist only for the frozen explicit-token corpus.",
+      "scope": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, snippets, explain output, and index JSON round-trips exist only for the frozen explicit-token corpus and bounded package tests.",
       "evidence": [
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",
@@ -249,8 +252,8 @@
         "fixtures/reports/nlp-retrieval/conformance-report.json"
       ],
       "limitations": [
-        "No large-corpus index, fielded query language, relevance benchmark, streaming index, or broad multilingual retrieval fixture set is implemented",
-        "Behavior uses explicit tokens from the frozen corpus fixture"
+        "No streaming retrieval, durable index storage, relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set is implemented",
+        "Behavior uses explicit tokens from the frozen corpus fixture plus bounded package-level tests"
       ]
     },
     {

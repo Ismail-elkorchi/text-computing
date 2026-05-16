@@ -12,7 +12,9 @@ import {
   isTextCorpusScoringResultV1,
   packageName,
   parseTextCorpusQuery,
+  parseTextCorpusRetrievalIndex,
   searchTextCorpusRetrievalIndex,
+  stringifyTextCorpusRetrievalIndex,
   sliceTextCorpusByMetadata,
   textCorpusCollectionSchemaVersion,
   textCorpusRetrievalSchemaVersion,
@@ -456,6 +458,91 @@ const repeatedRetrieval = searchTextCorpusRetrievalIndex(retrievalIndex, [parsed
 const repeatedRetrievalAgain = searchTextCorpusRetrievalIndex(retrievalIndex, [parsedQuery], { topK: 3 });
 if (JSON.stringify(repeatedRetrieval) !== JSON.stringify(repeatedRetrievalAgain)) {
   throw new Error("retrieval output should be deterministic for identical inputs");
+}
+
+const serializedRetrievalIndex = stringifyTextCorpusRetrievalIndex(retrievalIndex);
+const parsedRetrievalIndex = parseTextCorpusRetrievalIndex(serializedRetrievalIndex);
+if (JSON.stringify(parsedRetrievalIndex) !== JSON.stringify(retrievalIndex)) {
+  throw new Error("retrieval index persistence should round-trip deterministically");
+}
+
+let invalidRetrievalIndexRejected = false;
+try {
+  parseTextCorpusRetrievalIndex("{\"schemaVersion\":1,\"corpusId\":\"bad\"}");
+} catch (error) {
+  invalidRetrievalIndexRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus retrieval index JSON must satisfy TextCorpusRetrievalIndexV1";
+}
+
+if (!invalidRetrievalIndexRejected) {
+  throw new Error("retrieval index parser should reject invalid persisted JSON");
+}
+
+const fieldedQuery = parseTextCorpusQuery("+beta genre:news -delta", {
+  id: "news-beta-without-delta",
+});
+
+if (
+  fieldedQuery.clauses
+    .map((clause) => `${clause.operator}:${clause.field ?? "_"}:${clause.term}`)
+    .join(",") !== "must:_:beta,should:genre:news,must-not:_:delta"
+) {
+  throw new Error("query parser should expose deterministic fielded/operator clauses");
+}
+
+const fieldedRetrieval = searchTextCorpusRetrievalIndex(retrievalIndex, [fieldedQuery], {
+  topK: 3,
+  snippetWindow: 1,
+});
+
+const fieldedHits = fieldedRetrieval.results[0]?.hits ?? [];
+if (fieldedHits.map((hit) => hit.docId).join(",") !== "doc-a") {
+  throw new Error("fielded retrieval should combine required, field, and prohibited clauses");
+}
+
+const fieldOnlyRetrieval = searchTextCorpusRetrievalIndex(
+  retrievalIndex,
+  [parseTextCorpusQuery("genre:note", { id: "genre-note" })],
+  { includeZeroScores: true },
+);
+
+if (fieldOnlyRetrieval.results[0]?.hits.map((hit) => hit.docId).join(",") !== "doc-c") {
+  throw new Error("field-only retrieval should support metadata filters with explicit zero-score inclusion");
+}
+
+const largeEntries = Array.from({ length: 128 }, (_, index): TextCorpusEntry => {
+  const id = `large-${String(index).padStart(3, "0")}`;
+  const hasTarget = index % 17 === 0;
+  const tokens = hasTarget ? ["target", "common", `term-${index}`] : ["common", `term-${index}`];
+  return {
+    id,
+    document: createDocument(`doc:${id}`, "r1", tokens.join(" "), tokens),
+    viewId: "analysis-view",
+    tokenLayerId: "tokens",
+    metadata: {
+      language: "en",
+      group: index % 2 === 0 ? "even" : "odd",
+    },
+  };
+});
+
+const largeCollection = createTextCorpusCollection(largeEntries, {
+  corpusId: "corpus-retrieval-large-signal",
+});
+const largeIndex = buildTextCorpusRetrievalIndex(largeCollection);
+const largeResult = searchTextCorpusRetrievalIndex(
+  largeIndex,
+  [parseTextCorpusQuery("+target group:even", { id: "target-even" })],
+  { topK: 4, snippetWindow: 1 },
+);
+
+if (largeIndex.documentOrder.length !== 128 || largeIndex.termOrder.length !== 130) {
+  throw new Error("large retrieval fixture should preserve all documents and deterministic terms");
+}
+
+if (largeResult.results[0]?.hits.map((hit) => hit.docId).join(",") !== "large-000,large-034,large-068,large-102") {
+  throw new Error("large retrieval fixture should preserve deterministic topK ordering under filters");
 }
 
 void expectedPackageName;

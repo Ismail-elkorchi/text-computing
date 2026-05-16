@@ -124,6 +124,15 @@ export interface TextCorpusParsedQuery {
   readonly id: string;
   readonly raw: string;
   readonly tokens: readonly string[];
+  readonly clauses: readonly TextCorpusParsedQueryClause[];
+}
+
+export type TextCorpusQueryClauseOperator = "should" | "must" | "must-not";
+
+export interface TextCorpusParsedQueryClause {
+  readonly term: string;
+  readonly operator: TextCorpusQueryClauseOperator;
+  readonly field?: string;
 }
 
 export interface TextCorpusParseQueryOptions {
@@ -139,6 +148,7 @@ export interface TextCorpusRetrievalDocument {
   readonly id: string;
   readonly length: number;
   readonly tokens: readonly string[];
+  readonly metadata?: Readonly<Record<string, string>>;
 }
 
 export interface TextCorpusRetrievalIndexV1 {
@@ -404,7 +414,8 @@ function isRetrievalDocument(value: unknown): value is TextCorpusRetrievalDocume
     Number.isInteger(length) &&
     length >= 0 &&
     Array.isArray(value.tokens) &&
-    value.tokens.every((token) => typeof token === "string")
+    value.tokens.every((token) => typeof token === "string") &&
+    (value.metadata === undefined || isStringRecord(value.metadata))
   );
 }
 
@@ -533,7 +544,17 @@ export function isTextCorpusParsedQuery(value: unknown): value is TextCorpusPars
     isNonEmptyString(value.id) &&
     typeof value.raw === "string" &&
     Array.isArray(value.tokens) &&
-    value.tokens.every((token) => typeof token === "string")
+    value.tokens.every((token) => typeof token === "string") &&
+    Array.isArray(value.clauses) &&
+    value.clauses.every(
+      (clause) =>
+        isRecord(clause) &&
+        typeof clause.term === "string" &&
+        (clause.operator === "should" ||
+          clause.operator === "must" ||
+          clause.operator === "must-not") &&
+        (clause.field === undefined || isNonEmptyString(clause.field)),
+    )
   );
 }
 
@@ -833,6 +854,34 @@ function normalizeQueryTokens(raw: string): readonly string[] {
     .filter((token) => token.length > 0);
 }
 
+function parseQuerySegment(rawSegment: string): readonly TextCorpusParsedQueryClause[] {
+  if (rawSegment.length === 0) return [];
+  let operator: TextCorpusQueryClauseOperator = "should";
+  let segment = rawSegment;
+  if (segment.startsWith("+")) {
+    operator = "must";
+    segment = segment.slice(1);
+  } else if (segment.startsWith("-")) {
+    operator = "must-not";
+    segment = segment.slice(1);
+  }
+
+  if (segment.length === 0) return [];
+  const fieldSeparator = segment.indexOf(":");
+  const field =
+    fieldSeparator > 0 ? normalizeQueryTokens(segment.slice(0, fieldSeparator))[0] : undefined;
+  const value = fieldSeparator > 0 ? segment.slice(fieldSeparator + 1) : segment;
+  return normalizeQueryTokens(value).map((term) => ({
+    term,
+    operator,
+    ...(field ? { field } : {}),
+  }));
+}
+
+function parseQueryClauses(raw: string): readonly TextCorpusParsedQueryClause[] {
+  return raw.split(/\s+/u).flatMap(parseQuerySegment);
+}
+
 export function parseTextCorpusQuery(
   raw: string,
   options: TextCorpusParseQueryOptions = {},
@@ -840,12 +889,13 @@ export function parseTextCorpusQuery(
   if (typeof raw !== "string") {
     throw new TypeError("textcorpus query raw text must be a string");
   }
-  const tokens = normalizeQueryTokens(raw);
+  const clauses = parseQueryClauses(raw);
+  const tokens = clauses.map((clause) => clause.term);
   const id = options.id ?? `query:${tokens.join("-") || "empty"}`;
   if (!isNonEmptyString(id)) {
     throw new TypeError("textcorpus parsed query id must be a non-empty string");
   }
-  return { id, raw, tokens };
+  return { id, raw, tokens, clauses };
 }
 
 export function buildTextCorpusRetrievalIndex(
@@ -861,6 +911,7 @@ export function buildTextCorpusRetrievalIndex(
       id: entry.id,
       length: tokens.length,
       tokens,
+      ...(entry.metadata ? { metadata: entry.metadata } : {}),
     };
   });
   const documentOrder = documents.map((document) => document.id);
@@ -908,8 +959,51 @@ function uniqueQueryTokens(tokens: readonly string[]): readonly string[] {
   return [...new Set(tokens)].sort(compareTerms);
 }
 
+function scoringTokens(query: TextCorpusParsedQuery): readonly string[] {
+  return query.clauses
+    .filter((clause) => clause.operator !== "must-not" && clause.field === undefined)
+    .map((clause) => clause.term);
+}
+
 function positionsForTerm(index: TextCorpusRetrievalIndexV1, term: string, docId: string): readonly number[] {
   return index.invertedIndex[term]?.find((posting) => posting.docId === docId)?.positions ?? [];
+}
+
+function metadataTokens(document: TextCorpusRetrievalDocument, field: string): readonly string[] {
+  const value = document.metadata?.[field];
+  return value === undefined ? [] : normalizeQueryTokens(value);
+}
+
+function documentMatchesClause(
+  index: TextCorpusRetrievalIndexV1,
+  document: TextCorpusRetrievalDocument,
+  clause: TextCorpusParsedQueryClause,
+): boolean {
+  if (clause.field !== undefined) {
+    return metadataTokens(document, clause.field).includes(clause.term);
+  }
+  return positionsForTerm(index, clause.term, document.id).length > 0;
+}
+
+function documentMatchesQuery(
+  index: TextCorpusRetrievalIndexV1,
+  document: TextCorpusRetrievalDocument,
+  query: TextCorpusParsedQuery,
+): boolean {
+  const mustClauses = query.clauses.filter((clause) => clause.operator === "must");
+  if (!mustClauses.every((clause) => documentMatchesClause(index, document, clause))) return false;
+  const prohibitedClauses = query.clauses.filter((clause) => clause.operator === "must-not");
+  if (prohibitedClauses.some((clause) => documentMatchesClause(index, document, clause))) return false;
+  const shouldClauses = query.clauses.filter((clause) => clause.operator === "should");
+  const shouldFieldClauses = shouldClauses.filter((clause) => clause.field !== undefined);
+  if (!shouldFieldClauses.every((clause) => documentMatchesClause(index, document, clause))) {
+    return false;
+  }
+  const shouldTermClauses = shouldClauses.filter((clause) => clause.field === undefined);
+  if (mustClauses.length === 0 && shouldTermClauses.length > 0) {
+    return shouldTermClauses.some((clause) => documentMatchesClause(index, document, clause));
+  }
+  return true;
 }
 
 function createRetrievalSnippet(
@@ -970,12 +1064,14 @@ export function searchTextCorpusRetrievalIndex(
   const documentById = new Map(index.documents.map((document) => [document.id, document]));
 
   const results = queries.map((query) => {
+    const tokensForScoring = scoringTokens(query);
     const hits = index.documentOrder.flatMap((docId) => {
       const document = documentById.get(docId);
       if (document === undefined) return [];
-      const scored = scoreRetrievalDocument(index, document, query.tokens);
+      if (!documentMatchesQuery(index, document, query)) return [];
+      const scored = scoreRetrievalDocument(index, document, tokensForScoring);
       if (!options.includeZeroScores && scored.score <= 0) return [];
-      const snippet = createRetrievalSnippet(document, query.tokens, snippetWindow);
+      const snippet = createRetrievalSnippet(document, tokensForScoring, snippetWindow);
       return [
         {
           docId,
@@ -999,4 +1095,28 @@ export function searchTextCorpusRetrievalIndex(
     formula: textCorpusBm25OkapiFormula,
     results,
   };
+}
+
+export function stringifyTextCorpusRetrievalIndex(index: TextCorpusRetrievalIndexV1): string {
+  if (!isTextCorpusRetrievalIndexV1(index)) {
+    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
+  }
+  return `${JSON.stringify(index, null, 2)}\n`;
+}
+
+export function parseTextCorpusRetrievalIndex(serialized: string): TextCorpusRetrievalIndexV1 {
+  if (typeof serialized !== "string") {
+    throw new TypeError("textcorpus retrieval index JSON must be a string");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(serialized);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new SyntaxError(`textcorpus retrieval index JSON parse failed: ${message}`);
+  }
+  if (!isTextCorpusRetrievalIndexV1(parsed)) {
+    throw new TypeError("textcorpus retrieval index JSON must satisfy TextCorpusRetrievalIndexV1");
+  }
+  return parsed;
 }
