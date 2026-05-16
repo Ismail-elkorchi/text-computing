@@ -19,7 +19,7 @@
       "comparisons": [
         {
           "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-          "sha256": "e41ce2fc42b62f35cee9d5da762e8d8a7c8ca8892f193d00bdce5cde05db88c0",
+          "sha256": "1883426a4a83a1b2d77f70c56262e13359c0be4865bdf57f85c74716a1275309",
           "comparator": {
             "name": "spaCy",
             "version": "3.8.14",
@@ -30,7 +30,7 @@
         },
         {
           "path": "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json",
-          "sha256": "7f652736681ce30561b827fedb5ab32e4630b82f0dc5df149327acbfece87df6",
+          "sha256": "9f6e8767374c2fb2aa2d3b4a695aa8e825a43cdeeb5c8c3e12c45ba0ccc8f08c",
           "comparator": {
             "name": "wink-nlp",
             "version": "2.4.0",

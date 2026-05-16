@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "greek",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "greek",
+    "sha256": "be78dcfa5dc23ea062e99d36e1604e29daa9f82eaa3010231149792458d71d31"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 8,
+      "text": "Καλημέρα"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 8,
+      "endCU": 9,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 9,
+      "endCU": 14,
+      "text": "κόσμε"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 14,
+      "endCU": 15,
+      "text": "."
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 22,
+      "text": "Δοκιμή"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 22,
+      "endCU": 23,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 16,
+      "text": "Καλημέρα κόσμε. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 16,
+      "endCU": 23,
+      "text": "Δοκιμή."
+    }
+  ],
+  "notes": [
+    "Fixture proves Unicode boundary behavior for this short Greek slice only."
+  ]
+}

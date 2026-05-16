@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "cyrillic-russian",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "cyrillic-russian",
+    "sha256": "1e86c2a1449ce6b4e60a88de2a224075fa6063da6aaf9e3b834a8347719854f2"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 6,
+      "text": "Привет"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 7,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 7,
+      "endCU": 10,
+      "text": "мир"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 11,
+      "text": "."
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 11,
+      "endCU": 12,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 12,
+      "endCU": 15,
+      "text": "Это"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 21,
+      "text": "текст"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 12,
+      "text": "Привет мир. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 12,
+      "endCU": 22,
+      "text": "Это текст."
+    }
+  ],
+  "notes": [
+    "Fixture proves Unicode boundary behavior for this short Cyrillic slice only."
+  ]
+}

@@ -14,7 +14,7 @@
     {
       "role": "fixture",
       "path": "fixtures/tokenization-sbd/slices.json",
-      "sha256": "40566a20f7369b813d18c097499da900dff09c31ffd532546976a0a439fc830b"
+      "sha256": "5f6e1f272c22a7a1d6ec642b3fb5c042c9f59724b1e9d7d64ac9051f6c7c5da3"
     },
     {
       "role": "expected",
@@ -24,7 +24,7 @@
     {
       "role": "comparison",
       "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-      "sha256": "e41ce2fc42b62f35cee9d5da762e8d8a7c8ca8892f193d00bdce5cde05db88c0"
+      "sha256": "1883426a4a83a1b2d77f70c56262e13359c0be4865bdf57f85c74716a1275309"
     },
     {
       "role": "schema",
@@ -40,7 +40,10 @@
     "source": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json"
   },
   "command": {
-    "argv": ["python", "capture-tokenization-sbd.py"],
+    "argv": [
+      "python",
+      "capture-tokenization-sbd.py"
+    ],
     "cwd": "."
   },
   "runtime": {
@@ -62,7 +65,7 @@
     {
       "kind": "comparison-capture",
       "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-      "sha256": "e41ce2fc42b62f35cee9d5da762e8d8a7c8ca8892f193d00bdce5cde05db88c0"
+      "sha256": "1883426a4a83a1b2d77f70c56262e13359c0be4865bdf57f85c74716a1275309"
     }
   ],
   "differences": [],
@@ -70,6 +73,7 @@
     "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
   ],
   "notes": [
-    "Schema example for the public evidence-run contract; comparator replay commands are added separately."
+    "Schema example for the public evidence-run contract; hashes track the current committed comparison artifact.",
+    "Slices without executed comparator output are recorded as not-run in the comparison artifact and are not used as agreement evidence."
   ]
 }

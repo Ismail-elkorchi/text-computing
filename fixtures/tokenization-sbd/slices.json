@@ -143,6 +143,76 @@
         "sentence-boundaries",
         "repeated-run"
       ]
+    },
+    {
+      "id": "devanagari-hindi",
+      "purpose": "Devanagari script with danda sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "नमस्ते दुनिया। यह पाठ है।"
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "hebrew-rtl",
+      "purpose": "Hebrew right-to-left script with Latin-style sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "שלום עולם. זה טקסט."
+      },
+      "checks": [
+        "multilingual",
+        "right-to-left",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "cyrillic-russian",
+      "purpose": "Cyrillic script with space-delimited words and sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "Привет мир. Это текст."
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "greek",
+      "purpose": "Greek script with accented letters and sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "Καλημέρα κόσμε. Δοκιμή."
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "ethiopic-amharic",
+      "purpose": "Ethiopic script with Ethiopic sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "ሰላም ዓለም። ይህ ጽሑፍ ነው።"
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
     }
   ]
 }
