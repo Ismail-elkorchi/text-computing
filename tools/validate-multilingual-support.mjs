@@ -11,7 +11,18 @@ const REQUIRED_TIERS = [
   "comparator-backed",
   "corpus-backed",
 ];
-const REQUIRED_SCRIPTS = ["Devanagari", "Cyrillic", "Hebrew", "Ethiopic"];
+const REQUIRED_SCRIPTS = [
+  "Devanagari",
+  "Cyrillic",
+  "Hebrew",
+  "Ethiopic",
+  "Greek",
+  "Armenian",
+  "Georgian",
+  "Tamil",
+  "Han",
+  "Thai",
+];
 
 async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
@@ -51,6 +62,15 @@ if (JSON.stringify(tierNames) !== JSON.stringify(requiredTierNames)) {
     expected: requiredTierNames,
     actual: tierNames,
   });
+}
+
+if (
+  matrix.externalReference.name !== "Universal Dependencies" ||
+  matrix.externalReference.version !== "2.18" ||
+  matrix.externalReference.treebanks < 353 ||
+  matrix.externalReference.languages < 193
+) {
+  fail("Multilingual support matrix must anchor expansion against the current UD 2.18 breadth reference.");
 }
 
 for (const tier of matrix.tiers) {

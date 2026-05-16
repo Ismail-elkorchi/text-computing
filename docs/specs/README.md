@@ -28,6 +28,7 @@ A specification document must state its scope, version, normative language, and 
 - [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.
 - [`next-wave-readiness-roadmap.md`](next-wave-readiness-roadmap.md) — readiness order for dependency parsing, relation extraction, coreference, entity linking, retrieval, and inspection tooling.
 - [`multilingual-support-tiers.md`](multilingual-support-tiers.md) — support-tier language for multilingual evidence and fixture expansion.
+- [`performance-gates.md`](performance-gates.md) — performance and scale gate requirements before broad operational claims.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.
 - [`textdoc-dependency-target-contract.md`](textdoc-dependency-target-contract.md) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.
 - [`textdoc-document-annotation-model.md`](textdoc-document-annotation-model.md) — structural contract for the document annotation model used by issue `#11`.

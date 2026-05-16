@@ -4,6 +4,7 @@
 - **Scope:** Public support-tier language for multilingual evidence
 - **Data:** `fixtures/multilingual-support/tier-matrix.v1.json`
 - **Schema:** `schemas/multilingual-support-tiers-v1.schema.json`
+- **External breadth reference:** Universal Dependencies 2.18, released 2026-05-15 with 353 treebanks and 193 languages.
 
 ## Why this document exists
 
@@ -25,7 +26,7 @@ Current public evidence is partial. It includes Unicode conformance, tokenizatio
 
 ## Script fixture expansion
 
-The matrix adds readiness-only inputs for Devanagari, Cyrillic, Hebrew, and Ethiopic. These inputs are script coverage seeds. They are not task behavior claims until a task-specific gate records expected outputs, comparator captures where applicable, and conformance reports.
+The matrix adds readiness-only inputs for Devanagari, Cyrillic, Hebrew, Ethiopic, Greek, Armenian, Georgian, Tamil, Han, and Thai. These inputs are script coverage seeds. They are not task behavior claims until a task-specific gate records expected outputs, comparator captures where applicable, and conformance reports.
 
 ## Interpretation rules
 

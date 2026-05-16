@@ -1,6 +1,17 @@
 {
   "schemaVersion": 1,
   "scope": "multilingual-support",
+  "externalReference": {
+    "name": "Universal Dependencies",
+    "version": "2.18",
+    "releaseDate": "2026-05-15",
+    "treebanks": 353,
+    "languages": 193,
+    "sourceRefs": [
+      "https://universaldependencies.org/download.html",
+      "https://universaldependencies.org/"
+    ]
+  },
   "tiers": [
     {
       "name": "unicode-invariant",
@@ -125,6 +136,84 @@
       "supportTier": "readiness-only",
       "inputPath": "fixtures/multilingual-support/inputs/am-ethiopic-smoke.txt",
       "sha256": "fdbaa26cae8bd0a082356dc587fb6277ab104295bd8f1e731308612533c13b70",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "el-greek-smoke",
+      "language": "el",
+      "script": "Greek",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/el-greek-smoke.txt",
+      "sha256": "22512931f85c8204e7716d901437f5c0ec28d2e8a18946c70dfec3f7a4c9f5b8",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "hy-armenian-smoke",
+      "language": "hy",
+      "script": "Armenian",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/hy-armenian-smoke.txt",
+      "sha256": "09673fd5263e5ec58940e3ba2819bd8a53498d74cb8361a997f628cbc5a631e3",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "ka-georgian-smoke",
+      "language": "ka",
+      "script": "Georgian",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/ka-georgian-smoke.txt",
+      "sha256": "052c13f82d03b8bba70a6839aad498fea627864124bf55cb97106f741fe333dc",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "ta-tamil-smoke",
+      "language": "ta",
+      "script": "Tamil",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/ta-tamil-smoke.txt",
+      "sha256": "778ba4fb253e6d44d8190216a2a8bb400937a49f976b41835137d6f2bcaed428",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "zh-han-smoke",
+      "language": "zh",
+      "script": "Han",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/zh-han-smoke.txt",
+      "sha256": "07740c670ce834f444697ed95eca53deca3431c5adee29a58d2313ff4cf14276",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "th-thai-smoke",
+      "language": "th",
+      "script": "Thai",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/th-thai-smoke.txt",
+      "sha256": "855fd39d3f2434d51daff84b65b43365face35d16f14f22db19b45f78a5250f5",
       "evidenceRefs": [],
       "limitations": [
         "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
