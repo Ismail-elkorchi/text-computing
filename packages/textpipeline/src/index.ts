@@ -13,7 +13,8 @@ export type PackageName = typeof packageName;
 export type TextPipelineTraceSchemaVersion = typeof textPipelineTraceSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
 export type TextPipelinePurity = "pure" | "stateful";
-export type TextPipelineTraceStatus = "applied" | "skipped";
+export type TextPipelineTraceStatus = "applied" | "skipped" | "cached" | "failed";
+export type TextPipelineErrorPolicy = "throw" | "continue";
 
 export interface TextPipelineRequirementSet {
   readonly views?: readonly string[];
@@ -50,6 +51,25 @@ export interface TextPipelineProcessor {
   ): TextPipelineProcessorRunResult;
 }
 
+export interface TextPipelineAsyncProcessor {
+  readonly descriptor: TextPipelineProcessorDescriptor;
+  run(
+    document: TextDocDocumentV1,
+    context: TextPipelineContext,
+  ): TextPipelineProcessorRunResult | Promise<TextPipelineProcessorRunResult>;
+}
+
+export interface TextPipelineDocumentCache {
+  get(key: string): TextDocDocumentV1 | undefined | Promise<TextDocDocumentV1 | undefined>;
+  set?(key: string, document: TextDocDocumentV1): void | Promise<void>;
+}
+
+export interface TextPipelineRunOptions {
+  readonly signal?: AbortSignal;
+  readonly errorPolicy?: TextPipelineErrorPolicy;
+  readonly cache?: TextPipelineDocumentCache;
+}
+
 export interface TextPipelineTraceEntry {
   readonly processorId: string;
   readonly version: string;
@@ -59,6 +79,7 @@ export interface TextPipelineTraceEntry {
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
   readonly inputRevision: string;
   readonly outputRevision: string;
+  readonly cacheKey?: string;
 }
 
 export interface TextPipelineTraceV1 {
@@ -72,6 +93,8 @@ export interface TextPipelineRunResult {
   readonly document: TextDocDocumentV1;
   readonly trace: TextPipelineTraceV1;
 }
+
+type TextPipelineExecutableProcessor = TextPipelineProcessor | TextPipelineAsyncProcessor;
 
 export type TextPipelineTraceEnvelopeV1 = TextProtocolResultEnvelopeV1<
   TextPipelineTraceV1,
@@ -114,7 +137,10 @@ function normalizeIdSet(values: readonly string[] | undefined): ReadonlySet<stri
   return new Set(values ?? []);
 }
 
-function compareProcessorIds(left: TextPipelineProcessor, right: TextPipelineProcessor): number {
+function compareProcessorIds(
+  left: TextPipelineExecutableProcessor,
+  right: TextPipelineExecutableProcessor,
+): number {
   return left.descriptor.id.localeCompare(right.descriptor.id);
 }
 
@@ -186,7 +212,7 @@ function assertValidTraceDiagnostics(
 }
 
 function assertEmitsSubset(
-  processor: TextPipelineProcessor,
+  processor: TextPipelineExecutableProcessor,
   emittedViews: readonly string[],
   emittedLayers: readonly string[],
 ): void {
@@ -208,10 +234,10 @@ function assertEmitsSubset(
   }
 }
 
-function buildProcessorMap(
-  processors: readonly TextPipelineProcessor[],
-): ReadonlyMap<string, TextPipelineProcessor> {
-  const byId = new Map<string, TextPipelineProcessor>();
+function buildProcessorMap<TProcessor extends TextPipelineExecutableProcessor>(
+  processors: readonly TProcessor[],
+): ReadonlyMap<string, TProcessor> {
+  const byId = new Map<string, TProcessor>();
 
   for (const processor of processors) {
     if (!isTextPipelineProcessorDescriptor(processor.descriptor)) {
@@ -230,7 +256,7 @@ function buildProcessorMap(
 }
 
 function collectDependencyGraph(
-  processors: ReadonlyMap<string, TextPipelineProcessor>,
+  processors: ReadonlyMap<string, TextPipelineExecutableProcessor>,
 ): {
   readonly pendingCounts: Map<string, number>;
   readonly dependents: Map<string, string[]>;
@@ -305,11 +331,15 @@ export function isTextPipelineTraceEntry(value: unknown): value is TextPipelineT
     isRecord(value) &&
     isNonEmptyString(value.processorId) &&
     isNonEmptyString(value.version) &&
-    (value.status === "applied" || value.status === "skipped") &&
+    (value.status === "applied" ||
+      value.status === "skipped" ||
+      value.status === "cached" ||
+      value.status === "failed") &&
     isStringArray(value.emittedViews) &&
     isStringArray(value.emittedLayers) &&
     isNonEmptyString(value.inputRevision) &&
     isNonEmptyString(value.outputRevision) &&
+    (value.cacheKey === undefined || isNonEmptyString(value.cacheKey)) &&
     (value.diagnostics === undefined ||
       (Array.isArray(value.diagnostics) &&
         value.diagnostics.every((entry) => isTextProtocolDiagnostic(entry))))
@@ -323,8 +353,36 @@ export function isTextPipelineTraceV1(value: unknown): value is TextPipelineTrac
     isNonEmptyString(value.documentId) &&
     isNonEmptyString(value.finalRevision) &&
     Array.isArray(value.entries) &&
-    value.entries.every((entry) => isTextPipelineTraceEntry(entry))
+      value.entries.every((entry) => isTextPipelineTraceEntry(entry))
   );
+}
+
+function assertNotAborted(signal: AbortSignal | undefined): void {
+  if (signal?.aborted === true) {
+    throw new Error("textpipeline run aborted");
+  }
+}
+
+function cacheContextPart(context: TextPipelineContext): string {
+  const packs = [...(context.packs ?? [])].sort().join(",");
+  const profiles = [...(context.profiles ?? [])].sort().join(",");
+  return `packs=${packs};profiles=${profiles}`;
+}
+
+function processorCacheKey(
+  processor: TextPipelineExecutableProcessor,
+  document: TextDocDocumentV1,
+  context: TextPipelineContext,
+): string {
+  return `${processor.descriptor.id}@${processor.descriptor.version}:${document.documentId}:${document.revision}:${cacheContextPart(context)}`;
+}
+
+function processorErrorDiagnostic(processorId: string, error: unknown): TextProtocolDiagnostic {
+  return {
+    code: "textpipeline.processor-error",
+    severity: "error",
+    message: error instanceof Error ? `${processorId}: ${error.message}` : `${processorId}: processor failed`,
+  };
 }
 
 export function runTextPipeline(
@@ -433,4 +491,194 @@ export function runTextPipeline(
       entries: traceEntries,
     },
   };
+}
+
+export async function runTextPipelineAsync(
+  document: TextDocDocumentV1,
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext = {},
+  options: TextPipelineRunOptions = {},
+): Promise<TextPipelineRunResult> {
+  if (!isTextDocDocumentV1(document)) {
+    throw new TypeError("pipeline input must satisfy TextDocDocumentV1");
+  }
+  if (!isTextPipelineContext(context)) {
+    throw new TypeError("pipeline context is invalid");
+  }
+
+  const processorMap = buildProcessorMap(processors);
+  const { pendingCounts, dependents } = collectDependencyGraph(processorMap);
+  const ready: TextPipelineAsyncProcessor[] = [...processorMap.values()]
+    .filter((processor) => (pendingCounts.get(processor.descriptor.id) ?? 0) === 0)
+    .sort(compareProcessorIds);
+
+  let currentDocument = document;
+  const traceEntries: TextPipelineTraceEntry[] = [];
+  let processedCount = 0;
+
+  while (ready.length > 0) {
+    assertNotAborted(options.signal);
+    const processor = ready.shift();
+    if (processor === undefined) break;
+
+    processedCount += 1;
+    const inputRevision = currentDocument.revision;
+    const requirementDiagnostics = getRequirementDiagnostics(
+      processor.descriptor,
+      currentDocument,
+      context,
+    );
+
+    if (requirementDiagnostics.length > 0) {
+      traceEntries.push({
+        processorId: processor.descriptor.id,
+        version: processor.descriptor.version,
+        status: "skipped",
+        emittedViews: [],
+        emittedLayers: [],
+        diagnostics: requirementDiagnostics,
+        inputRevision,
+        outputRevision: currentDocument.revision,
+      });
+    } else {
+      const previousViews = currentDocument.views;
+      const previousLayers = currentDocument.layers;
+      const cacheKey = options.cache === undefined ? undefined : processorCacheKey(processor, currentDocument, context);
+      const cachedDocument = cacheKey === undefined ? undefined : await options.cache?.get(cacheKey);
+
+      if (cachedDocument !== undefined) {
+        if (cacheKey === undefined) {
+          throw new Error(`processor ${processor.descriptor.id} cache returned without a cache key`);
+        }
+        if (!isTextDocDocumentV1(cachedDocument)) {
+          throw new TypeError(`processor ${processor.descriptor.id} cache returned an invalid document`);
+        }
+        if (cachedDocument.documentId !== currentDocument.documentId) {
+          throw new Error(`processor ${processor.descriptor.id} cache changed documentId`);
+        }
+
+        const emittedViews = collectEmittedIds(previousViews, cachedDocument.views);
+        const emittedLayers = collectEmittedIds(previousLayers, cachedDocument.layers);
+        assertEmitsSubset(processor, emittedViews, emittedLayers);
+        currentDocument = cachedDocument;
+        traceEntries.push({
+          processorId: processor.descriptor.id,
+          version: processor.descriptor.version,
+          status: "cached",
+          emittedViews,
+          emittedLayers,
+          inputRevision,
+          outputRevision: currentDocument.revision,
+          cacheKey,
+        });
+      } else {
+        try {
+          const result = await processor.run(currentDocument, context);
+
+          if (!isTextDocDocumentV1(result.document)) {
+            throw new TypeError(`processor ${processor.descriptor.id} returned an invalid document`);
+          }
+          if (result.document.documentId !== currentDocument.documentId) {
+            throw new Error(`processor ${processor.descriptor.id} changed documentId`);
+          }
+
+          const diagnostics = assertValidTraceDiagnostics(
+            processor.descriptor.id,
+            result.diagnostics,
+          );
+          const emittedViews = collectEmittedIds(previousViews, result.document.views);
+          const emittedLayers = collectEmittedIds(previousLayers, result.document.layers);
+
+          assertEmitsSubset(processor, emittedViews, emittedLayers);
+          if (cacheKey !== undefined) await options.cache?.set?.(cacheKey, result.document);
+
+          currentDocument = result.document;
+          traceEntries.push({
+            processorId: processor.descriptor.id,
+            version: processor.descriptor.version,
+            status: "applied",
+            emittedViews,
+            emittedLayers,
+            ...(diagnostics.length > 0 ? { diagnostics } : {}),
+            inputRevision,
+            outputRevision: currentDocument.revision,
+            ...(cacheKey !== undefined ? { cacheKey } : {}),
+          });
+        } catch (error) {
+          if (options.errorPolicy !== "continue") throw error;
+          traceEntries.push({
+            processorId: processor.descriptor.id,
+            version: processor.descriptor.version,
+            status: "failed",
+            emittedViews: [],
+            emittedLayers: [],
+            diagnostics: [processorErrorDiagnostic(processor.descriptor.id, error)],
+            inputRevision,
+            outputRevision: currentDocument.revision,
+            ...(cacheKey !== undefined ? { cacheKey } : {}),
+          });
+        }
+      }
+    }
+
+    for (const dependentId of dependents.get(processor.descriptor.id) ?? []) {
+      const remaining = (pendingCounts.get(dependentId) ?? 0) - 1;
+      pendingCounts.set(dependentId, remaining);
+      if (remaining === 0) {
+        const nextProcessor = processorMap.get(dependentId);
+        if (nextProcessor === undefined) {
+          throw new Error(`processor dependency graph lost processor ${dependentId}`);
+        }
+        ready.push(nextProcessor);
+        ready.sort(compareProcessorIds);
+      }
+    }
+  }
+
+  if (processedCount !== processorMap.size) {
+    throw new Error("processor dependency graph contains a cycle");
+  }
+
+  return {
+    document: currentDocument,
+    trace: {
+      schemaVersion: textPipelineTraceSchemaVersion,
+      documentId: currentDocument.documentId,
+      finalRevision: currentDocument.revision,
+      entries: traceEntries,
+    },
+  };
+}
+
+export function runTextPipelineBatch(
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineProcessor[],
+  context: TextPipelineContext = {},
+): readonly TextPipelineRunResult[] {
+  return documents.map((document) => runTextPipeline(document, processors, context));
+}
+
+export async function runTextPipelineBatchAsync(
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext = {},
+  options: TextPipelineRunOptions = {},
+): Promise<readonly TextPipelineRunResult[]> {
+  const results: TextPipelineRunResult[] = [];
+  for (const document of documents) {
+    results.push(await runTextPipelineAsync(document, processors, context, options));
+  }
+  return results;
+}
+
+export async function* runTextPipelineStream(
+  documents: AsyncIterable<TextDocDocumentV1> | Iterable<TextDocDocumentV1>,
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext = {},
+  options: TextPipelineRunOptions = {},
+): AsyncIterable<TextPipelineRunResult> {
+  for await (const document of documents) {
+    assertNotAborted(options.signal);
+    yield await runTextPipelineAsync(document, processors, context, options);
+  }
 }
