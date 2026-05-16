@@ -48,11 +48,14 @@ const TASKS = {
   },
   "dependency-parser": {
     taskId: "nlp-dependency-parser",
-    validatorCommands: [["node", "tools/validate-dependency-parser-readiness.mjs"]],
+    validatorCommands: [
+      ["node", "tools/validate-dependency-parser-readiness.mjs"],
+      ["node", "tools/validate-dependency-parser-feature.mjs"],
+    ],
     comparisonDir: "fixtures/dependency-parser/comparisons",
     comparisonSchema: "schemas/dependency-parser-comparison-v1.schema.json",
-    conformanceReportRefs: [],
-    knownGap: "Dependency parser remains readiness-only; this command validates comparator captures without parser behavior.",
+    conformanceReportRefs: ["fixtures/reports/nlp-dependency-parser/conformance-report.json"],
+    knownGap: "Dependency parser behavior remains limited to frozen slices; this command validates comparator captures and feature output.",
   },
 };
 

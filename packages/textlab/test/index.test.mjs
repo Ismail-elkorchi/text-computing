@@ -43,10 +43,10 @@ const supportStatus = {
     },
     {
       id: "nlp-dependency-parser",
-      status: "readiness-only",
-      scope: "Expected arcs only",
-      evidence: ["readiness artifacts"],
-      limitations: ["no parser"],
+      status: "slice-proven",
+      scope: "Frozen parser arcs",
+      evidence: ["fixtures"],
+      limitations: ["frozen slices only"],
     },
   ],
 };
@@ -61,7 +61,7 @@ if (summary.taskRows.map((row) => row.id).join(",") !== "nlp-dependency-parser,n
   throw new Error("task rows should be sorted deterministically");
 }
 
-if (summary.counts.map((entry) => `${entry.status}:${entry.count}`).join(",") !== "scaffold:1,readiness-only:1,slice-proven:1,beta:1") {
+if (summary.counts.map((entry) => `${entry.status}:${entry.count}`).join(",") !== "scaffold:1,slice-proven:2,beta:1") {
   throw new Error("summary counts should be deterministic and complete");
 }
 
@@ -91,12 +91,12 @@ const evidenceManifest = {
     },
     {
       taskId: "nlp-dependency-parser",
-      supportStatus: "readiness-only",
-      claimBoundary: "Readiness artifacts only.",
+      supportStatus: "slice-proven",
+      claimBoundary: "Frozen parser slices only.",
       reportPath: "fixtures/reports/nlp-dependency-parser/conformance-report.json",
       evidenceRefs: ["fixtures/dependency-parser/slices.json"],
-      comparatorRefs: [],
-      knownGaps: ["No parser implementation."],
+      comparatorRefs: ["fixtures/dependency-parser/comparisons/stanza-1.12.json"],
+      knownGaps: ["No broad treebank behavior."],
     },
   ],
 };
@@ -201,7 +201,7 @@ if (cliResult.exitCode !== 0 || cliResult.stderr !== "") {
   throw new Error(`support-status CLI should pass: ${cliResult.stderr}`);
 }
 
-if (!cliResult.stdout.includes("task:nlp-dependency-parser [readiness-only]")) {
+if (!cliResult.stdout.includes("task:nlp-dependency-parser [slice-proven]")) {
   throw new Error("support-status CLI should render task status rows");
 }
 

@@ -18,7 +18,7 @@ validation.
 - [`rule-backed-ner/`](rule-backed-ner/) — multilingual readiness slices, comparator captures, and recorded goldens for issue `#13`.
 - [`corpus-tfidf-bm25/`](corpus-tfidf-bm25/) — explicit-token corpus slices, formula goldens, and comparator captures for issue `#14`.
 - [`conllu-dependency/`](conllu-dependency/) — valid, invalid, and expected-output CoNLL-U fixtures for dependency-target round-trip work.
-- [`dependency-parser/`](dependency-parser/) — readiness-only expected dependency arcs and comparator capability records for parser work.
+- [`dependency-parser/`](dependency-parser/) — frozen expected dependency arcs, comparator captures, and feature evidence for parser work.
 - [`multilingual-support/`](multilingual-support/) — support-tier matrix and readiness-only script fixtures for multilingual evidence control.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.

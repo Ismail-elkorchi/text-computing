@@ -1,0 +1,68 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
+  "schemaVersion": 1,
+  "reportId": "task-evidence:nlp-dependency-parser",
+  "subject": {
+    "kind": "task",
+    "id": "nlp-dependency-parser",
+    "schemaId": "docs/specs/support-status.v1.json"
+  },
+  "generatedAt": "2026-05-16T00:00:00.000Z",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "notRun": 0
+  },
+  "checks": [
+    {
+      "checkId": "readiness-fixtures-recorded",
+      "status": "pass",
+      "message": "Frozen dependency-parser slices, negative controls, and tool versions are committed.",
+      "evidenceRefs": [
+        "fixtures/dependency-parser/slices.json",
+        "fixtures/dependency-parser/tool-versions.json"
+      ]
+    },
+    {
+      "checkId": "expected-outputs-recorded",
+      "status": "pass",
+      "message": "Expected dependency arcs validate through the readiness validator.",
+      "evidenceRefs": [
+        "schemas/dependency-parser-expected-v1.schema.json",
+        "tools/validate-dependency-parser-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "comparator-captures-recorded",
+      "status": "pass",
+      "message": "Executed spaCy, Stanza, and direct UD validation captures are committed.",
+      "evidenceRefs": [
+        "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+        "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+        "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
+      ]
+    },
+    {
+      "checkId": "feature-output-proof",
+      "status": "pass",
+      "message": "Generated dependency arcs validate as textdoc, result-envelope, and conformance-report compatible.",
+      "evidenceRefs": [
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test/index.test.ts",
+        "tools/validate-dependency-parser-feature.mjs"
+      ]
+    },
+    {
+      "checkId": "support-boundary-recorded",
+      "status": "pass",
+      "message": "Support status remains limited to the frozen dependency-parser slices.",
+      "evidenceRefs": [
+        "docs/specs/support-status.v1.json",
+        "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
+      ]
+    }
+  ],
+  "notes": [
+    "This report persists dependency-parser evidence for frozen slices only; it does not add broad treebank, trained-parser, or JavaScript parser support."
+  ]
+}

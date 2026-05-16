@@ -203,8 +203,8 @@ for (const fixture of slices.fixtures) {
     `${fixture.expectedPath} sourceConlluPath must match ${fixture.sourceConlluPath}.`,
   );
   expect(
-    expected.supportBoundary.includes("Readiness-only"),
-    `${fixture.expectedPath} must preserve a readiness-only support boundary.`,
+    expected.supportBoundary.toLocaleLowerCase("und").includes("frozen"),
+    `${fixture.expectedPath} must preserve a frozen-slice support boundary.`,
   );
 
   const source = parseConlluArcs(await readText(fixture.sourceConlluPath), fixture.sourceConlluPath);
@@ -339,7 +339,10 @@ expect(
 
 const supportStatus = await readJson("docs/specs/support-status.v1.json");
 const task = supportStatus.tasks.find((entry) => entry.id === "nlp-dependency-parser");
-expect(task?.status === "readiness-only", "Support status must mark nlp-dependency-parser as readiness-only.");
+expect(
+  task?.status === "readiness-only" || task?.status === "slice-proven",
+  "Support status must mark nlp-dependency-parser as readiness-only or slice-proven.",
+);
 expect(
   task.evidence.includes("docs/specs/dependency-parser-readiness.md"),
   "Support status evidence must cite dependency-parser-readiness.md.",
