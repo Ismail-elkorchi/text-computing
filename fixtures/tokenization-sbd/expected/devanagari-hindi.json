@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "devanagari-hindi",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "devanagari-hindi",
+    "sha256": "15e212d60cb4593116ce50cbf4e878b8cf2facda6bb8bb48cb9f1028aa78084c"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 6,
+      "text": "नमस्ते"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 7,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 7,
+      "endCU": 13,
+      "text": "दुनिया"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 13,
+      "endCU": 14,
+      "text": "।"
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 14,
+      "endCU": 15,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 17,
+      "text": "यह"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 17,
+      "endCU": 18,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 18,
+      "endCU": 21,
+      "text": "पाठ"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": " "
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 22,
+      "endCU": 24,
+      "text": "है"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 24,
+      "endCU": 25,
+      "text": "।"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 15,
+      "text": "नमस्ते दुनिया। "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 15,
+      "endCU": 25,
+      "text": "यह पाठ है।"
+    }
+  ],
+  "notes": [
+    "Fixture proves Unicode boundary behavior for this short Devanagari slice only; it does not claim Hindi word segmentation completeness."
+  ]
+}

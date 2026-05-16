@@ -11,4 +11,4 @@ This directory stores issue #9 readiness fixtures.
   `textconformance` reports from the recorded expected outputs to prove that
   issue `#9` outputs survive the public document/protocol/conformance path.
 
-Current files define readiness structure, diagnostic comparison snapshots, and recorded expected outputs only; they do not add tokenization or sentence-boundary behavior.
+Current files define readiness structure, diagnostic comparison snapshots, recorded expected outputs, and behavior verification artifacts for the committed slices only. They do not establish broad language or tokenizer coverage.

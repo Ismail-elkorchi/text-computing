@@ -516,6 +516,41 @@
           "text": "ha ha ha. ha ha."
         }
       ]
+    },
+    {
+      "sliceId": "devanagari-hindi",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "hebrew-rtl",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "cyrillic-russian",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "greek",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "ethiopic-amharic",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
     }
   ]
 }

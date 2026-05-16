@@ -62,6 +62,6 @@
     }
   ],
   "notes": [
-    "This report persists existing slice evidence; it does not expand tokenizer support."
+    "This report persists slice evidence, including committed script-seed fixtures; it does not establish broad tokenizer support."
   ]
 }
