@@ -89,6 +89,81 @@ export interface TextlabConformanceReportSummary {
   readonly checkCount: number;
 }
 
+export interface TextlabCount {
+  readonly id: string;
+  readonly count: number;
+}
+
+export interface TextlabAnnotationInspectionOptions {
+  readonly layerKinds?: readonly string[];
+  readonly lifecycleStates?: readonly string[];
+  readonly annotationIds?: readonly string[];
+}
+
+export interface TextlabAnnotationInspectionRow {
+  readonly layerId: string;
+  readonly layerKind: string;
+  readonly viewId: string;
+  readonly annotationId: string;
+  readonly annotationKind: string;
+  readonly lifecycleState: string;
+  readonly targetCount: number;
+  readonly targetKinds: readonly string[];
+  readonly graphEdgeCount: number;
+  readonly details: readonly string[];
+}
+
+export interface TextlabAnnotationInspection {
+  readonly schemaVersion: 1;
+  readonly documentId: string;
+  readonly revision: string;
+  readonly layerCount: number;
+  readonly annotationCount: number;
+  readonly graphEdgeCount: number;
+  readonly layerKindCounts: readonly TextlabCount[];
+  readonly lifecycleCounts: readonly TextlabCount[];
+  readonly rows: readonly TextlabAnnotationInspectionRow[];
+}
+
+export interface TextlabEvidenceReplayComparisonSummary {
+  readonly status: string;
+  readonly count: number;
+}
+
+export interface TextlabEvidenceReplayRow {
+  readonly task: string;
+  readonly taskId: string;
+  readonly status: string;
+  readonly validatorCount: number;
+  readonly comparatorCount: number;
+  readonly passedComparisonCount: number;
+  readonly failedComparisonCount: number;
+  readonly notRunComparisonCount: number;
+  readonly conformanceReportCount: number;
+  readonly knownGapCount: number;
+}
+
+export interface TextlabEvidenceReplayInspection {
+  readonly schemaVersion: 1;
+  readonly generatedAt: string;
+  readonly rows: readonly TextlabEvidenceReplayRow[];
+  readonly statusCounts: readonly TextlabEvidenceReplayComparisonSummary[];
+  readonly comparisonStatusCounts: readonly TextlabEvidenceReplayComparisonSummary[];
+}
+
+export interface TextlabCorpusFixtureInspection {
+  readonly schemaVersion: 1;
+  readonly corpusId: string;
+  readonly formulaIds: readonly string[];
+  readonly documentCount: number;
+  readonly emptyDocumentCount: number;
+  readonly termCount: number;
+  readonly queryCount: number;
+  readonly hitCount: number;
+  readonly scoredHitCount: number;
+  readonly explainEntryCount: number;
+}
+
 const statusLabels: readonly TextlabSupportStatusLabel[] = [
   "scaffold",
   "readiness-only",
@@ -191,6 +266,127 @@ function compareEvidenceRows(
   right: TextlabEvidenceSummaryRow,
 ): number {
   return left.taskId.localeCompare(right.taskId);
+}
+
+function countById(values: readonly string[]): readonly TextlabCount[] {
+  const counts = new Map<string, number>();
+  for (const value of values) {
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([id, count]) => ({ id, count }));
+}
+
+function stringSet(values: readonly unknown[]): readonly string[] {
+  return [...new Set(values.filter((value): value is string => isNonEmptyString(value)))].sort();
+}
+
+function annotationGraphEdgeCount(annotation: Record<string, unknown>): number {
+  switch (annotation.kind) {
+    case "relation":
+      return Array.isArray(annotation.arguments) ? annotation.arguments.length : 0;
+    case "coreference-chain":
+      return Array.isArray(annotation.mentionIds) ? annotation.mentionIds.length : 0;
+    case "entity-link":
+      return isRecord(annotation.link) || isRecord(annotation.nil) ? 1 : 0;
+    case "dependency":
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+function annotationDetails(annotation: Record<string, unknown>): readonly string[] {
+  switch (annotation.kind) {
+    case "relation":
+      return [
+        isNonEmptyString(annotation.relationType) ? `type=${annotation.relationType}` : "type=<missing>",
+        `arguments=${Array.isArray(annotation.arguments) ? annotation.arguments.length : 0}`,
+      ];
+    case "coreference-chain":
+      return [
+        `mentions=${Array.isArray(annotation.mentionIds) ? annotation.mentionIds.length : 0}`,
+        isNonEmptyString(annotation.representativeMentionId)
+          ? `representative=${annotation.representativeMentionId}`
+          : "representative=<none>",
+      ];
+    case "entity-link":
+      if (isRecord(annotation.link)) {
+        const namespace = isNonEmptyString(annotation.link.namespace) ? annotation.link.namespace : "<missing>";
+        const id = isNonEmptyString(annotation.link.id) ? annotation.link.id : "<missing>";
+        return [`link=${namespace}:${id}`];
+      }
+      if (isRecord(annotation.nil)) {
+        return [
+          `nil=${isNonEmptyString(annotation.nil.reason) ? annotation.nil.reason : "<missing>"}`,
+        ];
+      }
+      return ["link=<none>"];
+    case "dependency":
+      return [
+        `dependent=${isNonEmptyString(annotation.dependentNodeId) ? annotation.dependentNodeId : "<missing>"}`,
+        `head=${isNonEmptyString(annotation.headNodeId) ? annotation.headNodeId : "<root>"}`,
+        `relation=${isNonEmptyString(annotation.relation) ? annotation.relation : "<missing>"}`,
+      ];
+    default:
+      return [];
+  }
+}
+
+function isTextdocInspectionDocument(value: unknown): value is Record<string, unknown> {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== 1 ||
+    !isNonEmptyString(value.documentId) ||
+    !isNonEmptyString(value.revision) ||
+    !Array.isArray(value.layers)
+  ) {
+    return false;
+  }
+
+  return value.layers.every((layer) => {
+    if (
+      !isRecord(layer) ||
+      !isNonEmptyString(layer.id) ||
+      !isNonEmptyString(layer.kind) ||
+      !isNonEmptyString(layer.viewId) ||
+      !Array.isArray(layer.annotations)
+    ) {
+      return false;
+    }
+    return layer.annotations.every(
+      (annotation) =>
+        isRecord(annotation) &&
+        isNonEmptyString(annotation.id) &&
+        isNonEmptyString(annotation.kind) &&
+        isRecord(annotation.lifecycle) &&
+        isNonEmptyString(annotation.lifecycle.state) &&
+        Array.isArray(annotation.targets) &&
+        annotation.targets.every((target) => isRecord(target) && isNonEmptyString(target.kind)),
+    );
+  });
+}
+
+function compareAnnotationRows(
+  left: TextlabAnnotationInspectionRow,
+  right: TextlabAnnotationInspectionRow,
+): number {
+  return `${left.layerId}\u0000${left.annotationId}`.localeCompare(
+    `${right.layerId}\u0000${right.annotationId}`,
+  );
+}
+
+function rowMatchesOptions(
+  row: TextlabAnnotationInspectionRow,
+  options: TextlabAnnotationInspectionOptions,
+): boolean {
+  return (
+    (options.layerKinds === undefined || options.layerKinds.includes(row.layerKind)) &&
+    (options.lifecycleStates === undefined ||
+      options.lifecycleStates.includes(row.lifecycleState)) &&
+    (options.annotationIds === undefined || options.annotationIds.includes(row.annotationId))
+  );
 }
 
 export function isTextlabSupportStatusDocument(value: unknown): value is TextlabSupportStatusDocument {
@@ -335,6 +531,281 @@ export function renderConformanceReportSummary(summary: TextlabConformanceReport
     `Pass: ${summary.pass}`,
     `Fail: ${summary.fail}`,
     `Not run: ${summary.notRun}`,
+    "",
+  ].join("\n");
+}
+
+export function inspectTextdocAnnotations(
+  document: unknown,
+  options: TextlabAnnotationInspectionOptions = {},
+): TextlabAnnotationInspection {
+  if (!isTextdocInspectionDocument(document)) {
+    throw new TypeError("textdoc document is invalid");
+  }
+
+  const allRows: TextlabAnnotationInspectionRow[] = [];
+  for (const layer of document.layers as readonly Record<string, unknown>[]) {
+    for (const annotation of layer.annotations as readonly Record<string, unknown>[]) {
+      const lifecycle = annotation.lifecycle as Record<string, unknown>;
+      const targets = annotation.targets as readonly Record<string, unknown>[];
+      allRows.push({
+        layerId: layer.id as string,
+        layerKind: layer.kind as string,
+        viewId: layer.viewId as string,
+        annotationId: annotation.id as string,
+        annotationKind: annotation.kind as string,
+        lifecycleState: lifecycle.state as string,
+        targetCount: targets.length,
+        targetKinds: stringSet(targets.map((target) => target.kind)),
+        graphEdgeCount: annotationGraphEdgeCount(annotation),
+        details: annotationDetails(annotation),
+      });
+    }
+  }
+
+  const rows = allRows.filter((row) => rowMatchesOptions(row, options)).sort(compareAnnotationRows);
+
+  return {
+    schemaVersion: 1,
+    documentId: document.documentId as string,
+    revision: document.revision as string,
+    layerCount: (document.layers as readonly unknown[]).length,
+    annotationCount: allRows.length,
+    graphEdgeCount: allRows.reduce((sum, row) => sum + row.graphEdgeCount, 0),
+    layerKindCounts: countById(
+      (document.layers as readonly Record<string, unknown>[]).map((layer) => layer.kind as string),
+    ),
+    lifecycleCounts: countById(allRows.map((row) => row.lifecycleState)),
+    rows,
+  };
+}
+
+export function renderTextdocAnnotationInspection(
+  inspection: TextlabAnnotationInspection,
+): string {
+  return [
+    "# textlab annotation inspection",
+    "",
+    `Document: ${inspection.documentId}`,
+    `Revision: ${inspection.revision}`,
+    `Layers: ${inspection.layerCount}`,
+    `Annotations: ${inspection.annotationCount}`,
+    `Graph edges: ${inspection.graphEdgeCount}`,
+    "",
+    "## Layer kinds",
+    ...inspection.layerKindCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Lifecycles",
+    ...inspection.lifecycleCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Rows",
+    ...inspection.rows.map(
+      (row) =>
+        `- ${row.layerId} ${row.annotationKind}:${row.annotationId} lifecycle=${row.lifecycleState} targets=${row.targetCount} targetKinds=${row.targetKinds.join(",")} graphEdges=${row.graphEdgeCount}${
+          row.details.length > 0 ? ` details=${row.details.join(";")}` : ""
+        }`,
+    ),
+    "",
+  ].join("\n");
+}
+
+function isEvidenceReplayDocument(value: unknown): value is Record<string, unknown> {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== 1 ||
+    !isNonEmptyString(value.generatedAt) ||
+    !Array.isArray(value.tasks)
+  ) {
+    return false;
+  }
+
+  return value.tasks.every(
+    (task) =>
+      isRecord(task) &&
+      isNonEmptyString(task.task) &&
+      isNonEmptyString(task.taskId) &&
+      isNonEmptyString(task.status) &&
+      Array.isArray(task.validators) &&
+      Array.isArray(task.comparisons) &&
+      (task.conformanceReportRefs === undefined || isStringArray(task.conformanceReportRefs)) &&
+      (task.knownGap === undefined || isNonEmptyString(task.knownGap)),
+  );
+}
+
+function comparisonStatusCounts(tasks: readonly Record<string, unknown>[]) {
+  const statuses: string[] = [];
+  for (const task of tasks) {
+    for (const comparison of task.comparisons as readonly unknown[]) {
+      if (isRecord(comparison) && isNonEmptyString(comparison.status)) {
+        statuses.push(comparison.status);
+      }
+    }
+  }
+  return countById(statuses).map(({ id, count }) => ({ status: id, count }));
+}
+
+export function inspectEvidenceReplay(document: unknown): TextlabEvidenceReplayInspection {
+  if (!isEvidenceReplayDocument(document)) {
+    throw new TypeError("evidence replay document is invalid");
+  }
+
+  const tasks = document.tasks as readonly Record<string, unknown>[];
+  const rows = tasks
+    .map((task) => {
+      const comparisons = task.comparisons as readonly unknown[];
+      const comparisonStatuses = comparisons
+        .filter(isRecord)
+        .map((comparison) => comparison.status)
+        .filter((status): status is string => isNonEmptyString(status));
+      return {
+        task: task.task as string,
+        taskId: task.taskId as string,
+        status: task.status as string,
+        validatorCount: (task.validators as readonly unknown[]).length,
+        comparatorCount: comparisons.length,
+        passedComparisonCount: comparisonStatuses.filter((status) => status === "pass").length,
+        failedComparisonCount: comparisonStatuses.filter((status) => status === "fail").length,
+        notRunComparisonCount: comparisonStatuses.filter((status) => status === "not-run").length,
+        conformanceReportCount: Array.isArray(task.conformanceReportRefs)
+          ? task.conformanceReportRefs.length
+          : 0,
+        knownGapCount: isNonEmptyString(task.knownGap) ? 1 : 0,
+      };
+    })
+    .sort((left, right) => left.taskId.localeCompare(right.taskId));
+
+  return {
+    schemaVersion: 1,
+    generatedAt: document.generatedAt as string,
+    rows,
+    statusCounts: countById(rows.map((row) => row.status)).map(({ id, count }) => ({
+      status: id,
+      count,
+    })),
+    comparisonStatusCounts: comparisonStatusCounts(tasks),
+  };
+}
+
+export function renderEvidenceReplayInspection(
+  inspection: TextlabEvidenceReplayInspection,
+): string {
+  return [
+    "# textlab evidence replay inspection",
+    "",
+    `Generated: ${inspection.generatedAt}`,
+    "",
+    "## Task statuses",
+    ...inspection.statusCounts.map((entry) => `- ${entry.status}: ${entry.count}`),
+    "",
+    "## Comparison statuses",
+    ...inspection.comparisonStatusCounts.map((entry) => `- ${entry.status}: ${entry.count}`),
+    "",
+    "## Tasks",
+    ...inspection.rows.map(
+      (row) =>
+        `- ${row.taskId} [${row.status}] validators=${row.validatorCount} comparators=${row.comparatorCount} passComparisons=${row.passedComparisonCount} failComparisons=${row.failedComparisonCount} notRunComparisons=${row.notRunComparisonCount} reports=${row.conformanceReportCount} gaps=${row.knownGapCount}`,
+    ),
+    "",
+  ].join("\n");
+}
+
+function isCorpusInspectionDocument(value: unknown): value is Record<string, unknown> {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === 1 &&
+    isNonEmptyString(value.corpusId) &&
+    Array.isArray(value.queries) &&
+    (value.documents === undefined || Array.isArray(value.documents)) &&
+    (value.termOrder === undefined || isStringArray(value.termOrder)) &&
+    (value.formulaSet === undefined || isStringArray(value.formulaSet)) &&
+    (value.formula === undefined || isNonEmptyString(value.formula))
+  );
+}
+
+function numericScore(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function collectTerms(document: Record<string, unknown>): readonly string[] {
+  if (isStringArray(document.termOrder)) return document.termOrder;
+  const terms: string[] = [];
+  for (const entry of Array.isArray(document.documents) ? document.documents : []) {
+    if (!isRecord(entry)) continue;
+    for (const listName of ["tf", "tfidf"] as const) {
+      const rows = entry[listName];
+      if (!Array.isArray(rows)) continue;
+      for (const row of rows) {
+        if (isRecord(row) && isNonEmptyString(row.term)) terms.push(row.term);
+      }
+    }
+  }
+  for (const query of document.queries as readonly unknown[]) {
+    if (isRecord(query) && isStringArray(query.tokens)) terms.push(...query.tokens);
+  }
+  return stringSet(terms);
+}
+
+function collectFormulaIds(document: Record<string, unknown>): readonly string[] {
+  const formulas: string[] = [];
+  if (isStringArray(document.formulaSet)) formulas.push(...document.formulaSet);
+  if (isNonEmptyString(document.formula)) formulas.push(document.formula);
+  return stringSet(formulas);
+}
+
+export function inspectCorpusFixture(document: unknown): TextlabCorpusFixtureInspection {
+  if (!isCorpusInspectionDocument(document)) {
+    throw new TypeError("corpus fixture is invalid");
+  }
+
+  const documents = Array.isArray(document.documents) ? document.documents : [];
+  const queries = document.queries as readonly unknown[];
+  let hitCount = 0;
+  let scoredHitCount = 0;
+  let explainEntryCount = 0;
+
+  for (const query of queries) {
+    if (!isRecord(query)) continue;
+    for (const listName of ["hits", "bm25"] as const) {
+      const hits = query[listName];
+      if (!Array.isArray(hits)) continue;
+      hitCount += hits.length;
+      for (const hit of hits) {
+        if (!isRecord(hit)) continue;
+        if (numericScore(hit.score) > 0) scoredHitCount += 1;
+        if (Array.isArray(hit.explain)) explainEntryCount += hit.explain.length;
+      }
+    }
+  }
+
+  return {
+    schemaVersion: 1,
+    corpusId: document.corpusId as string,
+    formulaIds: collectFormulaIds(document),
+    documentCount: documents.length,
+    emptyDocumentCount: documents.filter((entry) => isRecord(entry) && entry.length === 0).length,
+    termCount: collectTerms(document).length,
+    queryCount: queries.length,
+    hitCount,
+    scoredHitCount,
+    explainEntryCount,
+  };
+}
+
+export function renderCorpusFixtureInspection(
+  inspection: TextlabCorpusFixtureInspection,
+): string {
+  return [
+    "# textlab corpus fixture inspection",
+    "",
+    `Corpus: ${inspection.corpusId}`,
+    `Documents: ${inspection.documentCount}`,
+    `Empty documents: ${inspection.emptyDocumentCount}`,
+    `Terms: ${inspection.termCount}`,
+    `Queries: ${inspection.queryCount}`,
+    `Hits: ${inspection.hitCount}`,
+    `Scored hits: ${inspection.scoredHitCount}`,
+    `Explain entries: ${inspection.explainEntryCount}`,
+    `Formulas: ${inspection.formulaIds.join(",")}`,
     "",
   ].join("\n");
 }
