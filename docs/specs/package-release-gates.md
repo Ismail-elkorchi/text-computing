@@ -20,6 +20,12 @@ private-unreleased.
 - `security-review` — dependency and workflow changes are auditable.
 - `claim-hygiene` — public claims remain support-graded and evidence-linked.
 
+The gate list is the required checklist, not a release approval by itself. Each package also records a
+`releaseReadiness` value:
+
+- `publishable` — current metadata and checks permit the declared public release track;
+- `blocked` — the package must remain private-unreleased, with explicit `releaseBlockers`.
+
 ## Current boundary
 
 `@ismail-elkorchi/textfacts` is the only public-beta package. The other eight package workspaces are

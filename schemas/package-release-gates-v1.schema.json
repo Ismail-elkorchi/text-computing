@@ -37,7 +37,16 @@
     "packageGate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["packageName", "releaseTrack", "supportStatus", "gates", "evidenceRefs", "limitations"],
+      "required": [
+        "packageName",
+        "releaseTrack",
+        "supportStatus",
+        "releaseReadiness",
+        "gates",
+        "releaseBlockers",
+        "evidenceRefs",
+        "limitations"
+      ],
       "properties": {
         "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" },
         "releaseTrack": {
@@ -45,6 +54,9 @@
         },
         "supportStatus": {
           "enum": ["scaffold", "readiness-only", "slice-proven", "beta", "production-candidate"]
+        },
+        "releaseReadiness": {
+          "enum": ["publishable", "blocked"]
         },
         "gates": {
           "type": "array",
@@ -60,6 +72,10 @@
               "claim-hygiene"
             ]
           }
+        },
+        "releaseBlockers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
         },
         "evidenceRefs": {
           "type": "array",
