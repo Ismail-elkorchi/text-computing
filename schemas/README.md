@@ -37,6 +37,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textpipeline-trace-v1.schema.json`](textpipeline-trace-v1.schema.json) — deterministic processor trace schema.
 - [`textpack-manifest-v1.schema.json`](textpack-manifest-v1.schema.json) — pack manifest schema for issue `#12`.
 - [`support-status-v1.schema.json`](support-status-v1.schema.json) — canonical package and task support-status schema.
+- [`toolkit-capability-scorecard-v1.schema.json`](toolkit-capability-scorecard-v1.schema.json) — evidence-linked package and task capability scorecard schema.
 - [`textprotocol-result-envelope-v1.schema.json`](textprotocol-result-envelope-v1.schema.json) — result envelope schema for public repository outputs.
 - [`textconformance-report-v1.schema.json`](textconformance-report-v1.schema.json) — machine-readable conformance report schema.
 - [`task-evidence-manifest-v1.schema.json`](task-evidence-manifest-v1.schema.json) — repository manifest for persisted task evidence reports.

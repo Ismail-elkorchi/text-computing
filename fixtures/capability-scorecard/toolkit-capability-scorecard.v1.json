@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-16T00:00:00.000Z",
+  "claimPolicy": {
+    "rule": "Public capability claims must stay support-graded and evidence-linked. Broad comparative marketing terms are not permitted in authored public surfaces.",
+    "blockedTermSetId": "comparative-marketing-v1"
+  },
+  "supportGradeOrder": [
+    "scaffold",
+    "readiness-only",
+    "slice-proven",
+    "beta",
+    "production-candidate"
+  ],
+  "languageTiers": [
+    {
+      "id": "unicode-invariant",
+      "description": "Behavior is defined over Unicode code points or strings without language-specific claims.",
+      "minimumEvidence": [
+        "schema or runtime tests",
+        "deterministic ordering tests"
+      ]
+    },
+    {
+      "id": "fixture-proven",
+      "description": "Behavior is demonstrated only on committed fixture slices.",
+      "minimumEvidence": [
+        "fixture inputs",
+        "expected outputs",
+        "validator or tests"
+      ]
+    },
+    {
+      "id": "resource-backed",
+      "description": "Behavior depends on committed resources with license and provenance metadata.",
+      "minimumEvidence": [
+        "resource manifest",
+        "license metadata",
+        "resource-backed tests"
+      ]
+    },
+    {
+      "id": "comparator-backed",
+      "description": "Behavior or readiness has executed comparator captures with named versions and documented differences.",
+      "minimumEvidence": [
+        "comparator version record",
+        "capture file",
+        "difference policy"
+      ]
+    },
+    {
+      "id": "corpus-backed",
+      "description": "Behavior is evaluated against a committed or reproducibly fetched corpus slice with declared scope.",
+      "minimumEvidence": [
+        "corpus slice policy",
+        "corpus provenance",
+        "conformance report"
+      ]
+    }
+  ],
+  "axes": [
+    {
+      "id": "task-coverage",
+      "label": "Task coverage",
+      "measurement": "Each NLP task has a declared support status and linked evidence.",
+      "gate": "No task claim may exceed its support status in support-status.v1.json.",
+      "evidenceRequired": [
+        "docs/specs/support-status.v1.json",
+        "fixtures/reports/task-evidence-manifest.v1.json"
+      ]
+    },
+    {
+      "id": "language-tier",
+      "label": "Language tier",
+      "measurement": "Each task states the strongest language tier supported by current evidence.",
+      "gate": "A language tier requires the minimum evidence listed in this scorecard.",
+      "evidenceRequired": [
+        "docs/specs/multilingual-support-tiers.md",
+        "fixtures/multilingual-support/tier-matrix.v1.json"
+      ]
+    },
+    {
+      "id": "comparator-evidence",
+      "label": "Comparator evidence",
+      "measurement": "Comparator captures name tool versions, fixture inputs, outputs, and differences.",
+      "gate": "Comparator-backed claims require replayable capture artifacts.",
+      "evidenceRequired": [
+        "fixtures/evidence/valid/evidence-ledger.v1.json",
+        "tools/compare/run.mjs"
+      ]
+    },
+    {
+      "id": "corpus-evidence",
+      "label": "Corpus evidence",
+      "measurement": "Corpus-backed claims name corpus provenance, slice policy, and conformance reports.",
+      "gate": "Corpus-backed claims require persisted corpus slices or reproducible fetch instructions.",
+      "evidenceRequired": [
+        "docs/specs/task-coverage-matrix.md",
+        "fixtures/reports/task-evidence-manifest.v1.json"
+      ]
+    },
+    {
+      "id": "conformance",
+      "label": "Conformance",
+      "measurement": "Machine-readable reports connect claims to checks and evidence.",
+      "gate": "Implemented task claims require conformance reports.",
+      "evidenceRequired": [
+        "schemas/textconformance-report-v1.schema.json",
+        "fixtures/reports/task-evidence-manifest.v1.json"
+      ]
+    },
+    {
+      "id": "api",
+      "label": "API",
+      "measurement": "Public APIs are exported from package entrypoints and covered by tests.",
+      "gate": "Package rows cannot advance without exported runtime and type surfaces.",
+      "evidenceRequired": [
+        "packages/textfacts/package.json",
+        "tools/validate-package-readiness.mjs"
+      ]
+    },
+    {
+      "id": "performance",
+      "label": "Performance",
+      "measurement": "Throughput, memory, and scale thresholds are declared before broad operational claims.",
+      "gate": "Broad corpus or pipeline claims require performance regression thresholds.",
+      "evidenceRequired": [
+        "tools/check-coverage.mjs",
+        "tools/fuzz/semantic.mjs"
+      ]
+    },
+    {
+      "id": "release-readiness",
+      "label": "Release readiness",
+      "measurement": "Packages pass metadata, build, export, and package-quality checks.",
+      "gate": "Package adoption claims require release gates to pass.",
+      "evidenceRequired": [
+        "tools/validate-package-readiness.mjs",
+        ".changeset/config.json"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "measurement": "Dependency and generated-artifact changes are explicit and auditable.",
+      "gate": "New runtime dependencies require review and lockfile evidence.",
+      "evidenceRequired": [
+        "package-lock.json",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "id": "reproducibility",
+      "label": "Reproducibility",
+      "measurement": "Evidence can be replayed from committed inputs and pinned commands.",
+      "gate": "Claims require deterministic replay or a documented blocker.",
+      "evidenceRequired": [
+        "schemas/evidence-run-v1.schema.json",
+        "schemas/evidence-ledger-v1.schema.json",
+        "tools/validate-evidence-schemas.mjs"
+      ]
+    }
+  ],
+  "packageRows": [
+    {
+      "packageName": "@ismail-elkorchi/textfacts",
+      "supportStatus": "beta",
+      "evidenceRefs": [
+        "packages/textfacts/package.json",
+        "packages/textfacts/test"
+      ],
+      "nextGate": "Keep cross-package protocol, conformance, and resource growth outside textfacts."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textdoc",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "docs/specs/textdoc-document-annotation-model.md",
+        "tools/validate-textdoc-document-model.mjs"
+      ],
+      "nextGate": "Expand graph conventions only through validated fixtures and schemas."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "docs/specs/textpack-resource-manifest.md",
+        "tools/validate-textpack-resources.mjs"
+      ],
+      "nextGate": "Add resource review and registry workflow before broad resource claims."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textrules",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/slices.json",
+        "fixtures/rule-backed-ner/slices.json"
+      ],
+      "nextGate": "Keep rule behavior fixture-scoped until comparator-backed language slices expand."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpipeline",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "docs/specs/textpipeline-processor-contract.md",
+        "tools/fuzz/semantic.mjs"
+      ],
+      "nextGate": "Define async, streaming, batching, and cache contracts before implementation."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textcorpus",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "docs/specs/textcorpus-collection-contract.md",
+        "fixtures/corpus-tfidf-bm25/slices.json"
+      ],
+      "nextGate": "Add retrieval readiness before query, snippet, and relevance behavior."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textprotocol",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "packages/textprotocol/src"
+      ],
+      "nextGate": "Add version negotiation only after a public contract exists."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textconformance",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "schemas/textconformance-report-v1.schema.json",
+        "packages/textconformance/src"
+      ],
+      "nextGate": "Add diff and report rendering before wider benchmark use."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textlab",
+      "supportStatus": "slice-proven",
+      "evidenceRefs": [
+        "packages/textlab/src/index.ts",
+        "packages/textlab/test/index.test.mjs"
+      ],
+      "nextGate": "Add evidence inspection for comparator drift, diffs, and support matrices."
+    }
+  ],
+  "taskRows": [
+    {
+      "taskId": "nlp-tokenization-sbd",
+      "supportStatus": "slice-proven",
+      "languageTier": "comparator-backed",
+      "evidenceRefs": [
+        "docs/specs/tokenization-sbd-readiness.md",
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+      ],
+      "nextGate": "Expand multilingual fixtures and comparator replay breadth before broader claims."
+    },
+    {
+      "taskId": "nlp-document-annotation-model",
+      "supportStatus": "slice-proven",
+      "languageTier": "fixture-proven",
+      "evidenceRefs": [
+        "docs/specs/textdoc-document-annotation-model.md",
+        "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+      ],
+      "nextGate": "Validate dependency, relation, entity-linking, and coreference graph examples."
+    },
+    {
+      "taskId": "nlp-pack-resource-manifest",
+      "supportStatus": "slice-proven",
+      "languageTier": "resource-backed",
+      "evidenceRefs": [
+        "docs/specs/textpack-resource-manifest.md",
+        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+      ],
+      "nextGate": "Add public resource review and update policy."
+    },
+    {
+      "taskId": "nlp-pos-morph-lemma",
+      "supportStatus": "slice-proven",
+      "languageTier": "comparator-backed",
+      "evidenceRefs": [
+        "docs/specs/pos-morph-lemma-readiness.md",
+        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+      ],
+      "nextGate": "Add a second executed comparator or reduce the stated comparator-backed scope."
+    },
+    {
+      "taskId": "nlp-rule-backed-ner",
+      "supportStatus": "slice-proven",
+      "languageTier": "comparator-backed",
+      "evidenceRefs": [
+        "docs/specs/rule-backed-ner-readiness.md",
+        "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+      ],
+      "nextGate": "Add multilingual negative controls and entity-linking readiness."
+    },
+    {
+      "taskId": "nlp-corpus-tfidf-bm25",
+      "supportStatus": "slice-proven",
+      "languageTier": "comparator-backed",
+      "evidenceRefs": [
+        "docs/specs/corpus-tfidf-bm25-readiness.md",
+        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+      ],
+      "nextGate": "Add retrieval readiness with query, snippet, and relevance fixtures."
+    },
+    {
+      "taskId": "nlp-conllu-dependency-roundtrip",
+      "supportStatus": "slice-proven",
+      "languageTier": "comparator-backed",
+      "evidenceRefs": [
+        "docs/specs/conllu-dependency-readiness.md",
+        "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+      ],
+      "nextGate": "Broaden invalid fixtures and keep parser behavior separate from format round-trip."
+    },
+    {
+      "taskId": "nlp-dependency-parser",
+      "supportStatus": "readiness-only",
+      "languageTier": "comparator-backed",
+      "evidenceRefs": [
+        "docs/specs/dependency-parser-readiness.md",
+        "fixtures/dependency-parser/slices.json"
+      ],
+      "nextGate": "Add executed parser comparator breadth and negative controls before parser behavior."
+    }
+  ],
+  "releaseGates": [
+    {
+      "id": "metadata",
+      "description": "Package metadata names, exports, files, side effects, and license are explicit.",
+      "evidenceRequired": [
+        "package.json",
+        "tools/validate-package-readiness.mjs"
+      ]
+    },
+    {
+      "id": "tests",
+      "description": "Package tests exercise runtime guards, schemas, and public examples.",
+      "evidenceRequired": [
+        "package tests",
+        "npm run -s test:all"
+      ]
+    },
+    {
+      "id": "schemas",
+      "description": "Repository and package schemas validate under the declared drafts.",
+      "evidenceRequired": [
+        "npm run -s schema:validate",
+        "schemas/README.md"
+      ]
+    },
+    {
+      "id": "package-quality",
+      "description": "Package-quality checks run before publication decisions.",
+      "evidenceRequired": [
+        "npm run -s check:package-readiness",
+        "npm run -s check:quality"
+      ]
+    },
+    {
+      "id": "security-review",
+      "description": "Dependency changes and workflow evidence are reviewed before release.",
+      "evidenceRequired": [
+        "package-lock.json",
+        ".github/workflows/ci.yml"
+      ]
+    }
+  ],
+  "antiMetricPolicy": "A numeric score is only an inspection aid. It cannot widen a support claim without linked fixtures, validators, comparator captures, and conformance reports."
+}

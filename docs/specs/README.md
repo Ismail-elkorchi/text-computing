@@ -19,6 +19,7 @@ A specification document must state its scope, version, normative language, and 
 - [`nlp-dependency-parser-research-ledger.md`](nlp-dependency-parser-research-ledger.md) — research ledger for dependency parser readiness.
 - [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
 - [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
+- [`toolkit-capability-scorecard.md`](toolkit-capability-scorecard.md) — evidence-linked capability gate for package and task claims.
 - [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.
 - [`next-wave-readiness-roadmap.md`](next-wave-readiness-roadmap.md) — readiness order for dependency parsing, relation extraction, coreference, entity linking, retrieval, and inspection tooling.
 - [`multilingual-support-tiers.md`](multilingual-support-tiers.md) — support-tier language for multilingual evidence and fixture expansion.
