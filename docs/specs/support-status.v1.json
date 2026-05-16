@@ -129,16 +129,19 @@
     {
       "name": "@ismail-elkorchi/textlab",
       "status": "slice-proven",
-      "scope": "Support-status, task-evidence, and conformance-report summary APIs and CLI commands are implemented for repository evidence files.",
+      "scope": "Support-status, task-evidence, conformance-report, annotation, evidence-replay, and corpus-fixture inspection APIs and CLI commands are implemented for repository evidence files.",
       "evidence": [
         "packages/textlab/src/index.ts",
         "packages/textlab/src/cli.ts",
         "packages/textlab/test/index.test.mjs",
         "fixtures/reports/task-evidence-manifest.v1.json",
+        "fixtures/reports/evidence-replay.v1.json",
+        "fixtures/textdoc/examples/document-annotation-model-v1.json",
+        "fixtures/retrieval/expected/retrieval-smoke.json",
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
       "limitations": [
-        "No comparator replay UI, rich diff renderer, annotation query engine, or corpus browser is implemented",
+        "No comparator execution engine, interactive UI, or large-corpus browser is implemented",
         "Package remains private until broader release gates pass"
       ]
     }

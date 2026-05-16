@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 import {
+  inspectCorpusFixture,
+  inspectEvidenceReplay,
+  inspectTextdocAnnotations,
   isTextlabTaskEvidenceManifest,
   isTextlabSupportStatusDocument,
+  renderCorpusFixtureInspection,
   renderConformanceReportSummary,
   renderEvidenceManifestSummary,
+  renderEvidenceReplayInspection,
   renderSupportStatusSummary,
+  renderTextdocAnnotationInspection,
   summarizeConformanceReport,
   summarizeEvidenceManifest,
   summarizeSupportStatus,
@@ -23,12 +29,18 @@ function usage(): string {
     "  textlab support-status [path]",
     "  textlab evidence [path]",
     "  textlab conformance-report <path>",
+    "  textlab annotations <path>",
+    "  textlab evidence-replay [path]",
+    "  textlab corpus-fixture <path>",
     "  textlab --help",
     "",
     "Commands:",
     "  support-status  Render a deterministic summary of docs/specs/support-status.v1.json.",
     "  evidence        Render a deterministic summary of fixtures/reports/task-evidence-manifest.v1.json.",
     "  conformance-report  Render a deterministic summary of one conformance report.",
+    "  annotations     Inspect a textdoc document annotation graph.",
+    "  evidence-replay Render comparator/replay status counts.",
+    "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
     "",
   ].join("\n");
 }
@@ -43,7 +55,14 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     };
   }
 
-  if (command !== "support-status" && command !== "evidence" && command !== "conformance-report") {
+  if (
+    command !== "support-status" &&
+    command !== "evidence" &&
+    command !== "conformance-report" &&
+    command !== "annotations" &&
+    command !== "evidence-replay" &&
+    command !== "corpus-fixture"
+  ) {
     return {
       exitCode: 2,
       stdout: "",
@@ -67,11 +86,29 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     };
   }
 
+  if (command === "annotations" && pathArg === undefined) {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `Missing path for annotations.\n${usage()}`,
+    };
+  }
+
+  if (command === "corpus-fixture" && pathArg === undefined) {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `Missing path for corpus-fixture.\n${usage()}`,
+    };
+  }
+
   const path =
     pathArg ??
     (command === "support-status"
       ? "docs/specs/support-status.v1.json"
-      : "fixtures/reports/task-evidence-manifest.v1.json");
+      : command === "evidence-replay"
+        ? "fixtures/reports/evidence-replay.v1.json"
+        : "fixtures/reports/task-evidence-manifest.v1.json");
   let parsed: unknown;
   try {
     parsed = JSON.parse(await readFile(path, "utf8"));
@@ -114,6 +151,54 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       stdout: renderEvidenceManifestSummary(summarizeEvidenceManifest(parsed)),
       stderr: "",
     };
+  }
+
+  if (command === "evidence-replay") {
+    try {
+      return {
+        exitCode: 0,
+        stdout: renderEvidenceReplayInspection(inspectEvidenceReplay(parsed)),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid evidence replay document: ${path}`,
+      };
+    }
+  }
+
+  if (command === "annotations") {
+    try {
+      return {
+        exitCode: 0,
+        stdout: renderTextdocAnnotationInspection(inspectTextdocAnnotations(parsed)),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textdoc document: ${path}`,
+      };
+    }
+  }
+
+  if (command === "corpus-fixture") {
+    try {
+      return {
+        exitCode: 0,
+        stdout: renderCorpusFixtureInspection(inspectCorpusFixture(parsed)),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid corpus fixture: ${path}`,
+      };
+    }
   }
 
   try {
