@@ -134,7 +134,8 @@
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
       "limitations": [
-        "No comparator replay UI, rich diff renderer, annotation query engine, or corpus browser is implemented"
+        "No comparator replay UI, rich diff renderer, annotation query engine, or corpus browser is implemented",
+        "Package remains private until broader release gates pass"
       ]
     }
   ],

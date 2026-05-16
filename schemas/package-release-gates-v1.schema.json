@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/package-release-gates-v1.schema.json",
+  "title": "Package release gates v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "scope", "requiredGates", "packages"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "scope": { "const": "package-release-gates" },
+    "requiredGates": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "metadata",
+          "tests",
+          "schemas",
+          "package-quality",
+          "security-review",
+          "claim-hygiene"
+        ]
+      }
+    },
+    "packages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/packageGate" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "packageGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageName", "releaseTrack", "supportStatus", "gates", "evidenceRefs", "limitations"],
+      "properties": {
+        "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" },
+        "releaseTrack": {
+          "enum": ["public-beta", "private-unreleased"]
+        },
+        "supportStatus": {
+          "enum": ["scaffold", "readiness-only", "slice-proven", "beta", "production-candidate"]
+        },
+        "gates": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "metadata",
+              "tests",
+              "schemas",
+              "package-quality",
+              "security-review",
+              "claim-hygiene"
+            ]
+          }
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -138,6 +138,9 @@
       "measurement": "Packages pass metadata, build, export, and package-quality checks.",
       "gate": "Package adoption claims require release gates to pass.",
       "evidenceRequired": [
+        "docs/specs/package-release-gates.md",
+        "fixtures/package-release/gates.v1.json",
+        "tools/validate-package-release-gates.mjs",
         "tools/validate-package-readiness.mjs",
         ".changeset/config.json"
       ]
@@ -410,6 +413,14 @@
       "evidenceRequired": [
         "package-lock.json",
         ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "id": "claim-hygiene",
+      "description": "Public package claims remain support-graded and evidence-linked before release.",
+      "evidenceRequired": [
+        "tools/check-public-claims.mjs",
+        "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
       ]
     }
   ],
