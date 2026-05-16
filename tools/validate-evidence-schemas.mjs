@@ -6,6 +6,8 @@ import Ajv from "ajv";
 const ROOT = process.cwd();
 const RUN_SCHEMA_PATH = "schemas/evidence-run-v1.schema.json";
 const LEDGER_SCHEMA_PATH = "schemas/evidence-ledger-v1.schema.json";
+const REPLAY_SCHEMA_PATH = "schemas/evidence-replay-v1.schema.json";
+const REPLAY_PATH = "fixtures/reports/evidence-replay.v1.json";
 const VALID_RUN_PATH = "fixtures/evidence/valid/evidence-run-tokenization-sbd.v1.json";
 const VALID_LEDGER_PATH = "fixtures/evidence/valid/evidence-ledger.v1.json";
 const INVALID_RUN_PATH = "fixtures/evidence/invalid/evidence-run-missing-repo.v1.json";
@@ -46,6 +48,7 @@ async function sha256(relativePath) {
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateRun = ajv.compile(await readJson(RUN_SCHEMA_PATH));
 const validateLedger = ajv.compile(await readJson(LEDGER_SCHEMA_PATH));
+const validateReplay = ajv.compile(await readJson(REPLAY_SCHEMA_PATH));
 
 const validRun = await readJson(VALID_RUN_PATH);
 expect(validateRun(validRun), `${VALID_RUN_PATH} failed ${RUN_SCHEMA_PATH}`, validateRun.errors);
@@ -98,5 +101,33 @@ expect(validateLedger(invalidLedger), `${INVALID_LEDGER_PATH} should pass schema
 const missingRef = invalidLedger.tasks[0]?.runRefs[0]?.path;
 expect(typeof missingRef === "string", `${INVALID_LEDGER_PATH} must contain a missing run ref`);
 expect(!(await fileExists(missingRef)), `${INVALID_LEDGER_PATH} missing run ref unexpectedly exists: ${missingRef}`);
+
+const replay = await readJson(REPLAY_PATH);
+expect(validateReplay(replay), `${REPLAY_PATH} failed ${REPLAY_SCHEMA_PATH}`, validateReplay.errors);
+
+for (const task of replay.tasks) {
+  for (const validator of task.validators) {
+    assertRelativeRef(validator.path, `${REPLAY_PATH} validator.path`);
+    expect(await fileExists(validator.path), `${REPLAY_PATH} validator path does not exist: ${validator.path}`);
+    const actualHash = await sha256(validator.path);
+    expect(
+      actualHash === validator.sha256,
+      `${REPLAY_PATH} validator hash mismatch for ${validator.path}: ${actualHash} != ${validator.sha256}`,
+    );
+  }
+  for (const comparison of task.comparisons) {
+    assertRelativeRef(comparison.path, `${REPLAY_PATH} comparison.path`);
+    expect(await fileExists(comparison.path), `${REPLAY_PATH} comparison path does not exist: ${comparison.path}`);
+    const actualHash = await sha256(comparison.path);
+    expect(
+      actualHash === comparison.sha256,
+      `${REPLAY_PATH} comparison hash mismatch for ${comparison.path}: ${actualHash} != ${comparison.sha256}`,
+    );
+  }
+  for (const ref of task.conformanceReportRefs) {
+    assertRelativeRef(ref, `${REPLAY_PATH} conformanceReportRefs`);
+    expect(await fileExists(ref), `${REPLAY_PATH} conformance report ref does not exist: ${ref}`);
+  }
+}
 
 console.log("Evidence schema fixtures OK.");

@@ -39,7 +39,8 @@
     "coverage:all": "npm run -s build && node tools/check-coverage.mjs",
     "fuzz:semantic": "npm run -s build && node tools/fuzz/semantic.mjs",
     "fuzz:all": "npm run -s fuzz:semantic",
-    "evidence:all": "npm run -s compare:all && npm run -s check:fixtures && npm run -s coverage:all && npm run -s fuzz:all"
+    "evidence:all": "npm run -s compare:all && npm run -s check:fixtures && npm run -s coverage:all && npm run -s fuzz:all",
+    "compare:write": "node tools/compare/run.mjs all --write"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",

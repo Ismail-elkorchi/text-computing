@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-16T00:00:00.000Z",
+  "tasks": [
+    {
+      "task": "tokenization-sbd",
+      "taskId": "nlp-tokenization-sbd",
+      "status": "ok",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-tokenization-sbd-readiness.mjs"
+          ],
+          "path": "tools/validate-tokenization-sbd-readiness.mjs",
+          "sha256": "88654c43c76241edb9d33bfa6ee6d0868cf3dd08c3e1663bc70a361974324332"
+        }
+      ],
+      "comparisons": [
+        {
+          "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+          "sha256": "e41ce2fc42b62f35cee9d5da762e8d8a7c8ca8892f193d00bdce5cde05db88c0",
+          "comparator": {
+            "name": "spaCy",
+            "version": "3.8.14",
+            "runtime": "Python 3.13.7",
+            "license": "MIT"
+          },
+          "status": "pass"
+        },
+        {
+          "path": "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json",
+          "sha256": "7f652736681ce30561b827fedb5ab32e4630b82f0dc5df149327acbfece87df6",
+          "comparator": {
+            "name": "wink-nlp",
+            "version": "2.4.0",
+            "runtime": "Node.js v24.14.0",
+            "model": {
+              "name": "wink-eng-lite-web-model",
+              "version": "1.8.1"
+            },
+            "license": "MIT"
+          },
+          "status": "pass"
+        }
+      ],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+      ]
+    },
+    {
+      "task": "pos-morph-lemma",
+      "taskId": "nlp-pos-morph-lemma",
+      "status": "ok",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-pos-morph-lemma-readiness.mjs"
+          ],
+          "path": "tools/validate-pos-morph-lemma-readiness.mjs",
+          "sha256": "c1f30a67c8ee31de305185b573d8294b000dc9bd3e9ed6bcf0a7ad3119d417de"
+        },
+        {
+          "argv": [
+            "node",
+            "tools/validate-pos-morph-lemma-feature.mjs"
+          ],
+          "path": "tools/validate-pos-morph-lemma-feature.mjs",
+          "sha256": "fd996867b21804d6872d744d66c9360e7f7c901bd47df84cb1da9e62612b208d"
+        }
+      ],
+      "comparisons": [
+        {
+          "path": "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+          "sha256": "e8ced0856e48fe28f2c8cc00705a9b78f4f7053eb9003ce31fdf8f67782e1b70",
+          "comparator": {
+            "name": "spaCy",
+            "version": "3.8.14",
+            "runtime": "Python 3.13.7",
+            "license": "MIT"
+          },
+          "status": "pass"
+        }
+      ],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+      ],
+      "knownGap": "Only spaCy has committed executed POS/morph/lemma comparator output in this gate."
+    },
+    {
+      "task": "rule-backed-ner",
+      "taskId": "nlp-rule-backed-ner",
+      "status": "ok",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-rule-backed-ner-readiness.mjs"
+          ],
+          "path": "tools/validate-rule-backed-ner-readiness.mjs",
+          "sha256": "f465ddff2e4d07ca3aec6a0859a1b761ceaaab6a75e3ccc5bcf6e6a3b14e6316"
+        }
+      ],
+      "comparisons": [
+        {
+          "path": "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
+          "sha256": "29ebe3554db9727409215175b0919869d01ce221a1c0eac9567642eae8044811",
+          "comparator": {
+            "name": "compromise",
+            "version": "14.15.0",
+            "runtime": "Node.js v24.14.0",
+            "license": "MIT"
+          },
+          "status": "pass"
+        },
+        {
+          "path": "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json",
+          "sha256": "301f0774ec7ac709c94de46133792e86e3191a553effd64056e15aebab2592e2",
+          "comparator": {
+            "name": "spaCy",
+            "version": "3.8.14",
+            "runtime": "Python 3.13",
+            "model": {
+              "name": "en_core_web_sm",
+              "version": "3.8.0"
+            },
+            "license": "MIT"
+          },
+          "status": "pass"
+        }
+      ],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+      ]
+    },
+    {
+      "task": "corpus-tfidf-bm25",
+      "taskId": "nlp-corpus-tfidf-bm25",
+      "status": "ok",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+          ],
+          "path": "tools/validate-corpus-tfidf-bm25-readiness.mjs",
+          "sha256": "693c584d3b5b777b91acd00d528fda7d7bd36eaf9c790c2a9779aeeda77651e3"
+        }
+      ],
+      "comparisons": [
+        {
+          "path": "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
+          "sha256": "5bad4e9ae3863a13cf844ab36692d75a2bae3f17a5cbcb8f84ebd8c3a3885a9f",
+          "comparator": {
+            "name": "Natural",
+            "version": "8.1.1",
+            "runtime": "javascript"
+          },
+          "status": "pass"
+        },
+        {
+          "path": "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
+          "sha256": "ea8da7607b0dd335cf815f1b546af427c93213a8db254d4acd6b3970bd47273c",
+          "comparator": {
+            "name": "scikit-learn+rank-bm25",
+            "version": "scikit-learn 1.8.0; rank-bm25 0.2.2",
+            "runtime": "python"
+          },
+          "status": "pass"
+        }
+      ],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+      ]
+    },
+    {
+      "task": "conllu",
+      "taskId": "nlp-conllu-dependency-roundtrip",
+      "status": "ok",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-conllu-dependency-readiness.mjs"
+          ],
+          "path": "tools/validate-conllu-dependency-readiness.mjs",
+          "sha256": "10a1284e70b323dcab9ec978913e343aa1a8bdd91cf1573d4a9f0aa30a2079c0"
+        }
+      ],
+      "comparisons": [
+        {
+          "path": "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json",
+          "sha256": "1a9d3bf56f2d51956ebaa1cbde148fc815cb4e62e0ddb10245f5046453f0688e",
+          "comparator": {
+            "name": "UniversalDependencies/tools validator",
+            "version": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
+            "runtime": "Python 3.13.7",
+            "license": "GPL-2.0"
+          },
+          "status": "pass"
+        }
+      ],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+      ],
+      "knownGap": "External CoNLL-U evidence is validator-format evidence only; it is not parser-accuracy evidence."
+    },
+    {
+      "task": "dependency-parser",
+      "taskId": "nlp-dependency-parser",
+      "status": "ok",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-dependency-parser-readiness.mjs"
+          ],
+          "path": "tools/validate-dependency-parser-readiness.mjs",
+          "sha256": "304604abfbc064c71ef0edfa61b0112527f8802ea8275f7f53ecd4a0903d19f3"
+        },
+        {
+          "argv": [
+            "node",
+            "tools/validate-dependency-parser-feature.mjs"
+          ],
+          "path": "tools/validate-dependency-parser-feature.mjs",
+          "sha256": "9434eee59ee50675b763b07544463a98a97e04f635cf4ada8a0c71722e2aa1c0"
+        }
+      ],
+      "comparisons": [
+        {
+          "path": "fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json",
+          "sha256": "fd91b80ca7aaf297b6fffb3c01fd48e6cc8cc87fe5d78f75f594431bdf5daac6",
+          "comparator": {
+            "name": "JavaScript NLP baseline",
+            "version": "2026-05 readiness review",
+            "runtime": "javascript"
+          },
+          "status": "not-run"
+        },
+        {
+          "path": "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+          "sha256": "2f63a1011029c2d281173ad6d1dd8012b86b6d1e908e0b94fb785217af5f240d",
+          "comparator": {
+            "name": "spaCy DependencyParser",
+            "version": "3.8.14",
+            "runtime": "python"
+          },
+          "status": "pass"
+        },
+        {
+          "path": "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+          "sha256": "16c9930a451a1f26280ef6859af5acdf8069bfbfb6d6ceb34f7b0cb5048d6483",
+          "comparator": {
+            "name": "Stanza DepparseProcessor",
+            "version": "1.12.0",
+            "runtime": "python"
+          },
+          "status": "pass"
+        },
+        {
+          "path": "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json",
+          "sha256": "239d1886a168fecf491f57ad62114ccb9da8b7211ccfe1f5e0f6323bb2f500fa",
+          "comparator": {
+            "name": "UniversalDependencies/tools validator",
+            "version": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
+            "runtime": "other"
+          },
+          "status": "pass"
+        }
+      ],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+      ],
+      "knownGap": "Dependency parser behavior remains limited to frozen slices; this command validates comparator captures and feature output."
+    },
+    {
+      "task": "retrieval",
+      "taskId": "nlp-retrieval",
+      "status": "gap-recorded",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-retrieval-feature.mjs"
+          ],
+          "path": "tools/validate-retrieval-feature.mjs",
+          "sha256": "001684fef2137d14244bc8053bcd02cdd6b8cbe033f3d00e844f151dceb1fc88"
+        }
+      ],
+      "comparisons": [],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-retrieval/conformance-report.json"
+      ],
+      "knownGap": "Retrieval behavior remains limited to a frozen explicit-token corpus; this command validates feature output without external comparator captures."
+    },
+    {
+      "task": "relation-extraction",
+      "taskId": "nlp-relation-extraction",
+      "status": "gap-recorded",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-relation-extraction-readiness.mjs"
+          ],
+          "path": "tools/validate-relation-extraction-readiness.mjs",
+          "sha256": "7c238d324e21a6e06b0dad99c2fb28a737fe65277e3c15aca210924132e3def7"
+        }
+      ],
+      "comparisons": [],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+      ],
+      "knownGap": "Relation extraction is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior."
+    },
+    {
+      "task": "coreference",
+      "taskId": "nlp-coreference",
+      "status": "gap-recorded",
+      "validators": [
+        {
+          "argv": [
+            "node",
+            "tools/validate-coreference-readiness.mjs"
+          ],
+          "path": "tools/validate-coreference-readiness.mjs",
+          "sha256": "fd27506da6fe596c8fee9bfd2e20ae0ac51f111c9bf2c8a1e401f5216117c002"
+        }
+      ],
+      "comparisons": [],
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-coreference/conformance-report.json"
+      ],
+      "knownGap": "Coreference is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior."
+    }
+  ]
+}
