@@ -4,14 +4,18 @@ import {
   type TextDocDependencyAnnotation,
   type TextDocDocumentV1,
   type TextDocEntityAnnotation,
+  type TextDocRelationAnnotation,
 } from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
+  analyzeRelationExtraction,
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
   analyzeDependencyParser,
   createDependencyParserConformanceReport,
   createDependencyParserResultEnvelope,
+  createRelationExtractionConformanceReport,
+  createRelationExtractionResultEnvelope,
   createRuleBackedNerConformanceReport,
   createRuleBackedNerResultEnvelope,
   createTextRulesEntityResource,
@@ -524,6 +528,177 @@ const flatNestedResult = analyzeRuleBackedNer(
 
 if (!flatNestedResult.diagnostics.some((diagnostic) => diagnostic.code === "entity-overlap-suppressed")) {
   throw new Error("suppressed nested spans should emit an explicit overlap diagnostic");
+}
+
+const expectedRelationExtraction = {
+  "en-employment": {
+    text: "Mira works for Northwind Labs in Boston.",
+    languageHint: "en",
+    relations: [
+      {
+        id: "relation-1",
+        label: "employed-by",
+        arguments: [
+          { role: "employee", target: { startCU: 0, endCU: 4, text: "Mira" } },
+          { role: "employer", target: { startCU: 15, endCU: 29, text: "Northwind Labs" } },
+        ],
+        evidence: [{ startCU: 5, endCU: 14, text: "works for" }],
+      },
+      {
+        id: "relation-2",
+        label: "located-in",
+        arguments: [
+          { role: "entity", target: { startCU: 15, endCU: 29, text: "Northwind Labs" } },
+          { role: "place", target: { startCU: 33, endCU: 39, text: "Boston" } },
+        ],
+        evidence: [{ startCU: 30, endCU: 32, text: "in" }],
+      },
+    ],
+  },
+  "en-cross-sentence": {
+    text: "Northwind Labs opened a clinic. The Boston facility is part of the company.",
+    languageHint: "en",
+    relations: [
+      {
+        id: "relation-1",
+        label: "part-of",
+        arguments: [
+          { role: "part", target: { startCU: 36, endCU: 51, text: "Boston facility" } },
+          { role: "whole", target: { startCU: 0, endCU: 14, text: "Northwind Labs" } },
+        ],
+        evidence: [{ startCU: 55, endCU: 74, text: "part of the company" }],
+      },
+    ],
+  },
+  "es-location": {
+    text: "El archivo central está en Sevilla.",
+    languageHint: "es",
+    relations: [
+      {
+        id: "relation-1",
+        label: "located-in",
+        arguments: [
+          { role: "entity", target: { startCU: 3, endCU: 18, text: "archivo central" } },
+          { role: "place", target: { startCU: 27, endCU: 34, text: "Sevilla" } },
+        ],
+        evidence: [{ startCU: 19, endCU: 26, text: "está en" }],
+      },
+    ],
+  },
+  "ar-location": {
+    text: "يقع المتحف في الرباط.",
+    languageHint: "ar",
+    relations: [
+      {
+        id: "relation-1",
+        label: "located-in",
+        arguments: [
+          { role: "entity", target: { startCU: 4, endCU: 10, text: "المتحف" } },
+          { role: "place", target: { startCU: 14, endCU: 20, text: "الرباط" } },
+        ],
+        evidence: [{ startCU: 0, endCU: 13, text: "يقع المتحف في" }],
+      },
+    ],
+  },
+  "en-no-relation": {
+    text: "Mira visited Northwind Labs but does not work for it.",
+    languageHint: "en",
+    relations: [],
+  },
+} as const;
+
+type RelationExtractionSliceId = keyof typeof expectedRelationExtraction;
+
+function relationExtractionProjection(document: TextDocDocumentV1) {
+  const entityLayer = document.layers.find((layer) => layer.id === "relation-arguments");
+  const relationLayer = document.layers.find((layer) => layer.id === "relations");
+  if (!entityLayer || !relationLayer) throw new Error("relation extraction document is missing expected layers");
+  const entityById = new Map(
+    entityLayer.annotations.map((annotation) => [annotation.id, annotation as TextDocEntityAnnotation]),
+  );
+  return relationLayer.annotations.map((annotation) => {
+    const relation = annotation as TextDocRelationAnnotation;
+    return {
+      id: relation.id,
+      label: relation.relationType,
+      arguments: relation.arguments.map((argument) => {
+        const entity = entityById.get(argument.annotationId);
+        if (!entity) throw new Error(`missing relation argument entity ${argument.annotationId}`);
+        const target = entity.targets[0];
+        if (!target || target.kind !== "span") throw new Error(`bad relation argument target ${entity.id}`);
+        return {
+          role: argument.role,
+          target: {
+            startCU: target.startCU,
+            endCU: target.endCU,
+            text: entity.text,
+          },
+        };
+      }),
+      evidence: relation.targets.map((target) => {
+        if (target.kind !== "annotation") throw new Error(`bad relation evidence target ${relation.id}`);
+        const evidence = entityById.get(target.annotationId);
+        if (!evidence) throw new Error(`missing relation evidence entity ${target.annotationId}`);
+        const evidenceTarget = evidence.targets[0];
+        if (!evidenceTarget || evidenceTarget.kind !== "span") {
+          throw new Error(`bad relation evidence span ${evidence.id}`);
+        }
+        return {
+          startCU: evidenceTarget.startCU,
+          endCU: evidenceTarget.endCU,
+          text: evidence.text,
+        };
+      }),
+    };
+  });
+}
+
+for (const sliceId of Object.keys(expectedRelationExtraction) as RelationExtractionSliceId[]) {
+  const expectedOutput = expectedRelationExtraction[sliceId];
+  const relationResult = analyzeRelationExtraction({
+    documentId: `relation:${sliceId}`,
+    text: expectedOutput.text,
+    sourceId: sliceId,
+    languageHint: expectedOutput.languageHint,
+  });
+
+  if (!isTextDocDocumentV1(relationResult.document)) {
+    throw new Error(`relation extraction result for ${sliceId} should satisfy textdoc`);
+  }
+
+  if (
+    JSON.stringify(relationExtractionProjection(relationResult.document)) !==
+    JSON.stringify(expectedOutput.relations)
+  ) {
+    throw new Error(`relation extraction output for ${sliceId} should match the recorded expected output`);
+  }
+
+  const relationEnvelope = createRelationExtractionResultEnvelope(relationResult, {
+    producerVersion: "0.0.0",
+    referenceId: sliceId,
+  });
+  if (!isTextProtocolResultEnvelopeV1(relationEnvelope)) {
+    throw new Error(`relation extraction envelope for ${sliceId} should satisfy textprotocol`);
+  }
+
+  const relationReport = createRelationExtractionConformanceReport(relationEnvelope, {
+    expectedArtifactPath: `fixtures/relation-extraction/expected/${sliceId}.json`,
+    matchesExpected: true,
+  });
+  if (!isTextConformanceReportV1(relationReport)) {
+    throw new Error(`relation extraction report for ${sliceId} should satisfy textconformance`);
+  }
+}
+
+const unsupportedRelation = analyzeRelationExtraction({
+  documentId: "relation:unsupported",
+  text: "Mira and Jana read the file.",
+  sourceId: "unsupported",
+  languageHint: "en",
+});
+
+if (!unsupportedRelation.diagnostics.some((diagnostic) => diagnostic.code === "unsupported-relation-pattern")) {
+  throw new Error("unsupported relation text should emit an explicit diagnostic");
 }
 
 const expectedDependencyParser = {

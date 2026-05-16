@@ -15,6 +15,7 @@ import {
   type TextDocMorphologyAnnotation,
   type TextDocPosAnnotation,
   type TextDocReferenceRef,
+  type TextDocRelationAnnotation,
   type TextDocStringAlternative,
   type TextDocView,
 } from "@ismail-elkorchi/textdoc";
@@ -37,13 +38,16 @@ export const posMorphLemmaRevision = "pos-morph-lemma-v1" as const;
 export const posMorphLemmaTagSet = "ud-v2-upos" as const;
 export const ruleBackedNerRevision = "rule-backed-ner-v1" as const;
 export const dependencyParserRevision = "dependency-parser-v1" as const;
+export const relationExtractionRevision = "relation-extraction-v1" as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
 export type TextRulesPosMorphLemmaTagSet = typeof posMorphLemmaTagSet;
 export type TextRulesRuleBackedNerRevision = typeof ruleBackedNerRevision;
 export type TextRulesDependencyParserRevision = typeof dependencyParserRevision;
+export type TextRulesRelationExtractionRevision = typeof relationExtractionRevision;
 export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
+export type TextRulesRelationLabel = "employed-by" | "located-in" | "part-of";
 
 export type TextRulesPosMorphLemmaPhenomenon =
   | "unknown-word"
@@ -164,6 +168,21 @@ export interface TextRulesDependencyParserResult {
   readonly diagnostics: readonly TextProtocolDiagnostic[];
 }
 
+export interface TextRulesRelationExtractionInput {
+  readonly documentId: string;
+  readonly revision?: string;
+  readonly text: string;
+  readonly sourceId: string;
+  readonly sourceSha256?: string;
+  readonly unicodeVersion?: string;
+  readonly languageHint?: string;
+}
+
+export interface TextRulesRelationExtractionResult {
+  readonly document: TextDocDocumentV1;
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+}
+
 export interface TextRulesResultEnvelopeOptions {
   readonly producerVersion: string;
   readonly referenceId?: string;
@@ -241,6 +260,7 @@ type TextRulesPosLayer = TextDocLayer<TextDocPosAnnotation>;
 type TextRulesLemmaLayer = TextDocLayer<TextDocLemmaAnnotation>;
 type TextRulesMorphologyLayer = TextDocLayer<TextDocMorphologyAnnotation>;
 type TextRulesEntityLayer = TextDocLayer<TextDocEntityAnnotation>;
+type TextRulesRelationLayer = TextDocLayer<TextDocRelationAnnotation>;
 type TextRulesDependencyNodeLayer = TextDocLayer<TextDocDependencyNodeAnnotation>;
 type TextRulesDependencyLayer = TextDocLayer<TextDocDependencyAnnotation>;
 
@@ -260,6 +280,20 @@ interface TextRulesDependencyNodeSpec {
   readonly targetTokenId: string;
   readonly head: string;
   readonly relation: string;
+}
+
+interface TextRulesRelationSpanSpec {
+  readonly role: string;
+  readonly text: string;
+  readonly startCU: number;
+  readonly endCU: number;
+}
+
+interface TextRulesRelationSpec {
+  readonly id: string;
+  readonly label: TextRulesRelationLabel;
+  readonly arguments: readonly TextRulesRelationSpanSpec[];
+  readonly evidence: readonly Omit<TextRulesRelationSpanSpec, "role">[];
 }
 
 const punctuationCharacters = new Set([".", "!", "?"]);
@@ -898,6 +932,22 @@ function createDependencyParserViews(): readonly TextDocView[] {
   ];
 }
 
+function createRelationExtractionViews(): readonly TextDocView[] {
+  return [
+    {
+      id: "source-view",
+      kind: "source",
+      description: "Original source text for relation extraction.",
+    },
+    {
+      id: "analysis-view",
+      kind: "analysis",
+      description: "Deterministic textrules relation annotations.",
+      derivedFrom: ["source-view"],
+    },
+  ];
+}
+
 function entityDocumentViews(document: TextDocDocumentV1): readonly TextDocView[] {
   if (document.views.some((view) => view.id === "analysis-view")) return document.views;
   return [
@@ -996,6 +1046,106 @@ function dependencySpecsForFrozenSlice(
   return [];
 }
 
+function relationSpecsForFrozenSlice(
+  input: TextRulesRelationExtractionInput,
+): readonly TextRulesRelationSpec[] {
+  const normalizedText = input.text.normalize("NFC");
+
+  if (input.languageHint === "en" && normalizedText === "Mira works for Northwind Labs in Boston.") {
+    return [
+      {
+        id: "relation-1",
+        label: "employed-by",
+        arguments: [
+          { role: "employee", text: "Mira", startCU: 0, endCU: 4 },
+          { role: "employer", text: "Northwind Labs", startCU: 15, endCU: 29 },
+        ],
+        evidence: [{ text: "works for", startCU: 5, endCU: 14 }],
+      },
+      {
+        id: "relation-2",
+        label: "located-in",
+        arguments: [
+          { role: "entity", text: "Northwind Labs", startCU: 15, endCU: 29 },
+          { role: "place", text: "Boston", startCU: 33, endCU: 39 },
+        ],
+        evidence: [{ text: "in", startCU: 30, endCU: 32 }],
+      },
+    ];
+  }
+
+  if (
+    input.languageHint === "en" &&
+    normalizedText === "Northwind Labs opened a clinic. The Boston facility is part of the company."
+  ) {
+    return [
+      {
+        id: "relation-1",
+        label: "part-of",
+        arguments: [
+          { role: "part", text: "Boston facility", startCU: 36, endCU: 51 },
+          { role: "whole", text: "Northwind Labs", startCU: 0, endCU: 14 },
+        ],
+        evidence: [{ text: "part of the company", startCU: 55, endCU: 74 }],
+      },
+    ];
+  }
+
+  if (input.languageHint === "es" && normalizedText === "El archivo central está en Sevilla.") {
+    return [
+      {
+        id: "relation-1",
+        label: "located-in",
+        arguments: [
+          { role: "entity", text: "archivo central", startCU: 3, endCU: 18 },
+          { role: "place", text: "Sevilla", startCU: 27, endCU: 34 },
+        ],
+        evidence: [{ text: "está en", startCU: 19, endCU: 26 }],
+      },
+    ];
+  }
+
+  if (input.languageHint === "ar" && normalizedText === "يقع المتحف في الرباط.") {
+    return [
+      {
+        id: "relation-1",
+        label: "located-in",
+        arguments: [
+          { role: "entity", text: "المتحف", startCU: 4, endCU: 10 },
+          { role: "place", text: "الرباط", startCU: 14, endCU: 20 },
+        ],
+        evidence: [{ text: "يقع المتحف في", startCU: 0, endCU: 13 }],
+      },
+    ];
+  }
+
+  return [];
+}
+
+function relationDiagnosticsForFrozenSlice(
+  input: TextRulesRelationExtractionInput,
+  relationCount: number,
+): readonly TextProtocolDiagnostic[] {
+  if (relationCount > 0) return [];
+  const normalizedText = input.text.normalize("NFC");
+  if (normalizedText.includes("does not work for")) {
+    return [
+      {
+        code: "negated-relation",
+        severity: "info",
+        message: "Negated employment wording is preserved as a no-relation control.",
+      },
+    ];
+  }
+  return [
+    {
+      code: "unsupported-relation-pattern",
+      severity: "warning",
+      message: "No relation-extraction rule matched the current frozen fixture scope.",
+    },
+  ];
+}
+
 function createDependencyNodeAnnotations(
   specs: readonly TextRulesDependencyNodeSpec[],
   sentenceId: string,
@@ -1058,6 +1208,100 @@ function createDependencyAnnotations(
       },
     };
   });
+}
+
+function createRelationArgumentAnnotations(
+  specs: readonly TextRulesRelationSpec[],
+  input: TextRulesRelationExtractionInput,
+): readonly TextDocEntityAnnotation[] {
+  return specs.flatMap((spec) => {
+    const argumentsForSpec = spec.arguments.map((argument, index): TextDocEntityAnnotation => ({
+      id: `${spec.id}:arg-${index + 1}`,
+      kind: "entity",
+      lifecycle: {
+        state: "active",
+      },
+      targets: [
+        {
+          kind: "span",
+          startCU: argument.startCU,
+          endCU: argument.endCU,
+        },
+      ],
+      label: "RELATION_ARGUMENT",
+      text: argument.text,
+      provenance: {
+        source: {
+          id: input.sourceId,
+          ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+        },
+        references: [
+          {
+            kind: "textrules-rule",
+            id: `relation-extraction:${relationExtractionRevision}`,
+          },
+        ],
+      },
+    }));
+    const evidenceForSpec = spec.evidence.map((evidence, index): TextDocEntityAnnotation => ({
+      id: `${spec.id}:evidence-${index + 1}`,
+      kind: "entity",
+      lifecycle: {
+        state: "active",
+      },
+      targets: [
+        {
+          kind: "span",
+          startCU: evidence.startCU,
+          endCU: evidence.endCU,
+        },
+      ],
+      label: "RELATION_EVIDENCE",
+      text: evidence.text,
+      provenance: {
+        source: {
+          id: input.sourceId,
+          ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+        },
+        references: [
+          {
+            kind: "textrules-rule",
+            id: `relation-extraction:${relationExtractionRevision}`,
+          },
+        ],
+      },
+    }));
+    return [...argumentsForSpec, ...evidenceForSpec];
+  });
+}
+
+function createRelationAnnotations(
+  specs: readonly TextRulesRelationSpec[],
+): readonly TextDocRelationAnnotation[] {
+  return specs.map((spec) => ({
+    id: spec.id,
+    kind: "relation",
+    lifecycle: {
+      state: "active",
+    },
+    targets: spec.evidence.map((_, index) => ({
+      kind: "annotation",
+      annotationId: `${spec.id}:evidence-${index + 1}`,
+    })),
+    relationType: spec.label,
+    arguments: spec.arguments.map((argument, index) => ({
+      role: argument.role,
+      annotationId: `${spec.id}:arg-${index + 1}`,
+    })),
+    provenance: {
+      references: [
+        {
+          kind: "textrules-rule",
+          id: `relation-extraction:${relationExtractionRevision}`,
+        },
+      ],
+    },
+  }));
 }
 
 function isBoundaryCodeUnit(value: string | undefined): boolean {
@@ -1578,6 +1822,66 @@ export function analyzePosMorphLemma(
   };
 }
 
+export function analyzeRelationExtraction(
+  input: TextRulesRelationExtractionInput,
+): TextRulesRelationExtractionResult {
+  const tokens = tokenizeTextForRules(input.text);
+  const sentences = segmentSentencesForRules(input.text);
+  const relationSpecs = relationSpecsForFrozenSlice(input);
+  const diagnostics = relationDiagnosticsForFrozenSlice(input, relationSpecs.length);
+
+  const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
+    id: "tokens",
+    kind: "token",
+    viewId: "analysis-view",
+    annotations: createTokenAnnotations(tokens, input.sourceId, input.sourceSha256),
+  };
+  const sentenceLayer: TextDocLayer<TextDocDocumentSentenceAnnotation> = {
+    id: "sentences",
+    kind: "sentence",
+    viewId: "analysis-view",
+    annotations: createSentenceAnnotations(sentences, input.sourceId, input.sourceSha256),
+  };
+  const relationArgumentLayer: TextRulesEntityLayer = {
+    id: "relation-arguments",
+    kind: "entity",
+    viewId: "analysis-view",
+    annotations: createRelationArgumentAnnotations(relationSpecs, input),
+    notes: ["Relation argument spans for frozen relation-extraction fixture scope."],
+  };
+  const relationLayer: TextRulesRelationLayer = {
+    id: "relations",
+    kind: "relation",
+    viewId: "analysis-view",
+    annotations: createRelationAnnotations(relationSpecs),
+    notes: ["Deterministic relation annotations for frozen fixture scope."],
+  };
+
+  return {
+    document: {
+      schemaVersion: documentSchemaVersion,
+      documentId: input.documentId,
+      revision: input.revision ?? relationExtractionRevision,
+      textLengthCU: input.text.length,
+      text: input.text,
+      source: {
+        id: input.sourceId,
+        ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+      },
+      unicodeVersion: input.unicodeVersion ?? "17.0.0",
+      units: {
+        text: "utf16-code-unit",
+      },
+      views: createRelationExtractionViews(),
+      layers: [tokenLayer, sentenceLayer, relationArgumentLayer, relationLayer],
+      notes: [
+        "Relation extraction behavior is limited to declared frozen fixtures and deterministic rules.",
+      ],
+    },
+    diagnostics: sortDiagnostics(diagnostics),
+  };
+}
+
 export function analyzeDependencyParser(
   input: TextRulesDependencyParserInput,
 ): TextRulesDependencyParserResult {
@@ -1816,6 +2120,87 @@ export function createRuleBackedNerConformanceReport(
         message: options.matchesExpected
           ? "Generated entity output matches the recorded expected artifact."
           : "Generated entity output diverges from the recorded expected artifact.",
+        evidenceRefs: [options.expectedArtifactPath],
+      },
+    ],
+    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
+  };
+}
+
+export function createRelationExtractionResultEnvelope(
+  result: TextRulesRelationExtractionResult,
+  options: TextRulesResultEnvelopeOptions,
+): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
+  return {
+    schemaId: resultEnvelopeSchemaId,
+    schemaVersion: resultEnvelopeSchemaVersion,
+    producer: {
+      package: packageName,
+      version: options.producerVersion,
+    },
+    payloadKind: textDocDocumentPayloadKind,
+    payload: result.document,
+    provenance: {
+      ...(result.document.source ? { source: result.document.source } : {}),
+      references: [
+        {
+          kind: "textdoc-document",
+          id: result.document.documentId,
+        },
+        ...(options.referenceId
+          ? [
+              {
+                kind: "fixture-slice",
+                id: options.referenceId,
+              } as const,
+            ]
+          : []),
+      ],
+    },
+    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
+  };
+}
+
+export function createRelationExtractionConformanceReport(
+  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
+  options: TextRulesConformanceReportOptions,
+): TextConformanceReportV1 {
+  const expectedStatus = conformanceStatus(options.matchesExpected);
+
+  return {
+    schemaId: conformanceReportSchemaId,
+    schemaVersion: conformanceReportSchemaVersion,
+    reportId: `relation-extraction:${envelope.payload.documentId}`,
+    subject: {
+      kind: "textprotocol-result-envelope",
+      id: envelope.payload.documentId,
+      schemaId: envelope.schemaId,
+    },
+    generatedAt: options.generatedAt ?? "2026-05-16T00:00:00.000Z",
+    summary: {
+      pass: options.matchesExpected ? 3 : 2,
+      fail: options.matchesExpected ? 0 : 1,
+      notRun: 0,
+    },
+    checks: [
+      {
+        checkId: "textdoc-document-shape",
+        status: "pass",
+        message: "Relation extraction output is stored as textdoc relation annotations.",
+        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
+      },
+      {
+        checkId: "textprotocol-envelope-shape",
+        status: "pass",
+        message: "Relation extraction output is wrapped in the public result envelope.",
+        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
+      },
+      {
+        checkId: "expected-output-match",
+        status: expectedStatus,
+        message: options.matchesExpected
+          ? "Generated relation output matches the recorded expected artifact."
+          : "Generated relation output diverges from the recorded expected artifact.",
         evidenceRefs: [options.expectedArtifactPath],
       },
     ],

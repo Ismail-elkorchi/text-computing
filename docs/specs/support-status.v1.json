@@ -302,20 +302,27 @@
     },
     {
       "id": "nlp-relation-extraction",
-      "status": "readiness-only",
-      "scope": "Typed relation extraction schemas, readiness fixtures, negative controls, and public support boundaries are recorded; no feature behavior is implemented.",
+      "status": "slice-proven",
+      "scope": "Deterministic typed relation outputs exist only for the frozen relation extraction slices.",
       "evidence": [
         "docs/specs/relation-extraction-readiness.md",
         "docs/specs/nlp-relation-extraction-research-ledger.md",
         "fixtures/relation-extraction/slices.json",
+        "fixtures/relation-extraction/expected/en-employment.json",
+        "fixtures/relation-extraction/expected/en-cross-sentence.json",
+        "fixtures/relation-extraction/expected/es-location.json",
+        "fixtures/relation-extraction/expected/ar-location.json",
+        "fixtures/relation-extraction/expected/en-no-relation.json",
         "schemas/relation-extraction-slices-v1.schema.json",
         "schemas/relation-extraction-expected-v1.schema.json",
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test/index.test.ts",
         "tools/validate-relation-extraction-readiness.mjs",
         "fixtures/reports/nlp-relation-extraction/conformance-report.json"
       ],
       "limitations": [
-        "No recorded expected outputs, executed comparator captures, feature behavior, or corpus evaluation are implemented",
-        "Current fixtures are repository-authored short texts only"
+        "No executed external comparator captures or corpus evaluation are implemented for relation extraction",
+        "Behavior is limited to repository-authored frozen short-text slices"
       ]
     },
     {

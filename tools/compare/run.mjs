@@ -72,7 +72,7 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-relation-extraction/conformance-report.json"],
-    knownGap: "Relation extraction is readiness-only; this command validates schemas, fixtures, and negative controls without feature behavior.",
+    knownGap: "Relation extraction behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures.",
   },
   coreference: {
     taskId: "nlp-coreference",

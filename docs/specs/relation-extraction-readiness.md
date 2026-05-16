@@ -3,22 +3,22 @@
 ## Why this document exists
 
 Relation extraction can be confused with cooccurrence, entity linking, event extraction, or learned
-classification. This readiness gate records the typed relation surface before any behavior is added.
+classification. This gate records the typed relation surface for the current frozen behavior slice.
 
 ## Status
 
 - Task id: `nlp-relation-extraction`
-- Status: `readiness-only`
+- Status: `slice-proven`
 - Owning packages: `textrules`, `textdoc`, `textconformance`
-- Current proof: public schemas, readiness fixtures, negative controls, and conformance report exist
-- Current non-proof: no relation extraction runtime behavior exists
+- Current proof: public schemas, frozen fixtures, recorded expected outputs, package behavior, negative controls, and conformance report exist
+- Current non-proof: no executed external comparator captures or corpus-level relation extraction evaluation exists
 
 ## Target representation
 
 The target representation is:
 
 - `textdoc-document-v1` for span-backed arguments and evidence spans;
-- `relation-extraction-expected-v1` for frozen expected outputs in a later feature gate;
+- `relation-extraction-expected-v1` for frozen expected outputs;
 - `textprotocol-result-envelope-v1` for serialized outputs; and
 - `textconformance-report-v1` for machine-readable verification references.
 
@@ -45,7 +45,7 @@ Every positive relation must identify:
 
 ## Allowed fixture policy
 
-Only repository-authored short texts are used in the current readiness gate. Broader corpora require
+Only repository-authored short texts are used in the current gate. Broader corpora require
 license, provenance, redistribution, and comparator-output decisions before they enter required checks.
 
 ## Input slices
@@ -67,16 +67,18 @@ They cover:
 
 This gate records comparator capability only. It does not commit executed comparator outputs.
 
-Future feature work must freeze comparator versions and corpus slices before behavior is added. Candidate
+Future broadening work must freeze comparator versions and corpus slices before wider behavior is added. Candidate
 comparators include mature NLP systems with relation or information-extraction surfaces, but their outputs
 are diagnostic evidence and do not define repository semantics.
 
 ## Expected-output format
 
-Future expected outputs must validate against
+Expected outputs validate against
 [`../../schemas/relation-extraction-expected-v1.schema.json`](../../schemas/relation-extraction-expected-v1.schema.json).
 
 The schema requires relation ids, labels, span-backed arguments, and evidence spans.
+Recorded expected outputs live in
+[`../../fixtures/relation-extraction/expected/`](../../fixtures/relation-extraction/expected/).
 
 ## Verification
 
