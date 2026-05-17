@@ -53,8 +53,8 @@ expect(
   "Relation extraction feature gate requires recorded expected outputs.",
 );
 expect(
-  slices.comparatorStatus === "capability-recorded",
-  "Relation extraction readiness must not claim executed comparator captures yet.",
+  slices.comparatorStatus === "claim-downgraded",
+  "Relation extraction readiness must explicitly downgrade comparator-backed claims.",
 );
 
 const requiredLabels = ["employed-by", "located-in", "part-of", "no-relation"];

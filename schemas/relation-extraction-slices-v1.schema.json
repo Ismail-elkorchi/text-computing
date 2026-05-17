@@ -20,7 +20,7 @@
     "taskId": { "const": "nlp-relation-extraction" },
     "supportStatus": { "enum": ["readiness-only", "slice-proven"] },
     "expectedOutputStatus": { "enum": ["schema-defined", "recorded"] },
-    "comparatorStatus": { "const": "capability-recorded" },
+    "comparatorStatus": { "const": "claim-downgraded" },
     "allowedFixturePolicy": { "type": "string", "minLength": 1 },
     "relationLabelPolicy": {
       "type": "object",

@@ -56,13 +56,12 @@ This gate records:
 
 ## Comparator outputs
 
-Files under `fixtures/dependency-parser/comparisons/*.json` distinguish executed captures from capability
-records and ecosystem gaps.
+Files under `fixtures/dependency-parser/comparisons/*.json` record executed captures for this gate.
 
 - `spacy-3.8.json` records executed outputs from pinned spaCy package and model versions.
 - `stanza-1.12.json` records executed outputs from Stanza 1.12.0 and downloaded Stanza models for the frozen slices.
 - `ud-validator-ee98e50.json` records direct UD/CoNLL-U validation of the frozen expected arcs. It is not parser model-output evidence.
-- `javascript-gap-2026-05.json` records the absence of a committed JavaScript comparator for this gate.
+- No JavaScript comparator-backed dependency-parser claim is made by this gate.
 
 The next feature gate must extend these records with broader corpus and language slices before feature code.
 

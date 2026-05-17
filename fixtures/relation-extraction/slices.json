@@ -3,7 +3,7 @@
   "taskId": "nlp-relation-extraction",
   "supportStatus": "slice-proven",
   "expectedOutputStatus": "recorded",
-  "comparatorStatus": "capability-recorded",
+  "comparatorStatus": "claim-downgraded",
   "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
   "relationLabelPolicy": {
     "labels": ["employed-by", "located-in", "part-of", "no-relation"],

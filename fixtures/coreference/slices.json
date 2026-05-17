@@ -3,7 +3,7 @@
   "taskId": "nlp-coreference",
   "supportStatus": "slice-proven",
   "expectedOutputStatus": "recorded",
-  "comparatorStatus": "capability-recorded",
+  "comparatorStatus": "claim-downgraded",
   "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
   "chainPolicy": {
     "mentionKinds": ["proper", "nominal", "pronoun", "singleton"],

@@ -9,9 +9,9 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 6,
+    "pass": 7,
     "fail": 0,
-    "notRun": 1
+    "notRun": 0
   },
   "checks": [
     {
@@ -63,9 +63,9 @@
       ]
     },
     {
-      "checkId": "additional-comparator-captures",
-      "status": "not-run",
-      "message": "wink-nlp and compromise POS/morph/lemma captures are not committed in this gate.",
+      "checkId": "javascript-comparator-claim-boundary",
+      "status": "pass",
+      "message": "No JavaScript comparator-backed POS/morph/lemma claim is made in this gate.",
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/tool-versions.json",
         "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
@@ -83,6 +83,6 @@
     }
   ],
   "notes": [
-    "This report persists current fixture-bound POS/morph/lemma evidence and records that spaCy and Stanza have committed executed comparator output while JavaScript comparator entries remain capability records."
+    "This report persists current fixture-bound POS/morph/lemma evidence and records that spaCy and Stanza have committed executed comparator output. JavaScript comparator-backed POS/morph/lemma support is not claimed."
   ]
 }

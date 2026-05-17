@@ -20,7 +20,7 @@
     "taskId": { "const": "nlp-coreference" },
     "supportStatus": { "const": "slice-proven" },
     "expectedOutputStatus": { "const": "recorded" },
-    "comparatorStatus": { "const": "capability-recorded" },
+    "comparatorStatus": { "const": "claim-downgraded" },
     "allowedFixturePolicy": { "type": "string", "minLength": 1 },
     "chainPolicy": {
       "type": "object",

@@ -49,7 +49,7 @@ expect(validateReport(report), `${reportPath} failed ${conformanceSchemaPath}`, 
 
 expect(slices.supportStatus === "slice-proven", "Coreference support status must be slice-proven.");
 expect(slices.expectedOutputStatus === "recorded", "Coreference feature gate requires recorded expected outputs.");
-expect(slices.comparatorStatus === "capability-recorded", "Coreference readiness must not claim executed comparator captures yet.");
+expect(slices.comparatorStatus === "claim-downgraded", "Coreference readiness must explicitly downgrade comparator-backed claims.");
 
 const requiredMentionKinds = ["proper", "nominal", "pronoun", "singleton"];
 expect(

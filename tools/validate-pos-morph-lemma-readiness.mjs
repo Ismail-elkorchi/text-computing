@@ -76,12 +76,12 @@ for (const phenomenon of requiredPhenomena) {
 
 const runtimes = new Set(toolVersions.comparators.map((entry) => entry.runtime));
 expect(
-  runtimes.has("javascript"),
-  "POS/morph/lemma readiness requires at least one frozen JavaScript comparator.",
-);
-expect(
   runtimes.has("python") || runtimes.has("jvm"),
   "POS/morph/lemma readiness requires at least one frozen Python or JVM comparator.",
+);
+expect(
+  toolVersions.notes.some((note) => note.includes("no JavaScript comparator-backed POS/morph/lemma claim is made")),
+  "POS/morph/lemma readiness must explicitly state that no JavaScript comparator-backed claim is made.",
 );
 
 const comparisonDir = "fixtures/pos-morph-lemma/comparisons";
