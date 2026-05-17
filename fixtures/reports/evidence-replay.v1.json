@@ -81,12 +81,23 @@
             "license": "MIT"
           },
           "status": "pass"
+        },
+        {
+          "path": "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
+          "sha256": "ca4021453f433b4b3437ff0e25a9bb515c7cd2b25b36fb8fcbc25ea8ea0e83e2",
+          "comparator": {
+            "name": "Stanza",
+            "version": "1.12.0",
+            "runtime": "Python 3.13.7",
+            "license": "Apache-2.0"
+          },
+          "status": "pass"
         }
       ],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
       ],
-      "knownGap": "Only spaCy has committed executed POS/morph/lemma comparator output in this gate."
+      "knownGap": "JavaScript POS/morph/lemma comparator entries remain capability records, not executed captures."
     },
     {
       "task": "rule-backed-ner",

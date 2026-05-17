@@ -54,17 +54,18 @@
     {
       "checkId": "comparator-output-captures",
       "status": "pass",
-      "message": "An executed spaCy comparator-output capture is committed for the frozen slices.",
+      "message": "Executed spaCy and Stanza comparator-output captures are committed for the frozen slices.",
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/tool-versions.json",
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+        "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
         "schemas/pos-morph-lemma-comparison-v1.schema.json"
       ]
     },
     {
       "checkId": "additional-comparator-captures",
       "status": "not-run",
-      "message": "Stanza, wink-nlp, and compromise POS/morph/lemma captures are not committed in this gate.",
+      "message": "wink-nlp and compromise POS/morph/lemma captures are not committed in this gate.",
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/tool-versions.json",
         "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
@@ -82,6 +83,6 @@
     }
   ],
   "notes": [
-    "This report persists current fixture-bound POS/morph/lemma evidence and records that only spaCy has committed executed comparator output."
+    "This report persists current fixture-bound POS/morph/lemma evidence and records that spaCy and Stanza have committed executed comparator output while JavaScript comparator entries remain capability records."
   ]
 }

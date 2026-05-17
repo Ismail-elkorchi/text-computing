@@ -24,7 +24,7 @@ const TASKS = {
     comparisonDir: "fixtures/pos-morph-lemma/comparisons",
     comparisonSchema: "schemas/pos-morph-lemma-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"],
-    knownGap: "Only spaCy has committed executed POS/morph/lemma comparator output in this gate.",
+    knownGap: "JavaScript POS/morph/lemma comparator entries remain capability records, not executed captures.",
   },
   "rule-backed-ner": {
     taskId: "nlp-rule-backed-ner",
