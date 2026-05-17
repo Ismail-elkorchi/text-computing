@@ -499,11 +499,12 @@
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",
         "fixtures/retrieval/expected/retrieval-smoke.json",
+        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
         "schemas/retrieval-expected-v1.schema.json",
         "fixtures/reports/nlp-retrieval/conformance-report.json",
         "tools/validate-retrieval-feature.mjs"
       ],
-      "nextGate": "Add relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance thresholds.",
+      "nextGate": "Add larger corpora, broad relevance fixtures, multilingual retrieval fixtures, streaming behavior, filesystem-backed index storage, and performance thresholds.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -515,14 +516,17 @@
           "packages/textcorpus/src/index.ts"
         ],
         "fixtureRefs": [
-          "fixtures/retrieval/slices.json"
+          "fixtures/retrieval/slices.json",
+          "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
         ],
         "negativeControlRefs": [
-          "fixtures/retrieval/expected/retrieval-smoke.json"
+          "fixtures/retrieval/expected/retrieval-smoke.json",
+          "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
         ],
         "comparatorRefs": [],
         "corpusRefs": [
-          "fixtures/retrieval/expected/retrieval-smoke.json"
+          "fixtures/retrieval/expected/retrieval-smoke.json",
+          "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
         ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-retrieval/conformance-report.json"
@@ -531,7 +535,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, snippets, explain output, and index JSON round-trips exist only for the frozen explicit-token corpus and bounded package tests."
+      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, relevance judgments, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests."
     },
     {
       "taskId": "nlp-conllu-dependency-roundtrip",
