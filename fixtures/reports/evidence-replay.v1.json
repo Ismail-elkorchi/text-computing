@@ -307,14 +307,14 @@
             "tools/validate-relation-extraction-readiness.mjs"
           ],
           "path": "tools/validate-relation-extraction-readiness.mjs",
-          "sha256": "7b227b91b82bc3c0d3a53e9d4fbb93543477549966ccb43da2843a737374dbff"
+          "sha256": "521b0411682ed09e477f122d2f7dadd69c4a33ea49ef24b0d8630f04260aeaa7"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-relation-extraction/conformance-report.json"
       ],
-      "knownGap": "Relation extraction behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed relation extraction claim is made."
+      "knownGap": "Relation extraction behavior remains limited to the frozen repository-authored corpus slice; no external comparator-backed relation extraction claim is made."
     },
     {
       "task": "coreference",
@@ -327,14 +327,14 @@
             "tools/validate-coreference-readiness.mjs"
           ],
           "path": "tools/validate-coreference-readiness.mjs",
-          "sha256": "e918c90abad13a460b55a1f7bd4516a4c8111b7a902a28bb8a9f8fa741b5bf7e"
+          "sha256": "bcc6c131bd3d3be3ae3887d36a40ab7974f9ec56a869141a1d656c5cad480f75"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-coreference/conformance-report.json"
       ],
-      "knownGap": "Coreference behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed coreference claim is made."
+      "knownGap": "Coreference behavior remains limited to the frozen repository-authored corpus slice; no external comparator-backed coreference claim is made."
     }
   ]
 }

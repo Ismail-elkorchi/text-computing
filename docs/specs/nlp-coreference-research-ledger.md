@@ -36,5 +36,6 @@ instead of hidden behind one flat score.
 - Mention spans remain first-class.
 - Singleton mentions are preserved unless a later expected artifact explicitly excludes them.
 - Ambiguity becomes diagnostics rather than silent resolution.
+- Corpus-backed evidence must record source hashes, expected-output paths, split policy, and negative-control roles.
 - Frozen-slice behavior must stay limited to recorded expected outputs until executed comparator captures
-  and broader corpus slices are committed.
+  and larger corpus slices are committed.

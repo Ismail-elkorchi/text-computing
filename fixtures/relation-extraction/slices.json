@@ -5,6 +5,45 @@
   "expectedOutputStatus": "recorded",
   "comparatorStatus": "claim-downgraded",
   "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
+  "corpusEvidence": {
+    "id": "corpus:nlp-relation-extraction-smoke-v1",
+    "status": "committed",
+    "corpusClass": "repository-authored-evaluation-slice",
+    "splitPolicy": "All documents are frozen evaluation or negative-control fixtures; no training split or broad benchmark score is claimed.",
+    "supportBoundary": "Corpus-backed evidence means this committed corpus slice validates expected outputs and negative controls; it does not imply broad relation extraction coverage.",
+    "documents": [
+      {
+        "fixtureId": "ar-location",
+        "expectedPath": "fixtures/relation-extraction/expected/ar-location.json",
+        "sourceSha256": "7ffaa847451d9246d9d7e80835f535ba1d62d9732e07a943d543c336bcb7927f",
+        "role": "evaluation"
+      },
+      {
+        "fixtureId": "en-cross-sentence",
+        "expectedPath": "fixtures/relation-extraction/expected/en-cross-sentence.json",
+        "sourceSha256": "029725fc4f7ff08a5573e8e652289dac282f95bcc430d31eef9c0706cb822107",
+        "role": "evaluation"
+      },
+      {
+        "fixtureId": "en-employment",
+        "expectedPath": "fixtures/relation-extraction/expected/en-employment.json",
+        "sourceSha256": "37a50bde6bc6534d4134f2618a5f2d7f497afa5ac42537beae6a7b181666ff1b",
+        "role": "evaluation"
+      },
+      {
+        "fixtureId": "en-no-relation",
+        "expectedPath": "fixtures/relation-extraction/expected/en-no-relation.json",
+        "sourceSha256": "8ac543a8fb67775867cf4ad69ce26eb6fa75d2c291a6c769cb9edf0bf92f81ff",
+        "role": "negative-control"
+      },
+      {
+        "fixtureId": "es-location",
+        "expectedPath": "fixtures/relation-extraction/expected/es-location.json",
+        "sourceSha256": "11e4b436af89b41508b3086d9f5c723f8d2db2361cea8d93a25b96225e328dd7",
+        "role": "evaluation"
+      }
+    ]
+  },
   "relationLabelPolicy": {
     "labels": ["employed-by", "located-in", "part-of", "no-relation"],
     "argumentPolicy": "A relation must name at least two textdoc span-backed arguments with explicit roles.",

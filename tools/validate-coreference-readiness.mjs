@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import {
   analyzeCoreference,
@@ -24,6 +25,10 @@ function expect(condition, message, details) {
   console.error(message);
   if (details !== undefined) console.error(JSON.stringify(details, null, 2));
   process.exit(1);
+}
+
+function sha256Text(text) {
+  return createHash("sha256").update(text, "utf8").digest("hex");
 }
 
 const slicesSchemaPath = "schemas/coreference-slices-v1.schema.json";
@@ -123,6 +128,36 @@ function projectCoreference(document) {
 
 const expectedDir = "fixtures/coreference/expected";
 const expectedFiles = (await readdir(expectedDir)).filter((file) => file.endsWith(".json")).sort();
+const expectedPathSet = new Set(expectedFiles.map((file) => `${expectedDir}/${file}`));
+const corpusDocuments = slices.corpusEvidence.documents;
+expect(
+  corpusDocuments.map((entry) => entry.fixtureId).join(",") ===
+    [...corpusDocuments.map((entry) => entry.fixtureId)].sort().join(","),
+  "Coreference corpus evidence documents must be sorted by fixture id.",
+);
+expect(
+  corpusDocuments.length === fixtureIds.size,
+  "Coreference corpus evidence must cover every fixture.",
+);
+for (const document of corpusDocuments) {
+  const fixture = fixturesById.get(document.fixtureId);
+  expect(fixture !== undefined, `Coreference corpus evidence references unknown fixture ${document.fixtureId}.`);
+  expect(expectedPathSet.has(document.expectedPath), `${document.fixtureId} corpus evidence expectedPath is not committed.`);
+  expect(
+    document.sourceSha256 === sha256Text(fixture.source.text),
+    `${document.fixtureId} corpus evidence source hash mismatch.`,
+  );
+  if (
+    fixture.phenomena.includes("ambiguous-pronoun") ||
+    fixture.phenomena.includes("split-antecedent-control")
+  ) {
+    expect(document.role === "negative-control", `${document.fixtureId} must be a negative-control corpus document.`);
+  }
+}
+expect(
+  corpusDocuments.some((entry) => entry.role === "negative-control"),
+  "Coreference corpus evidence must include a negative-control document.",
+);
 const expectedSliceIds = new Set();
 for (const file of expectedFiles) {
   const dataPath = `${expectedDir}/${file}`;

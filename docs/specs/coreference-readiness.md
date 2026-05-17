@@ -11,8 +11,8 @@ recorded expected outputs.
 - Task id: `nlp-coreference`
 - Status: `slice-proven`
 - Owning packages: `textdoc`, `textrules`, `textconformance`
-- Current proof: public schemas, frozen fixtures, recorded expected outputs, package tests, and a conformance report exist
-- Current non-proof: executed external comparator captures and corpus evaluation are not implemented
+- Current proof: public schemas, frozen fixtures, committed corpus evidence, recorded expected outputs, package tests, and a conformance report exist
+- Current non-proof: executed external comparator captures and broad corpus benchmark are not implemented
 
 ## Target representation
 
@@ -64,9 +64,14 @@ They cover:
 
 ## Comparator and corpus freeze
 
+This gate records a committed repository-authored corpus slice in
+[`../../fixtures/coreference/slices.json`](../../fixtures/coreference/slices.json). The corpus evidence records
+fixture ids, source hashes, expected-output paths, split policy, and negative-control roles. It is corpus-backed
+evidence for this frozen slice only.
+
 This gate records comparator capability only. It does not commit executed comparator outputs.
 
-Future expansion must freeze comparator versions and corpus slices before wider behavior is added. Candidate
+Future expansion must freeze comparator versions and larger corpus slices before wider behavior is added. Candidate
 comparators include mature NLP systems with coreference or mention-clustering surfaces, but their outputs
 are diagnostic evidence and do not define repository semantics.
 

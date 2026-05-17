@@ -36,4 +36,5 @@ about behavior, not commands to widen the package boundary.
 - Relation arguments and evidence remain span-backed.
 - Cooccurrence is not a relation without an evidence cue.
 - Negation and ambiguity must become explicit diagnostics.
-- Feature code must wait for expected outputs and executed comparator captures.
+- Corpus-backed evidence must record source hashes, expected-output paths, split policy, and negative-control roles.
+- Wider behavior must wait for larger corpus slices and executed comparator captures.

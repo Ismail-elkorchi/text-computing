@@ -311,7 +311,7 @@
     {
       "id": "nlp-relation-extraction",
       "status": "slice-proven",
-      "scope": "Deterministic typed relation outputs exist only for the frozen relation extraction slices.",
+      "scope": "Deterministic typed relation outputs exist only for the frozen relation extraction corpus slice.",
       "evidence": [
         "docs/specs/relation-extraction-readiness.md",
         "docs/specs/nlp-relation-extraction-research-ledger.md",
@@ -329,14 +329,14 @@
         "fixtures/reports/nlp-relation-extraction/conformance-report.json"
       ],
       "limitations": [
-        "External comparator-backed and corpus-level relation extraction support are not claimed",
-        "Behavior is limited to repository-authored frozen short-text slices"
+        "External comparator-backed and broad-corpus relation extraction support are not claimed",
+        "Behavior is limited to the repository-authored frozen corpus slice"
       ]
     },
     {
       "id": "nlp-coreference",
       "status": "slice-proven",
-      "scope": "Coreference mention and chain behavior is implemented for frozen repository-authored short-text slices only.",
+      "scope": "Coreference mention and chain behavior is implemented for the frozen repository-authored corpus slice only.",
       "evidence": [
         "docs/specs/coreference-readiness.md",
         "docs/specs/nlp-coreference-research-ledger.md",
@@ -354,8 +354,8 @@
         "fixtures/reports/nlp-coreference/conformance-report.json"
       ],
       "limitations": [
-        "External comparator-backed and corpus-level coreference support are not claimed",
-        "Behavior is limited to repository-authored frozen short-text slices"
+        "External comparator-backed and broad-corpus coreference support are not claimed",
+        "Behavior is limited to the repository-authored frozen corpus slice"
       ]
     }
   ]

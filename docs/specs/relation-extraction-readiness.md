@@ -10,8 +10,8 @@ classification. This gate records the typed relation surface for the current fro
 - Task id: `nlp-relation-extraction`
 - Status: `slice-proven`
 - Owning packages: `textrules`, `textdoc`, `textconformance`
-- Current proof: public schemas, frozen fixtures, recorded expected outputs, package behavior, negative controls, and conformance report exist
-- Current non-proof: no executed external comparator captures or corpus-level relation extraction evaluation exists
+- Current proof: public schemas, frozen fixtures, committed corpus evidence, recorded expected outputs, package behavior, negative controls, and conformance report exist
+- Current non-proof: no executed external comparator captures or broad corpus benchmark exists
 
 ## Target representation
 
@@ -65,9 +65,14 @@ They cover:
 
 ## Comparator and corpus freeze
 
+This gate records a committed repository-authored corpus slice in
+[`../../fixtures/relation-extraction/slices.json`](../../fixtures/relation-extraction/slices.json).
+The corpus evidence records fixture ids, source hashes, expected-output paths, split policy, and negative-control
+roles. It is corpus-backed evidence for this frozen slice only.
+
 This gate records comparator capability only. It does not commit executed comparator outputs.
 
-Future broadening work must freeze comparator versions and corpus slices before wider behavior is added. Candidate
+Future broadening work must freeze comparator versions and larger corpus slices before wider behavior is added. Candidate
 comparators include mature NLP systems with relation or information-extraction surfaces, but their outputs
 are diagnostic evidence and do not define repository semantics.
 
