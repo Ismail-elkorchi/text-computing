@@ -260,7 +260,38 @@
         "docs/specs/tokenization-sbd-readiness.md",
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
-      "nextGate": "Expand multilingual fixtures and comparator replay breadth before broader claims."
+      "nextGate": "Expand multilingual fixtures and comparator replay breadth before broader claims.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textfacts",
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textfacts/src",
+          "packages/textdoc/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/tokenization-sbd/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/tokenization-sbd/expected/unpaired-high-surrogate.json"
+        ],
+        "comparatorRefs": [
+          "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+          "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
+        ],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Frozen fixtures, expected outputs, comparator captures, and executable behavior are present for the current slices."
     },
     {
       "taskId": "nlp-document-annotation-model",
@@ -270,7 +301,33 @@
         "docs/specs/textdoc-document-annotation-model.md",
         "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
       ],
-      "nextGate": "Validate dependency, relation, entity-linking, and coreference graph examples."
+      "nextGate": "Validate dependency, relation, entity-linking, and coreference graph examples.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textdoc/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/textdoc/examples/document-annotation-model-v1.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/textdoc/invalid/dangling-target.json"
+        ],
+        "comparatorRefs": [],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and round-trip validation are implemented."
     },
     {
       "taskId": "nlp-pack-resource-manifest",
@@ -280,7 +337,33 @@
         "docs/specs/textpack-resource-manifest.md",
         "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
       ],
-      "nextGate": "Add public resource review and update policy."
+      "nextGate": "Add public resource review and update policy.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textpack"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textpack/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/textpack/manifests/textpack-en-core.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/textpack/invalid/missing-license.json"
+        ],
+        "comparatorRefs": [],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Resource-manifest validation, licensed fixtures, fixture content loading, and overlay-conflict policy are implemented."
     },
     {
       "taskId": "nlp-pos-morph-lemma",
@@ -290,7 +373,38 @@
         "docs/specs/pos-morph-lemma-readiness.md",
         "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
       ],
-      "nextGate": "Add a second executed comparator or reduce the stated comparator-backed scope."
+      "nextGate": "Add a second executed comparator or reduce the stated comparator-backed scope.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textrules",
+          "@ismail-elkorchi/textdoc",
+          "@ismail-elkorchi/textpack"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textpack/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/pos-morph-lemma/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/pos-morph-lemma/expected/en-unknown-word.json"
+        ],
+        "comparatorRefs": [
+          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
+        ],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices."
     },
     {
       "taskId": "nlp-rule-backed-ner",
@@ -300,7 +414,39 @@
         "docs/specs/rule-backed-ner-readiness.md",
         "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
       ],
-      "nextGate": "Add multilingual negative controls and entity-linking readiness."
+      "nextGate": "Add multilingual negative controls and entity-linking readiness.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textrules",
+          "@ismail-elkorchi/textpack",
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textpack/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/rule-backed-ner/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json"
+        ],
+        "comparatorRefs": [
+          "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
+          "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
+        ],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures."
     },
     {
       "taskId": "nlp-corpus-tfidf-bm25",
@@ -310,7 +456,38 @@
         "docs/specs/corpus-tfidf-bm25-readiness.md",
         "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
-      "nextGate": "Add larger corpora, relevance-linked retrieval evaluation, field weighting, and performance thresholds."
+      "nextGate": "Add larger corpora, relevance-linked retrieval evaluation, field weighting, and performance thresholds.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textcorpus"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textcorpus/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/corpus-tfidf-bm25/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
+        ],
+        "comparatorRefs": [
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+        ],
+        "corpusRefs": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
+        ],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus."
     },
     {
       "taskId": "nlp-retrieval",
@@ -324,7 +501,35 @@
         "fixtures/reports/nlp-retrieval/conformance-report.json",
         "tools/validate-retrieval-feature.mjs"
       ],
-      "nextGate": "Add relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance thresholds."
+      "nextGate": "Add relevance judgments, larger corpora, fielded query syntax, streaming behavior, and performance thresholds.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textcorpus"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textcorpus/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/retrieval/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/retrieval/expected/retrieval-smoke.json"
+        ],
+        "comparatorRefs": [],
+        "corpusRefs": [
+          "fixtures/retrieval/expected/retrieval-smoke.json"
+        ],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-retrieval/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, snippets, explain output, and index JSON round-trips exist only for the frozen explicit-token corpus and bounded package tests."
     },
     {
       "taskId": "nlp-conllu-dependency-roundtrip",
@@ -334,7 +539,35 @@
         "docs/specs/conllu-dependency-readiness.md",
         "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
       ],
-      "nextGate": "Broaden invalid fixtures and keep parser behavior separate from format round-trip."
+      "nextGate": "Broaden invalid fixtures and keep parser behavior separate from format round-trip.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textdoc/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/conllu-dependency/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/conllu-dependency/invalid/dangling-head.conllu"
+        ],
+        "comparatorRefs": [
+          "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json"
+        ],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "CoNLL-U/UD import-export round-trip behavior exists only for the frozen repository-authored fixtures; no dependency parser or broad UD treebank behavior is implemented."
     },
     {
       "taskId": "nlp-dependency-parser",
@@ -347,7 +580,39 @@
         "fixtures/reports/nlp-dependency-parser/conformance-report.json",
         "tools/validate-dependency-parser-feature.mjs"
       ],
-      "nextGate": "Add broader UD treebank slices, performance thresholds, and JavaScript gap resolution before wider parser behavior."
+      "nextGate": "Add broader UD treebank slices, performance thresholds, and JavaScript gap resolution before wider parser behavior.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textrules",
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textdoc/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/dependency-parser/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/dependency-parser/slices.json"
+        ],
+        "comparatorRefs": [
+          "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+          "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+          "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
+        ],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Deterministic dependency arcs are implemented only for the frozen en-basic, es-mwt, and ar-nonlatin slices."
     },
     {
       "taskId": "nlp-relation-extraction",
@@ -365,7 +630,35 @@
         "packages/textrules/test/index.test.ts",
         "tools/validate-relation-extraction-readiness.mjs"
       ],
-      "nextGate": "Add executed external comparator captures and corpus evaluation before wider relation extraction behavior."
+      "nextGate": "Add executed external comparator captures and corpus evaluation before wider relation extraction behavior.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textrules",
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textdoc/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/relation-extraction/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/relation-extraction/expected/en-no-relation.json"
+        ],
+        "comparatorRefs": [],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Deterministic typed relation outputs exist only for the frozen relation extraction slices."
     },
     {
       "taskId": "nlp-coreference",
@@ -383,7 +676,35 @@
         "packages/textrules/test/index.test.ts",
         "tools/validate-coreference-readiness.mjs"
       ],
-      "nextGate": "Add executed external comparator captures and corpus evaluation before wider coreference behavior."
+      "nextGate": "Add executed external comparator captures and corpus evaluation before wider coreference behavior.",
+      "implementation": {
+        "status": "fixture-implemented",
+        "packageOwners": [
+          "@ismail-elkorchi/textrules",
+          "@ismail-elkorchi/textdoc"
+        ]
+      },
+      "evidenceProfile": {
+        "implementationRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textdoc/src/index.ts"
+        ],
+        "fixtureRefs": [
+          "fixtures/coreference/slices.json"
+        ],
+        "negativeControlRefs": [
+          "fixtures/coreference/expected/en-ambiguous.json"
+        ],
+        "comparatorRefs": [],
+        "corpusRefs": [],
+        "conformanceReportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "performanceBudgetRefs": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "claimBoundary": "Coreference mention and chain behavior is implemented for frozen repository-authored short-text slices only."
     }
   ],
   "releaseGates": [

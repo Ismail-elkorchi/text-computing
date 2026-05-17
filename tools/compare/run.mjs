@@ -6,6 +6,7 @@ import Ajv from "ajv";
 
 const ROOT = process.cwd();
 const REPLAY_MANIFEST_PATH = "fixtures/reports/evidence-replay.v1.json";
+const MODES = new Set(["replay", "execute"]);
 const TASKS = {
   "tokenization-sbd": {
     taskId: "nlp-tokenization-sbd",
@@ -85,7 +86,10 @@ const TASKS = {
 };
 
 const writeMode = process.argv.includes("--write");
-const taskArg = process.argv.find((arg, index) => index > 1 && !arg.startsWith("--")) ?? "all";
+const positionalArgs = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
+const firstArg = positionalArgs[0];
+const mode = MODES.has(firstArg) ? firstArg : "replay";
+const taskArg = (mode === firstArg ? positionalArgs[1] : firstArg) ?? "all";
 const taskNames = taskArg === "all" ? Object.keys(TASKS) : [taskArg];
 
 function fail(message, details) {
@@ -189,6 +193,7 @@ function makeValidatorRun({ config, command, commandResult, repoHead, dirty }) {
 
 function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash, repoHead, dirty }) {
   const comparator = comparison.comparator ?? comparison.validator ?? {};
+  const status = comparison.executionStatus === "capability-recorded" ? "not-run" : "pass";
   return {
     schemaId: "urn:ismail-elkorchi:evidence:run:v1",
     schemaVersion: 1,
@@ -215,7 +220,7 @@ function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash,
       source: comparisonPath,
     },
     command: {
-      argv: ["node", "tools/compare/run.mjs", taskArg],
+      argv: ["node", "tools/compare/run.mjs", mode, taskArg],
       cwd: ".",
     },
     runtime: {
@@ -232,7 +237,7 @@ function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash,
       stderr: "",
       durationMs: 0,
     },
-    status: comparison.executionStatus === "capability-recorded" ? "not-run" : "pass",
+    status,
     outputs: [
       {
         kind: "comparison-capture",
@@ -356,7 +361,14 @@ if (!validateEvidenceReplay(replayManifest)) {
   fail("Generated evidence replay manifest failed schema validation", validateEvidenceReplay.errors);
 }
 
-if (taskArg === "all") {
+if (mode === "execute") {
+  const executableComparisonCount = replayTasks
+    .flatMap((task) => task.comparisons)
+    .filter((comparison) => comparison.status === "pass").length;
+  if (executableComparisonCount === 0 && taskArg !== "all") {
+    fail(`${taskArg} has no executed comparator captures to inspect`);
+  }
+} else if (taskArg === "all") {
   if (writeMode) {
     await mkdir(path.dirname(path.join(ROOT, REPLAY_MANIFEST_PATH)), { recursive: true });
     await writeFile(path.join(ROOT, REPLAY_MANIFEST_PATH), `${JSON.stringify(replayManifest, null, 2)}\n`);
@@ -379,4 +391,4 @@ if (taskArg === "all") {
   }
 }
 
-console.log(JSON.stringify({ schemaVersion: 1, repoHead, dirty, summaries }, null, 2));
+console.log(JSON.stringify({ schemaVersion: 1, mode, repoHead, dirty, summaries }, null, 2));

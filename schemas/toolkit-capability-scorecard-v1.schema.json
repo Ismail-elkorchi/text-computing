@@ -135,6 +135,9 @@
         "taskId",
         "supportStatus",
         "languageTier",
+        "implementation",
+        "evidenceProfile",
+        "claimBoundary",
         "evidenceRefs",
         "nextGate"
       ],
@@ -150,6 +153,9 @@
             "corpus-backed"
           ]
         },
+        "implementation": { "$ref": "#/definitions/taskImplementation" },
+        "evidenceProfile": { "$ref": "#/definitions/evidenceProfile" },
+        "claimBoundary": { "type": "string", "minLength": 1 },
         "evidenceRefs": {
           "type": "array",
           "minItems": 1,
@@ -169,6 +175,72 @@
           "type": "array",
           "minItems": 1,
           "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "taskImplementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "packageOwners"],
+      "properties": {
+        "status": {
+          "enum": [
+            "readiness-only",
+            "fixture-implemented",
+            "package-implemented"
+          ]
+        },
+        "packageOwners": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "evidenceProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementationRefs",
+        "fixtureRefs",
+        "negativeControlRefs",
+        "comparatorRefs",
+        "corpusRefs",
+        "conformanceReportRefs",
+        "performanceBudgetRefs"
+      ],
+      "properties": {
+        "implementationRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "fixtureRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "negativeControlRefs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "comparatorRefs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "corpusRefs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "conformanceReportRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "performanceBudgetRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
         }
       }
     },

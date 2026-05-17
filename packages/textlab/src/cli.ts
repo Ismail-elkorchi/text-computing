@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import { readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { access, readFile } from "node:fs/promises";
+import path from "node:path";
 import {
   inspectCorpusFixture,
   inspectEvidenceReplay,
@@ -23,6 +25,52 @@ export interface TextlabCliResult {
   readonly stderr: string;
 }
 
+function execFileText(binary: string, args: readonly string[], cwd: string): Promise<TextlabCliResult> {
+  return new Promise((resolve) => {
+    execFile(binary, [...args], { cwd, encoding: "utf8" }, (error, stdout, stderr) => {
+      const exitCode =
+        error !== null && typeof error === "object" && "code" in error && typeof error.code === "number"
+          ? error.code
+          : error === null
+            ? 0
+            : 1;
+      resolve({
+        exitCode,
+        stdout,
+        stderr,
+      });
+    });
+  });
+}
+
+async function pathExists(candidate: string): Promise<boolean> {
+  try {
+    await access(candidate);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function findRepositoryRoot(startDirectory = process.cwd()): Promise<string | undefined> {
+  let current = path.resolve(startDirectory);
+  while (true) {
+    const packagePath = path.join(current, "package.json");
+    const comparePath = path.join(current, "tools", "compare", "run.mjs");
+    if ((await pathExists(packagePath)) && (await pathExists(comparePath))) {
+      try {
+        const packageJson = JSON.parse(await readFile(packagePath, "utf8")) as { readonly name?: unknown };
+        if (packageJson.name === "text-computing") return current;
+      } catch {
+        return undefined;
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) return undefined;
+    current = parent;
+  }
+}
+
 function usage(): string {
   return [
     "Usage:",
@@ -31,6 +79,7 @@ function usage(): string {
     "  textlab conformance-report <path>",
     "  textlab annotations <path>",
     "  textlab evidence-replay [path]",
+    "  textlab evidence-run <replay|execute> [task]",
     "  textlab corpus-fixture <path>",
     "  textlab --help",
     "",
@@ -40,6 +89,7 @@ function usage(): string {
     "  conformance-report  Render a deterministic summary of one conformance report.",
     "  annotations     Inspect a textdoc document annotation graph.",
     "  evidence-replay Render comparator/replay status counts.",
+    "  evidence-run    Run the repository evidence replay or execution command.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
     "",
   ].join("\n");
@@ -61,6 +111,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "conformance-report" &&
     command !== "annotations" &&
     command !== "evidence-replay" &&
+    command !== "evidence-run" &&
     command !== "corpus-fixture"
   ) {
     return {
@@ -68,6 +119,33 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       stdout: "",
       stderr: `Unknown command: ${command}\n${usage()}`,
     };
+  }
+
+  if (command === "evidence-run") {
+    const [modeArg, taskArg = "all", ...extra] = [pathArg, ...rest];
+    if (modeArg !== "replay" && modeArg !== "execute") {
+      return {
+        exitCode: 2,
+        stdout: "",
+        stderr: `Missing or invalid evidence-run mode.\n${usage()}`,
+      };
+    }
+    if (extra.length > 0) {
+      return {
+        exitCode: 2,
+        stdout: "",
+        stderr: `Too many arguments for ${command}.\n${usage()}`,
+      };
+    }
+    const root = await findRepositoryRoot();
+    if (root === undefined) {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: "Could not find text-computing repository root for evidence-run.\n",
+      };
+    }
+    return execFileText(process.execPath, ["tools/compare/run.mjs", modeArg, taskArg], root);
   }
 
   if (rest.length > 0) {
