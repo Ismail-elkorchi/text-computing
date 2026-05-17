@@ -16,6 +16,7 @@ import {
   searchTextCorpusRetrievalIndex,
   stringifyTextCorpusRetrievalIndex,
   sliceTextCorpusByMetadata,
+  textCorpusBm25fFormula,
   textCorpusCollectionSchemaVersion,
   textCorpusRetrievalSchemaVersion,
   textCorpusScoringSchemaVersion,
@@ -511,6 +512,128 @@ if (fieldOnlyRetrieval.results[0]?.hits.map((hit) => hit.docId).join(",") !== "d
   throw new Error("field-only retrieval should support metadata filters with explicit zero-score inclusion");
 }
 
+const fieldedScoringCollection = createTextCorpusCollection(
+  [
+    {
+      ...scoringAlphaEntry,
+      metadata: {
+        language: "en",
+        genre: "news",
+        title: "Alpha report",
+      },
+    },
+    {
+      ...scoringBetaEntry,
+      metadata: {
+        language: "en",
+        genre: "news",
+        title: "Gamma bulletin",
+      },
+    },
+    {
+      ...scoringDeltaEntry,
+      metadata: {
+        language: "en",
+        genre: "note",
+        title: "Delta note",
+      },
+    },
+    emptyEntry,
+  ],
+  { corpusId: "corpus-retrieval-fielded-smoke" },
+);
+
+const fieldedIndex = buildTextCorpusRetrievalIndex(fieldedScoringCollection, {
+  formula: textCorpusBm25fFormula,
+  fields: [
+    { id: "title", source: "metadata", weight: 2, b: 0.25 },
+    { id: "body", source: "tokens", weight: 1, b: 0.75 },
+  ],
+});
+
+if (!isTextCorpusRetrievalIndexV1(fieldedIndex)) {
+  throw new Error("fielded retrieval index should satisfy the runtime contract");
+}
+
+if (
+  fieldedIndex.formula !== textCorpusBm25fFormula ||
+  fieldedIndex.fieldOrder?.join(",") !== "title,body" ||
+  fieldedIndex.termOrder.join(",") !== "alpha,beta,bulletin,delta,gamma,note,report"
+) {
+  throw new Error("fielded retrieval index should expose deterministic field and term ordering");
+}
+
+const fieldedSerialized = stringifyTextCorpusRetrievalIndex(fieldedIndex);
+const fieldedParsed = parseTextCorpusRetrievalIndex(fieldedSerialized);
+if (JSON.stringify(fieldedParsed) !== JSON.stringify(fieldedIndex)) {
+  throw new Error("fielded retrieval index persistence should round-trip deterministically");
+}
+
+const bm25fResult = searchTextCorpusRetrievalIndex(
+  fieldedIndex,
+  [
+    parseTextCorpusQuery("title:alpha +beta genre:news", { id: "fielded-title-alpha-beta" }),
+    parseTextCorpusQuery("title:delta genre:note", { id: "fielded-delta-note" }),
+    parseTextCorpusQuery("+beta title:gamma", { id: "negative-field-control" }),
+  ],
+  { topK: 3, snippetWindow: 1 },
+);
+
+if (!isTextCorpusRetrievalResultV1(bm25fResult)) {
+  throw new Error("fielded retrieval result should satisfy the runtime contract");
+}
+
+const fieldedTitleAlphaHits =
+  bm25fResult.results.find((entry) => entry.query.id === "fielded-title-alpha-beta")?.hits ?? [];
+if (fieldedTitleAlphaHits.map((hit) => hit.docId).join(",") !== "doc-a") {
+  throw new Error("fielded title/body retrieval should return doc-a");
+}
+const titleAlphaExplain = fieldedTitleAlphaHits[0]?.explain.find(
+  (entry) => entry.term === "alpha" && entry.field === "title",
+);
+if (
+  titleAlphaExplain?.fieldContributions?.[0]?.field !== "title" ||
+  titleAlphaExplain.fieldContributions[0].weight !== 2
+) {
+  throw new Error("fielded BM25F explain output should record title field contribution");
+}
+expectNear(titleAlphaExplain?.contribution, 1.1297304805162718, "fielded title alpha contribution");
+const fieldedBetaExplain = fieldedTitleAlphaHits[0]?.explain.find(
+  (entry) => entry.term === "beta" && entry.field === undefined,
+);
+expectNear(fieldedBetaExplain?.contribution, 0.9092952648057796, "fielded beta body contribution");
+expectNear(fieldedTitleAlphaHits[0]?.score, 2.0390257453220513, "fielded title/body score");
+
+const fieldedDeltaHits =
+  bm25fResult.results.find((entry) => entry.query.id === "fielded-delta-note")?.hits ?? [];
+if (fieldedDeltaHits.map((hit) => hit.docId).join(",") !== "doc-c") {
+  throw new Error("fielded retrieval should combine indexed title fields and metadata filters");
+}
+
+const negativeFieldHits =
+  bm25fResult.results.find((entry) => entry.query.id === "negative-field-control")?.hits ?? [];
+if (negativeFieldHits.length !== 0) {
+  throw new Error("fielded retrieval should reject incompatible required body/title clauses");
+}
+
+let duplicateFieldRejected = false;
+try {
+  buildTextCorpusRetrievalIndex(fieldedScoringCollection, {
+    formula: textCorpusBm25fFormula,
+    fields: [
+      { id: "title", source: "metadata" },
+      { id: "title", source: "tokens" },
+    ],
+  });
+} catch (error) {
+  duplicateFieldRejected =
+    error instanceof Error && error.message === "duplicate textcorpus retrieval field id: title";
+}
+
+if (!duplicateFieldRejected) {
+  throw new Error("fielded retrieval should reject duplicate field ids");
+}
+
 const largeEntries = Array.from({ length: 128 }, (_, index): TextCorpusEntry => {
   const id = `large-${String(index).padStart(3, "0")}`;
   const hasTarget = index % 17 === 0;
@@ -543,6 +666,25 @@ if (largeIndex.documentOrder.length !== 128 || largeIndex.termOrder.length !== 1
 
 if (largeResult.results[0]?.hits.map((hit) => hit.docId).join(",") !== "large-000,large-034,large-068,large-102") {
   throw new Error("large retrieval fixture should preserve deterministic topK ordering under filters");
+}
+
+const largeFieldedIndex = buildTextCorpusRetrievalIndex(largeCollection, {
+  formula: textCorpusBm25fFormula,
+  fields: [
+    { id: "body", source: "tokens", weight: 1, b: 0.75 },
+    { id: "group", source: "metadata", weight: 0.25, b: 0 },
+  ],
+});
+const largeFieldedResult = searchTextCorpusRetrievalIndex(
+  largeFieldedIndex,
+  [parseTextCorpusQuery("+target group:even", { id: "target-even-fielded" })],
+  { topK: 4, snippetWindow: 1 },
+);
+if (
+  largeFieldedResult.results[0]?.hits.map((hit) => hit.docId).join(",") !==
+  "large-000,large-034,large-068,large-102"
+) {
+  throw new Error("large fielded retrieval fixture should preserve deterministic topK ordering");
 }
 
 void expectedPackageName;

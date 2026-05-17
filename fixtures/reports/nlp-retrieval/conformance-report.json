@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 7,
     "fail": 0,
     "notRun": 0
   },
@@ -20,7 +20,8 @@
       "message": "Frozen retrieval slice and expected output are committed.",
       "evidenceRefs": [
         "fixtures/retrieval/slices.json",
-        "fixtures/retrieval/expected/retrieval-smoke.json"
+        "fixtures/retrieval/expected/retrieval-smoke.json",
+        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
       ]
     },
     {
@@ -34,10 +35,29 @@
     {
       "checkId": "feature-output-proof",
       "status": "pass",
-      "message": "Retrieval index, query parsing, ranking, snippets, and explain output pass feature validation.",
+      "message": "Retrieval index, query parsing, ranking, snippets, explain output, and JSON persistence pass feature validation.",
       "evidenceRefs": [
         "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test/index.test.ts",
+        "tools/validate-retrieval-feature.mjs"
+      ]
+    },
+    {
+      "checkId": "fielded-bm25f-proof",
+      "status": "pass",
+      "message": "Fielded BM25F retrieval is tied to explicit field specs and a committed fielded smoke corpus.",
+      "evidenceRefs": [
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+        "packages/textcorpus/test/index.test.ts"
+      ]
+    },
+    {
+      "checkId": "relevance-judgment-recorded",
+      "status": "pass",
+      "message": "Committed relevance judgments are checked against the fielded retrieval smoke output.",
+      "evidenceRefs": [
+        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
         "tools/validate-retrieval-feature.mjs"
       ]
     },
@@ -53,7 +73,7 @@
     {
       "checkId": "support-boundary-recorded",
       "status": "pass",
-      "message": "Support status remains limited to the frozen retrieval corpus.",
+      "message": "Support status remains limited to committed retrieval fixtures and bounded package tests.",
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
@@ -61,6 +81,6 @@
     }
   ],
   "notes": [
-    "This report persists retrieval evidence for a frozen explicit-token corpus and bounded package-level query-control tests only; it does not add streaming index, durable storage, relevance-benchmark, or broad multilingual support."
+    "This report persists retrieval evidence for committed explicit-token and fielded smoke corpora plus bounded package-level query-control tests only; it does not add streaming index, filesystem-backed index storage, broad relevance-benchmark, or broad multilingual support."
   ]
 }

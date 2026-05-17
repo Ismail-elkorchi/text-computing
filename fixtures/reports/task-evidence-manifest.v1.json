@@ -201,20 +201,21 @@
     {
       "taskId": "nlp-retrieval",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for retrieval over the frozen explicit-token corpus and bounded package-level query-control tests only.",
+      "claimBoundary": "Slice-proven for retrieval over committed explicit-token and fielded smoke corpora plus bounded package-level query-control tests only.",
       "reportPath": "fixtures/reports/nlp-retrieval/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",
         "fixtures/retrieval/expected/retrieval-smoke.json",
+        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
         "schemas/retrieval-expected-v1.schema.json",
         "packages/textcorpus/src/index.ts",
         "tools/validate-retrieval-feature.mjs"
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No streaming retrieval, durable index storage, relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set is implemented.",
-        "Behavior uses explicit tokens from the frozen corpus fixture plus bounded package-level tests."
+        "No streaming retrieval, filesystem-backed index store, broad relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
+        "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
       ]
     },
     {

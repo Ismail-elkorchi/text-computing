@@ -31,7 +31,7 @@
       "scalePolicy": "Large-corpus claims require document-count, token-count, query-count, and index-size thresholds.",
       "regressionPolicy": "Future retrieval measurements must pin corpus hash, query hash, formula, and ordering policy.",
       "evidenceRefs": ["fixtures/retrieval/slices.json", "tools/validate-retrieval-feature.mjs"],
-      "limitations": ["Current retrieval proof uses a small explicit-token corpus only."]
+      "limitations": ["Current retrieval proof uses small committed corpora and bounded package-level scale signals; it does not persist stable wall-clock or memory measurements."]
     },
     {
       "id": "textpack-lookup",

@@ -103,51 +103,128 @@ const expectedSchema = await readJson("schemas/retrieval-expected-v1.schema.json
 const validateExpected = ajv.compile(expectedSchema);
 const retrievalSlices = await readJson("fixtures/retrieval/slices.json");
 const corpusSlices = await readJson("fixtures/corpus-tfidf-bm25/slices.json");
-const expected = await readJson(retrievalSlices.expectedPath);
-expect(validateExpected(expected), `${retrievalSlices.expectedPath} failed retrieval expected schema`, validateExpected.errors);
+const expectedPaths = retrievalSlices.expectedPaths ?? [retrievalSlices.expectedPath];
+expect(
+  Array.isArray(expectedPaths) && expectedPaths.length >= 1,
+  "retrieval slices must declare one or more expected paths.",
+);
+const allCorpora = [...corpusSlices.corpora, ...(retrievalSlices.fieldedCorpora ?? [])];
+let expectedQueryCount = 0;
 
-const corpus = corpusSlices.corpora.find((entry) => entry.id === expected.corpusId);
-expect(corpus !== undefined, `missing corpus ${expected.corpusId}`);
+function buildOptions(expected) {
+  if (expected.formula === "bm25f.k1-1.2.b-0.75.fielded") {
+    return {
+      formula: expected.formula,
+      fields: expected.fieldSpecs,
+    };
+  }
+  return {
+    formula: expected.formula,
+  };
+}
 
-const collection = createTextCorpusCollection(corpus.documents.map(entryFromSlice), {
-  corpusId: expected.corpusId,
-});
-const index = buildTextCorpusRetrievalIndex(collection);
-expect(isTextCorpusRetrievalIndexV1(index), "retrieval index failed runtime guard.");
-
-const queries = expected.queries.map((query) => parseTextCorpusQuery(query.raw, { id: query.id }));
-const result = searchTextCorpusRetrievalIndex(index, queries, { topK: 3, snippetWindow: 1 });
-expect(isTextCorpusRetrievalResultV1(result), "retrieval result failed runtime guard.");
-
-const actual = comparableResult(result);
-expect(actual.queries.length === expected.queries.length, "retrieval query count mismatch.");
-for (const expectedQuery of expected.queries) {
-  const actualQuery = actual.queries.find((entry) => entry.id === expectedQuery.id);
-  expect(actualQuery !== undefined, `missing retrieval query ${expectedQuery.id}`);
-  expect(JSON.stringify(actualQuery.tokens) === JSON.stringify(expectedQuery.tokens), `${expectedQuery.id} token mismatch.`);
-  expect(actualQuery.hits.length === expectedQuery.hits.length, `${expectedQuery.id} hit count mismatch.`);
-  for (const expectedHit of expectedQuery.hits) {
-    const actualHit = actualQuery.hits.find((entry) => entry.docId === expectedHit.docId);
-    expect(actualHit !== undefined, `${expectedQuery.id} missing hit ${expectedHit.docId}`);
-    assertNear(actualHit.score, expectedHit.score, expected.tolerance, `${expectedQuery.id} ${expectedHit.docId} score`);
-    expect(JSON.stringify(actualHit.snippet) === JSON.stringify(expectedHit.snippet), `${expectedQuery.id} ${expectedHit.docId} snippet mismatch.`);
-    expect(actualHit.explain.length === expectedHit.explain.length, `${expectedQuery.id} ${expectedHit.docId} explain count mismatch.`);
-    for (const expectedTerm of expectedHit.explain) {
-      const actualTerm = actualHit.explain.find((entry) => entry.term === expectedTerm.term);
-      expect(actualTerm !== undefined, `${expectedQuery.id} ${expectedHit.docId} missing explain term ${expectedTerm.term}`);
-      expect(actualTerm.tf === expectedTerm.tf, `${expectedQuery.id} ${expectedTerm.term} tf mismatch.`);
-      expect(actualTerm.df === expectedTerm.df, `${expectedQuery.id} ${expectedTerm.term} df mismatch.`);
-      assertNear(actualTerm.idf, expectedTerm.idf, expected.tolerance, `${expectedQuery.id} ${expectedTerm.term} idf`);
-      assertNear(actualTerm.contribution, expectedTerm.contribution, expected.tolerance, `${expectedQuery.id} ${expectedTerm.term} contribution`);
-    }
+function assertExplanation(actualTerm, expectedTerm, tolerance, label) {
+  expect(actualTerm !== undefined, `${label} missing explain term ${expectedTerm.term}`);
+  expect(actualTerm.field === expectedTerm.field, `${label} ${expectedTerm.term} field mismatch.`);
+  assertNear(actualTerm.tf, expectedTerm.tf, tolerance, `${label} ${expectedTerm.term} tf`);
+  expect(actualTerm.df === expectedTerm.df, `${label} ${expectedTerm.term} df mismatch.`);
+  assertNear(actualTerm.idf, expectedTerm.idf, tolerance, `${label} ${expectedTerm.term} idf`);
+  assertNear(actualTerm.contribution, expectedTerm.contribution, tolerance, `${label} ${expectedTerm.term} contribution`);
+  const actualContributions = actualTerm.fieldContributions ?? [];
+  const expectedContributions = expectedTerm.fieldContributions ?? [];
+  expect(
+    actualContributions.length === expectedContributions.length,
+    `${label} ${expectedTerm.term} field contribution count mismatch.`,
+  );
+  for (const expectedContribution of expectedContributions) {
+    const actualContribution = actualContributions.find((entry) => entry.field === expectedContribution.field);
+    expect(actualContribution !== undefined, `${label} missing field contribution ${expectedContribution.field}.`);
+    assertNear(actualContribution.tf, expectedContribution.tf, tolerance, `${label} ${expectedContribution.field} tf`);
+    expect(actualContribution.length === expectedContribution.length, `${label} ${expectedContribution.field} length mismatch.`);
+    assertNear(
+      actualContribution.averageLength,
+      expectedContribution.averageLength,
+      tolerance,
+      `${label} ${expectedContribution.field} average length`,
+    );
+    assertNear(actualContribution.weight, expectedContribution.weight, tolerance, `${label} ${expectedContribution.field} weight`);
+    assertNear(
+      actualContribution.normalizedTf,
+      expectedContribution.normalizedTf,
+      tolerance,
+      `${label} ${expectedContribution.field} normalized tf`,
+    );
   }
 }
 
-const repeated = searchTextCorpusRetrievalIndex(index, queries, { topK: 3, snippetWindow: 1 });
-expect(JSON.stringify(result) === JSON.stringify(repeated), "retrieval output must be deterministic.");
+for (const expectedPath of expectedPaths) {
+  const expected = await readJson(expectedPath);
+  expect(validateExpected(expected), `${expectedPath} failed retrieval expected schema`, validateExpected.errors);
+
+  const corpus = allCorpora.find((entry) => entry.id === expected.corpusId);
+  expect(corpus !== undefined, `missing corpus ${expected.corpusId}`);
+
+  const collection = createTextCorpusCollection(corpus.documents.map(entryFromSlice), {
+    corpusId: expected.corpusId,
+  });
+  const index = buildTextCorpusRetrievalIndex(collection, buildOptions(expected));
+  expect(isTextCorpusRetrievalIndexV1(index), `${expectedPath} retrieval index failed runtime guard.`);
+
+  const serializedIndex = JSON.stringify(index, null, 2);
+  expect(
+    JSON.stringify(JSON.parse(serializedIndex)) === JSON.stringify(index),
+    `${expectedPath} retrieval index JSON persistence round-trip failed.`,
+  );
+
+  const queries = expected.queries.map((query) => parseTextCorpusQuery(query.raw, { id: query.id }));
+  const result = searchTextCorpusRetrievalIndex(index, queries, { topK: 3, snippetWindow: 1 });
+  expect(isTextCorpusRetrievalResultV1(result), `${expectedPath} retrieval result failed runtime guard.`);
+
+  const actual = comparableResult(result);
+  expect(actual.formula === expected.formula, `${expectedPath} formula mismatch.`);
+  expect(actual.queries.length === expected.queries.length, `${expectedPath} retrieval query count mismatch.`);
+  expectedQueryCount += expected.queries.length;
+  for (const expectedQuery of expected.queries) {
+    const actualQuery = actual.queries.find((entry) => entry.id === expectedQuery.id);
+    expect(actualQuery !== undefined, `${expectedPath} missing retrieval query ${expectedQuery.id}`);
+    expect(JSON.stringify(actualQuery.tokens) === JSON.stringify(expectedQuery.tokens), `${expectedQuery.id} token mismatch.`);
+    expect(actualQuery.hits.length === expectedQuery.hits.length, `${expectedQuery.id} hit count mismatch.`);
+    for (const expectedHit of expectedQuery.hits) {
+      const actualHit = actualQuery.hits.find((entry) => entry.docId === expectedHit.docId);
+      expect(actualHit !== undefined, `${expectedQuery.id} missing hit ${expectedHit.docId}`);
+      assertNear(actualHit.score, expectedHit.score, expected.tolerance, `${expectedQuery.id} ${expectedHit.docId} score`);
+      expect(JSON.stringify(actualHit.snippet) === JSON.stringify(expectedHit.snippet), `${expectedQuery.id} ${expectedHit.docId} snippet mismatch.`);
+      expect(actualHit.explain.length === expectedHit.explain.length, `${expectedQuery.id} ${expectedHit.docId} explain count mismatch.`);
+      for (const expectedTerm of expectedHit.explain) {
+        const actualTerm = actualHit.explain.find(
+          (entry) => entry.term === expectedTerm.term && entry.field === expectedTerm.field,
+        );
+        assertExplanation(actualTerm, expectedTerm, expected.tolerance, `${expectedQuery.id} ${expectedHit.docId}`);
+      }
+    }
+  }
+
+  for (const judgment of expected.relevanceJudgments ?? []) {
+    const actualQuery = actual.queries.find((entry) => entry.id === judgment.queryId);
+    expect(actualQuery !== undefined, `${expectedPath} relevance query ${judgment.queryId} is missing.`);
+    const positiveDocIds = judgment.ratings
+      .filter((rating) => rating.grade > 0)
+      .map((rating) => rating.docId)
+      .sort();
+    const actualDocIds = actualQuery.hits.map((hit) => hit.docId).sort();
+    expect(
+      positiveDocIds.every((docId) => actualDocIds.includes(docId)),
+      `${expectedPath} relevance positives are absent from hits for ${judgment.queryId}.`,
+      { positiveDocIds, actualDocIds },
+    );
+  }
+
+  const repeated = searchTextCorpusRetrievalIndex(index, queries, { topK: 3, snippetWindow: 1 });
+  expect(JSON.stringify(result) === JSON.stringify(repeated), `${expectedPath} retrieval output must be deterministic.`);
+}
 
 const supportStatus = await readJson("docs/specs/support-status.v1.json");
 const task = supportStatus.tasks.find((entry) => entry.id === "nlp-retrieval");
 expect(task?.status === "slice-proven", "Support status must mark nlp-retrieval as slice-proven.");
 
-console.log(`Retrieval feature artifacts OK (queries=${expected.queries.length}).`);
+console.log(`Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount}).`);
