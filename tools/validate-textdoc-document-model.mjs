@@ -391,6 +391,38 @@ function validateDocumentSemantics(document) {
     }
   }
 
+  const selectedAmbiguitySets = new Map();
+  const ambiguityRanks = new Map();
+  for (const { annotation } of annotationsById.values()) {
+    if (!annotation.ambiguitySet || annotation.lifecycle.state !== "active") continue;
+    const setId = annotation.ambiguitySet.id;
+    if (annotation.ambiguitySet.role === "selected") {
+      const existing = selectedAmbiguitySets.get(setId);
+      if (existing) {
+        pushError(
+          errors,
+          "multiple-selected-ambiguity-members",
+          `Ambiguity set ${setId} selects both ${existing} and ${annotation.id}.`,
+        );
+      } else {
+        selectedAmbiguitySets.set(setId, annotation.id);
+      }
+    }
+    if (annotation.ambiguitySet.rank !== undefined) {
+      const rankKey = `${setId}:${annotation.ambiguitySet.rank}`;
+      const existing = ambiguityRanks.get(rankKey);
+      if (existing) {
+        pushError(
+          errors,
+          "duplicate-ambiguity-rank",
+          `Ambiguity set ${setId} repeats rank ${annotation.ambiguitySet.rank} in ${existing} and ${annotation.id}.`,
+        );
+      } else {
+        ambiguityRanks.set(rankKey, annotation.id);
+      }
+    }
+  }
+
   const dependencyNodes = new Map();
   for (const { annotation } of annotationsById.values()) {
     if (annotation.kind === "dependency-node") {
@@ -617,6 +649,10 @@ const invalidCases = [
   {
     path: "fixtures/textdoc/invalid/dependency-cycle.json",
     expectedCode: "dependency-cycle",
+  },
+  {
+    path: "fixtures/textdoc/invalid/ambiguity-multiple-selected.json",
+    expectedCode: "multiple-selected-ambiguity-members",
   },
 ];
 

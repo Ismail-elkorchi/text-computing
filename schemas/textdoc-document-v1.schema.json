@@ -184,6 +184,48 @@
         }
       }
     },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "method": { "type": "string", "minLength": 1 }
+      }
+    },
+    "lossMarker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reason"],
+      "properties": {
+        "kind": {
+          "enum": ["lossy-normalization", "omitted-alternative", "truncated-context", "external-reference"]
+        },
+        "reason": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 }
+      }
+    },
+    "ambiguitySetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["candidate", "selected", "rejected"] },
+        "rank": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "externalDocumentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentId", "role"],
+      "properties": {
+        "documentId": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
     "annotationBase": {
       "type": "object",
       "required": ["id", "kind", "lifecycle", "targets"],
@@ -202,7 +244,17 @@
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
         },
-        "provenance": { "$ref": "#/definitions/provenance" }
+        "provenance": { "$ref": "#/definitions/provenance" },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "loss": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/lossMarker" }
+        },
+        "ambiguitySet": { "$ref": "#/definitions/ambiguitySetRef" },
+        "documentRefs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/externalDocumentRef" }
+        }
       }
     },
     "tokenAnnotation": {
