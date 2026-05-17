@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "khmer",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "khmer",
+    "sha256": "2aa19791f1b551850a8a433b479a81f4065fa00465614c44e884e36cae2d0ca3"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 2,
+      "text": "សួ"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 2,
+      "endCU": 4,
+      "text": "ស្"
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 4,
+      "endCU": 6,
+      "text": "តី"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 7,
+      "text": " "
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 7,
+      "endCU": 9,
+      "text": "ពិ"
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 9,
+      "endCU": 10,
+      "text": "ភ"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 11,
+      "text": "ព"
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 11,
+      "endCU": 13,
+      "text": "លោ"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 13,
+      "endCU": 14,
+      "text": "ក"
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 14,
+      "endCU": 15,
+      "text": "។"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": " "
+    },
+    {
+      "id": "token-12",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 19,
+      "text": "នេះ"
+    },
+    {
+      "id": "token-13",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 19,
+      "endCU": 21,
+      "text": "ជា"
+    },
+    {
+      "id": "token-14",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": "អ"
+    },
+    {
+      "id": "token-15",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 22,
+      "endCU": 24,
+      "text": "ត្"
+    },
+    {
+      "id": "token-16",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 24,
+      "endCU": 25,
+      "text": "ថ"
+    },
+    {
+      "id": "token-17",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 25,
+      "endCU": 26,
+      "text": "ប"
+    },
+    {
+      "id": "token-18",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 26,
+      "endCU": 27,
+      "text": "ទ"
+    },
+    {
+      "id": "token-19",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 27,
+      "endCU": 28,
+      "text": "។"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 16,
+      "text": "សួស្តី ពិភពលោក។ "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 16,
+      "endCU": 28,
+      "text": "នេះជាអត្ថបទ។"
+    }
+  ],
+  "notes": [
+    "Expected output records current UAX #29 behavior for this fixture; it is not a language-specific tokenizer claim."
+  ]
+}

@@ -545,6 +545,34 @@
       "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
       "tokens": [],
       "sentences": []
+    },
+    {
+      "sliceId": "korean-hangul",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "armenian",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "georgian",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "khmer",
+      "status": "not-run",
+      "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
+      "tokens": [],
+      "sentences": []
     }
   ]
 }

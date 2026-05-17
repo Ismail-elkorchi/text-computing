@@ -213,6 +213,62 @@
         "sentence-boundaries",
         "span-accounting"
       ]
+    },
+    {
+      "id": "korean-hangul",
+      "purpose": "Hangul script with space-delimited words and sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "안녕하세요 세계. 테스트입니다."
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "armenian",
+      "purpose": "Armenian script with Armenian sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "Բարև աշխարհ։ Սա տեքստ է։"
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "georgian",
+      "purpose": "Georgian script with space-delimited words and sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "გამარჯობა მსოფლიო. ეს ტექსტია."
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
+    },
+    {
+      "id": "khmer",
+      "purpose": "Khmer script with Khmer sentence punctuation",
+      "source": {
+        "kind": "text",
+        "text": "សួស្តី ពិភពលោក។ នេះជាអត្ថបទ។"
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting"
+      ]
     }
   ]
 }

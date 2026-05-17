@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "korean-hangul",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "korean-hangul",
+    "sha256": "bd20def682d1856a58ec504fe256d2cfb6823646a688283f9b72d9f9dec8dfef"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 5,
+      "text": "안녕하세요"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 6,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 8,
+      "text": "세계"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 8,
+      "endCU": 9,
+      "text": "."
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 9,
+      "endCU": 10,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 16,
+      "text": "테스트입니다"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 17,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 10,
+      "text": "안녕하세요 세계. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 10,
+      "endCU": 17,
+      "text": "테스트입니다."
+    }
+  ],
+  "notes": [
+    "Expected output records current UAX #29 behavior for this fixture; it is not a language-specific tokenizer claim."
+  ]
+}
