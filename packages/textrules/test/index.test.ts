@@ -1,3 +1,4 @@
+import { loadTextPackResources } from "@ismail-elkorchi/textpack";
 import { isTextConformanceReportV1 } from "@ismail-elkorchi/textconformance";
 import {
   isTextDocDocumentV1,
@@ -6,6 +7,7 @@ import {
   type TextDocDependencyAnnotation,
   type TextDocDocumentV1,
   type TextDocEntityAnnotation,
+  type TextDocPosAnnotation,
   type TextDocRelationAnnotation,
 } from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
@@ -26,9 +28,11 @@ import {
   createRelationExtractionResultEnvelope,
   createRuleBackedNerConformanceReport,
   createRuleBackedNerResultEnvelope,
+  createTextRulesEntityResourcesFromLoadedPack,
   createTextRulesEntityResource,
   createPosMorphLemmaConformanceReport,
   createPosMorphLemmaResultEnvelope,
+  createTextRulesLexiconResourcesFromLoadedPack,
   createTextRulesLexiconResource,
   matchTextRulesTokenPattern,
   matchTextRulesTokenPatterns,
@@ -180,6 +184,147 @@ if (
   primitiveCoreferenceSpec.chains[0]?.mentionIds.join(",") !== "mention-1,mention-2"
 ) {
   throw new Error("coreference rules should derive mention spans and chains from capture templates");
+}
+
+const textpackEnCoreManifest = {
+  schemaVersion: 1,
+  packId: "pack:en-core",
+  packageName: "@ismail-elkorchi/textpack-en-core",
+  version: "0.0.0",
+  resources: [
+    {
+      resourceId: "lexicon-en-core",
+      lookupKey: "lexicon.en.core",
+      kind: "lexicon",
+      path: "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
+      language: "en",
+      overlayPrecedence: 10,
+      licenseId: "license-cc0",
+      provenanceId: "prov-hand-curated",
+    },
+  ],
+  licenses: [{ id: "license-cc0", spdx: "CC0-1.0", attribution: "Prepared for repository fixtures." }],
+  provenance: [
+    { id: "prov-hand-curated", origin: "repository-fixture", version: "2026-04-21", createdBy: "text-computing" },
+  ],
+  entrypoints: {
+    manifest: "fixtures/textpack/manifests/textpack-en-core.json",
+  },
+  tests: {
+    smoke: ["fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"],
+    lookup: ["lookup:lexicon:en"],
+    overlay: [],
+  },
+} as never;
+const textpackEnLegalManifest = {
+  schemaVersion: 1,
+  packId: "pack:en-legal",
+  packageName: "@ismail-elkorchi/textpack-en-legal",
+  version: "0.0.0",
+  resources: [
+    {
+      resourceId: "gazetteer-en-legal",
+      lookupKey: "gazetteer.en.courts",
+      kind: "gazetteer",
+      path: "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv",
+      language: "en",
+      profiles: ["legal"],
+      overlayPrecedence: 50,
+      licenseId: "license-cc0",
+      provenanceId: "prov-hand-curated",
+    },
+  ],
+  licenses: [{ id: "license-cc0", spdx: "CC0-1.0", attribution: "Prepared for repository fixtures." }],
+  provenance: [
+    { id: "prov-hand-curated", origin: "repository-fixture", version: "2026-04-21", createdBy: "text-computing" },
+  ],
+  entrypoints: {
+    manifest: "fixtures/textpack/manifests/textpack-en-legal.json",
+  },
+  tests: {
+    smoke: ["fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv"],
+    lookup: ["lookup:gazetteer:en:legal"],
+    overlay: [],
+  },
+} as never;
+const textpackContent = {
+  "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv":
+    "host\tlemma=host\tpos=VERB\ncorpora\tlemma=corpus\tpos=NOUN\n",
+  "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv":
+    "Supreme Court\tORG\nNew York\tGPE\n",
+};
+
+const loadedLexicon = loadTextPackResources(
+  [textpackEnCoreManifest],
+  { kind: "lexicon", language: "en" },
+  textpackContent,
+);
+const loadedLexiconResources = createTextRulesLexiconResourcesFromLoadedPack(loadedLexicon.resources);
+if (
+  loadedLexicon.diagnostics.length !== 0 ||
+  loadedLexiconResources.diagnostics.length !== 0 ||
+  loadedLexiconResources.resources.length !== 1
+) {
+  throw new Error("loaded textpack lexicon resources should convert without diagnostics");
+}
+
+const loadedPosResult = analyzePosMorphLemma(
+  {
+    documentId: "resource-backed-pos-smoke",
+    text: "corpora host",
+    sourceId: "resource-backed-pos-smoke",
+    sourceSha256: "sha256:resource-backed-pos-smoke",
+    languageHint: "en",
+  },
+  loadedLexiconResources.resources,
+);
+const loadedPosTags = loadedPosResult.document.layers
+  .filter((layer) => layer.kind === "pos")
+  .flatMap((layer) => layer.annotations)
+  .map((annotation) => (annotation as TextDocPosAnnotation).alternatives[0]?.value)
+  .join(",");
+if (loadedPosTags !== "NOUN,VERB") {
+  throw new Error("resource-backed lexicon conversion should drive POS output");
+}
+
+const loadedGazetteer = loadTextPackResources(
+  [textpackEnLegalManifest],
+  { kind: "gazetteer", language: "en", profile: "legal" },
+  textpackContent,
+);
+const loadedEntityResources = createTextRulesEntityResourcesFromLoadedPack(loadedGazetteer.resources);
+if (
+  loadedGazetteer.diagnostics.length !== 0 ||
+  loadedEntityResources.resources.length !== 1 ||
+  loadedEntityResources.diagnostics.map((diagnostic) => diagnostic.code).join(",") !== "unsupported-entity-label"
+) {
+  throw new Error("loaded textpack gazetteer conversion should keep unsupported labels diagnostic");
+}
+
+const loadedNerDocument = analyzePosMorphLemma(
+  {
+    documentId: "resource-backed-ner-smoke",
+    text: "The Supreme Court issued an order in New York.",
+    sourceId: "resource-backed-ner-smoke",
+    sourceSha256: "sha256:resource-backed-ner-smoke",
+    languageHint: "en",
+  },
+  [],
+).document;
+const loadedNerResult = analyzeRuleBackedNer(
+  {
+    document: loadedNerDocument,
+    languageHint: "en",
+  },
+  loadedEntityResources.resources,
+);
+const loadedEntityTexts = loadedNerResult.document.layers
+  .filter((layer) => layer.kind === "entity")
+  .flatMap((layer) => layer.annotations)
+  .map((annotation) => (annotation as TextDocEntityAnnotation).text)
+  .join(",");
+if (loadedEntityTexts !== "Supreme Court") {
+  throw new Error("resource-backed gazetteer conversion should drive NER output for supported labels");
 }
 
 const englishResourceData: TextRulesLexiconResourceData = {
