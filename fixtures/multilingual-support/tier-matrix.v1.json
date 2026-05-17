@@ -12,6 +12,48 @@
       "https://universaldependencies.org/"
     ]
   },
+  "coverageAxes": {
+    "scripts": [
+      "Arabic",
+      "Armenian",
+      "Bengali",
+      "Cyrillic",
+      "Devanagari",
+      "Ethiopic",
+      "Georgian",
+      "Greek",
+      "Han",
+      "Hangul",
+      "Hebrew",
+      "Khmer",
+      "Latin",
+      "Tamil",
+      "Thai"
+    ],
+    "families": [
+      "Afro-Asiatic",
+      "Austroasiatic",
+      "Dravidian",
+      "Indo-European",
+      "Kartvelian",
+      "Koreanic",
+      "Kra-Dai",
+      "Niger-Congo",
+      "Sino-Tibetan",
+      "Turkic",
+      "Uralic",
+      "language-isolate"
+    ],
+    "morphologyProfiles": [
+      "agglutinative",
+      "fusional",
+      "isolating",
+      "templatic",
+      "no-whitespace-segmentation",
+      "right-to-left"
+    ],
+    "interpretation": "These axes are readiness coverage seeds derived from UD 2.18 breadth; they are not task support claims."
+  },
   "tiers": [
     {
       "name": "unicode-invariant",
@@ -217,6 +259,110 @@
       "evidenceRefs": [],
       "limitations": [
         "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "ar-arabic-smoke",
+      "language": "ar",
+      "script": "Arabic",
+      "direction": "rtl",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/ar-arabic-smoke.txt",
+      "sha256": "28c2ee3136fe08cc5ede1434d2e56c55fa1614ff9b6beb9bb1f50e769a5be63f",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only RTL script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "bn-bengali-smoke",
+      "language": "bn",
+      "script": "Bengali",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/bn-bengali-smoke.txt",
+      "sha256": "b16fec4c39327a977bed54963f441946e3d2607cd2ddba7ba23436cd0838dff6",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "ko-hangul-smoke",
+      "language": "ko",
+      "script": "Hangul",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/ko-hangul-smoke.txt",
+      "sha256": "ad5dee40628517844cd2192ee0184187606b87deef66fa3309107fbb4e99086b",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "km-khmer-smoke",
+      "language": "km",
+      "script": "Khmer",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/km-khmer-smoke.txt",
+      "sha256": "647c03f91fea0f177b2c877861bbb6db60ad8056849cff812273e08ba8be0dcd",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only script fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "tr-turkish-agglutinative-smoke",
+      "language": "tr",
+      "script": "Latin",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/tr-turkish-agglutinative-smoke.txt",
+      "sha256": "f482cf5d5eacd0796fc4bd9bf6b97d3bdfd0499fe415ad3d3a130f65dd9b4dae",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only language-family fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "fi-finnish-uralic-smoke",
+      "language": "fi",
+      "script": "Latin",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/fi-finnish-uralic-smoke.txt",
+      "sha256": "05e72036508d5e29404e98ecd887025636cdca47e6001737ba709ff41f28dcc1",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only language-family fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "eu-basque-smoke",
+      "language": "eu",
+      "script": "Latin",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/eu-basque-smoke.txt",
+      "sha256": "5fa034ded2de42328f741fdad1fe4baf8df9a876e6c2e1c195d851bfb2f1c936",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only language-family fixture; no task expected output or comparator capture is claimed yet."
+      ]
+    },
+    {
+      "id": "sw-swahili-bantu-smoke",
+      "language": "sw",
+      "script": "Latin",
+      "direction": "ltr",
+      "supportTier": "readiness-only",
+      "inputPath": "fixtures/multilingual-support/inputs/sw-swahili-bantu-smoke.txt",
+      "sha256": "75ca270ab6560ea4b8a443623ae4c2c27eda062de20fa35f5e1fb0e88f34f655",
+      "evidenceRefs": [],
+      "limitations": [
+        "Readiness-only language-family fixture; no task expected output or comparator capture is claimed yet."
       ]
     }
   ],

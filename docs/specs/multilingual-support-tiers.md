@@ -26,7 +26,9 @@ Current public evidence is partial. It includes Unicode conformance, tokenizatio
 
 ## Script fixture expansion
 
-The matrix adds readiness-only inputs for Devanagari, Cyrillic, Hebrew, Ethiopic, Greek, Armenian, Georgian, Tamil, Han, and Thai. These inputs are script coverage seeds. They are not task behavior claims until a task-specific gate records expected outputs, comparator captures where applicable, and conformance reports.
+The matrix adds readiness-only inputs for Arabic, Armenian, Bengali, Cyrillic, Devanagari, Ethiopic, Georgian, Greek, Han, Hangul, Hebrew, Khmer, Latin-script language-family cases, Tamil, and Thai. These inputs are script and family coverage seeds. They are not task behavior claims until a task-specific gate records expected outputs, comparator captures where applicable, and conformance reports.
+
+The matrix also records breadth axes for families and morphology profiles represented in UD 2.18. These axes prevent a small fixture set from being read as language coverage.
 
 ## Interpretation rules
 
