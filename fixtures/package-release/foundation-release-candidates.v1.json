@@ -22,7 +22,8 @@
       ],
       "releaseBlockers": [
         "Version-negotiation and transport compatibility policy are not release-ready.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
+        "Downstream API stability evidence is not recorded for declared downstream dependents."
       ]
     },
     {
@@ -44,7 +45,8 @@
       ],
       "releaseBlockers": [
         "Diff, benchmark, and claim-registry workflows are not release-ready.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
+        "Downstream API stability evidence is not recorded for declared downstream dependents."
       ]
     },
     {
@@ -71,7 +73,8 @@
       ],
       "releaseBlockers": [
         "Graph annotation behavior is fixture-scope and does not yet have broad production validation.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
+        "Downstream API stability evidence is not recorded for declared downstream dependents."
       ]
     },
     {
@@ -93,7 +96,8 @@
       ],
       "releaseBlockers": [
         "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
+        "Downstream API stability evidence is not recorded for declared downstream dependents."
       ]
     }
   ],

@@ -7,7 +7,8 @@
     "schemas",
     "package-quality",
     "security-review",
-    "claim-hygiene"
+    "claim-hygiene",
+    "downstream-api-stability"
   ],
   "packages": [
     {
@@ -15,7 +16,14 @@
       "releaseTrack": "public-beta",
       "supportStatus": "beta",
       "releaseReadiness": "publishable",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": false,
+        "status": "not-required",
+        "downstreamDependents": ["@ismail-elkorchi/textcorpus"],
+        "evidenceRefs": ["packages/textfacts/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "This gate controls future non-textfacts releases; textfacts remains governed by its existing public-beta package-quality and claim-hygiene gates."
+      },
       "releaseBlockers": [],
       "evidenceRefs": ["packages/textfacts/package.json", "packages/textfacts/test", "tools/check-public-claims.mjs"],
       "limitations": ["Beta package; cross-package growth remains outside textfacts."]
@@ -25,10 +33,22 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": [
+          "@ismail-elkorchi/textcorpus",
+          "@ismail-elkorchi/textpipeline",
+          "@ismail-elkorchi/textrules"
+        ],
+        "evidenceRefs": ["packages/textdoc/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+      },
       "releaseBlockers": [
         "Graph annotation behavior is fixture-scope and does not yet have broad production validation.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for all declared downstream dependents."
       ],
       "evidenceRefs": ["packages/textdoc/package.json", "packages/textdoc/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -38,10 +58,18 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": ["@ismail-elkorchi/textrules"],
+        "evidenceRefs": ["packages/textpack/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+      },
       "releaseBlockers": [
         "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for all declared downstream dependents."
       ],
       "evidenceRefs": ["packages/textpack/package.json", "packages/textpack/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -51,10 +79,18 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": [],
+        "evidenceRefs": ["packages/textrules/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+      },
       "releaseBlockers": [
         "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
-        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces."
+        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+        "Downstream API stability evidence is not recorded for this package release surface."
       ],
       "evidenceRefs": ["packages/textrules/package.json", "packages/textrules/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -64,10 +100,18 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": [],
+        "evidenceRefs": ["packages/textpipeline/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+      },
       "releaseBlockers": [
         "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for this package release surface."
       ],
       "evidenceRefs": ["packages/textpipeline/package.json", "packages/textpipeline/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -77,10 +121,18 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": [],
+        "evidenceRefs": ["packages/textcorpus/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+      },
       "releaseBlockers": [
         "Retrieval and corpus scoring remain frozen-corpus only without large-corpus relevance or performance validation.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for this package release surface."
       ],
       "evidenceRefs": ["packages/textcorpus/package.json", "packages/textcorpus/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -90,10 +142,21 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": [
+          "@ismail-elkorchi/textpipeline",
+          "@ismail-elkorchi/textrules"
+        ],
+        "evidenceRefs": ["packages/textprotocol/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+      },
       "releaseBlockers": [
         "Result envelope behavior is slice-proven, but version negotiation and transport compatibility policy are not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for all declared downstream dependents."
       ],
       "evidenceRefs": ["packages/textprotocol/package.json", "packages/textprotocol/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -103,10 +166,18 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": ["@ismail-elkorchi/textrules"],
+        "evidenceRefs": ["packages/textconformance/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+      },
       "releaseBlockers": [
         "Conformance runner behavior is minimal and lacks broad diff, benchmark, and claim-registry workflows.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for all declared downstream dependents."
       ],
       "evidenceRefs": ["packages/textconformance/package.json", "packages/textconformance/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -116,10 +187,18 @@
       "releaseTrack": "private-unreleased",
       "supportStatus": "slice-proven",
       "releaseReadiness": "blocked",
-      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene"],
+      "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "blocked",
+        "downstreamDependents": [],
+        "evidenceRefs": ["packages/textlab/package.json", "fixtures/package-release/gates.v1.json"],
+        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+      },
       "releaseBlockers": [
         "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+        "Downstream API stability evidence is not recorded for this package release surface."
       ],
       "evidenceRefs": ["packages/textlab/package.json", "packages/textlab/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -127,6 +206,7 @@
   ],
   "notes": [
     "Private-unreleased packages are not adoption surfaces until a later release PR changes their releaseTrack.",
-    "Claim hygiene is a release gate because package publication can amplify unsupported claims."
+    "Claim hygiene is a release gate because package publication can amplify unsupported claims.",
+    "Non-textfacts packages require downstream API stability evidence before their release track can change."
   ]
 }

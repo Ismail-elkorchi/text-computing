@@ -10,7 +10,7 @@
     "scope": { "const": "package-release-gates" },
     "requiredGates": {
       "type": "array",
-      "minItems": 6,
+      "minItems": 7,
       "uniqueItems": true,
       "items": {
         "enum": [
@@ -19,7 +19,8 @@
           "schemas",
           "package-quality",
           "security-review",
-          "claim-hygiene"
+          "claim-hygiene",
+          "downstream-api-stability"
         ]
       }
     },
@@ -43,6 +44,7 @@
         "supportStatus",
         "releaseReadiness",
         "gates",
+        "downstreamApiStability",
         "releaseBlockers",
         "evidenceRefs",
         "limitations"
@@ -60,7 +62,7 @@
         },
         "gates": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 7,
           "uniqueItems": true,
           "items": {
             "enum": [
@@ -69,8 +71,34 @@
               "schemas",
               "package-quality",
               "security-review",
-              "claim-hygiene"
+              "claim-hygiene",
+              "downstream-api-stability"
             ]
+          }
+        },
+        "downstreamApiStability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requiredBeforeRelease",
+            "status",
+            "downstreamDependents",
+            "evidenceRefs",
+            "policy"
+          ],
+          "properties": {
+            "requiredBeforeRelease": { "type": "boolean" },
+            "status": { "enum": ["not-required", "blocked", "proven"] },
+            "downstreamDependents": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" }
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "policy": { "type": "string", "minLength": 1 }
           }
         },
         "releaseBlockers": {
