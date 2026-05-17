@@ -33,7 +33,7 @@ import {
   type TextProtocolDiagnostic,
   type TextProtocolResultEnvelopeV1,
 } from "@ismail-elkorchi/textprotocol";
-import type { TextPackResolvedResource } from "@ismail-elkorchi/textpack";
+import type { TextPackLoadedResource, TextPackResolvedResource } from "@ismail-elkorchi/textpack";
 
 export const packageName = "@ismail-elkorchi/textrules" as const;
 export const posMorphLemmaRevision = "pos-morph-lemma-v1" as const;
@@ -112,6 +112,29 @@ export interface TextRulesEntityResource {
   readonly language?: string;
   readonly overlayPrecedence: number;
   readonly entries: readonly TextRulesEntityEntry[];
+}
+
+export type TextRulesResourceDiagnosticCode =
+  | "unsupported-resource-kind"
+  | "missing-lexicon-attribute"
+  | "unsupported-entity-label";
+
+export interface TextRulesResourceDiagnostic {
+  readonly code: TextRulesResourceDiagnosticCode;
+  readonly packId: string;
+  readonly resourceId: string;
+  readonly line?: number;
+  readonly message: string;
+}
+
+export interface TextRulesLoadedLexiconResources {
+  readonly resources: readonly TextRulesLexiconResource[];
+  readonly diagnostics: readonly TextRulesResourceDiagnostic[];
+}
+
+export interface TextRulesLoadedEntityResources {
+  readonly resources: readonly TextRulesEntityResource[];
+  readonly diagnostics: readonly TextRulesResourceDiagnostic[];
 }
 
 export interface TextRulesTokenSpan {
@@ -2157,6 +2180,179 @@ export function createTextRulesEntityResource(
       ...(entry.notes ? { notes: entry.notes } : {}),
     })),
   };
+}
+
+function textRulesDiagnostic(
+  code: TextRulesResourceDiagnosticCode,
+  resource: TextPackResolvedResource,
+  message: string,
+  line?: number,
+): TextRulesResourceDiagnostic {
+  return {
+    code,
+    packId: resource.packId,
+    resourceId: resource.resourceId,
+    ...(line === undefined ? {} : { line }),
+    message,
+  };
+}
+
+function parseTextRulesMorphologyAttributes(
+  attributes: Readonly<Record<string, string>>,
+): readonly TextDocFeature[] {
+  const features: TextDocFeature[] = [];
+  for (const [name, value] of Object.entries(attributes).sort(([left], [right]) => left.localeCompare(right))) {
+    if (name === "lemma" || name === "pos" || name === "ruleId" || name === "notes") continue;
+    if (name === "morphology") {
+      for (const part of value.split("|")) {
+        const [featureName, featureValue] = part.split("=");
+        if (featureName && featureValue) {
+          features.push({ name: featureName, value: featureValue });
+        }
+      }
+      continue;
+    }
+    features.push({ name, value });
+  }
+  return normalizeFeatures(features);
+}
+
+function textRulesNotesFromAttributes(
+  attributes: Readonly<Record<string, string>>,
+): readonly string[] | undefined {
+  const notes = attributes.notes;
+  if (notes === undefined || notes.trim().length === 0) return undefined;
+  return notes
+    .split("|")
+    .map((note) => note.trim())
+    .filter((note) => note.length > 0);
+}
+
+export function createTextRulesLexiconResourcesFromLoadedPack(
+  loadedResources: readonly TextPackLoadedResource[],
+): TextRulesLoadedLexiconResources {
+  const resources: TextRulesLexiconResource[] = [];
+  const diagnostics: TextRulesResourceDiagnostic[] = [];
+
+  for (const loadedResource of loadedResources) {
+    const { resource } = loadedResource;
+    if (resource.kind !== "lexicon") {
+      diagnostics.push(
+        textRulesDiagnostic(
+          "unsupported-resource-kind",
+          resource,
+          `Resource ${resource.resourceId} has kind ${resource.kind}; expected lexicon.`,
+        ),
+      );
+      continue;
+    }
+
+    const entriesBySurface = new Map<string, TextRulesLexiconAnalysis[]>();
+    for (const entry of loadedResource.entries) {
+      const pos = entry.attributes.pos;
+      const lemma = entry.attributes.lemma;
+      if (pos === undefined || lemma === undefined) {
+        diagnostics.push(
+          textRulesDiagnostic(
+            "missing-lexicon-attribute",
+            resource,
+            `Lexicon entry ${entry.value} must declare pos and lemma attributes.`,
+            entry.line,
+          ),
+        );
+        continue;
+      }
+      const analyses = entriesBySurface.get(entry.value) ?? [];
+      const morphology = parseTextRulesMorphologyAttributes(entry.attributes);
+      const notes = textRulesNotesFromAttributes(entry.attributes);
+      analyses.push({
+        ruleId:
+          entry.attributes.ruleId ??
+          `textpack:${resource.packId}:${resource.resourceId}:${entry.line}:${pos}`,
+        pos,
+        lemma,
+        ...(morphology.length === 0 ? {} : { morphology }),
+        ...(notes === undefined ? {} : { notes }),
+      });
+      entriesBySurface.set(entry.value, analyses);
+    }
+
+    resources.push(
+      createTextRulesLexiconResource(resource, {
+        entries: [...entriesBySurface.entries()]
+          .sort(([left], [right]) => normalizeSurface(left).localeCompare(normalizeSurface(right)))
+          .map(([surface, analyses]) => ({
+            surface,
+            analyses: analyses.sort((left, right) => left.ruleId.localeCompare(right.ruleId)),
+          })),
+      }),
+    );
+  }
+
+  return { resources, diagnostics };
+}
+
+export function createTextRulesEntityResourcesFromLoadedPack(
+  loadedResources: readonly TextPackLoadedResource[],
+): TextRulesLoadedEntityResources {
+  const resources: TextRulesEntityResource[] = [];
+  const diagnostics: TextRulesResourceDiagnostic[] = [];
+
+  for (const loadedResource of loadedResources) {
+    const { resource } = loadedResource;
+    if (resource.kind !== "gazetteer") {
+      diagnostics.push(
+        textRulesDiagnostic(
+          "unsupported-resource-kind",
+          resource,
+          `Resource ${resource.resourceId} has kind ${resource.kind}; expected gazetteer.`,
+        ),
+      );
+      continue;
+    }
+
+    const entries: TextRulesEntityEntry[] = [];
+    for (const entry of loadedResource.entries) {
+      if (!isTextRulesEntityLabel(entry.label)) {
+        diagnostics.push(
+          textRulesDiagnostic(
+            "unsupported-entity-label",
+            resource,
+            `Gazetteer entry ${entry.value} has unsupported label ${entry.label ?? "(missing)"}.`,
+            entry.line,
+          ),
+        );
+        continue;
+      }
+      const notes = textRulesNotesFromAttributes(entry.attributes);
+      entries.push({
+        id: entry.attributes.id ?? `${resource.resourceId}:${entry.line}`,
+        surface: entry.value,
+        label: entry.label,
+        ...(entry.attributes.normalized === undefined ? {} : { normalized: entry.attributes.normalized }),
+        ...(entry.attributes.aliases === undefined
+          ? {}
+          : {
+              aliases: entry.attributes.aliases
+                .split("|")
+                .map((alias) => alias.trim())
+                .filter((alias) => alias.length > 0),
+            }),
+        ...(entry.attributes.caseFoldFallback === undefined
+          ? {}
+          : { caseFoldFallback: entry.attributes.caseFoldFallback === "true" }),
+        ...(notes === undefined ? {} : { notes }),
+      });
+    }
+
+    resources.push(
+      createTextRulesEntityResource(resource, {
+        entries: entries.sort((left, right) => left.id.localeCompare(right.id)),
+      }),
+    );
+  }
+
+  return { resources, diagnostics };
 }
 
 export function analyzeRuleBackedNer(
