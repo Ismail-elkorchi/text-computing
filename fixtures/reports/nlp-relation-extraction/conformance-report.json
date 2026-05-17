@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -44,6 +44,15 @@
       ]
     },
     {
+      "checkId": "corpus-evidence",
+      "status": "pass",
+      "message": "Committed corpus evidence records fixture ids, source hashes, expected-output paths, split policy, and negative-control roles.",
+      "evidenceRefs": [
+        "fixtures/relation-extraction/slices.json",
+        "tools/validate-relation-extraction-readiness.mjs"
+      ]
+    },
+    {
       "checkId": "feature-validator",
       "status": "pass",
       "message": "Generated relation extraction outputs match recorded expected artifacts.",
@@ -62,6 +71,6 @@
     }
   ],
   "notes": [
-    "This report records slice-proven relation extraction evidence for frozen repository-authored short texts only. External comparator-backed and corpus-level relation extraction support are not claimed."
+    "This report records slice-proven relation extraction evidence for a frozen repository-authored corpus slice only. External comparator-backed and broad-corpus relation extraction support are not claimed."
   ]
 }

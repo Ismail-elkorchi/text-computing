@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 6,
+    "pass": 7,
     "fail": 0,
     "notRun": 0
   },
@@ -36,6 +36,15 @@
       "evidenceRefs": [
         "docs/specs/coreference-readiness.md",
         "docs/specs/nlp-coreference-research-ledger.md"
+      ]
+    },
+    {
+      "checkId": "corpus-evidence",
+      "status": "pass",
+      "message": "Committed corpus evidence records fixture ids, source hashes, expected-output paths, split policy, and negative-control roles.",
+      "evidenceRefs": [
+        "fixtures/coreference/slices.json",
+        "tools/validate-coreference-readiness.mjs"
       ]
     },
     {
@@ -68,6 +77,6 @@
     }
   ],
   "notes": [
-    "This report records frozen-slice behavior only. External comparator-backed, broad-coverage, and corpus-evaluation support are not claimed."
+    "This report records frozen corpus-slice behavior only. External comparator-backed, broad-coverage, and broad-corpus evaluation support are not claimed."
   ]
 }

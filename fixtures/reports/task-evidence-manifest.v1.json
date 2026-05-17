@@ -31,7 +31,7 @@
     {
       "taskId": "nlp-coreference",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for deterministic mention and chain outputs over frozen repository-authored short-text slices only.",
+      "claimBoundary": "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only.",
       "reportPath": "fixtures/reports/nlp-coreference/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/coreference-readiness.md",
@@ -50,8 +50,8 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "External comparator-backed and corpus-level coreference support are not claimed.",
-        "Behavior is limited to repository-authored frozen short-text slices."
+        "External comparator-backed and broad-corpus coreference support are not claimed.",
+        "Behavior is limited to the repository-authored frozen corpus slice."
       ]
     },
     {
@@ -175,7 +175,7 @@
     {
       "taskId": "nlp-relation-extraction",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for deterministic typed relation outputs over frozen repository-authored short-text slices only.",
+      "claimBoundary": "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only.",
       "reportPath": "fixtures/reports/nlp-relation-extraction/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/relation-extraction-readiness.md",
@@ -194,8 +194,8 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "External comparator-backed and corpus-level relation extraction support are not claimed.",
-        "Behavior is limited to repository-authored frozen short-text slices."
+        "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+        "Behavior is limited to the repository-authored frozen corpus slice."
       ]
     },
     {

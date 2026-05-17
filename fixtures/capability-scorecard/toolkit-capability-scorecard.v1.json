@@ -623,7 +623,7 @@
     {
       "taskId": "nlp-relation-extraction",
       "supportStatus": "slice-proven",
-      "languageTier": "fixture-proven",
+      "languageTier": "corpus-backed",
       "evidenceRefs": [
         "docs/specs/relation-extraction-readiness.md",
         "fixtures/relation-extraction/slices.json",
@@ -636,7 +636,7 @@
         "packages/textrules/test/index.test.ts",
         "tools/validate-relation-extraction-readiness.mjs"
       ],
-      "nextGate": "Add executed external comparator captures and corpus evaluation before wider relation extraction behavior.",
+      "nextGate": "Add executed external comparator captures and larger corpus evaluation before wider relation extraction behavior.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -656,7 +656,9 @@
           "fixtures/relation-extraction/expected/en-no-relation.json"
         ],
         "comparatorRefs": [],
-        "corpusRefs": [],
+        "corpusRefs": [
+          "fixtures/relation-extraction/slices.json"
+        ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-relation-extraction/conformance-report.json"
         ],
@@ -664,12 +666,12 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Deterministic typed relation outputs exist only for the frozen relation extraction slices."
+      "claimBoundary": "Deterministic typed relation outputs exist only for the frozen relation extraction corpus slice."
     },
     {
       "taskId": "nlp-coreference",
       "supportStatus": "slice-proven",
-      "languageTier": "fixture-proven",
+      "languageTier": "corpus-backed",
       "evidenceRefs": [
         "docs/specs/coreference-readiness.md",
         "fixtures/coreference/slices.json",
@@ -682,7 +684,7 @@
         "packages/textrules/test/index.test.ts",
         "tools/validate-coreference-readiness.mjs"
       ],
-      "nextGate": "Add executed external comparator captures and corpus evaluation before wider coreference behavior.",
+      "nextGate": "Add executed external comparator captures and larger corpus evaluation before wider coreference behavior.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -702,7 +704,9 @@
           "fixtures/coreference/expected/en-ambiguous.json"
         ],
         "comparatorRefs": [],
-        "corpusRefs": [],
+        "corpusRefs": [
+          "fixtures/coreference/slices.json"
+        ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
@@ -710,7 +714,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Coreference mention and chain behavior is implemented for frozen repository-authored short-text slices only."
+      "claimBoundary": "Coreference mention and chain behavior is implemented for the frozen repository-authored corpus slice only."
     }
   ],
   "releaseGates": [

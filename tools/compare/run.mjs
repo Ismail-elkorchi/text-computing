@@ -74,7 +74,7 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-relation-extraction/conformance-report.json"],
-    knownGap: "Relation extraction behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed relation extraction claim is made.",
+    knownGap: "Relation extraction behavior remains limited to the frozen repository-authored corpus slice; no external comparator-backed relation extraction claim is made.",
     claimDowngraded: true,
   },
   coreference: {
@@ -83,7 +83,7 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-coreference/conformance-report.json"],
-    knownGap: "Coreference behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed coreference claim is made.",
+    knownGap: "Coreference behavior remains limited to the frozen repository-authored corpus slice; no external comparator-backed coreference claim is made.",
     claimDowngraded: true,
   },
 };

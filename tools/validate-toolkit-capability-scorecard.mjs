@@ -125,7 +125,7 @@ const TASK_EVIDENCE_REQUIREMENTS = {
     fixtureRefs: ["fixtures/relation-extraction/slices.json"],
     negativeControlRefs: ["fixtures/relation-extraction/expected/en-no-relation.json"],
     comparatorRefs: [],
-    corpusRefs: [],
+    corpusRefs: ["fixtures/relation-extraction/slices.json"],
   },
   "nlp-coreference": {
     implementationOwners: ["@ismail-elkorchi/textrules", "@ismail-elkorchi/textdoc"],
@@ -133,7 +133,7 @@ const TASK_EVIDENCE_REQUIREMENTS = {
     fixtureRefs: ["fixtures/coreference/slices.json"],
     negativeControlRefs: ["fixtures/coreference/expected/en-ambiguous.json"],
     comparatorRefs: [],
-    corpusRefs: [],
+    corpusRefs: ["fixtures/coreference/slices.json"],
   },
 };
 
