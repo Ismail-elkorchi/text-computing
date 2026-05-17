@@ -10,6 +10,9 @@ import {
 } from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
+  applyTextRulesCoreferenceRules,
+  applyTextRulesDependencyRules,
+  applyTextRulesRelationRules,
   analyzeCoreference,
   analyzeRelationExtraction,
   analyzeRuleBackedNer,
@@ -88,6 +91,95 @@ const primitiveRewrite = rewriteTextRulesTokenTexts(primitiveTokens, [
 ]);
 if (primitiveRewrite.tokens.join(" ") !== "NYC court sign .") {
   throw new Error("primitive token rewrites should apply left-to-right without hidden state");
+}
+
+const primitiveDependencyTokens = tokenizeTextRulesText("Cats chase mice.");
+const primitiveDependencySpecs = applyTextRulesDependencyRules(primitiveDependencyTokens, "en", [
+  {
+    ruleId: "test-dependency:transitive",
+    language: "en",
+    pattern: {
+      ruleId: "test-dependency-pattern:transitive",
+      atoms: [
+        { kind: "literal", value: "Cats", capture: "subject" },
+        { kind: "literal", value: "chase", capture: "root" },
+        { kind: "literal", value: "mice", capture: "object" },
+        { kind: "literal", value: ".", capture: "punct" },
+      ],
+    },
+    nodes: [
+      { id: "1", form: "Cats", targetCapture: "subject", head: "2", relation: "nsubj" },
+      { id: "2", form: "chase", targetCapture: "root", head: "0", relation: "root" },
+      { id: "3", form: "mice", targetCapture: "object", head: "2", relation: "obj" },
+      { id: "4", form: ".", targetCapture: "punct", head: "2", relation: "punct" },
+    ],
+  },
+]);
+if (
+  primitiveDependencySpecs.map((spec) => `${spec.id}:${spec.targetTokenId}:${spec.head}:${spec.relation}`).join(",") !==
+  "1:token-1:2:nsubj,2:token-2:0:root,3:token-3:2:obj,4:token-4:2:punct"
+) {
+  throw new Error("dependency rules should map capture-backed node templates to token ids");
+}
+
+const primitiveRelationTokens = tokenizeTextRulesText("Alice knows Bob.");
+const primitiveRelationSpecs = applyTextRulesRelationRules("Alice knows Bob.", primitiveRelationTokens, "en", [
+  {
+    ruleId: "test-relation:knows",
+    language: "en",
+    label: "employed-by",
+    pattern: {
+      ruleId: "test-relation-pattern:knows",
+      atoms: [
+        { kind: "literal", value: "Alice", capture: "left" },
+        { kind: "literal", value: "knows", capture: "evidence" },
+        { kind: "literal", value: "Bob", capture: "right" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    arguments: [
+      { role: "employee", captureNames: ["left"] },
+      { role: "employer", captureNames: ["right"] },
+    ],
+    evidence: [{ captureNames: ["evidence"] }],
+  },
+]);
+if (
+  primitiveRelationSpecs.length !== 1 ||
+  primitiveRelationSpecs[0]?.arguments.map((argument) => `${argument.role}:${argument.text}`).join(",") !== "employee:Alice,employer:Bob" ||
+  primitiveRelationSpecs[0].evidence[0]?.text !== "knows"
+) {
+  throw new Error("relation rules should derive argument and evidence spans from captures");
+}
+
+const primitiveCoreferenceTokens = tokenizeTextRulesText("Alice said she left.");
+const primitiveCoreferenceSpec = applyTextRulesCoreferenceRules("Alice said she left.", primitiveCoreferenceTokens, "en", [
+  {
+    ruleId: "test-coreference:pronoun",
+    language: "en",
+    pattern: {
+      ruleId: "test-coreference-pattern:pronoun",
+      atoms: [
+        { kind: "literal", value: "Alice", capture: "name" },
+        { kind: "literal", value: "said" },
+        { kind: "literal", value: "she", capture: "pronoun" },
+        { kind: "literal", value: "left" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    mentions: [
+      { id: "mention-1", kind: "proper", captureNames: ["name"] },
+      { id: "mention-2", kind: "pronoun", captureNames: ["pronoun"] },
+    ],
+    chains: [{ id: "chain-1", mentionIds: ["mention-1", "mention-2"], representativeMentionId: "mention-1" }],
+  },
+]);
+if (
+  primitiveCoreferenceSpec.mentions.map((mention) => `${mention.id}:${mention.text}`).join(",") !==
+    "mention-1:Alice,mention-2:she" ||
+  primitiveCoreferenceSpec.chains[0]?.mentionIds.join(",") !== "mention-1,mention-2"
+) {
+  throw new Error("coreference rules should derive mention spans and chains from capture templates");
 }
 
 const englishResourceData: TextRulesLexiconResourceData = {
