@@ -164,9 +164,7 @@
           "kind": "pos",
           "tagSet": "ud-v2-upos",
           "lifecycle": {
-            "state": "superseded",
-            "supersededBy": "pos-3-final",
-            "reason": "Initial lexical guess replaced after rule evaluation"
+            "state": "active"
           },
           "targets": [
             {
@@ -180,7 +178,16 @@
               "rank": 1,
               "value": "NOUN"
             }
-          ]
+          ],
+          "confidence": {
+            "value": 0.5,
+            "method": "fixture-rule"
+          },
+          "ambiguitySet": {
+            "id": "ambiguity:pos-token-3",
+            "role": "selected",
+            "rank": 2
+          }
         },
         {
           "id": "pos-3-final",

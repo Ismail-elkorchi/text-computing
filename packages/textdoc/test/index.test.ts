@@ -129,6 +129,8 @@ const graphFixtureDocument: TextDocDocumentV1 = {
             { role: "entity", annotationId: "entity-1" },
             { role: "surface", annotationId: "token-1" },
           ],
+          confidence: { value: 1, method: "fixture-rule" },
+          ambiguitySet: { id: "ambiguity:relation-1", role: "selected", rank: 1 },
         },
       ],
     },
@@ -159,6 +161,13 @@ const graphFixtureDocument: TextDocDocumentV1 = {
           targets: [{ kind: "annotation", annotationId: "mention-1" }],
           mentionIds: ["mention-1"],
           representativeMentionId: "mention-1",
+          documentRefs: [
+            {
+              documentId: "doc:graph-runtime-source",
+              role: "comparison-source",
+              sha256: "0".repeat(64),
+            },
+          ],
         },
       ],
     },
@@ -173,6 +182,12 @@ const graphFixtureDocument: TextDocDocumentV1 = {
           lifecycle: { state: "active" },
           targets: [{ kind: "annotation", annotationId: "entity-1" }],
           nil: { reason: "fixture-no-kb" },
+          loss: [
+            {
+              kind: "external-reference",
+              reason: "Fixture omits external knowledge-base resolution.",
+            },
+          ],
         },
       ],
     },
@@ -255,6 +270,21 @@ if (!isTextDocDocumentV1(issueElevenDocument)) {
 
 if (!isTextDocDocumentV1(graphFixtureDocument)) {
   throw new Error("graph fixture should satisfy the document model runtime guard");
+}
+
+const invalidEvidenceDocument = structuredClone(graphFixtureDocument);
+const invalidRelation = invalidEvidenceDocument.layers
+  .find((layer) => layer.id === "relations")
+  ?.annotations.find((annotation) => annotation.id === "relation-1");
+if (invalidRelation) {
+  (invalidRelation as { confidence?: { value: number; method: string } }).confidence = {
+    value: 1.5,
+    method: "invalid-fixture",
+  };
+}
+
+if (isTextDocDocumentV1(invalidEvidenceDocument)) {
+  throw new Error("document runtime guard should reject confidence values outside [0, 1]");
 }
 
 for (const requiredKind of ["relation", "coreference-mention", "coreference-chain", "entity-link"]) {

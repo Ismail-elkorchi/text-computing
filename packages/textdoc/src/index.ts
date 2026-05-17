@@ -148,6 +148,34 @@ export interface TextDocMorphologyAlternative {
   readonly notes?: readonly string[];
 }
 
+export interface TextDocConfidence {
+  readonly value: number;
+  readonly method?: string;
+}
+
+export interface TextDocLossMarker {
+  readonly kind:
+    | "lossy-normalization"
+    | "omitted-alternative"
+    | "truncated-context"
+    | "external-reference";
+  readonly reason: string;
+  readonly source?: string;
+}
+
+export interface TextDocAmbiguitySetRef {
+  readonly id: string;
+  readonly role: "candidate" | "selected" | "rejected";
+  readonly rank?: number;
+}
+
+export interface TextDocExternalDocumentRef {
+  readonly documentId: string;
+  readonly role: string;
+  readonly revision?: string;
+  readonly sha256?: string;
+}
+
 export interface TextDocAnnotationBase {
   readonly id: string;
   readonly kind: TextDocLayerKind;
@@ -155,6 +183,10 @@ export interface TextDocAnnotationBase {
   readonly targets: readonly TextDocTarget[];
   readonly notes?: readonly string[];
   readonly provenance?: TextDocProvenance;
+  readonly confidence?: TextDocConfidence;
+  readonly loss?: readonly TextDocLossMarker[];
+  readonly ambiguitySet?: TextDocAmbiguitySetRef;
+  readonly documentRefs?: readonly TextDocExternalDocumentRef[];
 }
 
 export interface TextDocDocumentTokenAnnotation extends TextDocAnnotationBase {
@@ -534,6 +566,50 @@ export function isTextDocEntityLinkNil(value: unknown): value is TextDocEntityLi
   return isRecord(value) && isNonEmptyString(value.reason);
 }
 
+export function isTextDocConfidence(value: unknown): value is TextDocConfidence {
+  return (
+    isRecord(value) &&
+    typeof value.value === "number" &&
+    Number.isFinite(value.value) &&
+    value.value >= 0 &&
+    value.value <= 1 &&
+    (value.method === undefined || isNonEmptyString(value.method))
+  );
+}
+
+export function isTextDocLossMarker(value: unknown): value is TextDocLossMarker {
+  return (
+    isRecord(value) &&
+    (value.kind === "lossy-normalization" ||
+      value.kind === "omitted-alternative" ||
+      value.kind === "truncated-context" ||
+      value.kind === "external-reference") &&
+    isNonEmptyString(value.reason) &&
+    (value.source === undefined || isNonEmptyString(value.source))
+  );
+}
+
+export function isTextDocAmbiguitySetRef(value: unknown): value is TextDocAmbiguitySetRef {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    (value.role === "candidate" || value.role === "selected" || value.role === "rejected") &&
+    (value.rank === undefined ||
+      (typeof value.rank === "number" && Number.isInteger(value.rank) && value.rank >= 1))
+  );
+}
+
+export function isTextDocExternalDocumentRef(value: unknown): value is TextDocExternalDocumentRef {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.role) &&
+    (value.revision === undefined || isNonEmptyString(value.revision)) &&
+    (value.sha256 === undefined ||
+      (typeof value.sha256 === "string" && /^[a-f0-9]{64}$/u.test(value.sha256)))
+  );
+}
+
 function isTextDocAnnotationBase(value: unknown): value is TextDocAnnotationBase {
   return (
     isRecord(value) &&
@@ -544,7 +620,14 @@ function isTextDocAnnotationBase(value: unknown): value is TextDocAnnotationBase
     value.targets.length >= 1 &&
     value.targets.every((target) => isTextDocTarget(target)) &&
     (value.notes === undefined || isStringArray(value.notes)) &&
-    (value.provenance === undefined || isTextDocProvenance(value.provenance))
+    (value.provenance === undefined || isTextDocProvenance(value.provenance)) &&
+    (value.confidence === undefined || isTextDocConfidence(value.confidence)) &&
+    (value.loss === undefined ||
+      (Array.isArray(value.loss) && value.loss.every((entry) => isTextDocLossMarker(entry)))) &&
+    (value.ambiguitySet === undefined || isTextDocAmbiguitySetRef(value.ambiguitySet)) &&
+    (value.documentRefs === undefined ||
+      (Array.isArray(value.documentRefs) &&
+        value.documentRefs.every((entry) => isTextDocExternalDocumentRef(entry))))
   );
 }
 
