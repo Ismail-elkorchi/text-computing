@@ -4,8 +4,8 @@
 
 Issue `#12` requires a public manifest contract for lexicons, stopwords, gazetteers, abbreviation
 lists, and related resource packs before any loader behavior is treated as accepted. This document
-records the manifest conventions, the licensed fixture resources, and the failure policy that the
-repository validates.
+records the manifest conventions, the licensed fixture resources, the registry query surface, and
+the failure policy that the repository validates.
 
 ## Manifest conventions
 
@@ -22,6 +22,13 @@ Each manifest records:
 - shared `licenses` and `provenance` registries referenced by the resource entries.
 
 ## Loading, overlay, and mismatch policy
+
+Resource registry creation is deterministic:
+
+- manifests are converted into an in-memory resource catalog without reading files or executing pack
+  code;
+- registry summaries expose normalized language, profile, and resource-kind lists; and
+- registry queries can filter by kind, language, profile, lookup key, pack id, or resource id.
 
 Resource lookup is deterministic:
 
@@ -49,7 +56,8 @@ The repository treats these conditions as failures or diagnostics:
 - `licenseId` and `provenanceId` references must resolve inside the manifest;
 - two resolved resources that share the same normalized `lookupKey` and `overlayPrecedence`
   produce an overlay-conflict diagnostic; and
-- language/profile mismatches are recorded as diagnostics, not silently ignored.
+- language/profile mismatches are recorded as diagnostics when a request has no successful
+  candidates.
 - malformed resource rows, duplicate loaded entries, and missing resource content are explicit
   loader diagnostics.
 
@@ -60,14 +68,16 @@ Valid manifests and resources live under
 
 - `manifests/textpack-en-core.json`
 - `manifests/textpack-en-legal.json`
+- `manifests/textpack-fr-core.json`
 - `resources/textpack-en-core/*`
 - `resources/textpack-en-legal/*`
+- `resources/textpack-fr-core/*`
 
 Negative controls live under `fixtures/textpack/invalid/`.
 
 ## Verification
 
 `npm run -s check:fixtures` validates the pack manifest schema, checks licensed fixture paths,
-rejects duplicate or missing references, exercises overlay conflicts, loads the committed stopword,
-lexicon, and gazetteer resources, and proves deterministic lookup behavior with recorded
-provenance.
+rejects duplicate or missing references, exercises overlay conflicts, builds the registry, loads the
+committed stopword, lexicon, and gazetteer resources, and proves deterministic lookup behavior with
+recorded provenance.

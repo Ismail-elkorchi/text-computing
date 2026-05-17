@@ -53,7 +53,10 @@ const TASK_EVIDENCE_REQUIREMENTS = {
   "nlp-pack-resource-manifest": {
     implementationOwners: ["@ismail-elkorchi/textpack"],
     implementationRefs: ["packages/textpack/src/index.ts"],
-    fixtureRefs: ["fixtures/textpack/manifests/textpack-en-core.json"],
+    fixtureRefs: [
+      "fixtures/textpack/manifests/textpack-en-core.json",
+      "fixtures/textpack/manifests/textpack-fr-core.json",
+    ],
     negativeControlRefs: ["fixtures/textpack/invalid/missing-license.json"],
     comparatorRefs: [],
     corpusRefs: [],

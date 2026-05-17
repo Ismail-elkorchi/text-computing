@@ -1,8 +1,11 @@
 import Ajv from "ajv";
 import { access, readFile } from "node:fs/promises";
 import {
+  createTextPackResourceRegistry,
+  loadTextPackRegistryResources,
   loadTextPackResources,
   lookupTextPackLoadedEntries,
+  queryTextPackResourceRegistry,
   resolveTextPackResources,
 } from "../packages/textpack/src/index.ts";
 
@@ -76,6 +79,7 @@ const validateManifest = ajv.compile(manifestSchema);
 const validManifestPaths = [
   "fixtures/textpack/manifests/textpack-en-core.json",
   "fixtures/textpack/manifests/textpack-en-legal.json",
+  "fixtures/textpack/manifests/textpack-fr-core.json",
 ];
 const validManifests = [];
 const resourceContents = {};
@@ -173,6 +177,54 @@ if (courtEntry?.label !== "ORG") {
   process.exit(1);
 }
 
+const registry = createTextPackResourceRegistry(validManifests);
+if (registry.languages.join(",") !== "en,fr") {
+  console.error("Registry languages must remain deterministic and include committed multilingual fixtures.");
+  console.error(JSON.stringify(registry.languages, null, 2));
+  process.exit(1);
+}
+
+if (registry.kinds.join(",") !== "abbreviation-list,gazetteer,lexicon,stopwords") {
+  console.error("Registry resource kinds must remain deterministic.");
+  console.error(JSON.stringify(registry.kinds, null, 2));
+  process.exit(1);
+}
+
+const frenchStopwordLookup = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  language: "fr",
+});
+if (
+  frenchStopwordLookup.diagnostics.length !== 0 ||
+  frenchStopwordLookup.resources.map((entry) => entry.resourceId).join(",") !== "stopwords-fr-core"
+) {
+  console.error("Registry must select French stopword resources without unrelated mismatch diagnostics.");
+  console.error(JSON.stringify(frenchStopwordLookup, null, 2));
+  process.exit(1);
+}
+
+const loadedFrenchLexicon = loadTextPackRegistryResources(
+  registry,
+  { kind: "lexicon", language: "fr" },
+  resourceContents,
+);
+const maisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS")[0]?.entry;
+if (maisonEntry?.attributes.lemma !== "maison" || maisonEntry.attributes.pos !== "NOUN") {
+  console.error("Registry-loaded French lexicon lookup failed.");
+  console.error(JSON.stringify(loadedFrenchLexicon, null, 2));
+  process.exit(1);
+}
+
+const directFrenchStopwords = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  resourceId: "stopwords-fr-core",
+});
+if (directFrenchStopwords.resources[0]?.packId !== "pack:fr-core") {
+  console.error("Registry must support deterministic direct resource lookup.");
+  console.error(JSON.stringify(directFrenchStopwords, null, 2));
+  process.exit(1);
+}
+
 const missingContent = loadTextPackResources(validManifests, { kind: "stopwords" }, {});
 if (!missingContent.diagnostics.some((entry) => entry.code === "resource-content-missing")) {
   console.error("Missing resource content must produce an explicit diagnostic.");
@@ -193,11 +245,11 @@ if (!profileMismatchLookup.diagnostics.some((entry) => entry.code === "profile-m
 
 const languageMismatchLookup = resolveTextPackResources(validManifests, {
   kind: "stopwords",
-  language: "fr",
+  language: "de",
   profile: "legal",
 });
 if (!languageMismatchLookup.diagnostics.some((entry) => entry.code === "language-mismatch")) {
-  console.error("Expected a language-mismatch diagnostic for the French stopword request.");
+  console.error("Expected a language-mismatch diagnostic for the German stopword request.");
   console.error(JSON.stringify(languageMismatchLookup, null, 2));
   process.exit(1);
 }
