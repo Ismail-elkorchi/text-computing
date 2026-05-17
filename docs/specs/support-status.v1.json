@@ -207,11 +207,12 @@
         "frozen POS/morph/lemma slices",
         "expected outputs",
         "executed spaCy comparator capture",
+        "executed Stanza comparator capture",
         "package tests",
         "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
       ],
       "limitations": [
-        "Only spaCy has committed executed comparator output for this task",
+        "JavaScript comparator entries remain capability records, not executed captures",
         "Not a trained or broad multilingual tagger; fixture-bound deterministic behavior only"
       ]
     },

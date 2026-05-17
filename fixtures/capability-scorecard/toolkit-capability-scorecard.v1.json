@@ -374,7 +374,7 @@
         "docs/specs/pos-morph-lemma-readiness.md",
         "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
       ],
-      "nextGate": "Add a second executed comparator or reduce the stated comparator-backed scope.",
+      "nextGate": "Add executed JavaScript comparator capture or reduce JavaScript comparator expectations.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -395,7 +395,8 @@
           "fixtures/pos-morph-lemma/expected/en-unknown-word.json"
         ],
         "comparatorRefs": [
-          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
+          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+          "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
         ],
         "corpusRefs": [],
         "conformanceReportRefs": [

@@ -52,11 +52,11 @@ Frozen comparator versions live in
 Committed comparator captures live in
 [`../../fixtures/pos-morph-lemma/comparisons/`](../../fixtures/pos-morph-lemma/comparisons/).
 
-This gate includes executed spaCy output over the frozen slices. Stanza `1.12.0`, wink-nlp, and
-compromise remain recorded comparator surfaces until bounded capture runners are added.
+This gate includes executed spaCy and Stanza output over the frozen slices. wink-nlp and
+compromise remain recorded JavaScript comparator surfaces until bounded capture runners are added.
 
 ## Verification
 
 `npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, executed spaCy
-capture, expected-output schema, required readiness documentation headings, pack-backed lexicon
+and Stanza captures, expected-output schema, required readiness documentation headings, pack-backed lexicon
 fixtures, and the recorded goldens produced by `@ismail-elkorchi/textrules`.

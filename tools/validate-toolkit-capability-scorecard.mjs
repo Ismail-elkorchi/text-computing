@@ -66,7 +66,7 @@ const TASK_EVIDENCE_REQUIREMENTS = {
     implementationRefs: ["packages/textrules/src/index.ts", "packages/textpack/src/index.ts"],
     fixtureRefs: ["fixtures/pos-morph-lemma/slices.json"],
     negativeControlRefs: ["fixtures/pos-morph-lemma/expected/en-unknown-word.json"],
-    comparatorRefs: ["fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"],
+    comparatorRefs: ["fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json", "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"],
     corpusRefs: [],
   },
   "nlp-rule-backed-ner": {

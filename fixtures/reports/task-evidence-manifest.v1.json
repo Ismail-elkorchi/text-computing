@@ -157,16 +157,18 @@
         "fixtures/pos-morph-lemma/slices.json",
         "fixtures/pos-morph-lemma/tool-versions.json",
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+        "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
         "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
         "schemas/pos-morph-lemma-expected-v1.schema.json",
         "schemas/pos-morph-lemma-comparison-v1.schema.json",
         "tools/validate-pos-morph-lemma-feature.mjs"
       ],
       "comparatorRefs": [
-        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
+        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+        "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
       ],
       "knownGaps": [
-        "Only spaCy has committed executed comparator output for this task.",
+        "JavaScript comparator entries remain capability records, not executed captures.",
         "Not a trained or broad multilingual tagger; behavior remains fixture-bound."
       ]
     },

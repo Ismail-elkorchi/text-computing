@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "scope": "pos-morph-lemma",
+  "capturedDate": "2026-05-17",
+  "offsetUnits": "utf16-code-unit",
+  "comparator": {
+    "name": "Stanza",
+    "version": "1.12.0",
+    "runtime": "Python 3.13.7",
+    "command": "python capture over fixtures/pos-morph-lemma/slices.json using Stanza tokenize,pos,lemma CPU pipelines",
+    "license": "Apache-2.0",
+    "artifactSurface": "diagnostic token, UPOS, XPOS, lemma, and morphology outputs"
+  },
+  "dependencies": [
+    {
+      "name": "python",
+      "version": "3.13.7",
+      "role": "runtime used for local comparator execution"
+    },
+    {
+      "name": "stanza",
+      "version": "1.12.0",
+      "role": "POS/lemma/morph runtime"
+    },
+    {
+      "name": "stanza-en-tokenize-pos-lemma",
+      "version": "1.12.0-default",
+      "role": "English model package resolved by stanza.download"
+    },
+    {
+      "name": "stanza-es-tokenize-pos-lemma",
+      "version": "1.12.0-default",
+      "role": "Spanish model package resolved by stanza.download"
+    },
+    {
+      "name": "stanza-fr-tokenize-pos-lemma",
+      "version": "1.12.0-default",
+      "role": "French model package resolved by stanza.download"
+    }
+  ],
+  "slices": [
+    {
+      "sliceId": "en-unknown-word",
+      "status": "captured",
+      "model": {
+        "name": "stanza-en-tokenize-pos-lemma",
+        "version": "1.12.0-default"
+      },
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 3,
+          "text": "The",
+          "upos": "DET",
+          "tag": "DT",
+          "lemma": "the",
+          "morphology": {
+            "Definite": "Def",
+            "PronType": "Art"
+          }
+        },
+        {
+          "id": "token-2",
+          "startCU": 4,
+          "endCU": 11,
+          "text": "florped",
+          "upos": "VERB",
+          "tag": "VBN",
+          "lemma": "florp",
+          "morphology": {
+            "Tense": "Past",
+            "VerbForm": "Part",
+            "Voice": "Pass"
+          }
+        },
+        {
+          "id": "token-3",
+          "startCU": 12,
+          "endCU": 16,
+          "text": "host",
+          "upos": "NOUN",
+          "tag": "NN",
+          "lemma": "host",
+          "morphology": {
+            "Number": "Sing"
+          }
+        },
+        {
+          "id": "token-4",
+          "startCU": 17,
+          "endCU": 22,
+          "text": "signs",
+          "upos": "VERB",
+          "tag": "VBZ",
+          "lemma": "sign",
+          "morphology": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          }
+        },
+        {
+          "id": "token-5",
+          "startCU": 22,
+          "endCU": 23,
+          "text": ".",
+          "upos": "PUNCT",
+          "tag": ".",
+          "lemma": ".",
+          "morphology": {}
+        }
+      ]
+    },
+    {
+      "sliceId": "es-multiword-token",
+      "status": "captured",
+      "model": {
+        "name": "stanza-es-tokenize-pos-lemma",
+        "version": "1.12.0-default"
+      },
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 3,
+          "text": "Del",
+          "upos": "ADP",
+          "tag": "sps00",
+          "lemma": "del",
+          "morphology": {}
+        },
+        {
+          "id": "token-2",
+          "startCU": 4,
+          "endCU": 8,
+          "text": "juez",
+          "upos": "NOUN",
+          "tag": "nccs000",
+          "lemma": "juez",
+          "morphology": {
+            "Number": "Sing"
+          }
+        },
+        {
+          "id": "token-3",
+          "startCU": 9,
+          "endCU": 13,
+          "text": "vino",
+          "upos": "VERB",
+          "tag": "vmis3s0",
+          "lemma": "venir",
+          "morphology": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          }
+        },
+        {
+          "id": "token-4",
+          "startCU": 13,
+          "endCU": 14,
+          "text": ".",
+          "upos": "PUNCT",
+          "tag": "fp",
+          "lemma": ".",
+          "morphology": {
+            "PunctType": "Peri"
+          }
+        }
+      ]
+    },
+    {
+      "sliceId": "fr-clitic-historical",
+      "status": "captured",
+      "model": {
+        "name": "stanza-fr-tokenize-pos-lemma",
+        "version": "1.12.0-default"
+      },
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 2,
+          "text": "L'",
+          "upos": "DET",
+          "tag": "",
+          "lemma": "le",
+          "morphology": {
+            "Definite": "Def",
+            "Number": "Sing",
+            "PronType": "Art"
+          }
+        },
+        {
+          "id": "token-2",
+          "startCU": 2,
+          "endCU": 7,
+          "text": "hoste",
+          "upos": "NOUN",
+          "tag": "",
+          "lemma": "hoste",
+          "morphology": {
+            "Number": "Sing"
+          }
+        },
+        {
+          "id": "token-3",
+          "startCU": 8,
+          "endCU": 10,
+          "text": "s'",
+          "upos": "PRON",
+          "tag": "",
+          "lemma": "soi",
+          "morphology": {
+            "Person": "3",
+            "PronType": "Prs",
+            "Reflex": "Yes"
+          }
+        },
+        {
+          "id": "token-4",
+          "startCU": 10,
+          "endCU": 17,
+          "text": "escrist",
+          "upos": "VERB",
+          "tag": "",
+          "lemma": "escrire",
+          "morphology": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          }
+        },
+        {
+          "id": "token-5",
+          "startCU": 17,
+          "endCU": 18,
+          "text": ".",
+          "upos": "PUNCT",
+          "tag": "",
+          "lemma": ".",
+          "morphology": {}
+        }
+      ]
+    },
+    {
+      "sliceId": "code-switch-en-fr",
+      "status": "captured",
+      "model": {
+        "name": "stanza-en-tokenize-pos-lemma",
+        "version": "1.12.0-default"
+      },
+      "tokens": [
+        {
+          "id": "token-1",
+          "startCU": 0,
+          "endCU": 2,
+          "text": "Le",
+          "upos": "PROPN",
+          "tag": "NNP",
+          "lemma": "Le",
+          "morphology": {
+            "Number": "Sing"
+          }
+        },
+        {
+          "id": "token-2",
+          "startCU": 3,
+          "endCU": 7,
+          "text": "host",
+          "upos": "NOUN",
+          "tag": "NN",
+          "lemma": "host",
+          "morphology": {
+            "Number": "Sing"
+          }
+        },
+        {
+          "id": "token-3",
+          "startCU": 8,
+          "endCU": 13,
+          "text": "signs",
+          "upos": "VERB",
+          "tag": "VBZ",
+          "lemma": "sign",
+          "morphology": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          }
+        },
+        {
+          "id": "token-4",
+          "startCU": 14,
+          "endCU": 17,
+          "text": "ici",
+          "upos": "NOUN",
+          "tag": "NN",
+          "lemma": "ici",
+          "morphology": {
+            "Number": "Sing"
+          }
+        },
+        {
+          "id": "token-5",
+          "startCU": 17,
+          "endCU": 18,
+          "text": ".",
+          "upos": "PUNCT",
+          "tag": ".",
+          "lemma": ".",
+          "morphology": {}
+        }
+      ],
+      "notes": [
+        "Code-switch slice captured with the English Stanza pipeline; this is diagnostic evidence only."
+      ]
+    }
+  ],
+  "notes": [
+    "Capture generated in an isolated local Python virtual environment with use_gpu=false."
+  ]
+}
