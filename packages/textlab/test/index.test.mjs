@@ -468,6 +468,22 @@ if (!replayCliResult.stdout.includes("notRunComparisons=1")) {
   throw new Error("evidence-replay CLI should render comparator gap counts");
 }
 
+const evidenceRunCliResult = await runTextlabCli(["evidence-run", "replay", "retrieval"]);
+
+if (evidenceRunCliResult.exitCode !== 0 || evidenceRunCliResult.stderr !== "") {
+  throw new Error(`evidence-run replay CLI should pass: ${evidenceRunCliResult.stderr}`);
+}
+
+if (!evidenceRunCliResult.stdout.includes('"mode": "replay"') || !evidenceRunCliResult.stdout.includes("nlp-retrieval")) {
+  throw new Error("evidence-run replay CLI should invoke repository replay and expose task output");
+}
+
+const invalidEvidenceRunCliResult = await runTextlabCli(["evidence-run", "capture"]);
+
+if (invalidEvidenceRunCliResult.exitCode !== 2 || !invalidEvidenceRunCliResult.stderr.includes("invalid evidence-run mode")) {
+  throw new Error("evidence-run CLI should reject unsupported modes");
+}
+
 const corpusCliResult = await runTextlabCli(["corpus-fixture", corpusPath]);
 
 if (corpusCliResult.exitCode !== 0 || corpusCliResult.stderr !== "") {
