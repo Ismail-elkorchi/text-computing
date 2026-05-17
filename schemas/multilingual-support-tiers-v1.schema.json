@@ -4,7 +4,7 @@
   "title": "multilingual support tiers v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "scope", "externalReference", "tiers", "scriptFixtures"],
+  "required": ["schemaVersion", "scope", "externalReference", "coverageAxes", "tiers", "scriptFixtures"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "scope": { "const": "multilingual-support" },
@@ -29,6 +29,32 @@
       "type": "array",
       "minItems": 5,
       "items": { "$ref": "#/definitions/tier" }
+    },
+    "coverageAxes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scripts", "families", "morphologyProfiles", "interpretation"],
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "minItems": 15,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "families": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "morphologyProfiles": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "interpretation": { "type": "string", "minLength": 1 }
+      }
     },
     "scriptFixtures": {
       "type": "array",

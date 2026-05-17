@@ -12,6 +12,8 @@ const REQUIRED_TIERS = [
   "corpus-backed",
 ];
 const REQUIRED_SCRIPTS = [
+  "Arabic",
+  "Bengali",
   "Devanagari",
   "Cyrillic",
   "Hebrew",
@@ -21,7 +23,32 @@ const REQUIRED_SCRIPTS = [
   "Georgian",
   "Tamil",
   "Han",
+  "Hangul",
+  "Khmer",
+  "Latin",
   "Thai",
+];
+const REQUIRED_FAMILIES = [
+  "Afro-Asiatic",
+  "Austroasiatic",
+  "Dravidian",
+  "Indo-European",
+  "Kartvelian",
+  "Koreanic",
+  "Kra-Dai",
+  "Niger-Congo",
+  "Sino-Tibetan",
+  "Turkic",
+  "Uralic",
+  "language-isolate",
+];
+const REQUIRED_MORPHOLOGY_PROFILES = [
+  "agglutinative",
+  "fusional",
+  "isolating",
+  "templatic",
+  "no-whitespace-segmentation",
+  "right-to-left",
 ];
 
 async function readJson(path) {
@@ -94,6 +121,21 @@ const scripts = new Set(matrix.scriptFixtures.map((fixture) => fixture.script));
 for (const script of REQUIRED_SCRIPTS) {
   if (!scripts.has(script)) {
     fail(`Multilingual support matrix is missing readiness-only script fixture for ${script}.`);
+  }
+}
+for (const family of REQUIRED_FAMILIES) {
+  if (!matrix.coverageAxes.families.includes(family)) {
+    fail(`Multilingual support matrix is missing UD breadth family axis for ${family}.`);
+  }
+}
+for (const profile of REQUIRED_MORPHOLOGY_PROFILES) {
+  if (!matrix.coverageAxes.morphologyProfiles.includes(profile)) {
+    fail(`Multilingual support matrix is missing morphology profile axis for ${profile}.`);
+  }
+}
+for (const script of REQUIRED_SCRIPTS) {
+  if (!matrix.coverageAxes.scripts.includes(script)) {
+    fail(`Multilingual support matrix coverageAxes is missing script ${script}.`);
   }
 }
 
