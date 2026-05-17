@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "scope": "foundation-release-candidates",
+  "publicHead": "5f9d790ec68980fcca97639d6c37072f4f7721fa",
+  "packages": [
+    {
+      "packageName": "@ismail-elkorchi/textprotocol",
+      "packageDir": "packages/textprotocol",
+      "releaseTrack": "private-unreleased",
+      "releaseReadiness": "blocked",
+      "candidateState": "gate-defined",
+      "privateRequired": true,
+      "owns": ["result envelope runtime guards", "result envelope schema contract"],
+      "downstreamDependents": ["@ismail-elkorchi/textpipeline", "@ismail-elkorchi/textrules", "@ismail-elkorchi/textlab"],
+      "requiredEvidenceRefs": [
+        "packages/textprotocol/package.json",
+        "packages/textprotocol/src/index.ts",
+        "packages/textprotocol/test/index.test.ts",
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "docs/specs/support-status.v1.json",
+        "fixtures/package-release/gates.v1.json"
+      ],
+      "releaseBlockers": [
+        "Version-negotiation and transport compatibility policy are not release-ready.",
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textconformance",
+      "packageDir": "packages/textconformance",
+      "releaseTrack": "private-unreleased",
+      "releaseReadiness": "blocked",
+      "candidateState": "gate-defined",
+      "privateRequired": true,
+      "owns": ["conformance report runtime guards", "minimal synchronous conformance runner"],
+      "downstreamDependents": ["@ismail-elkorchi/textrules", "@ismail-elkorchi/textlab"],
+      "requiredEvidenceRefs": [
+        "packages/textconformance/package.json",
+        "packages/textconformance/src/index.ts",
+        "packages/textconformance/test/index.test.ts",
+        "schemas/textconformance-report-v1.schema.json",
+        "fixtures/reports/task-evidence-manifest.v1.json",
+        "fixtures/package-release/gates.v1.json"
+      ],
+      "releaseBlockers": [
+        "Diff, benchmark, and claim-registry workflows are not release-ready.",
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textdoc",
+      "packageDir": "packages/textdoc",
+      "releaseTrack": "private-unreleased",
+      "releaseReadiness": "blocked",
+      "candidateState": "gate-defined",
+      "privateRequired": true,
+      "owns": ["document container", "annotation layers", "CoNLL-U round-trip helpers"],
+      "downstreamDependents": [
+        "@ismail-elkorchi/textpipeline",
+        "@ismail-elkorchi/textcorpus",
+        "@ismail-elkorchi/textrules",
+        "@ismail-elkorchi/textlab"
+      ],
+      "requiredEvidenceRefs": [
+        "packages/textdoc/package.json",
+        "packages/textdoc/src/index.ts",
+        "packages/textdoc/test/index.test.ts",
+        "schemas/textdoc-document-v1.schema.json",
+        "fixtures/textdoc/examples/document-annotation-model-v1.json",
+        "fixtures/package-release/gates.v1.json"
+      ],
+      "releaseBlockers": [
+        "Graph annotation behavior is fixture-scope and does not yet have broad production validation.",
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack",
+      "packageDir": "packages/textpack",
+      "releaseTrack": "private-unreleased",
+      "releaseReadiness": "blocked",
+      "candidateState": "gate-defined",
+      "privateRequired": true,
+      "owns": ["pack manifest runtime guards", "resource loading", "resource registry lookup"],
+      "downstreamDependents": ["@ismail-elkorchi/textrules"],
+      "requiredEvidenceRefs": [
+        "packages/textpack/package.json",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/test/index.test.ts",
+        "schemas/textpack-manifest-v1.schema.json",
+        "fixtures/textpack/manifests/textpack-en-core.json",
+        "fixtures/package-release/gates.v1.json"
+      ],
+      "releaseBlockers": [
+        "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.",
+        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact."
+      ]
+    }
+  ],
+  "notes": [
+    "This artifact defines non-publishing release-candidate gates only; packages remain private until release blockers are cleared.",
+    "Foundational packages must stabilize before dependent package release-readiness can advance."
+  ]
+}
