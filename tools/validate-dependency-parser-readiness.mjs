@@ -227,8 +227,8 @@ expect(
   "Dependency parser readiness requires at least one Python comparator capability record.",
 );
 expect(
-  comparatorRuntimes.has("javascript"),
-  "Dependency parser readiness requires a JavaScript gap/capability record.",
+  toolVersions.executionPolicy.includes("JavaScript comparator-backed dependency-parser support is not claimed"),
+  "Dependency parser readiness must explicitly state that no JavaScript comparator-backed claim is made.",
 );
 
 let executedComparatorCount = 0;
@@ -304,7 +304,7 @@ for (const fixtureId of fixturesById.keys()) {
 
 const comparisonDir = "fixtures/dependency-parser/comparisons";
 const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
-expect(comparisonFiles.length >= 3, "Dependency parser readiness requires comparator/gap capture files.");
+expect(comparisonFiles.length >= 3, "Dependency parser readiness requires executed comparator capture files.");
 
 const readinessDoc = await readText("docs/specs/dependency-parser-readiness.md");
 for (const heading of [

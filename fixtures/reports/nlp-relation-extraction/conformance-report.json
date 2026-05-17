@@ -9,9 +9,9 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 4,
+    "pass": 5,
     "fail": 0,
-    "notRun": 1
+    "notRun": 0
   },
   "checks": [
     {
@@ -53,15 +53,15 @@
       ]
     },
     {
-      "checkId": "external-comparator-captures",
-      "status": "not-run",
-      "message": "No executed external relation extraction comparator captures are committed in this gate.",
+      "checkId": "comparator-claim-boundary",
+      "status": "pass",
+      "message": "No external comparator-backed relation extraction claim is made in this gate.",
       "evidenceRefs": [
         "docs/specs/nlp-relation-extraction-research-ledger.md"
       ]
     }
   ],
   "notes": [
-    "This report records slice-proven relation extraction evidence for frozen repository-authored short texts only; it does not claim external comparator-backed or corpus-level relation extraction behavior."
+    "This report records slice-proven relation extraction evidence for frozen repository-authored short texts only. External comparator-backed and corpus-level relation extraction support are not claimed."
   ]
 }

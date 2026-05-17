@@ -27,15 +27,15 @@ UD/CoNLL-U validation, negative controls, and a JavaScript ecosystem gap record.
   frozen slices.
 - `fixtures/dependency-parser/comparisons/stanza-1.12.json` records executed Stanza 1.12.0 parser outputs for the frozen slices.
 - `fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json` records direct UD/CoNLL-U validation of the frozen expected arcs. It is fixture-format evidence, not parser model-output evidence.
-- `fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json` records that no committed JavaScript
-  dependency-parser comparator is available in this readiness gate.
+- No JavaScript dependency-parser comparator with a comparable UD arc surface is used in this gate, and no
+  JavaScript comparator-backed dependency-parser claim is made.
 
 ## Comparator limitations
 
 - spaCy and Stanza behavior is model- and language-package-dependent.
 - The Stanza capture depends on downloaded model assets; those model files are not vendored in this repository.
 - The UD validator capture proves frozen CoNLL-U row validity and expected-arc consistency; it does not prove parser behavior.
-- JavaScript ecosystem comparison remains a gap to revisit before feature implementation.
+- JavaScript ecosystem comparison is not part of the comparator-backed claim for this gate.
 
 ## Readiness consequences
 

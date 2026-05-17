@@ -19,24 +19,10 @@
       "version": "1.12.0",
       "executionStatus": "executed",
       "capturePath": "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
-    },
-    {
-      "name": "wink-nlp",
-      "runtime": "javascript",
-      "version": "2.4.0",
-      "model": "wink-eng-lite-web-model",
-      "modelVersion": "1.8.1",
-      "executionStatus": "capability-recorded"
-    },
-    {
-      "name": "compromise",
-      "runtime": "javascript",
-      "version": "14.15.0",
-      "executionStatus": "capability-recorded"
     }
   ],
   "notes": [
     "Comparator versions are frozen for readiness; feature work must record any later changes explicitly.",
-    "spaCy and Stanza have committed executed output in this gate; JavaScript comparator entries remain capability records."
+    "spaCy and Stanza have committed executed output in this gate; no JavaScript comparator-backed POS/morph/lemma claim is made."
   ]
 }

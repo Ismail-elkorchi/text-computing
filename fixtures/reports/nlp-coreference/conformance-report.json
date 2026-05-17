@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -56,9 +56,18 @@
         "fixtures/coreference/expected/es-pronoun.json",
         "tools/validate-coreference-readiness.mjs"
       ]
+    },
+    {
+      "checkId": "comparator-claim-boundary",
+      "status": "pass",
+      "message": "No external comparator-backed coreference claim is made in this gate.",
+      "evidenceRefs": [
+        "docs/specs/nlp-coreference-research-ledger.md",
+        "fixtures/coreference/slices.json"
+      ]
     }
   ],
   "notes": [
-    "This report records frozen-slice behavior only; it does not claim broad coreference coverage or corpus evaluation."
+    "This report records frozen-slice behavior only. External comparator-backed, broad-coverage, and corpus-evaluation support are not claimed."
   ]
 }

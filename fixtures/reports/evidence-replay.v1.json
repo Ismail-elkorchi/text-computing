@@ -59,7 +59,7 @@
             "tools/validate-pos-morph-lemma-readiness.mjs"
           ],
           "path": "tools/validate-pos-morph-lemma-readiness.mjs",
-          "sha256": "c1f30a67c8ee31de305185b573d8294b000dc9bd3e9ed6bcf0a7ad3119d417de"
+          "sha256": "b2754182fd8f46e02ae61287d8790b259df5c0c4ce7a96fcacf9a92d1d8b540b"
         },
         {
           "argv": [
@@ -97,7 +97,7 @@
       "conformanceReportRefs": [
         "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
       ],
-      "knownGap": "JavaScript POS/morph/lemma comparator entries remain capability records, not executed captures."
+      "knownGap": "Only committed spaCy and Stanza captures are comparator-backed; no JavaScript POS/morph/lemma comparator-backed claim is made."
     },
     {
       "task": "rule-backed-ner",
@@ -228,7 +228,7 @@
             "tools/validate-dependency-parser-readiness.mjs"
           ],
           "path": "tools/validate-dependency-parser-readiness.mjs",
-          "sha256": "304604abfbc064c71ef0edfa61b0112527f8802ea8275f7f53ecd4a0903d19f3"
+          "sha256": "26558dabce541e3605ed3c102b137908cd6f541b4e5e398e24e6baed203443ce"
         },
         {
           "argv": [
@@ -240,16 +240,6 @@
         }
       ],
       "comparisons": [
-        {
-          "path": "fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json",
-          "sha256": "fd91b80ca7aaf297b6fffb3c01fd48e6cc8cc87fe5d78f75f594431bdf5daac6",
-          "comparator": {
-            "name": "JavaScript NLP baseline",
-            "version": "2026-05 readiness review",
-            "runtime": "javascript"
-          },
-          "status": "not-run"
-        },
         {
           "path": "fixtures/dependency-parser/comparisons/spacy-3.8.json",
           "sha256": "2f63a1011029c2d281173ad6d1dd8012b86b6d1e908e0b94fb785217af5f240d",
@@ -284,12 +274,12 @@
       "conformanceReportRefs": [
         "fixtures/reports/nlp-dependency-parser/conformance-report.json"
       ],
-      "knownGap": "Dependency parser behavior remains limited to frozen slices; this command validates comparator captures and feature output."
+      "knownGap": "Dependency parser behavior remains limited to frozen slices; no JavaScript dependency-parser comparator-backed claim is made."
     },
     {
       "task": "retrieval",
       "taskId": "nlp-retrieval",
-      "status": "gap-recorded",
+      "status": "ok",
       "validators": [
         {
           "argv": [
@@ -304,12 +294,12 @@
       "conformanceReportRefs": [
         "fixtures/reports/nlp-retrieval/conformance-report.json"
       ],
-      "knownGap": "Retrieval behavior remains limited to a frozen explicit-token corpus; this command validates feature output without external comparator captures."
+      "knownGap": "Retrieval behavior remains limited to a frozen explicit-token corpus; no external comparator-backed retrieval claim is made."
     },
     {
       "task": "relation-extraction",
       "taskId": "nlp-relation-extraction",
-      "status": "gap-recorded",
+      "status": "ok",
       "validators": [
         {
           "argv": [
@@ -317,19 +307,19 @@
             "tools/validate-relation-extraction-readiness.mjs"
           ],
           "path": "tools/validate-relation-extraction-readiness.mjs",
-          "sha256": "6d7b928e92ccca8b202de9869a9d8c1dd6210bc42218035475431691bbafcbd3"
+          "sha256": "7b227b91b82bc3c0d3a53e9d4fbb93543477549966ccb43da2843a737374dbff"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-relation-extraction/conformance-report.json"
       ],
-      "knownGap": "Relation extraction behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures."
+      "knownGap": "Relation extraction behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed relation extraction claim is made."
     },
     {
       "task": "coreference",
       "taskId": "nlp-coreference",
-      "status": "gap-recorded",
+      "status": "ok",
       "validators": [
         {
           "argv": [
@@ -337,14 +327,14 @@
             "tools/validate-coreference-readiness.mjs"
           ],
           "path": "tools/validate-coreference-readiness.mjs",
-          "sha256": "920511809357a205f81fd7b290eb68ca356fe2981dcfc90db6a66b3b0544ead3"
+          "sha256": "e918c90abad13a460b55a1f7bd4516a4c8111b7a902a28bb8a9f8fa741b5bf7e"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-coreference/conformance-report.json"
       ],
-      "knownGap": "Coreference behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures."
+      "knownGap": "Coreference behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed coreference claim is made."
     }
   ]
 }

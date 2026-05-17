@@ -50,7 +50,7 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No executed external comparator captures or corpus evaluation are implemented for coreference.",
+        "External comparator-backed and corpus-level coreference support are not claimed.",
         "Behavior is limited to repository-authored frozen short-text slices."
       ]
     },
@@ -168,7 +168,7 @@
         "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
       ],
       "knownGaps": [
-        "JavaScript comparator entries remain capability records, not executed captures.",
+        "No JavaScript comparator-backed POS/morph/lemma claim is made.",
         "Not a trained or broad multilingual tagger; behavior remains fixture-bound."
       ]
     },
@@ -194,7 +194,7 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No executed external comparator captures or corpus evaluation are implemented for relation extraction.",
+        "External comparator-backed and corpus-level relation extraction support are not claimed.",
         "Behavior is limited to repository-authored frozen short-text slices."
       ]
     },

@@ -50,16 +50,7 @@
       "artifactSurface": "CoNLL-U HEAD/DEPREL row validation for frozen expected arcs",
       "executionStatus": "executed",
       "capturePath": "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
-    },
-    {
-      "name": "JavaScript NLP baseline",
-      "version": "2026-05 readiness review",
-      "runtime": "javascript",
-      "license": "not-applicable",
-      "artifactSurface": "No committed broad dependency-parser comparator was identified for this readiness gate.",
-      "executionStatus": "capability-recorded",
-      "capturePath": "fixtures/dependency-parser/comparisons/javascript-gap-2026-05.json"
     }
   ],
-  "executionPolicy": "At least one executed parser model-output capture and one direct UD/CoNLL-U validation capture are required before this readiness gate passes. Additional parser feature work still requires broader comparator captures and explicit non-failure differences."
+  "executionPolicy": "At least one executed parser model-output capture and one direct UD/CoNLL-U validation capture are required before this readiness gate passes. JavaScript comparator-backed dependency-parser support is not claimed by this gate."
 }

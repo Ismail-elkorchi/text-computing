@@ -24,7 +24,7 @@ const TASKS = {
     comparisonDir: "fixtures/pos-morph-lemma/comparisons",
     comparisonSchema: "schemas/pos-morph-lemma-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"],
-    knownGap: "JavaScript POS/morph/lemma comparator entries remain capability records, not executed captures.",
+    knownGap: "Only committed spaCy and Stanza captures are comparator-backed; no JavaScript POS/morph/lemma comparator-backed claim is made.",
   },
   "rule-backed-ner": {
     taskId: "nlp-rule-backed-ner",
@@ -57,7 +57,7 @@ const TASKS = {
     comparisonDir: "fixtures/dependency-parser/comparisons",
     comparisonSchema: "schemas/dependency-parser-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-dependency-parser/conformance-report.json"],
-    knownGap: "Dependency parser behavior remains limited to frozen slices; this command validates comparator captures and feature output.",
+    knownGap: "Dependency parser behavior remains limited to frozen slices; no JavaScript dependency-parser comparator-backed claim is made.",
   },
   retrieval: {
     taskId: "nlp-retrieval",
@@ -65,7 +65,8 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-retrieval/conformance-report.json"],
-    knownGap: "Retrieval behavior remains limited to a frozen explicit-token corpus; this command validates feature output without external comparator captures.",
+    knownGap: "Retrieval behavior remains limited to a frozen explicit-token corpus; no external comparator-backed retrieval claim is made.",
+    claimDowngraded: true,
   },
   "relation-extraction": {
     taskId: "nlp-relation-extraction",
@@ -73,7 +74,8 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-relation-extraction/conformance-report.json"],
-    knownGap: "Relation extraction behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures.",
+    knownGap: "Relation extraction behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed relation extraction claim is made.",
+    claimDowngraded: true,
   },
   coreference: {
     taskId: "nlp-coreference",
@@ -81,7 +83,8 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-coreference/conformance-report.json"],
-    knownGap: "Coreference behavior remains limited to frozen repository-authored short-text slices; this command validates expected outputs without external comparator captures.",
+    knownGap: "Coreference behavior remains limited to frozen repository-authored short-text slices; no external comparator-backed coreference claim is made.",
+    claimDowngraded: true,
   },
 };
 
@@ -337,7 +340,7 @@ for (const taskName of taskNames) {
     validators: config.validatorCommands.length,
     comparisons: files.length,
     evidenceRuns: runCount,
-    status: config.knownGap && files.length === 0 ? "gap-recorded" : "ok",
+    status: config.knownGap && files.length === 0 && !config.claimDowngraded ? "gap-recorded" : "ok",
   };
   summaries.push(summary);
   replayTasks.push({
