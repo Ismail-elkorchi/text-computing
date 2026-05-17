@@ -13,6 +13,7 @@ const REQUIRED_GATES = [
   "package-quality",
   "security-review",
   "claim-hygiene",
+  "downstream-api-stability",
 ];
 
 async function readJson(relativePath) {
@@ -56,6 +57,25 @@ async function workspacePackageNames() {
   return names.sort();
 }
 
+async function workspaceDownstreamDependents() {
+  const entries = await readdir(path.join(ROOT, "packages"), { withFileTypes: true });
+  const packageJsons = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    packageJsons.push(await readJson(`packages/${entry.name}/package.json`));
+  }
+  const packageNames = new Set(packageJsons.map((packageJson) => packageJson.name));
+  const downstreamByPackage = new Map([...packageNames].map((name) => [name, []]));
+  for (const packageJson of packageJsons) {
+    for (const dependencyName of Object.keys(packageJson.dependencies ?? {})) {
+      if (!packageNames.has(dependencyName)) continue;
+      downstreamByPackage.get(dependencyName)?.push(packageJson.name);
+    }
+  }
+  for (const downstream of downstreamByPackage.values()) downstream.sort();
+  return downstreamByPackage;
+}
+
 const ajv = new Ajv({ allErrors: true, strict: true });
 const [schema, gates, supportStatus] = await Promise.all([
   readJson(SCHEMA_PATH),
@@ -71,6 +91,7 @@ expect(
 );
 
 const supportByPackage = new Map(supportStatus.packages.map((entry) => [entry.name, entry]));
+const downstreamByPackage = await workspaceDownstreamDependents();
 const declaredNames = gates.packages.map((entry) => entry.packageName).sort();
 expect(
   JSON.stringify(declaredNames) === JSON.stringify(await workspacePackageNames()),
@@ -87,9 +108,32 @@ for (const entry of gates.packages) {
     JSON.stringify([...entry.gates].sort()) === JSON.stringify([...REQUIRED_GATES].sort()),
     `${entry.packageName} must list every required release gate.`,
   );
+  const expectedDownstream = downstreamByPackage.get(entry.packageName) ?? [];
+  expect(
+    JSON.stringify([...entry.downstreamApiStability.downstreamDependents].sort()) ===
+      JSON.stringify(expectedDownstream),
+    `${entry.packageName} downstream dependency graph mismatch.`,
+    { expected: expectedDownstream, actual: entry.downstreamApiStability.downstreamDependents },
+  );
+  for (const ref of entry.downstreamApiStability.evidenceRefs) {
+    assertRepoRef(ref, `${entry.packageName} downstreamApiStability.evidenceRefs`);
+    expect(await fileExists(ref), `${entry.packageName} downstream API evidence ref does not exist: ${ref}`);
+  }
   if (entry.releaseTrack === "private-unreleased") {
     expect(entry.releaseReadiness === "blocked", `${entry.packageName} private-unreleased package must be release-blocked.`);
     expect(entry.releaseBlockers.length >= 1, `${entry.packageName} private-unreleased package must list release blockers.`);
+    expect(
+      entry.downstreamApiStability.requiredBeforeRelease === true,
+      `${entry.packageName} private-unreleased package must require downstream API stability before release.`,
+    );
+    expect(
+      entry.downstreamApiStability.status === "blocked",
+      `${entry.packageName} private-unreleased package must have blocked downstream API stability.`,
+    );
+    expect(
+      entry.releaseBlockers.some((blocker) => blocker.includes("Downstream API stability evidence")),
+      `${entry.packageName} private-unreleased package must include a downstream API stability release blocker.`,
+    );
     expect(packageJson.private === true, `${entry.packageName} must remain private while releaseTrack is private-unreleased.`);
     expect(packageJson.version === "0.0.0", `${entry.packageName} private-unreleased version must remain 0.0.0.`);
     expect(
@@ -100,6 +144,14 @@ for (const entry of gates.packages) {
     expect(entry.releaseTrack === "public-beta", `${entry.packageName} has unknown release track ${entry.releaseTrack}.`);
     expect(entry.releaseReadiness === "publishable", `${entry.packageName} public-beta package must be marked publishable.`);
     expect(entry.releaseBlockers.length === 0, `${entry.packageName} public-beta package must not list release blockers.`);
+    expect(
+      entry.downstreamApiStability.requiredBeforeRelease === false,
+      `${entry.packageName} public-beta package must not require this non-textfacts downstream gate.`,
+    );
+    expect(
+      entry.downstreamApiStability.status === "not-required" || entry.downstreamApiStability.status === "proven",
+      `${entry.packageName} public-beta downstream API status must be not-required or proven.`,
+    );
     expect(packageJson.private !== true, `${entry.packageName} public-beta package must not be private.`);
     expect(support.status === "beta", `${entry.packageName} public-beta package must be beta in support status.`);
   }

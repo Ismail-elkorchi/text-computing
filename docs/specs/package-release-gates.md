@@ -19,6 +19,7 @@ private-unreleased.
 - `package-quality` — pack, export, static, and package-quality checks pass where applicable.
 - `security-review` — dependency and workflow changes are auditable.
 - `claim-hygiene` — public claims remain support-graded and evidence-linked.
+- `downstream-api-stability` — non-`textfacts` packages prove stable API usage through downstream dependents or an explicit no-dependent release-candidate integration artifact.
 
 The gate list is the required checklist, not a release approval by itself. Each package also records a
 `releaseReadiness` value:
@@ -30,6 +31,11 @@ The gate list is the required checklist, not a release approval by itself. Each 
 
 `@ismail-elkorchi/textfacts` is the only public-beta package. The other eight package workspaces are
 private-unreleased even when their current slice behavior is implemented.
+
+For non-`textfacts` packages, release readiness is dependency-based: the release track must stay
+`private-unreleased` until downstream API stability evidence is recorded for declared downstream dependents,
+or until a package with no current downstream dependent records an explicit release-candidate integration
+artifact.
 
 ## Verification
 
