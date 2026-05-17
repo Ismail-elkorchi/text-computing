@@ -296,7 +296,7 @@ interface TextRulesEntityMatch {
   readonly matchedSurface: string;
 }
 
-interface TextRulesDependencyNodeSpec {
+export interface TextRulesDependencyNodeSpec {
   readonly id: string;
   readonly form: string;
   readonly targetTokenId: string;
@@ -304,21 +304,57 @@ interface TextRulesDependencyNodeSpec {
   readonly relation: string;
 }
 
-interface TextRulesRelationSpanSpec {
+export interface TextRulesDependencyNodeTemplate {
+  readonly id: string;
+  readonly form: string;
+  readonly targetCapture: string;
+  readonly head: string;
+  readonly relation: string;
+}
+
+export interface TextRulesDependencyRule {
+  readonly ruleId: string;
+  readonly language?: string;
+  readonly pattern: TextRulesTokenPattern;
+  readonly nodes: readonly TextRulesDependencyNodeTemplate[];
+}
+
+export interface TextRulesRelationSpanSpec {
   readonly role: string;
   readonly text: string;
   readonly startCU: number;
   readonly endCU: number;
 }
 
-interface TextRulesRelationSpec {
+export interface TextRulesCaptureSpanTemplate {
+  readonly captureNames: readonly string[];
+  readonly startOffsetCU?: number;
+  readonly endOffsetCU?: number;
+}
+
+export interface TextRulesRelationArgumentTemplate extends TextRulesCaptureSpanTemplate {
+  readonly role: string;
+}
+
+export interface TextRulesRelationEvidenceTemplate extends TextRulesCaptureSpanTemplate {}
+
+export interface TextRulesRelationRule {
+  readonly ruleId: string;
+  readonly language?: string;
+  readonly label: TextRulesRelationLabel;
+  readonly pattern: TextRulesTokenPattern;
+  readonly arguments: readonly TextRulesRelationArgumentTemplate[];
+  readonly evidence: readonly TextRulesRelationEvidenceTemplate[];
+}
+
+export interface TextRulesRelationSpec {
   readonly id: string;
   readonly label: TextRulesRelationLabel;
   readonly arguments: readonly TextRulesRelationSpanSpec[];
   readonly evidence: readonly Omit<TextRulesRelationSpanSpec, "role">[];
 }
 
-interface TextRulesCoreferenceMentionSpec {
+export interface TextRulesCoreferenceMentionSpec {
   readonly id: string;
   readonly kind: TextRulesCoreferenceMentionKind;
   readonly text: string;
@@ -327,17 +363,39 @@ interface TextRulesCoreferenceMentionSpec {
   readonly notes?: readonly string[];
 }
 
-interface TextRulesCoreferenceChainSpec {
+export interface TextRulesCoreferenceMentionTemplate extends TextRulesCaptureSpanTemplate {
+  readonly id: string;
+  readonly kind: TextRulesCoreferenceMentionKind;
+  readonly notes?: readonly string[];
+}
+
+export interface TextRulesCoreferenceChainSpec {
   readonly id: string;
   readonly mentionIds: readonly string[];
   readonly representativeMentionId?: string;
   readonly diagnostics?: readonly string[];
 }
 
-interface TextRulesCoreferenceSpec {
+export interface TextRulesCoreferenceChainTemplate {
+  readonly id: string;
+  readonly mentionIds: readonly string[];
+  readonly representativeMentionId?: string;
+  readonly diagnostics?: readonly string[];
+}
+
+export interface TextRulesCoreferenceSpec {
   readonly mentions: readonly TextRulesCoreferenceMentionSpec[];
   readonly chains: readonly TextRulesCoreferenceChainSpec[];
   readonly diagnostics: readonly TextProtocolDiagnostic[];
+}
+
+export interface TextRulesCoreferenceRule {
+  readonly ruleId: string;
+  readonly language?: string;
+  readonly pattern: TextRulesTokenPattern;
+  readonly mentions: readonly TextRulesCoreferenceMentionTemplate[];
+  readonly chains: readonly TextRulesCoreferenceChainTemplate[];
+  readonly diagnostics?: readonly TextProtocolDiagnostic[];
 }
 
 const punctuationCharacters = new Set([".", "!", "?"]);
@@ -1057,138 +1115,515 @@ function dependencyArcId(sentenceId: string, conlluId: string): string {
   return `${sentenceId}:dep-${conlluId}`;
 }
 
-function dependencyTargetToken(
-  tokens: readonly TextRulesTokenSpan[],
-  tokenIndex: number,
-): string {
-  const token = tokens[tokenIndex - 1];
-  if (token === undefined) {
-    throw new TypeError(`dependency parser fixture requires token ${tokenIndex}`);
-  }
-  return token.id;
+const builtInDependencyRules: readonly TextRulesDependencyRule[] = [
+  {
+    ruleId: "dependency:en:basic-transitive",
+    language: "en",
+    pattern: {
+      ruleId: "dependency-pattern:en:basic-transitive",
+      atoms: [
+        { kind: "literal", value: "They", capture: "subject" },
+        { kind: "literal", value: "buy", capture: "root" },
+        { kind: "literal", value: "books", capture: "object" },
+        { kind: "literal", value: ".", capture: "punct" },
+      ],
+    },
+    nodes: [
+      { id: "1", form: "They", targetCapture: "subject", head: "2", relation: "nsubj" },
+      { id: "2", form: "buy", targetCapture: "root", head: "0", relation: "root" },
+      { id: "3", form: "books", targetCapture: "object", head: "2", relation: "obj" },
+      { id: "4", form: ".", targetCapture: "punct", head: "2", relation: "punct" },
+    ],
+  },
+  {
+    ruleId: "dependency:es:mwt-motion",
+    language: "es",
+    pattern: {
+      ruleId: "dependency-pattern:es:mwt-motion",
+      atoms: [
+        { kind: "literal", value: "Vámonos", capture: "verb-mwt" },
+        { kind: "literal", value: "al", capture: "case-det-mwt" },
+        { kind: "literal", value: "mar", capture: "object" },
+        { kind: "literal", value: ".", capture: "punct" },
+      ],
+    },
+    nodes: [
+      { id: "1", form: "Vamos", targetCapture: "verb-mwt", head: "0", relation: "root" },
+      { id: "2", form: "nos", targetCapture: "verb-mwt", head: "1", relation: "obj" },
+      { id: "3", form: "a", targetCapture: "case-det-mwt", head: "5", relation: "case" },
+      { id: "4", form: "el", targetCapture: "case-det-mwt", head: "5", relation: "det" },
+      { id: "5", form: "mar", targetCapture: "object", head: "1", relation: "obl" },
+      { id: "6", form: ".", targetCapture: "punct", head: "1", relation: "punct" },
+    ],
+  },
+  {
+    ruleId: "dependency:ar:basic-transitive",
+    language: "ar",
+    pattern: {
+      ruleId: "dependency-pattern:ar:basic-transitive",
+      atoms: [
+        { kind: "literal", value: "كتب", capture: "root" },
+        { kind: "literal", value: "الطالب", capture: "subject" },
+        { kind: "literal", value: "الدرس", capture: "object" },
+        { kind: "literal", value: ".", capture: "punct" },
+      ],
+    },
+    nodes: [
+      { id: "1", form: "كتب", targetCapture: "root", head: "0", relation: "root" },
+      { id: "2", form: "الطالب", targetCapture: "subject", head: "1", relation: "nsubj" },
+      { id: "3", form: "الدرس", targetCapture: "object", head: "1", relation: "obj" },
+      { id: "4", form: ".", targetCapture: "punct", head: "1", relation: "punct" },
+    ],
+  },
+];
+
+const builtInRelationRules: readonly TextRulesRelationRule[] = [
+  {
+    ruleId: "relation:en:employment-location",
+    language: "en",
+    label: "employed-by",
+    pattern: {
+      ruleId: "relation-pattern:en:employment-location",
+      atoms: [
+        { kind: "literal", value: "Mira", capture: "employee" },
+        { kind: "literal", value: "works", capture: "evidence-works" },
+        { kind: "literal", value: "for", capture: "evidence-for" },
+        { kind: "literal", value: "Northwind", capture: "employer-1" },
+        { kind: "literal", value: "Labs", capture: "employer-2" },
+        { kind: "literal", value: "in", capture: "evidence-in" },
+        { kind: "literal", value: "Boston", capture: "place" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    arguments: [
+      { role: "employee", captureNames: ["employee"] },
+      { role: "employer", captureNames: ["employer-1", "employer-2"] },
+    ],
+    evidence: [{ captureNames: ["evidence-works", "evidence-for"] }],
+  },
+  {
+    ruleId: "relation:en:location-from-employment",
+    language: "en",
+    label: "located-in",
+    pattern: {
+      ruleId: "relation-pattern:en:employment-location",
+      atoms: [
+        { kind: "literal", value: "Mira" },
+        { kind: "literal", value: "works" },
+        { kind: "literal", value: "for" },
+        { kind: "literal", value: "Northwind", capture: "entity-1" },
+        { kind: "literal", value: "Labs", capture: "entity-2" },
+        { kind: "literal", value: "in", capture: "evidence-in" },
+        { kind: "literal", value: "Boston", capture: "place" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    arguments: [
+      { role: "entity", captureNames: ["entity-1", "entity-2"] },
+      { role: "place", captureNames: ["place"] },
+    ],
+    evidence: [{ captureNames: ["evidence-in"] }],
+  },
+  {
+    ruleId: "relation:en:cross-sentence-part-of",
+    language: "en",
+    label: "part-of",
+    pattern: {
+      ruleId: "relation-pattern:en:cross-sentence-part-of",
+      atoms: [
+        { kind: "literal", value: "Northwind", capture: "whole-1" },
+        { kind: "literal", value: "Labs", capture: "whole-2" },
+        { kind: "literal", value: "opened" },
+        { kind: "literal", value: "a" },
+        { kind: "literal", value: "clinic" },
+        { kind: "literal", value: "." },
+        { kind: "literal", value: "The" },
+        { kind: "literal", value: "Boston", capture: "part-1" },
+        { kind: "literal", value: "facility", capture: "part-2" },
+        { kind: "literal", value: "is", capture: "evidence-1" },
+        { kind: "literal", value: "part", capture: "evidence-2" },
+        { kind: "literal", value: "of", capture: "evidence-3" },
+        { kind: "literal", value: "the", capture: "evidence-4" },
+        { kind: "literal", value: "company", capture: "evidence-5" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    arguments: [
+      { role: "part", captureNames: ["part-1", "part-2"] },
+      { role: "whole", captureNames: ["whole-1", "whole-2"] },
+    ],
+    evidence: [{ captureNames: ["evidence-2", "evidence-3", "evidence-4", "evidence-5"] }],
+  },
+  {
+    ruleId: "relation:es:location",
+    language: "es",
+    label: "located-in",
+    pattern: {
+      ruleId: "relation-pattern:es:location",
+      atoms: [
+        { kind: "literal", value: "El" },
+        { kind: "literal", value: "archivo", capture: "entity-1" },
+        { kind: "literal", value: "central", capture: "entity-2" },
+        { kind: "literal", value: "está", capture: "evidence-1" },
+        { kind: "literal", value: "en", capture: "evidence-2" },
+        { kind: "literal", value: "Sevilla", capture: "place" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    arguments: [
+      { role: "entity", captureNames: ["entity-1", "entity-2"] },
+      { role: "place", captureNames: ["place"] },
+    ],
+    evidence: [{ captureNames: ["evidence-1", "evidence-2"] }],
+  },
+  {
+    ruleId: "relation:ar:location",
+    language: "ar",
+    label: "located-in",
+    pattern: {
+      ruleId: "relation-pattern:ar:location",
+      atoms: [
+        { kind: "literal", value: "يقع", capture: "evidence-1" },
+        { kind: "literal", value: "المتحف", capture: "entity" },
+        { kind: "literal", value: "في", capture: "evidence-2" },
+        { kind: "literal", value: "الرباط", capture: "place" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    arguments: [
+      { role: "entity", captureNames: ["entity"] },
+      { role: "place", captureNames: ["place"] },
+    ],
+    evidence: [{ captureNames: ["evidence-1", "entity", "evidence-2"] }],
+  },
+];
+
+const negatedEmploymentPattern: TextRulesTokenPattern = {
+  ruleId: "relation-pattern:negated-employment",
+  atoms: [
+    { kind: "literal", value: "does" },
+    { kind: "literal", value: "not" },
+    { kind: "literal", value: "work" },
+    { kind: "literal", value: "for" },
+  ],
+};
+
+const builtInCoreferenceRules: readonly TextRulesCoreferenceRule[] = [
+  {
+    ruleId: "coreference:en:pronoun-pair",
+    language: "en",
+    pattern: {
+      ruleId: "coreference-pattern:en:pronoun-pair",
+      atoms: [
+        { kind: "literal", value: "Mira", capture: "person" },
+        { kind: "literal", value: "checked" },
+        { kind: "literal", value: "the", capture: "object-1" },
+        { kind: "literal", value: "sensor", capture: "object-2" },
+        { kind: "literal", value: "because" },
+        { kind: "literal", value: "she", capture: "person-pronoun" },
+        { kind: "literal", value: "calibrated" },
+        { kind: "literal", value: "it", capture: "object-pronoun" },
+        { kind: "literal", value: "yesterday" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    mentions: [
+      { id: "mention-1", kind: "proper", captureNames: ["person"] },
+      { id: "mention-2", kind: "nominal", captureNames: ["object-1", "object-2"] },
+      { id: "mention-3", kind: "pronoun", captureNames: ["person-pronoun"] },
+      { id: "mention-4", kind: "pronoun", captureNames: ["object-pronoun"] },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1", "mention-3"], representativeMentionId: "mention-1" },
+      { id: "chain-2", mentionIds: ["mention-2", "mention-4"], representativeMentionId: "mention-2" },
+    ],
+  },
+  {
+    ruleId: "coreference:en:nominal-company",
+    language: "en",
+    pattern: {
+      ruleId: "coreference-pattern:en:nominal-company",
+      atoms: [
+        { kind: "literal", value: "Northwind", capture: "company-1" },
+        { kind: "literal", value: "Labs", capture: "company-2" },
+        { kind: "literal", value: "released" },
+        { kind: "literal", value: "the" },
+        { kind: "literal", value: "report" },
+        { kind: "literal", value: "." },
+        { kind: "literal", value: "The", capture: "nominal-1" },
+        { kind: "literal", value: "company", capture: "nominal-2" },
+        { kind: "literal", value: "archived" },
+        { kind: "literal", value: "the" },
+        { kind: "literal", value: "draft" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    mentions: [
+      { id: "mention-1", kind: "proper", captureNames: ["company-1", "company-2"] },
+      { id: "mention-2", kind: "nominal", captureNames: ["nominal-1", "nominal-2"] },
+    ],
+    chains: [{ id: "chain-1", mentionIds: ["mention-1", "mention-2"], representativeMentionId: "mention-1" }],
+  },
+  {
+    ruleId: "coreference:es:pronoun-pair",
+    language: "es",
+    pattern: {
+      ruleId: "coreference-pattern:es:pronoun-pair",
+      atoms: [
+        { kind: "literal", value: "Lucía", capture: "person" },
+        { kind: "literal", value: "encontró" },
+        { kind: "literal", value: "el", capture: "object-1" },
+        { kind: "literal", value: "cuaderno", capture: "object-2" },
+        { kind: "literal", value: "y" },
+        { kind: "literal", value: "ella", capture: "person-pronoun" },
+        { kind: "literal", value: "lo", capture: "object-pronoun" },
+        { kind: "literal", value: "guardó" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    mentions: [
+      { id: "mention-1", kind: "proper", captureNames: ["person"] },
+      { id: "mention-2", kind: "nominal", captureNames: ["object-1", "object-2"] },
+      { id: "mention-3", kind: "pronoun", captureNames: ["person-pronoun"] },
+      { id: "mention-4", kind: "pronoun", captureNames: ["object-pronoun"] },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1", "mention-3"], representativeMentionId: "mention-1" },
+      { id: "chain-2", mentionIds: ["mention-2", "mention-4"], representativeMentionId: "mention-2" },
+    ],
+  },
+  {
+    ruleId: "coreference:ar:attached-pronoun",
+    language: "ar",
+    pattern: {
+      ruleId: "coreference-pattern:ar:attached-pronoun",
+      atoms: [
+        { kind: "literal", value: "قرأت" },
+        { kind: "literal", value: "سلمى", capture: "person" },
+        { kind: "literal", value: "الرسالة", capture: "object" },
+        { kind: "literal", value: "ثم" },
+        { kind: "literal", value: "حفظتها", capture: "attached-pronoun" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    mentions: [
+      { id: "mention-1", kind: "proper", captureNames: ["person"] },
+      { id: "mention-2", kind: "nominal", captureNames: ["object"] },
+      {
+        id: "mention-3",
+        kind: "pronoun",
+        captureNames: ["attached-pronoun"],
+        startOffsetCU: 4,
+        notes: ["attached-pronoun-suffix"],
+      },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1"], representativeMentionId: "mention-1", diagnostics: ["singleton-control"] },
+      { id: "chain-2", mentionIds: ["mention-2", "mention-3"], representativeMentionId: "mention-2" },
+    ],
+  },
+  {
+    ruleId: "coreference:en:ambiguous-pronoun",
+    language: "en",
+    pattern: {
+      ruleId: "coreference-pattern:en:ambiguous-pronoun",
+      atoms: [
+        { kind: "literal", value: "Mira", capture: "candidate-1" },
+        { kind: "literal", value: "called" },
+        { kind: "literal", value: "Jana", capture: "candidate-2" },
+        { kind: "literal", value: "after" },
+        { kind: "literal", value: "she", capture: "pronoun" },
+        { kind: "literal", value: "reviewed" },
+        { kind: "literal", value: "the", capture: "file-1" },
+        { kind: "literal", value: "file", capture: "file-2" },
+        { kind: "literal", value: "." },
+      ],
+    },
+    mentions: [
+      { id: "mention-1", kind: "proper", captureNames: ["candidate-1"] },
+      { id: "mention-2", kind: "proper", captureNames: ["candidate-2"] },
+      { id: "mention-3", kind: "pronoun", captureNames: ["pronoun"], notes: ["ambiguous-antecedent"] },
+      { id: "mention-4", kind: "singleton", captureNames: ["file-1", "file-2"] },
+    ],
+    chains: [
+      { id: "chain-1", mentionIds: ["mention-1"], representativeMentionId: "mention-1", diagnostics: ["candidate-antecedent-for:mention-3"] },
+      { id: "chain-2", mentionIds: ["mention-2"], representativeMentionId: "mention-2", diagnostics: ["candidate-antecedent-for:mention-3"] },
+      { id: "chain-3", mentionIds: ["mention-3"], diagnostics: ["ambiguous-antecedent"] },
+      { id: "chain-4", mentionIds: ["mention-4"], representativeMentionId: "mention-4", diagnostics: ["singleton-control"] },
+    ],
+    diagnostics: [
+      {
+        code: "ambiguous-antecedent",
+        severity: "info",
+        message: "Ambiguous pronoun antecedents are preserved as singleton candidate chains for this frozen slice.",
+      },
+    ],
+  },
+];
+
+function ruleLanguageMatches(ruleLanguage: string | undefined, languageHint: string | undefined): boolean {
+  if (ruleLanguage === undefined) return true;
+  return normalizeLanguageHint(languageHint).includes(normalizeSurface(ruleLanguage));
 }
 
-function dependencySpecsForFrozenSlice(
+function capturesByName(match: TextRulesPatternMatch): ReadonlyMap<string, TextRulesPatternCapture> {
+  const captures = new Map<string, TextRulesPatternCapture>();
+  for (const capture of match.captures) captures.set(capture.name, capture);
+  return captures;
+}
+
+function resolveCaptureSpan(
+  template: TextRulesCaptureSpanTemplate,
+  captures: ReadonlyMap<string, TextRulesPatternCapture>,
+): Omit<TextRulesRelationSpanSpec, "role"> | undefined {
+  const resolved = template.captureNames.map((name) => captures.get(name));
+  if (resolved.some((capture) => capture === undefined)) return undefined;
+  const captureList = resolved as readonly TextRulesPatternCapture[];
+  const startCapture = captureList.reduce((left, right) => (left.startCU <= right.startCU ? left : right));
+  const endCapture = captureList.reduce((left, right) => (left.endCU >= right.endCU ? left : right));
+  const startCU = startCapture.startCU + (template.startOffsetCU ?? 0);
+  const endCU = template.endOffsetCU === undefined ? endCapture.endCU : endCapture.startCU + template.endOffsetCU;
+  return {
+    text: startCapture.value.slice(0, Math.max(0, endCU - startCU)) === ""
+      ? captureList.map((capture) => capture.value).join(" ")
+      : startCapture.value.slice(startCU - startCapture.startCU, endCU - startCapture.startCU),
+    startCU,
+    endCU,
+  };
+}
+
+function resolveCaptureText(inputText: string, span: Omit<TextRulesRelationSpanSpec, "role">): Omit<TextRulesRelationSpanSpec, "role"> {
+  return {
+    ...span,
+    text: inputText.slice(span.startCU, span.endCU),
+  };
+}
+
+export function applyTextRulesDependencyRules(
+  tokens: readonly TextRulesTokenSpan[],
+  languageHint: string | undefined,
+  rules: readonly TextRulesDependencyRule[],
+): readonly TextRulesDependencyNodeSpec[] {
+  for (const rule of rules) {
+    if (!ruleLanguageMatches(rule.language, languageHint)) continue;
+    const match = matchTextRulesTokenPattern(tokens, rule.pattern)[0];
+    if (match === undefined) continue;
+    const captures = capturesByName(match);
+    const specs: TextRulesDependencyNodeSpec[] = [];
+    for (const node of rule.nodes) {
+      const target = captures.get(node.targetCapture);
+      if (target === undefined) {
+        specs.length = 0;
+        break;
+      }
+      specs.push({
+        id: node.id,
+        form: node.form,
+        targetTokenId: target.tokenId,
+        head: node.head,
+        relation: node.relation,
+      });
+    }
+    if (specs.length > 0) return specs;
+  }
+  return [];
+}
+
+export function applyTextRulesRelationRules(
+  inputText: string,
+  tokens: readonly TextRulesTokenSpan[],
+  languageHint: string | undefined,
+  rules: readonly TextRulesRelationRule[],
+): readonly TextRulesRelationSpec[] {
+  const specs: TextRulesRelationSpec[] = [];
+  for (const rule of rules) {
+    if (!ruleLanguageMatches(rule.language, languageHint)) continue;
+    const match = matchTextRulesTokenPattern(tokens, rule.pattern)[0];
+    if (match === undefined) continue;
+    const captures = capturesByName(match);
+    const argumentSpecs = rule.arguments.map((argument) => {
+      const span = resolveCaptureSpan(argument, captures);
+      return span === undefined ? undefined : { role: argument.role, ...resolveCaptureText(inputText, span) };
+    });
+    const evidenceSpecs = rule.evidence.map((evidence) => {
+      const span = resolveCaptureSpan(evidence, captures);
+      return span === undefined ? undefined : resolveCaptureText(inputText, span);
+    });
+    if (argumentSpecs.some((argument) => argument === undefined) || evidenceSpecs.some((evidence) => evidence === undefined)) {
+      continue;
+    }
+    specs.push({
+      id: `relation-${specs.length + 1}`,
+      label: rule.label,
+      arguments: argumentSpecs as readonly TextRulesRelationSpanSpec[],
+      evidence: evidenceSpecs as readonly Omit<TextRulesRelationSpanSpec, "role">[],
+    });
+  }
+  return specs;
+}
+
+export function applyTextRulesCoreferenceRules(
+  inputText: string,
+  tokens: readonly TextRulesTokenSpan[],
+  languageHint: string | undefined,
+  rules: readonly TextRulesCoreferenceRule[],
+): TextRulesCoreferenceSpec {
+  for (const rule of rules) {
+    if (!ruleLanguageMatches(rule.language, languageHint)) continue;
+    const match = matchTextRulesTokenPattern(tokens, rule.pattern)[0];
+    if (match === undefined) continue;
+    const captures = capturesByName(match);
+    const mentions = rule.mentions.map((mention) => {
+      const span = resolveCaptureSpan(mention, captures);
+      return span === undefined
+        ? undefined
+        : {
+            id: mention.id,
+            kind: mention.kind,
+            ...resolveCaptureText(inputText, span),
+            ...(mention.notes ? { notes: mention.notes } : {}),
+          };
+    });
+    if (mentions.some((mention) => mention === undefined)) continue;
+    return {
+      mentions: mentions as readonly TextRulesCoreferenceMentionSpec[],
+      chains: rule.chains,
+      diagnostics: rule.diagnostics ?? [],
+    };
+  }
+  return {
+    mentions: [],
+    chains: [],
+    diagnostics: [
+      {
+        code: "unsupported-coreference-pattern",
+        severity: "warning",
+        message: "No coreference rule matched the current frozen fixture scope.",
+      },
+    ],
+  };
+}
+
+function dependencySpecsFromBuiltInRules(
   input: TextRulesDependencyParserInput,
   tokens: readonly TextRulesTokenSpan[],
 ): readonly TextRulesDependencyNodeSpec[] {
-  const normalizedText = input.text.normalize("NFC");
-
-  if (input.languageHint === "en" && normalizedText === "They buy books.") {
-    return [
-      { id: "1", form: "They", targetTokenId: dependencyTargetToken(tokens, 1), head: "2", relation: "nsubj" },
-      { id: "2", form: "buy", targetTokenId: dependencyTargetToken(tokens, 2), head: "0", relation: "root" },
-      { id: "3", form: "books", targetTokenId: dependencyTargetToken(tokens, 3), head: "2", relation: "obj" },
-      { id: "4", form: ".", targetTokenId: dependencyTargetToken(tokens, 4), head: "2", relation: "punct" },
-    ];
-  }
-
-  if (input.languageHint === "es" && normalizedText === "Vámonos al mar.") {
-    return [
-      { id: "1", form: "Vamos", targetTokenId: dependencyTargetToken(tokens, 1), head: "0", relation: "root" },
-      { id: "2", form: "nos", targetTokenId: dependencyTargetToken(tokens, 1), head: "1", relation: "obj" },
-      { id: "3", form: "a", targetTokenId: dependencyTargetToken(tokens, 2), head: "5", relation: "case" },
-      { id: "4", form: "el", targetTokenId: dependencyTargetToken(tokens, 2), head: "5", relation: "det" },
-      { id: "5", form: "mar", targetTokenId: dependencyTargetToken(tokens, 3), head: "1", relation: "obl" },
-      { id: "6", form: ".", targetTokenId: dependencyTargetToken(tokens, 4), head: "1", relation: "punct" },
-    ];
-  }
-
-  if (input.languageHint === "ar" && normalizedText === "كتب الطالب الدرس.") {
-    return [
-      { id: "1", form: "كتب", targetTokenId: dependencyTargetToken(tokens, 1), head: "0", relation: "root" },
-      { id: "2", form: "الطالب", targetTokenId: dependencyTargetToken(tokens, 2), head: "1", relation: "nsubj" },
-      { id: "3", form: "الدرس", targetTokenId: dependencyTargetToken(tokens, 3), head: "1", relation: "obj" },
-      { id: "4", form: ".", targetTokenId: dependencyTargetToken(tokens, 4), head: "1", relation: "punct" },
-    ];
-  }
-
-  return [];
+  return applyTextRulesDependencyRules(tokens, input.languageHint, builtInDependencyRules);
 }
 
-function relationSpecsForFrozenSlice(
+function relationSpecsFromBuiltInRules(
   input: TextRulesRelationExtractionInput,
+  tokens: readonly TextRulesTokenSpan[],
 ): readonly TextRulesRelationSpec[] {
-  const normalizedText = input.text.normalize("NFC");
-
-  if (input.languageHint === "en" && normalizedText === "Mira works for Northwind Labs in Boston.") {
-    return [
-      {
-        id: "relation-1",
-        label: "employed-by",
-        arguments: [
-          { role: "employee", text: "Mira", startCU: 0, endCU: 4 },
-          { role: "employer", text: "Northwind Labs", startCU: 15, endCU: 29 },
-        ],
-        evidence: [{ text: "works for", startCU: 5, endCU: 14 }],
-      },
-      {
-        id: "relation-2",
-        label: "located-in",
-        arguments: [
-          { role: "entity", text: "Northwind Labs", startCU: 15, endCU: 29 },
-          { role: "place", text: "Boston", startCU: 33, endCU: 39 },
-        ],
-        evidence: [{ text: "in", startCU: 30, endCU: 32 }],
-      },
-    ];
-  }
-
-  if (
-    input.languageHint === "en" &&
-    normalizedText === "Northwind Labs opened a clinic. The Boston facility is part of the company."
-  ) {
-    return [
-      {
-        id: "relation-1",
-        label: "part-of",
-        arguments: [
-          { role: "part", text: "Boston facility", startCU: 36, endCU: 51 },
-          { role: "whole", text: "Northwind Labs", startCU: 0, endCU: 14 },
-        ],
-        evidence: [{ text: "part of the company", startCU: 55, endCU: 74 }],
-      },
-    ];
-  }
-
-  if (input.languageHint === "es" && normalizedText === "El archivo central está en Sevilla.") {
-    return [
-      {
-        id: "relation-1",
-        label: "located-in",
-        arguments: [
-          { role: "entity", text: "archivo central", startCU: 3, endCU: 18 },
-          { role: "place", text: "Sevilla", startCU: 27, endCU: 34 },
-        ],
-        evidence: [{ text: "está en", startCU: 19, endCU: 26 }],
-      },
-    ];
-  }
-
-  if (input.languageHint === "ar" && normalizedText === "يقع المتحف في الرباط.") {
-    return [
-      {
-        id: "relation-1",
-        label: "located-in",
-        arguments: [
-          { role: "entity", text: "المتحف", startCU: 4, endCU: 10 },
-          { role: "place", text: "الرباط", startCU: 14, endCU: 20 },
-        ],
-        evidence: [{ text: "يقع المتحف في", startCU: 0, endCU: 13 }],
-      },
-    ];
-  }
-
-  return [];
+  return applyTextRulesRelationRules(input.text, tokens, input.languageHint, builtInRelationRules);
 }
 
-function relationDiagnosticsForFrozenSlice(
-  input: TextRulesRelationExtractionInput,
+function relationDiagnosticsFromRules(
+  tokens: readonly TextRulesTokenSpan[],
   relationCount: number,
 ): readonly TextProtocolDiagnostic[] {
   if (relationCount > 0) return [];
-  const normalizedText = input.text.normalize("NFC");
-  if (normalizedText.includes("does not work for")) {
+  if (matchTextRulesTokenPattern(tokens, negatedEmploymentPattern).length > 0) {
     return [
       {
         code: "negated-relation",
@@ -1206,104 +1641,11 @@ function relationDiagnosticsForFrozenSlice(
   ];
 }
 
-function coreferenceSpecsForFrozenSlice(input: TextRulesCoreferenceInput): TextRulesCoreferenceSpec {
-  const normalizedText = input.text.normalize("NFC");
-
-  if (input.languageHint === "en" && normalizedText === "Mira checked the sensor because she calibrated it yesterday.") {
-    return {
-      mentions: [
-        { id: "mention-1", kind: "proper", text: "Mira", startCU: 0, endCU: 4 },
-        { id: "mention-2", kind: "nominal", text: "the sensor", startCU: 13, endCU: 23 },
-        { id: "mention-3", kind: "pronoun", text: "she", startCU: 32, endCU: 35 },
-        { id: "mention-4", kind: "pronoun", text: "it", startCU: 47, endCU: 49 },
-      ],
-      chains: [
-        { id: "chain-1", mentionIds: ["mention-1", "mention-3"], representativeMentionId: "mention-1" },
-        { id: "chain-2", mentionIds: ["mention-2", "mention-4"], representativeMentionId: "mention-2" },
-      ],
-      diagnostics: [],
-    };
-  }
-
-  if (input.languageHint === "en" && normalizedText === "Northwind Labs released the report. The company archived the draft.") {
-    return {
-      mentions: [
-        { id: "mention-1", kind: "proper", text: "Northwind Labs", startCU: 0, endCU: 14 },
-        { id: "mention-2", kind: "nominal", text: "The company", startCU: 36, endCU: 47 },
-      ],
-      chains: [
-        { id: "chain-1", mentionIds: ["mention-1", "mention-2"], representativeMentionId: "mention-1" },
-      ],
-      diagnostics: [],
-    };
-  }
-
-  if (input.languageHint === "es" && normalizedText === "Lucía encontró el cuaderno y ella lo guardó.") {
-    return {
-      mentions: [
-        { id: "mention-1", kind: "proper", text: "Lucía", startCU: 0, endCU: 5 },
-        { id: "mention-2", kind: "nominal", text: "el cuaderno", startCU: 15, endCU: 26 },
-        { id: "mention-3", kind: "pronoun", text: "ella", startCU: 29, endCU: 33 },
-        { id: "mention-4", kind: "pronoun", text: "lo", startCU: 34, endCU: 36 },
-      ],
-      chains: [
-        { id: "chain-1", mentionIds: ["mention-1", "mention-3"], representativeMentionId: "mention-1" },
-        { id: "chain-2", mentionIds: ["mention-2", "mention-4"], representativeMentionId: "mention-2" },
-      ],
-      diagnostics: [],
-    };
-  }
-
-  if (input.languageHint === "ar" && normalizedText === "قرأت سلمى الرسالة ثم حفظتها.") {
-    return {
-      mentions: [
-        { id: "mention-1", kind: "proper", text: "سلمى", startCU: 5, endCU: 9 },
-        { id: "mention-2", kind: "nominal", text: "الرسالة", startCU: 10, endCU: 17 },
-        { id: "mention-3", kind: "pronoun", text: "ها", startCU: 25, endCU: 27, notes: ["attached-pronoun-suffix"] },
-      ],
-      chains: [
-        { id: "chain-1", mentionIds: ["mention-1"], representativeMentionId: "mention-1", diagnostics: ["singleton-control"] },
-        { id: "chain-2", mentionIds: ["mention-2", "mention-3"], representativeMentionId: "mention-2" },
-      ],
-      diagnostics: [],
-    };
-  }
-
-  if (input.languageHint === "en" && normalizedText === "Mira called Jana after she reviewed the file.") {
-    return {
-      mentions: [
-        { id: "mention-1", kind: "proper", text: "Mira", startCU: 0, endCU: 4 },
-        { id: "mention-2", kind: "proper", text: "Jana", startCU: 12, endCU: 16 },
-        { id: "mention-3", kind: "pronoun", text: "she", startCU: 23, endCU: 26, notes: ["ambiguous-antecedent"] },
-        { id: "mention-4", kind: "singleton", text: "the file", startCU: 36, endCU: 44 },
-      ],
-      chains: [
-        { id: "chain-1", mentionIds: ["mention-1"], representativeMentionId: "mention-1", diagnostics: ["candidate-antecedent-for:mention-3"] },
-        { id: "chain-2", mentionIds: ["mention-2"], representativeMentionId: "mention-2", diagnostics: ["candidate-antecedent-for:mention-3"] },
-        { id: "chain-3", mentionIds: ["mention-3"], diagnostics: ["ambiguous-antecedent"] },
-        { id: "chain-4", mentionIds: ["mention-4"], representativeMentionId: "mention-4", diagnostics: ["singleton-control"] },
-      ],
-      diagnostics: [
-        {
-          code: "ambiguous-antecedent",
-          severity: "info",
-          message: "Ambiguous pronoun antecedents are preserved as singleton candidate chains for this frozen slice.",
-        },
-      ],
-    };
-  }
-
-  return {
-    mentions: [],
-    chains: [],
-    diagnostics: [
-      {
-        code: "unsupported-coreference-pattern",
-        severity: "warning",
-        message: "No coreference rule matched the current frozen fixture scope.",
-      },
-    ],
-  };
+function coreferenceSpecsFromBuiltInRules(
+  input: TextRulesCoreferenceInput,
+  tokens: readonly TextRulesTokenSpan[],
+): TextRulesCoreferenceSpec {
+  return applyTextRulesCoreferenceRules(input.text, tokens, input.languageHint, builtInCoreferenceRules);
 }
 
 function createDependencyNodeAnnotations(
@@ -2049,8 +2391,8 @@ export function analyzeRelationExtraction(
 ): TextRulesRelationExtractionResult {
   const tokens = tokenizeTextForRules(input.text);
   const sentences = segmentSentencesForRules(input.text);
-  const relationSpecs = relationSpecsForFrozenSlice(input);
-  const diagnostics = relationDiagnosticsForFrozenSlice(input, relationSpecs.length);
+  const relationSpecs = relationSpecsFromBuiltInRules(input, tokens);
+  const diagnostics = relationDiagnosticsFromRules(tokens, relationSpecs.length);
 
   const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
     id: "tokens",
@@ -2107,7 +2449,7 @@ export function analyzeRelationExtraction(
 export function analyzeCoreference(input: TextRulesCoreferenceInput): TextRulesCoreferenceResult {
   const tokens = tokenizeTextForRules(input.text);
   const sentences = segmentSentencesForRules(input.text);
-  const coreferenceSpec = coreferenceSpecsForFrozenSlice(input);
+  const coreferenceSpec = coreferenceSpecsFromBuiltInRules(input, tokens);
 
   const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
     id: "tokens",
@@ -2173,7 +2515,7 @@ export function analyzeDependencyParser(
   const sentences = segmentSentencesForRules(input.text);
   const sentence = sentences[0];
   const dependencySpecs =
-    sentence === undefined ? [] : dependencySpecsForFrozenSlice(input, tokens);
+    sentence === undefined ? [] : dependencySpecsFromBuiltInRules(input, tokens);
   const diagnostics: TextProtocolDiagnostic[] = [];
 
   if (dependencySpecs.length === 0) {
