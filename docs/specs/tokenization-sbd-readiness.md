@@ -49,7 +49,7 @@ Each expected-output document contains:
 
 ## Fixture slice policy
 
-A slice definition names the input purpose before expected behavior is recorded. The initial slices cover empty input, repeated-run determinism, malformed UTF-16 representation, multilingual text, combining marks, emoji ZWJ sequences, newline handling, and sentence-boundary ambiguity.
+A slice definition names the input purpose before expected behavior is recorded. The slices cover empty input, repeated-run determinism, malformed UTF-16 representation, combining marks, emoji ZWJ sequences, newline handling, sentence-boundary ambiguity, and script-family fixtures for Arabic, Armenian, CJK/Japanese, Cyrillic, Devanagari, Ethiopic, Georgian, Greek, Hangul/Korean, Hebrew, Khmer, and Thai inputs.
 
 A fixture slice does not imply that every future tokenization package must support every language-specific tokenizer in its first implementation. It records the input surface that must be considered before issue #9 behavior is accepted.
 

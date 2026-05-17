@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "armenian",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "armenian",
+    "sha256": "f235c6a13448fdb9ca90a2f5f64de6cf2e790a6490d4e655b2d01aebf54a5e27"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 4,
+      "text": "Բարև"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 4,
+      "endCU": 5,
+      "text": " "
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 11,
+      "text": "աշխարհ"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 11,
+      "endCU": 12,
+      "text": "։"
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 12,
+      "endCU": 13,
+      "text": " "
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 13,
+      "endCU": 15,
+      "text": "Սա"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": " "
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 21,
+      "text": "տեքստ"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": " "
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 22,
+      "endCU": 23,
+      "text": "է"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 23,
+      "endCU": 24,
+      "text": "։"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 13,
+      "text": "Բարև աշխարհ։ "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 13,
+      "endCU": 24,
+      "text": "Սա տեքստ է։"
+    }
+  ],
+  "notes": [
+    "Expected output records current UAX #29 behavior for this fixture; it is not a language-specific tokenizer claim."
+  ]
+}

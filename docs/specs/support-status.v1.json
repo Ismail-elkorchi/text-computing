@@ -160,12 +160,13 @@
       "scope": "Frozen fixtures, expected outputs, comparator captures, and executable behavior are present for the current slices.",
       "evidence": [
         "frozen tokenization/SBD fixtures",
-        "expected outputs",
-        "comparator captures",
+        "script-family expected outputs",
+        "comparator captures and explicit not-run gap records",
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
       "limitations": [
-        "Not a broad multilingual tokenizer benchmark suite"
+        "Not a broad multilingual tokenizer benchmark suite",
+        "Newer script-family fixtures with not-run comparator entries are expected-output evidence, not comparator-backed evidence"
       ]
     },
     {
