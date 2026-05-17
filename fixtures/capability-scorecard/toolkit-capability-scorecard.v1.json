@@ -193,7 +193,7 @@
         "docs/specs/textpack-resource-manifest.md",
         "tools/validate-textpack-resources.mjs"
       ],
-      "nextGate": "Add resource review and registry workflow before broad resource claims."
+      "nextGate": "Add public resource review workflow before broad resource claims."
     },
     {
       "packageName": "@ismail-elkorchi/textrules",
@@ -349,7 +349,8 @@
           "packages/textpack/src/index.ts"
         ],
         "fixtureRefs": [
-          "fixtures/textpack/manifests/textpack-en-core.json"
+          "fixtures/textpack/manifests/textpack-en-core.json",
+          "fixtures/textpack/manifests/textpack-fr-core.json"
         ],
         "negativeControlRefs": [
           "fixtures/textpack/invalid/missing-license.json"
@@ -363,7 +364,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Resource-manifest validation, licensed fixtures, fixture content loading, and overlay-conflict policy are implemented."
+      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, and overlay-conflict policy are implemented."
     },
     {
       "taskId": "nlp-pos-morph-lemma",

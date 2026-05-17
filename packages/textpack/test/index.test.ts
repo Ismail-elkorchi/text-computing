@@ -1,9 +1,12 @@
 import {
+  createTextPackResourceRegistry,
   isTextPackManifestV1,
+  loadTextPackRegistryResources,
   loadTextPackResources,
   lookupTextPackLoadedEntries,
   packageName,
   parseTextPackResourceContent,
+  queryTextPackResourceRegistry,
   resolveTextPackResources,
   textPackManifestSchemaVersion,
   type TextPackManifestV1,
@@ -32,6 +35,16 @@ const baseManifest: TextPackManifestV1 = {
       lookupKey: "lexicon.en.core",
       kind: "lexicon",
       path: "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
+      language: "en",
+      overlayPrecedence: 10,
+      licenseId: "license-cc0",
+      provenanceId: "prov-hand-curated",
+    },
+    {
+      resourceId: "abbrev-en-core",
+      lookupKey: "abbreviation.en.core",
+      kind: "abbreviation-list",
+      path: "fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt",
       language: "en",
       overlayPrecedence: 10,
       licenseId: "license-cc0",
@@ -104,6 +117,46 @@ const overlayManifest: TextPackManifestV1 = {
   },
 };
 
+const frenchManifest: TextPackManifestV1 = {
+  schemaVersion: textPackManifestSchemaVersion,
+  packId: "pack:fr-core",
+  packageName: "@ismail-elkorchi/textpack-fr-core",
+  version: "0.0.0",
+  resources: [
+    {
+      resourceId: "stopwords-fr-core",
+      lookupKey: "stopwords.fr.core",
+      kind: "stopwords",
+      path: "fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt",
+      language: "fr",
+      overlayPrecedence: 10,
+      licenseId: "license-cc0",
+      provenanceId: "prov-hand-curated",
+    },
+    {
+      resourceId: "lexicon-fr-core",
+      lookupKey: "lexicon.fr.core",
+      kind: "lexicon",
+      path: "fixtures/textpack/resources/textpack-fr-core/lexicon.fr.simple.tsv",
+      language: "fr",
+      overlayPrecedence: 10,
+      licenseId: "license-cc0",
+      provenanceId: "prov-hand-curated",
+    },
+  ],
+  licenses: baseManifest.licenses,
+  provenance: baseManifest.provenance,
+  entrypoints: {
+    manifest: "fixtures/textpack/manifests/textpack-fr-core.json",
+    resourceRoot: "fixtures/textpack/resources",
+  },
+  tests: {
+    smoke: ["fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt"],
+    lookup: ["lookup:stopwords:fr", "lookup:lexicon:fr"],
+    overlay: ["overlay:stopwords:fr"],
+  },
+};
+
 const lookupResult = resolveTextPackResources([baseManifest, overlayManifest], {
   kind: "stopwords",
   language: "en",
@@ -116,8 +169,12 @@ const contentByPath = {
     "hereby\nthereof\ntherein\n",
   "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv":
     "host\tlemma=host\tpos=VERB\ncorpora\tlemma=corpus\tpos=NOUN\n",
+  "fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt": "Dr.\nMr.\nMs.\n",
   "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv":
     "Supreme Court\tORG\nNew York\tGPE\n",
+  "fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt": "le\nla\nles\net\n",
+  "fixtures/textpack/resources/textpack-fr-core/lexicon.fr.simple.tsv":
+    "maisons\tlemma=maison\tpos=NOUN\nparle\tlemma=parler\tpos=VERB\n",
 } as const;
 
 if (!isTextPackManifestV1(baseManifest)) {
@@ -126,6 +183,10 @@ if (!isTextPackManifestV1(baseManifest)) {
 
 if (!isTextPackManifestV1(overlayManifest)) {
   throw new Error("overlay manifest should satisfy the pack manifest shape");
+}
+
+if (!isTextPackManifestV1(frenchManifest)) {
+  throw new Error("French manifest should satisfy the pack manifest shape");
 }
 
 if (lookupResult.resources[0]?.resourceId !== "stopwords-en-legal") {
@@ -196,6 +257,47 @@ const loadedGazetteer = loadTextPackResources(
 const courtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "supreme court")[0]?.entry;
 if (courtEntry?.label !== "ORG") {
   throw new Error("gazetteer loading should parse labels");
+}
+
+const registry = createTextPackResourceRegistry([baseManifest, overlayManifest, frenchManifest]);
+if (registry.languages.join(",") !== "en,fr") {
+  throw new Error("registry should expose deterministic normalized language coverage");
+}
+
+if (registry.kinds.join(",") !== "abbreviation-list,gazetteer,lexicon,stopwords") {
+  throw new Error("registry should expose deterministic resource kinds");
+}
+
+const frenchStopwords = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  language: "fr",
+});
+if (
+  frenchStopwords.diagnostics.length !== 0 ||
+  frenchStopwords.resources.map((entry) => entry.resourceId).join(",") !== "stopwords-fr-core"
+) {
+  throw new Error("registry query should select French stopwords without unrelated mismatch noise");
+}
+
+const loadedFrenchLexicon = loadTextPackRegistryResources(
+  registry,
+  {
+    kind: "lexicon",
+    language: "fr",
+  },
+  contentByPath,
+);
+const maisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS")[0]?.entry;
+if (maisonEntry?.attributes.lemma !== "maison" || maisonEntry.attributes.pos !== "NOUN") {
+  throw new Error("registry loading should preserve multilingual lexicon attributes");
+}
+
+const directFrenchResource = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  resourceId: "stopwords-fr-core",
+});
+if (directFrenchResource.resources[0]?.packId !== "pack:fr-core") {
+  throw new Error("registry query should support direct resource selection");
 }
 
 const missingContent = loadTextPackResources([baseManifest], { kind: "stopwords" }, {});

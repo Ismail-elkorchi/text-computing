@@ -67,6 +67,12 @@ export interface TextPackLookupRequest {
   readonly profile?: string;
 }
 
+export interface TextPackRegistryQuery extends TextPackLookupRequest {
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly lookupKey?: string;
+}
+
 export interface TextPackResolvedResource {
   readonly packId: string;
   readonly packageName: string;
@@ -97,6 +103,14 @@ export interface TextPackLookupDiagnostic {
 export interface TextPackLookupResult {
   readonly resources: readonly TextPackResolvedResource[];
   readonly diagnostics: readonly TextPackLookupDiagnostic[];
+}
+
+export interface TextPackResourceRegistry {
+  readonly manifests: readonly TextPackManifestV1[];
+  readonly resources: readonly TextPackResolvedResource[];
+  readonly kinds: readonly TextPackResourceKind[];
+  readonly languages: readonly string[];
+  readonly profiles: readonly string[];
 }
 
 export type TextPackResourceLoadDiagnosticCode =
@@ -302,80 +316,122 @@ function compareTextPackResources(
   );
 }
 
-export function resolveTextPackResources(
+function sortedUniqueTextPackValues(values: Iterable<string | undefined>): readonly string[] {
+  return [...new Set([...values].filter(isNonEmptyString).map((value) => normalizeTextPackLookupToken(value)))]
+    .sort((left, right) => left.localeCompare(right));
+}
+
+function resolveTextPackManifestResources(
+  manifest: TextPackManifestV1,
+): readonly TextPackResolvedResource[] {
+  const licensesById = new Map(manifest.licenses.map((license) => [license.id, license]));
+  const provenanceById = new Map(manifest.provenance.map((record) => [record.id, record]));
+  const resources: TextPackResolvedResource[] = [];
+
+  for (const resource of manifest.resources) {
+    const license = licensesById.get(resource.licenseId);
+    const provenance = provenanceById.get(resource.provenanceId);
+    if (!license || !provenance) continue;
+
+    resources.push({
+      packId: manifest.packId,
+      packageName: manifest.packageName,
+      version: manifest.version,
+      resourceId: resource.resourceId,
+      lookupKey: resource.lookupKey,
+      kind: resource.kind,
+      path: resource.path,
+      overlayPrecedence: resource.overlayPrecedence,
+      license,
+      provenance,
+      ...(resource.language ? { language: resource.language } : {}),
+      ...(resource.profiles ? { profiles: resource.profiles } : {}),
+    });
+  }
+
+  return resources;
+}
+
+export function createTextPackResourceRegistry(
   manifests: readonly TextPackManifestV1[],
-  request: TextPackLookupRequest,
+): TextPackResourceRegistry {
+  const resources = manifests
+    .flatMap((manifest) => [...resolveTextPackManifestResources(manifest)])
+    .sort(compareTextPackResources);
+
+  return {
+    manifests: [...manifests],
+    resources,
+    kinds: [...new Set(resources.map((resource) => resource.kind))]
+      .sort((left, right) => left.localeCompare(right)),
+    languages: sortedUniqueTextPackValues(resources.map((resource) => resource.language)),
+    profiles: sortedUniqueTextPackValues(resources.flatMap((resource) => resource.profiles ?? [])),
+  };
+}
+
+export function queryTextPackResourceRegistry(
+  registry: TextPackResourceRegistry,
+  request: TextPackRegistryQuery,
 ): TextPackLookupResult {
-  const diagnostics: TextPackLookupDiagnostic[] = [];
+  const mismatchDiagnostics: TextPackLookupDiagnostic[] = [];
   const resources: TextPackResolvedResource[] = [];
   const requestLanguage =
     request.language === undefined ? undefined : normalizeTextPackLookupToken(request.language);
   const requestProfile =
     request.profile === undefined ? undefined : normalizeTextPackLookupToken(request.profile);
+  const requestLookupKey =
+    request.lookupKey === undefined ? undefined : normalizeTextPackLookupToken(request.lookupKey);
 
-  for (const manifest of manifests) {
-    const licensesById = new Map(manifest.licenses.map((license) => [license.id, license]));
-    const provenanceById = new Map(manifest.provenance.map((record) => [record.id, record]));
+  for (const resource of registry.resources) {
+    if (resource.kind !== request.kind) continue;
+    if (request.packId !== undefined && resource.packId !== request.packId) continue;
+    if (request.resourceId !== undefined && resource.resourceId !== request.resourceId) continue;
+    if (
+      requestLookupKey !== undefined &&
+      normalizeTextPackLookupToken(resource.lookupKey) !== requestLookupKey
+    ) {
+      continue;
+    }
 
-    for (const resource of manifest.resources) {
-      if (resource.kind !== request.kind) continue;
+    const resourceLanguage =
+      resource.language === undefined ? undefined : normalizeTextPackLookupToken(resource.language);
+    const resourceProfiles = [...(resource.profiles ?? [])]
+      .map((profile) => normalizeTextPackLookupToken(profile))
+      .sort();
 
-      const resourceLanguage =
-        resource.language === undefined ? undefined : normalizeTextPackLookupToken(resource.language);
-      const resourceProfiles = [...(resource.profiles ?? [])]
-        .map((profile) => normalizeTextPackLookupToken(profile))
-        .sort();
+    if (
+      requestLanguage !== undefined &&
+      resourceLanguage !== undefined &&
+      requestLanguage !== resourceLanguage
+    ) {
+      mismatchDiagnostics.push({
+        code: "language-mismatch",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        message: `Resource ${resource.resourceId} does not match requested language ${request.language}.`,
+      });
+      continue;
+    }
 
-      if (
-        requestLanguage !== undefined &&
-        resourceLanguage !== undefined &&
-        requestLanguage !== resourceLanguage
-      ) {
-        diagnostics.push({
-          code: "language-mismatch",
-          packId: manifest.packId,
+    if (requestProfile !== undefined) {
+      if (resourceProfiles.length > 0 && !resourceProfiles.includes(requestProfile)) {
+        mismatchDiagnostics.push({
+          code: "profile-mismatch",
+          packId: resource.packId,
           resourceId: resource.resourceId,
-          message: `Resource ${resource.resourceId} does not match requested language ${request.language}.`,
+          message: `Resource ${resource.resourceId} does not match requested profile ${request.profile}.`,
         });
         continue;
       }
-
-      if (requestProfile !== undefined) {
-        if (resourceProfiles.length > 0 && !resourceProfiles.includes(requestProfile)) {
-          diagnostics.push({
-            code: "profile-mismatch",
-            packId: manifest.packId,
-            resourceId: resource.resourceId,
-            message: `Resource ${resource.resourceId} does not match requested profile ${request.profile}.`,
-          });
-          continue;
-        }
-      } else if (resourceProfiles.length > 0) {
-        continue;
-      }
-
-      const license = licensesById.get(resource.licenseId);
-      const provenance = provenanceById.get(resource.provenanceId);
-      if (!license || !provenance) continue;
-
-      resources.push({
-        packId: manifest.packId,
-        packageName: manifest.packageName,
-        version: manifest.version,
-        resourceId: resource.resourceId,
-        lookupKey: resource.lookupKey,
-        kind: resource.kind,
-        path: resource.path,
-        overlayPrecedence: resource.overlayPrecedence,
-        license,
-        provenance,
-        ...(resource.language ? { language: resource.language } : {}),
-        ...(resource.profiles ? { profiles: resource.profiles } : {}),
-      });
+    } else if (resourceProfiles.length > 0) {
+      continue;
     }
+
+    resources.push(resource);
   }
 
   resources.sort(compareTextPackResources);
+  const diagnostics: TextPackLookupDiagnostic[] = resources.length === 0 ? [...mismatchDiagnostics] : [];
 
   for (let index = 0; index < resources.length; index += 1) {
     const left = resources[index];
@@ -398,6 +454,13 @@ export function resolveTextPackResources(
   }
 
   return { resources, diagnostics };
+}
+
+export function resolveTextPackResources(
+  manifests: readonly TextPackManifestV1[],
+  request: TextPackLookupRequest,
+): TextPackLookupResult {
+  return queryTextPackResourceRegistry(createTextPackResourceRegistry(manifests), request);
 }
 
 export function parseTextPackResourceContent(
@@ -507,7 +570,15 @@ export function loadTextPackResources(
   request: TextPackLookupRequest,
   contents: TextPackResourceContentSource,
 ): TextPackLoadResult {
-  const resolved = resolveTextPackResources(manifests, request);
+  return loadTextPackRegistryResources(createTextPackResourceRegistry(manifests), request, contents);
+}
+
+export function loadTextPackRegistryResources(
+  registry: TextPackResourceRegistry,
+  request: TextPackRegistryQuery,
+  contents: TextPackResourceContentSource,
+): TextPackLoadResult {
+  const resolved = queryTextPackResourceRegistry(registry, request);
   const diagnostics: (TextPackLookupDiagnostic | TextPackResourceLoadDiagnostic)[] = [
     ...resolved.diagnostics,
   ];

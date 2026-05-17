@@ -31,3 +31,13 @@ The current loader surface covers committed fixture formats:
 
 Loaded entries preserve the resolved resource metadata, license reference, provenance reference,
 line number, normalized lookup token, and deterministic overlay order.
+
+## Resource registry
+
+`createTextPackResourceRegistry` builds a deterministic in-memory catalog from one or more manifests.
+The registry exposes normalized language, profile, and resource-kind summaries, and
+`queryTextPackResourceRegistry` selects resources by kind, language, profile, lookup key, pack id, or
+resource id.
+
+`loadTextPackRegistryResources` loads selected registry resources from caller-provided content while
+preserving license, provenance, and overlay metadata.

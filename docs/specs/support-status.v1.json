@@ -33,16 +33,17 @@
     {
       "name": "@ismail-elkorchi/textpack",
       "status": "slice-proven",
-      "scope": "Manifest validation, licensed fixture resources, deterministic fixture content loading, overlay precedence, and conflict diagnostics are implemented.",
+      "scope": "Manifest validation, licensed English/French fixture resources, deterministic registry queries, fixture content loading, overlay precedence, and conflict diagnostics are implemented.",
       "evidence": [
         "resource manifest fixtures",
+        "fixture resource registry tests",
         "fixture resource loading tests",
         "overlay conflict tests",
         "provenance/license validation",
         "dist export readiness metadata"
       ],
       "limitations": [
-        "No broad multilingual resource marketplace or vetting workflow is implemented",
+        "No public resource marketplace or vetting workflow is implemented",
         "Package remains private until broader release gates pass"
       ]
     },
@@ -184,16 +185,17 @@
     {
       "id": "nlp-pack-resource-manifest",
       "status": "slice-proven",
-      "scope": "Resource-manifest validation, licensed fixtures, fixture content loading, and overlay-conflict policy are implemented.",
+      "scope": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, and overlay-conflict policy are implemented.",
       "evidence": [
         "manifest fixtures",
         "licensed resource fixtures",
+        "fixture registry tests",
         "fixture resource loading tests",
         "overlay conflict cases",
         "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
       ],
       "limitations": [
-        "No public resource review workflow or registry is implemented"
+        "No public resource review workflow or broad resource marketplace is implemented"
       ]
     },
     {
