@@ -52,6 +52,26 @@
       "regressionPolicy": "Future measurements must distinguish validation cost from report rendering cost.",
       "evidenceRefs": ["fixtures/reports/task-evidence-manifest.v1.json", "tools/validate-task-evidence-reports.mjs"],
       "limitations": ["Current runner behavior is minimal and not a benchmark harness."]
+    },
+    {
+      "id": "textrules-pattern-matching",
+      "packageName": "@ismail-elkorchi/textrules",
+      "surface": "Rule pattern matching, resource-backed analysis, and deterministic annotation generation",
+      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "scalePolicy": "Broader rule-backed claims require rule-count, token-count, resource-count, and conflict-count thresholds.",
+      "regressionPolicy": "Future measurements must pin rule fixture hashes, resource fixture hashes, and deterministic match ordering policy.",
+      "evidenceRefs": ["packages/textrules/test/index.test.ts", "tools/validate-rule-backed-ner-readiness.mjs"],
+      "limitations": ["Current rule behavior is proven only for curated fixtures and small resources."]
+    },
+    {
+      "id": "textlab-evidence-inspection",
+      "packageName": "@ismail-elkorchi/textlab",
+      "surface": "Evidence manifest, replay, conformance report, annotation, and corpus fixture inspection",
+      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "scalePolicy": "Large evidence-inspection claims require report-count, comparison-count, annotation-count, corpus-size, and render-size thresholds.",
+      "regressionPolicy": "Future measurements must separate parsing, summarization, and rendering costs.",
+      "evidenceRefs": ["packages/textlab/test/index.test.mjs", "fixtures/reports/evidence-replay.v1.json"],
+      "limitations": ["Current textlab behavior is repository-fixture inspection, not an interactive or large-corpus UI."]
     }
   ],
   "notes": [
