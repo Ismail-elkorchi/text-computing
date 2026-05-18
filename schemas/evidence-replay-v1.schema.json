@@ -94,7 +94,13 @@
           "minItems": 1,
           "items": { "type": "string", "minLength": 1 }
         },
-        "knownGap": { "type": "string", "minLength": 1 }
+        "knownGap": { "type": "string", "minLength": 1 },
+        "gapDisposition": {
+          "enum": [
+            "executed-captures-and-narrowed-claim",
+            "claim-narrowed"
+          ]
+        }
       }
     }
   }

@@ -49,6 +49,15 @@
         "tools/validate-coreference-readiness.mjs"
       ],
       "comparatorRefs": [],
+      "gapResolution": {
+        "disposition": "claim-narrowed",
+        "reason": "No external comparator capture is recorded for coreference; the public claim remains limited to repository-authored corpus slices.",
+        "evidenceRefs": [
+          "docs/specs/support-status.v1.json",
+          "fixtures/reports/evidence-replay.v1.json",
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ]
+      },
       "knownGaps": [
         "External comparator-backed and broad-corpus coreference support are not claimed.",
         "Behavior is limited to the repository-authored frozen corpus slice."
@@ -193,6 +202,15 @@
         "tools/validate-relation-extraction-readiness.mjs"
       ],
       "comparatorRefs": [],
+      "gapResolution": {
+        "disposition": "claim-narrowed",
+        "reason": "No external comparator capture is recorded for relation extraction; the public claim remains limited to repository-authored corpus slices.",
+        "evidenceRefs": [
+          "docs/specs/support-status.v1.json",
+          "fixtures/reports/evidence-replay.v1.json",
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ]
+      },
       "knownGaps": [
         "External comparator-backed and broad-corpus relation extraction support are not claimed.",
         "Behavior is limited to the repository-authored frozen corpus slice."
@@ -221,6 +239,15 @@
         "schemas/retrieval-evaluation-v1.schema.json"
       ],
       "comparatorRefs": [],
+      "gapResolution": {
+        "disposition": "claim-narrowed",
+        "reason": "No external retrieval comparator or external relevance dataset is recorded; the public claim remains limited to committed explicit-token corpora, qrels, and deterministic thresholds.",
+        "evidenceRefs": [
+          "docs/specs/support-status.v1.json",
+          "fixtures/reports/evidence-replay.v1.json",
+          "fixtures/reports/nlp-retrieval/conformance-report.json"
+        ]
+      },
       "knownGaps": [
         "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
         "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
@@ -265,6 +292,15 @@
         "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
         "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
       ],
+      "gapResolution": {
+        "disposition": "executed-captures-and-narrowed-claim",
+        "reason": "spaCy and wink-nlp captures are executed for committed slices, while language-specific segmentation beyond frozen slices remains outside the public claim.",
+        "evidenceRefs": [
+          "docs/specs/support-status.v1.json",
+          "fixtures/reports/evidence-replay.v1.json",
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ]
+      },
       "knownGaps": [
         "Not a broad multilingual tokenizer benchmark suite.",
         "Language-specific segmentation beyond the frozen slices remains future work."

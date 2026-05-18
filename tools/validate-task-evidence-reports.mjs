@@ -7,6 +7,12 @@ const MANIFEST_PATH = "fixtures/reports/task-evidence-manifest.v1.json";
 const MANIFEST_SCHEMA_PATH = "schemas/task-evidence-manifest-v1.schema.json";
 const REPORT_SCHEMA_PATH = "schemas/textconformance-report-v1.schema.json";
 const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
+const TARGETED_GAP_RESOLUTION_TASKS = new Set([
+  "nlp-tokenization-sbd",
+  "nlp-retrieval",
+  "nlp-relation-extraction",
+  "nlp-coreference",
+]);
 
 const PRIVATE_LEAK_PATTERNS = [
   /\/home\//,
@@ -120,6 +126,9 @@ for (const task of manifest.tasks) {
   );
 
   const manifestRefs = [...task.evidenceRefs, ...(task.comparatorRefs ?? []), task.reportPath];
+  if (task.gapResolution !== undefined) {
+    manifestRefs.push(...task.gapResolution.evidenceRefs);
+  }
   for (const ref of manifestRefs) {
     assertRelativeEvidenceRef(ref, `${task.taskId} manifest evidence ref`);
     expect(await fileExists(ref), `${task.taskId} manifest evidence ref does not exist: ${ref}`);
@@ -144,6 +153,27 @@ for (const task of manifest.tasks) {
     for (const ref of check.evidenceRefs ?? []) {
       assertRelativeEvidenceRef(ref, `${task.taskId} report evidence ref`);
       expect(await fileExists(ref), `${task.taskId} report evidence ref does not exist: ${ref}`);
+    }
+  }
+
+  if (TARGETED_GAP_RESOLUTION_TASKS.has(task.taskId)) {
+    expect(task.gapResolution !== undefined, `${task.taskId} must record a gapResolution.`);
+    const gapText = [task.gapResolution.reason, ...task.knownGaps, ...supportTask.limitations].join(" ");
+    if ((task.comparatorRefs ?? []).length === 0) {
+      expect(
+        task.gapResolution.disposition === "claim-narrowed",
+        `${task.taskId} without comparatorRefs must use claim-narrowed disposition.`,
+      );
+      expect(
+        /not claimed|No external|outside the public claim/u.test(gapText),
+        `${task.taskId} gapResolution must explicitly narrow the public claim.`,
+      );
+    }
+    if ((task.comparatorRefs ?? []).length > 0 && task.knownGaps.length > 0) {
+      expect(
+        task.gapResolution.disposition === "executed-captures-and-narrowed-claim",
+        `${task.taskId} with comparatorRefs and known gaps must record executed-captures-and-narrowed-claim.`,
+      );
     }
   }
 }
