@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "scope": "downstream-api-stability",
+  "packages": [
+    {
+      "packageName": "@ismail-elkorchi/textdoc",
+      "status": "proven",
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textcorpus",
+          "evidenceRefs": ["packages/textcorpus/src/index.ts", "packages/textcorpus/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textdoc"]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textpipeline",
+          "evidenceRefs": ["packages/textpipeline/src/index.ts", "packages/textpipeline/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textdoc"]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textrules",
+          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textdoc"]
+        }
+      ],
+      "evidenceRefs": [
+        "packages/textdoc/package.json",
+        "packages/textdoc/src/index.ts",
+        "packages/textdoc/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API usage by declared downstream dependents; it does not publish the package."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack",
+      "status": "proven",
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textrules",
+          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textpack"]
+        }
+      ],
+      "evidenceRefs": [
+        "packages/textpack/package.json",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API usage by declared downstream dependents; it does not publish the package."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textprotocol",
+      "status": "proven",
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textpipeline",
+          "evidenceRefs": ["packages/textpipeline/src/index.ts", "packages/textpipeline/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textprotocol"]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textrules",
+          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textprotocol"]
+        }
+      ],
+      "evidenceRefs": [
+        "packages/textprotocol/package.json",
+        "packages/textprotocol/src/index.ts",
+        "packages/textprotocol/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API usage by declared downstream dependents; it does not standardize version negotiation or transport behavior."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textconformance",
+      "status": "proven",
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textrules",
+          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
+          "importSurfaces": ["@ismail-elkorchi/textconformance"]
+        }
+      ],
+      "evidenceRefs": [
+        "packages/textconformance/package.json",
+        "packages/textconformance/src/index.ts",
+        "packages/textconformance/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API usage by declared downstream dependents; it does not make the runner a full benchmark harness."
+      ]
+    }
+  ],
+  "notes": [
+    "This artifact clears only the downstream API stability gate for the listed foundation packages.",
+    "Other release blockers remain active until separate evidence removes them."
+  ]
+}

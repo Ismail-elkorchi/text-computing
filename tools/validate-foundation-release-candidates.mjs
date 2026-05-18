@@ -6,6 +6,7 @@ const ROOT = process.cwd();
 const ARTIFACT_PATH = "fixtures/package-release/foundation-release-candidates.v1.json";
 const SCHEMA_PATH = "schemas/foundation-release-candidates-v1.schema.json";
 const RELEASE_GATES_PATH = "fixtures/package-release/gates.v1.json";
+const DOWNSTREAM_API_STABILITY_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
 const EXPECTED_PACKAGES = [
   "@ismail-elkorchi/textconformance",
   "@ismail-elkorchi/textdoc",
@@ -77,6 +78,20 @@ for (const entry of artifact.packages) {
   expect(releaseGate.releaseReadiness === "blocked", `${entry.packageName} release gate must remain blocked.`);
   expect(entry.releaseBlockers.length > 0, `${entry.packageName} must list release blockers.`);
   expect(entry.requiredEvidenceRefs.includes(RELEASE_GATES_PATH), `${entry.packageName} must reference release gates.`);
+  if (entry.candidateState === "candidate-ready") {
+    expect(
+      entry.requiredEvidenceRefs.includes(DOWNSTREAM_API_STABILITY_PATH),
+      `${entry.packageName} candidate-ready state must reference downstream API stability evidence.`,
+    );
+    expect(
+      !entry.releaseBlockers.some((blocker) => blocker.includes("Built-package API smoke evidence")),
+      `${entry.packageName} candidate-ready state must not keep a built-package API smoke blocker.`,
+    );
+    expect(
+      !entry.releaseBlockers.some((blocker) => blocker.includes("Downstream API stability evidence")),
+      `${entry.packageName} candidate-ready state must not keep a downstream API stability blocker.`,
+    );
+  }
 
   for (const ref of entry.requiredEvidenceRefs) {
     assertRepoRelative(ref, `${entry.packageName} requiredEvidenceRefs`);

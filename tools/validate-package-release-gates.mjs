@@ -6,6 +6,7 @@ const ROOT = process.cwd();
 const GATES_PATH = "fixtures/package-release/gates.v1.json";
 const SCHEMA_PATH = "schemas/package-release-gates-v1.schema.json";
 const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
+const DOWNSTREAM_API_STABILITY_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
 const REQUIRED_GATES = [
   "metadata",
   "tests",
@@ -127,13 +128,24 @@ for (const entry of gates.packages) {
       `${entry.packageName} private-unreleased package must require downstream API stability before release.`,
     );
     expect(
-      entry.downstreamApiStability.status === "blocked",
-      `${entry.packageName} private-unreleased package must have blocked downstream API stability.`,
+      entry.downstreamApiStability.status === "blocked" || entry.downstreamApiStability.status === "proven",
+      `${entry.packageName} private-unreleased package downstream API stability must be blocked or proven.`,
     );
-    expect(
-      entry.releaseBlockers.some((blocker) => blocker.includes("Downstream API stability evidence")),
-      `${entry.packageName} private-unreleased package must include a downstream API stability release blocker.`,
-    );
+    if (entry.downstreamApiStability.status === "blocked") {
+      expect(
+        entry.releaseBlockers.some((blocker) => blocker.includes("Downstream API stability evidence")),
+        `${entry.packageName} private-unreleased package must include a downstream API stability release blocker while blocked.`,
+      );
+    } else {
+      expect(
+        entry.downstreamApiStability.evidenceRefs.includes(DOWNSTREAM_API_STABILITY_PATH),
+        `${entry.packageName} proven downstream API stability must reference ${DOWNSTREAM_API_STABILITY_PATH}.`,
+      );
+      expect(
+        !entry.releaseBlockers.some((blocker) => blocker.includes("Downstream API stability evidence")),
+        `${entry.packageName} proven downstream API stability must not keep a downstream API stability release blocker.`,
+      );
+    }
     expect(packageJson.private === true, `${entry.packageName} must remain private while releaseTrack is private-unreleased.`);
     expect(packageJson.version === "0.0.0", `${entry.packageName} private-unreleased version must remain 0.0.0.`);
     expect(

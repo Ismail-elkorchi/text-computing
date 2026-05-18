@@ -36,19 +36,23 @@
       "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": [
           "@ismail-elkorchi/textcorpus",
           "@ismail-elkorchi/textpipeline",
           "@ismail-elkorchi/textrules"
         ],
-        "evidenceRefs": ["packages/textdoc/package.json", "fixtures/package-release/gates.v1.json"],
-        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+        "evidenceRefs": [
+          "packages/textdoc/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
         "Graph annotation behavior is fixture-scope and does not yet have broad production validation.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for all declared downstream dependents."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": ["packages/textdoc/package.json", "packages/textdoc/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -61,15 +65,19 @@
       "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": ["@ismail-elkorchi/textrules"],
-        "evidenceRefs": ["packages/textpack/package.json", "fixtures/package-release/gates.v1.json"],
-        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+        "evidenceRefs": [
+          "packages/textpack/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
         "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for all declared downstream dependents."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": ["packages/textpack/package.json", "packages/textpack/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -145,18 +153,22 @@
       "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": [
           "@ismail-elkorchi/textpipeline",
           "@ismail-elkorchi/textrules"
         ],
-        "evidenceRefs": ["packages/textprotocol/package.json", "fixtures/package-release/gates.v1.json"],
-        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+        "evidenceRefs": [
+          "packages/textprotocol/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
         "Result envelope behavior is slice-proven, but version negotiation and transport compatibility policy are not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for all declared downstream dependents."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": ["packages/textprotocol/package.json", "packages/textprotocol/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
@@ -169,15 +181,19 @@
       "gates": ["metadata", "tests", "schemas", "package-quality", "security-review", "claim-hygiene", "downstream-api-stability"],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": ["@ismail-elkorchi/textrules"],
-        "evidenceRefs": ["packages/textconformance/package.json", "fixtures/package-release/gates.v1.json"],
-        "policy": "A non-textfacts release requires downstream packages to prove stable API usage through committed tests or release-candidate artifacts."
+        "evidenceRefs": [
+          "packages/textconformance/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
         "Conformance runner behavior is minimal and lacks broad diff, benchmark, and claim-registry workflows.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for all declared downstream dependents."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": ["packages/textconformance/package.json", "packages/textconformance/test", "tools/validate-package-readiness.mjs"],
       "limitations": ["Package remains private until broader release gates pass."]
