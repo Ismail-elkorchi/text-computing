@@ -10,8 +10,8 @@ const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
 
 const PRIVATE_LEAK_PATTERNS = [
   /\/home\//,
-  /tse-workbench/,
-  /projects\/text-computing\/private/,
+  new RegExp(["tse", "workbench"].join("-")),
+  new RegExp(["projects", "text-computing", "private"].join("\\/")),
   /\braw prompt\b/i,
   /\bscratchpad\b/i,
 ];

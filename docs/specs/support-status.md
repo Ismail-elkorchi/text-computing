@@ -1,8 +1,9 @@
+<!-- This file is generated. Do not edit it by hand. -->
+<!-- Source: docs/specs/support-status.v1.json -->
+
 # Support status
 
-This document is generated from `docs/specs/support-status.v1.json`. Do not edit it by hand; update
-the JSON source and rerun `node tools/validate-support-status.mjs --write` if the canonical status
-changes.
+This document is generated from `docs/specs/support-status.v1.json`.
 
 ## Status labels
 

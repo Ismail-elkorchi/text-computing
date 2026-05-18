@@ -1,47 +1,52 @@
+<!-- This file is generated. Do not edit it by hand. -->
+<!-- Source: fixtures/package-release/gates.v1.json -->
+
 # Package release gates
 
-- **Status:** Draft 0.1
-- **Scope:** Public package release gate requirements
-- **Data:** `fixtures/package-release/gates.v1.json`
-- **Schema:** `schemas/package-release-gates-v1.schema.json`
+This document is generated from `fixtures/package-release/gates.v1.json`.
 
 ## Why this document exists
 
-Package metadata can look releasable before support claims, tests, schemas, quality checks, and
-security checks are ready. This document records which packages are public surfaces and which remain
-private-unreleased.
+Package metadata can look releasable before support claims, tests, schemas, quality checks, and security checks are ready.
 
 ## Gate list
 
-- `metadata` — package name, version, exports, files, side effects, and license are explicit.
-- `tests` — package tests and repository tests cover the package surface.
-- `schemas` — repository and package schemas validate under declared drafts.
-- `package-quality` — pack, export, static, and package-quality checks pass where applicable.
-- `security-review` — dependency and workflow changes are auditable.
-- `claim-hygiene` — public claims remain support-graded and evidence-linked.
-- `downstream-api-stability` — non-`textfacts` packages prove stable API usage through downstream dependents or an explicit no-dependent release-candidate integration artifact.
+The gate list is the required checklist, not a release approval by itself.
 
-The gate list is the required checklist, not a release approval by itself. Each package also records a
-`releaseReadiness` value:
+## Required gates
 
-- `publishable` — current metadata and checks permit the declared public release track;
-- `blocked` — the package must remain private-unreleased, with explicit `releaseBlockers`.
+- `metadata`
+- `tests`
+- `schemas`
+- `package-quality`
+- `security-review`
+- `claim-hygiene`
+- `downstream-api-stability`
+
+## Package gates
+
+| Package | Track | Support | Readiness | Downstream API | Blockers |
+| --- | --- | --- | --- | --- | --- |
+| `@ismail-elkorchi/textfacts` | `public-beta` | `beta` | `publishable` | `not-required` | — |
+| `@ismail-elkorchi/textdoc` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Graph annotation behavior is fixture-scope and does not yet have broad production validation.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for all declared downstream dependents. |
+| `@ismail-elkorchi/textpack` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for all declared downstream dependents. |
+| `@ismail-elkorchi/textrules` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.<br>External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.<br>Downstream API stability evidence is not recorded for this package release surface. |
+| `@ismail-elkorchi/textpipeline` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for this package release surface. |
+| `@ismail-elkorchi/textcorpus` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Retrieval and corpus scoring remain frozen-corpus only without large-corpus relevance or performance validation.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for this package release surface. |
+| `@ismail-elkorchi/textprotocol` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Result envelope behavior is slice-proven, but version negotiation and transport compatibility policy are not release-ready.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for all declared downstream dependents. |
+| `@ismail-elkorchi/textconformance` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Conformance runner behavior is minimal and lacks broad diff, benchmark, and claim-registry workflows.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for all declared downstream dependents. |
+| `@ismail-elkorchi/textlab` | `private-unreleased` | `slice-proven` | `blocked` | `blocked` | Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.<br>Package-quality publication checks have not been promoted beyond private-unreleased status.<br>Downstream API stability evidence is not recorded for this package release surface. |
+
+## Notes
+
+- Private-unreleased packages are not adoption surfaces until a later release PR changes their releaseTrack.
+- Claim hygiene is a release gate because package publication can amplify unsupported claims.
+- Non-textfacts packages require downstream API stability evidence before their release track can change.
 
 ## Current boundary
 
-`@ismail-elkorchi/textfacts` is the only public-beta package. The other eight package workspaces are
-private-unreleased even when their current slice behavior is implemented.
-
-For non-`textfacts` packages, release readiness is dependency-based: the release track must stay
-`private-unreleased` until downstream API stability evidence is recorded for declared downstream dependents,
-or until a package with no current downstream dependent records an explicit release-candidate integration
-artifact.
+Release readiness is dependency-based. A non-public package remains private until its declared downstream API and release-gate evidence passes.
 
 ## Verification
 
-Run:
-
-```sh
-node tools/validate-package-release-gates.mjs
-npm run -s check:fixtures
-```
+Run `npm run -s check:release-gates` and `npm run -s check:status-docs`.
