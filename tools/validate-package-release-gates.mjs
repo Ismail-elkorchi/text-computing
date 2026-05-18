@@ -7,6 +7,7 @@ const GATES_PATH = "fixtures/package-release/gates.v1.json";
 const SCHEMA_PATH = "schemas/package-release-gates-v1.schema.json";
 const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
 const DOWNSTREAM_API_STABILITY_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
+const WORKSPACE_PACK_DRY_RUN_PATH = "tools/check-workspace-pack-dry-run.mjs";
 const REQUIRED_GATES = [
   "metadata",
   "tests",
@@ -48,23 +49,22 @@ function assertRepoRef(ref, label) {
 }
 
 async function workspacePackageNames() {
-  const entries = await readdir(path.join(ROOT, "packages"), { withFileTypes: true });
-  const names = [];
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    const packageJson = await readJson(`packages/${entry.name}/package.json`);
-    names.push(packageJson.name);
-  }
-  return names.sort();
+  return (await workspacePackageJsons()).map((packageJson) => packageJson.name).sort();
 }
 
-async function workspaceDownstreamDependents() {
+async function workspacePackageJsons() {
   const entries = await readdir(path.join(ROOT, "packages"), { withFileTypes: true });
   const packageJsons = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    packageJsons.push(await readJson(`packages/${entry.name}/package.json`));
+    const packageJson = await readJson(`packages/${entry.name}/package.json`);
+    packageJsons.push(packageJson);
   }
+  return packageJsons.sort((left, right) => left.name.localeCompare(right.name));
+}
+
+async function workspaceDownstreamDependents() {
+  const packageJsons = await workspacePackageJsons();
   const packageNames = new Set(packageJsons.map((packageJson) => packageJson.name));
   const downstreamByPackage = new Map([...packageNames].map((name) => [name, []]));
   for (const packageJson of packageJsons) {
@@ -92,12 +92,48 @@ expect(
 );
 
 const supportByPackage = new Map(supportStatus.packages.map((entry) => [entry.name, entry]));
+const workspacePackageJsonsByName = new Map((await workspacePackageJsons()).map((packageJson) => [packageJson.name, packageJson]));
 const downstreamByPackage = await workspaceDownstreamDependents();
 const declaredNames = gates.packages.map((entry) => entry.packageName).sort();
 expect(
   JSON.stringify(declaredNames) === JSON.stringify(await workspacePackageNames()),
   "Package release gates must cover exactly the workspace package set.",
 );
+
+const stageByPackage = new Map();
+const seenStages = new Set();
+for (const stage of gates.dependencyReleaseOrder) {
+  expect(!seenStages.has(stage.stage), `Dependency release order stage ${stage.stage} is duplicated.`);
+  seenStages.add(stage.stage);
+  for (const ref of stage.requiredEvidenceRefs) {
+    assertRepoRef(ref, `dependencyReleaseOrder stage ${stage.stage} requiredEvidenceRefs`);
+    expect(await fileExists(ref), `dependency release order evidence ref does not exist: ${ref}`);
+  }
+  for (const packageName of stage.packages) {
+    expect(!stageByPackage.has(packageName), `${packageName} appears in more than one dependency release stage.`);
+    expect(workspacePackageJsonsByName.has(packageName), `${packageName} dependency release stage is not a workspace package.`);
+    stageByPackage.set(packageName, stage.stage);
+  }
+}
+expect(
+  JSON.stringify([...stageByPackage.keys()].sort()) === JSON.stringify(declaredNames),
+  "Dependency release order must cover exactly the workspace package set.",
+);
+expect(stageByPackage.get("@ismail-elkorchi/textfacts") === 0, "textfacts must remain the stage 0 published package anchor.");
+
+for (const [packageName, packageJson] of workspacePackageJsonsByName) {
+  const packageStage = stageByPackage.get(packageName);
+  const internalDependencies = Object.keys(packageJson.dependencies ?? {}).filter((dependencyName) =>
+    workspacePackageJsonsByName.has(dependencyName),
+  );
+  for (const dependencyName of internalDependencies) {
+    expect(
+      stageByPackage.get(dependencyName) < packageStage,
+      `${packageName} release stage must be after dependency ${dependencyName}.`,
+      { packageStage, dependencyStage: stageByPackage.get(dependencyName) },
+    );
+  }
+}
 
 for (const entry of gates.packages) {
   const packageDir = entry.packageName.split("/")[1];
@@ -170,6 +206,12 @@ for (const entry of gates.packages) {
   for (const ref of entry.evidenceRefs) {
     assertRepoRef(ref, `${entry.packageName} evidenceRefs`);
     expect(await fileExists(ref), `${entry.packageName} evidence ref does not exist: ${ref}`);
+  }
+  if (entry.releaseTrack === "private-unreleased") {
+    expect(
+      entry.evidenceRefs.includes(WORKSPACE_PACK_DRY_RUN_PATH),
+      `${entry.packageName} private-unreleased release gate must reference workspace pack dry-run evidence.`,
+    );
   }
 }
 
