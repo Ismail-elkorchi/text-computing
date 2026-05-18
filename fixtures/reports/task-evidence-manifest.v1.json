@@ -201,24 +201,28 @@
     {
       "taskId": "nlp-retrieval",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for retrieval over committed explicit-token and fielded smoke corpora, standalone qrels, and bounded package-level query-control tests only.",
+      "claimBoundary": "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only.",
       "reportPath": "fixtures/reports/nlp-retrieval/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",
         "fixtures/retrieval/expected/retrieval-smoke.json",
         "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+        "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
         "schemas/retrieval-expected-v1.schema.json",
         "packages/textcorpus/src/index.ts",
         "tools/validate-retrieval-feature.mjs",
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
         "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+        "fixtures/performance/gates.v1.json",
         "schemas/retrieval-qrels-v1.schema.json",
         "schemas/retrieval-evaluation-v1.schema.json"
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No streaming retrieval, filesystem-backed index store, broad relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
+        "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
         "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
       ]
     },

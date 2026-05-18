@@ -20,6 +20,12 @@ const REQUIRED_PACKAGES = [
   "@ismail-elkorchi/textrules",
   "@ismail-elkorchi/textlab",
 ];
+const REQUIRED_RETRIEVAL_THRESHOLDS = {
+  minDocuments: 12,
+  minTokens: 70,
+  minQueries: 6,
+  maxSerializedIndexBytes: 50000,
+};
 
 async function readJson(relativePath) {
   return JSON.parse(await readFile(relativePath, "utf8"));
@@ -69,6 +75,14 @@ for (const gate of gates.gates) {
   for (const ref of gate.evidenceRefs) {
     assertRepoRef(ref, `${gate.id} evidenceRefs`);
     if (!(await fileExists(ref))) fail(`${gate.id} evidence ref does not exist: ${ref}`);
+  }
+  if (gate.id === "textcorpus-retrieval") {
+    if (!gate.thresholds) fail("textcorpus-retrieval must declare deterministic thresholds.");
+    for (const [key, value] of Object.entries(REQUIRED_RETRIEVAL_THRESHOLDS)) {
+      if (gate.thresholds[key] !== value) {
+        fail(`textcorpus-retrieval threshold ${key} must be ${value}.`, gate.thresholds);
+      }
+    }
   }
 }
 
