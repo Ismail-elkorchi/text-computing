@@ -50,7 +50,7 @@
     "@types/node": "25.8.0",
     "ajv": "8.20.0",
     "esbuild": "0.28.0",
-    "publint": "0.3.20",
+    "publint": "0.3.21",
     "typescript": "6.0.3"
   },
   "license": "MIT"
