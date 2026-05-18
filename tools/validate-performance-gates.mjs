@@ -17,6 +17,8 @@ const REQUIRED_PACKAGES = [
   "@ismail-elkorchi/textcorpus",
   "@ismail-elkorchi/textpack",
   "@ismail-elkorchi/textconformance",
+  "@ismail-elkorchi/textrules",
+  "@ismail-elkorchi/textlab",
 ];
 
 async function readJson(relativePath) {
