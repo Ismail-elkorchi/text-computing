@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
   "scope": "foundation-release-candidates",
-  "publicHead": "5f9d790ec68980fcca97639d6c37072f4f7721fa",
+  "publicHead": "e8503c43967945c498b5b22b56bbe9e736ddf1e1",
   "packages": [
     {
       "packageName": "@ismail-elkorchi/textprotocol",
       "packageDir": "packages/textprotocol",
       "releaseTrack": "private-unreleased",
       "releaseReadiness": "blocked",
-      "candidateState": "gate-defined",
+      "candidateState": "candidate-ready",
       "privateRequired": true,
       "owns": ["result envelope runtime guards", "result envelope schema contract"],
-      "downstreamDependents": ["@ismail-elkorchi/textpipeline", "@ismail-elkorchi/textrules", "@ismail-elkorchi/textlab"],
+      "downstreamDependents": ["@ismail-elkorchi/textpipeline", "@ismail-elkorchi/textrules"],
       "requiredEvidenceRefs": [
         "packages/textprotocol/package.json",
         "packages/textprotocol/src/index.ts",
         "packages/textprotocol/test/index.test.ts",
         "schemas/textprotocol-result-envelope-v1.schema.json",
         "docs/specs/support-status.v1.json",
-        "fixtures/package-release/gates.v1.json"
+        "fixtures/package-release/gates.v1.json",
+        "fixtures/package-release/downstream-api-stability.v1.json",
+        "tools/check-downstream-api-stability.mjs"
       ],
       "releaseBlockers": [
-        "Version-negotiation and transport compatibility policy are not release-ready.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
-        "Downstream API stability evidence is not recorded for declared downstream dependents."
+        "Version-negotiation and transport compatibility policy are not release-ready."
       ]
     },
     {
@@ -31,22 +31,22 @@
       "packageDir": "packages/textconformance",
       "releaseTrack": "private-unreleased",
       "releaseReadiness": "blocked",
-      "candidateState": "gate-defined",
+      "candidateState": "candidate-ready",
       "privateRequired": true,
       "owns": ["conformance report runtime guards", "minimal synchronous conformance runner"],
-      "downstreamDependents": ["@ismail-elkorchi/textrules", "@ismail-elkorchi/textlab"],
+      "downstreamDependents": ["@ismail-elkorchi/textrules"],
       "requiredEvidenceRefs": [
         "packages/textconformance/package.json",
         "packages/textconformance/src/index.ts",
         "packages/textconformance/test/index.test.ts",
         "schemas/textconformance-report-v1.schema.json",
         "fixtures/reports/task-evidence-manifest.v1.json",
-        "fixtures/package-release/gates.v1.json"
+        "fixtures/package-release/gates.v1.json",
+        "fixtures/package-release/downstream-api-stability.v1.json",
+        "tools/check-downstream-api-stability.mjs"
       ],
       "releaseBlockers": [
-        "Diff, benchmark, and claim-registry workflows are not release-ready.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
-        "Downstream API stability evidence is not recorded for declared downstream dependents."
+        "Diff, benchmark, and claim-registry workflows are not release-ready."
       ]
     },
     {
@@ -54,14 +54,13 @@
       "packageDir": "packages/textdoc",
       "releaseTrack": "private-unreleased",
       "releaseReadiness": "blocked",
-      "candidateState": "gate-defined",
+      "candidateState": "candidate-ready",
       "privateRequired": true,
       "owns": ["document container", "annotation layers", "CoNLL-U round-trip helpers"],
       "downstreamDependents": [
         "@ismail-elkorchi/textpipeline",
         "@ismail-elkorchi/textcorpus",
-        "@ismail-elkorchi/textrules",
-        "@ismail-elkorchi/textlab"
+        "@ismail-elkorchi/textrules"
       ],
       "requiredEvidenceRefs": [
         "packages/textdoc/package.json",
@@ -69,12 +68,12 @@
         "packages/textdoc/test/index.test.ts",
         "schemas/textdoc-document-v1.schema.json",
         "fixtures/textdoc/examples/document-annotation-model-v1.json",
-        "fixtures/package-release/gates.v1.json"
+        "fixtures/package-release/gates.v1.json",
+        "fixtures/package-release/downstream-api-stability.v1.json",
+        "tools/check-downstream-api-stability.mjs"
       ],
       "releaseBlockers": [
-        "Graph annotation behavior is fixture-scope and does not yet have broad production validation.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
-        "Downstream API stability evidence is not recorded for declared downstream dependents."
+        "Graph annotation behavior is fixture-scope and does not yet have broad production validation."
       ]
     },
     {
@@ -82,7 +81,7 @@
       "packageDir": "packages/textpack",
       "releaseTrack": "private-unreleased",
       "releaseReadiness": "blocked",
-      "candidateState": "gate-defined",
+      "candidateState": "candidate-ready",
       "privateRequired": true,
       "owns": ["pack manifest runtime guards", "resource loading", "resource registry lookup"],
       "downstreamDependents": ["@ismail-elkorchi/textrules"],
@@ -92,12 +91,12 @@
         "packages/textpack/test/index.test.ts",
         "schemas/textpack-manifest-v1.schema.json",
         "fixtures/textpack/manifests/textpack-en-core.json",
-        "fixtures/package-release/gates.v1.json"
+        "fixtures/package-release/gates.v1.json",
+        "fixtures/package-release/downstream-api-stability.v1.json",
+        "tools/check-downstream-api-stability.mjs"
       ],
       "releaseBlockers": [
-        "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.",
-        "Built-package API smoke evidence is not yet recorded as a release-candidate artifact.",
-        "Downstream API stability evidence is not recorded for declared downstream dependents."
+        "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release."
       ]
     }
   ],

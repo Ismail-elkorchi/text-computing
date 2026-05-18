@@ -20,10 +20,10 @@ Release-candidate work is not package publication. These packages remain private
 
 | Package | State | Track | Readiness | Downstream dependents | Blockers |
 | --- | --- | --- | --- | --- | --- |
-| `@ismail-elkorchi/textprotocol` | `gate-defined` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textrules<br>@ismail-elkorchi/textlab | Version-negotiation and transport compatibility policy are not release-ready.<br>Built-package API smoke evidence is not yet recorded as a release-candidate artifact.<br>Downstream API stability evidence is not recorded for declared downstream dependents. |
-| `@ismail-elkorchi/textconformance` | `gate-defined` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules<br>@ismail-elkorchi/textlab | Diff, benchmark, and claim-registry workflows are not release-ready.<br>Built-package API smoke evidence is not yet recorded as a release-candidate artifact.<br>Downstream API stability evidence is not recorded for declared downstream dependents. |
-| `@ismail-elkorchi/textdoc` | `gate-defined` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textcorpus<br>@ismail-elkorchi/textrules<br>@ismail-elkorchi/textlab | Graph annotation behavior is fixture-scope and does not yet have broad production validation.<br>Built-package API smoke evidence is not yet recorded as a release-candidate artifact.<br>Downstream API stability evidence is not recorded for declared downstream dependents. |
-| `@ismail-elkorchi/textpack` | `gate-defined` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules | Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.<br>Built-package API smoke evidence is not yet recorded as a release-candidate artifact.<br>Downstream API stability evidence is not recorded for declared downstream dependents. |
+| `@ismail-elkorchi/textprotocol` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textrules | Version-negotiation and transport compatibility policy are not release-ready. |
+| `@ismail-elkorchi/textconformance` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules | Diff, benchmark, and claim-registry workflows are not release-ready. |
+| `@ismail-elkorchi/textdoc` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textcorpus<br>@ismail-elkorchi/textrules | Graph annotation behavior is fixture-scope and does not yet have broad production validation. |
+| `@ismail-elkorchi/textpack` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules | Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release. |
 
 ## Notes
 

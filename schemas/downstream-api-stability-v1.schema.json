@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/downstream-api-stability-v1.schema.json",
+  "title": "Downstream API stability v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "scope", "packages"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "scope": { "const": "downstream-api-stability" },
+    "packages": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "$ref": "#/definitions/package" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "repoRef": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "anyOf": [
+          { "pattern": "^/" },
+          { "pattern": "\\.\\." },
+          { "pattern": "\\\\" },
+          { "pattern": "^https?://" }
+        ]
+      }
+    },
+    "dependent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageName", "evidenceRefs", "importSurfaces"],
+      "properties": {
+        "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repoRef" }
+        },
+        "importSurfaces": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+(?:/[a-z]+)?$" }
+        }
+      }
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageName", "status", "dependents", "evidenceRefs", "limitations"],
+      "properties": {
+        "packageName": {
+          "enum": [
+            "@ismail-elkorchi/textconformance",
+            "@ismail-elkorchi/textdoc",
+            "@ismail-elkorchi/textpack",
+            "@ismail-elkorchi/textprotocol"
+          ]
+        },
+        "status": { "const": "proven" },
+        "dependents": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/dependent" }
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repoRef" }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}
