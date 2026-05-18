@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
   "comparator": {
     "name": "Natural",
     "version": "8.1.1",

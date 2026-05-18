@@ -56,12 +56,13 @@
     "comparisonRef": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "sha256", "comparator", "status"],
+      "required": ["path", "sha256", "comparator", "status", "captureMode"],
       "properties": {
         "path": { "type": "string", "minLength": 1 },
         "sha256": { "$ref": "#/definitions/sha256" },
         "comparator": { "$ref": "#/definitions/comparator" },
-        "status": { "enum": ["pass", "fail", "not-run"] }
+        "status": { "enum": ["pass", "fail", "not-run"] },
+        "captureMode": { "enum": ["curated-local-execution", "capability-record"] }
       }
     },
     "taskReplay": {

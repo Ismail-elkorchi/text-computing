@@ -10,6 +10,7 @@
     "capturedDate",
     "comparator",
     "executionStatus",
+    "captureMode",
     "slices",
     "notes"
   ],
@@ -32,6 +33,12 @@
       "enum": [
         "capability-recorded",
         "executed"
+      ]
+    },
+    "captureMode": {
+      "enum": [
+        "curated-local-execution",
+        "capability-record"
       ]
     },
     "dependencies": {

@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "scope": "pos-morph-lemma",
   "capturedDate": "2026-05-15",
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
   "offsetUnits": "utf16-code-unit",
   "comparator": {
     "name": "spaCy",

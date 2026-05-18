@@ -4,11 +4,13 @@
   "title": "CoNLL-U external validator capture v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "scope", "capturedDate", "validator", "dependencies", "fixtures"],
+  "required": ["schemaVersion", "scope", "capturedDate", "executionStatus", "captureMode", "validator", "dependencies", "fixtures"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "scope": { "const": "conllu-dependency" },
     "capturedDate": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+    "executionStatus": { "const": "executed" },
+    "captureMode": { "const": "curated-local-execution" },
     "validator": {
       "type": "object",
       "additionalProperties": false,

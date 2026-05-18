@@ -24,7 +24,7 @@
     {
       "role": "comparison",
       "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-      "sha256": "3f366c66258382c90666131f782637d6751f802855a8d9384987198ba04d909d"
+      "sha256": "10803047184917ec428ade88b9464490153604dea7225c5c96d24c0411c9d41f"
     },
     {
       "role": "schema",
@@ -65,7 +65,7 @@
     {
       "kind": "comparison-capture",
       "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-      "sha256": "3f366c66258382c90666131f782637d6751f802855a8d9384987198ba04d909d"
+      "sha256": "10803047184917ec428ade88b9464490153604dea7225c5c96d24c0411c9d41f"
     }
   ],
   "differences": [],
