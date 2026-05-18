@@ -25,6 +25,7 @@ const TASKS = {
     comparisonSchema: "schemas/pos-morph-lemma-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"],
     knownGap: "Only committed spaCy and Stanza captures are comparator-backed; no JavaScript POS/morph/lemma comparator-backed claim is made.",
+    gapDisposition: "executed-captures-and-narrowed-claim",
   },
   "rule-backed-ner": {
     taskId: "nlp-rule-backed-ner",
@@ -47,6 +48,7 @@ const TASKS = {
     comparisonSchema: "schemas/conllu-validator-capture-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"],
     knownGap: "External CoNLL-U evidence is validator-format evidence only; it is not parser-accuracy evidence.",
+    gapDisposition: "executed-captures-and-narrowed-claim",
   },
   "dependency-parser": {
     taskId: "nlp-dependency-parser",
@@ -58,6 +60,7 @@ const TASKS = {
     comparisonSchema: "schemas/dependency-parser-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-dependency-parser/conformance-report.json"],
     knownGap: "Dependency parser behavior remains limited to frozen slices; no JavaScript dependency-parser comparator-backed claim is made.",
+    gapDisposition: "executed-captures-and-narrowed-claim",
   },
   retrieval: {
     taskId: "nlp-retrieval",
@@ -65,8 +68,9 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-retrieval/conformance-report.json"],
-    knownGap: "Retrieval behavior remains limited to a frozen explicit-token corpus; no external comparator-backed retrieval claim is made.",
+    knownGap: "Retrieval behavior remains limited to committed explicit-token corpora, qrels, and deterministic thresholds; no external comparator-backed retrieval claim is made.",
     claimDowngraded: true,
+    gapDisposition: "claim-narrowed",
   },
   "relation-extraction": {
     taskId: "nlp-relation-extraction",
@@ -76,6 +80,7 @@ const TASKS = {
     conformanceReportRefs: ["fixtures/reports/nlp-relation-extraction/conformance-report.json"],
     knownGap: "Relation extraction behavior remains limited to the frozen repository-authored corpus slice; no external comparator-backed relation extraction claim is made.",
     claimDowngraded: true,
+    gapDisposition: "claim-narrowed",
   },
   coreference: {
     taskId: "nlp-coreference",
@@ -85,6 +90,7 @@ const TASKS = {
     conformanceReportRefs: ["fixtures/reports/nlp-coreference/conformance-report.json"],
     knownGap: "Coreference behavior remains limited to the frozen repository-authored corpus slice; no external comparator-backed coreference claim is made.",
     claimDowngraded: true,
+    gapDisposition: "claim-narrowed",
   },
 };
 
@@ -358,6 +364,7 @@ for (const taskName of taskNames) {
     comparisons: comparisonRefs,
     conformanceReportRefs: config.conformanceReportRefs,
     ...(config.knownGap ? { knownGap: config.knownGap } : {}),
+    ...(config.gapDisposition ? { gapDisposition: config.gapDisposition } : {}),
   });
 }
 
