@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/retrieval-evaluation-v1.schema.json",
+  "title": "Retrieval evaluation result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "corpusId",
+    "formula",
+    "k",
+    "relevantGradeThreshold",
+    "tolerance",
+    "summary",
+    "queries"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "taskId": { "const": "nlp-retrieval" },
+    "corpusId": { "type": "string", "minLength": 1 },
+    "formula": {
+      "enum": [
+        "bm25.okapi.k1-1.5.b-0.75",
+        "bm25f.k1-1.2.b-0.75.fielded"
+      ]
+    },
+    "k": { "type": "integer", "minimum": 1 },
+    "relevantGradeThreshold": { "type": "integer", "minimum": 1 },
+    "tolerance": { "type": "number", "minimum": 0 },
+    "summary": { "$ref": "#/definitions/summary" },
+    "queries": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/query" }
+    }
+  },
+  "definitions": {
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precisionAtK", "recallAtK", "mrr", "ndcgAtK"],
+      "properties": {
+        "precisionAtK": { "type": "number" },
+        "recallAtK": { "type": "number" },
+        "mrr": { "type": "number" },
+        "ndcgAtK": { "type": "number" }
+      }
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queryId", "retrieved", "relevant", "precisionAtK", "recallAtK", "reciprocalRank", "ndcgAtK"],
+      "properties": {
+        "queryId": { "type": "string", "minLength": 1 },
+        "retrieved": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relevant": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "precisionAtK": { "type": "number" },
+        "recallAtK": { "type": "number" },
+        "reciprocalRank": { "type": "number" },
+        "ndcgAtK": { "type": "number" }
+      }
+    }
+  }
+}

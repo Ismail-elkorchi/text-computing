@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 7,
+    "pass": 8,
     "fail": 0,
     "notRun": 0
   },
@@ -27,15 +27,17 @@
     {
       "checkId": "schema-recorded",
       "status": "pass",
-      "message": "Expected retrieval output validates against a repository schema.",
+      "message": "Expected retrieval output, qrels, and evaluation output validate against repository schemas.",
       "evidenceRefs": [
-        "schemas/retrieval-expected-v1.schema.json"
+        "schemas/retrieval-expected-v1.schema.json",
+        "schemas/retrieval-qrels-v1.schema.json",
+        "schemas/retrieval-evaluation-v1.schema.json"
       ]
     },
     {
       "checkId": "feature-output-proof",
       "status": "pass",
-      "message": "Retrieval index, query parsing, ranking, snippets, explain output, and JSON persistence pass feature validation.",
+      "message": "Retrieval index, query parsing, ranking, snippets, explain output, qrels evaluation, and JSON persistence pass feature validation.",
       "evidenceRefs": [
         "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test/index.test.ts",
@@ -55,9 +57,25 @@
     {
       "checkId": "relevance-judgment-recorded",
       "status": "pass",
-      "message": "Committed relevance judgments are checked against the fielded retrieval smoke output.",
+      "message": "Committed relevance judgments are checked through standalone qrels and expected evaluation output.",
       "evidenceRefs": [
         "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+        "tools/validate-retrieval-feature.mjs",
+        "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "schemas/retrieval-qrels-v1.schema.json",
+        "schemas/retrieval-evaluation-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "qrels-evaluation-proof",
+      "status": "pass",
+      "message": "The retrieval validator regenerates qrels metrics from current package code and fails on drift from committed evaluation output.",
+      "evidenceRefs": [
+        "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "packages/textcorpus/src/index.ts",
+        "packages/textcorpus/test/index.test.ts",
         "tools/validate-retrieval-feature.mjs"
       ]
     },
@@ -81,6 +99,6 @@
     }
   ],
   "notes": [
-    "This report persists retrieval evidence for committed explicit-token and fielded smoke corpora plus bounded package-level query-control tests only; it does not add streaming index, filesystem-backed index storage, broad relevance-benchmark, or broad multilingual support."
+    "This report persists retrieval evidence for committed explicit-token and fielded smoke corpora, standalone qrels, and bounded package-level query-control tests only; it does not add streaming index, filesystem-backed index storage, broad relevance-benchmark, or broad multilingual support."
   ]
 }

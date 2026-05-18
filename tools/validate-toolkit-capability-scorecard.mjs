@@ -94,10 +94,19 @@ const TASK_EVIDENCE_REQUIREMENTS = {
   "nlp-retrieval": {
     implementationOwners: ["@ismail-elkorchi/textcorpus"],
     implementationRefs: ["packages/textcorpus/src/index.ts"],
-    fixtureRefs: ["fixtures/retrieval/slices.json", "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"],
+    fixtureRefs: [
+      "fixtures/retrieval/slices.json",
+      "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+      "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+      "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+    ],
     negativeControlRefs: ["fixtures/retrieval/expected/retrieval-smoke.json", "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"],
     comparatorRefs: [],
-    corpusRefs: ["fixtures/retrieval/expected/retrieval-smoke.json", "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"],
+    corpusRefs: [
+      "fixtures/retrieval/expected/retrieval-smoke.json",
+      "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+      "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+    ],
   },
   "nlp-conllu-dependency-roundtrip": {
     implementationOwners: ["@ismail-elkorchi/textdoc"],

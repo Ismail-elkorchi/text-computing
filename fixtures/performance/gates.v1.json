@@ -30,7 +30,13 @@
       "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
       "scalePolicy": "Large-corpus claims require document-count, token-count, query-count, and index-size thresholds.",
       "regressionPolicy": "Future retrieval measurements must pin corpus hash, query hash, formula, and ordering policy.",
-      "evidenceRefs": ["fixtures/retrieval/slices.json", "tools/validate-retrieval-feature.mjs"],
+      "evidenceRefs": [
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "packages/textcorpus/test/index.test.ts",
+        "tools/validate-retrieval-feature.mjs"
+      ],
       "limitations": ["Current retrieval proof uses small committed corpora and bounded package-level scale signals; it does not persist stable wall-clock or memory measurements."]
     },
     {

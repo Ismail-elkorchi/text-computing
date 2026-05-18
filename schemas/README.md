@@ -22,6 +22,8 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`corpus-tfidf-bm25-tool-versions-v1.schema.json`](corpus-tfidf-bm25-tool-versions-v1.schema.json) — frozen formula/comparator schema for issue `#14`.
 - [`corpus-tfidf-bm25-comparison-v1.schema.json`](corpus-tfidf-bm25-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#14`.
 - [`retrieval-expected-v1.schema.json`](retrieval-expected-v1.schema.json) — expected-output schema for frozen-scope retrieval behavior.
+- [`retrieval-qrels-v1.schema.json`](retrieval-qrels-v1.schema.json) — relevance-judgment schema for frozen-scope retrieval behavior.
+- [`retrieval-evaluation-v1.schema.json`](retrieval-evaluation-v1.schema.json) — expected evaluation-metric schema for frozen-scope retrieval behavior.
 - [`conllu-dependency-slices-v1.schema.json`](conllu-dependency-slices-v1.schema.json) — CoNLL-U / UD readiness fixture schema.
 - [`conllu-dependency-tool-versions-v1.schema.json`](conllu-dependency-tool-versions-v1.schema.json) — public source, validator, and future comparator role schema for CoNLL-U / UD readiness.
 - [`conllu-dependency-roundtrip-expected-v1.schema.json`](conllu-dependency-roundtrip-expected-v1.schema.json) — expected-output schema for fixture-scope CoNLL-U round-trip behavior.

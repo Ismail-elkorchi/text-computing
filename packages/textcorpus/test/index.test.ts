@@ -4,10 +4,13 @@ import {
   buildTextCorpusRetrievalIndex,
   computeTextCorpusScoring,
   createTextCorpusCollection,
+  evaluateTextCorpusRetrieval,
   isTextCorpusCollectionV1,
   isTextCorpusFingerprintIndex,
   isTextCorpusParsedQuery,
+  isTextCorpusRetrievalEvaluationResultV1,
   isTextCorpusRetrievalIndexV1,
+  isTextCorpusRetrievalQrelsV1,
   isTextCorpusRetrievalResultV1,
   isTextCorpusScoringResultV1,
   packageName,
@@ -18,15 +21,20 @@ import {
   sliceTextCorpusByMetadata,
   textCorpusBm25fFormula,
   textCorpusCollectionSchemaVersion,
+  textCorpusRetrievalEvaluationSchemaVersion,
+  textCorpusRetrievalQrelsSchemaVersion,
   textCorpusRetrievalSchemaVersion,
   textCorpusScoringSchemaVersion,
   type TextCorpusEntry,
+  type TextCorpusRetrievalQrelsV1,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textcorpus";
 const expectedSchemaVersion: typeof textCorpusCollectionSchemaVersion = 1;
 const expectedScoringSchemaVersion: typeof textCorpusScoringSchemaVersion = 1;
 const expectedRetrievalSchemaVersion: typeof textCorpusRetrievalSchemaVersion = 1;
+const expectedRetrievalQrelsSchemaVersion: typeof textCorpusRetrievalQrelsSchemaVersion = 1;
+const expectedRetrievalEvaluationSchemaVersion: typeof textCorpusRetrievalEvaluationSchemaVersion = 1;
 
 function createDocument(
   documentId: string,
@@ -583,6 +591,108 @@ if (!isTextCorpusRetrievalResultV1(bm25fResult)) {
   throw new Error("fielded retrieval result should satisfy the runtime contract");
 }
 
+const fieldedQrels: TextCorpusRetrievalQrelsV1 = {
+  schemaVersion: textCorpusRetrievalQrelsSchemaVersion,
+  taskId: "nlp-retrieval",
+  corpusId: "corpus-retrieval-fielded-smoke",
+  judgments: [
+    {
+      queryId: "fielded-title-alpha-beta",
+      ratings: [
+        { docId: "doc-a", grade: 2 },
+        { docId: "doc-b", grade: 0 },
+      ],
+    },
+    {
+      queryId: "fielded-delta-note",
+      ratings: [
+        { docId: "doc-c", grade: 2 },
+        { docId: "doc-a", grade: 0 },
+      ],
+    },
+    {
+      queryId: "negative-field-control",
+      ratings: [
+        { docId: "doc-a", grade: 0 },
+        { docId: "doc-b", grade: 0 },
+      ],
+    },
+  ],
+};
+
+if (!isTextCorpusRetrievalQrelsV1(fieldedQrels)) {
+  throw new Error("retrieval qrels should satisfy the runtime contract");
+}
+
+const fieldedEvaluation = evaluateTextCorpusRetrieval(bm25fResult, fieldedQrels, {
+  k: 3,
+  relevantGradeThreshold: 1,
+  tolerance: 1e-12,
+});
+
+if (fieldedEvaluation.schemaVersion !== textCorpusRetrievalEvaluationSchemaVersion) {
+  throw new Error("retrieval evaluation should use the evaluation schema version");
+}
+
+if (!isTextCorpusRetrievalEvaluationResultV1(fieldedEvaluation)) {
+  throw new Error("retrieval evaluation should satisfy the runtime contract");
+}
+
+expectNear(fieldedEvaluation.summary.precisionAtK, 2 / 9, "fielded qrels macro precision@3");
+expectNear(fieldedEvaluation.summary.recallAtK, 2 / 3, "fielded qrels macro recall@3");
+expectNear(fieldedEvaluation.summary.mrr, 2 / 3, "fielded qrels macro MRR");
+expectNear(fieldedEvaluation.summary.ndcgAtK, 2 / 3, "fielded qrels macro nDCG@3");
+
+const negativeEvaluation = fieldedEvaluation.queries.find((entry) => entry.queryId === "negative-field-control");
+if (
+  !negativeEvaluation ||
+  negativeEvaluation.retrieved.length !== 0 ||
+  negativeEvaluation.relevant.length !== 0 ||
+  negativeEvaluation.ndcgAtK !== 0
+) {
+  throw new Error("retrieval qrels evaluation should preserve zero-relevance negative controls");
+}
+
+let duplicateQrelsDocRejected = false;
+try {
+  evaluateTextCorpusRetrieval(bm25fResult, {
+    ...fieldedQrels,
+    judgments: [
+      {
+        queryId: "duplicate-doc",
+        ratings: [
+          { docId: "doc-a", grade: 1 },
+          { docId: "doc-a", grade: 0 },
+        ],
+      },
+    ],
+  });
+} catch (error) {
+  duplicateQrelsDocRejected =
+    error instanceof Error && error.message === "duplicate textcorpus qrels doc id: duplicate-doc/doc-a";
+}
+
+if (!duplicateQrelsDocRejected) {
+  throw new Error("retrieval qrels evaluation should reject duplicate doc ids per query");
+}
+
+let qrelsCorpusMismatchRejected = false;
+try {
+  evaluateTextCorpusRetrieval(bm25fResult, {
+    ...fieldedQrels,
+    corpusId: "corpus:other",
+  });
+} catch (error) {
+  qrelsCorpusMismatchRejected =
+    error instanceof Error &&
+    error.message ===
+      "textcorpus retrieval qrels corpus mismatch: corpus:other != corpus-retrieval-fielded-smoke";
+}
+
+if (!qrelsCorpusMismatchRejected) {
+  throw new Error("retrieval qrels evaluation should reject corpus mismatches");
+}
+
 const fieldedTitleAlphaHits =
   bm25fResult.results.find((entry) => entry.query.id === "fielded-title-alpha-beta")?.hits ?? [];
 if (fieldedTitleAlphaHits.map((hit) => hit.docId).join(",") !== "doc-a") {
@@ -691,3 +801,5 @@ void expectedPackageName;
 void expectedSchemaVersion;
 void expectedScoringSchemaVersion;
 void expectedRetrievalSchemaVersion;
+void expectedRetrievalQrelsSchemaVersion;
+void expectedRetrievalEvaluationSchemaVersion;

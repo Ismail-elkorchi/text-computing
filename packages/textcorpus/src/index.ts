@@ -11,6 +11,8 @@ export const packageName = "@ismail-elkorchi/textcorpus" as const;
 export const textCorpusCollectionSchemaVersion = 1 as const;
 export const textCorpusScoringSchemaVersion = 1 as const;
 export const textCorpusRetrievalSchemaVersion = 1 as const;
+export const textCorpusRetrievalQrelsSchemaVersion = 1 as const;
+export const textCorpusRetrievalEvaluationSchemaVersion = 1 as const;
 export const textCorpusTokenSource = "explicit-textdoc-token-layer" as const;
 export const textCorpusTfRawCountFormula = "tf.raw-count" as const;
 export const textCorpusDfDocumentCountFormula = "df.document-count" as const;
@@ -22,6 +24,9 @@ export type PackageName = typeof packageName;
 export type TextCorpusCollectionSchemaVersion = typeof textCorpusCollectionSchemaVersion;
 export type TextCorpusScoringSchemaVersion = typeof textCorpusScoringSchemaVersion;
 export type TextCorpusRetrievalSchemaVersion = typeof textCorpusRetrievalSchemaVersion;
+export type TextCorpusRetrievalQrelsSchemaVersion = typeof textCorpusRetrievalQrelsSchemaVersion;
+export type TextCorpusRetrievalEvaluationSchemaVersion =
+  typeof textCorpusRetrievalEvaluationSchemaVersion;
 export type TextCorpusTokenSource = typeof textCorpusTokenSource;
 export type TextCorpusFormulaId =
   | typeof textCorpusTfRawCountFormula
@@ -256,6 +261,58 @@ export interface TextCorpusRetrievalResultV1 {
   readonly results: readonly TextCorpusRetrievalQueryResult[];
 }
 
+export interface TextCorpusRelevanceRating {
+  readonly docId: string;
+  readonly grade: number;
+}
+
+export interface TextCorpusRelevanceJudgment {
+  readonly queryId: string;
+  readonly ratings: readonly TextCorpusRelevanceRating[];
+}
+
+export interface TextCorpusRetrievalQrelsV1 {
+  readonly schemaVersion: TextCorpusRetrievalQrelsSchemaVersion;
+  readonly taskId: "nlp-retrieval";
+  readonly corpusId: string;
+  readonly judgments: readonly TextCorpusRelevanceJudgment[];
+}
+
+export interface TextCorpusRetrievalEvaluationOptions {
+  readonly k?: number;
+  readonly relevantGradeThreshold?: number;
+  readonly tolerance?: number;
+}
+
+export interface TextCorpusRetrievalQueryEvaluation {
+  readonly queryId: string;
+  readonly retrieved: readonly string[];
+  readonly relevant: readonly string[];
+  readonly precisionAtK: number;
+  readonly recallAtK: number;
+  readonly reciprocalRank: number;
+  readonly ndcgAtK: number;
+}
+
+export interface TextCorpusRetrievalEvaluationSummary {
+  readonly precisionAtK: number;
+  readonly recallAtK: number;
+  readonly mrr: number;
+  readonly ndcgAtK: number;
+}
+
+export interface TextCorpusRetrievalEvaluationResultV1 {
+  readonly schemaVersion: TextCorpusRetrievalEvaluationSchemaVersion;
+  readonly taskId: "nlp-retrieval";
+  readonly corpusId: string;
+  readonly formula: TextCorpusRetrievalFormulaId;
+  readonly k: number;
+  readonly relevantGradeThreshold: number;
+  readonly tolerance: number;
+  readonly summary: TextCorpusRetrievalEvaluationSummary;
+  readonly queries: readonly TextCorpusRetrievalQueryEvaluation[];
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -465,6 +522,26 @@ function isPostingArray(value: unknown): value is readonly TextCorpusPosting[] {
 
 function isRetrievalFormula(value: unknown): value is TextCorpusRetrievalFormulaId {
   return value === textCorpusBm25OkapiFormula || value === textCorpusBm25fFormula;
+}
+
+function isRelevanceRating(value: unknown): value is TextCorpusRelevanceRating {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.docId) &&
+    typeof value.grade === "number" &&
+    Number.isInteger(value.grade) &&
+    value.grade >= 0
+  );
+}
+
+function isRelevanceJudgment(value: unknown): value is TextCorpusRelevanceJudgment {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.queryId) &&
+    Array.isArray(value.ratings) &&
+    value.ratings.length > 0 &&
+    value.ratings.every((rating) => isRelevanceRating(rating))
+  );
 }
 
 function isRetrievalDocumentField(value: unknown): value is TextCorpusRetrievalDocumentField {
@@ -726,6 +803,76 @@ export function isTextCorpusRetrievalResultV1(value: unknown): value is TextCorp
             Array.isArray(hit.explain),
         ),
     )
+  );
+}
+
+export function isTextCorpusRetrievalQrelsV1(value: unknown): value is TextCorpusRetrievalQrelsV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalQrelsSchemaVersion &&
+    value.taskId === "nlp-retrieval" &&
+    isNonEmptyString(value.corpusId) &&
+    Array.isArray(value.judgments) &&
+    value.judgments.every((judgment) => isRelevanceJudgment(judgment))
+  );
+}
+
+function isRetrievalQueryEvaluation(value: unknown): value is TextCorpusRetrievalQueryEvaluation {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.queryId) &&
+    Array.isArray(value.retrieved) &&
+    value.retrieved.every((docId) => isNonEmptyString(docId)) &&
+    Array.isArray(value.relevant) &&
+    value.relevant.every((docId) => isNonEmptyString(docId)) &&
+    typeof value.precisionAtK === "number" &&
+    Number.isFinite(value.precisionAtK) &&
+    typeof value.recallAtK === "number" &&
+    Number.isFinite(value.recallAtK) &&
+    typeof value.reciprocalRank === "number" &&
+    Number.isFinite(value.reciprocalRank) &&
+    typeof value.ndcgAtK === "number" &&
+    Number.isFinite(value.ndcgAtK)
+  );
+}
+
+function isRetrievalEvaluationSummary(
+  value: unknown,
+): value is TextCorpusRetrievalEvaluationSummary {
+  return (
+    isRecord(value) &&
+    typeof value.precisionAtK === "number" &&
+    Number.isFinite(value.precisionAtK) &&
+    typeof value.recallAtK === "number" &&
+    Number.isFinite(value.recallAtK) &&
+    typeof value.mrr === "number" &&
+    Number.isFinite(value.mrr) &&
+    typeof value.ndcgAtK === "number" &&
+    Number.isFinite(value.ndcgAtK)
+  );
+}
+
+export function isTextCorpusRetrievalEvaluationResultV1(
+  value: unknown,
+): value is TextCorpusRetrievalEvaluationResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalEvaluationSchemaVersion &&
+    value.taskId === "nlp-retrieval" &&
+    isNonEmptyString(value.corpusId) &&
+    isRetrievalFormula(value.formula) &&
+    typeof value.k === "number" &&
+    Number.isInteger(value.k) &&
+    value.k >= 1 &&
+    typeof value.relevantGradeThreshold === "number" &&
+    Number.isInteger(value.relevantGradeThreshold) &&
+    value.relevantGradeThreshold >= 1 &&
+    typeof value.tolerance === "number" &&
+    Number.isFinite(value.tolerance) &&
+    value.tolerance >= 0 &&
+    isRetrievalEvaluationSummary(value.summary) &&
+    Array.isArray(value.queries) &&
+    value.queries.every((query) => isRetrievalQueryEvaluation(query))
   );
 }
 
@@ -1201,6 +1348,75 @@ function uniqueQueryTokens(tokens: readonly string[]): readonly string[] {
   return [...new Set(tokens)].sort(compareTerms);
 }
 
+function validateRetrievalQrels(qrels: TextCorpusRetrievalQrelsV1): void {
+  if (!isTextCorpusRetrievalQrelsV1(qrels)) {
+    throw new TypeError("textcorpus retrieval qrels must satisfy TextCorpusRetrievalQrelsV1");
+  }
+  const seenQueries = new Set<string>();
+  for (const judgment of qrels.judgments) {
+    if (seenQueries.has(judgment.queryId)) {
+      throw new Error(`duplicate textcorpus qrels query id: ${judgment.queryId}`);
+    }
+    seenQueries.add(judgment.queryId);
+    const seenDocs = new Set<string>();
+    for (const rating of judgment.ratings) {
+      if (seenDocs.has(rating.docId)) {
+        throw new Error(`duplicate textcorpus qrels doc id: ${judgment.queryId}/${rating.docId}`);
+      }
+      seenDocs.add(rating.docId);
+    }
+  }
+}
+
+function average(values: readonly number[]): number {
+  if (values.length === 0) return 0;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function discountedGainAtK(grades: readonly number[], k: number): number {
+  return grades.slice(0, k).reduce((sum, grade, index) => {
+    const rank = index + 1;
+    const gain = 2 ** grade - 1;
+    return sum + gain / Math.log2(rank + 1);
+  }, 0);
+}
+
+function evaluateQueryRetrieval(
+  result: TextCorpusRetrievalResultV1,
+  judgment: TextCorpusRelevanceJudgment,
+  k: number,
+  relevantGradeThreshold: number,
+): TextCorpusRetrievalQueryEvaluation {
+  const resultForQuery = result.results.find((entry) => entry.query.id === judgment.queryId);
+  const retrieved = (resultForQuery?.hits ?? []).slice(0, k).map((hit) => hit.docId);
+  const gradeByDoc = new Map(judgment.ratings.map((rating) => [rating.docId, rating.grade]));
+  const relevant = judgment.ratings
+    .filter((rating) => rating.grade >= relevantGradeThreshold)
+    .map((rating) => rating.docId)
+    .sort((left, right) => left.localeCompare(right));
+  const relevantSet = new Set(relevant);
+  const relevantRetrievedCount = retrieved.filter((docId) => relevantSet.has(docId)).length;
+  const precisionAtK = relevantRetrievedCount / k;
+  const recallAtK = relevant.length === 0 ? 0 : relevantRetrievedCount / relevant.length;
+  const firstRelevantIndex = retrieved.findIndex((docId) => relevantSet.has(docId));
+  const reciprocalRank = firstRelevantIndex === -1 ? 0 : 1 / (firstRelevantIndex + 1);
+  const actualGrades = retrieved.map((docId) => gradeByDoc.get(docId) ?? 0);
+  const idealGrades = judgment.ratings
+    .map((rating) => rating.grade)
+    .sort((left, right) => right - left);
+  const idealDcg = discountedGainAtK(idealGrades, k);
+  const ndcgAtK = idealDcg === 0 ? 0 : discountedGainAtK(actualGrades, k) / idealDcg;
+  return {
+    queryId: judgment.queryId,
+    retrieved,
+    relevant,
+    precisionAtK,
+    recallAtK,
+    reciprocalRank,
+    ndcgAtK,
+  };
+}
+
 function scoringTokens(query: TextCorpusParsedQuery): readonly string[] {
   return query.clauses
     .filter((clause) => clause.operator !== "must-not" && clause.field === undefined)
@@ -1480,6 +1696,45 @@ export function searchTextCorpusRetrievalIndex(
     tokenSource: textCorpusTokenSource,
     formula: index.formula,
     results,
+  };
+}
+
+export function evaluateTextCorpusRetrieval(
+  result: TextCorpusRetrievalResultV1,
+  qrels: TextCorpusRetrievalQrelsV1,
+  options: TextCorpusRetrievalEvaluationOptions = {},
+): TextCorpusRetrievalEvaluationResultV1 {
+  if (!isTextCorpusRetrievalResultV1(result)) {
+    throw new TypeError("textcorpus retrieval result must satisfy TextCorpusRetrievalResultV1");
+  }
+  validateRetrievalQrels(qrels);
+  if (result.corpusId !== qrels.corpusId) {
+    throw new Error(`textcorpus retrieval qrels corpus mismatch: ${qrels.corpusId} != ${result.corpusId}`);
+  }
+  const k = Math.max(1, Math.floor(options.k ?? 10));
+  const relevantGradeThreshold = Math.max(1, Math.floor(options.relevantGradeThreshold ?? 1));
+  const tolerance = options.tolerance ?? 1e-12;
+  if (!Number.isFinite(tolerance) || tolerance < 0) {
+    throw new TypeError("textcorpus retrieval evaluation tolerance must be a non-negative finite number");
+  }
+  const queries = [...qrels.judgments]
+    .sort((left, right) => left.queryId.localeCompare(right.queryId))
+    .map((judgment) => evaluateQueryRetrieval(result, judgment, k, relevantGradeThreshold));
+  return {
+    schemaVersion: textCorpusRetrievalEvaluationSchemaVersion,
+    taskId: "nlp-retrieval",
+    corpusId: result.corpusId,
+    formula: result.formula,
+    k,
+    relevantGradeThreshold,
+    tolerance,
+    summary: {
+      precisionAtK: average(queries.map((query) => query.precisionAtK)),
+      recallAtK: average(queries.map((query) => query.recallAtK)),
+      mrr: average(queries.map((query) => query.reciprocalRank)),
+      ndcgAtK: average(queries.map((query) => query.ndcgAtK)),
+    },
+    queries,
   };
 }
 
