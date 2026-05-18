@@ -23,6 +23,16 @@ The gate list is the required checklist, not a release approval by itself.
 - `claim-hygiene`
 - `downstream-api-stability`
 
+## Dependency release order
+
+A package can advance only after the package APIs it depends on have compatible release-gate evidence.
+
+| Stage | Packages | Evidence | Policy |
+| --- | --- | --- | --- |
+| `0` | `@ismail-elkorchi/textfacts` | packages/textfacts/package.json<br>tools/check-public-claims.mjs | Existing public beta package anchor; future non-textfacts package releases depend on declared package API evidence rather than schedule order. |
+| `1` | `@ismail-elkorchi/textconformance`<br>`@ismail-elkorchi/textdoc`<br>`@ismail-elkorchi/textlab`<br>`@ismail-elkorchi/textpack`<br>`@ismail-elkorchi/textprotocol` | tools/validate-package-readiness.mjs<br>tools/check-workspace-pack-dry-run.mjs<br>fixtures/package-release/gates.v1.json | Packages without workspace package dependencies may advance only after package metadata, documentation, dry-run packaging, claim hygiene, and package-specific blockers pass. |
+| `2` | `@ismail-elkorchi/textcorpus`<br>`@ismail-elkorchi/textpipeline`<br>`@ismail-elkorchi/textrules` | fixtures/package-release/downstream-api-stability.v1.json<br>tools/check-downstream-api-stability.mjs<br>tools/check-workspace-pack-dry-run.mjs<br>fixtures/package-release/gates.v1.json | Packages with workspace package dependencies may advance only after their dependency packages have earlier-stage release evidence and downstream API smoke evidence remains current. |
+
 ## Package gates
 
 | Package | Track | Support | Readiness | Downstream API | Blockers |
@@ -42,6 +52,7 @@ The gate list is the required checklist, not a release approval by itself.
 - Private-unreleased packages are not adoption surfaces until a later release PR changes their releaseTrack.
 - Claim hygiene is a release gate because package publication can amplify unsupported claims.
 - Non-textfacts packages require downstream API stability evidence before their release track can change.
+- Release ordering is dependency-based: a package cannot advance past private-unreleased while any workspace package dependency is in a later or missing release stage.
 
 ## Current boundary
 

@@ -4,7 +4,7 @@
   "title": "Package release gates v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "scope", "requiredGates", "packages"],
+  "required": ["schemaVersion", "scope", "requiredGates", "dependencyReleaseOrder", "packages"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "scope": { "const": "package-release-gates" },
@@ -24,6 +24,11 @@
         ]
       }
     },
+    "dependencyReleaseOrder": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/dependencyReleaseStage" }
+    },
     "packages": {
       "type": "array",
       "minItems": 1,
@@ -35,6 +40,42 @@
     }
   },
   "definitions": {
+    "repoRef": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "anyOf": [
+          { "pattern": "^/" },
+          { "pattern": "\\.\\." },
+          { "pattern": "\\\\" },
+          { "pattern": "^https?://" }
+        ]
+      }
+    },
+    "dependencyReleaseStage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "packages", "policy", "requiredEvidenceRefs"],
+      "properties": {
+        "stage": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "packages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" }
+        },
+        "policy": { "type": "string", "minLength": 1 },
+        "requiredEvidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/repoRef" }
+        }
+      }
+    },
     "packageGate": {
       "type": "object",
       "additionalProperties": false,

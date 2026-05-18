@@ -208,6 +208,20 @@ function renderPackageReleaseGates([gates]) {
     "",
     mdList(gates.requiredGates.map((gate) => `\`${gate}\``)),
     "",
+    "## Dependency release order",
+    "",
+    "A package can advance only after the package APIs it depends on have compatible release-gate evidence.",
+    "",
+    table(
+      ["Stage", "Packages", "Evidence", "Policy"],
+      gates.dependencyReleaseOrder.map((stage) => [
+        `\`${stage.stage}\``,
+        list(stage.packages.map((packageName) => `\`${packageName}\``)),
+        list(stage.requiredEvidenceRefs),
+        stage.policy,
+      ]),
+    ),
+    "",
     "## Package gates",
     "",
     table(
