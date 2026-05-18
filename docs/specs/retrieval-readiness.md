@@ -10,7 +10,7 @@ This document keeps those surfaces tied to explicit fixtures before broader corp
 - Task id: `nlp-retrieval`
 - Status: `slice-proven`
 - Owning package: `textcorpus`
-- Current proof: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, plus fielded BM25F retrieval over the committed fielded smoke corpus
+- Current proof: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, plus fielded BM25F retrieval, standalone qrels, and expected evaluation metrics over the committed fielded smoke corpus
 - Current non-proof: no streaming index, filesystem-backed index store, broad relevance benchmark, or multilingual retrieval benchmark
 
 ## Input slices
@@ -34,7 +34,8 @@ and records:
 - deterministic snippets;
 - per-term explain values;
 - deterministic index JSON round-trip behavior;
-- committed relevance judgments for fielded smoke queries;
+- committed relevance judgments and standalone qrels for fielded smoke queries;
+- precision@k, recall@k, MRR, and nDCG@k evaluation output for the committed qrels;
 - bounded large-corpus ordering behavior;
 - missing-query controls.
 

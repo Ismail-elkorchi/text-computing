@@ -3,7 +3,9 @@ import { readFile } from "node:fs/promises";
 import {
   buildTextCorpusRetrievalIndex,
   createTextCorpusCollection,
+  evaluateTextCorpusRetrieval,
   isTextCorpusRetrievalIndexV1,
+  isTextCorpusRetrievalQrelsV1,
   isTextCorpusRetrievalResultV1,
   parseTextCorpusQuery,
   searchTextCorpusRetrievalIndex,
@@ -100,7 +102,11 @@ function comparableResult(result) {
 }
 
 const expectedSchema = await readJson("schemas/retrieval-expected-v1.schema.json");
+const qrelsSchema = await readJson("schemas/retrieval-qrels-v1.schema.json");
+const evaluationSchema = await readJson("schemas/retrieval-evaluation-v1.schema.json");
 const validateExpected = ajv.compile(expectedSchema);
+const validateQrels = ajv.compile(qrelsSchema);
+const validateEvaluation = ajv.compile(evaluationSchema);
 const retrievalSlices = await readJson("fixtures/retrieval/slices.json");
 const corpusSlices = await readJson("fixtures/corpus-tfidf-bm25/slices.json");
 const expectedPaths = retrievalSlices.expectedPaths ?? [retrievalSlices.expectedPath];
@@ -110,6 +116,7 @@ expect(
 );
 const allCorpora = [...corpusSlices.corpora, ...(retrievalSlices.fieldedCorpora ?? [])];
 let expectedQueryCount = 0;
+let evaluatedQueryCount = 0;
 
 function buildOptions(expected) {
   if (expected.formula === "bm25f.k1-1.2.b-0.75.fielded") {
@@ -153,6 +160,48 @@ function assertExplanation(actualTerm, expectedTerm, tolerance, label) {
       expectedContribution.normalizedTf,
       tolerance,
       `${label} ${expectedContribution.field} normalized tf`,
+    );
+  }
+}
+
+function assertMetricObject(actual, expected, tolerance, label) {
+  for (const key of ["precisionAtK", "recallAtK", "mrr", "ndcgAtK"]) {
+    if (expected[key] !== undefined) {
+      assertNear(actual[key], expected[key], tolerance, `${label} ${key}`);
+    }
+  }
+}
+
+function assertEvaluation(actual, expected, tolerance, label) {
+  expect(actual.schemaVersion === expected.schemaVersion, `${label} evaluation schema version mismatch.`);
+  expect(actual.taskId === expected.taskId, `${label} evaluation task id mismatch.`);
+  expect(actual.corpusId === expected.corpusId, `${label} evaluation corpus id mismatch.`);
+  expect(actual.formula === expected.formula, `${label} evaluation formula mismatch.`);
+  expect(actual.k === expected.k, `${label} evaluation k mismatch.`);
+  expect(
+    actual.relevantGradeThreshold === expected.relevantGradeThreshold,
+    `${label} evaluation relevant grade threshold mismatch.`,
+  );
+  assertNear(actual.tolerance, expected.tolerance, tolerance, `${label} evaluation tolerance`);
+  assertMetricObject(actual.summary, expected.summary, tolerance, `${label} summary`);
+  expect(actual.queries.length === expected.queries.length, `${label} evaluation query count mismatch.`);
+  for (const expectedQuery of expected.queries) {
+    const actualQuery = actual.queries.find((entry) => entry.queryId === expectedQuery.queryId);
+    expect(actualQuery !== undefined, `${label} missing evaluation query ${expectedQuery.queryId}`);
+    expect(
+      JSON.stringify(actualQuery.retrieved) === JSON.stringify(expectedQuery.retrieved),
+      `${label} ${expectedQuery.queryId} retrieved docs mismatch.`,
+    );
+    expect(
+      JSON.stringify(actualQuery.relevant) === JSON.stringify(expectedQuery.relevant),
+      `${label} ${expectedQuery.queryId} relevant docs mismatch.`,
+    );
+    assertMetricObject(actualQuery, expectedQuery, tolerance, `${label} ${expectedQuery.queryId}`);
+    assertNear(
+      actualQuery.reciprocalRank,
+      expectedQuery.reciprocalRank,
+      tolerance,
+      `${label} ${expectedQuery.queryId} reciprocalRank`,
     );
   }
 }
@@ -219,6 +268,29 @@ for (const expectedPath of expectedPaths) {
     );
   }
 
+  if (expectedPath === retrievalSlices.qrelsExpectedPath) {
+    const qrels = await readJson(retrievalSlices.qrelsPath);
+    const expectedEvaluation = await readJson(retrievalSlices.evaluationPath);
+    expect(validateQrels(qrels), `${retrievalSlices.qrelsPath} failed retrieval qrels schema`, validateQrels.errors);
+    expect(isTextCorpusRetrievalQrelsV1(qrels), `${retrievalSlices.qrelsPath} failed retrieval qrels runtime guard.`);
+    expect(
+      JSON.stringify(qrels.judgments) === JSON.stringify(expected.relevanceJudgments),
+      `${retrievalSlices.qrelsPath} must match relevance judgments embedded in ${expectedPath}.`,
+    );
+    expect(
+      validateEvaluation(expectedEvaluation),
+      `${retrievalSlices.evaluationPath} failed retrieval evaluation schema`,
+      validateEvaluation.errors,
+    );
+    const evaluation = evaluateTextCorpusRetrieval(result, qrels, {
+      k: expectedEvaluation.k,
+      relevantGradeThreshold: expectedEvaluation.relevantGradeThreshold,
+      tolerance: expectedEvaluation.tolerance,
+    });
+    assertEvaluation(evaluation, expectedEvaluation, expectedEvaluation.tolerance, retrievalSlices.evaluationPath);
+    evaluatedQueryCount += evaluation.queries.length;
+  }
+
   const repeated = searchTextCorpusRetrievalIndex(index, queries, { topK: 3, snippetWindow: 1 });
   expect(JSON.stringify(result) === JSON.stringify(repeated), `${expectedPath} retrieval output must be deterministic.`);
 }
@@ -227,4 +299,6 @@ const supportStatus = await readJson("docs/specs/support-status.v1.json");
 const task = supportStatus.tasks.find((entry) => entry.id === "nlp-retrieval");
 expect(task?.status === "slice-proven", "Support status must mark nlp-retrieval as slice-proven.");
 
-console.log(`Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount}).`);
+console.log(
+  `Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount} evaluatedQueries=${evaluatedQueryCount}).`,
+);

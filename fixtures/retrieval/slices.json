@@ -8,6 +8,9 @@
     "fixtures/retrieval/expected/retrieval-smoke.json",
     "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
   ],
+  "qrelsPath": "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+  "qrelsExpectedPath": "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+  "evaluationPath": "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
   "fieldedCorpora": [
     {
       "id": "corpus-retrieval-fielded-smoke",
@@ -64,6 +67,7 @@
     "explain",
     "index-json-round-trip",
     "relevance-judgments",
+    "qrels-evaluation",
     "bounded-large-corpus-test",
     "missing-query-control",
     "stable-ordering"

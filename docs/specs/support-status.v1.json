@@ -86,7 +86,7 @@
     {
       "name": "@ismail-elkorchi/textcorpus",
       "status": "slice-proven",
-      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval with query operators, metadata filters, and index JSON round-trips are implemented.",
+      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval with query operators, metadata filters, qrels evaluation, and index JSON round-trips are implemented.",
       "evidence": [
         "explicit-token corpus tests",
         "fingerprint index tests",
@@ -95,10 +95,11 @@
         "retrieval query-operator tests",
         "retrieval index JSON round-trip tests",
         "bounded large-corpus ordering tests",
-        "dist export readiness metadata"
+        "dist export readiness metadata",
+        "retrieval qrels evaluation tests"
       ],
       "limitations": [
-        "No streaming retrieval, durable index storage, relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set",
+        "No streaming retrieval, durable index storage, broad relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set",
         "Package remains private until broader release gates pass"
       ]
     },
@@ -247,7 +248,7 @@
     {
       "id": "nlp-retrieval",
       "status": "slice-proven",
-      "scope": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, relevance judgments, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
+      "scope": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, qrels evaluation, relevance judgments, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
       "evidence": [
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",
@@ -257,7 +258,11 @@
         "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test/index.test.ts",
         "tools/validate-retrieval-feature.mjs",
-        "fixtures/reports/nlp-retrieval/conformance-report.json"
+        "fixtures/reports/nlp-retrieval/conformance-report.json",
+        "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "schemas/retrieval-qrels-v1.schema.json",
+        "schemas/retrieval-evaluation-v1.schema.json"
       ],
       "limitations": [
         "No streaming retrieval, filesystem-backed index store, broad relevance benchmark, or broad multilingual retrieval fixture set is implemented",

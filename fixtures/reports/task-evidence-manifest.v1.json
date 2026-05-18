@@ -201,7 +201,7 @@
     {
       "taskId": "nlp-retrieval",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for retrieval over committed explicit-token and fielded smoke corpora plus bounded package-level query-control tests only.",
+      "claimBoundary": "Slice-proven for retrieval over committed explicit-token and fielded smoke corpora, standalone qrels, and bounded package-level query-control tests only.",
       "reportPath": "fixtures/reports/nlp-retrieval/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/retrieval-readiness.md",
@@ -210,7 +210,11 @@
         "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
         "schemas/retrieval-expected-v1.schema.json",
         "packages/textcorpus/src/index.ts",
-        "tools/validate-retrieval-feature.mjs"
+        "tools/validate-retrieval-feature.mjs",
+        "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "schemas/retrieval-qrels-v1.schema.json",
+        "schemas/retrieval-evaluation-v1.schema.json"
       ],
       "comparatorRefs": [],
       "knownGaps": [
