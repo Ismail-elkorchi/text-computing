@@ -1,34 +1,41 @@
+<!-- This file is generated. Do not edit it by hand. -->
+<!-- Source: fixtures/performance/gates.v1.json -->
+
 # Performance gates
 
-- **Status:** Draft 0.1
-- **Scope:** Public performance and scale gate requirements
-- **Data:** `fixtures/performance/gates.v1.json`
-- **Schema:** `schemas/performance-gates-v1.schema.json`
+This document is generated from `fixtures/performance/gates.v1.json`.
 
 ## Why this document exists
 
-Small fixture correctness can be mistaken for operational scale. This document records which
-throughput, memory, streaming, large-corpus, and regression-threshold gates must exist before broader
-operational claims are made.
+Small fixture correctness can be mistaken for operational scale. This document keeps operational claims tied to measured gates.
 
 ## Gate dimensions
 
-- `throughput` — command-level processing rate must be measured against a named fixture class.
-- `memory` — peak or bounded memory behavior must be measured or justified.
-- `streaming` — streaming claims require a streaming fixture and replay command.
-- `large-corpus` — large-corpus claims require corpus size, token count, query count, and index size policy.
-- `regression-threshold` — regression checks require stable baseline metadata before failing CI.
+- `throughput`
+- `memory`
+- `streaming`
+- `large-corpus`
+- `regression-threshold`
 
 ## Current boundary
 
-The current manifest defines gate requirements. It does not persist wall-clock or memory measurements.
-Those measurements require a benchmark-host policy to avoid noisy CI assertions.
+The current manifest defines deterministic performance and scale gates. Broader operational claims require measured evidence against these gates.
+
+## Gates
+
+| Gate | Package | Surface | Dimensions | Regression policy | Limitations |
+| --- | --- | --- | --- | --- | --- |
+| `textdoc-roundtrip` | `@ismail-elkorchi/textdoc` | Document validation and round-trip serialization | `throughput`<br>`memory`<br>`regression-threshold` | Future measurements must store baseline environment, command, input hash, and threshold before becoming required checks. | Current gate records measurement requirements; it does not persist timing or memory measurements. |
+| `textpipeline-determinism` | `@ismail-elkorchi/textpipeline` | Synchronous processor execution | `throughput`<br>`memory`<br>`streaming`<br>`regression-threshold` | Future measurements must fail on threshold regression only after a stable benchmark host policy exists. | Current implementation is synchronous and in-memory. |
+| `textcorpus-retrieval` | `@ismail-elkorchi/textcorpus` | Corpus scoring and retrieval | `throughput`<br>`memory`<br>`large-corpus`<br>`regression-threshold` | Future retrieval measurements must pin corpus hash, query hash, formula, and ordering policy. | Current retrieval proof uses small committed corpora and bounded package-level scale signals; it does not persist stable wall-clock or memory measurements. |
+| `textpack-lookup` | `@ismail-elkorchi/textpack` | Pack manifest validation and resource lookup | `throughput`<br>`memory`<br>`large-corpus`<br>`regression-threshold` | Future measurements must include duplicate and overlay-conflict controls. | Current resource fixtures are small contract fixtures. |
+| `textconformance-reporting` | `@ismail-elkorchi/textconformance` | Conformance report validation and summarization | `throughput`<br>`memory`<br>`regression-threshold` | Future measurements must distinguish validation cost from report rendering cost. | Current runner behavior is minimal and not a benchmark harness. |
+
+## Notes
+
+- This file records performance gate requirements before broad operational claims.
+- It intentionally avoids unstable wall-clock assertions until benchmark-host policy is defined.
 
 ## Verification
 
-Run:
-
-```sh
-node tools/validate-performance-gates.mjs
-npm run -s check:fixtures
-```
+Run `node tools/validate-performance-gates.mjs` and `npm run -s check:status-docs`.

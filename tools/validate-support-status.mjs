@@ -1,48 +1,11 @@
-import { readFile, readdir, writeFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import Ajv from "ajv";
 
 const ROOT = process.cwd();
 const JSON_PATH = path.join(ROOT, "docs", "specs", "support-status.v1.json");
-const MARKDOWN_PATH = path.join(ROOT, "docs", "specs", "support-status.md");
 const SCHEMA_PATH = path.join(ROOT, "schemas", "support-status-v1.schema.json");
 const README_PATH = path.join(ROOT, "README.md");
-
-function renderStatusTable(
-  heading,
-  label,
-  rows,
-) {
-  const lines = [`## ${heading}`, "", `| ${label} | Status | Scope | Evidence | Limitations |`, "| --- | --- | --- | --- | --- |"];
-  for (const row of rows) {
-    const id = "name" in row ? row.name : row.id;
-    lines.push(`| \`${id}\` | \`${row.status}\` | ${row.scope} | ${row.evidence.join("<br>")} | ${row.limitations.join("<br>")} |`);
-  }
-  return lines.join("\n");
-}
-
-function renderMarkdown(statusDocument) {
-  return [
-    "# Support status",
-    "",
-    "This document is generated from `docs/specs/support-status.v1.json`. Do not edit it by hand; update",
-    "the JSON source and rerun `node tools/validate-support-status.mjs --write` if the canonical status",
-    "changes.",
-    "",
-    "## Status labels",
-    "",
-    "- `scaffold` — workspace or package shell exists, but no ratified behavior exists yet.",
-    "- `readiness-only` — frozen artifacts exist, but behavior is not implemented yet.",
-    "- `slice-proven` — executable behavior exists only for declared frozen slices or fixtures.",
-    "- `beta` — broader package behavior exists with multi-runtime or conformance evidence, but production support is not yet claimed.",
-    "- `production-candidate` — broad support, conformance, packaging, and operational evidence are available for the declared scope.",
-    "",
-    renderStatusTable("Package status", "Package", statusDocument.packages),
-    "",
-    renderStatusTable("Task status", "Task", statusDocument.tasks),
-    "",
-  ].join("\n");
-}
 
 async function readWorkspacePackageNames() {
   const packageDir = path.join(ROOT, "packages");
@@ -59,7 +22,6 @@ async function readWorkspacePackageNames() {
 }
 
 async function main() {
-  const writeMode = process.argv.includes("--write");
   const [schemaText, statusText, readmeText] = await Promise.all([
     readFile(SCHEMA_PATH, "utf8"),
     readFile(JSON_PATH, "utf8"),
@@ -103,17 +65,6 @@ async function main() {
   if (!readmeText.includes("docs/specs/support-status.md")) {
     console.error("README.md must link to docs/specs/support-status.md");
     process.exit(1);
-  }
-
-  const expectedMarkdown = renderMarkdown(statusDocument);
-  if (writeMode) {
-    await writeFile(MARKDOWN_PATH, expectedMarkdown, "utf8");
-  } else {
-    const actualMarkdown = await readFile(MARKDOWN_PATH, "utf8");
-    if (actualMarkdown !== expectedMarkdown) {
-      console.error("docs/specs/support-status.md is out of date with support-status.v1.json");
-      process.exit(1);
-    }
   }
 
   console.log(
