@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "scope": "dependency-parser",
   "capturedDate": "2026-05-15",
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
   "comparator": {
     "name": "spaCy DependencyParser",
     "version": "3.8.14",
     "runtime": "python",
     "artifactSurface": "Token.head, Token.dep, Doc.sents"
   },
-  "executionStatus": "executed",
   "dependencies": [
     {
       "name": "python",

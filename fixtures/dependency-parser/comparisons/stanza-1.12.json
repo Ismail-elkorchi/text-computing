@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "scope": "dependency-parser",
   "capturedDate": "2026-05-15",
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
   "comparator": {
     "name": "Stanza DepparseProcessor",
     "version": "1.12.0",
     "runtime": "python",
     "artifactSurface": "UD-style head and dependency relation fields"
   },
-  "executionStatus": "executed",
   "dependencies": [
     {
       "name": "python",

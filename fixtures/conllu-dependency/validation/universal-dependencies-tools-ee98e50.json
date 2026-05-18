@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "scope": "conllu-dependency",
   "capturedDate": "2026-05-15",
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
   "validator": {
     "name": "UniversalDependencies/tools validator",
     "url": "https://github.com/UniversalDependencies/tools",
@@ -140,4 +142,3 @@
     "This capture validates fixture format and syntax only; it does not evaluate dependency parser accuracy."
   ]
 }
-

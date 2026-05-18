@@ -6,6 +6,8 @@
   "additionalProperties": false,
   "required": [
     "schemaVersion",
+    "executionStatus",
+    "captureMode",
     "comparator",
     "corpusId",
     "documentOrder",
@@ -14,6 +16,16 @@
   "properties": {
     "schemaVersion": {
       "const": 1
+    },
+    "capturedDate": {
+      "type": "string",
+      "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$"
+    },
+    "executionStatus": {
+      "enum": ["executed", "capability-recorded"]
+    },
+    "captureMode": {
+      "enum": ["curated-local-execution", "capability-record"]
     },
     "corpusId": {
       "type": "string",

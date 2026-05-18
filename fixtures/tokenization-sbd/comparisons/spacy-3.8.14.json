@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "scope": "tokenization-sbd",
   "capturedDate": "2026-04-13",
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
   "offsetUnits": "utf16-code-unit",
   "comparator": {
     "name": "spaCy",

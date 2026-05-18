@@ -302,6 +302,8 @@ for (const taskName of taskNames) {
   }
 
   const comparisonRefs = [];
+  let executedComparisonCount = 0;
+  let capabilityRecordCount = 0;
   for (const file of files) {
     const comparison = await readJson(file);
     if (!validateComparison(comparison)) {
@@ -330,7 +332,10 @@ for (const taskName of taskNames) {
         ...(run.comparator.license ? { license: run.comparator.license } : {}),
       },
       status: run.status,
+      captureMode: String(comparison.captureMode ?? "unspecified"),
     });
+    if (run.status === "pass") executedComparisonCount += 1;
+    if (run.status === "not-run") capabilityRecordCount += 1;
     runCount += 1;
   }
 
@@ -339,6 +344,8 @@ for (const taskName of taskNames) {
     taskId: config.taskId,
     validators: config.validatorCommands.length,
     comparisons: files.length,
+    executedComparisons: executedComparisonCount,
+    capabilityRecords: capabilityRecordCount,
     evidenceRuns: runCount,
     status: config.knownGap && files.length === 0 && !config.claimDowngraded ? "gap-recorded" : "ok",
   };

@@ -4,11 +4,13 @@
   "title": "Tokenization and sentence boundary comparison output v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "scope", "capturedDate", "offsetUnits", "comparator", "slices"],
+  "required": ["schemaVersion", "scope", "capturedDate", "executionStatus", "captureMode", "offsetUnits", "comparator", "slices"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "scope": { "const": "tokenization-sbd" },
     "capturedDate": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "executionStatus": { "enum": ["executed", "capability-recorded"] },
+    "captureMode": { "enum": ["curated-local-execution", "capability-record"] },
     "offsetUnits": { "const": "utf16-code-unit" },
     "comparator": {
       "type": "object",
