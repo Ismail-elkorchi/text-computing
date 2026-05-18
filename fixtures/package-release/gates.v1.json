@@ -138,7 +138,7 @@
         "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
       },
       "releaseBlockers": [
-        "Retrieval and corpus scoring remain frozen-corpus only without broad relevance or performance validation.",
+        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status.",
         "Downstream API stability evidence is not recorded for this package release surface."
       ],
@@ -147,7 +147,10 @@
         "packages/textcorpus/test",
         "tools/validate-package-readiness.mjs",
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
-        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json"
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+        "fixtures/performance/gates.v1.json"
       ],
       "limitations": ["Package remains private until broader release gates pass."]
     },

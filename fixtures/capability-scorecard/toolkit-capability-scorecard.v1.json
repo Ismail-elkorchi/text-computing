@@ -219,9 +219,11 @@
       "evidenceRefs": [
         "docs/specs/textcorpus-collection-contract.md",
         "fixtures/corpus-tfidf-bm25/slices.json",
-        "fixtures/retrieval/slices.json"
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
+        "fixtures/performance/gates.v1.json"
       ],
-      "nextGate": "Add larger corpora, broader qrels, multilingual retrieval fixtures, streaming behavior, and performance thresholds."
+      "nextGate": "Add external relevance datasets, streaming behavior, filesystem-backed index storage, and broader multilingual retrieval fixtures."
     },
     {
       "packageName": "@ismail-elkorchi/textprotocol",
@@ -500,15 +502,19 @@
         "fixtures/retrieval/slices.json",
         "fixtures/retrieval/expected/retrieval-smoke.json",
         "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+        "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
         "schemas/retrieval-expected-v1.schema.json",
         "fixtures/reports/nlp-retrieval/conformance-report.json",
         "tools/validate-retrieval-feature.mjs",
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
         "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+        "fixtures/performance/gates.v1.json",
         "schemas/retrieval-qrels-v1.schema.json",
         "schemas/retrieval-evaluation-v1.schema.json"
       ],
-      "nextGate": "Add larger corpora, broader qrels, multilingual retrieval fixtures, streaming behavior, filesystem-backed index storage, and performance thresholds.",
+      "nextGate": "Add external relevance datasets, streaming behavior, filesystem-backed index storage, and broader multilingual retrieval fixtures.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -523,17 +529,23 @@
           "fixtures/retrieval/slices.json",
           "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
           "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
-          "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json"
+          "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+          "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
+          "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
         ],
         "negativeControlRefs": [
           "fixtures/retrieval/expected/retrieval-smoke.json",
-          "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
+          "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json"
         ],
         "comparatorRefs": [],
         "corpusRefs": [
           "fixtures/retrieval/expected/retrieval-smoke.json",
           "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
-          "fixtures/retrieval/qrels/retrieval-fielded-qrels.json"
+          "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+          "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
+          "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
         ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-retrieval/conformance-report.json"
@@ -542,7 +554,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, qrels evaluation, relevance judgments, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests."
+      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests."
     },
     {
       "taskId": "nlp-conllu-dependency-roundtrip",

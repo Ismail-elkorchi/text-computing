@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 8,
+    "pass": 9,
     "fail": 0,
     "notRun": 0
   },
@@ -21,7 +21,8 @@
       "evidenceRefs": [
         "fixtures/retrieval/slices.json",
         "fixtures/retrieval/expected/retrieval-smoke.json",
-        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
+        "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+        "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json"
       ]
     },
     {
@@ -63,6 +64,8 @@
         "tools/validate-retrieval-feature.mjs",
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
         "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
         "schemas/retrieval-qrels-v1.schema.json",
         "schemas/retrieval-evaluation-v1.schema.json"
       ]
@@ -74,9 +77,25 @@
       "evidenceRefs": [
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
         "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+        "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
         "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test/index.test.ts",
         "tools/validate-retrieval-feature.mjs"
+      ]
+    },
+    {
+      "checkId": "licensed-corpus-threshold-proof",
+      "status": "pass",
+      "message": "The repository-authored licensed retrieval corpus declares corpus hash, qrels, metric expectations, and deterministic size thresholds checked by the retrieval and performance validators.",
+      "evidenceRefs": [
+        "fixtures/retrieval/slices.json",
+        "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
+        "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+        "fixtures/performance/gates.v1.json",
+        "tools/validate-retrieval-feature.mjs",
+        "tools/validate-performance-gates.mjs"
       ]
     },
     {
@@ -99,6 +118,6 @@
     }
   ],
   "notes": [
-    "This report persists retrieval evidence for committed explicit-token and fielded smoke corpora, standalone qrels, and bounded package-level query-control tests only; it does not add streaming index, filesystem-backed index storage, broad relevance-benchmark, or broad multilingual support."
+    "This report persists retrieval evidence for committed explicit-token, fielded smoke, and repository-authored licensed corpora, standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only; it does not add streaming index, filesystem-backed index storage, external relevance benchmark, or broad multilingual support."
   ]
 }

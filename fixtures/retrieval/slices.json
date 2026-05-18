@@ -6,11 +6,26 @@
   "expectedPath": "fixtures/retrieval/expected/retrieval-smoke.json",
   "expectedPaths": [
     "fixtures/retrieval/expected/retrieval-smoke.json",
-    "fixtures/retrieval/expected/retrieval-fielded-bm25f.json"
+    "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+    "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json"
   ],
   "qrelsPath": "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
   "qrelsExpectedPath": "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
   "evaluationPath": "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+  "qrelsSets": [
+    {
+      "id": "fielded-smoke",
+      "expectedPath": "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+      "qrelsPath": "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+      "evaluationPath": "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json"
+    },
+    {
+      "id": "licensed-news",
+      "expectedPath": "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
+      "qrelsPath": "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+      "evaluationPath": "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
+    }
+  ],
   "fieldedCorpora": [
     {
       "id": "corpus-retrieval-fielded-smoke",
@@ -49,6 +64,141 @@
           "metadata": {
             "language": "en",
             "genre": "empty-control"
+          }
+        }
+      ]
+    },
+    {
+      "id": "corpus-retrieval-licensed-news",
+      "description": "Repository-authored explicit-token corpus with license metadata, multilingual controls, relevance judgments, and scale thresholds for retrieval checks.",
+      "license": "MIT",
+      "provenance": "Repository-authored fixture text.",
+      "contentHash": "sha256:1689113bb437fe534d6a0869ff2c4a3d8792167c67259b2c8dc2826b745bc5b3",
+      "thresholds": {
+        "minDocuments": 12,
+        "minTokens": 70,
+        "minQueries": 6,
+        "maxSerializedIndexBytes": 50000
+      },
+      "documents": [
+        {
+          "id": "doc-climate-1",
+          "tokens": ["renewable", "energy", "climate", "policy", "solar", "transition", "grid", "resilience"],
+          "metadata": {
+            "language": "en",
+            "genre": "news",
+            "title": "Renewable energy climate policy",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-climate-2",
+          "tokens": ["climate", "adaptation", "flood", "resilience", "city", "planning", "water", "infrastructure"],
+          "metadata": {
+            "language": "en",
+            "genre": "news",
+            "title": "Climate adaptation flood planning",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-health-1",
+          "tokens": ["vaccine", "clinic", "public", "health", "campaign", "community", "trust"],
+          "metadata": {
+            "language": "en",
+            "genre": "health",
+            "title": "Public health vaccine campaign",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-health-2",
+          "tokens": ["hospital", "data", "privacy", "patient", "records", "secure", "access"],
+          "metadata": {
+            "language": "en",
+            "genre": "health",
+            "title": "Patient privacy records",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-tech-1",
+          "tokens": ["search", "index", "ranking", "query", "relevance", "benchmark", "corpus"],
+          "metadata": {
+            "language": "en",
+            "genre": "technology",
+            "title": "Search relevance benchmark",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-tech-2",
+          "tokens": ["typescript", "library", "deterministic", "text", "processing", "agent", "audit"],
+          "metadata": {
+            "language": "en",
+            "genre": "technology",
+            "title": "Deterministic text processing",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-finance-1",
+          "tokens": ["market", "regulation", "banking", "risk", "capital", "liquidity"],
+          "metadata": {
+            "language": "en",
+            "genre": "finance",
+            "title": "Banking regulation risk",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-legal-1",
+          "tokens": ["court", "evidence", "contract", "liability", "damages", "appeal"],
+          "metadata": {
+            "language": "en",
+            "genre": "legal",
+            "title": "Contract liability evidence",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-ar-heritage",
+          "tokens": ["نص", "عربي", "تراث", "مخطوط", "تحقيق"],
+          "metadata": {
+            "language": "ar",
+            "genre": "heritage",
+            "title": "نص عربي تراث",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-es-archive",
+          "tokens": ["texto", "español", "archivo", "búsqueda", "corpus", "lingüístico"],
+          "metadata": {
+            "language": "es",
+            "genre": "archive",
+            "title": "Texto español búsqueda",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-fr-archive",
+          "tokens": ["texte", "français", "archive", "recherche", "corpus", "linguistique"],
+          "metadata": {
+            "language": "fr",
+            "genre": "archive",
+            "title": "Texte français recherche",
+            "license": "MIT"
+          }
+        },
+        {
+          "id": "doc-empty-control",
+          "tokens": [],
+          "metadata": {
+            "language": "en",
+            "genre": "empty-control",
+            "title": "Empty control",
+            "license": "MIT"
           }
         }
       ]

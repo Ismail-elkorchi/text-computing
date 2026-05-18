@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-retrieval",
+  "corpusId": "corpus-retrieval-licensed-news",
+  "judgments": [
+    {
+      "queryId": "licensed-climate-policy",
+      "ratings": [
+        { "docId": "doc-climate-1", "grade": 2 },
+        { "docId": "doc-climate-2", "grade": 1 },
+        { "docId": "doc-tech-1", "grade": 0 }
+      ]
+    },
+    {
+      "queryId": "licensed-search-relevance",
+      "ratings": [
+        { "docId": "doc-tech-1", "grade": 2 },
+        { "docId": "doc-tech-2", "grade": 0 },
+        { "docId": "doc-climate-1", "grade": 0 }
+      ]
+    },
+    {
+      "queryId": "licensed-ar-heritage",
+      "ratings": [
+        { "docId": "doc-ar-heritage", "grade": 2 },
+        { "docId": "doc-es-archive", "grade": 0 }
+      ]
+    },
+    {
+      "queryId": "licensed-es-archive",
+      "ratings": [
+        { "docId": "doc-es-archive", "grade": 2 },
+        { "docId": "doc-fr-archive", "grade": 0 }
+      ]
+    },
+    {
+      "queryId": "licensed-health-privacy",
+      "ratings": [
+        { "docId": "doc-health-2", "grade": 2 },
+        { "docId": "doc-health-1", "grade": 1 },
+        { "docId": "doc-finance-1", "grade": 0 }
+      ]
+    },
+    {
+      "queryId": "licensed-no-hit-control",
+      "ratings": [
+        { "docId": "doc-climate-1", "grade": 0 },
+        { "docId": "doc-tech-1", "grade": 0 }
+      ]
+    }
+  ]
+}

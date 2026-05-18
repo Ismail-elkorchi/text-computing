@@ -61,6 +61,10 @@ function formatValue(value) {
   return String(value);
 }
 
+function thresholdsCell(thresholds) {
+  return thresholds === undefined ? "—" : formatValue(thresholds);
+}
+
 function table(headers, rows) {
   return [
     `| ${headers.join(" | ")} |`,
@@ -300,12 +304,13 @@ function renderPerformanceGates([gates]) {
     "## Gates",
     "",
     table(
-      ["Gate", "Package", "Surface", "Dimensions", "Regression policy", "Limitations"],
+      ["Gate", "Package", "Surface", "Dimensions", "Thresholds", "Regression policy", "Limitations"],
       gates.gates.map((gate) => [
         `\`${gate.id}\``,
         `\`${gate.packageName}\``,
         gate.surface,
         list(gate.dimensions.map((dimension) => `\`${dimension}\``)),
+        thresholdsCell(gate.thresholds),
         gate.regressionPolicy,
         list(gate.limitations),
       ]),

@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import {
   buildTextCorpusRetrievalIndex,
@@ -22,6 +23,10 @@ function expect(condition, message, details) {
   console.error(message);
   if (details !== undefined) console.error(JSON.stringify(details, null, 2));
   process.exit(1);
+}
+
+function sha256Json(value) {
+  return createHash("sha256").update(JSON.stringify(value)).digest("hex");
 }
 
 function createDocument(documentId, text, tokenTexts) {
@@ -115,8 +120,36 @@ expect(
   "retrieval slices must declare one or more expected paths.",
 );
 const allCorpora = [...corpusSlices.corpora, ...(retrievalSlices.fieldedCorpora ?? [])];
+const qrelsSets = retrievalSlices.qrelsSets ?? [
+  {
+    id: "legacy-qrels-set",
+    expectedPath: retrievalSlices.qrelsExpectedPath,
+    qrelsPath: retrievalSlices.qrelsPath,
+    evaluationPath: retrievalSlices.evaluationPath,
+  },
+];
+const qrelsSetByExpectedPath = new Map(qrelsSets.map((entry) => [entry.expectedPath, entry]));
 let expectedQueryCount = 0;
 let evaluatedQueryCount = 0;
+let thresholdCheckedCount = 0;
+
+for (const corpus of retrievalSlices.fieldedCorpora ?? []) {
+  if (corpus.license !== undefined || corpus.provenance !== undefined || corpus.contentHash !== undefined) {
+    expect(corpus.license === "MIT", `${corpus.id} must declare the repository fixture license as MIT.`);
+    expect(typeof corpus.provenance === "string" && corpus.provenance.length > 0, `${corpus.id} must declare provenance.`);
+    expect(
+      corpus.contentHash === `sha256:${sha256Json(corpus.documents)}`,
+      `${corpus.id} contentHash must match its document list.`,
+      { actual: corpus.contentHash, expected: `sha256:${sha256Json(corpus.documents)}` },
+    );
+    for (const document of corpus.documents) {
+      expect(
+        document.metadata?.license === corpus.license,
+        `${corpus.id}/${document.id} must carry matching license metadata.`,
+      );
+    }
+  }
+}
 
 function buildOptions(expected) {
   if (expected.formula === "bm25f.k1-1.2.b-0.75.fielded") {
@@ -268,18 +301,19 @@ for (const expectedPath of expectedPaths) {
     );
   }
 
-  if (expectedPath === retrievalSlices.qrelsExpectedPath) {
-    const qrels = await readJson(retrievalSlices.qrelsPath);
-    const expectedEvaluation = await readJson(retrievalSlices.evaluationPath);
-    expect(validateQrels(qrels), `${retrievalSlices.qrelsPath} failed retrieval qrels schema`, validateQrels.errors);
-    expect(isTextCorpusRetrievalQrelsV1(qrels), `${retrievalSlices.qrelsPath} failed retrieval qrels runtime guard.`);
+  const qrelsSet = qrelsSetByExpectedPath.get(expectedPath);
+  if (qrelsSet !== undefined) {
+    const qrels = await readJson(qrelsSet.qrelsPath);
+    const expectedEvaluation = await readJson(qrelsSet.evaluationPath);
+    expect(validateQrels(qrels), `${qrelsSet.qrelsPath} failed retrieval qrels schema`, validateQrels.errors);
+    expect(isTextCorpusRetrievalQrelsV1(qrels), `${qrelsSet.qrelsPath} failed retrieval qrels runtime guard.`);
     expect(
       JSON.stringify(qrels.judgments) === JSON.stringify(expected.relevanceJudgments),
-      `${retrievalSlices.qrelsPath} must match relevance judgments embedded in ${expectedPath}.`,
+      `${qrelsSet.qrelsPath} must match relevance judgments embedded in ${expectedPath}.`,
     );
     expect(
       validateEvaluation(expectedEvaluation),
-      `${retrievalSlices.evaluationPath} failed retrieval evaluation schema`,
+      `${qrelsSet.evaluationPath} failed retrieval evaluation schema`,
       validateEvaluation.errors,
     );
     const evaluation = evaluateTextCorpusRetrieval(result, qrels, {
@@ -287,8 +321,22 @@ for (const expectedPath of expectedPaths) {
       relevantGradeThreshold: expectedEvaluation.relevantGradeThreshold,
       tolerance: expectedEvaluation.tolerance,
     });
-    assertEvaluation(evaluation, expectedEvaluation, expectedEvaluation.tolerance, retrievalSlices.evaluationPath);
+    assertEvaluation(evaluation, expectedEvaluation, expectedEvaluation.tolerance, qrelsSet.evaluationPath);
     evaluatedQueryCount += evaluation.queries.length;
+    const threshold = corpus.thresholds;
+    if (threshold !== undefined) {
+      const tokenCount = corpus.documents.reduce((sum, document) => sum + document.tokens.length, 0);
+      const serializedIndexBytes = Buffer.byteLength(serializedIndex, "utf8");
+      expect(corpus.documents.length >= threshold.minDocuments, `${corpus.id} document threshold failed.`);
+      expect(tokenCount >= threshold.minTokens, `${corpus.id} token threshold failed.`);
+      expect(expected.queries.length >= threshold.minQueries, `${corpus.id} query threshold failed.`);
+      expect(
+        serializedIndexBytes <= threshold.maxSerializedIndexBytes,
+        `${corpus.id} serialized index threshold failed.`,
+        { serializedIndexBytes, threshold: threshold.maxSerializedIndexBytes },
+      );
+      thresholdCheckedCount += 1;
+    }
   }
 
   const repeated = searchTextCorpusRetrievalIndex(index, queries, { topK: 3, snippetWindow: 1 });
@@ -300,5 +348,5 @@ const task = supportStatus.tasks.find((entry) => entry.id === "nlp-retrieval");
 expect(task?.status === "slice-proven", "Support status must mark nlp-retrieval as slice-proven.");
 
 console.log(
-  `Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount} evaluatedQueries=${evaluatedQueryCount}).`,
+  `Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount} evaluatedQueries=${evaluatedQueryCount} thresholdSets=${thresholdCheckedCount}).`,
 );
