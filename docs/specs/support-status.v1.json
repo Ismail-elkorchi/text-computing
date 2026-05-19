@@ -34,9 +34,10 @@
     {
       "name": "@ismail-elkorchi/textpack",
       "status": "slice-proven",
-      "scope": "Manifest validation, licensed English/French fixture resources, deterministic registry queries, fixture content loading, overlay precedence, and conflict diagnostics are implemented.",
+      "scope": "Manifest validation, package-level manifest governance diagnostics, licensed English/French fixture resources, deterministic registry queries, fixture content loading, overlay precedence, and conflict diagnostics are implemented.",
       "evidence": [
         "resource manifest fixtures",
+        "manifest governance validator tests",
         "fixture resource registry tests",
         "fixture resource loading tests",
         "overlay conflict tests",

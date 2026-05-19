@@ -101,7 +101,12 @@
       "releaseReadiness": "blocked",
       "candidateState": "candidate-ready",
       "privateRequired": true,
-      "owns": ["pack manifest runtime guards", "resource loading", "resource registry lookup"],
+      "owns": [
+        "pack manifest runtime guards",
+        "manifest governance diagnostics",
+        "resource loading",
+        "resource registry lookup"
+      ],
       "downstreamDependents": ["@ismail-elkorchi/textrules"],
       "requiredEvidenceRefs": [
         "packages/textpack/package.json",
@@ -114,7 +119,7 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "releaseBlockers": [
-        "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release."
+        "Multilingual pack coverage and update workflow are not broad enough for package release."
       ]
     }
   ],

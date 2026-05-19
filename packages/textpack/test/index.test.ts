@@ -4,16 +4,23 @@ import {
   loadTextPackRegistryResources,
   loadTextPackResources,
   lookupTextPackLoadedEntries,
-  packageName,
   parseTextPackResourceContent,
   queryTextPackResourceRegistry,
   resolveTextPackResources,
+  type packageName,
+  type TextPackManifestGovernanceDiagnosticCode,
+  type TextPackManifestV1,
   textPackDemoTrimLowercaseCanonicalizer,
   textPackManifestSchemaVersion,
-  type TextPackManifestV1,
+  validateTextPackManifestGovernance,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textpack";
+
+function required<T>(value: T | undefined, message: string): T {
+  if (value === undefined) throw new Error(message);
+  return value;
+}
 
 const baseManifest: TextPackManifestV1 = {
   schemaVersion: textPackManifestSchemaVersion,
@@ -75,6 +82,17 @@ const baseManifest: TextPackManifestV1 = {
     overlay: ["overlay:stopwords:en"],
   },
 };
+
+const baseStopwordsResource = required(
+  baseManifest.resources[0],
+  "base stopword resource fixture must exist",
+);
+const baseLexiconResource = required(
+  baseManifest.resources[1],
+  "base lexicon resource fixture must exist",
+);
+const baseLicense = required(baseManifest.licenses[0], "base license fixture must exist");
+const baseProvenance = required(baseManifest.provenance[0], "base provenance fixture must exist");
 
 const overlayManifest: TextPackManifestV1 = {
   schemaVersion: textPackManifestSchemaVersion,
@@ -190,15 +208,117 @@ if (!isTextPackManifestV1(frenchManifest)) {
   throw new Error("French manifest should satisfy the pack manifest shape");
 }
 
-if (lookupResult.resources[0]?.resourceId !== "stopwords-en-legal") {
+function expectGovernanceCodes(
+  manifest: unknown,
+  expectedCodes: readonly TextPackManifestGovernanceDiagnosticCode[],
+  message: string,
+): void {
+  const codes = validateTextPackManifestGovernance(manifest).diagnostics.map((entry) => entry.code);
+  for (const expectedCode of expectedCodes) {
+    if (!codes.includes(expectedCode)) {
+      throw new Error(`${message}: expected ${expectedCode}, got ${codes.join(",")}`);
+    }
+  }
+}
+
+const baseGovernance = validateTextPackManifestGovernance(baseManifest);
+if (!baseGovernance.ok || baseGovernance.diagnostics.length !== 0) {
+  throw new Error("base manifest should pass manifest governance validation");
+}
+
+expectGovernanceCodes({}, ["invalid-manifest-shape"], "invalid manifests should be diagnosed");
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    resources: [
+      {
+        ...baseStopwordsResource,
+        licenseId: "license-missing",
+        provenanceId: "prov-missing",
+      },
+    ],
+  },
+  ["missing-license-ref", "missing-provenance-ref"],
+  "missing license and provenance refs should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    licenses: [...baseManifest.licenses, baseLicense],
+    provenance: [...baseManifest.provenance, baseProvenance],
+    resources: [
+      baseStopwordsResource,
+      {
+        ...baseLexiconResource,
+        resourceId: baseStopwordsResource.resourceId,
+      },
+    ],
+  },
+  ["duplicate-license-id", "duplicate-provenance-id", "duplicate-resource-id"],
+  "duplicate manifest ids should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    resources: [
+      {
+        ...baseStopwordsResource,
+        path: "../outside/stopwords.txt",
+      },
+    ],
+    entrypoints: {
+      ...baseManifest.entrypoints,
+      manifest: "/tmp/textpack.json",
+      resourceRoot: "C:\\packs",
+    },
+    tests: {
+      ...baseManifest.tests,
+      smoke: ["https://example.invalid/smoke"],
+    },
+  },
+  ["unsafe-resource-path", "unsafe-entrypoint-path", "unsafe-test-ref"],
+  "unsafe manifest paths and refs should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    resources: [
+      baseStopwordsResource,
+      {
+        ...baseLexiconResource,
+        resourceId: "stopwords-en-core-shadow",
+        lookupKey: baseStopwordsResource.lookupKey,
+        kind: baseStopwordsResource.kind,
+        path: "fixtures/textpack/resources/textpack-en-core/stopwords.en.shadow.txt",
+      },
+    ],
+  },
+  ["overlay-conflict"],
+  "same lookup key and overlay precedence should be diagnosed",
+);
+
+const overlayStopwordsResource = required(
+  lookupResult.resources[0],
+  "legal stopword overlay should resolve",
+);
+const baseResolvedStopwordsResource = required(
+  lookupResult.resources[1],
+  "base stopword resource should resolve after overlay",
+);
+
+if (overlayStopwordsResource.resourceId !== "stopwords-en-legal") {
   throw new Error("profile-specific overlay should sort ahead of the base pack");
 }
 
-if (lookupResult.resources[1]?.resourceId !== "stopwords-en-core") {
+if (baseResolvedStopwordsResource.resourceId !== "stopwords-en-core") {
   throw new Error("base pack should remain available after the overlay resource");
 }
 
-if (lookupResult.resources[0]?.provenance.id !== "prov-hand-curated") {
+if (overlayStopwordsResource.provenance.id !== "prov-hand-curated") {
   throw new Error("resolved resources should retain provenance records");
 }
 
@@ -266,6 +386,10 @@ const loadedLexicon = loadTextPackResources(
     language: "en",
   },
   contentByPath,
+);
+const loadedLexiconResource = required(
+  loadedLexicon.resources[0]?.resource,
+  "English lexicon resource should load",
 );
 
 const hiddenHostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST")[0]?.entry;
@@ -387,17 +511,17 @@ if (!missingContent.diagnostics.some((entry) => entry.code === "resource-content
   throw new Error("missing resource content should produce an explicit diagnostic");
 }
 
-const caseDistinctParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nThe\n");
+const caseDistinctParsed = parseTextPackResourceContent(overlayStopwordsResource, "the\nThe\n");
 if (caseDistinctParsed.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) {
   throw new Error("case-distinct loaded entries should not duplicate under exact parsing");
 }
 
-const duplicateParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nthe\n");
+const duplicateParsed = parseTextPackResourceContent(overlayStopwordsResource, "the\nthe\n");
 if (!duplicateParsed.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) {
   throw new Error("exact duplicate loaded entries should produce a diagnostic");
 }
 
-const canonicalDuplicateParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nThe\n", {
+const canonicalDuplicateParsed = parseTextPackResourceContent(overlayStopwordsResource, "the\nThe\n", {
   canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
 });
 if (!canonicalDuplicateParsed.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) {
@@ -405,13 +529,15 @@ if (!canonicalDuplicateParsed.diagnostics.some((entry) => entry.code === "duplic
 }
 
 const malformedLexicon = parseTextPackResourceContent(
-  loadedLexicon.resources[0]!.resource,
+  loadedLexiconResource,
   "broken\tlemma\nvalid\tlemma=valid\tpos=ADJ\n",
 );
 if (
   !malformedLexicon.diagnostics.some((entry) => entry.code === "malformed-resource-row") ||
-  lookupTextPackLoadedEntries([{ resource: loadedLexicon.resources[0]!.resource, entries: malformedLexicon.entries }], "broken")
-    .length !== 0
+  lookupTextPackLoadedEntries(
+    [{ resource: loadedLexiconResource, entries: malformedLexicon.entries }],
+    "broken",
+  ).length !== 0
 ) {
   throw new Error("malformed lexicon rows should be diagnosed and excluded from loaded entries");
 }
