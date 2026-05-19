@@ -559,7 +559,7 @@ const resultEnvelope = {
     package: textdocPackage.name,
     version: textdocPackage.version,
   },
-  payloadKind: "textdoc-document",
+  payloadKind: "textdoc-document-v1",
   payload: validDocument,
   provenance: {
     source: validDocument.source,

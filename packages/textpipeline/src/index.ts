@@ -1,13 +1,14 @@
 import { isTextDocDocumentV1, type TextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
 import {
   isTextProtocolDiagnostic,
+  textProtocolPayloadKindTextpipelineTraceV1,
   type TextProtocolDiagnostic,
   type TextProtocolResultEnvelopeV1,
 } from "@ismail-elkorchi/textprotocol";
 
 export const packageName = "@ismail-elkorchi/textpipeline" as const;
 export const textPipelineTraceSchemaVersion = 1 as const;
-export const textPipelineTracePayloadKind = "textpipeline-trace" as const;
+export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
 
 export type PackageName = typeof packageName;
 export type TextPipelineTraceSchemaVersion = typeof textPipelineTraceSchemaVersion;

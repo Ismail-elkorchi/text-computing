@@ -19,6 +19,11 @@
     },
     "payloadKind": { "type": "string", "minLength": 1 },
     "payload": {},
+    "claimBoundary": { "type": "string", "minLength": 1 },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
     "provenance": {
       "type": "object",
       "additionalProperties": false,
