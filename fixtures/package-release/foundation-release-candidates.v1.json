@@ -10,7 +10,12 @@
       "releaseReadiness": "blocked",
       "candidateState": "candidate-ready",
       "privateRequired": true,
-      "owns": ["result envelope runtime guards", "result envelope schema contract"],
+      "owns": [
+        "result envelope runtime guards",
+        "result envelope schema contract",
+        "supported-version negotiation",
+        "deterministic JSON transport wrapper"
+      ],
       "downstreamDependents": ["@ismail-elkorchi/textpipeline", "@ismail-elkorchi/textrules"],
       "requiredEvidenceRefs": [
         "packages/textprotocol/package.json",
@@ -20,10 +25,11 @@
         "docs/specs/support-status.v1.json",
         "fixtures/package-release/gates.v1.json",
         "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs"
+        "tools/check-downstream-api-stability.mjs",
+        "packages/textprotocol/README.md"
       ],
       "releaseBlockers": [
-        "Version-negotiation and transport compatibility policy are not release-ready."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ]
     },
     {
