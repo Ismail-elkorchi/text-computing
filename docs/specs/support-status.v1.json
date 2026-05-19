@@ -130,21 +130,22 @@
     },
     {
       "name": "@ismail-elkorchi/textconformance",
-      "status": "slice-proven",
-      "scope": "Machine-readable conformance reports, runtime guards, report diffs, deterministic Markdown report rendering, claim-registry traceability checks, and synchronous runner are implemented.",
+      "status": "alpha",
+      "scope": "Public alpha conformance report package for machine-readable reports, runtime guards, report diffs, deterministic Markdown rendering, claim-registry traceability checks, and synchronous checks proven by Public Vertical Slice 0.1 and package tests.",
       "evidence": [
         "conformance report schema",
         "runtime guards",
         "minimal synchronous runner tests",
         "fixtures/reports/task-evidence-manifest.v1.json",
-        "dist export readiness metadata",
         "report diff tests",
         "Markdown report rendering tests",
-        "claim-registry traceability tests"
+        "claim-registry traceability tests",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
-        "No benchmark runner is implemented",
-        "Package remains private until broader release gates pass"
+        "Benchmark runner is not release-ready.",
+        "Alpha scope is bounded to declared conformance reports and package interop proven by Public Vertical Slice 0.1"
       ]
     },
     {
