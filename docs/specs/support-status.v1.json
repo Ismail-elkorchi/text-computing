@@ -35,8 +35,8 @@
     },
     {
       "name": "@ismail-elkorchi/textpack",
-      "status": "slice-proven",
-      "scope": "Manifest validation, package-level manifest governance diagnostics, licensed English/French fixture resources, deterministic registry queries, fixture content loading, overlay precedence, and conflict diagnostics are implemented.",
+      "status": "alpha",
+      "scope": "Public alpha text resource package for manifest validation, fixture resource loading, deterministic registry queries, overlay precedence, provenance, licensing, and lookup diagnostics proven by Public Vertical Slice 0.1 and package tests.",
       "evidence": [
         "resource manifest fixtures",
         "manifest governance validator tests",
@@ -44,11 +44,13 @@
         "fixture resource loading tests",
         "overlay conflict tests",
         "provenance/license validation",
-        "dist export readiness metadata"
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
+        "Multilingual pack coverage and update workflow are not broad enough for package release.",
         "No public resource marketplace or vetting workflow is implemented",
-        "Package remains private until broader release gates pass"
+        "Alpha scope is bounded to explicit fixture resources and package interop proven by Public Vertical Slice 0.1"
       ]
     },
     {
