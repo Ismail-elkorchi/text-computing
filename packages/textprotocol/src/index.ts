@@ -2,10 +2,21 @@ export const packageName = "@ismail-elkorchi/textprotocol" as const;
 export const resultEnvelopeSchemaId =
   "urn:ismail-elkorchi:textprotocol:result-envelope:v1" as const;
 export const resultEnvelopeSchemaVersion = 1 as const;
+export const textProtocolPayloadKindTextdocDocumentV1 = "textdoc-document-v1" as const;
+export const textProtocolPayloadKindTextpipelineTraceV1 = "textpipeline-trace-v1" as const;
+export const textProtocolPayloadKindTextconformanceReportV1 =
+  "textconformance-report-v1" as const;
+export const textProtocolPayloadKindVerticalSliceResultV1 =
+  "public-vertical-slice-0.1-result-v1" as const;
 
 export type PackageName = typeof packageName;
 export type TextProtocolResultEnvelopeSchemaId = typeof resultEnvelopeSchemaId;
 export type TextProtocolResultEnvelopeSchemaVersion = typeof resultEnvelopeSchemaVersion;
+export type TextProtocolPayloadKind =
+  | typeof textProtocolPayloadKindTextdocDocumentV1
+  | typeof textProtocolPayloadKindTextpipelineTraceV1
+  | typeof textProtocolPayloadKindTextconformanceReportV1
+  | typeof textProtocolPayloadKindVerticalSliceResultV1;
 
 export type TextProtocolDiagnosticSeverity = "info" | "warning" | "error";
 
@@ -35,6 +46,27 @@ export interface TextProtocolDiagnostic {
   readonly message?: string;
 }
 
+export interface TextProtocolPayloadKindDescriptor {
+  readonly payloadKind: TextProtocolPayloadKind;
+  readonly ownerPackage: string;
+  readonly schemaId?: string;
+  readonly schemaVersion?: string | number;
+  readonly description: string;
+}
+
+export interface TextProtocolEnvelopeCompatibilityOptions {
+  readonly expectedPayloadKind?: TextProtocolPayloadKind;
+  readonly expectedProducerPackage?: string;
+  readonly requireProvenance?: boolean;
+  readonly requireClaimBoundary?: boolean;
+  readonly requireLimitations?: boolean;
+}
+
+export interface TextProtocolEnvelopeCompatibilityResult {
+  readonly ok: boolean;
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+}
+
 export interface TextProtocolResultEnvelopeV1<
   TPayload = unknown,
   TPayloadKind extends string = string,
@@ -46,7 +78,40 @@ export interface TextProtocolResultEnvelopeV1<
   readonly payload: TPayload;
   readonly provenance?: TextProtocolProvenance;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly claimBoundary?: string;
+  readonly limitations?: readonly string[];
 }
+
+export const textProtocolPayloadKindRegistry: readonly TextProtocolPayloadKindDescriptor[] = [
+  {
+    payloadKind: textProtocolPayloadKindTextdocDocumentV1,
+    ownerPackage: "@ismail-elkorchi/textdoc",
+    schemaId: "https://github.com/Ismail-elkorchi/text-computing/schemas/textdoc-document-v1.schema.json",
+    schemaVersion: 1,
+    description: "textdoc document annotation model v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextpipelineTraceV1,
+    ownerPackage: "@ismail-elkorchi/textpipeline",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-trace-v1.schema.json",
+    schemaVersion: 1,
+    description: "textpipeline deterministic processor trace v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextconformanceReportV1,
+    ownerPackage: "@ismail-elkorchi/textconformance",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-report-v1.schema.json",
+    schemaVersion: 1,
+    description: "textconformance report v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindVerticalSliceResultV1,
+    ownerPackage: "text-computing",
+    description: "Public Vertical Slice 0.1 result payload.",
+  },
+] as const;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -54,6 +119,20 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
+}
+
+function isStringArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
+export function isTextProtocolPayloadKind(value: unknown): value is TextProtocolPayloadKind {
+  return textProtocolPayloadKindRegistry.some((entry) => entry.payloadKind === value);
+}
+
+export function getTextProtocolPayloadKindDescriptor(
+  payloadKind: string,
+): TextProtocolPayloadKindDescriptor | undefined {
+  return textProtocolPayloadKindRegistry.find((entry) => entry.payloadKind === payloadKind);
 }
 
 export function isTextProtocolProducerRef(value: unknown): value is TextProtocolProducerRef {
@@ -97,6 +176,14 @@ export function isTextProtocolDiagnostic(value: unknown): value is TextProtocolD
   );
 }
 
+function compatibilityError(code: string, message: string): TextProtocolDiagnostic {
+  return { code, severity: "error", message };
+}
+
+function hasErrorDiagnostics(diagnostics: readonly TextProtocolDiagnostic[]): boolean {
+  return diagnostics.some((entry) => entry.severity === "error");
+}
+
 export function isTextProtocolResultEnvelopeV1(
   value: unknown,
 ): value is TextProtocolResultEnvelopeV1 {
@@ -110,6 +197,156 @@ export function isTextProtocolResultEnvelopeV1(
     (value.provenance === undefined || isTextProtocolProvenance(value.provenance)) &&
     (value.diagnostics === undefined ||
       (Array.isArray(value.diagnostics) &&
-        value.diagnostics.every((entry) => isTextProtocolDiagnostic(entry))))
+        value.diagnostics.every((entry) => isTextProtocolDiagnostic(entry)))) &&
+    (value.claimBoundary === undefined || isNonEmptyString(value.claimBoundary)) &&
+    (value.limitations === undefined || isStringArray(value.limitations))
   );
+}
+
+export function isTextProtocolResultEnvelopeForPayloadKind<
+  TPayloadKind extends TextProtocolPayloadKind,
+>(
+  value: unknown,
+  payloadKind: TPayloadKind,
+): value is TextProtocolResultEnvelopeV1<unknown, TPayloadKind> {
+  return isTextProtocolResultEnvelopeV1(value) && value.payloadKind === payloadKind;
+}
+
+export function checkTextProtocolResultEnvelopeCompatibility(
+  value: unknown,
+  options: TextProtocolEnvelopeCompatibilityOptions = {},
+): TextProtocolEnvelopeCompatibilityResult {
+  const diagnostics: TextProtocolDiagnostic[] = [];
+
+  if (!isRecord(value)) {
+    return {
+      ok: false,
+      diagnostics: [
+        compatibilityError("textprotocol.envelope-not-object", "Result envelope must be an object."),
+      ],
+    };
+  }
+
+  if (value.schemaId !== resultEnvelopeSchemaId) {
+    diagnostics.push(
+      compatibilityError(
+        "textprotocol.schema-id",
+        `Result envelope schemaId must be ${resultEnvelopeSchemaId}.`,
+      ),
+    );
+  }
+
+  if (value.schemaVersion !== resultEnvelopeSchemaVersion) {
+    diagnostics.push(
+      compatibilityError(
+        "textprotocol.schema-version",
+        `Result envelope schemaVersion must be ${resultEnvelopeSchemaVersion}.`,
+      ),
+    );
+  }
+
+  if (!isTextProtocolProducerRef(value.producer)) {
+    diagnostics.push(
+      compatibilityError(
+        "textprotocol.producer",
+        "Result envelope producer must declare non-empty package and version.",
+      ),
+    );
+  } else if (
+    options.expectedProducerPackage !== undefined &&
+    value.producer.package !== options.expectedProducerPackage
+  ) {
+    diagnostics.push(
+      compatibilityError(
+        "textprotocol.producer-package",
+        `Result envelope producer package must be ${options.expectedProducerPackage}.`,
+      ),
+    );
+  }
+
+  if (!isNonEmptyString(value.payloadKind)) {
+    diagnostics.push(
+      compatibilityError("textprotocol.payload-kind", "Result envelope payloadKind must be non-empty."),
+    );
+  } else {
+    if (!isTextProtocolPayloadKind(value.payloadKind)) {
+      diagnostics.push(
+        compatibilityError(
+          "textprotocol.payload-kind-unregistered",
+          `Result envelope payloadKind ${value.payloadKind} is not registered.`,
+        ),
+      );
+    }
+    if (
+      options.expectedPayloadKind !== undefined &&
+      value.payloadKind !== options.expectedPayloadKind
+    ) {
+      diagnostics.push(
+        compatibilityError(
+          "textprotocol.payload-kind-expected",
+          `Result envelope payloadKind must be ${options.expectedPayloadKind}.`,
+        ),
+      );
+    }
+  }
+
+  if (!("payload" in value)) {
+    diagnostics.push(
+      compatibilityError("textprotocol.payload-missing", "Result envelope payload is required."),
+    );
+  }
+
+  if (value.provenance === undefined) {
+    if (options.requireProvenance === true) {
+      diagnostics.push(
+        compatibilityError("textprotocol.provenance-missing", "Result envelope provenance is required."),
+      );
+    }
+  } else if (!isTextProtocolProvenance(value.provenance)) {
+    diagnostics.push(
+      compatibilityError("textprotocol.provenance", "Result envelope provenance is invalid."),
+    );
+  }
+
+  if (
+    value.diagnostics !== undefined &&
+    (!Array.isArray(value.diagnostics) ||
+      !value.diagnostics.every((entry: unknown) => isTextProtocolDiagnostic(entry)))
+  ) {
+    diagnostics.push(
+      compatibilityError("textprotocol.diagnostics", "Result envelope diagnostics are invalid."),
+    );
+  }
+
+  if (value.claimBoundary === undefined) {
+    if (options.requireClaimBoundary === true) {
+      diagnostics.push(
+        compatibilityError(
+          "textprotocol.claim-boundary-missing",
+          "Result envelope claimBoundary is required.",
+        ),
+      );
+    }
+  } else if (!isNonEmptyString(value.claimBoundary)) {
+    diagnostics.push(
+      compatibilityError("textprotocol.claim-boundary", "Result envelope claimBoundary is invalid."),
+    );
+  }
+
+  if (value.limitations === undefined) {
+    if (options.requireLimitations === true) {
+      diagnostics.push(
+        compatibilityError("textprotocol.limitations-missing", "Result envelope limitations are required."),
+      );
+    }
+  } else if (!isStringArray(value.limitations)) {
+    diagnostics.push(
+      compatibilityError("textprotocol.limitations", "Result envelope limitations are invalid."),
+    );
+  }
+
+  return {
+    ok: !hasErrorDiagnostics(diagnostics),
+    diagnostics,
+  };
 }

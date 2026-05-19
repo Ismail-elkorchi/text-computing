@@ -3036,7 +3036,7 @@ export function createPosMorphLemmaResultEnvelope(
       ...(result.document.source ? { source: result.document.source } : {}),
       references: [
         {
-          kind: "textdoc-document",
+          kind: "textdoc-document-v1",
           id: result.document.documentId,
         },
         ...(options.referenceId
@@ -3121,7 +3121,7 @@ export function createRuleBackedNerResultEnvelope(
       ...(result.document.source ? { source: result.document.source } : {}),
       references: [
         {
-          kind: "textdoc-document",
+          kind: "textdoc-document-v1",
           id: result.document.documentId,
         },
         ...(options.referenceId
@@ -3202,7 +3202,7 @@ export function createRelationExtractionResultEnvelope(
       ...(result.document.source ? { source: result.document.source } : {}),
       references: [
         {
-          kind: "textdoc-document",
+          kind: "textdoc-document-v1",
           id: result.document.documentId,
         },
         ...(options.referenceId
@@ -3283,7 +3283,7 @@ export function createCoreferenceResultEnvelope(
       ...(result.document.source ? { source: result.document.source } : {}),
       references: [
         {
-          kind: "textdoc-document",
+          kind: "textdoc-document-v1",
           id: result.document.documentId,
         },
         ...(options.referenceId
@@ -3364,7 +3364,7 @@ export function createDependencyParserResultEnvelope(
       ...(result.document.source ? { source: result.document.source } : {}),
       references: [
         {
-          kind: "textdoc-document",
+          kind: "textdoc-document-v1",
           id: result.document.documentId,
         },
         ...(options.referenceId

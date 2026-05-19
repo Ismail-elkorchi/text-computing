@@ -16,7 +16,7 @@ import {
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textdoc";
-const expectedPayloadKind: typeof textDocDocumentPayloadKind = "textdoc-document";
+const expectedPayloadKind: typeof textDocDocumentPayloadKind = "textdoc-document-v1";
 
 const issueNineAnnotationSet: TextDocTokenSentenceAnnotationSet = {
   schemaVersion: tokenSentenceAnnotationSchemaVersion,

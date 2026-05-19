@@ -50,7 +50,7 @@ Each trace records:
 
 The trace payload is designed to sit inside
 [`../../schemas/textprotocol-result-envelope-v1.schema.json`](../../schemas/textprotocol-result-envelope-v1.schema.json)
-with payload kind `textpipeline-trace`.
+with payload kind `textpipeline-trace-v1`.
 
 ## Deliberate v1 exclusions
 

@@ -4,7 +4,7 @@ export type PackageName = typeof packageName;
 
 export const tokenSentenceAnnotationSchemaVersion = 1 as const;
 export const documentSchemaVersion = 1 as const;
-export const textDocDocumentPayloadKind = "textdoc-document" as const;
+export const textDocDocumentPayloadKind = "textdoc-document-v1" as const;
 export const textDocConlluRoundTripPayloadKind = "textdoc-conllu-roundtrip" as const;
 
 export type TextDocTokenSentenceAnnotationSchemaVersion =

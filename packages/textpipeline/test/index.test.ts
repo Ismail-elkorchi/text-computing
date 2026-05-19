@@ -16,7 +16,7 @@ import {
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textpipeline";
-const expectedPayloadKind: typeof textPipelineTracePayloadKind = "textpipeline-trace";
+const expectedPayloadKind: typeof textPipelineTracePayloadKind = "textpipeline-trace-v1";
 const expectedTraceSchemaVersion: typeof textPipelineTraceSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
