@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "foundation-release-candidates",
-  "publicHead": "e8503c43967945c498b5b22b56bbe9e736ddf1e1",
+  "publicHead": "bb44f72786bf1f5ec36ab3d5ef366f9713f76fab",
   "packages": [
     {
       "packageName": "@ismail-elkorchi/textprotocol",
@@ -16,7 +16,10 @@
         "supported-version negotiation",
         "deterministic JSON transport wrapper"
       ],
-      "downstreamDependents": ["@ismail-elkorchi/textpipeline", "@ismail-elkorchi/textrules"],
+      "downstreamDependents": [
+        "@ismail-elkorchi/textpipeline",
+        "@ismail-elkorchi/textrules"
+      ],
       "requiredEvidenceRefs": [
         "packages/textprotocol/package.json",
         "packages/textprotocol/src/index.ts",
@@ -59,7 +62,8 @@
         "packages/textconformance/README.md"
       ],
       "releaseBlockers": [
-        "Benchmark runner is not release-ready."
+        "Benchmark runner is not release-ready.",
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ]
     },
     {
@@ -93,7 +97,8 @@
         "packages/textdoc/README.md"
       ],
       "releaseBlockers": [
-        "Task-specific graph semantics remain limited beyond package-level graph integrity checks."
+        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ]
     },
     {
@@ -109,7 +114,9 @@
         "resource loading",
         "resource registry lookup"
       ],
-      "downstreamDependents": ["@ismail-elkorchi/textrules"],
+      "downstreamDependents": [
+        "@ismail-elkorchi/textrules"
+      ],
       "requiredEvidenceRefs": [
         "packages/textpack/package.json",
         "packages/textpack/src/index.ts",
@@ -121,12 +128,14 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "releaseBlockers": [
-        "Multilingual pack coverage and update workflow are not broad enough for package release."
+        "Multilingual pack coverage and update workflow are not broad enough for package release.",
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ]
     }
   ],
   "notes": [
-    "This artifact defines non-publishing release-candidate gates only; packages remain private until release blockers are cleared.",
-    "Foundational packages must stabilize before dependent package release-readiness can advance."
+    "This artifact defines remaining private foundation release candidates only; packages leave this list when alpha release gates pass.",
+    "Foundational packages must stabilize before dependent package release-readiness can advance.",
+    "Beta and production-candidate limitations remain recorded outside alpha release blockers."
   ]
 }

@@ -4,7 +4,14 @@
   "title": "Package release gates v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "scope", "requiredGates", "dependencyReleaseOrder", "packages"],
+  "required": [
+    "schemaVersion",
+    "scope",
+    "requiredGates",
+    "phaseCompletionEvidence",
+    "dependencyReleaseOrder",
+    "packages"
+  ],
   "properties": {
     "schemaVersion": { "const": 1 },
     "scope": { "const": "package-release-gates" },
@@ -22,6 +29,27 @@
           "claim-hygiene",
           "downstream-api-stability"
         ]
+      }
+    },
+    "phaseCompletionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "evidenceRefs", "commands", "claimBoundary"],
+      "properties": {
+        "phase": { "const": "alpha-foundation-release-0.1" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/repoRef" }
+        },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "claimBoundary": { "type": "string", "minLength": 1 }
       }
     },
     "dependencyReleaseOrder": {
@@ -87,16 +115,17 @@
         "gates",
         "downstreamApiStability",
         "releaseBlockers",
+        "blockerClassifications",
         "evidenceRefs",
         "limitations"
       ],
       "properties": {
         "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" },
         "releaseTrack": {
-          "enum": ["public-beta", "private-unreleased"]
+          "enum": ["public-beta", "public-alpha", "private-unreleased"]
         },
         "supportStatus": {
-          "enum": ["scaffold", "readiness-only", "slice-proven", "beta", "production-candidate"]
+          "enum": ["scaffold", "readiness-only", "slice-proven", "alpha", "beta", "production-candidate"]
         },
         "releaseReadiness": {
           "enum": ["publishable", "blocked"]
@@ -146,6 +175,10 @@
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
         },
+        "blockerClassifications": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/blockerClassification" }
+        },
         "evidenceRefs": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
@@ -154,6 +187,24 @@
           "type": "array",
           "minItems": 1,
           "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "blockerClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocker", "maturity", "decision", "evidenceRefs"],
+      "properties": {
+        "blocker": { "type": "string", "minLength": 1 },
+        "maturity": {
+          "enum": ["alpha", "beta", "production-candidate", "non-blocking limitation"]
+        },
+        "decision": { "type": "string", "minLength": 1 },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/repoRef" }
         }
       }
     }

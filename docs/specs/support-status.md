@@ -10,6 +10,7 @@ This document is generated from `docs/specs/support-status.v1.json`.
 - `scaffold` — workspace or package shell exists, but no ratified behavior exists yet.
 - `readiness-only` — frozen artifacts exist, but behavior is not implemented yet.
 - `slice-proven` — executable behavior exists only for declared frozen slices or fixtures.
+- `alpha` — externally installable package behavior is proven for a bounded declared scope, with beta or production-candidate limitations still possible.
 - `beta` — broader package behavior exists with multi-runtime or conformance evidence, but production support is not yet claimed.
 - `production-candidate` — broad support, conformance, packaging, and operational evidence are available for the declared scope.
 

@@ -9,6 +9,7 @@
     "scaffold",
     "readiness-only",
     "slice-proven",
+    "alpha",
     "beta",
     "production-candidate"
   ],

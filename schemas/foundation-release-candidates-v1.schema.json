@@ -14,7 +14,6 @@
     },
     "packages": {
       "type": "array",
-      "minItems": 4,
       "maxItems": 4,
       "items": { "$ref": "#/definitions/package" }
     },

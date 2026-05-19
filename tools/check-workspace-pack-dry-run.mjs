@@ -1,6 +1,10 @@
 import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
 
-const REQUIRED_FILES = ["package.json", "README.md", "CHANGELOG.md", "dist/index.js", "dist/index.d.ts"];
+const COMMON_REQUIRED_FILES = ["package.json", "README.md", "CHANGELOG.md"];
+const ENTRYPOINT_FILES_BY_PACKAGE = new Map([
+  ["@ismail-elkorchi/textfacts", ["dist/mod.js", "dist/mod.d.ts"]],
+]);
 
 function fail(message, details) {
   console.error(message);
@@ -39,6 +43,10 @@ function runPackDryRun() {
   });
 }
 
+async function readJson(path) {
+  return JSON.parse(await readFile(path, "utf8"));
+}
+
 const raw = await runPackDryRun();
 let reports;
 try {
@@ -50,19 +58,39 @@ try {
 expect(Array.isArray(reports), "Workspace pack dry-run output must be an array.");
 
 const byName = new Map(reports.map((report) => [report.name, report]));
-const nonTextfacts = reports.filter((report) => report.name !== "@ismail-elkorchi/textfacts");
+const gates = await readJson("fixtures/package-release/gates.v1.json");
+const gateByName = new Map(gates.packages.map((entry) => [entry.packageName, entry]));
 
 expect(reports.length === 9, "Workspace pack dry-run must cover every workspace package.", {
   packageCount: reports.length,
   packageNames: reports.map((report) => report.name),
 });
-expect(nonTextfacts.length === 8, "Workspace pack dry-run must cover every non-textfacts package.");
 expect(byName.get("@ismail-elkorchi/textfacts")?.version === "0.1.0", "textfacts dry-run version must stay public beta.");
 
-for (const report of nonTextfacts) {
-  expect(report.version === "0.0.0", `${report.name} must remain at private-unreleased version 0.0.0.`);
+let privatePackageCount = 0;
+let publicPackageCount = 0;
+for (const report of reports) {
+  const gate = gateByName.get(report.name);
+  const packageDir = report.name.split("/")[1];
+  const packageJson = await readJson(`packages/${packageDir}/package.json`);
+
+  expect(gate !== undefined, `${report.name} is missing from package release gates.`);
+  expect(report.version === packageJson.version, `${report.name} dry-run version must match package.json.`);
+  if (gate.releaseTrack === "private-unreleased") {
+    privatePackageCount += 1;
+    expect(report.version === "0.0.0", `${report.name} must remain at private-unreleased version 0.0.0.`);
+    expect(packageJson.private === true, `${report.name} private-unreleased package must remain private.`);
+  } else {
+    publicPackageCount += 1;
+    expect(report.version !== "0.0.0", `${report.name} public package must not use version 0.0.0.`);
+    expect(packageJson.private !== true, `${report.name} public package must not be private.`);
+  }
   const files = new Set((report.files ?? []).map((file) => file.path));
-  for (const requiredFile of REQUIRED_FILES) {
+  const requiredFiles = [
+    ...COMMON_REQUIRED_FILES,
+    ...(ENTRYPOINT_FILES_BY_PACKAGE.get(report.name) ?? ["dist/index.js", "dist/index.d.ts"]),
+  ];
+  for (const requiredFile of requiredFiles) {
     expect(files.has(requiredFile), `${report.name} dry-run package is missing ${requiredFile}.`, {
       files: [...files].sort(),
     });
@@ -74,4 +102,4 @@ for (const report of nonTextfacts) {
   );
 }
 
-console.log(`Workspace pack dry-run OK (packages=${reports.length}, privatePackages=${nonTextfacts.length}).`);
+console.log(`Workspace pack dry-run OK (packages=${reports.length}, privatePackages=${privatePackageCount}, publicPackages=${publicPackageCount}).`);
