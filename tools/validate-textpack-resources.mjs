@@ -7,6 +7,7 @@ import {
   lookupTextPackLoadedEntries,
   queryTextPackResourceRegistry,
   resolveTextPackResources,
+  textPackDemoTrimLowercaseCanonicalizer,
 } from "../packages/textpack/src/index.ts";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
@@ -153,15 +154,45 @@ if (legalStopwordMatches[0]?.resource.resourceId !== "stopwords-en-legal") {
   process.exit(1);
 }
 
+const hiddenLegalStopwordMatches = lookupTextPackLoadedEntries(loadedLegalStopwords.resources, "Thereof");
+if (hiddenLegalStopwordMatches.length !== 0) {
+  console.error("Loaded legal stopword lookup must be exact unless a canonicalizer is supplied.");
+  console.error(JSON.stringify(hiddenLegalStopwordMatches, null, 2));
+  process.exit(1);
+}
+
+const canonicalLegalStopwordMatches = lookupTextPackLoadedEntries(
+  loadedLegalStopwords.resources,
+  "Thereof",
+  { canonicalizer: textPackDemoTrimLowercaseCanonicalizer },
+);
+if (
+  canonicalLegalStopwordMatches[0]?.resource.resourceId !== "stopwords-en-legal" ||
+  canonicalLegalStopwordMatches[0]?.canonicalization?.canonicalizerId !== "textpack.demo.trim-lowercase" ||
+  canonicalLegalStopwordMatches[0]?.canonicalization?.query.canonicalValue !== "thereof" ||
+  canonicalLegalStopwordMatches[0]?.canonicalization?.entry.canonicalValue !== "thereof"
+) {
+  console.error("Explicit canonicalized legal stopword lookup failed.");
+  console.error(JSON.stringify(canonicalLegalStopwordMatches, null, 2));
+  process.exit(1);
+}
+
 const loadedLexicon = loadTextPackResources(
   validManifests,
   { kind: "lexicon", language: "en" },
   resourceContents,
 );
-const hostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST")[0]?.entry;
+const hostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "host")[0]?.entry;
 if (hostEntry?.attributes.lemma !== "host" || hostEntry.attributes.pos !== "VERB") {
   console.error("Loaded lexicon attribute lookup failed.");
   console.error(JSON.stringify(loadedLexicon, null, 2));
+  process.exit(1);
+}
+
+const hiddenHostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST")[0]?.entry;
+if (hiddenHostEntry !== undefined) {
+  console.error("Loaded lexicon lookup must not lowercase without a caller-provided canonicalizer.");
+  console.error(JSON.stringify(hiddenHostEntry, null, 2));
   process.exit(1);
 }
 
@@ -170,7 +201,7 @@ const loadedGazetteer = loadTextPackResources(
   { kind: "gazetteer", language: "en", profile: "legal" },
   resourceContents,
 );
-const courtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "supreme court")[0]?.entry;
+const courtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "Supreme Court")[0]?.entry;
 if (courtEntry?.label !== "ORG") {
   console.error("Loaded gazetteer label lookup failed.");
   console.error(JSON.stringify(loadedGazetteer, null, 2));
@@ -203,15 +234,43 @@ if (
   process.exit(1);
 }
 
+const uppercaseFrenchStopwordLookup = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  language: "FR",
+});
+if (!uppercaseFrenchStopwordLookup.diagnostics.some((entry) => entry.code === "language-mismatch")) {
+  console.error("Registry lookup must not lowercase language requests without a canonicalizer.");
+  console.error(JSON.stringify(uppercaseFrenchStopwordLookup, null, 2));
+  process.exit(1);
+}
+
+const canonicalFrenchStopwordLookup = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  language: "FR",
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+});
+if (canonicalFrenchStopwordLookup.resources.map((entry) => entry.resourceId).join(",") !== "stopwords-fr-core") {
+  console.error("Explicit canonicalized registry lookup failed.");
+  console.error(JSON.stringify(canonicalFrenchStopwordLookup, null, 2));
+  process.exit(1);
+}
+
 const loadedFrenchLexicon = loadTextPackRegistryResources(
   registry,
   { kind: "lexicon", language: "fr" },
   resourceContents,
 );
-const maisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS")[0]?.entry;
+const maisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "maisons")[0]?.entry;
 if (maisonEntry?.attributes.lemma !== "maison" || maisonEntry.attributes.pos !== "NOUN") {
   console.error("Registry-loaded French lexicon lookup failed.");
   console.error(JSON.stringify(loadedFrenchLexicon, null, 2));
+  process.exit(1);
+}
+
+const hiddenMaisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS")[0]?.entry;
+if (hiddenMaisonEntry !== undefined) {
+  console.error("Registry-loaded French lexicon lookup must not lowercase by default.");
+  console.error(JSON.stringify(hiddenMaisonEntry, null, 2));
   process.exit(1);
 }
 

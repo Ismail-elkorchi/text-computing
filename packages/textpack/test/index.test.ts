@@ -8,6 +8,7 @@ import {
   parseTextPackResourceContent,
   queryTextPackResourceRegistry,
   resolveTextPackResources,
+  textPackDemoTrimLowercaseCanonicalizer,
   textPackManifestSchemaVersion,
   type TextPackManifestV1,
 } from "../src/index.ts";
@@ -221,12 +222,40 @@ if (loadedStopwords.resources.map((entry) => entry.resource.resourceId).join(","
 }
 
 const legalStopwordMatches = lookupTextPackLoadedEntries(loadedStopwords.resources, "Thereof");
-if (legalStopwordMatches[0]?.resource.resourceId !== "stopwords-en-legal") {
-  throw new Error("loaded stopword lookup should be normalized and preserve resource metadata");
+if (legalStopwordMatches.length !== 0) {
+  throw new Error("loaded stopword lookup should be exact by default");
+}
+
+const canonicalLegalStopwordMatches = lookupTextPackLoadedEntries(loadedStopwords.resources, "Thereof", {
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+});
+const canonicalLegalStopword = canonicalLegalStopwordMatches[0];
+const canonicalLegalStopwordMetadata = canonicalLegalStopword?.canonicalization;
+if (
+  canonicalLegalStopword?.resource.resourceId !== "stopwords-en-legal" ||
+  canonicalLegalStopwordMetadata?.canonicalizerId !== "textpack.demo.trim-lowercase" ||
+  canonicalLegalStopwordMetadata?.query.originalValue !== "Thereof" ||
+  canonicalLegalStopwordMetadata?.query.canonicalValue !== "thereof" ||
+  canonicalLegalStopwordMetadata?.entry.originalValue !== "thereof" ||
+  canonicalLegalStopwordMetadata?.entry.canonicalValue !== "thereof"
+) {
+  throw new Error("explicit canonicalized stopword lookup should preserve canonicalization metadata");
+}
+
+const exactLegalStopwordMatches = lookupTextPackLoadedEntries(loadedStopwords.resources, "thereof");
+if (exactLegalStopwordMatches[0]?.resource.resourceId !== "stopwords-en-legal") {
+  throw new Error("loaded stopword lookup should preserve resource metadata");
 }
 
 const baseStopwordMatches = lookupTextPackLoadedEntries(loadedStopwords.resources, "THE");
-if (baseStopwordMatches[0]?.resource.resourceId !== "stopwords-en-core") {
+if (baseStopwordMatches.length !== 0) {
+  throw new Error("base stopword lookup should not use hidden case folding");
+}
+
+const canonicalBaseStopwordMatches = lookupTextPackLoadedEntries(loadedStopwords.resources, "THE", {
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+});
+if (canonicalBaseStopwordMatches[0]?.resource.resourceId !== "stopwords-en-core") {
   throw new Error("base stopword lookup should remain available after profile overlays");
 }
 
@@ -239,9 +268,21 @@ const loadedLexicon = loadTextPackResources(
   contentByPath,
 );
 
-const hostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST")[0]?.entry;
+const hiddenHostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST")[0]?.entry;
+if (hiddenHostEntry !== undefined) {
+  throw new Error("lexicon lookup should not case-fold without a caller-provided canonicalizer");
+}
+
+const hostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "host")[0]?.entry;
 if (hostEntry?.attributes.lemma !== "host" || hostEntry.attributes.pos !== "VERB") {
   throw new Error("lexicon loading should parse deterministic key=value attributes");
+}
+
+const canonicalHostEntry = lookupTextPackLoadedEntries(loadedLexicon.resources, "HOST", {
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+})[0]?.entry;
+if (canonicalHostEntry?.attributes.lemma !== "host" || canonicalHostEntry.attributes.pos !== "VERB") {
+  throw new Error("explicit canonicalized lexicon lookup should parse deterministic key=value attributes");
 }
 
 const loadedGazetteer = loadTextPackResources(
@@ -254,14 +295,26 @@ const loadedGazetteer = loadTextPackResources(
   contentByPath,
 );
 
-const courtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "supreme court")[0]?.entry;
+const hiddenCourtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "supreme court")[0]?.entry;
+if (hiddenCourtEntry !== undefined) {
+  throw new Error("gazetteer lookup should not case-fold without a caller-provided canonicalizer");
+}
+
+const courtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "Supreme Court")[0]?.entry;
 if (courtEntry?.label !== "ORG") {
   throw new Error("gazetteer loading should parse labels");
 }
 
+const canonicalCourtEntry = lookupTextPackLoadedEntries(loadedGazetteer.resources, "supreme court", {
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+})[0]?.entry;
+if (canonicalCourtEntry?.label !== "ORG") {
+  throw new Error("explicit canonicalized gazetteer lookup should parse labels");
+}
+
 const registry = createTextPackResourceRegistry([baseManifest, overlayManifest, frenchManifest]);
 if (registry.languages.join(",") !== "en,fr") {
-  throw new Error("registry should expose deterministic normalized language coverage");
+  throw new Error("registry should expose deterministic exact language coverage");
 }
 
 if (registry.kinds.join(",") !== "abbreviation-list,gazetteer,lexicon,stopwords") {
@@ -279,6 +332,23 @@ if (
   throw new Error("registry query should select French stopwords without unrelated mismatch noise");
 }
 
+const uppercaseFrenchStopwords = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  language: "FR",
+});
+if (!uppercaseFrenchStopwords.diagnostics.some((entry) => entry.code === "language-mismatch")) {
+  throw new Error("registry query should not case-fold language requests without a canonicalizer");
+}
+
+const canonicalFrenchStopwords = queryTextPackResourceRegistry(registry, {
+  kind: "stopwords",
+  language: "FR",
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+});
+if (canonicalFrenchStopwords.resources.map((entry) => entry.resourceId).join(",") !== "stopwords-fr-core") {
+  throw new Error("registry query should support explicit canonicalized language requests");
+}
+
 const loadedFrenchLexicon = loadTextPackRegistryResources(
   registry,
   {
@@ -287,9 +357,21 @@ const loadedFrenchLexicon = loadTextPackRegistryResources(
   },
   contentByPath,
 );
-const maisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS")[0]?.entry;
+const hiddenMaisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS")[0]?.entry;
+if (hiddenMaisonEntry !== undefined) {
+  throw new Error("multilingual lexicon lookup should not lowercase without a caller-provided canonicalizer");
+}
+
+const maisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "maisons")[0]?.entry;
 if (maisonEntry?.attributes.lemma !== "maison" || maisonEntry.attributes.pos !== "NOUN") {
   throw new Error("registry loading should preserve multilingual lexicon attributes");
+}
+
+const canonicalMaisonEntry = lookupTextPackLoadedEntries(loadedFrenchLexicon.resources, "MAISONS", {
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+})[0]?.entry;
+if (canonicalMaisonEntry?.attributes.lemma !== "maison" || canonicalMaisonEntry.attributes.pos !== "NOUN") {
+  throw new Error("explicit canonicalized multilingual lexicon lookup should preserve attributes");
 }
 
 const directFrenchResource = queryTextPackResourceRegistry(registry, {
@@ -305,9 +387,21 @@ if (!missingContent.diagnostics.some((entry) => entry.code === "resource-content
   throw new Error("missing resource content should produce an explicit diagnostic");
 }
 
-const duplicateParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nThe\n");
+const caseDistinctParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nThe\n");
+if (caseDistinctParsed.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) {
+  throw new Error("case-distinct loaded entries should not duplicate under exact parsing");
+}
+
+const duplicateParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nthe\n");
 if (!duplicateParsed.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) {
-  throw new Error("duplicate loaded entries should produce a diagnostic");
+  throw new Error("exact duplicate loaded entries should produce a diagnostic");
+}
+
+const canonicalDuplicateParsed = parseTextPackResourceContent(lookupResult.resources[0]!, "the\nThe\n", {
+  canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+});
+if (!canonicalDuplicateParsed.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) {
+  throw new Error("explicit canonicalized duplicate loaded entries should produce a diagnostic");
 }
 
 const malformedLexicon = parseTextPackResourceContent(

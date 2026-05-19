@@ -13,6 +13,7 @@ import {
 import {
   isTextPackManifestV1,
   resolveTextPackResources,
+  textPackDemoTrimLowercaseCanonicalizer,
   textPackManifestSchemaVersion,
 } from "@ismail-elkorchi/textpack";
 import { isTextPipelineTraceV1, runTextPipeline } from "@ismail-elkorchi/textpipeline";
@@ -222,15 +223,32 @@ function fuzzTextPack() {
   assert(isTextPackManifestV1(overlay), "overlay pack manifest should be valid");
   const forward = resolveTextPackResources([base, overlay], {
     kind: "stopwords",
-    language: "EN",
-    profile: "LEGAL",
+    language: "en",
+    profile: "legal",
   });
   const reverse = resolveTextPackResources([overlay, base], {
     kind: "stopwords",
     language: "en",
     profile: "legal",
   });
+  const mismatchedCase = resolveTextPackResources([base, overlay], {
+    kind: "stopwords",
+    language: "EN",
+    profile: "LEGAL",
+  });
+  const canonicalizedCase = resolveTextPackResources([base, overlay], {
+    kind: "stopwords",
+    language: "EN",
+    profile: "LEGAL",
+    canonicalizer: textPackDemoTrimLowercaseCanonicalizer,
+  });
   assert(forward.resources.map((entry) => entry.resourceId).join(",") === "stopwords-en-legal,stopwords-en-core");
+  assert(mismatchedCase.resources.length === 0, "resource resolution should be exact by default");
+  assert(
+    canonicalizedCase.resources.map((entry) => entry.resourceId).join(",") ===
+      "stopwords-en-legal,stopwords-en-core",
+    "resource resolution should support explicit canonicalization",
+  );
   assert(
     forward.resources.map((entry) => entry.resourceId).join(",") ===
       reverse.resources.map((entry) => entry.resourceId).join(","),

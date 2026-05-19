@@ -65,6 +65,7 @@ export interface TextPackLookupRequest {
   readonly kind: TextPackResourceKind;
   readonly language?: string;
   readonly profile?: string;
+  readonly canonicalizer?: TextPackCanonicalizer;
 }
 
 export interface TextPackRegistryQuery extends TextPackLookupRequest {
@@ -113,6 +114,31 @@ export interface TextPackResourceRegistry {
   readonly profiles: readonly string[];
 }
 
+export interface TextPackCanonicalizer {
+  readonly id: string;
+  canonicalize(value: string): string;
+}
+
+export interface TextPackCanonicalizationMetadata {
+  readonly canonicalizerId: string;
+  readonly originalValue: string;
+  readonly canonicalValue: string;
+}
+
+export interface TextPackResourceParseOptions {
+  readonly canonicalizer?: TextPackCanonicalizer;
+}
+
+export interface TextPackEntryLookupOptions {
+  readonly canonicalizer?: TextPackCanonicalizer;
+}
+
+export interface TextPackEntryLookupCanonicalizationMetadata {
+  readonly canonicalizerId: string;
+  readonly query: TextPackCanonicalizationMetadata;
+  readonly entry: TextPackCanonicalizationMetadata;
+}
+
 export type TextPackResourceLoadDiagnosticCode =
   | "resource-content-missing"
   | "malformed-resource-row"
@@ -132,6 +158,7 @@ export interface TextPackLoadedEntry {
   readonly lookupToken: string;
   readonly line: number;
   readonly attributes: Readonly<Record<string, string>>;
+  readonly canonicalization?: TextPackCanonicalizationMetadata;
   readonly label?: string;
 }
 
@@ -150,6 +177,7 @@ export interface TextPackLoadResult {
 export interface TextPackEntryLookupMatch {
   readonly resource: TextPackResolvedResource;
   readonly entry: TextPackLoadedEntry;
+  readonly canonicalization?: TextPackEntryLookupCanonicalizationMetadata;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -175,6 +203,35 @@ function isTextPackResourceKind(value: unknown): value is TextPackResourceKind {
 
 export function normalizeTextPackLookupToken(value: string): string {
   return value.trim().toLowerCase();
+}
+
+export const textPackDemoTrimLowercaseCanonicalizer: TextPackCanonicalizer = {
+  id: "textpack.demo.trim-lowercase",
+  canonicalize: normalizeTextPackLookupToken,
+};
+
+function canonicalizeTextPackValue(
+  value: string,
+  canonicalizer: TextPackCanonicalizer,
+): TextPackCanonicalizationMetadata {
+  if (!isNonEmptyString(canonicalizer.id)) {
+    throw new TypeError("Textpack canonicalizer id must be a non-empty string.");
+  }
+
+  const canonicalValue = canonicalizer.canonicalize(value);
+  if (typeof canonicalValue !== "string") {
+    throw new TypeError(`Textpack canonicalizer ${canonicalizer.id} must return a string.`);
+  }
+
+  return {
+    canonicalizerId: canonicalizer.id,
+    originalValue: value,
+    canonicalValue,
+  };
+}
+
+function comparableTextPackValue(value: string, canonicalizer?: TextPackCanonicalizer): string {
+  return canonicalizer ? canonicalizeTextPackValue(value, canonicalizer).canonicalValue : value;
 }
 
 function textPackContentForPath(source: TextPackResourceContentSource, resourcePath: string): string | undefined {
@@ -317,8 +374,9 @@ function compareTextPackResources(
 }
 
 function sortedUniqueTextPackValues(values: Iterable<string | undefined>): readonly string[] {
-  return [...new Set([...values].filter(isNonEmptyString).map((value) => normalizeTextPackLookupToken(value)))]
-    .sort((left, right) => left.localeCompare(right));
+  return [...new Set([...values].filter(isNonEmptyString))].sort((left, right) =>
+    left.localeCompare(right),
+  );
 }
 
 function resolveTextPackManifestResources(
@@ -376,11 +434,17 @@ export function queryTextPackResourceRegistry(
   const mismatchDiagnostics: TextPackLookupDiagnostic[] = [];
   const resources: TextPackResolvedResource[] = [];
   const requestLanguage =
-    request.language === undefined ? undefined : normalizeTextPackLookupToken(request.language);
+    request.language === undefined
+      ? undefined
+      : comparableTextPackValue(request.language, request.canonicalizer);
   const requestProfile =
-    request.profile === undefined ? undefined : normalizeTextPackLookupToken(request.profile);
+    request.profile === undefined
+      ? undefined
+      : comparableTextPackValue(request.profile, request.canonicalizer);
   const requestLookupKey =
-    request.lookupKey === undefined ? undefined : normalizeTextPackLookupToken(request.lookupKey);
+    request.lookupKey === undefined
+      ? undefined
+      : comparableTextPackValue(request.lookupKey, request.canonicalizer);
 
   for (const resource of registry.resources) {
     if (resource.kind !== request.kind) continue;
@@ -388,15 +452,17 @@ export function queryTextPackResourceRegistry(
     if (request.resourceId !== undefined && resource.resourceId !== request.resourceId) continue;
     if (
       requestLookupKey !== undefined &&
-      normalizeTextPackLookupToken(resource.lookupKey) !== requestLookupKey
+      comparableTextPackValue(resource.lookupKey, request.canonicalizer) !== requestLookupKey
     ) {
       continue;
     }
 
     const resourceLanguage =
-      resource.language === undefined ? undefined : normalizeTextPackLookupToken(resource.language);
+      resource.language === undefined
+        ? undefined
+        : comparableTextPackValue(resource.language, request.canonicalizer);
     const resourceProfiles = [...(resource.profiles ?? [])]
-      .map((profile) => normalizeTextPackLookupToken(profile))
+      .map((profile) => comparableTextPackValue(profile, request.canonicalizer))
       .sort();
 
     if (
@@ -440,7 +506,8 @@ export function queryTextPackResourceRegistry(
       const right = resources[otherIndex];
       if (!right) continue;
       if (
-        normalizeTextPackLookupToken(left.lookupKey) === normalizeTextPackLookupToken(right.lookupKey) &&
+        comparableTextPackValue(left.lookupKey, request.canonicalizer) ===
+          comparableTextPackValue(right.lookupKey, request.canonicalizer) &&
         left.overlayPrecedence === right.overlayPrecedence
       ) {
         diagnostics.push({
@@ -466,6 +533,7 @@ export function resolveTextPackResources(
 export function parseTextPackResourceContent(
   resource: TextPackResolvedResource,
   content: string,
+  options: TextPackResourceParseOptions = {},
 ): {
   readonly entries: readonly TextPackLoadedEntry[];
   readonly diagnostics: readonly TextPackResourceLoadDiagnostic[];
@@ -539,7 +607,10 @@ export function parseTextPackResourceContent(
       continue;
     }
 
-    const lookupToken = normalizeTextPackLookupToken(value);
+    const canonicalization = options.canonicalizer
+      ? canonicalizeTextPackValue(value, options.canonicalizer)
+      : undefined;
+    const lookupToken = canonicalization?.canonicalValue ?? value;
     if (seenLookupTokens.has(lookupToken)) {
       diagnostics.push({
         code: "duplicate-resource-entry",
@@ -558,6 +629,7 @@ export function parseTextPackResourceContent(
       lookupToken,
       line,
       attributes,
+      ...(canonicalization ? { canonicalization } : {}),
       ...(label ? { label } : {}),
     });
   }
@@ -569,14 +641,21 @@ export function loadTextPackResources(
   manifests: readonly TextPackManifestV1[],
   request: TextPackLookupRequest,
   contents: TextPackResourceContentSource,
+  options: TextPackResourceParseOptions = {},
 ): TextPackLoadResult {
-  return loadTextPackRegistryResources(createTextPackResourceRegistry(manifests), request, contents);
+  return loadTextPackRegistryResources(
+    createTextPackResourceRegistry(manifests),
+    request,
+    contents,
+    options,
+  );
 }
 
 export function loadTextPackRegistryResources(
   registry: TextPackResourceRegistry,
   request: TextPackRegistryQuery,
   contents: TextPackResourceContentSource,
+  options: TextPackResourceParseOptions = {},
 ): TextPackLoadResult {
   const resolved = queryTextPackResourceRegistry(registry, request);
   const diagnostics: (TextPackLookupDiagnostic | TextPackResourceLoadDiagnostic)[] = [
@@ -597,7 +676,7 @@ export function loadTextPackRegistryResources(
       continue;
     }
 
-    const parsed = parseTextPackResourceContent(resource, content);
+    const parsed = parseTextPackResourceContent(resource, content, options);
     diagnostics.push(...parsed.diagnostics);
     resources.push({
       resource,
@@ -611,16 +690,33 @@ export function loadTextPackRegistryResources(
 export function lookupTextPackLoadedEntries(
   resources: readonly TextPackLoadedResource[],
   value: string,
+  options: TextPackEntryLookupOptions = {},
 ): readonly TextPackEntryLookupMatch[] {
-  const lookupToken = normalizeTextPackLookupToken(value);
+  const queryCanonicalization = options.canonicalizer
+    ? canonicalizeTextPackValue(value, options.canonicalizer)
+    : undefined;
+  const lookupToken = queryCanonicalization?.canonicalValue ?? value;
   const matches: TextPackEntryLookupMatch[] = [];
 
   for (const resource of resources) {
     for (const entry of resource.entries) {
-      if (entry.lookupToken === lookupToken) {
+      const entryCanonicalization = options.canonicalizer
+        ? canonicalizeTextPackValue(entry.value, options.canonicalizer)
+        : undefined;
+      const entryLookupToken = entryCanonicalization?.canonicalValue ?? entry.lookupToken;
+      if (entryLookupToken === lookupToken) {
         matches.push({
           resource: resource.resource,
           entry,
+          ...(queryCanonicalization && entryCanonicalization
+            ? {
+                canonicalization: {
+                  canonicalizerId: queryCanonicalization.canonicalizerId,
+                  query: queryCanonicalization,
+                  entry: entryCanonicalization,
+                },
+              }
+            : {}),
         });
       }
     }
