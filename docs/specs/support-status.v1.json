@@ -4,14 +4,14 @@
     {
       "name": "@ismail-elkorchi/textfacts",
       "status": "beta",
-      "scope": "Deterministic single-text kernel. Legacy public pack/protocol/schema helpers are frozen; new cross-package growth does not land here.",
+      "scope": "Deterministic single-text kernel. Legacy broad public subpaths are frozen; new cross-package growth does not land here.",
       "evidence": [
         "Unicode conformance tests",
         "published package metadata",
         "multi-runtime tests"
       ],
       "limitations": [
-        "New cross-package protocol/resource growth is frozen outside textfacts",
+        "New cross-package protocol/resource/schema/tooling growth is frozen outside textfacts",
         "Locale tailoring breadth remains limited"
       ]
     },
