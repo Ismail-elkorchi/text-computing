@@ -90,10 +90,66 @@
       "limitations": [
         "This proves current built-package API usage by declared downstream dependents; it does not make the runner a full benchmark harness."
       ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textlab",
+      "status": "proven",
+      "dependents": [],
+      "evidenceRefs": [
+        "packages/textlab/package.json",
+        "packages/textlab/src/index.ts",
+        "packages/textlab/test/index.test.mjs",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API import and smoke usage; it does not add an interactive UI, comparator execution engine, or large-corpus browser."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpipeline",
+      "status": "proven",
+      "dependents": [],
+      "evidenceRefs": [
+        "packages/textpipeline/package.json",
+        "packages/textpipeline/src/index.ts",
+        "packages/textpipeline/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API import and smoke usage; it does not add remote orchestration, durable cache storage, worker execution, or long-running recovery."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textcorpus",
+      "status": "proven",
+      "dependents": [],
+      "evidenceRefs": [
+        "packages/textcorpus/package.json",
+        "packages/textcorpus/src/index.ts",
+        "packages/textcorpus/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API import and smoke usage; it does not add external relevance datasets, streaming retrieval, or durable index storage."
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textrules",
+      "status": "proven",
+      "dependents": [],
+      "evidenceRefs": [
+        "packages/textrules/package.json",
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test/index.test.ts",
+        "tools/check-downstream-api-stability.mjs"
+      ],
+      "limitations": [
+        "This proves current built-package API import and smoke usage; it does not broaden POS, NER, dependency parsing, relation extraction, or coreference claims."
+      ]
     }
   ],
   "notes": [
-    "This artifact clears only the downstream API stability gate for the listed foundation packages.",
+    "This artifact clears only the downstream API stability gate for the listed package release surfaces.",
     "Other release blockers remain active until separate evidence removes them."
   ]
 }
