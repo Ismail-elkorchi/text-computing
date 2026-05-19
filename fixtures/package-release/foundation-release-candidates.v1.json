@@ -39,7 +39,12 @@
       "releaseReadiness": "blocked",
       "candidateState": "candidate-ready",
       "privateRequired": true,
-      "owns": ["conformance report runtime guards", "minimal synchronous conformance runner"],
+      "owns": [
+        "conformance report runtime guards",
+        "minimal synchronous conformance runner",
+        "report diff helper",
+        "claim-registry traceability checks"
+      ],
       "downstreamDependents": [],
       "requiredEvidenceRefs": [
         "packages/textconformance/package.json",
@@ -49,10 +54,11 @@
         "fixtures/reports/task-evidence-manifest.v1.json",
         "fixtures/package-release/gates.v1.json",
         "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs"
+        "tools/check-downstream-api-stability.mjs",
+        "packages/textconformance/README.md"
       ],
       "releaseBlockers": [
-        "Diff, benchmark, and claim-registry workflows are not release-ready."
+        "Benchmark runner and release-oriented report rendering are not release-ready."
       ]
     },
     {
