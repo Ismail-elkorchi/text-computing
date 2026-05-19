@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:extension-bad-id",
+  "revision": "2026-05-19",
+  "textLengthCU": 5,
+  "text": "Alice",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "source"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "analysis",
+      "derivedFrom": ["source-view"]
+    }
+  ],
+  "layers": [
+    {
+      "id": "tokens",
+      "kind": "token",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 5
+            }
+          ],
+          "text": "Alice"
+        }
+      ]
+    },
+    {
+      "id": "extension-annotations",
+      "kind": "extension",
+      "viewId": "analysis-view",
+      "annotations": [
+        {
+          "id": "extension-1",
+          "kind": "extension",
+          "extensionId": "demo-note",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "token-1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

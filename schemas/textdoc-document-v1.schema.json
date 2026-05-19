@@ -232,7 +232,7 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "relation", "coreference-mention", "coreference-chain", "entity-link", "corpus-feature", "dependency-node", "dependency"]
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "relation", "coreference-mention", "coreference-chain", "entity-link", "corpus-feature", "dependency-node", "dependency", "extension"]
         },
         "lifecycle": { "$ref": "#/definitions/lifecycle" },
         "targets": {
@@ -536,6 +536,33 @@
         }
       ]
     },
+    "extensionSchemaRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaId"],
+      "properties": {
+        "schemaId": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "extensionAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/annotationBase" },
+        {
+          "type": "object",
+          "required": ["extensionId"],
+          "properties": {
+            "kind": { "const": "extension" },
+            "extensionId": { "type": "string", "pattern": "^[a-z][a-z0-9+.-]*:[^\\s]+$" },
+            "extensionSchema": { "$ref": "#/definitions/extensionSchemaRef" },
+            "data": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      ]
+    },
     "conlluFields": {
       "type": "object",
       "additionalProperties": false,
@@ -630,7 +657,8 @@
         { "$ref": "#/definitions/entityLinkAnnotation" },
         { "$ref": "#/definitions/corpusFeatureAnnotation" },
         { "$ref": "#/definitions/dependencyNodeAnnotation" },
-        { "$ref": "#/definitions/dependencyAnnotation" }
+        { "$ref": "#/definitions/dependencyAnnotation" },
+        { "$ref": "#/definitions/extensionAnnotation" }
       ]
     },
     "layer": {
@@ -640,7 +668,7 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "relation", "coreference-mention", "coreference-chain", "entity-link", "corpus-feature", "dependency-node", "dependency"]
+          "enum": ["token", "sentence", "pos", "lemma", "morphology", "entity", "relation", "coreference-mention", "coreference-chain", "entity-link", "corpus-feature", "dependency-node", "dependency", "extension"]
         },
         "viewId": { "type": "string", "minLength": 1 },
         "allowSpanOverlap": { "type": "boolean" },

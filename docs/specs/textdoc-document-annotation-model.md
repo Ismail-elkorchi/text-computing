@@ -23,6 +23,19 @@ It demonstrates that one document can hold:
 - entity-link annotations with canonical or NIL resolution; and
 - corpus-feature annotations.
 
+The extension structural example is
+[`../../fixtures/textdoc/examples/document-extension-model-v1.json`](../../fixtures/textdoc/examples/document-extension-model-v1.json).
+It demonstrates how package-specific annotation payloads are carried as `kind: "extension"` without
+adding a new hardcoded core annotation kind.
+
+## Core versus extension policy
+
+A new annotation kind belongs in `textdoc` core only when the repository can define stable
+cross-package semantics and runtime/schema validation for that kind. Task-specific, domain-specific,
+or producer-specific payloads belong in `kind: "extension"` annotations with a URI-like
+`extensionId`, optional package schema metadata, declared targets, lifecycle, provenance,
+confidence, loss markers, ambiguity-set references, and external document references.
+
 ## Invalid-reference policy
 
 The document model rejects:
@@ -47,6 +60,8 @@ Deterministic ordering is preserved by the serialized array order for `views`, `
 
 Negative controls for those failures live under
 [`../../fixtures/textdoc/invalid/`](../../fixtures/textdoc/invalid/).
+The extension-id negative control proves that extension annotations require a declared scheme-like
+identifier instead of an unscoped label.
 
 ## Result-envelope requirements
 
