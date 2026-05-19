@@ -68,7 +68,12 @@
       "releaseReadiness": "blocked",
       "candidateState": "candidate-ready",
       "privateRequired": true,
-      "owns": ["document container", "annotation layers", "CoNLL-U round-trip helpers"],
+      "owns": [
+        "document container",
+        "annotation layers",
+        "CoNLL-U round-trip helpers",
+        "document reference validator"
+      ],
       "downstreamDependents": [
         "@ismail-elkorchi/textpipeline",
         "@ismail-elkorchi/textcorpus",
@@ -82,10 +87,11 @@
         "fixtures/textdoc/examples/document-annotation-model-v1.json",
         "fixtures/package-release/gates.v1.json",
         "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs"
+        "tools/check-downstream-api-stability.mjs",
+        "packages/textdoc/README.md"
       ],
       "releaseBlockers": [
-        "Graph annotation behavior is fixture-scope and does not yet have broad production validation."
+        "Broad production graph validation remains limited beyond structural reference checks."
       ]
     },
     {

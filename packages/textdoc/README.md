@@ -18,6 +18,10 @@ for deterministic annotation containers with:
 The package does not perform tokenization, tagging, or entity extraction. It defines the container
 shape that other packages serialize through `@ismail-elkorchi/textprotocol`.
 
+Use `validateTextDocDocumentV1()` after runtime shape validation when reference integrity matters.
+The validator checks view and layer references, duplicate ids, span ranges, annotation targets,
+lifecycle links, relation arguments, coreference chains, and dependency node links.
+
 ## Extension annotations
 
 Core annotation kinds are reserved for cross-package semantics that this package can validate without
