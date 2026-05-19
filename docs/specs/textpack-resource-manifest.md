@@ -27,14 +27,15 @@ Resource registry creation is deterministic:
 
 - manifests are converted into an in-memory resource catalog without reading files or executing pack
   code;
-- registry summaries expose normalized language, profile, and resource-kind lists; and
+- registry summaries expose exact language, profile, and resource-kind lists; and
 - registry queries can filter by kind, language, profile, lookup key, pack id, or resource id.
 
 Resource lookup is deterministic:
 
 - resources are filtered by kind first;
-- language comparison uses normalized lowercase tokens when both the request and the resource record
-  a language;
+- language comparison is exact by default when both the request and the resource record a language;
+- case folding, trimming, or any other canonicalization is allowed only when the caller supplies an
+  explicit canonicalizer;
 - profile-specific resources are only considered when the requested profile matches, while
   profile-free resources remain eligible as base overlays; and
 - successful candidates are ordered by descending `overlayPrecedence`, then `packId`, then
@@ -47,14 +48,16 @@ Resource loading is deterministic and side-effect-free:
 - lexicons load from TSV rows with a surface value followed by `key=value` attributes;
 - gazetteers load from TSV rows with a surface value followed by a label and optional `key=value`
   attributes; and
-- loaded-entry lookup uses normalized lowercase tokens while preserving original values, line
+- loaded-entry lookup uses exact values by default while preserving original values, line
   numbers, resource metadata, license references, and provenance references.
+  Canonicalized lookup records the canonicalizer id plus query-side and entry-side original and
+  canonical values.
 
 The repository treats these conditions as failures or diagnostics:
 
 - duplicate `resourceId` values within one manifest are invalid;
 - `licenseId` and `provenanceId` references must resolve inside the manifest;
-- two resolved resources that share the same normalized `lookupKey` and `overlayPrecedence`
+- two resolved resources that share the same exact `lookupKey` and `overlayPrecedence`
   produce an overlay-conflict diagnostic; and
 - language/profile mismatches are recorded as diagnostics when a request has no successful
   candidates.

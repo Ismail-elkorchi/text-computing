@@ -30,12 +30,17 @@ The current loader surface covers committed fixture formats:
 - TSV gazetteers with labels.
 
 Loaded entries preserve the resolved resource metadata, license reference, provenance reference,
-line number, normalized lookup token, and deterministic overlay order.
+line number, exact lookup token, and deterministic overlay order.
+
+Resource lookup is exact by default. Case folding, trimming, or any other canonicalization must be
+provided explicitly by the caller through a declared canonicalizer. The exported
+`textPackDemoTrimLowercaseCanonicalizer` is fixture/demo behavior only; it is not a package-level
+multilingual default.
 
 ## Resource registry
 
 `createTextPackResourceRegistry` builds a deterministic in-memory catalog from one or more manifests.
-The registry exposes normalized language, profile, and resource-kind summaries, and
+The registry exposes exact language, profile, and resource-kind summaries, and
 `queryTextPackResourceRegistry` selects resources by kind, language, profile, lookup key, pack id, or
 resource id.
 
