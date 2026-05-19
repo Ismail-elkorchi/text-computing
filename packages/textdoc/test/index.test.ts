@@ -542,5 +542,161 @@ if (
   throw new Error("document validation should reject duplicate annotation ids");
 }
 
+const invalidLifecycleDocument = structuredClone(graphFixtureDocument);
+const selfSupersedingRelation = invalidLifecycleDocument.layers
+  .find((layer) => layer.id === "relations")
+  ?.annotations.find((annotation) => annotation.id === "relation-1");
+if (selfSupersedingRelation === undefined) {
+  throw new Error("relation fixture should exist for lifecycle self-reference test");
+}
+(selfSupersedingRelation as { lifecycle: typeof selfSupersedingRelation.lifecycle }).lifecycle = {
+  state: "active",
+  supersedes: ["relation-1"],
+};
+const invalidLifecycleResult = validateTextDocDocumentV1(invalidLifecycleDocument);
+if (
+  invalidLifecycleResult.ok ||
+  !invalidLifecycleResult.diagnostics.some((entry) => entry.code === "textdoc.lifecycle-self-reference")
+) {
+  throw new Error("document validation should reject lifecycle self references");
+}
+
+const invalidRelationSelfArgumentDocument = structuredClone(graphFixtureDocument);
+const selfArgumentRelation = invalidRelationSelfArgumentDocument.layers
+  .find((layer) => layer.id === "relations")
+  ?.annotations.find((annotation) => annotation.id === "relation-1");
+if (selfArgumentRelation?.kind !== "relation") {
+  throw new Error("relation fixture should exist for self-argument test");
+}
+(selfArgumentRelation as { arguments: typeof selfArgumentRelation.arguments }).arguments = [
+  { role: "self", annotationId: "relation-1" },
+  { role: "surface", annotationId: "token-1" },
+];
+const invalidRelationSelfArgumentResult = validateTextDocDocumentV1(invalidRelationSelfArgumentDocument);
+if (
+  invalidRelationSelfArgumentResult.ok ||
+  !invalidRelationSelfArgumentResult.diagnostics.some((entry) => entry.code === "textdoc.relation-argument-self")
+) {
+  throw new Error("document validation should reject relation self arguments");
+}
+
+const duplicateMentionDocument = structuredClone(graphFixtureDocument);
+const duplicateMentionChain = duplicateMentionDocument.layers
+  .find((layer) => layer.id === "coreference-chains")
+  ?.annotations.find((annotation) => annotation.id === "chain-1");
+if (duplicateMentionChain?.kind !== "coreference-chain") {
+  throw new Error("coreference chain fixture should exist for duplicate mention test");
+}
+(duplicateMentionChain as { mentionIds: typeof duplicateMentionChain.mentionIds }).mentionIds = [
+  "mention-1",
+  "mention-1",
+];
+const duplicateMentionResult = validateTextDocDocumentV1(duplicateMentionDocument);
+if (
+  duplicateMentionResult.ok ||
+  !duplicateMentionResult.diagnostics.some((entry) => entry.code === "textdoc.coreference-mention-duplicate")
+) {
+  throw new Error("document validation should reject duplicate coreference mentions");
+}
+
+const representativeOutsideChainDocument = structuredClone(graphFixtureDocument);
+const representativeOutsideChain = representativeOutsideChainDocument.layers
+  .find((layer) => layer.id === "coreference-chains")
+  ?.annotations.find((annotation) => annotation.id === "chain-1");
+if (representativeOutsideChain?.kind !== "coreference-chain") {
+  throw new Error("coreference chain fixture should exist for representative membership test");
+}
+(representativeOutsideChain as { representativeMentionId: string }).representativeMentionId = "entity-1";
+const representativeOutsideChainResult = validateTextDocDocumentV1(representativeOutsideChainDocument);
+if (
+  representativeOutsideChainResult.ok ||
+  !representativeOutsideChainResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.coreference-representative-outside-chain",
+  ) ||
+  !representativeOutsideChainResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.coreference-representative-kind",
+  )
+) {
+  throw new Error("document validation should reject invalid coreference representatives");
+}
+
+function firstDependencyAnnotation(document: TextDocDocumentV1) {
+  const annotation = document.layers
+    .find((layer) => layer.kind === "dependency")
+    ?.annotations.find((entry) => entry.kind === "dependency");
+  if (annotation?.kind !== "dependency") {
+    throw new Error("CoNLL-U fixture should contain a dependency annotation");
+  }
+  return annotation;
+}
+
+function firstDependencyNodeAnnotation(document: TextDocDocumentV1, annotationId: string) {
+  const annotation = document.layers
+    .find((layer) => layer.kind === "dependency-node")
+    ?.annotations.find((entry) => entry.id === annotationId);
+  if (annotation?.kind !== "dependency-node") {
+    throw new Error(`CoNLL-U fixture should contain dependency node ${annotationId}`);
+  }
+  return annotation;
+}
+
+const dependencySelfLoopDocument = structuredClone(conlluDocument);
+const selfLoopDependency = firstDependencyAnnotation(dependencySelfLoopDocument);
+(selfLoopDependency as { headNodeId: string }).headNodeId = selfLoopDependency.dependentNodeId;
+const dependencySelfLoopResult = validateTextDocDocumentV1(dependencySelfLoopDocument);
+if (
+  dependencySelfLoopResult.ok ||
+  !dependencySelfLoopResult.diagnostics.some((entry) => entry.code === "textdoc.dependency-self-loop")
+) {
+  throw new Error("document validation should reject dependency self loops");
+}
+
+const dependencyKindDocument = structuredClone(conlluDocument);
+const kindMismatchDependency = firstDependencyAnnotation(dependencyKindDocument);
+(kindMismatchDependency as { dependentNodeId: string }).dependentNodeId = "textdoc-conllu-1:sentence";
+const dependencyKindResult = validateTextDocDocumentV1(dependencyKindDocument);
+if (
+  dependencyKindResult.ok ||
+  !dependencyKindResult.diagnostics.some((entry) => entry.code === "textdoc.dependency-dependent-kind")
+) {
+  throw new Error("document validation should reject non-node dependency references");
+}
+
+const dependencySourceSentenceDocument = structuredClone(conlluDocument);
+const sourceMismatchDependency = firstDependencyAnnotation(dependencySourceSentenceDocument);
+(sourceMismatchDependency as { source: typeof sourceMismatchDependency.source }).source = {
+  ...sourceMismatchDependency.source,
+  sentenceId: "other-sentence",
+};
+const dependencySourceSentenceResult = validateTextDocDocumentV1(dependencySourceSentenceDocument);
+if (
+  dependencySourceSentenceResult.ok ||
+  !dependencySourceSentenceResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.dependency-source-sentence-mismatch",
+  )
+) {
+  throw new Error("document validation should reject dependency source sentence mismatches");
+}
+
+const dependencyHeadSentenceDocument = structuredClone(conlluDocument);
+const headSentenceMismatchDependency = firstDependencyAnnotation(dependencyHeadSentenceDocument);
+if (headSentenceMismatchDependency.headNodeId === null) {
+  throw new Error("CoNLL-U fixture should include a non-root dependency for head sentence test");
+}
+const headSentenceMismatchNode = firstDependencyNodeAnnotation(
+  dependencyHeadSentenceDocument,
+  headSentenceMismatchDependency.headNodeId,
+);
+(headSentenceMismatchNode as { sentenceId: string }).sentenceId = "other-sentence";
+const dependencyHeadSentenceResult = validateTextDocDocumentV1(dependencyHeadSentenceDocument);
+if (
+  dependencyHeadSentenceResult.ok ||
+  !dependencyHeadSentenceResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.dependency-head-sentence-mismatch",
+  )
+) {
+  throw new Error("document validation should reject cross-sentence dependency heads");
+}
+
 void expectedPackageName;
 void expectedPayloadKind;
