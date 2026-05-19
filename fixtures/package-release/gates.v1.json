@@ -209,9 +209,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textrules",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -231,20 +231,23 @@
           "fixtures/package-release/downstream-api-stability.v1.json",
           "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
+        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
       },
-      "releaseBlockers": [
-        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
-        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textrules/package.json",
+        "packages/textrules/README.md",
+        "packages/textrules/CHANGELOG.md",
+        "packages/textrules/src/index.ts",
         "packages/textrules/test",
         "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+        "Public alpha scope is bounded to reusable rules, explicit resources, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
@@ -270,9 +273,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textpipeline",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -292,20 +295,22 @@
           "fixtures/package-release/downstream-api-stability.v1.json",
           "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
+        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
       },
-      "releaseBlockers": [
-        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textpipeline/package.json",
+        "packages/textpipeline/README.md",
+        "packages/textpipeline/CHANGELOG.md",
+        "packages/textpipeline/src/index.ts",
         "packages/textpipeline/test",
         "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+        "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
@@ -317,25 +322,14 @@
             "packages/textpipeline/test",
             "docs/specs/support-status.v1.json"
           ]
-        },
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textpipeline alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
-          ]
         }
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textcorpus",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -355,14 +349,14 @@
           "fixtures/package-release/downstream-api-stability.v1.json",
           "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
+        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
       },
-      "releaseBlockers": [
-        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textcorpus/package.json",
+        "packages/textcorpus/README.md",
+        "packages/textcorpus/CHANGELOG.md",
+        "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test",
         "tools/validate-package-readiness.mjs",
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
@@ -373,7 +367,8 @@
         "tools/check-workspace-pack-dry-run.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
+        "Public alpha scope is bounded to explicit-token corpus APIs, frozen retrieval fixtures, package tests, and package dry-run evidence."
       ],
       "blockerClassifications": [
         {
@@ -384,17 +379,6 @@
             "packages/textcorpus/src/index.ts",
             "packages/textcorpus/test",
             "docs/specs/support-status.v1.json"
-          ]
-        },
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textcorpus alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
           ]
         }
       ]
