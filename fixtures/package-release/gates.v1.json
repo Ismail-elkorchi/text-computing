@@ -370,14 +370,16 @@
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
-        "Conformance runner behavior is minimal and lacks broad diff, benchmark, and claim-registry workflows.",
+        "Benchmark runner and release-oriented report rendering are not release-ready.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textconformance/package.json",
         "packages/textconformance/test",
         "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
+        "tools/check-workspace-pack-dry-run.mjs",
+        "packages/textconformance/src/index.ts",
+        "packages/textconformance/README.md"
       ],
       "limitations": [
         "Package remains private until broader release gates pass."

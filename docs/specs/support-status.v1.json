@@ -124,16 +124,18 @@
     {
       "name": "@ismail-elkorchi/textconformance",
       "status": "slice-proven",
-      "scope": "Machine-readable conformance reports and runtime guards are implemented.",
+      "scope": "Machine-readable conformance reports, runtime guards, report diffs, claim-registry traceability checks, and synchronous runner are implemented.",
       "evidence": [
         "conformance report schema",
         "runtime guards",
         "minimal synchronous runner tests",
         "fixtures/reports/task-evidence-manifest.v1.json",
-        "dist export readiness metadata"
+        "dist export readiness metadata",
+        "report diff tests",
+        "claim-registry traceability tests"
       ],
       "limitations": [
-        "Runner behavior is minimal and not a full benchmark harness yet",
+        "No benchmark runner or release-oriented report renderer is implemented",
         "Package remains private until broader release gates pass"
       ]
     },
