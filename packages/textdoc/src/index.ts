@@ -32,6 +32,7 @@ export type TextDocLayerKind =
   | "extension";
 export type TextDocAnnotationLifecycleState = "active" | "superseded" | "retracted";
 export type TextDocDependencyNodeKind = "word" | "multiword-token" | "empty-node";
+export type TextDocDocumentValidationSeverity = "error" | "warning";
 export type TextDocConlluErrorCode =
   | "empty-input"
   | "field-count"
@@ -358,6 +359,21 @@ export interface TextDocDocumentV1 {
   readonly notes?: readonly string[];
 }
 
+export interface TextDocDocumentValidationDiagnostic {
+  readonly code: string;
+  readonly severity: TextDocDocumentValidationSeverity;
+  readonly message: string;
+  readonly viewId?: string;
+  readonly layerId?: string;
+  readonly annotationId?: string;
+  readonly targetId?: string;
+}
+
+export interface TextDocDocumentValidationResult {
+  readonly ok: boolean;
+  readonly diagnostics: readonly TextDocDocumentValidationDiagnostic[];
+}
+
 export interface TextDocConlluImportOptions {
   readonly documentId?: string;
   readonly revision?: string;
@@ -407,6 +423,42 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
+function textDocValidationDiagnostic(
+  code: string,
+  message: string,
+  context: Omit<TextDocDocumentValidationDiagnostic, "code" | "message" | "severity"> = {},
+): TextDocDocumentValidationDiagnostic {
+  return {
+    code,
+    severity: "error",
+    message,
+    ...context,
+  };
+}
+
+function hasErrorDiagnostics(diagnostics: readonly TextDocDocumentValidationDiagnostic[]): boolean {
+  return diagnostics.some((entry) => entry.severity === "error");
+}
+
+function addDuplicateDiagnostics(
+  values: readonly string[],
+  code: string,
+  label: string,
+  diagnostics: TextDocDocumentValidationDiagnostic[],
+): void {
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+  for (const value of values) {
+    if (seen.has(value)) duplicates.add(value);
+    seen.add(value);
+  }
+  for (const duplicate of [...duplicates].sort()) {
+    diagnostics.push(textDocValidationDiagnostic(code, `${label} id ${duplicate} is duplicated.`, {
+      targetId: duplicate,
+    }));
+  }
 }
 
 function isTextDocLayerKind(value: unknown): value is TextDocLayerKind {
@@ -853,6 +905,179 @@ export function isTextDocDocumentV1(value: unknown): value is TextDocDocumentV1 
     value.layers.every((entry) => isTextDocLayer(entry)) &&
     (value.notes === undefined || isStringArray(value.notes))
   );
+}
+
+export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValidationResult {
+  const diagnostics: TextDocDocumentValidationDiagnostic[] = [];
+  if (!isTextDocDocumentV1(value)) {
+    return {
+      ok: false,
+      diagnostics: [
+        textDocValidationDiagnostic(
+          "textdoc.document-shape",
+          "Document does not satisfy TextDocDocumentV1 runtime shape.",
+        ),
+      ],
+    };
+  }
+
+  const document = value;
+  const viewIds = new Set(document.views.map((view) => view.id));
+  addDuplicateDiagnostics(
+    document.views.map((view) => view.id),
+    "textdoc.view-duplicate",
+    "View",
+    diagnostics,
+  );
+  for (const view of document.views) {
+    for (const derivedFrom of view.derivedFrom ?? []) {
+      if (!viewIds.has(derivedFrom)) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.view-derived-from-missing",
+          `View ${view.id} references missing derivedFrom view ${derivedFrom}.`,
+          { viewId: view.id, targetId: derivedFrom },
+        ));
+      }
+    }
+  }
+
+  addDuplicateDiagnostics(
+    document.layers.map((layer) => layer.id),
+    "textdoc.layer-duplicate",
+    "Layer",
+    diagnostics,
+  );
+  for (const layer of document.layers) {
+    if (!viewIds.has(layer.viewId)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.layer-view-missing",
+        `Layer ${layer.id} references missing view ${layer.viewId}.`,
+        { layerId: layer.id, viewId: layer.viewId },
+      ));
+    }
+  }
+
+  const annotationIds = new Map<string, TextDocAnnotation>();
+  const duplicateAnnotationIds = new Set<string>();
+  for (const layer of document.layers) {
+    for (const annotation of layer.annotations) {
+      if (annotationIds.has(annotation.id)) {
+        duplicateAnnotationIds.add(annotation.id);
+      } else {
+        annotationIds.set(annotation.id, annotation);
+      }
+    }
+  }
+  for (const duplicate of [...duplicateAnnotationIds].sort()) {
+    diagnostics.push(textDocValidationDiagnostic(
+      "textdoc.annotation-duplicate",
+      `Annotation id ${duplicate} is duplicated.`,
+      { annotationId: duplicate },
+    ));
+  }
+
+  const requireAnnotation = (
+    sourceAnnotation: TextDocAnnotation,
+    targetId: string,
+    code: string,
+    message: string,
+  ) => {
+    if (!annotationIds.has(targetId)) {
+      diagnostics.push(textDocValidationDiagnostic(code, message, {
+        annotationId: sourceAnnotation.id,
+        targetId,
+      }));
+    }
+  };
+
+  for (const layer of document.layers) {
+    for (const annotation of layer.annotations) {
+      for (const target of annotation.targets) {
+        if (target.kind === "span" && !isTextDocSpanInRange(target, document.textLengthCU)) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.span-target-out-of-range",
+            `Annotation ${annotation.id} has span target outside document text range.`,
+            { layerId: layer.id, annotationId: annotation.id },
+          ));
+        }
+        if (target.kind === "annotation") {
+          requireAnnotation(
+            annotation,
+            target.annotationId,
+            "textdoc.annotation-target-missing",
+            `Annotation ${annotation.id} targets missing annotation ${target.annotationId}.`,
+          );
+        }
+      }
+
+      for (const supersedes of annotation.lifecycle.supersedes ?? []) {
+        requireAnnotation(
+          annotation,
+          supersedes,
+          "textdoc.lifecycle-supersedes-missing",
+          `Annotation ${annotation.id} supersedes missing annotation ${supersedes}.`,
+        );
+      }
+      if (annotation.lifecycle.supersededBy !== undefined) {
+        requireAnnotation(
+          annotation,
+          annotation.lifecycle.supersededBy,
+          "textdoc.lifecycle-superseded-by-missing",
+          `Annotation ${annotation.id} is superseded by missing annotation ${annotation.lifecycle.supersededBy}.`,
+        );
+      }
+
+      if (annotation.kind === "relation") {
+        for (const argument of annotation.arguments) {
+          requireAnnotation(
+            annotation,
+            argument.annotationId,
+            "textdoc.relation-argument-missing",
+            `Relation ${annotation.id} references missing argument annotation ${argument.annotationId}.`,
+          );
+        }
+      }
+      if (annotation.kind === "coreference-chain") {
+        for (const mentionId of annotation.mentionIds) {
+          requireAnnotation(
+            annotation,
+            mentionId,
+            "textdoc.coreference-mention-missing",
+            `Coreference chain ${annotation.id} references missing mention ${mentionId}.`,
+          );
+        }
+        if (annotation.representativeMentionId !== undefined) {
+          requireAnnotation(
+            annotation,
+            annotation.representativeMentionId,
+            "textdoc.coreference-representative-missing",
+            `Coreference chain ${annotation.id} references missing representative mention ${annotation.representativeMentionId}.`,
+          );
+        }
+      }
+      if (annotation.kind === "dependency") {
+        requireAnnotation(
+          annotation,
+          annotation.dependentNodeId,
+          "textdoc.dependency-dependent-missing",
+          `Dependency ${annotation.id} references missing dependent node ${annotation.dependentNodeId}.`,
+        );
+        if (annotation.headNodeId !== null) {
+          requireAnnotation(
+            annotation,
+            annotation.headNodeId,
+            "textdoc.dependency-head-missing",
+            `Dependency ${annotation.id} references missing head node ${annotation.headNodeId}.`,
+          );
+        }
+      }
+    }
+  }
+
+  return {
+    ok: !hasErrorDiagnostics(diagnostics),
+    diagnostics,
+  };
 }
 
 export function toTextDocDocumentV1(

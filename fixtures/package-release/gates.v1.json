@@ -122,14 +122,16 @@
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
-        "Graph annotation behavior is fixture-scope and does not yet have broad production validation.",
+        "Broad production graph validation remains limited beyond structural reference checks.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textdoc/package.json",
         "packages/textdoc/test",
         "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
+        "tools/check-workspace-pack-dry-run.mjs",
+        "packages/textdoc/src/index.ts",
+        "packages/textdoc/README.md"
       ],
       "limitations": [
         "Package remains private until broader release gates pass."

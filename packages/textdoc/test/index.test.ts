@@ -11,6 +11,7 @@ import {
   textDocDocumentPayloadKind,
   toTextDocDocumentV1,
   tokenSentenceAnnotationSchemaVersion,
+  validateTextDocDocumentV1,
   type TextDocDocumentV1,
   type TextDocTokenSentenceAnnotationSet,
 } from "../src/index.ts";
@@ -321,6 +322,11 @@ if (!isTextDocDocumentV1(graphFixtureDocument)) {
   throw new Error("graph fixture should satisfy the document model runtime guard");
 }
 
+const graphValidation = validateTextDocDocumentV1(graphFixtureDocument);
+if (!graphValidation.ok || graphValidation.diagnostics.length !== 0) {
+  throw new Error("graph fixture should satisfy package-level reference validation");
+}
+
 if (textDocExtensionIdPattern !== "^[a-z][a-z0-9+.-]*:[^\\s]+$") {
   throw new Error("extension id pattern should remain explicit and stable");
 }
@@ -438,6 +444,10 @@ if (!isTextDocDocumentV1(conlluDocument)) {
   throw new Error("CoNLL-U import should satisfy the document model shape");
 }
 
+if (!validateTextDocDocumentV1(conlluDocument).ok) {
+  throw new Error("CoNLL-U import should satisfy package-level reference validation");
+}
+
 if (exportTextDocDocumentV1ToConllu(conlluDocument) !== conlluFixture) {
   throw new Error("CoNLL-U export should preserve the fixture text");
 }
@@ -455,6 +465,81 @@ try {
 
 if (!invalidConlluRejected) {
   throw new Error("CoNLL-U import should reject malformed rows with a stable code");
+}
+
+const invalidLayerViewDocument = structuredClone(graphFixtureDocument);
+const firstInvalidLayerViewLayer = invalidLayerViewDocument.layers[0];
+if (firstInvalidLayerViewLayer === undefined) {
+  throw new Error("graph fixture should contain a layer for invalid layer view test");
+}
+(invalidLayerViewDocument as { layers: TextDocDocumentV1["layers"] }).layers = [
+  {
+    ...firstInvalidLayerViewLayer,
+    viewId: "missing-view",
+  },
+  ...invalidLayerViewDocument.layers.slice(1),
+];
+const invalidLayerViewResult = validateTextDocDocumentV1(invalidLayerViewDocument);
+if (
+  invalidLayerViewResult.ok ||
+  !invalidLayerViewResult.diagnostics.some((entry) => entry.code === "textdoc.layer-view-missing")
+) {
+  throw new Error("document validation should reject missing layer view references");
+}
+
+const invalidAnnotationTargetDocument = structuredClone(graphFixtureDocument);
+const invalidRelationLayer = invalidAnnotationTargetDocument.layers.find((layer) => layer.id === "relations");
+const invalidRelationAnnotation = invalidRelationLayer?.annotations[0];
+if (invalidRelationAnnotation?.kind !== "relation") {
+  throw new Error("relation fixture should exist for invalid-reference test");
+}
+(invalidRelationAnnotation as { targets: typeof invalidRelationAnnotation.targets }).targets = [
+  { kind: "annotation", annotationId: "missing-entity" },
+];
+const invalidAnnotationTargetResult = validateTextDocDocumentV1(invalidAnnotationTargetDocument);
+if (
+  invalidAnnotationTargetResult.ok ||
+  !invalidAnnotationTargetResult.diagnostics.some((entry) => entry.code === "textdoc.annotation-target-missing")
+) {
+  throw new Error("document validation should reject missing annotation targets");
+}
+
+const invalidRelationArgumentDocument = structuredClone(graphFixtureDocument);
+const missingArgumentRelation = invalidRelationArgumentDocument.layers
+  .find((layer) => layer.id === "relations")
+  ?.annotations.find((annotation) => annotation.id === "relation-1");
+if (missingArgumentRelation?.kind !== "relation") {
+  throw new Error("relation fixture should exist for missing argument test");
+}
+(missingArgumentRelation as { arguments: typeof missingArgumentRelation.arguments }).arguments = [
+  { role: "entity", annotationId: "missing-argument" },
+  { role: "surface", annotationId: "token-1" },
+];
+const invalidRelationArgumentResult = validateTextDocDocumentV1(invalidRelationArgumentDocument);
+if (
+  invalidRelationArgumentResult.ok ||
+  !invalidRelationArgumentResult.diagnostics.some((entry) => entry.code === "textdoc.relation-argument-missing")
+) {
+  throw new Error("document validation should reject missing relation argument annotations");
+}
+
+const duplicateAnnotationDocument = structuredClone(graphFixtureDocument);
+const duplicateEntityLayer = duplicateAnnotationDocument.layers.find((layer) => layer.id === "entities");
+if (!duplicateEntityLayer) throw new Error("entity layer should exist for duplicate test");
+const firstDuplicateAnnotation = duplicateEntityLayer.annotations[0];
+if (firstDuplicateAnnotation === undefined) {
+  throw new Error("entity layer should contain an annotation for duplicate test");
+}
+(duplicateEntityLayer as { annotations: typeof duplicateEntityLayer.annotations }).annotations = [
+  ...duplicateEntityLayer.annotations,
+  firstDuplicateAnnotation,
+];
+const duplicateAnnotationResult = validateTextDocDocumentV1(duplicateAnnotationDocument);
+if (
+  duplicateAnnotationResult.ok ||
+  !duplicateAnnotationResult.diagnostics.some((entry) => entry.code === "textdoc.annotation-duplicate")
+) {
+  throw new Error("document validation should reject duplicate annotation ids");
 }
 
 void expectedPackageName;
