@@ -17,3 +17,11 @@ and removed checks and rejects duplicate check ids.
 Use `validateTextConformanceClaimRegistry()` to verify that support claims carry
 traceability links to requirements, APIs, evidence, conformance reports, and
 limitations. The package does not define a benchmark runner.
+
+## Markdown rendering
+
+Use `renderTextConformanceReportMarkdown()` and
+`renderTextConformanceReportDiffMarkdown()` to produce deterministic
+release-oriented Markdown summaries from machine-readable reports and report
+diffs. The renderers validate their inputs, sort check rows by stable check id,
+escape table cells, and emit a final newline.

@@ -374,11 +374,12 @@
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
-        "Benchmark runner and release-oriented report rendering are not release-ready.",
+        "Benchmark runner is not release-ready.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textconformance/package.json",
+        "packages/textconformance/README.md",
         "packages/textconformance/test",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",

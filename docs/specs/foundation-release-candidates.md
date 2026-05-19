@@ -21,7 +21,7 @@ Release-candidate work is not package publication. These packages remain private
 | Package | State | Track | Readiness | Downstream dependents | Blockers |
 | --- | --- | --- | --- | --- | --- |
 | `@ismail-elkorchi/textprotocol` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textrules | Package-quality publication checks have not been promoted beyond private-unreleased status. |
-| `@ismail-elkorchi/textconformance` | `candidate-ready` | `private-unreleased` | `blocked` | — | Benchmark runner and release-oriented report rendering are not release-ready. |
+| `@ismail-elkorchi/textconformance` | `candidate-ready` | `private-unreleased` | `blocked` | — | Benchmark runner is not release-ready. |
 | `@ismail-elkorchi/textdoc` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textcorpus<br>@ismail-elkorchi/textrules | Broad production graph validation remains limited beyond structural reference checks. |
 | `@ismail-elkorchi/textpack` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules | Multilingual pack coverage and update workflow are not broad enough for package release. |
 

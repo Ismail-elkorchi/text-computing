@@ -115,6 +115,10 @@ export interface TextConformanceRunnerOptions {
   readonly notes?: readonly string[];
 }
 
+export interface TextConformanceMarkdownRenderOptions {
+  readonly title?: string;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -149,6 +153,36 @@ function checkIdentity(value: TextConformanceCheckV1): string {
     message: value.message ?? null,
     evidenceRefs: [...(value.evidenceRefs ?? [])].sort(),
   });
+}
+
+function markdownText(value: string): string {
+  return value.replace(/\r\n|\r|\n/gu, " ").replace(/\s+/gu, " ").trim();
+}
+
+function markdownTableCell(value: string | undefined): string {
+  if (value === undefined || value.length === 0) return "—";
+  return value
+    .replace(/\r\n|\r|\n/gu, "<br>")
+    .replace(/\\/gu, "\\\\")
+    .replace(/\|/gu, "\\|")
+    .replace(/\t/gu, " ");
+}
+
+function markdownTableList(values: readonly string[] | undefined): string {
+  if (values === undefined || values.length === 0) return "—";
+  return values.map((value) => markdownTableCell(value)).join("<br>");
+}
+
+function sortedChecksForRendering(
+  checks: readonly TextConformanceCheckV1[],
+): readonly TextConformanceCheckV1[] {
+  return [...checks].sort((left, right) => compareCheckIds(left.checkId, right.checkId));
+}
+
+function sortedDiffChecksForRendering(
+  checks: readonly TextConformanceReportDiffEntryV1[],
+): readonly TextConformanceReportDiffEntryV1[] {
+  return [...checks].sort((left, right) => compareCheckIds(left.checkId, right.checkId));
 }
 
 function mapChecksById(
@@ -483,4 +517,77 @@ export function validateTextConformanceClaimRegistry(
       ...(registry.notes ? { notes: registry.notes } : {}),
     },
   );
+}
+
+export function renderTextConformanceReportMarkdown(
+  report: TextConformanceReportV1,
+  options: TextConformanceMarkdownRenderOptions = {},
+): string {
+  if (!isTextConformanceReportV1(report)) {
+    throw new TypeError("conformance report is invalid");
+  }
+
+  const title = options.title ?? `Conformance report ${report.reportId}`;
+  const lines = [
+    `# ${markdownText(title)}`,
+    "",
+    `- **Report id:** ${markdownTableCell(report.reportId)}`,
+    `- **Subject:** ${markdownTableCell(`${report.subject.kind}:${report.subject.id}`)}`,
+    `- **Generated at:** ${markdownTableCell(report.generatedAt)}`,
+    `- **Summary:** pass=${report.summary.pass}; fail=${report.summary.fail}; not-run=${report.summary.notRun}`,
+    "",
+    "## Checks",
+    "",
+    "| Check | Status | Message | Evidence |",
+    "| --- | --- | --- | --- |",
+    ...sortedChecksForRendering(report.checks).map(
+      (check) =>
+        `| ${markdownTableCell(check.checkId)} | ${check.status} | ${markdownTableCell(check.message)} | ${markdownTableList(check.evidenceRefs)} |`,
+    ),
+  ];
+
+  if (report.notes !== undefined && report.notes.length > 0) {
+    lines.push("", "## Notes", "", ...report.notes.map((note) => `- ${markdownText(note)}`));
+  }
+
+  return `${lines.join("\n")}\n`;
+}
+
+export function renderTextConformanceReportDiffMarkdown(
+  diff: TextConformanceReportDiffV1,
+  options: TextConformanceMarkdownRenderOptions = {},
+): string {
+  if (!isTextConformanceReportDiffV1(diff)) {
+    throw new TypeError("conformance report diff is invalid");
+  }
+
+  const title = options.title ?? `Conformance report diff ${diff.expectedReportId} to ${diff.actualReportId}`;
+  const lines = [
+    `# ${markdownText(title)}`,
+    "",
+    `- **Expected report:** ${markdownTableCell(diff.expectedReportId)}`,
+    `- **Actual report:** ${markdownTableCell(diff.actualReportId)}`,
+    `- **Subject changed:** ${diff.subjectChanged ? "yes" : "no"}`,
+    `- **Summary:** same=${diff.summary.same}; changed=${diff.summary.changed}; added=${diff.summary.added}; removed=${diff.summary.removed}`,
+    "",
+    "## Check diff",
+    "",
+    "| Check | Diff status | Expected | Actual | Message | Evidence |",
+    "| --- | --- | --- | --- | --- | --- |",
+    ...sortedDiffChecksForRendering(diff.checks).map((check) => {
+      const expected = check.expectedStatus ?? "—";
+      const actual = check.actualStatus ?? "—";
+      const message =
+        check.expectedMessage === check.actualMessage
+          ? markdownTableCell(check.actualMessage)
+          : `${markdownTableCell(check.expectedMessage)} → ${markdownTableCell(check.actualMessage)}`;
+      const evidence =
+        JSON.stringify(check.expectedEvidenceRefs ?? []) === JSON.stringify(check.actualEvidenceRefs ?? [])
+          ? markdownTableList(check.actualEvidenceRefs)
+          : `${markdownTableList(check.expectedEvidenceRefs)} → ${markdownTableList(check.actualEvidenceRefs)}`;
+      return `| ${markdownTableCell(check.checkId)} | ${check.status} | ${expected} | ${actual} | ${message} | ${evidence} |`;
+    }),
+  ];
+
+  return `${lines.join("\n")}\n`;
 }

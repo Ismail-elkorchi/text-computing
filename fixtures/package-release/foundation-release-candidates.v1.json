@@ -43,6 +43,7 @@
         "conformance report runtime guards",
         "minimal synchronous conformance runner",
         "report diff helper",
+        "Markdown report renderer",
         "claim-registry traceability checks"
       ],
       "downstreamDependents": [],
@@ -58,7 +59,7 @@
         "packages/textconformance/README.md"
       ],
       "releaseBlockers": [
-        "Benchmark runner and release-oriented report rendering are not release-ready."
+        "Benchmark runner is not release-ready."
       ]
     },
     {
