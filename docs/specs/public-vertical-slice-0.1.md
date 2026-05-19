@@ -119,6 +119,7 @@ npm run -s test:all
 npm run -s evidence:all
 npm run -s check:release-gates
 npm run -s check:pack:workspaces
+npm run -s smoke:public-vertical-slice
 ```
 
 The phase MUST also pass an external-consumer smoke test that installs built package tarballs in a temporary project outside this repository and imports only package entrypoints.
