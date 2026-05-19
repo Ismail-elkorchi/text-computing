@@ -1,9 +1,8 @@
 {
   "name": "@ismail-elkorchi/textdoc",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Document annotation container package.",
   "type": "module",
-  "private": true,
   "sideEffects": false,
   "exports": {
     ".": {
@@ -21,5 +20,8 @@
     "dist",
     "README.md",
     "CHANGELOG.md"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

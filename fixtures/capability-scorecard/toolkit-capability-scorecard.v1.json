@@ -180,12 +180,15 @@
     },
     {
       "packageName": "@ismail-elkorchi/textdoc",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "docs/specs/textdoc-document-annotation-model.md",
-        "tools/validate-textdoc-document-model.mjs"
+        "packages/textdoc/src",
+        "packages/textdoc/package.json",
+        "docs/specs/public-vertical-slice-0.1.md",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
-      "nextGate": "Expand graph conventions only through validated fixtures and schemas."
+      "nextGate": "Keep task-specific graph semantics as a beta limitation until broader task graph evidence exists."
     },
     {
       "packageName": "@ismail-elkorchi/textpack",
