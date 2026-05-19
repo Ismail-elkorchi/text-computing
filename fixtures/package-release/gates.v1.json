@@ -223,18 +223,19 @@
       ],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": [],
         "evidenceRefs": [
           "packages/textrules/package.json",
-          "fixtures/package-release/gates.v1.json"
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
       },
       "releaseBlockers": [
         "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
-        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
-        "Downstream API stability evidence is not recorded for this package release surface."
+        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces."
       ],
       "evidenceRefs": [
         "packages/textrules/package.json",
@@ -264,15 +265,6 @@
             "fixtures/reports/task-evidence-manifest.v1.json",
             "docs/specs/support-status.v1.json"
           ]
-        },
-        {
-          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
-          "maturity": "alpha",
-          "decision": "Blocks any textrules alpha release until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
-          "evidenceRefs": [
-            "fixtures/package-release/downstream-api-stability.v1.json",
-            "tools/check-downstream-api-stability.mjs"
-          ]
         }
       ]
     },
@@ -292,18 +284,19 @@
       ],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": [],
         "evidenceRefs": [
           "packages/textpipeline/package.json",
-          "fixtures/package-release/gates.v1.json"
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
       },
       "releaseBlockers": [
         "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for this package release surface."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textpipeline/package.json",
@@ -335,15 +328,6 @@
             "tools/check-workspace-pack-dry-run.mjs",
             "docs/specs/public-vertical-slice-0.1.md"
           ]
-        },
-        {
-          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
-          "maturity": "alpha",
-          "decision": "Blocks textpipeline alpha until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
-          "evidenceRefs": [
-            "fixtures/package-release/downstream-api-stability.v1.json",
-            "tools/check-downstream-api-stability.mjs"
-          ]
         }
       ]
     },
@@ -363,18 +347,19 @@
       ],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": [],
         "evidenceRefs": [
           "packages/textcorpus/package.json",
-          "fixtures/package-release/gates.v1.json"
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
       },
       "releaseBlockers": [
         "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for this package release surface."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textcorpus/package.json",
@@ -410,15 +395,6 @@
             "tools/validate-package-release-gates.mjs",
             "tools/check-workspace-pack-dry-run.mjs",
             "docs/specs/public-vertical-slice-0.1.md"
-          ]
-        },
-        {
-          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
-          "maturity": "alpha",
-          "decision": "Blocks textcorpus alpha until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
-          "evidenceRefs": [
-            "fixtures/package-release/downstream-api-stability.v1.json",
-            "tools/check-downstream-api-stability.mjs"
           ]
         }
       ]
@@ -539,18 +515,19 @@
       ],
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
-        "status": "blocked",
+        "status": "proven",
         "downstreamDependents": [],
         "evidenceRefs": [
           "packages/textlab/package.json",
-          "fixtures/package-release/gates.v1.json"
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "A non-textfacts release requires either downstream stable-API evidence or an explicit no-dependent release-candidate integration artifact."
+        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
       },
       "releaseBlockers": [
         "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-        "Downstream API stability evidence is not recorded for this package release surface."
+        "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textlab/package.json",
@@ -581,15 +558,6 @@
             "tools/validate-package-release-gates.mjs",
             "tools/check-workspace-pack-dry-run.mjs",
             "docs/specs/public-vertical-slice-0.1.md"
-          ]
-        },
-        {
-          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
-          "maturity": "alpha",
-          "decision": "Blocks textlab alpha until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
-          "evidenceRefs": [
-            "fixtures/package-release/downstream-api-stability.v1.json",
-            "tools/check-downstream-api-stability.mjs"
           ]
         }
       ]

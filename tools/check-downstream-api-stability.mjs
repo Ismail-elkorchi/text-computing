@@ -5,12 +5,7 @@ import path from "node:path";
 const ROOT = process.cwd();
 const ARTIFACT_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
 const SCHEMA_PATH = "schemas/downstream-api-stability-v1.schema.json";
-const FOUNDATION_PACKAGES = [
-  "@ismail-elkorchi/textconformance",
-  "@ismail-elkorchi/textdoc",
-  "@ismail-elkorchi/textpack",
-  "@ismail-elkorchi/textprotocol",
-];
+const RELEASE_GATES_PATH = "fixtures/package-release/gates.v1.json";
 
 function fail(message, details) {
   console.error(message);
@@ -90,7 +85,17 @@ async function assertDeclaredImports(entry) {
 }
 
 async function assertBuiltPackageSmoke() {
-  for (const packageName of FOUNDATION_PACKAGES) {
+  const releaseGates = await readJson(RELEASE_GATES_PATH);
+  const provenPackages = releaseGates.packages
+    .filter(
+      (entry) =>
+        entry.downstreamApiStability?.requiredBeforeRelease === true &&
+        entry.downstreamApiStability?.status === "proven",
+    )
+    .map((entry) => entry.packageName)
+    .sort();
+
+  for (const packageName of provenPackages) {
     const packageDir = packageName.split("/")[1];
     expect(await fileExists(`packages/${packageDir}/dist/index.js`), `${packageName} dist output is missing; run npm run -s build first.`);
   }
@@ -102,6 +107,7 @@ async function assertBuiltPackageSmoke() {
   const textpipeline = await import("@ismail-elkorchi/textpipeline");
   const textcorpus = await import("@ismail-elkorchi/textcorpus");
   const textrules = await import("@ismail-elkorchi/textrules");
+  const textlab = await import("@ismail-elkorchi/textlab");
 
   const document = {
     schemaVersion: 1,
@@ -200,6 +206,8 @@ async function assertBuiltPackageSmoke() {
     { corpusId: "corpus:downstream-api" },
   );
   expect(textcorpus.isTextCorpusCollectionV1(collection), "textcorpus should consume textdoc documents through package APIs.");
+  const inspection = textlab.inspectTextdocAnnotations(document);
+  expect(inspection.layerCount === 1, "textlab should inspect textdoc documents through package APIs.");
 
   const manifest = {
     schemaVersion: 1,
@@ -237,18 +245,30 @@ async function assertBuiltPackageSmoke() {
   expect(lexiconResources.resources.length === 1, "textrules should expose one loaded lexicon resource.");
 }
 
-const [schema, artifact] = await Promise.all([readJson(SCHEMA_PATH), readJson(ARTIFACT_PATH)]);
+const [schema, artifact, releaseGates] = await Promise.all([
+  readJson(SCHEMA_PATH),
+  readJson(ARTIFACT_PATH),
+  readJson(RELEASE_GATES_PATH),
+]);
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validate = ajv.compile(schema);
 expect(validate(artifact), `${ARTIFACT_PATH} failed ${SCHEMA_PATH}`, validate.errors);
 
 const packageJsons = await workspacePackageJsons();
 const downstream = downstreamByPackage(packageJsons);
+const expectedProvenPackageNames = releaseGates.packages
+  .filter(
+    (entry) =>
+      entry.downstreamApiStability?.requiredBeforeRelease === true &&
+      entry.downstreamApiStability?.status === "proven",
+  )
+  .map((entry) => entry.packageName)
+  .sort();
 const declaredPackageNames = artifact.packages.map((entry) => entry.packageName).sort();
 expect(
-  JSON.stringify(declaredPackageNames) === JSON.stringify(FOUNDATION_PACKAGES),
-  "downstream API artifact must cover exactly the foundation package set.",
-  { expected: FOUNDATION_PACKAGES, actual: declaredPackageNames },
+  JSON.stringify(declaredPackageNames) === JSON.stringify(expectedProvenPackageNames),
+  "downstream API artifact must cover exactly the release-gate proven package set.",
+  { expected: expectedProvenPackageNames, actual: declaredPackageNames },
 );
 
 for (const entry of artifact.packages) {
