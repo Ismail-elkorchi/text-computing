@@ -73,7 +73,8 @@
         "document container",
         "annotation layers",
         "CoNLL-U round-trip helpers",
-        "document reference validator"
+        "document reference validator",
+        "semantic graph validator"
       ],
       "downstreamDependents": [
         "@ismail-elkorchi/textpipeline",
@@ -92,7 +93,7 @@
         "packages/textdoc/README.md"
       ],
       "releaseBlockers": [
-        "Broad production graph validation remains limited beyond structural reference checks."
+        "Task-specific graph semantics remain limited beyond package-level graph integrity checks."
       ]
     },
     {

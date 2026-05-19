@@ -122,7 +122,7 @@
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
-        "Broad production graph validation remains limited beyond structural reference checks.",
+        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
@@ -131,7 +131,8 @@
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "packages/textdoc/src/index.ts",
-        "packages/textdoc/README.md"
+        "packages/textdoc/README.md",
+        "packages/textdoc/CHANGELOG.md"
       ],
       "limitations": [
         "Package remains private until broader release gates pass."

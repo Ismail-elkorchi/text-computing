@@ -981,13 +981,15 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
     targetId: string,
     code: string,
     message: string,
-  ) => {
-    if (!annotationIds.has(targetId)) {
+  ): TextDocAnnotation | undefined => {
+    const targetAnnotation = annotationIds.get(targetId);
+    if (targetAnnotation === undefined) {
       diagnostics.push(textDocValidationDiagnostic(code, message, {
         annotationId: sourceAnnotation.id,
         targetId,
       }));
     }
+    return targetAnnotation;
   };
 
   for (const layer of document.layers) {
@@ -1011,6 +1013,13 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
       }
 
       for (const supersedes of annotation.lifecycle.supersedes ?? []) {
+        if (supersedes === annotation.id) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.lifecycle-self-reference",
+            `Annotation ${annotation.id} cannot supersede itself.`,
+            { annotationId: annotation.id, targetId: supersedes },
+          ));
+        }
         requireAnnotation(
           annotation,
           supersedes,
@@ -1019,6 +1028,13 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
         );
       }
       if (annotation.lifecycle.supersededBy !== undefined) {
+        if (annotation.lifecycle.supersededBy === annotation.id) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.lifecycle-self-reference",
+            `Annotation ${annotation.id} cannot be superseded by itself.`,
+            { annotationId: annotation.id, targetId: annotation.lifecycle.supersededBy },
+          ));
+        }
         requireAnnotation(
           annotation,
           annotation.lifecycle.supersededBy,
@@ -1029,6 +1045,13 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
 
       if (annotation.kind === "relation") {
         for (const argument of annotation.arguments) {
+          if (argument.annotationId === annotation.id) {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.relation-argument-self",
+              `Relation ${annotation.id} cannot use itself as an argument.`,
+              { annotationId: annotation.id, targetId: argument.annotationId },
+            ));
+          }
           requireAnnotation(
             annotation,
             argument.annotationId,
@@ -1038,37 +1061,112 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
         }
       }
       if (annotation.kind === "coreference-chain") {
+        const seenMentionIds = new Set<string>();
         for (const mentionId of annotation.mentionIds) {
-          requireAnnotation(
+          if (seenMentionIds.has(mentionId)) {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.coreference-mention-duplicate",
+              `Coreference chain ${annotation.id} repeats mention ${mentionId}.`,
+              { annotationId: annotation.id, targetId: mentionId },
+            ));
+          }
+          seenMentionIds.add(mentionId);
+          const mention = requireAnnotation(
             annotation,
             mentionId,
             "textdoc.coreference-mention-missing",
             `Coreference chain ${annotation.id} references missing mention ${mentionId}.`,
           );
+          if (mention !== undefined && mention.kind !== "coreference-mention") {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.coreference-mention-kind",
+              `Coreference chain ${annotation.id} references non-mention annotation ${mentionId}.`,
+              { annotationId: annotation.id, targetId: mentionId },
+            ));
+          }
         }
         if (annotation.representativeMentionId !== undefined) {
-          requireAnnotation(
+          if (!annotation.mentionIds.includes(annotation.representativeMentionId)) {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.coreference-representative-outside-chain",
+              `Coreference chain ${annotation.id} representative ${annotation.representativeMentionId} is not in mentionIds.`,
+              { annotationId: annotation.id, targetId: annotation.representativeMentionId },
+            ));
+          }
+          const representative = requireAnnotation(
             annotation,
             annotation.representativeMentionId,
             "textdoc.coreference-representative-missing",
             `Coreference chain ${annotation.id} references missing representative mention ${annotation.representativeMentionId}.`,
           );
+          if (representative !== undefined && representative.kind !== "coreference-mention") {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.coreference-representative-kind",
+              `Coreference chain ${annotation.id} representative ${annotation.representativeMentionId} is not a coreference mention.`,
+              { annotationId: annotation.id, targetId: annotation.representativeMentionId },
+            ));
+          }
         }
       }
       if (annotation.kind === "dependency") {
-        requireAnnotation(
+        if (annotation.headNodeId === annotation.dependentNodeId) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.dependency-self-loop",
+            `Dependency ${annotation.id} cannot point a node to itself.`,
+            { annotationId: annotation.id, targetId: annotation.dependentNodeId },
+          ));
+        }
+        const dependent = requireAnnotation(
           annotation,
           annotation.dependentNodeId,
           "textdoc.dependency-dependent-missing",
           `Dependency ${annotation.id} references missing dependent node ${annotation.dependentNodeId}.`,
         );
+        if (dependent !== undefined && dependent.kind !== "dependency-node") {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.dependency-dependent-kind",
+            `Dependency ${annotation.id} dependent ${annotation.dependentNodeId} is not a dependency node.`,
+            { annotationId: annotation.id, targetId: annotation.dependentNodeId },
+          ));
+        }
+        if (
+          dependent !== undefined &&
+          dependent.kind === "dependency-node" &&
+          annotation.source.sentenceId !== dependent.sentenceId
+        ) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.dependency-source-sentence-mismatch",
+            `Dependency ${annotation.id} source sentence does not match dependent node sentence.`,
+            { annotationId: annotation.id, targetId: annotation.dependentNodeId },
+          ));
+        }
         if (annotation.headNodeId !== null) {
-          requireAnnotation(
+          const head = requireAnnotation(
             annotation,
             annotation.headNodeId,
             "textdoc.dependency-head-missing",
             `Dependency ${annotation.id} references missing head node ${annotation.headNodeId}.`,
           );
+          if (head !== undefined && head.kind !== "dependency-node") {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.dependency-head-kind",
+              `Dependency ${annotation.id} head ${annotation.headNodeId} is not a dependency node.`,
+              { annotationId: annotation.id, targetId: annotation.headNodeId },
+            ));
+          }
+          if (
+            dependent !== undefined &&
+            dependent.kind === "dependency-node" &&
+            head !== undefined &&
+            head.kind === "dependency-node" &&
+            head.sentenceId !== dependent.sentenceId
+          ) {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.dependency-head-sentence-mismatch",
+              `Dependency ${annotation.id} head and dependent nodes belong to different sentences.`,
+              { annotationId: annotation.id, targetId: annotation.headNodeId },
+            ));
+          }
         }
       }
     }
