@@ -229,7 +229,7 @@ const validate = ajv.compile(schema);
 expect(validate(scorecard), `${SCORECARD_PATH} failed ${SCORECARD_SCHEMA_PATH}`, validate.errors);
 
 const supportGrades = new Set(scorecard.supportGradeOrder);
-for (const required of ["scaffold", "readiness-only", "slice-proven", "beta", "production-candidate"]) {
+for (const required of ["scaffold", "readiness-only", "slice-proven", "alpha", "beta", "production-candidate"]) {
   expect(supportGrades.has(required), `scorecard supportGradeOrder is missing ${required}`);
 }
 

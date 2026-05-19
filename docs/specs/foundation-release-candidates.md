@@ -21,14 +21,15 @@ Release-candidate work is not package publication. These packages remain private
 | Package | State | Track | Readiness | Downstream dependents | Blockers |
 | --- | --- | --- | --- | --- | --- |
 | `@ismail-elkorchi/textprotocol` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textrules | Package-quality publication checks have not been promoted beyond private-unreleased status. |
-| `@ismail-elkorchi/textconformance` | `candidate-ready` | `private-unreleased` | `blocked` | — | Benchmark runner is not release-ready. |
-| `@ismail-elkorchi/textdoc` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textcorpus<br>@ismail-elkorchi/textrules | Task-specific graph semantics remain limited beyond package-level graph integrity checks. |
-| `@ismail-elkorchi/textpack` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules | Multilingual pack coverage and update workflow are not broad enough for package release. |
+| `@ismail-elkorchi/textconformance` | `candidate-ready` | `private-unreleased` | `blocked` | — | Benchmark runner is not release-ready.<br>Package-quality publication checks have not been promoted beyond private-unreleased status. |
+| `@ismail-elkorchi/textdoc` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textpipeline<br>@ismail-elkorchi/textcorpus<br>@ismail-elkorchi/textrules | Task-specific graph semantics remain limited beyond package-level graph integrity checks.<br>Package-quality publication checks have not been promoted beyond private-unreleased status. |
+| `@ismail-elkorchi/textpack` | `candidate-ready` | `private-unreleased` | `blocked` | @ismail-elkorchi/textrules | Multilingual pack coverage and update workflow are not broad enough for package release.<br>Package-quality publication checks have not been promoted beyond private-unreleased status. |
 
 ## Notes
 
-- This artifact defines non-publishing release-candidate gates only; packages remain private until release blockers are cleared.
+- This artifact defines remaining private foundation release candidates only; packages leave this list when alpha release gates pass.
 - Foundational packages must stabilize before dependent package release-readiness can advance.
+- Beta and production-candidate limitations remain recorded outside alpha release blockers.
 
 ## Verification
 

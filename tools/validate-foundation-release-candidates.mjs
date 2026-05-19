@@ -7,7 +7,7 @@ const ARTIFACT_PATH = "fixtures/package-release/foundation-release-candidates.v1
 const SCHEMA_PATH = "schemas/foundation-release-candidates-v1.schema.json";
 const RELEASE_GATES_PATH = "fixtures/package-release/gates.v1.json";
 const DOWNSTREAM_API_STABILITY_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
-const EXPECTED_PACKAGES = [
+const FOUNDATION_PACKAGES = [
   "@ismail-elkorchi/textconformance",
   "@ismail-elkorchi/textdoc",
   "@ismail-elkorchi/textpack",
@@ -55,13 +55,16 @@ const validate = ajv.compile(schema);
 expect(validate(artifact), `${ARTIFACT_PATH} failed ${SCHEMA_PATH}`, validate.errors);
 
 const packageNames = artifact.packages.map((entry) => entry.packageName).sort();
+const releaseGateByPackage = new Map(releaseGates.packages.map((entry) => [entry.packageName, entry]));
+const expectedPackages = FOUNDATION_PACKAGES.filter(
+  (packageName) => releaseGateByPackage.get(packageName)?.releaseTrack === "private-unreleased",
+).sort();
 expect(
-  JSON.stringify(packageNames) === JSON.stringify(EXPECTED_PACKAGES),
-  "foundation release candidates must cover exactly the foundational package set.",
-  packageNames,
+  JSON.stringify(packageNames) === JSON.stringify(expectedPackages),
+  "foundation release candidates must cover exactly the remaining private foundation package set.",
+  { expectedPackages, packageNames },
 );
 
-const releaseGateByPackage = new Map(releaseGates.packages.map((entry) => [entry.packageName, entry]));
 for (const entry of artifact.packages) {
   const packageJson = await readJson(`${entry.packageDir}/package.json`);
   const releaseGate = releaseGateByPackage.get(entry.packageName);
@@ -76,6 +79,11 @@ for (const entry of artifact.packages) {
   expect(releaseGate !== undefined, `${entry.packageName} missing from package release gates.`);
   expect(releaseGate.releaseTrack === "private-unreleased", `${entry.packageName} release gate must remain private-unreleased.`);
   expect(releaseGate.releaseReadiness === "blocked", `${entry.packageName} release gate must remain blocked.`);
+  expect(
+    JSON.stringify([...entry.releaseBlockers].sort()) === JSON.stringify([...releaseGate.releaseBlockers].sort()),
+    `${entry.packageName} candidate blockers must match release-gate blockers.`,
+    { candidateBlockers: entry.releaseBlockers, releaseGateBlockers: releaseGate.releaseBlockers },
+  );
   expect(entry.releaseBlockers.length > 0, `${entry.packageName} must list release blockers.`);
   expect(entry.requiredEvidenceRefs.includes(RELEASE_GATES_PATH), `${entry.packageName} must reference release gates.`);
   if (entry.candidateState === "candidate-ready") {

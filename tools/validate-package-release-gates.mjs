@@ -8,6 +8,8 @@ const SCHEMA_PATH = "schemas/package-release-gates-v1.schema.json";
 const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
 const DOWNSTREAM_API_STABILITY_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
 const WORKSPACE_PACK_DRY_RUN_PATH = "tools/check-workspace-pack-dry-run.mjs";
+const ALPHA_PHASE = "alpha-foundation-release-0.1";
+const MATURITY_LEVELS = new Set(["alpha", "beta", "production-candidate", "non-blocking limitation"]);
 const REQUIRED_GATES = [
   "metadata",
   "tests",
@@ -90,6 +92,19 @@ expect(
   JSON.stringify([...gates.requiredGates].sort()) === JSON.stringify([...REQUIRED_GATES].sort()),
   "Package release gates must define the canonical required gate set.",
 );
+expect(gates.phaseCompletionEvidence.phase === ALPHA_PHASE, "Package release gates must name the alpha foundation phase.");
+for (const ref of gates.phaseCompletionEvidence.evidenceRefs) {
+  assertRepoRef(ref, "phaseCompletionEvidence.evidenceRefs");
+  expect(await fileExists(ref), `alpha phase evidence ref does not exist: ${ref}`);
+}
+expect(
+  gates.phaseCompletionEvidence.commands.includes("npm run -s smoke:public-vertical-slice"),
+  "Alpha phase evidence must include the public vertical-slice smoke command.",
+);
+expect(
+  gates.phaseCompletionEvidence.claimBoundary.includes("not broad task support"),
+  "Alpha phase claim boundary must prevent broad task-support interpretation.",
+);
 
 const supportByPackage = new Map(supportStatus.packages.map((entry) => [entry.name, entry]));
 const workspacePackageJsonsByName = new Map((await workspacePackageJsons()).map((packageJson) => [packageJson.name, packageJson]));
@@ -156,6 +171,27 @@ for (const entry of gates.packages) {
     assertRepoRef(ref, `${entry.packageName} downstreamApiStability.evidenceRefs`);
     expect(await fileExists(ref), `${entry.packageName} downstream API evidence ref does not exist: ${ref}`);
   }
+  const blockerClassifications = entry.blockerClassifications ?? [];
+  const classificationByBlocker = new Map(blockerClassifications.map((classification) => [classification.blocker, classification]));
+  expect(
+    classificationByBlocker.size === blockerClassifications.length,
+    `${entry.packageName} blocker classifications must have unique blocker text.`,
+  );
+  for (const blocker of entry.releaseBlockers) {
+    expect(classificationByBlocker.has(blocker), `${entry.packageName} release blocker is missing maturity classification: ${blocker}`);
+  }
+  for (const classification of blockerClassifications) {
+    expect(MATURITY_LEVELS.has(classification.maturity), `${entry.packageName} blocker has invalid maturity: ${classification.maturity}`);
+    expect(
+      entry.releaseBlockers.includes(classification.blocker) || entry.limitations.includes(classification.blocker),
+      `${entry.packageName} blocker classification must correspond to a current blocker or limitation: ${classification.blocker}`,
+    );
+    for (const ref of classification.evidenceRefs) {
+      assertRepoRef(ref, `${entry.packageName} blockerClassifications.evidenceRefs`);
+      expect(await fileExists(ref), `${entry.packageName} blocker classification evidence ref does not exist: ${ref}`);
+    }
+  }
+  const alphaBlockers = blockerClassifications.filter((classification) => classification.maturity === "alpha");
   if (entry.releaseTrack === "private-unreleased") {
     expect(entry.releaseReadiness === "blocked", `${entry.packageName} private-unreleased package must be release-blocked.`);
     expect(entry.releaseBlockers.length >= 1, `${entry.packageName} private-unreleased package must list release blockers.`);
@@ -189,19 +225,33 @@ for (const entry of gates.packages) {
       `${entry.packageName} support status must state the package remains private.`,
     );
   } else {
-    expect(entry.releaseTrack === "public-beta", `${entry.packageName} has unknown release track ${entry.releaseTrack}.`);
-    expect(entry.releaseReadiness === "publishable", `${entry.packageName} public-beta package must be marked publishable.`);
-    expect(entry.releaseBlockers.length === 0, `${entry.packageName} public-beta package must not list release blockers.`);
     expect(
-      entry.downstreamApiStability.requiredBeforeRelease === false,
-      `${entry.packageName} public-beta package must not require this non-textfacts downstream gate.`,
+      entry.releaseTrack === "public-beta" || entry.releaseTrack === "public-alpha",
+      `${entry.packageName} has unknown release track ${entry.releaseTrack}.`,
+    );
+    expect(entry.releaseReadiness === "publishable", `${entry.packageName} public package must be marked publishable.`);
+    expect(entry.releaseBlockers.length === 0, `${entry.packageName} public package must not list current release blockers.`);
+    expect(alphaBlockers.length === 0, `${entry.packageName} public package must not retain alpha blocker classifications.`);
+    expect(
+      entry.downstreamApiStability.requiredBeforeRelease === false ||
+        entry.downstreamApiStability.status === "proven",
+      `${entry.packageName} public package must either not require downstream API stability or have proven downstream API stability.`,
     );
     expect(
       entry.downstreamApiStability.status === "not-required" || entry.downstreamApiStability.status === "proven",
-      `${entry.packageName} public-beta downstream API status must be not-required or proven.`,
+      `${entry.packageName} public package downstream API status must be not-required or proven.`,
     );
-    expect(packageJson.private !== true, `${entry.packageName} public-beta package must not be private.`);
-    expect(support.status === "beta", `${entry.packageName} public-beta package must be beta in support status.`);
+    expect(packageJson.private !== true, `${entry.packageName} public package must not be private.`);
+    if (entry.releaseTrack === "public-alpha") {
+      expect(support.status === "alpha", `${entry.packageName} public-alpha package must be alpha in support status.`);
+      expect(packageJson.version !== "0.0.0", `${entry.packageName} public-alpha package must not remain version 0.0.0.`);
+      expect(
+        !support.limitations.some((item) => item.includes("Package remains private")),
+        `${entry.packageName} public-alpha support status must not state the package remains private.`,
+      );
+    } else {
+      expect(support.status === "beta", `${entry.packageName} public-beta package must be beta in support status.`);
+    }
   }
   for (const ref of entry.evidenceRefs) {
     assertRepoRef(ref, `${entry.packageName} evidenceRefs`);

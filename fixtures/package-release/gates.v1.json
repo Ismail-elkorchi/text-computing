@@ -89,7 +89,8 @@
       ],
       "limitations": [
         "Beta package; cross-package growth remains outside textfacts."
-      ]
+      ],
+      "blockerClassifications": []
     },
     {
       "packageName": "@ismail-elkorchi/textdoc",
@@ -136,6 +137,29 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because the alpha scope requires bounded document/container interoperation, not broad task graph semantics.",
+          "evidenceRefs": [
+            "packages/textdoc/src/index.ts",
+            "packages/textdoc/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textdoc alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        }
       ]
     },
     {
@@ -180,6 +204,29 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Multilingual pack coverage and update workflow are not broad enough for package release.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because alpha requires explicit fixture resources and exact declared lookup behavior, not broad resource-marketplace coverage.",
+          "evidenceRefs": [
+            "packages/textpack/src/index.ts",
+            "packages/textpack/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textpack alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        }
       ]
     },
     {
@@ -219,6 +266,36 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+          "maturity": "beta",
+          "decision": "Blocks broader task claims, not the foundation alpha package sequence; keep behavior slice-scoped.",
+          "evidenceRefs": [
+            "packages/textrules/src/index.ts",
+            "packages/textrules/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+          "maturity": "beta",
+          "decision": "Blocks broader task evidence claims; does not authorize new comparator matrices during alpha foundation release.",
+          "evidenceRefs": [
+            "fixtures/reports/task-evidence-manifest.v1.json",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
+          "maturity": "alpha",
+          "decision": "Blocks any textrules alpha release until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
+          "evidenceRefs": [
+            "fixtures/package-release/downstream-api-stability.v1.json",
+            "tools/check-downstream-api-stability.mjs"
+          ]
+        }
       ]
     },
     {
@@ -258,6 +335,38 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+          "maturity": "production-candidate",
+          "decision": "Does not block alpha; it limits production-candidate operational claims beyond deterministic local execution.",
+          "evidenceRefs": [
+            "packages/textpipeline/src/index.ts",
+            "packages/textpipeline/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textpipeline alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        },
+        {
+          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
+          "maturity": "alpha",
+          "decision": "Blocks textpipeline alpha until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
+          "evidenceRefs": [
+            "fixtures/package-release/downstream-api-stability.v1.json",
+            "tools/check-downstream-api-stability.mjs"
+          ]
+        }
       ]
     },
     {
@@ -302,6 +411,38 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
+          "maturity": "beta",
+          "decision": "Blocks broader corpus and retrieval release claims; it does not authorize task expansion during alpha foundation release.",
+          "evidenceRefs": [
+            "packages/textcorpus/src/index.ts",
+            "packages/textcorpus/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textcorpus alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        },
+        {
+          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
+          "maturity": "alpha",
+          "decision": "Blocks textcorpus alpha until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
+          "evidenceRefs": [
+            "fixtures/package-release/downstream-api-stability.v1.json",
+            "tools/check-downstream-api-stability.mjs"
+          ]
+        }
       ]
     },
     {
@@ -346,6 +487,19 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textprotocol alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        }
       ]
     },
     {
@@ -389,6 +543,29 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Benchmark runner is not release-ready.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because alpha requires declared conformance reports and checks, not a broad benchmark runner.",
+          "evidenceRefs": [
+            "packages/textconformance/src/index.ts",
+            "packages/textconformance/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textconformance alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        }
       ]
     },
     {
@@ -428,6 +605,38 @@
       ],
       "limitations": [
         "Package remains private until broader release gates pass."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
+          "maturity": "beta",
+          "decision": "Blocks broader inspection-tooling claims; it does not block foundation alpha packages unless their smoke output cannot be inspected.",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
+          "maturity": "alpha",
+          "decision": "Blocks textlab alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
+          "evidenceRefs": [
+            "fixtures/package-release/gates.v1.json",
+            "tools/validate-package-release-gates.mjs",
+            "tools/check-workspace-pack-dry-run.mjs",
+            "docs/specs/public-vertical-slice-0.1.md"
+          ]
+        },
+        {
+          "blocker": "Downstream API stability evidence is not recorded for this package release surface.",
+          "maturity": "alpha",
+          "decision": "Blocks textlab alpha until its release surface has stable API evidence or an explicit no-dependent integration artifact.",
+          "evidenceRefs": [
+            "fixtures/package-release/downstream-api-stability.v1.json",
+            "tools/check-downstream-api-stability.mjs"
+          ]
+        }
       ]
     }
   ],
@@ -435,6 +644,21 @@
     "Private-unreleased packages are not adoption surfaces until a later release PR changes their releaseTrack.",
     "Claim hygiene is a release gate because package publication can amplify unsupported claims.",
     "Non-textfacts packages require downstream API stability evidence before their release track can change.",
-    "Release ordering is dependency-based: a package cannot advance past private-unreleased while any workspace package dependency is in a later or missing release stage."
-  ]
+    "Release ordering is dependency-based: a package cannot advance past private-unreleased while any workspace package dependency is in a later or missing release stage.",
+    "Beta and production-candidate blocker classifications remain explicit limitations; they do not block public-alpha publication when alpha blockers pass.",
+    "Public Vertical Slice 0.1 external-smoke evidence is the phase-completion proof for alpha foundation release classification."
+  ],
+  "phaseCompletionEvidence": {
+    "phase": "alpha-foundation-release-0.1",
+    "evidenceRefs": [
+      "docs/specs/public-vertical-slice-0.1.md",
+      "tools/smoke-public-vertical-slice.mjs",
+      "package.json"
+    ],
+    "commands": [
+      "npm run -s smoke:public-vertical-slice",
+      "npm run -s check:release-gates"
+    ],
+    "claimBoundary": "Public Vertical Slice 0.1 proves bounded external installability and package interoperation, not broad task support."
+  }
 }
