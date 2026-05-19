@@ -19,14 +19,9 @@ import {
   type TextDocReferenceRef,
   type TextDocRelationAnnotation,
   type TextDocStringAlternative,
+  type TextDocSourceRef,
   type TextDocView,
 } from "@ismail-elkorchi/textdoc";
-import {
-  conformanceReportSchemaId,
-  conformanceReportSchemaVersion,
-  type TextConformanceCheckStatus,
-  type TextConformanceReportV1,
-} from "@ismail-elkorchi/textconformance";
 import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
@@ -42,6 +37,9 @@ export const ruleBackedNerRevision = "rule-backed-ner-v1" as const;
 export const dependencyParserRevision = "dependency-parser-v1" as const;
 export const relationExtractionRevision = "relation-extraction-v1" as const;
 export const coreferenceRevision = "coreference-v1" as const;
+const textRulesConformanceReportSchemaId =
+  "urn:ismail-elkorchi:textconformance:report:v1" as const;
+const textRulesConformanceReportSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
@@ -53,6 +51,31 @@ export type TextRulesCoreferenceRevision = typeof coreferenceRevision;
 export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
 export type TextRulesRelationLabel = "employed-by" | "located-in" | "part-of";
 export type TextRulesCoreferenceMentionKind = "proper" | "nominal" | "pronoun" | "singleton";
+export type TextRulesConformanceCheckStatus = "pass" | "fail" | "not-run";
+
+export interface TextRulesConformanceReportV1 {
+  readonly schemaId: typeof textRulesConformanceReportSchemaId;
+  readonly schemaVersion: typeof textRulesConformanceReportSchemaVersion;
+  readonly reportId: string;
+  readonly subject: {
+    readonly kind: string;
+    readonly id: string;
+    readonly schemaId?: string;
+  };
+  readonly generatedAt: string;
+  readonly summary: {
+    readonly pass: number;
+    readonly fail: number;
+    readonly notRun: number;
+  };
+  readonly checks: readonly {
+    readonly checkId: string;
+    readonly status: TextRulesConformanceCheckStatus;
+    readonly message?: string;
+    readonly evidenceRefs?: readonly string[];
+  }[];
+  readonly notes?: readonly string[];
+}
 
 export type TextRulesPosMorphLemmaPhenomenon =
   | "unknown-word"
@@ -146,6 +169,10 @@ export interface TextRulesTokenSpan {
   readonly notes?: readonly string[];
 }
 
+export interface TextRulesTextDocTokenLayerOptions {
+  readonly tokenLayerId?: string;
+}
+
 export interface TextRulesSentenceSpan {
   readonly id: string;
   readonly sentenceKind: "uax29-sentence";
@@ -163,6 +190,14 @@ export interface TextRulesPosMorphLemmaInput {
   readonly unicodeVersion?: string;
   readonly languageHint?: string;
   readonly phenomena?: readonly TextRulesPosMorphLemmaPhenomenon[];
+}
+
+export interface TextRulesPosMorphLemmaDocumentInput {
+  readonly document: TextDocDocumentV1;
+  readonly revision?: string;
+  readonly languageHint?: string;
+  readonly phenomena?: readonly TextRulesPosMorphLemmaPhenomenon[];
+  readonly tokenLayerId?: string;
 }
 
 export interface TextRulesPosMorphLemmaResult {
@@ -258,6 +293,16 @@ export interface TextRulesTokenPattern {
   readonly ruleId: string;
   readonly atoms: readonly TextRulesPatternAtom[];
   readonly caseSensitive?: boolean;
+}
+
+export interface TextRulesTextDocTokenPatternInput extends TextRulesTextDocTokenLayerOptions {
+  readonly document: TextDocDocumentV1;
+  readonly pattern: TextRulesTokenPattern;
+}
+
+export interface TextRulesTextDocTokenPatternsInput extends TextRulesTextDocTokenLayerOptions {
+  readonly document: TextDocDocumentV1;
+  readonly patterns: readonly TextRulesTokenPattern[];
 }
 
 export interface TextRulesPatternCapture {
@@ -718,6 +763,102 @@ export function tokenizeTextRulesText(text: string): readonly TextRulesTokenSpan
   return tokenizeTextForRules(text);
 }
 
+export function tokenizeTextRulesFixtureText(text: string): readonly TextRulesTokenSpan[] {
+  return tokenizeTextForRules(text);
+}
+
+function tokenLayerFromTextDoc(
+  document: TextDocDocumentV1,
+  options: TextRulesTextDocTokenLayerOptions = {},
+): TextDocLayer<TextDocDocumentTokenAnnotation> {
+  const layer = options.tokenLayerId
+    ? document.layers.find((entry) => entry.id === options.tokenLayerId)
+    : document.layers.find((entry) => entry.kind === "token");
+  if (layer === undefined || layer.kind !== "token") {
+    throw new TypeError(
+      options.tokenLayerId
+        ? `textdoc token layer ${options.tokenLayerId} was not found`
+        : "textdoc document must contain a token layer",
+    );
+  }
+  return layer as TextDocLayer<TextDocDocumentTokenAnnotation>;
+}
+
+function spanTargetForTextRulesToken(annotation: TextDocDocumentTokenAnnotation): {
+  readonly startCU: number;
+  readonly endCU: number;
+} {
+  const target = annotation.targets.find((entry) => entry.kind === "span");
+  if (target === undefined || target.kind !== "span") {
+    throw new TypeError(`token annotation ${annotation.id} must target a span`);
+  }
+  return {
+    startCU: target.startCU,
+    endCU: target.endCU,
+  };
+}
+
+function tokenTextFromTextDocAnnotation(
+  document: TextDocDocumentV1,
+  annotation: TextDocDocumentTokenAnnotation,
+  startCU: number,
+  endCU: number,
+): string {
+  if (annotation.text !== undefined) return annotation.text;
+  if (document.text === undefined) {
+    throw new TypeError(`token annotation ${annotation.id} requires text or document.text`);
+  }
+  return document.text.slice(startCU, endCU);
+}
+
+export function textRulesTokenSpansFromTextDoc(
+  document: TextDocDocumentV1,
+  options: TextRulesTextDocTokenLayerOptions = {},
+): readonly TextRulesTokenSpan[] {
+  return tokenLayerFromTextDoc(document, options).annotations
+    .map((annotation) => {
+      const span = spanTargetForTextRulesToken(annotation);
+      return {
+        id: annotation.id,
+        tokenKind: "lexical-token" as const,
+        startCU: span.startCU,
+        endCU: span.endCU,
+        text: tokenTextFromTextDocAnnotation(document, annotation, span.startCU, span.endCU),
+        ...(annotation.notes ? { notes: annotation.notes } : {}),
+      };
+    })
+    .sort(
+      (left, right) =>
+        left.startCU - right.startCU ||
+        left.endCU - right.endCU ||
+        left.id.localeCompare(right.id),
+    );
+}
+
+export function matchTextDocTokenPattern(
+  input: TextRulesTextDocTokenPatternInput,
+): readonly TextRulesPatternMatch[] {
+  return matchTextRulesTokenPattern(
+    textRulesTokenSpansFromTextDoc(
+      input.document,
+      input.tokenLayerId === undefined ? {} : { tokenLayerId: input.tokenLayerId },
+    ),
+    input.pattern,
+  );
+}
+
+export function matchTextDocTokenPatterns(
+  input: TextRulesTextDocTokenPatternsInput,
+): readonly TextRulesPatternMatch[] {
+  return matchTextRulesTokenPatterns(
+    textRulesTokenSpansFromTextDoc(
+      input.document,
+      input.tokenLayerId === undefined ? {} : { tokenLayerId: input.tokenLayerId },
+    ),
+    input.patterns,
+  );
+}
+
 function normalizePatternValue(value: string, caseSensitive: boolean): string {
   return caseSensitive ? value : normalizeSurface(value);
 }
@@ -992,10 +1133,10 @@ function resolveAnalyses(
 
 function createPhenomenonDiagnostics(
   token: TextRulesTokenSpan,
-  input: TextRulesPosMorphLemmaInput,
+  phenomenaInput: readonly TextRulesPosMorphLemmaPhenomenon[] | undefined,
 ): readonly TextProtocolDiagnostic[] {
   const diagnostics: TextProtocolDiagnostic[] = [];
-  const phenomena = new Set(input.phenomena ?? []);
+  const phenomena = new Set(phenomenaInput ?? []);
   const normalized = normalizeSurface(token.text);
 
   if (phenomena.has("multiword-token") && normalized === "del") {
@@ -1114,13 +1255,13 @@ function sortDiagnostics(diagnostics: readonly TextProtocolDiagnostic[]): readon
 }
 
 function annotationProvenance(
-  input: TextRulesPosMorphLemmaInput,
+  source: TextDocSourceRef,
   references: readonly TextDocReferenceRef[],
 ) {
   return {
     source: {
-      id: input.sourceId,
-      ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+      id: source.id,
+      ...(source.sha256 ? { sha256: source.sha256 } : {}),
     },
     references: uniqueReferences(references),
   };
@@ -2008,6 +2149,58 @@ function collectEntityMatches(
   return [...matchesByKey.values()].sort(compareEntityMatches);
 }
 
+function collectEntityMatchesFromTextDoc(
+  document: TextDocDocumentV1,
+  resources: readonly TextRulesEntityResource[],
+): readonly TextRulesEntityMatch[] {
+  if (document.text === undefined) {
+    throw new TypeError("entity matching over textdoc tokens requires document.text");
+  }
+  const tokens = textRulesTokenSpansFromTextDoc(document);
+  const matchesByKey = new Map<string, TextRulesEntityMatch>();
+
+  for (const resource of resources) {
+    for (const entry of resource.entries) {
+      for (const surface of [entry.surface, ...(entry.aliases ?? [])]) {
+        if (surface.length === 0) continue;
+        const normalizedSurface = surface.toLocaleLowerCase("und");
+        for (let startIndex = 0; startIndex < tokens.length; startIndex += 1) {
+          const startToken = tokens[startIndex];
+          if (startToken === undefined) continue;
+          for (let endIndex = startIndex; endIndex < tokens.length; endIndex += 1) {
+            const endToken = tokens[endIndex];
+            if (endToken === undefined) continue;
+            const candidateText = document.text.slice(startToken.startCU, endToken.endCU);
+            if (candidateText.length > surface.length) break;
+            const exactMatch = candidateText === surface;
+            const caseFoldMatch =
+              entry.caseFoldFallback === true &&
+              candidateText.toLocaleLowerCase("und") === normalizedSurface;
+            if (!exactMatch && !caseFoldMatch) continue;
+            if (!hasEntityBoundary(document.text, startToken.startCU, endToken.endCU)) continue;
+            const match: TextRulesEntityMatch = {
+              entry,
+              resource,
+              startCU: startToken.startCU,
+              endCU: endToken.endCU,
+              text: candidateText,
+              priority: exactMatch ? 0 : 1,
+              matchedSurface: surface,
+            };
+            const key = `${match.startCU}:${match.endCU}:${match.entry.label}:${match.entry.id}`;
+            const existing = matchesByKey.get(key);
+            if (!existing || compareEntityMatches(match, existing) < 0) {
+              matchesByKey.set(key, match);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return [...matchesByKey.values()].sort(compareEntityMatches);
+}
+
 function filterEntityOverlaps(
   matches: readonly TextRulesEntityMatch[],
   allowSpanOverlap: boolean,
@@ -2371,7 +2564,7 @@ export function analyzeRuleBackedNer(
   }
 
   const selectedResources = selectEntityResources(resources, input.languageHint);
-  const rawMatches = collectEntityMatches(document.text, selectedResources);
+  const rawMatches = collectEntityMatchesFromTextDoc(document, selectedResources);
   const { matches, diagnostics } = filterEntityOverlaps(rawMatches, input.allowSpanOverlap === true);
   const entityAnnotations = createEntityAnnotations(matches, document);
   const entityLayer: TextRulesEntityLayer = {
@@ -2396,16 +2589,32 @@ export function analyzeRuleBackedNer(
   };
 }
 
-export function analyzePosMorphLemma(
-  input: TextRulesPosMorphLemmaInput,
+function posMorphLemmaViews(document: TextDocDocumentV1): readonly TextDocView[] {
+  if (document.views.some((view) => view.id === "analysis-view")) return document.views;
+  return [
+    ...document.views,
+    {
+      id: "analysis-view",
+      kind: "analysis",
+      description: "Deterministic textrules POS, lemma, and morphology annotations.",
+      derivedFrom: document.views.some((view) => view.id === "source-view")
+        ? ["source-view"]
+        : document.views.slice(0, 1).map((view) => view.id),
+    },
+  ];
+}
+
+export function analyzePosMorphLemmaDocument(
+  input: TextRulesPosMorphLemmaDocumentInput,
   resources: readonly TextRulesLexiconResource[],
 ): TextRulesPosMorphLemmaResult {
   const selectedResources = selectResources(resources, input.languageHint);
   const entriesBySurface = buildLexiconIndex(selectedResources);
-  const tokens = tokenizeTextForRules(input.text);
-  const sentences = segmentSentencesForRules(input.text);
-  const tokenAnnotations = createTokenAnnotations(tokens, input.sourceId, input.sourceSha256);
-  const sentenceAnnotations = createSentenceAnnotations(sentences, input.sourceId, input.sourceSha256);
+  const tokens = textRulesTokenSpansFromTextDoc(
+    input.document,
+    input.tokenLayerId === undefined ? {} : { tokenLayerId: input.tokenLayerId },
+  );
+  const source = input.document.source ?? { id: input.document.documentId };
   const posAnnotations: TextDocPosAnnotation[] = [];
   const lemmaAnnotations: TextDocLemmaAnnotation[] = [];
   const morphologyAnnotations: TextDocMorphologyAnnotation[] = [];
@@ -2421,7 +2630,7 @@ export function analyzePosMorphLemma(
 
   for (const token of tokens) {
     const { analyses, diagnostics: fallbackDiagnostics } = resolveAnalyses(token, entriesBySurface);
-    diagnostics.push(...fallbackDiagnostics, ...createPhenomenonDiagnostics(token, input));
+    diagnostics.push(...fallbackDiagnostics, ...createPhenomenonDiagnostics(token, input.phenomena));
 
     if (analyses.length === 0) continue;
 
@@ -2432,7 +2641,7 @@ export function analyzePosMorphLemma(
         id: analysis.ruleId,
       } satisfies TextDocReferenceRef,
     ]);
-    const provenance = annotationProvenance(input, references);
+    const provenance = annotationProvenance(source, references);
 
     const posValues: { value: string; notes?: readonly string[] }[] = [];
     const seenPos = new Set<string>();
@@ -2523,18 +2732,9 @@ export function analyzePosMorphLemma(
   }
 
   const layers: TextDocLayer<TextDocAnnotation>[] = [
-    {
-      id: "tokens",
-      kind: "token",
-      viewId: "analysis-view",
-      annotations: tokenAnnotations,
-    },
-    {
-      id: "sentences",
-      kind: "sentence",
-      viewId: "analysis-view",
-      annotations: sentenceAnnotations,
-    },
+    ...input.document.layers.filter(
+      (layer) => layer.id !== "pos" && layer.id !== "lemmas" && layer.id !== "morphology",
+    ),
     {
       id: "pos",
       kind: "pos",
@@ -2557,20 +2757,9 @@ export function analyzePosMorphLemma(
 
   return {
     document: {
-      schemaVersion: documentSchemaVersion,
-      documentId: input.documentId,
+      ...input.document,
       revision: input.revision ?? posMorphLemmaRevision,
-      textLengthCU: input.text.length,
-      text: input.text,
-      source: {
-        id: input.sourceId,
-        ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
-      },
-      unicodeVersion: input.unicodeVersion ?? "17.0.0",
-      units: {
-        text: "utf16-code-unit",
-      },
-      views: createDocumentViews(),
+      views: posMorphLemmaViews(input.document),
       layers,
       ...(input.phenomena && input.phenomena.length > 0
         ? {
@@ -2580,6 +2769,53 @@ export function analyzePosMorphLemma(
     },
     diagnostics: sortDiagnostics(diagnostics),
   };
+}
+
+export function analyzePosMorphLemma(
+  input: TextRulesPosMorphLemmaInput,
+  resources: readonly TextRulesLexiconResource[],
+): TextRulesPosMorphLemmaResult {
+  const tokens = tokenizeTextRulesFixtureText(input.text);
+  const sentences = segmentSentencesForRules(input.text);
+  const document: TextDocDocumentV1 = {
+    schemaVersion: documentSchemaVersion,
+    documentId: input.documentId,
+    revision: input.revision ?? posMorphLemmaRevision,
+    textLengthCU: input.text.length,
+    text: input.text,
+    source: {
+      id: input.sourceId,
+      ...(input.sourceSha256 ? { sha256: input.sourceSha256 } : {}),
+    },
+    unicodeVersion: input.unicodeVersion ?? "17.0.0",
+    units: {
+      text: "utf16-code-unit",
+    },
+    views: createDocumentViews(),
+    layers: [
+      {
+        id: "tokens",
+        kind: "token",
+        viewId: "analysis-view",
+        annotations: createTokenAnnotations(tokens, input.sourceId, input.sourceSha256),
+      },
+      {
+        id: "sentences",
+        kind: "sentence",
+        viewId: "analysis-view",
+        annotations: createSentenceAnnotations(sentences, input.sourceId, input.sourceSha256),
+      },
+    ],
+  };
+  return analyzePosMorphLemmaDocument(
+    {
+      document,
+      revision: input.revision ?? posMorphLemmaRevision,
+      ...(input.languageHint === undefined ? {} : { languageHint: input.languageHint }),
+      ...(input.phenomena === undefined ? {} : { phenomena: input.phenomena }),
+    },
+    resources,
+  );
 }
 
 export function analyzeRelationExtraction(
@@ -2817,19 +3053,19 @@ export function createPosMorphLemmaResultEnvelope(
   };
 }
 
-function conformanceStatus(matchesExpected: boolean): TextConformanceCheckStatus {
+function conformanceStatus(matchesExpected: boolean): TextRulesConformanceCheckStatus {
   return matchesExpected ? "pass" : "fail";
 }
 
 export function createPosMorphLemmaConformanceReport(
   envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
   options: TextRulesConformanceReportOptions,
-): TextConformanceReportV1 {
+): TextRulesConformanceReportV1 {
   const expectedStatus = conformanceStatus(options.matchesExpected);
 
   return {
-    schemaId: conformanceReportSchemaId,
-    schemaVersion: conformanceReportSchemaVersion,
+    schemaId: textRulesConformanceReportSchemaId,
+    schemaVersion: textRulesConformanceReportSchemaVersion,
     reportId: `pos-morph-lemma:${envelope.payload.documentId}`,
     subject: {
       kind: "textprotocol-result-envelope",
@@ -2905,12 +3141,12 @@ export function createRuleBackedNerResultEnvelope(
 export function createRuleBackedNerConformanceReport(
   envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
   options: TextRulesConformanceReportOptions,
-): TextConformanceReportV1 {
+): TextRulesConformanceReportV1 {
   const expectedStatus = conformanceStatus(options.matchesExpected);
 
   return {
-    schemaId: conformanceReportSchemaId,
-    schemaVersion: conformanceReportSchemaVersion,
+    schemaId: textRulesConformanceReportSchemaId,
+    schemaVersion: textRulesConformanceReportSchemaVersion,
     reportId: `rule-backed-ner:${envelope.payload.documentId}`,
     subject: {
       kind: "textprotocol-result-envelope",
@@ -2986,12 +3222,12 @@ export function createRelationExtractionResultEnvelope(
 export function createRelationExtractionConformanceReport(
   envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
   options: TextRulesConformanceReportOptions,
-): TextConformanceReportV1 {
+): TextRulesConformanceReportV1 {
   const expectedStatus = conformanceStatus(options.matchesExpected);
 
   return {
-    schemaId: conformanceReportSchemaId,
-    schemaVersion: conformanceReportSchemaVersion,
+    schemaId: textRulesConformanceReportSchemaId,
+    schemaVersion: textRulesConformanceReportSchemaVersion,
     reportId: `relation-extraction:${envelope.payload.documentId}`,
     subject: {
       kind: "textprotocol-result-envelope",
@@ -3067,12 +3303,12 @@ export function createCoreferenceResultEnvelope(
 export function createCoreferenceConformanceReport(
   envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
   options: TextRulesConformanceReportOptions,
-): TextConformanceReportV1 {
+): TextRulesConformanceReportV1 {
   const expectedStatus = conformanceStatus(options.matchesExpected);
 
   return {
-    schemaId: conformanceReportSchemaId,
-    schemaVersion: conformanceReportSchemaVersion,
+    schemaId: textRulesConformanceReportSchemaId,
+    schemaVersion: textRulesConformanceReportSchemaVersion,
     reportId: `coreference:${envelope.payload.documentId}`,
     subject: {
       kind: "textprotocol-result-envelope",
@@ -3148,12 +3384,12 @@ export function createDependencyParserResultEnvelope(
 export function createDependencyParserConformanceReport(
   envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
   options: TextRulesConformanceReportOptions,
-): TextConformanceReportV1 {
+): TextRulesConformanceReportV1 {
   const expectedStatus = conformanceStatus(options.matchesExpected);
 
   return {
-    schemaId: conformanceReportSchemaId,
-    schemaVersion: conformanceReportSchemaVersion,
+    schemaId: textRulesConformanceReportSchemaId,
+    schemaVersion: textRulesConformanceReportSchemaVersion,
     reportId: `dependency-parser:${envelope.payload.documentId}`,
     subject: {
       kind: "textprotocol-result-envelope",

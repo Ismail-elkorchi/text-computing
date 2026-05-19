@@ -67,7 +67,7 @@
         "status": { "const": "proven" },
         "dependents": {
           "type": "array",
-          "minItems": 1,
+          "minItems": 0,
           "items": { "$ref": "#/definitions/dependent" }
         },
         "evidenceRefs": {
