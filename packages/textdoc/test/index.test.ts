@@ -2,10 +2,12 @@ import {
   documentSchemaVersion,
   exportTextDocDocumentV1ToConllu,
   importConlluToTextDocDocumentV1,
+  isTextDocExtensionId,
   isTextDocDocumentV1,
   isTextDocSpanInRange,
   packageName,
   TextDocConlluError,
+  textDocExtensionIdPattern,
   textDocDocumentPayloadKind,
   toTextDocDocumentV1,
   tokenSentenceAnnotationSchemaVersion,
@@ -194,6 +196,53 @@ const graphFixtureDocument: TextDocDocumentV1 = {
   ],
 };
 
+const extensionFixtureDocument: TextDocDocumentV1 = {
+  ...graphFixtureDocument,
+  documentId: "doc:extension-runtime",
+  layers: [
+    ...graphFixtureDocument.layers,
+    {
+      id: "extensions",
+      kind: "extension",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "extension-1",
+          kind: "extension",
+          extensionId: "urn:ismail-elkorchi:textdoc-extension:demo-note",
+          extensionSchema: {
+            schemaId: "urn:ismail-elkorchi:textdoc-extension:demo-note:v1",
+            schemaVersion: "1",
+          },
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "token-1" }],
+          provenance: {
+            references: [{ kind: "fixture-policy", id: "textdoc-extension-policy" }],
+          },
+          confidence: { value: 1, method: "fixture" },
+          loss: [
+            {
+              kind: "external-reference",
+              reason: "Extension payload is validated by its declaring package schema.",
+            },
+          ],
+          ambiguitySet: { id: "ambiguity:extension-demo", role: "candidate", rank: 1 },
+          documentRefs: [
+            {
+              documentId: "doc:extension-policy",
+              role: "policy-reference",
+              sha256: "a".repeat(64),
+            },
+          ],
+          data: {
+            label: "demo-note",
+          },
+        },
+      ],
+    },
+  ],
+};
+
 const issueElevenDocument: TextDocDocumentV1 = {
   schemaVersion: documentSchemaVersion,
   documentId: "doc:annotation-model",
@@ -270,6 +319,98 @@ if (!isTextDocDocumentV1(issueElevenDocument)) {
 
 if (!isTextDocDocumentV1(graphFixtureDocument)) {
   throw new Error("graph fixture should satisfy the document model runtime guard");
+}
+
+if (textDocExtensionIdPattern !== "^[a-z][a-z0-9+.-]*:[^\\s]+$") {
+  throw new Error("extension id pattern should remain explicit and stable");
+}
+
+if (!isTextDocExtensionId("urn:ismail-elkorchi:textdoc-extension:demo-note")) {
+  throw new Error("URI-like extension ids should satisfy the extension id guard");
+}
+
+if (isTextDocExtensionId("demo-note")) {
+  throw new Error("extension ids should require an explicit scheme prefix");
+}
+
+if (!isTextDocDocumentV1(extensionFixtureDocument)) {
+  throw new Error("extension annotations should satisfy the document model runtime guard");
+}
+
+function cloneExtensionFixture(): TextDocDocumentV1 {
+  return structuredClone(extensionFixtureDocument);
+}
+
+function mutateExtensionAnnotation(
+  document: TextDocDocumentV1,
+  mutate: (annotation: Record<string, unknown>) => void,
+): TextDocDocumentV1 {
+  const annotation = document.layers
+    .find((layer) => layer.id === "extensions")
+    ?.annotations.find((entry) => entry.id === "extension-1") as
+    | Record<string, unknown>
+    | undefined;
+  if (!annotation) throw new Error("extension fixture annotation should exist");
+  mutate(annotation);
+  return document;
+}
+
+const invalidExtensionCases: readonly [string, (annotation: Record<string, unknown>) => void][] = [
+  ["extension id", (annotation) => { annotation.extensionId = "demo-note"; }],
+  [
+    "target",
+    (annotation) => {
+      annotation.targets = [{ kind: "annotation", annotationId: "" }];
+    },
+  ],
+  [
+    "lifecycle",
+    (annotation) => {
+      annotation.lifecycle = { state: "archived" };
+    },
+  ],
+  [
+    "provenance",
+    (annotation) => {
+      annotation.provenance = { references: [{ kind: "", id: "textdoc-extension-policy" }] };
+    },
+  ],
+  [
+    "confidence",
+    (annotation) => {
+      annotation.confidence = { value: -0.1, method: "fixture" };
+    },
+  ],
+  [
+    "loss",
+    (annotation) => {
+      annotation.loss = [{ kind: "unknown", reason: "invalid" }];
+    },
+  ],
+  [
+    "ambiguity set",
+    (annotation) => {
+      annotation.ambiguitySet = { id: "ambiguity:extension-demo", role: "maybe" };
+    },
+  ],
+  [
+    "external document reference",
+    (annotation) => {
+      annotation.documentRefs = [
+        {
+          documentId: "doc:extension-policy",
+          role: "policy-reference",
+          sha256: "not-a-sha",
+        },
+      ];
+    },
+  ],
+];
+
+for (const [field, mutate] of invalidExtensionCases) {
+  if (isTextDocDocumentV1(mutateExtensionAnnotation(cloneExtensionFixture(), mutate))) {
+    throw new Error(`extension annotation should reject invalid ${field}`);
+  }
 }
 
 const invalidEvidenceDocument = structuredClone(graphFixtureDocument);

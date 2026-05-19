@@ -28,7 +28,8 @@ export type TextDocLayerKind =
   | "entity-link"
   | "corpus-feature"
   | "dependency-node"
-  | "dependency";
+  | "dependency"
+  | "extension";
 export type TextDocAnnotationLifecycleState = "active" | "superseded" | "retracted";
 export type TextDocDependencyNodeKind = "word" | "multiword-token" | "empty-node";
 export type TextDocConlluErrorCode =
@@ -271,6 +272,18 @@ export interface TextDocCorpusFeatureAnnotation extends TextDocAnnotationBase {
   readonly numericValue?: number;
 }
 
+export interface TextDocExtensionSchemaRef {
+  readonly schemaId: string;
+  readonly schemaVersion?: string;
+}
+
+export interface TextDocExtensionAnnotation extends TextDocAnnotationBase {
+  readonly kind: "extension";
+  readonly extensionId: string;
+  readonly extensionSchema?: TextDocExtensionSchemaRef;
+  readonly data?: Readonly<Record<string, unknown>>;
+}
+
 export interface TextDocConlluFields {
   readonly id: string;
   readonly form: string;
@@ -319,7 +332,8 @@ export type TextDocAnnotation =
   | TextDocEntityLinkAnnotation
   | TextDocCorpusFeatureAnnotation
   | TextDocDependencyNodeAnnotation
-  | TextDocDependencyAnnotation;
+  | TextDocDependencyAnnotation
+  | TextDocExtensionAnnotation;
 
 export interface TextDocLayer<TAnnotation extends TextDocAnnotation = TextDocAnnotation> {
   readonly id: string;
@@ -409,7 +423,8 @@ function isTextDocLayerKind(value: unknown): value is TextDocLayerKind {
     value === "entity-link" ||
     value === "corpus-feature" ||
     value === "dependency-node" ||
-    value === "dependency"
+    value === "dependency" ||
+    value === "extension"
   );
 }
 
@@ -610,6 +625,20 @@ export function isTextDocExternalDocumentRef(value: unknown): value is TextDocEx
   );
 }
 
+export const textDocExtensionIdPattern = "^[a-z][a-z0-9+.-]*:[^\\s]+$" as const;
+
+export function isTextDocExtensionId(value: unknown): value is string {
+  return typeof value === "string" && /^[a-z][a-z0-9+.-]*:[^\s]+$/u.test(value);
+}
+
+export function isTextDocExtensionSchemaRef(value: unknown): value is TextDocExtensionSchemaRef {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.schemaId) &&
+    (value.schemaVersion === undefined || isNonEmptyString(value.schemaVersion))
+  );
+}
+
 function isTextDocAnnotationBase(value: unknown): value is TextDocAnnotationBase {
   return (
     isRecord(value) &&
@@ -745,6 +774,15 @@ export function isTextDocAnnotation(value: unknown): value is TextDocAnnotation 
       (annotation.value === undefined || isNonEmptyString(annotation.value)) &&
       (annotation.numericValue === undefined || typeof annotation.numericValue === "number") &&
       (annotation.value !== undefined || annotation.numericValue !== undefined)
+    );
+  }
+
+  if (annotation.kind === "extension") {
+    return (
+      isTextDocExtensionId(annotation.extensionId) &&
+      (annotation.extensionSchema === undefined ||
+        isTextDocExtensionSchemaRef(annotation.extensionSchema)) &&
+      (annotation.data === undefined || isRecord(annotation.data))
     );
   }
 

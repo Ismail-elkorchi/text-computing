@@ -212,7 +212,8 @@ function validateDocumentSemantics(document) {
       if (
         target.kind === "document" &&
         layer.kind !== "corpus-feature" &&
-        layer.kind !== "dependency-node"
+        layer.kind !== "dependency-node" &&
+        layer.kind !== "extension"
       ) {
         pushError(
           errors,
@@ -520,27 +521,36 @@ const conformanceReportSchema = await readJson("schemas/textconformance-report-v
 const validateConformanceReport = ajv.compile(conformanceReportSchema);
 const textdocPackage = await readJson("packages/textdoc/package.json");
 
-const validFixturePath = "fixtures/textdoc/examples/document-annotation-model-v1.json";
+const validFixturePaths = [
+  "fixtures/textdoc/examples/document-annotation-model-v1.json",
+  "fixtures/textdoc/examples/document-extension-model-v1.json",
+];
+
+for (const validFixturePath of validFixturePaths) {
+  const validDocument = await readJson(validFixturePath);
+
+  if (!validateDocument(validDocument)) {
+    console.error(`${validFixturePath} failed schemas/textdoc-document-v1.schema.json`);
+    console.error(JSON.stringify(validateDocument.errors, null, 2));
+    process.exit(1);
+  }
+
+  const semanticErrors = validateDocumentSemantics(validDocument);
+  if (semanticErrors.length > 0) {
+    console.error(`${validFixturePath} failed semantic validation`);
+    console.error(JSON.stringify(semanticErrors, null, 2));
+    process.exit(1);
+  }
+
+  const roundTripString = stableStringify(JSON.parse(JSON.stringify(validDocument)));
+  if (roundTripString !== stableStringify(validDocument)) {
+    console.error(`${validFixturePath} failed stable round-trip serialization`);
+    process.exit(1);
+  }
+}
+
+const validFixturePath = validFixturePaths[0];
 const validDocument = await readJson(validFixturePath);
-
-if (!validateDocument(validDocument)) {
-  console.error(`${validFixturePath} failed schemas/textdoc-document-v1.schema.json`);
-  console.error(JSON.stringify(validateDocument.errors, null, 2));
-  process.exit(1);
-}
-
-const semanticErrors = validateDocumentSemantics(validDocument);
-if (semanticErrors.length > 0) {
-  console.error(`${validFixturePath} failed semantic validation`);
-  console.error(JSON.stringify(semanticErrors, null, 2));
-  process.exit(1);
-}
-
-const roundTripString = stableStringify(JSON.parse(JSON.stringify(validDocument)));
-if (roundTripString !== stableStringify(validDocument)) {
-  console.error(`${validFixturePath} failed stable round-trip serialization`);
-  process.exit(1);
-}
 
 const resultEnvelope = {
   schemaId: "urn:ismail-elkorchi:textprotocol:result-envelope:v1",
@@ -655,6 +665,20 @@ const invalidCases = [
     expectedCode: "multiple-selected-ambiguity-members",
   },
 ];
+
+const schemaInvalidCases = [
+  {
+    path: "fixtures/textdoc/invalid/extension-bad-id.json",
+  },
+];
+
+for (const invalidCase of schemaInvalidCases) {
+  const invalidDocument = await readJson(invalidCase.path);
+  if (validateDocument(invalidDocument)) {
+    console.error(`${invalidCase.path} must fail schemas/textdoc-document-v1.schema.json`);
+    process.exit(1);
+  }
+}
 
 for (const invalidCase of invalidCases) {
   const invalidDocument = await readJson(invalidCase.path);
