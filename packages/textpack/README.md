@@ -46,3 +46,13 @@ resource id.
 
 `loadTextPackRegistryResources` loads selected registry resources from caller-provided content while
 preserving license, provenance, and overlay metadata.
+
+## Manifest governance
+
+`validateTextPackManifestGovernance` checks a manifest before registry construction. It reports
+duplicate license, provenance, and resource ids; missing license or provenance references; unsafe
+resource, entrypoint, or test paths; and same-scope overlay conflicts.
+
+The validator does not read files and does not treat fixture identifiers as resource paths. Pack
+authors remain responsible for supplying package-relative resources, explicit provenance, and
+licenses before a pack is considered releasable.

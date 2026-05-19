@@ -166,11 +166,13 @@
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [
-        "Resource governance, multilingual pack coverage, and update workflow are not broad enough for package release.",
+        "Multilingual pack coverage and update workflow are not broad enough for package release.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ],
       "evidenceRefs": [
         "packages/textpack/package.json",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/README.md",
         "packages/textpack/test",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs"

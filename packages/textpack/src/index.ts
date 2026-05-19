@@ -180,6 +180,31 @@ export interface TextPackEntryLookupMatch {
   readonly canonicalization?: TextPackEntryLookupCanonicalizationMetadata;
 }
 
+export type TextPackManifestGovernanceDiagnosticCode =
+  | "invalid-manifest-shape"
+  | "duplicate-license-id"
+  | "duplicate-provenance-id"
+  | "duplicate-resource-id"
+  | "missing-license-ref"
+  | "missing-provenance-ref"
+  | "unsafe-resource-path"
+  | "unsafe-entrypoint-path"
+  | "unsafe-test-ref"
+  | "overlay-conflict";
+
+export interface TextPackManifestGovernanceDiagnostic {
+  readonly code: TextPackManifestGovernanceDiagnosticCode;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextPackManifestGovernanceResult {
+  readonly ok: boolean;
+  readonly diagnostics: readonly TextPackManifestGovernanceDiagnostic[];
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -379,6 +404,40 @@ function sortedUniqueTextPackValues(values: Iterable<string | undefined>): reado
   );
 }
 
+function isSafeTextPackPackageRelativePath(value: string): boolean {
+  if (value !== value.trim()) return false;
+  if (value.length === 0 || value.includes("\0") || value.includes("\\")) return false;
+  if (value.startsWith("/") || /^[A-Za-z]:/u.test(value)) return false;
+  if (/^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value)) return false;
+  return !value.split("/").some((segment) => segment.length === 0 || segment === "." || segment === "..");
+}
+
+function isSafeTextPackTestRef(value: string): boolean {
+  if (isSafeTextPackPackageRelativePath(value)) return true;
+  if (value !== value.trim()) return false;
+  if (value.includes("\0") || value.includes("\\")) return false;
+  if (/^[A-Za-z][A-Za-z0-9+.-]*:(?:\/|\\)/u.test(value)) return false;
+  return /^[A-Za-z][A-Za-z0-9.-]*(?::[A-Za-z0-9._-]+)+$/u.test(value);
+}
+
+function addTextPackGovernanceDiagnostic(
+  diagnostics: TextPackManifestGovernanceDiagnostic[],
+  diagnostic: TextPackManifestGovernanceDiagnostic,
+): void {
+  diagnostics.push(diagnostic);
+}
+
+function textPackOverlayKey(resource: TextPackResourceEntry): string {
+  const profiles = [...(resource.profiles ?? [])].sort((left, right) => left.localeCompare(right));
+  return [
+    resource.kind,
+    resource.lookupKey,
+    resource.language ?? "",
+    profiles.join("\u001f"),
+    String(resource.overlayPrecedence),
+  ].join("\u001e");
+}
+
 function resolveTextPackManifestResources(
   manifest: TextPackManifestV1,
 ): readonly TextPackResolvedResource[] {
@@ -424,6 +483,140 @@ export function createTextPackResourceRegistry(
       .sort((left, right) => left.localeCompare(right)),
     languages: sortedUniqueTextPackValues(resources.map((resource) => resource.language)),
     profiles: sortedUniqueTextPackValues(resources.flatMap((resource) => resource.profiles ?? [])),
+  };
+}
+
+export function validateTextPackManifestGovernance(
+  manifest: unknown,
+): TextPackManifestGovernanceResult {
+  const diagnostics: TextPackManifestGovernanceDiagnostic[] = [];
+  if (!isTextPackManifestV1(manifest)) {
+    return {
+      ok: false,
+      diagnostics: [
+        {
+          code: "invalid-manifest-shape",
+          message: "Textpack manifest does not satisfy the version 1 runtime shape.",
+        },
+      ],
+    };
+  }
+
+  const licenseIds = new Set<string>();
+  for (const license of manifest.licenses) {
+    if (licenseIds.has(license.id)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "duplicate-license-id",
+        packId: manifest.packId,
+        ref: license.id,
+        message: `Manifest ${manifest.packId} repeats license id ${license.id}.`,
+      });
+    }
+    licenseIds.add(license.id);
+  }
+
+  const provenanceIds = new Set<string>();
+  for (const provenance of manifest.provenance) {
+    if (provenanceIds.has(provenance.id)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "duplicate-provenance-id",
+        packId: manifest.packId,
+        ref: provenance.id,
+        message: `Manifest ${manifest.packId} repeats provenance id ${provenance.id}.`,
+      });
+    }
+    provenanceIds.add(provenance.id);
+  }
+
+  const resourceIds = new Set<string>();
+  const overlayKeys = new Map<string, TextPackResourceEntry>();
+  for (const resource of manifest.resources) {
+    if (resourceIds.has(resource.resourceId)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "duplicate-resource-id",
+        packId: manifest.packId,
+        resourceId: resource.resourceId,
+        message: `Manifest ${manifest.packId} repeats resource id ${resource.resourceId}.`,
+      });
+    }
+    resourceIds.add(resource.resourceId);
+
+    if (!licenseIds.has(resource.licenseId)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "missing-license-ref",
+        packId: manifest.packId,
+        resourceId: resource.resourceId,
+        ref: resource.licenseId,
+        message: `Resource ${resource.resourceId} references missing license id ${resource.licenseId}.`,
+      });
+    }
+
+    if (!provenanceIds.has(resource.provenanceId)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "missing-provenance-ref",
+        packId: manifest.packId,
+        resourceId: resource.resourceId,
+        ref: resource.provenanceId,
+        message: `Resource ${resource.resourceId} references missing provenance id ${resource.provenanceId}.`,
+      });
+    }
+
+    if (!isSafeTextPackPackageRelativePath(resource.path)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "unsafe-resource-path",
+        packId: manifest.packId,
+        resourceId: resource.resourceId,
+        ref: resource.path,
+        message: `Resource ${resource.resourceId} uses an unsafe package-relative path.`,
+      });
+    }
+
+    const overlayKey = textPackOverlayKey(resource);
+    const conflictingResource = overlayKeys.get(overlayKey);
+    if (conflictingResource !== undefined) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "overlay-conflict",
+        packId: manifest.packId,
+        resourceId: resource.resourceId,
+        ref: conflictingResource.resourceId,
+        message: `Resources ${conflictingResource.resourceId} and ${resource.resourceId} share a lookup key and overlay precedence.`,
+      });
+    } else {
+      overlayKeys.set(overlayKey, resource);
+    }
+  }
+
+  const entrypoints = [
+    ["manifest", manifest.entrypoints.manifest],
+    ["resourceRoot", manifest.entrypoints.resourceRoot],
+  ] as const;
+  for (const [field, value] of entrypoints) {
+    if (value !== undefined && !isSafeTextPackPackageRelativePath(value)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "unsafe-entrypoint-path",
+        packId: manifest.packId,
+        ref: `${field}:${value}`,
+        message: `Entrypoint ${field} uses an unsafe package-relative path.`,
+      });
+    }
+  }
+
+  for (const [field, refs] of Object.entries(manifest.tests)) {
+    for (const ref of refs) {
+      if (!isSafeTextPackTestRef(ref)) {
+        addTextPackGovernanceDiagnostic(diagnostics, {
+          code: "unsafe-test-ref",
+          packId: manifest.packId,
+          ref: `${field}:${ref}`,
+          message: `Test reference ${ref} is neither a safe package-relative path nor a stable test identifier.`,
+        });
+      }
+    }
+  }
+
+  return {
+    ok: diagnostics.length === 0,
+    diagnostics,
   };
 }
 
