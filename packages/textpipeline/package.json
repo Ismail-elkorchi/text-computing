@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@ismail-elkorchi/textdoc": "0.0.0",
-    "@ismail-elkorchi/textprotocol": "0.0.0"
+    "@ismail-elkorchi/textprotocol": "0.1.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

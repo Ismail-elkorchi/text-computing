@@ -1,40 +1,8 @@
 {
   "schemaVersion": 1,
   "scope": "foundation-release-candidates",
-  "publicHead": "bb44f72786bf1f5ec36ab3d5ef366f9713f76fab",
+  "publicHead": "ddbefe7ef61f3e70313e704ce7d6594e7c02f604",
   "packages": [
-    {
-      "packageName": "@ismail-elkorchi/textprotocol",
-      "packageDir": "packages/textprotocol",
-      "releaseTrack": "private-unreleased",
-      "releaseReadiness": "blocked",
-      "candidateState": "candidate-ready",
-      "privateRequired": true,
-      "owns": [
-        "result envelope runtime guards",
-        "result envelope schema contract",
-        "supported-version negotiation",
-        "deterministic JSON transport wrapper"
-      ],
-      "downstreamDependents": [
-        "@ismail-elkorchi/textpipeline",
-        "@ismail-elkorchi/textrules"
-      ],
-      "requiredEvidenceRefs": [
-        "packages/textprotocol/package.json",
-        "packages/textprotocol/src/index.ts",
-        "packages/textprotocol/test/index.test.ts",
-        "schemas/textprotocol-result-envelope-v1.schema.json",
-        "docs/specs/support-status.v1.json",
-        "fixtures/package-release/gates.v1.json",
-        "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs",
-        "packages/textprotocol/README.md"
-      ],
-      "releaseBlockers": [
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ]
-    },
     {
       "packageName": "@ismail-elkorchi/textconformance",
       "packageDir": "packages/textconformance",

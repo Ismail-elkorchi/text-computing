@@ -228,12 +228,15 @@
     },
     {
       "packageName": "@ismail-elkorchi/textprotocol",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "schemas/textprotocol-result-envelope-v1.schema.json",
-        "packages/textprotocol/src"
+        "packages/textprotocol/src",
+        "packages/textprotocol/package.json",
+        "docs/specs/public-vertical-slice-0.1.md",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
-      "nextGate": "Add version negotiation only after a public contract exists."
+      "nextGate": "Keep beta and production-candidate limitations explicit until broader transport and compatibility evidence exists."
     },
     {
       "packageName": "@ismail-elkorchi/textconformance",

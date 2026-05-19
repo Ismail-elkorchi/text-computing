@@ -109,19 +109,20 @@
     },
     {
       "name": "@ismail-elkorchi/textprotocol",
-      "status": "slice-proven",
-      "scope": "Result-envelope types, runtime guards, repository schema, supported-version negotiation, and deterministic JSON transport wrapper are implemented.",
+      "status": "alpha",
+      "scope": "Public alpha result-envelope package for schema version 1, supported-version negotiation, deterministic JSON transport, and bounded package interop proven by Public Vertical Slice 0.1.",
       "evidence": [
         "result-envelope schema",
         "runtime guards",
         "repository fixture validation",
-        "dist export readiness metadata",
         "version-negotiation tests",
-        "JSON transport round-trip tests"
+        "JSON transport round-trip tests",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
         "Only result-envelope schema version 1 and the package JSON transport wrapper are standardized",
-        "Package remains private until broader release gates pass"
+        "Alpha scope is bounded to package interop and external installability proven by Public Vertical Slice 0.1"
       ]
     },
     {

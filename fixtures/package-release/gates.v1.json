@@ -447,9 +447,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textprotocol",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -474,33 +474,22 @@
         ],
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
-      "releaseBlockers": [
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textprotocol/package.json",
         "packages/textprotocol/test",
+        "packages/textprotocol/src/index.ts",
+        "packages/textprotocol/README.md",
+        "packages/textprotocol/CHANGELOG.md",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
-        "packages/textprotocol/src/index.ts",
-        "packages/textprotocol/README.md"
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Only result-envelope schema version 1 and the package JSON transport wrapper are standardized.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
-      "blockerClassifications": [
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textprotocol alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
-          ]
-        }
-      ]
+      "blockerClassifications": []
     },
     {
       "packageName": "@ismail-elkorchi/textconformance",
