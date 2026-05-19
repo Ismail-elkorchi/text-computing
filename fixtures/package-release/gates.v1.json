@@ -501,9 +501,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textlab",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -523,20 +523,23 @@
           "fixtures/package-release/downstream-api-stability.v1.json",
           "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "Built-package API import and smoke evidence is recorded; package remains private until package-quality and package-specific release gates pass."
+        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
       },
-      "releaseBlockers": [
-        "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textlab/package.json",
+        "packages/textlab/README.md",
+        "packages/textlab/CHANGELOG.md",
+        "packages/textlab/src/index.ts",
+        "packages/textlab/src/cli.ts",
         "packages/textlab/test",
         "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
+        "Public alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
@@ -547,17 +550,6 @@
             "packages/textlab/src/index.ts",
             "packages/textlab/test/index.test.mjs",
             "docs/specs/support-status.v1.json"
-          ]
-        },
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textlab alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
           ]
         }
       ]

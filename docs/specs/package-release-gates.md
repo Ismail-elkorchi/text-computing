@@ -62,7 +62,7 @@ A package can advance only after the package APIs it depends on have compatible 
 | `@ismail-elkorchi/textcorpus` | `private-unreleased` | `slice-proven` | `blocked` | `proven` | Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.<br>Package-quality publication checks have not been promoted beyond private-unreleased status. |
 | `@ismail-elkorchi/textprotocol` | `public-alpha` | `alpha` | `publishable` | `proven` | — |
 | `@ismail-elkorchi/textconformance` | `public-alpha` | `alpha` | `publishable` | `proven` | — |
-| `@ismail-elkorchi/textlab` | `private-unreleased` | `slice-proven` | `blocked` | `proven` | Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.<br>Package-quality publication checks have not been promoted beyond private-unreleased status. |
+| `@ismail-elkorchi/textlab` | `public-alpha` | `alpha` | `publishable` | `proven` | — |
 
 ## Blocker maturity
 
@@ -78,7 +78,6 @@ A package can advance only after the package APIs it depends on have compatible 
 | `@ismail-elkorchi/textcorpus` | `alpha` | Package-quality publication checks have not been promoted beyond private-unreleased status. | Blocks textcorpus alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope. | fixtures/package-release/gates.v1.json<br>tools/validate-package-release-gates.mjs<br>tools/check-workspace-pack-dry-run.mjs<br>docs/specs/public-vertical-slice-0.1.md |
 | `@ismail-elkorchi/textconformance` | `beta` | Benchmark runner is not release-ready. | Does not block alpha because alpha requires declared conformance reports and checks, not a broad benchmark runner. | packages/textconformance/src/index.ts<br>packages/textconformance/test<br>docs/specs/support-status.v1.json |
 | `@ismail-elkorchi/textlab` | `beta` | Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening. | Blocks broader inspection-tooling claims; it does not block foundation alpha packages unless their smoke output cannot be inspected. | packages/textlab/src/index.ts<br>packages/textlab/test/index.test.mjs<br>docs/specs/support-status.v1.json |
-| `@ismail-elkorchi/textlab` | `alpha` | Package-quality publication checks have not been promoted beyond private-unreleased status. | Blocks textlab alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope. | fixtures/package-release/gates.v1.json<br>tools/validate-package-release-gates.mjs<br>tools/check-workspace-pack-dry-run.mjs<br>docs/specs/public-vertical-slice-0.1.md |
 
 ## Notes
 

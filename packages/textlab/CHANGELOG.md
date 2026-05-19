@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+
+- Promote package metadata to public alpha for the bounded inspection API and CLI scope.
+
 ## 0.0.0
 
 - Adds deterministic annotation, evidence-replay, and corpus-fixture inspection APIs and CLI commands.

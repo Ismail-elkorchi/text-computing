@@ -258,12 +258,15 @@
     },
     {
       "packageName": "@ismail-elkorchi/textlab",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "packages/textlab/src/index.ts",
-        "packages/textlab/test/index.test.mjs"
+        "packages/textlab/src/cli.ts",
+        "packages/textlab/test/index.test.mjs",
+        "tools/smoke-public-vertical-slice.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
       ],
-      "nextGate": "Add evidence inspection for comparator drift, diffs, and support matrices."
+      "nextGate": "Keep comparator execution, interactive views, and large-corpus browsing as beta limitations until broader inspection evidence exists."
     }
   ],
   "taskRows": [

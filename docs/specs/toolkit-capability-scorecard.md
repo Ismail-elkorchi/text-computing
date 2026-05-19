@@ -48,7 +48,7 @@ Blocked term set: `comparative-marketing-v1`.
 | `@ismail-elkorchi/textcorpus` | `slice-proven` | docs/specs/textcorpus-collection-contract.md<br>fixtures/corpus-tfidf-bm25/slices.json<br>fixtures/retrieval/slices.json<br>fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json<br>fixtures/performance/gates.v1.json | Add external relevance datasets, streaming behavior, filesystem-backed index storage, and broader multilingual retrieval fixtures. |
 | `@ismail-elkorchi/textprotocol` | `alpha` | schemas/textprotocol-result-envelope-v1.schema.json<br>packages/textprotocol/src<br>packages/textprotocol/package.json<br>docs/specs/public-vertical-slice-0.1.md<br>tools/smoke-public-vertical-slice.mjs | Keep beta and production-candidate limitations explicit until broader transport and compatibility evidence exists. |
 | `@ismail-elkorchi/textconformance` | `alpha` | schemas/textconformance-report-v1.schema.json<br>packages/textconformance/src<br>packages/textconformance/package.json<br>docs/specs/public-vertical-slice-0.1.md<br>tools/smoke-public-vertical-slice.mjs | Keep broad benchmark-runner behavior as a beta limitation until broader benchmark evidence exists. |
-| `@ismail-elkorchi/textlab` | `slice-proven` | packages/textlab/src/index.ts<br>packages/textlab/test/index.test.mjs | Add evidence inspection for comparator drift, diffs, and support matrices. |
+| `@ismail-elkorchi/textlab` | `alpha` | packages/textlab/src/index.ts<br>packages/textlab/src/cli.ts<br>packages/textlab/test/index.test.mjs<br>tools/smoke-public-vertical-slice.mjs<br>tools/check-workspace-pack-dry-run.mjs | Keep comparator execution, interactive views, and large-corpus browsing as beta limitations until broader inspection evidence exists. |
 
 ## Task rows
 
