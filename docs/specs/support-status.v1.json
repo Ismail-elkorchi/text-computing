@@ -126,7 +126,7 @@
     {
       "name": "@ismail-elkorchi/textconformance",
       "status": "slice-proven",
-      "scope": "Machine-readable conformance reports, runtime guards, report diffs, claim-registry traceability checks, and synchronous runner are implemented.",
+      "scope": "Machine-readable conformance reports, runtime guards, report diffs, deterministic Markdown report rendering, claim-registry traceability checks, and synchronous runner are implemented.",
       "evidence": [
         "conformance report schema",
         "runtime guards",
@@ -134,10 +134,11 @@
         "fixtures/reports/task-evidence-manifest.v1.json",
         "dist export readiness metadata",
         "report diff tests",
+        "Markdown report rendering tests",
         "claim-registry traceability tests"
       ],
       "limitations": [
-        "No benchmark runner or release-oriented report renderer is implemented",
+        "No benchmark runner is implemented",
         "Package remains private until broader release gates pass"
       ]
     },

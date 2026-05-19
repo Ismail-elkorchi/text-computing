@@ -4,3 +4,4 @@
 
 - Establish package workspace metadata.
 - Add the `textconformance-report-v1` contract and runtime guards for machine-readable check reports.
+- Add report diff, claim-registry validation, and deterministic Markdown rendering helpers.

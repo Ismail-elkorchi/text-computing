@@ -6,6 +6,8 @@ import {
   isTextConformanceReportDiffV1,
   isTextConformanceReportV1,
   packageName,
+  renderTextConformanceReportDiffMarkdown,
+  renderTextConformanceReportMarkdown,
   runTextConformanceChecks,
   validateTextConformanceClaimRegistry,
 } from "../src/index.ts";
@@ -44,6 +46,24 @@ const report = runTextConformanceChecks(
 
 if (!isTextConformanceReportV1(report)) {
   throw new Error("runner output should satisfy the conformance report contract");
+}
+
+const renderedReport = renderTextConformanceReportMarkdown(report, {
+  title: "Textconformance unit report",
+});
+if (!renderedReport.endsWith("\n")) {
+  throw new Error("report Markdown renderer should emit a final newline");
+}
+if (
+  !renderedReport.includes("# Textconformance unit report") ||
+  !renderedReport.includes("- **Summary:** pass=1; fail=1; not-run=1") ||
+  !renderedReport.includes("| comparator-replay | not-run | Comparator replay is not attached to this unit test. | — |") ||
+  renderedReport.indexOf("| comparator-replay |") > renderedReport.indexOf("| negative-control |")
+) {
+  throw new Error("report Markdown renderer should emit deterministic summary and check rows");
+}
+if (renderTextConformanceReportMarkdown(report, { title: "Textconformance unit report" }) !== renderedReport) {
+  throw new Error("report Markdown renderer should be deterministic across repeated calls");
 }
 
 if (report.summary.pass !== 1 || report.summary.fail !== 1 || report.summary.notRun !== 1) {
@@ -134,6 +154,61 @@ if (
   diff.summary.removed !== 1
 ) {
   throw new Error("report diff should count same, changed, added, and removed checks");
+}
+const renderedDiff = renderTextConformanceReportDiffMarkdown(diff, {
+  title: "Textconformance unit diff",
+});
+if (
+  !renderedDiff.includes("# Textconformance unit diff") ||
+  !renderedDiff.includes("- **Summary:** same=1; changed=1; added=1; removed=1") ||
+  renderedDiff.indexOf("| added-check |") > renderedDiff.indexOf("| output-stable |")
+) {
+  throw new Error("diff Markdown renderer should emit deterministic summary and check rows");
+}
+if (renderTextConformanceReportDiffMarkdown(diff, { title: "Textconformance unit diff" }) !== renderedDiff) {
+  throw new Error("diff Markdown renderer should be deterministic across repeated calls");
+}
+
+const escapedReport = runTextConformanceChecks(
+  [
+    {
+      checkId: "pipe-message",
+      run: () => ({
+        checkId: "pipe-message",
+        status: "fail",
+        message: "contains | pipe\nand backslash \\ marker",
+        evidenceRefs: ["fixtures/example|pipe.json", "fixtures/example\\backslash.json"],
+      }),
+    },
+  ],
+  {
+    reportId: "textconformance:escaped",
+    subject: {
+      kind: "fixture-suite",
+      id: "textconformance-escaped",
+    },
+  },
+);
+const escapedMarkdown = renderTextConformanceReportMarkdown(escapedReport);
+if (
+  !escapedMarkdown.includes("contains \\| pipe<br>and backslash \\\\ marker") ||
+  !escapedMarkdown.includes("fixtures/example\\|pipe.json<br>fixtures/example\\\\backslash.json")
+) {
+  throw new Error("report Markdown renderer should escape table cells deterministically");
+}
+
+let invalidReportRenderRejected = false;
+try {
+  renderTextConformanceReportMarkdown({
+    ...report,
+    schemaId: "invalid",
+  } as never);
+} catch (error) {
+  invalidReportRenderRejected =
+    error instanceof TypeError && error.message === "conformance report is invalid";
+}
+if (!invalidReportRenderRejected) {
+  throw new Error("report Markdown renderer should reject invalid reports");
 }
 
 let duplicateCheckRejected = false;
