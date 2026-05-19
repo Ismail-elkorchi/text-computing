@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -14,6 +14,26 @@ const TASKS = {
     comparisonDir: "fixtures/tokenization-sbd/comparisons",
     comparisonSchema: "schemas/tokenization-sbd-comparison-v1.schema.json",
     conformanceReportRefs: ["fixtures/reports/nlp-tokenization-sbd/conformance-report.json"],
+    externalComparatorCommands: [
+      {
+        comparatorName: "spaCy",
+        expectedVersion: "3.8.14",
+        runtime: "python",
+        argv: ["python3", "-c", "import spacy; print(spacy.__version__)"],
+        comparisonPath: "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+      },
+      {
+        comparatorName: "wink-nlp",
+        expectedVersion: "2.4.0",
+        runtime: "node",
+        argv: [
+          "node",
+          "-e",
+          "import { createRequire } from 'node:module'; const require = createRequire(process.cwd() + '/'); const pkg = require('wink-nlp/package.json'); console.log(pkg.version);",
+        ],
+        comparisonPath: "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json",
+      },
+    ],
   },
   "pos-morph-lemma": {
     taskId: "nlp-pos-morph-lemma",
@@ -141,6 +161,69 @@ function runCommand(command) {
   };
 }
 
+function sanitizeExecutionText(text) {
+  return String(text)
+    .replaceAll(ROOT, "<repo>")
+    .replace(/\/home\/[^/\s]+\/[^\s"']*/gu, "<local-path>");
+}
+
+function runOptionalExternalComparator(command) {
+  const started = Date.now();
+  const [binary, ...args] = command.argv;
+  const result = spawnSync(binary, args, {
+    cwd: ROOT,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  const durationMs = Date.now() - started;
+  const stdout = sanitizeExecutionText(result.stdout ?? "");
+  const stderr = sanitizeExecutionText(result.stderr ?? "");
+  if (result.error !== undefined || result.status !== 0) {
+    return {
+      comparatorName: command.comparatorName,
+      expectedVersion: command.expectedVersion,
+      runtime: command.runtime,
+      argv: command.argv,
+      comparisonPath: command.comparisonPath,
+      status: "not-run",
+      observedVersion: null,
+      skipReason: result.error?.message ?? (stderr.trim() || `exit ${result.status}`),
+      durationMs,
+      stdout,
+      stderr,
+    };
+  }
+  const observedVersion = stdout.trim();
+  if (observedVersion !== command.expectedVersion) {
+    return {
+      comparatorName: command.comparatorName,
+      expectedVersion: command.expectedVersion,
+      runtime: command.runtime,
+      argv: command.argv,
+      comparisonPath: command.comparisonPath,
+      status: "fail",
+      observedVersion,
+      skipReason: `expected ${command.expectedVersion}, observed ${observedVersion}`,
+      durationMs,
+      stdout,
+      stderr,
+    };
+  }
+  return {
+    comparatorName: command.comparatorName,
+    expectedVersion: command.expectedVersion,
+    runtime: command.runtime,
+    argv: command.argv,
+    comparisonPath: command.comparisonPath,
+    status: "pass",
+    observedVersion,
+    skipReason: null,
+    durationMs,
+    stdout,
+    stderr,
+  };
+}
+
 async function comparisonFiles(config) {
   if (config.comparisonDir === null) return [];
   const entries = await readdir(path.join(ROOT, config.comparisonDir));
@@ -260,6 +343,66 @@ function makeComparisonRun({ config, comparison, comparisonPath, comparisonHash,
   };
 }
 
+function makeExternalComparatorAttemptRun({ config, attempt, repoHead, dirty }) {
+  return {
+    schemaId: "urn:ismail-elkorchi:evidence:run:v1",
+    schemaVersion: 1,
+    runId: `evidence-run:${config.taskId}:${attempt.comparatorName}:external-execute:${attempt.expectedVersion}`,
+    taskId: config.taskId,
+    repo: {
+      headSha: repoHead,
+      dirty,
+    },
+    generatedAt: new Date(0).toISOString(),
+    inputs: [
+      {
+        role: "comparison",
+        path: attempt.comparisonPath,
+        sha256: "0".repeat(64),
+      },
+    ],
+    comparator: {
+      name: attempt.comparatorName,
+      version: attempt.expectedVersion,
+      runtime: attempt.runtime,
+      source: attempt.comparisonPath,
+    },
+    command: {
+      argv: attempt.argv,
+      cwd: ".",
+    },
+    runtime: {
+      name: attempt.runtime,
+      version: attempt.observedVersion ?? "unavailable",
+      platform: process.platform,
+    },
+    environment: {
+      node: process.versions.node,
+    },
+    execution: {
+      exitCode: attempt.status === "pass" ? 0 : attempt.status === "fail" ? 1 : 127,
+      stdout: attempt.stdout,
+      stderr: attempt.stderr,
+      durationMs: attempt.durationMs,
+    },
+    status: attempt.status,
+    outputs: [],
+    differences: attempt.status === "fail"
+      ? [
+          {
+            kind: "version-mismatch",
+            severity: "failure",
+            message: attempt.skipReason,
+            expected: attempt.expectedVersion,
+            actual: attempt.observedVersion,
+          },
+        ]
+      : [],
+    conformanceReportRefs: config.conformanceReportRefs,
+    notes: attempt.status === "not-run" ? [`Comparator unavailable: ${attempt.skipReason}`] : [],
+  };
+}
+
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateEvidenceRun = ajv.compile(await readJson("schemas/evidence-run-v1.schema.json"));
 const validateEvidenceReplay = ajv.compile(await readJson("schemas/evidence-replay-v1.schema.json"));
@@ -276,6 +419,7 @@ for (const taskName of taskNames) {
   }
 
   let runCount = 0;
+  const externalExecutions = [];
   const validatorRefs = [];
   for (const command of config.validatorCommands) {
     const commandResult = runCommand(command);
@@ -345,6 +489,30 @@ for (const taskName of taskNames) {
     runCount += 1;
   }
 
+  if (mode === "execute") {
+    for (const command of config.externalComparatorCommands ?? []) {
+      const attempt = runOptionalExternalComparator(command);
+      const run = makeExternalComparatorAttemptRun({ config, attempt, repoHead, dirty });
+      run.inputs[0].sha256 = await sha256(attempt.comparisonPath);
+      if (!validateEvidenceRun(run)) {
+        fail(`${taskName} generated external comparator evidence run failed schema validation`, validateEvidenceRun.errors);
+      }
+      externalExecutions.push({
+        comparator: attempt.comparatorName,
+        expectedVersion: attempt.expectedVersion,
+        observedVersion: attempt.observedVersion,
+        status: attempt.status,
+        command: attempt.argv,
+        comparisonPath: attempt.comparisonPath,
+        ...(attempt.skipReason ? { skipReason: attempt.skipReason } : {}),
+      });
+      if (attempt.status === "fail") {
+        fail(`${taskName} external comparator version check failed`, externalExecutions.at(-1));
+      }
+      runCount += 1;
+    }
+  }
+
   const summary = {
     task: taskName,
     taskId: config.taskId,
@@ -353,6 +521,7 @@ for (const taskName of taskNames) {
     executedComparisons: executedComparisonCount,
     capabilityRecords: capabilityRecordCount,
     evidenceRuns: runCount,
+    externalExecutions,
     status: config.knownGap && files.length === 0 && !config.claimDowngraded ? "gap-recorded" : "ok",
   };
   summaries.push(summary);

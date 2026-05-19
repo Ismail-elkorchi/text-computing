@@ -11,6 +11,10 @@ const artifactPairs = [
     schemaPath: "schemas/tokenization-sbd-tool-versions-v1.schema.json",
     dataPath: "fixtures/tokenization-sbd/tool-versions.json",
   },
+  {
+    schemaPath: "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
+    dataPath: "fixtures/tokenization-sbd/corpus.v1.json",
+  },
 ];
 
 const ajv = new Ajv({ allErrors: true, strict: true });
@@ -58,6 +62,7 @@ for (const pair of artifactPairs) {
 }
 
 const slices = await readJson("fixtures/tokenization-sbd/slices.json");
+const corpusGate = await readJson("fixtures/tokenization-sbd/corpus.v1.json");
 const sliceIds = new Set();
 const slicesById = new Map();
 for (const slice of slices.slices) {
@@ -67,6 +72,42 @@ for (const slice of slices.slices) {
   }
   sliceIds.add(slice.id);
   slicesById.set(slice.id, slice);
+}
+
+const corpusRoles = new Set();
+const corpusIds = new Set();
+const developmentCorpusSliceIds = new Set();
+for (const corpusSlice of corpusGate.corpusSlices) {
+  if (corpusIds.has(corpusSlice.id)) {
+    console.error(`Duplicate tokenization/SBD corpus slice id: ${corpusSlice.id}`);
+    process.exit(1);
+  }
+  corpusIds.add(corpusSlice.id);
+  corpusRoles.add(corpusSlice.splitRole);
+  if (!sliceIds.has(corpusSlice.sourceSliceId)) {
+    console.error(`Tokenization/SBD corpus slice ${corpusSlice.id} references unknown slice ${corpusSlice.sourceSliceId}`);
+    process.exit(1);
+  }
+  if (corpusSlice.expectedOutputRef !== `fixtures/tokenization-sbd/expected/${corpusSlice.sourceSliceId}.json`) {
+    console.error(`Tokenization/SBD corpus slice ${corpusSlice.id} expectedOutputRef must match sourceSliceId.`);
+    process.exit(1);
+  }
+  if (corpusSlice.provenance.sourceRef !== "fixtures/tokenization-sbd/slices.json") {
+    console.error(`Tokenization/SBD corpus slice ${corpusSlice.id} must cite the committed slice manifest as sourceRef.`);
+    process.exit(1);
+  }
+  if (corpusSlice.splitRole === "development") developmentCorpusSliceIds.add(corpusSlice.sourceSliceId);
+  if (corpusSlice.splitRole === "holdout" && developmentCorpusSliceIds.has(corpusSlice.sourceSliceId)) {
+    console.error(`Tokenization/SBD corpus slice ${corpusSlice.id} cannot be both development and holdout.`);
+    process.exit(1);
+  }
+}
+
+for (const role of ["development", "validation", "holdout", "negative-control"]) {
+  if (!corpusRoles.has(role)) {
+    console.error(`Tokenization/SBD corpus gate is missing split role ${role}.`);
+    process.exit(1);
+  }
 }
 
 const expectedSchema = await readJson("schemas/tokenization-sbd-expected-v1.schema.json");

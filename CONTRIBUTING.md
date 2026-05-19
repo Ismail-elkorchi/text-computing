@@ -2,7 +2,7 @@
 
 Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
 
-The current non-private workspace package is `@ismail-elkorchi/textfacts`, with source and package-local tools under `packages/textfacts`.
+Workspace package sources live under `packages/*`; current package and task support status is tracked in `docs/specs/support-status.md`.
 
 **Prerequisites**
 - Node.js 24+

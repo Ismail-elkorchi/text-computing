@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 8,
     "fail": 0,
     "notRun": 0
   },
@@ -58,6 +58,35 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
+      ]
+    },
+    {
+      "checkId": "evidence-tier-policy-recorded",
+      "status": "pass",
+      "message": "Task evidence tier remains comparator-backed and records explicit blockers before corpus-backed or broader claims.",
+      "evidenceRefs": [
+        "docs/specs/task-evidence-tiers.md",
+        "fixtures/evidence/task-evidence-tier-policy.v1.json",
+        "schemas/task-evidence-tier-policy-v1.schema.json"
+      ]
+    },
+    {
+      "checkId": "corpus-split-policy-recorded",
+      "status": "pass",
+      "message": "Development, validation, holdout, and negative-control split roles are recorded for tokenization/SBD corpus-gate fixtures.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/corpus.v1.json",
+        "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
+        "tools/validate-tokenization-sbd-readiness.mjs"
+      ]
+    },
+    {
+      "checkId": "performance-gate-recorded",
+      "status": "pass",
+      "message": "Tokenization/SBD performance evidence requirements are recorded before broad operational claims.",
+      "evidenceRefs": [
+        "fixtures/performance/gates.v1.json",
+        "tools/validate-performance-gates.mjs"
       ]
     }
   ],

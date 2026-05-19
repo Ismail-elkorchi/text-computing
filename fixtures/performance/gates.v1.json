@@ -4,30 +4,75 @@
   "status": "thresholds-defined",
   "gates": [
     {
+      "id": "textfacts-tokenization-sbd",
+      "packageName": "@ismail-elkorchi/textfacts",
+      "surface": "UAX #29 tokenization and sentence-boundary segmentation over committed tokenization/SBD fixtures",
+      "dimensions": [
+        "throughput",
+        "memory",
+        "large-corpus",
+        "regression-threshold"
+      ],
+      "scalePolicy": "Broad tokenization/SBD claims require slice count, code-unit count, script/family coverage, comparator execution records, and holdout split evidence before wall-clock thresholds become release gates.",
+      "regressionPolicy": "Future measurements must pin corpus gate hash, expected-output hash set, runtime, command, and environment before timing or memory thresholds become blocking checks.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/slices.json",
+        "fixtures/tokenization-sbd/corpus.v1.json",
+        "tools/validate-tokenization-sbd-readiness.mjs"
+      ],
+      "limitations": [
+        "Current tokenization/SBD performance gate records scale-evidence requirements; it does not persist stable wall-clock or memory measurements."
+      ]
+    },
+    {
       "id": "textdoc-roundtrip",
       "packageName": "@ismail-elkorchi/textdoc",
       "surface": "Document validation and round-trip serialization",
-      "dimensions": ["throughput", "memory", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "regression-threshold"
+      ],
       "scalePolicy": "Future broad document claims require batch fixtures with declared document count, token count, annotation count, and maximum serialized size.",
       "regressionPolicy": "Future measurements must store baseline environment, command, input hash, and threshold before becoming required checks.",
-      "evidenceRefs": ["tools/check-coverage.mjs", "tools/fuzz/semantic.mjs"],
-      "limitations": ["Current gate records measurement requirements; it does not persist timing or memory measurements."]
+      "evidenceRefs": [
+        "tools/check-coverage.mjs",
+        "tools/fuzz/semantic.mjs"
+      ],
+      "limitations": [
+        "Current gate records measurement requirements; it does not persist timing or memory measurements."
+      ]
     },
     {
       "id": "textpipeline-determinism",
       "packageName": "@ismail-elkorchi/textpipeline",
       "surface": "Synchronous processor execution",
-      "dimensions": ["throughput", "memory", "streaming", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "streaming",
+        "regression-threshold"
+      ],
       "scalePolicy": "Streaming, async, batching, and cache claims require separate fixture classes and replay commands.",
       "regressionPolicy": "Future measurements must fail on threshold regression only after a stable benchmark host policy exists.",
-      "evidenceRefs": ["docs/specs/textpipeline-processor-contract.md", "tools/fuzz/semantic.mjs"],
-      "limitations": ["Current implementation is synchronous and in-memory."]
+      "evidenceRefs": [
+        "docs/specs/textpipeline-processor-contract.md",
+        "tools/fuzz/semantic.mjs"
+      ],
+      "limitations": [
+        "Current implementation is synchronous and in-memory."
+      ]
     },
     {
       "id": "textcorpus-retrieval",
       "packageName": "@ismail-elkorchi/textcorpus",
       "surface": "Corpus scoring and retrieval",
-      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "large-corpus",
+        "regression-threshold"
+      ],
       "scalePolicy": "Retrieval scale claims require document-count, token-count, query-count, qrels, corpus hash, query policy, and serialized-index thresholds.",
       "regressionPolicy": "Retrieval measurements must pin corpus hash, query hash, formula, ordering policy, qrels, and metric tolerance before broader claims.",
       "thresholds": {
@@ -46,47 +91,88 @@
         "packages/textcorpus/test/index.test.ts",
         "tools/validate-retrieval-feature.mjs"
       ],
-      "limitations": ["Current retrieval proof uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."]
+      "limitations": [
+        "Current retrieval proof uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."
+      ]
     },
     {
       "id": "textpack-lookup",
       "packageName": "@ismail-elkorchi/textpack",
       "surface": "Pack manifest validation and resource lookup",
-      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "large-corpus",
+        "regression-threshold"
+      ],
       "scalePolicy": "Broad resource-pack claims require resource-count, overlay-count, and lookup-count thresholds.",
       "regressionPolicy": "Future measurements must include duplicate and overlay-conflict controls.",
-      "evidenceRefs": ["docs/specs/textpack-resource-manifest.md", "tools/validate-textpack-resources.mjs"],
-      "limitations": ["Current resource fixtures are small contract fixtures."]
+      "evidenceRefs": [
+        "docs/specs/textpack-resource-manifest.md",
+        "tools/validate-textpack-resources.mjs"
+      ],
+      "limitations": [
+        "Current resource fixtures are small contract fixtures."
+      ]
     },
     {
       "id": "textconformance-reporting",
       "packageName": "@ismail-elkorchi/textconformance",
       "surface": "Conformance report validation and summarization",
-      "dimensions": ["throughput", "memory", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "regression-threshold"
+      ],
       "scalePolicy": "Broad conformance claims require report-count, check-count, evidence-ref-count, and render-size thresholds.",
       "regressionPolicy": "Future measurements must distinguish validation cost from report rendering cost.",
-      "evidenceRefs": ["fixtures/reports/task-evidence-manifest.v1.json", "tools/validate-task-evidence-reports.mjs"],
-      "limitations": ["Current runner behavior is minimal and not a benchmark harness."]
+      "evidenceRefs": [
+        "fixtures/reports/task-evidence-manifest.v1.json",
+        "tools/validate-task-evidence-reports.mjs"
+      ],
+      "limitations": [
+        "Current runner behavior is minimal and not a benchmark harness."
+      ]
     },
     {
       "id": "textrules-pattern-matching",
       "packageName": "@ismail-elkorchi/textrules",
       "surface": "Rule pattern matching, resource-backed analysis, and deterministic annotation generation",
-      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "large-corpus",
+        "regression-threshold"
+      ],
       "scalePolicy": "Broader rule-backed claims require rule-count, token-count, resource-count, and conflict-count thresholds.",
       "regressionPolicy": "Future measurements must pin rule fixture hashes, resource fixture hashes, and deterministic match ordering policy.",
-      "evidenceRefs": ["packages/textrules/test/index.test.ts", "tools/validate-rule-backed-ner-readiness.mjs"],
-      "limitations": ["Current rule behavior is proven only for curated fixtures and small resources."]
+      "evidenceRefs": [
+        "packages/textrules/test/index.test.ts",
+        "tools/validate-rule-backed-ner-readiness.mjs"
+      ],
+      "limitations": [
+        "Current rule behavior is proven only for curated fixtures and small resources."
+      ]
     },
     {
       "id": "textlab-evidence-inspection",
       "packageName": "@ismail-elkorchi/textlab",
       "surface": "Evidence manifest, replay, conformance report, annotation, and corpus fixture inspection",
-      "dimensions": ["throughput", "memory", "large-corpus", "regression-threshold"],
+      "dimensions": [
+        "throughput",
+        "memory",
+        "large-corpus",
+        "regression-threshold"
+      ],
       "scalePolicy": "Large evidence-inspection claims require report-count, comparison-count, annotation-count, corpus-size, and render-size thresholds.",
       "regressionPolicy": "Future measurements must separate parsing, summarization, and rendering costs.",
-      "evidenceRefs": ["packages/textlab/test/index.test.mjs", "fixtures/reports/evidence-replay.v1.json"],
-      "limitations": ["Current textlab behavior is repository-fixture inspection, not an interactive or large-corpus UI."]
+      "evidenceRefs": [
+        "packages/textlab/test/index.test.mjs",
+        "fixtures/reports/evidence-replay.v1.json"
+      ],
+      "limitations": [
+        "Current textlab behavior is repository-fixture inspection, not an interactive or large-corpus UI."
+      ]
     }
   ],
   "notes": [

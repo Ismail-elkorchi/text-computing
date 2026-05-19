@@ -185,11 +185,18 @@
         "frozen tokenization/SBD fixtures",
         "script-family expected outputs",
         "comparator captures and explicit not-run gap records",
+        "fixtures/tokenization-sbd/corpus.v1.json",
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
       ],
       "limitations": [
         "Not a broad multilingual tokenizer benchmark suite",
         "Newer script-family fixtures with not-run comparator entries are expected-output evidence, not comparator-backed evidence"
+      ],
+      "evidenceTier": "comparator-backed",
+      "nextEvidenceTierBlockers": [
+        "Corpus-scale tokenization/SBD aggregate outputs and conformance reports are not yet persisted.",
+        "Holdout slices exist only as a gate policy and are not sufficient for broad multilingual claims.",
+        "Comparator execution still depends on local availability of pinned external tools."
       ]
     },
     {
@@ -204,6 +211,10 @@
       ],
       "limitations": [
         "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work"
+      ],
+      "evidenceTier": "fixture-proven",
+      "nextEvidenceTierBlockers": [
+        "No external document-model comparator or broad graph holdout suite is recorded."
       ]
     },
     {
@@ -220,6 +231,10 @@
       ],
       "limitations": [
         "No public resource review workflow or broad resource marketplace is implemented"
+      ],
+      "evidenceTier": "fixture-proven",
+      "nextEvidenceTierBlockers": [
+        "No external resource-manifest comparator, public review workflow, or broad resource catalog evidence is recorded."
       ]
     },
     {
@@ -237,6 +252,10 @@
       "limitations": [
         "No JavaScript comparator-backed POS/morph/lemma claim is made",
         "Not a trained or broad multilingual tagger; fixture-bound deterministic behavior only"
+      ],
+      "evidenceTier": "comparator-backed",
+      "nextEvidenceTierBlockers": [
+        "No UD-style corpus evaluation, broad unknown-word evaluation, or holdout MWT/clitic corpus is recorded."
       ]
     },
     {
@@ -251,6 +270,10 @@
       ],
       "limitations": [
         "Only PER/ORG/LOC and small curated resources are covered"
+      ],
+      "evidenceTier": "comparator-backed",
+      "nextEvidenceTierBlockers": [
+        "No larger licensed NER corpus, broader label set, or multilingual holdout evaluation is recorded."
       ]
     },
     {
@@ -265,6 +288,10 @@
       ],
       "limitations": [
         "No large-corpus relevance benchmark, fielded weighting, or performance proof"
+      ],
+      "evidenceTier": "comparator-backed",
+      "nextEvidenceTierBlockers": [
+        "The current explicit-token corpus is too small for broad corpus-backed ranking claims."
       ]
     },
     {
@@ -293,6 +320,10 @@
       "limitations": [
         "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented",
         "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests"
+      ],
+      "evidenceTier": "corpus-backed",
+      "nextEvidenceTierBlockers": [
+        "No external relevance dataset, broad multilingual qrels set, streaming retrieval proof, or filesystem-backed index evidence is recorded."
       ]
     },
     {
@@ -310,6 +341,10 @@
       "limitations": [
         "CoNLL-U round-trip artifacts do not implement dependency parser behavior",
         "No broad UD treebank or language coverage is claimed"
+      ],
+      "evidenceTier": "comparator-backed",
+      "nextEvidenceTierBlockers": [
+        "No broad UD treebank round-trip corpus evaluation is recorded. Parser behavior remains separate."
       ]
     },
     {
@@ -337,6 +372,10 @@
         "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented",
         "JavaScript parser comparison remains a gap/capability record",
         "The UD validator capture is fixture-format evidence, not parser model-output evidence"
+      ],
+      "evidenceTier": "comparator-backed",
+      "nextEvidenceTierBlockers": [
+        "No broad UD treebank parsing evaluation, JavaScript parser comparator, or parser performance threshold is recorded."
       ]
     },
     {
@@ -362,6 +401,10 @@
       "limitations": [
         "External comparator-backed and broad-corpus relation extraction support are not claimed",
         "Behavior is limited to the repository-authored frozen corpus slice"
+      ],
+      "evidenceTier": "corpus-backed",
+      "nextEvidenceTierBlockers": [
+        "No external comparator capture, larger corpus evaluation, or multilingual holdout relation corpus is recorded."
       ]
     },
     {
@@ -387,6 +430,10 @@
       "limitations": [
         "External comparator-backed and broad-corpus coreference support are not claimed",
         "Behavior is limited to the repository-authored frozen corpus slice"
+      ],
+      "evidenceTier": "corpus-backed",
+      "nextEvidenceTierBlockers": [
+        "No external comparator capture, larger corpus evaluation, or multilingual holdout coreference corpus is recorded."
       ]
     }
   ]

@@ -7,6 +7,7 @@ const SCORECARD_PATH = "fixtures/capability-scorecard/toolkit-capability-scoreca
 const SCORECARD_SCHEMA_PATH = "schemas/toolkit-capability-scorecard-v1.schema.json";
 const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
 const PERFORMANCE_BUDGET_PATH = "fixtures/performance/gates.v1.json";
+const TASK_EVIDENCE_POLICY_PATH = "fixtures/evidence/task-evidence-tier-policy.v1.json";
 
 const REQUIRED_AXES = [
   "task-coverage",
@@ -19,6 +20,13 @@ const REQUIRED_AXES = [
   "release-readiness",
   "security",
   "reproducibility",
+];
+const REQUIRED_TASK_EVIDENCE_TIERS = [
+  "fixture-proven",
+  "comparator-backed",
+  "corpus-backed",
+  "broad-multilingual",
+  "release-stable",
 ];
 const BLOCKED_PUBLIC_CLAIM_TERMS = [
   ["b", "est"].join(""),
@@ -218,10 +226,11 @@ function assertSameStringArray(actual, expected, label) {
   );
 }
 
-const [schema, scorecard, supportStatus] = await Promise.all([
+const [schema, scorecard, supportStatus, taskEvidencePolicy] = await Promise.all([
   readJson(SCORECARD_SCHEMA_PATH),
   readJson(SCORECARD_PATH),
   readJson(SUPPORT_STATUS_PATH),
+  readJson(TASK_EVIDENCE_POLICY_PATH),
 ]);
 
 const ajv = new Ajv({ allErrors: true, strict: false });
@@ -235,6 +244,12 @@ for (const required of ["scaffold", "readiness-only", "slice-proven", "alpha", "
 
 const languageTierIds = new Set(scorecard.languageTiers.map((tier) => tier.id));
 expect(languageTierIds.size === scorecard.languageTiers.length, "language tier ids must be unique");
+const taskEvidenceTierIds = scorecard.taskEvidenceTiers.map((tier) => tier.id);
+expect(
+  stableStringify(taskEvidenceTierIds) === stableStringify(REQUIRED_TASK_EVIDENCE_TIERS),
+  "scorecard taskEvidenceTiers must follow the canonical task evidence tier order",
+  { expected: REQUIRED_TASK_EVIDENCE_TIERS, actual: taskEvidenceTierIds },
+);
 
 const axisIds = new Set(scorecard.axes.map((axis) => axis.id));
 expect(axisIds.size === scorecard.axes.length, "scorecard axis ids must be unique");
@@ -257,9 +272,12 @@ const taskEvidence = new Map(
     {
       evidence: entry.evidence,
       claimBoundary: entry.scope,
+      evidenceTier: entry.evidenceTier,
+      nextEvidenceTierBlockers: entry.nextEvidenceTierBlockers,
     },
   ]),
 );
+const taskEvidencePolicyById = new Map(taskEvidencePolicy.taskPolicies.map((entry) => [entry.taskId, entry]));
 
 expect(
   new Set(scorecard.packageRows.map((row) => row.packageName)).size === scorecard.packageRows.length,
@@ -293,9 +311,21 @@ for (const row of scorecard.taskRows) {
   const expected = TASK_EVIDENCE_REQUIREMENTS[row.taskId];
   expect(expected !== undefined, `scorecard task has no evidence requirement profile: ${row.taskId}`);
   expect(supportTasks.has(row.taskId), `scorecard task is absent from support status: ${row.taskId}`);
+  const policy = taskEvidencePolicyById.get(row.taskId);
+  expect(policy !== undefined, `scorecard task is absent from task evidence-tier policy: ${row.taskId}`);
   expect(
     supportTasks.get(row.taskId) === row.supportStatus,
     `scorecard task status mismatch for ${row.taskId}: ${row.supportStatus} != ${supportTasks.get(row.taskId)}`,
+  );
+  expect(row.evidenceTier === policy.evidenceTier, `${row.taskId} evidenceTier mismatch with task evidence-tier policy.`);
+  expect(row.evidenceTier === taskEvidence.get(row.taskId)?.evidenceTier, `${row.taskId} evidenceTier mismatch with support status.`);
+  expect(
+    stableStringify(row.fixtureSplitRefs) === stableStringify(policy.fixtureSplits),
+    `${row.taskId} fixtureSplitRefs mismatch with task evidence-tier policy.`,
+  );
+  expect(
+    stableStringify(row.nextEvidenceTierBlockers) === stableStringify(policy.nextTierBlockers),
+    `${row.taskId} nextEvidenceTierBlockers mismatch with task evidence-tier policy.`,
   );
   expect(languageTierIds.has(row.languageTier), `scorecard task ${row.taskId} has unknown language tier ${row.languageTier}`);
   assertSameStringArray(row.implementation.packageOwners, expected.implementationOwners, `${row.taskId} implementation packageOwners`);
@@ -321,6 +351,12 @@ for (const row of scorecard.taskRows) {
   if (row.languageTier === "corpus-backed") {
     expect(row.evidenceProfile.corpusRefs.length > 0, `${row.taskId} corpus-backed tier requires corpusRefs.`);
   }
+  if (row.evidenceTier === "comparator-backed") {
+    expect(row.fixtureSplitRefs.externalComparators.length > 0, `${row.taskId} comparator-backed evidence tier requires externalComparators.`);
+  }
+  if (["corpus-backed", "broad-multilingual", "release-stable"].includes(row.evidenceTier)) {
+    expect(row.fixtureSplitRefs.corpusEvidence.length > 0, `${row.taskId} ${row.evidenceTier} evidence tier requires corpusEvidence.`);
+  }
   for (const ref of row.evidenceRefs) {
     assertRepositoryRef(ref, `${row.taskId} evidenceRefs`);
     expect(await fileExists(ref), `${row.taskId} evidence ref does not exist: ${ref}`);
@@ -329,6 +365,12 @@ for (const row of scorecard.taskRows) {
     for (const ref of refs) {
       assertRepositoryRef(ref, `${row.taskId} ${field}`);
       expect(await fileExists(ref), `${row.taskId} ${field} ref does not exist: ${ref}`);
+    }
+  }
+  for (const [field, refs] of Object.entries(row.fixtureSplitRefs)) {
+    for (const ref of refs) {
+      assertRepositoryRef(ref, `${row.taskId} fixtureSplitRefs.${field}`);
+      expect(await fileExists(ref), `${row.taskId} fixtureSplitRefs.${field} ref does not exist: ${ref}`);
     }
   }
 }
