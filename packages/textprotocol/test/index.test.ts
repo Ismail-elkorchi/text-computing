@@ -3,14 +3,19 @@ import {
   getTextProtocolPayloadKindDescriptor,
   isTextProtocolDiagnostic,
   isTextProtocolPayloadKind,
+  isTextProtocolResultEnvelopeJsonTransportV1,
   isTextProtocolResultEnvelopeV1,
   isTextProtocolResultEnvelopeForPayloadKind,
+  negotiateTextProtocolResultEnvelopeVersion,
   packageName,
+  parseTextProtocolResultEnvelopeJson,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  serializeTextProtocolResultEnvelopeJson,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineTraceV1,
   textProtocolPayloadKindVerticalSliceResultV1,
+  textProtocolResultEnvelopeJsonMediaType,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textprotocol";
@@ -125,6 +130,95 @@ for (const requiredCode of [
 
 if (!isTextProtocolDiagnostic(validEnvelope.diagnostics[0])) {
   throw new Error("valid diagnostic should satisfy the runtime guard");
+}
+
+const negotiation = negotiateTextProtocolResultEnvelopeVersion([99, 1]);
+if (!negotiation.ok || negotiation.selectedVersion !== resultEnvelopeSchemaVersion) {
+  throw new Error("version negotiation should select the supported result-envelope version");
+}
+
+const unsupportedNegotiation = negotiateTextProtocolResultEnvelopeVersion([99]);
+if (
+  unsupportedNegotiation.ok ||
+  !unsupportedNegotiation.diagnostics.some((entry) => entry.code === "textprotocol.version-unsupported")
+) {
+  throw new Error("version negotiation should report unsupported version requests");
+}
+
+const emptyNegotiation = negotiateTextProtocolResultEnvelopeVersion([]);
+if (
+  emptyNegotiation.ok ||
+  !emptyNegotiation.diagnostics.some((entry) => entry.code === "textprotocol.version-request-empty")
+) {
+  throw new Error("version negotiation should reject empty requests");
+}
+
+const transport = serializeTextProtocolResultEnvelopeJson(registeredEnvelope, {
+  expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
+  requireClaimBoundary: true,
+  requireLimitations: true,
+});
+if (!isTextProtocolResultEnvelopeJsonTransportV1(transport)) {
+  throw new Error("serialized transport wrapper should satisfy the runtime guard");
+}
+if (transport.mediaType !== textProtocolResultEnvelopeJsonMediaType) {
+  throw new Error("serialized transport wrapper should declare the JSON media type");
+}
+const parsedEnvelope = parseTextProtocolResultEnvelopeJson(transport, {
+  expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
+  requireClaimBoundary: true,
+  requireLimitations: true,
+});
+if (
+  parsedEnvelope.payloadKind !== textProtocolPayloadKindTextdocDocumentV1 ||
+  parsedEnvelope.producer.package !== packageName
+) {
+  throw new Error("JSON transport parse should preserve envelope payload kind and producer");
+}
+if (transport.body !== serializeTextProtocolResultEnvelopeJson(parsedEnvelope).body) {
+  throw new Error("JSON transport serialization should be deterministic after parse");
+}
+
+try {
+  serializeTextProtocolResultEnvelopeJson(
+    {
+      ...registeredEnvelope,
+      payload: Number.NaN,
+    },
+    {
+      expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
+    },
+  );
+  throw new Error("JSON transport should reject non-finite numbers");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
+}
+
+try {
+  serializeTextProtocolResultEnvelopeJson(
+    {
+      ...registeredEnvelope,
+      payload: {
+        hidden: undefined,
+      },
+    },
+    {
+      expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
+    },
+  );
+  throw new Error("JSON transport should reject undefined object properties");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
+}
+
+try {
+  parseTextProtocolResultEnvelopeJson({
+    ...transport,
+    mediaType: "application/json" as typeof textProtocolResultEnvelopeJsonMediaType,
+  });
+  throw new Error("JSON transport should reject unsupported media types");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
 }
 
 if (
