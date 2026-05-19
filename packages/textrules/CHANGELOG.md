@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+
+- Promote package metadata to public alpha for the bounded resource-backed rules scope.
+
 ## 0.0.0
 
 - Establish package workspace metadata.

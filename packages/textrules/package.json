@@ -1,9 +1,11 @@
 {
   "name": "@ismail-elkorchi/textrules",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Deterministic text rules package.",
   "type": "module",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "exports": {
     ".": {

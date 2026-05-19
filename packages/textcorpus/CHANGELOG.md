@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+
+- Promote package metadata to public alpha for the bounded corpus and retrieval fixture scope.
+
 ## 0.0.0
 
 - Add the deterministic corpus collection contract, metadata slicing, and explicit-token fingerprint index.

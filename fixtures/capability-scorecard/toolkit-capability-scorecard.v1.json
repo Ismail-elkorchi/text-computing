@@ -204,33 +204,44 @@
     },
     {
       "packageName": "@ismail-elkorchi/textrules",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/slices.json",
-        "fixtures/rule-backed-ner/slices.json"
+        "fixtures/rule-backed-ner/slices.json",
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test/index.test.ts",
+        "tools/smoke-public-vertical-slice.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
       ],
-      "nextGate": "Keep rule behavior fixture-scoped until comparator-backed language slices expand."
+      "nextGate": "Keep broader rule-backed task claims blocked until comparator-backed language slices and corpus evaluation expand."
     },
     {
       "packageName": "@ismail-elkorchi/textpipeline",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "docs/specs/textpipeline-processor-contract.md",
-        "tools/fuzz/semantic.mjs"
+        "tools/fuzz/semantic.mjs",
+        "packages/textpipeline/src/index.ts",
+        "packages/textpipeline/test/index.test.ts",
+        "tools/smoke-public-vertical-slice.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
       ],
-      "nextGate": "Define async, streaming, batching, and cache contracts before implementation."
+      "nextGate": "Keep remote orchestration, durable cache policy, worker execution, and long-running recovery as later limitations."
     },
     {
       "packageName": "@ismail-elkorchi/textcorpus",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "docs/specs/textcorpus-collection-contract.md",
         "fixtures/corpus-tfidf-bm25/slices.json",
         "fixtures/retrieval/slices.json",
         "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
-        "fixtures/performance/gates.v1.json"
+        "fixtures/performance/gates.v1.json",
+        "packages/textcorpus/src/index.ts",
+        "packages/textcorpus/test/index.test.ts",
+        "tools/check-workspace-pack-dry-run.mjs"
       ],
-      "nextGate": "Add external relevance datasets, streaming behavior, filesystem-backed index storage, and broader multilingual retrieval fixtures."
+      "nextGate": "Keep retrieval and corpus scoring bounded until external relevance datasets, streaming behavior, and durable index storage exist."
     },
     {
       "packageName": "@ismail-elkorchi/textprotocol",

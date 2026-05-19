@@ -55,8 +55,8 @@
     },
     {
       "name": "@ismail-elkorchi/textrules",
-      "status": "slice-proven",
-      "scope": "Reusable lexical token-pattern primitives are implemented; rule-backed POS, lemma, morphology, NER, dependency parsing, relation extraction, and coreference behavior is implemented only for frozen slices.",
+      "status": "alpha",
+      "scope": "Public alpha deterministic rules package for reusable lexical token-pattern primitives and bounded resource-backed rule execution over frozen slices.",
       "evidence": [
         "primitive matcher tests",
         "POS/morph/lemma frozen slices",
@@ -65,34 +65,39 @@
         "relation extraction frozen slices",
         "coreference frozen slices",
         "textdoc/protocol/conformance tests",
-        "dist export readiness metadata"
+        "dist export readiness metadata",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
-        "Behavior is limited to curated fixtures, frozen repository-authored slices, and small hand-authored resources",
-        "Package remains private until broader release gates pass"
+        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+        "Alpha scope is bounded to reusable rules, explicit resources, package tests, and package interop proven by Public Vertical Slice 0.1"
       ]
     },
     {
       "name": "@ismail-elkorchi/textpipeline",
-      "status": "slice-proven",
-      "scope": "The deterministic processor contract includes synchronous, asynchronous, batch, stream, cancellation, caller-provided cache-hit tracing, and continue-on-error execution hooks.",
+      "status": "alpha",
+      "scope": "Public alpha deterministic local pipeline package for synchronous, asynchronous, batch, stream, cancellation, caller-provided cache-hit tracing, and continue-on-error execution hooks.",
       "evidence": [
         "processor ordering tests",
         "async/batch/stream execution tests",
         "cache-hit and failure-recovery tests",
         "trace validation",
         "missing-requirement diagnostics",
-        "dist export readiness metadata"
+        "dist export readiness metadata",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
-        "No remote orchestration, distributed scheduling, durable cache storage, or worker pool execution",
-        "Package remains private until broader release gates pass"
+        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+        "Alpha scope is bounded to deterministic local execution, package tests, and package interop proven by Public Vertical Slice 0.1"
       ]
     },
     {
       "name": "@ismail-elkorchi/textcorpus",
-      "status": "slice-proven",
-      "scope": "Explicit-token corpus collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval with query operators, metadata filters, qrels evaluation, deterministic size thresholds, and index JSON round-trips are implemented.",
+      "status": "alpha",
+      "scope": "Public alpha corpus package for explicit-token collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval fixtures.",
       "evidence": [
         "explicit-token corpus tests",
         "fingerprint index tests",
@@ -103,11 +108,12 @@
         "bounded large-corpus ordering tests",
         "dist export readiness metadata",
         "retrieval qrels evaluation tests",
-        "licensed retrieval fixture thresholds"
+        "licensed retrieval fixture thresholds",
+        "workspace pack dry-run"
       ],
       "limitations": [
-        "No streaming retrieval, durable index storage, external relevance benchmark, broad field weighting, or broad multilingual retrieval fixture set",
-        "Package remains private until broader release gates pass"
+        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
+        "Alpha scope is bounded to explicit-token corpus APIs, frozen retrieval fixtures, package tests, and package dry-run evidence"
       ]
     },
     {
