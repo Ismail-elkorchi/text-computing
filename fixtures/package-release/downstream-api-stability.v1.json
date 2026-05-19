@@ -80,13 +80,7 @@
     {
       "packageName": "@ismail-elkorchi/textconformance",
       "status": "proven",
-      "dependents": [
-        {
-          "packageName": "@ismail-elkorchi/textrules",
-          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textconformance"]
-        }
-      ],
+      "dependents": [],
       "evidenceRefs": [
         "packages/textconformance/package.json",
         "packages/textconformance/src/index.ts",

@@ -34,7 +34,7 @@
       "candidateState": "candidate-ready",
       "privateRequired": true,
       "owns": ["conformance report runtime guards", "minimal synchronous conformance runner"],
-      "downstreamDependents": ["@ismail-elkorchi/textrules"],
+      "downstreamDependents": [],
       "requiredEvidenceRefs": [
         "packages/textconformance/package.json",
         "packages/textconformance/src/index.ts",

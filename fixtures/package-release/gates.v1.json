@@ -359,9 +359,7 @@
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
         "status": "proven",
-        "downstreamDependents": [
-          "@ismail-elkorchi/textrules"
-        ],
+        "downstreamDependents": [],
         "evidenceRefs": [
           "packages/textconformance/package.json",
           "fixtures/package-release/gates.v1.json",

@@ -14,6 +14,7 @@ import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   applyTextRulesCoreferenceRules,
   applyTextRulesDependencyRules,
+  analyzePosMorphLemmaDocument,
   applyTextRulesRelationRules,
   analyzeCoreference,
   analyzeRelationExtraction,
@@ -34,10 +35,13 @@ import {
   createPosMorphLemmaResultEnvelope,
   createTextRulesLexiconResourcesFromLoadedPack,
   createTextRulesLexiconResource,
+  matchTextDocTokenPattern,
   matchTextRulesTokenPattern,
   matchTextRulesTokenPatterns,
   packageName,
   rewriteTextRulesTokenTexts,
+  textRulesTokenSpansFromTextDoc,
+  tokenizeTextRulesFixtureText,
   tokenizeTextRulesText,
   type TextRulesEntityResourceData,
   type TextRulesLexiconResourceData,
@@ -45,7 +49,10 @@ import {
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textrules";
 
-const primitiveTokens = tokenizeTextRulesText("New York courts sign.");
+const primitiveTokens = tokenizeTextRulesFixtureText("New York courts sign.");
+if (tokenizeTextRulesText("New York courts sign.").length !== primitiveTokens.length) {
+  throw new Error("legacy raw-text tokenizer should remain a compatibility alias for fixture tokenization");
+}
 const placePattern = {
   ruleId: "primitive:place:new-york",
   atoms: [
@@ -76,6 +83,82 @@ const primitiveMatches = matchTextRulesTokenPatterns(primitiveTokens, [
 if (primitiveMatches.map((match) => match.ruleId).join(",") !==
   "primitive:place:new-york,primitive:any-court") {
   throw new Error("primitive matches should sort by start offset, length, and rule id");
+}
+
+const textdocPatternDocument: TextDocDocumentV1 = {
+  schemaVersion: 1,
+  documentId: "textrules:textdoc-token-pattern",
+  revision: "fixture",
+  textLengthCU: 21,
+  text: "New York courts sign.",
+  units: { text: "utf16-code-unit" },
+  views: [
+    { id: "source-view", kind: "source" },
+    { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+  ],
+  layers: [
+    {
+      id: "tokens",
+      kind: "token",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "doc-token-1",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 0, endCU: 3 }],
+          text: "New",
+        },
+        {
+          id: "doc-token-2",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 4, endCU: 8 }],
+          text: "York",
+        },
+        {
+          id: "doc-token-3",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 9, endCU: 15 }],
+          text: "courts",
+        },
+        {
+          id: "doc-token-4",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 16, endCU: 20 }],
+          text: "sign",
+        },
+        {
+          id: "doc-token-5",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 20, endCU: 21 }],
+          text: ".",
+        },
+      ],
+    },
+  ],
+};
+if (textRulesTokenSpansFromTextDoc(textdocPatternDocument).map((token) => token.id).join(",") !==
+  "doc-token-1,doc-token-2,doc-token-3,doc-token-4,doc-token-5") {
+  throw new Error("textdoc token extraction should preserve deterministic token order");
+}
+const textdocPlaceMatches = matchTextDocTokenPattern({
+  document: textdocPatternDocument,
+  pattern: placePattern,
+});
+if (
+  textdocPlaceMatches.length !== 1 ||
+  textdocPlaceMatches[0]?.captures.map((capture) => capture.tokenId).join(",") !== "doc-token-1,doc-token-2"
+) {
+  throw new Error("textdoc token-pattern matching should consume existing token annotations");
 }
 
 const primitiveRewrite = rewriteTextRulesTokenTexts(primitiveTokens, [
@@ -287,6 +370,75 @@ if (loadedPosTags !== "NOUN,VERB") {
   throw new Error("resource-backed lexicon conversion should drive POS output");
 }
 
+const textdocPosInput: TextDocDocumentV1 = {
+  schemaVersion: 1,
+  documentId: "resource-backed-pos-textdoc-smoke",
+  revision: "tokens-from-textdoc",
+  textLengthCU: 12,
+  text: "corpora host",
+  source: { id: "resource-backed-pos-textdoc-smoke" },
+  units: { text: "utf16-code-unit" },
+  views: [
+    { id: "source-view", kind: "source" },
+    { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+  ],
+  layers: [
+    {
+      id: "tokens",
+      kind: "token",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "doc-token-1",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 0, endCU: 7 }],
+          text: "corpora",
+        },
+        {
+          id: "doc-token-2",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 8, endCU: 12 }],
+          text: "host",
+        },
+      ],
+    },
+    {
+      id: "sentences",
+      kind: "sentence",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "sentence-1",
+          kind: "sentence",
+          sentenceKind: "uax29-sentence",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", startCU: 0, endCU: 12 }],
+          text: "corpora host",
+        },
+      ],
+    },
+  ],
+};
+const textdocPosResult = analyzePosMorphLemmaDocument(
+  {
+    document: textdocPosInput,
+    languageHint: "en",
+  },
+  loadedLexiconResources.resources,
+);
+const textdocPosTargets = textdocPosResult.document.layers
+  .find((layer) => layer.id === "pos")
+  ?.annotations.map((annotation) => annotation.targets[0])
+  .map((target) => (target?.kind === "annotation" ? target.annotationId : ""))
+  .join(",");
+if (textdocPosTargets !== "doc-token-1,doc-token-2") {
+  throw new Error("POS analysis over textdoc should target existing token annotations");
+}
+
 const loadedGazetteer = loadTextPackResources(
   [textpackEnLegalManifest],
   { kind: "gazetteer", language: "en", profile: "legal" },
@@ -404,6 +556,101 @@ const englishResource = createTextRulesLexiconResource(
   },
   englishResourceData,
 );
+
+const explicitFallbackResource = createTextRulesLexiconResource(
+  {
+    packId: "pack:pos-fallback",
+    packageName: "@ismail-elkorchi/textpack-pos-fallback",
+    version: "0.0.0",
+    resourceId: "lexicon-en-fallback",
+    lookupKey: "lexicon.pos.en.fallback",
+    kind: "lexicon",
+    path: "fixtures/pos-morph-lemma/resources/textpack-pos-core/en.lexicon.json",
+    overlayPrecedence: 5,
+    language: "en",
+    license: {
+      id: "license-cc0",
+      spdx: "CC0-1.0",
+      attribution: "Prepared for repository fixtures.",
+    },
+    provenance: {
+      id: "prov-hand-curated",
+      origin: "repository-fixture",
+      version: "2026-04-21",
+      createdBy: "text-computing",
+    },
+  },
+  {
+    entries: [
+      {
+        surface: "florped",
+        analyses: [
+          {
+            ruleId: "fallback:suffix-ed:adjective",
+            pos: "ADJ",
+            lemma: "florped",
+            morphology: [{ name: "Degree", value: "Pos" }],
+          },
+          {
+            ruleId: "fallback:suffix-ed:verb",
+            pos: "VERB",
+            lemma: "florp",
+            morphology: [
+              { name: "Tense", value: "Past" },
+              { name: "VerbForm", value: "Part" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+);
+const explicitFallbackResult = analyzePosMorphLemmaDocument(
+  {
+    document: {
+      schemaVersion: 1,
+      documentId: "explicit-fallback-pos-smoke",
+      revision: "tokens-from-textdoc",
+      textLengthCU: 7,
+      text: "florped",
+      source: { id: "explicit-fallback-pos-smoke" },
+      units: { text: "utf16-code-unit" },
+      views: [
+        { id: "source-view", kind: "source" },
+        { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+      ],
+      layers: [
+        {
+          id: "tokens",
+          kind: "token",
+          viewId: "analysis-view",
+          annotations: [
+            {
+              id: "fallback-token-1",
+              kind: "token",
+              tokenKind: "lexical-token",
+              lifecycle: { state: "active" },
+              targets: [{ kind: "span", startCU: 0, endCU: 7 }],
+              text: "florped",
+            },
+          ],
+        },
+      ],
+    },
+    languageHint: "en",
+  },
+  [explicitFallbackResource],
+);
+const explicitFallbackRefs = explicitFallbackResult.document.layers
+  .find((layer) => layer.id === "pos")
+  ?.annotations[0]?.provenance?.references?.map((reference) => `${reference.kind}:${reference.id}`)
+  .join(",");
+if (
+  explicitFallbackRefs !==
+  "textpack-resource:pack:pos-fallback:lexicon-en-fallback,textrules-rule:fallback:suffix-ed:adjective,textrules-rule:fallback:suffix-ed:verb"
+) {
+  throw new Error("fallback-style output should reference explicit resource and rule provenance");
+}
 
 const result = analyzePosMorphLemma(
   {
@@ -611,8 +858,56 @@ const expectedRuleBackedNer = {
 
 type RuleBackedNerSliceId = keyof typeof expectedRuleBackedNer;
 
+function tokenizeRuleBackedNerFixtureText(text: string): readonly {
+  readonly id: string;
+  readonly startCU: number;
+  readonly endCU: number;
+  readonly text: string;
+}[] {
+  const tokens: { id: string; startCU: number; endCU: number; text: string }[] = [];
+  let cursor = 0;
+  let tokenIndex = 1;
+  const boundaryPunctuation = new Set([".", ",", "(", ")", "،"]);
+  while (cursor < text.length) {
+    const current = text[cursor];
+    if (current === undefined) break;
+    if (/\s/u.test(current)) {
+      cursor += 1;
+      continue;
+    }
+    if (boundaryPunctuation.has(current)) {
+      tokens.push({
+        id: `token-${tokenIndex}`,
+        startCU: cursor,
+        endCU: cursor + 1,
+        text: current,
+      });
+      tokenIndex += 1;
+      cursor += 1;
+      continue;
+    }
+    const startCU = cursor;
+    while (
+      cursor < text.length &&
+      !/\s/u.test(text[cursor] ?? "") &&
+      !boundaryPunctuation.has(text[cursor] ?? "")
+    ) {
+      cursor += 1;
+    }
+    tokens.push({
+      id: `token-${tokenIndex}`,
+      startCU,
+      endCU: cursor,
+      text: text.slice(startCU, cursor),
+    });
+    tokenIndex += 1;
+  }
+  return tokens;
+}
+
 function createRuleBackedNerInputDocument(sliceId: RuleBackedNerSliceId): TextDocDocumentV1 {
   const expected = expectedRuleBackedNer[sliceId];
+  const tokens = tokenizeRuleBackedNerFixtureText(expected.text);
   return {
     schemaVersion: 1,
     documentId: `rule-backed-ner:${sliceId}`,
@@ -643,18 +938,16 @@ function createRuleBackedNerInputDocument(sliceId: RuleBackedNerSliceId): TextDo
         id: "tokens",
         kind: "token",
         viewId: "analysis-view",
-        annotations: [
-          {
-            id: "token-1",
-            kind: "token",
-            tokenKind: "lexical-token",
-            lifecycle: {
-              state: "active",
-            },
-            targets: [{ kind: "span", startCU: 0, endCU: expected.text.length }],
-            text: expected.text,
+        annotations: tokens.map((token) => ({
+          id: token.id,
+          kind: "token" as const,
+          tokenKind: "lexical-token" as const,
+          lifecycle: {
+            state: "active" as const,
           },
-        ],
+          targets: [{ kind: "span" as const, startCU: token.startCU, endCU: token.endCU }],
+          text: token.text,
+        })),
       },
       {
         id: "sentences",
