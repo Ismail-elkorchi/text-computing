@@ -41,7 +41,7 @@ Blocked term set: `comparative-marketing-v1`.
 | Package | Status | Evidence | Next gate |
 | --- | --- | --- | --- |
 | `@ismail-elkorchi/textfacts` | `beta` | packages/textfacts/package.json<br>packages/textfacts/test | Keep cross-package protocol, conformance, and resource growth outside textfacts. |
-| `@ismail-elkorchi/textdoc` | `slice-proven` | docs/specs/textdoc-document-annotation-model.md<br>tools/validate-textdoc-document-model.mjs | Expand graph conventions only through validated fixtures and schemas. |
+| `@ismail-elkorchi/textdoc` | `alpha` | docs/specs/textdoc-document-annotation-model.md<br>packages/textdoc/src<br>packages/textdoc/package.json<br>docs/specs/public-vertical-slice-0.1.md<br>tools/smoke-public-vertical-slice.mjs | Keep task-specific graph semantics as a beta limitation until broader task graph evidence exists. |
 | `@ismail-elkorchi/textpack` | `slice-proven` | docs/specs/textpack-resource-manifest.md<br>tools/validate-textpack-resources.mjs | Add public resource review workflow before broad resource claims. |
 | `@ismail-elkorchi/textrules` | `slice-proven` | fixtures/pos-morph-lemma/slices.json<br>fixtures/rule-backed-ner/slices.json | Keep rule behavior fixture-scoped until comparator-backed language slices expand. |
 | `@ismail-elkorchi/textpipeline` | `slice-proven` | docs/specs/textpipeline-processor-contract.md<br>tools/fuzz/semantic.mjs | Define async, streaming, batching, and cache contracts before implementation. |

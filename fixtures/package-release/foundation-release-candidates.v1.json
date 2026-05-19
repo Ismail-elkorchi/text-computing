@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "foundation-release-candidates",
-  "publicHead": "ddbefe7ef61f3e70313e704ce7d6594e7c02f604",
+  "publicHead": "3d3b8b5b80652f7437e70e6af2069a420a877f3f",
   "packages": [
     {
       "packageName": "@ismail-elkorchi/textconformance",
@@ -31,41 +31,6 @@
       ],
       "releaseBlockers": [
         "Benchmark runner is not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ]
-    },
-    {
-      "packageName": "@ismail-elkorchi/textdoc",
-      "packageDir": "packages/textdoc",
-      "releaseTrack": "private-unreleased",
-      "releaseReadiness": "blocked",
-      "candidateState": "candidate-ready",
-      "privateRequired": true,
-      "owns": [
-        "document container",
-        "annotation layers",
-        "CoNLL-U round-trip helpers",
-        "document reference validator",
-        "semantic graph validator"
-      ],
-      "downstreamDependents": [
-        "@ismail-elkorchi/textpipeline",
-        "@ismail-elkorchi/textcorpus",
-        "@ismail-elkorchi/textrules"
-      ],
-      "requiredEvidenceRefs": [
-        "packages/textdoc/package.json",
-        "packages/textdoc/src/index.ts",
-        "packages/textdoc/test/index.test.ts",
-        "schemas/textdoc-document-v1.schema.json",
-        "fixtures/textdoc/examples/document-annotation-model-v1.json",
-        "fixtures/package-release/gates.v1.json",
-        "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs",
-        "packages/textdoc/README.md"
-      ],
-      "releaseBlockers": [
-        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ]
     },

@@ -94,9 +94,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textdoc",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -122,21 +122,20 @@
         ],
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
-      "releaseBlockers": [
-        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textdoc/package.json",
         "packages/textdoc/test",
-        "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs",
         "packages/textdoc/src/index.ts",
         "packages/textdoc/README.md",
-        "packages/textdoc/CHANGELOG.md"
+        "packages/textdoc/CHANGELOG.md",
+        "tools/validate-package-readiness.mjs",
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
@@ -147,17 +146,6 @@
             "packages/textdoc/src/index.ts",
             "packages/textdoc/test",
             "docs/specs/support-status.v1.json"
-          ]
-        },
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textdoc alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
           ]
         }
       ]

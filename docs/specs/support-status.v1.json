@@ -17,19 +17,20 @@
     },
     {
       "name": "@ismail-elkorchi/textdoc",
-      "status": "slice-proven",
-      "scope": "Document containers, lifecycle, provenance, annotation-layer validation, package-level reference and graph validation, and fixture-level graph annotation conventions are implemented.",
+      "status": "alpha",
+      "scope": "Public alpha document container package for document identity, source/token/sentence views, lifecycle, provenance, annotation-layer validation, and package-level graph integrity checks proven by Public Vertical Slice 0.1 and package tests.",
       "evidence": [
         "document-model fixtures",
         "invalid-reference validator",
         "runtime guards",
-        "dist export readiness metadata",
         "package reference-validation tests",
-        "semantic graph-validation tests"
+        "semantic graph-validation tests",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
-        "Graph validation covers structural integrity, reference kinds, lifecycle self-references, coreference membership, and dependency sentence consistency; broad relation extraction, coreference resolution, entity linking, and parser behavior are not production-grade yet",
-        "Package remains private until broader release gates pass"
+        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
+        "Alpha scope is bounded to document/container behavior and package interop proven by Public Vertical Slice 0.1"
       ]
     },
     {
