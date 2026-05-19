@@ -192,12 +192,15 @@
     },
     {
       "packageName": "@ismail-elkorchi/textpack",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "docs/specs/textpack-resource-manifest.md",
-        "tools/validate-textpack-resources.mjs"
+        "packages/textpack/src",
+        "packages/textpack/package.json",
+        "docs/specs/public-vertical-slice-0.1.md",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
-      "nextGate": "Add public resource review workflow before broad resource claims."
+      "nextGate": "Keep multilingual pack breadth and resource-vetting workflow as beta limitations until broader resource evidence exists."
     },
     {
       "packageName": "@ismail-elkorchi/textrules",

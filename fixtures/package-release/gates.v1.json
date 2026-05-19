@@ -152,9 +152,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textpack",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -178,20 +178,21 @@
         ],
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
-      "releaseBlockers": [
-        "Multilingual pack coverage and update workflow are not broad enough for package release.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textpack/package.json",
         "packages/textpack/src/index.ts",
         "packages/textpack/README.md",
+        "packages/textpack/CHANGELOG.md",
         "packages/textpack/test",
         "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Multilingual pack coverage and update workflow are not broad enough for package release.",
+        "No public resource marketplace or vetting workflow is implemented.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
@@ -202,17 +203,6 @@
             "packages/textpack/src/index.ts",
             "packages/textpack/test",
             "docs/specs/support-status.v1.json"
-          ]
-        },
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textpack alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
           ]
         }
       ]

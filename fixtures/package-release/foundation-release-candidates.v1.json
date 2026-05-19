@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "foundation-release-candidates",
-  "publicHead": "3d3b8b5b80652f7437e70e6af2069a420a877f3f",
+  "publicHead": "79c2e7d3396015f2f8a7652267eed5316d40d837",
   "packages": [
     {
       "packageName": "@ismail-elkorchi/textconformance",
@@ -31,37 +31,6 @@
       ],
       "releaseBlockers": [
         "Benchmark runner is not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ]
-    },
-    {
-      "packageName": "@ismail-elkorchi/textpack",
-      "packageDir": "packages/textpack",
-      "releaseTrack": "private-unreleased",
-      "releaseReadiness": "blocked",
-      "candidateState": "candidate-ready",
-      "privateRequired": true,
-      "owns": [
-        "pack manifest runtime guards",
-        "manifest governance diagnostics",
-        "resource loading",
-        "resource registry lookup"
-      ],
-      "downstreamDependents": [
-        "@ismail-elkorchi/textrules"
-      ],
-      "requiredEvidenceRefs": [
-        "packages/textpack/package.json",
-        "packages/textpack/src/index.ts",
-        "packages/textpack/test/index.test.ts",
-        "schemas/textpack-manifest-v1.schema.json",
-        "fixtures/textpack/manifests/textpack-en-core.json",
-        "fixtures/package-release/gates.v1.json",
-        "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs"
-      ],
-      "releaseBlockers": [
-        "Multilingual pack coverage and update workflow are not broad enough for package release.",
         "Package-quality publication checks have not been promoted beyond private-unreleased status."
       ]
     }
