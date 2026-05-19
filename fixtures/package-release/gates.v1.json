@@ -471,9 +471,9 @@
     },
     {
       "packageName": "@ismail-elkorchi/textconformance",
-      "releaseTrack": "private-unreleased",
-      "supportStatus": "slice-proven",
-      "releaseReadiness": "blocked",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
       "gates": [
         "metadata",
         "tests",
@@ -495,21 +495,20 @@
         ],
         "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
-      "releaseBlockers": [
-        "Benchmark runner is not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ],
+      "releaseBlockers": [],
       "evidenceRefs": [
         "packages/textconformance/package.json",
         "packages/textconformance/README.md",
+        "packages/textconformance/CHANGELOG.md",
         "packages/textconformance/test",
+        "packages/textconformance/src/index.ts",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
-        "packages/textconformance/src/index.ts",
-        "packages/textconformance/README.md"
+        "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Package remains private until broader release gates pass."
+        "Benchmark runner is not release-ready.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
@@ -520,17 +519,6 @@
             "packages/textconformance/src/index.ts",
             "packages/textconformance/test",
             "docs/specs/support-status.v1.json"
-          ]
-        },
-        {
-          "blocker": "Package-quality publication checks have not been promoted beyond private-unreleased status.",
-          "maturity": "alpha",
-          "decision": "Blocks textconformance alpha until package metadata, tarball dry-run, support status, and external smoke evidence pass for the declared scope.",
-          "evidenceRefs": [
-            "fixtures/package-release/gates.v1.json",
-            "tools/validate-package-release-gates.mjs",
-            "tools/check-workspace-pack-dry-run.mjs",
-            "docs/specs/public-vertical-slice-0.1.md"
           ]
         }
       ]

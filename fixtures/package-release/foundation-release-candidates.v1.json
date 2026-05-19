@@ -1,40 +1,8 @@
 {
   "schemaVersion": 1,
   "scope": "foundation-release-candidates",
-  "publicHead": "79c2e7d3396015f2f8a7652267eed5316d40d837",
-  "packages": [
-    {
-      "packageName": "@ismail-elkorchi/textconformance",
-      "packageDir": "packages/textconformance",
-      "releaseTrack": "private-unreleased",
-      "releaseReadiness": "blocked",
-      "candidateState": "candidate-ready",
-      "privateRequired": true,
-      "owns": [
-        "conformance report runtime guards",
-        "minimal synchronous conformance runner",
-        "report diff helper",
-        "Markdown report renderer",
-        "claim-registry traceability checks"
-      ],
-      "downstreamDependents": [],
-      "requiredEvidenceRefs": [
-        "packages/textconformance/package.json",
-        "packages/textconformance/src/index.ts",
-        "packages/textconformance/test/index.test.ts",
-        "schemas/textconformance-report-v1.schema.json",
-        "fixtures/reports/task-evidence-manifest.v1.json",
-        "fixtures/package-release/gates.v1.json",
-        "fixtures/package-release/downstream-api-stability.v1.json",
-        "tools/check-downstream-api-stability.mjs",
-        "packages/textconformance/README.md"
-      ],
-      "releaseBlockers": [
-        "Benchmark runner is not release-ready.",
-        "Package-quality publication checks have not been promoted beyond private-unreleased status."
-      ]
-    }
-  ],
+  "publicHead": "adf1516ab71b9fdf131d93481f95cd8a00dd7fa4",
+  "packages": [],
   "notes": [
     "This artifact defines remaining private foundation release candidates only; packages leave this list when alpha release gates pass.",
     "Foundational packages must stabilize before dependent package release-readiness can advance.",

@@ -246,12 +246,15 @@
     },
     {
       "packageName": "@ismail-elkorchi/textconformance",
-      "supportStatus": "slice-proven",
+      "supportStatus": "alpha",
       "evidenceRefs": [
         "schemas/textconformance-report-v1.schema.json",
-        "packages/textconformance/src"
+        "packages/textconformance/src",
+        "packages/textconformance/package.json",
+        "docs/specs/public-vertical-slice-0.1.md",
+        "tools/smoke-public-vertical-slice.mjs"
       ],
-      "nextGate": "Add diff and report rendering before wider benchmark use."
+      "nextGate": "Keep broad benchmark-runner behavior as a beta limitation until broader benchmark evidence exists."
     },
     {
       "packageName": "@ismail-elkorchi/textlab",
