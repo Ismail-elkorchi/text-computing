@@ -1,3 +1,12 @@
+import {
+  diffTextConformanceReports,
+  isTextConformanceReportV1,
+  type TextConformanceReportDiffV1,
+} from "@ismail-elkorchi/textconformance";
+import { isTextCorpusRetrievalEvaluationResultV1, isTextCorpusRetrievalQrelsV1 } from "@ismail-elkorchi/textcorpus";
+import { isTextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
+import { isTextPackManifestV1 } from "@ismail-elkorchi/textpack";
+
 export const packageName = "@ismail-elkorchi/textlab" as const;
 
 export type PackageName = typeof packageName;
@@ -5,6 +14,7 @@ export type TextlabSupportStatusLabel =
   | "scaffold"
   | "readiness-only"
   | "slice-proven"
+  | "alpha"
   | "beta"
   | "production-candidate";
 export type TextlabSupportStatusRowKind = "package" | "task";
@@ -164,10 +174,129 @@ export interface TextlabCorpusFixtureInspection {
   readonly explainEntryCount: number;
 }
 
+export interface TextlabPackageInspection {
+  readonly schemaVersion: 1;
+  readonly name: string;
+  readonly version: string;
+  readonly private: boolean;
+  readonly exportPaths: readonly string[];
+  readonly binNames: readonly string[];
+  readonly fileEntries: readonly string[];
+  readonly scriptNames: readonly string[];
+  readonly dependencyNames: readonly string[];
+  readonly devDependencyNames: readonly string[];
+}
+
+export interface TextlabPackInspection {
+  readonly schemaVersion: 1;
+  readonly id: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly kinds: readonly string[];
+  readonly languages: readonly string[];
+  readonly scripts: readonly string[];
+  readonly profiles: readonly string[];
+  readonly domains: readonly string[];
+  readonly resourceFamilies: readonly TextlabCount[];
+  readonly provides: readonly TextlabCount[];
+  readonly reviewState: string;
+  readonly overlayPrecedence?: number;
+  readonly codeLicenseCount: number;
+  readonly dataLicenseCount: number;
+  readonly provenanceSourceCount: number;
+  readonly limitations: readonly string[];
+}
+
+export interface TextlabDocumentInspection {
+  readonly schemaVersion: 1;
+  readonly documentId: string;
+  readonly revision: string;
+  readonly viewCount: number;
+  readonly spanMapCount: number;
+  readonly layerCount: number;
+  readonly annotationCount: number;
+  readonly viewKindCounts: readonly TextlabCount[];
+  readonly layerKindCounts: readonly TextlabCount[];
+}
+
+export interface TextlabConformanceDiffInspection {
+  readonly schemaVersion: 1;
+  readonly expectedReportId: string;
+  readonly actualReportId: string;
+  readonly subjectChanged: boolean;
+  readonly same: number;
+  readonly changed: number;
+  readonly added: number;
+  readonly removed: number;
+  readonly changedCheckIds: readonly string[];
+}
+
+export interface TextlabComparatorDriftRow {
+  readonly taskId: string;
+  readonly task: string;
+  readonly status: string;
+  readonly comparator: string;
+  readonly path: string;
+  readonly knownGap?: string;
+}
+
+export interface TextlabComparatorDriftInspection {
+  readonly schemaVersion: 1;
+  readonly generatedAt: string;
+  readonly driftCount: number;
+  readonly rows: readonly TextlabComparatorDriftRow[];
+}
+
+export interface TextlabRetrievalQrelsInspection {
+  readonly schemaVersion: 1;
+  readonly taskId: string;
+  readonly corpusId: string;
+  readonly queryCount: number;
+  readonly ratingCount: number;
+  readonly relevantRatingCount: number;
+  readonly maxGrade: number;
+}
+
+export interface TextlabRetrievalEvaluationInspection {
+  readonly schemaVersion: 1;
+  readonly taskId: string;
+  readonly corpusId: string;
+  readonly formula: string;
+  readonly k: number;
+  readonly queryCount: number;
+  readonly precisionAtK: number;
+  readonly recallAtK: number;
+  readonly mrr: number;
+  readonly ndcgAtK: number;
+}
+
+export interface TextlabReleaseReadinessRow {
+  readonly packageName: string;
+  readonly releaseTrack: string;
+  readonly supportStatus: string;
+  readonly releaseReadiness: string;
+  readonly downstreamApiStatus: string;
+  readonly downstreamDependentCount: number;
+  readonly releaseBlockerCount: number;
+  readonly limitationCount: number;
+}
+
+export interface TextlabReleaseReadinessInspection {
+  readonly schemaVersion: 1;
+  readonly scope: string;
+  readonly packageCount: number;
+  readonly stageCount: number;
+  readonly trackCounts: readonly TextlabCount[];
+  readonly readinessCounts: readonly TextlabCount[];
+  readonly blockerCount: number;
+  readonly rows: readonly TextlabReleaseReadinessRow[];
+}
+
 const statusLabels: readonly TextlabSupportStatusLabel[] = [
   "scaffold",
   "readiness-only",
   "slice-proven",
+  "alpha",
   "beta",
   "production-candidate",
 ];
@@ -282,6 +411,21 @@ function stringSet(values: readonly unknown[]): readonly string[] {
   return [...new Set(values.filter((value): value is string => isNonEmptyString(value)))].sort();
 }
 
+function recordKeys(value: unknown): readonly string[] {
+  return isRecord(value) ? Object.keys(value).sort() : [];
+}
+
+function recordStringArrayEntries(value: unknown): readonly TextlabCount[] {
+  if (!isRecord(value)) return [];
+  return Object.entries(value)
+    .map(([id, entry]) => ({ id, count: Array.isArray(entry) ? entry.length : 0 }))
+    .sort((left, right) => left.id.localeCompare(right.id));
+}
+
+function numeric(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
 function annotationGraphEdgeCount(annotation: Record<string, unknown>): number {
   switch (annotation.kind) {
     case "relation":
@@ -332,40 +476,6 @@ function annotationDetails(annotation: Record<string, unknown>): readonly string
     default:
       return [];
   }
-}
-
-function isTextdocInspectionDocument(value: unknown): value is Record<string, unknown> {
-  if (
-    !isRecord(value) ||
-    value.schemaVersion !== 1 ||
-    !isNonEmptyString(value.documentId) ||
-    !isNonEmptyString(value.revision) ||
-    !Array.isArray(value.layers)
-  ) {
-    return false;
-  }
-
-  return value.layers.every((layer) => {
-    if (
-      !isRecord(layer) ||
-      !isNonEmptyString(layer.id) ||
-      !isNonEmptyString(layer.kind) ||
-      !isNonEmptyString(layer.viewId) ||
-      !Array.isArray(layer.annotations)
-    ) {
-      return false;
-    }
-    return layer.annotations.every(
-      (annotation) =>
-        isRecord(annotation) &&
-        isNonEmptyString(annotation.id) &&
-        isNonEmptyString(annotation.kind) &&
-        isRecord(annotation.lifecycle) &&
-        isNonEmptyString(annotation.lifecycle.state) &&
-        Array.isArray(annotation.targets) &&
-        annotation.targets.every((target) => isRecord(target) && isNonEmptyString(target.kind)),
-    );
-  });
 }
 
 function compareAnnotationRows(
@@ -435,6 +545,102 @@ export function renderSupportStatusSummary(summary: TextlabSupportStatusSummary)
   ].join("\n");
 }
 
+export function inspectPackageManifest(value: unknown): TextlabPackageInspection {
+  if (
+    !isRecord(value) ||
+    !isNonEmptyString(value.name) ||
+    !isNonEmptyString(value.version)
+  ) {
+    throw new TypeError("package manifest is invalid");
+  }
+
+  return {
+    schemaVersion: 1,
+    name: value.name,
+    version: value.version,
+    private: value.private === true,
+    exportPaths: recordKeys(value.exports),
+    binNames: recordKeys(value.bin),
+    fileEntries: isStringArray(value.files) ? [...value.files].sort() : [],
+    scriptNames: recordKeys(value.scripts),
+    dependencyNames: recordKeys(value.dependencies),
+    devDependencyNames: recordKeys(value.devDependencies),
+  };
+}
+
+export function renderPackageInspection(inspection: TextlabPackageInspection): string {
+  return [
+    "# textlab package inspection",
+    "",
+    `Package: ${inspection.name}`,
+    `Version: ${inspection.version}`,
+    `Private: ${inspection.private ? "yes" : "no"}`,
+    `Exports: ${inspection.exportPaths.length}`,
+    `Bins: ${inspection.binNames.length}`,
+    `Files: ${inspection.fileEntries.length}`,
+    `Scripts: ${inspection.scriptNames.length}`,
+    `Dependencies: ${inspection.dependencyNames.length}`,
+    `Dev dependencies: ${inspection.devDependencyNames.length}`,
+    "",
+    "## Export paths",
+    ...inspection.exportPaths.map((entry) => `- ${entry}`),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextPackManifest(value: unknown): TextlabPackInspection {
+  if (!isTextPackManifestV1(value)) {
+    throw new TypeError("textpack manifest is invalid");
+  }
+
+  return {
+    schemaVersion: 1,
+    id: value.id,
+    packageName: value.packageName,
+    version: value.version,
+    kinds: [...value.kind].sort(),
+    languages: [...(value.targets.languages ?? [])].sort(),
+    scripts: [...(value.targets.scripts ?? [])].sort(),
+    profiles: [...(value.targets.profiles ?? [])].sort(),
+    domains: [...(value.targets.domains ?? [])].sort(),
+    resourceFamilies: recordStringArrayEntries(value.resources),
+    provides: recordStringArrayEntries(value.provides),
+    reviewState: value.reviewState,
+    ...(value.composition?.overlayPrecedence !== undefined
+      ? { overlayPrecedence: value.composition.overlayPrecedence }
+      : {}),
+    codeLicenseCount: value.licenses.code.length,
+    dataLicenseCount: value.licenses.data.length,
+    provenanceSourceCount: value.provenance.sources.length,
+    limitations: [...(value.limitations ?? [])].sort(),
+  };
+}
+
+export function renderTextPackInspection(inspection: TextlabPackInspection): string {
+  return [
+    "# textlab pack inspection",
+    "",
+    `Pack: ${inspection.id}`,
+    `Package: ${inspection.packageName}`,
+    `Version: ${inspection.version}`,
+    `Kinds: ${inspection.kinds.join(",")}`,
+    `Languages: ${inspection.languages.join(",")}`,
+    `Scripts: ${inspection.scripts.join(",")}`,
+    `Review state: ${inspection.reviewState}`,
+    `Overlay precedence: ${inspection.overlayPrecedence ?? "none"}`,
+    `Code licenses: ${inspection.codeLicenseCount}`,
+    `Data licenses: ${inspection.dataLicenseCount}`,
+    `Provenance sources: ${inspection.provenanceSourceCount}`,
+    "",
+    "## Resources",
+    ...inspection.resourceFamilies.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Provides",
+    ...inspection.provides.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+  ].join("\n");
+}
+
 export function isTextlabTaskEvidenceManifest(value: unknown): value is TextlabTaskEvidenceManifest {
   return (
     isRecord(value) &&
@@ -489,35 +695,18 @@ export function renderEvidenceManifestSummary(summary: TextlabEvidenceSummary): 
 }
 
 export function summarizeConformanceReport(value: unknown): TextlabConformanceReportSummary {
-  if (!isRecord(value)) {
-    throw new TypeError("conformance report is invalid");
-  }
-  const subject = value.subject;
-  const summary = value.summary;
-  const checks = value.checks;
-  if (
-    value.schemaVersion !== 1 ||
-    !isNonEmptyString(value.reportId) ||
-    !isRecord(subject) ||
-    !isNonEmptyString(subject.kind) ||
-    !isNonEmptyString(subject.id) ||
-    !isRecord(summary) ||
-    typeof summary.pass !== "number" ||
-    typeof summary.fail !== "number" ||
-    typeof summary.notRun !== "number" ||
-    !Array.isArray(checks)
-  ) {
+  if (!isTextConformanceReportV1(value)) {
     throw new TypeError("conformance report is invalid");
   }
 
   return {
     schemaVersion: 1,
     reportId: value.reportId,
-    subject: `${subject.kind}:${subject.id}`,
-    pass: summary.pass,
-    fail: summary.fail,
-    notRun: summary.notRun,
-    checkCount: checks.length,
+    subject: `${value.subject.kind}:${value.subject.id}`,
+    pass: value.summary.pass,
+    fail: value.summary.fail,
+    notRun: value.summary.notRun,
+    checkCount: value.checks.length,
   };
 }
 
@@ -535,30 +724,117 @@ export function renderConformanceReportSummary(summary: TextlabConformanceReport
   ].join("\n");
 }
 
+export function inspectConformanceReportDiff(
+  expected: unknown,
+  actual: unknown,
+): TextlabConformanceDiffInspection {
+  if (!isTextConformanceReportV1(expected)) {
+    throw new TypeError("expected conformance report is invalid");
+  }
+  if (!isTextConformanceReportV1(actual)) {
+    throw new TypeError("actual conformance report is invalid");
+  }
+  const diff: TextConformanceReportDiffV1 = diffTextConformanceReports(expected, actual);
+  return {
+    schemaVersion: 1,
+    expectedReportId: diff.expectedReportId,
+    actualReportId: diff.actualReportId,
+    subjectChanged: diff.subjectChanged,
+    same: diff.summary.same,
+    changed: diff.summary.changed,
+    added: diff.summary.added,
+    removed: diff.summary.removed,
+    changedCheckIds: diff.checks
+      .filter((entry) => entry.status !== "same")
+      .map((entry) => entry.checkId)
+      .sort(),
+  };
+}
+
+export function renderConformanceDiffInspection(
+  inspection: TextlabConformanceDiffInspection,
+): string {
+  return [
+    "# textlab conformance diff inspection",
+    "",
+    `Expected: ${inspection.expectedReportId}`,
+    `Actual: ${inspection.actualReportId}`,
+    `Subject changed: ${inspection.subjectChanged ? "yes" : "no"}`,
+    `Same: ${inspection.same}`,
+    `Changed: ${inspection.changed}`,
+    `Added: ${inspection.added}`,
+    `Removed: ${inspection.removed}`,
+    "",
+    "## Changed checks",
+    ...inspection.changedCheckIds.map((entry) => `- ${entry}`),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextdocDocument(document: unknown): TextlabDocumentInspection {
+  if (!isTextDocDocumentV1(document)) {
+    throw new TypeError("textdoc document is invalid");
+  }
+  const annotationCount = document.layers.reduce(
+    (sum, layer) => sum + layer.annotations.length,
+    0,
+  );
+  return {
+    schemaVersion: 1,
+    documentId: document.documentId,
+    revision: document.revision,
+    viewCount: document.views.length,
+    spanMapCount: document.spanMaps?.length ?? 0,
+    layerCount: document.layers.length,
+    annotationCount,
+    viewKindCounts: countById(document.views.map((view) => view.kind)),
+    layerKindCounts: countById(document.layers.map((layer) => layer.kind)),
+  };
+}
+
+export function renderTextdocDocumentInspection(inspection: TextlabDocumentInspection): string {
+  return [
+    "# textlab document inspection",
+    "",
+    `Document: ${inspection.documentId}`,
+    `Revision: ${inspection.revision}`,
+    `Views: ${inspection.viewCount}`,
+    `Span maps: ${inspection.spanMapCount}`,
+    `Layers: ${inspection.layerCount}`,
+    `Annotations: ${inspection.annotationCount}`,
+    "",
+    "## View kinds",
+    ...inspection.viewKindCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Layer kinds",
+    ...inspection.layerKindCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+  ].join("\n");
+}
+
 export function inspectTextdocAnnotations(
   document: unknown,
   options: TextlabAnnotationInspectionOptions = {},
 ): TextlabAnnotationInspection {
-  if (!isTextdocInspectionDocument(document)) {
+  if (!isTextDocDocumentV1(document)) {
     throw new TypeError("textdoc document is invalid");
   }
 
   const allRows: TextlabAnnotationInspectionRow[] = [];
-  for (const layer of document.layers as readonly Record<string, unknown>[]) {
-    for (const annotation of layer.annotations as readonly Record<string, unknown>[]) {
-      const lifecycle = annotation.lifecycle as Record<string, unknown>;
-      const targets = annotation.targets as readonly Record<string, unknown>[];
+  for (const layer of document.layers) {
+    for (const annotation of layer.annotations) {
+      const annotationRecord = annotation as unknown as Record<string, unknown>;
       allRows.push({
-        layerId: layer.id as string,
-        layerKind: layer.kind as string,
-        viewId: layer.viewId as string,
-        annotationId: annotation.id as string,
-        annotationKind: annotation.kind as string,
-        lifecycleState: lifecycle.state as string,
-        targetCount: targets.length,
-        targetKinds: stringSet(targets.map((target) => target.kind)),
-        graphEdgeCount: annotationGraphEdgeCount(annotation),
-        details: annotationDetails(annotation),
+        layerId: layer.id,
+        layerKind: layer.kind,
+        viewId: layer.viewId,
+        annotationId: annotation.id,
+        annotationKind: annotation.kind,
+        lifecycleState: annotation.lifecycle.state,
+        targetCount: annotation.targets.length,
+        targetKinds: stringSet(annotation.targets.map((target) => target.kind)),
+        graphEdgeCount: annotationGraphEdgeCount(annotationRecord),
+        details: annotationDetails(annotationRecord),
       });
     }
   }
@@ -569,12 +845,10 @@ export function inspectTextdocAnnotations(
     schemaVersion: 1,
     documentId: document.documentId as string,
     revision: document.revision as string,
-    layerCount: (document.layers as readonly unknown[]).length,
+    layerCount: document.layers.length,
     annotationCount: allRows.length,
     graphEdgeCount: allRows.reduce((sum, row) => sum + row.graphEdgeCount, 0),
-    layerKindCounts: countById(
-      (document.layers as readonly Record<string, unknown>[]).map((layer) => layer.kind as string),
-    ),
+    layerKindCounts: countById(document.layers.map((layer) => layer.kind)),
     lifecycleCounts: countById(allRows.map((row) => row.lifecycleState)),
     rows,
   };
@@ -709,6 +983,66 @@ export function renderEvidenceReplayInspection(
   ].join("\n");
 }
 
+function comparatorName(value: unknown): string {
+  if (!isRecord(value)) return "<unknown>";
+  const name = isNonEmptyString(value.name) ? value.name : "<unknown>";
+  const version = isNonEmptyString(value.version) ? value.version : "";
+  return version.length > 0 ? `${name}@${version}` : name;
+}
+
+export function inspectComparatorDrift(document: unknown): TextlabComparatorDriftInspection {
+  if (!isEvidenceReplayDocument(document)) {
+    throw new TypeError("evidence replay document is invalid");
+  }
+  const rows: TextlabComparatorDriftRow[] = [];
+  for (const task of document.tasks as readonly Record<string, unknown>[]) {
+    for (const comparison of task.comparisons as readonly unknown[]) {
+      if (!isRecord(comparison)) continue;
+      const status = isNonEmptyString(comparison.status) ? comparison.status : "<missing>";
+      if (status === "pass") continue;
+      rows.push({
+        taskId: task.taskId as string,
+        task: task.task as string,
+        status,
+        comparator: comparatorName(comparison.comparator),
+        path: isNonEmptyString(comparison.path) ? comparison.path : "<missing>",
+        ...(isNonEmptyString(task.knownGap) ? { knownGap: task.knownGap } : {}),
+      });
+    }
+  }
+  rows.sort((left, right) =>
+    `${left.taskId}\u0000${left.status}\u0000${left.path}`.localeCompare(
+      `${right.taskId}\u0000${right.status}\u0000${right.path}`,
+    ),
+  );
+  return {
+    schemaVersion: 1,
+    generatedAt: document.generatedAt as string,
+    driftCount: rows.length,
+    rows,
+  };
+}
+
+export function renderComparatorDriftInspection(
+  inspection: TextlabComparatorDriftInspection,
+): string {
+  return [
+    "# textlab comparator drift inspection",
+    "",
+    `Generated: ${inspection.generatedAt}`,
+    `Drift rows: ${inspection.driftCount}`,
+    "",
+    "## Rows",
+    ...inspection.rows.map(
+      (row) =>
+        `- ${row.taskId} [${row.status}] comparator=${row.comparator} path=${row.path}${
+          row.knownGap ? ` gap=${row.knownGap}` : ""
+        }`,
+    ),
+    "",
+  ].join("\n");
+}
+
 function isCorpusInspectionDocument(value: unknown): value is Record<string, unknown> {
   return (
     isRecord(value) &&
@@ -806,6 +1140,149 @@ export function renderCorpusFixtureInspection(
     `Scored hits: ${inspection.scoredHitCount}`,
     `Explain entries: ${inspection.explainEntryCount}`,
     `Formulas: ${inspection.formulaIds.join(",")}`,
+    "",
+  ].join("\n");
+}
+
+export function inspectRetrievalQrels(document: unknown): TextlabRetrievalQrelsInspection {
+  if (!isTextCorpusRetrievalQrelsV1(document)) {
+    throw new TypeError("retrieval qrels document is invalid");
+  }
+  const ratings = document.judgments.flatMap((judgment) => judgment.ratings);
+  return {
+    schemaVersion: 1,
+    taskId: document.taskId,
+    corpusId: document.corpusId,
+    queryCount: document.judgments.length,
+    ratingCount: ratings.length,
+    relevantRatingCount: ratings.filter((rating) => rating.grade > 0).length,
+    maxGrade: ratings.reduce((max, rating) => Math.max(max, rating.grade), 0),
+  };
+}
+
+export function renderRetrievalQrelsInspection(
+  inspection: TextlabRetrievalQrelsInspection,
+): string {
+  return [
+    "# textlab retrieval qrels inspection",
+    "",
+    `Task: ${inspection.taskId}`,
+    `Corpus: ${inspection.corpusId}`,
+    `Queries: ${inspection.queryCount}`,
+    `Ratings: ${inspection.ratingCount}`,
+    `Relevant ratings: ${inspection.relevantRatingCount}`,
+    `Max grade: ${inspection.maxGrade}`,
+    "",
+  ].join("\n");
+}
+
+export function inspectRetrievalEvaluation(
+  document: unknown,
+): TextlabRetrievalEvaluationInspection {
+  if (!isTextCorpusRetrievalEvaluationResultV1(document)) {
+    throw new TypeError("retrieval evaluation document is invalid");
+  }
+  return {
+    schemaVersion: 1,
+    taskId: document.taskId,
+    corpusId: document.corpusId,
+    formula: document.formula,
+    k: document.k,
+    queryCount: document.queries.length,
+    precisionAtK: document.summary.precisionAtK,
+    recallAtK: document.summary.recallAtK,
+    mrr: document.summary.mrr,
+    ndcgAtK: document.summary.ndcgAtK,
+  };
+}
+
+export function renderRetrievalEvaluationInspection(
+  inspection: TextlabRetrievalEvaluationInspection,
+): string {
+  return [
+    "# textlab retrieval evaluation inspection",
+    "",
+    `Task: ${inspection.taskId}`,
+    `Corpus: ${inspection.corpusId}`,
+    `Formula: ${inspection.formula}`,
+    `K: ${inspection.k}`,
+    `Queries: ${inspection.queryCount}`,
+    `Precision@K: ${inspection.precisionAtK}`,
+    `Recall@K: ${inspection.recallAtK}`,
+    `MRR: ${inspection.mrr}`,
+    `NDCG@K: ${inspection.ndcgAtK}`,
+    "",
+  ].join("\n");
+}
+
+export function inspectReleaseReadiness(document: unknown): TextlabReleaseReadinessInspection {
+  if (
+    !isRecord(document) ||
+    document.schemaVersion !== 1 ||
+    !isNonEmptyString(document.scope) ||
+    !Array.isArray(document.dependencyReleaseOrder) ||
+    !Array.isArray(document.packages)
+  ) {
+    throw new TypeError("release readiness document is invalid");
+  }
+  const packages = document.packages.filter(isRecord);
+  const rows = packages
+    .map((entry) => {
+      const downstream = isRecord(entry.downstreamApiStability)
+        ? entry.downstreamApiStability
+        : {};
+      return {
+        packageName: isNonEmptyString(entry.packageName) ? entry.packageName : "<missing>",
+        releaseTrack: isNonEmptyString(entry.releaseTrack) ? entry.releaseTrack : "<missing>",
+        supportStatus: isNonEmptyString(entry.supportStatus) ? entry.supportStatus : "<missing>",
+        releaseReadiness: isNonEmptyString(entry.releaseReadiness)
+          ? entry.releaseReadiness
+          : "<missing>",
+        downstreamApiStatus: isNonEmptyString(downstream.status) ? downstream.status : "<missing>",
+        downstreamDependentCount: Array.isArray(downstream.downstreamDependents)
+          ? downstream.downstreamDependents.length
+          : 0,
+        releaseBlockerCount: Array.isArray(entry.releaseBlockers)
+          ? entry.releaseBlockers.length
+          : 0,
+        limitationCount: Array.isArray(entry.limitations) ? entry.limitations.length : 0,
+      };
+    })
+    .sort((left, right) => left.packageName.localeCompare(right.packageName));
+  return {
+    schemaVersion: 1,
+    scope: document.scope,
+    packageCount: rows.length,
+    stageCount: document.dependencyReleaseOrder.length,
+    trackCounts: countById(rows.map((row) => row.releaseTrack)),
+    readinessCounts: countById(rows.map((row) => row.releaseReadiness)),
+    blockerCount: rows.reduce((sum, row) => sum + row.releaseBlockerCount, 0),
+    rows,
+  };
+}
+
+export function renderReleaseReadinessInspection(
+  inspection: TextlabReleaseReadinessInspection,
+): string {
+  return [
+    "# textlab release-readiness inspection",
+    "",
+    `Scope: ${inspection.scope}`,
+    `Packages: ${inspection.packageCount}`,
+    `Stages: ${inspection.stageCount}`,
+    `Blockers: ${inspection.blockerCount}`,
+    "",
+    "## Release tracks",
+    ...inspection.trackCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Readiness",
+    ...inspection.readinessCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Packages",
+    ...inspection.rows.map(
+      (row) =>
+        `- ${row.packageName} track=${row.releaseTrack} readiness=${row.releaseReadiness} downstream=${row.downstreamApiStatus} dependents=${row.downstreamDependentCount} blockers=${row.releaseBlockerCount}`,
+    ),
     "",
   ].join("\n");
 }

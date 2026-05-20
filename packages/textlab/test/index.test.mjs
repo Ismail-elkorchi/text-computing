@@ -3,14 +3,30 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   inspectCorpusFixture,
+  inspectComparatorDrift,
+  inspectConformanceReportDiff,
   inspectEvidenceReplay,
+  inspectPackageManifest,
+  inspectReleaseReadiness,
+  inspectRetrievalEvaluation,
+  inspectRetrievalQrels,
+  inspectTextdocDocument,
   inspectTextdocAnnotations,
+  inspectTextPackManifest,
   packageName,
+  renderComparatorDriftInspection,
   renderCorpusFixtureInspection,
+  renderConformanceDiffInspection,
   renderConformanceReportSummary,
   renderEvidenceManifestSummary,
   renderEvidenceReplayInspection,
+  renderPackageInspection,
+  renderReleaseReadinessInspection,
+  renderRetrievalEvaluationInspection,
+  renderRetrievalQrelsInspection,
   renderTextdocAnnotationInspection,
+  renderTextdocDocumentInspection,
+  renderTextPackInspection,
   summarizeConformanceReport,
   summarizeEvidenceManifest,
   summarizeSupportStatus,
@@ -193,11 +209,121 @@ if (!invalidReportRejected) {
   throw new Error("invalid conformance report should be rejected");
 }
 
+const changedConformanceReport = {
+  ...conformanceReport,
+  reportId: "task-evidence:nlp-rule-backed-ner:actual",
+  summary: {
+    pass: 4,
+    fail: 1,
+    notRun: 1,
+  },
+  checks: [
+    { checkId: "fixture", status: "pass" },
+    { checkId: "expected", status: "pass" },
+    { checkId: "comparator", status: "fail", message: "Comparator drift detected." },
+    { checkId: "negative", status: "fail" },
+    { checkId: "future-a", status: "not-run" },
+    { checkId: "new-check", status: "pass" },
+  ],
+};
+
+const conformanceDiff = inspectConformanceReportDiff(conformanceReport, changedConformanceReport);
+
+if (
+  conformanceDiff.expectedReportId !== "task-evidence:nlp-rule-backed-ner" ||
+  conformanceDiff.actualReportId !== "task-evidence:nlp-rule-backed-ner:actual" ||
+  conformanceDiff.changed !== 1 ||
+  conformanceDiff.added !== 1 ||
+  conformanceDiff.removed !== 1 ||
+  conformanceDiff.changedCheckIds.join(",") !== "comparator,future-b,new-check"
+) {
+  throw new Error("conformance diff inspection should expose changed, added, and removed checks");
+}
+
+if (!renderConformanceDiffInspection(conformanceDiff).includes("Changed: 1")) {
+  throw new Error("conformance diff renderer should include changed count");
+}
+
+const packageManifest = {
+  name: "@ismail-elkorchi/textlab",
+  version: "0.1.0",
+  type: "module",
+  exports: {
+    ".": { types: "./dist/index.d.ts", import: "./dist/index.js" },
+    "./cli": { types: "./dist/cli.d.ts", import: "./dist/cli.js" },
+  },
+  bin: { textlab: "./dist/cli.js" },
+  files: ["dist", "README.md", "CHANGELOG.md"],
+  scripts: { build: "tsc -p tsconfig.build.json" },
+  dependencies: { "@ismail-elkorchi/textdoc": "0.1.0" },
+};
+
+const packageInspection = inspectPackageManifest(packageManifest);
+
+if (
+  packageInspection.name !== "@ismail-elkorchi/textlab" ||
+  packageInspection.exportPaths.join(",") !== ".,./cli" ||
+  packageInspection.dependencyNames.join(",") !== "@ismail-elkorchi/textdoc"
+) {
+  throw new Error("package inspection should summarize exported package surfaces");
+}
+
+if (!renderPackageInspection(packageInspection).includes("Exports: 2")) {
+  throw new Error("package renderer should include export counts");
+}
+
+const packManifest = {
+  manifestVersion: "1.0.0",
+  id: "textpack-reference-smoke",
+  packageName: "@ismail-elkorchi/textpack-reference-smoke",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["en"],
+    scripts: ["Latn"],
+    profiles: ["uax29-default"],
+    domains: ["smoke"],
+  },
+  engines: { textpack: "^0.1.0" },
+  externalData: {},
+  capabilities: { lexicons: true, stopwords: true },
+  resources: {
+    lexicons: ["resources/lexicon.tsv"],
+    stopwords: ["resources/stopwords.tsv"],
+  },
+  provides: {
+    lexicons: ["lexicon:smoke"],
+    stopwords: ["stopwords:smoke"],
+  },
+  entrypoints: { manifest: "textpack.manifest.json", load: "dist/index.js" },
+  licenses: { code: ["MIT"], data: ["CC0-1.0"] },
+  provenance: { sources: ["fixture:pack-smoke"], generated: false },
+  tests: { smoke: ["tests/smoke.json"], negative: ["tests/negative.json"], representative: ["tests/representative.json"] },
+  reviewState: "experimental",
+  composition: { overlayPrecedence: 10 },
+  limitations: ["Fixture-scale pack only."],
+};
+
+const packInspection = inspectTextPackManifest(packManifest);
+
+if (
+  packInspection.id !== "textpack-reference-smoke" ||
+  packInspection.resourceFamilies.map((entry) => `${entry.id}:${entry.count}`).join(",") !== "lexicons:1,stopwords:1" ||
+  packInspection.provenanceSourceCount !== 1
+) {
+  throw new Error("textpack manifest inspection should summarize resources and provenance");
+}
+
+if (!renderTextPackInspection(packInspection).includes("Review state: experimental")) {
+  throw new Error("textpack renderer should include review state");
+}
+
 const textdocDocument = {
   schemaVersion: 1,
   documentId: "doc:inspection",
   revision: "1",
-  textLengthCU: 19,
+  textLengthCU: 18,
+  text: "Alice knows Alice.",
   units: { text: "utf16-code-unit" },
   views: [{ id: "analysis", kind: "raw" }],
   layers: [
@@ -211,6 +337,7 @@ const textdocDocument = {
           kind: "token",
           lifecycle: { state: "active" },
           targets: [{ kind: "span", viewId: "analysis", startCU: 0, endCU: 5 }],
+          tokenKind: "lexical-token",
           text: "Alice",
         },
         {
@@ -218,6 +345,7 @@ const textdocDocument = {
           kind: "token",
           lifecycle: { state: "active" },
           targets: [{ kind: "span", viewId: "analysis", startCU: 6, endCU: 11 }],
+          tokenKind: "lexical-token",
           text: "knows",
         },
       ],
@@ -231,7 +359,14 @@ const textdocDocument = {
           id: "ent-1",
           kind: "entity",
           lifecycle: { state: "active" },
-          targets: [{ kind: "annotation", annotationId: "token-1" }],
+          targets: [{ kind: "span", viewId: "analysis", startCU: 0, endCU: 5 }],
+          label: "PER",
+        },
+        {
+          id: "ent-2",
+          kind: "entity",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis", startCU: 12, endCU: 17 }],
           label: "PER",
         },
       ],
@@ -245,9 +380,33 @@ const textdocDocument = {
           id: "rel-1",
           kind: "relation",
           lifecycle: { state: "active" },
-          targets: [{ kind: "document" }],
+          targets: [{ kind: "annotation", annotationId: "ent-1" }],
           relationType: "knows",
-          arguments: [{ role: "subject", annotationId: "ent-1" }],
+          arguments: [
+            { role: "subject", annotationId: "ent-1" },
+            { role: "object", annotationId: "ent-2" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "layer-coreference-mention",
+      kind: "coreference-mention",
+      viewId: "analysis",
+      annotations: [
+        {
+          id: "mention-1",
+          kind: "coreference-mention",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "ent-1" }],
+          mentionType: "proper-name",
+        },
+        {
+          id: "mention-2",
+          kind: "coreference-mention",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "ent-2" }],
+          mentionType: "proper-name",
         },
       ],
     },
@@ -260,9 +419,37 @@ const textdocDocument = {
           id: "chain-1",
           kind: "coreference-chain",
           lifecycle: { state: "active" },
-          targets: [{ kind: "document" }],
+          targets: [{ kind: "annotation", annotationId: "mention-1" }],
           mentionIds: ["mention-1", "mention-2"],
           representativeMentionId: "mention-1",
+        },
+      ],
+    },
+    {
+      id: "layer-dependency-node",
+      kind: "dependency-node",
+      viewId: "analysis",
+      annotations: [
+        {
+          id: "node-1",
+          kind: "dependency-node",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "token-2" }],
+          nodeKind: "word",
+          sentenceId: "sent-1",
+          sourceOrder: 1,
+          fields: {
+            id: "1",
+            form: "knows",
+            lemma: "know",
+            upos: "VERB",
+            xpos: "_",
+            feats: "_",
+            head: "0",
+            deprel: "root",
+            deps: "_",
+            misc: "_",
+          },
         },
       ],
     },
@@ -275,7 +462,7 @@ const textdocDocument = {
           id: "dep-1",
           kind: "dependency",
           lifecycle: { state: "active" },
-          targets: [{ kind: "document" }],
+          targets: [{ kind: "annotation", annotationId: "node-1" }],
           dependentNodeId: "node-1",
           headNodeId: null,
           relation: "root",
@@ -298,16 +485,31 @@ const annotationInspection = inspectTextdocAnnotations(textdocDocument, {
 
 if (
   annotationInspection.documentId !== "doc:inspection" ||
-  annotationInspection.layerCount !== 5 ||
-  annotationInspection.annotationCount !== 6 ||
+  annotationInspection.layerCount !== 7 ||
+  annotationInspection.annotationCount !== 10 ||
   annotationInspection.rows.map((row) => row.annotationId).join(",") !== "chain-1,dep-1,rel-1" ||
-  annotationInspection.graphEdgeCount !== 4
+  annotationInspection.graphEdgeCount !== 5
 ) {
   throw new Error("textdoc annotation inspection should count and query graph annotations deterministically");
 }
 
 if (!renderTextdocAnnotationInspection(annotationInspection).includes("relation:rel-1")) {
   throw new Error("textdoc annotation renderer should include queried relation rows");
+}
+
+const documentInspection = inspectTextdocDocument(textdocDocument);
+
+if (
+  documentInspection.documentId !== "doc:inspection" ||
+  documentInspection.viewCount !== 1 ||
+  documentInspection.layerCount !== 7 ||
+  documentInspection.annotationCount !== 10
+) {
+  throw new Error("textdoc document inspection should summarize views, layers, and annotations");
+}
+
+if (!renderTextdocDocumentInspection(documentInspection).includes("Annotations: 10")) {
+  throw new Error("textdoc document renderer should include annotation counts");
 }
 
 let invalidDocumentRejected = false;
@@ -365,6 +567,21 @@ if (!renderEvidenceReplayInspection(replayInspection).includes("notRunComparison
   throw new Error("evidence replay renderer should expose comparator gap counts");
 }
 
+const comparatorDriftInspection = inspectComparatorDrift(evidenceReplay);
+
+if (
+  comparatorDriftInspection.driftCount !== 1 ||
+  comparatorDriftInspection.rows[0].taskId !== "nlp-tokenization-sbd" ||
+  comparatorDriftInspection.rows[0].status !== "not-run" ||
+  comparatorDriftInspection.rows[0].comparator !== "wink-nlp@2.4.0"
+) {
+  throw new Error("comparator drift inspection should expose non-passing comparator rows");
+}
+
+if (!renderComparatorDriftInspection(comparatorDriftInspection).includes("wink-nlp@2.4.0")) {
+  throw new Error("comparator drift renderer should include comparator identity");
+}
+
 const corpusFixture = {
   schemaVersion: 1,
   corpusId: "corpus-smoke",
@@ -404,6 +621,118 @@ if (!renderCorpusFixtureInspection(corpusInspection).includes("Empty documents: 
   throw new Error("corpus fixture renderer should include empty-document count");
 }
 
+const retrievalQrels = {
+  schemaVersion: 1,
+  taskId: "nlp-retrieval",
+  corpusId: "corpus-smoke",
+  judgments: [
+    {
+      queryId: "alpha",
+      ratings: [
+        { docId: "doc-a", grade: 2 },
+        { docId: "doc-empty", grade: 0 },
+      ],
+    },
+  ],
+};
+
+const qrelsInspection = inspectRetrievalQrels(retrievalQrels);
+
+if (
+  qrelsInspection.taskId !== "nlp-retrieval" ||
+  qrelsInspection.queryCount !== 1 ||
+  qrelsInspection.ratingCount !== 2 ||
+  qrelsInspection.relevantRatingCount !== 1 ||
+  qrelsInspection.maxGrade !== 2
+) {
+  throw new Error("retrieval qrels inspection should count relevance judgments");
+}
+
+if (!renderRetrievalQrelsInspection(qrelsInspection).includes("Relevant ratings: 1")) {
+  throw new Error("retrieval qrels renderer should include relevant judgment count");
+}
+
+const retrievalEvaluation = {
+  schemaVersion: 1,
+  taskId: "nlp-retrieval",
+  corpusId: "corpus-smoke",
+  formula: "bm25.okapi.k1-1.5.b-0.75",
+  k: 2,
+  relevantGradeThreshold: 1,
+  tolerance: 1e-12,
+  summary: { precisionAtK: 0.5, recallAtK: 1, mrr: 1, ndcgAtK: 1 },
+  queries: [
+    {
+      queryId: "alpha",
+      retrieved: ["doc-a", "doc-empty"],
+      relevant: ["doc-a"],
+      precisionAtK: 0.5,
+      recallAtK: 1,
+      reciprocalRank: 1,
+      ndcgAtK: 1,
+    },
+  ],
+};
+
+const retrievalEvaluationInspection = inspectRetrievalEvaluation(retrievalEvaluation);
+
+if (
+  retrievalEvaluationInspection.formula !== "bm25.okapi.k1-1.5.b-0.75" ||
+  retrievalEvaluationInspection.queryCount !== 1 ||
+  retrievalEvaluationInspection.precisionAtK !== 0.5 ||
+  retrievalEvaluationInspection.ndcgAtK !== 1
+) {
+  throw new Error("retrieval evaluation inspection should expose metric summaries");
+}
+
+if (!renderRetrievalEvaluationInspection(retrievalEvaluationInspection).includes("Precision@K: 0.5")) {
+  throw new Error("retrieval evaluation renderer should include metric summaries");
+}
+
+const releaseReadiness = {
+  schemaVersion: 1,
+  scope: "package-release-gates",
+  dependencyReleaseOrder: [
+    { stage: 1, packages: ["@ismail-elkorchi/textfacts"] },
+    { stage: 2, packages: ["@ismail-elkorchi/textdoc"] },
+  ],
+  packages: [
+    {
+      packageName: "@ismail-elkorchi/textfacts",
+      releaseTrack: "alpha",
+      supportStatus: "alpha",
+      releaseReadiness: "candidate",
+      downstreamApiStability: { status: "stable", downstreamDependents: ["@ismail-elkorchi/textdoc"] },
+      releaseBlockers: [],
+      limitations: ["Alpha surface only."],
+    },
+    {
+      packageName: "@ismail-elkorchi/textdoc",
+      releaseTrack: "alpha",
+      supportStatus: "alpha",
+      releaseReadiness: "blocked",
+      downstreamApiStability: { status: "provisional", downstreamDependents: [] },
+      releaseBlockers: ["missing downstream consumer"],
+      limitations: ["Fixture-scale only."],
+    },
+  ],
+};
+
+const releaseReadinessInspection = inspectReleaseReadiness(releaseReadiness);
+
+if (
+  releaseReadinessInspection.packageCount !== 2 ||
+  releaseReadinessInspection.stageCount !== 2 ||
+  releaseReadinessInspection.blockerCount !== 1 ||
+  releaseReadinessInspection.readinessCounts.map((entry) => `${entry.id}:${entry.count}`).join(",") !== "blocked:1,candidate:1"
+) {
+  throw new Error("release-readiness inspection should summarize package gates");
+}
+
+if (!renderReleaseReadinessInspection(releaseReadinessInspection).includes("Blockers: 1")) {
+  throw new Error("release-readiness renderer should include blocker count");
+}
+
 const dir = await mkdtemp(path.join(tmpdir(), "textlab-support-status-"));
 const fixturePath = path.join(dir, "support-status.v1.json");
 await writeFile(fixturePath, `${JSON.stringify(supportStatus, null, 2)}\n`, "utf8");
@@ -417,6 +746,18 @@ const replayPath = path.join(dir, "evidence-replay.v1.json");
 await writeFile(replayPath, `${JSON.stringify(evidenceReplay, null, 2)}\n`, "utf8");
 const corpusPath = path.join(dir, "corpus-fixture.json");
 await writeFile(corpusPath, `${JSON.stringify(corpusFixture, null, 2)}\n`, "utf8");
+const changedReportPath = path.join(dir, "conformance-report-actual.json");
+await writeFile(changedReportPath, `${JSON.stringify(changedConformanceReport, null, 2)}\n`, "utf8");
+const packagePath = path.join(dir, "package.json");
+await writeFile(packagePath, `${JSON.stringify(packageManifest, null, 2)}\n`, "utf8");
+const packPath = path.join(dir, "textpack.manifest.json");
+await writeFile(packPath, `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
+const qrelsPath = path.join(dir, "qrels.json");
+await writeFile(qrelsPath, `${JSON.stringify(retrievalQrels, null, 2)}\n`, "utf8");
+const retrievalEvaluationPath = path.join(dir, "retrieval-evaluation.json");
+await writeFile(retrievalEvaluationPath, `${JSON.stringify(retrievalEvaluation, null, 2)}\n`, "utf8");
+const releaseReadinessPath = path.join(dir, "release-readiness.json");
+await writeFile(releaseReadinessPath, `${JSON.stringify(releaseReadiness, null, 2)}\n`, "utf8");
 
 const cliResult = await runTextlabCli(["support-status", fixturePath]);
 
@@ -448,14 +789,69 @@ if (!reportCliResult.stdout.includes("Subject: task:nlp-rule-backed-ner")) {
   throw new Error("conformance-report CLI should render the report subject");
 }
 
+const reportJsonCliResult = await runTextlabCli(["conformance-report", reportPath, "--json"]);
+
+if (
+  reportJsonCliResult.exitCode !== 0 ||
+  !JSON.parse(reportJsonCliResult.stdout).reportId.includes("nlp-rule-backed-ner")
+) {
+  throw new Error("conformance-report CLI should support stable JSON output");
+}
+
+const conformanceDiffCliResult = await runTextlabCli(["conformance-diff", reportPath, changedReportPath]);
+
+if (conformanceDiffCliResult.exitCode !== 0 || conformanceDiffCliResult.stderr !== "") {
+  throw new Error(`conformance-diff CLI should pass: ${conformanceDiffCliResult.stderr}`);
+}
+
+if (!conformanceDiffCliResult.stdout.includes("Removed: 1")) {
+  throw new Error("conformance-diff CLI should render removed check counts");
+}
+
+const packageCliResult = await runTextlabCli(["package", packagePath]);
+
+if (packageCliResult.exitCode !== 0 || packageCliResult.stderr !== "") {
+  throw new Error(`package CLI should pass: ${packageCliResult.stderr}`);
+}
+
+if (!packageCliResult.stdout.includes("Package: @ismail-elkorchi/textlab")) {
+  throw new Error("package CLI should render package identity");
+}
+
+const packCliResult = await runTextlabCli(["pack", packPath, "--json"]);
+
+if (packCliResult.exitCode !== 0 || JSON.parse(packCliResult.stdout).id !== "textpack-reference-smoke") {
+  throw new Error(`pack CLI should support JSON output: ${packCliResult.stderr}`);
+}
+
+const documentCliResult = await runTextlabCli(["document", textdocPath]);
+
+if (documentCliResult.exitCode !== 0 || documentCliResult.stderr !== "") {
+  throw new Error(`document CLI should pass: ${documentCliResult.stderr}`);
+}
+
+if (!documentCliResult.stdout.includes("Annotations: 10")) {
+  throw new Error("document CLI should render annotation counts");
+}
+
 const annotationCliResult = await runTextlabCli(["annotations", textdocPath]);
 
 if (annotationCliResult.exitCode !== 0 || annotationCliResult.stderr !== "") {
   throw new Error(`annotations CLI should pass: ${annotationCliResult.stderr}`);
 }
 
-if (!annotationCliResult.stdout.includes("Graph edges: 4")) {
+if (!annotationCliResult.stdout.includes("Graph edges: 5")) {
   throw new Error("annotations CLI should render graph edge counts");
+}
+
+const filteredAnnotationCliResult = await runTextlabCli(["annotations", textdocPath, "--layer-kind", "relation"]);
+
+if (
+  filteredAnnotationCliResult.exitCode !== 0 ||
+  !filteredAnnotationCliResult.stdout.includes("relation:rel-1") ||
+  filteredAnnotationCliResult.stdout.includes("coreference-chain:chain-1")
+) {
+  throw new Error("annotations CLI should support deterministic layer-kind filtering");
 }
 
 const replayCliResult = await runTextlabCli(["evidence-replay", replayPath]);
@@ -466,6 +862,16 @@ if (replayCliResult.exitCode !== 0 || replayCliResult.stderr !== "") {
 
 if (!replayCliResult.stdout.includes("notRunComparisons=1")) {
   throw new Error("evidence-replay CLI should render comparator gap counts");
+}
+
+const comparatorDriftCliResult = await runTextlabCli(["comparator-drift", replayPath]);
+
+if (comparatorDriftCliResult.exitCode !== 0 || comparatorDriftCliResult.stderr !== "") {
+  throw new Error(`comparator-drift CLI should pass: ${comparatorDriftCliResult.stderr}`);
+}
+
+if (!comparatorDriftCliResult.stdout.includes("Drift rows: 1")) {
+  throw new Error("comparator-drift CLI should render non-passing comparator rows");
 }
 
 const evidenceRunCliResult = await runTextlabCli(["evidence-run", "replay", "retrieval"]);
@@ -492,6 +898,36 @@ if (corpusCliResult.exitCode !== 0 || corpusCliResult.stderr !== "") {
 
 if (!corpusCliResult.stdout.includes("Corpus: corpus-smoke")) {
   throw new Error("corpus-fixture CLI should render corpus identity");
+}
+
+const qrelsCliResult = await runTextlabCli(["retrieval-qrels", qrelsPath]);
+
+if (qrelsCliResult.exitCode !== 0 || qrelsCliResult.stderr !== "") {
+  throw new Error(`retrieval-qrels CLI should pass: ${qrelsCliResult.stderr}`);
+}
+
+if (!qrelsCliResult.stdout.includes("Relevant ratings: 1")) {
+  throw new Error("retrieval-qrels CLI should render relevance judgment counts");
+}
+
+const retrievalEvaluationCliResult = await runTextlabCli(["retrieval-evaluation", retrievalEvaluationPath]);
+
+if (retrievalEvaluationCliResult.exitCode !== 0 || retrievalEvaluationCliResult.stderr !== "") {
+  throw new Error(`retrieval-evaluation CLI should pass: ${retrievalEvaluationCliResult.stderr}`);
+}
+
+if (!retrievalEvaluationCliResult.stdout.includes("NDCG@K: 1")) {
+  throw new Error("retrieval-evaluation CLI should render metric summaries");
+}
+
+const releaseReadinessCliResult = await runTextlabCli(["release-readiness", releaseReadinessPath]);
+
+if (releaseReadinessCliResult.exitCode !== 0 || releaseReadinessCliResult.stderr !== "") {
+  throw new Error(`release-readiness CLI should pass: ${releaseReadinessCliResult.stderr}`);
+}
+
+if (!releaseReadinessCliResult.stdout.includes("Packages: 2")) {
+  throw new Error("release-readiness CLI should render package counts");
 }
 
 const missingReportCliResult = await runTextlabCli(["conformance-report"]);

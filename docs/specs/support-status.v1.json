@@ -92,21 +92,26 @@
     {
       "name": "@ismail-elkorchi/textlab",
       "status": "alpha",
-      "scope": "Public alpha inspection package for support-status, task-evidence, conformance-report, annotation, evidence-replay, and corpus-fixture inspection APIs and CLI commands proven by package tests and Public Vertical Slice 0.1.",
+      "scope": "Public alpha inspection package for package, pack, document, annotation, conformance-report, conformance-diff, evidence, comparator-drift, corpus, retrieval, release-readiness, and support-status inspection APIs and CLI commands proven by package tests and Public Vertical Slice 0.1.",
       "evidence": [
         "packages/textlab/src/index.ts",
         "packages/textlab/src/cli.ts",
         "packages/textlab/test/index.test.mjs",
+        "packages/textlab/package.json",
         "fixtures/reports/task-evidence-manifest.v1.json",
         "fixtures/reports/evidence-replay.v1.json",
+        "fixtures/package-release/gates.v1.json",
+        "fixtures/package-release/downstream-api-stability.v1.json",
         "fixtures/textdoc/examples/document-annotation-model-v1.json",
         "fixtures/retrieval/expected/retrieval-smoke.json",
+        "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
         "Public Vertical Slice 0.1 external-consumer smoke test",
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
+        "Interactive views, standalone comparator execution, and large-corpus browsing remain outside alpha scope.",
         "Alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and package interop proven by Public Vertical Slice 0.1"
       ]
     },
