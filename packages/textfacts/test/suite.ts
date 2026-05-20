@@ -209,6 +209,36 @@ export function registerTests(api: TestApi): void {
     }
   });
 
+  api.test("multilingual Unicode edge fixtures stay text-local", async () => {
+    const {
+      integrityProfile,
+      isNormalized,
+      isWellFormedUnicode,
+      normalize,
+      segmentGraphemes,
+      segmentSentencesUAX29,
+      segmentWordsUAX29,
+    } = await importTextfacts();
+    const fixtureUrl = new URL("testdata/edge/multilingual-unicode-edge.v1.json", getRepoRootUrl());
+    const fixture = JSON.parse(await readTextFile(fixtureUrl)) as {
+      claimBoundary: string;
+      cases: Array<{ id: string; text: string; expectWellFormed: boolean }>;
+    };
+    api.assertEqual(
+      fixture.claimBoundary,
+      "Text-local Unicode edge coverage only; not language-aware NLP support.",
+    );
+    for (const testCase of fixture.cases) {
+      api.assertEqual(isWellFormedUnicode(testCase.text), testCase.expectWellFormed);
+      const nfc = normalize(testCase.text, "NFC");
+      api.assertEqual(isNormalized(nfc, "NFC"), true);
+      api.assertOk([...segmentGraphemes(testCase.text)].length > 0, testCase.id);
+      api.assertOk([...segmentWordsUAX29(testCase.text)].length > 0, testCase.id);
+      api.assertOk([...segmentSentencesUAX29(testCase.text)].length > 0, testCase.id);
+      api.assertEqual(integrityProfile(testCase.text).wellFormed, true);
+    }
+  });
+
   api.test("UAX14 LineBreakTest", async () => {
     const { lineBreakPositions } = await importTextfacts();
     const data = await readUcdTestFile("auxiliary/LineBreakTest.txt");

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "claimBoundary": "Text-local Unicode edge coverage only; not language-aware NLP support.",
+  "cases": [
+    {
+      "id": "arabic-diacritics-rtl",
+      "text": "العَرَبِيَّةُ نصٌّ.",
+      "expectWellFormed": true
+    },
+    {
+      "id": "hebrew-niqqud-rtl",
+      "text": "שָׁלוֹם עולם.",
+      "expectWellFormed": true
+    },
+    {
+      "id": "devanagari-conjunct",
+      "text": "क्‍ष नमस्ते।",
+      "expectWellFormed": true
+    },
+    {
+      "id": "thai-no-spaces",
+      "text": "ภาษาไทยไม่มีเว้นวรรค",
+      "expectWellFormed": true
+    },
+    {
+      "id": "khmer-no-spaces",
+      "text": "ភាសាខ្មែរ",
+      "expectWellFormed": true
+    },
+    {
+      "id": "han-kana-mixed",
+      "text": "東京でカフェに行く。",
+      "expectWellFormed": true
+    },
+    {
+      "id": "emoji-zwj-family",
+      "text": "👨‍👩‍👧‍👦 family",
+      "expectWellFormed": true
+    },
+    {
+      "id": "latin-combining-order",
+      "text": "Café ẹ́",
+      "expectWellFormed": true
+    }
+  ]
+}
