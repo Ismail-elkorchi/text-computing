@@ -69,7 +69,7 @@
             "tools/validate-pos-morph-lemma-feature.mjs"
           ],
           "path": "tools/validate-pos-morph-lemma-feature.mjs",
-          "sha256": "fd996867b21804d6872d744d66c9360e7f7c901bd47df84cb1da9e62612b208d"
+          "sha256": "9bf99523f2571859818804c295a5b5da0e5f767f87baf9dedc1cc3bc854ea2a8"
         }
       ],
       "comparisons": [

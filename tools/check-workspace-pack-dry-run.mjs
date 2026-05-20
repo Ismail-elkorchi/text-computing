@@ -61,8 +61,9 @@ const byName = new Map(reports.map((report) => [report.name, report]));
 const gates = await readJson("fixtures/package-release/gates.v1.json");
 const gateByName = new Map(gates.packages.map((entry) => [entry.packageName, entry]));
 
-expect(reports.length === 9, "Workspace pack dry-run must cover every workspace package.", {
+expect(reports.length === gates.packages.length, "Workspace pack dry-run must cover every workspace package.", {
   packageCount: reports.length,
+  expectedPackageCount: gates.packages.length,
   packageNames: reports.map((report) => report.name),
 });
 expect(byName.get("@ismail-elkorchi/textfacts")?.version === "0.1.0", "textfacts dry-run version must stay public beta.");
@@ -95,9 +96,13 @@ for (const report of reports) {
       files: [...files].sort(),
     });
   }
+  const allowsPublishedTests = report.name.startsWith("@ismail-elkorchi/textpack-");
+  expect(![...files].some((file) => file.startsWith("src/")), `${report.name} dry-run package must not include source directories.`, {
+    files: [...files].sort(),
+  });
   expect(
-    ![...files].some((file) => file.startsWith("src/") || file.startsWith("test/")),
-    `${report.name} dry-run package must not include source or test directories.`,
+    allowsPublishedTests || ![...files].some((file) => file.startsWith("test/")),
+    `${report.name} dry-run package must not include test directories unless it is a reference pack.`,
     { files: [...files].sort() },
   );
 }

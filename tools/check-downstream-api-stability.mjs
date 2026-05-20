@@ -80,7 +80,8 @@ async function assertDeclaredImports(entry) {
     }
 
     const siblingPath = `packages/${entry.packageName.split("/")[1]}`;
-    expect(!evidenceText.includes(siblingPath), `${dependent.packageName} evidence must not import sibling path ${siblingPath}`);
+    const siblingPathPattern = new RegExp(`(^|[^A-Za-z0-9_-])${siblingPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:/|$)`);
+    expect(!siblingPathPattern.test(evidenceText), `${dependent.packageName} evidence must not import sibling path ${siblingPath}`);
   }
 }
 
@@ -210,26 +211,27 @@ async function assertBuiltPackageSmoke() {
   expect(inspection.layerCount === 1, "textlab should inspect textdoc documents through package APIs.");
 
   const manifest = {
-    schemaVersion: 1,
-    packId: "pack:downstream-api",
+    manifestVersion: "1.0.0",
+    id: "pack:downstream-api",
     packageName: "@ismail-elkorchi/textpack-downstream-api",
-    version: "0.0.0",
-    resources: [
-      {
-        resourceId: "lexicon-downstream-api",
-        lookupKey: "lexicon.downstream-api",
-        kind: "lexicon",
-        path: "resources/lexicon.tsv",
-        language: "en",
-        overlayPrecedence: 1,
-        licenseId: "license-cc0",
-        provenanceId: "prov-local",
-      },
-    ],
-    licenses: [{ id: "license-cc0", spdx: "CC0-1.0" }],
-    provenance: [{ id: "prov-local", origin: "repository-fixture", version: "1" }],
+    version: "0.1.0",
+    kind: ["language"],
+    targets: { languages: ["en"], scripts: ["Latn"] },
+    engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
+    externalData: { unicode: "17.0.0" },
+    capabilities: { lexicons: true },
+    resources: { lexicons: ["resources/lexicon.tsv"] },
+    provides: { lexicons: ["lexicon-downstream-api"] },
     entrypoints: { manifest: "pack.manifest.json" },
-    tests: { smoke: ["resources/lexicon.tsv"], lookup: ["lookup:alice"], overlay: ["overlay:none"] },
+    licenses: { code: ["MIT"], data: ["CC0-1.0"] },
+    provenance: { sources: ["repo:tools/check-downstream-api-stability.mjs"], generated: false },
+    tests: {
+      smoke: ["resources/lexicon.tsv"],
+      negative: ["negative:no-hidden-canonicalizer"],
+      representative: ["representative:alice"],
+    },
+    reviewState: "experimental",
+    composition: { overlayPrecedence: 1 },
   };
   expect(textpack.isTextPackManifestV1(manifest), "textpack built API should validate a manifest.");
 

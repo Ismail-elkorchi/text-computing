@@ -2,6 +2,10 @@
 
 ## 0.1.0
 
+- Migrate the manifest model to `manifestVersion`, pack `id`, resource-family maps, `provides`,
+  compatibility metadata, review state, and required pack tests.
+- Add compatibility checks, explicit pack composition, package governance diagnostics, and support
+  for reference `textpack-*` package validation.
 - Promote the resource package surface to public alpha for bounded package interop.
 - Keep multilingual pack breadth and resource-vetting workflow outside the alpha support claim.
 

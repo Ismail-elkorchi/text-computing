@@ -8,18 +8,33 @@
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textcorpus",
-          "evidenceRefs": ["packages/textcorpus/src/index.ts", "packages/textcorpus/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textdoc"]
+          "evidenceRefs": [
+            "packages/textcorpus/src/index.ts",
+            "packages/textcorpus/test/index.test.ts"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textdoc"
+          ]
         },
         {
           "packageName": "@ismail-elkorchi/textpipeline",
-          "evidenceRefs": ["packages/textpipeline/src/index.ts", "packages/textpipeline/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textdoc"]
+          "evidenceRefs": [
+            "packages/textpipeline/src/index.ts",
+            "packages/textpipeline/test/index.test.ts"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textdoc"
+          ]
         },
         {
           "packageName": "@ismail-elkorchi/textrules",
-          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textdoc"]
+          "evidenceRefs": [
+            "packages/textrules/src/index.ts",
+            "packages/textrules/test/index.test.ts"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textdoc"
+          ]
         }
       ],
       "evidenceRefs": [
@@ -37,9 +52,44 @@
       "status": "proven",
       "dependents": [
         {
+          "packageName": "@ismail-elkorchi/textpack-en-core",
+          "evidenceRefs": [
+            "packages/textpack-en-core/src/index.ts",
+            "packages/textpack-en-core/test/smoke.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textpack"
+          ]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textpack-en-legal",
+          "evidenceRefs": [
+            "packages/textpack-en-legal/src/index.ts",
+            "packages/textpack-en-legal/test/smoke.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textpack"
+          ]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textpack-fr-core",
+          "evidenceRefs": [
+            "packages/textpack-fr-core/src/index.ts",
+            "packages/textpack-fr-core/test/smoke.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textpack"
+          ]
+        },
+        {
           "packageName": "@ismail-elkorchi/textrules",
-          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textpack"]
+          "evidenceRefs": [
+            "packages/textrules/src/index.ts",
+            "packages/textrules/test/index.test.ts"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textpack"
+          ]
         }
       ],
       "evidenceRefs": [
@@ -58,13 +108,23 @@
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textpipeline",
-          "evidenceRefs": ["packages/textpipeline/src/index.ts", "packages/textpipeline/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textprotocol"]
+          "evidenceRefs": [
+            "packages/textpipeline/src/index.ts",
+            "packages/textpipeline/test/index.test.ts"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textprotocol"
+          ]
         },
         {
           "packageName": "@ismail-elkorchi/textrules",
-          "evidenceRefs": ["packages/textrules/src/index.ts", "packages/textrules/test/index.test.ts"],
-          "importSurfaces": ["@ismail-elkorchi/textprotocol"]
+          "evidenceRefs": [
+            "packages/textrules/src/index.ts",
+            "packages/textrules/test/index.test.ts"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textprotocol"
+          ]
         }
       ],
       "evidenceRefs": [

@@ -88,10 +88,12 @@ for (const file of manifestFiles) {
     process.exit(1);
   }
 
-  for (const resource of manifest.resources) {
-    if (!(await fileExists(resource.path))) {
-      console.error(`${path} references missing resource path ${resource.path}`);
-      process.exit(1);
+  for (const resourcePaths of Object.values(manifest.resources)) {
+    for (const resourcePath of resourcePaths) {
+      if (!(await fileExists(resourcePath))) {
+        console.error(`${path} references missing resource path ${resourcePath}`);
+        process.exit(1);
+      }
     }
   }
 

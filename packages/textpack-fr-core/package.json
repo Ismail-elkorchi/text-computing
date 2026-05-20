@@ -1,0 +1,34 @@
+{
+  "name": "@ismail-elkorchi/textpack-fr-core",
+  "version": "0.1.0",
+  "description": "pack:fr-core reference textpack resources.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./pack.manifest.json": "./pack.manifest.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "npm run -s build && node test/smoke.mjs && node test/negative.mjs && node test/representative.mjs",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@ismail-elkorchi/textpack": "0.1.0"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "pack.manifest.json",
+    "resources",
+    "test",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

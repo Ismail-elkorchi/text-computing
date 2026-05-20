@@ -36,7 +36,7 @@
       "additionalProperties": false,
       "required": ["packageName", "evidenceRefs", "importSurfaces"],
       "properties": {
-        "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+$" },
+        "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z][a-z0-9-]*$" },
         "evidenceRefs": {
           "type": "array",
           "minItems": 1,
@@ -46,7 +46,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z]+(?:/[a-z]+)?$" }
+          "items": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z][a-z0-9-]*(?:/[a-z][a-z0-9-]*)?$" }
         }
       }
     },
@@ -57,7 +57,7 @@
       "properties": {
         "packageName": {
           "type": "string",
-          "pattern": "^@ismail-elkorchi/[a-z]+$"
+          "pattern": "^@ismail-elkorchi/[a-z][a-z0-9-]*$"
         },
         "status": { "const": "proven" },
         "dependents": {

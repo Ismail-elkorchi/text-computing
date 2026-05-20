@@ -181,7 +181,7 @@
       "fixtureSplits": {
         "development": [
           "fixtures/pos-morph-lemma/slices.json",
-          "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json"
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
         ],
         "validation": [
           "fixtures/pos-morph-lemma/expected/es-multiword-token.json",

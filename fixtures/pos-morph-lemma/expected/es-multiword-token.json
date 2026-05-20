@@ -239,7 +239,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -280,7 +280,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -325,7 +325,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -416,7 +416,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -456,7 +456,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -500,7 +500,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -612,7 +612,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -661,7 +661,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",
@@ -735,7 +735,7 @@
               "references": [
                 {
                   "kind": "textpack-resource",
-                  "id": "pack:pos-core:lexicon-es-core"
+                  "id": "pack:pos-es-core:lexicon-es-core"
                 },
                 {
                   "kind": "textrules-rule",

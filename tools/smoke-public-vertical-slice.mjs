@@ -100,7 +100,7 @@ import {
   isTextDocDocumentV1,
   textDocDocumentPayloadKind,
 } from "@ismail-elkorchi/textdoc";
-import { loadTextPackResources, textPackManifestSchemaVersion } from "@ismail-elkorchi/textpack";
+import { loadTextPackResources, textPackManifestVersion } from "@ismail-elkorchi/textpack";
 import {
   analyzeRuleBackedNer,
   createTextRulesEntityResourcesFromLoadedPack,
@@ -175,43 +175,31 @@ async function createDocument(text) {
 
 function createFixturePack() {
   const manifest = {
-    schemaVersion: textPackManifestSchemaVersion,
-    packId: "pack:public-vertical-slice-0.1",
+    manifestVersion: textPackManifestVersion,
+    id: "pack:public-vertical-slice-0.1",
     packageName: "@ismail-elkorchi/textpack-public-vertical-slice",
-    version: "0.0.0-fixture",
-    resources: [
-      {
-        resourceId: "gazetteer-public-vertical-slice",
-        lookupKey: "gazetteer.public-vertical-slice.entities",
-        kind: "gazetteer",
-        path: "resources/entities.tsv",
-        language: "en",
-        overlayPrecedence: 10,
-        licenseId: "license:cc0-1.0",
-        provenanceId: "provenance:repository-fixture",
-      },
-    ],
-    licenses: [
-      {
-        id: "license:cc0-1.0",
-        spdx: "CC0-1.0",
-        attribution: "Repository-authored public smoke fixture.",
-      },
-    ],
-    provenance: [
-      {
-        id: "provenance:repository-fixture",
-        origin: "Repository-authored public smoke fixture.",
-        version: "0.1",
-        createdBy: "text-computing maintainers",
-      },
-    ],
-    entrypoints: { manifest: "pack.manifest.json", resourceRoot: "resources/" },
+    version: "0.1.0",
+    kind: ["domain"],
+    targets: { languages: ["en"], scripts: ["Latn"], domains: ["public-vertical-slice"] },
+    engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
+    externalData: { unicode: "17.0.0" },
+    capabilities: { gazetteers: true },
+    resources: { gazetteers: ["resources/entities.tsv"] },
+    provides: { gazetteers: ["gazetteer-public-vertical-slice"] },
+    entrypoints: { manifest: "pack.manifest.json" },
     tests: {
       smoke: ["external-consumer-smoke"],
-      lookup: ["exact-entity-lookup"],
-      overlay: ["single-resource-no-overlay"],
+      negative: ["negative:no-hidden-canonicalizer"],
+      representative: ["representative:entity-fixture"],
     },
+    licenses: { code: ["MIT"], data: ["CC0-1.0"] },
+    provenance: {
+      sources: ["repo:tools/smoke-public-vertical-slice.mjs"],
+      generated: false,
+      createdBy: ["text-computing"],
+    },
+    reviewState: "experimental",
+    composition: { overlayPrecedence: 10 },
     notes: ["Exact fixture resource for Public Vertical Slice 0.1."],
   };
   const contents = {
@@ -295,7 +283,7 @@ const processor = {
     version: "0.0.0",
     requires: {
       layers: ["tokens", "sentences"],
-      packs: [manifest.packId],
+      packs: [manifest.id],
     },
     emits: {
       views: ["analysis-view"],
@@ -315,7 +303,7 @@ const processor = {
   },
 };
 
-const pipelineRun = runTextPipeline(initialDocument, [processor], { packs: [manifest.packId] });
+const pipelineRun = runTextPipeline(initialDocument, [processor], { packs: [manifest.id] });
 const entityLayer = pipelineRun.document.layers.find((layer) => layer.id === "entities");
 expect(entityLayer !== undefined, "Pipeline did not emit an entities layer.", pipelineRun.document.layers);
 expect(entityLayer.annotations.length === 4, "Expected four entity annotations for the smoke fixture.", entityLayer);
@@ -332,7 +320,7 @@ const textdocEnvelope = createEnvelope(
   "@ismail-elkorchi/textdoc",
   "0.0.0",
   pipelineRun.document,
-  [{ kind: "textpack", id: manifest.packId }],
+  [{ kind: "textpack", id: manifest.id }],
 );
 const traceEnvelope = createEnvelope(
   textProtocolPayloadKindTextpipelineTraceV1,
@@ -351,7 +339,7 @@ const conformanceReport = runTextConformanceChecks(
     },
     {
       checkId: "entities-from-fixture-resource",
-      evidenceRefs: [manifest.resources[0].resourceId],
+      evidenceRefs: [manifest.provides.gazetteers[0]],
       run: () => (entityLayer.annotations.length === 4 ? "pass" : "fail"),
     },
     {

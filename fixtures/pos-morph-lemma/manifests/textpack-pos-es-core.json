@@ -1,0 +1,49 @@
+{
+  "manifestVersion": "1.0.0",
+  "id": "pack:pos-es-core",
+  "packageName": "@ismail-elkorchi/textpack-pos-es-core",
+  "version": "0.1.0",
+  "kind": ["language", "morph"],
+  "targets": {
+    "languages": ["es"],
+    "scripts": ["Latn"]
+  },
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0",
+    "@ismail-elkorchi/textrules": "^0.1.0"
+  },
+  "externalData": {
+    "unicode": "17.0.0"
+  },
+  "capabilities": {
+    "lexicons": true
+  },
+  "resources": {
+    "lexicons": ["fixtures/pos-morph-lemma/resources/textpack-pos-core/es.lexicon.json"]
+  },
+  "provides": {
+    "lexicons": ["lexicon-es-core"]
+  },
+  "entrypoints": {
+    "manifest": "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json"
+  },
+  "licenses": {
+    "code": ["MIT"],
+    "data": ["CC0-1.0"]
+  },
+  "provenance": {
+    "sources": ["repo:fixtures/pos-morph-lemma/resources/textpack-pos-core/es.lexicon.json"],
+    "generated": false,
+    "createdBy": ["text-computing"]
+  },
+  "tests": {
+    "smoke": ["fixtures/pos-morph-lemma/resources/textpack-pos-core/es.lexicon.json"],
+    "negative": ["negative:unknown-word"],
+    "representative": ["lookup:lexicon:es"]
+  },
+  "reviewState": "candidate",
+  "composition": {
+    "overlayPrecedence": 10
+  },
+  "limitations": ["Fixture lexicon for POS/morph/lemma validation only."]
+}

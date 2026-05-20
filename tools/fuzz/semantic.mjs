@@ -14,7 +14,7 @@ import {
   isTextPackManifestV1,
   resolveTextPackResources,
   textPackDemoTrimLowercaseCanonicalizer,
-  textPackManifestSchemaVersion,
+  textPackManifestVersion,
 } from "@ismail-elkorchi/textpack";
 import { isTextPipelineTraceV1, runTextPipeline } from "@ismail-elkorchi/textpipeline";
 import {
@@ -196,44 +196,31 @@ function fuzzTextProtocol() {
 }
 
 function manifest(packId, resourceId, overlayPrecedence, profiles = undefined) {
+  const packageSlug = packId.replace("pack:", "textpack-");
   return {
-    schemaVersion: textPackManifestSchemaVersion,
-    packId,
-    packageName: `@ismail-elkorchi/${packId.replace("pack:", "textpack-")}`,
-    version: "0.0.0",
-    resources: [
-      {
-        resourceId,
-        lookupKey: "stopwords.en.core",
-        kind: "stopwords",
-        path: `fixtures/textpack/resources/${resourceId}.txt`,
-        language: "en",
-        ...(profiles ? { profiles } : {}),
-        overlayPrecedence,
-        licenseId: "license-cc0",
-        provenanceId: "prov-fuzz",
-      },
-    ],
-    licenses: [
-      {
-        id: "license-cc0",
-        spdx: "CC0-1.0",
-      },
-    ],
-    provenance: [
-      {
-        id: "prov-fuzz",
-        origin: "semantic-fuzz",
-      },
-    ],
+    manifestVersion: textPackManifestVersion,
+    id: packId,
+    packageName: `@ismail-elkorchi/${packageSlug}`,
+    version: "0.1.0",
+    kind: profiles ? ["language", "domain"] : ["language"],
+    targets: { languages: ["en"], scripts: ["Latn"], ...(profiles ? { profiles } : {}) },
+    engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
+    externalData: { unicode: "17.0.0" },
+    capabilities: { stopwords: true },
+    resources: { stopwords: [`fixtures/textpack/resources/${resourceId}.txt`] },
+    provides: { stopwords: [resourceId] },
     entrypoints: {
       manifest: "pack.manifest.json",
     },
+    licenses: { code: ["MIT"], data: ["CC0-1.0"] },
+    provenance: { sources: ["repo:tools/fuzz/semantic.mjs"], generated: false },
     tests: {
       smoke: ["smoke"],
-      lookup: ["lookup"],
-      overlay: ["overlay"],
+      negative: ["negative"],
+      representative: ["representative"],
     },
+    reviewState: "candidate",
+    composition: { overlayPrecedence },
   };
 }
 

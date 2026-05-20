@@ -2,10 +2,10 @@
 
 ## Why this document exists
 
-Issue `#12` requires a public manifest contract for lexicons, stopwords, gazetteers, abbreviation
-lists, and related resource packs before any loader behavior is treated as accepted. This document
-records the manifest conventions, the licensed fixture resources, the registry query surface, and
-the failure policy that the repository validates.
+Issue `#12` requires a public manifest contract for lexicons, stopwords, gazetteers, rules,
+tagsets, morphology resources, benchmark fixtures, and related resource packs before loader behavior
+is treated as accepted. This document records the manifest conventions, reference fixture packs, the
+registry query surface, and the failure policy that the repository validates.
 
 ## Manifest conventions
 
@@ -14,12 +14,17 @@ The canonical schema is
 
 Each manifest records:
 
-- `packId`, `packageName`, and `version`;
-- resource entries with `resourceId`, `lookupKey`, `kind`, `path`, `overlayPrecedence`,
-  `licenseId`, and `provenanceId`;
-- manifest entrypoints;
-- runnable test references; and
-- shared `licenses` and `provenance` registries referenced by the resource entries.
+- `manifestVersion`, pack `id`, npm `packageName`, and `version`;
+- descriptive `kind`, target scope, engine compatibility, external data versions, and capabilities;
+- resource-family arrays under `resources`;
+- stable logical identifiers under `provides`;
+- manifest and loader entrypoints;
+- required `smoke`, `negative`, and `representative` test references;
+- structured code/data licenses and provenance; and
+- `reviewState` plus optional explicit overlay composition metadata.
+
+Resource paths are package-relative or repository-relative in fixtures. Values in `provides` are
+logical identifiers, not file paths.
 
 ## Loading, overlay, and mismatch policy
 
@@ -27,46 +32,51 @@ Resource registry creation is deterministic:
 
 - manifests are converted into an in-memory resource catalog without reading files or executing pack
   code;
-- registry summaries expose exact language, profile, and resource-kind lists; and
-- registry queries can filter by kind, language, profile, lookup key, pack id, or resource id.
+- registry summaries expose exact language, profile, resource-family, resource-kind, and review-state
+  lists; and
+- registry queries can filter by family, kind, language, profile, lookup key, pack id, or resource id.
 
 Resource lookup is deterministic:
 
-- resources are filtered by kind first;
+- resources are filtered by family or kind first;
 - language comparison is exact by default when both the request and the resource record a language;
 - case folding, trimming, or any other canonicalization is allowed only when the caller supplies an
   explicit canonicalizer;
 - profile-specific resources are only considered when the requested profile matches, while
   profile-free resources remain eligible as base overlays; and
-- successful candidates are ordered by descending `overlayPrecedence`, then `packId`, then
-  `resourceId`.
+- successful candidates are ordered by descending overlay precedence, then pack id, then resource id.
 
 Resource loading is deterministic and side-effect-free:
 
 - callers provide resource file content by manifest path;
-- stopwords and abbreviation lists load as one value per non-empty line;
-- lexicons load from TSV rows with a surface value followed by `key=value` attributes;
+- stopwords, rules, profiles, structures, transducers, and benchmark fixtures load as one value per
+  non-empty line;
+- lexicons, morphology tables, and tagsets load from TSV rows with a surface value followed by
+  `key=value` attributes;
 - gazetteers load from TSV rows with a surface value followed by a label and optional `key=value`
   attributes; and
-- loaded-entry lookup uses exact values by default while preserving original values, line
-  numbers, resource metadata, license references, and provenance references.
-  Canonicalized lookup records the canonicalizer id plus query-side and entry-side original and
-  canonical values.
+- loaded-entry lookup uses exact values by default while preserving original values, line numbers,
+  resource metadata, license metadata, and provenance metadata. Canonicalized lookup records the
+  canonicalizer id plus query-side and entry-side original and canonical values.
 
 The repository treats these conditions as failures or diagnostics:
 
-- duplicate `resourceId` values within one manifest are invalid;
-- `licenseId` and `provenanceId` references must resolve inside the manifest;
-- two resolved resources that share the same exact `lookupKey` and `overlayPrecedence`
-  produce an overlay-conflict diagnostic; and
-- language/profile mismatches are recorded as diagnostics when a request has no successful
-  candidates.
-- malformed resource rows, duplicate loaded entries, and missing resource content are explicit
-  loader diagnostics.
+- duplicate logical ids in `provides`;
+- mismatched resource and provided-id counts for a family;
+- missing license, provenance, target scope, or required test references;
+- resource declarations without matching true capability flags;
+- true capability flags without matching resources;
+- unsafe resource, entrypoint, or test paths;
+- deprecated review state for active packs;
+- overlay conflicts at equal precedence; and
+- language/profile mismatches when a request has no successful candidates.
+
+Malformed resource rows, duplicate loaded entries, and missing resource content are explicit loader
+diagnostics.
 
 ## Fixture inventory
 
-Valid manifests and resources live under
+Repository-level fixture manifests and resources live under
 [`../../fixtures/textpack/`](../../fixtures/textpack/):
 
 - `manifests/textpack-en-core.json`
@@ -76,11 +86,17 @@ Valid manifests and resources live under
 - `resources/textpack-en-legal/*`
 - `resources/textpack-fr-core/*`
 
+Installable reference packs live under:
+
+- `../../packages/textpack-en-core/`
+- `../../packages/textpack-en-legal/`
+- `../../packages/textpack-fr-core/`
+
 Negative controls live under `fixtures/textpack/invalid/`.
 
 ## Verification
 
-`npm run -s check:fixtures` validates the pack manifest schema, checks licensed fixture paths,
-rejects duplicate or missing references, exercises overlay conflicts, builds the registry, loads the
-committed stopword, lexicon, and gazetteer resources, and proves deterministic lookup behavior with
-recorded provenance.
+`npm run -s check:fixtures` validates the pack manifest schema, checks fixture paths, rejects invalid
+metadata, exercises overlay conflicts, builds the registry, loads committed resources, validates
+installable `textpack-*` package manifests, and proves deterministic lookup behavior with recorded
+provenance.
