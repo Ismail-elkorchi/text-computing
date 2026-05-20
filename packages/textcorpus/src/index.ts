@@ -13,7 +13,9 @@ export const textCorpusScoringSchemaVersion = 1 as const;
 export const textCorpusRetrievalSchemaVersion = 1 as const;
 export const textCorpusRetrievalQrelsSchemaVersion = 1 as const;
 export const textCorpusRetrievalEvaluationSchemaVersion = 1 as const;
+export const textCorpusAnalysisSchemaVersion = 1 as const;
 export const textCorpusTokenSource = "explicit-textdoc-token-layer" as const;
+export const textCorpusEvidenceClassE2 = "E2" as const;
 export const textCorpusTfRawCountFormula = "tf.raw-count" as const;
 export const textCorpusDfDocumentCountFormula = "df.document-count" as const;
 export const textCorpusTfidfSklearnSmoothRawFormula = "tfidf.sklearn-smooth-raw" as const;
@@ -27,7 +29,9 @@ export type TextCorpusRetrievalSchemaVersion = typeof textCorpusRetrievalSchemaV
 export type TextCorpusRetrievalQrelsSchemaVersion = typeof textCorpusRetrievalQrelsSchemaVersion;
 export type TextCorpusRetrievalEvaluationSchemaVersion =
   typeof textCorpusRetrievalEvaluationSchemaVersion;
+export type TextCorpusAnalysisSchemaVersion = typeof textCorpusAnalysisSchemaVersion;
 export type TextCorpusTokenSource = typeof textCorpusTokenSource;
+export type TextCorpusEvidenceClass = typeof textCorpusEvidenceClassE2;
 export type TextCorpusFormulaId =
   | typeof textCorpusTfRawCountFormula
   | typeof textCorpusDfDocumentCountFormula
@@ -65,6 +69,29 @@ export interface CreateTextCorpusCollectionOptions {
 export type TextCorpusMetadataFilters = Readonly<
   Record<string, string | readonly string[]>
 >;
+
+export type TextCorpusNormalizedMetadataFilters = Readonly<Record<string, readonly string[]>>;
+
+export interface TextCorpusSelectionDocumentRefV1 {
+  readonly id: string;
+  readonly documentId: string;
+  readonly revision: string;
+  readonly viewId: string;
+  readonly tokenLayerId: string;
+  readonly tokenCount: number;
+  readonly metadata?: Readonly<Record<string, string>>;
+}
+
+export interface TextCorpusSelectionProvenanceV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly units: "utf16-code-unit";
+  readonly documentOrder: readonly string[];
+  readonly tokenCount: number;
+  readonly documents: readonly TextCorpusSelectionDocumentRefV1[];
+  readonly metadataFilters?: TextCorpusNormalizedMetadataFilters;
+}
 
 export interface TextCorpusFingerprintIndexOptions {
   readonly shingleSize: number;
@@ -122,6 +149,8 @@ export interface TextCorpusScoringResultV1 {
   readonly schemaVersion: TextCorpusScoringSchemaVersion;
   readonly corpusId: string;
   readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
   readonly formulaSet: readonly TextCorpusFormulaId[];
   readonly documentOrder: readonly string[];
   readonly termOrder: readonly string[];
@@ -195,6 +224,8 @@ export interface TextCorpusRetrievalIndexV1 {
   readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
   readonly corpusId: string;
   readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
   readonly formula: TextCorpusRetrievalFormulaId;
   readonly documentOrder: readonly string[];
   readonly termOrder: readonly string[];
@@ -257,6 +288,8 @@ export interface TextCorpusRetrievalResultV1 {
   readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
   readonly corpusId: string;
   readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
   readonly formula: TextCorpusRetrievalFormulaId;
   readonly results: readonly TextCorpusRetrievalQueryResult[];
 }
@@ -305,6 +338,8 @@ export interface TextCorpusRetrievalEvaluationResultV1 {
   readonly schemaVersion: TextCorpusRetrievalEvaluationSchemaVersion;
   readonly taskId: "nlp-retrieval";
   readonly corpusId: string;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
   readonly formula: TextCorpusRetrievalFormulaId;
   readonly k: number;
   readonly relevantGradeThreshold: number;
@@ -312,6 +347,159 @@ export interface TextCorpusRetrievalEvaluationResultV1 {
   readonly summary: TextCorpusRetrievalEvaluationSummary;
   readonly queries: readonly TextCorpusRetrievalQueryEvaluation[];
 }
+
+export interface TextCorpusAnalysisSelectionOptions {
+  readonly metadataFilters?: TextCorpusMetadataFilters;
+}
+
+export interface TextCorpusConcordanceOptions extends TextCorpusAnalysisSelectionOptions {
+  readonly query: string;
+  readonly window?: number;
+}
+
+export interface TextCorpusConcordanceRowV1 {
+  readonly docId: string;
+  readonly documentId: string;
+  readonly tokenIndex: number;
+  readonly left: readonly string[];
+  readonly match: string;
+  readonly right: readonly string[];
+}
+
+export interface TextCorpusConcordanceResultV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly query: string;
+  readonly window: number;
+  readonly rows: readonly TextCorpusConcordanceRowV1[];
+}
+
+export interface TextCorpusFrequencyOptions extends TextCorpusAnalysisSelectionOptions {}
+
+export interface TextCorpusFrequencyRowV1 {
+  readonly term: string;
+  readonly count: number;
+  readonly documentFrequency: number;
+  readonly relativeFrequency: number;
+}
+
+export interface TextCorpusFrequencyResultV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly rows: readonly TextCorpusFrequencyRowV1[];
+}
+
+export interface TextCorpusNgramOptions extends TextCorpusAnalysisSelectionOptions {
+  readonly n: number;
+}
+
+export interface TextCorpusNgramRowV1 {
+  readonly ngram: readonly string[];
+  readonly count: number;
+  readonly documentFrequency: number;
+  readonly relativeFrequency: number;
+}
+
+export interface TextCorpusNgramResultV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly n: number;
+  readonly rows: readonly TextCorpusNgramRowV1[];
+}
+
+export interface TextCorpusCooccurrenceOptions extends TextCorpusAnalysisSelectionOptions {
+  readonly window?: number;
+}
+
+export interface TextCorpusCooccurrenceRowV1 {
+  readonly term: string;
+  readonly coTerm: string;
+  readonly count: number;
+  readonly termCount: number;
+  readonly coTermCount: number;
+  readonly pmiLog2: number;
+}
+
+export interface TextCorpusCooccurrenceResultV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly window: number;
+  readonly rows: readonly TextCorpusCooccurrenceRowV1[];
+}
+
+export interface TextCorpusCollocateOptions extends TextCorpusCooccurrenceOptions {
+  readonly term: string;
+}
+
+export interface TextCorpusCollocateResultV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly term: string;
+  readonly window: number;
+  readonly rows: readonly TextCorpusCooccurrenceRowV1[];
+}
+
+export type TextCorpusPairwiseRelationLabel =
+  | "exact-duplicate"
+  | "near-duplicate"
+  | "shared-reuse";
+
+export interface TextCorpusPairwiseRelationOptions extends TextCorpusAnalysisSelectionOptions {
+  readonly shingleSize: number;
+  readonly windowSize: number;
+  readonly hashAlgorithm?: Hash64AlgoId;
+  readonly nearDuplicateThreshold?: number;
+}
+
+export interface TextCorpusPairwiseRelationRowV1 {
+  readonly leftDocId: string;
+  readonly rightDocId: string;
+  readonly relation: TextCorpusPairwiseRelationLabel;
+  readonly sharedFingerprintCount: number;
+  readonly leftFingerprintCount: number;
+  readonly rightFingerprintCount: number;
+  readonly jaccard: number;
+}
+
+export interface TextCorpusPairwiseRelationResultV1 {
+  readonly schemaVersion: TextCorpusAnalysisSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly shingleSize: number;
+  readonly windowSize: number;
+  readonly hashAlgorithm: Hash64AlgoId;
+  readonly nearDuplicateThreshold: number;
+  readonly rows: readonly TextCorpusPairwiseRelationRowV1[];
+}
+
+export type TextCorpusArtifactV1 =
+  | TextCorpusConcordanceResultV1
+  | TextCorpusFrequencyResultV1
+  | TextCorpusNgramResultV1
+  | TextCorpusCooccurrenceResultV1
+  | TextCorpusCollocateResultV1
+  | TextCorpusPairwiseRelationResultV1
+  | TextCorpusScoringResultV1
+  | TextCorpusRetrievalIndexV1
+  | TextCorpusRetrievalResultV1
+  | TextCorpusRetrievalEvaluationResultV1;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -434,6 +622,159 @@ function countTerms(tokens: readonly string[]): ReadonlyMap<string, number> {
     counts.set(token, (counts.get(token) ?? 0) + 1);
   }
   return counts;
+}
+
+function positiveInteger(value: unknown, label: string): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    throw new TypeError(`${label} must be a positive integer`);
+  }
+  return value;
+}
+
+function nonNegativeInteger(value: unknown, label: string): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+    throw new TypeError(`${label} must be a non-negative integer`);
+  }
+  return value;
+}
+
+function normalizeMetadataFilters(
+  filters: TextCorpusMetadataFilters | undefined,
+): TextCorpusNormalizedMetadataFilters | undefined {
+  if (filters === undefined) return undefined;
+  if (!isRecord(filters)) {
+    throw new TypeError("textcorpus metadata filters must be a record");
+  }
+  const normalized: Record<string, readonly string[]> = {};
+  for (const [key, value] of Object.entries(filters).sort(([left], [right]) => left.localeCompare(right))) {
+    if (!isNonEmptyString(key)) {
+      throw new TypeError("textcorpus metadata filter keys must be non-empty strings");
+    }
+    if (typeof value === "string") {
+      if (!isNonEmptyString(value)) {
+        throw new TypeError(`metadata filter ${key} must be a non-empty string`);
+      }
+      normalized[key] = [value];
+      continue;
+    }
+    if (!Array.isArray(value) || value.length === 0 || !value.every((entry) => isNonEmptyString(entry))) {
+      throw new TypeError(`metadata filter ${key} must be a non-empty string or string array`);
+    }
+    normalized[key] = [...new Set(value)].sort(compareTerms);
+  }
+  return normalized;
+}
+
+function entryMatchesMetadataFilters(
+  entry: TextCorpusEntry,
+  filters: TextCorpusNormalizedMetadataFilters | undefined,
+): boolean {
+  if (filters === undefined) return true;
+  return Object.entries(filters).every(([key, acceptedValues]) => {
+    const actualValue = entry.metadata?.[key];
+    return actualValue !== undefined && acceptedValues.includes(actualValue);
+  });
+}
+
+interface TextCorpusSelectedEntry {
+  readonly entry: TextCorpusEntry;
+  readonly tokens: readonly string[];
+}
+
+function selectTextCorpusEntries(
+  collection: TextCorpusCollectionV1,
+  metadataFilters?: TextCorpusMetadataFilters,
+): {
+  readonly entries: readonly TextCorpusSelectedEntry[];
+  readonly selection: TextCorpusSelectionProvenanceV1;
+} {
+  if (!isTextCorpusCollectionV1(collection)) {
+    throw new TypeError("textcorpus collection must satisfy TextCorpusCollectionV1");
+  }
+  const normalizedFilters = normalizeMetadataFilters(metadataFilters);
+  const entries = collection.entries
+    .filter((entry) => entryMatchesMetadataFilters(entry, normalizedFilters))
+    .map((entry) => ({ entry, tokens: getEntryTokenTexts(entry) }));
+  const documents = entries.map(({ entry, tokens }) => ({
+    id: entry.id,
+    documentId: entry.document.documentId,
+    revision: entry.document.revision,
+    viewId: entry.viewId,
+    tokenLayerId: entry.tokenLayerId,
+    tokenCount: tokens.length,
+    ...(entry.metadata ? { metadata: entry.metadata } : {}),
+  }));
+  return {
+    entries,
+    selection: {
+      schemaVersion: textCorpusAnalysisSchemaVersion,
+      corpusId: collection.corpusId,
+      tokenSource: textCorpusTokenSource,
+      units: "utf16-code-unit",
+      documentOrder: entries.map(({ entry }) => entry.id),
+      tokenCount: entries.reduce((sum, selected) => sum + selected.tokens.length, 0),
+      documents,
+      ...(normalizedFilters ? { metadataFilters: normalizedFilters } : {}),
+    },
+  };
+}
+
+function tokenCountMap(selectedEntries: readonly TextCorpusSelectedEntry[]): ReadonlyMap<string, number> {
+  const counts = new Map<string, number>();
+  for (const { tokens } of selectedEntries) {
+    for (const [term, count] of countTerms(tokens)) {
+      counts.set(term, (counts.get(term) ?? 0) + count);
+    }
+  }
+  return counts;
+}
+
+function documentFrequencyMapForTerms(selectedEntries: readonly TextCorpusSelectedEntry[]): ReadonlyMap<string, number> {
+  const documentFrequency = new Map<string, number>();
+  for (const { tokens } of selectedEntries) {
+    for (const term of new Set(tokens)) {
+      documentFrequency.set(term, (documentFrequency.get(term) ?? 0) + 1);
+    }
+  }
+  return documentFrequency;
+}
+
+function relativeFrequency(count: number, total: number): number {
+  return total === 0 ? 0 : count / total;
+}
+
+function ngramKey(ngram: readonly string[]): string {
+  return ngram.join("\u001f");
+}
+
+function splitNgramKey(key: string): readonly string[] {
+  return key.length === 0 ? [] : key.split("\u001f");
+}
+
+function compareStringArrays(left: readonly string[], right: readonly string[]): number {
+  const length = Math.min(left.length, right.length);
+  for (let index = 0; index < length; index += 1) {
+    const leftValue = left[index] ?? "";
+    const rightValue = right[index] ?? "";
+    const compared = leftValue.localeCompare(rightValue);
+    if (compared !== 0) return compared;
+  }
+  return left.length - right.length;
+}
+
+function cooccurrenceKey(left: string, right: string): string {
+  const [term, coTerm] = [left, right].sort(compareTerms);
+  return `${term}\u001f${coTerm}`;
+}
+
+function splitCooccurrenceKey(key: string): readonly [string, string] {
+  const [term = "", coTerm = ""] = key.split("\u001f");
+  return [term, coTerm];
+}
+
+function pmiLog2(count: number, termCount: number, coTermCount: number, totalPairs: number): number {
+  if (count <= 0 || termCount <= 0 || coTermCount <= 0 || totalPairs <= 0) return 0;
+  return Math.log2((count * totalPairs) / (termCount * coTermCount));
 }
 
 function validateQueries(queries: readonly TextCorpusQuery[]): void {
@@ -665,6 +1006,265 @@ export function isTextCorpusCollectionV1(value: unknown): value is TextCorpusCol
   );
 }
 
+function isTextCorpusEvidenceClass(value: unknown): value is TextCorpusEvidenceClass {
+  return value === textCorpusEvidenceClassE2;
+}
+
+function isNormalizedMetadataFilters(value: unknown): value is TextCorpusNormalizedMetadataFilters {
+  return (
+    isRecord(value) &&
+    Object.entries(value).every(
+      ([key, entryValue]) =>
+        isNonEmptyString(key) &&
+        Array.isArray(entryValue) &&
+        entryValue.length > 0 &&
+        entryValue.every((item) => isNonEmptyString(item)),
+    )
+  );
+}
+
+function isTextCorpusSelectionDocumentRefV1(value: unknown): value is TextCorpusSelectionDocumentRefV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.revision) &&
+    isNonEmptyString(value.viewId) &&
+    isNonEmptyString(value.tokenLayerId) &&
+    typeof value.tokenCount === "number" &&
+    Number.isInteger(value.tokenCount) &&
+    value.tokenCount >= 0 &&
+    (value.metadata === undefined || isStringRecord(value.metadata))
+  );
+}
+
+export function isTextCorpusSelectionProvenanceV1(value: unknown): value is TextCorpusSelectionProvenanceV1 {
+  if (
+    !(
+      isRecord(value) &&
+      value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+      isNonEmptyString(value.corpusId) &&
+      value.tokenSource === textCorpusTokenSource &&
+      value.units === "utf16-code-unit" &&
+      Array.isArray(value.documentOrder) &&
+      value.documentOrder.every((entry) => isNonEmptyString(entry)) &&
+      typeof value.tokenCount === "number" &&
+      Number.isInteger(value.tokenCount) &&
+      value.tokenCount >= 0 &&
+      Array.isArray(value.documents) &&
+      value.documents.every((entry) => isTextCorpusSelectionDocumentRefV1(entry)) &&
+      (value.metadataFilters === undefined || isNormalizedMetadataFilters(value.metadataFilters))
+    )
+  ) {
+    return false;
+  }
+  const documents = value.documents as readonly TextCorpusSelectionDocumentRefV1[];
+  const documentOrder = value.documentOrder as readonly string[];
+  return (
+    documents.map((entry) => entry.id).join("\u001f") === documentOrder.join("\u001f") &&
+    documents.reduce((sum, entry) => sum + entry.tokenCount, 0) === value.tokenCount
+  );
+}
+
+function selectionMatchesCorpus(
+  selection: unknown,
+  corpusId: unknown,
+): selection is TextCorpusSelectionProvenanceV1 {
+  return isTextCorpusSelectionProvenanceV1(selection) && selection.corpusId === corpusId;
+}
+
+function isTextCorpusConcordanceRowV1(value: unknown): value is TextCorpusConcordanceRowV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.docId) &&
+    isNonEmptyString(value.documentId) &&
+    typeof value.tokenIndex === "number" &&
+    Number.isInteger(value.tokenIndex) &&
+    value.tokenIndex >= 0 &&
+    Array.isArray(value.left) &&
+    value.left.every((entry) => typeof entry === "string") &&
+    typeof value.match === "string" &&
+    Array.isArray(value.right) &&
+    value.right.every((entry) => typeof entry === "string")
+  );
+}
+
+export function isTextCorpusConcordanceResultV1(value: unknown): value is TextCorpusConcordanceResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    isNonEmptyString(value.query) &&
+    typeof value.window === "number" &&
+    Number.isInteger(value.window) &&
+    value.window >= 0 &&
+    Array.isArray(value.rows) &&
+    value.rows.every((entry) => isTextCorpusConcordanceRowV1(entry))
+  );
+}
+
+function isFrequencyRow(value: unknown): value is TextCorpusFrequencyRowV1 {
+  return (
+    isRecord(value) &&
+    typeof value.term === "string" &&
+    typeof value.count === "number" &&
+    Number.isInteger(value.count) &&
+    value.count >= 0 &&
+    typeof value.documentFrequency === "number" &&
+    Number.isInteger(value.documentFrequency) &&
+    value.documentFrequency >= 0 &&
+    typeof value.relativeFrequency === "number" &&
+    Number.isFinite(value.relativeFrequency) &&
+    value.relativeFrequency >= 0
+  );
+}
+
+export function isTextCorpusFrequencyResultV1(value: unknown): value is TextCorpusFrequencyResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    Array.isArray(value.rows) &&
+    value.rows.every((entry) => isFrequencyRow(entry))
+  );
+}
+
+function isNgramRow(value: unknown): value is TextCorpusNgramRowV1 {
+  return (
+    isRecord(value) &&
+    Array.isArray(value.ngram) &&
+    value.ngram.length >= 1 &&
+    value.ngram.every((entry) => typeof entry === "string") &&
+    isFrequencyRow({ term: value.ngram.join("\u001f"), count: value.count, documentFrequency: value.documentFrequency, relativeFrequency: value.relativeFrequency })
+  );
+}
+
+export function isTextCorpusNgramResultV1(value: unknown): value is TextCorpusNgramResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    typeof value.n === "number" &&
+    Number.isInteger(value.n) &&
+    value.n >= 1 &&
+    Array.isArray(value.rows) &&
+    value.rows.every((entry) => isNgramRow(entry))
+  );
+}
+
+function isCooccurrenceRow(value: unknown): value is TextCorpusCooccurrenceRowV1 {
+  return (
+    isRecord(value) &&
+    typeof value.term === "string" &&
+    typeof value.coTerm === "string" &&
+    typeof value.count === "number" &&
+    Number.isInteger(value.count) &&
+    value.count >= 0 &&
+    typeof value.termCount === "number" &&
+    Number.isInteger(value.termCount) &&
+    value.termCount >= 0 &&
+    typeof value.coTermCount === "number" &&
+    Number.isInteger(value.coTermCount) &&
+    value.coTermCount >= 0 &&
+    typeof value.pmiLog2 === "number" &&
+    Number.isFinite(value.pmiLog2)
+  );
+}
+
+export function isTextCorpusCooccurrenceResultV1(value: unknown): value is TextCorpusCooccurrenceResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    typeof value.window === "number" &&
+    Number.isInteger(value.window) &&
+    value.window >= 1 &&
+    Array.isArray(value.rows) &&
+    value.rows.every((entry) => isCooccurrenceRow(entry))
+  );
+}
+
+export function isTextCorpusCollocateResultV1(value: unknown): value is TextCorpusCollocateResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    isNonEmptyString(value.term) &&
+    typeof value.window === "number" &&
+    Number.isInteger(value.window) &&
+    value.window >= 1 &&
+    Array.isArray(value.rows) &&
+    value.rows.every((entry) => isCooccurrenceRow(entry))
+  );
+}
+
+function isPairwiseRelationLabel(value: unknown): value is TextCorpusPairwiseRelationLabel {
+  return value === "exact-duplicate" || value === "near-duplicate" || value === "shared-reuse";
+}
+
+function isPairwiseRelationRow(value: unknown): value is TextCorpusPairwiseRelationRowV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.leftDocId) &&
+    isNonEmptyString(value.rightDocId) &&
+    isPairwiseRelationLabel(value.relation) &&
+    typeof value.sharedFingerprintCount === "number" &&
+    Number.isInteger(value.sharedFingerprintCount) &&
+    value.sharedFingerprintCount >= 0 &&
+    typeof value.leftFingerprintCount === "number" &&
+    Number.isInteger(value.leftFingerprintCount) &&
+    value.leftFingerprintCount >= 0 &&
+    typeof value.rightFingerprintCount === "number" &&
+    Number.isInteger(value.rightFingerprintCount) &&
+    value.rightFingerprintCount >= 0 &&
+    typeof value.jaccard === "number" &&
+    Number.isFinite(value.jaccard) &&
+    value.jaccard >= 0 &&
+    value.jaccard <= 1
+  );
+}
+
+export function isTextCorpusPairwiseRelationResultV1(value: unknown): value is TextCorpusPairwiseRelationResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusAnalysisSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    typeof value.shingleSize === "number" &&
+    Number.isInteger(value.shingleSize) &&
+    value.shingleSize >= 1 &&
+    typeof value.windowSize === "number" &&
+    Number.isInteger(value.windowSize) &&
+    value.windowSize >= 1 &&
+    (value.hashAlgorithm === "fnv1a64-utf16le" ||
+      value.hashAlgorithm === "fnv1a64-utf8" ||
+      value.hashAlgorithm === "xxh64-utf8") &&
+    typeof value.nearDuplicateThreshold === "number" &&
+    Number.isFinite(value.nearDuplicateThreshold) &&
+    value.nearDuplicateThreshold >= 0 &&
+    value.nearDuplicateThreshold <= 1 &&
+    Array.isArray(value.rows) &&
+    value.rows.every((entry) => isPairwiseRelationRow(entry))
+  );
+}
+
 export function isTextCorpusFingerprintIndex(
   value: unknown,
 ): value is TextCorpusFingerprintIndex {
@@ -699,6 +1299,8 @@ export function isTextCorpusScoringResultV1(value: unknown): value is TextCorpus
     value.schemaVersion === textCorpusScoringSchemaVersion &&
     isNonEmptyString(value.corpusId) &&
     value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
     Array.isArray(value.formulaSet) &&
     value.formulaSet.every(
       (entry) =>
@@ -760,6 +1362,8 @@ export function isTextCorpusRetrievalIndexV1(value: unknown): value is TextCorpu
     value.schemaVersion === textCorpusRetrievalSchemaVersion &&
     isNonEmptyString(value.corpusId) &&
     value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
     isRetrievalFormula(value.formula) &&
     Array.isArray(value.documentOrder) &&
     value.documentOrder.every((entry) => isNonEmptyString(entry)) &&
@@ -787,6 +1391,8 @@ export function isTextCorpusRetrievalResultV1(value: unknown): value is TextCorp
     value.schemaVersion === textCorpusRetrievalSchemaVersion &&
     isNonEmptyString(value.corpusId) &&
     value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
     isRetrievalFormula(value.formula) &&
     Array.isArray(value.results) &&
     value.results.every(
@@ -860,6 +1466,8 @@ export function isTextCorpusRetrievalEvaluationResultV1(
     value.schemaVersion === textCorpusRetrievalEvaluationSchemaVersion &&
     value.taskId === "nlp-retrieval" &&
     isNonEmptyString(value.corpusId) &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
     isRetrievalFormula(value.formula) &&
     typeof value.k === "number" &&
     Number.isInteger(value.k) &&
@@ -950,6 +1558,256 @@ export function sliceTextCorpusByMetadata(
   return {
     ...collection,
     entries,
+  };
+}
+
+export function computeTextCorpusConcordance(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusConcordanceOptions,
+): TextCorpusConcordanceResultV1 {
+  if (!isNonEmptyString(options.query)) {
+    throw new TypeError("textcorpus concordance query must be a non-empty string");
+  }
+  const window = nonNegativeInteger(options.window ?? 5, "textcorpus concordance window");
+  const { entries, selection } = selectTextCorpusEntries(collection, options.metadataFilters);
+  const rows: TextCorpusConcordanceRowV1[] = [];
+  for (const { entry, tokens } of entries) {
+    for (const [tokenIndex, token] of tokens.entries()) {
+      if (token !== options.query) continue;
+      rows.push({
+        docId: entry.id,
+        documentId: entry.document.documentId,
+        tokenIndex,
+        left: tokens.slice(Math.max(0, tokenIndex - window), tokenIndex),
+        match: token,
+        right: tokens.slice(tokenIndex + 1, tokenIndex + window + 1),
+      });
+    }
+  }
+  rows.sort((left, right) => left.docId.localeCompare(right.docId) || left.tokenIndex - right.tokenIndex);
+  return {
+    schemaVersion: textCorpusAnalysisSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
+    query: options.query,
+    window,
+    rows,
+  };
+}
+
+export function computeTextCorpusFrequencies(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusFrequencyOptions = {},
+): TextCorpusFrequencyResultV1 {
+  const { entries, selection } = selectTextCorpusEntries(collection, options.metadataFilters);
+  const counts = tokenCountMap(entries);
+  const documentFrequency = documentFrequencyMapForTerms(entries);
+  const totalTokens = selection.tokenCount;
+  const rows = [...counts.entries()]
+    .sort(([left], [right]) => compareTerms(left, right))
+    .map(([term, count]) => ({
+      term,
+      count,
+      documentFrequency: documentFrequency.get(term) ?? 0,
+      relativeFrequency: relativeFrequency(count, totalTokens),
+    }));
+  return {
+    schemaVersion: textCorpusAnalysisSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
+    rows,
+  };
+}
+
+export function computeTextCorpusNgrams(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusNgramOptions,
+): TextCorpusNgramResultV1 {
+  const n = positiveInteger(options.n, "textcorpus n-gram size");
+  const { entries, selection } = selectTextCorpusEntries(collection, options.metadataFilters);
+  const counts = new Map<string, number>();
+  const documentFrequency = new Map<string, number>();
+  let totalNgrams = 0;
+  for (const { tokens } of entries) {
+    const seenInDocument = new Set<string>();
+    for (let tokenIndex = 0; tokenIndex <= tokens.length - n; tokenIndex += 1) {
+      const key = ngramKey(tokens.slice(tokenIndex, tokenIndex + n));
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+      seenInDocument.add(key);
+      totalNgrams += 1;
+    }
+    for (const key of seenInDocument) {
+      documentFrequency.set(key, (documentFrequency.get(key) ?? 0) + 1);
+    }
+  }
+  const rows = [...counts.entries()]
+    .map(([key, count]) => ({
+      ngram: splitNgramKey(key),
+      count,
+      documentFrequency: documentFrequency.get(key) ?? 0,
+      relativeFrequency: relativeFrequency(count, totalNgrams),
+    }))
+    .sort((left, right) => compareStringArrays(left.ngram, right.ngram));
+  return {
+    schemaVersion: textCorpusAnalysisSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
+    n,
+    rows,
+  };
+}
+
+export function computeTextCorpusCooccurrences(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusCooccurrenceOptions = {},
+): TextCorpusCooccurrenceResultV1 {
+  const window = positiveInteger(options.window ?? 5, "textcorpus co-occurrence window");
+  const { entries, selection } = selectTextCorpusEntries(collection, options.metadataFilters);
+  const termCounts = tokenCountMap(entries);
+  const pairCounts = new Map<string, number>();
+  let totalPairs = 0;
+  for (const { tokens } of entries) {
+    for (let tokenIndex = 0; tokenIndex < tokens.length; tokenIndex += 1) {
+      const left = tokens[tokenIndex] ?? "";
+      for (
+        let neighborIndex = tokenIndex + 1;
+        neighborIndex < tokens.length && neighborIndex <= tokenIndex + window;
+        neighborIndex += 1
+      ) {
+        const right = tokens[neighborIndex] ?? "";
+        const key = cooccurrenceKey(left, right);
+        pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
+        totalPairs += 1;
+      }
+    }
+  }
+  const rows = [...pairCounts.entries()]
+    .map(([key, count]) => {
+      const [term, coTerm] = splitCooccurrenceKey(key);
+      const termCount = termCounts.get(term) ?? 0;
+      const coTermCount = termCounts.get(coTerm) ?? 0;
+      return {
+        term,
+        coTerm,
+        count,
+        termCount,
+        coTermCount,
+        pmiLog2: pmiLog2(count, termCount, coTermCount, totalPairs),
+      };
+    })
+    .sort((left, right) => left.term.localeCompare(right.term) || left.coTerm.localeCompare(right.coTerm));
+  return {
+    schemaVersion: textCorpusAnalysisSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
+    window,
+    rows,
+  };
+}
+
+export function computeTextCorpusCollocates(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusCollocateOptions,
+): TextCorpusCollocateResultV1 {
+  if (!isNonEmptyString(options.term)) {
+    throw new TypeError("textcorpus collocate term must be a non-empty string");
+  }
+  const cooccurrences = computeTextCorpusCooccurrences(collection, options);
+  const rows = cooccurrences.rows
+    .flatMap((row): readonly TextCorpusCooccurrenceRowV1[] => {
+      if (row.term === options.term) return [row];
+      if (row.coTerm === options.term) {
+        return [
+          {
+            term: options.term,
+            coTerm: row.term,
+            count: row.count,
+            termCount: row.coTermCount,
+            coTermCount: row.termCount,
+            pmiLog2: row.pmiLog2,
+          },
+        ];
+      }
+      return [];
+    })
+    .sort((left, right) => left.coTerm.localeCompare(right.coTerm));
+  return {
+    schemaVersion: textCorpusAnalysisSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection: cooccurrences.selection,
+    term: options.term,
+    window: cooccurrences.window,
+    rows,
+  };
+}
+
+export function computeTextCorpusPairwiseRelations(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusPairwiseRelationOptions,
+): TextCorpusPairwiseRelationResultV1 {
+  const shingleSize = positiveInteger(options.shingleSize, "textcorpus pairwise shingle size");
+  const windowSize = positiveInteger(options.windowSize, "textcorpus pairwise window size");
+  const nearDuplicateThreshold = options.nearDuplicateThreshold ?? 0.8;
+  if (!Number.isFinite(nearDuplicateThreshold) || nearDuplicateThreshold < 0 || nearDuplicateThreshold > 1) {
+    throw new TypeError("textcorpus near-duplicate threshold must be between 0 and 1");
+  }
+  const { entries, selection } = selectTextCorpusEntries(collection, options.metadataFilters);
+  const selectedCollection: TextCorpusCollectionV1 = {
+    ...collection,
+    entries: entries.map(({ entry }) => entry),
+  };
+  const fingerprintIndex = buildTextCorpusFingerprintIndex(selectedCollection, {
+    shingleSize,
+    windowSize,
+    ...(options.hashAlgorithm ? { hashAlgorithm: options.hashAlgorithm } : {}),
+  });
+  const rows: TextCorpusPairwiseRelationRowV1[] = [];
+  const documentOrder = selection.documentOrder;
+  for (let leftIndex = 0; leftIndex < documentOrder.length; leftIndex += 1) {
+    const leftDocId = documentOrder[leftIndex] ?? "";
+    const leftFingerprints = new Set(fingerprintIndex.docFingerprints[leftDocId] ?? []);
+    for (let rightIndex = leftIndex + 1; rightIndex < documentOrder.length; rightIndex += 1) {
+      const rightDocId = documentOrder[rightIndex] ?? "";
+      const rightFingerprints = new Set(fingerprintIndex.docFingerprints[rightDocId] ?? []);
+      const shared = [...leftFingerprints].filter((fingerprint) => rightFingerprints.has(fingerprint));
+      if (shared.length === 0) continue;
+      const unionCount = new Set([...leftFingerprints, ...rightFingerprints]).size;
+      const jaccard = unionCount === 0 ? 0 : shared.length / unionCount;
+      const relation: TextCorpusPairwiseRelationLabel =
+        jaccard === 1 ? "exact-duplicate" : jaccard >= nearDuplicateThreshold ? "near-duplicate" : "shared-reuse";
+      rows.push({
+        leftDocId,
+        rightDocId,
+        relation,
+        sharedFingerprintCount: shared.length,
+        leftFingerprintCount: leftFingerprints.size,
+        rightFingerprintCount: rightFingerprints.size,
+        jaccard,
+      });
+    }
+  }
+  rows.sort((left, right) => left.leftDocId.localeCompare(right.leftDocId) || left.rightDocId.localeCompare(right.rightDocId));
+  return {
+    schemaVersion: textCorpusAnalysisSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
+    shingleSize,
+    windowSize,
+    hashAlgorithm: fingerprintIndex.hashAlgorithm,
+    nearDuplicateThreshold,
+    rows,
   };
 }
 
@@ -1046,8 +1904,9 @@ export function computeTextCorpusScoring(
 
   const queries = options.queries ?? [];
   validateQueries(queries);
-  const documentOrder = collection.entries.map((entry) => entry.id);
-  const tokenLists = collection.entries.map((entry) => getEntryTokenTexts(entry));
+  const { entries, selection } = selectTextCorpusEntries(collection);
+  const documentOrder = entries.map(({ entry }) => entry.id);
+  const tokenLists = entries.map(({ tokens }) => tokens);
   const termCounts = tokenLists.map((tokens) => countTerms(tokens));
   const termSet = new Set<string>();
   const documentFrequency = new Map<string, number>();
@@ -1060,11 +1919,11 @@ export function computeTextCorpusScoring(
   }
 
   const termOrder = [...termSet].sort(compareTerms);
-  const documentCount = collection.entries.length;
+  const documentCount = entries.length;
   const averageDocumentLength =
     tokenLists.reduce((sum, tokens) => sum + tokens.length, 0) / Math.max(1, documentCount);
 
-  const documents = collection.entries.map((entry, index) => {
+  const documents = entries.map(({ entry }, index) => {
     const counts = termCounts[index] ?? new Map<string, number>();
     const tf: TextCorpusTermValue[] = [];
     const tfidf: TextCorpusTermValue[] = [];
@@ -1085,7 +1944,7 @@ export function computeTextCorpusScoring(
 
   const queryScores = queries.map((query) => ({
     id: query.id,
-    bm25: collection.entries.map((entry, index) => {
+    bm25: entries.map(({ entry }, index) => {
       const counts = termCounts[index] ?? new Map<string, number>();
       const documentLength = tokenLists[index]?.length ?? 0;
       const score = query.tokens.reduce((sum, term) => {
@@ -1104,6 +1963,8 @@ export function computeTextCorpusScoring(
     schemaVersion: textCorpusScoringSchemaVersion,
     corpusId: collection.corpusId,
     tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
     formulaSet: [
       textCorpusTfRawCountFormula,
       textCorpusDfDocumentCountFormula,
@@ -1184,9 +2045,9 @@ export function buildTextCorpusRetrievalIndex(
   }
   const fieldSpecs =
     formula === textCorpusBm25fFormula ? normalizeRetrievalFieldSpecs(options.fields) : [];
+  const { entries, selection } = selectTextCorpusEntries(collection);
 
-  const documents = collection.entries.map((entry) => {
-    const tokens = getEntryTokenTexts(entry);
+  const documents = entries.map(({ entry, tokens }) => {
     const fields = fieldSpecs.map((fieldSpec) => {
       const fieldTokensForEntry = retrievalFieldTokens(entry, tokens, fieldSpec);
       return {
@@ -1277,6 +2138,8 @@ export function buildTextCorpusRetrievalIndex(
     schemaVersion: textCorpusRetrievalSchemaVersion,
     corpusId: collection.corpusId,
     tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
     formula,
     documentOrder,
     termOrder,
@@ -1694,6 +2557,8 @@ export function searchTextCorpusRetrievalIndex(
     schemaVersion: textCorpusRetrievalSchemaVersion,
     corpusId: index.corpusId,
     tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection: index.selection,
     formula: index.formula,
     results,
   };
@@ -1724,6 +2589,8 @@ export function evaluateTextCorpusRetrieval(
     schemaVersion: textCorpusRetrievalEvaluationSchemaVersion,
     taskId: "nlp-retrieval",
     corpusId: result.corpusId,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection: result.selection,
     formula: result.formula,
     k,
     relevantGradeThreshold,
@@ -1758,6 +2625,45 @@ export function parseTextCorpusRetrievalIndex(serialized: string): TextCorpusRet
   }
   if (!isTextCorpusRetrievalIndexV1(parsed)) {
     throw new TypeError("textcorpus retrieval index JSON must satisfy TextCorpusRetrievalIndexV1");
+  }
+  return parsed;
+}
+
+export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtifactV1 {
+  return (
+    isTextCorpusConcordanceResultV1(value) ||
+    isTextCorpusFrequencyResultV1(value) ||
+    isTextCorpusNgramResultV1(value) ||
+    isTextCorpusCooccurrenceResultV1(value) ||
+    isTextCorpusCollocateResultV1(value) ||
+    isTextCorpusPairwiseRelationResultV1(value) ||
+    isTextCorpusScoringResultV1(value) ||
+    isTextCorpusRetrievalIndexV1(value) ||
+    isTextCorpusRetrievalResultV1(value) ||
+    isTextCorpusRetrievalEvaluationResultV1(value)
+  );
+}
+
+export function stringifyTextCorpusArtifact(artifact: TextCorpusArtifactV1): string {
+  if (!isTextCorpusArtifactV1(artifact)) {
+    throw new TypeError("textcorpus artifact must satisfy a known TextCorpus artifact contract");
+  }
+  return `${JSON.stringify(artifact, null, 2)}\n`;
+}
+
+export function parseTextCorpusArtifact(serialized: string): TextCorpusArtifactV1 {
+  if (typeof serialized !== "string") {
+    throw new TypeError("textcorpus artifact JSON must be a string");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(serialized);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new SyntaxError(`textcorpus artifact JSON parse failed: ${message}`);
+  }
+  if (!isTextCorpusArtifactV1(parsed)) {
+    throw new TypeError("textcorpus artifact JSON must satisfy a known TextCorpus artifact contract");
   }
   return parsed;
 }

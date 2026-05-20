@@ -31,9 +31,12 @@
     {
       "name": "@ismail-elkorchi/textcorpus",
       "status": "alpha",
-      "scope": "Public alpha corpus package for explicit-token collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval fixtures.",
+      "scope": "Public alpha corpus package for explicit-token collections, metadata slicing, KWIC/concordance, frequency, n-gram, co-occurrence, collocate, pairwise document-relation, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval fixtures.",
       "evidence": [
         "explicit-token corpus tests",
+        "corpus-analysis API tests",
+        "generic textcorpus artifact JSON round-trip tests",
+        "E2 selection-provenance tests",
         "fingerprint index tests",
         "frozen TF-IDF/BM25 corpus",
         "frozen retrieval fixture",
@@ -46,7 +49,7 @@
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
+        "Corpus analysis, retrieval, and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable filesystem index storage.",
         "Alpha scope is bounded to explicit-token corpus APIs, frozen retrieval fixtures, package tests, and package dry-run evidence"
       ]
     },
@@ -365,15 +368,16 @@
     {
       "id": "nlp-corpus-tfidf-bm25",
       "status": "slice-proven",
-      "scope": "Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus.",
+      "scope": "Deterministic raw TF, smooth TF-IDF, Okapi BM25, and E2 corpus-selection disclosures exist only for the frozen issue #14 explicit-token corpus.",
       "evidence": [
         "explicit-token corpus fixture",
+        "E2 selection-provenance tests",
         "scikit-learn/rank-bm25/Natural captures",
         "numeric tolerance tests",
         "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
       "limitations": [
-        "No large-corpus relevance benchmark, fielded weighting, or performance proof"
+        "No large-corpus relevance benchmark, fielded weighting claim, or stable wall-clock/memory performance proof"
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
@@ -383,7 +387,7 @@
     {
       "id": "nlp-retrieval",
       "status": "slice-proven",
-      "scope": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
+      "scope": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
       "evidence": [
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",

@@ -66,7 +66,7 @@
     {
       "taskId": "nlp-corpus-tfidf-bm25",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only.",
+      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, Okapi BM25, and E2 corpus-selection disclosures exist only for the frozen issue #14 explicit-token corpus.",
       "reportPath": "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/corpus-tfidf-bm25-readiness.md",
@@ -219,7 +219,7 @@
     {
       "taskId": "nlp-retrieval",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only.",
+      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
       "reportPath": "fixtures/reports/nlp-retrieval/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/retrieval-readiness.md",

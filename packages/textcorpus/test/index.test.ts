@@ -2,11 +2,23 @@ import type { TextDocDocumentV1, TextDocLayer } from "@ismail-elkorchi/textdoc";
 import {
   buildTextCorpusFingerprintIndex,
   buildTextCorpusRetrievalIndex,
+  computeTextCorpusCollocates,
+  computeTextCorpusConcordance,
+  computeTextCorpusCooccurrences,
+  computeTextCorpusFrequencies,
+  computeTextCorpusNgrams,
+  computeTextCorpusPairwiseRelations,
   computeTextCorpusScoring,
   createTextCorpusCollection,
   evaluateTextCorpusRetrieval,
+  isTextCorpusCollocateResultV1,
   isTextCorpusCollectionV1,
+  isTextCorpusConcordanceResultV1,
+  isTextCorpusCooccurrenceResultV1,
   isTextCorpusFingerprintIndex,
+  isTextCorpusFrequencyResultV1,
+  isTextCorpusNgramResultV1,
+  isTextCorpusPairwiseRelationResultV1,
   isTextCorpusParsedQuery,
   isTextCorpusRetrievalEvaluationResultV1,
   isTextCorpusRetrievalIndexV1,
@@ -14,9 +26,11 @@ import {
   isTextCorpusRetrievalResultV1,
   isTextCorpusScoringResultV1,
   packageName,
+  parseTextCorpusArtifact,
   parseTextCorpusQuery,
   parseTextCorpusRetrievalIndex,
   searchTextCorpusRetrievalIndex,
+  stringifyTextCorpusArtifact,
   stringifyTextCorpusRetrievalIndex,
   sliceTextCorpusByMetadata,
   textCorpusBm25fFormula,
@@ -247,6 +261,174 @@ if (slicedCollection.entries.map((entry) => entry.id).join(",") !== "doc-a") {
   throw new Error("metadata slicing should preserve deterministic filtered ordering");
 }
 
+const concordance = computeTextCorpusConcordance(collection, {
+  query: "beta",
+  window: 1,
+  metadataFilters: { language: "en" },
+});
+
+if (!isTextCorpusConcordanceResultV1(concordance)) {
+  throw new Error("concordance output should satisfy the runtime contract");
+}
+
+if (
+  concordance.evidenceClass !== "E2" ||
+  concordance.selection.corpusId !== "corpus:foundation" ||
+  concordance.selection.documentOrder.join(",") !== "doc-a,doc-b" ||
+  concordance.selection.tokenCount !== 6 ||
+  concordance.rows.map((row) => `${row.docId}:${row.tokenIndex}:${row.left.join(" ")}|${row.match}|${row.right.join(" ")}`).join(",") !==
+    "doc-a:1:alpha|beta|gamma,doc-b:1:alpha|beta|delta"
+) {
+  throw new Error("concordance should expose exact-token KWIC rows with selection provenance");
+}
+
+const frequency = computeTextCorpusFrequencies(collection, { metadataFilters: { language: "en" } });
+
+if (!isTextCorpusFrequencyResultV1(frequency)) {
+  throw new Error("frequency output should satisfy the runtime contract");
+}
+
+if (
+  frequency.rows.map((row) => `${row.term}:${row.count}:${row.documentFrequency}`).join(",") !==
+  "alpha:2:2,beta:2:2,delta:1:1,gamma:1:1"
+) {
+  throw new Error("frequency output should expose deterministic raw and document-frequency counts");
+}
+
+const ngrams = computeTextCorpusNgrams(collection, { n: 2, metadataFilters: { language: "en" } });
+
+if (!isTextCorpusNgramResultV1(ngrams)) {
+  throw new Error("n-gram output should satisfy the runtime contract");
+}
+
+if (
+  ngrams.rows.map((row) => `${row.ngram.join(" ")}:${row.count}:${row.documentFrequency}`).join(",") !==
+  "alpha beta:2:2,beta delta:1:1,beta gamma:1:1"
+) {
+  throw new Error("n-gram output should expose deterministic exact-token n-grams");
+}
+
+const cooccurrences = computeTextCorpusCooccurrences(collection, {
+  window: 1,
+  metadataFilters: { language: "en" },
+});
+
+if (!isTextCorpusCooccurrenceResultV1(cooccurrences)) {
+  throw new Error("co-occurrence output should satisfy the runtime contract");
+}
+
+if (
+  cooccurrences.rows.map((row) => `${row.term}:${row.coTerm}:${row.count}`).join(",") !==
+  "alpha:beta:2,beta:delta:1,beta:gamma:1"
+) {
+  throw new Error("co-occurrence output should count deterministic unordered token windows");
+}
+
+const collocates = computeTextCorpusCollocates(collection, {
+  term: "beta",
+  window: 1,
+  metadataFilters: { language: "en" },
+});
+
+if (!isTextCorpusCollocateResultV1(collocates)) {
+  throw new Error("collocate output should satisfy the runtime contract");
+}
+
+if (
+  collocates.rows.map((row) => `${row.term}:${row.coTerm}:${row.count}`).join(",") !==
+  "beta:alpha:2,beta:delta:1,beta:gamma:1"
+) {
+  throw new Error("collocate output should expose rows for one query term");
+}
+
+const relationCorpus = createTextCorpusCollection(
+  [
+    alphaEntry,
+    betaEntry,
+    {
+      ...alphaEntry,
+      id: "doc-a-copy",
+      document: createDocument("doc:a-copy", "r1", "alpha beta gamma", ["alpha", "beta", "gamma"]),
+    },
+  ],
+  { corpusId: "corpus:relations" },
+);
+const pairwiseRelations = computeTextCorpusPairwiseRelations(relationCorpus, {
+  shingleSize: 2,
+  windowSize: 1,
+  nearDuplicateThreshold: 0.3,
+});
+
+if (!isTextCorpusPairwiseRelationResultV1(pairwiseRelations)) {
+  throw new Error("pairwise relation output should satisfy the runtime contract");
+}
+
+if (
+  pairwiseRelations.rows
+    .map((row) => `${row.leftDocId}/${row.rightDocId}:${row.relation}:${row.jaccard}`)
+    .join(",") !== "doc-a/doc-a-copy:exact-duplicate:1,doc-a/doc-b:near-duplicate:0.3333333333333333,doc-a-copy/doc-b:near-duplicate:0.3333333333333333"
+) {
+  throw new Error("pairwise relation output should expose deterministic reuse relations");
+}
+
+const serializedFrequency = stringifyTextCorpusArtifact(frequency);
+if (JSON.stringify(parseTextCorpusArtifact(serializedFrequency)) !== JSON.stringify(frequency)) {
+  throw new Error("generic corpus artifact persistence should round-trip frequency output deterministically");
+}
+
+let invalidArtifactRejected = false;
+try {
+  parseTextCorpusArtifact("{\"schemaVersion\":1,\"corpusId\":\"bad\"}");
+} catch (error) {
+  invalidArtifactRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus artifact JSON must satisfy a known TextCorpus artifact contract";
+}
+
+if (!invalidArtifactRejected) {
+  throw new Error("generic corpus artifact parser should reject unknown persisted artifacts");
+}
+
+let mismatchedArtifactRejected = false;
+try {
+  stringifyTextCorpusArtifact({
+    ...frequency,
+    selection: { ...frequency.selection, corpusId: "corpus:mismatch" },
+  });
+} catch (error) {
+  mismatchedArtifactRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus artifact must satisfy a known TextCorpus artifact contract";
+}
+
+if (!mismatchedArtifactRejected) {
+  throw new Error("generic corpus artifact persistence should reject mismatched selection provenance");
+}
+
+let emptyConcordanceQueryRejected = false;
+try {
+  computeTextCorpusConcordance(collection, { query: "", window: 1 });
+} catch (error) {
+  emptyConcordanceQueryRejected =
+    error instanceof TypeError && error.message === "textcorpus concordance query must be a non-empty string";
+}
+
+if (!emptyConcordanceQueryRejected) {
+  throw new Error("concordance should reject empty query terms");
+}
+
+let invalidNgramRejected = false;
+try {
+  computeTextCorpusNgrams(collection, { n: 0 });
+} catch (error) {
+  invalidNgramRejected =
+    error instanceof TypeError && error.message === "textcorpus n-gram size must be a positive integer";
+}
+
+if (!invalidNgramRejected) {
+  throw new Error("n-gram computation should reject non-positive n");
+}
+
 const fingerprintIndex = buildTextCorpusFingerprintIndex(collection, {
   shingleSize: 2,
   windowSize: 2,
@@ -326,6 +508,14 @@ if (scoringResult.schemaVersion !== textCorpusScoringSchemaVersion) {
 
 if (!isTextCorpusScoringResultV1(scoringResult)) {
   throw new Error("textcorpus scoring result should satisfy the runtime contract");
+}
+
+if (
+  scoringResult.evidenceClass !== "E2" ||
+  scoringResult.selection.documentOrder.join(",") !== "doc-a,doc-b,doc-c,doc-empty" ||
+  scoringResult.selection.tokenCount !== 6
+) {
+  throw new Error("textcorpus scoring result should disclose E2 selection provenance");
 }
 
 if (scoringResult.documentOrder.join(",") !== "doc-a,doc-b,doc-c,doc-empty") {
@@ -430,6 +620,14 @@ if (!isTextCorpusRetrievalIndexV1(retrievalIndex)) {
   throw new Error("retrieval index should satisfy the runtime contract");
 }
 
+if (
+  retrievalIndex.evidenceClass !== "E2" ||
+  retrievalIndex.selection.documentOrder.join(",") !== "doc-a,doc-b,doc-c,doc-empty" ||
+  retrievalIndex.selection.tokenCount !== 6
+) {
+  throw new Error("retrieval index should disclose E2 selection provenance");
+}
+
 if (retrievalIndex.termOrder.join(",") !== "alpha,beta,delta,gamma") {
   throw new Error("retrieval index should preserve deterministic term ordering");
 }
@@ -455,6 +653,13 @@ if (retrievalResult.schemaVersion !== textCorpusRetrievalSchemaVersion) {
 
 if (!isTextCorpusRetrievalResultV1(retrievalResult)) {
   throw new Error("retrieval result should satisfy the runtime contract");
+}
+
+if (
+  retrievalResult.evidenceClass !== "E2" ||
+  retrievalResult.selection.documentOrder.join(",") !== retrievalIndex.selection.documentOrder.join(",")
+) {
+  throw new Error("retrieval result should preserve index selection provenance");
 }
 
 function retrievalHits(queryId: string) {
@@ -657,6 +862,13 @@ if (fieldedEvaluation.schemaVersion !== textCorpusRetrievalEvaluationSchemaVersi
 
 if (!isTextCorpusRetrievalEvaluationResultV1(fieldedEvaluation)) {
   throw new Error("retrieval evaluation should satisfy the runtime contract");
+}
+
+if (
+  fieldedEvaluation.evidenceClass !== "E2" ||
+  fieldedEvaluation.selection.documentOrder.join(",") !== bm25fResult.selection.documentOrder.join(",")
+) {
+  throw new Error("retrieval evaluation should preserve retrieval selection provenance");
 }
 
 expectNear(fieldedEvaluation.summary.precisionAtK, 2 / 9, "fielded qrels macro precision@3");
