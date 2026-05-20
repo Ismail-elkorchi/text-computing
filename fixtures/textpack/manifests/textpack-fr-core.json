@@ -1,59 +1,103 @@
 {
-  "schemaVersion": 1,
-  "packId": "pack:fr-core",
-  "packageName": "@ismail-elkorchi/textpack-fr-core",
-  "version": "0.0.0",
-  "resources": [
-    {
-      "resourceId": "stopwords-fr-core",
-      "lookupKey": "stopwords.fr.core",
-      "kind": "stopwords",
-      "path": "fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt",
-      "language": "fr",
-      "overlayPrecedence": 10,
-      "licenseId": "license-cc0",
-      "provenanceId": "prov-hand-curated"
-    },
-    {
-      "resourceId": "lexicon-fr-core",
-      "lookupKey": "lexicon.fr.core",
-      "kind": "lexicon",
-      "path": "fixtures/textpack/resources/textpack-fr-core/lexicon.fr.simple.tsv",
-      "language": "fr",
-      "overlayPrecedence": 10,
-      "licenseId": "license-cc0",
-      "provenanceId": "prov-hand-curated"
-    }
-  ],
-  "licenses": [
-    {
-      "id": "license-cc0",
-      "spdx": "CC0-1.0",
-      "attribution": "Prepared for repository fixtures."
-    }
-  ],
-  "provenance": [
-    {
-      "id": "prov-hand-curated",
-      "origin": "repository-fixture",
-      "version": "2026-05-17",
-      "createdBy": "text-computing"
-    }
-  ],
+  "manifestVersion": "1.0.0",
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0"
+  },
+  "externalData": {
+    "unicode": "17.0.0"
+  },
+  "licenses": {
+    "code": [
+      "MIT"
+    ],
+    "data": [
+      "CC0-1.0"
+    ]
+  },
+  "provenance": {
+    "sources": [
+      "repo:fixtures/textpack"
+    ],
+    "generated": false,
+    "createdBy": [
+      "text-computing"
+    ]
+  },
   "entrypoints": {
-    "manifest": "fixtures/textpack/manifests/textpack-fr-core.json",
-    "resourceRoot": "fixtures/textpack/resources"
+    "manifest": "pack.manifest.json",
+    "load": "./dist/index.js"
   },
   "tests": {
     "smoke": [
+      "test/smoke.spec.ts"
+    ],
+    "negative": [
+      "test/negative.spec.ts"
+    ],
+    "representative": [
+      "test/representative.spec.ts"
+    ]
+  },
+  "id": "pack:fr-core",
+  "packageName": "@ismail-elkorchi/textpack-fr-core",
+  "version": "0.1.0",
+  "kind": [
+    "language"
+  ],
+  "targets": {
+    "languages": [
+      "fr"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  },
+  "capabilities": {
+    "stopwords": true,
+    "lexicons": true,
+    "tagsets": true,
+    "morphology": true,
+    "benchmarks": true
+  },
+  "resources": {
+    "stopwords": [
       "fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt"
     ],
-    "lookup": [
-      "lookup:stopwords:fr",
-      "lookup:lexicon:fr"
+    "lexicons": [
+      "fixtures/textpack/resources/textpack-fr-core/lexicon.fr.simple.tsv"
     ],
-    "overlay": [
-      "overlay:stopwords:fr"
+    "tagsets": [
+      "fixtures/textpack/resources/textpack-fr-core/tagset.ud-lite.tsv"
+    ],
+    "morphology": [
+      "fixtures/textpack/resources/textpack-fr-core/morph.fr.simple.tsv"
+    ],
+    "benchmarks": [
+      "fixtures/textpack/resources/textpack-fr-core/benchmark.smoke.txt"
     ]
-  }
+  },
+  "provides": {
+    "stopwords": [
+      "stopwords-fr-core"
+    ],
+    "lexicons": [
+      "lexicon-fr-core"
+    ],
+    "tagsets": [
+      "tagset-fr-ud-lite"
+    ],
+    "morphology": [
+      "morph-fr-core"
+    ],
+    "benchmarks": [
+      "benchmark-fr-smoke"
+    ]
+  },
+  "reviewState": "candidate",
+  "composition": {
+    "overlayPrecedence": 10
+  },
+  "limitations": [
+    "Repository fixture pack; not a broad language resource."
+  ]
 }

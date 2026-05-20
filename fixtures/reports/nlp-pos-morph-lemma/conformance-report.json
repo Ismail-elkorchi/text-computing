@@ -37,7 +37,7 @@
       "status": "pass",
       "message": "Pack-backed lexicon fixtures used by the deterministic analyzer are committed.",
       "evidenceRefs": [
-        "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
         "fixtures/pos-morph-lemma/README.md"
       ]
     },

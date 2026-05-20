@@ -1,68 +1,156 @@
 export const packageName = "@ismail-elkorchi/textpack" as const;
-export const textPackManifestSchemaVersion = 1 as const;
+export const textPackManifestVersion = "1.0.0" as const;
 
 export type PackageName = typeof packageName;
-export type TextPackManifestSchemaVersion = typeof textPackManifestSchemaVersion;
+export type TextPackManifestVersion = typeof textPackManifestVersion;
+
+export const textPackKinds = [
+  "profile",
+  "language",
+  "morph",
+  "domain",
+  "historical",
+  "structure",
+  "composite",
+] as const;
+
+export const textPackResourceFamilies = [
+  "profiles",
+  "rules",
+  "lexicons",
+  "stopwords",
+  "gazetteers",
+  "tagsets",
+  "morphology",
+  "transducers",
+  "structures",
+  "benchmarks",
+] as const;
+
+export const textPackReviewStates = [
+  "experimental",
+  "candidate",
+  "stable",
+  "reference",
+  "deprecated",
+] as const;
+
+export type TextPackKind = (typeof textPackKinds)[number];
+export type TextPackResourceFamily = (typeof textPackResourceFamilies)[number];
+export type TextPackReviewState = (typeof textPackReviewStates)[number];
 
 export type TextPackResourceKind =
+  | "profile"
+  | "rule"
   | "lexicon"
   | "stopwords"
   | "gazetteer"
-  | "abbreviation-list";
+  | "tagset"
+  | "morphology"
+  | "transducer"
+  | "structure"
+  | "benchmark";
 
-export interface TextPackLicenseRef {
-  readonly id: string;
-  readonly spdx: string;
-  readonly attribution?: string;
-}
-
-export interface TextPackProvenanceRecord {
-  readonly id: string;
-  readonly origin: string;
-  readonly version?: string;
-  readonly retrievedFrom?: string;
-  readonly createdBy?: string;
-  readonly notes?: readonly string[];
-}
-
-export interface TextPackResourceEntry {
-  readonly resourceId: string;
-  readonly lookupKey: string;
-  readonly kind: TextPackResourceKind;
-  readonly path: string;
-  readonly language?: string;
+export interface TextPackTargets {
+  readonly languages?: readonly string[];
+  readonly scripts?: readonly string[];
+  readonly regions?: readonly string[];
+  readonly periods?: readonly string[];
+  readonly domains?: readonly string[];
+  readonly genres?: readonly string[];
   readonly profiles?: readonly string[];
-  readonly overlayPrecedence: number;
-  readonly licenseId: string;
-  readonly provenanceId: string;
 }
 
 export interface TextPackEntrypoints {
   readonly manifest: string;
-  readonly resourceRoot?: string;
+  readonly load?: string;
 }
 
 export interface TextPackTests {
   readonly smoke: readonly string[];
-  readonly lookup: readonly string[];
-  readonly overlay: readonly string[];
+  readonly negative: readonly string[];
+  readonly representative: readonly string[];
 }
 
-export interface TextPackManifestV1 {
-  readonly schemaVersion: TextPackManifestSchemaVersion;
-  readonly packId: string;
-  readonly packageName: string;
-  readonly version: string;
-  readonly resources: readonly TextPackResourceEntry[];
-  readonly licenses: readonly TextPackLicenseRef[];
-  readonly provenance: readonly TextPackProvenanceRecord[];
-  readonly entrypoints: TextPackEntrypoints;
-  readonly tests: TextPackTests;
+export interface TextPackLicenses {
+  readonly code: readonly string[];
+  readonly data: readonly string[];
+  readonly notices?: readonly string[];
+}
+
+export interface TextPackProvenance {
+  readonly sources: readonly string[];
+  readonly generated: boolean;
+  readonly createdBy?: readonly string[];
   readonly notes?: readonly string[];
 }
 
-export interface TextPackLookupRequest {
+export interface TextPackComposition {
+  readonly overlayPrecedence?: number;
+  readonly exclusiveWith?: readonly string[];
+}
+
+export type TextPackResourceFamilyMap = Partial<Record<TextPackResourceFamily, readonly string[]>>;
+export type TextPackCapabilityMap = Partial<Record<TextPackResourceFamily, boolean | string>>;
+
+export interface TextPackManifestV1 {
+  readonly manifestVersion: TextPackManifestVersion;
+  readonly id: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly kind: readonly TextPackKind[];
+  readonly targets: TextPackTargets;
+  readonly engines: Readonly<Record<string, string>>;
+  readonly externalData: Readonly<Record<string, string>>;
+  readonly capabilities: TextPackCapabilityMap;
+  readonly resources: TextPackResourceFamilyMap;
+  readonly provides: TextPackResourceFamilyMap;
+  readonly entrypoints: TextPackEntrypoints;
+  readonly licenses: TextPackLicenses;
+  readonly provenance: TextPackProvenance;
+  readonly tests: TextPackTests;
+  readonly reviewState: TextPackReviewState;
+  readonly composition?: TextPackComposition;
+  readonly limitations?: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextPackLicenseRef {
+  readonly id: string;
+  readonly spdx: string;
+  readonly notices?: readonly string[];
+}
+
+export interface TextPackProvenanceRecord {
+  readonly id: string;
+  readonly sources: readonly string[];
+  readonly generated: boolean;
+  readonly createdBy?: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextPackResolvedResource {
+  readonly packId: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly resourceId: string;
+  readonly lookupKey: string;
   readonly kind: TextPackResourceKind;
+  readonly family: TextPackResourceFamily;
+  readonly path: string;
+  readonly language?: string;
+  readonly profiles?: readonly string[];
+  readonly overlayPrecedence: number;
+  readonly license: TextPackLicenseRef;
+  readonly provenance: TextPackProvenanceRecord;
+  readonly licenseId: string;
+  readonly provenanceId: string;
+  readonly reviewState: TextPackReviewState;
+}
+
+export interface TextPackLookupRequest {
+  readonly kind?: TextPackResourceKind;
+  readonly family?: TextPackResourceFamily;
   readonly language?: string;
   readonly profile?: string;
   readonly canonicalizer?: TextPackCanonicalizer;
@@ -74,25 +162,11 @@ export interface TextPackRegistryQuery extends TextPackLookupRequest {
   readonly lookupKey?: string;
 }
 
-export interface TextPackResolvedResource {
-  readonly packId: string;
-  readonly packageName: string;
-  readonly version: string;
-  readonly resourceId: string;
-  readonly lookupKey: string;
-  readonly kind: TextPackResourceKind;
-  readonly path: string;
-  readonly language?: string;
-  readonly profiles?: readonly string[];
-  readonly overlayPrecedence: number;
-  readonly license: TextPackLicenseRef;
-  readonly provenance: TextPackProvenanceRecord;
-}
-
 export type TextPackLookupDiagnosticCode =
   | "language-mismatch"
   | "profile-mismatch"
-  | "overlay-conflict";
+  | "overlay-conflict"
+  | "family-kind-mismatch";
 
 export interface TextPackLookupDiagnostic {
   readonly code: TextPackLookupDiagnosticCode;
@@ -110,8 +184,10 @@ export interface TextPackResourceRegistry {
   readonly manifests: readonly TextPackManifestV1[];
   readonly resources: readonly TextPackResolvedResource[];
   readonly kinds: readonly TextPackResourceKind[];
+  readonly families: readonly TextPackResourceFamily[];
   readonly languages: readonly string[];
   readonly profiles: readonly string[];
+  readonly reviewStates: readonly TextPackReviewState[];
 }
 
 export interface TextPackCanonicalizer {
@@ -182,15 +258,20 @@ export interface TextPackEntryLookupMatch {
 
 export type TextPackManifestGovernanceDiagnosticCode =
   | "invalid-manifest-shape"
-  | "duplicate-license-id"
-  | "duplicate-provenance-id"
-  | "duplicate-resource-id"
-  | "missing-license-ref"
-  | "missing-provenance-ref"
+  | "duplicate-provides-id"
+  | "resource-provides-length-mismatch"
+  | "unsupported-resource-family"
+  | "resource-family-without-capability"
+  | "capability-without-resource"
+  | "missing-license"
+  | "missing-provenance"
+  | "missing-target-scope"
+  | "missing-test-ref"
   | "unsafe-resource-path"
   | "unsafe-entrypoint-path"
   | "unsafe-test-ref"
-  | "overlay-conflict";
+  | "overlay-conflict"
+  | "deprecated-review-state";
 
 export interface TextPackManifestGovernanceDiagnostic {
   readonly code: TextPackManifestGovernanceDiagnosticCode;
@@ -205,6 +286,60 @@ export interface TextPackManifestGovernanceResult {
   readonly diagnostics: readonly TextPackManifestGovernanceDiagnostic[];
 }
 
+export type TextPackCompatibilityDiagnosticCode =
+  | "engine-version-missing"
+  | "engine-version-incompatible"
+  | "profile-missing"
+  | "mandatory-resource-missing"
+  | "review-state-too-low"
+  | "exclusive-overlay-conflict";
+
+export interface TextPackCompatibilityPolicy {
+  readonly packageVersions?: Readonly<Record<string, string>>;
+  readonly requiredProfiles?: readonly string[];
+  readonly mandatoryResources?: readonly string[];
+  readonly minimumReviewState?: Exclude<TextPackReviewState, "deprecated">;
+  readonly activePackIds?: readonly string[];
+}
+
+export interface TextPackCompatibilityDiagnostic {
+  readonly code: TextPackCompatibilityDiagnosticCode;
+  readonly packId: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextPackCompatibilityResult {
+  readonly ok: boolean;
+  readonly diagnostics: readonly TextPackCompatibilityDiagnostic[];
+}
+
+export interface TextPackCompositionInput {
+  readonly manifest: TextPackManifestV1;
+  readonly precedence?: number;
+}
+
+const resourceKindByFamily: Readonly<Record<TextPackResourceFamily, TextPackResourceKind>> = {
+  profiles: "profile",
+  rules: "rule",
+  lexicons: "lexicon",
+  stopwords: "stopwords",
+  gazetteers: "gazetteer",
+  tagsets: "tagset",
+  morphology: "morphology",
+  transducers: "transducer",
+  structures: "structure",
+  benchmarks: "benchmark",
+};
+
+const reviewStateRank: Readonly<Record<TextPackReviewState, number>> = {
+  experimental: 0,
+  candidate: 1,
+  stable: 2,
+  reference: 3,
+  deprecated: -1,
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -217,12 +352,126 @@ function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
 }
 
+function isBooleanOrString(value: unknown): value is boolean | string {
+  return typeof value === "boolean" || isNonEmptyString(value);
+}
+
+function isTextPackKind(value: unknown): value is TextPackKind {
+  return textPackKinds.includes(value as TextPackKind);
+}
+
+function isTextPackReviewState(value: unknown): value is TextPackReviewState {
+  return textPackReviewStates.includes(value as TextPackReviewState);
+}
+
+function isTextPackResourceFamily(value: unknown): value is TextPackResourceFamily {
+  return textPackResourceFamilies.includes(value as TextPackResourceFamily);
+}
+
 function isTextPackResourceKind(value: unknown): value is TextPackResourceKind {
+  return Object.values(resourceKindByFamily).includes(value as TextPackResourceKind);
+}
+
+function isStringRecord(value: unknown): value is Readonly<Record<string, string>> {
+  return isRecord(value) && Object.values(value).every((entry) => isNonEmptyString(entry));
+}
+
+function isCapabilityMap(value: unknown): value is TextPackCapabilityMap {
+  return isRecord(value) && Object.values(value).every((entry) => isBooleanOrString(entry));
+}
+
+function isResourceFamilyMap(value: unknown): value is TextPackResourceFamilyMap {
+  return isRecord(value) && Object.entries(value).every(([key, entries]) => isTextPackResourceFamily(key) && isStringArray(entries));
+}
+
+function hasAnyTargetScope(targets: TextPackTargets): boolean {
+  return Object.values(targets).some((value) => Array.isArray(value) && value.length > 0);
+}
+
+function isTextPackTargets(value: unknown): value is TextPackTargets {
+  if (!isRecord(value)) return false;
+  const allowed = new Set(["languages", "scripts", "regions", "periods", "domains", "genres", "profiles"]);
+  return Object.entries(value).every(([key, entries]) => allowed.has(key) && isStringArray(entries)) && hasAnyTargetScope(value);
+}
+
+export function isTextPackEntrypoints(value: unknown): value is TextPackEntrypoints {
   return (
-    value === "lexicon" ||
-    value === "stopwords" ||
-    value === "gazetteer" ||
-    value === "abbreviation-list"
+    isRecord(value) &&
+    isNonEmptyString(value.manifest) &&
+    (value.load === undefined || isNonEmptyString(value.load))
+  );
+}
+
+export function isTextPackTests(value: unknown): value is TextPackTests {
+  return (
+    isRecord(value) &&
+    isStringArray(value.smoke) &&
+    value.smoke.length >= 1 &&
+    isStringArray(value.negative) &&
+    value.negative.length >= 1 &&
+    isStringArray(value.representative) &&
+    value.representative.length >= 1
+  );
+}
+
+export function isTextPackLicenses(value: unknown): value is TextPackLicenses {
+  return (
+    isRecord(value) &&
+    isStringArray(value.code) &&
+    value.code.length >= 1 &&
+    isStringArray(value.data) &&
+    value.data.length >= 1 &&
+    (value.notices === undefined || isStringArray(value.notices))
+  );
+}
+
+export function isTextPackProvenance(value: unknown): value is TextPackProvenance {
+  return (
+    isRecord(value) &&
+    isStringArray(value.sources) &&
+    value.sources.length >= 1 &&
+    typeof value.generated === "boolean" &&
+    (value.createdBy === undefined || isStringArray(value.createdBy)) &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+export function isTextPackComposition(value: unknown): value is TextPackComposition {
+  return (
+    value === undefined ||
+    (isRecord(value) &&
+      (value.overlayPrecedence === undefined ||
+        (typeof value.overlayPrecedence === "number" &&
+          Number.isInteger(value.overlayPrecedence) &&
+          value.overlayPrecedence >= 0)) &&
+      (value.exclusiveWith === undefined || isStringArray(value.exclusiveWith)))
+  );
+}
+
+export function isTextPackManifestV1(value: unknown): value is TextPackManifestV1 {
+  return (
+    isRecord(value) &&
+    value.manifestVersion === textPackManifestVersion &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.packageName) &&
+    isNonEmptyString(value.version) &&
+    Array.isArray(value.kind) &&
+    value.kind.length >= 1 &&
+    value.kind.every((entry) => isTextPackKind(entry)) &&
+    isTextPackTargets(value.targets) &&
+    isStringRecord(value.engines) &&
+    isStringRecord(value.externalData) &&
+    isCapabilityMap(value.capabilities) &&
+    isResourceFamilyMap(value.resources) &&
+    isResourceFamilyMap(value.provides) &&
+    isTextPackEntrypoints(value.entrypoints) &&
+    isTextPackLicenses(value.licenses) &&
+    isTextPackProvenance(value.provenance) &&
+    isTextPackTests(value.tests) &&
+    isTextPackReviewState(value.reviewState) &&
+    isTextPackComposition(value.composition) &&
+    (value.limitations === undefined || isStringArray(value.limitations)) &&
+    (value.notes === undefined || isStringArray(value.notes))
   );
 }
 
@@ -307,86 +556,6 @@ function parseTextPackAttributes(
   return attributes;
 }
 
-export function isTextPackLicenseRef(value: unknown): value is TextPackLicenseRef {
-  return (
-    isRecord(value) &&
-    isNonEmptyString(value.id) &&
-    isNonEmptyString(value.spdx) &&
-    (value.attribution === undefined || isNonEmptyString(value.attribution))
-  );
-}
-
-export function isTextPackProvenanceRecord(value: unknown): value is TextPackProvenanceRecord {
-  return (
-    isRecord(value) &&
-    isNonEmptyString(value.id) &&
-    isNonEmptyString(value.origin) &&
-    (value.version === undefined || isNonEmptyString(value.version)) &&
-    (value.retrievedFrom === undefined || isNonEmptyString(value.retrievedFrom)) &&
-    (value.createdBy === undefined || isNonEmptyString(value.createdBy)) &&
-    (value.notes === undefined || isStringArray(value.notes))
-  );
-}
-
-export function isTextPackResourceEntry(value: unknown): value is TextPackResourceEntry {
-  return (
-    isRecord(value) &&
-    isNonEmptyString(value.resourceId) &&
-    isNonEmptyString(value.lookupKey) &&
-    isTextPackResourceKind(value.kind) &&
-    isNonEmptyString(value.path) &&
-    (value.language === undefined || isNonEmptyString(value.language)) &&
-    (value.profiles === undefined || isStringArray(value.profiles)) &&
-    typeof value.overlayPrecedence === "number" &&
-    Number.isInteger(value.overlayPrecedence) &&
-    value.overlayPrecedence >= 0 &&
-    isNonEmptyString(value.licenseId) &&
-    isNonEmptyString(value.provenanceId)
-  );
-}
-
-export function isTextPackEntrypoints(value: unknown): value is TextPackEntrypoints {
-  return (
-    isRecord(value) &&
-    isNonEmptyString(value.manifest) &&
-    (value.resourceRoot === undefined || isNonEmptyString(value.resourceRoot))
-  );
-}
-
-export function isTextPackTests(value: unknown): value is TextPackTests {
-  return (
-    isRecord(value) &&
-    isStringArray(value.smoke) &&
-    value.smoke.length >= 1 &&
-    isStringArray(value.lookup) &&
-    value.lookup.length >= 1 &&
-    isStringArray(value.overlay) &&
-    value.overlay.length >= 1
-  );
-}
-
-export function isTextPackManifestV1(value: unknown): value is TextPackManifestV1 {
-  return (
-    isRecord(value) &&
-    value.schemaVersion === textPackManifestSchemaVersion &&
-    isNonEmptyString(value.packId) &&
-    isNonEmptyString(value.packageName) &&
-    isNonEmptyString(value.version) &&
-    Array.isArray(value.resources) &&
-    value.resources.length >= 1 &&
-    value.resources.every((entry) => isTextPackResourceEntry(entry)) &&
-    Array.isArray(value.licenses) &&
-    value.licenses.length >= 1 &&
-    value.licenses.every((entry) => isTextPackLicenseRef(entry)) &&
-    Array.isArray(value.provenance) &&
-    value.provenance.length >= 1 &&
-    value.provenance.every((entry) => isTextPackProvenanceRecord(entry)) &&
-    isTextPackEntrypoints(value.entrypoints) &&
-    isTextPackTests(value.tests) &&
-    (value.notes === undefined || isStringArray(value.notes))
-  );
-}
-
 function compareTextPackResources(
   left: TextPackResolvedResource,
   right: TextPackResolvedResource,
@@ -405,11 +574,12 @@ function sortedUniqueTextPackValues(values: Iterable<string | undefined>): reado
 }
 
 function isSafeTextPackPackageRelativePath(value: string): boolean {
+  const normalized = value.startsWith("./") ? value.slice(2) : value;
   if (value !== value.trim()) return false;
-  if (value.length === 0 || value.includes("\0") || value.includes("\\")) return false;
-  if (value.startsWith("/") || /^[A-Za-z]:/u.test(value)) return false;
-  if (/^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value)) return false;
-  return !value.split("/").some((segment) => segment.length === 0 || segment === "." || segment === "..");
+  if (normalized.length === 0 || normalized.includes("\0") || normalized.includes("\\")) return false;
+  if (normalized.startsWith("/") || /^[A-Za-z]:/u.test(normalized)) return false;
+  if (/^[A-Za-z][A-Za-z0-9+.-]*:/u.test(normalized)) return false;
+  return !normalized.split("/").some((segment) => segment.length === 0 || segment === "." || segment === "..");
 }
 
 function isSafeTextPackTestRef(value: string): boolean {
@@ -427,7 +597,15 @@ function addTextPackGovernanceDiagnostic(
   diagnostics.push(diagnostic);
 }
 
-function textPackOverlayKey(resource: TextPackResourceEntry): string {
+function canonicalManifestPath(value: string): string {
+  return value.startsWith("./") ? value.slice(2) : value;
+}
+
+function resourceIdsForManifest(manifest: TextPackManifestV1): readonly string[] {
+  return textPackResourceFamilies.flatMap((family) => [...(manifest.provides[family] ?? [])]);
+}
+
+function textPackOverlayKey(resource: TextPackResolvedResource): string {
   const profiles = [...(resource.profiles ?? [])].sort((left, right) => left.localeCompare(right));
   return [
     resource.kind,
@@ -438,32 +616,70 @@ function textPackOverlayKey(resource: TextPackResourceEntry): string {
   ].join("\u001e");
 }
 
+function derivedTextPackLicense(manifest: TextPackManifestV1): TextPackLicenseRef {
+  return {
+    id: "license:data",
+    spdx: manifest.licenses.data.join(" OR "),
+    ...(manifest.licenses.notices ? { notices: manifest.licenses.notices } : {}),
+  };
+}
+
+function derivedTextPackProvenance(manifest: TextPackManifestV1): TextPackProvenanceRecord {
+  return {
+    id: "provenance:manifest",
+    sources: manifest.provenance.sources,
+    generated: manifest.provenance.generated,
+    ...(manifest.provenance.createdBy ? { createdBy: manifest.provenance.createdBy } : {}),
+    ...(manifest.provenance.notes ? { notes: manifest.provenance.notes } : {}),
+  };
+}
+
+function manifestResourceLanguage(manifest: TextPackManifestV1): string | undefined {
+  return manifest.targets.languages?.length === 1 ? manifest.targets.languages[0] : undefined;
+}
+
+function manifestResourceProfiles(manifest: TextPackManifestV1): readonly string[] | undefined {
+  return manifest.targets.profiles && manifest.targets.profiles.length > 0 ? manifest.targets.profiles : undefined;
+}
+
 function resolveTextPackManifestResources(
   manifest: TextPackManifestV1,
+  precedenceOverride?: number,
 ): readonly TextPackResolvedResource[] {
-  const licensesById = new Map(manifest.licenses.map((license) => [license.id, license]));
-  const provenanceById = new Map(manifest.provenance.map((record) => [record.id, record]));
   const resources: TextPackResolvedResource[] = [];
+  const license = derivedTextPackLicense(manifest);
+  const provenance = derivedTextPackProvenance(manifest);
+  const overlayPrecedence = precedenceOverride ?? manifest.composition?.overlayPrecedence ?? 0;
+  const language = manifestResourceLanguage(manifest);
+  const profiles = manifestResourceProfiles(manifest);
 
-  for (const resource of manifest.resources) {
-    const license = licensesById.get(resource.licenseId);
-    const provenance = provenanceById.get(resource.provenanceId);
-    if (!license || !provenance) continue;
-
-    resources.push({
-      packId: manifest.packId,
-      packageName: manifest.packageName,
-      version: manifest.version,
-      resourceId: resource.resourceId,
-      lookupKey: resource.lookupKey,
-      kind: resource.kind,
-      path: resource.path,
-      overlayPrecedence: resource.overlayPrecedence,
-      license,
-      provenance,
-      ...(resource.language ? { language: resource.language } : {}),
-      ...(resource.profiles ? { profiles: resource.profiles } : {}),
-    });
+  for (const family of textPackResourceFamilies) {
+    const paths = manifest.resources[family] ?? [];
+    const provides = manifest.provides[family] ?? [];
+    const kind = resourceKindByFamily[family];
+    for (let index = 0; index < paths.length; index += 1) {
+      const resourcePath = paths[index];
+      const resourceId = provides[index];
+      if (!resourcePath || !resourceId) continue;
+      resources.push({
+        packId: manifest.id,
+        packageName: manifest.packageName,
+        version: manifest.version,
+        resourceId,
+        lookupKey: resourceId,
+        kind,
+        family,
+        path: canonicalManifestPath(resourcePath),
+        overlayPrecedence,
+        license,
+        provenance,
+        licenseId: license.id,
+        provenanceId: provenance.id,
+        reviewState: manifest.reviewState,
+        ...(language ? { language } : {}),
+        ...(profiles ? { profiles } : {}),
+      });
+    }
   }
 
   return resources;
@@ -481,8 +697,31 @@ export function createTextPackResourceRegistry(
     resources,
     kinds: [...new Set(resources.map((resource) => resource.kind))]
       .sort((left, right) => left.localeCompare(right)),
+    families: [...new Set(resources.map((resource) => resource.family))]
+      .sort((left, right) => left.localeCompare(right)),
     languages: sortedUniqueTextPackValues(resources.map((resource) => resource.language)),
     profiles: sortedUniqueTextPackValues(resources.flatMap((resource) => resource.profiles ?? [])),
+    reviewStates: sortedUniqueTextPackValues(resources.map((resource) => resource.reviewState)) as readonly TextPackReviewState[],
+  };
+}
+
+export function composeTextPackResources(
+  inputs: readonly TextPackCompositionInput[],
+): TextPackResourceRegistry {
+  const resources = inputs
+    .flatMap((input) => [...resolveTextPackManifestResources(input.manifest, input.precedence)])
+    .sort(compareTextPackResources);
+  const manifests = inputs.map((input) => input.manifest);
+  return {
+    manifests,
+    resources,
+    kinds: [...new Set(resources.map((resource) => resource.kind))]
+      .sort((left, right) => left.localeCompare(right)),
+    families: [...new Set(resources.map((resource) => resource.family))]
+      .sort((left, right) => left.localeCompare(right)),
+    languages: sortedUniqueTextPackValues(resources.map((resource) => resource.language)),
+    profiles: sortedUniqueTextPackValues(resources.flatMap((resource) => resource.profiles ?? [])),
+    reviewStates: sortedUniqueTextPackValues(resources.map((resource) => resource.reviewState)) as readonly TextPackReviewState[],
   };
 }
 
@@ -502,99 +741,111 @@ export function validateTextPackManifestGovernance(
     };
   }
 
-  const licenseIds = new Set<string>();
-  for (const license of manifest.licenses) {
-    if (licenseIds.has(license.id)) {
-      addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "duplicate-license-id",
-        packId: manifest.packId,
-        ref: license.id,
-        message: `Manifest ${manifest.packId} repeats license id ${license.id}.`,
-      });
-    }
-    licenseIds.add(license.id);
+  if (!hasAnyTargetScope(manifest.targets)) {
+    addTextPackGovernanceDiagnostic(diagnostics, {
+      code: "missing-target-scope",
+      packId: manifest.id,
+      message: `Manifest ${manifest.id} must declare at least one target scope.`,
+    });
   }
 
-  const provenanceIds = new Set<string>();
-  for (const provenance of manifest.provenance) {
-    if (provenanceIds.has(provenance.id)) {
-      addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "duplicate-provenance-id",
-        packId: manifest.packId,
-        ref: provenance.id,
-        message: `Manifest ${manifest.packId} repeats provenance id ${provenance.id}.`,
-      });
-    }
-    provenanceIds.add(provenance.id);
+  if (manifest.reviewState === "deprecated") {
+    addTextPackGovernanceDiagnostic(diagnostics, {
+      code: "deprecated-review-state",
+      packId: manifest.id,
+      message: `Manifest ${manifest.id} is deprecated and cannot be promoted as an active pack.`,
+    });
   }
 
-  const resourceIds = new Set<string>();
-  const overlayKeys = new Map<string, TextPackResourceEntry>();
-  for (const resource of manifest.resources) {
-    if (resourceIds.has(resource.resourceId)) {
-      addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "duplicate-resource-id",
-        packId: manifest.packId,
-        resourceId: resource.resourceId,
-        message: `Manifest ${manifest.packId} repeats resource id ${resource.resourceId}.`,
-      });
-    }
-    resourceIds.add(resource.resourceId);
+  if (manifest.licenses.code.length === 0 || manifest.licenses.data.length === 0) {
+    addTextPackGovernanceDiagnostic(diagnostics, {
+      code: "missing-license",
+      packId: manifest.id,
+      message: `Manifest ${manifest.id} must declare code and data licenses.`,
+    });
+  }
 
-    if (!licenseIds.has(resource.licenseId)) {
-      addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "missing-license-ref",
-        packId: manifest.packId,
-        resourceId: resource.resourceId,
-        ref: resource.licenseId,
-        message: `Resource ${resource.resourceId} references missing license id ${resource.licenseId}.`,
-      });
-    }
+  if (manifest.provenance.sources.length === 0) {
+    addTextPackGovernanceDiagnostic(diagnostics, {
+      code: "missing-provenance",
+      packId: manifest.id,
+      message: `Manifest ${manifest.id} must declare one or more provenance sources.`,
+    });
+  }
 
-    if (!provenanceIds.has(resource.provenanceId)) {
+  const providedIds = new Set<string>();
+  for (const family of textPackResourceFamilies) {
+    const paths = manifest.resources[family] ?? [];
+    const ids = manifest.provides[family] ?? [];
+    const capability = manifest.capabilities[family];
+
+    if (paths.length !== ids.length) {
       addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "missing-provenance-ref",
-        packId: manifest.packId,
-        resourceId: resource.resourceId,
-        ref: resource.provenanceId,
-        message: `Resource ${resource.resourceId} references missing provenance id ${resource.provenanceId}.`,
+        code: "resource-provides-length-mismatch",
+        packId: manifest.id,
+        ref: family,
+        message: `Manifest ${manifest.id} has ${paths.length} ${family} resources but ${ids.length} provided ids.`,
       });
     }
 
-    if (!isSafeTextPackPackageRelativePath(resource.path)) {
+    if (paths.length > 0 && capability !== true) {
       addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "unsafe-resource-path",
-        packId: manifest.packId,
-        resourceId: resource.resourceId,
-        ref: resource.path,
-        message: `Resource ${resource.resourceId} uses an unsafe package-relative path.`,
+        code: "resource-family-without-capability",
+        packId: manifest.id,
+        ref: family,
+        message: `Manifest ${manifest.id} declares ${family} resources without a true capability flag.`,
       });
     }
 
-    const overlayKey = textPackOverlayKey(resource);
-    const conflictingResource = overlayKeys.get(overlayKey);
-    if (conflictingResource !== undefined) {
+    if (paths.length === 0 && capability === true) {
       addTextPackGovernanceDiagnostic(diagnostics, {
-        code: "overlay-conflict",
-        packId: manifest.packId,
-        resourceId: resource.resourceId,
-        ref: conflictingResource.resourceId,
-        message: `Resources ${conflictingResource.resourceId} and ${resource.resourceId} share a lookup key and overlay precedence.`,
+        code: "capability-without-resource",
+        packId: manifest.id,
+        ref: family,
+        message: `Manifest ${manifest.id} claims ${family} capability without declaring resources.`,
       });
-    } else {
-      overlayKeys.set(overlayKey, resource);
+    }
+
+    for (const resourcePath of paths) {
+      if (!isSafeTextPackPackageRelativePath(resourcePath)) {
+        addTextPackGovernanceDiagnostic(diagnostics, {
+          code: "unsafe-resource-path",
+          packId: manifest.id,
+          ref: resourcePath,
+          message: `Manifest ${manifest.id} uses an unsafe package-relative resource path.`,
+        });
+      }
+    }
+
+    for (const resourceId of ids) {
+      if (providedIds.has(resourceId)) {
+        addTextPackGovernanceDiagnostic(diagnostics, {
+          code: "duplicate-provides-id",
+          packId: manifest.id,
+          resourceId,
+          message: `Manifest ${manifest.id} repeats provided resource id ${resourceId}.`,
+        });
+      }
+      providedIds.add(resourceId);
     }
   }
 
-  const entrypoints = [
-    ["manifest", manifest.entrypoints.manifest],
-    ["resourceRoot", manifest.entrypoints.resourceRoot],
-  ] as const;
-  for (const [field, value] of entrypoints) {
-    if (value !== undefined && !isSafeTextPackPackageRelativePath(value)) {
+  for (const key of Object.keys(manifest.resources)) {
+    if (!isTextPackResourceFamily(key)) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "unsupported-resource-family",
+        packId: manifest.id,
+        ref: key,
+        message: `Manifest ${manifest.id} declares unsupported resource family ${key}.`,
+      });
+    }
+  }
+
+  for (const [field, value] of Object.entries(manifest.entrypoints)) {
+    if (!isSafeTextPackPackageRelativePath(value)) {
       addTextPackGovernanceDiagnostic(diagnostics, {
         code: "unsafe-entrypoint-path",
-        packId: manifest.packId,
+        packId: manifest.id,
         ref: `${field}:${value}`,
         message: `Entrypoint ${field} uses an unsafe package-relative path.`,
       });
@@ -602,15 +853,163 @@ export function validateTextPackManifestGovernance(
   }
 
   for (const [field, refs] of Object.entries(manifest.tests)) {
+    if (refs.length === 0) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "missing-test-ref",
+        packId: manifest.id,
+        ref: field,
+        message: `Manifest ${manifest.id} must declare ${field} test references.`,
+      });
+    }
     for (const ref of refs) {
       if (!isSafeTextPackTestRef(ref)) {
         addTextPackGovernanceDiagnostic(diagnostics, {
           code: "unsafe-test-ref",
-          packId: manifest.packId,
+          packId: manifest.id,
           ref: `${field}:${ref}`,
           message: `Test reference ${ref} is neither a safe package-relative path nor a stable test identifier.`,
         });
       }
+    }
+  }
+
+  const overlayKeys = new Map<string, TextPackResolvedResource>();
+  for (const resource of resolveTextPackManifestResources(manifest)) {
+    const overlayKey = textPackOverlayKey(resource);
+    const conflict = overlayKeys.get(overlayKey);
+    if (conflict !== undefined) {
+      addTextPackGovernanceDiagnostic(diagnostics, {
+        code: "overlay-conflict",
+        packId: manifest.id,
+        resourceId: resource.resourceId,
+        ref: conflict.resourceId,
+        message: `Resources ${conflict.resourceId} and ${resource.resourceId} share a lookup key and overlay precedence.`,
+      });
+    } else {
+      overlayKeys.set(overlayKey, resource);
+    }
+  }
+
+  return {
+    ok: diagnostics.length === 0,
+    diagnostics,
+  };
+}
+
+function parseTextPackVersion(value: string): readonly [number, number, number] | undefined {
+  const match = /^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/u.exec(value);
+  if (!match) return undefined;
+  return [Number(match[1]), Number(match[2]), Number(match[3])];
+}
+
+function compareTextPackVersions(left: string, right: string): number {
+  const parsedLeft = parseTextPackVersion(left);
+  const parsedRight = parseTextPackVersion(right);
+  if (!parsedLeft || !parsedRight) return left.localeCompare(right);
+  for (let index = 0; index < 3; index += 1) {
+    const difference = (parsedLeft[index] ?? 0) - (parsedRight[index] ?? 0);
+    if (difference !== 0) return difference;
+  }
+  return 0;
+}
+
+export function satisfiesTextPackVersionRange(version: string, range: string): boolean {
+  if (range === "*" || range === version) return true;
+  if (range.startsWith(">=")) return compareTextPackVersions(version, range.slice(2)) >= 0;
+  if (range.startsWith("^")) {
+    const base = range.slice(1);
+    const parsedVersion = parseTextPackVersion(version);
+    const parsedBase = parseTextPackVersion(base);
+    if (!parsedVersion || !parsedBase) return false;
+    return parsedVersion[0] === parsedBase[0] && compareTextPackVersions(version, base) >= 0;
+  }
+  if (range.startsWith("~")) {
+    const base = range.slice(1);
+    const parsedVersion = parseTextPackVersion(version);
+    const parsedBase = parseTextPackVersion(base);
+    if (!parsedVersion || !parsedBase) return false;
+    return (
+      parsedVersion[0] === parsedBase[0] &&
+      parsedVersion[1] === parsedBase[1] &&
+      compareTextPackVersions(version, base) >= 0
+    );
+  }
+  return false;
+}
+
+export function checkTextPackCompatibility(
+  manifest: TextPackManifestV1,
+  policy: TextPackCompatibilityPolicy = {},
+): TextPackCompatibilityResult {
+  const diagnostics: TextPackCompatibilityDiagnostic[] = [];
+  const packageVersions = policy.packageVersions ?? {};
+
+  for (const [engineName, expectedRange] of Object.entries(manifest.engines)) {
+    const actualVersion = packageVersions[engineName];
+    if (actualVersion === undefined) {
+      diagnostics.push({
+        code: "engine-version-missing",
+        packId: manifest.id,
+        ref: engineName,
+        message: `Compatibility policy did not provide version for ${engineName}.`,
+      });
+      continue;
+    }
+    if (!satisfiesTextPackVersionRange(actualVersion, expectedRange)) {
+      diagnostics.push({
+        code: "engine-version-incompatible",
+        packId: manifest.id,
+        ref: `${engineName}:${expectedRange}`,
+        message: `${engineName}@${actualVersion} does not satisfy ${expectedRange}.`,
+      });
+    }
+  }
+
+  const manifestProfiles = new Set(manifest.targets.profiles ?? []);
+  for (const profile of policy.requiredProfiles ?? []) {
+    if (!manifestProfiles.has(profile)) {
+      diagnostics.push({
+        code: "profile-missing",
+        packId: manifest.id,
+        ref: profile,
+        message: `Manifest ${manifest.id} does not declare required profile ${profile}.`,
+      });
+    }
+  }
+
+  const resourceIds = new Set(resourceIdsForManifest(manifest));
+  for (const resourceId of policy.mandatoryResources ?? []) {
+    if (!resourceIds.has(resourceId)) {
+      diagnostics.push({
+        code: "mandatory-resource-missing",
+        packId: manifest.id,
+        ref: resourceId,
+        message: `Manifest ${manifest.id} does not provide mandatory resource ${resourceId}.`,
+      });
+    }
+  }
+
+  if (
+    policy.minimumReviewState !== undefined &&
+    reviewStateRank[manifest.reviewState] < reviewStateRank[policy.minimumReviewState]
+  ) {
+    diagnostics.push({
+      code: "review-state-too-low",
+      packId: manifest.id,
+      ref: policy.minimumReviewState,
+      message: `Manifest ${manifest.id} review state ${manifest.reviewState} is below ${policy.minimumReviewState}.`,
+    });
+  }
+
+  const activePackIds = new Set(policy.activePackIds ?? []);
+  for (const exclusivePackId of manifest.composition?.exclusiveWith ?? []) {
+    if (activePackIds.has(exclusivePackId)) {
+      diagnostics.push({
+        code: "exclusive-overlay-conflict",
+        packId: manifest.id,
+        ref: exclusivePackId,
+        message: `Manifest ${manifest.id} is mutually exclusive with active pack ${exclusivePackId}.`,
+      });
     }
   }
 
@@ -640,7 +1039,17 @@ export function queryTextPackResourceRegistry(
       : comparableTextPackValue(request.lookupKey, request.canonicalizer);
 
   for (const resource of registry.resources) {
-    if (resource.kind !== request.kind) continue;
+    if (request.kind !== undefined && resource.kind !== request.kind) continue;
+    if (request.family !== undefined && resource.family !== request.family) continue;
+    if (request.kind !== undefined && request.family !== undefined && resourceKindByFamily[request.family] !== request.kind) {
+      mismatchDiagnostics.push({
+        code: "family-kind-mismatch",
+        packId: resource.packId,
+        resourceId: resource.resourceId,
+        message: `Requested family ${request.family} does not resolve to kind ${request.kind}.`,
+      });
+      continue;
+    }
     if (request.packId !== undefined && resource.packId !== request.packId) continue;
     if (request.resourceId !== undefined && resource.resourceId !== request.resourceId) continue;
     if (
@@ -738,7 +1147,7 @@ export function parseTextPackResourceContent(
   for (const [lineIndex, rawLine] of splitTextPackResourceLines(content).entries()) {
     const line = lineIndex + 1;
     const trimmed = rawLine.trim();
-    if (trimmed.length === 0) continue;
+    if (trimmed.length === 0 || trimmed.startsWith("#")) continue;
 
     const cells = trimmed.split("\t").map((cell) => cell.trim());
     const value = cells[0] ?? "";
@@ -757,7 +1166,7 @@ export function parseTextPackResourceContent(
     let label: string | undefined;
     let attributes: Record<string, string> = {};
 
-    if (resource.kind === "lexicon") {
+    if (resource.kind === "lexicon" || resource.kind === "morphology" || resource.kind === "tagset") {
       if (cells.length < 2) {
         diagnostics.push({
           code: "malformed-resource-row",
@@ -765,7 +1174,7 @@ export function parseTextPackResourceContent(
           resourceId: resource.resourceId,
           path: resource.path,
           line,
-          message: `Lexicon resource ${resource.resourceId} must contain attributes at line ${line}.`,
+          message: `${resource.kind} resource ${resource.resourceId} must contain attributes at line ${line}.`,
         });
         continue;
       }

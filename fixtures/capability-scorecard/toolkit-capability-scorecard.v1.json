@@ -170,63 +170,16 @@
   ],
   "packageRows": [
     {
-      "packageName": "@ismail-elkorchi/textfacts",
-      "supportStatus": "beta",
-      "evidenceRefs": [
-        "packages/textfacts/package.json",
-        "packages/textfacts/test"
-      ],
-      "nextGate": "Keep cross-package protocol, conformance, and resource growth outside textfacts."
-    },
-    {
-      "packageName": "@ismail-elkorchi/textdoc",
+      "packageName": "@ismail-elkorchi/textconformance",
       "supportStatus": "alpha",
       "evidenceRefs": [
-        "docs/specs/textdoc-document-annotation-model.md",
-        "packages/textdoc/src",
-        "packages/textdoc/package.json",
+        "schemas/textconformance-report-v1.schema.json",
+        "packages/textconformance/src",
+        "packages/textconformance/package.json",
         "docs/specs/public-vertical-slice-0.1.md",
         "tools/smoke-public-vertical-slice.mjs"
       ],
-      "nextGate": "Keep task-specific graph semantics as a beta limitation until broader task graph evidence exists."
-    },
-    {
-      "packageName": "@ismail-elkorchi/textpack",
-      "supportStatus": "alpha",
-      "evidenceRefs": [
-        "docs/specs/textpack-resource-manifest.md",
-        "packages/textpack/src",
-        "packages/textpack/package.json",
-        "docs/specs/public-vertical-slice-0.1.md",
-        "tools/smoke-public-vertical-slice.mjs"
-      ],
-      "nextGate": "Keep multilingual pack breadth and resource-vetting workflow as beta limitations until broader resource evidence exists."
-    },
-    {
-      "packageName": "@ismail-elkorchi/textrules",
-      "supportStatus": "alpha",
-      "evidenceRefs": [
-        "fixtures/pos-morph-lemma/slices.json",
-        "fixtures/rule-backed-ner/slices.json",
-        "packages/textrules/src/index.ts",
-        "packages/textrules/test/index.test.ts",
-        "tools/smoke-public-vertical-slice.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
-      ],
-      "nextGate": "Keep broader rule-backed task claims blocked until comparator-backed language slices and corpus evaluation expand."
-    },
-    {
-      "packageName": "@ismail-elkorchi/textpipeline",
-      "supportStatus": "alpha",
-      "evidenceRefs": [
-        "docs/specs/textpipeline-processor-contract.md",
-        "tools/fuzz/semantic.mjs",
-        "packages/textpipeline/src/index.ts",
-        "packages/textpipeline/test/index.test.ts",
-        "tools/smoke-public-vertical-slice.mjs",
-        "tools/check-workspace-pack-dry-run.mjs"
-      ],
-      "nextGate": "Keep remote orchestration, durable cache policy, worker execution, and long-running recovery as later limitations."
+      "nextGate": "Keep broad benchmark-runner behavior as a beta limitation until broader benchmark evidence exists."
     },
     {
       "packageName": "@ismail-elkorchi/textcorpus",
@@ -244,28 +197,25 @@
       "nextGate": "Keep retrieval and corpus scoring bounded until external relevance datasets, streaming behavior, and durable index storage exist."
     },
     {
-      "packageName": "@ismail-elkorchi/textprotocol",
+      "packageName": "@ismail-elkorchi/textdoc",
       "supportStatus": "alpha",
       "evidenceRefs": [
-        "schemas/textprotocol-result-envelope-v1.schema.json",
-        "packages/textprotocol/src",
-        "packages/textprotocol/package.json",
+        "docs/specs/textdoc-document-annotation-model.md",
+        "packages/textdoc/src",
+        "packages/textdoc/package.json",
         "docs/specs/public-vertical-slice-0.1.md",
         "tools/smoke-public-vertical-slice.mjs"
       ],
-      "nextGate": "Keep beta and production-candidate limitations explicit until broader transport and compatibility evidence exists."
+      "nextGate": "Keep task-specific graph semantics as a beta limitation until broader task graph evidence exists."
     },
     {
-      "packageName": "@ismail-elkorchi/textconformance",
-      "supportStatus": "alpha",
+      "packageName": "@ismail-elkorchi/textfacts",
+      "supportStatus": "beta",
       "evidenceRefs": [
-        "schemas/textconformance-report-v1.schema.json",
-        "packages/textconformance/src",
-        "packages/textconformance/package.json",
-        "docs/specs/public-vertical-slice-0.1.md",
-        "tools/smoke-public-vertical-slice.mjs"
+        "packages/textfacts/package.json",
+        "packages/textfacts/test"
       ],
-      "nextGate": "Keep broad benchmark-runner behavior as a beta limitation until broader benchmark evidence exists."
+      "nextGate": "Keep cross-package protocol, conformance, and resource growth outside textfacts."
     },
     {
       "packageName": "@ismail-elkorchi/textlab",
@@ -278,6 +228,95 @@
         "tools/check-workspace-pack-dry-run.mjs"
       ],
       "nextGate": "Keep comparator execution, interactive views, and large-corpus browsing as beta limitations until broader inspection evidence exists."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "docs/specs/textpack-resource-manifest.md",
+        "packages/textpack/src",
+        "packages/textpack/package.json",
+        "docs/specs/public-vertical-slice-0.1.md",
+        "tools/smoke-public-vertical-slice.mjs"
+      ],
+      "nextGate": "Keep multilingual pack breadth and resource-vetting workflow as beta limitations until broader resource evidence exists."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "packages/textpack-en-core/package.json",
+        "packages/textpack-en-core/pack.manifest.json",
+        "packages/textpack-en-core/resources",
+        "packages/textpack-en-core/test",
+        "tools/validate-textpack-packages.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "nextGate": "Keep reference resources scoped until broader resource review and language coverage exist."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack-en-legal",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "packages/textpack-en-legal/package.json",
+        "packages/textpack-en-legal/pack.manifest.json",
+        "packages/textpack-en-legal/resources",
+        "packages/textpack-en-legal/test",
+        "tools/validate-textpack-packages.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "nextGate": "Keep legal-domain reference resources scoped until broader domain resource review and coverage exist."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack-fr-core",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "packages/textpack-fr-core/package.json",
+        "packages/textpack-fr-core/pack.manifest.json",
+        "packages/textpack-fr-core/resources",
+        "packages/textpack-fr-core/test",
+        "tools/validate-textpack-packages.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "nextGate": "Keep reference resources scoped until broader resource review and language coverage exist."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpipeline",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "docs/specs/textpipeline-processor-contract.md",
+        "tools/fuzz/semantic.mjs",
+        "packages/textpipeline/src/index.ts",
+        "packages/textpipeline/test/index.test.ts",
+        "tools/smoke-public-vertical-slice.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "nextGate": "Keep remote orchestration, durable cache policy, worker execution, and long-running recovery as later limitations."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textprotocol",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "schemas/textprotocol-result-envelope-v1.schema.json",
+        "packages/textprotocol/src",
+        "packages/textprotocol/package.json",
+        "docs/specs/public-vertical-slice-0.1.md",
+        "tools/smoke-public-vertical-slice.mjs"
+      ],
+      "nextGate": "Keep beta and production-candidate limitations explicit until broader transport and compatibility evidence exists."
+    },
+    {
+      "packageName": "@ismail-elkorchi/textrules",
+      "supportStatus": "alpha",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/slices.json",
+        "fixtures/rule-backed-ner/slices.json",
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test/index.test.ts",
+        "tools/smoke-public-vertical-slice.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "nextGate": "Keep broader rule-backed task claims blocked until comparator-backed language slices and corpus evaluation expand."
     }
   ],
   "taskRows": [
@@ -522,7 +561,9 @@
       "fixtureSplitRefs": {
         "development": [
           "fixtures/pos-morph-lemma/slices.json",
-          "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json"
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
         ],
         "validation": [
           "fixtures/pos-morph-lemma/expected/es-multiword-token.json",

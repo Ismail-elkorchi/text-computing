@@ -1,38 +1,72 @@
 {
-  "schemaVersion": 1,
-  "packId": "pack:overlay-conflict-a",
-  "packageName": "@ismail-elkorchi/textpack-overlay-conflict-a",
-  "version": "0.0.0",
-  "resources": [
-    {
-      "resourceId": "stopwords-en-conflict-a",
-      "lookupKey": "stopwords.en.conflict",
-      "kind": "stopwords",
-      "path": "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
-      "language": "en",
-      "overlayPrecedence": 40,
-      "licenseId": "license-cc0",
-      "provenanceId": "prov-hand-curated"
-    }
-  ],
-  "licenses": [
-    {
-      "id": "license-cc0",
-      "spdx": "CC0-1.0"
-    }
-  ],
-  "provenance": [
-    {
-      "id": "prov-hand-curated",
-      "origin": "repository-fixture"
-    }
-  ],
+  "manifestVersion": "1.0.0",
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0"
+  },
+  "externalData": {
+    "unicode": "17.0.0"
+  },
+  "licenses": {
+    "code": [
+      "MIT"
+    ],
+    "data": [
+      "CC0-1.0"
+    ]
+  },
+  "provenance": {
+    "sources": [
+      "repo:fixtures/textpack"
+    ],
+    "generated": false,
+    "createdBy": [
+      "text-computing"
+    ]
+  },
   "entrypoints": {
-    "manifest": "fixtures/textpack/invalid/overlay-conflict-a.json"
+    "manifest": "pack.manifest.json",
+    "load": "./dist/index.js"
   },
   "tests": {
-    "smoke": ["fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"],
-    "lookup": ["lookup:stopwords:en"],
-    "overlay": ["overlay:stopwords:en"]
+    "smoke": [
+      "test/smoke.spec.ts"
+    ],
+    "negative": [
+      "test/negative.spec.ts"
+    ],
+    "representative": [
+      "test/representative.spec.ts"
+    ]
+  },
+  "id": "pack:overlay-conflict-a",
+  "packageName": "@ismail-elkorchi/textpack-overlay-conflict-a",
+  "version": "0.1.0",
+  "kind": [
+    "language"
+  ],
+  "targets": {
+    "languages": [
+      "en"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  },
+  "capabilities": {
+    "stopwords": true
+  },
+  "resources": {
+    "stopwords": [
+      "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"
+    ]
+  },
+  "provides": {
+    "stopwords": [
+      "stopwords-en-conflict"
+    ]
+  },
+  "reviewState": "candidate",
+  "composition": {
+    "overlayPrecedence": 40
   }
 }

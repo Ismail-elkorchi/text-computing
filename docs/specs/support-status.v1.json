@@ -2,18 +2,45 @@
   "schemaVersion": 1,
   "packages": [
     {
-      "name": "@ismail-elkorchi/textfacts",
-      "status": "beta",
-      "scope": "Deterministic single-text Unicode kernel. Historical broad public subpaths are removed; cross-package protocol/resource/schema/tooling behavior does not land here.",
+      "name": "@ismail-elkorchi/textconformance",
+      "status": "alpha",
+      "scope": "Public alpha conformance report package for machine-readable reports, runtime guards, report diffs, deterministic Markdown rendering, claim-registry traceability checks, and synchronous checks proven by Public Vertical Slice 0.1 and package tests.",
       "evidence": [
-        "Unicode conformance tests",
-        "published package metadata",
-        "multi-runtime tests"
+        "conformance report schema",
+        "runtime guards",
+        "minimal synchronous runner tests",
+        "fixtures/reports/task-evidence-manifest.v1.json",
+        "report diff tests",
+        "Markdown report rendering tests",
+        "claim-registry traceability tests",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
       ],
       "limitations": [
-        "Removed broad subpaths are not compatibility surfaces during alpha",
-        "New cross-package protocol/resource/schema/tooling growth belongs outside textfacts",
-        "Locale tailoring breadth remains limited"
+        "Benchmark runner is not release-ready.",
+        "Alpha scope is bounded to declared conformance reports and package interop proven by Public Vertical Slice 0.1"
+      ]
+    },
+    {
+      "name": "@ismail-elkorchi/textcorpus",
+      "status": "alpha",
+      "scope": "Public alpha corpus package for explicit-token collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval fixtures.",
+      "evidence": [
+        "explicit-token corpus tests",
+        "fingerprint index tests",
+        "frozen TF-IDF/BM25 corpus",
+        "frozen retrieval fixture",
+        "retrieval query-operator tests",
+        "retrieval index JSON round-trip tests",
+        "bounded large-corpus ordering tests",
+        "dist export readiness metadata",
+        "retrieval qrels evaluation tests",
+        "licensed retrieval fixture thresholds",
+        "workspace pack dry-run"
+      ],
+      "limitations": [
+        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
+        "Alpha scope is bounded to explicit-token corpus APIs, frozen retrieval fixtures, package tests, and package dry-run evidence"
       ]
     },
     {
@@ -41,9 +68,45 @@
       ]
     },
     {
+      "name": "@ismail-elkorchi/textfacts",
+      "status": "beta",
+      "scope": "Deterministic single-text Unicode kernel. Historical broad public subpaths are removed; cross-package protocol/resource/schema/tooling behavior does not land here.",
+      "evidence": [
+        "Unicode conformance tests",
+        "published package metadata",
+        "multi-runtime tests"
+      ],
+      "limitations": [
+        "Removed broad subpaths are not compatibility surfaces during alpha",
+        "New cross-package protocol/resource/schema/tooling growth belongs outside textfacts",
+        "Locale tailoring breadth remains limited"
+      ]
+    },
+    {
+      "name": "@ismail-elkorchi/textlab",
+      "status": "alpha",
+      "scope": "Public alpha inspection package for support-status, task-evidence, conformance-report, annotation, evidence-replay, and corpus-fixture inspection APIs and CLI commands proven by package tests and Public Vertical Slice 0.1.",
+      "evidence": [
+        "packages/textlab/src/index.ts",
+        "packages/textlab/src/cli.ts",
+        "packages/textlab/test/index.test.mjs",
+        "fixtures/reports/task-evidence-manifest.v1.json",
+        "fixtures/reports/evidence-replay.v1.json",
+        "fixtures/textdoc/examples/document-annotation-model-v1.json",
+        "fixtures/retrieval/expected/retrieval-smoke.json",
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
+        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "workspace pack dry-run"
+      ],
+      "limitations": [
+        "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
+        "Alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and package interop proven by Public Vertical Slice 0.1"
+      ]
+    },
+    {
       "name": "@ismail-elkorchi/textpack",
       "status": "alpha",
-      "scope": "Public alpha text resource package for manifest validation, fixture resource loading, deterministic registry queries, overlay precedence, provenance, licensing, and lookup diagnostics proven by Public Vertical Slice 0.1 and package tests.",
+      "scope": "Public alpha text resource package for authority-shaped manifest validation, package-relative resource loading, compatibility checks, explicit overlay composition, provenance, licensing, and lookup diagnostics proven by package tests and reference packs.",
       "evidence": [
         "resource manifest fixtures",
         "manifest governance validator tests",
@@ -52,34 +115,64 @@
         "overlay conflict tests",
         "provenance/license validation",
         "Public Vertical Slice 0.1 external-consumer smoke test",
-        "workspace pack dry-run"
+        "workspace pack dry-run",
+        "compatibility check tests",
+        "explicit composition tests",
+        "reference textpack-* packages",
+        "textpack package manifest validator"
       ],
       "limitations": [
         "Multilingual pack coverage and update workflow are not broad enough for package release.",
-        "No public resource marketplace or vetting workflow is implemented",
-        "Alpha scope is bounded to explicit fixture resources and package interop proven by Public Vertical Slice 0.1"
+        "Alpha scope is bounded to explicit fixture resources and package interop proven by Public Vertical Slice 0.1",
+        "Reference packs exist for alpha validation; resource-vetting breadth remains limited."
       ]
     },
     {
-      "name": "@ismail-elkorchi/textrules",
+      "name": "@ismail-elkorchi/textpack-en-core",
       "status": "alpha",
-      "scope": "Public alpha deterministic rules package for reusable lexical token-pattern primitives and bounded resource-backed rule execution over frozen slices.",
+      "scope": "Reference English resource pack for package-relative stopwords, rules, lexicon, tagset, morphology, and benchmark fixture resources.",
       "evidence": [
-        "primitive matcher tests",
-        "POS/morph/lemma frozen slices",
-        "rule-backed NER frozen slices",
-        "dependency-parser frozen slices",
-        "relation extraction frozen slices",
-        "coreference frozen slices",
-        "textdoc/protocol/conformance tests",
-        "dist export readiness metadata",
-        "Public Vertical Slice 0.1 external-consumer smoke test",
+        "pack.manifest.json",
+        "package-relative resources",
+        "smoke/negative/representative pack tests",
+        "textpack package manifest validator",
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
-        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
-        "Alpha scope is bounded to reusable rules, explicit resources, package tests, and package interop proven by Public Vertical Slice 0.1"
+        "Reference fixture pack for English resource loading; it is not broad language coverage.",
+        "Alpha scope is bounded to package-relative resources and manifest/test validation."
+      ]
+    },
+    {
+      "name": "@ismail-elkorchi/textpack-en-legal",
+      "status": "alpha",
+      "scope": "Reference English legal-domain resource pack for package-relative stopwords, gazetteer, and benchmark fixture resources.",
+      "evidence": [
+        "pack.manifest.json",
+        "package-relative resources",
+        "smoke/negative/representative pack tests",
+        "textpack package manifest validator",
+        "workspace pack dry-run"
+      ],
+      "limitations": [
+        "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage.",
+        "Alpha scope is bounded to package-relative resources and manifest/test validation."
+      ]
+    },
+    {
+      "name": "@ismail-elkorchi/textpack-fr-core",
+      "status": "alpha",
+      "scope": "Reference French resource pack for package-relative stopwords, lexicon, tagset, morphology, and benchmark fixture resources.",
+      "evidence": [
+        "pack.manifest.json",
+        "package-relative resources",
+        "smoke/negative/representative pack tests",
+        "textpack package manifest validator",
+        "workspace pack dry-run"
+      ],
+      "limitations": [
+        "Reference fixture pack for French resource loading; it is not broad language coverage.",
+        "Alpha scope is bounded to package-relative resources and manifest/test validation."
       ]
     },
     {
@@ -99,28 +192,6 @@
       "limitations": [
         "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
         "Alpha scope is bounded to deterministic local execution, package tests, and package interop proven by Public Vertical Slice 0.1"
-      ]
-    },
-    {
-      "name": "@ismail-elkorchi/textcorpus",
-      "status": "alpha",
-      "scope": "Public alpha corpus package for explicit-token collections, metadata slicing, deterministic fingerprint indexing, frozen-scope TF-IDF/BM25 scoring, and frozen-scope retrieval fixtures.",
-      "evidence": [
-        "explicit-token corpus tests",
-        "fingerprint index tests",
-        "frozen TF-IDF/BM25 corpus",
-        "frozen retrieval fixture",
-        "retrieval query-operator tests",
-        "retrieval index JSON round-trip tests",
-        "bounded large-corpus ordering tests",
-        "dist export readiness metadata",
-        "retrieval qrels evaluation tests",
-        "licensed retrieval fixture thresholds",
-        "workspace pack dry-run"
-      ],
-      "limitations": [
-        "Retrieval and corpus scoring remain frozen-corpus only without external relevance datasets, streaming retrieval, or durable index storage.",
-        "Alpha scope is bounded to explicit-token corpus APIs, frozen retrieval fixtures, package tests, and package dry-run evidence"
       ]
     },
     {
@@ -146,44 +217,25 @@
       ]
     },
     {
-      "name": "@ismail-elkorchi/textconformance",
+      "name": "@ismail-elkorchi/textrules",
       "status": "alpha",
-      "scope": "Public alpha conformance report package for machine-readable reports, runtime guards, report diffs, deterministic Markdown rendering, claim-registry traceability checks, and synchronous checks proven by Public Vertical Slice 0.1 and package tests.",
+      "scope": "Public alpha deterministic rules package for reusable lexical token-pattern primitives and bounded resource-backed rule execution over frozen slices.",
       "evidence": [
-        "conformance report schema",
-        "runtime guards",
-        "minimal synchronous runner tests",
-        "fixtures/reports/task-evidence-manifest.v1.json",
-        "report diff tests",
-        "Markdown report rendering tests",
-        "claim-registry traceability tests",
+        "primitive matcher tests",
+        "POS/morph/lemma frozen slices",
+        "rule-backed NER frozen slices",
+        "dependency-parser frozen slices",
+        "relation extraction frozen slices",
+        "coreference frozen slices",
+        "textdoc/protocol/conformance tests",
+        "dist export readiness metadata",
         "Public Vertical Slice 0.1 external-consumer smoke test",
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Benchmark runner is not release-ready.",
-        "Alpha scope is bounded to declared conformance reports and package interop proven by Public Vertical Slice 0.1"
-      ]
-    },
-    {
-      "name": "@ismail-elkorchi/textlab",
-      "status": "alpha",
-      "scope": "Public alpha inspection package for support-status, task-evidence, conformance-report, annotation, evidence-replay, and corpus-fixture inspection APIs and CLI commands proven by package tests and Public Vertical Slice 0.1.",
-      "evidence": [
-        "packages/textlab/src/index.ts",
-        "packages/textlab/src/cli.ts",
-        "packages/textlab/test/index.test.mjs",
-        "fixtures/reports/task-evidence-manifest.v1.json",
-        "fixtures/reports/evidence-replay.v1.json",
-        "fixtures/textdoc/examples/document-annotation-model-v1.json",
-        "fixtures/retrieval/expected/retrieval-smoke.json",
-        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
-        "Public Vertical Slice 0.1 external-consumer smoke test",
-        "workspace pack dry-run"
-      ],
-      "limitations": [
-        "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
-        "Alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and package interop proven by Public Vertical Slice 0.1"
+        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+        "Alpha scope is bounded to reusable rules, explicit resources, package tests, and package interop proven by Public Vertical Slice 0.1"
       ]
     }
   ],

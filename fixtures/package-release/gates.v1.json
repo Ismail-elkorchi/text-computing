@@ -42,6 +42,9 @@
       "stage": 2,
       "packages": [
         "@ismail-elkorchi/textcorpus",
+        "@ismail-elkorchi/textpack-en-core",
+        "@ismail-elkorchi/textpack-en-legal",
+        "@ismail-elkorchi/textpack-fr-core",
         "@ismail-elkorchi/textpipeline",
         "@ismail-elkorchi/textrules"
       ],
@@ -56,160 +59,7 @@
   ],
   "packages": [
     {
-      "packageName": "@ismail-elkorchi/textfacts",
-      "releaseTrack": "public-beta",
-      "supportStatus": "beta",
-      "releaseReadiness": "publishable",
-      "gates": [
-        "metadata",
-        "tests",
-        "schemas",
-        "package-quality",
-        "security-review",
-        "claim-hygiene",
-        "downstream-api-stability"
-      ],
-      "downstreamApiStability": {
-        "requiredBeforeRelease": false,
-        "status": "not-required",
-        "downstreamDependents": [
-          "@ismail-elkorchi/textcorpus",
-          "@ismail-elkorchi/textdoc"
-        ],
-        "evidenceRefs": [
-          "packages/textfacts/package.json",
-          "fixtures/package-release/gates.v1.json"
-        ],
-        "policy": "This gate controls future non-textfacts releases; textfacts remains governed by its existing public-beta package-quality and claim-hygiene gates."
-      },
-      "releaseBlockers": [],
-      "evidenceRefs": [
-        "packages/textfacts/package.json",
-        "packages/textfacts/test",
-        "tools/check-public-claims.mjs"
-      ],
-      "limitations": [
-        "Beta package; cross-package growth remains outside textfacts."
-      ],
-      "blockerClassifications": []
-    },
-    {
-      "packageName": "@ismail-elkorchi/textdoc",
-      "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
-      "releaseReadiness": "publishable",
-      "gates": [
-        "metadata",
-        "tests",
-        "schemas",
-        "package-quality",
-        "security-review",
-        "claim-hygiene",
-        "downstream-api-stability"
-      ],
-      "downstreamApiStability": {
-        "requiredBeforeRelease": true,
-        "status": "proven",
-        "downstreamDependents": [
-          "@ismail-elkorchi/textcorpus",
-          "@ismail-elkorchi/textpipeline",
-          "@ismail-elkorchi/textrules"
-        ],
-        "evidenceRefs": [
-          "packages/textdoc/package.json",
-          "fixtures/package-release/gates.v1.json",
-          "fixtures/package-release/downstream-api-stability.v1.json",
-          "tools/check-downstream-api-stability.mjs"
-        ],
-        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
-      },
-      "releaseBlockers": [],
-      "evidenceRefs": [
-        "packages/textdoc/package.json",
-        "packages/textdoc/test",
-        "packages/textdoc/src/index.ts",
-        "packages/textdoc/README.md",
-        "packages/textdoc/CHANGELOG.md",
-        "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs",
-        "tools/smoke-public-vertical-slice.mjs"
-      ],
-      "limitations": [
-        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
-        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
-      ],
-      "blockerClassifications": [
-        {
-          "blocker": "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
-          "maturity": "beta",
-          "decision": "Does not block alpha because the alpha scope requires bounded document/container interoperation, not broad task graph semantics.",
-          "evidenceRefs": [
-            "packages/textdoc/src/index.ts",
-            "packages/textdoc/test",
-            "docs/specs/support-status.v1.json"
-          ]
-        }
-      ]
-    },
-    {
-      "packageName": "@ismail-elkorchi/textpack",
-      "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
-      "releaseReadiness": "publishable",
-      "gates": [
-        "metadata",
-        "tests",
-        "schemas",
-        "package-quality",
-        "security-review",
-        "claim-hygiene",
-        "downstream-api-stability"
-      ],
-      "downstreamApiStability": {
-        "requiredBeforeRelease": true,
-        "status": "proven",
-        "downstreamDependents": [
-          "@ismail-elkorchi/textrules"
-        ],
-        "evidenceRefs": [
-          "packages/textpack/package.json",
-          "fixtures/package-release/gates.v1.json",
-          "fixtures/package-release/downstream-api-stability.v1.json",
-          "tools/check-downstream-api-stability.mjs"
-        ],
-        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
-      },
-      "releaseBlockers": [],
-      "evidenceRefs": [
-        "packages/textpack/package.json",
-        "packages/textpack/src/index.ts",
-        "packages/textpack/README.md",
-        "packages/textpack/CHANGELOG.md",
-        "packages/textpack/test",
-        "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs",
-        "tools/smoke-public-vertical-slice.mjs"
-      ],
-      "limitations": [
-        "Multilingual pack coverage and update workflow are not broad enough for package release.",
-        "No public resource marketplace or vetting workflow is implemented.",
-        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
-      ],
-      "blockerClassifications": [
-        {
-          "blocker": "Multilingual pack coverage and update workflow are not broad enough for package release.",
-          "maturity": "beta",
-          "decision": "Does not block alpha because alpha requires explicit fixture resources and exact declared lookup behavior, not broad resource-marketplace coverage.",
-          "evidenceRefs": [
-            "packages/textpack/src/index.ts",
-            "packages/textpack/test",
-            "docs/specs/support-status.v1.json"
-          ]
-        }
-      ]
-    },
-    {
-      "packageName": "@ismail-elkorchi/textrules",
+      "packageName": "@ismail-elkorchi/textconformance",
       "releaseTrack": "public-alpha",
       "supportStatus": "alpha",
       "releaseReadiness": "publishable",
@@ -227,100 +77,36 @@
         "status": "proven",
         "downstreamDependents": [],
         "evidenceRefs": [
-          "packages/textrules/package.json",
+          "packages/textconformance/package.json",
           "fixtures/package-release/gates.v1.json",
           "fixtures/package-release/downstream-api-stability.v1.json",
           "tools/check-downstream-api-stability.mjs"
         ],
-        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
       },
       "releaseBlockers": [],
       "evidenceRefs": [
-        "packages/textrules/package.json",
-        "packages/textrules/README.md",
-        "packages/textrules/CHANGELOG.md",
-        "packages/textrules/src/index.ts",
-        "packages/textrules/test",
+        "packages/textconformance/package.json",
+        "packages/textconformance/README.md",
+        "packages/textconformance/CHANGELOG.md",
+        "packages/textconformance/test",
+        "packages/textconformance/src/index.ts",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
-        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
-        "Public alpha scope is bounded to reusable rules, explicit resources, package tests, and Public Vertical Slice 0.1 package interop evidence."
+        "Benchmark runner is not release-ready.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+          "blocker": "Benchmark runner is not release-ready.",
           "maturity": "beta",
-          "decision": "Blocks broader task claims, not the foundation alpha package sequence; keep behavior slice-scoped.",
+          "decision": "Does not block alpha because alpha requires declared conformance reports and checks, not a broad benchmark runner.",
           "evidenceRefs": [
-            "packages/textrules/src/index.ts",
-            "packages/textrules/test",
-            "docs/specs/support-status.v1.json"
-          ]
-        },
-        {
-          "blocker": "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
-          "maturity": "beta",
-          "decision": "Blocks broader task evidence claims; does not authorize new comparator matrices during alpha foundation release.",
-          "evidenceRefs": [
-            "fixtures/reports/task-evidence-manifest.v1.json",
-            "docs/specs/support-status.v1.json"
-          ]
-        }
-      ]
-    },
-    {
-      "packageName": "@ismail-elkorchi/textpipeline",
-      "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
-      "releaseReadiness": "publishable",
-      "gates": [
-        "metadata",
-        "tests",
-        "schemas",
-        "package-quality",
-        "security-review",
-        "claim-hygiene",
-        "downstream-api-stability"
-      ],
-      "downstreamApiStability": {
-        "requiredBeforeRelease": true,
-        "status": "proven",
-        "downstreamDependents": [],
-        "evidenceRefs": [
-          "packages/textpipeline/package.json",
-          "fixtures/package-release/gates.v1.json",
-          "fixtures/package-release/downstream-api-stability.v1.json",
-          "tools/check-downstream-api-stability.mjs"
-        ],
-        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
-      },
-      "releaseBlockers": [],
-      "evidenceRefs": [
-        "packages/textpipeline/package.json",
-        "packages/textpipeline/README.md",
-        "packages/textpipeline/CHANGELOG.md",
-        "packages/textpipeline/src/index.ts",
-        "packages/textpipeline/test",
-        "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs",
-        "tools/smoke-public-vertical-slice.mjs"
-      ],
-      "limitations": [
-        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
-        "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
-      ],
-      "blockerClassifications": [
-        {
-          "blocker": "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
-          "maturity": "production-candidate",
-          "decision": "Does not block alpha; it limits production-candidate operational claims beyond deterministic local execution.",
-          "evidenceRefs": [
-            "packages/textpipeline/src/index.ts",
-            "packages/textpipeline/test",
+            "packages/textconformance/src/index.ts",
+            "packages/textconformance/test",
             "docs/specs/support-status.v1.json"
           ]
         }
@@ -385,7 +171,7 @@
       ]
     },
     {
-      "packageName": "@ismail-elkorchi/textprotocol",
+      "packageName": "@ismail-elkorchi/textdoc",
       "releaseTrack": "public-alpha",
       "supportStatus": "alpha",
       "releaseReadiness": "publishable",
@@ -402,11 +188,12 @@
         "requiredBeforeRelease": true,
         "status": "proven",
         "downstreamDependents": [
+          "@ismail-elkorchi/textcorpus",
           "@ismail-elkorchi/textpipeline",
           "@ismail-elkorchi/textrules"
         ],
         "evidenceRefs": [
-          "packages/textprotocol/package.json",
+          "packages/textdoc/package.json",
           "fixtures/package-release/gates.v1.json",
           "fixtures/package-release/downstream-api-stability.v1.json",
           "tools/check-downstream-api-stability.mjs"
@@ -415,25 +202,36 @@
       },
       "releaseBlockers": [],
       "evidenceRefs": [
-        "packages/textprotocol/package.json",
-        "packages/textprotocol/test",
-        "packages/textprotocol/src/index.ts",
-        "packages/textprotocol/README.md",
-        "packages/textprotocol/CHANGELOG.md",
+        "packages/textdoc/package.json",
+        "packages/textdoc/test",
+        "packages/textdoc/src/index.ts",
+        "packages/textdoc/README.md",
+        "packages/textdoc/CHANGELOG.md",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Only result-envelope schema version 1 and the package JSON transport wrapper are standardized.",
+        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
-      "blockerClassifications": []
+      "blockerClassifications": [
+        {
+          "blocker": "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because the alpha scope requires bounded document/container interoperation, not broad task graph semantics.",
+          "evidenceRefs": [
+            "packages/textdoc/src/index.ts",
+            "packages/textdoc/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        }
+      ]
     },
     {
-      "packageName": "@ismail-elkorchi/textconformance",
-      "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
+      "packageName": "@ismail-elkorchi/textfacts",
+      "releaseTrack": "public-beta",
+      "supportStatus": "beta",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -445,44 +243,28 @@
         "downstream-api-stability"
       ],
       "downstreamApiStability": {
-        "requiredBeforeRelease": true,
-        "status": "proven",
-        "downstreamDependents": [],
-        "evidenceRefs": [
-          "packages/textconformance/package.json",
-          "fixtures/package-release/gates.v1.json",
-          "fixtures/package-release/downstream-api-stability.v1.json",
-          "tools/check-downstream-api-stability.mjs"
+        "requiredBeforeRelease": false,
+        "status": "not-required",
+        "downstreamDependents": [
+          "@ismail-elkorchi/textcorpus",
+          "@ismail-elkorchi/textdoc"
         ],
-        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
+        "evidenceRefs": [
+          "packages/textfacts/package.json",
+          "fixtures/package-release/gates.v1.json"
+        ],
+        "policy": "This gate controls future non-textfacts releases; textfacts remains governed by its existing public-beta package-quality and claim-hygiene gates."
       },
       "releaseBlockers": [],
       "evidenceRefs": [
-        "packages/textconformance/package.json",
-        "packages/textconformance/README.md",
-        "packages/textconformance/CHANGELOG.md",
-        "packages/textconformance/test",
-        "packages/textconformance/src/index.ts",
-        "tools/validate-package-readiness.mjs",
-        "tools/check-workspace-pack-dry-run.mjs",
-        "tools/smoke-public-vertical-slice.mjs"
+        "packages/textfacts/package.json",
+        "packages/textfacts/test",
+        "tools/check-public-claims.mjs"
       ],
       "limitations": [
-        "Benchmark runner is not release-ready.",
-        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
+        "Beta package; cross-package growth remains outside textfacts."
       ],
-      "blockerClassifications": [
-        {
-          "blocker": "Benchmark runner is not release-ready.",
-          "maturity": "beta",
-          "decision": "Does not block alpha because alpha requires declared conformance reports and checks, not a broad benchmark runner.",
-          "evidenceRefs": [
-            "packages/textconformance/src/index.ts",
-            "packages/textconformance/test",
-            "docs/specs/support-status.v1.json"
-          ]
-        }
-      ]
+      "blockerClassifications": []
     },
     {
       "packageName": "@ismail-elkorchi/textlab",
@@ -534,6 +316,394 @@
           "evidenceRefs": [
             "packages/textlab/src/index.ts",
             "packages/textlab/test/index.test.mjs",
+            "docs/specs/support-status.v1.json"
+          ]
+        }
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "proven",
+        "downstreamDependents": [
+          "@ismail-elkorchi/textpack-en-core",
+          "@ismail-elkorchi/textpack-en-legal",
+          "@ismail-elkorchi/textpack-fr-core",
+          "@ismail-elkorchi/textrules"
+        ],
+        "evidenceRefs": [
+          "packages/textpack/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textpack/package.json",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/README.md",
+        "packages/textpack/CHANGELOG.md",
+        "packages/textpack/test",
+        "tools/validate-package-readiness.mjs",
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs",
+        "tools/validate-textpack-packages.mjs"
+      ],
+      "limitations": [
+        "Multilingual pack coverage and update workflow are not broad enough for package release.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence.",
+        "Reference packs exist for alpha validation; resource-vetting breadth remains limited."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Multilingual pack coverage and update workflow are not broad enough for package release.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because alpha requires explicit fixture resources and exact declared lookup behavior, not broad resource-marketplace coverage.",
+          "evidenceRefs": [
+            "packages/textpack/src/index.ts",
+            "packages/textpack/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "Reference packs exist for alpha validation; resource-vetting breadth remains limited.",
+          "maturity": "beta",
+          "decision": "Does not block alpha reference packs; it limits broad resource-catalog claims until review workflow and resource breadth expand.",
+          "evidenceRefs": [
+            "packages/textpack/src/index.ts",
+            "tools/validate-textpack-packages.mjs",
+            "docs/specs/support-status.v1.json"
+          ]
+        }
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": false,
+        "status": "not-required",
+        "downstreamDependents": [],
+        "evidenceRefs": [
+          "packages/textpack-en-core/package.json",
+          "tools/validate-textpack-packages.mjs",
+          "tools/check-workspace-pack-dry-run.mjs",
+          "fixtures/package-release/gates.v1.json"
+        ],
+        "policy": "Reference packs have no workspace downstream dependents; package manifest, resource, test, and dry-run evidence are the alpha gate."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textpack-en-core/package.json",
+        "packages/textpack-en-core/pack.manifest.json",
+        "packages/textpack-en-core/resources",
+        "packages/textpack-en-core/test",
+        "tools/validate-textpack-packages.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "limitations": [
+        "Reference fixture pack for English resource loading; it is not broad language coverage.",
+        "Alpha scope is bounded to package-relative resources, manifest validation, package tests, and workspace pack dry-run evidence."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Reference fixture pack for English resource loading; it is not broad language coverage.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because the reference pack is intentionally small and explicitly scoped.",
+          "evidenceRefs": [
+            "packages/textpack-en-core/pack.manifest.json",
+            "packages/textpack-en-core/README.md"
+          ]
+        }
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack-en-legal",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": false,
+        "status": "not-required",
+        "downstreamDependents": [],
+        "evidenceRefs": [
+          "packages/textpack-en-legal/package.json",
+          "tools/validate-textpack-packages.mjs",
+          "tools/check-workspace-pack-dry-run.mjs",
+          "fixtures/package-release/gates.v1.json"
+        ],
+        "policy": "Reference packs have no workspace downstream dependents; package manifest, resource, test, and dry-run evidence are the alpha gate."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textpack-en-legal/package.json",
+        "packages/textpack-en-legal/pack.manifest.json",
+        "packages/textpack-en-legal/resources",
+        "packages/textpack-en-legal/test",
+        "tools/validate-textpack-packages.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "limitations": [
+        "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage.",
+        "Alpha scope is bounded to package-relative resources, manifest validation, package tests, and workspace pack dry-run evidence."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because the reference pack is intentionally small and explicitly scoped.",
+          "evidenceRefs": [
+            "packages/textpack-en-legal/pack.manifest.json",
+            "packages/textpack-en-legal/README.md"
+          ]
+        }
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpack-fr-core",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": false,
+        "status": "not-required",
+        "downstreamDependents": [],
+        "evidenceRefs": [
+          "packages/textpack-fr-core/package.json",
+          "tools/validate-textpack-packages.mjs",
+          "tools/check-workspace-pack-dry-run.mjs",
+          "fixtures/package-release/gates.v1.json"
+        ],
+        "policy": "Reference packs have no workspace downstream dependents; package manifest, resource, test, and dry-run evidence are the alpha gate."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textpack-fr-core/package.json",
+        "packages/textpack-fr-core/pack.manifest.json",
+        "packages/textpack-fr-core/resources",
+        "packages/textpack-fr-core/test",
+        "tools/validate-textpack-packages.mjs",
+        "tools/check-workspace-pack-dry-run.mjs"
+      ],
+      "limitations": [
+        "Reference fixture pack for French resource loading; it is not broad language coverage.",
+        "Alpha scope is bounded to package-relative resources, manifest validation, package tests, and workspace pack dry-run evidence."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Reference fixture pack for French resource loading; it is not broad language coverage.",
+          "maturity": "beta",
+          "decision": "Does not block alpha because the reference pack is intentionally small and explicitly scoped.",
+          "evidenceRefs": [
+            "packages/textpack-fr-core/pack.manifest.json",
+            "packages/textpack-fr-core/README.md"
+          ]
+        }
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textpipeline",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "proven",
+        "downstreamDependents": [],
+        "evidenceRefs": [
+          "packages/textpipeline/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textpipeline/package.json",
+        "packages/textpipeline/README.md",
+        "packages/textpipeline/CHANGELOG.md",
+        "packages/textpipeline/src/index.ts",
+        "packages/textpipeline/test",
+        "tools/validate-package-readiness.mjs",
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
+      ],
+      "limitations": [
+        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+        "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+          "maturity": "production-candidate",
+          "decision": "Does not block alpha; it limits production-candidate operational claims beyond deterministic local execution.",
+          "evidenceRefs": [
+            "packages/textpipeline/src/index.ts",
+            "packages/textpipeline/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        }
+      ]
+    },
+    {
+      "packageName": "@ismail-elkorchi/textprotocol",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "proven",
+        "downstreamDependents": [
+          "@ismail-elkorchi/textpipeline",
+          "@ismail-elkorchi/textrules"
+        ],
+        "evidenceRefs": [
+          "packages/textprotocol/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Declared downstream dependents import and exercise current built package APIs through committed tests and release-candidate evidence."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textprotocol/package.json",
+        "packages/textprotocol/test",
+        "packages/textprotocol/src/index.ts",
+        "packages/textprotocol/README.md",
+        "packages/textprotocol/CHANGELOG.md",
+        "tools/validate-package-readiness.mjs",
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
+      ],
+      "limitations": [
+        "Only result-envelope schema version 1 and the package JSON transport wrapper are standardized.",
+        "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
+      ],
+      "blockerClassifications": []
+    },
+    {
+      "packageName": "@ismail-elkorchi/textrules",
+      "releaseTrack": "public-alpha",
+      "supportStatus": "alpha",
+      "releaseReadiness": "publishable",
+      "gates": [
+        "metadata",
+        "tests",
+        "schemas",
+        "package-quality",
+        "security-review",
+        "claim-hygiene",
+        "downstream-api-stability"
+      ],
+      "downstreamApiStability": {
+        "requiredBeforeRelease": true,
+        "status": "proven",
+        "downstreamDependents": [],
+        "evidenceRefs": [
+          "packages/textrules/package.json",
+          "fixtures/package-release/gates.v1.json",
+          "fixtures/package-release/downstream-api-stability.v1.json",
+          "tools/check-downstream-api-stability.mjs"
+        ],
+        "policy": "Built-package API import and smoke evidence is recorded for the declared public-alpha package scope."
+      },
+      "releaseBlockers": [],
+      "evidenceRefs": [
+        "packages/textrules/package.json",
+        "packages/textrules/README.md",
+        "packages/textrules/CHANGELOG.md",
+        "packages/textrules/src/index.ts",
+        "packages/textrules/test",
+        "tools/validate-package-readiness.mjs",
+        "tools/check-workspace-pack-dry-run.mjs",
+        "tools/smoke-public-vertical-slice.mjs"
+      ],
+      "limitations": [
+        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+        "Public alpha scope is bounded to reusable rules, explicit resources, package tests, and Public Vertical Slice 0.1 package interop evidence."
+      ],
+      "blockerClassifications": [
+        {
+          "blocker": "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+          "maturity": "beta",
+          "decision": "Blocks broader task claims, not the foundation alpha package sequence; keep behavior slice-scoped.",
+          "evidenceRefs": [
+            "packages/textrules/src/index.ts",
+            "packages/textrules/test",
+            "docs/specs/support-status.v1.json"
+          ]
+        },
+        {
+          "blocker": "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+          "maturity": "beta",
+          "decision": "Blocks broader task evidence claims; does not authorize new comparator matrices during alpha foundation release.",
+          "evidenceRefs": [
+            "fixtures/reports/task-evidence-manifest.v1.json",
             "docs/specs/support-status.v1.json"
           ]
         }

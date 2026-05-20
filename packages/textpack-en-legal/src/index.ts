@@ -1,0 +1,102 @@
+import type { TextPackManifestV1 } from "@ismail-elkorchi/textpack";
+
+export const textPackEnLegalManifest: TextPackManifestV1 = {
+  "manifestVersion": "1.0.0",
+  "id": "pack:en-legal",
+  "packageName": "@ismail-elkorchi/textpack-en-legal",
+  "version": "0.1.0",
+  "kind": [
+    "language",
+    "domain"
+  ],
+  "targets": {
+    "languages": [
+      "en"
+    ],
+    "scripts": [
+      "Latn"
+    ],
+    "domains": [
+      "legal"
+    ],
+    "profiles": [
+      "legal"
+    ]
+  },
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0"
+  },
+  "externalData": {
+    "unicode": "17.0.0"
+  },
+  "capabilities": {
+    "stopwords": true,
+    "gazetteers": true,
+    "benchmarks": true
+  },
+  "resources": {
+    "stopwords": [
+      "resources/stopwords.en.legal.txt"
+    ],
+    "gazetteers": [
+      "resources/gazetteer.en.legal.tsv"
+    ],
+    "benchmarks": [
+      "resources/benchmark.legal-smoke.txt"
+    ]
+  },
+  "provides": {
+    "stopwords": [
+      "stopwords-en-legal"
+    ],
+    "gazetteers": [
+      "gazetteer-en-legal"
+    ],
+    "benchmarks": [
+      "benchmark-en-legal-smoke"
+    ]
+  },
+  "entrypoints": {
+    "manifest": "./pack.manifest.json",
+    "load": "./dist/index.js"
+  },
+  "licenses": {
+    "code": [
+      "MIT"
+    ],
+    "data": [
+      "CC0-1.0"
+    ]
+  },
+  "provenance": {
+    "sources": [
+      "repo:packages/textpack-en-legal/resources"
+    ],
+    "generated": false,
+    "createdBy": [
+      "text-computing"
+    ]
+  },
+  "tests": {
+    "smoke": [
+      "test/smoke.mjs"
+    ],
+    "negative": [
+      "test/negative.mjs"
+    ],
+    "representative": [
+      "test/representative.mjs"
+    ]
+  },
+  "reviewState": "candidate",
+  "composition": {
+    "overlayPrecedence": 50
+  },
+  "limitations": [
+    "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage."
+  ]
+} as const;
+
+export function loadTextPackEnLegalManifest(): TextPackManifestV1 {
+  return textPackEnLegalManifest;
+}

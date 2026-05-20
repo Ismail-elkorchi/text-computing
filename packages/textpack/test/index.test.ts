@@ -1,4 +1,6 @@
 import {
+  checkTextPackCompatibility,
+  composeTextPackResources,
   createTextPackResourceRegistry,
   isTextPackManifestV1,
   loadTextPackRegistryResources,
@@ -7,11 +9,12 @@ import {
   parseTextPackResourceContent,
   queryTextPackResourceRegistry,
   resolveTextPackResources,
+  satisfiesTextPackVersionRange,
   type packageName,
   type TextPackManifestGovernanceDiagnosticCode,
   type TextPackManifestV1,
   textPackDemoTrimLowercaseCanonicalizer,
-  textPackManifestSchemaVersion,
+  textPackManifestVersion,
   validateTextPackManifestGovernance,
 } from "../src/index.ts";
 
@@ -22,159 +25,126 @@ function required<T>(value: T | undefined, message: string): T {
   return value;
 }
 
-const baseManifest: TextPackManifestV1 = {
-  schemaVersion: textPackManifestSchemaVersion,
-  packId: "pack:en-core",
-  packageName: "@ismail-elkorchi/textpack-en-core",
-  version: "0.0.0",
-  resources: [
-    {
-      resourceId: "stopwords-en-core",
-      lookupKey: "stopwords.en.core",
-      kind: "stopwords",
-      path: "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
-      language: "en",
-      overlayPrecedence: 10,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-    {
-      resourceId: "lexicon-en-core",
-      lookupKey: "lexicon.en.core",
-      kind: "lexicon",
-      path: "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
-      language: "en",
-      overlayPrecedence: 10,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-    {
-      resourceId: "abbrev-en-core",
-      lookupKey: "abbreviation.en.core",
-      kind: "abbreviation-list",
-      path: "fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt",
-      language: "en",
-      overlayPrecedence: 10,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-  ],
-  licenses: [
-    {
-      id: "license-cc0",
-      spdx: "CC0-1.0",
-    },
-  ],
-  provenance: [
-    {
-      id: "prov-hand-curated",
-      origin: "repository-fixture",
-      createdBy: "text-computing",
-    },
-  ],
+const sharedManifestFields = {
+  manifestVersion: textPackManifestVersion,
+  engines: {
+    "@ismail-elkorchi/textpack": "^0.1.0",
+  },
+  externalData: {
+    unicode: "17.0.0",
+  },
+  licenses: {
+    code: ["MIT"],
+    data: ["CC0-1.0"],
+  },
+  provenance: {
+    sources: ["repo:fixtures/textpack"],
+    generated: false,
+    createdBy: ["text-computing"],
+  },
   entrypoints: {
-    manifest: "fixtures/textpack/manifests/textpack-en-core.json",
-    resourceRoot: "fixtures/textpack/resources",
+    manifest: "pack.manifest.json",
+    load: "./dist/index.js",
   },
   tests: {
-    smoke: ["fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"],
-    lookup: ["lookup:stopwords:en"],
-    overlay: ["overlay:stopwords:en"],
+    smoke: ["test/smoke.spec.ts"],
+    negative: ["test/negative.spec.ts"],
+    representative: ["test/representative.spec.ts"],
+  },
+} as const;
+
+const baseManifest: TextPackManifestV1 = {
+  ...sharedManifestFields,
+  id: "pack:en-core",
+  packageName: "@ismail-elkorchi/textpack-en-core",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["en"],
+    scripts: ["Latn"],
+  },
+  capabilities: {
+    stopwords: true,
+    lexicons: true,
+    rules: true,
+  },
+  resources: {
+    stopwords: ["fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"],
+    lexicons: ["fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"],
+    rules: ["fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt"],
+  },
+  provides: {
+    stopwords: ["stopwords-en-core"],
+    lexicons: ["lexicon-en-core"],
+    rules: ["abbrev-en-core"],
+  },
+  reviewState: "reference",
+  composition: {
+    overlayPrecedence: 10,
   },
 };
 
-const baseStopwordsResource = required(
-  baseManifest.resources[0],
-  "base stopword resource fixture must exist",
-);
-const baseLexiconResource = required(
-  baseManifest.resources[1],
-  "base lexicon resource fixture must exist",
-);
-const baseLicense = required(baseManifest.licenses[0], "base license fixture must exist");
-const baseProvenance = required(baseManifest.provenance[0], "base provenance fixture must exist");
-
 const overlayManifest: TextPackManifestV1 = {
-  schemaVersion: textPackManifestSchemaVersion,
-  packId: "pack:en-legal",
+  ...sharedManifestFields,
+  id: "pack:en-legal",
   packageName: "@ismail-elkorchi/textpack-en-legal",
-  version: "0.0.0",
-  resources: [
-    {
-      resourceId: "stopwords-en-legal",
-      lookupKey: "stopwords.en.core",
-      kind: "stopwords",
-      path: "fixtures/textpack/resources/textpack-en-legal/stopwords.en.legal.txt",
-      language: "en",
-      profiles: ["legal"],
-      overlayPrecedence: 50,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-    {
-      resourceId: "gazetteer-en-legal",
-      lookupKey: "gazetteer.en.courts",
-      kind: "gazetteer",
-      path: "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv",
-      language: "en",
-      profiles: ["legal"],
-      overlayPrecedence: 50,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-  ],
-  licenses: baseManifest.licenses,
-  provenance: baseManifest.provenance,
-  entrypoints: {
-    manifest: "fixtures/textpack/manifests/textpack-en-legal.json",
-    resourceRoot: "fixtures/textpack/resources",
+  version: "0.1.0",
+  kind: ["language", "domain"],
+  targets: {
+    languages: ["en"],
+    scripts: ["Latn"],
+    domains: ["legal"],
+    profiles: ["legal"],
   },
-  tests: {
-    smoke: ["fixtures/textpack/resources/textpack-en-legal/stopwords.en.legal.txt"],
-    lookup: ["lookup:stopwords:en:legal"],
-    overlay: ["overlay:stopwords:en:legal"],
+  capabilities: {
+    stopwords: true,
+    gazetteers: true,
+  },
+  resources: {
+    stopwords: ["fixtures/textpack/resources/textpack-en-legal/stopwords.en.legal.txt"],
+    gazetteers: ["fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv"],
+  },
+  provides: {
+    stopwords: ["stopwords-en-legal"],
+    gazetteers: ["gazetteer-en-legal"],
+  },
+  reviewState: "candidate",
+  composition: {
+    overlayPrecedence: 50,
   },
 };
 
 const frenchManifest: TextPackManifestV1 = {
-  schemaVersion: textPackManifestSchemaVersion,
-  packId: "pack:fr-core",
+  ...sharedManifestFields,
+  id: "pack:fr-core",
   packageName: "@ismail-elkorchi/textpack-fr-core",
-  version: "0.0.0",
-  resources: [
-    {
-      resourceId: "stopwords-fr-core",
-      lookupKey: "stopwords.fr.core",
-      kind: "stopwords",
-      path: "fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt",
-      language: "fr",
-      overlayPrecedence: 10,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-    {
-      resourceId: "lexicon-fr-core",
-      lookupKey: "lexicon.fr.core",
-      kind: "lexicon",
-      path: "fixtures/textpack/resources/textpack-fr-core/lexicon.fr.simple.tsv",
-      language: "fr",
-      overlayPrecedence: 10,
-      licenseId: "license-cc0",
-      provenanceId: "prov-hand-curated",
-    },
-  ],
-  licenses: baseManifest.licenses,
-  provenance: baseManifest.provenance,
-  entrypoints: {
-    manifest: "fixtures/textpack/manifests/textpack-fr-core.json",
-    resourceRoot: "fixtures/textpack/resources",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["fr"],
+    scripts: ["Latn"],
   },
-  tests: {
-    smoke: ["fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt"],
-    lookup: ["lookup:stopwords:fr", "lookup:lexicon:fr"],
-    overlay: ["overlay:stopwords:fr"],
+  capabilities: {
+    stopwords: true,
+    lexicons: true,
+  },
+  resources: {
+    stopwords: ["fixtures/textpack/resources/textpack-fr-core/stopwords.fr.basic.txt"],
+    lexicons: ["fixtures/textpack/resources/textpack-fr-core/lexicon.fr.simple.tsv"],
+  },
+  provides: {
+    stopwords: ["stopwords-fr-core"],
+    lexicons: ["lexicon-fr-core"],
+  },
+  reviewState: "candidate",
+  composition: {
+    overlayPrecedence: 10,
   },
 };
+
+const baseStopwordsResourcePath = required(baseManifest.resources.stopwords?.[0], "base stopwords path must exist");
+const baseLexiconResourcePath = required(baseManifest.resources.lexicons?.[0], "base lexicon path must exist");
+const baseStopwordsResourceId = required(baseManifest.provides.stopwords?.[0], "base stopwords id must exist");
 
 const lookupResult = resolveTextPackResources([baseManifest, overlayManifest], {
   kind: "stopwords",
@@ -231,48 +201,74 @@ expectGovernanceCodes({}, ["invalid-manifest-shape"], "invalid manifests should 
 expectGovernanceCodes(
   {
     ...baseManifest,
-    resources: [
-      {
-        ...baseStopwordsResource,
-        licenseId: "license-missing",
-        provenanceId: "prov-missing",
-      },
-    ],
+    provides: {
+      ...baseManifest.provides,
+      stopwords: [],
+    },
   },
-  ["missing-license-ref", "missing-provenance-ref"],
-  "missing license and provenance refs should be diagnosed",
+  ["resource-provides-length-mismatch"],
+  "empty provides arrays should be rejected by governance validation",
 );
 
 expectGovernanceCodes(
   {
     ...baseManifest,
-    licenses: [...baseManifest.licenses, baseLicense],
-    provenance: [...baseManifest.provenance, baseProvenance],
-    resources: [
-      baseStopwordsResource,
-      {
-        ...baseLexiconResource,
-        resourceId: baseStopwordsResource.resourceId,
-      },
-    ],
+    provides: {
+      ...baseManifest.provides,
+      stopwords: [baseStopwordsResourceId, "extra-id"],
+    },
   },
-  ["duplicate-license-id", "duplicate-provenance-id", "duplicate-resource-id"],
-  "duplicate manifest ids should be diagnosed",
+  ["resource-provides-length-mismatch"],
+  "resource/provides count mismatch should be diagnosed",
 );
 
 expectGovernanceCodes(
   {
     ...baseManifest,
-    resources: [
-      {
-        ...baseStopwordsResource,
-        path: "../outside/stopwords.txt",
-      },
-    ],
+    capabilities: {
+      ...baseManifest.capabilities,
+      benchmarks: true,
+    },
+  },
+  ["capability-without-resource"],
+  "capabilities without resources should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    capabilities: {
+      lexicons: true,
+      rules: true,
+    },
+  },
+  ["resource-family-without-capability"],
+  "resources without true capability flags should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    provides: {
+      ...baseManifest.provides,
+      lexicons: [baseStopwordsResourceId],
+    },
+  },
+  ["duplicate-provides-id"],
+  "duplicate provided logical ids should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    resources: {
+      ...baseManifest.resources,
+      stopwords: ["../outside/stopwords.txt"],
+    },
     entrypoints: {
       ...baseManifest.entrypoints,
       manifest: "/tmp/textpack.json",
-      resourceRoot: "C:\\packs",
+      load: "C:\\packs",
     },
     tests: {
       ...baseManifest.tests,
@@ -286,16 +282,14 @@ expectGovernanceCodes(
 expectGovernanceCodes(
   {
     ...baseManifest,
-    resources: [
-      baseStopwordsResource,
-      {
-        ...baseLexiconResource,
-        resourceId: "stopwords-en-core-shadow",
-        lookupKey: baseStopwordsResource.lookupKey,
-        kind: baseStopwordsResource.kind,
-        path: "fixtures/textpack/resources/textpack-en-core/stopwords.en.shadow.txt",
-      },
-    ],
+    resources: {
+      ...baseManifest.resources,
+      stopwords: [baseStopwordsResourcePath, baseLexiconResourcePath],
+    },
+    provides: {
+      ...baseManifest.provides,
+      stopwords: ["stopwords-en-core", "stopwords-en-core"],
+    },
   },
   ["overlay-conflict"],
   "same lookup key and overlay precedence should be diagnosed",
@@ -318,8 +312,57 @@ if (baseResolvedStopwordsResource.resourceId !== "stopwords-en-core") {
   throw new Error("base pack should remain available after the overlay resource");
 }
 
-if (overlayStopwordsResource.provenance.id !== "prov-hand-curated") {
-  throw new Error("resolved resources should retain provenance records");
+if (
+  overlayStopwordsResource.provenance.id !== "provenance:manifest" ||
+  overlayStopwordsResource.license.id !== "license:data"
+) {
+  throw new Error("resolved resources should retain derived provenance and license metadata");
+}
+
+const compatibility = checkTextPackCompatibility(baseManifest, {
+  packageVersions: { "@ismail-elkorchi/textpack": "0.1.0" },
+  mandatoryResources: ["stopwords-en-core"],
+  minimumReviewState: "candidate",
+});
+if (!compatibility.ok) {
+  throw new Error("compatible manifest policy should pass");
+}
+
+const incompatible = checkTextPackCompatibility(overlayManifest, {
+  packageVersions: { "@ismail-elkorchi/textpack": "0.0.1" },
+  requiredProfiles: ["medical"],
+  mandatoryResources: ["gazetteer-missing"],
+  minimumReviewState: "reference",
+  activePackIds: ["pack:en-core"],
+});
+if (
+  !incompatible.diagnostics.some((entry) => entry.code === "engine-version-incompatible") ||
+  !incompatible.diagnostics.some((entry) => entry.code === "profile-missing") ||
+  !incompatible.diagnostics.some((entry) => entry.code === "mandatory-resource-missing") ||
+  !incompatible.diagnostics.some((entry) => entry.code === "review-state-too-low")
+) {
+  throw new Error("incompatible policy should report engine, profile, resource, and review-state diagnostics");
+}
+
+if (
+  !satisfiesTextPackVersionRange("0.1.5", "^0.1.0") ||
+  satisfiesTextPackVersionRange("0.2.0", "~0.1.0") ||
+  !satisfiesTextPackVersionRange("0.1.0", ">=0.1.0")
+) {
+  throw new Error("version range helper should support exact, caret, tilde, wildcard, and lower-bound ranges");
+}
+
+const composedRegistry = composeTextPackResources([
+  { manifest: baseManifest, precedence: 5 },
+  { manifest: overlayManifest, precedence: 80 },
+]);
+const composedStopwords = queryTextPackResourceRegistry(composedRegistry, {
+  kind: "stopwords",
+  language: "en",
+  profile: "legal",
+});
+if (composedStopwords.resources[0]?.resourceId !== "stopwords-en-legal") {
+  throw new Error("explicit composition precedence should override manifest precedence");
 }
 
 const loadedStopwords = loadTextPackResources(
@@ -441,8 +484,12 @@ if (registry.languages.join(",") !== "en,fr") {
   throw new Error("registry should expose deterministic exact language coverage");
 }
 
-if (registry.kinds.join(",") !== "abbreviation-list,gazetteer,lexicon,stopwords") {
+if (registry.kinds.join(",") !== "gazetteer,lexicon,rule,stopwords") {
   throw new Error("registry should expose deterministic resource kinds");
+}
+
+if (registry.families.join(",") !== "gazetteers,lexicons,rules,stopwords") {
+  throw new Error("registry should expose deterministic resource families");
 }
 
 const frenchStopwords = queryTextPackResourceRegistry(registry, {
@@ -504,6 +551,15 @@ const directFrenchResource = queryTextPackResourceRegistry(registry, {
 });
 if (directFrenchResource.resources[0]?.packId !== "pack:fr-core") {
   throw new Error("registry query should support direct resource selection");
+}
+
+const familyQuery = queryTextPackResourceRegistry(registry, {
+  family: "gazetteers",
+  language: "en",
+  profile: "legal",
+});
+if (familyQuery.resources[0]?.kind !== "gazetteer") {
+  throw new Error("registry query should support resource-family selection");
 }
 
 const missingContent = loadTextPackResources([baseManifest], { kind: "stopwords" }, {});

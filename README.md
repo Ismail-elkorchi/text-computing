@@ -16,6 +16,12 @@ Current package and task support status is tracked in [`docs/specs/support-statu
 - `@ismail-elkorchi/textconformance` — conformance report package.
 - `@ismail-elkorchi/textlab` — inspection command package.
 
+## Reference packs
+
+- `@ismail-elkorchi/textpack-en-core` — English reference resources for alpha validation.
+- `@ismail-elkorchi/textpack-en-legal` — English legal-domain reference resources for alpha validation.
+- `@ismail-elkorchi/textpack-fr-core` — French reference resources for alpha validation.
+
 ## Development
 
 Run repository checks from the workspace root:

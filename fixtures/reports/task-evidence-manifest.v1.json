@@ -167,7 +167,7 @@
         "fixtures/pos-morph-lemma/tool-versions.json",
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
         "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
-        "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
         "schemas/pos-morph-lemma-expected-v1.schema.json",
         "schemas/pos-morph-lemma-comparison-v1.schema.json",
         "tools/validate-pos-morph-lemma-feature.mjs"
