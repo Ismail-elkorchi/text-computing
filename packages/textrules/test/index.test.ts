@@ -93,8 +93,29 @@ const textdocPatternDocument: TextDocDocumentV1 = {
   text: "New York courts sign.",
   units: { text: "utf16-code-unit" },
   views: [
-    { id: "source-view", kind: "source" },
-    { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+    { id: "source-view", kind: "raw" },
+    {
+      id: "analysis-view",
+      kind: "task",
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ],
+  spanMaps: [
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: "source-view",
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments: [
+        {
+          source: { startCU: 0, endCU: 21 },
+          target: { startCU: 0, endCU: 21 },
+          kind: "unchanged",
+          reversible: true,
+        },
+      ],
+    },
   ],
   layers: [
     {
@@ -107,7 +128,7 @@ const textdocPatternDocument: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 3 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 3 }],
           text: "New",
         },
         {
@@ -115,7 +136,7 @@ const textdocPatternDocument: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 4, endCU: 8 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 4, endCU: 8 }],
           text: "York",
         },
         {
@@ -123,7 +144,7 @@ const textdocPatternDocument: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 9, endCU: 15 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 9, endCU: 15 }],
           text: "courts",
         },
         {
@@ -131,7 +152,7 @@ const textdocPatternDocument: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 16, endCU: 20 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 16, endCU: 20 }],
           text: "sign",
         },
         {
@@ -139,7 +160,7 @@ const textdocPatternDocument: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 20, endCU: 21 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 20, endCU: 21 }],
           text: ".",
         },
       ],
@@ -379,8 +400,29 @@ const textdocPosInput: TextDocDocumentV1 = {
   source: { id: "resource-backed-pos-textdoc-smoke" },
   units: { text: "utf16-code-unit" },
   views: [
-    { id: "source-view", kind: "source" },
-    { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+    { id: "source-view", kind: "raw" },
+    {
+      id: "analysis-view",
+      kind: "task",
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ],
+  spanMaps: [
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: "source-view",
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments: [
+        {
+          source: { startCU: 0, endCU: 12 },
+          target: { startCU: 0, endCU: 12 },
+          kind: "unchanged",
+          reversible: true,
+        },
+      ],
+    },
   ],
   layers: [
     {
@@ -393,7 +435,7 @@ const textdocPosInput: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 7 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 7 }],
           text: "corpora",
         },
         {
@@ -401,7 +443,7 @@ const textdocPosInput: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 8, endCU: 12 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 8, endCU: 12 }],
           text: "host",
         },
       ],
@@ -416,7 +458,7 @@ const textdocPosInput: TextDocDocumentV1 = {
           kind: "sentence",
           sentenceKind: "uax29-sentence",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 12 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 12 }],
           text: "corpora host",
         },
       ],
@@ -616,8 +658,29 @@ const explicitFallbackResult = analyzePosMorphLemmaDocument(
       source: { id: "explicit-fallback-pos-smoke" },
       units: { text: "utf16-code-unit" },
       views: [
-        { id: "source-view", kind: "source" },
-        { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+        { id: "source-view", kind: "raw" },
+        {
+          id: "analysis-view",
+          kind: "task",
+          parentViewId: "source-view",
+          spanMapIds: ["span-map-source-analysis"],
+        },
+      ],
+      spanMaps: [
+        {
+          id: "span-map-source-analysis",
+          sourceViewId: "source-view",
+          targetViewId: "analysis-view",
+          lifecycle: { state: "active" },
+          segments: [
+            {
+              source: { startCU: 0, endCU: 7 },
+              target: { startCU: 0, endCU: 7 },
+              kind: "unchanged",
+              reversible: true,
+            },
+          ],
+        },
       ],
       layers: [
         {
@@ -630,7 +693,7 @@ const explicitFallbackResult = analyzePosMorphLemmaDocument(
               kind: "token",
               tokenKind: "lexical-token",
               lifecycle: { state: "active" },
-              targets: [{ kind: "span", startCU: 0, endCU: 7 }],
+              targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 7 }],
               text: "florped",
             },
           ],
@@ -925,12 +988,32 @@ function createRuleBackedNerInputDocument(sliceId: RuleBackedNerSliceId): TextDo
     views: [
       {
         id: "source-view",
-        kind: "source",
+        kind: "raw",
       },
       {
         id: "analysis-view",
-        kind: "analysis",
-        derivedFrom: ["source-view"],
+        kind: "task",
+        parentViewId: "source-view",
+        spanMapIds: ["span-map-source-analysis"],
+      },
+    ],
+    spanMaps: [
+      {
+        id: "span-map-source-analysis",
+        sourceViewId: "source-view",
+        targetViewId: "analysis-view",
+        lifecycle: { state: "active" },
+        segments:
+          expected.text.length === 0
+            ? []
+            : [
+                {
+                  source: { startCU: 0, endCU: expected.text.length },
+                  target: { startCU: 0, endCU: expected.text.length },
+                  kind: "unchanged",
+                  reversible: true,
+                },
+              ],
       },
     ],
     layers: [
@@ -945,7 +1028,14 @@ function createRuleBackedNerInputDocument(sliceId: RuleBackedNerSliceId): TextDo
           lifecycle: {
             state: "active" as const,
           },
-          targets: [{ kind: "span" as const, startCU: token.startCU, endCU: token.endCU }],
+          targets: [
+            {
+              kind: "span" as const,
+              viewId: "analysis-view",
+              startCU: token.startCU,
+              endCU: token.endCU,
+            },
+          ],
           text: token.text,
         })),
       },
@@ -961,7 +1051,7 @@ function createRuleBackedNerInputDocument(sliceId: RuleBackedNerSliceId): TextDo
             lifecycle: {
               state: "active",
             },
-            targets: [{ kind: "span", startCU: 0, endCU: expected.text.length }],
+            targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: expected.text.length }],
             text: expected.text,
           },
         ],

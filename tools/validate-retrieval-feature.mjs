@@ -42,7 +42,7 @@ function createDocument(documentId, text, tokenTexts) {
       kind: "token",
       tokenKind: "lexical-token",
       lifecycle: { state: "active" },
-      targets: [{ kind: "span", startCU, endCU }],
+      targets: [{ kind: "span", viewId: "analysis-view", startCU, endCU }],
       text: tokenText,
     });
   }
@@ -54,8 +54,32 @@ function createDocument(documentId, text, tokenTexts) {
     text,
     units: { text: "utf16-code-unit" },
     views: [
-      { id: "source-view", kind: "source" },
-      { id: "analysis-view", kind: "analysis", derivedFrom: ["source-view"] },
+      { id: "source-view", kind: "raw" },
+      {
+        id: "analysis-view",
+        kind: "task",
+        parentViewId: "source-view",
+        spanMapIds: ["span-map-source-analysis"],
+      },
+    ],
+    spanMaps: [
+      {
+        id: "span-map-source-analysis",
+        sourceViewId: "source-view",
+        targetViewId: "analysis-view",
+        lifecycle: { state: "active" },
+        segments:
+          text.length === 0
+            ? []
+            : [
+                {
+                  source: { startCU: 0, endCU: text.length },
+                  target: { startCU: 0, endCU: text.length },
+                  kind: "unchanged",
+                  reversible: true,
+                },
+              ],
+      },
     ],
     layers: [
       {

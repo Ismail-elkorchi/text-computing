@@ -22,12 +22,15 @@
     "views": [
       {
         "id": "source-view",
-        "kind": "source"
+        "kind": "raw"
       },
       {
         "id": "analysis-view",
-        "kind": "analysis",
-        "derivedFrom": ["source-view"]
+        "kind": "task",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
       }
     ],
     "layers": [
@@ -36,16 +39,176 @@
         "kind": "token",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 13 }], "text": "International" },
-          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 14, "endCU": 22 }], "text": "Business" },
-          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 23, "endCU": 31 }], "text": "Machines" },
-          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 33 }], "text": "(" },
-          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 33, "endCU": 36 }], "text": "IBM" },
-          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 36, "endCU": 37 }], "text": ")" },
-          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 38, "endCU": 43 }], "text": "hired" },
-          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 44, "endCU": 49 }], "text": "Alice" },
-          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 50, "endCU": 55 }], "text": "Smith" },
-          { "id": "token-10", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 55, "endCU": 56 }], "text": "." }
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 13,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "International"
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 14,
+                "endCU": 22,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Business"
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 23,
+                "endCU": 31,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Machines"
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 32,
+                "endCU": 33,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "("
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 33,
+                "endCU": 36,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "IBM"
+          },
+          {
+            "id": "token-6",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 36,
+                "endCU": 37,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": ")"
+          },
+          {
+            "id": "token-7",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 38,
+                "endCU": 43,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "hired"
+          },
+          {
+            "id": "token-8",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 44,
+                "endCU": 49,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Alice"
+          },
+          {
+            "id": "token-9",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 50,
+                "endCU": 55,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Smith"
+          },
+          {
+            "id": "token-10",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 55,
+                "endCU": 56,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "."
+          }
         ]
       },
       {
@@ -53,7 +216,23 @@
         "kind": "sentence",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 56 }], "text": "International Business Machines (IBM) hired Alice Smith." }
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 56,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "International Business Machines (IBM) hired Alice Smith."
+          }
         ]
       },
       {
@@ -61,14 +240,86 @@
         "kind": "entity",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 31 }], "label": "ORG", "text": "International Business Machines" },
-          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 33, "endCU": 36 }], "label": "ORG", "text": "IBM" },
-          { "id": "entity-3", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 44, "endCU": 55 }], "label": "PER", "text": "Alice Smith" }
+          {
+            "id": "entity-1",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 31,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "ORG",
+            "text": "International Business Machines"
+          },
+          {
+            "id": "entity-2",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 33,
+                "endCU": 36,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "ORG",
+            "text": "IBM"
+          },
+          {
+            "id": "entity-3",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 44,
+                "endCU": 55,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "PER",
+            "text": "Alice Smith"
+          }
         ]
       }
     ],
     "notes": [
       "Readiness golden keeps canonical organization name and acronym as separate ORG spans."
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 56
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 56
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

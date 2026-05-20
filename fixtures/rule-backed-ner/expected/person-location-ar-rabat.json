@@ -20,8 +20,18 @@
       "text": "utf16-code-unit"
     },
     "views": [
-      { "id": "source-view", "kind": "source" },
-      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+      {
+        "id": "source-view",
+        "kind": "raw"
+      },
+      {
+        "id": "analysis-view",
+        "kind": "task",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
+      }
     ],
     "layers": [
       {
@@ -29,10 +39,74 @@
         "kind": "token",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 3 }], "text": "زار" },
-          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 4, "endCU": 7 }], "text": "علي" },
-          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 8, "endCU": 14 }], "text": "الرباط" },
-          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 14, "endCU": 15 }], "text": "." }
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 3,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "زار"
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 4,
+                "endCU": 7,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "علي"
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 8,
+                "endCU": 14,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "الرباط"
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 14,
+                "endCU": 15,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "."
+          }
         ]
       },
       {
@@ -40,7 +114,23 @@
         "kind": "sentence",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 15 }], "text": "زار علي الرباط." }
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 15,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "زار علي الرباط."
+          }
         ]
       },
       {
@@ -48,13 +138,69 @@
         "kind": "entity",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 4, "endCU": 7 }], "label": "PER", "text": "علي" },
-          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 8, "endCU": 14 }], "label": "LOC", "text": "الرباط" }
+          {
+            "id": "entity-1",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 4,
+                "endCU": 7,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "PER",
+            "text": "علي"
+          },
+          {
+            "id": "entity-2",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 8,
+                "endCU": 14,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "LOC",
+            "text": "الرباط"
+          }
         ]
       }
     ],
     "notes": [
       "Non-Latin-script slice records explicit person and location spans in Arabic."
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 15
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 15
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

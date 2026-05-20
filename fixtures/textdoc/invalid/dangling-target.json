@@ -10,12 +10,15 @@
   "views": [
     {
       "id": "source-view",
-      "kind": "source"
+      "kind": "raw"
     },
     {
       "id": "analysis-view",
-      "kind": "analysis",
-      "derivedFrom": ["source-view"]
+      "kind": "task",
+      "parentViewId": "source-view",
+      "spanMapIds": [
+        "span-map-source-analysis"
+      ]
     }
   ],
   "layers": [
@@ -44,6 +47,30 @@
               "value": "NOUN"
             }
           ]
+        }
+      ]
+    }
+  ],
+  "spanMaps": [
+    {
+      "id": "span-map-source-analysis",
+      "sourceViewId": "source-view",
+      "targetViewId": "analysis-view",
+      "lifecycle": {
+        "state": "active"
+      },
+      "segments": [
+        {
+          "source": {
+            "startCU": 0,
+            "endCU": 4
+          },
+          "target": {
+            "startCU": 0,
+            "endCU": 4
+          },
+          "kind": "unchanged",
+          "reversible": true
         }
       ]
     }

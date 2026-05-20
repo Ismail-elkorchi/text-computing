@@ -73,7 +73,7 @@ const document = {
   textLengthCU: 5,
   text: "Alice",
   units: { text: "utf16-code-unit" },
-  views: [{ id: "analysis", kind: "analysis" }],
+  views: [{ id: "analysis", kind: "raw" }],
   layers: [
     {
       id: "tokens",
@@ -85,7 +85,7 @@ const document = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+          targets: [{ kind: "span", viewId: "analysis", startCU: 0, endCU: 5 }],
           text: "Alice",
         },
       ],

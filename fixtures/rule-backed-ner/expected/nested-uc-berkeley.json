@@ -20,8 +20,18 @@
       "text": "utf16-code-unit"
     },
     "views": [
-      { "id": "source-view", "kind": "source" },
-      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+      {
+        "id": "source-view",
+        "kind": "raw"
+      },
+      {
+        "id": "analysis-view",
+        "kind": "task",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
+      }
     ],
     "layers": [
       {
@@ -29,15 +39,159 @@
         "kind": "token",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 3 }], "text": "The" },
-          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 4, "endCU": 14 }], "text": "University" },
-          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 15, "endCU": 17 }], "text": "of" },
-          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 18, "endCU": 28 }], "text": "California" },
-          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 28, "endCU": 29 }], "text": "," },
-          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 30, "endCU": 38 }], "text": "Berkeley" },
-          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 39, "endCU": 45 }], "text": "campus" },
-          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 46, "endCU": 54 }], "text": "reopened" },
-          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 54, "endCU": 55 }], "text": "." }
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 3,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "The"
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 4,
+                "endCU": 14,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "University"
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 15,
+                "endCU": 17,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "of"
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 18,
+                "endCU": 28,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "California"
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 28,
+                "endCU": 29,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": ","
+          },
+          {
+            "id": "token-6",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 30,
+                "endCU": 38,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Berkeley"
+          },
+          {
+            "id": "token-7",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 39,
+                "endCU": 45,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "campus"
+          },
+          {
+            "id": "token-8",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 46,
+                "endCU": 54,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "reopened"
+          },
+          {
+            "id": "token-9",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 54,
+                "endCU": 55,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "."
+          }
         ]
       },
       {
@@ -45,7 +199,23 @@
         "kind": "sentence",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 55 }], "text": "The University of California, Berkeley campus reopened." }
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 55,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "The University of California, Berkeley campus reopened."
+          }
         ]
       },
       {
@@ -54,13 +224,69 @@
         "viewId": "analysis-view",
         "allowSpanOverlap": true,
         "annotations": [
-          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 4, "endCU": 38 }], "label": "ORG", "text": "University of California, Berkeley" },
-          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 30, "endCU": 38 }], "label": "LOC", "text": "Berkeley" }
+          {
+            "id": "entity-1",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 4,
+                "endCU": 38,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "ORG",
+            "text": "University of California, Berkeley"
+          },
+          {
+            "id": "entity-2",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 30,
+                "endCU": 38,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "LOC",
+            "text": "Berkeley"
+          }
         ]
       }
     ],
     "notes": [
       "Readiness golden preserves a nested Berkeley location span inside the larger organization span."
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 55
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 55
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

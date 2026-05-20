@@ -25,7 +25,8 @@ The public contract now includes a repository-level document schema,
 for deterministic annotation containers with:
 
 - document ids, revisions, and UTF-16 text offsets;
-- source and analysis views with explicit lineage;
+- raw, normalized, tailored, task, imported, and extension views with explicit parent lineage;
+- span-map records for view-to-view offset mapping, lifecycle, and loss accounting;
 - stable layer ids for token, sentence, POS, lemma, morphology, entity, corpus-feature, dependency-node, dependency, and extension layers;
 - span, document, and annotation-reference targets;
 - lifecycle state for active, superseded, and retracted annotations;
@@ -35,9 +36,10 @@ The package does not perform tokenization, tagging, or entity extraction. It def
 shape that other packages serialize through `@ismail-elkorchi/textprotocol`.
 
 Use `validateTextDocDocumentV1()` after runtime shape validation when reference integrity matters.
-The validator checks view and layer references, duplicate ids, span ranges, annotation targets,
-lifecycle links, relation arguments, coreference chains, dependency node links, dependency
-self-loops, dependency sentence consistency, and reference-kind integrity.
+The validator checks view parents, span maps, layer references, duplicate ids, span ranges, target
+view ids, annotation targets, lifecycle links, relation arguments, coreference chains, dependency
+node links, dependency self-loops, dependency sentence consistency, ambiguity-set consistency, loss
+provenance, and reference-kind integrity.
 
 ## Extension annotations
 

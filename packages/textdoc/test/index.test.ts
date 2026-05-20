@@ -3,6 +3,9 @@ import {
   createTextDocDocumentFromTextSync,
   createTextDocDocumentsFromTexts,
   createTextDocDocumentsFromTextsSync,
+  addTextDocLayerV1,
+  addTextDocSpanMapV1,
+  addTextDocViewV1,
   documentSchemaVersion,
   exportTextDocDocumentV1ToConllu,
   importConlluToTextDocDocumentV1,
@@ -10,7 +13,11 @@ import {
   isTextDocDocumentV1,
   isTextDocSpanInRange,
   packageName,
+  queryTextDocAnnotations,
+  retractTextDocAnnotationV1,
+  supersedeTextDocAnnotationV1,
   TextDocConlluError,
+  TextDocRevisionError,
   textDocExtensionIdPattern,
   textDocDocumentPayloadKind,
   toTextDocDocumentV1,
@@ -110,12 +117,29 @@ const graphFixtureDocument: TextDocDocumentV1 = {
   views: [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
     },
     {
       id: "analysis-view",
-      kind: "analysis",
-      derivedFrom: ["source-view"],
+      kind: "task",
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ],
+  spanMaps: [
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: "source-view",
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments: [
+        {
+          source: { startCU: 0, endCU: 5 },
+          target: { startCU: 0, endCU: 5 },
+          kind: "unchanged",
+          reversible: true,
+        },
+      ],
     },
   ],
   layers: [
@@ -129,7 +153,7 @@ const graphFixtureDocument: TextDocDocumentV1 = {
           kind: "token",
           tokenKind: "lexical-token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 5 }],
           text: "Alice",
         },
       ],
@@ -144,7 +168,7 @@ const graphFixtureDocument: TextDocDocumentV1 = {
           kind: "entity",
           label: "PER",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 5 }],
           text: "Alice",
         },
       ],
@@ -220,6 +244,9 @@ const graphFixtureDocument: TextDocDocumentV1 = {
           lifecycle: { state: "active" },
           targets: [{ kind: "annotation", annotationId: "entity-1" }],
           nil: { reason: "fixture-no-kb" },
+          provenance: {
+            references: [{ kind: "fixture", id: "graph-runtime" }],
+          },
           loss: [
             {
               kind: "external-reference",
@@ -296,12 +323,29 @@ const issueElevenDocument: TextDocDocumentV1 = {
   views: [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
     },
     {
       id: "analysis-view",
-      kind: "analysis",
-      derivedFrom: ["source-view"],
+      kind: "task",
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ],
+  spanMaps: [
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: "source-view",
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments: [
+        {
+          source: { startCU: 0, endCU: 31 },
+          target: { startCU: 0, endCU: 31 },
+          kind: "unchanged",
+          reversible: true,
+        },
+      ],
     },
   ],
   layers: [
@@ -419,6 +463,148 @@ if (!isTextDocDocumentV1(graphFixtureDocument)) {
 const graphValidation = validateTextDocDocumentV1(graphFixtureDocument);
 if (!graphValidation.ok || graphValidation.diagnostics.length !== 0) {
   throw new Error("graph fixture should satisfy package-level reference validation");
+}
+
+const tokenQuery = queryTextDocAnnotations(graphFixtureDocument, {
+  kind: "token",
+  spanOverlap: { viewId: "analysis-view", startCU: 0, endCU: 1 },
+});
+if (tokenQuery.length !== 1 || tokenQuery[0]?.annotation.id !== "token-1") {
+  throw new Error("queryTextDocAnnotations should return deterministic token span matches");
+}
+
+const shuffledQueryDocument: TextDocDocumentV1 = {
+  ...graphFixtureDocument,
+  layers: [...graphFixtureDocument.layers].reverse(),
+};
+const stableQueryIds = queryTextDocAnnotations(shuffledQueryDocument).map((entry) => entry.annotation.id);
+if (stableQueryIds[0] !== "chain-1" || stableQueryIds.at(-1) !== "token-1") {
+  throw new Error("queryTextDocAnnotations should sort results deterministically");
+}
+
+const retractedDocument = retractTextDocAnnotationV1(
+  graphFixtureDocument,
+  "entity-1",
+  "fixture retraction",
+  { expectedRevision: graphFixtureDocument.revision, revision: "2026-05-16+1" },
+);
+if (
+  retractedDocument.revision !== "2026-05-16+1" ||
+  queryTextDocAnnotations(retractedDocument, { kind: "entity" }).length !== 0 ||
+  queryTextDocAnnotations(retractedDocument, {
+    kind: "entity",
+    lifecycleStates: ["retracted"],
+  })[0]?.annotation.id !== "entity-1"
+) {
+  throw new Error("retractTextDocAnnotationV1 should update revision and hide retracted annotations by default");
+}
+
+let staleRevisionRejected = false;
+try {
+  addTextDocLayerV1(
+    graphFixtureDocument,
+    {
+      id: "unused-layer",
+      kind: "extension",
+      viewId: "analysis-view",
+      annotations: [],
+    },
+    { expectedRevision: "stale" },
+  );
+} catch (error) {
+  staleRevisionRejected =
+    error instanceof TextDocRevisionError &&
+    error.code === "textdoc.revision.expected-mismatch";
+}
+if (!staleRevisionRejected) {
+  throw new Error("revision-visible operations should reject stale expected revisions");
+}
+
+const supersededDocument = supersedeTextDocAnnotationV1(
+  graphFixtureDocument,
+  "tokens",
+  "token-1",
+  {
+    id: "token-1-replacement",
+    kind: "token",
+    tokenKind: "lexical-token",
+    lifecycle: { state: "active" },
+    targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 5 }],
+    text: "Alice",
+  },
+  "fixture replacement",
+  { revision: "2026-05-16+1" },
+);
+const supersededValidation = validateTextDocDocumentV1(supersededDocument);
+if (!supersededValidation.ok) {
+  throw new Error("supersedeTextDocAnnotationV1 should preserve lifecycle link integrity");
+}
+
+const normalizedViewDocument = addTextDocSpanMapV1(
+  addTextDocViewV1(
+    graphFixtureDocument,
+    {
+      id: "normalized-view",
+      kind: "normalized",
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-normalized"],
+      loss: [
+        {
+          kind: "lossy-normalization",
+          reason: "fixture normalization map is identity for runtime validation",
+          source: "fixture",
+        },
+      ],
+    },
+    { revision: "2026-05-16+1" },
+  ),
+  {
+    id: "span-map-source-normalized",
+    sourceViewId: "source-view",
+    targetViewId: "normalized-view",
+    lifecycle: { state: "active" },
+    segments: [
+      {
+        source: { startCU: 0, endCU: 5 },
+        target: { startCU: 0, endCU: 5 },
+        kind: "unchanged",
+        reversible: true,
+      },
+    ],
+  },
+  { expectedRevision: "2026-05-16+1", revision: "2026-05-16+2" },
+);
+if (!validateTextDocDocumentV1(normalizedViewDocument).ok) {
+  throw new Error("view and span-map operations should create a valid derived-view document");
+}
+
+const invalidatedSpanMapDocument = structuredClone(graphFixtureDocument);
+const firstSpanMap = invalidatedSpanMapDocument.spanMaps?.[0];
+if (firstSpanMap === undefined) {
+  throw new Error("graph fixture should contain a span map");
+}
+(firstSpanMap as { lifecycle: typeof firstSpanMap.lifecycle }).lifecycle = {
+  state: "invalidated",
+  reason: "fixture invalidation",
+};
+const invalidatedSpanMapResult = validateTextDocDocumentV1(invalidatedSpanMapDocument);
+if (
+  invalidatedSpanMapResult.ok ||
+  !invalidatedSpanMapResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.span-target-inactive-span-map",
+  )
+) {
+  throw new Error("document validation should reject active annotations on invalidated span maps");
+}
+
+const parentCycleDocument = structuredClone(graphFixtureDocument);
+(parentCycleDocument.views[0] as { parentViewId?: string }).parentViewId = "analysis-view";
+const parentCycleResult = validateTextDocDocumentV1(parentCycleDocument);
+if (
+  parentCycleResult.ok ||
+  !parentCycleResult.diagnostics.some((entry) => entry.code === "textdoc.view-parent-cycle")
+) {
+  throw new Error("document validation should reject parent-view cycles");
 }
 
 if (textDocExtensionIdPattern !== "^[a-z][a-z0-9+.-]*:[^\\s]+$") {

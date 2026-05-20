@@ -116,7 +116,7 @@ async function assertBuiltPackageSmoke() {
     text: "Alice works.",
     textLengthCU: 12,
     units: { text: "utf16-code-unit" },
-    views: [{ id: "source-view", kind: "source" }],
+    views: [{ id: "source-view", kind: "raw" }],
     layers: [
       {
         id: "tokens",
@@ -128,7 +128,7 @@ async function assertBuiltPackageSmoke() {
             kind: "token",
             tokenKind: "lexical-token",
             lifecycle: { state: "active" },
-            targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+            targets: [{ kind: "span", viewId: "source-view", startCU: 0, endCU: 5 }],
             text: "Alice",
           },
           {
@@ -136,7 +136,7 @@ async function assertBuiltPackageSmoke() {
             kind: "token",
             tokenKind: "lexical-token",
             lifecycle: { state: "active" },
-            targets: [{ kind: "span", startCU: 6, endCU: 11 }],
+            targets: [{ kind: "span", viewId: "source-view", startCU: 6, endCU: 11 }],
             text: "works",
           },
         ],

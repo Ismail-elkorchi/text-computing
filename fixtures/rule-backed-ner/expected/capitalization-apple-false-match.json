@@ -20,8 +20,18 @@
       "text": "utf16-code-unit"
     },
     "views": [
-      { "id": "source-view", "kind": "source" },
-      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+      {
+        "id": "source-view",
+        "kind": "raw"
+      },
+      {
+        "id": "analysis-view",
+        "kind": "task",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
+      }
     ],
     "layers": [
       {
@@ -29,15 +39,159 @@
         "kind": "token",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 5 }], "text": "apple" },
-          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 6, "endCU": 13 }], "text": "growers" },
-          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 14, "endCU": 23 }], "text": "protested" },
-          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 24, "endCU": 31 }], "text": "outside" },
-          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 37 }], "text": "Apple" },
-          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 38, "endCU": 40 }], "text": "in" },
-          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 41, "endCU": 44 }], "text": "New" },
-          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 45, "endCU": 49 }], "text": "York" },
-          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 49, "endCU": 50 }], "text": "." }
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 5,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "apple"
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 6,
+                "endCU": 13,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "growers"
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 14,
+                "endCU": 23,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "protested"
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 24,
+                "endCU": 31,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "outside"
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 32,
+                "endCU": 37,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Apple"
+          },
+          {
+            "id": "token-6",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 38,
+                "endCU": 40,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "in"
+          },
+          {
+            "id": "token-7",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 41,
+                "endCU": 44,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "New"
+          },
+          {
+            "id": "token-8",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 45,
+                "endCU": 49,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "York"
+          },
+          {
+            "id": "token-9",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 49,
+                "endCU": 50,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "."
+          }
         ]
       },
       {
@@ -45,7 +199,23 @@
         "kind": "sentence",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 50 }], "text": "apple growers protested outside Apple in New York." }
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 50,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "apple growers protested outside Apple in New York."
+          }
         ]
       },
       {
@@ -53,13 +223,69 @@
         "kind": "entity",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 37 }], "label": "ORG", "text": "Apple" },
-          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 41, "endCU": 49 }], "label": "LOC", "text": "New York" }
+          {
+            "id": "entity-1",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 32,
+                "endCU": 37,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "ORG",
+            "text": "Apple"
+          },
+          {
+            "id": "entity-2",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 41,
+                "endCU": 49,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "LOC",
+            "text": "New York"
+          }
         ]
       }
     ],
     "notes": [
       "Lowercase common noun remains non-entity; only Apple and New York are labeled."
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 50
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 50
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

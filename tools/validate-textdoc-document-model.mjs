@@ -69,30 +69,103 @@ function validateDocumentSemantics(document) {
 
   const viewIds = new Set();
   const viewOrder = new Map();
+  const viewById = new Map();
   for (const [index, view] of document.views.entries()) {
     if (viewIds.has(view.id)) {
       pushError(errors, "duplicate-view-id", `Duplicate view id ${view.id}.`);
     }
     viewIds.add(view.id);
     viewOrder.set(view.id, index);
-    for (const ancestorId of view.derivedFrom ?? []) {
-      if (ancestorId === view.id) {
-        pushError(errors, "self-derived-view", `View ${view.id} cannot derive from itself.`);
+    viewById.set(view.id, view);
+    const parentId = view.parentViewId;
+    if (parentId === undefined) continue;
+    if (parentId === view.id) {
+      pushError(errors, "self-parent-view", `View ${view.id} cannot parent itself.`);
+      continue;
+    }
+    const parentIndex = viewOrder.get(parentId);
+    if (parentIndex === undefined) {
+      pushError(
+        errors,
+        "dangling-view-reference",
+        `View ${view.id} references missing or later parent view ${parentId}.`,
+      );
+    } else if (parentIndex >= index) {
+      pushError(errors, "view-order-violation", `View ${view.id} must list parent views first.`);
+    }
+    const visited = new Set();
+    let cursor = view;
+    while (cursor?.parentViewId) {
+      if (visited.has(cursor.id)) {
+        pushError(errors, "view-parent-cycle", `View ${view.id} participates in a parent cycle.`);
+        break;
+      }
+      visited.add(cursor.id);
+      cursor = viewById.get(cursor.parentViewId);
+    }
+  }
+
+  const spanMapById = new Map();
+  for (const spanMap of document.spanMaps ?? []) {
+    if (spanMapById.has(spanMap.id)) {
+      pushError(errors, "duplicate-span-map-id", `Duplicate span map id ${spanMap.id}.`);
+    }
+    spanMapById.set(spanMap.id, spanMap);
+    if (!viewIds.has(spanMap.sourceViewId)) {
+      pushError(errors, "dangling-span-map-source", `Span map ${spanMap.id} references missing source view.`);
+    }
+    if (!viewIds.has(spanMap.targetViewId)) {
+      pushError(errors, "dangling-span-map-target", `Span map ${spanMap.id} references missing target view.`);
+    }
+    if (spanMap.sourceViewId === spanMap.targetViewId) {
+      pushError(errors, "self-span-map", `Span map ${spanMap.id} cannot map a view to itself.`);
+    }
+    if (spanMap.lifecycle.state === "superseded" && !spanMap.lifecycle.supersededBy) {
+      pushError(errors, "missing-span-map-superseded-by", `Span map ${spanMap.id} is superseded without supersededBy.`);
+    }
+    if (
+      spanMap.lifecycle.state !== "superseded" &&
+      spanMap.lifecycle.supersededBy !== undefined
+    ) {
+      pushError(errors, "invalid-span-map-superseded-by-state", `Only superseded span maps may declare supersededBy.`);
+    }
+    if (
+      (spanMap.lifecycle.state === "partial" || spanMap.lifecycle.state === "invalidated") &&
+      !spanMap.lifecycle.reason
+    ) {
+      pushError(errors, "missing-span-map-reason", `Partial or invalidated span map ${spanMap.id} needs a reason.`);
+    }
+    let previousSourceEnd = -1;
+    for (const segment of spanMap.segments) {
+      if (
+        segment.source.startCU < 0 ||
+        segment.source.endCU < segment.source.startCU ||
+        segment.source.endCU > document.textLengthCU ||
+        segment.target.startCU < 0 ||
+        segment.target.endCU < segment.target.startCU ||
+        segment.target.endCU > document.textLengthCU
+      ) {
+        pushError(errors, "span-map-segment-out-of-range", `Span map ${spanMap.id} has an out-of-range segment.`);
+      }
+      if (segment.source.startCU < previousSourceEnd) {
+        pushError(errors, "span-map-segment-order", `Span map ${spanMap.id} segments must be source ordered.`);
+      }
+      previousSourceEnd = segment.source.endCU;
+    }
+  }
+
+  for (const view of document.views) {
+    for (const spanMapId of view.spanMapIds ?? []) {
+      const spanMap = spanMapById.get(spanMapId);
+      if (!spanMap) {
+        pushError(errors, "dangling-view-span-map", `View ${view.id} references missing span map ${spanMapId}.`);
         continue;
       }
-      const ancestorIndex = viewOrder.get(ancestorId);
-      if (ancestorIndex === undefined) {
-        pushError(
-          errors,
-          "dangling-view-reference",
-          `View ${view.id} derives from missing or later view ${ancestorId}.`,
-        );
-      } else if (ancestorIndex >= index) {
-        pushError(
-          errors,
-          "view-order-violation",
-          `View ${view.id} must list earlier lineage before derived views.`,
-        );
+      if (spanMap.targetViewId !== view.id) {
+        pushError(errors, "view-span-map-target-mismatch", `View ${view.id} references a span map with a different target view.`);
+      }
+      if (view.parentViewId && spanMap.sourceViewId !== view.parentViewId) {
+        pushError(errors, "view-span-map-parent-mismatch", `View ${view.id} span map must map from its parent view.`);
       }
     }
   }
@@ -168,6 +241,7 @@ function validateDocumentSemantics(document) {
     for (const target of annotation.targets) {
       if (target.kind === "span") {
         if (
+          !viewIds.has(target.viewId) ||
           !Number.isInteger(target.startCU) ||
           !Number.isInteger(target.endCU) ||
           target.startCU < 0 ||
@@ -178,6 +252,13 @@ function validateDocumentSemantics(document) {
             errors,
             "span-out-of-range",
             `Annotation ${annotation.id} has span target outside textLengthCU.`,
+          );
+        }
+        if (target.viewId !== layer.viewId) {
+          pushError(
+            errors,
+            "span-target-layer-view-mismatch",
+            `Annotation ${annotation.id} span target view does not match layer ${layer.id}.`,
           );
         }
         if (

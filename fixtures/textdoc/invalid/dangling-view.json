@@ -10,7 +10,7 @@
   "views": [
     {
       "id": "source-view",
-      "kind": "source"
+      "kind": "raw"
     }
   ],
   "layers": [
@@ -30,7 +30,8 @@
             {
               "kind": "span",
               "startCU": 0,
-              "endCU": 4
+              "endCU": 4,
+              "viewId": "missing-view"
             }
           ],
           "text": "Test"

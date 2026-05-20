@@ -48,7 +48,7 @@ function createBaseDocument(seed) {
     views: [
       {
         id: "source-view",
-        kind: "source",
+        kind: "raw",
       },
     ],
     layers: [
@@ -70,8 +70,29 @@ function appendLayer(document, processorId, layerKind) {
       ...document.views,
       {
         id: `${processorId}-view`,
-        kind: "analysis",
-        derivedFrom: ["source-view"],
+        kind: "task",
+        parentViewId: "source-view",
+        spanMapIds: [`span-map-source-to-${processorId}`],
+      },
+    ],
+    spanMaps: [
+      ...(document.spanMaps ?? []),
+      {
+        id: `span-map-source-to-${processorId}`,
+        sourceViewId: "source-view",
+        targetViewId: `${processorId}-view`,
+        lifecycle: { state: "active" },
+        segments:
+          document.textLengthCU === 0
+            ? []
+            : [
+                {
+                  source: { startCU: 0, endCU: document.textLengthCU },
+                  target: { startCU: 0, endCU: document.textLengthCU },
+                  kind: "unchanged",
+                  reversible: true,
+                },
+              ],
       },
     ],
     layers: [
