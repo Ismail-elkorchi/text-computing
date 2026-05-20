@@ -6,7 +6,12 @@ import type {
 } from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
+  createTextPipelineCacheKey,
+  createTextPipelineContextFingerprint,
+  createTextPipelineExecutionPlan,
+  createTextPipelineTraceEnvelope,
   isTextPipelineProcessorDescriptor,
+  isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
   packageName,
   runTextPipeline,
@@ -16,8 +21,11 @@ import {
   runTextPipelineStream,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
+  validateTextPipelineGraph,
   type TextPipelineAsyncProcessor,
+  type TextPipelineEmitSet,
   type TextPipelineProcessor,
+  type TextPipelineRequirementSet,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textpipeline";
@@ -107,24 +115,17 @@ function appendAnalysisArtifacts(
 function createProcessor(
   id: string,
   options: {
+    readonly version?: string;
     readonly dependsOn?: readonly string[];
-    readonly requires?: {
-      readonly views?: readonly string[];
-      readonly layers?: readonly string[];
-      readonly packs?: readonly string[];
-      readonly profiles?: readonly string[];
-    };
-    readonly emits?: {
-      readonly views?: readonly string[];
-      readonly layers?: readonly string[];
-    };
+    readonly requires?: TextPipelineRequirementSet;
+    readonly emits?: TextPipelineEmitSet;
     readonly apply?: (document: TextDocDocumentV1) => TextDocDocumentV1;
   } = {},
 ): TextPipelineProcessor {
   return {
     descriptor: {
       id,
-      version: "1.0.0",
+      version: options.version ?? "1.0.0",
       ...(options.dependsOn ? { dependsOn: options.dependsOn } : {}),
       ...(options.requires ? { requires: options.requires } : {}),
       ...(options.emits ? { emits: options.emits } : {}),
@@ -168,6 +169,21 @@ if (!isTextPipelineProcessorDescriptor(alpha.descriptor)) {
   throw new Error("processor descriptor should satisfy the runtime contract");
 }
 
+const diamondPlan = createTextPipelineExecutionPlan([
+  createProcessor("delta", { dependsOn: ["alpha", "beta"] }),
+  createProcessor("gamma", { dependsOn: ["alpha"] }),
+  createProcessor("beta"),
+  createProcessor("alpha"),
+]);
+if (diamondPlan.processorOrder.join(",") !== "alpha,beta,delta,gamma") {
+  throw new Error("execution plans should use deterministic topological ordering");
+}
+
+const duplicateGraph = validateTextPipelineGraph([createProcessor("dup"), createProcessor("dup")]);
+if (duplicateGraph.ok || duplicateGraph.diagnostics[0]?.code !== "textpipeline.duplicate-processor-id") {
+  throw new Error("graph validation should report duplicate processor ids without throwing");
+}
+
 const deterministicRun = runTextPipeline(baseDocument, [beta, gamma, alpha]);
 
 if (deterministicRun.trace.schemaVersion !== textPipelineTraceSchemaVersion) {
@@ -175,9 +191,18 @@ if (deterministicRun.trace.schemaVersion !== textPipelineTraceSchemaVersion) {
 }
 
 if (
-  deterministicRun.trace.entries.map((entry) => entry.processorId).join(",") !== "alpha,beta,gamma"
+  deterministicRun.trace.entries.map((entry) => entry.processorId).join(",") !== "alpha,beta,gamma" ||
+  deterministicRun.trace.processorOrder.join(",") !== "alpha,beta,gamma"
 ) {
   throw new Error("processors should execute in stable lexical order when equally ready");
+}
+
+if (
+  deterministicRun.trace.executionMode !== "sync" ||
+  deterministicRun.trace.runStatus !== "complete" ||
+  deterministicRun.trace.cachePolicy !== "none"
+) {
+  throw new Error("sync traces should record execution mode, run status, and cache policy");
 }
 
 if (deterministicRun.document.revision !== "r0>alpha>beta>gamma") {
@@ -207,50 +232,86 @@ if (!isTextPipelineTraceV1(deterministicRun.trace)) {
   throw new Error("pipeline trace should satisfy the runtime contract");
 }
 
-const serializedEnvelope = {
-  schemaId: "urn:ismail-elkorchi:textprotocol:result-envelope:v1",
-  schemaVersion: 1,
-  producer: {
-    package: packageName,
-    version: "0.0.0",
-  },
-  payloadKind: textPipelineTracePayloadKind,
-  payload: deterministicRun.trace,
-};
+const serializedEnvelope = createTextPipelineTraceEnvelope(deterministicRun.trace, "0.1.0", {
+  claimBoundary: "Package test trace serialization.",
+  limitations: ["Package-local fixture only."],
+});
 
 if (!isTextProtocolResultEnvelopeV1(serializedEnvelope)) {
   throw new Error("trace envelope should satisfy the textprotocol result envelope contract");
 }
 
-if (!isTextPipelineTraceV1(serializedEnvelope.payload)) {
-  throw new Error("trace payload should remain valid inside the textprotocol result envelope");
+if (!isTextPipelineTraceEnvelopeV1(serializedEnvelope)) {
+  throw new Error("trace envelope should satisfy the textpipeline payload contract");
 }
 
-const skippedRun = runTextPipeline(baseDocument, [
-  createProcessor("needs-analysis", {
-    requires: {
-      views: ["analysis-view"],
-      packs: ["pack:core"],
-      profiles: ["profile:default"],
-    },
-  }),
-]);
+const contextFingerprint = createTextPipelineContextFingerprint({
+  packageVersions: [{ id: "@ismail-elkorchi/textdoc", version: "0.1.0" }],
+  packVersions: [{ id: "pack:core", version: "1.0.0" }],
+  profiles: ["profile:default"],
+});
+const contextFingerprintWithDifferentOrder = createTextPipelineContextFingerprint({
+  profiles: ["profile:default"],
+  packVersions: [{ id: "pack:core", version: "1.0.0" }],
+  packageVersions: [{ id: "@ismail-elkorchi/textdoc", version: "0.1.0" }],
+});
+if (contextFingerprint !== contextFingerprintWithDifferentOrder) {
+  throw new Error("context fingerprints should be deterministic across field order");
+}
+
+const skippedRun = runTextPipeline(
+  baseDocument,
+  [
+    createProcessor("needs-analysis", {
+      requires: {
+        views: ["analysis-view"],
+        packages: ["@ismail-elkorchi/missing-package"],
+        packs: ["pack:core"],
+        profiles: ["profile:default"],
+        packageVersions: [{ id: "@ismail-elkorchi/textdoc", version: "9.0.0" }],
+        packVersions: [{ id: "pack:core", version: "2.0.0" }],
+        profileVersions: [{ id: "profile:default", version: "1.0.0" }],
+      },
+    }),
+  ],
+  {
+    packageVersions: [{ id: "@ismail-elkorchi/textdoc", version: "0.1.0" }],
+    packVersions: [{ id: "pack:core", version: "1.0.0" }],
+    profiles: ["profile:default"],
+  },
+);
 
 const skippedEntry = skippedRun.trace.entries[0];
 
 if (
   !skippedEntry ||
   skippedEntry.status !== "skipped" ||
-  skippedEntry.outputRevision !== baseDocument.revision
+  skippedEntry.outputRevision !== baseDocument.revision ||
+  skippedRun.trace.runStatus !== "partial"
 ) {
   throw new Error("missing requirements should skip the processor without changing the document");
 }
 
 if (
   skippedEntry.diagnostics?.map((diagnostic) => diagnostic.code).join(",") !==
-  "textpipeline.missing-view,textpipeline.missing-pack,textpipeline.missing-profile"
+  "textpipeline.missing-view,textpipeline.missing-package,textpipeline.version-mismatch,textpipeline.version-mismatch,textpipeline.missing-profile-version"
 ) {
   throw new Error("skipped processors should emit deterministic missing-requirement diagnostics");
+}
+
+const blockedRun = runTextPipeline(baseDocument, [
+  createProcessor("needs-view", {
+    requires: {
+      views: ["missing-view"],
+    },
+  }),
+  createProcessor("after-needs-view", { dependsOn: ["needs-view"] }),
+]);
+if (
+  blockedRun.trace.entries[1]?.status !== "skipped" ||
+  blockedRun.trace.entries[1].diagnostics?.[0]?.code !== "textpipeline.blocked-dependency"
+) {
+  throw new Error("dependents should be skipped when an upstream dependency did not complete");
 }
 
 let missingDependencyRejected = false;
@@ -277,7 +338,9 @@ try {
     createProcessor("right", { dependsOn: ["left"] }),
   ]);
 } catch (error) {
-  cycleRejected = error instanceof Error && error.message === "processor dependency graph contains a cycle";
+  cycleRejected =
+    error instanceof Error &&
+    error.message === "processor dependency graph contains a cycle: left, right";
 }
 
 if (!cycleRejected) {
@@ -331,17 +394,21 @@ const asyncAlpha: TextPipelineAsyncProcessor = createProcessor("async-alpha", {
 const asyncRun = await runTextPipelineAsync(baseDocument, [asyncAlpha]);
 if (
   asyncRun.trace.entries[0]?.status !== "applied" ||
+  asyncRun.trace.executionMode !== "async" ||
+  asyncRun.trace.runStatus !== "complete" ||
   asyncRun.document.revision !== "r0>async-alpha"
 ) {
   throw new Error("async pipeline execution should preserve applied trace semantics");
 }
 
 const cacheStore = new Map<string, TextDocDocumentV1>();
+let cacheSetCount = 0;
 const cache = {
   get(key: string): TextDocDocumentV1 | undefined {
     return cacheStore.get(key);
   },
   set(key: string, document: TextDocDocumentV1): void {
+    cacheSetCount += 1;
     cacheStore.set(key, document);
   },
 };
@@ -376,7 +443,9 @@ const secondCachedRun = await runTextPipelineAsync(baseDocument, [cachedProcesso
 if (
   firstCachedRun.trace.entries[0]?.status !== "applied" ||
   secondCachedRun.trace.entries[0]?.status !== "cached" ||
-  cachedProcessorRuns !== 1
+  secondCachedRun.trace.cachePolicy !== "read-through" ||
+  cachedProcessorRuns !== 1 ||
+  cacheSetCount !== 1
 ) {
   throw new Error("async pipeline cache should replay cached documents with explicit trace status");
 }
@@ -384,11 +453,29 @@ if (
 const contextCachedRun = await runTextPipelineAsync(
   baseDocument,
   [cachedProcessor],
-  { profiles: ["profile:other"] },
+  { profileVersions: [{ id: "profile:other", version: "1.0.0" }] },
   { cache },
 );
 if (contextCachedRun.trace.entries[0]?.status !== "applied" || cacheStore.size !== 2) {
-  throw new Error("pipeline cache keys should include context profiles and packs");
+  throw new Error("pipeline cache keys should include context profile versions");
+}
+
+const revisedDocument: TextDocDocumentV1 = { ...baseDocument, revision: "r1" };
+const baseCacheKey = createTextPipelineCacheKey(cachedProcessor, baseDocument, {}, { cacheNamespace: "n1" });
+const revisedCacheKey = createTextPipelineCacheKey(cachedProcessor, revisedDocument, {}, { cacheNamespace: "n1" });
+const packVersionCacheKey = createTextPipelineCacheKey(
+  cachedProcessor,
+  baseDocument,
+  { packVersions: [{ id: "pack:core", version: "2.0.0" }] },
+  { cacheNamespace: "n1" },
+);
+const namespaceCacheKey = createTextPipelineCacheKey(cachedProcessor, baseDocument, {}, { cacheNamespace: "n2" });
+if (
+  baseCacheKey === revisedCacheKey ||
+  baseCacheKey === packVersionCacheKey ||
+  baseCacheKey === namespaceCacheKey
+) {
+  throw new Error("cache keys should change across document, version, and namespace changes");
 }
 
 const batchRun = runTextPipelineBatch([baseDocument, { ...baseDocument, documentId: "doc:pipeline:2" }], [alpha]);
@@ -412,6 +499,7 @@ if (streamedDocumentIds.join(",") !== "doc:pipeline") {
   throw new Error("stream execution should yield runs in input order");
 }
 
+const cacheStoreBeforeFailure = cacheStore.size;
 const failureRun = await runTextPipelineAsync(
   baseDocument,
   [
@@ -426,16 +514,21 @@ const failureRun = await runTextPipelineAsync(
         throw new Error("fixture failure");
       },
     },
+    createProcessor("after-fails", { dependsOn: ["fails"] }),
   ],
   {},
-  { errorPolicy: "continue" },
+  { errorPolicy: "continue", cache },
 );
 if (
   failureRun.trace.entries[0]?.status !== "failed" ||
   failureRun.trace.entries[0].diagnostics?.[0]?.code !== "textpipeline.processor-error" ||
-  failureRun.document.revision !== baseDocument.revision
+  failureRun.trace.entries[1]?.status !== "skipped" ||
+  failureRun.trace.entries[1].diagnostics?.[0]?.code !== "textpipeline.blocked-dependency" ||
+  failureRun.trace.runStatus !== "partial" ||
+  failureRun.document.revision !== baseDocument.revision ||
+  cacheStore.size !== cacheStoreBeforeFailure
 ) {
-  throw new Error("continue error policy should record failed processors without changing the document");
+  throw new Error("continue error policy should record failed processors and block dependents");
 }
 
 const abortController = new AbortController();
@@ -449,6 +542,36 @@ try {
 
 if (!abortedRunRejected) {
   throw new Error("aborted async pipeline runs should reject deterministically");
+}
+
+const midRunAbortController = new AbortController();
+let midRunAbortRejected = false;
+try {
+  await runTextPipelineAsync(
+    baseDocument,
+    [
+      {
+        descriptor: {
+          id: "aborts",
+          version: "1.0.0",
+          purity: "pure",
+          parallelSafe: true,
+        },
+        async run(document) {
+          midRunAbortController.abort();
+          return { document };
+        },
+      },
+    ],
+    {},
+    { signal: midRunAbortController.signal },
+  );
+} catch (error) {
+  midRunAbortRejected = error instanceof Error && error.message === "textpipeline run aborted";
+}
+
+if (!midRunAbortRejected) {
+  throw new Error("async pipeline should check cancellation after processor resolution");
 }
 
 void expectedPackageName;

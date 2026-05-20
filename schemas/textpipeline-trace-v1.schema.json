@@ -4,11 +4,29 @@
   "title": "textpipeline trace v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "documentId", "finalRevision", "entries"],
+  "required": [
+    "schemaVersion",
+    "documentId",
+    "finalRevision",
+    "executionMode",
+    "runStatus",
+    "processorOrder",
+    "contextFingerprint",
+    "cachePolicy",
+    "entries"
+  ],
   "properties": {
     "schemaVersion": { "const": 1 },
     "documentId": { "type": "string", "minLength": 1 },
     "finalRevision": { "type": "string", "minLength": 1 },
+    "executionMode": { "enum": ["sync", "async"] },
+    "runStatus": { "enum": ["complete", "partial"] },
+    "processorOrder": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "contextFingerprint": { "type": "string", "minLength": 1 },
+    "cachePolicy": { "enum": ["none", "read-through"] },
     "entries": {
       "type": "array",
       "items": {
@@ -26,7 +44,7 @@
         "properties": {
           "processorId": { "type": "string", "minLength": 1 },
           "version": { "type": "string", "minLength": 1 },
-          "status": { "enum": ["applied", "skipped"] },
+          "status": { "enum": ["applied", "skipped", "cached", "failed"] },
           "emittedViews": {
             "type": "array",
             "items": { "type": "string", "minLength": 1 }
@@ -49,7 +67,8 @@
             }
           },
           "inputRevision": { "type": "string", "minLength": 1 },
-          "outputRevision": { "type": "string", "minLength": 1 }
+          "outputRevision": { "type": "string", "minLength": 1 },
+          "cacheKey": { "type": "string", "minLength": 1 }
         }
       }
     }
