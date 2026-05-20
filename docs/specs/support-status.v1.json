@@ -275,15 +275,17 @@
         "script-family expected outputs",
         "comparator captures and explicit not-run gap records",
         "fixtures/tokenization-sbd/corpus.v1.json",
-        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
+        "fixtures/tokenization-sbd/aggregate/ud-2.18.json",
+        "schemas/tokenization-sbd-corpus-aggregate-v1.schema.json"
       ],
       "limitations": [
         "Not a broad multilingual tokenizer benchmark suite",
-        "Newer script-family fixtures with not-run comparator entries are expected-output evidence, not comparator-backed evidence"
+        "Newer script-family fixtures with not-run comparator entries are expected-output evidence, not comparator-backed evidence",
+        "UD 2.18 aggregate counts are persisted as corpus-scale evidence, but they do not prove language-specific tokenization correctness."
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
-        "Corpus-scale tokenization/SBD aggregate outputs and conformance reports are not yet persisted.",
         "Holdout slices exist only as a gate policy and are not sufficient for broad multilingual claims.",
         "Comparator execution still depends on local availability of pinned external tools."
       ]

@@ -167,7 +167,9 @@
         "fixtures/pos-morph-lemma/tool-versions.json",
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
         "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
-        "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
         "schemas/pos-morph-lemma-expected-v1.schema.json",
         "schemas/pos-morph-lemma-comparison-v1.schema.json",
         "tools/validate-pos-morph-lemma-feature.mjs"
@@ -291,7 +293,10 @@
         "fixtures/evidence/task-evidence-tier-policy.v1.json",
         "fixtures/tokenization-sbd/corpus.v1.json",
         "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
-        "fixtures/performance/gates.v1.json"
+        "fixtures/performance/gates.v1.json",
+        "fixtures/tokenization-sbd/aggregate/ud-2.18.json",
+        "schemas/tokenization-sbd-corpus-aggregate-v1.schema.json",
+        "tools/derive-tokenization-sbd-corpus-aggregate.mjs"
       ],
       "comparatorRefs": [
         "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
@@ -305,14 +310,16 @@
           "fixtures/reports/evidence-replay.v1.json",
           "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
           "fixtures/evidence/task-evidence-tier-policy.v1.json",
-          "fixtures/tokenization-sbd/corpus.v1.json"
+          "fixtures/tokenization-sbd/corpus.v1.json",
+          "fixtures/tokenization-sbd/aggregate/ud-2.18.json",
+          "schemas/tokenization-sbd-corpus-aggregate-v1.schema.json"
         ]
       },
       "knownGaps": [
         "Not a broad multilingual tokenizer benchmark suite.",
         "Language-specific segmentation beyond the frozen slices remains future work.",
         "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence.",
-        "Holdout slices cannot support broad claims until aggregate outputs and conformance reports are persisted."
+        "UD 2.18 aggregate counts are corpus-scale evidence only; broad support still needs holdout and comparator execution gates."
       ]
     }
   ]

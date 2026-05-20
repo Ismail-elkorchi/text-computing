@@ -48,7 +48,7 @@ const TASK_EVIDENCE_REQUIREMENTS = {
       "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
       "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json",
     ],
-    corpusRefs: [],
+    corpusRefs: ["fixtures/tokenization-sbd/aggregate/ud-2.18.json"],
   },
   "nlp-document-annotation-model": {
     implementationOwners: ["@ismail-elkorchi/textdoc"],

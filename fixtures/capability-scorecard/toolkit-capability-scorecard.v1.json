@@ -328,7 +328,9 @@
         "docs/specs/tokenization-sbd-readiness.md",
         "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
         "docs/specs/task-evidence-tiers.md",
-        "fixtures/tokenization-sbd/corpus.v1.json"
+        "fixtures/tokenization-sbd/corpus.v1.json",
+        "fixtures/tokenization-sbd/aggregate/ud-2.18.json",
+        "schemas/tokenization-sbd-corpus-aggregate-v1.schema.json"
       ],
       "nextGate": "Expand multilingual fixtures and comparator replay breadth before broader claims.",
       "implementation": {
@@ -353,7 +355,9 @@
           "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
           "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
         ],
-        "corpusRefs": [],
+        "corpusRefs": [
+          "fixtures/tokenization-sbd/aggregate/ud-2.18.json"
+        ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
         ],
@@ -386,13 +390,14 @@
           "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
           "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/tokenization-sbd/aggregate/ud-2.18.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
       },
       "nextEvidenceTierBlockers": [
-        "Corpus-scale tokenization/SBD aggregate outputs and conformance reports are not yet persisted.",
         "Holdout slices exist only as a gate policy and are not sufficient for broad multilingual claims.",
         "Comparator execution still depends on local availability of pinned external tools."
       ]
