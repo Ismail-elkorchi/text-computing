@@ -12,7 +12,7 @@ Current package and task support status is tracked in [`docs/specs/support-statu
 - `@ismail-elkorchi/textrules` — deterministic rules package.
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
-- `@ismail-elkorchi/textprotocol` — result envelope package.
+- `@ismail-elkorchi/textprotocol` — protocol schema and result envelope package.
 - `@ismail-elkorchi/textconformance` — conformance report package.
 - `@ismail-elkorchi/textlab` — inspection command package.
 

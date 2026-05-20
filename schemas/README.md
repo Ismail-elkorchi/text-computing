@@ -48,6 +48,13 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`support-status-v1.schema.json`](support-status-v1.schema.json) — canonical package and task support-status schema.
 - [`toolkit-capability-scorecard-v1.schema.json`](toolkit-capability-scorecard-v1.schema.json) — evidence-linked package and task capability scorecard schema.
 - [`textprotocol-result-envelope-v1.schema.json`](textprotocol-result-envelope-v1.schema.json) — result envelope schema for public repository outputs.
+- [`textprotocol-document-bundle-v1.schema.json`](textprotocol-document-bundle-v1.schema.json) — protocol document-bundle envelope schema.
+- [`textprotocol-annotation-bundle-v1.schema.json`](textprotocol-annotation-bundle-v1.schema.json) — protocol annotation-bundle envelope schema.
+- [`textprotocol-evidence-bundle-v1.schema.json`](textprotocol-evidence-bundle-v1.schema.json) — protocol evidence-bundle envelope schema.
+- [`textprotocol-processor-trace-v1.schema.json`](textprotocol-processor-trace-v1.schema.json) — protocol processor-trace envelope schema.
+- [`textprotocol-corpus-metric-envelope-v1.schema.json`](textprotocol-corpus-metric-envelope-v1.schema.json) — protocol corpus-metric envelope schema.
+- [`textprotocol-mapping-loss-report-v1.schema.json`](textprotocol-mapping-loss-report-v1.schema.json) — protocol mapping-loss report schema.
+- [`textprotocol-protocol-error-v1.schema.json`](textprotocol-protocol-error-v1.schema.json) — protocol error envelope schema.
 - [`textconformance-report-v1.schema.json`](textconformance-report-v1.schema.json) — machine-readable conformance report schema.
 - [`task-evidence-manifest-v1.schema.json`](task-evidence-manifest-v1.schema.json) — repository manifest for persisted task evidence reports.
 - [`evidence-run-v1.schema.json`](evidence-run-v1.schema.json) — replayable comparator/evidence run schema.
