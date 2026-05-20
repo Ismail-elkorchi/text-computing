@@ -94,7 +94,9 @@
           "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
           "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/tokenization-sbd/aggregate/ud-2.18.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
@@ -104,7 +106,6 @@
       ],
       "nextTier": "corpus-backed",
       "nextTierBlockers": [
-        "Corpus-scale tokenization/SBD aggregate outputs and conformance reports are not yet persisted.",
         "Holdout slices exist only as a gate policy and are not sufficient for broad multilingual claims.",
         "Comparator execution still depends on local availability of pinned external tools."
       ]
@@ -181,7 +182,9 @@
       "fixtureSplits": {
         "development": [
           "fixtures/pos-morph-lemma/slices.json",
-          "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
         ],
         "validation": [
           "fixtures/pos-morph-lemma/expected/es-multiword-token.json",

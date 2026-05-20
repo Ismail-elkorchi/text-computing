@@ -2,6 +2,15 @@ import Ajv from "ajv";
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 
+const PRIVATE_LEAK_TERMS = [
+  ["/", "home", "/"].join(""),
+  ["tse", "-", "workbench"].join(""),
+  ["projects", "/", "text-computing", "/", "private"].join(""),
+];
+const privateLeakPattern = new RegExp(
+  PRIVATE_LEAK_TERMS.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
+);
+
 const artifactPairs = [
   {
     schemaPath: "schemas/tokenization-sbd-slices-v1.schema.json",
@@ -14,6 +23,10 @@ const artifactPairs = [
   {
     schemaPath: "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
     dataPath: "fixtures/tokenization-sbd/corpus.v1.json",
+  },
+  {
+    schemaPath: "schemas/tokenization-sbd-corpus-aggregate-v1.schema.json",
+    dataPath: "fixtures/tokenization-sbd/aggregate/ud-2.18.json",
   },
 ];
 
@@ -63,6 +76,7 @@ for (const pair of artifactPairs) {
 
 const slices = await readJson("fixtures/tokenization-sbd/slices.json");
 const corpusGate = await readJson("fixtures/tokenization-sbd/corpus.v1.json");
+const corpusAggregate = await readJson("fixtures/tokenization-sbd/aggregate/ud-2.18.json");
 const sliceIds = new Set();
 const slicesById = new Map();
 for (const slice of slices.slices) {
@@ -108,6 +122,25 @@ for (const role of ["development", "validation", "holdout", "negative-control"])
     console.error(`Tokenization/SBD corpus gate is missing split role ${role}.`);
     process.exit(1);
   }
+}
+
+if (corpusAggregate.aggregate.treebanks !== 353) {
+  console.error("Tokenization/SBD UD 2.18 aggregate must record 353 treebanks.");
+  process.exit(1);
+}
+if (corpusAggregate.aggregate.sentenceTexts < 2_000_000) {
+  console.error("Tokenization/SBD UD 2.18 aggregate must be corpus-scale.");
+  process.exit(1);
+}
+for (const requiredRegime of ["cjk", "right-to-left", "southeast-asian-no-space"]) {
+  if (!corpusAggregate.byBoundaryRegime.some((entry) => entry.id === requiredRegime)) {
+    console.error(`Tokenization/SBD UD 2.18 aggregate is missing boundary regime ${requiredRegime}.`);
+    process.exit(1);
+  }
+}
+if (privateLeakPattern.test(JSON.stringify(corpusAggregate))) {
+  console.error("Tokenization/SBD UD 2.18 aggregate must not contain private paths.");
+  process.exit(1);
 }
 
 const expectedSchema = await readJson("schemas/tokenization-sbd-expected-v1.schema.json");
