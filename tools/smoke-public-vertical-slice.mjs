@@ -95,8 +95,11 @@ import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalize } from "@ismail-elkorchi/textfacts/normalize";
-import { segmentSentencesUAX29, segmentWordsUAX29 } from "@ismail-elkorchi/textfacts/segment";
-import { isTextDocDocumentV1, textDocDocumentPayloadKind } from "@ismail-elkorchi/textdoc";
+import {
+  createTextDocDocumentFromText,
+  isTextDocDocumentV1,
+  textDocDocumentPayloadKind,
+} from "@ismail-elkorchi/textdoc";
 import { loadTextPackResources, textPackManifestSchemaVersion } from "@ismail-elkorchi/textpack";
 import {
   analyzeRuleBackedNer,
@@ -157,80 +160,16 @@ function resolveImport(specifier) {
   return normalizedResolved;
 }
 
-function spanText(text, span) {
-  return text.slice(span.startCU, span.endCU);
-}
-
-function tokenAnnotationsFromSegments(text, wordSpans) {
-  return wordSpans.map((span, index) => ({
-    id: "token-" + (index + 1),
-    kind: "token",
-    tokenKind: "uax29-word-boundary-token",
-    lifecycle: { state: "active" },
-    targets: [{ kind: "span", startCU: span.startCU, endCU: span.endCU }],
-    text: spanText(text, span),
-    provenance: {
-      source: { id: "input:public-vertical-slice-0.1", sha256: sha256(text) },
-      references: [{ kind: "textfacts-segmentation", id: "UAX29.Word:Unicode-17.0.0" }],
-    },
-  }));
-}
-
-function sentenceAnnotationsFromSegments(text, sentenceSpans) {
-  return sentenceSpans.map((span, index) => ({
-    id: "sentence-" + (index + 1),
-    kind: "sentence",
-    sentenceKind: "uax29-sentence",
-    lifecycle: { state: "active" },
-    targets: [{ kind: "span", startCU: span.startCU, endCU: span.endCU }],
-    text: spanText(text, span),
-    provenance: {
-      source: { id: "input:public-vertical-slice-0.1", sha256: sha256(text) },
-      references: [{ kind: "textfacts-segmentation", id: "UAX29.Sentence:Unicode-17.0.0" }],
-    },
-  }));
-}
-
-function createDocument(text) {
-  const wordSpans = [...segmentWordsUAX29(text)];
-  const sentenceSpans = [...segmentSentencesUAX29(text)];
-  const tokenAnnotations = tokenAnnotationsFromSegments(text, wordSpans);
-  const sentenceAnnotations = sentenceAnnotationsFromSegments(text, sentenceSpans);
-  const document = {
-    schemaVersion: 1,
+async function createDocument(text) {
+  const result = await createTextDocDocumentFromText(text, {
     documentId: "doc:public-vertical-slice-0.1",
     revision: "textfacts-uax29-v1",
-    textLengthCU: text.length,
-    text,
-    source: { id: "input:public-vertical-slice-0.1", sha256: sha256(text) },
-    unicodeVersion: "17.0.0",
-    units: { text: "utf16-code-unit" },
-    views: [
-      {
-        id: "source-view",
-        kind: "source",
-        description: "Raw text source and textfacts UAX29 token/sentence spans.",
-      },
-    ],
-    layers: [
-      {
-        id: "tokens",
-        kind: "token",
-        viewId: "source-view",
-        annotations: tokenAnnotations,
-        notes: ["Generated from @ismail-elkorchi/textfacts/segment UAX29 word boundaries."],
-      },
-      {
-        id: "sentences",
-        kind: "sentence",
-        viewId: "source-view",
-        annotations: sentenceAnnotations,
-        notes: ["Generated from @ismail-elkorchi/textfacts/segment UAX29 sentence boundaries."],
-      },
-    ],
-    notes: ["Public Vertical Slice 0.1 smoke fixture."],
-  };
+    sourceId: "input:public-vertical-slice-0.1",
+  });
+  expect(result.diagnostics.length === 0, "Raw text document creation emitted diagnostics.", result.diagnostics);
+  const document = result.document;
   expect(isTextDocDocumentV1(document), "Initial textdoc document is invalid.", document);
+  expect(document.source?.sha256 === sha256(text), "Raw text document source digest mismatch.", document.source);
   return document;
 }
 
@@ -336,7 +275,7 @@ expect(textDocDocumentPayloadKind === textProtocolPayloadKindTextdocDocumentV1, 
 expect(textPipelineTracePayloadKind === textProtocolPayloadKindTextpipelineTraceV1, "textpipeline payload kind does not match textprotocol registry.");
 
 const normalizedText = normalize(rawText, "NFC");
-const initialDocument = createDocument(normalizedText);
+const initialDocument = await createDocument(normalizedText);
 const { manifest, contents } = createFixturePack();
 const loadedPack = loadTextPackResources(
   [manifest],
@@ -465,6 +404,10 @@ const reportEnvelope = createEnvelope(
   [{ kind: "conformance-report", id: conformanceReport.reportId }],
 );
 const inspection = inspectTextdocAnnotations(pipelineRun.document);
+const initialTokenLayer = initialDocument.layers.find((layer) => layer.id === "tokens");
+const initialSentenceLayer = initialDocument.layers.find((layer) => layer.id === "sentences");
+expect(initialTokenLayer !== undefined, "Raw text document creation did not emit tokens.", initialDocument.layers);
+expect(initialSentenceLayer !== undefined, "Raw text document creation did not emit sentences.", initialDocument.layers);
 
 const output = {
   schemaVersion: 1,
@@ -472,8 +415,14 @@ const output = {
   input: { rawText },
   textfacts: {
     normalizedText,
-    wordSpans: [...segmentWordsUAX29(normalizedText)],
-    sentenceSpans: [...segmentSentencesUAX29(normalizedText)],
+    wordSpans: initialTokenLayer.annotations.map((annotation) => {
+      const target = annotation.targets[0];
+      return { startCU: target.startCU, endCU: target.endCU };
+    }),
+    sentenceSpans: initialSentenceLayer.annotations.map((annotation) => {
+      const target = annotation.targets[0];
+      return { startCU: target.startCU, endCU: target.endCU };
+    }),
   },
   textdoc: {
     payloadKind: textDocDocumentPayloadKind,

@@ -23,5 +23,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@ismail-elkorchi/textfacts": "0.1.0"
   }
 }

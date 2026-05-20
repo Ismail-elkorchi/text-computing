@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add raw-text document creation helpers backed by `@ismail-elkorchi/textfacts` UAX #29 segmentation.
 - Promote the document container package surface to public alpha for bounded package interop.
 - Keep task-specific graph semantics outside the alpha support claim.
 

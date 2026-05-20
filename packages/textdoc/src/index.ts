@@ -1,3 +1,6 @@
+import { scanLoneSurrogates, sha256Hex } from "@ismail-elkorchi/textfacts";
+import { segmentSentencesUAX29, segmentWordsUAX29 } from "@ismail-elkorchi/textfacts/segment";
+
 export const packageName = "@ismail-elkorchi/textdoc" as const;
 
 export type PackageName = typeof packageName;
@@ -382,6 +385,36 @@ export interface TextDocConlluImportOptions {
   readonly unicodeVersion?: string;
 }
 
+export type TextDocRawTextDiagnosticCode =
+  | "textdoc.raw-text.lone-surrogate"
+  | "textdoc.raw-text.sha256-unavailable";
+
+export interface TextDocRawTextDiagnostic {
+  readonly code: TextDocRawTextDiagnosticCode;
+  readonly severity: TextDocDocumentValidationSeverity;
+  readonly message: string;
+  readonly startCU?: number;
+  readonly endCU?: number;
+}
+
+export interface TextDocRawTextDocumentOptions {
+  readonly documentId: string;
+  readonly revision?: string;
+  readonly sourceId?: string;
+  readonly sourceSha256?: string;
+  readonly unicodeVersion?: string;
+  readonly includeText?: boolean;
+}
+
+export interface TextDocRawTextDocumentInput extends TextDocRawTextDocumentOptions {
+  readonly text: string;
+}
+
+export interface TextDocRawTextDocumentResult {
+  readonly document: TextDocDocumentV1;
+  readonly diagnostics: readonly TextDocRawTextDiagnostic[];
+}
+
 interface ParsedConlluRow {
   readonly line: number;
   readonly fields: TextDocConlluFields;
@@ -419,6 +452,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
+}
+
+function isSha256Hex(value: string): boolean {
+  return /^[a-f0-9]{64}$/u.test(value);
 }
 
 function isStringArray(value: unknown): value is readonly string[] {
@@ -1255,6 +1292,164 @@ export function toTextDocDocumentV1(
     ...(annotationSet.unicodeVersion ? { unicodeVersion: annotationSet.unicodeVersion } : {}),
     ...(annotationSet.notes ? { notes: annotationSet.notes } : {}),
   };
+}
+
+function validateRawTextDocumentOptions(options: TextDocRawTextDocumentOptions): void {
+  if (!isNonEmptyString(options.documentId)) {
+    throw new TypeError("raw text document options require a non-empty documentId");
+  }
+  if (options.sourceId !== undefined && !isNonEmptyString(options.sourceId)) {
+    throw new TypeError("raw text document sourceId must be non-empty when provided");
+  }
+  if (options.revision !== undefined && !isNonEmptyString(options.revision)) {
+    throw new TypeError("raw text document revision must be non-empty when provided");
+  }
+  if (options.unicodeVersion !== undefined && !isNonEmptyString(options.unicodeVersion)) {
+    throw new TypeError("raw text document unicodeVersion must be non-empty when provided");
+  }
+  if (options.sourceSha256 !== undefined && !isSha256Hex(options.sourceSha256)) {
+    throw new TypeError("raw text document sourceSha256 must be a lowercase 64-character hex digest");
+  }
+}
+
+function rawTextDiagnostics(text: string): readonly TextDocRawTextDiagnostic[] {
+  return scanLoneSurrogates(text).map((finding) => ({
+    code: "textdoc.raw-text.lone-surrogate",
+    severity: "warning",
+    message: `Input contains a lone ${finding.kind} surrogate at UTF-16 code unit ${finding.span.startCU}.`,
+    startCU: finding.span.startCU,
+    endCU: finding.span.endCU,
+  }));
+}
+
+function rawTextSourceRef(
+  options: TextDocRawTextDocumentOptions,
+  sourceSha256: string | undefined,
+): TextDocSourceRef {
+  return {
+    id: options.sourceId ?? options.documentId,
+    ...(sourceSha256 ? { sha256: sourceSha256 } : {}),
+  };
+}
+
+function textDocRawTextNotes(diagnostics: readonly TextDocRawTextDiagnostic[]): readonly string[] {
+  return [
+    "Created from raw text with @ismail-elkorchi/textfacts UAX #29 word and sentence segmentation.",
+    ...(diagnostics.length > 0
+      ? ["Input contains Unicode integrity diagnostics; inspect the returned diagnostics before broad claims."]
+      : []),
+  ];
+}
+
+function createTextDocDocumentFromTextWithSourceHash(
+  text: string,
+  options: TextDocRawTextDocumentOptions,
+  sourceSha256: string | undefined,
+  diagnostics: readonly TextDocRawTextDiagnostic[] = rawTextDiagnostics(text),
+): TextDocRawTextDocumentResult {
+  validateRawTextDocumentOptions(options);
+
+  const wordSegments = segmentWordsUAX29(text);
+  const sentenceSegments = segmentSentencesUAX29(text);
+  const unicodeVersion = options.unicodeVersion ?? wordSegments.provenance.unicodeVersion;
+  const annotationSet: TextDocTokenSentenceAnnotationSet = {
+    schemaVersion: tokenSentenceAnnotationSchemaVersion,
+    documentId: options.documentId,
+    source: rawTextSourceRef(options, sourceSha256),
+    unicodeVersion,
+    units: {
+      text: "utf16-code-unit",
+    },
+    tokens: [...wordSegments].map((span, index) => ({
+      id: `token-${index + 1}`,
+      kind: "uax29-word-boundary-token",
+      startCU: span.startCU,
+      endCU: span.endCU,
+      text: text.slice(span.startCU, span.endCU),
+    })),
+    sentences: [...sentenceSegments].map((span, index) => ({
+      id: `sentence-${index + 1}`,
+      kind: "uax29-sentence",
+      startCU: span.startCU,
+      endCU: span.endCU,
+      text: text.slice(span.startCU, span.endCU),
+    })),
+    notes: textDocRawTextNotes(diagnostics),
+  };
+  const document = toTextDocDocumentV1(annotationSet);
+  return {
+    document: {
+      ...document,
+      revision: options.revision ?? "raw-text-uax29-v1",
+      textLengthCU: text.length,
+      ...(options.includeText === false ? {} : { text }),
+    },
+    diagnostics,
+  };
+}
+
+async function computeRawTextSourceSha256(
+  text: string,
+  diagnostics: readonly TextDocRawTextDiagnostic[],
+): Promise<{
+  readonly sourceSha256: string | undefined;
+  readonly diagnostics: readonly TextDocRawTextDiagnostic[];
+}> {
+  const digest = await sha256Hex(text);
+  if (digest.startsWith("sha256:")) {
+    const sourceSha256 = digest.slice("sha256:".length);
+    if (isSha256Hex(sourceSha256)) {
+      return { sourceSha256, diagnostics };
+    }
+  }
+  return {
+    sourceSha256: undefined,
+    diagnostics: [
+      ...diagnostics,
+      {
+        code: "textdoc.raw-text.sha256-unavailable",
+        severity: "warning",
+        message: "SHA-256 source digest was unavailable in the current runtime.",
+      },
+    ],
+  };
+}
+
+export function createTextDocDocumentFromTextSync(
+  text: string,
+  options: TextDocRawTextDocumentOptions,
+): TextDocRawTextDocumentResult {
+  if (typeof text !== "string") {
+    throw new TypeError("raw text document input must be a string");
+  }
+  return createTextDocDocumentFromTextWithSourceHash(text, options, options.sourceSha256);
+}
+
+export async function createTextDocDocumentFromText(
+  text: string,
+  options: TextDocRawTextDocumentOptions,
+): Promise<TextDocRawTextDocumentResult> {
+  if (typeof text !== "string") {
+    throw new TypeError("raw text document input must be a string");
+  }
+  const initialDiagnostics = rawTextDiagnostics(text);
+  const { sourceSha256, diagnostics } =
+    options.sourceSha256 === undefined
+      ? await computeRawTextSourceSha256(text, initialDiagnostics)
+      : { sourceSha256: options.sourceSha256, diagnostics: initialDiagnostics };
+  return createTextDocDocumentFromTextWithSourceHash(text, options, sourceSha256, diagnostics);
+}
+
+export function createTextDocDocumentsFromTextsSync(
+  inputs: readonly TextDocRawTextDocumentInput[],
+): readonly TextDocRawTextDocumentResult[] {
+  return inputs.map((input) => createTextDocDocumentFromTextSync(input.text, input));
+}
+
+export async function createTextDocDocumentsFromTexts(
+  inputs: readonly TextDocRawTextDocumentInput[],
+): Promise<readonly TextDocRawTextDocumentResult[]> {
+  return Promise.all(inputs.map((input) => createTextDocDocumentFromText(input.text, input)));
 }
 
 function sentenceIdFromComments(comments: readonly string[], fallback: string): string {

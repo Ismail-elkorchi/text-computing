@@ -1,4 +1,8 @@
 import {
+  createTextDocDocumentFromText,
+  createTextDocDocumentFromTextSync,
+  createTextDocDocumentsFromTexts,
+  createTextDocDocumentsFromTextsSync,
   documentSchemaVersion,
   exportTextDocDocumentV1ToConllu,
   importConlluToTextDocDocumentV1,
@@ -51,6 +55,37 @@ const issueNineAnnotationSet: TextDocTokenSentenceAnnotationSet = {
 };
 
 const convertedDocument = toTextDocDocumentV1(issueNineAnnotationSet);
+const rawText = "Hello world. Bye.";
+const rawTextDocumentResult = createTextDocDocumentFromTextSync(rawText, {
+  documentId: "doc:raw-text-sync",
+  sourceId: "source:raw-text-sync",
+  sourceSha256: "0".repeat(64),
+});
+const rawTextDocument = rawTextDocumentResult.document;
+const asyncRawTextDocumentResult = await createTextDocDocumentFromText(rawText, {
+  documentId: "doc:raw-text-async",
+  sourceId: "source:raw-text-async",
+});
+const malformedRawTextDocumentResult = createTextDocDocumentFromTextSync("bad \uD800 text", {
+  documentId: "doc:raw-text-malformed",
+});
+const batchRawTextDocuments = createTextDocDocumentsFromTextsSync([
+  {
+    documentId: "doc:raw-text-batch-1",
+    text: "One.",
+  },
+  {
+    documentId: "doc:raw-text-batch-2",
+    text: "Two.",
+    includeText: false,
+  },
+]);
+const asyncBatchRawTextDocuments = await createTextDocDocumentsFromTexts([
+  {
+    documentId: "doc:raw-text-async-batch-1",
+    text: "Three.",
+  },
+]);
 const conlluFixture = [
   "# sent_id = textdoc-conllu-1",
   "# text = They buy books.",
@@ -312,6 +347,65 @@ if (!convertedTokenLayer || convertedTokenLayer.kind !== "token") {
 
 if (!isTextDocDocumentV1(convertedDocument)) {
   throw new Error("converted token/sentence annotation set should satisfy the document model shape");
+}
+
+if (!isTextDocDocumentV1(rawTextDocument)) {
+  throw new Error("raw-text sync document should satisfy the document model shape");
+}
+
+if (!validateTextDocDocumentV1(rawTextDocument).ok) {
+  throw new Error("raw-text sync document should pass reference validation");
+}
+
+if (rawTextDocument.text !== rawText || rawTextDocument.textLengthCU !== rawText.length) {
+  throw new Error("raw-text sync document should preserve source text and UTF-16 length");
+}
+
+if (rawTextDocument.source?.sha256 !== "0".repeat(64)) {
+  throw new Error("raw-text sync document should preserve caller-provided source digest");
+}
+
+const rawTokenLayer = rawTextDocument.layers.find((layer) => layer.kind === "token");
+const rawSentenceLayer = rawTextDocument.layers.find((layer) => layer.kind === "sentence");
+if (
+  rawTokenLayer === undefined ||
+  rawTokenLayer.annotations.map((annotation) => ("text" in annotation ? annotation.text : undefined)).join("|") !==
+    "Hello| |world|.| |Bye|."
+) {
+  throw new Error("raw-text sync document should expose textfacts UAX #29 word-boundary tokens");
+}
+
+if (
+  rawSentenceLayer === undefined ||
+  rawSentenceLayer.annotations.map((annotation) => ("text" in annotation ? annotation.text : undefined)).join("|") !==
+    "Hello world. |Bye."
+) {
+  throw new Error("raw-text sync document should expose textfacts UAX #29 sentences");
+}
+
+if (!isTextDocDocumentV1(asyncRawTextDocumentResult.document)) {
+  throw new Error("raw-text async document should satisfy the document model shape");
+}
+
+if (!/^[a-f0-9]{64}$/u.test(asyncRawTextDocumentResult.document.source?.sha256 ?? "")) {
+  throw new Error("raw-text async document should compute a source SHA-256 digest");
+}
+
+if (
+  malformedRawTextDocumentResult.diagnostics.length !== 1 ||
+  malformedRawTextDocumentResult.diagnostics[0]?.code !== "textdoc.raw-text.lone-surrogate"
+) {
+  throw new Error("raw-text malformed input should return a lone-surrogate diagnostic");
+}
+
+if (
+  batchRawTextDocuments.length !== 2 ||
+  batchRawTextDocuments[0]?.document.documentId !== "doc:raw-text-batch-1" ||
+  batchRawTextDocuments[1]?.document.text !== undefined ||
+  asyncBatchRawTextDocuments.length !== 1 ||
+  asyncBatchRawTextDocuments[0]?.document.documentId !== "doc:raw-text-async-batch-1"
+) {
+  throw new Error("raw-text batch helpers should produce deterministic document results");
 }
 
 if (!isTextDocDocumentV1(issueElevenDocument)) {
