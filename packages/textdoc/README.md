@@ -2,6 +2,22 @@
 
 Document annotation container package.
 
+## Raw text document creation
+
+`createTextDocDocumentFromText()` and `createTextDocDocumentFromTextSync()` create a
+`TextDocDocumentV1` from a raw JavaScript string using `@ismail-elkorchi/textfacts` UAX #29 word and
+sentence segmentation. The produced document preserves UTF-16 offsets, source text by default,
+Unicode version metadata, token and sentence layers, and source provenance.
+
+Use the async helper when a runtime SHA-256 source digest is required. The sync helper accepts a
+caller-provided `sourceSha256` and otherwise leaves the digest absent. Both helpers return
+diagnostics for malformed UTF-16 such as lone surrogates.
+
+Batch helpers are also available:
+
+- `createTextDocDocumentsFromTexts`
+- `createTextDocDocumentsFromTextsSync`
+
 ## Document annotation model
 
 The public contract now includes a repository-level document schema,

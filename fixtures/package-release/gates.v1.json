@@ -73,7 +73,8 @@
         "requiredBeforeRelease": false,
         "status": "not-required",
         "downstreamDependents": [
-          "@ismail-elkorchi/textcorpus"
+          "@ismail-elkorchi/textcorpus",
+          "@ismail-elkorchi/textdoc"
         ],
         "evidenceRefs": [
           "packages/textfacts/package.json",

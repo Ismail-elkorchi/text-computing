@@ -18,7 +18,7 @@
     {
       "name": "@ismail-elkorchi/textdoc",
       "status": "alpha",
-      "scope": "Public alpha document container package for document identity, source/token/sentence views, lifecycle, provenance, annotation-layer validation, and package-level graph integrity checks proven by Public Vertical Slice 0.1 and package tests.",
+      "scope": "Public alpha document container package for raw-text document creation, document identity, source/token/sentence views, lifecycle, provenance, annotation-layer validation, and package-level graph integrity checks proven by Public Vertical Slice 0.1 and package tests.",
       "evidence": [
         "document-model fixtures",
         "invalid-reference validator",
@@ -26,7 +26,9 @@
         "package reference-validation tests",
         "semantic graph-validation tests",
         "Public Vertical Slice 0.1 external-consumer smoke test",
-        "workspace pack dry-run"
+        "workspace pack dry-run",
+        "raw-text document creation tests",
+        "raw-text external-consumer smoke path"
       ],
       "limitations": [
         "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
