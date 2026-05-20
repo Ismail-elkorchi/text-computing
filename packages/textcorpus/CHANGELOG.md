@@ -3,6 +3,9 @@
 ## 0.1.0
 
 - Promote package metadata to public alpha for the bounded corpus and retrieval fixture scope.
+- Add corpus-analysis APIs for KWIC/concordance, frequency, n-grams, co-occurrence, collocates, and pairwise document relations over explicit token layers.
+- Add E2 corpus selection provenance to corpus-analysis, scoring, retrieval-index, retrieval-result, and retrieval-evaluation outputs.
+- Add deterministic JSON persistence helpers for declared textcorpus artifact families.
 
 ## 0.0.0
 

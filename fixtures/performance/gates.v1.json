@@ -67,15 +67,15 @@
     {
       "id": "textcorpus-retrieval",
       "packageName": "@ismail-elkorchi/textcorpus",
-      "surface": "Corpus scoring and retrieval",
+      "surface": "Corpus analysis, scoring, and retrieval",
       "dimensions": [
         "throughput",
         "memory",
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Retrieval scale claims require document-count, token-count, query-count, qrels, corpus hash, query policy, and serialized-index thresholds.",
-      "regressionPolicy": "Retrieval measurements must pin corpus hash, query hash, formula, ordering policy, qrels, and metric tolerance before broader claims.",
+      "scalePolicy": "Corpus-analysis and retrieval scale claims require document-count, token-count, query-count where applicable, qrels where applicable, corpus hash, query policy, artifact size, and serialized-index thresholds.",
+      "regressionPolicy": "Corpus-analysis and retrieval measurements must pin corpus hash, query hash where applicable, formula, ordering policy, qrels where applicable, and metric tolerance before broader claims.",
       "thresholds": {
         "minDocuments": 12,
         "minTokens": 70,
@@ -93,7 +93,7 @@
         "tools/validate-retrieval-feature.mjs"
       ],
       "limitations": [
-        "Current retrieval proof uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."
+        "Current corpus-analysis and retrieval proof uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."
       ]
     },
     {
