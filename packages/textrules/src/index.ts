@@ -20,6 +20,7 @@ import {
   type TextDocRelationAnnotation,
   type TextDocStringAlternative,
   type TextDocSourceRef,
+  type TextDocSpanMapV1,
   type TextDocView,
 } from "@ismail-elkorchi/textdoc";
 import {
@@ -631,6 +632,7 @@ function createTokenAnnotations(
     targets: [
       {
         kind: "span",
+        viewId: "analysis-view",
         startCU: token.startCU,
         endCU: token.endCU,
       },
@@ -667,6 +669,7 @@ function createSentenceAnnotations(
     targets: [
       {
         kind: "span",
+        viewId: "analysis-view",
         startCU: sentence.startCU,
         endCU: sentence.endCU,
       },
@@ -1170,14 +1173,37 @@ function createDocumentViews(): readonly TextDocView[] {
   return [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
       description: "Original source text for POS, lemma, and morphology analysis.",
     },
     {
       id: "analysis-view",
-      kind: "analysis",
+      kind: "task",
       description: "Deterministic textrules POS, lemma, and morphology annotations.",
-      derivedFrom: ["source-view"],
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ];
+}
+
+function createAnalysisSpanMaps(textLengthCU: number): readonly TextDocSpanMapV1[] {
+  return [
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: "source-view",
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments:
+        textLengthCU === 0
+          ? []
+          : [
+              {
+                source: { startCU: 0, endCU: textLengthCU },
+                target: { startCU: 0, endCU: textLengthCU },
+                kind: "unchanged",
+                reversible: true,
+              },
+            ],
     },
   ];
 }
@@ -1186,14 +1212,15 @@ function createDependencyParserViews(): readonly TextDocView[] {
   return [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
       description: "Original source text for dependency parsing.",
     },
     {
       id: "analysis-view",
-      kind: "analysis",
+      kind: "task",
       description: "Deterministic textrules dependency annotations.",
-      derivedFrom: ["source-view"],
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
     },
   ];
 }
@@ -1202,14 +1229,15 @@ function createRelationExtractionViews(): readonly TextDocView[] {
   return [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
       description: "Original source text for relation extraction.",
     },
     {
       id: "analysis-view",
-      kind: "analysis",
+      kind: "task",
       description: "Deterministic textrules relation annotations.",
-      derivedFrom: ["source-view"],
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
     },
   ];
 }
@@ -1218,29 +1246,63 @@ function createCoreferenceViews(): readonly TextDocView[] {
   return [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
       description: "Original source text for coreference analysis.",
     },
     {
       id: "analysis-view",
-      kind: "analysis",
+      kind: "task",
       description: "Deterministic textrules coreference annotations.",
-      derivedFrom: ["source-view"],
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
     },
   ];
 }
 
 function entityDocumentViews(document: TextDocDocumentV1): readonly TextDocView[] {
   if (document.views.some((view) => view.id === "analysis-view")) return document.views;
+  const parentViewId = document.views.some((view) => view.id === "source-view")
+    ? "source-view"
+    : document.views[0]?.id;
+  if (parentViewId === undefined) return document.views;
   return [
     ...document.views,
     {
       id: "analysis-view",
-      kind: "analysis",
+      kind: "task",
       description: "Deterministic textrules rule-backed named entity annotations.",
-      derivedFrom: document.views.some((view) => view.id === "source-view")
-        ? ["source-view"]
-        : document.views.slice(0, 1).map((view) => view.id),
+      parentViewId,
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ];
+}
+
+function analysisDocumentSpanMaps(document: TextDocDocumentV1): readonly TextDocSpanMapV1[] {
+  if (document.spanMaps?.some((spanMap) => spanMap.id === "span-map-source-analysis")) {
+    return document.spanMaps;
+  }
+  const parentViewId = document.views.some((view) => view.id === "source-view")
+    ? "source-view"
+    : document.views[0]?.id;
+  if (parentViewId === undefined) return document.spanMaps ?? [];
+  return [
+    ...(document.spanMaps ?? []),
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: parentViewId,
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments:
+        document.textLengthCU === 0
+          ? []
+          : [
+              {
+                source: { startCU: 0, endCU: document.textLengthCU },
+                target: { startCU: 0, endCU: document.textLengthCU },
+                kind: "unchanged",
+                reversible: true,
+              },
+            ],
     },
   ];
 }
@@ -1890,6 +1952,7 @@ function createRelationArgumentAnnotations(
       targets: [
         {
           kind: "span",
+          viewId: "analysis-view",
           startCU: argument.startCU,
           endCU: argument.endCU,
         },
@@ -1918,6 +1981,7 @@ function createRelationArgumentAnnotations(
       targets: [
         {
           kind: "span",
+          viewId: "analysis-view",
           startCU: evidence.startCU,
           endCU: evidence.endCU,
         },
@@ -1983,6 +2047,7 @@ function createCoreferenceMentionAnnotations(
     targets: [
       {
         kind: "span",
+        viewId: "analysis-view",
         startCU: spec.startCU,
         endCU: spec.endCU,
       },
@@ -2241,6 +2306,7 @@ function createEntityAnnotations(
     targets: [
       {
         kind: "span",
+        viewId: "analysis-view",
         startCU: match.startCU,
         endCU: match.endCU,
       },
@@ -2583,6 +2649,7 @@ export function analyzeRuleBackedNer(
       ...document,
       revision: ruleBackedNerRevision,
       views: entityDocumentViews(document),
+      spanMaps: analysisDocumentSpanMaps(document),
       layers: [...document.layers.filter((layer) => layer.id !== "entities"), entityLayer],
     },
     diagnostics: sortDiagnostics(diagnostics),
@@ -2591,15 +2658,18 @@ export function analyzeRuleBackedNer(
 
 function posMorphLemmaViews(document: TextDocDocumentV1): readonly TextDocView[] {
   if (document.views.some((view) => view.id === "analysis-view")) return document.views;
+  const parentViewId = document.views.some((view) => view.id === "source-view")
+    ? "source-view"
+    : document.views[0]?.id;
+  if (parentViewId === undefined) return document.views;
   return [
     ...document.views,
     {
       id: "analysis-view",
-      kind: "analysis",
+      kind: "task",
       description: "Deterministic textrules POS, lemma, and morphology annotations.",
-      derivedFrom: document.views.some((view) => view.id === "source-view")
-        ? ["source-view"]
-        : document.views.slice(0, 1).map((view) => view.id),
+      parentViewId,
+      spanMapIds: ["span-map-source-analysis"],
     },
   ];
 }
@@ -2760,6 +2830,7 @@ export function analyzePosMorphLemmaDocument(
       ...input.document,
       revision: input.revision ?? posMorphLemmaRevision,
       views: posMorphLemmaViews(input.document),
+      spanMaps: analysisDocumentSpanMaps(input.document),
       layers,
       ...(input.phenomena && input.phenomena.length > 0
         ? {
@@ -2792,6 +2863,7 @@ export function analyzePosMorphLemma(
       text: "utf16-code-unit",
     },
     views: createDocumentViews(),
+    spanMaps: createAnalysisSpanMaps(input.text.length),
     layers: [
       {
         id: "tokens",
@@ -2869,6 +2941,7 @@ export function analyzeRelationExtraction(
         text: "utf16-code-unit",
       },
       views: createRelationExtractionViews(),
+      spanMaps: createAnalysisSpanMaps(input.text.length),
       layers: [tokenLayer, sentenceLayer, relationArgumentLayer, relationLayer],
       notes: [
         "Relation extraction behavior is limited to declared frozen fixtures and deterministic rules.",
@@ -2931,6 +3004,7 @@ export function analyzeCoreference(input: TextRulesCoreferenceInput): TextRulesC
         text: "utf16-code-unit",
       },
       views: createCoreferenceViews(),
+      spanMaps: createAnalysisSpanMaps(input.text.length),
       layers,
       notes: [
         "Coreference behavior is limited to declared frozen fixtures and deterministic rules.",
@@ -3010,6 +3084,7 @@ export function analyzeDependencyParser(
         text: "utf16-code-unit",
       },
       views: createDependencyParserViews(),
+      spanMaps: createAnalysisSpanMaps(input.text.length),
       layers,
       notes: [
         "Dependency parser behavior is limited to declared frozen fixtures and deterministic rules.",

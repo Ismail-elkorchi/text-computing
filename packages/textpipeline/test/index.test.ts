@@ -1,4 +1,9 @@
-import type { TextDocDocumentV1, TextDocLayer, TextDocView } from "@ismail-elkorchi/textdoc";
+import type {
+  TextDocDocumentV1,
+  TextDocLayer,
+  TextDocSpanMapV1,
+  TextDocView,
+} from "@ismail-elkorchi/textdoc";
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   isTextPipelineProcessorDescriptor,
@@ -31,7 +36,7 @@ const baseDocument: TextDocDocumentV1 = {
   views: [
     {
       id: "source-view",
-      kind: "source",
+      kind: "raw",
     },
   ],
   layers: [
@@ -55,8 +60,29 @@ function appendAnalysisArtifacts(
     ...document.views,
     {
       id: viewId,
-      kind: "analysis",
-      derivedFrom: ["source-view"],
+      kind: "task",
+      parentViewId: "source-view",
+      spanMapIds: [`span-map-source-to-${viewId}`],
+    },
+  ];
+  const spanMaps: readonly TextDocSpanMapV1[] = [
+    ...(document.spanMaps ?? []),
+    {
+      id: `span-map-source-to-${viewId}`,
+      sourceViewId: "source-view",
+      targetViewId: viewId,
+      lifecycle: { state: "active" },
+      segments:
+        document.textLengthCU === 0
+          ? []
+          : [
+              {
+                source: { startCU: 0, endCU: document.textLengthCU },
+                target: { startCU: 0, endCU: document.textLengthCU },
+                kind: "unchanged",
+                reversible: true,
+              },
+            ],
     },
   ];
   const layers: readonly TextDocLayer[] = [
@@ -73,6 +99,7 @@ function appendAnalysisArtifacts(
     ...document,
     revision,
     views,
+    spanMaps,
     layers,
   };
 }

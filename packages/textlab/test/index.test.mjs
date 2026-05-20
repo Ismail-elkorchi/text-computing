@@ -199,7 +199,7 @@ const textdocDocument = {
   revision: "1",
   textLengthCU: 19,
   units: { text: "utf16-code-unit" },
-  views: [{ id: "analysis", kind: "analysis" }],
+  views: [{ id: "analysis", kind: "raw" }],
   layers: [
     {
       id: "layer-token",
@@ -210,14 +210,14 @@ const textdocDocument = {
           id: "token-1",
           kind: "token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 0, endCU: 5 }],
+          targets: [{ kind: "span", viewId: "analysis", startCU: 0, endCU: 5 }],
           text: "Alice",
         },
         {
           id: "token-2",
           kind: "token",
           lifecycle: { state: "active" },
-          targets: [{ kind: "span", startCU: 6, endCU: 11 }],
+          targets: [{ kind: "span", viewId: "analysis", startCU: 6, endCU: 11 }],
           text: "knows",
         },
       ],

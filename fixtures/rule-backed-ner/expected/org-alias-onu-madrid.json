@@ -20,8 +20,18 @@
       "text": "utf16-code-unit"
     },
     "views": [
-      { "id": "source-view", "kind": "source" },
-      { "id": "analysis-view", "kind": "analysis", "derivedFrom": ["source-view"] }
+      {
+        "id": "source-view",
+        "kind": "raw"
+      },
+      {
+        "id": "analysis-view",
+        "kind": "task",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
+      }
     ],
     "layers": [
       {
@@ -29,21 +39,261 @@
         "kind": "token",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "token-1", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 2 }], "text": "La" },
-          { "id": "token-2", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 3, "endCU": 15 }], "text": "Organización" },
-          { "id": "token-3", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 16, "endCU": 18 }], "text": "de" },
-          { "id": "token-4", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 19, "endCU": 22 }], "text": "las" },
-          { "id": "token-5", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 23, "endCU": 31 }], "text": "Naciones" },
-          { "id": "token-6", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 32, "endCU": 38 }], "text": "Unidas" },
-          { "id": "token-7", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 39, "endCU": 40 }], "text": "(" },
-          { "id": "token-8", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 40, "endCU": 43 }], "text": "ONU" },
-          { "id": "token-9", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 43, "endCU": 44 }], "text": ")" },
-          { "id": "token-10", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 45, "endCU": 50 }], "text": "abrió" },
-          { "id": "token-11", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 51, "endCU": 54 }], "text": "una" },
-          { "id": "token-12", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 55, "endCU": 62 }], "text": "oficina" },
-          { "id": "token-13", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 63, "endCU": 65 }], "text": "en" },
-          { "id": "token-14", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 66, "endCU": 72 }], "text": "Madrid" },
-          { "id": "token-15", "kind": "token", "tokenKind": "lexical-token", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 72, "endCU": 73 }], "text": "." }
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 2,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "La"
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 3,
+                "endCU": 15,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Organización"
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 16,
+                "endCU": 18,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "de"
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 19,
+                "endCU": 22,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "las"
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 23,
+                "endCU": 31,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Naciones"
+          },
+          {
+            "id": "token-6",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 32,
+                "endCU": 38,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Unidas"
+          },
+          {
+            "id": "token-7",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 39,
+                "endCU": 40,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "("
+          },
+          {
+            "id": "token-8",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 40,
+                "endCU": 43,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "ONU"
+          },
+          {
+            "id": "token-9",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 43,
+                "endCU": 44,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": ")"
+          },
+          {
+            "id": "token-10",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 45,
+                "endCU": 50,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "abrió"
+          },
+          {
+            "id": "token-11",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 51,
+                "endCU": 54,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "una"
+          },
+          {
+            "id": "token-12",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 55,
+                "endCU": 62,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "oficina"
+          },
+          {
+            "id": "token-13",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 63,
+                "endCU": 65,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "en"
+          },
+          {
+            "id": "token-14",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 66,
+                "endCU": 72,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "Madrid"
+          },
+          {
+            "id": "token-15",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 72,
+                "endCU": 73,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "."
+          }
         ]
       },
       {
@@ -51,7 +301,23 @@
         "kind": "sentence",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "sentence-1", "kind": "sentence", "sentenceKind": "uax29-sentence", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 0, "endCU": 73 }], "text": "La Organización de las Naciones Unidas (ONU) abrió una oficina en Madrid." }
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 0,
+                "endCU": 73,
+                "viewId": "analysis-view"
+              }
+            ],
+            "text": "La Organización de las Naciones Unidas (ONU) abrió una oficina en Madrid."
+          }
         ]
       },
       {
@@ -59,14 +325,86 @@
         "kind": "entity",
         "viewId": "analysis-view",
         "annotations": [
-          { "id": "entity-1", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 3, "endCU": 38 }], "label": "ORG", "text": "Organización de las Naciones Unidas" },
-          { "id": "entity-2", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 40, "endCU": 43 }], "label": "ORG", "text": "ONU" },
-          { "id": "entity-3", "kind": "entity", "lifecycle": { "state": "active" }, "targets": [{ "kind": "span", "startCU": 66, "endCU": 72 }], "label": "LOC", "text": "Madrid" }
+          {
+            "id": "entity-1",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 3,
+                "endCU": 38,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "ORG",
+            "text": "Organización de las Naciones Unidas"
+          },
+          {
+            "id": "entity-2",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 40,
+                "endCU": 43,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "ORG",
+            "text": "ONU"
+          },
+          {
+            "id": "entity-3",
+            "kind": "entity",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "startCU": 66,
+                "endCU": 72,
+                "viewId": "analysis-view"
+              }
+            ],
+            "label": "LOC",
+            "text": "Madrid"
+          }
         ]
       }
     ],
     "notes": [
       "Non-English Latin-script slice keeps both the full organization name and the ONU acronym."
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 73
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 73
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

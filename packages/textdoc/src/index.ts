@@ -17,7 +17,7 @@ export type TextDocDocumentPayloadKind = typeof textDocDocumentPayloadKind;
 export type TextDocConlluRoundTripPayloadKind = typeof textDocConlluRoundTripPayloadKind;
 
 export type TextDocOffsetUnit = "utf16-code-unit";
-export type TextDocViewKind = "source" | "analysis";
+export type TextDocViewKind = "raw" | "normalized" | "tailored" | "task" | "imported" | "extension";
 export type TextDocLayerKind =
   | "token"
   | "sentence"
@@ -34,6 +34,7 @@ export type TextDocLayerKind =
   | "dependency"
   | "extension";
 export type TextDocAnnotationLifecycleState = "active" | "superseded" | "retracted";
+export type TextDocSpanMapLifecycleState = "active" | "partial" | "invalidated" | "superseded";
 export type TextDocDependencyNodeKind = "word" | "multiword-token" | "empty-node";
 export type TextDocDocumentValidationSeverity = "error" | "warning";
 export type TextDocConlluErrorCode =
@@ -106,7 +107,9 @@ export interface TextDocView {
   readonly id: string;
   readonly kind: TextDocViewKind;
   readonly description?: string;
-  readonly derivedFrom?: readonly string[];
+  readonly parentViewId?: string;
+  readonly spanMapIds?: readonly string[];
+  readonly loss?: readonly TextDocLossMarker[];
 }
 
 export interface TextDocLifecycle {
@@ -118,6 +121,7 @@ export interface TextDocLifecycle {
 
 export interface TextDocSpanTarget extends TextDocSpanCU {
   readonly kind: "span";
+  readonly viewId: string;
 }
 
 export interface TextDocDocumentTarget {
@@ -281,6 +285,30 @@ export interface TextDocExtensionSchemaRef {
   readonly schemaVersion?: string;
 }
 
+export interface TextDocSpanMapSegment {
+  readonly source: TextDocSpanCU;
+  readonly target: TextDocSpanCU;
+  readonly kind: "unchanged" | "normalized" | "inserted" | "deleted" | "reordered" | "unknown";
+  readonly reversible?: boolean;
+  readonly loss?: readonly TextDocLossMarker[];
+}
+
+export interface TextDocSpanMapLifecycle {
+  readonly state: TextDocSpanMapLifecycleState;
+  readonly supersededBy?: string;
+  readonly reason?: string;
+}
+
+export interface TextDocSpanMapV1 {
+  readonly id: string;
+  readonly sourceViewId: string;
+  readonly targetViewId: string;
+  readonly lifecycle: TextDocSpanMapLifecycle;
+  readonly segments: readonly TextDocSpanMapSegment[];
+  readonly loss?: readonly TextDocLossMarker[];
+  readonly provenance?: TextDocProvenance;
+}
+
 export interface TextDocExtensionAnnotation extends TextDocAnnotationBase {
   readonly kind: "extension";
   readonly extensionId: string;
@@ -358,6 +386,7 @@ export interface TextDocDocumentV1 {
   readonly unicodeVersion?: string;
   readonly units: TextDocUnits;
   readonly views: readonly TextDocView[];
+  readonly spanMaps?: readonly TextDocSpanMapV1[];
   readonly layers: readonly TextDocLayer[];
   readonly notes?: readonly string[];
 }
@@ -413,6 +442,33 @@ export interface TextDocRawTextDocumentInput extends TextDocRawTextDocumentOptio
 export interface TextDocRawTextDocumentResult {
   readonly document: TextDocDocumentV1;
   readonly diagnostics: readonly TextDocRawTextDiagnostic[];
+}
+
+export type TextDocRevisionErrorCode =
+  | "textdoc.revision.expected-mismatch"
+  | "textdoc.revision.invalid-next";
+
+export interface TextDocRevisionOptions {
+  readonly expectedRevision?: string;
+  readonly revision?: string;
+}
+
+export interface TextDocAnnotationQuery {
+  readonly viewId?: string;
+  readonly layerId?: string;
+  readonly kind?: TextDocLayerKind;
+  readonly lifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+  readonly targetKind?: TextDocTarget["kind"];
+  readonly spanOverlap?: TextDocSpanCU & { readonly viewId: string };
+  readonly spanContains?: TextDocSpanCU & { readonly viewId: string };
+  readonly provenanceReference?: TextDocReferenceRef;
+  readonly extensionId?: string;
+}
+
+export interface TextDocAnnotationQueryResult<TAnnotation extends TextDocAnnotation = TextDocAnnotation> {
+  readonly viewId: string;
+  readonly layerId: string;
+  readonly annotation: TAnnotation;
 }
 
 interface ParsedConlluRow {
@@ -521,6 +577,10 @@ function isTextDocLifecycleState(value: unknown): value is TextDocAnnotationLife
   return value === "active" || value === "superseded" || value === "retracted";
 }
 
+function isTextDocSpanMapLifecycleState(value: unknown): value is TextDocSpanMapLifecycleState {
+  return value === "active" || value === "partial" || value === "invalidated" || value === "superseded";
+}
+
 function isTextDocTargetOfKind(
   value: unknown,
   kind: TextDocTarget["kind"],
@@ -536,6 +596,19 @@ export function isTextDocSpanInRange(span: TextDocSpanCU, textLengthCU: number):
     span.startCU >= 0 &&
     span.endCU >= span.startCU &&
     span.endCU <= textLengthCU
+  );
+}
+
+function isTextDocSpanCUValue(value: unknown): value is TextDocSpanCU {
+  if (!isRecord(value)) return false;
+  const { startCU, endCU } = value;
+  return (
+    typeof startCU === "number" &&
+    typeof endCU === "number" &&
+    Number.isInteger(startCU) &&
+    Number.isInteger(endCU) &&
+    startCU >= 0 &&
+    endCU >= startCU
   );
 }
 
@@ -565,9 +638,17 @@ export function isTextDocView(value: unknown): value is TextDocView {
   return (
     isRecord(value) &&
     isNonEmptyString(value.id) &&
-    (value.kind === "source" || value.kind === "analysis") &&
+    (value.kind === "raw" ||
+      value.kind === "normalized" ||
+      value.kind === "tailored" ||
+      value.kind === "task" ||
+      value.kind === "imported" ||
+      value.kind === "extension") &&
     (value.description === undefined || isNonEmptyString(value.description)) &&
-    (value.derivedFrom === undefined || isStringArray(value.derivedFrom))
+    (value.parentViewId === undefined || isNonEmptyString(value.parentViewId)) &&
+    (value.spanMapIds === undefined || isStringArray(value.spanMapIds)) &&
+    (value.loss === undefined ||
+      (Array.isArray(value.loss) && value.loss.every((entry) => isTextDocLossMarker(entry))))
   );
 }
 
@@ -585,6 +666,7 @@ export function isTextDocSpanTarget(value: unknown): value is TextDocSpanTarget 
   return (
     isRecord(value) &&
     value.kind === "span" &&
+    isNonEmptyString(value.viewId) &&
     Number.isInteger(value.startCU) &&
     Number.isInteger(value.endCU)
   );
@@ -725,6 +807,47 @@ export function isTextDocExtensionSchemaRef(value: unknown): value is TextDocExt
     isRecord(value) &&
     isNonEmptyString(value.schemaId) &&
     (value.schemaVersion === undefined || isNonEmptyString(value.schemaVersion))
+  );
+}
+
+export function isTextDocSpanMapSegment(value: unknown): value is TextDocSpanMapSegment {
+  return (
+    isRecord(value) &&
+    isTextDocSpanCUValue(value.source) &&
+    isTextDocSpanCUValue(value.target) &&
+    (value.kind === "unchanged" ||
+      value.kind === "normalized" ||
+      value.kind === "inserted" ||
+      value.kind === "deleted" ||
+      value.kind === "reordered" ||
+      value.kind === "unknown") &&
+    (value.reversible === undefined || typeof value.reversible === "boolean") &&
+    (value.loss === undefined ||
+      (Array.isArray(value.loss) && value.loss.every((entry) => isTextDocLossMarker(entry))))
+  );
+}
+
+export function isTextDocSpanMapLifecycle(value: unknown): value is TextDocSpanMapLifecycle {
+  return (
+    isRecord(value) &&
+    isTextDocSpanMapLifecycleState(value.state) &&
+    (value.supersededBy === undefined || isNonEmptyString(value.supersededBy)) &&
+    (value.reason === undefined || isNonEmptyString(value.reason))
+  );
+}
+
+export function isTextDocSpanMapV1(value: unknown): value is TextDocSpanMapV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.sourceViewId) &&
+    isNonEmptyString(value.targetViewId) &&
+    isTextDocSpanMapLifecycle(value.lifecycle) &&
+    Array.isArray(value.segments) &&
+    value.segments.every((entry) => isTextDocSpanMapSegment(entry)) &&
+    (value.loss === undefined ||
+      (Array.isArray(value.loss) && value.loss.every((entry) => isTextDocLossMarker(entry)))) &&
+    (value.provenance === undefined || isTextDocProvenance(value.provenance))
   );
 }
 
@@ -937,6 +1060,8 @@ export function isTextDocDocumentV1(value: unknown): value is TextDocDocumentV1 
     Array.isArray(value.views) &&
     value.views.length >= 1 &&
     value.views.every((entry) => isTextDocView(entry)) &&
+    (value.spanMaps === undefined ||
+      (Array.isArray(value.spanMaps) && value.spanMaps.every((entry) => isTextDocSpanMapV1(entry)))) &&
     Array.isArray(value.layers) &&
     value.layers.length >= 1 &&
     value.layers.every((entry) => isTextDocLayer(entry)) &&
@@ -960,6 +1085,7 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
 
   const document = value;
   const viewIds = new Set(document.views.map((view) => view.id));
+  const viewById = new Map(document.views.map((view) => [view.id, view] as const));
   addDuplicateDiagnostics(
     document.views.map((view) => view.id),
     "textdoc.view-duplicate",
@@ -967,12 +1093,142 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
     diagnostics,
   );
   for (const view of document.views) {
-    for (const derivedFrom of view.derivedFrom ?? []) {
-      if (!viewIds.has(derivedFrom)) {
+    if (view.parentViewId === view.id) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.view-parent-self",
+        `View ${view.id} cannot declare itself as parent.`,
+        { viewId: view.id, targetId: view.parentViewId },
+      ));
+    }
+    if (view.parentViewId !== undefined && !viewIds.has(view.parentViewId)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.view-parent-missing",
+        `View ${view.id} references missing parent view ${view.parentViewId}.`,
+        { viewId: view.id, targetId: view.parentViewId },
+      ));
+    }
+    const visited = new Set<string>();
+    let cursor: TextDocView | undefined = view;
+    while (cursor?.parentViewId !== undefined) {
+      if (visited.has(cursor.id)) {
         diagnostics.push(textDocValidationDiagnostic(
-          "textdoc.view-derived-from-missing",
-          `View ${view.id} references missing derivedFrom view ${derivedFrom}.`,
-          { viewId: view.id, targetId: derivedFrom },
+          "textdoc.view-parent-cycle",
+          `View ${view.id} participates in a parent-view cycle.`,
+          { viewId: view.id, targetId: cursor.id },
+        ));
+        break;
+      }
+      visited.add(cursor.id);
+      cursor = viewById.get(cursor.parentViewId);
+    }
+  }
+
+  const spanMaps = document.spanMaps ?? [];
+  const spanMapById = new Map(spanMaps.map((spanMap) => [spanMap.id, spanMap] as const));
+  addDuplicateDiagnostics(
+    spanMaps.map((spanMap) => spanMap.id),
+    "textdoc.span-map-duplicate",
+    "Span map",
+    diagnostics,
+  );
+  for (const spanMap of spanMaps) {
+    if (spanMap.sourceViewId === spanMap.targetViewId) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.span-map-self",
+        `Span map ${spanMap.id} cannot map a view to itself.`,
+        { targetId: spanMap.id },
+      ));
+    }
+    if (!viewIds.has(spanMap.sourceViewId)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.span-map-source-view-missing",
+        `Span map ${spanMap.id} references missing source view ${spanMap.sourceViewId}.`,
+        { targetId: spanMap.sourceViewId },
+      ));
+    }
+    if (!viewIds.has(spanMap.targetViewId)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.span-map-target-view-missing",
+        `Span map ${spanMap.id} references missing target view ${spanMap.targetViewId}.`,
+        { targetId: spanMap.targetViewId },
+      ));
+    }
+    if (spanMap.lifecycle.state === "superseded" && spanMap.lifecycle.supersededBy === undefined) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.span-map-superseded-by-missing",
+        `Superseded span map ${spanMap.id} must declare supersededBy.`,
+        { targetId: spanMap.id },
+      ));
+    }
+    if (
+      spanMap.lifecycle.state !== "superseded" &&
+      spanMap.lifecycle.supersededBy !== undefined
+    ) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.span-map-superseded-by-state",
+        `Only superseded span maps may declare supersededBy.`,
+        { targetId: spanMap.id },
+      ));
+    }
+    if (
+      (spanMap.lifecycle.state === "invalidated" || spanMap.lifecycle.state === "partial") &&
+      spanMap.lifecycle.reason === undefined
+    ) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.span-map-reason-missing",
+        `Partial or invalidated span map ${spanMap.id} must declare a reason.`,
+        { targetId: spanMap.id },
+      ));
+    }
+    let previousSourceEnd = -1;
+    for (const segment of spanMap.segments) {
+      if (!isTextDocSpanInRange(segment.source, document.textLengthCU)) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.span-map-source-out-of-range",
+          `Span map ${spanMap.id} has source segment outside document text range.`,
+          { targetId: spanMap.id },
+        ));
+      }
+      if (!isTextDocSpanInRange(segment.target, document.textLengthCU)) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.span-map-target-out-of-range",
+          `Span map ${spanMap.id} has target segment outside document text range.`,
+          { targetId: spanMap.id },
+        ));
+      }
+      if (segment.source.startCU < previousSourceEnd) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.span-map-source-order",
+          `Span map ${spanMap.id} source segments must be ordered and non-overlapping.`,
+          { targetId: spanMap.id },
+        ));
+      }
+      previousSourceEnd = segment.source.endCU;
+    }
+  }
+  for (const view of document.views) {
+    for (const spanMapId of view.spanMapIds ?? []) {
+      const spanMap = spanMapById.get(spanMapId);
+      if (spanMap === undefined) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.view-span-map-missing",
+          `View ${view.id} references missing span map ${spanMapId}.`,
+          { viewId: view.id, targetId: spanMapId },
+        ));
+        continue;
+      }
+      if (spanMap.targetViewId !== view.id) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.view-span-map-target-mismatch",
+          `View ${view.id} references span map ${spanMapId} whose target is ${spanMap.targetViewId}.`,
+          { viewId: view.id, targetId: spanMapId },
+        ));
+      }
+      if (view.parentViewId !== undefined && spanMap.sourceViewId !== view.parentViewId) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.view-span-map-parent-mismatch",
+          `View ${view.id} span map ${spanMapId} does not map from its parent view ${view.parentViewId}.`,
+          { viewId: view.id, targetId: spanMapId },
         ));
       }
     }
@@ -1039,6 +1295,36 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
             { layerId: layer.id, annotationId: annotation.id },
           ));
         }
+        if (target.kind === "span" && !viewIds.has(target.viewId)) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.span-target-view-missing",
+            `Annotation ${annotation.id} targets missing view ${target.viewId}.`,
+            { layerId: layer.id, annotationId: annotation.id, viewId: target.viewId },
+          ));
+        }
+        if (target.kind === "span" && target.viewId !== layer.viewId) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.span-target-layer-view-mismatch",
+            `Annotation ${annotation.id} span target view ${target.viewId} does not match layer view ${layer.viewId}.`,
+            { layerId: layer.id, annotationId: annotation.id, viewId: target.viewId },
+          ));
+        }
+        if (
+          target.kind === "span" &&
+          annotation.lifecycle.state === "active" &&
+          viewById
+            .get(target.viewId)
+            ?.spanMapIds?.some((spanMapId) => {
+              const spanMap = spanMapById.get(spanMapId);
+              return spanMap?.lifecycle.state === "invalidated" || spanMap?.lifecycle.state === "superseded";
+            })
+        ) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.span-target-inactive-span-map",
+            `Annotation ${annotation.id} targets view ${target.viewId} through an inactive span map.`,
+            { layerId: layer.id, annotationId: annotation.id, viewId: target.viewId },
+          ));
+        }
         if (target.kind === "annotation") {
           requireAnnotation(
             annotation,
@@ -1049,6 +1335,39 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
         }
       }
 
+      if (annotation.lifecycle.state === "retracted" && annotation.lifecycle.reason === undefined) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.lifecycle-retraction-reason-missing",
+          `Retracted annotation ${annotation.id} must declare a reason.`,
+          { layerId: layer.id, annotationId: annotation.id },
+        ));
+      }
+      if (annotation.lifecycle.state === "superseded" && annotation.lifecycle.supersededBy === undefined) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.lifecycle-superseded-by-missing",
+          `Superseded annotation ${annotation.id} must declare supersededBy.`,
+          { layerId: layer.id, annotationId: annotation.id },
+        ));
+      }
+      if (annotation.lifecycle.state !== "superseded" && annotation.lifecycle.supersededBy !== undefined) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.lifecycle-superseded-by-state",
+          `Only superseded annotations may declare supersededBy.`,
+          { layerId: layer.id, annotationId: annotation.id, targetId: annotation.lifecycle.supersededBy },
+        ));
+      }
+      if (
+        annotation.loss !== undefined &&
+        annotation.provenance === undefined &&
+        annotation.loss.some((loss) => loss.source === undefined)
+      ) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.loss-provenance-missing",
+          `Annotation ${annotation.id} declares loss without annotation provenance or loss source.`,
+          { layerId: layer.id, annotationId: annotation.id },
+        ));
+      }
+
       for (const supersedes of annotation.lifecycle.supersedes ?? []) {
         if (supersedes === annotation.id) {
           diagnostics.push(textDocValidationDiagnostic(
@@ -1057,12 +1376,28 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
             { annotationId: annotation.id, targetId: supersedes },
           ));
         }
-        requireAnnotation(
+        const supersededAnnotation = requireAnnotation(
           annotation,
           supersedes,
           "textdoc.lifecycle-supersedes-missing",
           `Annotation ${annotation.id} supersedes missing annotation ${supersedes}.`,
         );
+        if (supersededAnnotation !== undefined) {
+          if (supersededAnnotation.lifecycle.state !== "superseded") {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.lifecycle-supersedes-state-mismatch",
+              `Annotation ${annotation.id} supersedes ${supersedes}, but ${supersedes} is not superseded.`,
+              { annotationId: annotation.id, targetId: supersedes },
+            ));
+          }
+          if (supersededAnnotation.lifecycle.supersededBy !== annotation.id) {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.lifecycle-supersedes-link-mismatch",
+              `Annotation ${supersedes} must point back to ${annotation.id} via supersededBy.`,
+              { annotationId: annotation.id, targetId: supersedes },
+            ));
+          }
+        }
       }
       if (annotation.lifecycle.supersededBy !== undefined) {
         if (annotation.lifecycle.supersededBy === annotation.id) {
@@ -1072,12 +1407,22 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
             { annotationId: annotation.id, targetId: annotation.lifecycle.supersededBy },
           ));
         }
-        requireAnnotation(
+        const supersedingAnnotation = requireAnnotation(
           annotation,
           annotation.lifecycle.supersededBy,
           "textdoc.lifecycle-superseded-by-missing",
           `Annotation ${annotation.id} is superseded by missing annotation ${annotation.lifecycle.supersededBy}.`,
         );
+        if (
+          supersedingAnnotation !== undefined &&
+          !supersedingAnnotation.lifecycle.supersedes?.includes(annotation.id)
+        ) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.lifecycle-superseded-by-link-mismatch",
+            `Replacement annotation ${annotation.lifecycle.supersededBy} must list ${annotation.id} in supersedes.`,
+            { annotationId: annotation.id, targetId: annotation.lifecycle.supersededBy },
+          ));
+        }
       }
 
       if (annotation.kind === "relation") {
@@ -1145,6 +1490,37 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
           }
         }
       }
+      if (annotation.kind === "entity-link") {
+        const target = annotation.targets[0];
+        if (target?.kind !== "annotation") {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.entity-link-target-kind",
+            `Entity-link ${annotation.id} must target an entity annotation.`,
+            { annotationId: annotation.id },
+          ));
+        } else {
+          const targetAnnotation = requireAnnotation(
+            annotation,
+            target.annotationId,
+            "textdoc.entity-link-target-missing",
+            `Entity-link ${annotation.id} targets missing annotation ${target.annotationId}.`,
+          );
+          if (targetAnnotation !== undefined && targetAnnotation.kind !== "entity") {
+            diagnostics.push(textDocValidationDiagnostic(
+              "textdoc.entity-link-target-kind",
+              `Entity-link ${annotation.id} must target an entity annotation, not ${targetAnnotation.kind}.`,
+              { annotationId: annotation.id, targetId: target.annotationId },
+            ));
+          }
+        }
+        if ((annotation.link === undefined) === (annotation.nil === undefined)) {
+          diagnostics.push(textDocValidationDiagnostic(
+            "textdoc.entity-link-resolution-mismatch",
+            `Entity-link ${annotation.id} must declare exactly one of link or nil.`,
+            { annotationId: annotation.id },
+          ));
+        }
+      }
       if (annotation.kind === "dependency") {
         if (annotation.headNodeId === annotation.dependentNodeId) {
           diagnostics.push(textDocValidationDiagnostic(
@@ -1209,10 +1585,315 @@ export function validateTextDocDocumentV1(value: unknown): TextDocDocumentValida
     }
   }
 
+  const selectedAmbiguityBySet = new Map<string, string>();
+  const ambiguityRankBySet = new Map<string, string>();
+  for (const annotation of annotationIds.values()) {
+    if (annotation.ambiguitySet === undefined || annotation.lifecycle.state !== "active") continue;
+    if (annotation.ambiguitySet.role === "selected") {
+      const existing = selectedAmbiguityBySet.get(annotation.ambiguitySet.id);
+      if (existing !== undefined) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.ambiguity-multiple-selected",
+          `Ambiguity set ${annotation.ambiguitySet.id} selects both ${existing} and ${annotation.id}.`,
+          { annotationId: annotation.id, targetId: existing },
+        ));
+      } else {
+        selectedAmbiguityBySet.set(annotation.ambiguitySet.id, annotation.id);
+      }
+    }
+    if (annotation.ambiguitySet.rank !== undefined) {
+      const rankKey = `${annotation.ambiguitySet.id}:${annotation.ambiguitySet.rank}`;
+      const existing = ambiguityRankBySet.get(rankKey);
+      if (existing !== undefined) {
+        diagnostics.push(textDocValidationDiagnostic(
+          "textdoc.ambiguity-rank-duplicate",
+          `Ambiguity set ${annotation.ambiguitySet.id} repeats rank ${annotation.ambiguitySet.rank}.`,
+          { annotationId: annotation.id, targetId: existing },
+        ));
+      } else {
+        ambiguityRankBySet.set(rankKey, annotation.id);
+      }
+    }
+  }
+
   return {
     ok: !hasErrorDiagnostics(diagnostics),
     diagnostics,
   };
+}
+
+export class TextDocRevisionError extends Error {
+  readonly code: TextDocRevisionErrorCode;
+
+  constructor(code: TextDocRevisionErrorCode, message: string) {
+    super(message);
+    this.name = "TextDocRevisionError";
+    this.code = code;
+  }
+}
+
+export function nextTextDocRevision(revision: string): string {
+  if (!isNonEmptyString(revision)) {
+    throw new TextDocRevisionError(
+      "textdoc.revision.invalid-next",
+      "Cannot derive a next textdoc revision from an empty revision.",
+    );
+  }
+  if (/^[0-9]+$/u.test(revision)) return String(Number.parseInt(revision, 10) + 1);
+  const match = /^(.*)\+([0-9]+)$/u.exec(revision);
+  if (match?.[1] !== undefined && match[2] !== undefined) {
+    return `${match[1]}+${Number.parseInt(match[2], 10) + 1}`;
+  }
+  return `${revision}+1`;
+}
+
+function revisionForOperation(
+  document: TextDocDocumentV1,
+  options: TextDocRevisionOptions = {},
+): string {
+  if (options.expectedRevision !== undefined && options.expectedRevision !== document.revision) {
+    throw new TextDocRevisionError(
+      "textdoc.revision.expected-mismatch",
+      `Expected document revision ${options.expectedRevision}, received ${document.revision}.`,
+    );
+  }
+  return options.revision ?? nextTextDocRevision(document.revision);
+}
+
+export function addTextDocViewV1(
+  document: TextDocDocumentV1,
+  view: TextDocView,
+  options: TextDocRevisionOptions = {},
+): TextDocDocumentV1 {
+  return {
+    ...document,
+    revision: revisionForOperation(document, options),
+    views: [...document.views, view],
+  };
+}
+
+export function addTextDocSpanMapV1(
+  document: TextDocDocumentV1,
+  spanMap: TextDocSpanMapV1,
+  options: TextDocRevisionOptions = {},
+): TextDocDocumentV1 {
+  return {
+    ...document,
+    revision: revisionForOperation(document, options),
+    spanMaps: [...(document.spanMaps ?? []), spanMap],
+  };
+}
+
+export function addTextDocLayerV1(
+  document: TextDocDocumentV1,
+  layer: TextDocLayer,
+  options: TextDocRevisionOptions = {},
+): TextDocDocumentV1 {
+  return {
+    ...document,
+    revision: revisionForOperation(document, options),
+    layers: [...document.layers, layer],
+  };
+}
+
+export function addTextDocAnnotationV1(
+  document: TextDocDocumentV1,
+  layerId: string,
+  annotation: TextDocAnnotation,
+  options: TextDocRevisionOptions = {},
+): TextDocDocumentV1 {
+  let found = false;
+  const layers = document.layers.map((layer) => {
+    if (layer.id !== layerId) return layer;
+    found = true;
+    if (layer.kind !== annotation.kind) {
+      throw new TypeError(`Layer ${layerId} cannot receive annotation kind ${annotation.kind}.`);
+    }
+    return {
+      ...layer,
+      annotations: [...layer.annotations, annotation],
+    };
+  });
+  if (!found) throw new TypeError(`Layer ${layerId} does not exist.`);
+  return {
+    ...document,
+    revision: revisionForOperation(document, options),
+    layers,
+  };
+}
+
+export function retractTextDocAnnotationV1(
+  document: TextDocDocumentV1,
+  annotationId: string,
+  reason: string,
+  options: TextDocRevisionOptions = {},
+): TextDocDocumentV1 {
+  if (!isNonEmptyString(reason)) {
+    throw new TypeError("Retraction reason must be a non-empty string.");
+  }
+  let found = false;
+  const layers = document.layers.map((layer) => ({
+    ...layer,
+    annotations: layer.annotations.map((annotation) => {
+      if (annotation.id !== annotationId) return annotation;
+      found = true;
+      return {
+        ...annotation,
+        lifecycle: {
+          ...annotation.lifecycle,
+          state: "retracted" as const,
+          reason,
+        },
+      };
+    }),
+  }));
+  if (!found) throw new TypeError(`Annotation ${annotationId} does not exist.`);
+  return {
+    ...document,
+    revision: revisionForOperation(document, options),
+    layers,
+  };
+}
+
+export function supersedeTextDocAnnotationV1(
+  document: TextDocDocumentV1,
+  layerId: string,
+  supersededAnnotationId: string,
+  replacement: TextDocAnnotation,
+  reason: string,
+  options: TextDocRevisionOptions = {},
+): TextDocDocumentV1 {
+  if (!isNonEmptyString(reason)) {
+    throw new TypeError("Supersession reason must be a non-empty string.");
+  }
+  let foundLayer = false;
+  let foundSuperseded = false;
+  const layers = document.layers.map((layer) => {
+    if (layer.id !== layerId) return layer;
+    foundLayer = true;
+    if (layer.kind !== replacement.kind) {
+      throw new TypeError(`Layer ${layerId} cannot receive annotation kind ${replacement.kind}.`);
+    }
+    const annotations = layer.annotations.map((annotation) => {
+      if (annotation.id !== supersededAnnotationId) return annotation;
+      foundSuperseded = true;
+      return {
+        ...annotation,
+        lifecycle: {
+          ...annotation.lifecycle,
+          state: "superseded" as const,
+          supersededBy: replacement.id,
+          reason,
+        },
+      };
+    });
+    return {
+      ...layer,
+      annotations: [
+        ...annotations,
+        {
+          ...replacement,
+          lifecycle: {
+            ...replacement.lifecycle,
+            supersedes: [...(replacement.lifecycle.supersedes ?? []), supersededAnnotationId],
+          },
+        },
+      ],
+    };
+  });
+  if (!foundLayer) throw new TypeError(`Layer ${layerId} does not exist.`);
+  if (!foundSuperseded) throw new TypeError(`Annotation ${supersededAnnotationId} does not exist.`);
+  return {
+    ...document,
+    revision: revisionForOperation(document, options),
+    layers,
+  };
+}
+
+function spanOverlaps(left: TextDocSpanCU, right: TextDocSpanCU): boolean {
+  return left.startCU < right.endCU && right.startCU < left.endCU;
+}
+
+function spanContains(outer: TextDocSpanCU, inner: TextDocSpanCU): boolean {
+  return outer.startCU <= inner.startCU && outer.endCU >= inner.endCU;
+}
+
+function firstSpanTarget(annotation: TextDocAnnotation): TextDocSpanTarget | undefined {
+  return annotation.targets.find((target): target is TextDocSpanTarget => target.kind === "span");
+}
+
+function compareTextDocQueryResults(
+  left: TextDocAnnotationQueryResult,
+  right: TextDocAnnotationQueryResult,
+): number {
+  const leftSpan = firstSpanTarget(left.annotation);
+  const rightSpan = firstSpanTarget(right.annotation);
+  return (
+    left.viewId.localeCompare(right.viewId) ||
+    left.layerId.localeCompare(right.layerId) ||
+    (leftSpan?.startCU ?? Number.MAX_SAFE_INTEGER) - (rightSpan?.startCU ?? Number.MAX_SAFE_INTEGER) ||
+    (leftSpan?.endCU ?? Number.MAX_SAFE_INTEGER) - (rightSpan?.endCU ?? Number.MAX_SAFE_INTEGER) ||
+    left.annotation.id.localeCompare(right.annotation.id)
+  );
+}
+
+export function queryTextDocAnnotations(
+  document: TextDocDocumentV1,
+  query: TextDocAnnotationQuery = {},
+): readonly TextDocAnnotationQueryResult[] {
+  const lifecycleStates = new Set<TextDocAnnotationLifecycleState>(query.lifecycleStates ?? ["active"]);
+  const results: TextDocAnnotationQueryResult[] = [];
+  for (const layer of document.layers) {
+    if (query.layerId !== undefined && layer.id !== query.layerId) continue;
+    if (query.viewId !== undefined && layer.viewId !== query.viewId) continue;
+    if (query.kind !== undefined && layer.kind !== query.kind) continue;
+    for (const annotation of layer.annotations) {
+      if (!lifecycleStates.has(annotation.lifecycle.state)) continue;
+      if (query.targetKind !== undefined && !annotation.targets.some((target) => target.kind === query.targetKind)) {
+        continue;
+      }
+      if (
+        query.extensionId !== undefined &&
+        (annotation.kind !== "extension" || annotation.extensionId !== query.extensionId)
+      ) {
+        continue;
+      }
+      if (
+        query.provenanceReference !== undefined &&
+        !annotation.provenance?.references?.some(
+          (reference) =>
+            reference.kind === query.provenanceReference?.kind &&
+            reference.id === query.provenanceReference.id,
+        )
+      ) {
+        continue;
+      }
+      if (
+        query.spanOverlap !== undefined &&
+        !annotation.targets.some(
+          (target) =>
+            target.kind === "span" &&
+            target.viewId === query.spanOverlap?.viewId &&
+            spanOverlaps(target, query.spanOverlap),
+        )
+      ) {
+        continue;
+      }
+      if (
+        query.spanContains !== undefined &&
+        !annotation.targets.some(
+          (target) =>
+            target.kind === "span" &&
+            target.viewId === query.spanContains?.viewId &&
+            spanContains(target, query.spanContains),
+        )
+      ) {
+        continue;
+      }
+      results.push({ viewId: layer.viewId, layerId: layer.id, annotation });
+    }
+  }
+  return results.sort(compareTextDocQueryResults);
 }
 
 export function toTextDocDocumentV1(
@@ -1232,14 +1913,34 @@ export function toTextDocDocumentV1(
     views: [
       {
         id: "source-view",
-        kind: "source",
+        kind: "raw",
         description: "Original text source",
       },
       {
         id: "tokenization-view",
-        kind: "analysis",
+        kind: "task",
         description: "Tokenization and sentence segmentation annotations",
-        derivedFrom: ["source-view"],
+        parentViewId: "source-view",
+        spanMapIds: ["span-map-source-tokenization"],
+      },
+    ],
+    spanMaps: [
+      {
+        id: "span-map-source-tokenization",
+        sourceViewId: "source-view",
+        targetViewId: "tokenization-view",
+        lifecycle: { state: "active" },
+        segments:
+          textLengthCU === 0
+            ? []
+            : [
+                {
+                  source: { startCU: 0, endCU: textLengthCU },
+                  target: { startCU: 0, endCU: textLengthCU },
+                  kind: "unchanged",
+                  reversible: true,
+                },
+              ],
       },
     ],
     layers: [
@@ -1257,6 +1958,7 @@ export function toTextDocDocumentV1(
           targets: [
             {
               kind: "span",
+              viewId: "tokenization-view",
               startCU: token.startCU,
               endCU: token.endCU,
             },
@@ -1279,6 +1981,7 @@ export function toTextDocDocumentV1(
           targets: [
             {
               kind: "span",
+              viewId: "tokenization-view",
               startCU: sentence.startCU,
               endCU: sentence.endCU,
             },
@@ -1634,7 +2337,7 @@ export function importConlluToTextDocDocumentV1(
       kind: "sentence",
       sentenceKind: "uax29-sentence",
       lifecycle: { state: "active" },
-      targets: [{ kind: "span", startCU: sentenceStart, endCU: sentenceEnd }],
+      targets: [{ kind: "span", viewId: "conllu-view", startCU: sentenceStart, endCU: sentenceEnd }],
       sourceComments: sentence.comments,
       ...(sentence.text ? { text: sentence.text } : {}),
     });
@@ -1658,6 +2361,7 @@ export function importConlluToTextDocDocumentV1(
         targets: [
           {
             kind: "span",
+            viewId: "conllu-view",
             startCU: sentenceStart + span.startCU,
             endCU: sentenceStart + span.endCU,
           },
@@ -1738,12 +2442,32 @@ export function importConlluToTextDocDocumentV1(
     ...(options.unicodeVersion ? { unicodeVersion: options.unicodeVersion } : {}),
     units: { text: "utf16-code-unit" },
     views: [
-      { id: "source-view", kind: "source" },
+      { id: "source-view", kind: "raw" },
       {
         id: "conllu-view",
-        kind: "analysis",
-        derivedFrom: ["source-view"],
+        kind: "imported",
+        parentViewId: "source-view",
+        spanMapIds: ["span-map-source-conllu"],
         description: "CoNLL-U import view",
+      },
+    ],
+    spanMaps: [
+      {
+        id: "span-map-source-conllu",
+        sourceViewId: "source-view",
+        targetViewId: "conllu-view",
+        lifecycle: { state: "active" },
+        segments:
+          documentText.length === 0
+            ? []
+            : [
+                {
+                  source: { startCU: 0, endCU: documentText.length },
+                  target: { startCU: 0, endCU: documentText.length },
+                  kind: "unchanged",
+                  reversible: true,
+                },
+              ],
       },
     ],
     layers: [

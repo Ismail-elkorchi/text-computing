@@ -15,15 +15,16 @@
   "views": [
     {
       "id": "source-view",
-      "kind": "source",
+      "kind": "raw",
       "description": "Original source text"
     },
     {
       "id": "analysis-view",
-      "kind": "analysis",
+      "kind": "task",
       "description": "Deterministic annotation view",
-      "derivedFrom": [
-        "source-view"
+      "parentViewId": "source-view",
+      "spanMapIds": [
+        "span-map-source-analysis"
       ]
     }
   ],
@@ -44,7 +45,8 @@
             {
               "kind": "span",
               "startCU": 0,
-              "endCU": 3
+              "endCU": 3,
+              "viewId": "analysis-view"
             }
           ],
           "text": "New"
@@ -60,7 +62,8 @@
             {
               "kind": "span",
               "startCU": 4,
-              "endCU": 8
+              "endCU": 8,
+              "viewId": "analysis-view"
             }
           ],
           "text": "York"
@@ -76,7 +79,8 @@
             {
               "kind": "span",
               "startCU": 9,
-              "endCU": 14
+              "endCU": 14,
+              "viewId": "analysis-view"
             }
           ],
           "text": "hosts"
@@ -92,7 +96,8 @@
             {
               "kind": "span",
               "startCU": 15,
-              "endCU": 22
+              "endCU": 22,
+              "viewId": "analysis-view"
             }
           ],
           "text": "example"
@@ -108,7 +113,8 @@
             {
               "kind": "span",
               "startCU": 23,
-              "endCU": 30
+              "endCU": 30,
+              "viewId": "analysis-view"
             }
           ],
           "text": "corpora"
@@ -124,7 +130,8 @@
             {
               "kind": "span",
               "startCU": 30,
-              "endCU": 31
+              "endCU": 31,
+              "viewId": "analysis-view"
             }
           ],
           "text": "."
@@ -147,7 +154,8 @@
             {
               "kind": "span",
               "startCU": 0,
-              "endCU": 31
+              "endCU": 31,
+              "viewId": "analysis-view"
             }
           ],
           "text": "New York hosts example corpora."
@@ -343,7 +351,8 @@
             {
               "kind": "span",
               "startCU": 0,
-              "endCU": 8
+              "endCU": 8,
+              "viewId": "analysis-view"
             }
           ],
           "text": "New York"
@@ -507,5 +516,29 @@
   ],
   "notes": [
     "This fixture is structural. It is not a claim that all task runtimes are implemented."
+  ],
+  "spanMaps": [
+    {
+      "id": "span-map-source-analysis",
+      "sourceViewId": "source-view",
+      "targetViewId": "analysis-view",
+      "lifecycle": {
+        "state": "active"
+      },
+      "segments": [
+        {
+          "source": {
+            "startCU": 0,
+            "endCU": 31
+          },
+          "target": {
+            "startCU": 0,
+            "endCU": 31
+          },
+          "kind": "unchanged",
+          "reversible": true
+        }
+      ]
+    }
   ]
 }

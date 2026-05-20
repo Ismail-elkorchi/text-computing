@@ -22,15 +22,16 @@
     "views": [
       {
         "id": "source-view",
-        "kind": "source",
+        "kind": "raw",
         "description": "Original source text for POS, lemma, and morphology analysis."
       },
       {
         "id": "analysis-view",
-        "kind": "analysis",
+        "kind": "task",
         "description": "Deterministic textrules POS, lemma, and morphology annotations.",
-        "derivedFrom": [
-          "source-view"
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
         ]
       }
     ],
@@ -51,7 +52,8 @@
               {
                 "kind": "span",
                 "startCU": 0,
-                "endCU": 3
+                "endCU": 3,
+                "viewId": "analysis-view"
               }
             ],
             "text": "Del",
@@ -79,7 +81,8 @@
               {
                 "kind": "span",
                 "startCU": 4,
-                "endCU": 8
+                "endCU": 8,
+                "viewId": "analysis-view"
               }
             ],
             "text": "juez",
@@ -107,7 +110,8 @@
               {
                 "kind": "span",
                 "startCU": 9,
-                "endCU": 13
+                "endCU": 13,
+                "viewId": "analysis-view"
               }
             ],
             "text": "vino",
@@ -135,7 +139,8 @@
               {
                 "kind": "span",
                 "startCU": 13,
-                "endCU": 14
+                "endCU": 14,
+                "viewId": "analysis-view"
               }
             ],
             "text": ".",
@@ -170,7 +175,8 @@
               {
                 "kind": "span",
                 "startCU": 0,
-                "endCU": 14
+                "endCU": 14,
+                "viewId": "analysis-view"
               }
             ],
             "text": "Del juez vino.",
@@ -747,6 +753,30 @@
     ],
     "notes": [
       "phenomenon:multiword-token"
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 14
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 14
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

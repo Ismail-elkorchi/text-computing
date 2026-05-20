@@ -22,15 +22,16 @@
     "views": [
       {
         "id": "source-view",
-        "kind": "source",
+        "kind": "raw",
         "description": "Original source text for POS, lemma, and morphology analysis."
       },
       {
         "id": "analysis-view",
-        "kind": "analysis",
+        "kind": "task",
         "description": "Deterministic textrules POS, lemma, and morphology annotations.",
-        "derivedFrom": [
-          "source-view"
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
         ]
       }
     ],
@@ -51,7 +52,8 @@
               {
                 "kind": "span",
                 "startCU": 0,
-                "endCU": 2
+                "endCU": 2,
+                "viewId": "analysis-view"
               }
             ],
             "text": "Le",
@@ -79,7 +81,8 @@
               {
                 "kind": "span",
                 "startCU": 3,
-                "endCU": 7
+                "endCU": 7,
+                "viewId": "analysis-view"
               }
             ],
             "text": "host",
@@ -107,7 +110,8 @@
               {
                 "kind": "span",
                 "startCU": 8,
-                "endCU": 13
+                "endCU": 13,
+                "viewId": "analysis-view"
               }
             ],
             "text": "signs",
@@ -135,7 +139,8 @@
               {
                 "kind": "span",
                 "startCU": 14,
-                "endCU": 17
+                "endCU": 17,
+                "viewId": "analysis-view"
               }
             ],
             "text": "ici",
@@ -163,7 +168,8 @@
               {
                 "kind": "span",
                 "startCU": 17,
-                "endCU": 18
+                "endCU": 18,
+                "viewId": "analysis-view"
               }
             ],
             "text": ".",
@@ -198,7 +204,8 @@
               {
                 "kind": "span",
                 "startCU": 0,
-                "endCU": 18
+                "endCU": 18,
+                "viewId": "analysis-view"
               }
             ],
             "text": "Le host signs ici.",
@@ -770,6 +777,30 @@
     ],
     "notes": [
       "phenomenon:code-switching"
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 18
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 18
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
     ]
   },
   "notes": [

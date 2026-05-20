@@ -10,12 +10,15 @@
   "views": [
     {
       "id": "source-view",
-      "kind": "source"
+      "kind": "raw"
     },
     {
       "id": "analysis-view",
-      "kind": "analysis",
-      "derivedFrom": ["source-view"]
+      "kind": "task",
+      "parentViewId": "source-view",
+      "spanMapIds": [
+        "span-map-source-analysis"
+      ]
     }
   ],
   "layers": [
@@ -35,7 +38,8 @@
             {
               "kind": "span",
               "startCU": 0,
-              "endCU": 3
+              "endCU": 3,
+              "viewId": "analysis-view"
             }
           ],
           "text": "ab "
@@ -51,10 +55,35 @@
             {
               "kind": "span",
               "startCU": 2,
-              "endCU": 6
+              "endCU": 6,
+              "viewId": "analysis-view"
             }
           ],
           "text": " cde"
+        }
+      ]
+    }
+  ],
+  "spanMaps": [
+    {
+      "id": "span-map-source-analysis",
+      "sourceViewId": "source-view",
+      "targetViewId": "analysis-view",
+      "lifecycle": {
+        "state": "active"
+      },
+      "segments": [
+        {
+          "source": {
+            "startCU": 0,
+            "endCU": 6
+          },
+          "target": {
+            "startCU": 0,
+            "endCU": 6
+          },
+          "kind": "unchanged",
+          "reversible": true
         }
       ]
     }

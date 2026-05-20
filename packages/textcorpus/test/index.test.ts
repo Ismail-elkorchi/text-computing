@@ -62,6 +62,7 @@ function createDocument(
       targets: [
         {
           kind: "span",
+          viewId: "analysis-view",
           startCU,
           endCU,
         },
@@ -82,12 +83,32 @@ function createDocument(
     views: [
       {
         id: "source-view",
-        kind: "source",
+        kind: "raw",
       },
       {
         id: "analysis-view",
-        kind: "analysis",
-        derivedFrom: ["source-view"],
+        kind: "task",
+        parentViewId: "source-view",
+        spanMapIds: ["span-map-source-analysis"],
+      },
+    ],
+    spanMaps: [
+      {
+        id: "span-map-source-analysis",
+        sourceViewId: "source-view",
+        targetViewId: "analysis-view",
+        lifecycle: { state: "active" },
+        segments:
+          text.length === 0
+            ? []
+            : [
+                {
+                  source: { startCU: 0, endCU: text.length },
+                  target: { startCU: 0, endCU: text.length },
+                  kind: "unchanged",
+                  reversible: true,
+                },
+              ],
       },
     ],
     layers: [

@@ -42,6 +42,10 @@
       "minItems": 1,
       "items": { "$ref": "#/definitions/view" }
     },
+    "spanMaps": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/spanMap" }
+    },
     "layers": {
       "type": "array",
       "minItems": 1,
@@ -87,11 +91,16 @@
       "required": ["id", "kind"],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
-        "kind": { "enum": ["source", "analysis"] },
+        "kind": { "enum": ["raw", "normalized", "tailored", "task", "imported", "extension"] },
         "description": { "type": "string", "minLength": 1 },
-        "derivedFrom": {
+        "parentViewId": { "type": "string", "minLength": 1 },
+        "spanMapIds": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
+        },
+        "loss": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/lossMarker" }
         }
       }
     },
@@ -112,9 +121,10 @@
     "spanTarget": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "startCU", "endCU"],
+      "required": ["kind", "viewId", "startCU", "endCU"],
       "properties": {
         "kind": { "const": "span" },
+        "viewId": { "type": "string", "minLength": 1 },
         "startCU": { "type": "integer", "minimum": 0 },
         "endCU": { "type": "integer", "minimum": 0 }
       }
@@ -224,6 +234,69 @@
         "role": { "type": "string", "minLength": 1 },
         "revision": { "type": "string", "minLength": 1 },
         "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "spanMapSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target", "kind"],
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["startCU", "endCU"],
+          "properties": {
+            "startCU": { "type": "integer", "minimum": 0 },
+            "endCU": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["startCU", "endCU"],
+          "properties": {
+            "startCU": { "type": "integer", "minimum": 0 },
+            "endCU": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "kind": {
+          "enum": ["unchanged", "normalized", "inserted", "deleted", "reordered", "unknown"]
+        },
+        "reversible": { "type": "boolean" },
+        "loss": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/lossMarker" }
+        }
+      }
+    },
+    "spanMapLifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["active", "partial", "invalidated", "superseded"] },
+        "supersededBy": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "spanMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceViewId", "targetViewId", "lifecycle", "segments"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sourceViewId": { "type": "string", "minLength": 1 },
+        "targetViewId": { "type": "string", "minLength": 1 },
+        "lifecycle": { "$ref": "#/definitions/spanMapLifecycle" },
+        "segments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/spanMapSegment" }
+        },
+        "loss": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/lossMarker" }
+        },
+        "provenance": { "$ref": "#/definitions/provenance" }
       }
     },
     "annotationBase": {
