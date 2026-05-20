@@ -583,14 +583,14 @@
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+        "Remote orchestration, durable cache storage, distributed scheduling, worker execution, and recovery after a process boundary are not release-ready.",
         "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+          "blocker": "Remote orchestration, durable cache storage, distributed scheduling, worker execution, and recovery after a process boundary are not release-ready.",
           "maturity": "production-candidate",
-          "decision": "Does not block alpha; it limits production-candidate operational claims beyond deterministic local execution.",
+          "decision": "Does not block alpha; it limits production-candidate operational claims beyond deterministic local execution and caller-provided cache semantics.",
           "evidenceRefs": [
             "packages/textpipeline/src/index.ts",
             "packages/textpipeline/test",

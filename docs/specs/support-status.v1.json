@@ -178,11 +178,14 @@
     {
       "name": "@ismail-elkorchi/textpipeline",
       "status": "alpha",
-      "scope": "Public alpha deterministic local pipeline package for synchronous, asynchronous, batch, stream, cancellation, caller-provided cache-hit tracing, and continue-on-error execution hooks.",
+      "scope": "Public alpha deterministic local pipeline package for graph validation, synchronous/asynchronous execution, batch and stream runners, cancellation, caller-provided cache-hit tracing, conservative cache keys, versioned requirements, and continue-on-error partial-run traces.",
       "evidence": [
         "processor ordering tests",
         "async/batch/stream execution tests",
         "cache-hit and failure-recovery tests",
+        "graph-plan and versioned-requirement tests",
+        "cache-key invalidation tests",
+        "partial-run and blocked-dependent tests",
         "trace validation",
         "missing-requirement diagnostics",
         "dist export readiness metadata",
@@ -190,7 +193,7 @@
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Remote orchestration, durable cache policy, worker execution, and long-running recovery semantics are not release-ready.",
+        "Remote orchestration, durable cache storage, distributed scheduling, worker execution, and recovery after a process boundary are not release-ready.",
         "Alpha scope is bounded to deterministic local execution, package tests, and package interop proven by Public Vertical Slice 0.1"
       ]
     },

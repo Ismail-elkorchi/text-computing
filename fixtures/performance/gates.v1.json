@@ -46,21 +46,22 @@
     {
       "id": "textpipeline-determinism",
       "packageName": "@ismail-elkorchi/textpipeline",
-      "surface": "Synchronous processor execution",
+      "surface": "Deterministic local processor graph execution",
       "dimensions": [
         "throughput",
         "memory",
         "streaming",
         "regression-threshold"
       ],
-      "scalePolicy": "Streaming, async, batching, and cache claims require separate fixture classes and replay commands.",
+      "scalePolicy": "Streaming, async, batching, cache, graph, and partial-run claims require package tests over multi-processor workflows and replay commands.",
       "regressionPolicy": "Future measurements must fail on threshold regression only after a stable benchmark host policy exists.",
       "evidenceRefs": [
         "docs/specs/textpipeline-processor-contract.md",
+        "packages/textpipeline/test/index.test.ts",
         "tools/fuzz/semantic.mjs"
       ],
       "limitations": [
-        "Current implementation is synchronous and in-memory."
+        "Current implementation is local and in-memory; no stable wall-clock or memory measurement threshold is enforced."
       ]
     },
     {
