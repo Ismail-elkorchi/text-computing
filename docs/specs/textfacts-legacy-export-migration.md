@@ -1,34 +1,30 @@
-# textfacts Legacy Export Migration
+# textfacts Legacy Export Removal
 
 ## Status
 
-Draft public boundary contract.
+Accepted alpha boundary contract.
 
 ## Purpose
 
-`@ismail-elkorchi/textfacts` remains the deterministic single-text Unicode kernel. Some historical public subpaths expose broader repository concerns. Those subpaths stay available for compatibility, but they are frozen for new production use.
+`@ismail-elkorchi/textfacts` remains the deterministic single-text Unicode kernel. Historical broad subpaths exposed repository concerns and package-family behavior that now belongs elsewhere. During alpha, those subpaths are removed rather than retained as compatibility shims.
 
 New cross-package behavior must land in the package that owns the concern.
 
-## Frozen legacy subpaths
+## Removed legacy subpaths
 
 | Legacy subpath | Status | Replacement direction |
 | --- | --- | --- |
-| `@ismail-elkorchi/textfacts/all` | Frozen compatibility aggregate. | Use explicit package entrypoints instead of a broad aggregate import. |
-| `@ismail-elkorchi/textfacts/compare` | Frozen compatibility surface for historical comparison helpers. | Keep single-text comparison primitives under `textfacts`; move corpus/replay/evidence comparison behavior to owning packages or repository tools. |
-| `@ismail-elkorchi/textfacts/pack` | Frozen compatibility surface for historical pack helpers. | Use `@ismail-elkorchi/textpack` for resource manifests, resource loading, provenance, and lookup. |
-| `@ismail-elkorchi/textfacts/protocol` | Frozen compatibility surface for historical protocol helpers. | Use `@ismail-elkorchi/textprotocol` for result envelopes, payload kinds, and compatibility checks. |
-| `@ismail-elkorchi/textfacts/schema` | Frozen compatibility surface for historical repository schema helpers. | Use package-owned schemas and repository-level `schemas/` artifacts for interop contracts. |
-| `@ismail-elkorchi/textfacts/toolspec` | Frozen compatibility surface for historical tool descriptors. | Use `@ismail-elkorchi/textprotocol` for machine-readable payload contracts and `@ismail-elkorchi/textlab` for inspection behavior. |
+| `@ismail-elkorchi/textfacts/all` | Removed aggregate. | Use the root export or explicit kernel subpaths. |
+| `@ismail-elkorchi/textfacts/compare` | Removed broad comparison surface. | Keep `textfacts` focused on Unicode/kernel facts; move corpus comparison and evidence behavior to owning repository tools or packages. |
+| `@ismail-elkorchi/textfacts/pack` | Removed pack-like helper surface. | Use `@ismail-elkorchi/textpack` for resource manifests, resource loading, provenance, and lookup. |
+| `@ismail-elkorchi/textfacts/protocol` | Removed protocol helper surface. | Use `@ismail-elkorchi/textprotocol` for result envelopes, payload kinds, and compatibility checks. |
+| `@ismail-elkorchi/textfacts/schema` | Removed source schema registry surface. | Use package-owned schemas and repository-level `schemas/` artifacts for interop contracts. |
+| `@ismail-elkorchi/textfacts/toolspec` | Removed tool descriptor surface. | Use package-owned public APIs and inspection/conformance packages for machine-readable contracts. |
 
 ## New-code rule
 
-New production code MUST NOT import the frozen legacy subpaths above. The boundary check scans production code for those imports. Explicit compatibility tests and historical documentation may still reference them.
-
-## Compatibility rule
-
-This document does not remove exports. Any future removal requires a separate compatibility decision, public migration notice, and version-policy review.
+New production code, tests, and docs MUST NOT import or recommend the removed legacy subpaths above. The boundary check rejects reintroduced package exports, Deno exports, source directories, and import references.
 
 ## Claim boundary
 
-This migration narrows package ownership. It does not change the current published behavior of `@ismail-elkorchi/textfacts` and does not upgrade any support status.
+This migration narrows package ownership. It does not upgrade support status or claim broader kernel behavior.

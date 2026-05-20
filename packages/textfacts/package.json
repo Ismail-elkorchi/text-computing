@@ -9,10 +9,6 @@
       "types": "./dist/mod.d.ts",
       "import": "./dist/mod.js"
     },
-    "./all": {
-      "types": "./dist/src/all/mod.d.ts",
-      "import": "./dist/src/all/mod.js"
-    },
     "./core": {
       "types": "./dist/src/core/mod.d.ts",
       "import": "./dist/src/core/mod.js"
@@ -57,10 +53,6 @@
       "types": "./dist/src/collation/mod.d.ts",
       "import": "./dist/src/collation/mod.js"
     },
-    "./compare": {
-      "types": "./dist/src/compare/mod.d.ts",
-      "import": "./dist/src/compare/mod.js"
-    },
     "./integrity": {
       "types": "./dist/src/integrity/mod.d.ts",
       "import": "./dist/src/integrity/mod.js"
@@ -68,22 +60,6 @@
     "./jcs": {
       "types": "./dist/src/jcs/mod.d.ts",
       "import": "./dist/src/jcs/mod.js"
-    },
-    "./protocol": {
-      "types": "./dist/src/protocol/mod.d.ts",
-      "import": "./dist/src/protocol/mod.js"
-    },
-    "./schema": {
-      "types": "./dist/src/schema/mod.d.ts",
-      "import": "./dist/src/schema/mod.js"
-    },
-    "./toolspec": {
-      "types": "./dist/src/toolspec/mod.d.ts",
-      "import": "./dist/src/toolspec/mod.js"
-    },
-    "./pack": {
-      "types": "./dist/src/pack/mod.d.ts",
-      "import": "./dist/src/pack/mod.js"
     },
     "./unicode": {
       "types": "./dist/src/unicode/mod.d.ts",
@@ -104,8 +80,8 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/build.mjs && node scripts/rewrite-dist-import-specifiers.mjs",
-    "build:test": "node scripts/build-test.mjs && node scripts/rewrite-test-import-specifiers.mjs",
+    "build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json && node scripts/build.mjs && node scripts/rewrite-dist-import-specifiers.mjs",
+    "build:test": "node scripts/clean-build-output.mjs dist-test && node scripts/build-test.mjs && node scripts/rewrite-test-import-specifiers.mjs",
     "gen:unicode": "node tools/unicode/gen-tables.js && node tools/unicode/gen-normalization.js && node tools/unicode/gen-casefold.js && node tools/unicode/gen-scripts.js && node tools/unicode/gen-security.js && node tools/uca/gen-ducet.mjs",
     "lint": "biome check src test scripts mod.ts package.json tsconfig.json tsconfig.build.json tsconfig.test.json deno.json biome.json --files-ignore-unknown=true",
     "format": "biome format --write .",

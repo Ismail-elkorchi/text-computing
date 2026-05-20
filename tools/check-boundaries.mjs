@@ -1,4 +1,4 @@
-import { readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const ROOT = process.cwd();
@@ -13,14 +13,14 @@ const LEGACY_TEXTFACTS_SUBPATHS = new Set([
 ]);
 const CODE_FILE_EXTENSIONS = new Set([".js", ".mjs", ".ts", ".mts"]);
 const SOURCE_IMPORT_SKIPPED_DIRS = new Set(["dist", "dist-test", "node_modules"]);
-const PRODUCTION_CODE_SKIPPED_DIRS = new Set([
+const CODE_SKIPPED_DIRS = new Set([
   "dist",
   "dist-test",
   "node_modules",
-  "docs",
-  "test",
-  "testdata",
 ]);
+const REMOVED_TEXTFACTS_SOURCE_DIRS = [...LEGACY_TEXTFACTS_SUBPATHS].map((subpath) =>
+  path.join("packages", "textfacts", "src", subpath),
+);
 
 function normalizePath(filePath) {
   return filePath.split(path.sep).join("/");
@@ -42,7 +42,7 @@ async function collectTypeScriptFiles(dirPath, filePaths) {
 async function collectCodeFiles(dirPath, filePaths) {
   const entries = await readdir(dirPath, { withFileTypes: true });
   for (const entry of entries) {
-    if (PRODUCTION_CODE_SKIPPED_DIRS.has(entry.name)) continue;
+    if (CODE_SKIPPED_DIRS.has(entry.name)) continue;
     const entryPath = path.join(dirPath, entry.name);
     if (entry.isDirectory()) {
       await collectCodeFiles(entryPath, filePaths);
@@ -50,6 +50,39 @@ async function collectCodeFiles(dirPath, filePaths) {
     }
     if (!entry.isFile()) continue;
     if (CODE_FILE_EXTENSIONS.has(path.extname(entry.name))) filePaths.push(entryPath);
+  }
+}
+
+async function assertTextfactsExports(errors) {
+  const packageJson = JSON.parse(
+    await readFile(path.join(ROOT, "packages", "textfacts", "package.json"), "utf8"),
+  );
+  for (const key of Object.keys(packageJson.exports ?? {})) {
+    const subpath = key.startsWith("./") ? key.slice(2) : key;
+    if (LEGACY_TEXTFACTS_SUBPATHS.has(subpath)) {
+      errors.push(`packages/textfacts/package.json exports removed textfacts subpath: ${key}`);
+    }
+  }
+
+  const denoJson = JSON.parse(
+    await readFile(path.join(ROOT, "packages", "textfacts", "deno.json"), "utf8"),
+  );
+  for (const key of Object.keys(denoJson.exports ?? {})) {
+    const subpath = key.startsWith("./") ? key.slice(2) : key;
+    if (LEGACY_TEXTFACTS_SUBPATHS.has(subpath)) {
+      errors.push(`packages/textfacts/deno.json exports removed textfacts subpath: ${key}`);
+    }
+  }
+}
+
+async function assertRemovedTextfactsSourceDirs(errors) {
+  for (const relPath of REMOVED_TEXTFACTS_SOURCE_DIRS) {
+    try {
+      await access(path.join(ROOT, relPath));
+      errors.push(`${normalizePath(relPath)} must not exist after textfacts boundary cleanup.`);
+    } catch {
+      // Expected absence.
+    }
   }
 }
 
@@ -89,7 +122,10 @@ function collectLegacyTextfactsSubpathImports(text) {
 async function main() {
   const errors = [];
   let scannedFiles = 0;
-  let scannedProductionFiles = 0;
+  let scannedCodeFiles = 0;
+
+  await assertTextfactsExports(errors);
+  await assertRemovedTextfactsSourceDirs(errors);
 
   const packageEntries = await readdir(PACKAGES_DIR, { withFileTypes: true });
   for (const entry of packageEntries) {
@@ -110,16 +146,16 @@ async function main() {
     }
   }
 
-  const productionFiles = [];
-  await collectCodeFiles(PACKAGES_DIR, productionFiles);
-  await collectCodeFiles(path.join(ROOT, "tools"), productionFiles);
-  for (const filePath of productionFiles) {
-    scannedProductionFiles += 1;
+  const codeFiles = [];
+  await collectCodeFiles(PACKAGES_DIR, codeFiles);
+  await collectCodeFiles(path.join(ROOT, "tools"), codeFiles);
+  for (const filePath of codeFiles) {
+    scannedCodeFiles += 1;
     const text = await readFile(filePath, "utf8");
     const hits = collectLegacyTextfactsSubpathImports(text);
     if (hits.length === 0) continue;
     errors.push(
-      `${normalizePath(path.relative(ROOT, filePath))} imports frozen textfacts legacy subpaths: ${hits.join(", ")}`,
+      `${normalizePath(path.relative(ROOT, filePath))} imports removed textfacts legacy subpaths: ${hits.join(", ")}`,
     );
   }
 
@@ -131,7 +167,7 @@ async function main() {
   }
 
   console.log(
-    `Boundary check OK (${scannedFiles} package TS files, ${scannedProductionFiles} production code files).`,
+    `Boundary check OK (${scannedFiles} package TS files, ${scannedCodeFiles} code files).`,
   );
 }
 

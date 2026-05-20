@@ -1,7 +1,6 @@
 import { wordFrequencies } from "../src/facts/mod.ts";
 import { uts46ToAscii } from "../src/idna/mod.ts";
 import { normalize } from "../src/normalize/mod.ts";
-import { analyzeText } from "../src/pack/mod.ts";
 import { segmentGraphemes } from "../src/segment/mod.ts";
 
 const spans = [...segmentGraphemes("Cafe\u0301")];
@@ -19,9 +18,11 @@ if (normalized !== "Café") {
   throw new Error(`Normalization mismatch: ${normalized}`);
 }
 
-const pack = analyzeText("a a b", { topK: 2 });
-if (pack.frequencies.words.representation !== "json") {
-  throw new Error("Pack representation mismatch");
+const normalizedTokens = wordFrequencies(normalize("Cafe\u0301 cafe", "NFC"), {
+  filter: "word-like",
+});
+if (normalizedTokens.totalTokens !== 2) {
+  throw new Error("Kernel normalization/frequency pipeline mismatch");
 }
 
 const idna = uts46ToAscii("example.com");

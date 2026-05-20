@@ -4,14 +4,15 @@
     {
       "name": "@ismail-elkorchi/textfacts",
       "status": "beta",
-      "scope": "Deterministic single-text kernel. Legacy broad public subpaths are frozen; new cross-package growth does not land here.",
+      "scope": "Deterministic single-text Unicode kernel. Historical broad public subpaths are removed; cross-package protocol/resource/schema/tooling behavior does not land here.",
       "evidence": [
         "Unicode conformance tests",
         "published package metadata",
         "multi-runtime tests"
       ],
       "limitations": [
-        "New cross-package protocol/resource/schema/tooling growth is frozen outside textfacts",
+        "Removed broad subpaths are not compatibility surfaces during alpha",
+        "New cross-package protocol/resource/schema/tooling growth belongs outside textfacts",
         "Locale tailoring breadth remains limited"
       ]
     },

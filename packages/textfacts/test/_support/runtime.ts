@@ -1,4 +1,4 @@
-import type * as Textfacts from "../../src/all/mod.ts";
+import type * as Textfacts from "../../mod.ts";
 
 export type Runtime = "node" | "deno" | "bun";
 export type TextfactsModule = typeof Textfacts;
@@ -44,8 +44,6 @@ export async function importTextfacts(): Promise<TextfactsModule> {
   const runtime = detectRuntime();
   const rootUrl = getRepoRootUrl();
   const moduleUrl =
-    runtime === "node"
-      ? new URL("dist/src/all/mod.js", rootUrl)
-      : new URL("src/all/mod.ts", rootUrl);
+    runtime === "node" ? new URL("dist/mod.js", rootUrl) : new URL("mod.ts", rootUrl);
   return import(moduleUrl.href) as Promise<TextfactsModule>;
 }

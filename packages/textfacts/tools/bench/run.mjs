@@ -94,18 +94,16 @@ function renderMarkdown(report) {
 }
 
 async function main() {
-  const distUrl = new URL("../../dist/src/all/mod.js", import.meta.url);
+  const distUrl = new URL("../../dist/mod.js", import.meta.url);
   const distPath = fileURLToPath(distUrl);
   await fs.access(distPath).catch(() => {
-    throw new Error("dist/src/all/mod.js not found. Run `npm run build` first.");
+    throw new Error("dist/mod.js not found. Run `npm run build` first.");
   });
 
   const textfacts = await import(distUrl.href);
 
   const seed = 1337;
   const baseText = generateText(seed, 24000);
-  const altText = mutateText(baseText, seed + 1);
-
   const benches = [];
 
   benches.push(
@@ -139,14 +137,6 @@ async function main() {
   benches.push(measure("idna-uts46-to-ascii", 200, () => textfacts.uts46ToAscii("exämple.test")));
 
   benches.push(measure("collation-sort-key", 100, () => textfacts.ucaSortKeyBytes("café")));
-
-  benches.push(measure("diff-text", 50, () => textfacts.diffText(baseText, altText, {})));
-
-  benches.push(
-    measure("winnowing-fingerprints", 30, () =>
-      textfacts.winnowingFingerprints(baseText, { k: 5, window: 4, dedupe: "min" }),
-    ),
-  );
 
   const report = {
     v: 1,

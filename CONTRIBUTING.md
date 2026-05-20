@@ -58,18 +58,7 @@ Coverage is a V8 signal over the current document, protocol, pack, pipeline, and
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
 - `fixtures/` and `schemas/` contain repository-level validation material.
 - `packages/textfacts/docs/` contains usage and reference documentation for `@ismail-elkorchi/textfacts`.
-- `packages/textfacts/src/`, `packages/textfacts/schemas/`, `packages/textfacts/interop/`, `packages/textfacts/scripts/`, `packages/textfacts/tools/`, `packages/textfacts/test/`, and `packages/textfacts/testdata/` contain implementation and verification.
-
-**Interop suite**
-```sh
-npm -w @ismail-elkorchi/textfacts exec -- node tools/interop/verify.mjs
-```
-
-Regenerating fixtures (dev-time):
-```sh
-npm run build
-npm -w @ismail-elkorchi/textfacts exec -- node tools/interop/verify.mjs --write
-```
+- `packages/textfacts/src/`, `packages/textfacts/schemas/`, `packages/textfacts/scripts/`, `packages/textfacts/tools/`, `packages/textfacts/test/`, and `packages/textfacts/testdata/` contain implementation and verification.
 
 **Formatting and linting (Biome)**
 ```sh

@@ -1,25 +1,30 @@
 # Imports And Footprint
 
-This repo keeps the root entrypoint small to avoid accidental bundle growth and to make imports intentional.
+This package exposes the deterministic Unicode/text-kernel surface through the root entrypoint and explicit kernel subpaths. Broad aggregate and repository-level helper subpaths are not part of the alpha surface.
 
 ## Canonical Import Patterns
 - **Minimal core (root):**
-  - `import { sliceBySpan, createProvenance } from "textfacts";`
-  - Root exports: core, integrity, JCS, hashing.
-- **Compare (diff + fingerprints):**
-  - `import { diffText, winnowingFingerprints } from "@ismail-elkorchi/textfacts/compare";`
+  - `import { sliceBySpan, segmentWordsUAX29, normalize } from "@ismail-elkorchi/textfacts";`
+  - Root exports the same kernel-owned modules as the explicit subpaths below.
+- **Segmentation and normalization:**
+  - `import { segmentWordsUAX29 } from "@ismail-elkorchi/textfacts/segment";`
+  - `import { normalize } from "@ismail-elkorchi/textfacts/normalize";`
 - **IDNA (UTS #46):**
   - `import { uts46ToAscii } from "@ismail-elkorchi/textfacts/idna";`
 - **Security (confusables + scripts):**
   - `import { confusableSkeleton } from "@ismail-elkorchi/textfacts/security";`
-- **Everything:**
-  - `import * as textfacts from "@ismail-elkorchi/textfacts/all";`
 
-## Why The Root Is Small
-Some bundlers do not reliably drop unused exports when a root entrypoint re-exports many modules.
-Bundling rationale references are maintained in `docs/sources-docs.md` under **Footprint + Bundling** (external sources; local snapshots are not vendored in this repo).
+## Removed broad subpaths
+
+The `all`, `compare`, `pack`, `protocol`, `schema`, and `toolspec` subpaths are removed during alpha boundary cleanup. Use package-owned surfaces instead:
+
+- result envelopes and payload compatibility: `@ismail-elkorchi/textprotocol`;
+- conformance reports and claim checks: `@ismail-elkorchi/textconformance`;
+- resource manifests and lookup: `@ismail-elkorchi/textpack`;
+- inspection behavior: `@ismail-elkorchi/textlab`;
+- corpus and retrieval behavior: `@ismail-elkorchi/textcorpus`.
 
 ## Footprint Policy
-- Root exports only minimal primitives (core types, hashing, integrity, JCS).
-- Heavy modules live behind explicit subpath entrypoints or `@ismail-elkorchi/textfacts/all`.
+- Root and subpath exports must stay inside the textfacts kernel mission.
+- Repository-level protocol, resource, schema registry, tool descriptor, and corpus-comparison behavior must not grow in textfacts.
 - Size budget history is not retained in this repository.

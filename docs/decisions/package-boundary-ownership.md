@@ -20,12 +20,13 @@ growth starts.
   `@ismail-elkorchi/textconformance`.
 - New pack/resource manifest and loader contracts land in
   `@ismail-elkorchi/textpack`.
-- `@ismail-elkorchi/textfacts` keeps its single-text deterministic utilities and
-  its legacy public `pack`/`protocol`/`schema` helpers for now, but new public
-  repository-level envelope, resource, or conformance responsibilities do not
-  expand there.
-- Pack and corpus-style helpers in `@ismail-elkorchi/textfacts` are frozen as a
-  legacy surface until a dedicated owner package lands.
+- `@ismail-elkorchi/textfacts` keeps only its single-text deterministic Unicode
+  kernel utilities. Historical broad `all`, `compare`, `pack`, `protocol`,
+  `schema`, and `toolspec` subpaths are removed before stable publication rather
+  than kept as compatibility shims.
+- Pack, protocol, schema registry, tool descriptor, corpus-comparison, and
+  repository-evidence behavior belongs in the package or repository tool that
+  owns that concern, not in `textfacts`.
 - Workspace packages import each other through package names, not sibling source
   paths.
 

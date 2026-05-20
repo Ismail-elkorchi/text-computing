@@ -152,7 +152,7 @@ Generated at: 2026-02-05T00:00:00Z
 ### entropy (repo)
 
 - Kind: repo
-- Definition: The repository entropy tuple measured by `entropy-report.v1.json`: totalTrackedFiles, totalMarkdownFiles, totalNpmScripts, totalEntrypoints, totalJsrExports, totalSrcModules, totalToolScripts, totalSchemas, totalInteropCases, totalGeneratedTables.
+- Definition: The repository entropy tuple measured by `entropy-report.v1.json`: totalTrackedFiles, totalMarkdownFiles, totalNpmScripts, totalEntrypoints, totalJsrExports, totalSrcModules, totalToolScripts, totalSchemas, totalGeneratedTables.
 - Preferred phrases: entropy metrics, entropy tuple
 
 ### entrypoint
@@ -193,12 +193,6 @@ Generated at: 2026-02-05T00:00:00Z
 - Kind: repo
 - Definition: Implementation and tooling complexity (tools, internal docs, schemas) that is not part of the public API surface.
 - Non-definition: surface area
-
-### interop case
-
-- Kind: protocol
-- Definition: A deterministic input/output fixture used for cross-runtime verification.
-- Preferred phrases: interop fixture
 
 ### jaccard
 
@@ -321,12 +315,6 @@ Generated at: 2026-02-05T00:00:00Z
 - Non-definition: natural-language meaning
 - Preferred phrases: Unicode text
 - Anchored by: unicode-principles, w3c-i18n-glossary
-
-### ToolSpec
-
-- Kind: protocol
-- Definition: A JSON contract for tool input/output schemas, independent of any runtime.
-- Preferred phrases: ToolSpec registry
 
 ### tree-shaking
 
