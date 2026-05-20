@@ -27,7 +27,6 @@
       "packages": [
         "@ismail-elkorchi/textconformance",
         "@ismail-elkorchi/textdoc",
-        "@ismail-elkorchi/textlab",
         "@ismail-elkorchi/textpack",
         "@ismail-elkorchi/textprotocol"
       ],
@@ -55,6 +54,19 @@
         "fixtures/package-release/gates.v1.json"
       ],
       "policy": "Packages with workspace package dependencies may advance only after their dependency packages have earlier-stage release evidence and downstream API smoke evidence remains current."
+    },
+    {
+      "stage": 3,
+      "packages": [
+        "@ismail-elkorchi/textlab"
+      ],
+      "requiredEvidenceRefs": [
+        "fixtures/package-release/downstream-api-stability.v1.json",
+        "tools/check-downstream-api-stability.mjs",
+        "tools/check-workspace-pack-dry-run.mjs",
+        "fixtures/package-release/gates.v1.json"
+      ],
+      "policy": "Inspection tooling advances after the package APIs it inspects have earlier-stage release evidence and downstream API smoke evidence remains current."
     }
   ],
   "packages": [
@@ -75,7 +87,9 @@
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
         "status": "proven",
-        "downstreamDependents": [],
+        "downstreamDependents": [
+          "@ismail-elkorchi/textlab"
+        ],
         "evidenceRefs": [
           "packages/textconformance/package.json",
           "fixtures/package-release/gates.v1.json",
@@ -135,7 +149,9 @@
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
         "status": "proven",
-        "downstreamDependents": [],
+        "downstreamDependents": [
+          "@ismail-elkorchi/textlab"
+        ],
         "evidenceRefs": [
           "packages/textcorpus/package.json",
           "fixtures/package-release/gates.v1.json",
@@ -195,6 +211,7 @@
         "status": "proven",
         "downstreamDependents": [
           "@ismail-elkorchi/textcorpus",
+          "@ismail-elkorchi/textlab",
           "@ismail-elkorchi/textpipeline",
           "@ismail-elkorchi/textrules"
         ],
@@ -307,16 +324,18 @@
         "packages/textlab/src/cli.ts",
         "packages/textlab/test",
         "tools/validate-package-readiness.mjs",
+        "fixtures/package-release/gates.v1.json",
+        "fixtures/package-release/downstream-api-stability.v1.json",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
+        "Interactive views, standalone comparator execution, and large-corpus browsing remain outside alpha scope.",
         "Public alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Inspection tooling lacks comparator execution, interactive views, large-corpus browsing, and release-oriented CLI hardening.",
+          "blocker": "Interactive views, standalone comparator execution, and large-corpus browsing remain outside alpha scope.",
           "maturity": "beta",
           "decision": "Blocks broader inspection-tooling claims; it does not block foundation alpha packages unless their smoke output cannot be inspected.",
           "evidenceRefs": [
@@ -345,6 +364,7 @@
         "requiredBeforeRelease": true,
         "status": "proven",
         "downstreamDependents": [
+          "@ismail-elkorchi/textlab",
           "@ismail-elkorchi/textpack-en-core",
           "@ismail-elkorchi/textpack-en-legal",
           "@ismail-elkorchi/textpack-fr-core",

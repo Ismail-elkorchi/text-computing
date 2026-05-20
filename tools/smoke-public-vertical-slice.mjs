@@ -15,6 +15,7 @@ const REQUIRED_PACKAGES = [
 	"@ismail-elkorchi/textpipeline",
 	"@ismail-elkorchi/textprotocol",
 	"@ismail-elkorchi/textconformance",
+	"@ismail-elkorchi/textcorpus",
 	"@ismail-elkorchi/textlab",
 ];
 const RAW_TEXT = "Alice visits Paris. Bob visits Paris.";

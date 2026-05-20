@@ -25,6 +25,12 @@
     "test": "tsc -p tsconfig.json --noEmit && npm run -s build && node test/index.test.mjs",
     "prepack": "npm run build"
   },
+  "dependencies": {
+    "@ismail-elkorchi/textconformance": "0.1.0",
+    "@ismail-elkorchi/textcorpus": "0.1.0",
+    "@ismail-elkorchi/textdoc": "0.1.0",
+    "@ismail-elkorchi/textpack": "0.1.0"
+  },
   "license": "MIT",
   "files": [
     "dist",

@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Add package, pack, document, conformance-diff, comparator-drift, retrieval-qrels, retrieval-evaluation, and release-readiness inspection APIs and CLI commands.
+- Add stable text and `--json` CLI output paths for inspection commands.
 - Promote package metadata to public alpha for the bounded inspection API and CLI scope.
 
 ## 0.0.0

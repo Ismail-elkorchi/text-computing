@@ -17,6 +17,16 @@
           ]
         },
         {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textdoc"
+          ]
+        },
+        {
           "packageName": "@ismail-elkorchi/textpipeline",
           "evidenceRefs": [
             "packages/textpipeline/src/index.ts",
@@ -90,6 +100,16 @@
           "importSurfaces": [
             "@ismail-elkorchi/textpack"
           ]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textpack"
+          ]
         }
       ],
       "evidenceRefs": [
@@ -140,7 +160,18 @@
     {
       "packageName": "@ismail-elkorchi/textconformance",
       "status": "proven",
-      "dependents": [],
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textconformance"
+          ]
+        }
+      ],
       "evidenceRefs": [
         "packages/textconformance/package.json",
         "packages/textconformance/src/index.ts",
@@ -182,7 +213,18 @@
     {
       "packageName": "@ismail-elkorchi/textcorpus",
       "status": "proven",
-      "dependents": [],
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textcorpus"
+          ]
+        }
+      ],
       "evidenceRefs": [
         "packages/textcorpus/package.json",
         "packages/textcorpus/src/index.ts",
