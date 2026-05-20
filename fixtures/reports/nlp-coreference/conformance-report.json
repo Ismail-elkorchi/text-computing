@@ -18,7 +18,36 @@
       "checkId": "readiness-fixtures-recorded",
       "status": "pass",
       "message": "Coreference readiness fixtures and negative controls are committed.",
-      "evidenceRefs": ["fixtures/coreference/slices.json"]
+      "evidenceRefs": [
+        "fixtures/coreference/slices.json"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/coreference/slices.json"
+        ],
+        "oracleRefs": [
+          "schemas/coreference-slices-v1.schema.json",
+          "schemas/coreference-expected-v1.schema.json",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "schemas-recorded",
@@ -27,7 +56,34 @@
       "evidenceRefs": [
         "schemas/coreference-slices-v1.schema.json",
         "schemas/coreference-expected-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/coreference-slices-v1.schema.json",
+          "schemas/coreference-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/coreference-slices-v1.schema.json",
+          "schemas/coreference-expected-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "readiness-doc-recorded",
@@ -36,7 +92,36 @@
       "evidenceRefs": [
         "docs/specs/coreference-readiness.md",
         "docs/specs/nlp-coreference-research-ledger.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/coreference/slices.json",
+          "fixtures/coreference/expected/ar-pronoun.json",
+          "fixtures/coreference/expected/en-ambiguous.json"
+        ],
+        "oracleRefs": [
+          "schemas/coreference-slices-v1.schema.json",
+          "schemas/coreference-expected-v1.schema.json",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "corpus-evidence",
@@ -45,13 +130,67 @@
       "evidenceRefs": [
         "fixtures/coreference/slices.json",
         "tools/validate-coreference-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/coreference/slices.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "validator-recorded",
       "status": "pass",
       "message": "A repository validator checks the readiness artifacts.",
-      "evidenceRefs": ["tools/validate-coreference-readiness.mjs"]
+      "evidenceRefs": [
+        "tools/validate-coreference-readiness.mjs"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/coreference/slices.json",
+          "fixtures/coreference/expected/ar-pronoun.json",
+          "fixtures/coreference/expected/en-ambiguous.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "feature-code",
@@ -64,7 +203,34 @@
         "fixtures/coreference/expected/en-pronoun.json",
         "fixtures/coreference/expected/es-pronoun.json",
         "tools/validate-coreference-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/coreference/expected/ar-pronoun.json",
+          "fixtures/coreference/expected/en-ambiguous.json",
+          "fixtures/coreference/expected/en-nominal.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "comparator-claim-boundary",
@@ -73,7 +239,34 @@
       "evidenceRefs": [
         "docs/specs/nlp-coreference-research-ledger.md",
         "fixtures/coreference/slices.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/coreference-readiness.md",
+          "docs/specs/nlp-coreference-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/coreference/slices.json"
+        ],
+        "oracleRefs": [
+          "schemas/coreference-slices-v1.schema.json",
+          "schemas/coreference-expected-v1.schema.json",
+          "tools/validate-coreference-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     }
   ],
   "notes": [

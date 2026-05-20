@@ -22,7 +22,30 @@
         "fixtures/textpack/manifests/textpack-en-core.json",
         "fixtures/textpack/manifests/textpack-en-legal.json",
         "schemas/textpack-manifest-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textpack-resource-manifest.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textpack/manifests/textpack-en-core.json",
+          "fixtures/textpack/manifests/textpack-en-legal.json",
+          "schemas/textpack-manifest-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textpack-manifest-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "limitations": [
+          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
+          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+        ]
+      }
     },
     {
       "checkId": "negative-resource-cases-recorded",
@@ -34,7 +57,30 @@
         "fixtures/textpack/invalid/missing-provenance.json",
         "fixtures/textpack/invalid/overlay-conflict-a.json",
         "fixtures/textpack/invalid/overlay-conflict-b.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textpack-resource-manifest.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textpack/invalid/duplicate-resource-id.json",
+          "fixtures/textpack/invalid/missing-license.json",
+          "fixtures/textpack/invalid/missing-provenance.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "limitations": [
+          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
+          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+        ]
+      }
     },
     {
       "checkId": "validator-proof-recorded",
@@ -43,7 +89,30 @@
       "evidenceRefs": [
         "tools/validate-textpack-resources.mjs",
         "docs/specs/textpack-resource-manifest.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textpack-resource-manifest.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textpack/manifests/textpack-en-core.json",
+          "fixtures/textpack/manifests/textpack-en-legal.json",
+          "fixtures/textpack/invalid/duplicate-resource-id.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "limitations": [
+          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
+          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+        ]
+      }
     },
     {
       "checkId": "resource-loading-proof-recorded",
@@ -56,7 +125,30 @@
         "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
         "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
         "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textpack-resource-manifest.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt",
+          "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv",
+          "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv"
+        ],
+        "oracleRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "limitations": [
+          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
+          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -65,7 +157,30 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textpack-resource-manifest.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textpack/manifests/textpack-en-core.json",
+          "fixtures/textpack/manifests/textpack-en-legal.json",
+          "fixtures/textpack/invalid/duplicate-resource-id.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "limitations": [
+          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
+          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+        ]
+      }
     }
   ],
   "notes": [

@@ -20,7 +20,34 @@
       "message": "Relation extraction frozen fixtures and negative controls are committed.",
       "evidenceRefs": [
         "fixtures/relation-extraction/slices.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/relation-extraction-readiness.md",
+          "docs/specs/nlp-relation-extraction-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/relation-extraction/slices.json"
+        ],
+        "oracleRefs": [
+          "schemas/relation-extraction-slices-v1.schema.json",
+          "schemas/relation-extraction-expected-v1.schema.json",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "expected-output",
@@ -32,7 +59,36 @@
         "fixtures/relation-extraction/expected/es-location.json",
         "fixtures/relation-extraction/expected/ar-location.json",
         "fixtures/relation-extraction/expected/en-no-relation.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/relation-extraction-readiness.md",
+          "docs/specs/nlp-relation-extraction-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/relation-extraction/expected/en-employment.json",
+          "fixtures/relation-extraction/expected/en-cross-sentence.json",
+          "fixtures/relation-extraction/expected/es-location.json"
+        ],
+        "oracleRefs": [
+          "schemas/relation-extraction-slices-v1.schema.json",
+          "schemas/relation-extraction-expected-v1.schema.json",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "schema-validation",
@@ -41,7 +97,34 @@
       "evidenceRefs": [
         "schemas/relation-extraction-slices-v1.schema.json",
         "schemas/relation-extraction-expected-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/relation-extraction-readiness.md",
+          "docs/specs/nlp-relation-extraction-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/relation-extraction-slices-v1.schema.json",
+          "schemas/relation-extraction-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/relation-extraction-slices-v1.schema.json",
+          "schemas/relation-extraction-expected-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "corpus-evidence",
@@ -50,7 +133,32 @@
       "evidenceRefs": [
         "fixtures/relation-extraction/slices.json",
         "tools/validate-relation-extraction-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/relation-extraction-readiness.md",
+          "docs/specs/nlp-relation-extraction-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/relation-extraction/slices.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "feature-validator",
@@ -59,7 +167,34 @@
       "evidenceRefs": [
         "tools/validate-relation-extraction-readiness.mjs",
         "packages/textrules/test/index.test.ts"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/relation-extraction-readiness.md",
+          "docs/specs/nlp-relation-extraction-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/relation-extraction/slices.json",
+          "fixtures/relation-extraction/expected/en-employment.json",
+          "fixtures/relation-extraction/expected/en-cross-sentence.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     },
     {
       "checkId": "comparator-claim-boundary",
@@ -67,7 +202,36 @@
       "message": "No external comparator-backed relation extraction claim is made in this gate.",
       "evidenceRefs": [
         "docs/specs/nlp-relation-extraction-research-ledger.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/relation-extraction-readiness.md",
+          "docs/specs/nlp-relation-extraction-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "packages/textrules/test/index.test.ts",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/relation-extraction/slices.json",
+          "fixtures/relation-extraction/expected/en-employment.json",
+          "fixtures/relation-extraction/expected/en-cross-sentence.json"
+        ],
+        "oracleRefs": [
+          "schemas/relation-extraction-slices-v1.schema.json",
+          "schemas/relation-extraction-expected-v1.schema.json",
+          "tools/validate-relation-extraction-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "limitations": [
+          "External comparator-backed and broad-corpus relation extraction support are not claimed.",
+          "Behavior is limited to the repository-authored frozen corpus slice.",
+          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+        ]
+      }
     }
   ],
   "notes": [

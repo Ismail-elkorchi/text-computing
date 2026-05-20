@@ -23,7 +23,33 @@
         "fixtures/conllu-dependency/valid/en-basic.conllu",
         "fixtures/conllu-dependency/valid/es-mwt.conllu",
         "schemas/textdoc-document-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/conllu-dependency-readiness.md",
+          "docs/specs/nlp-conllu-dependency-research-ledger.md",
+          "docs/specs/textdoc-dependency-target-contract.md"
+        ],
+        "apiRefs": [
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/conllu-dependency/valid/ar-nonlatin.conllu",
+          "fixtures/conllu-dependency/valid/en-basic.conllu",
+          "fixtures/conllu-dependency/valid/es-mwt.conllu"
+        ],
+        "oracleRefs": [
+          "schemas/textdoc-document-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "limitations": [
+          "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
+          "No broad UD treebank or language coverage is claimed.",
+          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+        ]
+      }
     },
     {
       "checkId": "exports-preserve-fixtures",
@@ -33,7 +59,35 @@
         "fixtures/conllu-dependency/expected/ar-nonlatin.json",
         "fixtures/conllu-dependency/expected/en-basic.json",
         "fixtures/conllu-dependency/expected/es-mwt.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/conllu-dependency-readiness.md",
+          "docs/specs/nlp-conllu-dependency-research-ledger.md",
+          "docs/specs/textdoc-dependency-target-contract.md"
+        ],
+        "apiRefs": [
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/conllu-dependency/expected/ar-nonlatin.json",
+          "fixtures/conllu-dependency/expected/en-basic.json",
+          "fixtures/conllu-dependency/expected/es-mwt.json"
+        ],
+        "oracleRefs": [
+          "schemas/conllu-dependency-roundtrip-expected-v1.schema.json",
+          "schemas/conllu-validator-capture-v1.schema.json",
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "limitations": [
+          "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
+          "No broad UD treebank or language coverage is claimed.",
+          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+        ]
+      }
     },
     {
       "checkId": "invalid-fixtures-diagnosed",
@@ -46,7 +100,35 @@
         "fixtures/conllu-dependency/invalid/missing-deprel.conllu",
         "fixtures/conllu-dependency/invalid/missing-root.conllu",
         "fixtures/conllu-dependency/invalid/multiple-roots.conllu"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/conllu-dependency-readiness.md",
+          "docs/specs/nlp-conllu-dependency-research-ledger.md",
+          "docs/specs/textdoc-dependency-target-contract.md"
+        ],
+        "apiRefs": [
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/conllu-dependency/invalid/bad-head-format.conllu",
+          "fixtures/conllu-dependency/invalid/dangling-head.conllu",
+          "fixtures/conllu-dependency/invalid/malformed-field-count.conllu"
+        ],
+        "oracleRefs": [
+          "schemas/conllu-dependency-roundtrip-expected-v1.schema.json",
+          "schemas/conllu-validator-capture-v1.schema.json",
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "limitations": [
+          "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
+          "No broad UD treebank or language coverage is claimed.",
+          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+        ]
+      }
     },
     {
       "checkId": "external-validator-capture",
@@ -55,7 +137,32 @@
       "evidenceRefs": [
         "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json",
         "schemas/conllu-validator-capture-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/conllu-dependency-readiness.md",
+          "docs/specs/nlp-conllu-dependency-research-ledger.md",
+          "docs/specs/textdoc-dependency-target-contract.md"
+        ],
+        "apiRefs": [
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json",
+          "schemas/conllu-validator-capture-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/conllu-validator-capture-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "limitations": [
+          "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
+          "No broad UD treebank or language coverage is claimed.",
+          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+        ]
+      }
     },
     {
       "checkId": "protocol-conformance-proof",
@@ -65,7 +172,34 @@
         "schemas/textprotocol-result-envelope-v1.schema.json",
         "schemas/textconformance-report-v1.schema.json",
         "tools/validate-conllu-dependency-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/conllu-dependency-readiness.md",
+          "docs/specs/nlp-conllu-dependency-research-ledger.md",
+          "docs/specs/textdoc-dependency-target-contract.md"
+        ],
+        "apiRefs": [
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json",
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "limitations": [
+          "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
+          "No broad UD treebank or language coverage is claimed.",
+          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -74,7 +208,35 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/conllu-dependency-readiness.md",
+          "docs/specs/nlp-conllu-dependency-research-ledger.md",
+          "docs/specs/textdoc-dependency-target-contract.md"
+        ],
+        "apiRefs": [
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/conllu-dependency/slices.json",
+          "fixtures/conllu-dependency/expected/ar-nonlatin.json",
+          "fixtures/conllu-dependency/expected/en-basic.json"
+        ],
+        "oracleRefs": [
+          "schemas/conllu-dependency-roundtrip-expected-v1.schema.json",
+          "schemas/conllu-validator-capture-v1.schema.json",
+          "tools/validate-conllu-dependency-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "limitations": [
+          "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
+          "No broad UD treebank or language coverage is claimed.",
+          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+        ]
+      }
     }
   ],
   "notes": [
