@@ -1,4 +1,9 @@
 import { normalizeInput } from "../core/input.ts";
+import {
+  assertProfileAlgorithmRevision,
+  resolveTextfactsProfile,
+  type TextfactsProfileInput,
+} from "../core/profile.ts";
 import { createProvenance } from "../core/provenance.ts";
 import type { SegmentIterable, Span, TextInput } from "../core/types.ts";
 import { IMPLEMENTATION_ID } from "../core/version.ts";
@@ -19,9 +24,9 @@ import { createSegmentIterable } from "./segment-iterable.ts";
  */
 export interface WordSegmentOptions {
   algorithmRevision?: string;
+  profile?: TextfactsProfileInput;
 }
 
-const DEFAULT_ALGORITHM_REVISION = "Unicode 17.0.0";
 const UAX29_SPEC = "https://unicode.org/reports/tr29/";
 
 /**
@@ -34,8 +39,11 @@ export function segmentWordsUAX29(
   options: WordSegmentOptions = {},
 ): SegmentIterable {
   const { text } = normalizeInput(input);
+  const profile = resolveTextfactsProfile(options.profile);
   const normalizedOptions = {
-    algorithmRevision: options.algorithmRevision ?? DEFAULT_ALGORITHM_REVISION,
+    algorithmRevision: assertProfileAlgorithmRevision(options.algorithmRevision, profile),
+    profileId: profile.id,
+    tailoring: profile.tailoring.segmentation,
   };
   const algorithm = {
     name: "UAX29.Word",

@@ -1,6 +1,6 @@
 import { normalizeInput } from "../core/input.ts";
 import { createProvenance } from "../core/provenance.ts";
-import type { Provenance, TextInput } from "../core/types.ts";
+import type { Provenance, Span, TextInput } from "../core/types.ts";
 import { IMPLEMENTATION_ID } from "../core/version.ts";
 import { lookupProperty } from "../unicode/lookup.ts";
 import { CCC_RANGES } from "./generated/ccc.ts";
@@ -20,11 +20,25 @@ export interface NormalizationExplanation {
   input: string;
   output: string;
   provenance: Provenance;
+  isReversible: boolean;
+  transformMap: NormalizationTransform[];
   stages: {
     decomposed: number[];
     reordered: number[];
     composed: number[];
   };
+}
+
+/**
+ * NormalizationTransform defines a source/output span mapping for diagnostics.
+ */
+export interface NormalizationTransform {
+  sourceSpanCU: Span;
+  outputSpanCU: Span;
+  source: string;
+  output: string;
+  kind: "unchanged" | "normalized" | "inserted" | "deleted";
+  reversible: boolean;
 }
 
 const TR15_SPEC = "https://unicode.org/reports/tr15/";
@@ -236,6 +250,97 @@ function codePointsToString(codePoints: number[]): string {
   return chunks.join("");
 }
 
+function nextCodePointOffset(text: string, index: number): number {
+  const codePoint = text.codePointAt(index) ?? 0;
+  return index + (codePoint > 0xffff ? 2 : 1);
+}
+
+function previousCodePointOffset(text: string, index: number): number {
+  if (index <= 0) return 0;
+  const previous = index - 1;
+  const codeUnit = text.charCodeAt(previous);
+  if (codeUnit >= 0xdc00 && codeUnit <= 0xdfff && previous > 0) {
+    const lead = text.charCodeAt(previous - 1);
+    if (lead >= 0xd800 && lead <= 0xdbff) return previous - 1;
+  }
+  return previous;
+}
+
+function buildTransformMap(input: string, output: string): NormalizationTransform[] {
+  if (input === output) {
+    return [
+      {
+        sourceSpanCU: { startCU: 0, endCU: input.length },
+        outputSpanCU: { startCU: 0, endCU: output.length },
+        source: input,
+        output,
+        kind: "unchanged",
+        reversible: true,
+      },
+    ];
+  }
+
+  let prefixCU = 0;
+  let outputPrefixCU = 0;
+  while (prefixCU < input.length && outputPrefixCU < output.length) {
+    const nextInput = nextCodePointOffset(input, prefixCU);
+    const nextOutput = nextCodePointOffset(output, outputPrefixCU);
+    if (input.slice(prefixCU, nextInput) !== output.slice(outputPrefixCU, nextOutput)) break;
+    prefixCU = nextInput;
+    outputPrefixCU = nextOutput;
+  }
+
+  let inputSuffixStart = input.length;
+  let outputSuffixStart = output.length;
+  while (inputSuffixStart > prefixCU && outputSuffixStart > outputPrefixCU) {
+    const nextInput = previousCodePointOffset(input, inputSuffixStart);
+    const nextOutput = previousCodePointOffset(output, outputSuffixStart);
+    if (input.slice(nextInput, inputSuffixStart) !== output.slice(nextOutput, outputSuffixStart)) {
+      break;
+    }
+    inputSuffixStart = nextInput;
+    outputSuffixStart = nextOutput;
+  }
+
+  const transforms: NormalizationTransform[] = [];
+  if (prefixCU > 0 || outputPrefixCU > 0) {
+    const source = input.slice(0, prefixCU);
+    const normalized = output.slice(0, outputPrefixCU);
+    transforms.push({
+      sourceSpanCU: { startCU: 0, endCU: prefixCU },
+      outputSpanCU: { startCU: 0, endCU: outputPrefixCU },
+      source,
+      output: normalized,
+      kind: "unchanged",
+      reversible: true,
+    });
+  }
+
+  const source = input.slice(prefixCU, inputSuffixStart);
+  const normalized = output.slice(outputPrefixCU, outputSuffixStart);
+  transforms.push({
+    sourceSpanCU: { startCU: prefixCU, endCU: inputSuffixStart },
+    outputSpanCU: { startCU: outputPrefixCU, endCU: outputSuffixStart },
+    source,
+    output: normalized,
+    kind: source.length === 0 ? "inserted" : normalized.length === 0 ? "deleted" : "normalized",
+    reversible: false,
+  });
+
+  if (inputSuffixStart < input.length || outputSuffixStart < output.length) {
+    transforms.push({
+      sourceSpanCU: { startCU: inputSuffixStart, endCU: input.length },
+      outputSpanCU: { startCU: outputSuffixStart, endCU: output.length },
+      source: input.slice(inputSuffixStart),
+      output: output.slice(outputSuffixStart),
+      kind: "unchanged",
+      reversible: true,
+    });
+  }
+
+  return transforms;
+}
+
 function normalizeToCodePoints(text: string, form: NormalizationForm): number[] {
   const compatibility = form === "NFKC" || form === "NFKD";
   const compose = form === "NFC" || form === "NFKC";
@@ -329,10 +434,12 @@ export function explainNormalization(
   const decomposed = decomposeText(text, compatibility);
   const reordered = reorderCanonical(decomposed);
   const composed = compose ? composeCanonical(reordered) : reordered;
+  const output = codePointsToString(composed);
+  const transformMap = buildTransformMap(text, output);
   return {
     form,
     input: text,
-    output: codePointsToString(composed),
+    output,
     provenance: createProvenance(
       {
         name: "UAX15.Normalize",
@@ -343,6 +450,8 @@ export function explainNormalization(
       { form },
       { text: "utf16-code-unit", codePoint: "unicode-code-point" },
     ),
+    isReversible: transformMap.every((item) => item.reversible),
+    transformMap,
     stages: {
       decomposed,
       reordered,

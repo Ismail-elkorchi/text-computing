@@ -265,6 +265,60 @@ export function registerTests(api: TestApi): void {
     }
   });
 
+  api.test("normalization explanation records transform map and reversibility", async () => {
+    const { explainNormalization } = await importTextfacts();
+    const unchanged = explainNormalization("abc", "NFC");
+    api.assertEqual(unchanged.output, "abc");
+    api.assertEqual(unchanged.isReversible, true);
+    api.assertEqual(unchanged.transformMap.length, 1);
+    api.assertEqual(unchanged.transformMap[0]?.kind, "unchanged");
+
+    const changed = explainNormalization("Cafe\u0301", "NFC");
+    api.assertEqual(changed.output, "Café");
+    api.assertEqual(changed.isReversible, false);
+    api.assertOk(changed.transformMap.some((entry) => entry.kind === "normalized"));
+    const normalized = changed.transformMap.find((entry) => entry.kind === "normalized");
+    api.assertEqual(normalized?.source, "e\u0301");
+    api.assertEqual(normalized?.output, "é");
+    api.assertEqual(normalized?.reversible, false);
+  });
+
+  api.test("textfacts profiles are explicit and reject undeclared tailoring", async () => {
+    const { resolveTextfactsProfile, segmentWordsUAX29, TextfactsError } = await importTextfacts();
+    const profile = resolveTextfactsProfile("unicode-17.0.0-default");
+    api.assertEqual(profile.id, "unicode-17.0.0-default");
+    api.assertEqual(profile.tailoring.segmentation, "uax29-default");
+
+    const spans = segmentWordsUAX29("Alpha beta", { profile: "unicode-17.0.0-default" });
+    api.assertEqual(spans.provenance.algorithm.revisionOrDate, "Unicode 17.0.0");
+
+    let threw = false;
+    try {
+      resolveTextfactsProfile({
+        id: "unicode-17.0.0-default",
+        tailoring: { segmentation: "locale-default" },
+      } as never);
+    } catch (err) {
+      threw = true;
+      api.assertOk(err instanceof TextfactsError);
+      api.assertEqual(getErrorCode(err), "PROFILE_UNSUPPORTED");
+    }
+    api.assertOk(threw);
+
+    threw = false;
+    try {
+      segmentWordsUAX29("Alpha", {
+        profile: "unicode-17.0.0-default",
+        algorithmRevision: "Unicode 99.0.0",
+      });
+    } catch (err) {
+      threw = true;
+      api.assertOk(err instanceof TextfactsError);
+      api.assertEqual(getErrorCode(err), "PROFILE_REVISION_MISMATCH");
+    }
+    api.assertOk(threw);
+  });
+
   api.test("UAX9 BidiTest", async () => {
     const { resolveBidi } = await importTextfacts();
     const data = await readUcdTestFile("BidiTest.txt");
@@ -791,6 +845,29 @@ export function registerTests(api: TestApi): void {
     } catch (err) {
       threw = true;
       api.assertOk(err instanceof TextfactsError);
+    }
+    api.assertOk(threw);
+  });
+
+  api.test("custom tokenizer failures are machine-readable", async () => {
+    const { scanTokens, buildVariantIndex, TextfactsError } = await importTextfacts();
+    let threw = false;
+    try {
+      [...scanTokens("abc", { tokenizer: "custom" })];
+    } catch (err) {
+      threw = true;
+      api.assertOk(err instanceof TextfactsError);
+      api.assertEqual(getErrorCode(err), "CUSTOM_TOKENIZER_REQUIRED");
+    }
+    api.assertOk(threw);
+
+    threw = false;
+    try {
+      buildVariantIndex("abc", { tokenizer: "custom", canonicalKey: "raw" });
+    } catch (err) {
+      threw = true;
+      api.assertOk(err instanceof TextfactsError);
+      api.assertEqual(getErrorCode(err), "CUSTOM_TOKENIZER_REQUIRED");
     }
     api.assertOk(threw);
   });

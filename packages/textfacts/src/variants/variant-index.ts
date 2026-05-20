@@ -2,6 +2,7 @@ import { nfkcCaseFold } from "../casefold/casefold.ts";
 import type { UcaOptions } from "../collation/types.ts";
 import { ucaCompare } from "../collation/uca.ts";
 import { compareByCodePoint } from "../core/compare.ts";
+import { TextfactsError } from "../core/error.ts";
 import { normalizeInput } from "../core/input.ts";
 import { createProvenance } from "../core/provenance.ts";
 import { sliceBySpan } from "../core/span.ts";
@@ -130,7 +131,11 @@ function iterateSpans(text: string, options: VariantIndexOptions): Iterable<Span
       })();
     case "custom":
       if (!options.customTokenizer)
-        throw new Error("customTokenizer is required for tokenizer=custom");
+        throw new TextfactsError(
+          "CUSTOM_TOKENIZER_REQUIRED",
+          "customTokenizer is required for tokenizer=custom",
+          { tokenizer: options.tokenizer },
+        );
       return options.customTokenizer(text);
     default:
       return [];

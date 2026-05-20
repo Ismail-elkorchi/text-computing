@@ -14,6 +14,12 @@ This package exposes the deterministic Unicode/text-kernel surface through the r
 - **Security (confusables + scripts):**
   - `import { confusableSkeleton } from "@ismail-elkorchi/textfacts/security";`
 
+## Kernel contract helpers
+
+- `resolveTextfactsProfile()` exposes the pinned `unicode-17.0.0-default` profile. Alpha rejects undeclared tailoring instead of inferring locale behavior from the host runtime.
+- `explainNormalization()` returns `transformMap` and `isReversible` diagnostics for normalization changes.
+- `TextfactsError` exposes machine-readable `code` values for text-local validation failures.
+
 ## Removed broad subpaths
 
 The `all`, `compare`, `pack`, `protocol`, `schema`, and `toolspec` subpaths are removed during alpha boundary cleanup. Use package-owned surfaces instead:
