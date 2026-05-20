@@ -92,9 +92,11 @@ function renderSupportStatus([status]) {
   const taskRows = status.tasks.map((entry) => [
     `\`${entry.id}\``,
     `\`${entry.status}\``,
+    `\`${entry.evidenceTier}\``,
     entry.scope,
     list(entry.evidence),
     list(entry.limitations),
+    list(entry.nextEvidenceTierBlockers),
   ]);
   return [
     renderGeneratedHeader("docs/specs/support-status.v1.json"),
@@ -119,7 +121,7 @@ function renderSupportStatus([status]) {
     "",
     "## Task status",
     "",
-    table(["Task", "Status", "Scope", "Evidence", "Limitations"], taskRows),
+    table(["Task", "Status", "Evidence tier", "Scope", "Evidence", "Limitations", "Next evidence-tier blockers"], taskRows),
     "",
   ].join("\n");
 }
@@ -151,6 +153,13 @@ function renderCapabilityScorecard([scorecard]) {
       scorecard.languageTiers.map((tier) => [`\`${tier.id}\``, tier.description, tier.minimumEvidence]),
     ),
     "",
+    "## Task evidence tiers",
+    "",
+    table(
+      ["Tier", "Description", "Minimum evidence"],
+      scorecard.taskEvidenceTiers.map((tier) => [`\`${tier.id}\``, tier.description, tier.minimumEvidence]),
+    ),
+    "",
     "## Package rows",
     "",
     table(
@@ -166,13 +175,15 @@ function renderCapabilityScorecard([scorecard]) {
     "## Task rows",
     "",
     table(
-      ["Task", "Status", "Language tier", "Evidence", "Next gate"],
+      ["Task", "Status", "Evidence tier", "Language tier", "Evidence", "Next gate", "Next evidence-tier blockers"],
       scorecard.taskRows.map((row) => [
         `\`${row.taskId}\``,
         `\`${row.supportStatus}\``,
+        `\`${row.evidenceTier}\``,
         `\`${row.languageTier}\``,
         list(row.evidenceRefs),
         row.nextGate,
+        list(row.nextEvidenceTierBlockers),
       ]),
     ),
     "",

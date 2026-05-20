@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/task-evidence-tier-policy-v1.schema.json",
+  "title": "Task evidence tier policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "scope", "generatedAt", "tierOrder", "tierDefinitions", "taskPolicies"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "scope": { "const": "task-evidence-tier-policy" },
+    "generatedAt": { "type": "string", "minLength": 1 },
+    "tierOrder": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/evidenceTier" }
+    },
+    "tierDefinitions": {
+      "type": "array",
+      "minItems": 5,
+      "items": { "$ref": "#/definitions/tierDefinition" }
+    },
+    "taskPolicies": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/taskPolicy" }
+    }
+  },
+  "definitions": {
+    "evidenceTier": {
+      "enum": [
+        "fixture-proven",
+        "comparator-backed",
+        "corpus-backed",
+        "broad-multilingual",
+        "release-stable"
+      ]
+    },
+    "repositoryRef": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(docs|fixtures|packages|schemas|tools)/"
+    },
+    "tierDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "definition", "minimumEvidence", "claimBoundary"],
+      "properties": {
+        "id": { "$ref": "#/definitions/evidenceTier" },
+        "definition": { "type": "string", "minLength": 1 },
+        "minimumEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "claimBoundary": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fixtureSplits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "development",
+        "validation",
+        "holdout",
+        "negativeControls",
+        "externalComparators",
+        "corpusEvidence",
+        "performanceEvidence"
+      ],
+      "properties": {
+        "development": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "validation": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "holdout": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "negativeControls": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "externalComparators": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "corpusEvidence": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "performanceEvidence": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        }
+      }
+    },
+    "taskPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskId",
+        "supportStatus",
+        "evidenceTier",
+        "claimBoundary",
+        "fixtureSplits",
+        "conformanceReportRefs",
+        "nextTier",
+        "nextTierBlockers"
+      ],
+      "properties": {
+        "taskId": { "type": "string", "minLength": 1 },
+        "supportStatus": {
+          "enum": [
+            "scaffold",
+            "readiness-only",
+            "slice-proven",
+            "alpha",
+            "beta",
+            "production-candidate"
+          ]
+        },
+        "evidenceTier": { "$ref": "#/definitions/evidenceTier" },
+        "claimBoundary": { "type": "string", "minLength": 1 },
+        "fixtureSplits": { "$ref": "#/definitions/fixtureSplits" },
+        "conformanceReportRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/repositoryRef" }
+        },
+        "nextTier": { "$ref": "#/definitions/evidenceTier" },
+        "nextTierBlockers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

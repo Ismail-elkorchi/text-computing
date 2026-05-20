@@ -70,31 +70,42 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "status",
-          "scope",
-          "evidence",
-          "limitations"
-        ],
+          "required": [
+            "id",
+            "status",
+            "evidenceTier",
+            "scope",
+            "evidence",
+            "limitations",
+            "nextEvidenceTierBlockers"
+          ],
         "properties": {
           "id": {
             "type": "string",
             "minLength": 1
           },
-          "status": {
-            "enum": [
-              "scaffold",
-              "readiness-only",
-              "slice-proven",
-              "alpha",
-              "beta",
-              "production-candidate"
-            ]
-          },
-          "scope": {
-            "type": "string",
-            "minLength": 1
+            "status": {
+              "enum": [
+                "scaffold",
+                "readiness-only",
+                "slice-proven",
+                "alpha",
+                "beta",
+                "production-candidate"
+              ]
+            },
+            "evidenceTier": {
+              "enum": [
+                "fixture-proven",
+                "comparator-backed",
+                "corpus-backed",
+                "broad-multilingual",
+                "release-stable"
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
           },
           "evidence": {
             "type": "array",
@@ -104,16 +115,23 @@
               "minLength": 1
             }
           },
-          "limitations": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "string",
-              "minLength": 1
+            "limitations": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "nextEvidenceTierBlockers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }
-      }
     }
   }
 }

@@ -13,7 +13,7 @@
             "tools/validate-tokenization-sbd-readiness.mjs"
           ],
           "path": "tools/validate-tokenization-sbd-readiness.mjs",
-          "sha256": "88654c43c76241edb9d33bfa6ee6d0868cf3dd08c3e1663bc70a361974324332"
+          "sha256": "53c210d8a5f5e6eb1edd1dab8a9e8d725fff88790e3152c563c61f17ad091a1f"
         }
       ],
       "comparisons": [

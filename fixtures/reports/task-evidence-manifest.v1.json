@@ -286,7 +286,12 @@
         "fixtures/tokenization-sbd/slices.json",
         "fixtures/tokenization-sbd/tool-versions.json",
         "schemas/tokenization-sbd-expected-v1.schema.json",
-        "tools/validate-tokenization-sbd-readiness.mjs"
+        "tools/validate-tokenization-sbd-readiness.mjs",
+        "docs/specs/task-evidence-tiers.md",
+        "fixtures/evidence/task-evidence-tier-policy.v1.json",
+        "fixtures/tokenization-sbd/corpus.v1.json",
+        "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
+        "fixtures/performance/gates.v1.json"
       ],
       "comparatorRefs": [
         "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
@@ -298,12 +303,16 @@
         "evidenceRefs": [
           "docs/specs/support-status.v1.json",
           "fixtures/reports/evidence-replay.v1.json",
-          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json",
+          "fixtures/evidence/task-evidence-tier-policy.v1.json",
+          "fixtures/tokenization-sbd/corpus.v1.json"
         ]
       },
       "knownGaps": [
         "Not a broad multilingual tokenizer benchmark suite.",
-        "Language-specific segmentation beyond the frozen slices remains future work."
+        "Language-specific segmentation beyond the frozen slices remains future work.",
+        "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence.",
+        "Holdout slices cannot support broad claims until aggregate outputs and conformance reports are persisted."
       ]
     }
   ]

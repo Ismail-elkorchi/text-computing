@@ -12,6 +12,7 @@ const REQUIRED_DIMENSIONS = [
   "regression-threshold",
 ];
 const REQUIRED_PACKAGES = [
+  "@ismail-elkorchi/textfacts",
   "@ismail-elkorchi/textdoc",
   "@ismail-elkorchi/textpipeline",
   "@ismail-elkorchi/textcorpus",

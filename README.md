@@ -2,8 +2,7 @@
 
 `text-computing` is the public workspace for deterministic text computing packages.
 
-The current non-private workspace package is `@ismail-elkorchi/textfacts`. Its implementation lives in `packages/textfacts`.
-Current implementation status is tracked in [`docs/specs/support-status.md`](docs/specs/support-status.md).
+Current package and task support status is tracked in [`docs/specs/support-status.md`](docs/specs/support-status.md).
 
 ## Packages
 

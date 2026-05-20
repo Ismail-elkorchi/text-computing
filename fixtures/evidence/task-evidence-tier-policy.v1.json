@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 1,
+  "scope": "task-evidence-tier-policy",
+  "generatedAt": "2026-05-20T00:00:00.000Z",
+  "tierOrder": [
+    "fixture-proven",
+    "comparator-backed",
+    "corpus-backed",
+    "broad-multilingual",
+    "release-stable"
+  ],
+  "tierDefinitions": [
+    {
+      "id": "fixture-proven",
+      "definition": "Committed fixtures and expected outputs prove only declared examples.",
+      "minimumEvidence": [
+        "development fixture refs",
+        "validation fixture refs",
+        "negative controls",
+        "conformance report refs"
+      ],
+      "claimBoundary": "No behavior claim extends beyond named fixtures."
+    },
+    {
+      "id": "comparator-backed",
+      "definition": "At least one executed external comparator or validator capture exists, with version and difference policy.",
+      "minimumEvidence": [
+        "fixture-proven evidence",
+        "external comparator refs",
+        "difference policy or known-gap statement"
+      ],
+      "claimBoundary": "Comparator evidence is diagnostic and scoped to captured inputs."
+    },
+    {
+      "id": "corpus-backed",
+      "definition": "Committed or reproducibly fetched corpus slices, provenance, expected outputs, and conformance reports exist.",
+      "minimumEvidence": [
+        "corpus slice policy",
+        "corpus provenance",
+        "expected outputs or qrels",
+        "conformance report refs"
+      ],
+      "claimBoundary": "Corpus evidence is limited to declared corpora, splits, and metrics."
+    },
+    {
+      "id": "broad-multilingual",
+      "definition": "Corpus-backed evidence spans declared language/script families and includes holdout evidence.",
+      "minimumEvidence": [
+        "corpus-backed evidence",
+        "language/script coverage matrix",
+        "holdout refs",
+        "negative controls by family"
+      ],
+      "claimBoundary": "Broad multilingual claims name covered language/script families and exclusions."
+    },
+    {
+      "id": "release-stable",
+      "definition": "Broad evidence is backed by API compatibility, performance regression gates, release checks, and limitation review.",
+      "minimumEvidence": [
+        "broad-multilingual evidence when applicable",
+        "release gates",
+        "performance evidence",
+        "compatibility/deprecation policy"
+      ],
+      "claimBoundary": "Release-stable claims apply only to the declared package and task surfaces."
+    }
+  ],
+  "taskPolicies": [
+    {
+      "taskId": "nlp-tokenization-sbd",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "comparator-backed",
+      "claimBoundary": "Frozen fixtures, expected outputs, comparator captures, and executable behavior are present for the current slices.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/tokenization-sbd/slices.json"
+        ],
+        "validation": [
+          "fixtures/tokenization-sbd/corpus.v1.json",
+          "fixtures/tokenization-sbd/expected/arabic.json",
+          "fixtures/tokenization-sbd/expected/japanese-cjk.json",
+          "fixtures/tokenization-sbd/expected/thai-no-space.json"
+        ],
+        "holdout": [
+          "fixtures/tokenization-sbd/corpus.v1.json",
+          "fixtures/tokenization-sbd/expected/devanagari-hindi.json",
+          "fixtures/tokenization-sbd/expected/korean-hangul.json"
+        ],
+        "negativeControls": [
+          "fixtures/tokenization-sbd/expected/unpaired-high-surrogate.json",
+          "fixtures/tokenization-sbd/expected/empty-string.json"
+        ],
+        "externalComparators": [
+          "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+          "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
+        ],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+      ],
+      "nextTier": "corpus-backed",
+      "nextTierBlockers": [
+        "Corpus-scale tokenization/SBD aggregate outputs and conformance reports are not yet persisted.",
+        "Holdout slices exist only as a gate policy and are not sufficient for broad multilingual claims.",
+        "Comparator execution still depends on local availability of pinned external tools."
+      ]
+    },
+    {
+      "taskId": "nlp-document-annotation-model",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "fixture-proven",
+      "claimBoundary": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and round-trip validation are implemented.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/textdoc/examples/document-annotation-model-v1.json"
+        ],
+        "validation": [
+          "fixtures/textdoc/examples/document-extension-model-v1.json",
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/textdoc/invalid/dangling-target.json",
+          "fixtures/textdoc/invalid/dangling-view.json"
+        ],
+        "externalComparators": [],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+      ],
+      "nextTier": "comparator-backed",
+      "nextTierBlockers": [
+        "No external document-model comparator or broad graph holdout suite is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-pack-resource-manifest",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "fixture-proven",
+      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, and overlay-conflict policy are implemented.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/textpack/manifests/textpack-en-core.json"
+        ],
+        "validation": [
+          "fixtures/textpack/manifests/textpack-fr-core.json",
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/textpack/invalid/missing-license.json",
+          "fixtures/textpack/invalid/overlay-conflict-a.json"
+        ],
+        "externalComparators": [],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+      ],
+      "nextTier": "comparator-backed",
+      "nextTierBlockers": [
+        "No external resource-manifest comparator, public review workflow, or broad resource catalog evidence is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-pos-morph-lemma",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "comparator-backed",
+      "claimBoundary": "Deterministic POS, lemma, and morphology outputs exist only for the frozen issue #10 slices.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/pos-morph-lemma/slices.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-core.json"
+        ],
+        "validation": [
+          "fixtures/pos-morph-lemma/expected/es-multiword-token.json",
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/pos-morph-lemma/expected/en-unknown-word.json"
+        ],
+        "externalComparators": [
+          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+          "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
+        ],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+      ],
+      "nextTier": "corpus-backed",
+      "nextTierBlockers": [
+        "No UD-style corpus evaluation, broad unknown-word evaluation, or holdout MWT/clitic corpus is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-rule-backed-ner",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "comparator-backed",
+      "claimBoundary": "Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/rule-backed-ner/slices.json"
+        ],
+        "validation": [
+          "fixtures/rule-backed-ner/expected/org-alias-ibm.json",
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json"
+        ],
+        "externalComparators": [
+          "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
+          "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
+        ],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+      ],
+      "nextTier": "corpus-backed",
+      "nextTierBlockers": [
+        "No larger licensed NER corpus, broader label set, or multilingual holdout evaluation is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-corpus-tfidf-bm25",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "comparator-backed",
+      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, and Okapi BM25 outputs exist only for the frozen issue #14 explicit-token corpus.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/corpus-tfidf-bm25/slices.json"
+        ],
+        "validation": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
+        ],
+        "externalComparators": [
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+        ],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+      ],
+      "nextTier": "corpus-backed",
+      "nextTierBlockers": [
+        "The current explicit-token corpus is too small for broad corpus-backed ranking claims."
+      ]
+    },
+    {
+      "taskId": "nlp-retrieval",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "corpus-backed",
+      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/retrieval/slices.json"
+        ],
+        "validation": [
+          "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
+          "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+          "fixtures/reports/nlp-retrieval/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/retrieval/expected/retrieval-smoke.json"
+        ],
+        "externalComparators": [],
+        "corpusEvidence": [
+          "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+          "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
+        ],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-retrieval/conformance-report.json"
+      ],
+      "nextTier": "broad-multilingual",
+      "nextTierBlockers": [
+        "No external relevance dataset, broad multilingual qrels set, streaming retrieval proof, or filesystem-backed index evidence is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-conllu-dependency-roundtrip",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "comparator-backed",
+      "claimBoundary": "CoNLL-U/UD import-export round-trip behavior exists only for the frozen repository-authored fixtures; no dependency parser or broad UD treebank behavior is implemented.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/conllu-dependency/slices.json"
+        ],
+        "validation": [
+          "fixtures/conllu-dependency/expected/en-basic.json",
+          "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/conllu-dependency/invalid/dangling-head.conllu"
+        ],
+        "externalComparators": [
+          "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json"
+        ],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-conllu-dependency-roundtrip/conformance-report.json"
+      ],
+      "nextTier": "corpus-backed",
+      "nextTierBlockers": [
+        "No broad UD treebank round-trip corpus evaluation is recorded. Parser behavior remains separate."
+      ]
+    },
+    {
+      "taskId": "nlp-dependency-parser",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "comparator-backed",
+      "claimBoundary": "Deterministic dependency arcs are implemented only for the frozen en-basic, es-mwt, and ar-nonlatin slices.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/dependency-parser/slices.json"
+        ],
+        "validation": [
+          "fixtures/dependency-parser/expected/en-basic.json",
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/dependency-parser/slices.json"
+        ],
+        "externalComparators": [
+          "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+          "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+          "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
+        ],
+        "corpusEvidence": [],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+      ],
+      "nextTier": "corpus-backed",
+      "nextTierBlockers": [
+        "No broad UD treebank parsing evaluation, JavaScript parser comparator, or parser performance threshold is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-relation-extraction",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "corpus-backed",
+      "claimBoundary": "Deterministic typed relation outputs exist only for the frozen relation extraction corpus slice.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/relation-extraction/slices.json"
+        ],
+        "validation": [
+          "fixtures/relation-extraction/expected/en-employment.json",
+          "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/relation-extraction/expected/en-no-relation.json"
+        ],
+        "externalComparators": [],
+        "corpusEvidence": [
+          "fixtures/relation-extraction/slices.json"
+        ],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-relation-extraction/conformance-report.json"
+      ],
+      "nextTier": "broad-multilingual",
+      "nextTierBlockers": [
+        "No external comparator capture, larger corpus evaluation, or multilingual holdout relation corpus is recorded."
+      ]
+    },
+    {
+      "taskId": "nlp-coreference",
+      "supportStatus": "slice-proven",
+      "evidenceTier": "corpus-backed",
+      "claimBoundary": "Coreference mention and chain behavior is implemented for the frozen repository-authored corpus slice only.",
+      "fixtureSplits": {
+        "development": [
+          "fixtures/coreference/slices.json"
+        ],
+        "validation": [
+          "fixtures/coreference/expected/en-pronoun.json",
+          "fixtures/reports/nlp-coreference/conformance-report.json"
+        ],
+        "holdout": [],
+        "negativeControls": [
+          "fixtures/coreference/expected/en-ambiguous.json"
+        ],
+        "externalComparators": [],
+        "corpusEvidence": [
+          "fixtures/coreference/slices.json"
+        ],
+        "performanceEvidence": [
+          "fixtures/performance/gates.v1.json"
+        ]
+      },
+      "conformanceReportRefs": [
+        "fixtures/reports/nlp-coreference/conformance-report.json"
+      ],
+      "nextTier": "broad-multilingual",
+      "nextTierBlockers": [
+        "No external comparator capture, larger corpus evaluation, or multilingual holdout coreference corpus is recorded."
+      ]
+    }
+  ]
+}

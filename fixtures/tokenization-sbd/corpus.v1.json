@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "scope": "tokenization-sbd-corpus-gate",
+  "claimBoundary": "This corpus gate records development, validation, holdout, and negative-control roles for existing tokenization/SBD fixtures. It does not upgrade tokenization/SBD beyond the current comparator-backed slice claim.",
+  "splitRoles": ["development", "validation", "holdout", "negative-control"],
+  "corpusSlices": [
+    {
+      "id": "dev-ascii-two-sentences",
+      "splitRole": "development",
+      "sourceSliceId": "ascii-two-sentences",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/ascii-two-sentences.json",
+      "language": "en",
+      "script": "Latin",
+      "boundaryRegime": "space-delimited",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "development-only"
+    },
+    {
+      "id": "dev-abbreviation-ambiguity",
+      "splitRole": "development",
+      "sourceSliceId": "abbreviation-ambiguity",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/abbreviation-ambiguity.json",
+      "language": "en",
+      "script": "Latin",
+      "boundaryRegime": "space-delimited",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "development-only",
+      "notes": ["Abbreviation-sensitive sentence boundaries remain a documented future specialization surface."]
+    },
+    {
+      "id": "validation-arabic-rtl",
+      "splitRole": "validation",
+      "sourceSliceId": "arabic",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/arabic.json",
+      "language": "ar",
+      "script": "Arabic",
+      "boundaryRegime": "right-to-left",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "validation-only"
+    },
+    {
+      "id": "validation-japanese-mixed-script",
+      "splitRole": "validation",
+      "sourceSliceId": "japanese-cjk",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/japanese-cjk.json",
+      "language": "ja",
+      "script": "Jpan",
+      "boundaryRegime": "mixed-script",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "validation-only",
+      "notes": ["Dictionary word segmentation is not claimed by this gate."]
+    },
+    {
+      "id": "validation-thai-no-space",
+      "splitRole": "validation",
+      "sourceSliceId": "thai-no-space",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/thai-no-space.json",
+      "language": "th",
+      "script": "Thai",
+      "boundaryRegime": "no-space",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "validation-only",
+      "notes": ["Language-specific word segmentation is not claimed by this gate."]
+    },
+    {
+      "id": "holdout-devanagari-hindi",
+      "splitRole": "holdout",
+      "sourceSliceId": "devanagari-hindi",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/devanagari-hindi.json",
+      "language": "hi",
+      "script": "Devanagari",
+      "boundaryRegime": "space-delimited",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned"
+    },
+    {
+      "id": "holdout-korean-hangul",
+      "splitRole": "holdout",
+      "sourceSliceId": "korean-hangul",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/korean-hangul.json",
+      "language": "ko",
+      "script": "Hangul",
+      "boundaryRegime": "space-delimited",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned"
+    },
+    {
+      "id": "negative-unpaired-high-surrogate",
+      "splitRole": "negative-control",
+      "sourceSliceId": "unpaired-high-surrogate",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/unpaired-high-surrogate.json",
+      "language": "und",
+      "script": "Unknown",
+      "boundaryRegime": "malformed",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "negative-control",
+      "notes": ["Malformed UTF-16 is represented through explicit code-unit fixtures, not lossy replacement text."]
+    },
+    {
+      "id": "negative-empty-string",
+      "splitRole": "negative-control",
+      "sourceSliceId": "empty-string",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/empty-string.json",
+      "language": "und",
+      "script": "Unknown",
+      "boundaryRegime": "unicode-edge",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "negative-control"
+    }
+  ],
+  "limitations": [
+    "This is a split-role corpus gate over committed fixtures, not a broad multilingual benchmark corpus.",
+    "Holdout slices are separated for future claim-upgrade validation; no broad multilingual support is claimed from this file alone."
+  ]
+}
