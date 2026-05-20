@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textprotocol-mapping-loss-report-v1.schema.json",
+  "title": "textprotocol mapping loss report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaId", "schemaVersion", "producer", "payload"],
+  "properties": {
+    "schemaId": { "const": "urn:ismail-elkorchi:textprotocol:mapping-loss-report:v1" },
+    "schemaVersion": { "const": 1 },
+    "producer": { "$ref": "#/definitions/producer" },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mappingId", "source", "target", "losses"],
+      "properties": {
+        "mappingId": { "type": "string", "minLength": 1 },
+        "source": { "$ref": "#/definitions/artifactRef" },
+        "target": { "$ref": "#/definitions/artifactRef" },
+        "losses": { "type": "array", "items": { "$ref": "#/definitions/loss" } }
+      }
+    },
+    "provenance": { "$ref": "#/definitions/provenance" },
+    "diagnostics": { "$ref": "#/definitions/diagnostics" },
+    "limitations": { "$ref": "#/definitions/nonEmptyStringArray" },
+    "extensions": { "type": "object" }
+  },
+  "definitions": {
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 },
+        "schemaId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "class", "reason"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "class": { "enum": ["offset-loss", "view-loss", "feature-loss", "type-loss", "ordering-loss", "unknown-loss"] },
+        "reason": { "type": "string", "minLength": 1 },
+        "sourcePath": { "type": "string", "minLength": 1 },
+        "targetPath": { "type": "string", "minLength": 1 },
+        "affectedTargets": { "type": "array", "items": { "$ref": "#/definitions/reference" } }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "sha256": { "type": "string", "minLength": 1 }
+          }
+        },
+        "references": { "type": "array", "items": { "$ref": "#/definitions/reference" } }
+      }
+    },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/definitions/diagnostic" } },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "nonEmptyStringArray": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}

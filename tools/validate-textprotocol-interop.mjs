@@ -1,13 +1,19 @@
 import { isTextDocDocumentV1, textDocDocumentPayloadKind } from "@ismail-elkorchi/textdoc";
 import {
+  checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
+  isTextProtocolDocumentBundleV1,
+  isTextProtocolProcessorTraceV1,
   isTextProtocolResultEnvelopeForPayloadKind,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  textProtocolDocumentBundleSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineTraceV1,
   textProtocolPayloadKindVerticalSliceResultV1,
+  textProtocolProcessorTraceSchemaId,
+  textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
 import { isTextPipelineTraceV1, runTextPipeline, textPipelineTracePayloadKind } from "@ismail-elkorchi/textpipeline";
 import { isTextConformanceReportV1, runTextConformanceChecks } from "@ismail-elkorchi/textconformance";
@@ -58,6 +64,18 @@ function assertEnvelope(value, payloadKind, producerPackage) {
   }
 }
 
+function assertProtocolFamily(value, expectedFamily, producerPackage) {
+  const result = checkTextProtocolSchemaFamilyEnvelope(value, {
+    expectedFamily,
+    expectedProducerPackage: producerPackage,
+    requireProvenance: true,
+    requireLimitations: true,
+  });
+  if (!result.ok) {
+    fail(`Protocol schema-family envelope for ${expectedFamily} failed compatibility checks.`, result.diagnostics);
+  }
+}
+
 if (textDocDocumentPayloadKind !== textProtocolPayloadKindTextdocDocumentV1) {
   fail("textdoc document payload kind must match the textprotocol registry.");
 }
@@ -105,12 +123,56 @@ if (!isTextPipelineTraceV1(pipelineRun.trace)) {
 const textdocEnvelope = envelope("@ismail-elkorchi/textdoc", textProtocolPayloadKindTextdocDocumentV1, document);
 assertEnvelope(textdocEnvelope, textProtocolPayloadKindTextdocDocumentV1, "@ismail-elkorchi/textdoc");
 
+const documentBundle = {
+  schemaId: textProtocolDocumentBundleSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: "@ismail-elkorchi/textdoc",
+    version: "0.0.0",
+  },
+  payload: {
+    documents: [
+      {
+        documentId: document.documentId,
+        revision: document.revision,
+        document,
+      },
+    ],
+  },
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural document-bundle interop smoke only."],
+};
+if (!isTextProtocolDocumentBundleV1(documentBundle)) {
+  fail("Interop document bundle must satisfy textprotocol structural guard.", documentBundle);
+}
+assertProtocolFamily(documentBundle, "document-bundle", "@ismail-elkorchi/textdoc");
+
 const traceEnvelope = envelope(
   "@ismail-elkorchi/textpipeline",
   textProtocolPayloadKindTextpipelineTraceV1,
   pipelineRun.trace,
 );
 assertEnvelope(traceEnvelope, textProtocolPayloadKindTextpipelineTraceV1, "@ismail-elkorchi/textpipeline");
+
+const processorTrace = {
+  schemaId: textProtocolProcessorTraceSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: "@ismail-elkorchi/textpipeline",
+    version: "0.0.0",
+  },
+  payload: pipelineRun.trace,
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural processor-trace interop smoke only."],
+};
+if (!isTextProtocolProcessorTraceV1(processorTrace)) {
+  fail("Interop processor trace must satisfy textprotocol structural guard.", processorTrace);
+}
+assertProtocolFamily(processorTrace, "processor-trace", "@ismail-elkorchi/textpipeline");
 
 const report = runTextConformanceChecks(
   [

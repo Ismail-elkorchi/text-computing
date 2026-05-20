@@ -126,18 +126,22 @@
     {
       "name": "@ismail-elkorchi/textprotocol",
       "status": "alpha",
-      "scope": "Public alpha result-envelope package for schema version 1, supported-version negotiation, deterministic JSON transport, and bounded package interop proven by Public Vertical Slice 0.1.",
+      "scope": "Public alpha protocol package for result-envelope schema version 1, schema-family descriptors, protocol-owned structural guards, deterministic JSON canonicalization, and bounded package interop proven by package tests and Public Vertical Slice 0.1.",
       "evidence": [
         "result-envelope schema",
-        "runtime guards",
+        "protocol schema-family JSON Schemas",
+        "schema-family registry and runtime guards",
         "repository fixture validation",
         "version-negotiation tests",
         "JSON transport round-trip tests",
+        "canonical JSON rejection tests",
         "Public Vertical Slice 0.1 external-consumer smoke test",
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Only result-envelope schema version 1 and the package JSON transport wrapper are standardized",
+        "Protocol-owned family schemas are alpha structural contracts and do not replace package-specific semantic validation.",
+        "The pack-manifest family remains owned by textpack and is validated by its JSON Schema.",
+        "No network transport, signing protocol, or hash algorithm is standardized by this package.",
         "Alpha scope is bounded to package interop and external installability proven by Public Vertical Slice 0.1"
       ]
     },

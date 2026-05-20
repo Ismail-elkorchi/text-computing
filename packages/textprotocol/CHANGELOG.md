@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+
+- Add protocol schema-family descriptors, structural guards, repository schemas, and canonical JSON helper for document bundles, annotation bundles, evidence bundles, processor traces, corpus metrics, mapping-loss reports, and protocol errors.
+
 ## 0.1.0
 
 - Promote the result-envelope v1 package surface to public alpha for bounded package interop.
