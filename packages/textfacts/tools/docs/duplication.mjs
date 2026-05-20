@@ -10,7 +10,7 @@ const REPORT_JSON = path.join(OUT_DIR, "duplication-report.v1.json");
 const REPORT_MD = path.join(OUT_DIR, "duplication-report.md");
 const ALLOWLIST_PATH = path.join(OUT_DIR, "allowlist.v1.json");
 const MARKDOWN_MANIFEST_PATH = path.join(ROOT, "docs", "markdown", "markdown-manifest.v1.json");
-const DIST_PATH = fileURLToPath(new URL("../../dist/src/all/mod.js", import.meta.url));
+const DIST_PATH = fileURLToPath(new URL("../../dist/mod.js", import.meta.url));
 
 const EXCLUDE_DIRS = new Set(["node_modules", "dist", "dist-test", ".git", "specs"]);
 const EXCLUDE_FILES = new Set(["docs/duplication/duplication-report.md"]);
@@ -19,8 +19,7 @@ const OPTIONS = {
   tokenizer: "uax29-word",
   canonicalKey: "nfkcCaseFold",
   k: 5,
-  window: 4,
-  dedupe: "by-hash",
+  hash: "xxh64-utf8",
 };
 
 function normalizePath(filePath) {
@@ -189,9 +188,38 @@ function normalizePair(leftPath, rightPath) {
   return [leftPath, rightPath].sort().join("::");
 }
 
+function tokenRecords(textfacts, text) {
+  return [...textfacts.segmentWordsUAX29(text)].map((span, tokenIndex) => {
+    const raw = textfacts.sliceBySpan(text, span);
+    return {
+      tokenIndex,
+      span,
+      key: textfacts.nfkcCaseFold(raw),
+    };
+  });
+}
+
+function shingleFingerprints(textfacts, tokens) {
+  const fingerprints = [];
+  for (let tokenIndex = 0; tokenIndex <= tokens.length - OPTIONS.k; tokenIndex += 1) {
+    const slice = tokens.slice(tokenIndex, tokenIndex + OPTIONS.k);
+    const key = slice.map((token) => token.key).join("\u001f");
+    const hash64Hex = textfacts.formatU64Hex(textfacts.hash64Text(key, { algo: OPTIONS.hash }));
+    fingerprints.push({
+      hash64Hex,
+      tokenIndex,
+      span: {
+        startCU: slice[0].span.startCU,
+        endCU: slice[slice.length - 1].span.endCU,
+      },
+    });
+  }
+  return fingerprints;
+}
+
 async function main() {
   await fs.access(DIST_PATH).catch(() => {
-    throw new Error("dist/src/all/mod.js not found. Run `npm run build` first.");
+    throw new Error("dist/mod.js not found. Run `npm run build` first.");
   });
   const textfacts = await import(pathToFileURL(DIST_PATH).href);
   await fs.mkdir(OUT_DIR, { recursive: true });
@@ -214,20 +242,9 @@ async function main() {
   for (const rel of relFiles) {
     const text = await fs.readFile(path.join(ROOT, rel), "utf8");
     const bytes = Buffer.byteLength(text, "utf8");
-    const tokens = textfacts.tokenizeForComparison(text, {
-      tokenizer: OPTIONS.tokenizer,
-      canonicalKey: OPTIONS.canonicalKey,
-      materialize: "none",
-    });
+    const tokens = tokenRecords(textfacts, text);
     const words = tokens.length;
-    const result = textfacts.winnowingFingerprints(text, {
-      tokenizer: OPTIONS.tokenizer,
-      canonicalKey: OPTIONS.canonicalKey,
-      k: OPTIONS.k,
-      window: OPTIONS.window,
-      dedupe: OPTIONS.dedupe,
-    });
-    const fingerprints = result.fingerprints ?? [];
+    const fingerprints = shingleFingerprints(textfacts, tokens);
     const fpSet = new Set(fingerprints.map((fp) => fp.hash64Hex));
     fileData.set(rel, { text, bytes, words, fingerprints, fpSet });
   }

@@ -3,8 +3,6 @@ import { evalProperty, getPbtRuns, getPbtSeed } from "../_support/pbt.ts";
 import { makeRng } from "../_support/prng.ts";
 import { importTextfacts } from "../_support/runtime.ts";
 
-type JsonValue = import("../../mod.ts").JsonValue;
-
 export interface TestApi {
   test: (name: string, fn: () => void | Promise<void>) => void;
   assertEqual: (actual: unknown, expected: unknown, message?: string) => void;
@@ -48,43 +46,20 @@ export function registerMetamorphicTests(api: TestApi): void {
   const seed = getPbtSeed();
   const seedFor = (name: string) => `${seed}:metamorphic:${name}`;
 
-  api.test("metamorphic: text envelope round-trip", async () => {
-    const { encodeTextEnvelope, decodeTextEnvelope, isIJsonSafeString } = await importTextfacts();
+  api.test("metamorphic: normalization is idempotent", async () => {
+    const { normalize, isNormalized, isWellFormedUnicode } = await importTextfacts();
     evalProperty({
-      name: "envelope-roundtrip",
-      seed: seedFor("envelope"),
+      name: "normalize-idempotent",
+      seed: seedFor("normalize"),
       runs,
       gen: genFuzzString,
       property: (value) => {
-        const env = encodeTextEnvelope(value);
-        const decoded = decodeTextEnvelope(env);
-        if (decoded !== value) return false;
-        const safe = isIJsonSafeString(value);
-        if (safe && env.kind !== "string") return false;
-        if (!safe && env.kind !== "utf16le-base64") return false;
+        const normalized = normalize(value, "NFC");
+        if (normalize(normalized, "NFC") !== normalized) return false;
+        if (isNormalized(value, "NFC") && normalized !== value) return false;
+        if (isWellFormedUnicode(value) && !isWellFormedUnicode(normalized)) return false;
       },
     });
-  });
-
-  api.test("metamorphic: pack digest matches canonical hash", async () => {
-    const { packTextV1, packTextV1Sha256, jcsCanonicalize, sha256Hex } = await importTextfacts();
-    const opts = {
-      includeInputText: true,
-      sections: { integrity: true },
-      maxExamples: 2,
-    } as const;
-    await evalAsyncPropertyRuns(
-      "pack-digest",
-      seedFor("pack"),
-      Math.max(10, Math.floor(runs / 2)),
-      genFuzzString,
-      async (value) => {
-        const pack = packTextV1(value, opts);
-        const digest = await packTextV1Sha256(value, opts);
-        const expected = await sha256Hex(jcsCanonicalize(pack as unknown as JsonValue));
-        if (digest !== expected) return false;
-      },
-    );
   });
 
   api.test("metamorphic: JCS canonicalization stability", async () => {
@@ -106,34 +81,23 @@ export function registerMetamorphicTests(api: TestApi): void {
     );
   });
 
-  api.test("metamorphic: token materialization preserves hashes", async () => {
-    const { tokenizeForComparison } = await importTextfacts();
+  api.test("metamorphic: word segmentation spans are stable", async () => {
+    const { segmentWordsUAX29, sliceBySpan } = await importTextfacts();
     evalProperty({
-      name: "token-materialization",
-      seed: seedFor("tokens"),
+      name: "word-segmentation-stable",
+      seed: seedFor("word-segmentation"),
       runs,
       gen: genFuzzString,
       property: (value) => {
-        const base = {
-          tokenizer: "uax29-word",
-          canonicalKey: "nfkcCaseFold",
-          maxTokens: 200,
-          hash: { algo: "xxh64-utf8" },
-        } as const;
-        const none = tokenizeForComparison(value, { ...base, materialize: "none" });
-        const full = tokenizeForComparison(value, { ...base, materialize: "raw+key" });
-        if (none.length !== full.length) return false;
-        for (let index = 0; index < none.length; index += 1) {
-          const noneToken = none[index];
-          const fullToken = full[index];
-          if (!noneToken || !fullToken) return false;
-          if (
-            noneToken.span.startCU !== fullToken.span.startCU ||
-            noneToken.span.endCU !== fullToken.span.endCU
-          ) {
-            return false;
-          }
-          if (noneToken.keyHash64 !== fullToken.keyHash64) return false;
+        const first = [...segmentWordsUAX29(value)];
+        const second = [...segmentWordsUAX29(value)];
+        if (first.length !== second.length) return false;
+        for (let index = 0; index < first.length; index += 1) {
+          const left = first[index];
+          const right = second[index];
+          if (!left || !right) return false;
+          if (left.startCU !== right.startCU || left.endCU !== right.endCU) return false;
+          if (sliceBySpan(value, left) !== value.slice(left.startCU, left.endCU)) return false;
         }
       },
     });

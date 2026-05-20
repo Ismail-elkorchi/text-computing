@@ -136,7 +136,6 @@ function renderMarkdown(report) {
     totalSrcModules: "Top-level module folders under `src/`.",
     totalToolScripts: "Tool scripts under `tools/` (`.mjs`, `.js`, `.ts`).",
     totalSchemas: "Schema files under `schemas/*.schema.json`.",
-    totalInteropCases: "Interop cases listed in `interop/manifest.json`.",
     totalGeneratedTables: "Files under `src/**/generated/`.",
   };
   const rows = Object.keys(report.current).map((key) => {
@@ -176,10 +175,6 @@ async function main() {
 
   const pkg = JSON.parse(await fs.readFile(path.join(ROOT, "package.json"), "utf8"));
   const deno = JSON.parse(await fs.readFile(path.join(ROOT, "deno.json"), "utf8"));
-  const interop = JSON.parse(
-    await fs.readFile(path.join(ROOT, "interop", "manifest.json"), "utf8"),
-  );
-
   const current = {
     totalTrackedFiles: files.length,
     totalMarkdownFiles: files.filter((file) => file.endsWith(".md")).length,
@@ -193,7 +188,6 @@ async function main() {
     totalSchemas: files.filter(
       (file) => file.startsWith("schemas/") && file.endsWith(".schema.json"),
     ).length,
-    totalInteropCases: (interop.cases ?? []).length,
     totalGeneratedTables: countGeneratedTables(files),
   };
 

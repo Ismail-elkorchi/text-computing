@@ -2,10 +2,10 @@
 
 ## Unreleased
 - UAX #15 normalization (pure TypeScript, Unicode 17.0.0 tables)
-- Agent-first FactPack (`analyzeText`, `analyzeCorpus`)
 - Canonical JSON helpers + determinism hashing utilities
 - Offline Unicode conformance test data vendored in-repo
-- Freeze legacy pack/corpus helpers in `textfacts`; new cross-package orchestration work lands in dedicated owner packages.
+- Remove broad legacy subpaths (`all`, `compare`, `pack`, `protocol`, `schema`, `toolspec`) during alpha boundary cleanup.
+- Keep package exports focused on deterministic Unicode/text-kernel APIs.
 
 ## 0.1.0
 - Initial release

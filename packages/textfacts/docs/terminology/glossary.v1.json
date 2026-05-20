@@ -263,18 +263,6 @@
       "preferredPhrases": ["fingerprint overlap count"]
     },
     {
-      "term": "ToolSpec",
-      "kind": "protocol",
-      "definition": "A JSON contract for tool input/output schemas, independent of any runtime.",
-      "preferredPhrases": ["ToolSpec registry"]
-    },
-    {
-      "term": "interop case",
-      "kind": "protocol",
-      "definition": "A deterministic input/output fixture used for cross-runtime verification.",
-      "preferredPhrases": ["interop fixture"]
-    },
-    {
       "term": "I-JSON safe",
       "kind": "protocol",
       "definition": "JSON content without non-characters, lone surrogates, or non-finite numbers.",
@@ -328,7 +316,7 @@
     {
       "term": "entropy (repo)",
       "kind": "repo",
-      "definition": "The repository entropy tuple measured by `entropy-report.v1.json`: totalTrackedFiles, totalMarkdownFiles, totalNpmScripts, totalEntrypoints, totalJsrExports, totalSrcModules, totalToolScripts, totalSchemas, totalInteropCases, totalGeneratedTables.",
+      "definition": "The repository entropy tuple measured by `entropy-report.v1.json`: totalTrackedFiles, totalMarkdownFiles, totalNpmScripts, totalEntrypoints, totalJsrExports, totalSrcModules, totalToolScripts, totalSchemas, totalGeneratedTables.",
       "preferredPhrases": ["entropy metrics", "entropy tuple"]
     },
     {

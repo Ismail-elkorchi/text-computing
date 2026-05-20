@@ -10,7 +10,6 @@
 - `packages/textfacts/src/`: library implementation.
 - `packages/textfacts/mod.ts`: primary package entrypoint.
 - `packages/textfacts/schemas/`: JSON Schema registry.
-- `packages/textfacts/interop/`: interop fixtures and manifest.
 - `packages/textfacts/scripts/`: package utility scripts.
 - `packages/textfacts/tools/`: verification and audit tools.
 - `packages/textfacts/test/`, `packages/textfacts/testdata/`: automated tests and pinned vectors.

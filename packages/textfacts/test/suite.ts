@@ -52,148 +52,21 @@ export function registerTests(api: TestApi): void {
     api.assertEqual(result.items[0].count, 2);
   });
 
-  api.test("analyzeCorpus defaults to word-like filtering", async () => {
-    const { analyzeCorpus } = await importTextfacts();
-    const corpus = analyzeCorpus(["foo", "bar", "\uD83D\uDE00", "\uD83D\uDE00", "foo"], {});
-    api.assertEqual(corpus.frequencies.words.totalTokens, 3);
-  });
-
-  api.test("analyzeCorpus emits corpus fingerprint facts", async () => {
-    const { analyzeCorpus } = await importTextfacts();
-    const corpus = analyzeCorpus(
-      ["alpha beta gamma delta epsilon zeta", "alpha beta gamma delta eta theta"],
-      {
-        fingerprint: {
-          tokenizer: "uax29-word",
-          canonicalKey: "nfkcCaseFold",
-          k: 3,
-          window: 4,
-        },
-      },
-    );
-    api.assertOk(!!corpus.fingerprint);
-    api.assertEqual(corpus.fingerprint?.k, 3);
-    api.assertEqual(corpus.fingerprint?.window, 4);
-    api.assertOk((corpus.fingerprint?.fingerprintCount ?? 0) > 0);
-  });
-
-  api.test("analyzeCorpus defaults to lean mode", async () => {
-    const { analyzeCorpus } = await importTextfacts();
-    const corpus = analyzeCorpus(["alpha beta gamma", "gamma beta"], {});
-    api.assertOk(corpus.ngrams === undefined);
-    api.assertOk(corpus.cooccurrence === undefined);
-    api.assertOk(corpus.repetition === undefined);
-  });
-
-  api.test("analyzeCorpus full mode computes expensive outputs", async () => {
-    const { analyzeCorpus } = await importTextfacts();
-    const corpus = analyzeCorpus(["alpha beta gamma", "gamma beta"], { mode: "full" });
-    api.assertOk(!!corpus.ngrams);
-    api.assertOk(!!corpus.cooccurrence);
-  });
-
-  api.test("analyzeText defaults to lean mode", async () => {
-    const { analyzeText } = await importTextfacts();
-    const pack = analyzeText("a a b a", {});
-    api.assertOk(pack.ngrams === undefined);
-    api.assertOk(pack.cooccurrence === undefined);
-    api.assertOk(pack.repetition === undefined);
-  });
-
-  api.test("analyzeText full mode computes expensive outputs", async () => {
-    const { analyzeText } = await importTextfacts();
-    const pack = analyzeText("a a b a", { mode: "full" });
-    api.assertOk(!!pack.ngrams);
-    api.assertOk(!!pack.cooccurrence);
-  });
-
-  api.test("analyzeText full mode blocks oversized input by default", async () => {
-    const { analyzeText } = await importTextfacts();
-    let threw = false;
-    try {
-      analyzeText("a".repeat(9), { mode: "full", fullModeInputLimit: 8 });
-    } catch (error) {
-      threw = true;
-      if (error instanceof Error) {
-        api.assertOk(error instanceof RangeError);
-        api.assertOk(error.message.includes("Full-mode guard blocked analyzeText"));
-        api.assertOk(error.message.includes("fullModeInputLimit=8"));
-      }
-    }
-    api.assertOk(threw);
-  });
-
-  api.test("analyzeText full mode allows oversized input when unsafe", async () => {
-    const { analyzeText } = await importTextfacts();
-    const pack = analyzeText("a".repeat(9), {
-      mode: "full",
-      fullModeInputLimit: 8,
-      allowUnsafeFullMode: true,
-    });
-    api.assertEqual(pack.summary.codeUnits, 9);
-  });
-
-  api.test("analyzeCorpus full mode blocks cumulative oversized input", async () => {
-    const { analyzeCorpus } = await importTextfacts();
-    let threw = false;
-    try {
-      analyzeCorpus(["aa", "bb", "cc"], { mode: "full", fullModeInputLimit: 5 });
-    } catch (error) {
-      threw = true;
-      if (error instanceof Error) {
-        api.assertOk(error instanceof RangeError);
-        api.assertOk(
-          error.message.includes("Full-mode guard blocked analyzeCorpus cumulative text"),
-        );
-      }
-    }
-    api.assertOk(threw);
-  });
-
-  api.test("analyzeCorpus full mode allows oversized cumulative input when unsafe", async () => {
-    const { analyzeCorpus } = await importTextfacts();
-    const corpus = analyzeCorpus(["aa", "bb", "cc"], {
-      mode: "full",
-      fullModeInputLimit: 5,
-      allowUnsafeFullMode: true,
-    });
-    api.assertEqual(corpus.summary.documents, 3);
-  });
-
-  api.test("determinism harness", async () => {
+  api.test("kernel determinism harness", async () => {
     const {
-      analyzeText,
       buildVariantIndex,
-      compareProfiles,
       confusableSkeleton,
-      diffText,
       fnv1a32,
       jcsCanonicalize,
       sha256Hex,
       normalize,
-      surfaceProfile,
+      segmentWordsUAX29,
       ucaSortKeyHex,
-      winnowingFingerprints,
+      wordFrequencies,
     } = await importTextfacts();
     const sample = "Cafe\u0301 — cafe \u{1F468}\u{1F3FD}\u200D\u{1F4BB}";
-    const pack = analyzeText(sample, {
-      topK: 5,
-      includeBoundaries: true,
-      maxPositions: 5,
-      ngrams: { n: 2, topK: 4 },
-      cooccurrence: { windowSize: 2, maxPairs: 4 },
-      variants: {
-        tokenizer: "uax29-word",
-        canonicalKey: "nfkcCaseFold",
-        wordFilter: "word-like",
-        maxExamplesPerVariant: 2,
-        maxVariants: 25,
-      },
-      profile: {
-        ngrams: { sizes: [2, 3], topK: 5 },
-        lengthBins: [2, 4, 8],
-      },
-    });
+    const wordSpans = [...segmentWordsUAX29(sample)];
+    const frequencies = wordFrequencies(sample, { filter: "word-like" });
     const variantIndex = buildVariantIndex(sample, {
       tokenizer: "uax29-word",
       canonicalKey: "skeleton",
@@ -201,27 +74,7 @@ export function registerTests(api: TestApi): void {
       maxExamplesPerVariant: 2,
       maxVariants: 25,
     });
-    const profileA = surfaceProfile(sample, {
-      ngrams: { sizes: [2], topK: 5 },
-      lengthBins: [2, 4, 8],
-    });
-    const profileB = surfaceProfile("Cafe cafe", {
-      ngrams: { sizes: [2], topK: 5 },
-      lengthBins: [2, 4, 8],
-    });
-    const comparison = compareProfiles(profileA, profileB);
     const skeleton = confusableSkeleton(sample);
-    const diff = diffText("Alpha beta gamma", "Alpha gamma delta", {
-      tokenizer: "uax29-word",
-      canonicalKey: "nfkcCaseFold",
-      prefer: "delete",
-    });
-    const fingerprints = winnowingFingerprints(sample, {
-      tokenizer: "uax29-word",
-      canonicalKey: "nfkcCaseFold",
-      k: 3,
-      window: 2,
-    });
     const jcs = jcsCanonicalize({ a: 1, b: [true, false, null] });
     const collationSamples: Array<{
       label: string;
@@ -255,21 +108,18 @@ export function registerTests(api: TestApi): void {
     });
     const payload = {
       normalized: normalize(sample, "NFC"),
-      pack,
+      wordSpans,
+      frequencies,
       variantIndex,
-      profileA,
-      comparison,
       skeleton,
-      diff,
-      fingerprints,
       collation,
       jcs,
     } as unknown as JsonValue;
     const canonical = jcsCanonicalize(payload);
     const fnv = fnv1a32(canonical);
     const sha = await sha256Hex(canonical);
-    api.assertEqual(fnv, "fnv1a32:9aa0ffd6");
-    api.assertEqual(sha, "sha256:ceb289211ec380ea930e0e901a30b4c14a22222da07a1b09b2ef8223f5c77ae3");
+    api.assertEqual(fnv, "fnv1a32:b79e2e0b");
+    api.assertEqual(sha, "sha256:5a3cff0994f07882184c92d89fca4cd20b5aa42628c52147195ebff5511222e5");
   });
 
   api.test("UAX29 GraphemeBreakTest", async () => {
@@ -762,13 +612,6 @@ export function registerTests(api: TestApi): void {
     api.assertEqual(result.variants[0]?.key, "alpha");
   });
 
-  api.test("SurfaceProfile baseline", async () => {
-    const { surfaceProfile } = await importTextfacts();
-    const profile = surfaceProfile("Hello world!");
-    api.assertOk(profile.summary.codeUnits > 0);
-    api.assertOk(profile.unicode.generalCategories.length > 0);
-  });
-
   api.test("Well-formed Unicode detection", async () => {
     const { isWellFormedUnicode, scanLoneSurrogates, toWellFormedUnicode } =
       await importTextfacts();
@@ -870,188 +713,6 @@ export function registerTests(api: TestApi): void {
     );
   });
 
-  api.test("Text envelope encodes I-JSON-safe strings", async () => {
-    const {
-      encodeTextEnvelope,
-      decodeTextEnvelope,
-      isIJsonSafeString,
-      encodeUtf16leBytes,
-      decodeUtf16leBytes,
-    } = await importTextfacts();
-    api.assertOk(isIJsonSafeString("Hello"));
-    api.assertOk(!isIJsonSafeString("\uD800"));
-    api.assertOk(!isIJsonSafeString("\uFDD0"));
-
-    const unsafe = "A\uD800B";
-    const env = encodeTextEnvelope(unsafe);
-    api.assertEqual(env.kind, "utf16le-base64");
-    const decoded = decodeTextEnvelope(env);
-    api.assertEqual(decoded, unsafe);
-
-    const ascii = "Plain ASCII";
-    const emoji = "👩🏽‍💻";
-    const nonchar = "\uFDD0";
-    const samples = [ascii, emoji, unsafe, nonchar];
-    for (const sample of samples) {
-      const bytes = encodeUtf16leBytes(sample);
-      const roundtrip = decodeUtf16leBytes(bytes);
-      api.assertEqual(roundtrip, sample);
-    }
-  });
-
-  api.test("Base64 encode/decode roundtrip", async () => {
-    const { base64Encode, base64Decode } = await importTextfacts();
-    const bytes = new Uint8Array([0, 1, 2, 3, 254, 255]);
-    const encoded = base64Encode(bytes);
-    const decoded = base64Decode(encoded);
-    api.assertDeepEqual(Array.from(decoded), Array.from(bytes));
-  });
-
-  api.test("Pack V1 is I-JSON-safe and hashable", async () => {
-    const { packTextV1, packTextV1Sha256, jcsCanonicalize } = await importTextfacts();
-    const text = "A\uD800B";
-    const pack = packTextV1(text, { includeInputText: true });
-    const canonical = jcsCanonicalize(pack as unknown as JsonValue);
-    api.assertOk(canonical.length > 0);
-    const digest = await packTextV1Sha256(text, { includeInputText: true });
-    api.assertOk(digest.startsWith("sha256:"));
-  });
-
-  api.test("Schema exports are I-JSON safe", async () => {
-    const { assertIJson: assertIJsonRaw, getJsonSchema } = await importTextfacts();
-    const assertIJson: (value: unknown) => asserts value is JsonValue = assertIJsonRaw;
-    const envelopeSchema = getJsonSchema("text-envelope-v1");
-    const packSchema = getJsonSchema("pack-v1");
-    assertIJson(envelopeSchema);
-    assertIJson(packSchema);
-  });
-
-  api.test("ToolSpec registry is I-JSON safe", async () => {
-    const {
-      assertIJson: assertIJsonRaw,
-      listToolSpecs,
-      getToolSpec,
-      toMcpTool,
-      jcsCanonicalize,
-    } = await importTextfacts();
-    const assertIJson: (value: unknown) => asserts value is JsonValue = assertIJsonRaw;
-    const specs = listToolSpecs();
-    api.assertOk(specs.length > 0);
-    for (const spec of specs) {
-      assertIJson(spec);
-      jcsCanonicalize(spec as unknown as JsonValue);
-      const mcp = toMcpTool(spec);
-      assertIJson(mcp);
-    }
-    const packSpec = getToolSpec("packTextV1");
-    api.assertEqual(packSpec.name, "packTextV1");
-  });
-
-  api.test("Interop suite cases verify", async () => {
-    const {
-      assertIJson: assertIJsonRaw,
-      decodeTextEnvelope,
-      encodeTextEnvelope,
-      packTextV1,
-      packTextV1Sha256,
-      jcsSha256Hex,
-      integrityProfile,
-      confusableSkeleton,
-      ucaCompare,
-      ucaSortKeyHex,
-      winnowingFingerprints,
-      diffText,
-      uts46ToAscii,
-      uts46ToUnicode,
-    } = await importTextfacts();
-    const assertIJson: (value: unknown) => asserts value is JsonValue = assertIJsonRaw;
-
-    const manifestText = await readSpecFile("interop/manifest.json");
-    const manifest = JSON.parse(manifestText) as { cases?: string[] };
-    const cases = manifest.cases ?? [];
-
-    const decodeEnv = (env: unknown) => decodeTextEnvelope(env as never);
-    const encodeEnv = (text: string) =>
-      encodeTextEnvelope(text, { prefer: "string", fallback: "utf16le-base64" });
-
-    const toInputRecord = (value: unknown): Record<string, unknown> =>
-      value && typeof value === "object" ? (value as Record<string, unknown>) : {};
-
-    const computeOutput = async (testCase: { op: string; input?: unknown }) => {
-      const input = toInputRecord(testCase.input);
-      switch (testCase.op) {
-        case "packTextV1": {
-          const text = decodeEnv(input.text);
-          return packTextV1(text, (input.opts ?? {}) as never);
-        }
-        case "textEnvelopeRoundtrip": {
-          const text = decodeEnv(input.text);
-          return { decoded: encodeEnv(text) };
-        }
-        case "integrityProfile": {
-          const text = decodeEnv(input.text);
-          return { profile: integrityProfile(text, (input.options ?? {}) as never) };
-        }
-        case "confusableSkeleton": {
-          const text = decodeEnv(input.text);
-          const skeleton = confusableSkeleton(text, (input.opts ?? {}) as never);
-          return { skeleton: encodeEnv(skeleton) };
-        }
-        case "ucaSortKeyHex": {
-          const options = (input.options ?? {}) as never;
-          const items = (Array.isArray(input.texts) ? input.texts : []).map((env: unknown) => {
-            const text = decodeEnv(env);
-            return { text: env, sortKeyHex: ucaSortKeyHex(text, options) };
-          });
-          return { items };
-        }
-        case "winnowingFingerprints": {
-          const text = decodeEnv(input.text);
-          return winnowingFingerprints(text, (input.options ?? {}) as never);
-        }
-        case "diffText": {
-          const sourceText = decodeEnv(input.a);
-          const targetText = decodeEnv(input.b);
-          return diffText(sourceText, targetText, input.options as never);
-        }
-        case "packTextV1Sha256": {
-          const text = decodeEnv(input.text);
-          return await packTextV1Sha256(text, (input.opts ?? {}) as never);
-        }
-        case "ucaCompare": {
-          const leftText = decodeEnv(input.a);
-          const rightText = decodeEnv(input.b);
-          return ucaCompare(leftText, rightText, (input.options ?? {}) as never);
-        }
-        case "uts46ToAscii": {
-          const text = decodeEnv(input.text);
-          return uts46ToAscii(text, (input.opts ?? {}) as never);
-        }
-        case "uts46ToUnicode": {
-          const text = decodeEnv(input.text);
-          return uts46ToUnicode(text, (input.opts ?? {}) as never);
-        }
-        default:
-          throw new Error(`Unsupported interop op: ${testCase.op}`);
-      }
-    };
-
-    for (const relPath of cases) {
-      const caseText = await readSpecFile(`interop/${relPath}`);
-      const testCase = JSON.parse(caseText) as {
-        id: string;
-        op: string;
-        expect: { jcsSha256: string };
-      };
-      const output = await computeOutput(testCase);
-      assertIJson(output);
-      const digest = await jcsSha256Hex(output as unknown as JsonValue);
-      if (digest !== testCase.expect.jcsSha256) {
-        throw new Error(`Interop case ${testCase.id} failed`);
-      }
-    }
-  });
-
   api.test("FNV1a64 UTF-16 golden vectors", async () => {
     const { fnv1a64Utf16, formatU64Hex } = await importTextfacts();
     const cases: Array<[string, string]> = [
@@ -1132,135 +793,6 @@ export function registerTests(api: TestApi): void {
       api.assertOk(err instanceof TextfactsError);
     }
     api.assertOk(threw);
-  });
-
-  api.test("diffSequence produces deterministic edits", async () => {
-    const { diffSequence } = await importTextfacts();
-    const sourceTokens = ["a", "b", "c"];
-    const targetTokens = ["a", "c", "d"];
-    const script = diffSequence(
-      sourceTokens,
-      targetTokens,
-      (leftToken: string, rightToken: string) => leftToken === rightToken,
-    );
-    api.assertEqual(script.edits[0]?.op, "equal");
-    api.assertEqual(script.edits[1]?.op, "delete");
-    api.assertEqual(script.edits[2]?.op, "equal");
-    api.assertEqual(script.edits[3]?.op, "insert");
-  });
-
-  api.test("diffText reconstructs target token stream", async () => {
-    const { diffText } = await importTextfacts();
-    const sourceText = "A B C";
-    const targetText = "A C D";
-    const diff = diffText(sourceText, targetText, { tokenizer: "uax29-word", canonicalKey: "raw" });
-    let equal = 0;
-    let del = 0;
-    let ins = 0;
-    for (const edit of diff.edits) {
-      if (edit.op === "equal") equal += edit.a1 - edit.a0;
-      if (edit.op === "delete") del += edit.a1 - edit.a0;
-      if (edit.op === "insert") ins += edit.b1 - edit.b0;
-    }
-    api.assertOk(equal > 0);
-    api.assertOk(del > 0);
-    api.assertOk(ins > 0);
-  });
-
-  api.test("Winnowing fingerprints deterministic", async () => {
-    const { winnowingFingerprints } = await importTextfacts();
-    const result = winnowingFingerprints("alpha beta alpha beta", {
-      tokenizer: "uax29-word",
-      canonicalKey: "raw",
-      k: 2,
-      window: 2,
-    });
-    api.assertOk(result.fingerprints.length > 0);
-    const first = result.fingerprints[0];
-    api.assertOk(Boolean(first?.hash64Hex));
-  });
-
-  api.test("Winnowing by-hash reduces density on constant input", async () => {
-    const { winnowingFingerprints } = await importTextfacts();
-    const text = "aaaaaaaaaaaaaaaaaaaaaaaa";
-    const byHash = winnowingFingerprints(text, {
-      tokenizer: "codePoint",
-      canonicalKey: "raw",
-      k: 2,
-      window: 4,
-      dedupe: "by-hash",
-    });
-    const byPosition = winnowingFingerprints(text, {
-      tokenizer: "codePoint",
-      canonicalKey: "raw",
-      k: 2,
-      window: 4,
-      dedupe: "by-position",
-    });
-    api.assertOk(byHash.fingerprints.length < byPosition.fingerprints.length);
-  });
-
-  api.test("Winnowing guarantee: each window has a fingerprint", async () => {
-    const { winnowingFingerprints } = await importTextfacts();
-    const text = "abcdefghijklmnop";
-    const kgramSize = 3;
-    const window = 4;
-    const result = winnowingFingerprints(text, {
-      tokenizer: "codePoint",
-      canonicalKey: "raw",
-      k: kgramSize,
-      window,
-      dedupe: "by-hash",
-    });
-    const indices = new Set(result.fingerprints.map((fp) => fp.tokenIndex));
-    const shingles = text.length - kgramSize + 1;
-    for (let start = 0; start <= shingles - window; start += 1) {
-      let hit = false;
-      for (let idx = start; idx < start + window; idx += 1) {
-        if (indices.has(idx)) {
-          hit = true;
-          break;
-        }
-      }
-      if (!hit) {
-        throw new Error(`Winnowing window ${start}-${start + window - 1} missing fingerprint`);
-      }
-    }
-  });
-
-  api.test("tokenizeForComparison materialize modes produce same hash", async () => {
-    const { tokenizeForComparison } = await importTextfacts();
-    const text = "Cafe\u0301 — cafe";
-    const withKeys = tokenizeForComparison(text, {
-      tokenizer: "uax29-word",
-      canonicalKey: "nfkcCaseFold",
-      materialize: "raw+key",
-    });
-    const tokensWithoutKeyMaterial = tokenizeForComparison(text, {
-      tokenizer: "uax29-word",
-      canonicalKey: "nfkcCaseFold",
-      materialize: "none",
-    });
-    api.assertEqual(withKeys.length, tokensWithoutKeyMaterial.length);
-    for (let tokenIndex = 0; tokenIndex < withKeys.length; tokenIndex += 1) {
-      api.assertEqual(
-        withKeys[tokenIndex]?.keyHash64,
-        tokensWithoutKeyMaterial[tokenIndex]?.keyHash64,
-      );
-    }
-  });
-
-  api.test("Fingerprint metrics exact ratios", async () => {
-    const { jaccard, containment, overlapCount } = await importTextfacts();
-    const leftSet = new Set(["a", "b", "c"]);
-    const rightSet = new Set(["b", "c", "d", "e"]);
-    const jaccardRatio = jaccard(leftSet, rightSet);
-    const containmentRatio = containment(leftSet, rightSet);
-    api.assertEqual(jaccardRatio.num, "2");
-    api.assertEqual(jaccardRatio.den, "5");
-    api.assertEqual(containmentRatio.num, "2");
-    api.assertEqual(containmentRatio.den, "3");
-    api.assertEqual(overlapCount(leftSet, rightSet), "2");
   });
 
   api.test("PBT segmentation invariants", async () => {
@@ -1376,120 +908,6 @@ export function registerTests(api: TestApi): void {
     });
   });
 
-  api.test("PBT diff invariants", async () => {
-    const { diffText, tokenizeForComparison } = await importTextfacts();
-    const name = "pbt:diff";
-    evalProperty({
-      name,
-      seed: pbtSeedFor(name),
-      runs: Math.max(20, Math.floor(pbtRuns / 2)),
-      gen: (rng, size) => ({
-        sourceText: genFuzzString(rng, size),
-        targetText: genFuzzString(rng, size),
-      }),
-      property: ({ sourceText, targetText }) => {
-        const opts = {
-          tokenizer: "uax29-word",
-          canonicalKey: "nfkcCaseFold",
-          maxTokens: 200,
-        } as const;
-        const diff = diffText(sourceText, targetText, opts);
-        const tokensA = tokenizeForComparison(sourceText, { ...opts, materialize: "none" });
-        const tokensB = tokenizeForComparison(targetText, { ...opts, materialize: "none" });
-        const rebuilt: bigint[] = [];
-        for (const edit of diff.edits) {
-          if (edit.op === "equal") {
-            for (let tokenIndex = edit.a0; tokenIndex < edit.a1; tokenIndex += 1) {
-              rebuilt.push(tokensA[tokenIndex]?.keyHash64 ?? 0n);
-            }
-          } else if (edit.op === "insert") {
-            for (let tokenIndex = edit.b0; tokenIndex < edit.b1; tokenIndex += 1) {
-              rebuilt.push(tokensB[tokenIndex]?.keyHash64 ?? 0n);
-            }
-          }
-        }
-        if (rebuilt.length !== tokensB.length) return false;
-        for (let tokenIndex = 0; tokenIndex < rebuilt.length; tokenIndex += 1) {
-          if (rebuilt[tokenIndex] !== tokensB[tokenIndex]?.keyHash64) return false;
-        }
-        const diff2 = diffText(sourceText, targetText, opts);
-        return JSON.stringify(diff.edits) === JSON.stringify(diff2.edits);
-      },
-    });
-  });
-
-  api.test("PBT fingerprint invariants", async () => {
-    const { winnowingFingerprints } = await importTextfacts();
-    const name = "pbt:fingerprint";
-    const kgramSize = 3;
-    const window = 4;
-    evalProperty({
-      name,
-      seed: pbtSeedFor(name),
-      runs: Math.max(20, Math.floor(pbtRuns / 2)),
-      gen: (rng, size) => {
-        const tokenCount = Math.max(kgramSize + window, size + 6);
-        const tokens = Array.from({ length: tokenCount }, (_, i) => `t${rng.int(0, 9)}${i}`);
-        const sharedLen = rng.int(
-          kgramSize + window - 1,
-          Math.min(tokenCount, kgramSize + window + 4),
-        );
-        const sharedStart = rng.int(0, tokenCount - sharedLen);
-        const shared = tokens.slice(sharedStart, sharedStart + sharedLen);
-        const prefixA = tokens.slice(0, rng.int(0, 3));
-        const suffixA = tokens.slice(0, rng.int(0, 3));
-        const prefixB = tokens.slice(0, rng.int(0, 3));
-        const suffixB = tokens.slice(0, rng.int(0, 3));
-        return {
-          textA: [...prefixA, ...shared, ...suffixA].join(" "),
-          textB: [...prefixB, ...shared, ...suffixB].join(" "),
-        };
-      },
-      property: ({ textA, textB }) => {
-        const setA = new Set(
-          winnowingFingerprints(textA, {
-            tokenizer: "uax29-word",
-            canonicalKey: "raw",
-            k: kgramSize,
-            window,
-            dedupe: "by-hash",
-          }).fingerprints.map((fp) => fp.hash64Hex),
-        );
-        const setB = new Set(
-          winnowingFingerprints(textB, {
-            tokenizer: "uax29-word",
-            canonicalKey: "raw",
-            k: kgramSize,
-            window,
-            dedupe: "by-hash",
-          }).fingerprints.map((fp) => fp.hash64Hex),
-        );
-        for (const hash of setA) {
-          if (setB.has(hash)) return true;
-        }
-        return false;
-      },
-    });
-
-    const { tokenizeForComparison } = await importTextfacts();
-    const constant = "a ".repeat(120).trim();
-    const dense = winnowingFingerprints(constant, {
-      tokenizer: "uax29-word",
-      canonicalKey: "raw",
-      k: kgramSize,
-      window,
-      dedupe: "by-hash",
-    });
-    const tokenCount = tokenizeForComparison(constant, {
-      tokenizer: "uax29-word",
-      canonicalKey: "raw",
-      materialize: "none",
-    }).length;
-    const shingles = Math.max(0, tokenCount - kgramSize + 1);
-    const maxExpected = Math.ceil(shingles / window) + 1;
-    api.assertOk(dense.fingerprints.length <= maxExpected);
-  });
-
   api.test("PBT collation invariants", async () => {
     const { ucaCompare, ucaSortKeyBytes } = await importTextfacts();
     const name = "pbt:collation";
@@ -1553,7 +971,7 @@ export function registerTests(api: TestApi): void {
   });
 
   api.test("PBT integration invariants", async () => {
-    const { tokenizeForComparison, jcsCanonicalize, toWellFormedUnicode } = await importTextfacts();
+    const { jcsCanonicalize, segmentWordsUAX29, toWellFormedUnicode } = await importTextfacts();
     const name = "pbt:integration";
     evalProperty({
       name,
@@ -1561,13 +979,11 @@ export function registerTests(api: TestApi): void {
       runs: pbtRuns,
       gen: genWellFormed,
       property: (text) => {
-        const tokens = tokenizeForComparison(text, {
-          tokenizer: "uax29-word",
-          canonicalKey: "nfkcCaseFold",
-          materialize: "none",
-        });
-        for (const token of tokens) {
-          if (token.raw !== undefined || token.key !== undefined) return false;
+        const spans = [...segmentWordsUAX29(text)];
+        for (const span of spans) {
+          if (span.startCU < 0 || span.endCU > text.length || span.endCU <= span.startCU) {
+            return false;
+          }
         }
         const safe = toWellFormedUnicode(text);
         jcsCanonicalize({ value: safe });

@@ -69,9 +69,6 @@ jobs:
       - name: Test All
         run: npm run test:all
 
-      - name: Interop Verify
-        run: npm -w @ismail-elkorchi/textfacts exec -- node tools/interop/verify.mjs
-
       - name: Docs Audit
         run: npm -w @ismail-elkorchi/textfacts exec -- node tools/docs/audit.mjs
 
