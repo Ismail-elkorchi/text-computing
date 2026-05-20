@@ -21,6 +21,7 @@ import {
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
   analyzeDependencyParser,
+  compileTextRulesRuleBundle,
   createCoreferenceConformanceReport,
   createCoreferenceResultEnvelope,
   createDependencyParserConformanceReport,
@@ -39,19 +40,22 @@ import {
   matchTextRulesTokenPattern,
   matchTextRulesTokenPatterns,
   packageName,
+  parseTextRulesRuleBundle,
   rewriteTextRulesTokenTexts,
+  runTextRules,
   textRulesTokenSpansFromTextDoc,
   tokenizeTextRulesFixtureText,
   tokenizeTextRulesText,
   type TextRulesEntityResourceData,
   type TextRulesLexiconResourceData,
+  validateTextRulesRuleBundle,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textrules";
 
 const primitiveTokens = tokenizeTextRulesFixtureText("New York courts sign.");
 if (tokenizeTextRulesText("New York courts sign.").length !== primitiveTokens.length) {
-  throw new Error("legacy raw-text tokenizer should remain a compatibility alias for fixture tokenization");
+  throw new Error("raw-text fixture helper should match fixture tokenization");
 }
 const placePattern = {
   ruleId: "primitive:place:new-york",
@@ -199,6 +203,192 @@ const primitiveRewrite = rewriteTextRulesTokenTexts(primitiveTokens, [
 ]);
 if (primitiveRewrite.tokens.join(" ") !== "NYC court sign .") {
   throw new Error("primitive token rewrites should apply left-to-right without hidden state");
+}
+
+const invalidRuleBundle = validateTextRulesRuleBundle({
+  schemaVersion: 1,
+  id: "demo-invalid",
+  namespace: "demo",
+  resources: ["resource:declared"],
+  rules: [
+    {
+      id: "duplicate",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 1,
+      resources: ["resource:declared"],
+      when: { pattern: placePattern },
+      emit: { extensionId: "demo:Place" },
+    },
+    {
+      id: "duplicate",
+      kind: "lexicon",
+      namespace: "demo",
+      priority: 1,
+      resources: ["resource:missing"],
+      emit: { extensionId: "demo:LexiconHit" },
+    },
+  ],
+});
+if (
+  invalidRuleBundle.ok ||
+  !invalidRuleBundle.diagnostics.some((diagnostic) => diagnostic.code === "duplicate-rule-id") ||
+  !invalidRuleBundle.diagnostics.some((diagnostic) => diagnostic.code === "missing-resource")
+) {
+  throw new Error("rule bundle validation should reject duplicate ids and undeclared resources");
+}
+
+const generalRuleBundle = parseTextRulesRuleBundle({
+  schemaVersion: 1,
+  id: "demo-rules",
+  namespace: "demo",
+  conflictPolicy: "emit-all",
+  resources: ["resource:lexicon", "resource:transducer"],
+  rules: [
+    {
+      id: "demo.span.new-york",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 100,
+      when: { pattern: placePattern },
+      emit: { extensionId: "demo:Place", data: { label: "PLACE" } },
+      resources: ["resource:lexicon"],
+    },
+    {
+      id: "demo.lexicon.courts",
+      kind: "lexicon",
+      namespace: "demo",
+      priority: 90,
+      resources: ["resource:lexicon"],
+      emit: { extensionId: "demo:LexiconHit" },
+    },
+    {
+      id: "demo.annotation.token",
+      kind: "annotation-pattern",
+      namespace: "demo",
+      priority: 80,
+      when: { annotationKind: "token" },
+      emit: { extensionId: "demo:TokenSeen" },
+    },
+    {
+      id: "demo.validation.courts",
+      kind: "validation",
+      namespace: "demo",
+      priority: 70,
+      diagnostic: true,
+      when: {
+        pattern: {
+          ruleId: "demo.validation.courts.pattern",
+          atoms: [{ kind: "literal", value: "courts" }],
+        },
+      },
+      emit: { diagnosticCode: "demo-court-token", diagnosticSeverity: "warning" },
+    },
+    {
+      id: "demo.transducer.sign",
+      kind: "transducer",
+      namespace: "demo",
+      priority: 60,
+      resources: ["resource:transducer"],
+      when: { surfaceIn: ["sign"] },
+      emit: {
+        extensionId: "demo:TransducerAnalysis",
+        transducerAnalyses: [
+          { lemma: "sign", features: [{ name: "VerbForm", value: "Inf" }], analysis: "VERB" },
+          { lemma: "sign", features: [{ name: "Number", value: "Sing" }], analysis: "NOUN" },
+        ],
+      },
+    },
+    {
+      id: "demo.rewrite.new-york",
+      kind: "rewrite",
+      namespace: "demo",
+      priority: 50,
+      when: { pattern: placePattern },
+      rewrite: {
+        targetViewId: "normalized-view",
+        replacement: ["NYC"],
+        reversible: false,
+        loss: [{ kind: "lossy-normalization", reason: "abbreviation loses expanded form" }],
+      },
+    },
+  ],
+});
+const generalRuleBundleReordered = {
+  ...generalRuleBundle,
+  rules: [...generalRuleBundle.rules].reverse(),
+};
+const compiledGeneralRules = compileTextRulesRuleBundle(generalRuleBundle);
+if (compiledGeneralRules.compiledId !== compileTextRulesRuleBundle(generalRuleBundleReordered).compiledId) {
+  throw new Error("compiled rule bundle id should be independent of source rule order");
+}
+const generalRun = runTextRules(
+  textdocPatternDocument,
+  compiledGeneralRules,
+  [{ id: "resource:lexicon", entries: ["courts"] }, { id: "resource:transducer", entries: ["sign"] }],
+);
+if (!isTextDocDocumentV1(generalRun.document)) {
+  throw new Error("general textrules runtime should return a valid textdoc document");
+}
+if (!generalRun.document.views.some((view) => view.id === "normalized-view")) {
+  throw new Error("rewrite rules should create a derived view");
+}
+if (!generalRun.document.spanMaps?.some((spanMap) => spanMap.id === "demo:demo.rewrite.new-york:span-map" && spanMap.lifecycle.state === "partial")) {
+  throw new Error("non-reversible rewrite rules should create loss-bearing partial span maps");
+}
+if (!generalRun.diagnostics.some((diagnostic) => diagnostic.code === "demo-court-token")) {
+  throw new Error("diagnostic validation rules should emit diagnostics");
+}
+const generalAnnotations = generalRun.annotations;
+if (generalAnnotations.length < 4) {
+  throw new Error("general runtime should emit span, annotation, lexicon, and transducer annotations");
+}
+if (
+  generalAnnotations.some(
+    (annotation) =>
+      !annotation.provenance?.references?.some((reference) => reference.kind === "textrules-rule"),
+  )
+) {
+  throw new Error("every general E1 annotation should carry rule provenance");
+}
+const lexiconAnnotation = generalAnnotations.find((annotation) => annotation.extensionId === "demo:LexiconHit");
+if (!lexiconAnnotation?.provenance?.references?.some((reference) => reference.kind === "textpack-resource" && reference.id === "resource:lexicon")) {
+  throw new Error("lexicon rule output should carry resource provenance");
+}
+const transducerAnnotation = generalAnnotations.find((annotation) => annotation.extensionId === "demo:TransducerAnalysis");
+if (
+  transducerAnnotation?.ambiguitySet?.role !== "candidate" ||
+  !Array.isArray(transducerAnnotation.data?.analyses) ||
+  transducerAnnotation.data.analyses.length !== 2
+) {
+  throw new Error("transducer rules should preserve ambiguous analyses");
+}
+const conflictBundle = compileTextRulesRuleBundle({
+  schemaVersion: 1,
+  id: "demo-conflicts",
+  namespace: "demo",
+  conflictPolicy: "first-win",
+  rules: [
+    {
+      id: "demo.conflict.short",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 10,
+      when: { pattern: { ruleId: "short", atoms: [{ kind: "literal", value: "New" }] } },
+      emit: { extensionId: "demo:Short" },
+    },
+    {
+      id: "demo.conflict.long",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 20,
+      when: { pattern: placePattern },
+      emit: { extensionId: "demo:Long" },
+    },
+  ],
+});
+if (runTextRules(textdocPatternDocument, conflictBundle).annotations.map((entry) => entry.extensionId).join(",") !== "demo:Long") {
+  throw new Error("first-win conflict policy should select the highest-priority overlapping match");
 }
 
 const primitiveDependencyTokens = tokenizeTextRulesText("Cats chase mice.");
@@ -523,6 +713,28 @@ const englishResourceData: TextRulesLexiconResourceData = {
             { name: "Definite", value: "Def" },
             { name: "PronType", value: "Art" },
           ],
+        },
+      ],
+    },
+    {
+      surface: "florped",
+      analyses: [
+        {
+          ruleId: "fallback:suffix-ed:adjective",
+          pos: "ADJ",
+          lemma: "florped",
+          morphology: [{ name: "Degree", value: "Pos" }],
+          notes: ["Fallback-style analysis is declared in the fixture lexicon."],
+        },
+        {
+          ruleId: "fallback:suffix-ed:verb",
+          pos: "VERB",
+          lemma: "florp",
+          morphology: [
+            { name: "Tense", value: "Past" },
+            { name: "VerbForm", value: "Part" },
+          ],
+          notes: ["Fallback-style analysis is declared in the fixture lexicon."],
         },
       ],
     },

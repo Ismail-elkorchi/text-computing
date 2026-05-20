@@ -15,6 +15,28 @@
       ]
     },
     {
+      "surface": "florped",
+      "analyses": [
+        {
+          "ruleId": "fallback:suffix-ed:adjective",
+          "pos": "ADJ",
+          "lemma": "florped",
+          "morphology": [{ "name": "Degree", "value": "Pos" }],
+          "notes": ["Fallback-style analysis is declared in the fixture lexicon."]
+        },
+        {
+          "ruleId": "fallback:suffix-ed:verb",
+          "pos": "VERB",
+          "lemma": "florp",
+          "morphology": [
+            { "name": "Tense", "value": "Past" },
+            { "name": "VerbForm", "value": "Part" }
+          ],
+          "notes": ["Fallback-style analysis is declared in the fixture lexicon."]
+        }
+      ]
+    },
+    {
       "surface": "host",
       "analyses": [
         {
