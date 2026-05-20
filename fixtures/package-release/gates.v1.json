@@ -680,16 +680,18 @@
         "packages/textrules/test",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
-        "tools/smoke-public-vertical-slice.mjs"
+        "tools/smoke-public-vertical-slice.mjs",
+        "packages/textrules/test/index.test.ts"
       ],
       "limitations": [
-        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "Rule-backed task behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "Raw-text tokenization helpers are fixture helpers; the default rule-engine input contract is an existing textdoc token layer.",
         "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
         "Public alpha scope is bounded to reusable rules, explicit resources, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+          "blocker": "Rule-backed task behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
           "maturity": "beta",
           "decision": "Blocks broader task claims, not the foundation alpha package sequence; keep behavior slice-scoped.",
           "evidenceRefs": [

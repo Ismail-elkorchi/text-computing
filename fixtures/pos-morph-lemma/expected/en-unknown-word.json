@@ -35,6 +35,30 @@
         ]
       }
     ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 23
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 23
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
+    ],
     "layers": [
       {
         "id": "tokens",
@@ -51,9 +75,9 @@
             "targets": [
               {
                 "kind": "span",
+                "viewId": "analysis-view",
                 "startCU": 0,
-                "endCU": 3,
-                "viewId": "analysis-view"
+                "endCU": 3
               }
             ],
             "text": "The",
@@ -80,9 +104,9 @@
             "targets": [
               {
                 "kind": "span",
+                "viewId": "analysis-view",
                 "startCU": 4,
-                "endCU": 11,
-                "viewId": "analysis-view"
+                "endCU": 11
               }
             ],
             "text": "florped",
@@ -109,9 +133,9 @@
             "targets": [
               {
                 "kind": "span",
+                "viewId": "analysis-view",
                 "startCU": 12,
-                "endCU": 16,
-                "viewId": "analysis-view"
+                "endCU": 16
               }
             ],
             "text": "host",
@@ -138,9 +162,9 @@
             "targets": [
               {
                 "kind": "span",
+                "viewId": "analysis-view",
                 "startCU": 17,
-                "endCU": 22,
-                "viewId": "analysis-view"
+                "endCU": 22
               }
             ],
             "text": "signs",
@@ -167,9 +191,9 @@
             "targets": [
               {
                 "kind": "span",
+                "viewId": "analysis-view",
                 "startCU": 22,
-                "endCU": 23,
-                "viewId": "analysis-view"
+                "endCU": 23
               }
             ],
             "text": ".",
@@ -203,9 +227,9 @@
             "targets": [
               {
                 "kind": "span",
+                "viewId": "analysis-view",
                 "startCU": 0,
-                "endCU": 23,
-                "viewId": "analysis-view"
+                "endCU": 23
               }
             ],
             "text": "The florped host signs.",
@@ -285,7 +309,7 @@
                 "rank": 1,
                 "value": "ADJ",
                 "notes": [
-                  "Suffix backoff keeps the surface form as an adjective candidate."
+                  "Fallback-style analysis is declared in the fixture lexicon."
                 ]
               },
               {
@@ -293,7 +317,7 @@
                 "rank": 2,
                 "value": "VERB",
                 "notes": [
-                  "Suffix backoff emits a participial verb alternative."
+                  "Fallback-style analysis is declared in the fixture lexicon."
                 ]
               }
             ],
@@ -303,6 +327,10 @@
                 "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
               },
               "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-en-core:lexicon-en-core"
+                },
                 {
                   "kind": "textrules-rule",
                   "id": "fallback:suffix-ed:adjective"
@@ -494,7 +522,7 @@
                 "rank": 1,
                 "value": "florped",
                 "notes": [
-                  "Suffix backoff keeps the surface form as an adjective candidate."
+                  "Fallback-style analysis is declared in the fixture lexicon."
                 ]
               },
               {
@@ -502,7 +530,7 @@
                 "rank": 2,
                 "value": "florp",
                 "notes": [
-                  "Suffix backoff emits a participial verb alternative."
+                  "Fallback-style analysis is declared in the fixture lexicon."
                 ]
               }
             ],
@@ -512,6 +540,10 @@
                 "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
               },
               "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-en-core:lexicon-en-core"
+                },
                 {
                   "kind": "textrules-rule",
                   "id": "fallback:suffix-ed:adjective"
@@ -706,7 +738,7 @@
                   }
                 ],
                 "notes": [
-                  "Suffix backoff keeps the surface form as an adjective candidate."
+                  "Fallback-style analysis is declared in the fixture lexicon."
                 ]
               },
               {
@@ -723,7 +755,7 @@
                   }
                 ],
                 "notes": [
-                  "Suffix backoff emits a participial verb alternative."
+                  "Fallback-style analysis is declared in the fixture lexicon."
                 ]
               }
             ],
@@ -733,6 +765,10 @@
                 "sha256": "5e75f59e2bfcc6e25f2276343795ed7c263bcb0e8ec05a0e010c0a38a13f4d60"
               },
               "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-en-core:lexicon-en-core"
+                },
                 {
                   "kind": "textrules-rule",
                   "id": "fallback:suffix-ed:adjective"
@@ -860,33 +896,9 @@
     ],
     "notes": [
       "phenomenon:unknown-word"
-    ],
-    "spanMaps": [
-      {
-        "id": "span-map-source-analysis",
-        "sourceViewId": "source-view",
-        "targetViewId": "analysis-view",
-        "lifecycle": {
-          "state": "active"
-        },
-        "segments": [
-          {
-            "source": {
-              "startCU": 0,
-              "endCU": 23
-            },
-            "target": {
-              "startCU": 0,
-              "endCU": 23
-            },
-            "kind": "unchanged",
-            "reversible": true
-          }
-        ]
-      }
     ]
   },
   "notes": [
-    "unknown-word:Unknown token florped uses suffix backoff analyses."
+    "unknown-word:Unknown token florped uses explicitly declared fallback-style analyses."
   ]
 }

@@ -219,7 +219,7 @@
     {
       "name": "@ismail-elkorchi/textrules",
       "status": "alpha",
-      "scope": "Public alpha deterministic rules package for reusable lexical token-pattern primitives and bounded resource-backed rule execution over frozen slices.",
+      "scope": "Public alpha deterministic rules package for canonical rule declarations, deterministic compilation, general rule families, explicit conflict policies, rewrite view/span-map output, validation diagnostics, unweighted transducer-style ambiguity output, and bounded resource-backed task adapters.",
       "evidence": [
         "primitive matcher tests",
         "POS/morph/lemma frozen slices",
@@ -230,10 +230,18 @@
         "textdoc/protocol/conformance tests",
         "dist export readiness metadata",
         "Public Vertical Slice 0.1 external-consumer smoke test",
-        "workspace pack dry-run"
+        "workspace pack dry-run",
+        "rule declaration validator tests",
+        "deterministic compiler tests",
+        "general runtime family tests",
+        "conflict-policy tests",
+        "rewrite view/span-map tests",
+        "transducer ambiguity tests",
+        "explicit fallback-resource provenance tests"
       ],
       "limitations": [
-        "Rule-backed behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "Rule-backed task behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
+        "Raw-text tokenization helpers are fixture helpers; the default rule-engine input contract is an existing textdoc token layer.",
         "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
         "Alpha scope is bounded to reusable rules, explicit resources, package tests, and package interop proven by Public Vertical Slice 0.1"
       ]

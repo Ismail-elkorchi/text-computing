@@ -10,12 +10,14 @@ import {
   type TextDocDocumentTokenAnnotation,
   type TextDocDocumentV1,
   type TextDocEntityAnnotation,
+  type TextDocExtensionAnnotation,
   type TextDocFeature,
   type TextDocLayer,
   type TextDocLemmaAnnotation,
   type TextDocMorphologyAlternative,
   type TextDocMorphologyAnnotation,
   type TextDocPosAnnotation,
+  type TextDocProvenance,
   type TextDocReferenceRef,
   type TextDocRelationAnnotation,
   type TextDocStringAlternative,
@@ -339,6 +341,138 @@ export interface TextRulesTokenTextRewrite {
 export interface TextRulesTokenTextRewriteResult {
   readonly tokens: readonly string[];
   readonly rewrites: readonly TextRulesTokenTextRewrite[];
+}
+
+export type TextRulesRuleKind =
+  | "span-pattern"
+  | "annotation-pattern"
+  | "lexicon"
+  | "rewrite"
+  | "validation"
+  | "transducer";
+
+export type TextRulesConflictPolicy = "emit-all" | "first-win" | "longest-win" | "error";
+
+export interface TextRulesRuleReadsV1 extends TextRulesTextDocTokenLayerOptions {
+  readonly viewId?: string;
+  readonly layerId?: string;
+  readonly annotationKind?: TextDocAnnotation["kind"];
+}
+
+export interface TextRulesRuleWhenV1 {
+  readonly pattern?: TextRulesTokenPattern;
+  readonly surfaceIn?: readonly string[];
+  readonly annotationKind?: TextDocAnnotation["kind"];
+  readonly feature?: TextDocFeature;
+}
+
+export interface TextRulesRuleEmitV1 {
+  readonly layerId?: string;
+  readonly extensionId?: string;
+  readonly data?: Readonly<Record<string, unknown>>;
+  readonly notes?: readonly string[];
+  readonly diagnosticCode?: string;
+  readonly diagnosticSeverity?: TextProtocolDiagnostic["severity"];
+  readonly transducerAnalyses?: readonly TextRulesTransducerAnalysisV1[];
+}
+
+export interface TextRulesRuleRewriteV1 {
+  readonly targetViewId: string;
+  readonly replacement: readonly string[];
+  readonly reversible?: boolean;
+  readonly loss?: readonly {
+    readonly kind: "lossy-normalization" | "omitted-alternative" | "truncated-context" | "external-reference";
+    readonly reason: string;
+    readonly source?: string;
+  }[];
+}
+
+export interface TextRulesTransducerAnalysisV1 {
+  readonly lemma?: string;
+  readonly stem?: string;
+  readonly features?: readonly TextDocFeature[];
+  readonly gloss?: string;
+  readonly analysis?: string;
+  readonly notes?: readonly string[];
+}
+
+export interface TextRulesRuleDeclarationV1 {
+  readonly id: string;
+  readonly kind: TextRulesRuleKind;
+  readonly namespace: string;
+  readonly priority: number;
+  readonly reads?: TextRulesRuleReadsV1;
+  readonly requires?: readonly string[];
+  readonly when?: TextRulesRuleWhenV1;
+  readonly emit?: TextRulesRuleEmitV1;
+  readonly rewrite?: TextRulesRuleRewriteV1;
+  readonly resources?: readonly string[];
+  readonly diagnostic?: boolean;
+  readonly enabled?: boolean;
+}
+
+export interface TextRulesRuleBundleV1 {
+  readonly schemaVersion: 1;
+  readonly id: string;
+  readonly namespace: string;
+  readonly conflictPolicy?: TextRulesConflictPolicy;
+  readonly resources?: readonly string[];
+  readonly rules: readonly TextRulesRuleDeclarationV1[];
+}
+
+export interface TextRulesRuleValidationDiagnostic {
+  readonly code:
+    | "invalid-bundle"
+    | "invalid-rule"
+    | "duplicate-rule-id"
+    | "missing-resource"
+    | "invalid-rewrite"
+    | "invalid-conflict-policy";
+  readonly severity: "error" | "warning";
+  readonly message: string;
+  readonly ruleId?: string;
+  readonly resourceId?: string;
+}
+
+export interface TextRulesRuleValidationResult {
+  readonly ok: boolean;
+  readonly diagnostics: readonly TextRulesRuleValidationDiagnostic[];
+}
+
+export interface TextRulesCompiledRuleBundleV1 {
+  readonly schemaVersion: 1;
+  readonly bundleId: string;
+  readonly compiledId: string;
+  readonly namespace: string;
+  readonly conflictPolicy: TextRulesConflictPolicy;
+  readonly resourceIds: readonly string[];
+  readonly rules: readonly TextRulesRuleDeclarationV1[];
+}
+
+export interface TextRulesRuleRuntimeResource {
+  readonly id: string;
+  readonly entries?: readonly string[];
+  readonly lexicon?: TextRulesLexiconResource;
+}
+
+export interface TextRulesRewriteArtifact {
+  readonly ruleId: string;
+  readonly sourceViewId: string;
+  readonly targetViewId: string;
+  readonly text: string;
+  readonly spanMapId: string;
+}
+
+export interface TextRulesRunOptions extends TextRulesTextDocTokenLayerOptions {
+  readonly sourceViewId?: string;
+  readonly targetViewId?: string;
+}
+
+export interface TextRulesRunResult {
+  readonly document: TextDocDocumentV1;
+  readonly annotations: readonly TextDocExtensionAnnotation[];
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly rewrites: readonly TextRulesRewriteArtifact[];
 }
 
 interface TextRulesResolvedAnalysis extends TextRulesLexiconAnalysis {
@@ -994,6 +1128,684 @@ export function rewriteTextRulesTokenTexts(
   };
 }
 
+function isTextRulesRuleKind(value: unknown): value is TextRulesRuleKind {
+  return (
+    value === "span-pattern" ||
+    value === "annotation-pattern" ||
+    value === "lexicon" ||
+    value === "rewrite" ||
+    value === "validation" ||
+    value === "transducer"
+  );
+}
+
+function isTextRulesConflictPolicy(value: unknown): value is TextRulesConflictPolicy {
+  return value === "emit-all" || value === "first-win" || value === "longest-win" || value === "error";
+}
+
+function isTextRulesFeature(value: unknown): value is TextDocFeature {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.name) &&
+    isNonEmptyString(value.value)
+  );
+}
+
+function isTextRulesPatternAtom(value: unknown): value is TextRulesPatternAtom {
+  if (!isRecord(value) || !isNonEmptyString(value.kind)) return false;
+  if (value.kind === "any") {
+    return value.capture === undefined || isNonEmptyString(value.capture);
+  }
+  if (value.kind === "literal") {
+    return isNonEmptyString(value.value) && (value.capture === undefined || isNonEmptyString(value.capture));
+  }
+  return (
+    value.kind === "one-of" &&
+    Array.isArray(value.values) &&
+    value.values.length > 0 &&
+    value.values.every((entry) => isNonEmptyString(entry)) &&
+    (value.capture === undefined || isNonEmptyString(value.capture))
+  );
+}
+
+function isTextRulesTokenPattern(value: unknown): value is TextRulesTokenPattern {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.ruleId) &&
+    Array.isArray(value.atoms) &&
+    value.atoms.length > 0 &&
+    value.atoms.every((entry) => isTextRulesPatternAtom(entry)) &&
+    (value.caseSensitive === undefined || typeof value.caseSensitive === "boolean")
+  );
+}
+
+function isTextRulesWhen(value: unknown): value is TextRulesRuleWhenV1 {
+  return (
+    value === undefined ||
+    (isRecord(value) &&
+      (value.pattern === undefined || isTextRulesTokenPattern(value.pattern)) &&
+      (value.surfaceIn === undefined || isStringArray(value.surfaceIn)) &&
+      (value.annotationKind === undefined || isNonEmptyString(value.annotationKind)) &&
+      (value.feature === undefined || isTextRulesFeature(value.feature)))
+  );
+}
+
+function isTextRulesEmit(value: unknown): value is TextRulesRuleEmitV1 {
+  return (
+    value === undefined ||
+    (isRecord(value) &&
+      (value.layerId === undefined || isNonEmptyString(value.layerId)) &&
+      (value.extensionId === undefined || isNonEmptyString(value.extensionId)) &&
+      (value.data === undefined || isRecord(value.data)) &&
+      (value.notes === undefined || isStringArray(value.notes)) &&
+      (value.diagnosticCode === undefined || isNonEmptyString(value.diagnosticCode)) &&
+      (value.diagnosticSeverity === undefined ||
+        value.diagnosticSeverity === "info" ||
+        value.diagnosticSeverity === "warning" ||
+        value.diagnosticSeverity === "error") &&
+      (value.transducerAnalyses === undefined ||
+        (Array.isArray(value.transducerAnalyses) &&
+          value.transducerAnalyses.every((entry) => isRecord(entry)))))
+  );
+}
+
+function isTextRulesRewrite(value: unknown): value is TextRulesRuleRewriteV1 {
+  return (
+    value === undefined ||
+    (isRecord(value) &&
+      isNonEmptyString(value.targetViewId) &&
+      isStringArray(value.replacement) &&
+      (value.reversible === undefined || typeof value.reversible === "boolean") &&
+      (value.loss === undefined || Array.isArray(value.loss)))
+  );
+}
+
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((entry) => stableJson(entry)).join(",")}]`;
+  if (isRecord(value)) {
+    return `{${Object.entries(value)
+      .filter(([, entry]) => entry !== undefined)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, entry]) => `${JSON.stringify(key)}:${stableJson(entry)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function stableHash(value: string): string {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+function ruleReference(rule: TextRulesRuleDeclarationV1): TextDocReferenceRef {
+  return {
+    kind: "textrules-rule",
+    id: rule.id,
+  };
+}
+
+function resourceReferences(rule: TextRulesRuleDeclarationV1): readonly TextDocReferenceRef[] {
+  return (rule.resources ?? []).map((id) => ({
+    kind: "textpack-resource",
+    id,
+  }));
+}
+
+function ruleProvenance(rule: TextRulesRuleDeclarationV1): TextDocProvenance {
+  return {
+    references: uniqueReferences([...resourceReferences(rule), ruleReference(rule)]),
+  };
+}
+
+function normalizeRuleDeclaration(rule: TextRulesRuleDeclarationV1): TextRulesRuleDeclarationV1 {
+  return {
+    ...rule,
+    namespace: normalizeSurface(rule.namespace),
+    enabled: rule.enabled !== false,
+    resources: [...(rule.resources ?? [])].sort((left, right) => left.localeCompare(right)),
+  };
+}
+
+function compareRuleDeclarations(
+  left: TextRulesRuleDeclarationV1,
+  right: TextRulesRuleDeclarationV1,
+): number {
+  return (
+    right.priority - left.priority ||
+    left.id.localeCompare(right.id) ||
+    left.kind.localeCompare(right.kind) ||
+    stableJson(left.when ?? {}).localeCompare(stableJson(right.when ?? {}))
+  );
+}
+
+export function parseTextRulesRuleBundle(value: unknown): TextRulesRuleBundleV1 {
+  const validation = validateTextRulesRuleBundle(value);
+  if (!validation.ok) {
+    throw new TypeError(validation.diagnostics.map((diagnostic) => diagnostic.message).join("; "));
+  }
+  return value as TextRulesRuleBundleV1;
+}
+
+export function validateTextRulesRuleBundle(value: unknown): TextRulesRuleValidationResult {
+  const diagnostics: TextRulesRuleValidationDiagnostic[] = [];
+  if (!isRecord(value)) {
+    return {
+      ok: false,
+      diagnostics: [
+        {
+          code: "invalid-bundle",
+          severity: "error",
+          message: "Rule bundle must be an object.",
+        },
+      ],
+    };
+  }
+
+  if (value.schemaVersion !== 1 || !isNonEmptyString(value.id) || !isNonEmptyString(value.namespace)) {
+    diagnostics.push({
+      code: "invalid-bundle",
+      severity: "error",
+      message: "Rule bundle requires schemaVersion=1, id, and namespace.",
+    });
+  }
+  if (value.conflictPolicy !== undefined && !isTextRulesConflictPolicy(value.conflictPolicy)) {
+    diagnostics.push({
+      code: "invalid-conflict-policy",
+      severity: "error",
+      message: "Rule bundle conflictPolicy must be emit-all, first-win, longest-win, or error.",
+    });
+  }
+  if (value.resources !== undefined && !isStringArray(value.resources)) {
+    diagnostics.push({
+      code: "invalid-bundle",
+      severity: "error",
+      message: "Rule bundle resources must be string identifiers.",
+    });
+  }
+  if (!Array.isArray(value.rules)) {
+    diagnostics.push({
+      code: "invalid-bundle",
+      severity: "error",
+      message: "Rule bundle rules must be an array.",
+    });
+    return { ok: diagnostics.length === 0, diagnostics };
+  }
+
+  const bundleResourceList = isStringArray(value.resources) ? value.resources : [];
+  const bundleResources = new Set(bundleResourceList);
+  const seenRuleIds = new Set<string>();
+  for (const ruleValue of value.rules) {
+    if (!isRecord(ruleValue)) {
+      diagnostics.push({
+        code: "invalid-rule",
+        severity: "error",
+        message: "Rule declarations must be objects.",
+      });
+      continue;
+    }
+    const ruleId = isNonEmptyString(ruleValue.id) ? ruleValue.id : undefined;
+    if (
+      ruleId === undefined ||
+      !isTextRulesRuleKind(ruleValue.kind) ||
+      !isNonEmptyString(ruleValue.namespace) ||
+      typeof ruleValue.priority !== "number" ||
+      !Number.isFinite(ruleValue.priority) ||
+      !isTextRulesWhen(ruleValue.when) ||
+      !isTextRulesEmit(ruleValue.emit) ||
+      !isTextRulesRewrite(ruleValue.rewrite) ||
+      (ruleValue.resources !== undefined && !isStringArray(ruleValue.resources)) ||
+      (ruleValue.requires !== undefined && !isStringArray(ruleValue.requires)) ||
+      (ruleValue.enabled !== undefined && typeof ruleValue.enabled !== "boolean") ||
+      (ruleValue.diagnostic !== undefined && typeof ruleValue.diagnostic !== "boolean")
+    ) {
+      diagnostics.push({
+        code: "invalid-rule",
+        severity: "error",
+        message: `Rule ${ruleId ?? "<unknown>"} has an invalid declaration shape.`,
+        ...(ruleId === undefined ? {} : { ruleId }),
+      });
+      continue;
+    }
+    if (seenRuleIds.has(ruleId)) {
+      diagnostics.push({
+        code: "duplicate-rule-id",
+        severity: "error",
+        message: `Rule id ${ruleId} is duplicated.`,
+        ruleId,
+      });
+    }
+    seenRuleIds.add(ruleId);
+    for (const resourceId of ruleValue.resources ?? []) {
+      if (!bundleResources.has(resourceId)) {
+        diagnostics.push({
+          code: "missing-resource",
+          severity: "error",
+          message: `Rule ${ruleId} references missing resource ${resourceId}.`,
+          ruleId,
+          resourceId,
+        });
+      }
+    }
+    if (ruleValue.kind === "rewrite" && ruleValue.rewrite === undefined) {
+      diagnostics.push({
+        code: "invalid-rewrite",
+        severity: "error",
+        message: `Rewrite rule ${ruleId} requires rewrite metadata.`,
+        ruleId,
+      });
+    }
+    if (ruleValue.kind !== "rewrite" && ruleValue.emit === undefined && ruleValue.diagnostic !== true) {
+      diagnostics.push({
+        code: "invalid-rule",
+        severity: "error",
+        message: `Rule ${ruleId} requires emit metadata unless it is a diagnostic-only rule.`,
+        ruleId,
+      });
+    }
+  }
+
+  return {
+    ok: diagnostics.every((diagnostic) => diagnostic.severity !== "error"),
+    diagnostics,
+  };
+}
+
+export function compileTextRulesRuleBundle(
+  bundle: TextRulesRuleBundleV1,
+): TextRulesCompiledRuleBundleV1 {
+  const parsed = parseTextRulesRuleBundle(bundle);
+  const rules = parsed.rules
+    .filter((rule) => rule.enabled !== false)
+    .map(normalizeRuleDeclaration)
+    .sort(compareRuleDeclarations);
+  const resourceIds = [...new Set([...(parsed.resources ?? []), ...rules.flatMap((rule) => rule.resources ?? [])])]
+    .sort((left, right) => left.localeCompare(right));
+  const sealed = {
+    schemaVersion: 1 as const,
+    bundleId: parsed.id,
+    namespace: normalizeSurface(parsed.namespace),
+    conflictPolicy: parsed.conflictPolicy ?? "emit-all",
+    resourceIds,
+    rules,
+  };
+  return {
+    ...sealed,
+    compiledId: `textrules-compiled:${stableHash(stableJson(sealed))}`,
+  };
+}
+
+function captureSignature(match: TextRulesPatternMatch): string {
+  return match.captures
+    .map((capture) => `${capture.name}:${capture.tokenId}:${capture.value}`)
+    .sort((left, right) => left.localeCompare(right))
+    .join("|");
+}
+
+function compareRuleMatches(
+  left: { readonly rule: TextRulesRuleDeclarationV1; readonly match: TextRulesPatternMatch },
+  right: { readonly rule: TextRulesRuleDeclarationV1; readonly match: TextRulesPatternMatch },
+): number {
+  const leftLength = left.match.endTokenIndexExclusive - left.match.startTokenIndex;
+  const rightLength = right.match.endTokenIndexExclusive - right.match.startTokenIndex;
+  return (
+    right.rule.priority - left.rule.priority ||
+    left.match.startCU - right.match.startCU ||
+    rightLength - leftLength ||
+    left.rule.id.localeCompare(right.rule.id) ||
+    captureSignature(left.match).localeCompare(captureSignature(right.match))
+  );
+}
+
+function applyConflictPolicy(
+  candidates: readonly {
+    readonly rule: TextRulesRuleDeclarationV1;
+    readonly match: TextRulesPatternMatch;
+  }[],
+  policy: TextRulesConflictPolicy,
+): {
+  readonly selected: readonly {
+    readonly rule: TextRulesRuleDeclarationV1;
+    readonly match: TextRulesPatternMatch;
+  }[];
+  readonly diagnostics: readonly TextProtocolDiagnostic[];
+} {
+  const ordered = [...candidates].sort(compareRuleMatches);
+  if (policy === "emit-all") return { selected: ordered, diagnostics: [] };
+  if (policy === "first-win") return { selected: ordered.slice(0, 1), diagnostics: [] };
+
+  const selected: typeof ordered = [];
+  const diagnostics: TextProtocolDiagnostic[] = [];
+  for (const candidate of ordered) {
+    const overlaps = selected.some(
+      (entry) => candidate.match.startCU < entry.match.endCU && entry.match.startCU < candidate.match.endCU,
+    );
+    if (!overlaps) {
+      selected.push(candidate);
+      continue;
+    }
+    if (policy === "error") {
+      diagnostics.push({
+        code: "textrules-conflict",
+        severity: "error",
+        message: `Rule ${candidate.rule.id} overlaps an already selected match.`,
+      });
+    }
+  }
+  return { selected, diagnostics };
+}
+
+function rulePattern(rule: TextRulesRuleDeclarationV1): TextRulesTokenPattern | undefined {
+  return rule.when?.pattern;
+}
+
+function ruleTargetView(document: TextDocDocumentV1, options: TextRulesRunOptions): string {
+  if (options.targetViewId !== undefined) return options.targetViewId;
+  if (document.views.some((view) => view.id === "analysis-view")) return "analysis-view";
+  return document.views[0]?.id ?? "source-view";
+}
+
+function extensionAnnotationForMatch(
+  rule: TextRulesRuleDeclarationV1,
+  match: TextRulesPatternMatch,
+  index: number,
+  viewId: string,
+): TextDocExtensionAnnotation {
+  return {
+    id: `${rule.namespace}:${rule.id}:match-${index + 1}`,
+    kind: "extension",
+    extensionId: rule.emit?.extensionId ?? `${rule.namespace}:${rule.kind}`,
+    lifecycle: { state: "active" },
+    targets: [{ kind: "span", viewId, startCU: match.startCU, endCU: match.endCU }],
+    provenance: ruleProvenance(rule),
+    data: {
+      ruleKind: rule.kind,
+      text: match.text,
+      captures: match.captures.map((capture) => ({
+        name: capture.name,
+        tokenId: capture.tokenId,
+        value: capture.value,
+        startCU: capture.startCU,
+        endCU: capture.endCU,
+      })),
+      ...(rule.emit?.data ?? {}),
+    },
+    ...(rule.emit?.notes ? { notes: rule.emit.notes } : {}),
+  };
+}
+
+function annotationMatchesRule(annotation: TextDocAnnotation, rule: TextRulesRuleDeclarationV1): boolean {
+  if (rule.when?.annotationKind !== undefined && annotation.kind !== rule.when.annotationKind) return false;
+  if (rule.reads?.annotationKind !== undefined && annotation.kind !== rule.reads.annotationKind) return false;
+  const feature = rule.when?.feature;
+  if (feature === undefined) return true;
+  if (annotation.kind !== "pos" && annotation.kind !== "morphology") return false;
+  const text = stableJson(annotation);
+  return text.includes(`"${feature.name}"`) && text.includes(`"${feature.value}"`);
+}
+
+function tokenSurfaceMatches(rule: TextRulesRuleDeclarationV1, token: TextRulesTokenSpan): boolean {
+  const surfaces = rule.when?.surfaceIn;
+  if (surfaces === undefined || surfaces.length === 0) return true;
+  return surfaces.some((surface) => normalizeSurface(surface) === normalizeSurface(token.text));
+}
+
+function runtimeResourcesForRule(
+  rule: TextRulesRuleDeclarationV1,
+  resources: readonly TextRulesRuleRuntimeResource[],
+): readonly TextRulesRuleRuntimeResource[] {
+  const required = new Set(rule.resources ?? []);
+  if (required.size === 0) return resources;
+  return resources.filter((resource) => required.has(resource.id));
+}
+
+function lexiconRuleCandidates(
+  document: TextDocDocumentV1,
+  rule: TextRulesRuleDeclarationV1,
+  resources: readonly TextRulesRuleRuntimeResource[],
+  options: TextRulesRunOptions,
+): readonly { readonly rule: TextRulesRuleDeclarationV1; readonly match: TextRulesPatternMatch }[] {
+  const tokens = textRulesTokenSpansFromTextDoc(document, options);
+  const surfaces = new Set<string>();
+  for (const resource of runtimeResourcesForRule(rule, resources)) {
+    for (const entry of resource.entries ?? []) surfaces.add(normalizeSurface(entry));
+    for (const entry of resource.lexicon?.entries ?? []) surfaces.add(normalizeSurface(entry.surface));
+  }
+  const declared = rule.when?.surfaceIn ?? [];
+  for (const surface of declared) surfaces.add(normalizeSurface(surface));
+  return tokens.flatMap((token, index) => {
+    if (surfaces.size > 0 && !surfaces.has(normalizeSurface(token.text))) return [];
+    if (!tokenSurfaceMatches(rule, token)) return [];
+    return [{
+      rule,
+      match: {
+        ruleId: rule.id,
+        startTokenIndex: index,
+        endTokenIndexExclusive: index + 1,
+        startCU: token.startCU,
+        endCU: token.endCU,
+        text: token.text,
+        captures: [
+          {
+            name: "surface",
+            tokenId: token.id,
+            value: token.text,
+            startCU: token.startCU,
+            endCU: token.endCU,
+          },
+        ],
+      },
+    }];
+  });
+}
+
+function ruleCandidates(
+  document: TextDocDocumentV1,
+  compiled: TextRulesCompiledRuleBundleV1,
+  resources: readonly TextRulesRuleRuntimeResource[],
+  options: TextRulesRunOptions,
+): readonly { readonly rule: TextRulesRuleDeclarationV1; readonly match: TextRulesPatternMatch }[] {
+  const tokens = textRulesTokenSpansFromTextDoc(document, options);
+  const candidates: { rule: TextRulesRuleDeclarationV1; match: TextRulesPatternMatch }[] = [];
+  for (const rule of compiled.rules) {
+    if (rule.kind === "annotation-pattern") continue;
+    if (rule.kind === "lexicon" || (rule.kind === "transducer" && rulePattern(rule) === undefined)) {
+      candidates.push(...lexiconRuleCandidates(document, rule, resources, options));
+      continue;
+    }
+    const pattern = rulePattern(rule);
+    if (pattern === undefined) continue;
+    for (const match of matchTextRulesTokenPattern(tokens, { ...pattern, ruleId: rule.id })) {
+      candidates.push({ rule, match });
+    }
+  }
+  return candidates;
+}
+
+function annotationPatternAnnotations(
+  document: TextDocDocumentV1,
+  rule: TextRulesRuleDeclarationV1,
+  viewId: string,
+): readonly TextDocExtensionAnnotation[] {
+  const annotations = document.layers.flatMap((layer) => layer.annotations).filter((annotation) => annotationMatchesRule(annotation, rule));
+  return annotations.map((annotation, index) => ({
+    id: `${rule.namespace}:${rule.id}:annotation-${index + 1}`,
+    kind: "extension",
+    extensionId: rule.emit?.extensionId ?? `${rule.namespace}:annotation-pattern`,
+    lifecycle: { state: "active" },
+    targets: [{ kind: "annotation", annotationId: annotation.id }],
+    provenance: ruleProvenance(rule),
+    data: {
+      ruleKind: rule.kind,
+      annotationKind: annotation.kind,
+      ...(rule.emit?.data ?? {}),
+    },
+    ...(rule.emit?.notes ? { notes: rule.emit.notes } : {}),
+    ...(annotation.loss ? { loss: annotation.loss } : {}),
+    ...(annotation.ambiguitySet ? { ambiguitySet: annotation.ambiguitySet } : {}),
+    ...(viewId.length === 0 ? {} : {}),
+  }));
+}
+
+function transducerAnnotationForMatch(
+  rule: TextRulesRuleDeclarationV1,
+  match: TextRulesPatternMatch,
+  index: number,
+  viewId: string,
+): TextDocExtensionAnnotation {
+  const analyses = [...(rule.emit?.transducerAnalyses ?? [])].sort((left, right) =>
+    stableJson(left).localeCompare(stableJson(right)),
+  );
+  return {
+    id: `${rule.namespace}:${rule.id}:transducer-${index + 1}`,
+    kind: "extension",
+    extensionId: rule.emit?.extensionId ?? `${rule.namespace}:transducer-analysis`,
+    lifecycle: { state: "active" },
+    targets: [{ kind: "span", viewId, startCU: match.startCU, endCU: match.endCU }],
+    provenance: ruleProvenance(rule),
+    data: {
+      ruleKind: "transducer",
+      surface: match.text,
+      analyses,
+    },
+    ...(analyses.length > 1
+      ? {
+          ambiguitySet: {
+            id: `${rule.namespace}:${rule.id}:ambiguity-${index + 1}`,
+            role: "candidate" as const,
+            rank: 1,
+          },
+        }
+      : {}),
+  };
+}
+
+function validationDiagnosticForMatch(
+  rule: TextRulesRuleDeclarationV1,
+  match: TextRulesPatternMatch,
+): TextProtocolDiagnostic {
+  return {
+    code: rule.emit?.diagnosticCode ?? rule.id,
+    severity: rule.emit?.diagnosticSeverity ?? (rule.diagnostic === true ? "warning" : "info"),
+    message: `${rule.kind} rule ${rule.id} matched ${match.text}.`,
+  };
+}
+
+function rewriteArtifactsForMatches(
+  document: TextDocDocumentV1,
+  matches: readonly {
+    readonly rule: TextRulesRuleDeclarationV1;
+    readonly match: TextRulesPatternMatch;
+  }[],
+  options: TextRulesRunOptions,
+): {
+  readonly views: readonly TextDocView[];
+  readonly spanMaps: readonly TextDocSpanMapV1[];
+  readonly rewrites: readonly TextRulesRewriteArtifact[];
+} {
+  const rewriteMatches = matches.filter((entry) => entry.rule.kind === "rewrite" && entry.rule.rewrite !== undefined);
+  const views: TextDocView[] = [];
+  const spanMaps: TextDocSpanMapV1[] = [];
+  const rewrites: TextRulesRewriteArtifact[] = [];
+  const sourceViewId = options.sourceViewId ?? document.views[0]?.id ?? "source-view";
+  for (const entry of rewriteMatches) {
+    const rewrite = entry.rule.rewrite;
+    if (rewrite === undefined) continue;
+    const targetViewId = rewrite.targetViewId;
+    const spanMapId = `${entry.rule.namespace}:${entry.rule.id}:span-map`;
+    if (!document.views.some((view) => view.id === targetViewId) && !views.some((view) => view.id === targetViewId)) {
+      views.push({
+        id: targetViewId,
+        kind: "normalized",
+        parentViewId: sourceViewId,
+        spanMapIds: [spanMapId],
+        ...(rewrite.loss ? { loss: rewrite.loss } : {}),
+      });
+    }
+    spanMaps.push({
+      id: spanMapId,
+      sourceViewId,
+      targetViewId,
+      lifecycle: { state: rewrite.reversible === false ? "partial" : "active", ...(rewrite.reversible === false ? { reason: "rewrite declared non-reversible output" } : {}) },
+      segments: [
+        {
+          source: { startCU: entry.match.startCU, endCU: entry.match.endCU },
+          target: { startCU: 0, endCU: rewrite.replacement.join(" ").length },
+          kind: rewrite.reversible === false ? "normalized" : "unchanged",
+          reversible: rewrite.reversible !== false,
+          ...(rewrite.loss ? { loss: rewrite.loss } : {}),
+        },
+      ],
+      provenance: ruleProvenance(entry.rule),
+      ...(rewrite.loss ? { loss: rewrite.loss } : {}),
+    });
+    rewrites.push({
+      ruleId: entry.rule.id,
+      sourceViewId,
+      targetViewId,
+      text: rewrite.replacement.join(" "),
+      spanMapId,
+    });
+  }
+  return { views, spanMaps, rewrites };
+}
+
+export function runTextRules(
+  document: TextDocDocumentV1,
+  compiled: TextRulesCompiledRuleBundleV1,
+  resources: readonly TextRulesRuleRuntimeResource[] = [],
+  options: TextRulesRunOptions = {},
+): TextRulesRunResult {
+  const viewId = ruleTargetView(document, options);
+  const candidates = ruleCandidates(document, compiled, resources, options);
+  const { selected, diagnostics: conflictDiagnostics } = applyConflictPolicy(candidates, compiled.conflictPolicy);
+  const annotations: TextDocExtensionAnnotation[] = [];
+  const diagnostics: TextProtocolDiagnostic[] = [...conflictDiagnostics];
+
+  for (const [index, entry] of selected.entries()) {
+    if (entry.rule.kind === "rewrite") continue;
+    if (entry.rule.kind === "validation") {
+      diagnostics.push(validationDiagnosticForMatch(entry.rule, entry.match));
+      if (entry.rule.diagnostic === true) continue;
+    }
+    annotations.push(
+      entry.rule.kind === "transducer"
+        ? transducerAnnotationForMatch(entry.rule, entry.match, index, viewId)
+        : extensionAnnotationForMatch(entry.rule, entry.match, index, viewId),
+    );
+  }
+  for (const rule of compiled.rules.filter((entry) => entry.kind === "annotation-pattern")) {
+    annotations.push(...annotationPatternAnnotations(document, rule, viewId));
+  }
+
+  const rewriteOutput = rewriteArtifactsForMatches(document, selected, options);
+  const extensionLayer: TextDocLayer<TextDocExtensionAnnotation> = {
+    id: `${compiled.namespace}:rule-outputs`,
+    kind: "extension",
+    viewId,
+    annotations: annotations.sort((left, right) => left.id.localeCompare(right.id)),
+    notes: [`Compiled rule bundle ${compiled.compiledId}`],
+  };
+  const layers: TextDocLayer<TextDocAnnotation>[] = [
+    ...document.layers.filter((layer) => layer.id !== extensionLayer.id),
+    ...(annotations.length === 0 ? [] : [extensionLayer]),
+  ];
+  return {
+    document: {
+      ...document,
+      views: [...document.views, ...rewriteOutput.views],
+      spanMaps: [...(document.spanMaps ?? []), ...rewriteOutput.spanMaps],
+      layers,
+    },
+    annotations: extensionLayer.annotations,
+    diagnostics: sortDiagnostics(diagnostics),
+    rewrites: rewriteOutput.rewrites,
+  };
+}
+
 function segmentSentencesForRules(text: string): readonly TextRulesSentenceSpan[] {
   const sentences: TextRulesSentenceSpan[] = [];
   let sentenceStart = 0;
@@ -1031,71 +1843,17 @@ function segmentSentencesForRules(text: string): readonly TextRulesSentenceSpan[
   return sentences;
 }
 
-function createFallbackAnalyses(token: TextRulesTokenSpan): {
+function createUnknownTokenDiagnostics(token: TextRulesTokenSpan): {
   readonly analyses: readonly TextRulesResolvedAnalysis[];
   readonly diagnostics: readonly TextProtocolDiagnostic[];
 } {
-  const normalized = normalizeSurface(token.text);
-
-  if (normalized.endsWith("ed") && normalized.length > 2) {
-    return {
-      analyses: [
-        {
-          ruleId: "fallback:suffix-ed:adjective",
-          pos: "ADJ",
-          lemma: normalized,
-          morphology: [
-            {
-              name: "Degree",
-              value: "Pos",
-            },
-          ],
-          notes: ["Suffix backoff keeps the surface form as an adjective candidate."],
-          resourceRefs: [],
-        },
-        {
-          ruleId: "fallback:suffix-ed:verb",
-          pos: "VERB",
-          lemma: normalized.slice(0, -2),
-          morphology: [
-            {
-              name: "Tense",
-              value: "Past",
-            },
-            {
-              name: "VerbForm",
-              value: "Part",
-            },
-          ],
-          notes: ["Suffix backoff emits a participial verb alternative."],
-          resourceRefs: [],
-        },
-      ],
-      diagnostics: [
-        {
-          code: "unknown-word",
-          severity: "warning",
-          message: `Unknown token ${token.text} uses suffix backoff analyses.`,
-        },
-      ],
-    };
-  }
-
   return {
-    analyses: [
-      {
-        ruleId: "fallback:unknown:x",
-        pos: "X",
-        lemma: normalized,
-        notes: ["Unknown-token fallback emits a single X tag."],
-        resourceRefs: [],
-      },
-    ],
+    analyses: [],
     diagnostics: [
       {
         code: "unknown-word",
         severity: "warning",
-        message: `Unknown token ${token.text} falls back to X.`,
+        message: `Unknown token ${token.text} has no explicit lexicon or transducer analysis.`,
       },
     ],
   };
@@ -1131,7 +1889,7 @@ function resolveAnalyses(
     };
   }
 
-  return createFallbackAnalyses(token);
+  return createUnknownTokenDiagnostics(token);
 }
 
 function createPhenomenonDiagnostics(
@@ -1141,6 +1899,14 @@ function createPhenomenonDiagnostics(
   const diagnostics: TextProtocolDiagnostic[] = [];
   const phenomena = new Set(phenomenaInput ?? []);
   const normalized = normalizeSurface(token.text);
+
+  if (phenomena.has("unknown-word") && normalized === "florped") {
+    diagnostics.push({
+      code: "unknown-word",
+      severity: "warning",
+      message: "Unknown token florped uses explicitly declared fallback-style analyses.",
+    });
+  }
 
   if (phenomena.has("multiword-token") && normalized === "del") {
     diagnostics.push({
@@ -1341,7 +2107,7 @@ function dependencyArcId(sentenceId: string, conlluId: string): string {
   return `${sentenceId}:dep-${conlluId}`;
 }
 
-const builtInDependencyRules: readonly TextRulesDependencyRule[] = [
+const frozenDependencyRuleResources: readonly TextRulesDependencyRule[] = [
   {
     ruleId: "dependency:en:basic-transitive",
     language: "en",
@@ -1403,7 +2169,7 @@ const builtInDependencyRules: readonly TextRulesDependencyRule[] = [
   },
 ];
 
-const builtInRelationRules: readonly TextRulesRelationRule[] = [
+const frozenRelationRuleResources: readonly TextRulesRelationRule[] = [
   {
     ruleId: "relation:en:employment-location",
     language: "en",
@@ -1534,7 +2300,7 @@ const negatedEmploymentPattern: TextRulesTokenPattern = {
   ],
 };
 
-const builtInCoreferenceRules: readonly TextRulesCoreferenceRule[] = [
+const frozenCoreferenceRuleResources: readonly TextRulesCoreferenceRule[] = [
   {
     ruleId: "coreference:en:pronoun-pair",
     language: "en",
@@ -1830,18 +2596,18 @@ export function applyTextRulesCoreferenceRules(
   };
 }
 
-function dependencySpecsFromBuiltInRules(
+function dependencySpecsFromDeclarativeRules(
   input: TextRulesDependencyParserInput,
   tokens: readonly TextRulesTokenSpan[],
 ): readonly TextRulesDependencyNodeSpec[] {
-  return applyTextRulesDependencyRules(tokens, input.languageHint, builtInDependencyRules);
+  return applyTextRulesDependencyRules(tokens, input.languageHint, frozenDependencyRuleResources);
 }
 
-function relationSpecsFromBuiltInRules(
+function relationSpecsFromDeclarativeRules(
   input: TextRulesRelationExtractionInput,
   tokens: readonly TextRulesTokenSpan[],
 ): readonly TextRulesRelationSpec[] {
-  return applyTextRulesRelationRules(input.text, tokens, input.languageHint, builtInRelationRules);
+  return applyTextRulesRelationRules(input.text, tokens, input.languageHint, frozenRelationRuleResources);
 }
 
 function relationDiagnosticsFromRules(
@@ -1867,11 +2633,11 @@ function relationDiagnosticsFromRules(
   ];
 }
 
-function coreferenceSpecsFromBuiltInRules(
+function coreferenceSpecsFromDeclarativeRules(
   input: TextRulesCoreferenceInput,
   tokens: readonly TextRulesTokenSpan[],
 ): TextRulesCoreferenceSpec {
-  return applyTextRulesCoreferenceRules(input.text, tokens, input.languageHint, builtInCoreferenceRules);
+  return applyTextRulesCoreferenceRules(input.text, tokens, input.languageHint, frozenCoreferenceRuleResources);
 }
 
 function createDependencyNodeAnnotations(
@@ -2895,7 +3661,7 @@ export function analyzeRelationExtraction(
 ): TextRulesRelationExtractionResult {
   const tokens = tokenizeTextForRules(input.text);
   const sentences = segmentSentencesForRules(input.text);
-  const relationSpecs = relationSpecsFromBuiltInRules(input, tokens);
+  const relationSpecs = relationSpecsFromDeclarativeRules(input, tokens);
   const diagnostics = relationDiagnosticsFromRules(tokens, relationSpecs.length);
 
   const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
@@ -2954,7 +3720,7 @@ export function analyzeRelationExtraction(
 export function analyzeCoreference(input: TextRulesCoreferenceInput): TextRulesCoreferenceResult {
   const tokens = tokenizeTextForRules(input.text);
   const sentences = segmentSentencesForRules(input.text);
-  const coreferenceSpec = coreferenceSpecsFromBuiltInRules(input, tokens);
+  const coreferenceSpec = coreferenceSpecsFromDeclarativeRules(input, tokens);
 
   const tokenLayer: TextDocLayer<TextDocDocumentTokenAnnotation> = {
     id: "tokens",
@@ -3021,7 +3787,7 @@ export function analyzeDependencyParser(
   const sentences = segmentSentencesForRules(input.text);
   const sentence = sentences[0];
   const dependencySpecs =
-    sentence === undefined ? [] : dependencySpecsFromBuiltInRules(input, tokens);
+    sentence === undefined ? [] : dependencySpecsFromDeclarativeRules(input, tokens);
   const diagnostics: TextProtocolDiagnostic[] = [];
 
   if (dependencySpecs.length === 0) {
