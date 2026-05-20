@@ -21,7 +21,34 @@
       "evidenceRefs": [
         "fixtures/dependency-parser/slices.json",
         "fixtures/dependency-parser/tool-versions.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/dependency-parser-readiness.md",
+          "docs/specs/nlp-dependency-parser-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/dependency-parser/slices.json",
+          "fixtures/dependency-parser/tool-versions.json"
+        ],
+        "oracleRefs": [
+          "schemas/dependency-parser-expected-v1.schema.json",
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "limitations": [
+          "Behavior is limited to deterministic rules for three frozen slices.",
+          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+        ]
+      }
     },
     {
       "checkId": "expected-outputs-recorded",
@@ -30,7 +57,32 @@
       "evidenceRefs": [
         "schemas/dependency-parser-expected-v1.schema.json",
         "tools/validate-dependency-parser-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/dependency-parser-readiness.md",
+          "docs/specs/nlp-dependency-parser-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "inputRefs": [
+          "schemas/dependency-parser-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/dependency-parser-expected-v1.schema.json",
+          "tools/validate-dependency-parser-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "limitations": [
+          "Behavior is limited to deterministic rules for three frozen slices.",
+          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+        ]
+      }
     },
     {
       "checkId": "comparator-captures-recorded",
@@ -40,7 +92,35 @@
         "fixtures/dependency-parser/comparisons/spacy-3.8.json",
         "fixtures/dependency-parser/comparisons/stanza-1.12.json",
         "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/dependency-parser-readiness.md",
+          "docs/specs/nlp-dependency-parser-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/dependency-parser/comparisons/spacy-3.8.json",
+          "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+          "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
+        ],
+        "oracleRefs": [
+          "schemas/dependency-parser-expected-v1.schema.json",
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "limitations": [
+          "Behavior is limited to deterministic rules for three frozen slices.",
+          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+        ]
+      }
     },
     {
       "checkId": "feature-output-proof",
@@ -50,7 +130,33 @@
         "packages/textrules/src/index.ts",
         "packages/textrules/test/index.test.ts",
         "tools/validate-dependency-parser-feature.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/dependency-parser-readiness.md",
+          "docs/specs/nlp-dependency-parser-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/dependency-parser/slices.json",
+          "fixtures/dependency-parser/tool-versions.json",
+          "fixtures/dependency-parser/expected/ar-nonlatin.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "limitations": [
+          "Behavior is limited to deterministic rules for three frozen slices.",
+          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -59,7 +165,33 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/dependency-parser-readiness.md",
+          "docs/specs/nlp-dependency-parser-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
+        ],
+        "oracleRefs": [
+          "schemas/dependency-parser-expected-v1.schema.json",
+          "tools/validate-dependency-parser-readiness.mjs",
+          "tools/validate-dependency-parser-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
+        ],
+        "limitations": [
+          "Behavior is limited to deterministic rules for three frozen slices.",
+          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+        ]
+      }
     }
   ],
   "notes": [

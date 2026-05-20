@@ -21,7 +21,33 @@
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/slices.json",
         "fixtures/pos-morph-lemma/tool-versions.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/pos-morph-lemma/slices.json",
+          "fixtures/pos-morph-lemma/tool-versions.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-expected-v1.schema.json",
+          "schemas/pos-morph-lemma-comparison-v1.schema.json",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     },
     {
       "checkId": "expected-outputs-recorded",
@@ -30,16 +56,69 @@
       "evidenceRefs": [
         "schemas/pos-morph-lemma-expected-v1.schema.json",
         "tools/validate-pos-morph-lemma-feature.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "schemas/pos-morph-lemma-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-expected-v1.schema.json",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     },
     {
       "checkId": "pack-backed-resources-recorded",
       "status": "pass",
       "message": "Pack-backed lexicon fixtures used by the deterministic analyzer are committed.",
       "evidenceRefs": [
-        "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json", "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
         "fixtures/pos-morph-lemma/README.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-expected-v1.schema.json",
+          "schemas/pos-morph-lemma-comparison-v1.schema.json",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     },
     {
       "checkId": "result-envelope-and-report-proof",
@@ -49,7 +128,33 @@
         "schemas/textprotocol-result-envelope-v1.schema.json",
         "schemas/textconformance-report-v1.schema.json",
         "tools/validate-pos-morph-lemma-feature.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     },
     {
       "checkId": "comparator-output-captures",
@@ -60,7 +165,32 @@
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
         "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
         "schemas/pos-morph-lemma-comparison-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/pos-morph-lemma/tool-versions.json",
+          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+          "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-comparison-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     },
     {
       "checkId": "javascript-comparator-claim-boundary",
@@ -70,7 +200,32 @@
         "fixtures/pos-morph-lemma/tool-versions.json",
         "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
         "docs/decisions/pos-morph-lemma-output-differences.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/pos-morph-lemma/tool-versions.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-expected-v1.schema.json",
+          "schemas/pos-morph-lemma-comparison-v1.schema.json",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -79,7 +234,34 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/pos-morph-lemma/slices.json",
+          "fixtures/pos-morph-lemma/tool-versions.json",
+          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-expected-v1.schema.json",
+          "schemas/pos-morph-lemma-comparison-v1.schema.json",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
     }
   ],
   "notes": [

@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add declarative conformance suite classes, fixture-role policy checks, a differential oracle helper, a separated benchmark report contract, and the `textconformance` CLI.
 - Promote the conformance report package surface to public alpha for bounded package interop.
 - Keep broad benchmark-runner behavior outside the alpha support claim.
 

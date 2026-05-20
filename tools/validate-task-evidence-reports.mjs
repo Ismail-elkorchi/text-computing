@@ -77,6 +77,10 @@ function assertRelativeEvidenceRef(ref, label) {
   expect(!/^https?:\/\//.test(ref), `${label} must reference a committed repository artifact: ${ref}`);
 }
 
+function assertNonEmptyArray(value, label) {
+  expect(Array.isArray(value) && value.length >= 1, `${label} must be a non-empty array.`);
+}
+
 function summarizeChecks(checks) {
   const summary = { pass: 0, fail: 0, notRun: 0 };
   for (const check of checks) {
@@ -153,6 +157,21 @@ for (const task of manifest.tasks) {
     for (const ref of check.evidenceRefs ?? []) {
       assertRelativeEvidenceRef(ref, `${task.taskId} report evidence ref`);
       expect(await fileExists(ref), `${task.taskId} report evidence ref does not exist: ${ref}`);
+    }
+    expect(check.traceability !== undefined, `${task.taskId} report check ${check.checkId} must include traceability.`);
+    assertNonEmptyArray(check.traceability.requirementRefs, `${task.taskId} ${check.checkId} requirementRefs`);
+    assertNonEmptyArray(check.traceability.apiRefs, `${task.taskId} ${check.checkId} apiRefs`);
+    assertNonEmptyArray(check.traceability.inputRefs, `${task.taskId} ${check.checkId} inputRefs`);
+    assertNonEmptyArray(check.traceability.oracleRefs, `${task.taskId} ${check.checkId} oracleRefs`);
+    assertNonEmptyArray(check.traceability.limitations, `${task.taskId} ${check.checkId} limitations`);
+    for (const ref of [
+      ...check.traceability.requirementRefs,
+      ...check.traceability.apiRefs,
+      ...check.traceability.inputRefs,
+      ...(check.traceability.reportRefs ?? []),
+    ]) {
+      assertRelativeEvidenceRef(ref, `${task.taskId} report traceability ref`);
+      expect(await fileExists(ref), `${task.taskId} report traceability ref does not exist: ${ref}`);
     }
   }
 

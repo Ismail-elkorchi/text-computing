@@ -4,11 +4,18 @@
     {
       "name": "@ismail-elkorchi/textconformance",
       "status": "alpha",
-      "scope": "Public alpha conformance report package for machine-readable reports, runtime guards, report diffs, deterministic Markdown rendering, claim-registry traceability checks, and synchronous checks proven by Public Vertical Slice 0.1 and package tests.",
+      "scope": "Public alpha conformance package for machine-readable reports, declarative suite classes, fixture-role policy checks, differential JSON oracles, separated benchmark report records, deterministic Markdown rendering, claim-registry traceability checks, CLI validation, and synchronous checks proven by Public Vertical Slice 0.1 and package tests.",
       "evidence": [
         "conformance report schema",
+        "conformance suite schema",
+        "benchmark report schema",
         "runtime guards",
         "minimal synchronous runner tests",
+        "suite harness tests",
+        "fixture policy tests",
+        "differential oracle tests",
+        "textconformance CLI tests",
+        "fixtures/conformance/package-suites.v1.json",
         "fixtures/reports/task-evidence-manifest.v1.json",
         "report diff tests",
         "Markdown report rendering tests",
@@ -17,7 +24,7 @@
         "workspace pack dry-run"
       ],
       "limitations": [
-        "Benchmark runner is not release-ready.",
+        "Benchmark execution runner remains outside the alpha scope; benchmark report records are separate from pass/fail conformance reports.",
         "Alpha scope is bounded to declared conformance reports and package interop proven by Public Vertical Slice 0.1"
       ]
     },

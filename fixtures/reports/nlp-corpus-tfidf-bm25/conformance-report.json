@@ -21,7 +21,31 @@
       "evidenceRefs": [
         "fixtures/corpus-tfidf-bm25/slices.json",
         "fixtures/corpus-tfidf-bm25/tool-versions.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/corpus-tfidf-bm25-readiness.md",
+          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/corpus-tfidf-bm25/slices.json",
+          "fixtures/corpus-tfidf-bm25/tool-versions.json"
+        ],
+        "oracleRefs": [
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "limitations": [
+          "No large-corpus relevance benchmark, fielded weighting, or performance proof is implemented.",
+          "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only."
+        ]
+      }
     },
     {
       "checkId": "expected-outputs-recorded",
@@ -30,7 +54,30 @@
       "evidenceRefs": [
         "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
         "tools/validate-corpus-tfidf-bm25-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/corpus-tfidf-bm25-readiness.md",
+          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "limitations": [
+          "No large-corpus relevance benchmark, fielded weighting, or performance proof is implemented.",
+          "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only."
+        ]
+      }
     },
     {
       "checkId": "comparator-captures-recorded",
@@ -39,7 +86,31 @@
       "evidenceRefs": [
         "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
         "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/corpus-tfidf-bm25-readiness.md",
+          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+        ],
+        "oracleRefs": [
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "limitations": [
+          "No large-corpus relevance benchmark, fielded weighting, or performance proof is implemented.",
+          "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only."
+        ]
+      }
     },
     {
       "checkId": "numeric-tolerance-recorded",
@@ -48,7 +119,31 @@
       "evidenceRefs": [
         "docs/specs/corpus-tfidf-bm25-readiness.md",
         "tools/validate-corpus-tfidf-bm25-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/corpus-tfidf-bm25-readiness.md",
+          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/corpus-tfidf-bm25/slices.json",
+          "fixtures/corpus-tfidf-bm25/tool-versions.json",
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "limitations": [
+          "No large-corpus relevance benchmark, fielded weighting, or performance proof is implemented.",
+          "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -57,7 +152,32 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/corpus-tfidf-bm25-readiness.md",
+          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/corpus-tfidf-bm25/slices.json",
+          "fixtures/corpus-tfidf-bm25/tool-versions.json",
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "limitations": [
+          "No large-corpus relevance benchmark, fielded weighting, or performance proof is implemented.",
+          "Slice-proven for raw TF, smooth TF-IDF, and Okapi BM25 outputs over the frozen explicit-token corpus only."
+        ]
+      }
     }
   ],
   "notes": [

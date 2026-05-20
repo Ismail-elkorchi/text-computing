@@ -21,7 +21,29 @@
       "evidenceRefs": [
         "fixtures/textdoc/examples/document-annotation-model-v1.json",
         "schemas/textdoc-document-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textdoc-document-annotation-model.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textdoc/examples/document-annotation-model-v1.json",
+          "schemas/textdoc-document-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textdoc-document-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "limitations": [
+          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+        ]
+      }
     },
     {
       "checkId": "invalid-reference-policy-tested",
@@ -36,7 +58,30 @@
         "fixtures/textdoc/invalid/coreference-missing-mention.json",
         "fixtures/textdoc/invalid/entity-link-target-kind.json",
         "fixtures/textdoc/invalid/dependency-cycle.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textdoc-document-annotation-model.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textdoc/invalid/dangling-target.json",
+          "fixtures/textdoc/invalid/dangling-view.json",
+          "fixtures/textdoc/invalid/lifecycle-mismatch.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "limitations": [
+          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+        ]
+      }
     },
     {
       "checkId": "result-envelope-and-report-proof",
@@ -46,7 +91,31 @@
         "schemas/textprotocol-result-envelope-v1.schema.json",
         "schemas/textconformance-report-v1.schema.json",
         "tools/validate-textdoc-document-model.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textdoc-document-annotation-model.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "inputRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json",
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "limitations": [
+          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -55,7 +124,30 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textdoc-document-annotation-model.md"
+        ],
+        "apiRefs": [
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textdoc/examples/document-annotation-model-v1.json",
+          "fixtures/textdoc/invalid/dangling-target.json",
+          "fixtures/textdoc/invalid/dangling-view.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "limitations": [
+          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+        ]
+      }
     }
   ],
   "notes": [

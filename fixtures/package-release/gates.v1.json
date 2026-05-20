@@ -90,22 +90,28 @@
         "packages/textconformance/README.md",
         "packages/textconformance/CHANGELOG.md",
         "packages/textconformance/test",
+        "packages/textconformance/src/cli.ts",
         "packages/textconformance/src/index.ts",
+        "schemas/textconformance-suite-v1.schema.json",
+        "schemas/textconformance-benchmark-report-v1.schema.json",
+        "fixtures/conformance/package-suites.v1.json",
+        "tools/validate-textconformance-suites.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Benchmark runner is not release-ready.",
+        "Benchmark execution runner remains outside the alpha scope; benchmark report records are separate from pass/fail conformance reports.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Benchmark runner is not release-ready.",
+          "blocker": "Benchmark execution runner remains outside the alpha scope; benchmark report records are separate from pass/fail conformance reports.",
           "maturity": "beta",
-          "decision": "Does not block alpha because alpha requires declared conformance reports and checks, not a broad benchmark runner.",
+          "decision": "Does not block alpha because alpha requires declared conformance reports, separated benchmark records, and checks, not benchmark execution.",
           "evidenceRefs": [
             "packages/textconformance/src/index.ts",
+            "schemas/textconformance-benchmark-report-v1.schema.json",
             "packages/textconformance/test",
             "docs/specs/support-status.v1.json"
           ]

@@ -4,6 +4,12 @@ export const conformanceReportSchemaId =
 export const conformanceReportSchemaVersion = 1 as const;
 export const conformanceReportDiffSchemaVersion = 1 as const;
 export const conformanceClaimRegistrySchemaVersion = 1 as const;
+export const conformanceSuiteSchemaId =
+  "urn:ismail-elkorchi:textconformance:suite:v1" as const;
+export const conformanceSuiteSchemaVersion = 1 as const;
+export const conformanceBenchmarkReportSchemaId =
+  "urn:ismail-elkorchi:textconformance:benchmark-report:v1" as const;
+export const conformanceBenchmarkReportSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextConformanceReportSchemaId = typeof conformanceReportSchemaId;
@@ -12,6 +18,12 @@ export type TextConformanceReportDiffSchemaVersion =
   typeof conformanceReportDiffSchemaVersion;
 export type TextConformanceClaimRegistrySchemaVersion =
   typeof conformanceClaimRegistrySchemaVersion;
+export type TextConformanceSuiteSchemaId = typeof conformanceSuiteSchemaId;
+export type TextConformanceSuiteSchemaVersion = typeof conformanceSuiteSchemaVersion;
+export type TextConformanceBenchmarkReportSchemaId =
+  typeof conformanceBenchmarkReportSchemaId;
+export type TextConformanceBenchmarkReportSchemaVersion =
+  typeof conformanceBenchmarkReportSchemaVersion;
 
 export type TextConformanceCheckStatus = "pass" | "fail" | "not-run";
 export type TextConformanceReportDiffStatus = "same" | "changed" | "added" | "removed";
@@ -20,11 +32,42 @@ export type TextConformanceClaimSupportLabel =
   | "comparator-backed"
   | "corpus-backed"
   | "performance-backed";
+export type TextConformanceSuiteClass =
+  | "spec"
+  | "profile"
+  | "pack"
+  | "interchange"
+  | "workflow"
+  | "benchmark";
+export type TextConformanceFixtureRole =
+  | "development"
+  | "validation"
+  | "holdout"
+  | "negative-control"
+  | "comparator-capture"
+  | "claim-narrowed-gap";
+export type TextConformanceOracleKind =
+  | "exact"
+  | "schema"
+  | "runtime-guard"
+  | "round-trip"
+  | "differential"
+  | "benchmark";
 
 export interface TextConformanceReportSubject {
   readonly kind: string;
   readonly id: string;
   readonly schemaId?: string;
+  readonly version?: string;
+}
+
+export interface TextConformanceTraceabilityV1 {
+  readonly requirementRefs: readonly string[];
+  readonly apiRefs: readonly string[];
+  readonly inputRefs: readonly string[];
+  readonly oracleRefs: readonly string[];
+  readonly reportRefs?: readonly string[];
+  readonly limitations: readonly string[];
 }
 
 export interface TextConformanceCheckV1 {
@@ -32,6 +75,7 @@ export interface TextConformanceCheckV1 {
   readonly status: TextConformanceCheckStatus;
   readonly message?: string;
   readonly evidenceRefs?: readonly string[];
+  readonly traceability?: TextConformanceTraceabilityV1;
 }
 
 export interface TextConformanceSummaryV1 {
@@ -48,6 +92,87 @@ export interface TextConformanceReportV1 {
   readonly generatedAt: string;
   readonly summary: TextConformanceSummaryV1;
   readonly checks: readonly TextConformanceCheckV1[];
+  readonly suite?: {
+    readonly suiteId: string;
+    readonly suiteVersion: string;
+    readonly suiteClass: TextConformanceSuiteClass;
+  };
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceFixtureRefV1 {
+  readonly role: TextConformanceFixtureRole;
+  readonly ref: string;
+  readonly description?: string;
+}
+
+export interface TextConformanceOracleRefV1 {
+  readonly oracleId: string;
+  readonly kind: TextConformanceOracleKind;
+  readonly ref?: string;
+}
+
+export interface TextConformanceSuiteCheckV1 {
+  readonly checkId: string;
+  readonly oracleId: string;
+  readonly expectedStatus?: TextConformanceCheckStatus;
+  readonly message?: string;
+  readonly evidenceRefs?: readonly string[];
+  readonly traceability?: TextConformanceTraceabilityV1;
+}
+
+export interface TextConformanceSuiteV1 {
+  readonly schemaId: TextConformanceSuiteSchemaId;
+  readonly schemaVersion: TextConformanceSuiteSchemaVersion;
+  readonly suiteId: string;
+  readonly suiteVersion: string;
+  readonly suiteClass: TextConformanceSuiteClass;
+  readonly subject: TextConformanceReportSubject;
+  readonly claimBoundary: string;
+  readonly fixtures: readonly TextConformanceFixtureRefV1[];
+  readonly oracles: readonly TextConformanceOracleRefV1[];
+  readonly checks: readonly TextConformanceSuiteCheckV1[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceFixturePolicyOptions {
+  readonly requireHoldout?: boolean;
+  readonly requireNegativeControl?: boolean;
+  readonly disallowDevelopmentOnly?: boolean;
+}
+
+export interface TextConformanceSuiteRunnerOptions {
+  readonly reportId?: string;
+  readonly generatedAt?: string;
+  readonly fixturePolicy?: TextConformanceFixturePolicyOptions;
+}
+
+export interface TextConformanceDifferentialOracleInput {
+  readonly oracleId: string;
+  readonly expected: unknown;
+  readonly actual: unknown;
+  readonly allowedDifferencePaths?: readonly string[];
+  readonly evidenceRefs?: readonly string[];
+  readonly message?: string;
+}
+
+export interface TextConformanceBenchmarkMetricV1 {
+  readonly metricId: string;
+  readonly value: number;
+  readonly unit: string;
+  readonly higherIsPreferred?: boolean;
+}
+
+export interface TextConformanceBenchmarkReportV1 {
+  readonly schemaId: TextConformanceBenchmarkReportSchemaId;
+  readonly schemaVersion: TextConformanceBenchmarkReportSchemaVersion;
+  readonly benchmarkId: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly generatedAt: string;
+  readonly metrics: readonly TextConformanceBenchmarkMetricV1[];
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
   readonly notes?: readonly string[];
 }
 
@@ -84,6 +209,8 @@ export interface TextConformanceClaimV1 {
   readonly supportLabel: TextConformanceClaimSupportLabel;
   readonly requirementRefs: readonly string[];
   readonly apiRefs: readonly string[];
+  readonly inputRefs: readonly string[];
+  readonly oracleRefs: readonly string[];
   readonly evidenceRefs: readonly string[];
   readonly reportRefs: readonly string[];
   readonly limitations: readonly string[];
@@ -143,6 +270,13 @@ function hasUniqueStrings(values: readonly string[]): boolean {
   return new Set(values).size === values.length;
 }
 
+function hasRole(
+  fixtures: readonly TextConformanceFixtureRefV1[],
+  role: TextConformanceFixtureRole,
+): boolean {
+  return fixtures.some((fixture) => fixture.role === role);
+}
+
 function compareCheckIds(left: string, right: string): number {
   return left.localeCompare(right);
 }
@@ -171,6 +305,38 @@ function markdownTableCell(value: string | undefined): string {
 function markdownTableList(values: readonly string[] | undefined): string {
   if (values === undefined || values.length === 0) return "—";
   return values.map((value) => markdownTableCell(value)).join("<br>");
+}
+
+function canonicalJson(value: unknown): string {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map((entry) => canonicalJson(entry)).join(",")}]`;
+  const record = value as Record<string, unknown>;
+  return `{${Object.keys(record)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
+    .join(",")}}`;
+}
+
+function withoutAllowedDifferencePaths(value: unknown, paths: readonly string[]): unknown {
+  if (paths.length === 0) return value;
+  const blocked = new Set(paths);
+  const visit = (entry: unknown, path: string): unknown => {
+    if (blocked.has(path)) return undefined;
+    if (entry === null || typeof entry !== "object") return entry;
+    if (Array.isArray(entry)) {
+      return entry
+        .map((item, index) => visit(item, `${path}[${index}]`))
+        .filter((item) => item !== undefined);
+    }
+    const output: Record<string, unknown> = {};
+    for (const key of Object.keys(entry).sort()) {
+      const childPath = path === "$" ? `$.${key}` : `${path}.${key}`;
+      const child = visit((entry as Record<string, unknown>)[key], childPath);
+      if (child !== undefined) output[key] = child;
+    }
+    return output;
+  };
+  return visit(value, "$");
 }
 
 function sortedChecksForRendering(
@@ -206,7 +372,57 @@ export function isTextConformanceReportSubject(
     isRecord(value) &&
     isNonEmptyString(value.kind) &&
     isNonEmptyString(value.id) &&
-    (value.schemaId === undefined || isNonEmptyString(value.schemaId))
+    (value.schemaId === undefined || isNonEmptyString(value.schemaId)) &&
+    (value.version === undefined || isNonEmptyString(value.version))
+  );
+}
+
+export function isTextConformanceSuiteClass(value: unknown): value is TextConformanceSuiteClass {
+  return (
+    value === "spec" ||
+    value === "profile" ||
+    value === "pack" ||
+    value === "interchange" ||
+    value === "workflow" ||
+    value === "benchmark"
+  );
+}
+
+export function isTextConformanceFixtureRole(
+  value: unknown,
+): value is TextConformanceFixtureRole {
+  return (
+    value === "development" ||
+    value === "validation" ||
+    value === "holdout" ||
+    value === "negative-control" ||
+    value === "comparator-capture" ||
+    value === "claim-narrowed-gap"
+  );
+}
+
+export function isTextConformanceOracleKind(value: unknown): value is TextConformanceOracleKind {
+  return (
+    value === "exact" ||
+    value === "schema" ||
+    value === "runtime-guard" ||
+    value === "round-trip" ||
+    value === "differential" ||
+    value === "benchmark"
+  );
+}
+
+export function isTextConformanceTraceabilityV1(
+  value: unknown,
+): value is TextConformanceTraceabilityV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyStringArray(value.requirementRefs) &&
+    isNonEmptyStringArray(value.apiRefs) &&
+    isNonEmptyStringArray(value.inputRefs) &&
+    isNonEmptyStringArray(value.oracleRefs) &&
+    (value.reportRefs === undefined || isNonEmptyStringArray(value.reportRefs)) &&
+    isNonEmptyStringArray(value.limitations)
   );
 }
 
@@ -218,7 +434,8 @@ export function isTextConformanceCheckV1(value: unknown): value is TextConforman
     (value.message === undefined || isNonEmptyString(value.message)) &&
     (value.evidenceRefs === undefined ||
       (Array.isArray(value.evidenceRefs) &&
-        value.evidenceRefs.every((entry) => isNonEmptyString(entry))))
+        value.evidenceRefs.every((entry) => isNonEmptyString(entry)))) &&
+    (value.traceability === undefined || isTextConformanceTraceabilityV1(value.traceability))
   );
 }
 
@@ -268,6 +485,54 @@ export function isTextConformanceReportDiffEntryV1(
   );
 }
 
+export function isTextConformanceFixtureRefV1(
+  value: unknown,
+): value is TextConformanceFixtureRefV1 {
+  return (
+    isRecord(value) &&
+    isTextConformanceFixtureRole(value.role) &&
+    isNonEmptyString(value.ref) &&
+    (value.description === undefined || isNonEmptyString(value.description))
+  );
+}
+
+export function isTextConformanceOracleRefV1(
+  value: unknown,
+): value is TextConformanceOracleRefV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.oracleId) &&
+    isTextConformanceOracleKind(value.kind) &&
+    (value.ref === undefined || isNonEmptyString(value.ref))
+  );
+}
+
+export function isTextConformanceSuiteCheckV1(
+  value: unknown,
+): value is TextConformanceSuiteCheckV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.checkId) &&
+    isNonEmptyString(value.oracleId) &&
+    (value.expectedStatus === undefined ||
+      value.expectedStatus === "pass" ||
+      value.expectedStatus === "fail" ||
+      value.expectedStatus === "not-run") &&
+    (value.message === undefined || isNonEmptyString(value.message)) &&
+    (value.evidenceRefs === undefined || isStringArray(value.evidenceRefs)) &&
+    (value.traceability === undefined || isTextConformanceTraceabilityV1(value.traceability))
+  );
+}
+
+function isTextConformanceReportSuite(value: unknown): value is TextConformanceReportV1["suite"] {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.suiteId) &&
+    isNonEmptyString(value.suiteVersion) &&
+    isTextConformanceSuiteClass(value.suiteClass)
+  );
+}
+
 export function isTextConformanceReportV1(value: unknown): value is TextConformanceReportV1 {
   return (
     isRecord(value) &&
@@ -279,8 +544,40 @@ export function isTextConformanceReportV1(value: unknown): value is TextConforma
     isTextConformanceSummaryV1(value.summary) &&
     Array.isArray(value.checks) &&
     value.checks.every((entry) => isTextConformanceCheckV1(entry)) &&
+    (value.suite === undefined || isTextConformanceReportSuite(value.suite)) &&
     (value.notes === undefined ||
       (Array.isArray(value.notes) && value.notes.every((entry) => isNonEmptyString(entry))))
+  );
+}
+
+export function isTextConformanceSuiteV1(value: unknown): value is TextConformanceSuiteV1 {
+  return (
+    isRecord(value) &&
+    value.schemaId === conformanceSuiteSchemaId &&
+    value.schemaVersion === conformanceSuiteSchemaVersion &&
+    isNonEmptyString(value.suiteId) &&
+    isNonEmptyString(value.suiteVersion) &&
+    isTextConformanceSuiteClass(value.suiteClass) &&
+    isTextConformanceReportSubject(value.subject) &&
+    isNonEmptyString(value.claimBoundary) &&
+    Array.isArray(value.fixtures) &&
+    value.fixtures.length >= 1 &&
+    value.fixtures.every((entry) => isTextConformanceFixtureRefV1(entry)) &&
+    Array.isArray(value.oracles) &&
+    value.oracles.length >= 1 &&
+    value.oracles.every((entry) => isTextConformanceOracleRefV1(entry)) &&
+    hasUniqueStrings(value.oracles.map((entry) => entry.oracleId)) &&
+    Array.isArray(value.checks) &&
+    value.checks.length >= 1 &&
+    value.checks.every((entry) => isTextConformanceSuiteCheckV1(entry)) &&
+    hasUniqueStrings((value.checks as readonly TextConformanceSuiteCheckV1[]).map((entry) => entry.checkId)) &&
+    (value.checks as readonly TextConformanceSuiteCheckV1[]).every((entry) =>
+      (value.oracles as readonly TextConformanceOracleRefV1[]).some(
+        (oracle) => oracle.oracleId === entry.oracleId,
+      ),
+    ) &&
+    isNonEmptyStringArray(value.limitations) &&
+    (value.notes === undefined || isStringArray(value.notes))
   );
 }
 
@@ -296,6 +593,39 @@ export function isTextConformanceReportDiffV1(
     isTextConformanceReportDiffSummaryV1(value.summary) &&
     Array.isArray(value.checks) &&
     value.checks.every((entry) => isTextConformanceReportDiffEntryV1(entry))
+  );
+}
+
+export function isTextConformanceBenchmarkMetricV1(
+  value: unknown,
+): value is TextConformanceBenchmarkMetricV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.metricId) &&
+    typeof value.value === "number" &&
+    Number.isFinite(value.value) &&
+    isNonEmptyString(value.unit) &&
+    (value.higherIsPreferred === undefined || typeof value.higherIsPreferred === "boolean")
+  );
+}
+
+export function isTextConformanceBenchmarkReportV1(
+  value: unknown,
+): value is TextConformanceBenchmarkReportV1 {
+  return (
+    isRecord(value) &&
+    value.schemaId === conformanceBenchmarkReportSchemaId &&
+    value.schemaVersion === conformanceBenchmarkReportSchemaVersion &&
+    isNonEmptyString(value.benchmarkId) &&
+    isTextConformanceReportSubject(value.subject) &&
+    isNonEmptyString(value.generatedAt) &&
+    Array.isArray(value.metrics) &&
+    value.metrics.length >= 1 &&
+    value.metrics.every((entry) => isTextConformanceBenchmarkMetricV1(entry)) &&
+    hasUniqueStrings(value.metrics.map((entry) => entry.metricId)) &&
+    isNonEmptyStringArray(value.evidenceRefs) &&
+    isNonEmptyStringArray(value.limitations) &&
+    (value.notes === undefined || isStringArray(value.notes))
   );
 }
 
@@ -318,6 +648,8 @@ export function isTextConformanceClaimV1(value: unknown): value is TextConforman
     isTextConformanceClaimSupportLabel(value.supportLabel) &&
     isNonEmptyStringArray(value.requirementRefs) &&
     isNonEmptyStringArray(value.apiRefs) &&
+    isNonEmptyStringArray(value.inputRefs) &&
+    isNonEmptyStringArray(value.oracleRefs) &&
     isNonEmptyStringArray(value.evidenceRefs) &&
     isNonEmptyStringArray(value.reportRefs) &&
     isNonEmptyStringArray(value.limitations)
@@ -389,6 +721,9 @@ export function runTextConformanceChecks(
     }
     return result;
   });
+  if (!hasUniqueStrings(normalizedChecks.map((check) => check.checkId))) {
+    throw new TypeError("conformance runner produced duplicate check ids");
+  }
 
   const report: TextConformanceReportV1 = {
     schemaId: conformanceReportSchemaId,
@@ -405,6 +740,129 @@ export function runTextConformanceChecks(
     throw new TypeError("conformance runner produced an invalid report");
   }
   return report;
+}
+
+export function validateTextConformanceFixturePolicy(
+  suite: TextConformanceSuiteV1,
+  options: TextConformanceFixturePolicyOptions = {},
+): readonly TextConformanceCheckV1[] {
+  if (!isTextConformanceSuiteV1(suite)) {
+    throw new TypeError("conformance suite is invalid");
+  }
+  const requireNegativeControl = options.requireNegativeControl ?? true;
+  const disallowDevelopmentOnly = options.disallowDevelopmentOnly ?? true;
+  const requireHoldout = options.requireHoldout ?? false;
+  const fixtureRoles = new Set(suite.fixtures.map((fixture) => fixture.role));
+  const evidenceRefs = suite.fixtures.map((fixture) => fixture.ref).sort();
+  const checks: TextConformanceCheckV1[] = [
+    {
+      checkId: "fixture-policy:roles-declared",
+      status: fixtureRoles.size > 0 ? "pass" : "fail",
+      message: `Fixture roles: ${[...fixtureRoles].sort().join(", ") || "none"}.`,
+      evidenceRefs,
+    },
+    {
+      checkId: "fixture-policy:development-not-sole-evidence",
+      status:
+        !disallowDevelopmentOnly ||
+        suite.fixtures.some((fixture) => fixture.role !== "development")
+          ? "pass"
+          : "fail",
+      message: "Development fixtures alone cannot prove a public claim.",
+      evidenceRefs,
+    },
+  ];
+  if (requireNegativeControl) {
+    checks.push({
+      checkId: "fixture-policy:negative-control",
+      status: hasRole(suite.fixtures, "negative-control") ? "pass" : "fail",
+      message: "Negative-control fixtures are required for claim-bearing suites.",
+      evidenceRefs,
+    });
+  }
+  if (requireHoldout) {
+    checks.push({
+      checkId: "fixture-policy:holdout",
+      status: hasRole(suite.fixtures, "holdout") ? "pass" : "fail",
+      message: "Holdout fixtures are required before broad or upgrade claims.",
+      evidenceRefs,
+    });
+  }
+  return checks;
+}
+
+export function runTextConformanceSuite(
+  suite: TextConformanceSuiteV1,
+  options: TextConformanceSuiteRunnerOptions = {},
+): TextConformanceReportV1 {
+  if (!isTextConformanceSuiteV1(suite)) {
+    throw new TypeError("conformance suite is invalid");
+  }
+  const oracleIds = new Set(suite.oracles.map((oracle) => oracle.oracleId));
+  const suiteChecks: TextConformanceCheckV1[] = suite.checks.map((check) => {
+    const status: TextConformanceCheckStatus = oracleIds.has(check.oracleId)
+      ? (check.expectedStatus ?? "pass")
+      : "fail";
+    return {
+      checkId: check.checkId,
+      status,
+      ...(check.message ? { message: check.message } : {}),
+      ...(check.evidenceRefs ? { evidenceRefs: check.evidenceRefs } : {}),
+      ...(check.traceability ? { traceability: check.traceability } : {}),
+    };
+  });
+  const policyChecks = validateTextConformanceFixturePolicy(suite, options.fixturePolicy);
+  const checks = [...policyChecks, ...suiteChecks].sort((left, right) =>
+    compareCheckIds(left.checkId, right.checkId),
+  );
+  if (!hasUniqueStrings(checks.map((check) => check.checkId))) {
+    throw new TypeError("conformance suite produced duplicate check ids");
+  }
+  const report: TextConformanceReportV1 = {
+    schemaId: conformanceReportSchemaId,
+    schemaVersion: conformanceReportSchemaVersion,
+    reportId: options.reportId ?? `suite:${suite.suiteId}`,
+    subject: suite.subject,
+    generatedAt: options.generatedAt ?? "1970-01-01T00:00:00.000Z",
+    summary: summarizeChecks(checks),
+    suite: {
+      suiteId: suite.suiteId,
+      suiteVersion: suite.suiteVersion,
+      suiteClass: suite.suiteClass,
+    },
+    checks,
+    notes: [...suite.limitations, ...(suite.notes ?? [])],
+  };
+  if (!isTextConformanceReportV1(report)) {
+    throw new TypeError("conformance suite produced an invalid report");
+  }
+  return report;
+}
+
+export function runTextConformanceDifferentialOracle(
+  input: TextConformanceDifferentialOracleInput,
+): TextConformanceCheckV1 {
+  if (!isNonEmptyString(input.oracleId)) {
+    throw new TypeError("differential oracle id must be a non-empty string");
+  }
+  const allowedDifferencePaths = input.allowedDifferencePaths ?? [];
+  if (!isStringArray(allowedDifferencePaths)) {
+    throw new TypeError("differential oracle allowed paths must be strings");
+  }
+  const expected = withoutAllowedDifferencePaths(input.expected, allowedDifferencePaths);
+  const actual = withoutAllowedDifferencePaths(input.actual, allowedDifferencePaths);
+  const status: TextConformanceCheckStatus =
+    canonicalJson(expected) === canonicalJson(actual) ? "pass" : "fail";
+  return {
+    checkId: `differential:${input.oracleId}`,
+    status,
+    message:
+      input.message ??
+      (status === "pass"
+        ? "Actual output matches expected output after applying allowed difference paths."
+        : "Actual output differs from expected output outside allowed difference paths."),
+    ...(input.evidenceRefs ? { evidenceRefs: input.evidenceRefs } : {}),
+  };
 }
 
 export function diffTextConformanceReports(
@@ -502,7 +960,14 @@ export function validateTextConformanceClaimRegistry(
             ...(missingReportRefs.length > 0
               ? { message: `Missing report refs: ${missingReportRefs.join(", ")}` }
               : {}),
-            evidenceRefs: [...claim.evidenceRefs, ...claim.reportRefs].sort(),
+            evidenceRefs: [
+              ...claim.requirementRefs,
+              ...claim.apiRefs,
+              ...claim.inputRefs,
+              ...claim.oracleRefs,
+              ...claim.evidenceRefs,
+              ...claim.reportRefs,
+            ].sort(),
           };
         },
       })),

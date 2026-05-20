@@ -21,7 +21,34 @@
       "evidenceRefs": [
         "fixtures/tokenization-sbd/slices.json",
         "fixtures/tokenization-sbd/tool-versions.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/tokenization-sbd/slices.json",
+          "fixtures/tokenization-sbd/tool-versions.json"
+        ],
+        "oracleRefs": [
+          "schemas/tokenization-sbd-expected-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs",
+          "schemas/tokenization-sbd-corpus-gate-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "expected-output-contract-recorded",
@@ -30,7 +57,32 @@
       "evidenceRefs": [
         "schemas/tokenization-sbd-expected-v1.schema.json",
         "tools/validate-tokenization-sbd-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/tokenization-sbd-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/tokenization-sbd-expected-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "comparator-captures-recorded",
@@ -39,7 +91,34 @@
       "evidenceRefs": [
         "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
         "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
+          "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
+        ],
+        "oracleRefs": [
+          "schemas/tokenization-sbd-expected-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs",
+          "schemas/tokenization-sbd-corpus-gate-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "result-envelope-and-report-proof",
@@ -49,7 +128,34 @@
         "schemas/textprotocol-result-envelope-v1.schema.json",
         "schemas/textconformance-report-v1.schema.json",
         "tools/validate-tokenization-sbd-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -58,7 +164,35 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/tokenization-sbd/slices.json",
+          "fixtures/tokenization-sbd/tool-versions.json",
+          "schemas/tokenization-sbd-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/tokenization-sbd-expected-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs",
+          "schemas/tokenization-sbd-corpus-gate-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "evidence-tier-policy-recorded",
@@ -68,7 +202,32 @@
         "docs/specs/task-evidence-tiers.md",
         "fixtures/evidence/task-evidence-tier-policy.v1.json",
         "schemas/task-evidence-tier-policy-v1.schema.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/evidence/task-evidence-tier-policy.v1.json",
+          "schemas/task-evidence-tier-policy-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/task-evidence-tier-policy-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "corpus-split-policy-recorded",
@@ -78,7 +237,33 @@
         "fixtures/tokenization-sbd/corpus.v1.json",
         "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
         "tools/validate-tokenization-sbd-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/tokenization-sbd/corpus.v1.json",
+          "schemas/tokenization-sbd-corpus-gate-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     },
     {
       "checkId": "performance-gate-recorded",
@@ -87,7 +272,31 @@
       "evidenceRefs": [
         "fixtures/performance/gates.v1.json",
         "tools/validate-performance-gates.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/performance/gates.v1.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-performance-gates.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Not a broad multilingual tokenizer benchmark suite.",
+          "Language-specific segmentation beyond the frozen slices remains future work.",
+          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
+        ]
+      }
     }
   ],
   "notes": [

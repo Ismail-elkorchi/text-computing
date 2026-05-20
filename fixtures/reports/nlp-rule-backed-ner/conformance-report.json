@@ -21,7 +21,32 @@
       "evidenceRefs": [
         "fixtures/rule-backed-ner/slices.json",
         "fixtures/rule-backed-ner/tool-versions.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/rule-backed-ner-readiness.md",
+          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/rule-backed-ner/slices.json",
+          "fixtures/rule-backed-ner/tool-versions.json"
+        ],
+        "oracleRefs": [
+          "schemas/rule-backed-ner-expected-v1.schema.json",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "limitations": [
+          "Only PER, ORG, LOC, and small curated resources are covered.",
+          "Broader labels, entity linking, and large multilingual datasets remain future work.",
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+        ]
+      }
     },
     {
       "checkId": "expected-outputs-recorded",
@@ -30,7 +55,31 @@
       "evidenceRefs": [
         "schemas/rule-backed-ner-expected-v1.schema.json",
         "tools/validate-rule-backed-ner-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/rule-backed-ner-readiness.md",
+          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/rule-backed-ner-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/rule-backed-ner-expected-v1.schema.json",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "limitations": [
+          "Only PER, ORG, LOC, and small curated resources are covered.",
+          "Broader labels, entity linking, and large multilingual datasets remain future work.",
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+        ]
+      }
     },
     {
       "checkId": "comparator-captures-recorded",
@@ -39,7 +88,32 @@
       "evidenceRefs": [
         "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
         "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/rule-backed-ner-readiness.md",
+          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
+          "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
+        ],
+        "oracleRefs": [
+          "schemas/rule-backed-ner-expected-v1.schema.json",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "limitations": [
+          "Only PER, ORG, LOC, and small curated resources are covered.",
+          "Broader labels, entity linking, and large multilingual datasets remain future work.",
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+        ]
+      }
     },
     {
       "checkId": "result-envelope-and-report-proof",
@@ -49,7 +123,33 @@
         "schemas/textprotocol-result-envelope-v1.schema.json",
         "schemas/textconformance-report-v1.schema.json",
         "tools/validate-rule-backed-ner-readiness.mjs"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/rule-backed-ner-readiness.md",
+          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "inputRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/textprotocol-result-envelope-v1.schema.json",
+          "schemas/textconformance-report-v1.schema.json",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "limitations": [
+          "Only PER, ORG, LOC, and small curated resources are covered.",
+          "Broader labels, entity linking, and large multilingual datasets remain future work.",
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+        ]
+      }
     },
     {
       "checkId": "support-boundary-recorded",
@@ -58,7 +158,33 @@
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
-      ]
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/rule-backed-ner-readiness.md",
+          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+        ],
+        "apiRefs": [
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/rule-backed-ner/slices.json",
+          "fixtures/rule-backed-ner/tool-versions.json",
+          "schemas/rule-backed-ner-expected-v1.schema.json"
+        ],
+        "oracleRefs": [
+          "schemas/rule-backed-ner-expected-v1.schema.json",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "limitations": [
+          "Only PER, ORG, LOC, and small curated resources are covered.",
+          "Broader labels, entity linking, and large multilingual datasets remain future work.",
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+        ]
+      }
     }
   ],
   "notes": [

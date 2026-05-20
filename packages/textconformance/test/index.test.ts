@@ -1,16 +1,29 @@
 import {
+  conformanceBenchmarkReportSchemaId,
+  conformanceBenchmarkReportSchemaVersion,
   conformanceClaimRegistrySchemaVersion,
+  conformanceSuiteSchemaId,
+  conformanceSuiteSchemaVersion,
   diffTextConformanceReports,
+  isTextConformanceBenchmarkReportV1,
   isTextConformanceClaimRegistryV1,
   isTextConformanceClaimV1,
   isTextConformanceReportDiffV1,
   isTextConformanceReportV1,
+  isTextConformanceSuiteV1,
   packageName,
   renderTextConformanceReportDiffMarkdown,
   renderTextConformanceReportMarkdown,
+  runTextConformanceDifferentialOracle,
   runTextConformanceChecks,
+  runTextConformanceSuite,
   validateTextConformanceClaimRegistry,
+  validateTextConformanceFixturePolicy,
 } from "../src/index.ts";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textconformance";
 
@@ -242,6 +255,8 @@ const claim = {
   supportLabel: "fixture-proven",
   requirementRefs: ["packages/textconformance/README.md#conformance-report-package"],
   apiRefs: ["packages/textconformance/src/index.ts#runTextConformanceChecks"],
+  inputRefs: ["packages/textconformance/test/index.test.ts#report"],
+  oracleRefs: ["packages/textconformance/test/index.test.ts#isTextConformanceReportV1"],
   evidenceRefs: ["packages/textconformance/test/index.test.ts"],
   reportRefs: [actualReport.reportId],
   limitations: ["This claim is limited to package unit-test evidence."],
@@ -282,10 +297,176 @@ if (missingReport.summary.fail !== 1) {
 if (
   isTextConformanceClaimV1({
     ...claim,
-    evidenceRefs: [],
+    oracleRefs: [],
   })
 ) {
-  throw new Error("claim guard should reject empty evidence refs");
+  throw new Error("claim guard should reject empty oracle refs");
+}
+
+const suite = {
+  schemaId: conformanceSuiteSchemaId,
+  schemaVersion: conformanceSuiteSchemaVersion,
+  suiteId: "suite:textconformance-unit",
+  suiteVersion: "1.0.0",
+  suiteClass: "spec",
+  subject: {
+    kind: "package",
+    id: "@ismail-elkorchi/textconformance",
+    version: "0.1.0",
+  },
+  claimBoundary: "Unit-test suite for the textconformance harness API.",
+  fixtures: [
+    {
+      role: "validation",
+      ref: "packages/textconformance/test/index.test.ts#suite-validation",
+    },
+    {
+      role: "holdout",
+      ref: "packages/textconformance/test/index.test.ts#suite-holdout",
+    },
+    {
+      role: "negative-control",
+      ref: "packages/textconformance/test/index.test.ts#suite-negative",
+    },
+  ],
+  oracles: [
+    {
+      oracleId: "runtime-guard",
+      kind: "runtime-guard",
+      ref: "packages/textconformance/src/index.ts#isTextConformanceSuiteV1",
+    },
+  ],
+  checks: [
+    {
+      checkId: "suite-runtime-guard",
+      oracleId: "runtime-guard",
+      expectedStatus: "pass",
+      evidenceRefs: ["packages/textconformance/test/index.test.ts"],
+      traceability: {
+        requirementRefs: ["packages/textconformance/README.md#suite-harness"],
+        apiRefs: ["packages/textconformance/src/index.ts#runTextConformanceSuite"],
+        inputRefs: ["packages/textconformance/test/index.test.ts#suite"],
+        oracleRefs: ["runtime-guard"],
+        reportRefs: ["suite:suite:textconformance-unit"],
+        limitations: ["Unit-test fixture only."],
+      },
+    },
+  ],
+  limitations: ["Unit-test suite, not a repository-wide package claim."],
+} as const;
+
+if (!isTextConformanceSuiteV1(suite)) {
+  throw new Error("suite should satisfy the conformance suite guard");
+}
+const suiteReport = runTextConformanceSuite(suite, {
+  generatedAt: "2026-04-23T00:00:00.000Z",
+  fixturePolicy: { requireHoldout: true },
+});
+if (!isTextConformanceReportV1(suiteReport) || suiteReport.summary.fail !== 0) {
+  throw new Error("suite runner should produce a passing conformance report");
+}
+if (suiteReport.checks[0]?.checkId !== "fixture-policy:development-not-sole-evidence") {
+  throw new Error("suite runner should emit deterministic sorted check rows");
+}
+
+const devOnlySuite = {
+  ...suite,
+  suiteId: "suite:textconformance-dev-only",
+  fixtures: [{ role: "development", ref: "packages/textconformance/test/index.test.ts#dev" }],
+} as const;
+if (!isTextConformanceSuiteV1(devOnlySuite)) {
+  throw new Error("development-only suite should remain structurally valid");
+}
+const devOnlyPolicy = validateTextConformanceFixturePolicy(devOnlySuite, {
+  requireHoldout: true,
+});
+if (devOnlyPolicy.filter((entry) => entry.status === "fail").length !== 3) {
+  throw new Error("fixture policy should reject development-only suites with missing controls");
+}
+
+const differentialPass = runTextConformanceDifferentialOracle({
+  oracleId: "json-output",
+  expected: { generatedAt: "a", values: [1, { id: "x" }] },
+  actual: { generatedAt: "b", values: [1, { id: "x" }] },
+  allowedDifferencePaths: ["$.generatedAt"],
+  evidenceRefs: ["packages/textconformance/test/index.test.ts#differential"],
+});
+if (differentialPass.status !== "pass") {
+  throw new Error("differential oracle should allow declared difference paths");
+}
+const differentialFail = runTextConformanceDifferentialOracle({
+  oracleId: "json-output-fail",
+  expected: { value: 1 },
+  actual: { value: 2 },
+});
+if (differentialFail.status !== "fail") {
+  throw new Error("differential oracle should fail undeclared differences");
+}
+
+const benchmarkReport = {
+  schemaId: conformanceBenchmarkReportSchemaId,
+  schemaVersion: conformanceBenchmarkReportSchemaVersion,
+  benchmarkId: "benchmark:textconformance-unit",
+  subject: {
+    kind: "package",
+    id: "@ismail-elkorchi/textconformance",
+  },
+  generatedAt: "2026-04-23T00:00:00.000Z",
+  metrics: [
+    {
+      metricId: "duration-ms",
+      value: 1,
+      unit: "ms",
+      higherIsPreferred: false,
+    },
+  ],
+  evidenceRefs: ["packages/textconformance/test/index.test.ts#benchmark"],
+  limitations: ["Synthetic unit-test benchmark report."],
+} as const;
+if (!isTextConformanceBenchmarkReportV1(benchmarkReport)) {
+  throw new Error("benchmark report should satisfy the benchmark report guard");
+}
+if (isTextConformanceReportV1(benchmarkReport)) {
+  throw new Error("benchmark report must not satisfy the conformance report guard");
+}
+
+const cliDir = mkdtempSync(path.join(tmpdir(), "textconformance-cli-"));
+const reportPath = path.join(cliDir, "report.json");
+const suitePath = path.join(cliDir, "suite.json");
+const invalidPath = path.join(cliDir, "invalid.json");
+writeFileSync(reportPath, `${JSON.stringify(suiteReport, null, 2)}\n`);
+writeFileSync(suitePath, `${JSON.stringify(suite, null, 2)}\n`);
+writeFileSync(invalidPath, "{\"schemaVersion\":1}\n");
+const cliPath = path.resolve("dist/cli.js");
+const validateCli = execFileSync(process.execPath, [cliPath, "validate-report", reportPath], {
+  encoding: "utf8",
+});
+if (!validateCli.includes("\"ok\":true") || !validateCli.includes("\"checkCount\":5")) {
+  throw new Error("CLI should validate conformance reports with deterministic JSON output");
+}
+const renderCli = execFileSync(process.execPath, [cliPath, "render-report", reportPath], {
+  encoding: "utf8",
+});
+if (!renderCli.includes("# Conformance report suite:suite:textconformance-unit")) {
+  throw new Error("CLI should render conformance report Markdown");
+}
+const suiteCli = execFileSync(process.execPath, [cliPath, "validate-suite", suitePath], {
+  encoding: "utf8",
+});
+if (!suiteCli.includes("\"reportId\":\"suite:suite:textconformance-unit\"")) {
+  throw new Error("CLI should validate and execute suite files");
+}
+let invalidCliRejected = false;
+try {
+  execFileSync(process.execPath, [cliPath, "validate-report", invalidPath], {
+    encoding: "utf8",
+    stdio: "pipe",
+  });
+} catch {
+  invalidCliRejected = true;
+}
+if (!invalidCliRejected) {
+  throw new Error("CLI should reject malformed conformance reports");
 }
 
 void expectedPackageName;

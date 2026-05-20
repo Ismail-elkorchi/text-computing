@@ -8,11 +8,18 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js"
     }
+  },
+  "bin": {
+    "textconformance": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "tsc -p tsconfig.json --noEmit && node test/index.test.ts",
+    "test": "tsc -p tsconfig.json --noEmit && npm run -s build && node test/index.test.ts",
     "prepack": "npm run build"
   },
   "license": "MIT",
