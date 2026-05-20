@@ -6,6 +6,7 @@
 - Offline Unicode conformance test data vendored in-repo
 - Remove broad legacy subpaths (`all`, `compare`, `pack`, `protocol`, `schema`, `toolspec`) during alpha boundary cleanup.
 - Keep package exports focused on deterministic Unicode/text-kernel APIs.
+- Add explicit default profile/tailoring hooks, normalization transform-map diagnostics, and machine-readable custom-tokenizer errors.
 
 ## 0.1.0
 - Initial release

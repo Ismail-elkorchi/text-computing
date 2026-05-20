@@ -1,5 +1,6 @@
 import { hasBidiControls } from "../bidi/bidi.ts";
 import { nfkcCaseFold } from "../casefold/casefold.ts";
+import { TextfactsError } from "../core/error.ts";
 import { normalizeInput } from "../core/input.ts";
 import { sliceBySpan } from "../core/span.ts";
 import type { Span, TextInput } from "../core/types.ts";
@@ -85,7 +86,11 @@ function iterateSpans(text: string, options: TokenScanOptions): Iterable<Span> {
       })();
     case "custom":
       if (!options.customTokenizer)
-        throw new Error("customTokenizer is required for tokenizer=custom");
+        throw new TextfactsError(
+          "CUSTOM_TOKENIZER_REQUIRED",
+          "customTokenizer is required for tokenizer=custom",
+          { tokenizer: options.tokenizer },
+        );
       return options.customTokenizer(text);
     default:
       return [];

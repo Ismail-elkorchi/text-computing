@@ -1,4 +1,9 @@
 import { normalizeInput } from "../core/input.ts";
+import {
+  assertProfileAlgorithmRevision,
+  resolveTextfactsProfile,
+  type TextfactsProfileInput,
+} from "../core/profile.ts";
 import { createProvenance } from "../core/provenance.ts";
 import type { Provenance, TextInput } from "../core/types.ts";
 import { IMPLEMENTATION_ID } from "../core/version.ts";
@@ -26,6 +31,8 @@ export interface LineBreakOpportunity {
  * LineBreakOptions defines an exported structural contract.
  */
 export interface LineBreakOptions {
+  algorithmRevision?: string;
+  profile?: TextfactsProfileInput;
   treatCRLFAsSingle?: boolean;
   treatNLAsHardBreak?: boolean;
   debug?: boolean;
@@ -38,11 +45,14 @@ export interface LineBreakIterable extends Iterable<LineBreakOpportunity> {
   provenance: Provenance;
 }
 
-const DEFAULT_ALGORITHM_REVISION = "Unicode 17.0.0";
 const UAX14_SPEC = "https://unicode.org/reports/tr14/";
 
-function normalizeOptions(options: LineBreakOptions): Required<LineBreakOptions> {
+function normalizeOptions(options: LineBreakOptions) {
+  const profile = resolveTextfactsProfile(options.profile);
   return {
+    algorithmRevision: assertProfileAlgorithmRevision(options.algorithmRevision, profile),
+    profileId: profile.id,
+    tailoring: profile.tailoring.lineBreak,
     treatCRLFAsSingle: options.treatCRLFAsSingle ?? true,
     treatNLAsHardBreak: options.treatNLAsHardBreak ?? true,
     debug: options.debug ?? false,
@@ -97,7 +107,7 @@ export function lineBreakOpportunities(
   const algorithm = {
     name: "UAX14.LineBreak",
     spec: UAX14_SPEC,
-    revisionOrDate: DEFAULT_ALGORITHM_REVISION,
+    revisionOrDate: normalizedOptions.algorithmRevision,
     implementationId: IMPLEMENTATION_ID,
   };
   const provenance = createProvenance(algorithm, normalizedOptions, {

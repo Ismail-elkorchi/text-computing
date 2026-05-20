@@ -8,3 +8,4 @@ export * from "./codepoint.ts";
 export * from "./span.ts";
 export * from "./version.ts";
 export * from "./error.ts";
+export * from "./profile.ts";
