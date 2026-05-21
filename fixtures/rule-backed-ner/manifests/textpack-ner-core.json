@@ -1,0 +1,51 @@
+{
+  "manifestVersion": "1.0.0",
+  "id": "pack:ner-core",
+  "packageName": "@ismail-elkorchi/textpack-ner-core",
+  "version": "0.1.0",
+  "kind": ["language", "domain"],
+  "targets": {
+    "languages": ["ar", "en", "es", "fr", "ja"],
+    "scripts": ["Arab", "Latn", "Jpan"]
+  },
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0",
+    "@ismail-elkorchi/textrules": "^0.1.0"
+  },
+  "externalData": {
+    "unicode": "17.0.0"
+  },
+  "capabilities": {
+    "gazetteers": true
+  },
+  "resources": {
+    "gazetteers": ["fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json"]
+  },
+  "provides": {
+    "gazetteers": ["gazetteer-ner-core"]
+  },
+  "entrypoints": {
+    "manifest": "fixtures/rule-backed-ner/manifests/textpack-ner-core.json"
+  },
+  "licenses": {
+    "code": ["MIT"],
+    "data": ["CC0-1.0"]
+  },
+  "provenance": {
+    "sources": ["repo:fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json"],
+    "generated": false,
+    "createdBy": ["text-computing"]
+  },
+  "tests": {
+    "smoke": ["fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json"],
+    "negative": ["negative:lowercase-alias"],
+    "representative": ["lookup:gazetteer:ner"]
+  },
+  "reviewState": "candidate",
+  "composition": {
+    "overlayPrecedence": 10
+  },
+  "limitations": [
+    "Fixture gazetteer for rule-backed NER validation only."
+  ]
+}

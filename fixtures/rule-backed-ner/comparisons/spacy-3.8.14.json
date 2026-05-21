@@ -103,6 +103,24 @@
       "status": "not-run",
       "reason": "Frozen English model en_core_web_sm is not declared for the Arabic readiness slice.",
       "entities": []
+    },
+    {
+      "sliceId": "org-person-location-fr-paris",
+      "status": "not-run",
+      "reason": "This added corpus/holdout slice was not part of the frozen executed comparator capture; no external comparator-backed claim is made for it in this gate.",
+      "entities": []
+    },
+    {
+      "sliceId": "person-location-ja-tokyo",
+      "status": "not-run",
+      "reason": "This added corpus/holdout slice was not part of the frozen executed comparator capture; no external comparator-backed claim is made for it in this gate.",
+      "entities": []
+    },
+    {
+      "sliceId": "negative-lowercase-aliases",
+      "status": "not-run",
+      "reason": "This added corpus/holdout slice was not part of the frozen executed comparator capture; no external comparator-backed claim is made for it in this gate.",
+      "entities": []
     }
   ]
 }

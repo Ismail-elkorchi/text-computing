@@ -3033,7 +3033,6 @@ function collectEntityMatchesFromTextDoc(
               entry.caseFoldFallback === true &&
               candidateText.toLocaleLowerCase("und") === normalizedSurface;
             if (!exactMatch && !caseFoldMatch) continue;
-            if (!hasEntityBoundary(document.text, startToken.startCU, endToken.endCU)) continue;
             const match: TextRulesEntityMatch = {
               entry,
               resource,

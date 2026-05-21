@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -44,7 +44,9 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
+          "Added multilingual holdouts are not external-comparator-backed in this gate."
         ]
       }
     },
@@ -77,7 +79,9 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
+          "Added multilingual holdouts are not external-comparator-backed in this gate."
         ]
       }
     },
@@ -111,7 +115,9 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
+          "Added multilingual holdouts are not external-comparator-backed in this gate."
         ]
       }
     },
@@ -147,7 +153,9 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
+          "Added multilingual holdouts are not external-comparator-backed in this gate."
         ]
       }
     },
@@ -182,12 +190,55 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
+          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
+          "Added multilingual holdouts are not external-comparator-backed in this gate."
+        ]
+      }
+    },
+    {
+      "checkId": "corpus-holdout-and-negative-control-evidence",
+      "status": "pass",
+      "message": "Committed NER corpus evidence records split roles, CC0-compatible license metadata, multilingual holdouts, label-policy controls, and false-positive controls.",
+      "evidenceRefs": [
+        "fixtures/rule-backed-ner/slices.json",
+        "fixtures/rule-backed-ner/manifests/textpack-ner-core.json",
+        "fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json",
+        "fixtures/rule-backed-ner/expected/org-person-location-fr-paris.json",
+        "fixtures/rule-backed-ner/expected/person-location-ja-tokyo.json",
+        "fixtures/rule-backed-ner/expected/negative-lowercase-aliases.json"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/rule-backed-ner-readiness.md",
+          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textrules/src/index.ts",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/rule-backed-ner/slices.json",
+          "fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json"
+        ],
+        "oracleRefs": [
+          "schemas/rule-backed-ner-slices-v1.schema.json",
+          "tools/validate-rule-backed-ner-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        ],
+        "limitations": [
+          "Only PER, ORG, LOC, and small curated resources are covered.",
+          "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
+          "Added multilingual holdouts are not external-comparator-backed in this gate.",
           "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists current rule-backed NER evidence; it does not add broader label, entity-linking, or dataset support."
+    "This report persists current rule-backed NER evidence; it does not add broader label, entity-linking, or large external dataset support.",
+    "Corpus-style evidence is bounded to committed CC0-compatible fixture slices."
   ]
 }

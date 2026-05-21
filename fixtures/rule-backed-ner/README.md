@@ -1,12 +1,11 @@
 # Rule-backed NER fixtures
 
-This fixture set records readiness artifacts for issue `#13`.
+This fixture set records readiness and slice-level feature evidence for rule-backed named entity recognition.
 
-- `slices.json` freezes the multilingual rule-backed NER slices that feature work must cover.
-- `tool-versions.json` freezes comparator versions, the supported label policy, and the
-  diagnostic comparator set.
-- `comparisons/` stores committed diagnostic comparator outputs from pinned external tools.
-- `expected/` stores recorded goldens that validate against
-  `schemas/rule-backed-ner-expected-v1.schema.json`.
+- `slices.json` freezes the input slices, PER/ORG/LOC label policy controls, split roles, CC0-compatible corpus-style fixture metadata, and false-positive controls.
+- `tool-versions.json` freezes comparator versions.
+- `expected/` records current deterministic expected outputs.
+- `manifests/` and `resources/` contain the explicit gazetteer fixture resources consumed by the validator.
+- `comparisons/` records diagnostic comparator captures and explicit `not-run` entries where added holdouts were outside the frozen execution scope.
 
-This fixture set is the frozen evidence surface for the implemented rule-backed NER behavior over the declared slices.
+The fixtures are package-evaluation evidence only. They do not claim broad NER dataset coverage, broad label coverage, entity linking, or broad multilingual NER support.

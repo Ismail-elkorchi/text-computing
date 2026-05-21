@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "negative-lowercase-aliases",
+  "source": {
+    "sliceId": "negative-lowercase-aliases",
+    "sha256": "e9da150970ab626caef798c825f48975d9495a4b7da9fb4744a17cb505390b1a"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "rule-backed-ner:negative-lowercase-aliases",
+    "revision": "rule-backed-ner-v1",
+    "textLengthCU": 37,
+    "text": "apple and ibm stayed outside the lab.",
+    "source": {
+      "id": "negative-lowercase-aliases",
+      "sha256": "e9da150970ab626caef798c825f48975d9495a4b7da9fb4744a17cb505390b1a"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      {
+        "id": "source-view",
+        "kind": "raw"
+      },
+      {
+        "id": "analysis-view",
+        "kind": "task",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
+      }
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 37
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 37
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 0,
+                "endCU": 5
+              }
+            ],
+            "text": "apple"
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 6,
+                "endCU": 9
+              }
+            ],
+            "text": "and"
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 10,
+                "endCU": 13
+              }
+            ],
+            "text": "ibm"
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 14,
+                "endCU": 20
+              }
+            ],
+            "text": "stayed"
+          },
+          {
+            "id": "token-5",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 21,
+                "endCU": 28
+              }
+            ],
+            "text": "outside"
+          },
+          {
+            "id": "token-6",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 29,
+                "endCU": 32
+              }
+            ],
+            "text": "the"
+          },
+          {
+            "id": "token-7",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 33,
+                "endCU": 36
+              }
+            ],
+            "text": "lab"
+          },
+          {
+            "id": "token-8",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 36,
+                "endCU": 37
+              }
+            ],
+            "text": "."
+          }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 0,
+                "endCU": 37
+              }
+            ],
+            "text": "apple and ibm stayed outside the lab."
+          }
+        ]
+      },
+      {
+        "id": "entities",
+        "kind": "entity",
+        "viewId": "analysis-view",
+        "annotations": [],
+        "notes": [
+          "Rule-backed NER emits only the frozen PER/ORG/LOC label set for declared resources."
+        ]
+      }
+    ]
+  },
+  "notes": [
+    "Generated from committed rule-backed NER gazetteer resources and textdoc token layers."
+  ]
+}

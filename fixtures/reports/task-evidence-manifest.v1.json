@@ -275,7 +275,12 @@
         "fixtures/rule-backed-ner/slices.json",
         "fixtures/rule-backed-ner/tool-versions.json",
         "schemas/rule-backed-ner-expected-v1.schema.json",
-        "tools/validate-rule-backed-ner-readiness.mjs"
+        "tools/validate-rule-backed-ner-readiness.mjs",
+        "fixtures/rule-backed-ner/manifests/textpack-ner-core.json",
+        "fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json",
+        "fixtures/rule-backed-ner/expected/org-person-location-fr-paris.json",
+        "fixtures/rule-backed-ner/expected/person-location-ja-tokyo.json",
+        "fixtures/rule-backed-ner/expected/negative-lowercase-aliases.json"
       ],
       "comparatorRefs": [
         "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
@@ -283,7 +288,9 @@
       ],
       "knownGaps": [
         "Only PER, ORG, LOC, and small curated resources are covered.",
-        "Broader labels, entity linking, and large multilingual datasets remain future work."
+        "Corpus-style evidence is limited to committed fixture slices; large external NER corpora remain future work.",
+        "Added multilingual holdouts are package-evaluation evidence only until comparator execution covers them.",
+        "Broader labels and entity linking remain future work."
       ]
     },
     {
