@@ -41,6 +41,12 @@ view ids, annotation targets, lifecycle links, relation arguments, coreference c
 node links, dependency self-loops, dependency sentence consistency, ambiguity-set consistency, loss
 provenance, and reference-kind integrity.
 
+`exportTextDocAnnotationBundlePayloadV1()` exports a document's annotations as deterministic
+stand-off records keyed by document id, revision, layer id, annotation id, representative target, and
+the full annotation object. `applyTextDocAnnotationBundlePayloadV1()` restores those records onto an
+existing document skeleton and rejects duplicate annotation ids, layer/kind mismatches, document or
+revision mismatch, and representative-target drift.
+
 ## Extension annotations
 
 Core annotation kinds are reserved for cross-package semantics that this package can validate without

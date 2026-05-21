@@ -1,10 +1,26 @@
 import Ajv from "ajv";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import {
+  applyTextDocAnnotationBundlePayloadV1,
+  exportTextDocAnnotationBundlePayloadV1,
+} from "../packages/textdoc/src/index.ts";
+import {
+  canonicalizeTextProtocolJson,
+  isTextProtocolAnnotationBundleV1,
+  textProtocolAnnotationBundleSchemaId,
+  textProtocolSchemaVersion,
+} from "../packages/textprotocol/src/index.ts";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
+const WRITE_MODE = process.argv.includes("--write");
 
 async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
+}
+
+async function writeJson(path, value) {
+  await mkdir(path.split("/").slice(0, -1).join("/"), { recursive: true });
+  await writeFile(path, `${JSON.stringify(value, null, 2)}\n`);
 }
 
 function stableStringify(value) {
@@ -598,6 +614,8 @@ const documentSchema = await readJson("schemas/textdoc-document-v1.schema.json")
 const validateDocument = ajv.compile(documentSchema);
 const resultEnvelopeSchema = await readJson("schemas/textprotocol-result-envelope-v1.schema.json");
 const validateResultEnvelope = ajv.compile(resultEnvelopeSchema);
+const annotationBundleSchema = await readJson("schemas/textprotocol-annotation-bundle-v1.schema.json");
+const validateAnnotationBundle = ajv.compile(annotationBundleSchema);
 const conformanceReportSchema = await readJson("schemas/textconformance-report-v1.schema.json");
 const validateConformanceReport = ajv.compile(conformanceReportSchema);
 const textdocPackage = await readJson("packages/textdoc/package.json");
@@ -632,6 +650,8 @@ for (const validFixturePath of validFixturePaths) {
 
 const validFixturePath = validFixturePaths[0];
 const validDocument = await readJson(validFixturePath);
+const annotationBundlePath =
+  "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json";
 
 const resultEnvelope = {
   schemaId: "urn:ismail-elkorchi:textprotocol:result-envelope:v1",
@@ -656,6 +676,121 @@ const resultEnvelope = {
 if (!validateResultEnvelope(resultEnvelope)) {
   console.error(`${validFixturePath} could not be wrapped in the result envelope schema`);
   console.error(JSON.stringify(validateResultEnvelope.errors, null, 2));
+  process.exit(1);
+}
+
+const annotationBundlePayload = exportTextDocAnnotationBundlePayloadV1(validDocument);
+const annotationBundleEnvelope = {
+  schemaId: textProtocolAnnotationBundleSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: textdocPackage.name,
+    version: textdocPackage.version,
+  },
+  payload: annotationBundlePayload,
+  provenance: {
+    source: validDocument.source,
+    references: [
+      {
+        kind: "fixture",
+        id: "textdoc-document-annotation-model-v1",
+      },
+      {
+        kind: "schema",
+        id: "schemas/textprotocol-annotation-bundle-v1.schema.json",
+      },
+    ],
+  },
+  limitations: [
+    "Stand-off annotation bundle evidence covers the committed document-model fixture only.",
+    "No external document-model comparator is claimed by this artifact.",
+  ],
+};
+
+if (!isTextProtocolAnnotationBundleV1(annotationBundleEnvelope)) {
+  console.error(`${annotationBundlePath} failed the textprotocol annotation-bundle runtime guard`);
+  process.exit(1);
+}
+
+if (!validateAnnotationBundle(annotationBundleEnvelope)) {
+  console.error(`${annotationBundlePath} failed schemas/textprotocol-annotation-bundle-v1.schema.json`);
+  console.error(JSON.stringify(validateAnnotationBundle.errors, null, 2));
+  process.exit(1);
+}
+
+const annotationSkeletonDocument = {
+  ...validDocument,
+  layers: validDocument.layers.map((layer) => ({ ...layer, annotations: [] })),
+};
+const annotationBundleRoundTrip = applyTextDocAnnotationBundlePayloadV1(
+  annotationSkeletonDocument,
+  annotationBundlePayload,
+);
+if (
+  !annotationBundleRoundTrip.ok ||
+  stableStringify(annotationBundleRoundTrip.document.layers) !== stableStringify(validDocument.layers)
+) {
+  console.error(`${annotationBundlePath} failed textdoc annotation-bundle round-trip restoration`);
+  console.error(JSON.stringify(annotationBundleRoundTrip.diagnostics, null, 2));
+  process.exit(1);
+}
+
+const firstAnnotationBundleEntry = annotationBundlePayload.annotations[0];
+if (firstAnnotationBundleEntry === undefined) {
+  console.error(`${annotationBundlePath} must contain annotation evidence.`);
+  process.exit(1);
+}
+
+const duplicateBundleResult = applyTextDocAnnotationBundlePayloadV1(annotationSkeletonDocument, {
+  ...annotationBundlePayload,
+  annotations: [...annotationBundlePayload.annotations, firstAnnotationBundleEntry],
+});
+if (
+  !duplicateBundleResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.annotation-bundle.annotation-duplicate",
+  )
+) {
+  console.error("Duplicate annotation-bundle entries must be rejected.");
+  process.exit(1);
+}
+
+const targetDriftResult = applyTextDocAnnotationBundlePayloadV1(annotationSkeletonDocument, {
+  ...annotationBundlePayload,
+  annotations: [
+    {
+      ...firstAnnotationBundleEntry,
+      target: { kind: "document" },
+    },
+    ...annotationBundlePayload.annotations.slice(1),
+  ],
+});
+if (
+  !targetDriftResult.diagnostics.some(
+    (entry) => entry.code === "textdoc.annotation-bundle.target-mismatch",
+  )
+) {
+  console.error("Annotation-bundle target drift must be rejected.");
+  process.exit(1);
+}
+
+if (WRITE_MODE) {
+  await writeJson(annotationBundlePath, annotationBundleEnvelope);
+}
+const committedAnnotationBundle = await readJson(annotationBundlePath);
+if (!validateAnnotationBundle(committedAnnotationBundle)) {
+  console.error(`${annotationBundlePath} committed artifact failed its schema`);
+  console.error(JSON.stringify(validateAnnotationBundle.errors, null, 2));
+  process.exit(1);
+}
+if (!isTextProtocolAnnotationBundleV1(committedAnnotationBundle)) {
+  console.error(`${annotationBundlePath} committed artifact failed its runtime guard`);
+  process.exit(1);
+}
+if (
+  canonicalizeTextProtocolJson(committedAnnotationBundle) !==
+    canonicalizeTextProtocolJson(annotationBundleEnvelope)
+) {
+  console.error(`${annotationBundlePath} is stale; run node tools/validate-textdoc-document-model.mjs --write.`);
   process.exit(1);
 }
 
