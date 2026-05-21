@@ -91,6 +91,9 @@ for (const slice of slices.slices) {
 const corpusRoles = new Set();
 const corpusIds = new Set();
 const developmentCorpusSliceIds = new Set();
+const holdoutScripts = new Set();
+const holdoutBoundaryRegimes = new Set();
+const holdoutSourceSliceIds = new Set();
 for (const corpusSlice of corpusGate.corpusSlices) {
   if (corpusIds.has(corpusSlice.id)) {
     console.error(`Duplicate tokenization/SBD corpus slice id: ${corpusSlice.id}`);
@@ -111,6 +114,11 @@ for (const corpusSlice of corpusGate.corpusSlices) {
     process.exit(1);
   }
   if (corpusSlice.splitRole === "development") developmentCorpusSliceIds.add(corpusSlice.sourceSliceId);
+  if (corpusSlice.splitRole === "holdout") {
+    holdoutScripts.add(corpusSlice.script);
+    holdoutBoundaryRegimes.add(corpusSlice.boundaryRegime);
+    holdoutSourceSliceIds.add(corpusSlice.sourceSliceId);
+  }
   if (corpusSlice.splitRole === "holdout" && developmentCorpusSliceIds.has(corpusSlice.sourceSliceId)) {
     console.error(`Tokenization/SBD corpus slice ${corpusSlice.id} cannot be both development and holdout.`);
     process.exit(1);
@@ -120,6 +128,36 @@ for (const corpusSlice of corpusGate.corpusSlices) {
 for (const role of ["development", "validation", "holdout", "negative-control"]) {
   if (!corpusRoles.has(role)) {
     console.error(`Tokenization/SBD corpus gate is missing split role ${role}.`);
+    process.exit(1);
+  }
+}
+for (const requiredHoldoutScript of ["Arabic", "Devanagari", "Han", "Hangul", "Khmer", "Lao", "Latin", "Thai"]) {
+  if (!holdoutScripts.has(requiredHoldoutScript)) {
+    console.error(`Tokenization/SBD corpus gate is missing holdout script ${requiredHoldoutScript}.`);
+    process.exit(1);
+  }
+}
+for (const requiredHoldoutRegime of [
+  "space-delimited",
+  "right-to-left",
+  "cjk",
+  "southeast-asian-no-space",
+]) {
+  if (!holdoutBoundaryRegimes.has(requiredHoldoutRegime)) {
+    console.error(`Tokenization/SBD corpus gate is missing holdout boundary regime ${requiredHoldoutRegime}.`);
+    process.exit(1);
+  }
+}
+for (const requiredHoldoutSlice of [
+  "arabic-diacritic-clitic",
+  "chinese-han",
+  "french-elision-diacritics",
+  "khmer-no-space",
+  "lao-no-space",
+  "thai-punctuation-holdout",
+]) {
+  if (!holdoutSourceSliceIds.has(requiredHoldoutSlice)) {
+    console.error(`Tokenization/SBD corpus gate is missing holdout source slice ${requiredHoldoutSlice}.`);
     process.exit(1);
   }
 }

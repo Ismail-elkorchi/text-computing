@@ -575,6 +575,48 @@
       "reason": "Fixture added after the recorded comparator capture; replay records the gap without using it as failure evidence.",
       "tokens": [],
       "sentences": []
+    },
+    {
+      "sliceId": "thai-punctuation-holdout",
+      "status": "not-run",
+      "reason": "Comparator was not rerun for this repository-authored holdout in this change; execution remains a separate evidence gate.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "lao-no-space",
+      "status": "not-run",
+      "reason": "Comparator was not rerun for this repository-authored holdout in this change; execution remains a separate evidence gate.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "khmer-no-space",
+      "status": "not-run",
+      "reason": "Comparator was not rerun for this repository-authored holdout in this change; execution remains a separate evidence gate.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "chinese-han",
+      "status": "not-run",
+      "reason": "Comparator was not rerun for this repository-authored holdout in this change; execution remains a separate evidence gate.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "arabic-diacritic-clitic",
+      "status": "not-run",
+      "reason": "Comparator was not rerun for this repository-authored holdout in this change; execution remains a separate evidence gate.",
+      "tokens": [],
+      "sentences": []
+    },
+    {
+      "sliceId": "french-elision-diacritics",
+      "status": "not-run",
+      "reason": "Comparator was not rerun for this repository-authored holdout in this change; execution remains a separate evidence gate.",
+      "tokens": [],
+      "sentences": []
     }
   ]
 }

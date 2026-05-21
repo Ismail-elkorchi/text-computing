@@ -67,6 +67,8 @@
             "space-delimited",
             "right-to-left",
             "no-space",
+            "cjk",
+            "southeast-asian-no-space",
             "mixed-script",
             "unicode-edge",
             "malformed"

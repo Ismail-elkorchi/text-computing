@@ -2,7 +2,12 @@
   "schemaVersion": 1,
   "scope": "tokenization-sbd-corpus-gate",
   "claimBoundary": "This corpus gate records development, validation, holdout, and negative-control roles for existing tokenization/SBD fixtures. It does not upgrade tokenization/SBD beyond the current comparator-backed slice claim.",
-  "splitRoles": ["development", "validation", "holdout", "negative-control"],
+  "splitRoles": [
+    "development",
+    "validation",
+    "holdout",
+    "negative-control"
+  ],
   "corpusSlices": [
     {
       "id": "dev-ascii-two-sentences",
@@ -33,7 +38,9 @@
         "license": "MIT"
       },
       "claimUse": "development-only",
-      "notes": ["Abbreviation-sensitive sentence boundaries remain a documented future specialization surface."]
+      "notes": [
+        "Abbreviation-sensitive sentence boundaries remain a documented future specialization surface."
+      ]
     },
     {
       "id": "validation-arabic-rtl",
@@ -64,7 +71,9 @@
         "license": "MIT"
       },
       "claimUse": "validation-only",
-      "notes": ["Dictionary word segmentation is not claimed by this gate."]
+      "notes": [
+        "Dictionary word segmentation is not claimed by this gate."
+      ]
     },
     {
       "id": "validation-thai-no-space",
@@ -73,14 +82,16 @@
       "expectedOutputRef": "fixtures/tokenization-sbd/expected/thai-no-space.json",
       "language": "th",
       "script": "Thai",
-      "boundaryRegime": "no-space",
+      "boundaryRegime": "southeast-asian-no-space",
       "provenance": {
         "kind": "repository-authored-fixture",
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
       "claimUse": "validation-only",
-      "notes": ["Language-specific word segmentation is not claimed by this gate."]
+      "notes": [
+        "Language-specific word segmentation is not claimed by this gate."
+      ]
     },
     {
       "id": "holdout-devanagari-hindi",
@@ -126,7 +137,9 @@
         "license": "MIT"
       },
       "claimUse": "negative-control",
-      "notes": ["Malformed UTF-16 is represented through explicit code-unit fixtures, not lossy replacement text."]
+      "notes": [
+        "Malformed UTF-16 is represented through explicit code-unit fixtures, not lossy replacement text."
+      ]
     },
     {
       "id": "negative-empty-string",
@@ -142,6 +155,114 @@
         "license": "MIT"
       },
       "claimUse": "negative-control"
+    },
+    {
+      "id": "holdout-thai-punctuation",
+      "splitRole": "holdout",
+      "sourceSliceId": "thai-punctuation-holdout",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/thai-punctuation-holdout.json",
+      "language": "th",
+      "script": "Thai",
+      "boundaryRegime": "southeast-asian-no-space",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned",
+      "notes": [
+        "Thai holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+      ]
+    },
+    {
+      "id": "holdout-lao-no-space",
+      "splitRole": "holdout",
+      "sourceSliceId": "lao-no-space",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/lao-no-space.json",
+      "language": "lo",
+      "script": "Lao",
+      "boundaryRegime": "southeast-asian-no-space",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned",
+      "notes": [
+        "Lao holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+      ]
+    },
+    {
+      "id": "holdout-khmer-no-space",
+      "splitRole": "holdout",
+      "sourceSliceId": "khmer-no-space",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/khmer-no-space.json",
+      "language": "km",
+      "script": "Khmer",
+      "boundaryRegime": "southeast-asian-no-space",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned",
+      "notes": [
+        "Khmer holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+      ]
+    },
+    {
+      "id": "holdout-chinese-han",
+      "splitRole": "holdout",
+      "sourceSliceId": "chinese-han",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/chinese-han.json",
+      "language": "zh",
+      "script": "Han",
+      "boundaryRegime": "cjk",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned",
+      "notes": [
+        "Han-script holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+      ]
+    },
+    {
+      "id": "holdout-arabic-diacritic-clitic",
+      "splitRole": "holdout",
+      "sourceSliceId": "arabic-diacritic-clitic",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/arabic-diacritic-clitic.json",
+      "language": "ar",
+      "script": "Arabic",
+      "boundaryRegime": "right-to-left",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned",
+      "notes": [
+        "Arabic holdout includes diacritics and clitic-like prefixes; language-specific morphology is not claimed."
+      ]
+    },
+    {
+      "id": "holdout-french-elision-diacritics",
+      "splitRole": "holdout",
+      "sourceSliceId": "french-elision-diacritics",
+      "expectedOutputRef": "fixtures/tokenization-sbd/expected/french-elision-diacritics.json",
+      "language": "fr",
+      "script": "Latin",
+      "boundaryRegime": "space-delimited",
+      "provenance": {
+        "kind": "repository-authored-fixture",
+        "sourceRef": "fixtures/tokenization-sbd/slices.json",
+        "license": "MIT"
+      },
+      "claimUse": "holdout-not-implementation-tuned",
+      "notes": [
+        "French holdout includes elision and diacritics; language-specific clitic analysis is not claimed."
+      ]
     }
   ],
   "limitations": [
