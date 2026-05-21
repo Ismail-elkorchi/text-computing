@@ -90,7 +90,10 @@
         "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
         "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
         "packages/textcorpus/test/index.test.ts",
-        "tools/validate-retrieval-feature.mjs"
+        "tools/validate-retrieval-feature.mjs",
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+        "tools/validate-corpus-tfidf-bm25-readiness.mjs"
       ],
       "limitations": [
         "Current corpus-analysis and retrieval proof uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."

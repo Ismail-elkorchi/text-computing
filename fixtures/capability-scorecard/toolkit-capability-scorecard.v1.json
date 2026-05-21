@@ -709,7 +709,7 @@
         "docs/specs/corpus-tfidf-bm25-readiness.md",
         "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
-      "nextGate": "Add larger corpora, relevance-linked retrieval evaluation, field weighting, and performance thresholds.",
+      "nextGate": "Add external or reproducibly sourced corpus evidence, held-out corpus slices, and stable performance measurements before any broader corpus-backed ranking claim.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -721,17 +721,20 @@
           "packages/textcorpus/src/index.ts"
         ],
         "fixtureRefs": [
-          "fixtures/corpus-tfidf-bm25/slices.json"
+          "fixtures/corpus-tfidf-bm25/slices.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
         ],
         "negativeControlRefs": [
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
         ],
         "comparatorRefs": [
           "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
         ],
         "corpusRefs": [
-          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
         ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
@@ -740,7 +743,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, Okapi BM25, and E2 corpus-selection disclosures exist only for the frozen issue #14 explicit-token corpus.",
+      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, Okapi BM25 parameter variants, numeric tolerance replay, and E2 corpus-selection disclosures exist only for committed explicit-token corpora.",
       "evidenceTier": "comparator-backed",
       "fixtureSplitRefs": {
         "development": [
@@ -748,6 +751,7 @@
         ],
         "validation": [
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "holdout": [],
@@ -756,15 +760,18 @@
         ],
         "externalComparators": [
           "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
       },
       "nextEvidenceTierBlockers": [
-        "The current explicit-token corpus is too small for broad corpus-backed ranking claims."
+        "Corpus-backed claims require external or reproducibly sourced corpora, held-out corpus slices, and stable performance measurements beyond committed synthetic explicit-token fixtures."
       ]
     },
     {

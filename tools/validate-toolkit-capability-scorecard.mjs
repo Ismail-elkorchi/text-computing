@@ -97,13 +97,18 @@ const TASK_EVIDENCE_REQUIREMENTS = {
   "nlp-corpus-tfidf-bm25": {
     implementationOwners: ["@ismail-elkorchi/textcorpus"],
     implementationRefs: ["packages/textcorpus/src/index.ts"],
-    fixtureRefs: ["fixtures/corpus-tfidf-bm25/slices.json"],
+    fixtureRefs: [
+      "fixtures/corpus-tfidf-bm25/slices.json",
+      "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
+      "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+    ],
     negativeControlRefs: ["fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"],
     comparatorRefs: [
       "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
       "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
+      "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
     ],
-    corpusRefs: ["fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"],
+    corpusRefs: ["fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"],
   },
   "nlp-retrieval": {
     implementationOwners: ["@ismail-elkorchi/textcorpus"],

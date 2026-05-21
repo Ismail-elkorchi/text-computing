@@ -15,7 +15,9 @@ The frozen formula names are:
 - `tf.raw-count`;
 - `df.document-count`;
 - `tfidf.sklearn-smooth-raw`;
-- `bm25.okapi.k1-1.5.b-0.75`.
+- `tfidf.sklearn-smooth-l2`;
+- `bm25.okapi.k1-1.5.b-0.75`;
+- `bm25.okapi.k1-1.2.b-0.75`.
 
 ## Numeric tolerance
 
@@ -25,7 +27,7 @@ Expected numeric comparisons use absolute tolerance `1e-12` for recorded outputs
 
 The canonical readiness corpus lives in [`../../fixtures/corpus-tfidf-bm25/slices.json`](../../fixtures/corpus-tfidf-bm25/slices.json).
 
-It covers repeated terms, shared terms, singleton terms, an empty document, a missing-query term, and stable ordering.
+It covers repeated terms, shared terms, singleton terms, an empty document, a missing-query term, stable ordering, formula variants, numeric tolerance, and deterministic performance thresholds over a repository-authored explicit-token corpus.
 
 ## Expected-output format
 
@@ -51,3 +53,4 @@ Comparator outputs are diagnostic evidence, not normative expected outputs when 
 
 `npm run -s check:fixtures` validates the corpus slice manifest, formula/version freeze, expected outputs, comparator captures, required readiness documentation headings, and support-status state before any feature PR for issue `#14`.
 
+The validator regenerates the committed expected outputs from `@ismail-elkorchi/textcorpus` scoring APIs and fails if any numeric value drifts beyond the recorded tolerance.

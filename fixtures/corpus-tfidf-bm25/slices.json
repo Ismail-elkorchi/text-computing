@@ -79,6 +79,293 @@
           ]
         }
       ]
+    },
+    {
+      "id": "corpus-tfidf-bm25-thresholds",
+      "description": "Repository-authored explicit-token corpus covering multiple topics, repeated cross-topic terms, formula variants, numeric tolerance, and deterministic threshold checks.",
+      "tokenPolicy": "tokens are predeclared lower-case lexical tokens; no tokenization is performed by this readiness fixture",
+      "phenomena": [
+        "repeated-term",
+        "shared-term",
+        "singleton-term",
+        "missing-query-term",
+        "stable-ordering",
+        "larger-corpus",
+        "formula-variant",
+        "numeric-tolerance",
+        "performance-threshold"
+      ],
+      "license": "MIT",
+      "provenance": "Repository-authored synthetic explicit-token corpus for deterministic corpus-scoring validation.",
+      "contentHash": "sha256:7219fdb265356bb394d3313ed9b27b665e07ffc8a857d71b9c1a43b713d493f5",
+      "performanceThresholds": {
+        "minDocuments": 12,
+        "minTokens": 90,
+        "minQueries": 6,
+        "maxSerializedScoringBytes": 90000
+      },
+      "documents": [
+        {
+          "id": "doc-001",
+          "tokens": [
+            "climate",
+            "energy",
+            "policy",
+            "solar",
+            "grid",
+            "storage",
+            "carbon",
+            "market"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "news",
+            "topic": "climate"
+          }
+        },
+        {
+          "id": "doc-002",
+          "tokens": [
+            "climate",
+            "adaptation",
+            "river",
+            "flood",
+            "city",
+            "planning",
+            "insurance",
+            "policy"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "news",
+            "topic": "climate"
+          }
+        },
+        {
+          "id": "doc-003",
+          "tokens": [
+            "health",
+            "vaccine",
+            "clinic",
+            "trial",
+            "immune",
+            "safety",
+            "data",
+            "patient"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "brief",
+            "topic": "health"
+          }
+        },
+        {
+          "id": "doc-004",
+          "tokens": [
+            "health",
+            "clinic",
+            "patient",
+            "triage",
+            "data",
+            "outcome",
+            "equity",
+            "safety"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "brief",
+            "topic": "health"
+          }
+        },
+        {
+          "id": "doc-005",
+          "tokens": [
+            "law",
+            "contract",
+            "court",
+            "evidence",
+            "liability",
+            "damages",
+            "appeal",
+            "rights"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "legal",
+            "topic": "law"
+          }
+        },
+        {
+          "id": "doc-006",
+          "tokens": [
+            "law",
+            "statute",
+            "court",
+            "appeal",
+            "precedent",
+            "rights",
+            "evidence",
+            "policy"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "legal",
+            "topic": "law"
+          }
+        },
+        {
+          "id": "doc-007",
+          "tokens": [
+            "finance",
+            "market",
+            "bond",
+            "rate",
+            "inflation",
+            "credit",
+            "risk",
+            "capital"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "market-note",
+            "topic": "finance"
+          }
+        },
+        {
+          "id": "doc-008",
+          "tokens": [
+            "finance",
+            "credit",
+            "default",
+            "market",
+            "capital",
+            "liquidity",
+            "risk",
+            "insurance"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "market-note",
+            "topic": "finance"
+          }
+        },
+        {
+          "id": "doc-009",
+          "tokens": [
+            "agriculture",
+            "soil",
+            "water",
+            "crop",
+            "drought",
+            "irrigation",
+            "yield",
+            "river"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "field-note",
+            "topic": "agriculture"
+          }
+        },
+        {
+          "id": "doc-010",
+          "tokens": [
+            "agriculture",
+            "crop",
+            "seed",
+            "pest",
+            "soil",
+            "yield",
+            "market",
+            "safety"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "field-note",
+            "topic": "agriculture"
+          }
+        },
+        {
+          "id": "doc-011",
+          "tokens": [
+            "technology",
+            "chip",
+            "model",
+            "data",
+            "cloud",
+            "latency",
+            "storage",
+            "energy"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "tech-note",
+            "topic": "technology"
+          }
+        },
+        {
+          "id": "doc-012",
+          "tokens": [
+            "technology",
+            "model",
+            "inference",
+            "data",
+            "privacy",
+            "energy",
+            "chip",
+            "risk"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "tech-note",
+            "topic": "technology"
+          }
+        }
+      ],
+      "queries": [
+        {
+          "id": "climate-energy",
+          "tokens": [
+            "climate",
+            "energy"
+          ]
+        },
+        {
+          "id": "clinic-data",
+          "tokens": [
+            "clinic",
+            "data"
+          ]
+        },
+        {
+          "id": "court-evidence",
+          "tokens": [
+            "court",
+            "evidence"
+          ]
+        },
+        {
+          "id": "market-risk",
+          "tokens": [
+            "market",
+            "risk"
+          ]
+        },
+        {
+          "id": "crop-soil",
+          "tokens": [
+            "crop",
+            "soil"
+          ]
+        },
+        {
+          "id": "model-data",
+          "tokens": [
+            "model",
+            "data"
+          ]
+        }
+      ]
     }
   ]
 }

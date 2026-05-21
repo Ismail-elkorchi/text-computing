@@ -163,7 +163,7 @@
             "tools/validate-corpus-tfidf-bm25-readiness.mjs"
           ],
           "path": "tools/validate-corpus-tfidf-bm25-readiness.mjs",
-          "sha256": "693c584d3b5b777b91acd00d528fda7d7bd36eaf9c790c2a9779aeeda77651e3"
+          "sha256": "7c877ac0089e1a66c170e69975e030feb826eebe349a89253cb0051ea3362eee"
         }
       ],
       "comparisons": [
@@ -174,6 +174,17 @@
             "name": "Natural",
             "version": "8.1.1",
             "runtime": "javascript"
+          },
+          "status": "pass",
+          "captureMode": "curated-local-execution"
+        },
+        {
+          "path": "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
+          "sha256": "96375e8939d84bb7f5f72419bfb6d614334d11b48fd8e3b23787d75d19dd4784",
+          "comparator": {
+            "name": "scikit-learn+rank-bm25",
+            "version": "scikit-learn 1.8.0; rank-bm25 0.2.2",
+            "runtime": "python"
           },
           "status": "pass",
           "captureMode": "curated-local-execution"

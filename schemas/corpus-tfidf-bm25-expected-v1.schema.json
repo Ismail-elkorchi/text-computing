@@ -108,6 +108,42 @@
                 }
               }
             }
+          },
+          "tfidfVariants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "formula",
+                "values"
+              ],
+              "properties": {
+                "formula": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "term",
+                      "value"
+                    ],
+                    "properties": {
+                      "term": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -143,6 +179,43 @@
                 },
                 "score": {
                   "type": "number"
+                }
+              }
+            }
+          },
+          "bm25Variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "formula",
+                "scores"
+              ],
+              "properties": {
+                "formula": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "scores": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "docId",
+                      "score"
+                    ],
+                    "properties": {
+                      "docId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "score": {
+                        "type": "number"
+                      }
+                    }
+                  }
                 }
               }
             }
