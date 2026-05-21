@@ -499,11 +499,123 @@
           "requiredMorphologyAlternatives": []
         }
       ]
+    },
+    {
+      "id": "ud-style-fi-rich-morphology",
+      "sourceSliceId": "fi-rich-morphology",
+      "expectedOutputRef": "fixtures/pos-morph-lemma/expected/fi-rich-morphology.json",
+      "splitRole": "holdout",
+      "language": "fi",
+      "phenomena": [
+        "rich-morphology"
+      ],
+      "goldTokens": [
+        {
+          "tokenId": "token-1",
+          "text": "Talossani",
+          "acceptedUpos": [
+            "NOUN"
+          ],
+          "acceptedLemmas": [
+            "talo"
+          ],
+          "requiredMorphologyAlternatives": [
+            [
+              {
+                "name": "Case",
+                "value": "Ine"
+              },
+              {
+                "name": "Number",
+                "value": "Sing"
+              },
+              {
+                "name": "Number[psor]",
+                "value": "Sing"
+              },
+              {
+                "name": "Person[psor]",
+                "value": "1"
+              }
+            ]
+          ],
+          "notes": [
+            "Rich morphology is accepted only from the declared fixture lexicon."
+          ]
+        },
+        {
+          "tokenId": "token-2",
+          "text": "on",
+          "acceptedUpos": [
+            "AUX"
+          ],
+          "acceptedLemmas": [
+            "olla"
+          ],
+          "requiredMorphologyAlternatives": [
+            [
+              {
+                "name": "Mood",
+                "value": "Ind"
+              },
+              {
+                "name": "Number",
+                "value": "Sing"
+              },
+              {
+                "name": "Person",
+                "value": "3"
+              },
+              {
+                "name": "Tense",
+                "value": "Pres"
+              },
+              {
+                "name": "VerbForm",
+                "value": "Fin"
+              }
+            ]
+          ]
+        },
+        {
+          "tokenId": "token-3",
+          "text": "kirja",
+          "acceptedUpos": [
+            "NOUN"
+          ],
+          "acceptedLemmas": [
+            "kirja"
+          ],
+          "requiredMorphologyAlternatives": [
+            [
+              {
+                "name": "Case",
+                "value": "Nom"
+              },
+              {
+                "name": "Number",
+                "value": "Sing"
+              }
+            ]
+          ]
+        },
+        {
+          "tokenId": "token-4",
+          "text": ".",
+          "acceptedUpos": [
+            "PUNCT"
+          ],
+          "acceptedLemmas": [
+            "."
+          ]
+        }
+      ]
     }
   ],
   "limitations": [
-    "Gold rows are repository-authored from committed slices and do not prove broad UD treebank performance.",
-    "The evaluation checks accepted alternatives instead of collapsing ambiguity to one tag.",
-    "Comparator execution for wider corpora remains a separate evidence gate."
+    "Corpus evaluation is limited to committed POS/morph/lemma slices and does not claim broad UD treebank performance.",
+    "Gold rows test accepted alternatives rather than collapsing ambiguity to one answer.",
+    "The rich-morphology slice is repository-authored fixture evidence backed by an explicit lexicon resource, not a broad Finnish tagger claim.",
+    "Wider comparator execution remains a separate gate before broader support claims."
   ]
 }

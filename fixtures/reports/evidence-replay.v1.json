@@ -61,7 +61,7 @@
             "tools/validate-pos-morph-lemma-readiness.mjs"
           ],
           "path": "tools/validate-pos-morph-lemma-readiness.mjs",
-          "sha256": "7252021d56e8bb53f0a433dba16713a93488b4ae86733738cf3d5d8128bec9e4"
+          "sha256": "2b4b2c55b16c7026c7ba788e38b11e7cc4d7b0cb4e93c65b29dcfaf580819288"
         },
         {
           "argv": [
@@ -69,13 +69,13 @@
             "tools/validate-pos-morph-lemma-feature.mjs"
           ],
           "path": "tools/validate-pos-morph-lemma-feature.mjs",
-          "sha256": "b6a0688fa582ccfd56193a8ba4054c18d232c236c77dd19c49376ae0ce6a5bb1"
+          "sha256": "bf68b36c69e63f773ac1db1b8a81632d88bfd5e1e2cbbce00a2a33eb0ed3ceee"
         }
       ],
       "comparisons": [
         {
           "path": "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
-          "sha256": "f95765292c76907f2b636927018a82145a13c312166c8a77c068126ae3e02cbe",
+          "sha256": "09512c800f04b498c8500f6591b5b9d3a77d32a53ab9a8115852377c5f327baa",
           "comparator": {
             "name": "spaCy",
             "version": "3.8.14",
@@ -87,7 +87,7 @@
         },
         {
           "path": "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
-          "sha256": "6bb70c049216094f7507dc9a95e91e1ddf4705f07d24e0c58100c905b49572f1",
+          "sha256": "0fe0777f460b73f536a4014f22dd6d5b67afc50f08dd7835205735ea3862dd9b",
           "comparator": {
             "name": "Stanza",
             "version": "1.12.0",

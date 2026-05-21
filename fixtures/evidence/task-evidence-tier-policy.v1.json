@@ -190,13 +190,18 @@
           "fixtures/pos-morph-lemma/slices.json",
           "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
           "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
-          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fi-core.json"
         ],
         "validation": [
           "fixtures/pos-morph-lemma/expected/es-multiword-token.json",
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/pos-morph-lemma/expected/fr-clitic-historical.json",
+          "fixtures/pos-morph-lemma/expected/code-switch-en-fr.json",
+          "fixtures/pos-morph-lemma/expected/fi-rich-morphology.json"
+        ],
         "negativeControls": [
           "fixtures/pos-morph-lemma/expected/en-unknown-word.json"
         ],
@@ -217,7 +222,7 @@
       ],
       "nextTier": "corpus-backed",
       "nextTierBlockers": [
-        "UD-style corpus evaluation exists for committed slices only; broad unknown-word evaluation, holdout MWT/clitic corpus breadth, rich morphology, and wider corpus evidence remain absent."
+        "UD-style corpus evaluation exists for committed slices only; broader UD treebank evidence, comparator execution for the added rich-morphology slice, and wider language coverage remain absent."
       ]
     },
     {

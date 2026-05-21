@@ -177,7 +177,7 @@ for (const documentSpec of corpus.documents) {
     tokens: documentSpec.goldTokens.length,
     passedTokens: documentPassed,
     failedTokens: documentFailed,
-    diagnostics: result.diagnostics.map((diagnostic) => diagnostic.code).sort(),
+    diagnostics: [...new Set(result.diagnostics.map((diagnostic) => diagnostic.code))].sort(),
   });
 }
 
