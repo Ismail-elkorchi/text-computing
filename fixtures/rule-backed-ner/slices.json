@@ -80,6 +80,190 @@
       "notes": [
         "Non-Latin-script slice with explicit person and location spans in Arabic."
       ]
+    },
+    {
+      "id": "org-person-location-fr-paris",
+      "languageHint": "fr",
+      "phenomena": [
+        "latin-script-non-english",
+        "alias"
+      ],
+      "fixtureClass": "cc0-compatible",
+      "source": {
+        "kind": "text",
+        "text": "Organisation mondiale de la Santé a réuni Marie Curie à Paris."
+      },
+      "notes": [
+        "French Latin-script holdout with ORG, PER, and LOC labels from the declared fixture gazetteer."
+      ]
+    },
+    {
+      "id": "person-location-ja-tokyo",
+      "languageHint": "ja",
+      "phenomena": [
+        "non-latin-script"
+      ],
+      "fixtureClass": "cc0-compatible",
+      "source": {
+        "kind": "text",
+        "text": "太郎は東京を訪れた。"
+      },
+      "notes": [
+        "Japanese-script holdout with explicit textdoc token boundaries; this is fixture evidence, not a broad segmenter claim."
+      ]
+    },
+    {
+      "id": "negative-lowercase-aliases",
+      "languageHint": "en",
+      "phenomena": [
+        "false-match",
+        "capitalization-ambiguity"
+      ],
+      "fixtureClass": "cc0-compatible",
+      "source": {
+        "kind": "text",
+        "text": "apple and ibm stayed outside the lab."
+      },
+      "notes": [
+        "Negative-control slice: lowercase forms matching known cased resources must remain non-entities."
+      ]
     }
-  ]
+  ],
+  "labelPolicyControls": {
+    "emittedLabels": [
+      "PER",
+      "ORG",
+      "LOC"
+    ],
+    "rejectedLabels": [
+      {
+        "label": "MISC",
+        "reason": "Too broad for the declared rule-backed NER v1 label policy."
+      },
+      {
+        "label": "PRODUCT",
+        "reason": "Entity-product typing is not part of the declared PER/ORG/LOC scope."
+      },
+      {
+        "label": "EVENT",
+        "reason": "Event extraction is a separate task surface."
+      }
+    ],
+    "unsupportedLabelPolicy": "Unsupported labels must be rejected or recorded as diagnostics; they must not be silently mapped into PER/ORG/LOC."
+  },
+  "corpusEvidence": {
+    "corpusId": "rule-backed-ner-corpus-slice-v1",
+    "license": "CC0-1.0",
+    "splitPolicy": "Development, validation, holdout, and negative-control fixture roles are recorded; broad support cannot be inferred from fixtures used to design behavior.",
+    "resourceRefs": [
+      "fixtures/rule-backed-ner/manifests/textpack-ner-core.json",
+      "fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json"
+    ],
+    "documents": [
+      {
+        "sliceId": "capitalization-apple-false-match",
+        "expectedPath": "fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json",
+        "sourceSha256": "062d60907a05f40bf5f7aaa7463f2ff4fb24c8a14445c5b64e554b98c4fc9970",
+        "splitRole": "negative-control",
+        "language": "en",
+        "phenomena": [
+          "capitalization-ambiguity",
+          "false-match"
+        ],
+        "entityCount": 2,
+        "falsePositiveControls": [
+          "lowercase-common-noun"
+        ]
+      },
+      {
+        "sliceId": "negative-lowercase-aliases",
+        "expectedPath": "fixtures/rule-backed-ner/expected/negative-lowercase-aliases.json",
+        "sourceSha256": "e9da150970ab626caef798c825f48975d9495a4b7da9fb4744a17cb505390b1a",
+        "splitRole": "negative-control",
+        "language": "en",
+        "phenomena": [
+          "false-match",
+          "capitalization-ambiguity"
+        ],
+        "entityCount": 0,
+        "falsePositiveControls": [
+          "lowercase-aliases"
+        ]
+      },
+      {
+        "sliceId": "nested-uc-berkeley",
+        "expectedPath": "fixtures/rule-backed-ner/expected/nested-uc-berkeley.json",
+        "sourceSha256": "7aeef927b4179c7f84d6d2ef14b134c5c2faeb9b8e38b42aa1160336121f7321",
+        "splitRole": "validation",
+        "language": "en",
+        "phenomena": [
+          "nested-span",
+          "overlapping-span"
+        ],
+        "entityCount": 2
+      },
+      {
+        "sliceId": "org-alias-ibm",
+        "expectedPath": "fixtures/rule-backed-ner/expected/org-alias-ibm.json",
+        "sourceSha256": "fb127c9470f6a713c90570f09e81735f729375e8b6f9eecb939c42dde3066a4d",
+        "splitRole": "development",
+        "language": "en",
+        "phenomena": [
+          "alias"
+        ],
+        "entityCount": 3
+      },
+      {
+        "sliceId": "org-alias-onu-madrid",
+        "expectedPath": "fixtures/rule-backed-ner/expected/org-alias-onu-madrid.json",
+        "sourceSha256": "599e9d6a299d9447d91e71c9df4becae62e21f9cae9717f501bfcd509e87a903",
+        "splitRole": "holdout",
+        "language": "es",
+        "phenomena": [
+          "alias",
+          "latin-script-non-english"
+        ],
+        "entityCount": 3
+      },
+      {
+        "sliceId": "org-person-location-fr-paris",
+        "expectedPath": "fixtures/rule-backed-ner/expected/org-person-location-fr-paris.json",
+        "sourceSha256": "8066383c3a74de6c794cd093c985dbb45dba5bf7f08de6bf922ef45d31a7be7c",
+        "splitRole": "holdout",
+        "language": "fr",
+        "phenomena": [
+          "latin-script-non-english",
+          "alias"
+        ],
+        "entityCount": 3
+      },
+      {
+        "sliceId": "person-location-ar-rabat",
+        "expectedPath": "fixtures/rule-backed-ner/expected/person-location-ar-rabat.json",
+        "sourceSha256": "180855a78c6e7a8445a77db52a18af1ffa3e299f342b0ba00ec116487e756188",
+        "splitRole": "holdout",
+        "language": "ar",
+        "phenomena": [
+          "non-latin-script"
+        ],
+        "entityCount": 2
+      },
+      {
+        "sliceId": "person-location-ja-tokyo",
+        "expectedPath": "fixtures/rule-backed-ner/expected/person-location-ja-tokyo.json",
+        "sourceSha256": "941f2aa67d8036d18ff124a1f9828c69c076060760bdf6d9b94cbc7b6567d36f",
+        "splitRole": "holdout",
+        "language": "ja",
+        "phenomena": [
+          "non-latin-script"
+        ],
+        "entityCount": 2
+      }
+    ],
+    "limitations": [
+      "Corpus evidence is limited to committed repository-authored slices and does not claim broad NER dataset coverage.",
+      "Comparator captures remain diagnostic; new holdouts are not external-comparator-backed in this gate.",
+      "Labels remain limited to PER, ORG, and LOC."
+    ]
+  }
 }

@@ -362,14 +362,22 @@
         "frozen rule-backed NER slices",
         "expected outputs",
         "comparator captures",
-        "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
+        "fixtures/reports/nlp-rule-backed-ner/conformance-report.json",
+        "fixtures/rule-backed-ner/slices.json",
+        "fixtures/rule-backed-ner/manifests/textpack-ner-core.json",
+        "fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json",
+        "fixtures/rule-backed-ner/expected/org-person-location-fr-paris.json",
+        "fixtures/rule-backed-ner/expected/person-location-ja-tokyo.json",
+        "fixtures/rule-backed-ner/expected/negative-lowercase-aliases.json"
       ],
       "limitations": [
-        "Only PER/ORG/LOC and small curated resources are covered"
+        "Only PER/ORG/LOC and small curated resources are covered.",
+        "Corpus-style evidence is limited to committed CC0-compatible fixture slices and does not claim large external NER corpus coverage.",
+        "New multilingual holdouts and false-positive controls are not external-comparator-backed in this gate."
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
-        "No larger licensed NER corpus, broader label set, or multilingual holdout evaluation is recorded."
+        "Large external licensed NER corpora, comparator execution for added holdouts, broader label taxonomies, and entity-linking evidence remain absent."
       ]
     },
     {

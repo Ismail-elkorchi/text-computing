@@ -232,21 +232,31 @@
       "claimBoundary": "Deterministic rule-backed PER/ORG/LOC outputs exist only for the frozen issue #13 slices, with recorded expected outputs and comparator captures.",
       "fixtureSplits": {
         "development": [
-          "fixtures/rule-backed-ner/slices.json"
+          "fixtures/rule-backed-ner/slices.json",
+          "fixtures/rule-backed-ner/manifests/textpack-ner-core.json",
+          "fixtures/rule-backed-ner/resources/textpack-ner-core/gazetteer.json"
         ],
         "validation": [
           "fixtures/rule-backed-ner/expected/org-alias-ibm.json",
           "fixtures/reports/nlp-rule-backed-ner/conformance-report.json"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/rule-backed-ner/expected/org-alias-onu-madrid.json",
+          "fixtures/rule-backed-ner/expected/person-location-ar-rabat.json",
+          "fixtures/rule-backed-ner/expected/org-person-location-fr-paris.json",
+          "fixtures/rule-backed-ner/expected/person-location-ja-tokyo.json"
+        ],
         "negativeControls": [
-          "fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json"
+          "fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json",
+          "fixtures/rule-backed-ner/expected/negative-lowercase-aliases.json"
         ],
         "externalComparators": [
           "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
           "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/rule-backed-ner/slices.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
@@ -256,7 +266,7 @@
       ],
       "nextTier": "corpus-backed",
       "nextTierBlockers": [
-        "No larger licensed NER corpus, broader label set, or multilingual holdout evaluation is recorded."
+        "Large external licensed NER corpora, comparator execution for added holdouts, broader label taxonomies, and entity-linking evidence remain absent."
       ]
     },
     {

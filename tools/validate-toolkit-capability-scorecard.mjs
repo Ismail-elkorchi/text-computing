@@ -84,12 +84,15 @@ const TASK_EVIDENCE_REQUIREMENTS = {
     implementationOwners: ["@ismail-elkorchi/textrules", "@ismail-elkorchi/textpack", "@ismail-elkorchi/textdoc"],
     implementationRefs: ["packages/textrules/src/index.ts", "packages/textpack/src/index.ts"],
     fixtureRefs: ["fixtures/rule-backed-ner/slices.json"],
-    negativeControlRefs: ["fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json"],
+    negativeControlRefs: [
+      "fixtures/rule-backed-ner/expected/capitalization-apple-false-match.json",
+      "fixtures/rule-backed-ner/expected/negative-lowercase-aliases.json",
+    ],
     comparatorRefs: [
       "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
       "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json",
     ],
-    corpusRefs: [],
+    corpusRefs: ["fixtures/rule-backed-ner/slices.json"],
   },
   "nlp-corpus-tfidf-bm25": {
     implementationOwners: ["@ismail-elkorchi/textcorpus"],

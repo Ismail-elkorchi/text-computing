@@ -115,13 +115,13 @@
             "tools/validate-rule-backed-ner-readiness.mjs"
           ],
           "path": "tools/validate-rule-backed-ner-readiness.mjs",
-          "sha256": "f465ddff2e4d07ca3aec6a0859a1b761ceaaab6a75e3ccc5bcf6e6a3b14e6316"
+          "sha256": "93de80d6d9e766df1cfa922f87b50341c85b643c95ac5c01acfb852876430cd6"
         }
       ],
       "comparisons": [
         {
           "path": "fixtures/rule-backed-ner/comparisons/compromise-14.15.0.json",
-          "sha256": "cebcbb517b4260b1fc1ab13eea3dac9077f137b9a12697f971ad01b5229c20a1",
+          "sha256": "88acd865ec36d7041bcf5aa0f46239760d7b6a25a2647e1419fe13f6c20b58fe",
           "comparator": {
             "name": "compromise",
             "version": "14.15.0",
@@ -133,7 +133,7 @@
         },
         {
           "path": "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json",
-          "sha256": "e3a345ccbd3db2f75263b18bea3c8e691a81b53cc48a84fedf220808c3d0a707",
+          "sha256": "b65860cffbc8351643c41c1d6299df548cf25802e478e9d4d17f01ae6c74c48d",
           "comparator": {
             "name": "spaCy",
             "version": "3.8.14",
