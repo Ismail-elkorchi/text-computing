@@ -414,9 +414,11 @@
       "languageTier": "fixture-proven",
       "evidenceRefs": [
         "docs/specs/textdoc-document-annotation-model.md",
-        "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
+        "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+        "schemas/textprotocol-annotation-bundle-v1.schema.json"
       ],
-      "nextGate": "Validate dependency, relation, entity-linking, and coreference graph examples.",
+      "nextGate": "Add held-out document annotation bundles from independent producers or externally named interchange targets before broadening the support label.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -428,7 +430,9 @@
           "packages/textdoc/src/index.ts"
         ],
         "fixtureRefs": [
-          "fixtures/textdoc/examples/document-annotation-model-v1.json"
+          "fixtures/textdoc/examples/document-annotation-model-v1.json",
+          "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+          "schemas/textprotocol-annotation-bundle-v1.schema.json"
         ],
         "negativeControlRefs": [
           "fixtures/textdoc/invalid/dangling-target.json"
@@ -442,7 +446,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and round-trip validation are implemented.",
+      "claimBoundary": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and stand-off annotation-bundle round-trip validation are implemented.",
       "evidenceTier": "fixture-proven",
       "fixtureSplitRefs": {
         "development": [
@@ -450,7 +454,9 @@
         ],
         "validation": [
           "fixtures/textdoc/examples/document-extension-model-v1.json",
-          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
+          "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+          "schemas/textprotocol-annotation-bundle-v1.schema.json"
         ],
         "holdout": [],
         "negativeControls": [
@@ -464,7 +470,8 @@
         ]
       },
       "nextEvidenceTierBlockers": [
-        "No external document-model comparator or broad graph holdout suite is recorded."
+        "No external document-model comparator or broad graph holdout suite is recorded.",
+        "No held-out document-annotation bundle from an independent producer is recorded."
       ]
     },
     {

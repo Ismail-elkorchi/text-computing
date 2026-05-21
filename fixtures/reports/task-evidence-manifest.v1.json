@@ -130,11 +130,14 @@
         "fixtures/textdoc/invalid/coreference-missing-mention.json",
         "fixtures/textdoc/invalid/entity-link-target-kind.json",
         "fixtures/textdoc/invalid/dependency-cycle.json",
-        "tools/validate-textdoc-document-model.mjs"
+        "tools/validate-textdoc-document-model.mjs",
+        "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+        "schemas/textprotocol-annotation-bundle-v1.schema.json"
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work."
+        "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+        "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model comparator result."
       ]
     },
     {

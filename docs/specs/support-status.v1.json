@@ -293,19 +293,23 @@
     {
       "id": "nlp-document-annotation-model",
       "status": "slice-proven",
-      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and round-trip validation are implemented.",
+      "scope": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and stand-off annotation-bundle round-trip validation are implemented.",
       "evidence": [
         "document model example",
         "invalid fixtures",
         "round-trip validation",
-        "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
+        "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+        "schemas/textprotocol-annotation-bundle-v1.schema.json"
       ],
       "limitations": [
-        "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work"
+        "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+        "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model comparator result."
       ],
       "evidenceTier": "fixture-proven",
       "nextEvidenceTierBlockers": [
-        "No external document-model comparator or broad graph holdout suite is recorded."
+        "No external document-model comparator or broad graph holdout suite is recorded.",
+        "No held-out document-annotation bundle from an independent producer is recorded."
       ]
     },
     {

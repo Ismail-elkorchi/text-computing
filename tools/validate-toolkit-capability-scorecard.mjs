@@ -53,7 +53,11 @@ const TASK_EVIDENCE_REQUIREMENTS = {
   "nlp-document-annotation-model": {
     implementationOwners: ["@ismail-elkorchi/textdoc"],
     implementationRefs: ["packages/textdoc/src/index.ts"],
-    fixtureRefs: ["fixtures/textdoc/examples/document-annotation-model-v1.json"],
+    fixtureRefs: [
+      "fixtures/textdoc/examples/document-annotation-model-v1.json",
+      "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+      "schemas/textprotocol-annotation-bundle-v1.schema.json",
+    ],
     negativeControlRefs: ["fixtures/textdoc/invalid/dangling-target.json"],
     comparatorRefs: [],
     corpusRefs: [],

@@ -6,9 +6,12 @@ import {
   addTextDocLayerV1,
   addTextDocSpanMapV1,
   addTextDocViewV1,
+  applyTextDocAnnotationBundlePayloadV1,
   documentSchemaVersion,
+  exportTextDocAnnotationBundlePayloadV1,
   exportTextDocDocumentV1ToConllu,
   importConlluToTextDocDocumentV1,
+  isTextDocAnnotationBundlePayloadV1,
   isTextDocExtensionId,
   isTextDocDocumentV1,
   isTextDocSpanInRange,
@@ -463,6 +466,71 @@ if (!isTextDocDocumentV1(graphFixtureDocument)) {
 const graphValidation = validateTextDocDocumentV1(graphFixtureDocument);
 if (!graphValidation.ok || graphValidation.diagnostics.length !== 0) {
   throw new Error("graph fixture should satisfy package-level reference validation");
+}
+
+const annotationBundlePayload = exportTextDocAnnotationBundlePayloadV1(graphFixtureDocument);
+if (!isTextDocAnnotationBundlePayloadV1(annotationBundlePayload)) {
+  throw new Error("exportTextDocAnnotationBundlePayloadV1 should produce a runtime-valid payload");
+}
+
+const graphAnnotationCount = graphFixtureDocument.layers.reduce(
+  (count, layer) => count + layer.annotations.length,
+  0,
+);
+if (
+  annotationBundlePayload.documentId !== graphFixtureDocument.documentId ||
+  annotationBundlePayload.documentRevision !== graphFixtureDocument.revision ||
+  annotationBundlePayload.annotations.length !== graphAnnotationCount
+) {
+  throw new Error("annotation bundle payload should preserve document identity and annotation count");
+}
+
+const graphSkeletonDocument: TextDocDocumentV1 = {
+  ...graphFixtureDocument,
+  layers: graphFixtureDocument.layers.map((layer) => ({ ...layer, annotations: [] })),
+};
+const annotationBundleRoundTrip = applyTextDocAnnotationBundlePayloadV1(
+  graphSkeletonDocument,
+  annotationBundlePayload,
+);
+if (
+  !annotationBundleRoundTrip.ok ||
+  JSON.stringify(annotationBundleRoundTrip.document?.layers) !== JSON.stringify(graphFixtureDocument.layers)
+) {
+  throw new Error("annotation bundle payload should restore layer and annotation order without loss");
+}
+
+const firstBundleAnnotation = annotationBundlePayload.annotations[0];
+if (firstBundleAnnotation === undefined) {
+  throw new Error("annotation bundle payload should include at least one annotation");
+}
+
+const duplicateAnnotationBundle = {
+  ...annotationBundlePayload,
+  annotations: [...annotationBundlePayload.annotations, firstBundleAnnotation],
+};
+if (
+  !applyTextDocAnnotationBundlePayloadV1(graphSkeletonDocument, duplicateAnnotationBundle)
+    .diagnostics.some((entry) => entry.code === "textdoc.annotation-bundle.annotation-duplicate")
+) {
+  throw new Error("annotation bundle import should reject duplicate annotation ids");
+}
+
+const targetMismatchBundle = {
+  ...annotationBundlePayload,
+  annotations: [
+    {
+      ...firstBundleAnnotation,
+      target: { kind: "document" as const },
+    },
+    ...annotationBundlePayload.annotations.slice(1),
+  ],
+};
+if (
+  !applyTextDocAnnotationBundlePayloadV1(graphSkeletonDocument, targetMismatchBundle)
+    .diagnostics.some((entry) => entry.code === "textdoc.annotation-bundle.target-mismatch")
+) {
+  throw new Error("annotation bundle import should reject representative target drift");
 }
 
 const tokenQuery = queryTextDocAnnotations(graphFixtureDocument, {

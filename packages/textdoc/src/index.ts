@@ -471,6 +471,26 @@ export interface TextDocAnnotationQueryResult<TAnnotation extends TextDocAnnotat
   readonly annotation: TAnnotation;
 }
 
+export interface TextDocAnnotationBundleAnnotationV1 {
+  readonly annotationId: string;
+  readonly layerId: string;
+  readonly kind: TextDocLayerKind;
+  readonly target: TextDocTarget;
+  readonly annotation: TextDocAnnotation;
+}
+
+export interface TextDocAnnotationBundlePayloadV1 {
+  readonly documentId: string;
+  readonly documentRevision: string;
+  readonly annotations: readonly TextDocAnnotationBundleAnnotationV1[];
+}
+
+export interface TextDocAnnotationBundleApplyResult {
+  readonly ok: boolean;
+  readonly document?: TextDocDocumentV1;
+  readonly diagnostics: readonly TextDocDocumentValidationDiagnostic[];
+}
+
 interface ParsedConlluRow {
   readonly line: number;
   readonly fields: TextDocConlluFields;
@@ -552,6 +572,21 @@ function addDuplicateDiagnostics(
       targetId: duplicate,
     }));
   }
+}
+
+function cloneJsonValue<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
+function stableTextDocJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((entry) => stableTextDocJson(entry)).join(",")}]`;
+  if (value !== null && typeof value === "object") {
+    return `{${Object.entries(value)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, entry]) => `${JSON.stringify(key)}:${stableTextDocJson(entry)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
 }
 
 function isTextDocLayerKind(value: unknown): value is TextDocLayerKind {
@@ -1894,6 +1929,164 @@ export function queryTextDocAnnotations(
     }
   }
   return results.sort(compareTextDocQueryResults);
+}
+
+function firstTextDocTarget(annotation: TextDocAnnotation): TextDocTarget | undefined {
+  return annotation.targets[0];
+}
+
+export function exportTextDocAnnotationBundlePayloadV1(
+  document: TextDocDocumentV1,
+): TextDocAnnotationBundlePayloadV1 {
+  const annotations: TextDocAnnotationBundleAnnotationV1[] = [];
+  for (const layer of document.layers) {
+    for (const annotation of layer.annotations) {
+      const target = firstTextDocTarget(annotation);
+      if (target === undefined) {
+        throw new TypeError(`Annotation ${annotation.id} cannot be exported without at least one target.`);
+      }
+      annotations.push({
+        annotationId: annotation.id,
+        layerId: layer.id,
+        kind: annotation.kind,
+        target: cloneJsonValue(target),
+        annotation: cloneJsonValue(annotation),
+      });
+    }
+  }
+  return {
+    documentId: document.documentId,
+    documentRevision: document.revision,
+    annotations,
+  };
+}
+
+function isTextDocAnnotationBundleAnnotationV1(
+  value: unknown,
+): value is TextDocAnnotationBundleAnnotationV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.annotationId) &&
+    isNonEmptyString(value.layerId) &&
+    isTextDocLayerKind(value.kind) &&
+    isTextDocTarget(value.target) &&
+    isTextDocAnnotation(value.annotation)
+  );
+}
+
+export function isTextDocAnnotationBundlePayloadV1(
+  value: unknown,
+): value is TextDocAnnotationBundlePayloadV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.documentRevision) &&
+    Array.isArray(value.annotations) &&
+    value.annotations.every((entry) => isTextDocAnnotationBundleAnnotationV1(entry))
+  );
+}
+
+export function applyTextDocAnnotationBundlePayloadV1(
+  document: TextDocDocumentV1,
+  bundle: unknown,
+): TextDocAnnotationBundleApplyResult {
+  const diagnostics: TextDocDocumentValidationDiagnostic[] = [];
+  if (!isTextDocAnnotationBundlePayloadV1(bundle)) {
+    return {
+      ok: false,
+      diagnostics: [
+        textDocValidationDiagnostic(
+          "textdoc.annotation-bundle.shape",
+          "Annotation bundle payload does not satisfy TextDocAnnotationBundlePayloadV1.",
+        ),
+      ],
+    };
+  }
+
+  if (bundle.documentId !== document.documentId) {
+    diagnostics.push(textDocValidationDiagnostic(
+      "textdoc.annotation-bundle.document-mismatch",
+      `Annotation bundle document ${bundle.documentId} does not match ${document.documentId}.`,
+    ));
+  }
+  if (bundle.documentRevision !== document.revision) {
+    diagnostics.push(textDocValidationDiagnostic(
+      "textdoc.annotation-bundle.revision-mismatch",
+      `Annotation bundle revision ${bundle.documentRevision} does not match ${document.revision}.`,
+    ));
+  }
+
+  const layerById = new Map(document.layers.map((layer) => [layer.id, layer] as const));
+  const annotationsByLayer = new Map<string, TextDocAnnotation[]>();
+  const seenAnnotationIds = new Set<string>();
+  for (const entry of bundle.annotations) {
+    const layer = layerById.get(entry.layerId);
+    if (seenAnnotationIds.has(entry.annotationId)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.annotation-bundle.annotation-duplicate",
+        `Annotation bundle repeats annotation ${entry.annotationId}.`,
+        { annotationId: entry.annotationId },
+      ));
+    }
+    seenAnnotationIds.add(entry.annotationId);
+    if (entry.annotation.id !== entry.annotationId) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.annotation-bundle.annotation-id-mismatch",
+        `Annotation bundle entry ${entry.annotationId} contains annotation ${entry.annotation.id}.`,
+        { annotationId: entry.annotationId, targetId: entry.annotation.id },
+      ));
+    }
+    if (layer === undefined) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.annotation-bundle.layer-missing",
+        `Annotation bundle references missing layer ${entry.layerId}.`,
+        { layerId: entry.layerId, annotationId: entry.annotationId },
+      ));
+      continue;
+    }
+    if (layer.kind !== entry.kind || entry.annotation.kind !== layer.kind) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.annotation-bundle.kind-mismatch",
+        `Annotation bundle entry ${entry.annotationId} does not match layer kind ${layer.kind}.`,
+        { layerId: layer.id, annotationId: entry.annotationId },
+      ));
+    }
+    const annotationTarget = firstTextDocTarget(entry.annotation);
+    if (annotationTarget === undefined || stableTextDocJson(annotationTarget) !== stableTextDocJson(entry.target)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.annotation-bundle.target-mismatch",
+        `Annotation bundle entry ${entry.annotationId} does not preserve its representative target.`,
+        { layerId: layer.id, annotationId: entry.annotationId },
+      ));
+    }
+    const annotations = annotationsByLayer.get(entry.layerId) ?? [];
+    annotations.push(cloneJsonValue(entry.annotation));
+    annotationsByLayer.set(entry.layerId, annotations);
+  }
+
+  if (hasErrorDiagnostics(diagnostics)) {
+    return { ok: false, diagnostics };
+  }
+
+  const roundTrippedDocument: TextDocDocumentV1 = {
+    ...document,
+    layers: document.layers.map((layer) => ({
+      ...layer,
+      annotations: annotationsByLayer.get(layer.id) ?? [],
+    })),
+  };
+  const validation = validateTextDocDocumentV1(roundTrippedDocument);
+  if (!validation.ok) {
+    return {
+      ok: false,
+      diagnostics: validation.diagnostics,
+    };
+  }
+  return {
+    ok: true,
+    document: roundTrippedDocument,
+    diagnostics: validation.diagnostics,
+  };
 }
 
 export function toTextDocDocumentV1(

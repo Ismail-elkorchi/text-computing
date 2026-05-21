@@ -63,6 +63,20 @@ Negative controls for those failures live under
 The extension-id negative control proves that extension annotations require a declared scheme-like
 identifier instead of an unscoped label.
 
+## Stand-off annotation round trip
+
+The package-level annotation-bundle API exports annotations as stand-off records with document id,
+revision, layer id, annotation id, representative target, and full annotation payload. The import
+path applies those records to an existing document skeleton and rejects duplicate ids, layer/kind
+mismatches, document or revision mismatch, and representative-target drift.
+
+The committed protocol envelope
+[`../../fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json`](../../fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json)
+is generated from the structural example and validated against
+[`../../schemas/textprotocol-annotation-bundle-v1.schema.json`](../../schemas/textprotocol-annotation-bundle-v1.schema.json).
+It is ecosystem-style interchange evidence for the committed fixture only; it is not an external
+document-model comparator result.
+
 ## Result-envelope requirements
 
 Any `textdoc` document emitted as a repository-level result must be serializable as:
@@ -78,4 +92,5 @@ Any `textdoc` document emitted as a repository-level result must be serializable
 ## Verification
 
 `npm run -s check:fixtures` validates the structural example, negative controls, lifecycle rules,
-deterministic ordering expectations, and the result-envelope/conformance round trip.
+deterministic ordering expectations, result-envelope/conformance compatibility, and the stand-off
+annotation-bundle round trip.

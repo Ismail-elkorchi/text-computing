@@ -120,14 +120,16 @@
       "taskId": "nlp-document-annotation-model",
       "supportStatus": "slice-proven",
       "evidenceTier": "fixture-proven",
-      "claimBoundary": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and round-trip validation are implemented.",
+      "claimBoundary": "The document model, invalid-reference policy, lifecycle/provenance support, fixture-level graph annotation conventions, and stand-off annotation-bundle round-trip validation are implemented.",
       "fixtureSplits": {
         "development": [
           "fixtures/textdoc/examples/document-annotation-model-v1.json"
         ],
         "validation": [
           "fixtures/textdoc/examples/document-extension-model-v1.json",
-          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
+          "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
+          "schemas/textprotocol-annotation-bundle-v1.schema.json"
         ],
         "holdout": [],
         "negativeControls": [
@@ -145,7 +147,8 @@
       ],
       "nextTier": "comparator-backed",
       "nextTierBlockers": [
-        "No external document-model comparator or broad graph holdout suite is recorded."
+        "No external document-model comparator or broad graph holdout suite is recorded.",
+        "No held-out document-annotation bundle from an independent producer is recorded."
       ]
     },
     {
