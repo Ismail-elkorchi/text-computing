@@ -88,7 +88,7 @@ const TASKS = {
     comparisonDir: null,
     comparisonSchema: null,
     conformanceReportRefs: ["fixtures/reports/nlp-retrieval/conformance-report.json"],
-    knownGap: "Retrieval behavior remains limited to committed explicit-token corpora, qrels, and deterministic thresholds; no external comparator-backed retrieval claim is made.",
+    knownGap: "Retrieval behavior remains limited to committed explicit-token corpora, qrels, streaming iteration, durable artifacts, citation windows, quote grounding, and deterministic thresholds; no Lucene-style comparator-backed retrieval claim is made.",
     claimDowngraded: true,
     gapDisposition: "claim-narrowed",
   },

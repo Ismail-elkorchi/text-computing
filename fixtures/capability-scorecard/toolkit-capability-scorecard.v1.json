@@ -194,7 +194,7 @@
         "packages/textcorpus/test/index.test.ts",
         "tools/check-workspace-pack-dry-run.mjs"
       ],
-      "nextGate": "Keep retrieval and corpus scoring bounded until external relevance datasets, streaming behavior, and durable index storage exist."
+      "nextGate": "Keep retrieval claims bounded until executed Lucene-style comparator captures, held-out multilingual qrels, and storage-performance evidence exist."
     },
     {
       "packageName": "@ismail-elkorchi/textdoc",
@@ -834,9 +834,14 @@
         "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
         "fixtures/performance/gates.v1.json",
         "schemas/retrieval-qrels-v1.schema.json",
-        "schemas/retrieval-evaluation-v1.schema.json"
+        "schemas/retrieval-evaluation-v1.schema.json",
+        "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+        "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json",
+        "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+        "tools/prepare-retrieval-external-fixture.mjs"
       ],
-      "nextGate": "Add external relevance datasets, streaming behavior, filesystem-backed index storage, and broader multilingual retrieval fixtures.",
+      "nextGate": "Add executed Lucene-style comparator captures, larger external relevance datasets, held-out multilingual qrels, and storage-performance evidence.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -854,7 +859,10 @@
           "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
           "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
           "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
-          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
+          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+          "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+          "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json"
         ],
         "negativeControlRefs": [
           "fixtures/retrieval/expected/retrieval-smoke.json",
@@ -867,7 +875,10 @@
           "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
           "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
           "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
-          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
+          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+          "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+          "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json"
         ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-retrieval/conformance-report.json"
@@ -876,7 +887,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
+      "claimBoundary": "Deterministic query parsing, boolean/phrase/proximity query clauses, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, streaming iteration, snippets, explain output, citation windows, quote grounding, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, durable index artifacts, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
       "evidenceTier": "corpus-backed",
       "fixtureSplitRefs": {
         "development": [
@@ -885,25 +896,31 @@
         "validation": [
           "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
           "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
+          "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+          "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json",
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "holdout": [],
         "negativeControls": [
-          "fixtures/retrieval/expected/retrieval-smoke.json"
+          "fixtures/retrieval/expected/retrieval-smoke.json",
+          "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json"
         ],
         "externalComparators": [],
         "corpusEvidence": [
           "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
           "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json",
           "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
-          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
+          "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
+          "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+          "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+          "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json"
         ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
       },
       "nextEvidenceTierBlockers": [
-        "No external relevance dataset, broad multilingual qrels set, streaming retrieval proof, or filesystem-backed index evidence is recorded."
+        "Comparator-backed or broader retrieval claims require executed Lucene-style comparator captures, larger external relevance datasets, held-out multilingual qrels, and storage-performance evidence beyond committed explicit-token fixtures."
       ]
     },
     {

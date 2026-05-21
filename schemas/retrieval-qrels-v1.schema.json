@@ -9,6 +9,7 @@
     "schemaVersion": { "const": 1 },
     "taskId": { "const": "nlp-retrieval" },
     "corpusId": { "type": "string", "minLength": 1 },
+    "source": { "$ref": "#/definitions/source" },
     "judgments": {
       "type": "array",
       "minItems": 1,
@@ -16,6 +17,19 @@
     }
   },
   "definitions": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["datasetId", "datasetVersion", "split", "license", "sourceUrl", "checksum"],
+      "properties": {
+        "datasetId": { "type": "string", "minLength": 1 },
+        "datasetVersion": { "type": "string", "minLength": 1 },
+        "split": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 },
+        "sourceUrl": { "type": "string", "minLength": 1 },
+        "checksum": { "type": "string", "minLength": 1 }
+      }
+    },
     "judgment": {
       "type": "object",
       "additionalProperties": false,

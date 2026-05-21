@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 9,
+    "pass": 10,
     "fail": 0,
     "notRun": 0
   },
@@ -46,9 +46,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -83,9 +82,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -96,7 +94,12 @@
       "evidenceRefs": [
         "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test/index.test.ts",
-        "tools/validate-retrieval-feature.mjs"
+        "tools/validate-retrieval-feature.mjs",
+        "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+        "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json",
+        "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+        "tools/prepare-retrieval-external-fixture.mjs"
       ],
       "traceability": {
         "requirementRefs": [
@@ -118,9 +121,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -154,9 +156,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -196,9 +197,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -235,9 +235,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -275,9 +274,8 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -310,9 +308,49 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
+        ]
+      }
+    },
+    {
+      "checkId": "section-12-retrieval-proof",
+      "status": "pass",
+      "message": "Retrieval Section 12 features are tied to package APIs, committed external qrels, expected outputs, and validator oracles without changing the support label.",
+      "evidenceRefs": [
+        "packages/textcorpus/src/index.ts",
+        "packages/textcorpus/test/index.test.ts",
+        "tools/validate-retrieval-feature.mjs",
+        "tools/prepare-retrieval-external-fixture.mjs",
+        "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+        "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+        "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/retrieval-readiness.md"
+        ],
+        "apiRefs": [
+          "packages/textcorpus/src/index.ts",
+          "tools/validate-retrieval-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/retrieval/slices.json",
+          "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json"
+        ],
+        "oracleRefs": [
+          "tools/validate-retrieval-feature.mjs",
+          "schemas/retrieval-expected-v1.schema.json",
+          "schemas/retrieval-qrels-v1.schema.json",
+          "schemas/retrieval-evaluation-v1.schema.json"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-retrieval/conformance-report.json"
+        ],
+        "limitations": [
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
@@ -344,14 +382,13 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
-          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests.",
-          "Slice-proven for retrieval over committed explicit-token, fielded smoke, and repository-authored licensed corpora with standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only."
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
+          "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists retrieval evidence for committed explicit-token, fielded smoke, and repository-authored licensed corpora, standalone qrels, deterministic size thresholds, and bounded package-level query-control tests only; it does not add streaming index, filesystem-backed index storage, external relevance benchmark, or broad multilingual support."
+    "This report persists retrieval evidence for committed explicit-token corpora, standalone qrels, deterministic size thresholds, streaming iteration, durable index artifacts, citation windows, quote grounding, and the pinned BEIR NFCorpus title-token subset only; it does not add a Lucene-backed comparator claim, filesystem-specific index store, broad multilingual retrieval benchmark, or broad retrieval-quality claim."
   ]
 }

@@ -19,6 +19,8 @@
     "schemaVersion": { "const": 1 },
     "taskId": { "const": "nlp-retrieval" },
     "corpusId": { "type": "string", "minLength": 1 },
+    "evidenceClass": { "const": "E2" },
+    "selection": { "type": "object" },
     "formula": {
       "enum": [
         "bm25.okapi.k1-1.5.b-0.75",

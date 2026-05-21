@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-retrieval",
+  "corpusId": "corpus-retrieval-beir-nfcorpus-title-subset",
+  "evidenceClass": "E2",
+  "selection": {
+    "schemaVersion": 1,
+    "corpusId": "corpus-retrieval-beir-nfcorpus-title-subset",
+    "tokenSource": "explicit-textdoc-token-layer",
+    "units": "utf16-code-unit",
+    "documentOrder": [
+      "MED-10",
+      "MED-118",
+      "MED-14",
+      "MED-2427",
+      "MED-2651"
+    ],
+    "tokenCount": 72,
+    "documents": [
+      {
+        "id": "MED-10",
+        "documentId": "doc:retrieval:MED-10",
+        "revision": "retrieval-v1",
+        "viewId": "analysis-view",
+        "tokenLayerId": "tokens",
+        "tokenCount": 12,
+        "metadata": {
+          "language": "en",
+          "genre": "external-reference",
+          "title": "Statin Use and Breast Cancer Survival: A Nationwide Cohort Study from Finland",
+          "license": "cc-by-sa-4.0",
+          "sourceDataset": "beir/nfcorpus",
+          "sourceDocumentId": "MED-10"
+        }
+      },
+      {
+        "id": "MED-118",
+        "documentId": "doc:retrieval:MED-118",
+        "revision": "retrieval-v1",
+        "viewId": "analysis-view",
+        "tokenLayerId": "tokens",
+        "tokenCount": 13,
+        "metadata": {
+          "language": "en",
+          "genre": "external-reference",
+          "title": "Alkylphenols in human milk and their relations to dietary habits in central Taiwan.",
+          "license": "cc-by-sa-4.0",
+          "sourceDataset": "beir/nfcorpus",
+          "sourceDocumentId": "MED-118"
+        }
+      },
+      {
+        "id": "MED-14",
+        "documentId": "doc:retrieval:MED-14",
+        "revision": "retrieval-v1",
+        "viewId": "analysis-view",
+        "tokenLayerId": "tokens",
+        "tokenCount": 14,
+        "metadata": {
+          "language": "en",
+          "genre": "external-reference",
+          "title": "Statin use after diagnosis of breast cancer and survival: a population-based cohort study.",
+          "license": "cc-by-sa-4.0",
+          "sourceDataset": "beir/nfcorpus",
+          "sourceDocumentId": "MED-14"
+        }
+      },
+      {
+        "id": "MED-2427",
+        "documentId": "doc:retrieval:MED-2427",
+        "revision": "retrieval-v1",
+        "viewId": "analysis-view",
+        "tokenLayerId": "tokens",
+        "tokenCount": 20,
+        "metadata": {
+          "language": "en",
+          "genre": "external-reference",
+          "title": "Elevated Levels of Cholesterol-Rich Lipid Rafts in Cancer Cells Are Correlated with Apoptosis Sensitivity Induced by Cholesterol-Depleting Agents",
+          "license": "cc-by-sa-4.0",
+          "sourceDataset": "beir/nfcorpus",
+          "sourceDocumentId": "MED-2427"
+        }
+      },
+      {
+        "id": "MED-2651",
+        "documentId": "doc:retrieval:MED-2651",
+        "revision": "retrieval-v1",
+        "viewId": "analysis-view",
+        "tokenLayerId": "tokens",
+        "tokenCount": 13,
+        "metadata": {
+          "language": "en",
+          "genre": "external-reference",
+          "title": "Alkylphenols in human milk and their relations to dietary habits in central Taiwan.",
+          "license": "cc-by-sa-4.0",
+          "sourceDataset": "beir/nfcorpus",
+          "sourceDocumentId": "MED-2651"
+        }
+      }
+    ]
+  },
+  "formula": "bm25f.k1-1.2.b-0.75.fielded",
+  "k": 3,
+  "relevantGradeThreshold": 1,
+  "tolerance": 1e-12,
+  "summary": {
+    "precisionAtK": 0.8333333333333333,
+    "recallAtK": 1,
+    "mrr": 1,
+    "ndcgAtK": 1
+  },
+  "queries": [
+    {
+      "queryId": "PLAIN-2",
+      "retrieved": [
+        "MED-2427",
+        "MED-10",
+        "MED-14"
+      ],
+      "relevant": [
+        "MED-10",
+        "MED-14",
+        "MED-2427"
+      ],
+      "precisionAtK": 1,
+      "recallAtK": 1,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1
+    },
+    {
+      "queryId": "PLAIN-23",
+      "retrieved": [
+        "MED-118",
+        "MED-2651"
+      ],
+      "relevant": [
+        "MED-118",
+        "MED-2651"
+      ],
+      "precisionAtK": 0.6666666666666666,
+      "recallAtK": 1,
+      "reciprocalRank": 1,
+      "ndcgAtK": 1
+    }
+  ]
+}
