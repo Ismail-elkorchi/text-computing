@@ -61,7 +61,7 @@
             "tools/validate-pos-morph-lemma-readiness.mjs"
           ],
           "path": "tools/validate-pos-morph-lemma-readiness.mjs",
-          "sha256": "b2754182fd8f46e02ae61287d8790b259df5c0c4ce7a96fcacf9a92d1d8b540b"
+          "sha256": "7252021d56e8bb53f0a433dba16713a93488b4ae86733738cf3d5d8128bec9e4"
         },
         {
           "argv": [
@@ -69,7 +69,7 @@
             "tools/validate-pos-morph-lemma-feature.mjs"
           ],
           "path": "tools/validate-pos-morph-lemma-feature.mjs",
-          "sha256": "9bf99523f2571859818804c295a5b5da0e5f767f87baf9dedc1cc3bc854ea2a8"
+          "sha256": "b6a0688fa582ccfd56193a8ba4054c18d232c236c77dd19c49376ae0ce6a5bb1"
         }
       ],
       "comparisons": [

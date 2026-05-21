@@ -172,7 +172,12 @@
         "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
         "schemas/pos-morph-lemma-expected-v1.schema.json",
         "schemas/pos-morph-lemma-comparison-v1.schema.json",
-        "tools/validate-pos-morph-lemma-feature.mjs"
+        "tools/validate-pos-morph-lemma-feature.mjs",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
+        "schemas/pos-morph-lemma-corpus-evaluation-v1.schema.json",
+        "schemas/pos-morph-lemma-corpus-evaluation-report-v1.schema.json",
+        "tools/evaluate-pos-morph-lemma-corpus.mjs"
       ],
       "comparatorRefs": [
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",

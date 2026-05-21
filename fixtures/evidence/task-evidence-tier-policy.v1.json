@@ -204,7 +204,10 @@
           "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
           "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
@@ -214,7 +217,7 @@
       ],
       "nextTier": "corpus-backed",
       "nextTierBlockers": [
-        "No UD-style corpus evaluation, broad unknown-word evaluation, or holdout MWT/clitic corpus is recorded."
+        "UD-style corpus evaluation exists for committed slices only; broad unknown-word evaluation, holdout MWT/clitic corpus breadth, rich morphology, and wider corpus evidence remain absent."
       ]
     },
     {

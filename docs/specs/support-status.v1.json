@@ -338,15 +338,17 @@
         "executed spaCy comparator capture",
         "executed Stanza comparator capture",
         "package tests",
-        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json"
       ],
       "limitations": [
         "No JavaScript comparator-backed POS/morph/lemma claim is made",
-        "Not a trained or broad multilingual tagger; fixture-bound deterministic behavior only"
+        "Not a trained or broad multilingual tagger; deterministic behavior remains bounded to committed slices and the UD-style slice corpus evaluation."
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
-        "No UD-style corpus evaluation, broad unknown-word evaluation, or holdout MWT/clitic corpus is recorded."
+        "UD-style corpus evaluation exists for committed slices only; broad unknown-word evaluation, holdout MWT/clitic corpus breadth, rich morphology, and wider corpus evidence remain absent."
       ]
     },
     {
