@@ -273,13 +273,14 @@
       "taskId": "nlp-corpus-tfidf-bm25",
       "supportStatus": "slice-proven",
       "evidenceTier": "comparator-backed",
-      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, Okapi BM25, and E2 corpus-selection disclosures exist only for the frozen issue #14 explicit-token corpus.",
+      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, Okapi BM25 parameter variants, numeric tolerance replay, and E2 corpus-selection disclosures exist only for committed explicit-token corpora.",
       "fixtureSplits": {
         "development": [
           "fixtures/corpus-tfidf-bm25/slices.json"
         ],
         "validation": [
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "holdout": [],
@@ -288,9 +289,12 @@
         ],
         "externalComparators": [
           "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
@@ -300,7 +304,7 @@
       ],
       "nextTier": "corpus-backed",
       "nextTierBlockers": [
-        "The current explicit-token corpus is too small for broad corpus-backed ranking claims."
+        "Corpus-backed claims require external or reproducibly sourced corpora, held-out corpus slices, and stable performance measurements beyond committed synthetic explicit-token fixtures."
       ]
     },
     {

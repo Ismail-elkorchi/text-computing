@@ -57,8 +57,52 @@
                 "singleton-term",
                 "empty-document",
                 "missing-query-term",
-                "stable-ordering"
+                "stable-ordering",
+                "larger-corpus",
+                "formula-variant",
+                "numeric-tolerance",
+                "performance-threshold"
               ]
+            }
+          },
+          "license": {
+            "type": "string",
+            "minLength": 1
+          },
+          "provenance": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contentHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "performanceThresholds": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "minDocuments",
+              "minTokens",
+              "minQueries",
+              "maxSerializedScoringBytes"
+            ],
+            "properties": {
+              "minDocuments": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "minTokens": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "minQueries": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxSerializedScoringBytes": {
+                "type": "integer",
+                "minimum": 1
+              }
             }
           },
           "documents": {

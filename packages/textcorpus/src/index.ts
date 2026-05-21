@@ -19,7 +19,9 @@ export const textCorpusEvidenceClassE2 = "E2" as const;
 export const textCorpusTfRawCountFormula = "tf.raw-count" as const;
 export const textCorpusDfDocumentCountFormula = "df.document-count" as const;
 export const textCorpusTfidfSklearnSmoothRawFormula = "tfidf.sklearn-smooth-raw" as const;
+export const textCorpusTfidfSklearnSmoothL2Formula = "tfidf.sklearn-smooth-l2" as const;
 export const textCorpusBm25OkapiFormula = "bm25.okapi.k1-1.5.b-0.75" as const;
+export const textCorpusBm25OkapiK1_1_2Formula = "bm25.okapi.k1-1.2.b-0.75" as const;
 export const textCorpusBm25fFormula = "bm25f.k1-1.2.b-0.75.fielded" as const;
 
 export type PackageName = typeof packageName;
@@ -32,11 +34,17 @@ export type TextCorpusRetrievalEvaluationSchemaVersion =
 export type TextCorpusAnalysisSchemaVersion = typeof textCorpusAnalysisSchemaVersion;
 export type TextCorpusTokenSource = typeof textCorpusTokenSource;
 export type TextCorpusEvidenceClass = typeof textCorpusEvidenceClassE2;
+export type TextCorpusTfidfFormulaId =
+  | typeof textCorpusTfidfSklearnSmoothRawFormula
+  | typeof textCorpusTfidfSklearnSmoothL2Formula;
+export type TextCorpusBm25FormulaId =
+  | typeof textCorpusBm25OkapiFormula
+  | typeof textCorpusBm25OkapiK1_1_2Formula;
 export type TextCorpusFormulaId =
   | typeof textCorpusTfRawCountFormula
   | typeof textCorpusDfDocumentCountFormula
-  | typeof textCorpusTfidfSklearnSmoothRawFormula
-  | typeof textCorpusBm25OkapiFormula
+  | TextCorpusTfidfFormulaId
+  | TextCorpusBm25FormulaId
   | typeof textCorpusBm25fFormula;
 export type TextCorpusRetrievalFormulaId =
   | typeof textCorpusBm25OkapiFormula
@@ -123,9 +131,19 @@ export interface TextCorpusTermValue {
   readonly value: number;
 }
 
+export interface TextCorpusFormulaTermValues {
+  readonly formula: TextCorpusTfidfFormulaId;
+  readonly values: readonly TextCorpusTermValue[];
+}
+
 export interface TextCorpusDocumentScore {
   readonly docId: string;
   readonly score: number;
+}
+
+export interface TextCorpusFormulaDocumentScores {
+  readonly formula: TextCorpusBm25FormulaId;
+  readonly scores: readonly TextCorpusDocumentScore[];
 }
 
 export interface TextCorpusDocumentTermScores {
@@ -133,16 +151,20 @@ export interface TextCorpusDocumentTermScores {
   readonly length: number;
   readonly tf: readonly TextCorpusTermValue[];
   readonly tfidf: readonly TextCorpusTermValue[];
+  readonly tfidfVariants?: readonly TextCorpusFormulaTermValues[];
 }
 
 export interface TextCorpusQueryScores {
   readonly id: string;
   readonly bm25: readonly TextCorpusDocumentScore[];
+  readonly bm25Variants?: readonly TextCorpusFormulaDocumentScores[];
 }
 
 export interface TextCorpusScoringOptions {
   readonly queries?: readonly TextCorpusQuery[];
   readonly tolerance?: number;
+  readonly tfidfFormulas?: readonly TextCorpusTfidfFormulaId[];
+  readonly bm25Formulas?: readonly TextCorpusBm25FormulaId[];
 }
 
 export interface TextCorpusScoringResultV1 {
@@ -802,15 +824,20 @@ function bm25OkapiIdf(documentCount: number, documentFrequency: number): number 
   return Math.log((documentCount - documentFrequency + 0.5) / (documentFrequency + 0.5));
 }
 
+function bm25OkapiParameters(formula: TextCorpusBm25FormulaId): { readonly k1: number; readonly b: number } {
+  if (formula === textCorpusBm25OkapiK1_1_2Formula) return { k1: 1.2, b: 0.75 };
+  return { k1: 1.5, b: 0.75 };
+}
+
 function bm25OkapiScore(
   termFrequency: number,
   documentLength: number,
   averageDocumentLength: number,
   idf: number,
+  parameters: { readonly k1: number; readonly b: number } = bm25OkapiParameters(textCorpusBm25OkapiFormula),
 ): number {
   if (termFrequency <= 0 || averageDocumentLength <= 0 || idf === 0) return 0;
-  const k1 = 1.5;
-  const b = 0.75;
+  const { k1, b } = parameters;
   const denominator = termFrequency + k1 * (1 - b + b * (documentLength / averageDocumentLength));
   if (denominator === 0) return 0;
   return idf * ((termFrequency * (k1 + 1)) / denominator);
@@ -835,6 +862,36 @@ function isTermValueArray(value: unknown): value is readonly TextCorpusTermValue
   );
 }
 
+function isTfidfFormula(value: unknown): value is TextCorpusTfidfFormulaId {
+  return value === textCorpusTfidfSklearnSmoothRawFormula || value === textCorpusTfidfSklearnSmoothL2Formula;
+}
+
+function isBm25ScoringFormula(value: unknown): value is TextCorpusBm25FormulaId {
+  return value === textCorpusBm25OkapiFormula || value === textCorpusBm25OkapiK1_1_2Formula;
+}
+
+function isScoringFormula(value: unknown): value is TextCorpusFormulaId {
+  return (
+    value === textCorpusTfRawCountFormula ||
+    value === textCorpusDfDocumentCountFormula ||
+    isTfidfFormula(value) ||
+    isBm25ScoringFormula(value) ||
+    value === textCorpusBm25fFormula
+  );
+}
+
+function isFormulaTermValuesArray(value: unknown): value is readonly TextCorpusFormulaTermValues[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        isRecord(entry) &&
+        isTfidfFormula(entry.formula) &&
+        isTermValueArray(entry.values),
+    )
+  );
+}
+
 function isDocumentScoreArray(value: unknown): value is readonly TextCorpusDocumentScore[] {
   return (
     Array.isArray(value) &&
@@ -844,6 +901,18 @@ function isDocumentScoreArray(value: unknown): value is readonly TextCorpusDocum
         isNonEmptyString(entry.docId) &&
         typeof entry.score === "number" &&
         Number.isFinite(entry.score),
+    )
+  );
+}
+
+function isFormulaDocumentScoresArray(value: unknown): value is readonly TextCorpusFormulaDocumentScores[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        isRecord(entry) &&
+        isBm25ScoringFormula(entry.formula) &&
+        isDocumentScoreArray(entry.scores),
     )
   );
 }
@@ -1302,13 +1371,7 @@ export function isTextCorpusScoringResultV1(value: unknown): value is TextCorpus
     isTextCorpusEvidenceClass(value.evidenceClass) &&
     selectionMatchesCorpus(value.selection, value.corpusId) &&
     Array.isArray(value.formulaSet) &&
-    value.formulaSet.every(
-      (entry) =>
-        entry === textCorpusTfRawCountFormula ||
-        entry === textCorpusDfDocumentCountFormula ||
-        entry === textCorpusTfidfSklearnSmoothRawFormula ||
-        entry === textCorpusBm25OkapiFormula,
-    ) &&
+    value.formulaSet.every((entry) => isScoringFormula(entry)) &&
     Array.isArray(value.documentOrder) &&
     value.documentOrder.every((entry) => isNonEmptyString(entry)) &&
     Array.isArray(value.termOrder) &&
@@ -1324,14 +1387,16 @@ export function isTextCorpusScoringResultV1(value: unknown): value is TextCorpus
         Number.isInteger(entry.length) &&
         entry.length >= 0 &&
         isTermValueArray(entry.tf) &&
-        isTermValueArray(entry.tfidf),
+        isTermValueArray(entry.tfidf) &&
+        (entry.tfidfVariants === undefined || isFormulaTermValuesArray(entry.tfidfVariants)),
     ) &&
     Array.isArray(value.queries) &&
     value.queries.every(
       (entry) =>
         isRecord(entry) &&
         isNonEmptyString(entry.id) &&
-        isDocumentScoreArray(entry.bm25),
+        isDocumentScoreArray(entry.bm25) &&
+        (entry.bm25Variants === undefined || isFormulaDocumentScoresArray(entry.bm25Variants)),
     )
   );
 }
@@ -1894,6 +1959,34 @@ export function buildTextCorpusFingerprintIndex(
   };
 }
 
+function uniqueTfidfFormulas(formulas: readonly TextCorpusTfidfFormulaId[] | undefined): readonly TextCorpusTfidfFormulaId[] {
+  const requested = formulas ?? [textCorpusTfidfSklearnSmoothRawFormula];
+  const output: TextCorpusTfidfFormulaId[] = [];
+  for (const formula of requested) {
+    if (!isTfidfFormula(formula)) throw new TypeError(`unsupported textcorpus TF-IDF formula: ${String(formula)}`);
+    if (!output.includes(formula)) output.push(formula);
+  }
+  if (!output.includes(textCorpusTfidfSklearnSmoothRawFormula)) output.unshift(textCorpusTfidfSklearnSmoothRawFormula);
+  return output;
+}
+
+function uniqueBm25Formulas(formulas: readonly TextCorpusBm25FormulaId[] | undefined): readonly TextCorpusBm25FormulaId[] {
+  const requested = formulas ?? [textCorpusBm25OkapiFormula];
+  const output: TextCorpusBm25FormulaId[] = [];
+  for (const formula of requested) {
+    if (!isBm25ScoringFormula(formula)) throw new TypeError(`unsupported textcorpus BM25 formula: ${String(formula)}`);
+    if (!output.includes(formula)) output.push(formula);
+  }
+  if (!output.includes(textCorpusBm25OkapiFormula)) output.unshift(textCorpusBm25OkapiFormula);
+  return output;
+}
+
+function l2NormalizeTermValues(values: readonly TextCorpusTermValue[]): readonly TextCorpusTermValue[] {
+  const norm = Math.sqrt(values.reduce((sum, entry) => sum + entry.value ** 2, 0));
+  if (norm === 0) return [];
+  return values.map((entry) => ({ term: entry.term, value: entry.value / norm }));
+}
+
 export function computeTextCorpusScoring(
   collection: TextCorpusCollectionV1,
   options: TextCorpusScoringOptions = {},
@@ -1904,6 +1997,8 @@ export function computeTextCorpusScoring(
 
   const queries = options.queries ?? [];
   validateQueries(queries);
+  const tfidfFormulas = uniqueTfidfFormulas(options.tfidfFormulas);
+  const bm25Formulas = uniqueBm25Formulas(options.bm25Formulas);
   const { entries, selection } = selectTextCorpusEntries(collection);
   const documentOrder = entries.map(({ entry }) => entry.id);
   const tokenLists = entries.map(({ tokens }) => tokens);
@@ -1934,11 +2029,16 @@ export function computeTextCorpusScoring(
       const df = documentFrequency.get(term) ?? 0;
       tfidf.push({ term, value: count * smoothSklearnIdf(documentCount, df) });
     }
+    const tfidfVariants = tfidfFormulas.map((formula) => ({
+      formula,
+      values: formula === textCorpusTfidfSklearnSmoothL2Formula ? l2NormalizeTermValues(tfidf) : tfidf,
+    }));
     return {
       id: entry.id,
       length: tokenLists[index]?.length ?? 0,
       tf,
       tfidf,
+      ...(tfidfFormulas.length > 1 ? { tfidfVariants } : {}),
     };
   });
 
@@ -1957,6 +2057,27 @@ export function computeTextCorpusScoring(
         score,
       };
     }),
+    ...(bm25Formulas.length > 1
+      ? {
+          bm25Variants: bm25Formulas.map((formula) => ({
+            formula,
+            scores: entries.map(({ entry }, index) => {
+              const counts = termCounts[index] ?? new Map<string, number>();
+              const documentLength = tokenLists[index]?.length ?? 0;
+              const parameters = bm25OkapiParameters(formula);
+              const score = query.tokens.reduce((sum, term) => {
+                const df = documentFrequency.get(term) ?? 0;
+                const idf = bm25OkapiIdf(documentCount, df);
+                return sum + bm25OkapiScore(counts.get(term) ?? 0, documentLength, averageDocumentLength, idf, parameters);
+              }, 0);
+              return {
+                docId: entry.id,
+                score,
+              };
+            }),
+          })),
+        }
+      : {}),
   }));
 
   return {
@@ -1968,8 +2089,8 @@ export function computeTextCorpusScoring(
     formulaSet: [
       textCorpusTfRawCountFormula,
       textCorpusDfDocumentCountFormula,
-      textCorpusTfidfSklearnSmoothRawFormula,
-      textCorpusBm25OkapiFormula,
+      ...tfidfFormulas,
+      ...bm25Formulas,
     ],
     documentOrder,
     termOrder,

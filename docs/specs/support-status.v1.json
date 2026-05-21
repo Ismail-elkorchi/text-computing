@@ -383,20 +383,23 @@
     {
       "id": "nlp-corpus-tfidf-bm25",
       "status": "slice-proven",
-      "scope": "Deterministic raw TF, smooth TF-IDF, Okapi BM25, and E2 corpus-selection disclosures exist only for the frozen issue #14 explicit-token corpus.",
+      "scope": "Deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, Okapi BM25 parameter variants, numeric tolerance replay, and E2 corpus-selection disclosures exist only for committed explicit-token corpora.",
       "evidence": [
-        "explicit-token corpus fixture",
+        "explicit-token corpus fixtures",
+        "threshold corpus expected-output replay",
         "E2 selection-provenance tests",
         "scikit-learn/rank-bm25/Natural captures",
+        "formula-variant tests",
         "numeric tolerance tests",
         "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
       ],
       "limitations": [
-        "No large-corpus relevance benchmark, fielded weighting claim, or stable wall-clock/memory performance proof"
+        "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+        "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task."
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
-        "The current explicit-token corpus is too small for broad corpus-backed ranking claims."
+        "Corpus-backed claims require external or reproducibly sourced corpora, held-out corpus slices, and stable performance measurements beyond committed synthetic explicit-token fixtures."
       ]
     },
     {

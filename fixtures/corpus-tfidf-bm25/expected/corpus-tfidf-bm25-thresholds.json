@@ -1,0 +1,2835 @@
+{
+  "schemaVersion": 1,
+  "corpusId": "corpus-tfidf-bm25-thresholds",
+  "formulaSet": [
+    "tf.raw-count",
+    "df.document-count",
+    "tfidf.sklearn-smooth-raw",
+    "tfidf.sklearn-smooth-l2",
+    "bm25.okapi.k1-1.5.b-0.75",
+    "bm25.okapi.k1-1.2.b-0.75"
+  ],
+  "documentOrder": [
+    "doc-001",
+    "doc-002",
+    "doc-003",
+    "doc-004",
+    "doc-005",
+    "doc-006",
+    "doc-007",
+    "doc-008",
+    "doc-009",
+    "doc-010",
+    "doc-011",
+    "doc-012"
+  ],
+  "termOrder": [
+    "adaptation",
+    "agriculture",
+    "appeal",
+    "bond",
+    "capital",
+    "carbon",
+    "chip",
+    "city",
+    "climate",
+    "clinic",
+    "cloud",
+    "contract",
+    "court",
+    "credit",
+    "crop",
+    "damages",
+    "data",
+    "default",
+    "drought",
+    "energy",
+    "equity",
+    "evidence",
+    "finance",
+    "flood",
+    "grid",
+    "health",
+    "immune",
+    "inference",
+    "inflation",
+    "insurance",
+    "irrigation",
+    "latency",
+    "law",
+    "liability",
+    "liquidity",
+    "market",
+    "model",
+    "outcome",
+    "patient",
+    "pest",
+    "planning",
+    "policy",
+    "precedent",
+    "privacy",
+    "rate",
+    "rights",
+    "risk",
+    "river",
+    "safety",
+    "seed",
+    "soil",
+    "solar",
+    "statute",
+    "storage",
+    "technology",
+    "triage",
+    "trial",
+    "vaccine",
+    "water",
+    "yield"
+  ],
+  "tolerance": 1e-12,
+  "documents": [
+    {
+      "id": "doc-001",
+      "length": 8,
+      "tf": [
+        {
+          "term": "carbon",
+          "value": 1
+        },
+        {
+          "term": "climate",
+          "value": 1
+        },
+        {
+          "term": "energy",
+          "value": 1
+        },
+        {
+          "term": "grid",
+          "value": 1
+        },
+        {
+          "term": "market",
+          "value": 1
+        },
+        {
+          "term": "policy",
+          "value": 1
+        },
+        {
+          "term": "solar",
+          "value": 1
+        },
+        {
+          "term": "storage",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "carbon",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "climate",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "energy",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "grid",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "market",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "policy",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "solar",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "storage",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "carbon",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "climate",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "energy",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "grid",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "market",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "policy",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "solar",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "storage",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "carbon",
+              "value": 0.40522552512264554
+            },
+            {
+              "term": "climate",
+              "value": 0.3480123881337633
+            },
+            {
+              "term": "energy",
+              "value": 0.30741902142651373
+            },
+            {
+              "term": "grid",
+              "value": 0.40522552512264554
+            },
+            {
+              "term": "market",
+              "value": 0.2759323600240242
+            },
+            {
+              "term": "policy",
+              "value": 0.30741902142651373
+            },
+            {
+              "term": "solar",
+              "value": 0.40522552512264554
+            },
+            {
+              "term": "storage",
+              "value": 0.3480123881337633
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-002",
+      "length": 8,
+      "tf": [
+        {
+          "term": "adaptation",
+          "value": 1
+        },
+        {
+          "term": "city",
+          "value": 1
+        },
+        {
+          "term": "climate",
+          "value": 1
+        },
+        {
+          "term": "flood",
+          "value": 1
+        },
+        {
+          "term": "insurance",
+          "value": 1
+        },
+        {
+          "term": "planning",
+          "value": 1
+        },
+        {
+          "term": "policy",
+          "value": 1
+        },
+        {
+          "term": "river",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "adaptation",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "city",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "climate",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "flood",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "insurance",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "planning",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "policy",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "river",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "adaptation",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "city",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "climate",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "flood",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "insurance",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "planning",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "policy",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "river",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "adaptation",
+              "value": 0.38381559711197993
+            },
+            {
+              "term": "city",
+              "value": 0.38381559711197993
+            },
+            {
+              "term": "climate",
+              "value": 0.3296252932573766
+            },
+            {
+              "term": "flood",
+              "value": 0.38381559711197993
+            },
+            {
+              "term": "insurance",
+              "value": 0.3296252932573766
+            },
+            {
+              "term": "planning",
+              "value": 0.38381559711197993
+            },
+            {
+              "term": "policy",
+              "value": 0.29117666079076926
+            },
+            {
+              "term": "river",
+              "value": 0.3296252932573766
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-003",
+      "length": 8,
+      "tf": [
+        {
+          "term": "clinic",
+          "value": 1
+        },
+        {
+          "term": "data",
+          "value": 1
+        },
+        {
+          "term": "health",
+          "value": 1
+        },
+        {
+          "term": "immune",
+          "value": 1
+        },
+        {
+          "term": "patient",
+          "value": 1
+        },
+        {
+          "term": "safety",
+          "value": 1
+        },
+        {
+          "term": "trial",
+          "value": 1
+        },
+        {
+          "term": "vaccine",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "clinic",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "data",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "health",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "immune",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "patient",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "safety",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "trial",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "vaccine",
+          "value": 2.8718021769015913
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "clinic",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "data",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "health",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "immune",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "patient",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "safety",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "trial",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "vaccine",
+              "value": 2.8718021769015913
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "clinic",
+              "value": 0.34347313114958533
+            },
+            {
+              "term": "data",
+              "value": 0.27233327006312796
+            },
+            {
+              "term": "health",
+              "value": 0.34347313114958533
+            },
+            {
+              "term": "immune",
+              "value": 0.39994001558965403
+            },
+            {
+              "term": "patient",
+              "value": 0.34347313114958533
+            },
+            {
+              "term": "safety",
+              "value": 0.3034092390519188
+            },
+            {
+              "term": "trial",
+              "value": 0.39994001558965403
+            },
+            {
+              "term": "vaccine",
+              "value": 0.39994001558965403
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-004",
+      "length": 8,
+      "tf": [
+        {
+          "term": "clinic",
+          "value": 1
+        },
+        {
+          "term": "data",
+          "value": 1
+        },
+        {
+          "term": "equity",
+          "value": 1
+        },
+        {
+          "term": "health",
+          "value": 1
+        },
+        {
+          "term": "outcome",
+          "value": 1
+        },
+        {
+          "term": "patient",
+          "value": 1
+        },
+        {
+          "term": "safety",
+          "value": 1
+        },
+        {
+          "term": "triage",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "clinic",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "data",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "equity",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "health",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "outcome",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "patient",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "safety",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "triage",
+          "value": 2.8718021769015913
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "clinic",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "data",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "equity",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "health",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "outcome",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "patient",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "safety",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "triage",
+              "value": 2.8718021769015913
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "clinic",
+              "value": 0.3434731311495854
+            },
+            {
+              "term": "data",
+              "value": 0.272333270063128
+            },
+            {
+              "term": "equity",
+              "value": 0.3999400155896541
+            },
+            {
+              "term": "health",
+              "value": 0.3434731311495854
+            },
+            {
+              "term": "outcome",
+              "value": 0.3999400155896541
+            },
+            {
+              "term": "patient",
+              "value": 0.3434731311495854
+            },
+            {
+              "term": "safety",
+              "value": 0.30340923905191886
+            },
+            {
+              "term": "triage",
+              "value": 0.3999400155896541
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-005",
+      "length": 8,
+      "tf": [
+        {
+          "term": "appeal",
+          "value": 1
+        },
+        {
+          "term": "contract",
+          "value": 1
+        },
+        {
+          "term": "court",
+          "value": 1
+        },
+        {
+          "term": "damages",
+          "value": 1
+        },
+        {
+          "term": "evidence",
+          "value": 1
+        },
+        {
+          "term": "law",
+          "value": 1
+        },
+        {
+          "term": "liability",
+          "value": 1
+        },
+        {
+          "term": "rights",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "appeal",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "contract",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "court",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "damages",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "evidence",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "law",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "liability",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "rights",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "appeal",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "contract",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "court",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "damages",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "evidence",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "law",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "liability",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "rights",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "appeal",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "contract",
+              "value": 0.3866862993670938
+            },
+            {
+              "term": "court",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "damages",
+              "value": 0.3866862993670938
+            },
+            {
+              "term": "evidence",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "law",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "liability",
+              "value": 0.3866862993670938
+            },
+            {
+              "term": "rights",
+              "value": 0.3320906857005619
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-006",
+      "length": 8,
+      "tf": [
+        {
+          "term": "appeal",
+          "value": 1
+        },
+        {
+          "term": "court",
+          "value": 1
+        },
+        {
+          "term": "evidence",
+          "value": 1
+        },
+        {
+          "term": "law",
+          "value": 1
+        },
+        {
+          "term": "policy",
+          "value": 1
+        },
+        {
+          "term": "precedent",
+          "value": 1
+        },
+        {
+          "term": "rights",
+          "value": 1
+        },
+        {
+          "term": "statute",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "appeal",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "court",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "evidence",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "law",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "policy",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "precedent",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "rights",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "statute",
+          "value": 2.8718021769015913
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "appeal",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "court",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "evidence",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "law",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "policy",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "precedent",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "rights",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "statute",
+              "value": 2.8718021769015913
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "appeal",
+              "value": 0.3431592569343825
+            },
+            {
+              "term": "court",
+              "value": 0.3431592569343825
+            },
+            {
+              "term": "evidence",
+              "value": 0.3431592569343825
+            },
+            {
+              "term": "law",
+              "value": 0.3431592569343825
+            },
+            {
+              "term": "policy",
+              "value": 0.3031319762090467
+            },
+            {
+              "term": "precedent",
+              "value": 0.3995745405433199
+            },
+            {
+              "term": "rights",
+              "value": 0.3431592569343825
+            },
+            {
+              "term": "statute",
+              "value": 0.3995745405433199
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-007",
+      "length": 8,
+      "tf": [
+        {
+          "term": "bond",
+          "value": 1
+        },
+        {
+          "term": "capital",
+          "value": 1
+        },
+        {
+          "term": "credit",
+          "value": 1
+        },
+        {
+          "term": "finance",
+          "value": 1
+        },
+        {
+          "term": "inflation",
+          "value": 1
+        },
+        {
+          "term": "market",
+          "value": 1
+        },
+        {
+          "term": "rate",
+          "value": 1
+        },
+        {
+          "term": "risk",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "bond",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "capital",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "credit",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "finance",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "inflation",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "market",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "rate",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "risk",
+          "value": 2.1786549963416464
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "bond",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "capital",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "credit",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "finance",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "inflation",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "market",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "rate",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "risk",
+              "value": 2.1786549963416464
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "bond",
+              "value": 0.3999400155896541
+            },
+            {
+              "term": "capital",
+              "value": 0.3434731311495854
+            },
+            {
+              "term": "credit",
+              "value": 0.3434731311495854
+            },
+            {
+              "term": "finance",
+              "value": 0.3434731311495854
+            },
+            {
+              "term": "inflation",
+              "value": 0.3999400155896541
+            },
+            {
+              "term": "market",
+              "value": 0.272333270063128
+            },
+            {
+              "term": "rate",
+              "value": 0.3999400155896541
+            },
+            {
+              "term": "risk",
+              "value": 0.30340923905191886
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-008",
+      "length": 8,
+      "tf": [
+        {
+          "term": "capital",
+          "value": 1
+        },
+        {
+          "term": "credit",
+          "value": 1
+        },
+        {
+          "term": "default",
+          "value": 1
+        },
+        {
+          "term": "finance",
+          "value": 1
+        },
+        {
+          "term": "insurance",
+          "value": 1
+        },
+        {
+          "term": "liquidity",
+          "value": 1
+        },
+        {
+          "term": "market",
+          "value": 1
+        },
+        {
+          "term": "risk",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "capital",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "credit",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "default",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "finance",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "insurance",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "liquidity",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "market",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "risk",
+          "value": 2.1786549963416464
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "capital",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "credit",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "default",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "finance",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "insurance",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "liquidity",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "market",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "risk",
+              "value": 2.1786549963416464
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "capital",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "credit",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "default",
+              "value": 0.408608285622984
+            },
+            {
+              "term": "finance",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "insurance",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "liquidity",
+              "value": 0.408608285622984
+            },
+            {
+              "term": "market",
+              "value": 0.2782358010226433
+            },
+            {
+              "term": "risk",
+              "value": 0.3099853082427738
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-009",
+      "length": 8,
+      "tf": [
+        {
+          "term": "agriculture",
+          "value": 1
+        },
+        {
+          "term": "crop",
+          "value": 1
+        },
+        {
+          "term": "drought",
+          "value": 1
+        },
+        {
+          "term": "irrigation",
+          "value": 1
+        },
+        {
+          "term": "river",
+          "value": 1
+        },
+        {
+          "term": "soil",
+          "value": 1
+        },
+        {
+          "term": "water",
+          "value": 1
+        },
+        {
+          "term": "yield",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "agriculture",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "crop",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "drought",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "irrigation",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "river",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "soil",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "water",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "yield",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "agriculture",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "crop",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "drought",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "irrigation",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "river",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "soil",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "water",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "yield",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "agriculture",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "crop",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "drought",
+              "value": 0.3866862993670938
+            },
+            {
+              "term": "irrigation",
+              "value": 0.3866862993670938
+            },
+            {
+              "term": "river",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "soil",
+              "value": 0.3320906857005619
+            },
+            {
+              "term": "water",
+              "value": 0.3866862993670938
+            },
+            {
+              "term": "yield",
+              "value": 0.3320906857005619
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-010",
+      "length": 8,
+      "tf": [
+        {
+          "term": "agriculture",
+          "value": 1
+        },
+        {
+          "term": "crop",
+          "value": 1
+        },
+        {
+          "term": "market",
+          "value": 1
+        },
+        {
+          "term": "pest",
+          "value": 1
+        },
+        {
+          "term": "safety",
+          "value": 1
+        },
+        {
+          "term": "seed",
+          "value": 1
+        },
+        {
+          "term": "soil",
+          "value": 1
+        },
+        {
+          "term": "yield",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "agriculture",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "crop",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "market",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "pest",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "safety",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "seed",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "soil",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "yield",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "agriculture",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "crop",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "market",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "pest",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "safety",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "seed",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "soil",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "yield",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "agriculture",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "crop",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "market",
+              "value": 0.27823580102264334
+            },
+            {
+              "term": "pest",
+              "value": 0.40860828562298407
+            },
+            {
+              "term": "safety",
+              "value": 0.30998530824277387
+            },
+            {
+              "term": "seed",
+              "value": 0.40860828562298407
+            },
+            {
+              "term": "soil",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "yield",
+              "value": 0.3509175421460903
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-011",
+      "length": 8,
+      "tf": [
+        {
+          "term": "chip",
+          "value": 1
+        },
+        {
+          "term": "cloud",
+          "value": 1
+        },
+        {
+          "term": "data",
+          "value": 1
+        },
+        {
+          "term": "energy",
+          "value": 1
+        },
+        {
+          "term": "latency",
+          "value": 1
+        },
+        {
+          "term": "model",
+          "value": 1
+        },
+        {
+          "term": "storage",
+          "value": 1
+        },
+        {
+          "term": "technology",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "chip",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "cloud",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "data",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "energy",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "latency",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "model",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "storage",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "technology",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "chip",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "cloud",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "data",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "energy",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "latency",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "model",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "storage",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "technology",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "chip",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "cloud",
+              "value": 0.40860828562298407
+            },
+            {
+              "term": "data",
+              "value": 0.27823580102264334
+            },
+            {
+              "term": "energy",
+              "value": 0.30998530824277387
+            },
+            {
+              "term": "latency",
+              "value": 0.40860828562298407
+            },
+            {
+              "term": "model",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "storage",
+              "value": 0.3509175421460903
+            },
+            {
+              "term": "technology",
+              "value": 0.3509175421460903
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc-012",
+      "length": 8,
+      "tf": [
+        {
+          "term": "chip",
+          "value": 1
+        },
+        {
+          "term": "data",
+          "value": 1
+        },
+        {
+          "term": "energy",
+          "value": 1
+        },
+        {
+          "term": "inference",
+          "value": 1
+        },
+        {
+          "term": "model",
+          "value": 1
+        },
+        {
+          "term": "privacy",
+          "value": 1
+        },
+        {
+          "term": "risk",
+          "value": 1
+        },
+        {
+          "term": "technology",
+          "value": 1
+        }
+      ],
+      "tfidf": [
+        {
+          "term": "chip",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "data",
+          "value": 1.9555114450274365
+        },
+        {
+          "term": "energy",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "inference",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "model",
+          "value": 2.466337068793427
+        },
+        {
+          "term": "privacy",
+          "value": 2.8718021769015913
+        },
+        {
+          "term": "risk",
+          "value": 2.1786549963416464
+        },
+        {
+          "term": "technology",
+          "value": 2.466337068793427
+        }
+      ],
+      "tfidfVariants": [
+        {
+          "formula": "tfidf.sklearn-smooth-raw",
+          "values": [
+            {
+              "term": "chip",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "data",
+              "value": 1.9555114450274365
+            },
+            {
+              "term": "energy",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "inference",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "model",
+              "value": 2.466337068793427
+            },
+            {
+              "term": "privacy",
+              "value": 2.8718021769015913
+            },
+            {
+              "term": "risk",
+              "value": 2.1786549963416464
+            },
+            {
+              "term": "technology",
+              "value": 2.466337068793427
+            }
+          ]
+        },
+        {
+          "formula": "tfidf.sklearn-smooth-l2",
+          "values": [
+            {
+              "term": "chip",
+              "value": 0.3557626204752728
+            },
+            {
+              "term": "data",
+              "value": 0.28207737087319334
+            },
+            {
+              "term": "energy",
+              "value": 0.3142652399046307
+            },
+            {
+              "term": "inference",
+              "value": 0.41424989344255597
+            },
+            {
+              "term": "model",
+              "value": 0.3557626204752728
+            },
+            {
+              "term": "privacy",
+              "value": 0.41424989344255597
+            },
+            {
+              "term": "risk",
+              "value": 0.3142652399046307
+            },
+            {
+              "term": "technology",
+              "value": 0.3557626204752728
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "id": "climate-energy",
+      "bm25": [
+        {
+          "docId": "doc-001",
+          "score": 2.4336133554004498
+        },
+        {
+          "docId": "doc-002",
+          "score": 1.4350845252893227
+        },
+        {
+          "docId": "doc-003",
+          "score": 0
+        },
+        {
+          "docId": "doc-004",
+          "score": 0
+        },
+        {
+          "docId": "doc-005",
+          "score": 0
+        },
+        {
+          "docId": "doc-006",
+          "score": 0
+        },
+        {
+          "docId": "doc-007",
+          "score": 0
+        },
+        {
+          "docId": "doc-008",
+          "score": 0
+        },
+        {
+          "docId": "doc-009",
+          "score": 0
+        },
+        {
+          "docId": "doc-010",
+          "score": 0
+        },
+        {
+          "docId": "doc-011",
+          "score": 0.9985288301111273
+        },
+        {
+          "docId": "doc-012",
+          "score": 0.9985288301111273
+        }
+      ],
+      "bm25Variants": [
+        {
+          "formula": "bm25.okapi.k1-1.5.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 2.4336133554004498
+            },
+            {
+              "docId": "doc-002",
+              "score": 1.4350845252893227
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 0.9985288301111273
+            },
+            {
+              "docId": "doc-012",
+              "score": 0.9985288301111273
+            }
+          ]
+        },
+        {
+          "formula": "bm25.okapi.k1-1.2.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 2.4336133554004498
+            },
+            {
+              "docId": "doc-002",
+              "score": 1.4350845252893227
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 0.9985288301111273
+            },
+            {
+              "docId": "doc-012",
+              "score": 0.9985288301111273
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinic-data",
+      "bm25": [
+        {
+          "docId": "doc-001",
+          "score": 0
+        },
+        {
+          "docId": "doc-002",
+          "score": 0
+        },
+        {
+          "docId": "doc-003",
+          "score": 2.0710732920093196
+        },
+        {
+          "docId": "doc-004",
+          "score": 2.0710732920093196
+        },
+        {
+          "docId": "doc-005",
+          "score": 0
+        },
+        {
+          "docId": "doc-006",
+          "score": 0
+        },
+        {
+          "docId": "doc-007",
+          "score": 0
+        },
+        {
+          "docId": "doc-008",
+          "score": 0
+        },
+        {
+          "docId": "doc-009",
+          "score": 0
+        },
+        {
+          "docId": "doc-010",
+          "score": 0
+        },
+        {
+          "docId": "doc-011",
+          "score": 0.6359887667199967
+        },
+        {
+          "docId": "doc-012",
+          "score": 0.6359887667199967
+        }
+      ],
+      "bm25Variants": [
+        {
+          "formula": "bm25.okapi.k1-1.5.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 2.0710732920093196
+            },
+            {
+              "docId": "doc-004",
+              "score": 2.0710732920093196
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-012",
+              "score": 0.6359887667199967
+            }
+          ]
+        },
+        {
+          "formula": "bm25.okapi.k1-1.2.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 2.0710732920093196
+            },
+            {
+              "docId": "doc-004",
+              "score": 2.0710732920093196
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-012",
+              "score": 0.6359887667199967
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "court-evidence",
+      "bm25": [
+        {
+          "docId": "doc-001",
+          "score": 0
+        },
+        {
+          "docId": "doc-002",
+          "score": 0
+        },
+        {
+          "docId": "doc-003",
+          "score": 0
+        },
+        {
+          "docId": "doc-004",
+          "score": 0
+        },
+        {
+          "docId": "doc-005",
+          "score": 2.8701690505786455
+        },
+        {
+          "docId": "doc-006",
+          "score": 2.8701690505786455
+        },
+        {
+          "docId": "doc-007",
+          "score": 0
+        },
+        {
+          "docId": "doc-008",
+          "score": 0
+        },
+        {
+          "docId": "doc-009",
+          "score": 0
+        },
+        {
+          "docId": "doc-010",
+          "score": 0
+        },
+        {
+          "docId": "doc-011",
+          "score": 0
+        },
+        {
+          "docId": "doc-012",
+          "score": 0
+        }
+      ],
+      "bm25Variants": [
+        {
+          "formula": "bm25.okapi.k1-1.5.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-006",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 0
+            },
+            {
+              "docId": "doc-012",
+              "score": 0
+            }
+          ]
+        },
+        {
+          "formula": "bm25.okapi.k1-1.2.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-006",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 0
+            },
+            {
+              "docId": "doc-012",
+              "score": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "market-risk",
+      "bm25": [
+        {
+          "docId": "doc-001",
+          "score": 0.6359887667199967
+        },
+        {
+          "docId": "doc-002",
+          "score": 0
+        },
+        {
+          "docId": "doc-003",
+          "score": 0
+        },
+        {
+          "docId": "doc-004",
+          "score": 0
+        },
+        {
+          "docId": "doc-005",
+          "score": 0
+        },
+        {
+          "docId": "doc-006",
+          "score": 0
+        },
+        {
+          "docId": "doc-007",
+          "score": 1.6345175968311239
+        },
+        {
+          "docId": "doc-008",
+          "score": 1.6345175968311239
+        },
+        {
+          "docId": "doc-009",
+          "score": 0
+        },
+        {
+          "docId": "doc-010",
+          "score": 0.6359887667199967
+        },
+        {
+          "docId": "doc-011",
+          "score": 0
+        },
+        {
+          "docId": "doc-012",
+          "score": 0.9985288301111273
+        }
+      ],
+      "bm25Variants": [
+        {
+          "formula": "bm25.okapi.k1-1.5.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 1.6345175968311239
+            },
+            {
+              "docId": "doc-008",
+              "score": 1.6345175968311239
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-011",
+              "score": 0
+            },
+            {
+              "docId": "doc-012",
+              "score": 0.9985288301111273
+            }
+          ]
+        },
+        {
+          "formula": "bm25.okapi.k1-1.2.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 1.6345175968311239
+            },
+            {
+              "docId": "doc-008",
+              "score": 1.6345175968311239
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-011",
+              "score": 0
+            },
+            {
+              "docId": "doc-012",
+              "score": 0.9985288301111273
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crop-soil",
+      "bm25": [
+        {
+          "docId": "doc-001",
+          "score": 0
+        },
+        {
+          "docId": "doc-002",
+          "score": 0
+        },
+        {
+          "docId": "doc-003",
+          "score": 0
+        },
+        {
+          "docId": "doc-004",
+          "score": 0
+        },
+        {
+          "docId": "doc-005",
+          "score": 0
+        },
+        {
+          "docId": "doc-006",
+          "score": 0
+        },
+        {
+          "docId": "doc-007",
+          "score": 0
+        },
+        {
+          "docId": "doc-008",
+          "score": 0
+        },
+        {
+          "docId": "doc-009",
+          "score": 2.8701690505786455
+        },
+        {
+          "docId": "doc-010",
+          "score": 2.8701690505786455
+        },
+        {
+          "docId": "doc-011",
+          "score": 0
+        },
+        {
+          "docId": "doc-012",
+          "score": 0
+        }
+      ],
+      "bm25Variants": [
+        {
+          "formula": "bm25.okapi.k1-1.5.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-010",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-011",
+              "score": 0
+            },
+            {
+              "docId": "doc-012",
+              "score": 0
+            }
+          ]
+        },
+        {
+          "formula": "bm25.okapi.k1-1.2.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0
+            },
+            {
+              "docId": "doc-004",
+              "score": 0
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-010",
+              "score": 2.8701690505786455
+            },
+            {
+              "docId": "doc-011",
+              "score": 0
+            },
+            {
+              "docId": "doc-012",
+              "score": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "model-data",
+      "bm25": [
+        {
+          "docId": "doc-001",
+          "score": 0
+        },
+        {
+          "docId": "doc-002",
+          "score": 0
+        },
+        {
+          "docId": "doc-003",
+          "score": 0.6359887667199967
+        },
+        {
+          "docId": "doc-004",
+          "score": 0.6359887667199967
+        },
+        {
+          "docId": "doc-005",
+          "score": 0
+        },
+        {
+          "docId": "doc-006",
+          "score": 0
+        },
+        {
+          "docId": "doc-007",
+          "score": 0
+        },
+        {
+          "docId": "doc-008",
+          "score": 0
+        },
+        {
+          "docId": "doc-009",
+          "score": 0
+        },
+        {
+          "docId": "doc-010",
+          "score": 0
+        },
+        {
+          "docId": "doc-011",
+          "score": 2.0710732920093196
+        },
+        {
+          "docId": "doc-012",
+          "score": 2.0710732920093196
+        }
+      ],
+      "bm25Variants": [
+        {
+          "formula": "bm25.okapi.k1-1.5.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-004",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 2.0710732920093196
+            },
+            {
+              "docId": "doc-012",
+              "score": 2.0710732920093196
+            }
+          ]
+        },
+        {
+          "formula": "bm25.okapi.k1-1.2.b-0.75",
+          "scores": [
+            {
+              "docId": "doc-001",
+              "score": 0
+            },
+            {
+              "docId": "doc-002",
+              "score": 0
+            },
+            {
+              "docId": "doc-003",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-004",
+              "score": 0.6359887667199967
+            },
+            {
+              "docId": "doc-005",
+              "score": 0
+            },
+            {
+              "docId": "doc-006",
+              "score": 0
+            },
+            {
+              "docId": "doc-007",
+              "score": 0
+            },
+            {
+              "docId": "doc-008",
+              "score": 0
+            },
+            {
+              "docId": "doc-009",
+              "score": 0
+            },
+            {
+              "docId": "doc-010",
+              "score": 0
+            },
+            {
+              "docId": "doc-011",
+              "score": 2.0710732920093196
+            },
+            {
+              "docId": "doc-012",
+              "score": 2.0710732920093196
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

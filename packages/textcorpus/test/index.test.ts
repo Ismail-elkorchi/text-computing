@@ -495,6 +495,8 @@ const scoringCollection = createTextCorpusCollection([scoringAlphaEntry, scoring
 
 const scoringResult = computeTextCorpusScoring(scoringCollection, {
   tolerance: 1e-12,
+  tfidfFormulas: ["tfidf.sklearn-smooth-raw", "tfidf.sklearn-smooth-l2"],
+  bm25Formulas: ["bm25.okapi.k1-1.5.b-0.75", "bm25.okapi.k1-1.2.b-0.75"],
   queries: [
     { id: "alpha-beta", tokens: ["alpha", "beta"] },
     { id: "delta", tokens: ["delta"] },
@@ -524,6 +526,14 @@ if (scoringResult.documentOrder.join(",") !== "doc-a,doc-b,doc-c,doc-empty") {
 
 if (scoringResult.termOrder.join(",") !== "alpha,beta,delta,gamma") {
   throw new Error("scoring output should expose deterministic lexical term order");
+}
+
+if (!scoringResult.formulaSet.includes("tfidf.sklearn-smooth-l2")) {
+  throw new Error("scoring output should disclose requested TF-IDF formula variants");
+}
+
+if (!scoringResult.formulaSet.includes("bm25.okapi.k1-1.2.b-0.75")) {
+  throw new Error("scoring output should disclose requested BM25 formula variants");
 }
 
 function expectNear(actual: number | undefined, expected: number, message: string): void {
@@ -559,6 +569,11 @@ expectNear(
   "doc-b gamma smooth tf-idf",
 );
 
+const docATfidfL2 = documentScores("doc-a").tfidfVariants?.find(
+  (entry) => entry.formula === "tfidf.sklearn-smooth-l2",
+)?.values;
+expectNear(termValue(docATfidfL2 ?? [], "beta"), 0.9303238670444788, "doc-a beta l2-normalized smooth tf-idf");
+
 if (documentScores("doc-empty").length !== 0 || documentScores("doc-empty").tf.length !== 0) {
   throw new Error("empty document should remain present with zero term values");
 }
@@ -576,6 +591,16 @@ function queryScore(queryId: string, docId: string): number | undefined {
 expectNear(queryScore("alpha-beta", "doc-a"), 0.9159976869050851, "alpha-beta BM25 doc-a");
 expectNear(queryScore("alpha-beta", "doc-b"), 0, "alpha-beta BM25 doc-b");
 expectNear(queryScore("delta", "doc-c"), 0.9968210122202397, "delta BM25 doc-c");
+const alphaBetaBm25K1_1_2 = queryScores("alpha-beta")
+  .at(0);
+const alphaBetaVariantScore = scoringResult.queries
+  .find((entry) => entry.id === "alpha-beta")
+  ?.bm25Variants?.find((entry) => entry.formula === "bm25.okapi.k1-1.2.b-0.75")
+  ?.scores.find((entry) => entry.docId === "doc-a")?.score;
+if (alphaBetaBm25K1_1_2?.docId !== "doc-a") {
+  throw new Error("canonical BM25 ordering should remain document-order stable");
+}
+expectNear(alphaBetaVariantScore, 0.9092952648057798, "alpha-beta BM25 k1=1.2 doc-a");
 for (const score of queryScores("missing")) {
   expectNear(score.score, 0, `missing query score for ${score.docId}`);
 }

@@ -66,7 +66,7 @@
     {
       "taskId": "nlp-corpus-tfidf-bm25",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, Okapi BM25, and E2 corpus-selection disclosures exist only for the frozen issue #14 explicit-token corpus.",
+      "claimBoundary": "Deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, Okapi BM25 parameter variants, numeric tolerance replay, and E2 corpus-selection disclosures exist only for committed explicit-token corpora.",
       "reportPath": "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/corpus-tfidf-bm25-readiness.md",
@@ -74,14 +74,17 @@
         "fixtures/corpus-tfidf-bm25/slices.json",
         "fixtures/corpus-tfidf-bm25/tool-versions.json",
         "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
-        "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        "tools/validate-corpus-tfidf-bm25-readiness.mjs",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
       ],
       "comparatorRefs": [
         "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
-        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json"
+        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
       ],
       "knownGaps": [
-        "No large-corpus relevance benchmark, fielded weighting, or performance proof is implemented."
+        "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+        "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task."
       ]
     },
     {
