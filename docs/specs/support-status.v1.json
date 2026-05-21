@@ -311,21 +311,24 @@
     {
       "id": "nlp-pack-resource-manifest",
       "status": "slice-proven",
-      "scope": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, and overlay-conflict policy are implemented.",
+      "scope": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, overlay-conflict policy, and generated reference-pack catalog evidence are implemented for committed packs.",
       "evidence": [
         "manifest fixtures",
         "licensed resource fixtures",
         "fixture registry tests",
         "fixture resource loading tests",
         "overlay conflict cases",
+        "fixtures/textpack/catalog.v1.json",
+        "schemas/textpack-catalog-v1.schema.json",
         "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
       ],
       "limitations": [
-        "No public resource review workflow or broad resource marketplace is implemented"
+        "No broad resource marketplace or update workflow is implemented.",
+        "Reference pack coverage remains intentionally small and scope-limited."
       ],
       "evidenceTier": "fixture-proven",
       "nextEvidenceTierBlockers": [
-        "No external resource-manifest comparator, public review workflow, or broad resource catalog evidence is recorded."
+        "Broader pack-resource claims require a public update workflow, broader reviewed resource catalog, and additional held-out pack authoring examples."
       ]
     },
     {

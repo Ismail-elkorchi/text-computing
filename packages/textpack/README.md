@@ -45,6 +45,9 @@ The registry exposes exact language, profile, family, kind, and review-state sum
 `queryTextPackResourceRegistry` selects resources by family, kind, language, profile, lookup key,
 pack id, or resource id.
 
+`createTextPackCatalog` turns a registry into a deterministic catalog artifact containing pack,
+resource-family, license, provenance, review-state, and test coverage summaries.
+
 `composeTextPackResources` accepts explicit pack/precedence inputs for overlay composition. It never
 discovers packs implicitly.
 

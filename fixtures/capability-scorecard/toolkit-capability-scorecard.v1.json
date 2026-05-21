@@ -475,7 +475,7 @@
         "docs/specs/textpack-resource-manifest.md",
         "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
       ],
-      "nextGate": "Add public resource review and update policy.",
+      "nextGate": "Add public update workflow, broader reviewed resource catalog, and held-out pack authoring examples before broader pack-resource claims.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -488,7 +488,9 @@
         ],
         "fixtureRefs": [
           "fixtures/textpack/manifests/textpack-en-core.json",
-          "fixtures/textpack/manifests/textpack-fr-core.json"
+          "fixtures/textpack/manifests/textpack-en-legal.json",
+          "fixtures/textpack/manifests/textpack-fr-core.json",
+          "fixtures/textpack/catalog.v1.json"
         ],
         "negativeControlRefs": [
           "fixtures/textpack/invalid/missing-license.json"
@@ -502,7 +504,7 @@
           "fixtures/performance/gates.v1.json"
         ]
       },
-      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, and overlay-conflict policy are implemented.",
+      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, overlay-conflict policy, and generated reference-pack catalog evidence are implemented for committed packs.",
       "evidenceTier": "fixture-proven",
       "fixtureSplitRefs": {
         "development": [
@@ -510,6 +512,7 @@
         ],
         "validation": [
           "fixtures/textpack/manifests/textpack-fr-core.json",
+          "fixtures/textpack/catalog.v1.json",
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "holdout": [],
@@ -524,7 +527,7 @@
         ]
       },
       "nextEvidenceTierBlockers": [
-        "No external resource-manifest comparator, public review workflow, or broad resource catalog evidence is recorded."
+        "Broader pack-resource claims require a public update workflow, broader reviewed resource catalog, and additional held-out pack authoring examples."
       ]
     },
     {

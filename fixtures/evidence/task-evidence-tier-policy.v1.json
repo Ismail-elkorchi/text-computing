@@ -152,13 +152,14 @@
       "taskId": "nlp-pack-resource-manifest",
       "supportStatus": "slice-proven",
       "evidenceTier": "fixture-proven",
-      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, and overlay-conflict policy are implemented.",
+      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, overlay-conflict policy, and generated reference-pack catalog evidence are implemented for committed packs.",
       "fixtureSplits": {
         "development": [
           "fixtures/textpack/manifests/textpack-en-core.json"
         ],
         "validation": [
           "fixtures/textpack/manifests/textpack-fr-core.json",
+          "fixtures/textpack/catalog.v1.json",
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "holdout": [],
@@ -177,7 +178,7 @@
       ],
       "nextTier": "comparator-backed",
       "nextTierBlockers": [
-        "No external resource-manifest comparator, public review workflow, or broad resource catalog evidence is recorded."
+        "Broader pack-resource claims require a public update workflow, broader reviewed resource catalog, and additional held-out pack authoring examples."
       ]
     },
     {
