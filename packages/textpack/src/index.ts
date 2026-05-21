@@ -1,8 +1,10 @@
 export const packageName = "@ismail-elkorchi/textpack" as const;
 export const textPackManifestVersion = "1.0.0" as const;
+export const textPackCatalogSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextPackManifestVersion = typeof textPackManifestVersion;
+export type TextPackCatalogSchemaVersion = typeof textPackCatalogSchemaVersion;
 
 export const textPackKinds = [
   "profile",
@@ -190,6 +192,40 @@ export interface TextPackResourceRegistry {
   readonly reviewStates: readonly TextPackReviewState[];
 }
 
+export interface TextPackCatalogPackSummaryV1 {
+  readonly id: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly reviewState: TextPackReviewState;
+  readonly languages: readonly string[];
+  readonly profiles: readonly string[];
+  readonly resourceCount: number;
+  readonly resourceFamilies: readonly TextPackResourceFamily[];
+  readonly resourceIds: readonly string[];
+  readonly licenses: TextPackLicenses;
+  readonly provenance: TextPackProvenance;
+  readonly tests: TextPackTests;
+  readonly limitations?: readonly string[];
+}
+
+export interface TextPackCatalogFamilySummaryV1 {
+  readonly family: TextPackResourceFamily;
+  readonly resourceCount: number;
+  readonly resourceIds: readonly string[];
+}
+
+export interface TextPackCatalogV1 {
+  readonly schemaVersion: TextPackCatalogSchemaVersion;
+  readonly packageName: PackageName;
+  readonly packCount: number;
+  readonly resourceCount: number;
+  readonly languages: readonly string[];
+  readonly profiles: readonly string[];
+  readonly reviewStates: readonly TextPackReviewState[];
+  readonly packs: readonly TextPackCatalogPackSummaryV1[];
+  readonly resourcesByFamily: readonly TextPackCatalogFamilySummaryV1[];
+}
+
 export interface TextPackCanonicalizer {
   readonly id: string;
   canonicalize(value: string): string;
@@ -352,6 +388,10 @@ function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
 }
 
+function isPossiblyEmptyStringArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
 function isBooleanOrString(value: unknown): value is boolean | string {
   return typeof value === "boolean" || isNonEmptyString(value);
 }
@@ -382,6 +422,10 @@ function isCapabilityMap(value: unknown): value is TextPackCapabilityMap {
 
 function isResourceFamilyMap(value: unknown): value is TextPackResourceFamilyMap {
   return isRecord(value) && Object.entries(value).every(([key, entries]) => isTextPackResourceFamily(key) && isStringArray(entries));
+}
+
+function isTextPackResourceFamilyArray(value: unknown): value is readonly TextPackResourceFamily[] {
+  return Array.isArray(value) && value.every((entry) => isTextPackResourceFamily(entry));
 }
 
 function hasAnyTargetScope(targets: TextPackTargets): boolean {
@@ -723,6 +767,104 @@ export function composeTextPackResources(
     profiles: sortedUniqueTextPackValues(resources.flatMap((resource) => resource.profiles ?? [])),
     reviewStates: sortedUniqueTextPackValues(resources.map((resource) => resource.reviewState)) as readonly TextPackReviewState[],
   };
+}
+
+export function createTextPackCatalog(registry: TextPackResourceRegistry): TextPackCatalogV1 {
+  const packs = [...registry.manifests]
+    .sort((left, right) => left.id.localeCompare(right.id))
+    .map((manifest) => {
+      const resources = registry.resources.filter((resource) => resource.packId === manifest.id);
+      return {
+        id: manifest.id,
+        packageName: manifest.packageName,
+        version: manifest.version,
+        reviewState: manifest.reviewState,
+        languages: [...(manifest.targets.languages ?? [])].sort((left, right) => left.localeCompare(right)),
+        profiles: [...(manifest.targets.profiles ?? [])].sort((left, right) => left.localeCompare(right)),
+        resourceCount: resources.length,
+        resourceFamilies: sortedUniqueTextPackValues(resources.map((resource) => resource.family)) as readonly TextPackResourceFamily[],
+        resourceIds: resources.map((resource) => resource.resourceId).sort((left, right) => left.localeCompare(right)),
+        licenses: manifest.licenses,
+        provenance: manifest.provenance,
+        tests: manifest.tests,
+        ...(manifest.limitations ? { limitations: manifest.limitations } : {}),
+      };
+    });
+
+  const resourcesByFamily = registry.families.map((family) => {
+    const resources = registry.resources.filter((resource) => resource.family === family);
+    return {
+      family,
+      resourceCount: resources.length,
+      resourceIds: resources.map((resource) => resource.resourceId).sort((left, right) => left.localeCompare(right)),
+    };
+  });
+
+  return {
+    schemaVersion: textPackCatalogSchemaVersion,
+    packageName,
+    packCount: registry.manifests.length,
+    resourceCount: registry.resources.length,
+    languages: registry.languages,
+    profiles: registry.profiles,
+    reviewStates: registry.reviewStates,
+    packs,
+    resourcesByFamily,
+  };
+}
+
+function isTextPackCatalogPackSummaryV1(value: unknown): value is TextPackCatalogPackSummaryV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.packageName) &&
+    isNonEmptyString(value.version) &&
+    isTextPackReviewState(value.reviewState) &&
+    isPossiblyEmptyStringArray(value.languages) &&
+    isPossiblyEmptyStringArray(value.profiles) &&
+    typeof value.resourceCount === "number" &&
+    Number.isInteger(value.resourceCount) &&
+    value.resourceCount >= 0 &&
+    isTextPackResourceFamilyArray(value.resourceFamilies) &&
+    isPossiblyEmptyStringArray(value.resourceIds) &&
+    isTextPackLicenses(value.licenses) &&
+    isTextPackProvenance(value.provenance) &&
+    isTextPackTests(value.tests) &&
+    (value.limitations === undefined || isPossiblyEmptyStringArray(value.limitations))
+  );
+}
+
+function isTextPackCatalogFamilySummaryV1(value: unknown): value is TextPackCatalogFamilySummaryV1 {
+  return (
+    isRecord(value) &&
+    isTextPackResourceFamily(value.family) &&
+    typeof value.resourceCount === "number" &&
+    Number.isInteger(value.resourceCount) &&
+    value.resourceCount >= 0 &&
+    isPossiblyEmptyStringArray(value.resourceIds)
+  );
+}
+
+export function isTextPackCatalogV1(value: unknown): value is TextPackCatalogV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textPackCatalogSchemaVersion &&
+    value.packageName === packageName &&
+    typeof value.packCount === "number" &&
+    Number.isInteger(value.packCount) &&
+    value.packCount >= 0 &&
+    typeof value.resourceCount === "number" &&
+    Number.isInteger(value.resourceCount) &&
+    value.resourceCount >= 0 &&
+    isPossiblyEmptyStringArray(value.languages) &&
+    isPossiblyEmptyStringArray(value.profiles) &&
+    Array.isArray(value.reviewStates) &&
+    value.reviewStates.every((entry) => isTextPackReviewState(entry)) &&
+    Array.isArray(value.packs) &&
+    value.packs.every((entry) => isTextPackCatalogPackSummaryV1(entry)) &&
+    Array.isArray(value.resourcesByFamily) &&
+    value.resourcesByFamily.every((entry) => isTextPackCatalogFamilySummaryV1(entry))
+  );
 }
 
 export function validateTextPackManifestGovernance(

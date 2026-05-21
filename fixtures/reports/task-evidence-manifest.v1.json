@@ -140,12 +140,15 @@
     {
       "taskId": "nlp-pack-resource-manifest",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only.",
+      "claimBoundary": "Resource-manifest validation, licensed fixtures, deterministic registry queries, fixture content loading, overlay-conflict policy, and generated reference-pack catalog evidence are implemented for committed packs.",
       "reportPath": "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/textpack-resource-manifest.md",
+        "fixtures/textpack/catalog.v1.json",
+        "schemas/textpack-catalog-v1.schema.json",
         "fixtures/textpack/manifests/textpack-en-core.json",
         "fixtures/textpack/manifests/textpack-en-legal.json",
+        "fixtures/textpack/manifests/textpack-fr-core.json",
         "fixtures/textpack/invalid/duplicate-resource-id.json",
         "fixtures/textpack/invalid/missing-license.json",
         "fixtures/textpack/invalid/missing-provenance.json",
@@ -155,7 +158,8 @@
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented."
+        "No broad resource marketplace or update workflow is implemented.",
+        "Reference pack coverage remains intentionally small and scope-limited."
       ]
     },
     {

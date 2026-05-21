@@ -1,7 +1,9 @@
 import {
   checkTextPackCompatibility,
   composeTextPackResources,
+  createTextPackCatalog,
   createTextPackResourceRegistry,
+  isTextPackCatalogV1,
   isTextPackManifestV1,
   loadTextPackRegistryResources,
   loadTextPackResources,
@@ -490,6 +492,26 @@ if (registry.kinds.join(",") !== "gazetteer,lexicon,rule,stopwords") {
 
 if (registry.families.join(",") !== "gazetteers,lexicons,rules,stopwords") {
   throw new Error("registry should expose deterministic resource families");
+}
+
+const catalog = createTextPackCatalog(registry);
+if (!isTextPackCatalogV1(catalog)) {
+  throw new Error("textpack catalog should satisfy the runtime contract");
+}
+
+if (catalog.packCount !== 3 || catalog.resourceCount !== 7) {
+  throw new Error("textpack catalog should summarize pack and resource counts");
+}
+
+if (catalog.packs.map((entry) => entry.id).join(",") !== "pack:en-core,pack:en-legal,pack:fr-core") {
+  throw new Error("textpack catalog should expose deterministic pack ordering");
+}
+
+if (
+  catalog.resourcesByFamily.map((entry) => `${entry.family}:${entry.resourceCount}`).join(",") !==
+  "gazetteers:1,lexicons:2,rules:1,stopwords:3"
+) {
+  throw new Error("textpack catalog should summarize resources by family");
 }
 
 const frenchStopwords = queryTextPackResourceRegistry(registry, {

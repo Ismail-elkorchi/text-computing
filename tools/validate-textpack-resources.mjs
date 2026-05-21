@@ -1,9 +1,11 @@
 import Ajv from "ajv";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, writeFile } from "node:fs/promises";
 import {
   checkTextPackCompatibility,
   composeTextPackResources,
+  createTextPackCatalog,
   createTextPackResourceRegistry,
+  isTextPackCatalogV1,
   loadTextPackRegistryResources,
   loadTextPackResources,
   lookupTextPackLoadedEntries,
@@ -14,6 +16,7 @@ import {
 } from "../packages/textpack/src/index.ts";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
+const WRITE_MODE = process.argv.includes("--write");
 
 async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
@@ -34,13 +37,16 @@ function expect(condition, message, details) {
 }
 
 const manifestSchema = await readJson("schemas/textpack-manifest-v1.schema.json");
+const catalogSchema = await readJson("schemas/textpack-catalog-v1.schema.json");
 const validateManifest = ajv.compile(manifestSchema);
+const validateCatalog = ajv.compile(catalogSchema);
 
 const validManifestPaths = [
   "fixtures/textpack/manifests/textpack-en-core.json",
   "fixtures/textpack/manifests/textpack-en-legal.json",
   "fixtures/textpack/manifests/textpack-fr-core.json",
 ];
+const catalogPath = "fixtures/textpack/catalog.v1.json";
 const validManifests = [];
 const resourceContents = {};
 
@@ -150,6 +156,17 @@ expect(
 );
 
 const registry = createTextPackResourceRegistry(validManifests);
+const generatedCatalog = createTextPackCatalog(registry);
+expect(isTextPackCatalogV1(generatedCatalog), "Generated textpack catalog failed runtime validation.", generatedCatalog);
+if (WRITE_MODE) {
+  await writeFile(catalogPath, `${JSON.stringify(generatedCatalog, null, 2)}\n`);
+}
+const catalog = await readJson(catalogPath);
+expect(validateCatalog(catalog), `${catalogPath} failed schemas/textpack-catalog-v1.schema.json`, validateCatalog.errors);
+expect(JSON.stringify(catalog) === JSON.stringify(generatedCatalog), `${catalogPath} is stale; run node tools/validate-textpack-resources.mjs --write.`);
+expect(catalog.packCount === 3, "Textpack catalog must include all committed reference packs.", catalog);
+expect(catalog.resourceCount === 13, "Textpack catalog must include the committed reference resources.", catalog);
+expect(catalog.reviewStates.join(",") === "candidate,reference", "Textpack catalog must preserve review-state coverage.", catalog.reviewStates);
 expect(registry.languages.join(",") === "en,fr", "Registry languages must remain deterministic and include committed multilingual fixtures.", registry.languages);
 expect(
   registry.kinds.join(",") === "benchmark,gazetteer,lexicon,morphology,rule,stopwords,tagset",

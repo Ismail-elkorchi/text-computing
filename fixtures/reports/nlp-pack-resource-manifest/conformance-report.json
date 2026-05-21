@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -42,8 +42,9 @@
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "limitations": [
-          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
-          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+          "No broad resource marketplace or update workflow is implemented.",
+          "Reference pack coverage remains intentionally small and scope-limited.",
+          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
@@ -77,8 +78,9 @@
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "limitations": [
-          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
-          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+          "No broad resource marketplace or update workflow is implemented.",
+          "Reference pack coverage remains intentionally small and scope-limited.",
+          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
@@ -109,8 +111,9 @@
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "limitations": [
-          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
-          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+          "No broad resource marketplace or update workflow is implemented.",
+          "Reference pack coverage remains intentionally small and scope-limited.",
+          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
@@ -145,15 +148,54 @@
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "limitations": [
-          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
-          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+          "No broad resource marketplace or update workflow is implemented.",
+          "Reference pack coverage remains intentionally small and scope-limited.",
+          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+        ]
+      }
+    },
+    {
+      "checkId": "catalog-proof-recorded",
+      "status": "pass",
+      "message": "The textpack validator regenerates the committed reference-pack catalog from package APIs and fails on drift.",
+      "evidenceRefs": [
+        "fixtures/textpack/catalog.v1.json",
+        "schemas/textpack-catalog-v1.schema.json",
+        "packages/textpack/src/index.ts",
+        "tools/validate-textpack-resources.mjs"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textpack-resource-manifest.md"
+        ],
+        "apiRefs": [
+          "packages/textpack/src/index.ts",
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textpack/manifests/textpack-en-core.json",
+          "fixtures/textpack/manifests/textpack-en-legal.json",
+          "fixtures/textpack/manifests/textpack-fr-core.json"
+        ],
+        "oracleRefs": [
+          "fixtures/textpack/catalog.v1.json",
+          "schemas/textpack-catalog-v1.schema.json",
+          "tools/validate-textpack-resources.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        ],
+        "limitations": [
+          "No broad resource marketplace or update workflow is implemented.",
+          "Reference pack coverage remains intentionally small and scope-limited.",
+          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
     {
       "checkId": "support-boundary-recorded",
       "status": "pass",
-      "message": "Support status records current resource-manifest limits.",
+      "message": "Support status records current resource-manifest and catalog limits.",
       "evidenceRefs": [
         "docs/specs/support-status.v1.json",
         "docs/specs/task-coverage-matrix.md"
@@ -177,13 +219,14 @@
           "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
         ],
         "limitations": [
-          "No public resource review workflow, registry, broad multilingual pack set, or update policy is implemented.",
-          "Slice-proven for current textpack manifest/resource validation, fixture content loading, and overlay-conflict fixtures only."
+          "No broad resource marketplace or update workflow is implemented.",
+          "Reference pack coverage remains intentionally small and scope-limited.",
+          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists current pack/resource evidence, including fixture-bound content loading; it does not create a public resource registry."
+    "This report persists current pack/resource evidence, including generated catalog and fixture-bound content loading; it does not create a broad resource marketplace."
   ]
 }

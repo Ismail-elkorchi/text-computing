@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "packageName": "@ismail-elkorchi/textpack",
+  "packCount": 3,
+  "resourceCount": 13,
+  "languages": [
+    "en",
+    "fr"
+  ],
+  "profiles": [
+    "legal"
+  ],
+  "reviewStates": [
+    "candidate",
+    "reference"
+  ],
+  "packs": [
+    {
+      "id": "pack:en-core",
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "version": "0.1.0",
+      "reviewState": "reference",
+      "languages": [
+        "en"
+      ],
+      "profiles": [],
+      "resourceCount": 6,
+      "resourceFamilies": [
+        "benchmarks",
+        "lexicons",
+        "morphology",
+        "rules",
+        "stopwords",
+        "tagsets"
+      ],
+      "resourceIds": [
+        "abbrev-en-core",
+        "benchmark-en-smoke",
+        "lexicon-en-core",
+        "morph-en-core",
+        "stopwords-en-core",
+        "tagset-ud-lite"
+      ],
+      "licenses": {
+        "code": [
+          "MIT"
+        ],
+        "data": [
+          "CC0-1.0"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          "repo:fixtures/textpack"
+        ],
+        "generated": false,
+        "createdBy": [
+          "text-computing"
+        ]
+      },
+      "tests": {
+        "smoke": [
+          "test/smoke.spec.ts"
+        ],
+        "negative": [
+          "test/negative.spec.ts"
+        ],
+        "representative": [
+          "test/representative.spec.ts"
+        ]
+      },
+      "limitations": [
+        "Repository fixture pack; not a broad language resource."
+      ]
+    },
+    {
+      "id": "pack:en-legal",
+      "packageName": "@ismail-elkorchi/textpack-en-legal",
+      "version": "0.1.0",
+      "reviewState": "candidate",
+      "languages": [
+        "en"
+      ],
+      "profiles": [
+        "legal"
+      ],
+      "resourceCount": 2,
+      "resourceFamilies": [
+        "gazetteers",
+        "stopwords"
+      ],
+      "resourceIds": [
+        "gazetteer-en-legal",
+        "stopwords-en-legal"
+      ],
+      "licenses": {
+        "code": [
+          "MIT"
+        ],
+        "data": [
+          "CC0-1.0"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          "repo:fixtures/textpack"
+        ],
+        "generated": false,
+        "createdBy": [
+          "text-computing"
+        ]
+      },
+      "tests": {
+        "smoke": [
+          "test/smoke.spec.ts"
+        ],
+        "negative": [
+          "test/negative.spec.ts"
+        ],
+        "representative": [
+          "test/representative.spec.ts"
+        ]
+      },
+      "limitations": [
+        "Repository fixture pack; not a broad legal language resource."
+      ]
+    },
+    {
+      "id": "pack:fr-core",
+      "packageName": "@ismail-elkorchi/textpack-fr-core",
+      "version": "0.1.0",
+      "reviewState": "candidate",
+      "languages": [
+        "fr"
+      ],
+      "profiles": [],
+      "resourceCount": 5,
+      "resourceFamilies": [
+        "benchmarks",
+        "lexicons",
+        "morphology",
+        "stopwords",
+        "tagsets"
+      ],
+      "resourceIds": [
+        "benchmark-fr-smoke",
+        "lexicon-fr-core",
+        "morph-fr-core",
+        "stopwords-fr-core",
+        "tagset-fr-ud-lite"
+      ],
+      "licenses": {
+        "code": [
+          "MIT"
+        ],
+        "data": [
+          "CC0-1.0"
+        ]
+      },
+      "provenance": {
+        "sources": [
+          "repo:fixtures/textpack"
+        ],
+        "generated": false,
+        "createdBy": [
+          "text-computing"
+        ]
+      },
+      "tests": {
+        "smoke": [
+          "test/smoke.spec.ts"
+        ],
+        "negative": [
+          "test/negative.spec.ts"
+        ],
+        "representative": [
+          "test/representative.spec.ts"
+        ]
+      },
+      "limitations": [
+        "Repository fixture pack; not a broad language resource."
+      ]
+    }
+  ],
+  "resourcesByFamily": [
+    {
+      "family": "benchmarks",
+      "resourceCount": 2,
+      "resourceIds": [
+        "benchmark-en-smoke",
+        "benchmark-fr-smoke"
+      ]
+    },
+    {
+      "family": "gazetteers",
+      "resourceCount": 1,
+      "resourceIds": [
+        "gazetteer-en-legal"
+      ]
+    },
+    {
+      "family": "lexicons",
+      "resourceCount": 2,
+      "resourceIds": [
+        "lexicon-en-core",
+        "lexicon-fr-core"
+      ]
+    },
+    {
+      "family": "morphology",
+      "resourceCount": 2,
+      "resourceIds": [
+        "morph-en-core",
+        "morph-fr-core"
+      ]
+    },
+    {
+      "family": "rules",
+      "resourceCount": 1,
+      "resourceIds": [
+        "abbrev-en-core"
+      ]
+    },
+    {
+      "family": "stopwords",
+      "resourceCount": 3,
+      "resourceIds": [
+        "stopwords-en-core",
+        "stopwords-en-legal",
+        "stopwords-fr-core"
+      ]
+    },
+    {
+      "family": "tagsets",
+      "resourceCount": 2,
+      "resourceIds": [
+        "tagset-fr-ud-lite",
+        "tagset-ud-lite"
+      ]
+    }
+  ]
+}

@@ -63,7 +63,9 @@ const TASK_EVIDENCE_REQUIREMENTS = {
     implementationRefs: ["packages/textpack/src/index.ts"],
     fixtureRefs: [
       "fixtures/textpack/manifests/textpack-en-core.json",
+      "fixtures/textpack/manifests/textpack-en-legal.json",
       "fixtures/textpack/manifests/textpack-fr-core.json",
+      "fixtures/textpack/catalog.v1.json",
     ],
     negativeControlRefs: ["fixtures/textpack/invalid/missing-license.json"],
     comparatorRefs: [],

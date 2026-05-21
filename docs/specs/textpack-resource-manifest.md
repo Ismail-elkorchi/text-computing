@@ -85,6 +85,7 @@ Repository-level fixture manifests and resources live under
 - `resources/textpack-en-core/*`
 - `resources/textpack-en-legal/*`
 - `resources/textpack-fr-core/*`
+- `catalog.v1.json`
 
 Installable reference packs live under:
 
@@ -97,6 +98,6 @@ Negative controls live under `fixtures/textpack/invalid/`.
 ## Verification
 
 `npm run -s check:fixtures` validates the pack manifest schema, checks fixture paths, rejects invalid
-metadata, exercises overlay conflicts, builds the registry, loads committed resources, validates
-installable `textpack-*` package manifests, and proves deterministic lookup behavior with recorded
-provenance.
+metadata, exercises overlay conflicts, builds the registry, regenerates the catalog, loads committed
+resources, validates installable `textpack-*` package manifests, and proves deterministic lookup
+behavior with recorded provenance.
