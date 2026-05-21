@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 7,
+    "pass": 8,
     "fail": 0,
     "notRun": 0
   },
@@ -260,6 +260,44 @@
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+        ]
+      }
+    },
+    {
+      "checkId": "ud-style-corpus-evaluation-recorded",
+      "status": "pass",
+      "message": "UD-style corpus evaluation over committed POS/morph/lemma slices is recorded and regenerates from package behavior.",
+      "evidenceRefs": [
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
+        "schemas/pos-morph-lemma-corpus-evaluation-v1.schema.json",
+        "schemas/pos-morph-lemma-corpus-evaluation-report-v1.schema.json",
+        "tools/evaluate-pos-morph-lemma-corpus.mjs"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/pos-morph-lemma-readiness.md",
+          "docs/specs/nlp-pos-morph-lemma-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/evaluate-pos-morph-lemma-corpus.mjs",
+          "tools/validate-pos-morph-lemma-feature.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json"
+        ],
+        "oracleRefs": [
+          "schemas/pos-morph-lemma-corpus-evaluation-v1.schema.json",
+          "schemas/pos-morph-lemma-corpus-evaluation-report-v1.schema.json",
+          "tools/evaluate-pos-morph-lemma-corpus.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        ],
+        "limitations": [
+          "UD-style corpus evaluation is limited to committed slices.",
+          "No broad UD treebank performance claim is made."
         ]
       }
     }

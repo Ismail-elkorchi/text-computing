@@ -1,7 +1,9 @@
 import Ajv from "ajv";
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
 import { access, readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { promisify } from "node:util";
 import {
   analyzePosMorphLemma,
   createPosMorphLemmaConformanceReport,
@@ -12,6 +14,7 @@ import {
 import { resolveTextPackResources } from "../packages/textpack/src/index.ts";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
+const execFileAsync = promisify(execFile);
 
 async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
@@ -294,4 +297,18 @@ for (const slice of slices.slices) {
     console.error(JSON.stringify(validateConformanceReport.errors, null, 2));
     process.exit(1);
   }
+}
+
+const { stdout: corpusEvaluationStdout } = await execFileAsync(
+  process.execPath,
+  ["tools/evaluate-pos-morph-lemma-corpus.mjs"],
+  { maxBuffer: 10 * 1024 * 1024 },
+);
+const generatedCorpusEvaluation = JSON.parse(corpusEvaluationStdout);
+const committedCorpusEvaluation = await readJson(
+  "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
+);
+if (stableStringify(generatedCorpusEvaluation) !== stableStringify(committedCorpusEvaluation)) {
+  console.error("POS/morph/lemma corpus evaluation report is stale.");
+  process.exit(1);
 }

@@ -533,7 +533,12 @@
       "languageTier": "comparator-backed",
       "evidenceRefs": [
         "docs/specs/pos-morph-lemma-readiness.md",
-        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
+        "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
+        "schemas/pos-morph-lemma-corpus-evaluation-v1.schema.json",
+        "schemas/pos-morph-lemma-corpus-evaluation-report-v1.schema.json",
+        "tools/evaluate-pos-morph-lemma-corpus.mjs"
       ],
       "nextGate": "Add executed JavaScript comparator capture or reduce JavaScript comparator expectations.",
       "implementation": {
@@ -559,7 +564,10 @@
           "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
           "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
         ],
-        "corpusRefs": [],
+        "corpusRefs": [
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json"
+        ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
@@ -588,13 +596,16 @@
           "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
           "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
         ],
-        "corpusEvidence": [],
+        "corpusEvidence": [
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+          "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json"
+        ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
       },
       "nextEvidenceTierBlockers": [
-        "No UD-style corpus evaluation, broad unknown-word evaluation, or holdout MWT/clitic corpus is recorded."
+        "UD-style corpus evaluation exists for committed slices only; broad unknown-word evaluation, holdout MWT/clitic corpus breadth, rich morphology, and wider corpus evidence remain absent."
       ]
     },
     {

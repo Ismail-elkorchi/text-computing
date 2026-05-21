@@ -14,6 +14,8 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`pos-morph-lemma-slices-v1.schema.json`](pos-morph-lemma-slices-v1.schema.json) — readiness slice schema for issue `#10`.
 - [`pos-morph-lemma-tool-versions-v1.schema.json`](pos-morph-lemma-tool-versions-v1.schema.json) — frozen comparator/version schema for issue `#10`.
 - [`pos-morph-lemma-comparison-v1.schema.json`](pos-morph-lemma-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#10`.
+- [`pos-morph-lemma-corpus-evaluation-v1.schema.json`](pos-morph-lemma-corpus-evaluation-v1.schema.json) — UD-style corpus evaluation input schema for POS/morph/lemma evidence.
+- [`pos-morph-lemma-corpus-evaluation-report-v1.schema.json`](pos-morph-lemma-corpus-evaluation-report-v1.schema.json) — UD-style corpus evaluation report schema for POS/morph/lemma evidence.
 - [`rule-backed-ner-expected-v1.schema.json`](rule-backed-ner-expected-v1.schema.json) — expected-output schema for issue `#13`.
 - [`rule-backed-ner-slices-v1.schema.json`](rule-backed-ner-slices-v1.schema.json) — readiness slice schema for issue `#13`.
 - [`rule-backed-ner-tool-versions-v1.schema.json`](rule-backed-ner-tool-versions-v1.schema.json) — frozen comparator/version schema for issue `#13`.

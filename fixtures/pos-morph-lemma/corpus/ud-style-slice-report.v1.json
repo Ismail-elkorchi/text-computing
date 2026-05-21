@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "taskId": "nlp-pos-morph-lemma",
+  "evaluationId": "pos-morph-lemma-ud-style-slice-corpus-v1",
+  "generatedAt": "2026-05-20T00:00:00.000Z",
+  "inputRef": "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+  "summary": {
+    "documents": 4,
+    "tokens": 19,
+    "passedTokens": 19,
+    "failedTokens": 0,
+    "ambiguousGoldTokens": 7
+  },
+  "documents": [
+    {
+      "id": "ud-style-en-unknown-word",
+      "sourceSliceId": "en-unknown-word",
+      "language": "en",
+      "splitRole": "development",
+      "tokens": 5,
+      "passedTokens": 5,
+      "failedTokens": 0,
+      "diagnostics": [
+        "unknown-word"
+      ]
+    },
+    {
+      "id": "ud-style-es-multiword-token",
+      "sourceSliceId": "es-multiword-token",
+      "language": "es",
+      "splitRole": "validation",
+      "tokens": 4,
+      "passedTokens": 4,
+      "failedTokens": 0,
+      "diagnostics": [
+        "multiword-token"
+      ]
+    },
+    {
+      "id": "ud-style-fr-clitic-historical",
+      "sourceSliceId": "fr-clitic-historical",
+      "language": "fr",
+      "splitRole": "holdout",
+      "tokens": 5,
+      "passedTokens": 5,
+      "failedTokens": 0,
+      "diagnostics": [
+        "clitic-token",
+        "clitic-token",
+        "historical-spelling",
+        "historical-spelling"
+      ]
+    },
+    {
+      "id": "ud-style-code-switch-en-fr",
+      "sourceSliceId": "code-switch-en-fr",
+      "language": "en+fr",
+      "splitRole": "holdout",
+      "tokens": 5,
+      "passedTokens": 5,
+      "failedTokens": 0,
+      "diagnostics": [
+        "code-switching-slice"
+      ]
+    }
+  ],
+  "limitations": [
+    "Gold rows are repository-authored from committed slices and do not prove broad UD treebank performance.",
+    "The evaluation checks accepted alternatives instead of collapsing ambiguity to one tag.",
+    "Comparator execution for wider corpora remains a separate evidence gate."
+  ]
+}

@@ -75,7 +75,10 @@ const TASK_EVIDENCE_REQUIREMENTS = {
     fixtureRefs: ["fixtures/pos-morph-lemma/slices.json"],
     negativeControlRefs: ["fixtures/pos-morph-lemma/expected/en-unknown-word.json"],
     comparatorRefs: ["fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json", "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"],
-    corpusRefs: [],
+    corpusRefs: [
+      "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
+      "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
+    ],
   },
   "nlp-rule-backed-ner": {
     implementationOwners: ["@ismail-elkorchi/textrules", "@ismail-elkorchi/textpack", "@ismail-elkorchi/textdoc"],
