@@ -1,0 +1,399 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textprotocol:annotation-bundle:v1",
+  "schemaVersion": 1,
+  "producer": {
+    "package": "interchange.web-annotation-style-exporter",
+    "version": "fixture-2026-05-21"
+  },
+  "payload": {
+    "documentId": "doc:heldout-web-annotation-style",
+    "documentRevision": "2026-05-21-heldout-1",
+    "annotations": [
+      {
+        "annotationId": "token-1",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 0,
+          "endCU": 3,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 3,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Ada"
+        }
+      },
+      {
+        "annotationId": "token-2",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 4,
+          "endCU": 7,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-2",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 4,
+              "endCU": 7,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "met"
+        }
+      },
+      {
+        "annotationId": "token-3",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 8,
+          "endCU": 11,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-3",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 8,
+              "endCU": 11,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Bob"
+        }
+      },
+      {
+        "annotationId": "token-4",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 12,
+          "endCU": 14,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-4",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 12,
+              "endCU": 14,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "in"
+        }
+      },
+      {
+        "annotationId": "token-5",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 15,
+          "endCU": 20,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-5",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 15,
+              "endCU": 20,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Paris"
+        }
+      },
+      {
+        "annotationId": "token-6",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 20,
+          "endCU": 21,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-6",
+          "kind": "token",
+          "tokenKind": "uax29-word-boundary-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 20,
+              "endCU": 21,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "."
+        }
+      },
+      {
+        "annotationId": "sentence-1",
+        "layerId": "layer-sentence",
+        "kind": "sentence",
+        "target": {
+          "kind": "span",
+          "startCU": 0,
+          "endCU": 21,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "sentence-1",
+          "kind": "sentence",
+          "sentenceKind": "uax29-sentence",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 21,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Ada met Bob in Paris."
+        }
+      },
+      {
+        "annotationId": "entity-ada",
+        "layerId": "layer-entity",
+        "kind": "entity",
+        "target": {
+          "kind": "span",
+          "startCU": 0,
+          "endCU": 3,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "entity-ada",
+          "kind": "entity",
+          "label": "PER",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 3,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Ada",
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "w3c-web-annotation-data-model"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "annotationId": "entity-bob",
+        "layerId": "layer-entity",
+        "kind": "entity",
+        "target": {
+          "kind": "span",
+          "startCU": 8,
+          "endCU": 11,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "entity-bob",
+          "kind": "entity",
+          "label": "PER",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 8,
+              "endCU": 11,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Bob",
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "w3c-web-annotation-data-model"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "annotationId": "entity-paris",
+        "layerId": "layer-entity",
+        "kind": "entity",
+        "target": {
+          "kind": "span",
+          "startCU": 15,
+          "endCU": 20,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "entity-paris",
+          "kind": "entity",
+          "label": "LOC",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 15,
+              "endCU": 20,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Paris",
+          "confidence": {
+            "value": 0.99,
+            "method": "heldout-fixture"
+          },
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "w3c-web-annotation-data-model"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "annotationId": "relation-meeting-place",
+        "layerId": "layer-relation",
+        "kind": "relation",
+        "target": {
+          "kind": "annotation",
+          "annotationId": "entity-ada"
+        },
+        "annotation": {
+          "id": "relation-meeting-place",
+          "kind": "relation",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "entity-ada"
+            },
+            {
+              "kind": "annotation",
+              "annotationId": "entity-bob"
+            },
+            {
+              "kind": "annotation",
+              "annotationId": "entity-paris"
+            }
+          ],
+          "relationType": "meeting-location",
+          "arguments": [
+            {
+              "role": "participant",
+              "annotationId": "entity-ada"
+            },
+            {
+              "role": "participant",
+              "annotationId": "entity-bob"
+            },
+            {
+              "role": "place",
+              "annotationId": "entity-paris"
+            }
+          ],
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "w3c-web-annotation-data-model"
+              }
+            ]
+          },
+          "confidence": {
+            "value": 1,
+            "method": "heldout-fixture"
+          }
+        }
+      }
+    ]
+  },
+  "provenance": {
+    "source": {
+      "id": "fixture:textdoc:heldout:heldout-web-annotation-style",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "references": [
+      {
+        "kind": "interchange-precedent",
+        "id": "w3c-web-annotation-data-model"
+      },
+      {
+        "kind": "schema",
+        "id": "schemas/textprotocol-annotation-bundle-v1.schema.json"
+      }
+    ]
+  },
+  "limitations": [
+    "Held-out bundle is repository-authored from an externally named interchange precedent; it is not an external comparator result.",
+    "Evidence covers stand-off bundle restoration and graph validation only."
+  ]
+}

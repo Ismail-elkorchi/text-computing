@@ -131,7 +131,12 @@
           "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
           "schemas/textprotocol-annotation-bundle-v1.schema.json"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+          "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
+        ],
         "negativeControls": [
           "fixtures/textdoc/invalid/dangling-target.json",
           "fixtures/textdoc/invalid/dangling-view.json"
@@ -147,8 +152,8 @@
       ],
       "nextTier": "comparator-backed",
       "nextTierBlockers": [
-        "No external document-model comparator or broad graph holdout suite is recorded.",
-        "No held-out document-annotation bundle from an independent producer is recorded."
+        "No actual external document-model comparator or externally sourced annotation-bundle corpus is recorded.",
+        "No broad graph holdout suite is recorded."
       ]
     },
     {
@@ -163,9 +168,12 @@
         "validation": [
           "fixtures/textpack/manifests/textpack-fr-core.json",
           "fixtures/textpack/catalog.v1.json",
-          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
+          "packages/textpack/test/index.test.ts"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/textpack/heldout/es-authoring/pack.manifest.json"
+        ],
         "negativeControls": [
           "fixtures/textpack/invalid/missing-license.json",
           "fixtures/textpack/invalid/overlay-conflict-a.json"
@@ -181,7 +189,7 @@
       ],
       "nextTier": "comparator-backed",
       "nextTierBlockers": [
-        "Broader pack-resource claims require a public update workflow, broader reviewed resource catalog, and additional held-out pack authoring examples."
+        "Broader pack-resource claims require multiple reviewed resource catalogs, package update examples, and release-use evidence beyond one held-out authoring fixture."
       ]
     },
     {
@@ -287,17 +295,21 @@
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
+        ],
         "negativeControls": [
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
         ],
         "externalComparators": [
           "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
           "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
         ],
         "corpusEvidence": [
-          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
         ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
@@ -308,7 +320,7 @@
       ],
       "nextTier": "corpus-backed",
       "nextTierBlockers": [
-        "Corpus-backed claims require external or reproducibly sourced corpora, held-out corpus slices, and stable performance measurements beyond committed synthetic explicit-token fixtures."
+        "Corpus-backed claims require additional external or reproducibly sourced corpora, held-out corpus slices, Python/JVM comparator coverage for holdouts where feasible, and stable performance measurements beyond committed explicit-token fixtures."
       ]
     },
     {

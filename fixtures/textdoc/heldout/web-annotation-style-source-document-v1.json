@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:heldout-web-annotation-style",
+  "revision": "2026-05-21-heldout-1",
+  "textLengthCU": 21,
+  "text": "Ada met Bob in Paris.",
+  "source": {
+    "id": "fixture:textdoc:heldout:heldout-web-annotation-style",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "unicodeVersion": "17.0.0",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "raw",
+      "description": "Original held-out source text"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "imported",
+      "description": "Imported stand-off annotation view",
+      "parentViewId": "source-view",
+      "spanMapIds": [
+        "span-map-source-analysis"
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-token",
+      "kind": "token",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-sentence",
+      "kind": "sentence",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-entity",
+      "kind": "entity",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-relation",
+      "kind": "relation",
+      "viewId": "analysis-view",
+      "annotations": []
+    }
+  ],
+  "spanMaps": [
+    {
+      "id": "span-map-source-analysis",
+      "sourceViewId": "source-view",
+      "targetViewId": "analysis-view",
+      "lifecycle": {
+        "state": "active"
+      },
+      "segments": [
+        {
+          "source": {
+            "startCU": 0,
+            "endCU": 21
+          },
+          "target": {
+            "startCU": 0,
+            "endCU": 21
+          },
+          "kind": "unchanged",
+          "reversible": true
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Held-out source document for annotation-bundle validation. It is repository-authored and does not claim external comparator coverage."
+  ]
+}

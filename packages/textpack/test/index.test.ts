@@ -2,6 +2,7 @@ import {
   checkTextPackCompatibility,
   composeTextPackResources,
   createTextPackCatalog,
+  createTextPackManifestDraft,
   createTextPackResourceRegistry,
   isTextPackCatalogV1,
   isTextPackManifestV1,
@@ -17,6 +18,7 @@ import {
   type TextPackManifestV1,
   textPackDemoTrimLowercaseCanonicalizer,
   textPackManifestVersion,
+  updateTextPackManifest,
   validateTextPackManifestGovernance,
 } from "../src/index.ts";
 
@@ -619,5 +621,96 @@ if (
 ) {
   throw new Error("malformed lexicon rows should be diagnosed and excluded from loaded entries");
 }
+
+const authoredManifest = createTextPackManifestDraft({
+  id: "pack:es-heldout",
+  packageName: "@ismail-elkorchi/textpack-es-heldout",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["es"],
+    scripts: ["Latn"],
+  },
+  resources: {
+    stopwords: ["resources/stopwords.es.heldout.txt"],
+    lexicons: ["resources/lexicon.es.heldout.tsv"],
+  },
+  provides: {
+    stopwords: ["stopwords-es-heldout"],
+    lexicons: ["lexicon-es-heldout"],
+  },
+  licenses: {
+    code: ["MIT"],
+    data: ["CC0-1.0"],
+  },
+  provenance: {
+    sources: ["repo:fixtures/textpack/heldout/es-authoring"],
+    generated: false,
+    createdBy: ["textpack-authoring-test"],
+  },
+  tests: {
+    smoke: ["test/smoke.spec.ts"],
+    negative: ["test/negative.spec.ts"],
+    representative: ["test/representative.spec.ts"],
+  },
+  reviewState: "experimental",
+  limitations: ["Held-out authoring fixture; not broad Spanish resource coverage."],
+});
+if (!isTextPackManifestV1(authoredManifest)) {
+  throw new Error("authored manifest should satisfy the runtime manifest shape");
+}
+if (!authoredManifest.capabilities.stopwords || !authoredManifest.capabilities.lexicons) {
+  throw new Error("manifest authoring should derive capability flags from declared resources");
+}
+if (!validateTextPackManifestGovernance(authoredManifest).ok) {
+  throw new Error("authored manifest should pass governance validation");
+}
+
+const promotedManifest = updateTextPackManifest(authoredManifest, {
+  reviewState: "candidate",
+  version: "0.1.1",
+  provenanceNotes: ["Reviewed fixture paths and resource ids during authoring workflow."],
+});
+if (promotedManifest.reviewState !== "candidate" || promotedManifest.version !== "0.1.1") {
+  throw new Error("manifest update should preserve deterministic review-state and version transitions");
+}
+if (!promotedManifest.provenance.notes?.includes("Reviewed fixture paths and resource ids during authoring workflow.")) {
+  throw new Error("manifest update should append provenance notes");
+}
+const promotedCompatibility = checkTextPackCompatibility(promotedManifest, {
+  packageVersions: {
+    "@ismail-elkorchi/textpack": "0.1.0",
+  },
+  minimumReviewState: "candidate",
+  mandatoryResources: ["stopwords-es-heldout", "lexicon-es-heldout"],
+});
+if (!promotedCompatibility.ok) {
+  throw new Error("promoted authoring manifest should satisfy compatibility policy");
+}
+
+const resourceUpdatedManifest = updateTextPackManifest(authoredManifest, {
+  resources: {
+    stopwords: ["resources/stopwords.es.heldout.txt"],
+  },
+  provides: {
+    stopwords: ["stopwords-es-heldout"],
+  },
+});
+if (resourceUpdatedManifest.capabilities.lexicons !== undefined || resourceUpdatedManifest.capabilities.stopwords !== true) {
+  throw new Error("manifest update should rederive capability flags when resources change");
+}
+
+const malformedAuthoredManifest = createTextPackManifestDraft({
+  ...authoredManifest,
+  reviewState: "experimental",
+  provides: {
+    stopwords: ["stopwords-es-heldout"],
+  },
+});
+expectGovernanceCodes(
+  malformedAuthoredManifest,
+  ["resource-provides-length-mismatch"],
+  "authoring workflow should preserve falsifiable resource/provides mismatches",
+);
 
 void expectedPackageName;

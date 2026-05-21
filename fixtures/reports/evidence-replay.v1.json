@@ -163,10 +163,21 @@
             "tools/validate-corpus-tfidf-bm25-readiness.mjs"
           ],
           "path": "tools/validate-corpus-tfidf-bm25-readiness.mjs",
-          "sha256": "7c877ac0089e1a66c170e69975e030feb826eebe349a89253cb0051ea3362eee"
+          "sha256": "0a9ee3130643ee9f2efc067c7028bcbf370821d180ef840153b5550bb22a8403"
         }
       ],
       "comparisons": [
+        {
+          "path": "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json",
+          "sha256": "1109b247c9e5ffa14e673bb56f058fe4e696928aedce7b31cea79180be6cba6f",
+          "comparator": {
+            "name": "natural",
+            "version": "8.1.1",
+            "runtime": "javascript"
+          },
+          "status": "pass",
+          "captureMode": "curated-local-execution"
+        },
         {
           "path": "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
           "sha256": "c995d6d108722b1ef4ea83033d7611cc162623cf20017852f80126b9f2e709cb",

@@ -204,10 +204,13 @@ const requiredPhenomena = new Set([
   "formula-variant",
   "numeric-tolerance",
   "performance-threshold",
+  "held-out-corpus",
+  "public-domain-source",
 ]);
 const seenPhenomena = new Set();
 const corpusIds = new Set();
 let scaledCorpusCount = 0;
+let holdoutCorpusCount = 0;
 for (const corpus of slices.corpora) {
   expect(!corpusIds.has(corpus.id), `Duplicate corpus id: ${corpus.id}`);
   corpusIds.add(corpus.id);
@@ -215,14 +218,25 @@ for (const corpus of slices.corpora) {
   const documentIds = corpus.documents.map((document) => document.id);
   expect(documentIds.join(",") === [...documentIds].sort().join(","), `${corpus.id} documents must be sorted by id.`);
   const tokenCount = corpus.documents.reduce((sum, document) => sum + document.tokens.length, 0);
-  if (corpus.performanceThresholds !== undefined) {
-    expect(corpus.license === "MIT", `${corpus.id} threshold corpus must declare the repository fixture license as MIT.`);
-    expect(typeof corpus.provenance === "string" && corpus.provenance.length > 0, `${corpus.id} must declare provenance.`);
+  if (corpus.contentHash !== undefined) {
     expect(
       corpus.contentHash === `sha256:${sha256Json(corpus.documents)}`,
       `${corpus.id} contentHash must match its document list.`,
       { actual: corpus.contentHash, expected: `sha256:${sha256Json(corpus.documents)}` },
     );
+  }
+  if (corpus.role === "holdout") {
+    expect(corpus.phenomena.includes("held-out-corpus"), `${corpus.id} holdout role must declare held-out-corpus phenomenon.`);
+    expect(corpus.license !== undefined, `${corpus.id} holdout corpus must declare a license.`);
+    expect(typeof corpus.provenance === "string" && corpus.provenance.length > 0, `${corpus.id} holdout corpus must declare provenance.`);
+    expect(corpus.contentHash !== undefined, `${corpus.id} holdout corpus must declare contentHash.`);
+    expect(corpus.documents.length >= 6, `${corpus.id} holdout corpus must contain at least six documents.`);
+    expect(corpus.queries.length >= 3, `${corpus.id} holdout corpus must contain at least three queries.`);
+    holdoutCorpusCount += 1;
+  }
+  if (corpus.performanceThresholds !== undefined) {
+    expect(corpus.license === "MIT", `${corpus.id} threshold corpus must declare the repository fixture license as MIT.`);
+    expect(typeof corpus.provenance === "string" && corpus.provenance.length > 0, `${corpus.id} must declare provenance.`);
     expect(
       corpus.documents.length >= corpus.performanceThresholds.minDocuments,
       `${corpus.id} does not satisfy its minDocuments threshold.`,
@@ -236,6 +250,7 @@ for (const phenomenon of requiredPhenomena) {
   expect(seenPhenomena.has(phenomenon), `Corpus TF-IDF/BM25 readiness is missing ${phenomenon}.`);
 }
 expect(scaledCorpusCount >= 1, "Corpus TF-IDF/BM25 readiness requires at least one threshold-checked larger corpus.");
+expect(holdoutCorpusCount >= 1, "Corpus TF-IDF/BM25 readiness requires at least one explicit held-out corpus.");
 
 const formulaIds = new Set(toolVersions.formulas.map((formula) => formula.id));
 for (const formulaId of [

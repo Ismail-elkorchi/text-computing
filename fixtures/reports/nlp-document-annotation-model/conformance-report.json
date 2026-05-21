@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -183,10 +183,48 @@
           "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
+    },
+    {
+      "checkId": "heldout-annotation-bundles-proof",
+      "status": "pass",
+      "message": "Held-out stand-off annotation bundles restore onto source documents and satisfy graph validation without support-label upgrade.",
+      "evidenceRefs": [
+        "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+        "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json",
+        "tools/validate-textdoc-document-model.mjs"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/textdoc-document-annotation-model.md"
+        ],
+        "apiRefs": [
+          "packages/textdoc/src/index.ts",
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+          "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
+        ],
+        "oracleRefs": [
+          "schemas/textprotocol-annotation-bundle-v1.schema.json",
+          "tools/validate-textdoc-document-model.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
+        ],
+        "limitations": [
+          "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Held-out stand-off annotation-bundle evidence is repository-authored from named interchange precedents and is not an external document-model comparator result."
+        ]
+      }
     }
   ],
   "notes": [
-    "This report persists current document-model evidence; graph conventions are slice-proven for the committed fixtures only and do not claim broad relation extraction, coreference resolution, entity linking, or parser behavior.",
-    "The annotation-bundle round trip is ecosystem-style interchange evidence for the committed fixture only; it is not an external comparator result."
+    "This report persists current document-model evidence; graph conventions remain slice-proven and do not claim broad task behavior.",
+    "Held-out annotation bundles are repository-authored from named interchange precedents and are not external comparator results."
   ]
 }

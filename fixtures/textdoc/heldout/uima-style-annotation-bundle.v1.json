@@ -1,0 +1,482 @@
+{
+  "schemaId": "urn:ismail-elkorchi:textprotocol:annotation-bundle:v1",
+  "schemaVersion": 1,
+  "producer": {
+    "package": "interchange.uima-style-exporter",
+    "version": "fixture-2026-05-21"
+  },
+  "payload": {
+    "documentId": "doc:heldout-uima-style",
+    "documentRevision": "2026-05-21-heldout-2",
+    "annotations": [
+      {
+        "annotationId": "token-1",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 0,
+          "endCU": 6,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-1",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 6,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Geneva"
+        }
+      },
+      {
+        "annotationId": "token-2",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 7,
+          "endCU": 13,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-2",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 7,
+              "endCU": 13,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "joined"
+        }
+      },
+      {
+        "annotationId": "token-3",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 14,
+          "endCU": 19,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-3",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 14,
+              "endCU": 19,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "talks"
+        }
+      },
+      {
+        "annotationId": "token-4",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 19,
+          "endCU": 20,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-4",
+          "kind": "token",
+          "tokenKind": "uax29-word-boundary-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 19,
+              "endCU": 20,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "."
+        }
+      },
+      {
+        "annotationId": "token-5",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 21,
+          "endCU": 23,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-5",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 21,
+              "endCU": 23,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "It"
+        }
+      },
+      {
+        "annotationId": "token-6",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 24,
+          "endCU": 30,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-6",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 24,
+              "endCU": 30,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "hosted"
+        }
+      },
+      {
+        "annotationId": "token-7",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 31,
+          "endCU": 40,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-7",
+          "kind": "token",
+          "tokenKind": "lexical-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 31,
+              "endCU": 40,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "observers"
+        }
+      },
+      {
+        "annotationId": "token-8",
+        "layerId": "layer-token",
+        "kind": "token",
+        "target": {
+          "kind": "span",
+          "startCU": 40,
+          "endCU": 41,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "token-8",
+          "kind": "token",
+          "tokenKind": "uax29-word-boundary-token",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 40,
+              "endCU": 41,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "."
+        }
+      },
+      {
+        "annotationId": "sentence-1",
+        "layerId": "layer-sentence",
+        "kind": "sentence",
+        "target": {
+          "kind": "span",
+          "startCU": 0,
+          "endCU": 20,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "sentence-1",
+          "kind": "sentence",
+          "sentenceKind": "uax29-sentence",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 20,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Geneva joined talks."
+        }
+      },
+      {
+        "annotationId": "sentence-2",
+        "layerId": "layer-sentence",
+        "kind": "sentence",
+        "target": {
+          "kind": "span",
+          "startCU": 21,
+          "endCU": 41,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "sentence-2",
+          "kind": "sentence",
+          "sentenceKind": "uax29-sentence",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 21,
+              "endCU": 41,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "It hosted observers."
+        }
+      },
+      {
+        "annotationId": "entity-geneva",
+        "layerId": "layer-entity",
+        "kind": "entity",
+        "target": {
+          "kind": "span",
+          "startCU": 0,
+          "endCU": 6,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "entity-geneva",
+          "kind": "entity",
+          "label": "ORG",
+          "normalized": "Geneva talks host",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 0,
+              "endCU": 6,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "Geneva",
+          "ambiguitySet": {
+            "id": "ambiguity:geneva-entity-type",
+            "role": "selected",
+            "rank": 1
+          },
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "uima-cas-style-stand-off"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "annotationId": "mention-geneva",
+        "layerId": "layer-coreference-mention",
+        "kind": "coreference-mention",
+        "target": {
+          "kind": "annotation",
+          "annotationId": "entity-geneva"
+        },
+        "annotation": {
+          "id": "mention-geneva",
+          "kind": "coreference-mention",
+          "mentionType": "proper",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "entity-geneva"
+            }
+          ],
+          "text": "Geneva",
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "uima-cas-style-stand-off"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "annotationId": "mention-it",
+        "layerId": "layer-coreference-mention",
+        "kind": "coreference-mention",
+        "target": {
+          "kind": "span",
+          "startCU": 21,
+          "endCU": 23,
+          "viewId": "analysis-view"
+        },
+        "annotation": {
+          "id": "mention-it",
+          "kind": "coreference-mention",
+          "mentionType": "pronoun",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "span",
+              "startCU": 21,
+              "endCU": 23,
+              "viewId": "analysis-view"
+            }
+          ],
+          "text": "It",
+          "confidence": {
+            "value": 0.8,
+            "method": "heldout-fixture"
+          },
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "uima-cas-style-stand-off"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "annotationId": "coref-chain-geneva",
+        "layerId": "layer-coreference-chain",
+        "kind": "coreference-chain",
+        "target": {
+          "kind": "annotation",
+          "annotationId": "mention-geneva"
+        },
+        "annotation": {
+          "id": "coref-chain-geneva",
+          "kind": "coreference-chain",
+          "lifecycle": {
+            "state": "active"
+          },
+          "targets": [
+            {
+              "kind": "annotation",
+              "annotationId": "mention-geneva"
+            },
+            {
+              "kind": "annotation",
+              "annotationId": "mention-it"
+            }
+          ],
+          "mentionIds": [
+            "mention-geneva",
+            "mention-it"
+          ],
+          "representativeMentionId": "mention-geneva",
+          "documentRefs": [
+            {
+              "documentId": "doc:heldout-uima-style-source-note",
+              "role": "interchange-precedent-note",
+              "revision": "1",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            }
+          ],
+          "loss": [
+            {
+              "kind": "external-reference",
+              "reason": "The held-out fixture records an external-interchange precedent without importing external payload syntax.",
+              "source": "uima-cas-style-stand-off"
+            }
+          ],
+          "provenance": {
+            "references": [
+              {
+                "kind": "interchange-precedent",
+                "id": "uima-cas-style-stand-off"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "provenance": {
+    "source": {
+      "id": "fixture:textdoc:heldout:heldout-uima-style",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "references": [
+      {
+        "kind": "interchange-precedent",
+        "id": "uima-cas-style-stand-off"
+      },
+      {
+        "kind": "schema",
+        "id": "schemas/textprotocol-annotation-bundle-v1.schema.json"
+      }
+    ]
+  },
+  "limitations": [
+    "Held-out bundle is repository-authored from an externally named interchange precedent; it is not an external comparator result.",
+    "Evidence covers stand-off bundle restoration, lifecycle, confidence, loss, ambiguity, and external document-reference validation only."
+  ]
+}

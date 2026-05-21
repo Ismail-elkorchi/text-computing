@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 6,
+    "pass": 7,
     "fail": 0,
     "notRun": 0
   },
@@ -223,9 +223,47 @@
           "Slice-proven for committed explicit-token corpora only."
         ]
       }
+    },
+    {
+      "checkId": "heldout-corpus-recorded",
+      "status": "pass",
+      "message": "A held-out public-domain explicit-token corpus, expected scoring output, and bounded JavaScript comparator capture are committed without upgrading broad ranking claims.",
+      "evidenceRefs": [
+        "fixtures/corpus-tfidf-bm25/slices.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json",
+        "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/corpus-tfidf-bm25-readiness.md",
+          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+        ],
+        "apiRefs": [
+          "packages/textcorpus/src/index.ts",
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/corpus-tfidf-bm25/slices.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
+        ],
+        "oracleRefs": [
+          "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
+          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        ],
+        "limitations": [
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
+          "The held-out public-domain corpus is explicit-token scoring evidence; it does not prove tokenizer behavior or broad ranking quality."
+        ]
+      }
     }
   ],
   "notes": [
-    "This report persists corpus scoring evidence for committed explicit-token corpora; it does not add an external relevance benchmark or stable wall-clock performance proof."
+    "This report persists corpus scoring evidence for committed explicit-token corpora, including one held-out public-domain corpus; it does not add an external relevance benchmark or stable wall-clock performance proof."
   ]
 }

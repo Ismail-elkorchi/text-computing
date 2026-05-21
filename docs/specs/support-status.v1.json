@@ -300,16 +300,20 @@
         "round-trip validation",
         "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
         "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
-        "schemas/textprotocol-annotation-bundle-v1.schema.json"
+        "schemas/textprotocol-annotation-bundle-v1.schema.json",
+        "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+        "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
       ],
       "limitations": [
         "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-        "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model comparator result."
+        "Held-out stand-off annotation-bundle evidence is repository-authored from named interchange precedents and is not an external document-model comparator result."
       ],
       "evidenceTier": "fixture-proven",
       "nextEvidenceTierBlockers": [
-        "No external document-model comparator or broad graph holdout suite is recorded.",
-        "No held-out document-annotation bundle from an independent producer is recorded."
+        "No actual external document-model comparator or externally sourced annotation-bundle corpus is recorded.",
+        "No broad graph holdout suite is recorded."
       ]
     },
     {
@@ -324,15 +328,21 @@
         "overlay conflict cases",
         "fixtures/textpack/catalog.v1.json",
         "schemas/textpack-catalog-v1.schema.json",
-        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
+        "fixtures/textpack/heldout/es-authoring/pack.manifest.json",
+        "fixtures/textpack/heldout/es-authoring/resources/stopwords.es.heldout.txt",
+        "fixtures/textpack/heldout/es-authoring/resources/lexicon.es.heldout.tsv",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/test/index.test.ts"
       ],
       "limitations": [
-        "No broad resource marketplace or update workflow is implemented.",
-        "Reference pack coverage remains intentionally small and scope-limited."
+        "No broad resource marketplace is implemented.",
+        "Reference pack coverage remains intentionally small and scope-limited.",
+        "The held-out authoring/update workflow is fixture-proven for one curated authoring example only."
       ],
       "evidenceTier": "fixture-proven",
       "nextEvidenceTierBlockers": [
-        "Broader pack-resource claims require a public update workflow, broader reviewed resource catalog, and additional held-out pack authoring examples."
+        "Broader pack-resource claims require multiple reviewed resource catalogs, package update examples, and release-use evidence beyond one held-out authoring fixture."
       ]
     },
     {
@@ -398,15 +408,18 @@
         "scikit-learn/rank-bm25/Natural captures",
         "formula-variant tests",
         "numeric tolerance tests",
-        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
       ],
       "limitations": [
         "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
-        "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task."
+        "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
+        "The held-out public-domain corpus is explicit-token scoring evidence; it does not prove tokenizer behavior or broad ranking quality."
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
-        "Corpus-backed claims require external or reproducibly sourced corpora, held-out corpus slices, and stable performance measurements beyond committed synthetic explicit-token fixtures."
+        "Corpus-backed claims require additional external or reproducibly sourced corpora, held-out corpus slices, Python/JVM comparator coverage for holdouts where feasible, and stable performance measurements beyond committed explicit-token fixtures."
       ]
     },
     {

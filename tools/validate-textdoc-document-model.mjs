@@ -652,6 +652,22 @@ const validFixturePath = validFixturePaths[0];
 const validDocument = await readJson(validFixturePath);
 const annotationBundlePath =
   "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json";
+const heldOutAnnotationBundleCases = [
+  {
+    sourceDocumentPath: "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+    annotationBundlePath: "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+    producerPackage: "interchange.web-annotation-style-exporter",
+    precedentRef: "w3c-web-annotation-data-model",
+    minAnnotations: 10,
+  },
+  {
+    sourceDocumentPath: "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+    annotationBundlePath: "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json",
+    producerPackage: "interchange.uima-style-exporter",
+    precedentRef: "uima-cas-style-stand-off",
+    minAnnotations: 14,
+  },
+];
 
 const resultEnvelope = {
   schemaId: "urn:ismail-elkorchi:textprotocol:result-envelope:v1",
@@ -792,6 +808,115 @@ if (
 ) {
   console.error(`${annotationBundlePath} is stale; run node tools/validate-textdoc-document-model.mjs --write.`);
   process.exit(1);
+}
+
+for (const heldOutCase of heldOutAnnotationBundleCases) {
+  const sourceDocument = await readJson(heldOutCase.sourceDocumentPath);
+  if (!validateDocument(sourceDocument)) {
+    console.error(`${heldOutCase.sourceDocumentPath} failed schemas/textdoc-document-v1.schema.json`);
+    console.error(JSON.stringify(validateDocument.errors, null, 2));
+    process.exit(1);
+  }
+  const sourceSemanticErrors = validateDocumentSemantics(sourceDocument);
+  if (sourceSemanticErrors.length > 0) {
+    console.error(`${heldOutCase.sourceDocumentPath} failed semantic validation`);
+    console.error(JSON.stringify(sourceSemanticErrors, null, 2));
+    process.exit(1);
+  }
+
+  const heldOutBundle = await readJson(heldOutCase.annotationBundlePath);
+  if (!validateAnnotationBundle(heldOutBundle)) {
+    console.error(`${heldOutCase.annotationBundlePath} failed schemas/textprotocol-annotation-bundle-v1.schema.json`);
+    console.error(JSON.stringify(validateAnnotationBundle.errors, null, 2));
+    process.exit(1);
+  }
+  if (!isTextProtocolAnnotationBundleV1(heldOutBundle)) {
+    console.error(`${heldOutCase.annotationBundlePath} failed its runtime guard`);
+    process.exit(1);
+  }
+  if (heldOutBundle.producer.package !== heldOutCase.producerPackage) {
+    console.error(`${heldOutCase.annotationBundlePath} must preserve its held-out producer identity.`);
+    process.exit(1);
+  }
+  if (
+    !heldOutBundle.provenance?.references?.some(
+      (entry) => entry.kind === "interchange-precedent" && entry.id === heldOutCase.precedentRef,
+    )
+  ) {
+    console.error(`${heldOutCase.annotationBundlePath} must name its external interchange precedent.`);
+    process.exit(1);
+  }
+  if (heldOutBundle.payload.annotations.length < heldOutCase.minAnnotations) {
+    console.error(`${heldOutCase.annotationBundlePath} does not contain enough held-out annotation coverage.`);
+    process.exit(1);
+  }
+
+  const heldOutRoundTrip = applyTextDocAnnotationBundlePayloadV1(
+    sourceDocument,
+    heldOutBundle.payload,
+  );
+  if (!heldOutRoundTrip.ok || heldOutRoundTrip.document === undefined) {
+    console.error(`${heldOutCase.annotationBundlePath} failed held-out annotation-bundle restoration.`);
+    console.error(JSON.stringify(heldOutRoundTrip.diagnostics, null, 2));
+    process.exit(1);
+  }
+  const restoredSemanticErrors = validateDocumentSemantics(heldOutRoundTrip.document);
+  if (restoredSemanticErrors.length > 0) {
+    console.error(`${heldOutCase.annotationBundlePath} restored document failed semantic validation`);
+    console.error(JSON.stringify(restoredSemanticErrors, null, 2));
+    process.exit(1);
+  }
+
+  const heldOutFirstAnnotation = heldOutBundle.payload.annotations[0];
+  if (heldOutFirstAnnotation === undefined) {
+    console.error(`${heldOutCase.annotationBundlePath} must contain annotations.`);
+    process.exit(1);
+  }
+
+  const heldOutDuplicateResult = applyTextDocAnnotationBundlePayloadV1(sourceDocument, {
+    ...heldOutBundle.payload,
+    annotations: [...heldOutBundle.payload.annotations, heldOutFirstAnnotation],
+  });
+  if (
+    !heldOutDuplicateResult.diagnostics.some(
+      (entry) => entry.code === "textdoc.annotation-bundle.annotation-duplicate",
+    )
+  ) {
+    console.error(`${heldOutCase.annotationBundlePath} duplicate annotation control was accepted.`);
+    process.exit(1);
+  }
+
+  const heldOutLayerMissingResult = applyTextDocAnnotationBundlePayloadV1(sourceDocument, {
+    ...heldOutBundle.payload,
+    annotations: [
+      {
+        ...heldOutFirstAnnotation,
+        layerId: "missing-heldout-layer",
+      },
+      ...heldOutBundle.payload.annotations.slice(1),
+    ],
+  });
+  if (
+    !heldOutLayerMissingResult.diagnostics.some(
+      (entry) => entry.code === "textdoc.annotation-bundle.layer-missing",
+    )
+  ) {
+    console.error(`${heldOutCase.annotationBundlePath} missing-layer control was accepted.`);
+    process.exit(1);
+  }
+
+  const heldOutRevisionMismatch = applyTextDocAnnotationBundlePayloadV1(sourceDocument, {
+    ...heldOutBundle.payload,
+    documentRevision: `${heldOutBundle.payload.documentRevision}-drift`,
+  });
+  if (
+    !heldOutRevisionMismatch.diagnostics.some(
+      (entry) => entry.code === "textdoc.annotation-bundle.revision-mismatch",
+    )
+  ) {
+    console.error(`${heldOutCase.annotationBundlePath} revision drift control was accepted.`);
+    process.exit(1);
+  }
 }
 
 const conformanceReport = {

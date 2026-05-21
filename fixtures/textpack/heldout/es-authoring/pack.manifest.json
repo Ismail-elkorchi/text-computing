@@ -1,0 +1,78 @@
+{
+  "manifestVersion": "1.0.0",
+  "id": "pack:es-heldout-authoring",
+  "packageName": "@ismail-elkorchi/textpack-es-heldout-authoring",
+  "version": "0.1.0",
+  "kind": [
+    "language"
+  ],
+  "targets": {
+    "languages": [
+      "es"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  },
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0"
+  },
+  "externalData": {
+    "unicode": "17.0.0"
+  },
+  "capabilities": {
+    "lexicons": true,
+    "stopwords": true
+  },
+  "resources": {
+    "lexicons": [
+      "fixtures/textpack/heldout/es-authoring/resources/lexicon.es.heldout.tsv"
+    ],
+    "stopwords": [
+      "fixtures/textpack/heldout/es-authoring/resources/stopwords.es.heldout.txt"
+    ]
+  },
+  "provides": {
+    "lexicons": [
+      "lexicon-es-heldout-authoring"
+    ],
+    "stopwords": [
+      "stopwords-es-heldout-authoring"
+    ]
+  },
+  "entrypoints": {
+    "manifest": "fixtures/textpack/heldout/es-authoring/pack.manifest.json"
+  },
+  "licenses": {
+    "code": [
+      "MIT"
+    ],
+    "data": [
+      "CC0-1.0"
+    ]
+  },
+  "provenance": {
+    "sources": [
+      "repo:fixtures/textpack/heldout/es-authoring"
+    ],
+    "generated": false,
+    "createdBy": [
+      "textpack-authoring-validator"
+    ]
+  },
+  "tests": {
+    "smoke": [
+      "fixtures/textpack/heldout/es-authoring/test/smoke.spec.txt"
+    ],
+    "negative": [
+      "fixtures/textpack/heldout/es-authoring/test/negative.spec.txt"
+    ],
+    "representative": [
+      "fixtures/textpack/heldout/es-authoring/test/representative.spec.txt"
+    ]
+  },
+  "reviewState": "experimental",
+  "limitations": [
+    "Held-out authoring fixture for workflow validation; not broad Spanish resource coverage."
+  ]
+}
