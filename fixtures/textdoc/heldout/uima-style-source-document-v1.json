@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc:heldout-uima-style",
+  "revision": "2026-05-21-heldout-2",
+  "textLengthCU": 41,
+  "text": "Geneva joined talks. It hosted observers.",
+  "source": {
+    "id": "fixture:textdoc:heldout:heldout-uima-style",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "unicodeVersion": "17.0.0",
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "views": [
+    {
+      "id": "source-view",
+      "kind": "raw",
+      "description": "Original held-out source text"
+    },
+    {
+      "id": "analysis-view",
+      "kind": "imported",
+      "description": "Imported stand-off annotation view",
+      "parentViewId": "source-view",
+      "spanMapIds": [
+        "span-map-source-analysis"
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-token",
+      "kind": "token",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-sentence",
+      "kind": "sentence",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-entity",
+      "kind": "entity",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-coreference-mention",
+      "kind": "coreference-mention",
+      "viewId": "analysis-view",
+      "annotations": []
+    },
+    {
+      "id": "layer-coreference-chain",
+      "kind": "coreference-chain",
+      "viewId": "analysis-view",
+      "annotations": []
+    }
+  ],
+  "spanMaps": [
+    {
+      "id": "span-map-source-analysis",
+      "sourceViewId": "source-view",
+      "targetViewId": "analysis-view",
+      "lifecycle": {
+        "state": "active"
+      },
+      "segments": [
+        {
+          "source": {
+            "startCU": 0,
+            "endCU": 41
+          },
+          "target": {
+            "startCU": 0,
+            "endCU": 41
+          },
+          "kind": "unchanged",
+          "reversible": true
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Held-out source document for annotation-bundle validation. It is repository-authored and does not claim external comparator coverage."
+  ]
+}

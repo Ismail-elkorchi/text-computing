@@ -75,16 +75,20 @@
         "fixtures/corpus-tfidf-bm25/tool-versions.json",
         "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
         "tools/validate-corpus-tfidf-bm25-readiness.mjs",
-        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
       ],
       "comparatorRefs": [
         "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
         "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
-        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
+        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
       ],
       "knownGaps": [
         "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
-        "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task."
+        "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
+        "The held-out public-domain corpus is explicit-token scoring evidence; it does not prove tokenizer behavior or broad ranking quality."
       ]
     },
     {
@@ -132,12 +136,16 @@
         "fixtures/textdoc/invalid/dependency-cycle.json",
         "tools/validate-textdoc-document-model.mjs",
         "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
-        "schemas/textprotocol-annotation-bundle-v1.schema.json"
+        "schemas/textprotocol-annotation-bundle-v1.schema.json",
+        "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+        "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-        "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model comparator result."
+        "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+        "Held-out stand-off annotation-bundle evidence is repository-authored from named interchange precedents and is not an external document-model comparator result."
       ]
     },
     {
@@ -157,12 +165,18 @@
         "fixtures/textpack/invalid/missing-provenance.json",
         "fixtures/textpack/invalid/overlay-conflict-a.json",
         "fixtures/textpack/invalid/overlay-conflict-b.json",
-        "tools/validate-textpack-resources.mjs"
+        "tools/validate-textpack-resources.mjs",
+        "fixtures/textpack/heldout/es-authoring/pack.manifest.json",
+        "fixtures/textpack/heldout/es-authoring/resources/stopwords.es.heldout.txt",
+        "fixtures/textpack/heldout/es-authoring/resources/lexicon.es.heldout.tsv",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/test/index.test.ts"
       ],
       "comparatorRefs": [],
       "knownGaps": [
-        "No broad resource marketplace or update workflow is implemented.",
-        "Reference pack coverage remains intentionally small and scope-limited."
+        "No broad resource marketplace is implemented.",
+        "Reference pack coverage remains intentionally small and scope-limited.",
+        "The held-out authoring/update workflow is fixture-proven for one curated authoring example only."
       ]
     },
     {

@@ -416,9 +416,13 @@
         "docs/specs/textdoc-document-annotation-model.md",
         "fixtures/reports/nlp-document-annotation-model/conformance-report.json",
         "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
-        "schemas/textprotocol-annotation-bundle-v1.schema.json"
+        "schemas/textprotocol-annotation-bundle-v1.schema.json",
+        "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+        "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+        "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
       ],
-      "nextGate": "Add held-out document annotation bundles from independent producers or externally named interchange targets before broadening the support label.",
+      "nextGate": "Add actual external document-model comparator or externally sourced annotation-bundle corpus before broadening the support label.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -432,7 +436,11 @@
         "fixtureRefs": [
           "fixtures/textdoc/examples/document-annotation-model-v1.json",
           "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
-          "schemas/textprotocol-annotation-bundle-v1.schema.json"
+          "schemas/textprotocol-annotation-bundle-v1.schema.json",
+          "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+          "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
         ],
         "negativeControlRefs": [
           "fixtures/textdoc/invalid/dangling-target.json"
@@ -458,7 +466,12 @@
           "fixtures/textdoc/roundtrip/document-annotation-model-annotation-bundle.v1.json",
           "schemas/textprotocol-annotation-bundle-v1.schema.json"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/textdoc/heldout/web-annotation-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/web-annotation-style-annotation-bundle.v1.json",
+          "fixtures/textdoc/heldout/uima-style-source-document-v1.json",
+          "fixtures/textdoc/heldout/uima-style-annotation-bundle.v1.json"
+        ],
         "negativeControls": [
           "fixtures/textdoc/invalid/dangling-target.json",
           "fixtures/textdoc/invalid/dangling-view.json"
@@ -470,8 +483,8 @@
         ]
       },
       "nextEvidenceTierBlockers": [
-        "No external document-model comparator or broad graph holdout suite is recorded.",
-        "No held-out document-annotation bundle from an independent producer is recorded."
+        "No actual external document-model comparator or externally sourced annotation-bundle corpus is recorded.",
+        "No broad graph holdout suite is recorded."
       ]
     },
     {
@@ -480,9 +493,14 @@
       "languageTier": "resource-backed",
       "evidenceRefs": [
         "docs/specs/textpack-resource-manifest.md",
-        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+        "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
+        "fixtures/textpack/heldout/es-authoring/pack.manifest.json",
+        "fixtures/textpack/heldout/es-authoring/resources/stopwords.es.heldout.txt",
+        "fixtures/textpack/heldout/es-authoring/resources/lexicon.es.heldout.tsv",
+        "packages/textpack/src/index.ts",
+        "packages/textpack/test/index.test.ts"
       ],
-      "nextGate": "Add public update workflow, broader reviewed resource catalog, and held-out pack authoring examples before broader pack-resource claims.",
+      "nextGate": "Add multiple reviewed resource catalogs and package update examples before broader pack-resource claims.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -497,7 +515,8 @@
           "fixtures/textpack/manifests/textpack-en-core.json",
           "fixtures/textpack/manifests/textpack-en-legal.json",
           "fixtures/textpack/manifests/textpack-fr-core.json",
-          "fixtures/textpack/catalog.v1.json"
+          "fixtures/textpack/catalog.v1.json",
+          "fixtures/textpack/heldout/es-authoring/pack.manifest.json"
         ],
         "negativeControlRefs": [
           "fixtures/textpack/invalid/missing-license.json"
@@ -520,9 +539,12 @@
         "validation": [
           "fixtures/textpack/manifests/textpack-fr-core.json",
           "fixtures/textpack/catalog.v1.json",
-          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json"
+          "fixtures/reports/nlp-pack-resource-manifest/conformance-report.json",
+          "packages/textpack/test/index.test.ts"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/textpack/heldout/es-authoring/pack.manifest.json"
+        ],
         "negativeControls": [
           "fixtures/textpack/invalid/missing-license.json",
           "fixtures/textpack/invalid/overlay-conflict-a.json"
@@ -534,7 +556,7 @@
         ]
       },
       "nextEvidenceTierBlockers": [
-        "Broader pack-resource claims require a public update workflow, broader reviewed resource catalog, and additional held-out pack authoring examples."
+        "Broader pack-resource claims require multiple reviewed resource catalogs, package update examples, and release-use evidence beyond one held-out authoring fixture."
       ]
     },
     {
@@ -717,9 +739,11 @@
       "languageTier": "comparator-backed",
       "evidenceRefs": [
         "docs/specs/corpus-tfidf-bm25-readiness.md",
-        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
+        "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json",
+        "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
+        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
       ],
-      "nextGate": "Add external or reproducibly sourced corpus evidence, held-out corpus slices, and stable performance measurements before any broader corpus-backed ranking claim.",
+      "nextGate": "Add additional external or reproducibly sourced corpora, holdout comparator coverage, and stable performance measurements before any broader corpus-backed ranking claim.",
       "implementation": {
         "status": "fixture-implemented",
         "packageOwners": [
@@ -733,7 +757,8 @@
         "fixtureRefs": [
           "fixtures/corpus-tfidf-bm25/slices.json",
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json",
-          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
         ],
         "negativeControlRefs": [
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
@@ -741,10 +766,12 @@
         "comparatorRefs": [
           "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
           "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
         ],
         "corpusRefs": [
-          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
         ],
         "conformanceReportRefs": [
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
@@ -764,24 +791,28 @@
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
-        "holdout": [],
+        "holdout": [
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
+        ],
         "negativeControls": [
           "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json"
         ],
         "externalComparators": [
           "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
           "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
         ],
         "corpusEvidence": [
-          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json"
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
         ],
         "performanceEvidence": [
           "fixtures/performance/gates.v1.json"
         ]
       },
       "nextEvidenceTierBlockers": [
-        "Corpus-backed claims require external or reproducibly sourced corpora, held-out corpus slices, and stable performance measurements beyond committed synthetic explicit-token fixtures."
+        "Corpus-backed claims require additional external or reproducibly sourced corpora, held-out corpus slices, Python/JVM comparator coverage for holdouts where feasible, and stable performance measurements beyond committed explicit-token fixtures."
       ]
     },
     {

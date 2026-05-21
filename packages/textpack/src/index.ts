@@ -355,6 +355,40 @@ export interface TextPackCompositionInput {
   readonly precedence?: number;
 }
 
+export interface TextPackManifestDraftOptions {
+  readonly id: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly kind: readonly TextPackKind[];
+  readonly targets: TextPackTargets;
+  readonly resources: TextPackResourceFamilyMap;
+  readonly provides: TextPackResourceFamilyMap;
+  readonly licenses: TextPackLicenses;
+  readonly provenance: TextPackProvenance;
+  readonly tests: TextPackTests;
+  readonly engines?: Readonly<Record<string, string>>;
+  readonly externalData?: Readonly<Record<string, string>>;
+  readonly capabilities?: TextPackCapabilityMap;
+  readonly entrypoints?: Partial<TextPackEntrypoints>;
+  readonly reviewState?: Exclude<TextPackReviewState, "deprecated">;
+  readonly composition?: TextPackComposition;
+  readonly limitations?: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextPackManifestUpdateOptions {
+  readonly version?: string;
+  readonly targets?: TextPackTargets;
+  readonly resources?: TextPackResourceFamilyMap;
+  readonly provides?: TextPackResourceFamilyMap;
+  readonly capabilities?: TextPackCapabilityMap;
+  readonly reviewState?: Exclude<TextPackReviewState, "deprecated">;
+  readonly composition?: TextPackComposition;
+  readonly limitations?: readonly string[];
+  readonly notes?: readonly string[];
+  readonly provenanceNotes?: readonly string[];
+}
+
 const resourceKindByFamily: Readonly<Record<TextPackResourceFamily, TextPackResourceKind>> = {
   profiles: "profile",
   rules: "rule",
@@ -615,6 +649,107 @@ function sortedUniqueTextPackValues(values: Iterable<string | undefined>): reado
   return [...new Set([...values].filter(isNonEmptyString))].sort((left, right) =>
     left.localeCompare(right),
   );
+}
+
+function normalizedTextPackStringArray(values: readonly string[] | undefined): readonly string[] | undefined {
+  if (values === undefined) return undefined;
+  return sortedUniqueTextPackValues(values);
+}
+
+function normalizedTextPackTargets(targets: TextPackTargets): TextPackTargets {
+  const normalized: Partial<Record<keyof TextPackTargets, readonly string[]>> = {};
+  const entries = [
+    ["languages", normalizedTextPackStringArray(targets.languages)],
+    ["scripts", normalizedTextPackStringArray(targets.scripts)],
+    ["regions", normalizedTextPackStringArray(targets.regions)],
+    ["periods", normalizedTextPackStringArray(targets.periods)],
+    ["domains", normalizedTextPackStringArray(targets.domains)],
+    ["genres", normalizedTextPackStringArray(targets.genres)],
+    ["profiles", normalizedTextPackStringArray(targets.profiles)],
+  ] as const;
+  for (const [key, value] of entries) {
+    if (value !== undefined && value.length > 0) normalized[key] = value;
+  }
+  return normalized;
+}
+
+function normalizedTextPackStringRecord(
+  record: Readonly<Record<string, string>> | undefined,
+): Readonly<Record<string, string>> {
+  if (record === undefined) return {};
+  return Object.fromEntries(
+    Object.entries(record)
+      .filter(([, value]) => isNonEmptyString(value))
+      .sort(([left], [right]) => left.localeCompare(right)),
+  );
+}
+
+function normalizedTextPackResourceFamilyMap(
+  map: TextPackResourceFamilyMap,
+): TextPackResourceFamilyMap {
+  const normalized: Partial<Record<TextPackResourceFamily, readonly string[]>> = {};
+  for (const family of textPackResourceFamilies) {
+    const values = map[family];
+    if (values !== undefined && values.length > 0) {
+      normalized[family] = [...values];
+    }
+  }
+  return normalized;
+}
+
+function normalizedTextPackCapabilities(
+  resources: TextPackResourceFamilyMap,
+  explicitCapabilities: TextPackCapabilityMap = {},
+): TextPackCapabilityMap {
+  const normalized: Partial<Record<TextPackResourceFamily, boolean | string>> = {};
+  for (const family of textPackResourceFamilies) {
+    const explicit = explicitCapabilities[family];
+    if (explicit !== undefined) {
+      normalized[family] = explicit;
+      continue;
+    }
+    if ((resources[family] ?? []).length > 0) {
+      normalized[family] = true;
+    }
+  }
+  return normalized;
+}
+
+function normalizedTextPackTests(tests: TextPackTests): TextPackTests {
+  return {
+    smoke: sortedUniqueTextPackValues(tests.smoke),
+    negative: sortedUniqueTextPackValues(tests.negative),
+    representative: sortedUniqueTextPackValues(tests.representative),
+  };
+}
+
+function normalizedTextPackLicenses(licenses: TextPackLicenses): TextPackLicenses {
+  return {
+    code: sortedUniqueTextPackValues(licenses.code),
+    data: sortedUniqueTextPackValues(licenses.data),
+    ...(licenses.notices === undefined
+      ? {}
+      : { notices: sortedUniqueTextPackValues(licenses.notices) }),
+  };
+}
+
+function normalizedTextPackProvenance(provenance: TextPackProvenance): TextPackProvenance {
+  return {
+    sources: sortedUniqueTextPackValues(provenance.sources),
+    generated: provenance.generated,
+    ...(provenance.createdBy === undefined
+      ? {}
+      : { createdBy: sortedUniqueTextPackValues(provenance.createdBy) }),
+    ...(provenance.notes === undefined
+      ? {}
+      : { notes: sortedUniqueTextPackValues(provenance.notes) }),
+  };
+}
+
+function normalizedTextPackOptionalStrings(values: readonly string[] | undefined): readonly string[] | undefined {
+  if (values === undefined) return undefined;
+  const normalized = sortedUniqueTextPackValues(values);
+  return normalized.length === 0 ? undefined : normalized;
 }
 
 function isSafeTextPackPackageRelativePath(value: string): boolean {
@@ -1158,6 +1293,77 @@ export function checkTextPackCompatibility(
   return {
     ok: diagnostics.length === 0,
     diagnostics,
+  };
+}
+
+export function createTextPackManifestDraft(
+  options: TextPackManifestDraftOptions,
+): TextPackManifestV1 {
+  const resources = normalizedTextPackResourceFamilyMap(options.resources);
+  const provides = normalizedTextPackResourceFamilyMap(options.provides);
+  const limitations = normalizedTextPackOptionalStrings(options.limitations);
+  const notes = normalizedTextPackOptionalStrings(options.notes);
+  return {
+    manifestVersion: textPackManifestVersion,
+    id: options.id,
+    packageName: options.packageName,
+    version: options.version,
+    kind: sortedUniqueTextPackValues(options.kind) as readonly TextPackKind[],
+    targets: normalizedTextPackTargets(options.targets),
+    engines: normalizedTextPackStringRecord(
+      options.engines ?? { [packageName]: "^0.1.0" },
+    ),
+    externalData: normalizedTextPackStringRecord(options.externalData),
+    capabilities: normalizedTextPackCapabilities(resources, options.capabilities),
+    resources,
+    provides,
+    entrypoints: {
+      manifest: options.entrypoints?.manifest ?? "./pack.manifest.json",
+      ...(options.entrypoints?.load === undefined ? {} : { load: options.entrypoints.load }),
+    },
+    licenses: normalizedTextPackLicenses(options.licenses),
+    provenance: normalizedTextPackProvenance(options.provenance),
+    tests: normalizedTextPackTests(options.tests),
+    reviewState: options.reviewState ?? "experimental",
+    ...(options.composition === undefined ? {} : { composition: options.composition }),
+    ...(limitations === undefined ? {} : { limitations }),
+    ...(notes === undefined ? {} : { notes }),
+  };
+}
+
+export function updateTextPackManifest(
+  manifest: TextPackManifestV1,
+  options: TextPackManifestUpdateOptions,
+): TextPackManifestV1 {
+  const resources = normalizedTextPackResourceFamilyMap(options.resources ?? manifest.resources);
+  const provides = normalizedTextPackResourceFamilyMap(options.provides ?? manifest.provides);
+  const capabilities =
+    options.capabilities !== undefined
+      ? normalizedTextPackCapabilities(resources, options.capabilities)
+      : options.resources !== undefined
+        ? normalizedTextPackCapabilities(resources)
+        : manifest.capabilities;
+  const provenanceNotes = normalizedTextPackOptionalStrings([
+    ...(manifest.provenance.notes ?? []),
+    ...(options.provenanceNotes ?? []),
+  ]);
+  const limitations = normalizedTextPackOptionalStrings(options.limitations ?? manifest.limitations);
+  const notes = normalizedTextPackOptionalStrings(options.notes ?? manifest.notes);
+  return {
+    ...manifest,
+    version: options.version ?? manifest.version,
+    targets: normalizedTextPackTargets(options.targets ?? manifest.targets),
+    capabilities,
+    resources,
+    provides,
+    provenance: {
+      ...normalizedTextPackProvenance(manifest.provenance),
+      ...(provenanceNotes === undefined ? {} : { notes: provenanceNotes }),
+    },
+    reviewState: options.reviewState ?? manifest.reviewState,
+    ...(options.composition === undefined ? {} : { composition: options.composition }),
+    ...(limitations === undefined ? {} : { limitations }),
+    ...(notes === undefined ? {} : { notes }),
   };
 }
 

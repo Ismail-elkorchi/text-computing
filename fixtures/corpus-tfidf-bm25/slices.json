@@ -4,6 +4,199 @@
   "expectedOutputStatus": "recorded",
   "corpora": [
     {
+      "id": "corpus-tfidf-bm25-public-domain-holdout",
+      "description": "Held-out explicit-token corpus derived from public-domain United States constitutional text themes, manually tokenized for deterministic TF-IDF/BM25 validation.",
+      "tokenPolicy": "tokens are predeclared lower-case lexical tokens; no tokenization is performed by this holdout fixture",
+      "role": "holdout",
+      "phenomena": [
+        "repeated-term",
+        "shared-term",
+        "singleton-term",
+        "stable-ordering",
+        "held-out-corpus",
+        "public-domain-source"
+      ],
+      "license": "public-domain-us-federal",
+      "provenance": "Manual explicit-token holdout derived from public-domain United States constitutional text themes; no tokenizer behavior is claimed by this corpus.",
+      "contentHash": "sha256:c095c9ef2341e6e97d0e99631168610e81dc57781dd6f0361984ff2c62dea4fe",
+      "documents": [
+        {
+          "id": "pd-doc-001",
+          "tokens": [
+            "people",
+            "union",
+            "justice",
+            "tranquility",
+            "defense",
+            "welfare",
+            "liberty",
+            "posterity"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "preamble"
+          }
+        },
+        {
+          "id": "pd-doc-002",
+          "tokens": [
+            "congress",
+            "senate",
+            "representatives",
+            "legislative",
+            "powers",
+            "laws",
+            "revenue",
+            "commerce"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "article-one"
+          }
+        },
+        {
+          "id": "pd-doc-003",
+          "tokens": [
+            "president",
+            "executive",
+            "commander",
+            "treaty",
+            "appointment",
+            "office",
+            "powers",
+            "law"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "article-two"
+          }
+        },
+        {
+          "id": "pd-doc-004",
+          "tokens": [
+            "courts",
+            "judicial",
+            "cases",
+            "law",
+            "equity",
+            "constitution",
+            "treaties",
+            "controversies"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "article-three"
+          }
+        },
+        {
+          "id": "pd-doc-005",
+          "tokens": [
+            "states",
+            "powers",
+            "elections",
+            "militia",
+            "commerce",
+            "regulation",
+            "union",
+            "law"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "federalism"
+          }
+        },
+        {
+          "id": "pd-doc-006",
+          "tokens": [
+            "amendment",
+            "speech",
+            "press",
+            "religion",
+            "assembly",
+            "petition",
+            "liberty",
+            "people"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "first-amendment"
+          }
+        },
+        {
+          "id": "pd-doc-007",
+          "tokens": [
+            "amendment",
+            "search",
+            "seizure",
+            "warrants",
+            "probable",
+            "cause",
+            "people",
+            "security"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "fourth-amendment"
+          }
+        },
+        {
+          "id": "pd-doc-008",
+          "tokens": [
+            "amendment",
+            "jury",
+            "trial",
+            "counsel",
+            "process",
+            "liberty",
+            "law",
+            "rights"
+          ],
+          "metadata": {
+            "language": "en",
+            "source": "us-constitution",
+            "section": "criminal-procedure"
+          }
+        }
+      ],
+      "queries": [
+        {
+          "id": "constitution-law",
+          "tokens": [
+            "constitution",
+            "law"
+          ]
+        },
+        {
+          "id": "amendment-liberty",
+          "tokens": [
+            "amendment",
+            "liberty"
+          ]
+        },
+        {
+          "id": "commerce-powers",
+          "tokens": [
+            "commerce",
+            "powers"
+          ]
+        },
+        {
+          "id": "people-rights",
+          "tokens": [
+            "people",
+            "rights"
+          ]
+        }
+      ]
+    },
+    {
       "id": "corpus-tfidf-bm25-smoke",
       "description": "Small explicit-token corpus covering shared terms, repeated terms, singleton terms, an empty document, and missing-query terms.",
       "tokenPolicy": "tokens are predeclared lower-case lexical tokens; no tokenization is performed by this readiness fixture",
@@ -78,7 +271,8 @@
             "missing"
           ]
         }
-      ]
+      ],
+      "role": "development"
     },
     {
       "id": "corpus-tfidf-bm25-thresholds",
@@ -365,7 +559,8 @@
             "data"
           ]
         }
-      ]
+      ],
+      "role": "validation"
     }
   ]
 }

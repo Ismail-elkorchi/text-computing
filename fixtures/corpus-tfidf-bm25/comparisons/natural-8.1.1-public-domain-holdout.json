@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "capturedDate": "2026-05-21",
+  "executionStatus": "executed",
+  "captureMode": "curated-local-execution",
+  "comparator": {
+    "name": "natural",
+    "version": "8.1.1",
+    "runtime": "javascript"
+  },
+  "corpusId": "corpus-tfidf-bm25-public-domain-holdout",
+  "documentOrder": [
+    "pd-doc-001",
+    "pd-doc-002",
+    "pd-doc-003",
+    "pd-doc-004",
+    "pd-doc-005",
+    "pd-doc-006",
+    "pd-doc-007",
+    "pd-doc-008"
+  ],
+  "outputs": {
+    "formulaSet": [
+      "tf.raw-count",
+      "df.document-count",
+      "tfidf.sklearn-smooth-raw",
+      "bm25.okapi.k1-1.5.b-0.75"
+    ],
+    "termOrder": [
+      "amendment",
+      "appointment",
+      "assembly",
+      "cases",
+      "cause",
+      "commander",
+      "commerce",
+      "congress",
+      "constitution",
+      "controversies",
+      "counsel",
+      "courts",
+      "defense",
+      "elections",
+      "equity",
+      "executive",
+      "judicial",
+      "jury",
+      "justice",
+      "law",
+      "laws",
+      "legislative",
+      "liberty",
+      "militia",
+      "office",
+      "people",
+      "petition",
+      "posterity",
+      "powers",
+      "president",
+      "press",
+      "probable",
+      "process",
+      "regulation",
+      "religion",
+      "representatives",
+      "revenue",
+      "rights",
+      "search",
+      "security",
+      "seizure",
+      "senate",
+      "speech",
+      "states",
+      "tranquility",
+      "treaties",
+      "treaty",
+      "trial",
+      "union",
+      "warrants",
+      "welfare"
+    ],
+    "queryOrder": [
+      "constitution-law",
+      "amendment-liberty",
+      "commerce-powers",
+      "people-rights"
+    ],
+    "notes": [
+      "Comparator capture is limited to deterministic JavaScript replay over the held-out explicit-token corpus.",
+      "No broad ranking or relevance benchmark claim is made by this capture."
+    ]
+  },
+  "notes": [
+    "Held-out corpus comparator breadth signal only; Python/JVM captures for this holdout remain future work."
+  ]
+}

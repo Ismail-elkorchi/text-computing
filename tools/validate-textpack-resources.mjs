@@ -4,6 +4,7 @@ import {
   checkTextPackCompatibility,
   composeTextPackResources,
   createTextPackCatalog,
+  createTextPackManifestDraft,
   createTextPackResourceRegistry,
   isTextPackCatalogV1,
   loadTextPackRegistryResources,
@@ -12,6 +13,7 @@ import {
   queryTextPackResourceRegistry,
   resolveTextPackResources,
   textPackDemoTrimLowercaseCanonicalizer,
+  updateTextPackManifest,
   validateTextPackManifestGovernance,
 } from "../packages/textpack/src/index.ts";
 
@@ -34,6 +36,10 @@ function fail(message, details) {
 
 function expect(condition, message, details) {
   if (!condition) fail(message, details);
+}
+
+function comparableJson(value) {
+  return JSON.stringify(value);
 }
 
 const manifestSchema = await readJson("schemas/textpack-manifest-v1.schema.json");
@@ -72,6 +78,82 @@ for (const manifestPath of validManifestPaths) {
 
   validManifests.push(manifest);
 }
+
+const heldOutAuthoringManifestPath = "fixtures/textpack/heldout/es-authoring/pack.manifest.json";
+const heldOutAuthoringManifest = await readJson(heldOutAuthoringManifestPath);
+expect(
+  validateManifest(heldOutAuthoringManifest),
+  `${heldOutAuthoringManifestPath} failed schemas/textpack-manifest-v1.schema.json`,
+  validateManifest.errors,
+);
+expect(
+  validateTextPackManifestGovernance(heldOutAuthoringManifest).ok,
+  `${heldOutAuthoringManifestPath} failed textpack governance validation.`,
+  validateTextPackManifestGovernance(heldOutAuthoringManifest).diagnostics,
+);
+for (const paths of Object.values(heldOutAuthoringManifest.resources)) {
+  for (const resourcePath of paths) {
+    await ensurePathExists(resourcePath);
+    resourceContents[resourcePath] = await readFile(resourcePath, "utf8");
+  }
+}
+for (const refs of Object.values(heldOutAuthoringManifest.tests)) {
+  for (const testRef of refs) {
+    await ensurePathExists(testRef);
+  }
+}
+const authoredFromApi = createTextPackManifestDraft({
+  id: heldOutAuthoringManifest.id,
+  packageName: heldOutAuthoringManifest.packageName,
+  version: heldOutAuthoringManifest.version,
+  kind: heldOutAuthoringManifest.kind,
+  targets: heldOutAuthoringManifest.targets,
+  engines: heldOutAuthoringManifest.engines,
+  externalData: heldOutAuthoringManifest.externalData,
+  resources: heldOutAuthoringManifest.resources,
+  provides: heldOutAuthoringManifest.provides,
+  entrypoints: heldOutAuthoringManifest.entrypoints,
+  licenses: heldOutAuthoringManifest.licenses,
+  provenance: heldOutAuthoringManifest.provenance,
+  tests: heldOutAuthoringManifest.tests,
+  reviewState: heldOutAuthoringManifest.reviewState,
+  limitations: heldOutAuthoringManifest.limitations,
+});
+expect(
+  comparableJson(authoredFromApi) === comparableJson(heldOutAuthoringManifest),
+  "Held-out pack authoring fixture must be reproducible through the textpack authoring API.",
+  { authoredFromApi, heldOutAuthoringManifest },
+);
+const promotedHeldOutManifest = updateTextPackManifest(heldOutAuthoringManifest, {
+  version: "0.1.1",
+  reviewState: "candidate",
+  provenanceNotes: ["Held-out authoring workflow promoted after resource and test-path validation."],
+});
+const promotedHeldOutGovernance = validateTextPackManifestGovernance(promotedHeldOutManifest);
+expect(promotedHeldOutGovernance.ok, "Promoted held-out manifest must remain governance-valid.", promotedHeldOutGovernance.diagnostics);
+const promotedHeldOutCompatibility = checkTextPackCompatibility(promotedHeldOutManifest, {
+  packageVersions: { "@ismail-elkorchi/textpack": "0.1.0" },
+  minimumReviewState: "candidate",
+  mandatoryResources: [
+    "lexicon-es-heldout-authoring",
+    "stopwords-es-heldout-authoring",
+  ],
+});
+expect(
+  promotedHeldOutCompatibility.ok,
+  "Promoted held-out manifest must satisfy package-version, review-state, and mandatory-resource compatibility.",
+  promotedHeldOutCompatibility.diagnostics,
+);
+const heldOutLoadedLexicon = loadTextPackResources(
+  [heldOutAuthoringManifest],
+  { kind: "lexicon", language: "es" },
+  resourceContents,
+);
+expect(
+  lookupTextPackLoadedEntries(heldOutLoadedLexicon.resources, "casas")[0]?.entry.attributes.lemma === "casa",
+  "Held-out authoring pack must load lexicon resources through package APIs.",
+  heldOutLoadedLexicon,
+);
 
 const legalStopwordsLookup = resolveTextPackResources(validManifests, {
   kind: "stopwords",
