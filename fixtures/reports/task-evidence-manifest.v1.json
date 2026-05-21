@@ -296,7 +296,15 @@
         "fixtures/performance/gates.v1.json",
         "fixtures/tokenization-sbd/aggregate/ud-2.18.json",
         "schemas/tokenization-sbd-corpus-aggregate-v1.schema.json",
-        "tools/derive-tokenization-sbd-corpus-aggregate.mjs"
+        "tools/derive-tokenization-sbd-corpus-aggregate.mjs",
+        "fixtures/tokenization-sbd/expected/devanagari-hindi.json",
+        "fixtures/tokenization-sbd/expected/korean-hangul.json",
+        "fixtures/tokenization-sbd/expected/arabic-diacritic-clitic.json",
+        "fixtures/tokenization-sbd/expected/chinese-han.json",
+        "fixtures/tokenization-sbd/expected/french-elision-diacritics.json",
+        "fixtures/tokenization-sbd/expected/khmer-no-space.json",
+        "fixtures/tokenization-sbd/expected/lao-no-space.json",
+        "fixtures/tokenization-sbd/expected/thai-punctuation-holdout.json"
       ],
       "comparatorRefs": [
         "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
@@ -319,7 +327,7 @@
         "Not a broad multilingual tokenizer benchmark suite.",
         "Language-specific segmentation beyond the frozen slices remains future work.",
         "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence.",
-        "UD 2.18 aggregate counts are corpus-scale evidence only; broad support still needs holdout and comparator execution gates."
+        "UD 2.18 aggregate counts and selected holdouts are corpus-scale evidence signals only; broad support still needs corpus evaluation and comparator execution gates."
       ]
     }
   ]

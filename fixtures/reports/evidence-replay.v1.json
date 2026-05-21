@@ -13,13 +13,13 @@
             "tools/validate-tokenization-sbd-readiness.mjs"
           ],
           "path": "tools/validate-tokenization-sbd-readiness.mjs",
-          "sha256": "755a2bcfce08467daebc06f4bf7b08a956b27be5bea046c4ec858b4214563b9f"
+          "sha256": "1188a17b4c91151d997af2ca23c7a930e75483c3446f7ad1eef987c6f772d9e5"
         }
       ],
       "comparisons": [
         {
           "path": "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-          "sha256": "10803047184917ec428ade88b9464490153604dea7225c5c96d24c0411c9d41f",
+          "sha256": "92ddd016b2ec18b3e91094d21623a52f5244f142dd1f04dac559aad5e5a99ccf",
           "comparator": {
             "name": "spaCy",
             "version": "3.8.14",
@@ -31,7 +31,7 @@
         },
         {
           "path": "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json",
-          "sha256": "dd13a0a5c17e252370116ca55d3a82329d3ce51708ad137d72b7dc933414e382",
+          "sha256": "a2da8d463391e85fd6cb45594b819072db0ceedcbc35a98f6301eea96d9b1a51",
           "comparator": {
             "name": "wink-nlp",
             "version": "2.4.0",

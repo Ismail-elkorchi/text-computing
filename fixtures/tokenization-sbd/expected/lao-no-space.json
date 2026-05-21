@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "lao-no-space",
+  "unicodeVersion": "17.0.0",
+  "source": {
+    "sliceId": "lao-no-space",
+    "sha256": "80f1f158b83ef47e69376547dde3ec35552d9869602e43ab9f1fa71b880dbace"
+  },
+  "units": {
+    "text": "utf16-code-unit"
+  },
+  "tokens": [
+    {
+      "id": "token-1",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 0,
+      "endCU": 1,
+      "text": "ພ"
+    },
+    {
+      "id": "token-2",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 1,
+      "endCU": 2,
+      "text": "າ"
+    },
+    {
+      "id": "token-3",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 2,
+      "endCU": 3,
+      "text": "ສ"
+    },
+    {
+      "id": "token-4",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 3,
+      "endCU": 4,
+      "text": "າ"
+    },
+    {
+      "id": "token-5",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 4,
+      "endCU": 5,
+      "text": "ລ"
+    },
+    {
+      "id": "token-6",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 5,
+      "endCU": 6,
+      "text": "າ"
+    },
+    {
+      "id": "token-7",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 6,
+      "endCU": 7,
+      "text": "ວ"
+    },
+    {
+      "id": "token-8",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 7,
+      "endCU": 10,
+      "text": "ບໍ່"
+    },
+    {
+      "id": "token-9",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 10,
+      "endCU": 12,
+      "text": "ມີ"
+    },
+    {
+      "id": "token-10",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 12,
+      "endCU": 14,
+      "text": "ຊ່"
+    },
+    {
+      "id": "token-11",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 14,
+      "endCU": 15,
+      "text": "ອ"
+    },
+    {
+      "id": "token-12",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 15,
+      "endCU": 16,
+      "text": "ງ"
+    },
+    {
+      "id": "token-13",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 16,
+      "endCU": 18,
+      "text": "ວ່"
+    },
+    {
+      "id": "token-14",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 18,
+      "endCU": 19,
+      "text": "າ"
+    },
+    {
+      "id": "token-15",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 19,
+      "endCU": 20,
+      "text": "ງ"
+    },
+    {
+      "id": "token-16",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 20,
+      "endCU": 21,
+      "text": "."
+    },
+    {
+      "id": "token-17",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 21,
+      "endCU": 22,
+      "text": " "
+    },
+    {
+      "id": "token-18",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 22,
+      "endCU": 24,
+      "text": "ທົ"
+    },
+    {
+      "id": "token-19",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 24,
+      "endCU": 25,
+      "text": "ດ"
+    },
+    {
+      "id": "token-20",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 25,
+      "endCU": 26,
+      "text": "ສ"
+    },
+    {
+      "id": "token-21",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 26,
+      "endCU": 27,
+      "text": "ອ"
+    },
+    {
+      "id": "token-22",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 27,
+      "endCU": 28,
+      "text": "ບ"
+    },
+    {
+      "id": "token-23",
+      "kind": "uax29-word-boundary-token",
+      "startCU": 28,
+      "endCU": 29,
+      "text": "."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sentence-1",
+      "kind": "uax29-sentence",
+      "startCU": 0,
+      "endCU": 22,
+      "text": "ພາສາລາວບໍ່ມີຊ່ອງວ່າງ. "
+    },
+    {
+      "id": "sentence-2",
+      "kind": "uax29-sentence",
+      "startCU": 22,
+      "endCU": 29,
+      "text": "ທົດສອບ."
+    }
+  ],
+  "notes": [
+    "Expected output records current UAX #29 behavior for this fixture; it is not a language-specific tokenizer claim."
+  ]
+}

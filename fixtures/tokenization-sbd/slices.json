@@ -269,6 +269,92 @@
         "sentence-boundaries",
         "span-accounting"
       ]
+    },
+    {
+      "id": "thai-punctuation-holdout",
+      "purpose": "Thai script no-space text with punctuation without dictionary segmentation claim",
+      "source": {
+        "kind": "text",
+        "text": "ภาษาไทยไม่มีเว้นวรรค. ทดสอบข้อความ."
+      },
+      "checks": [
+        "multilingual",
+        "sentence-boundaries",
+        "span-accounting",
+        "documented-difference"
+      ]
+    },
+    {
+      "id": "lao-no-space",
+      "purpose": "Lao script no-space text without dictionary segmentation claim",
+      "source": {
+        "kind": "text",
+        "text": "ພາສາລາວບໍ່ມີຊ່ອງວ່າງ. ທົດສອບ."
+      },
+      "checks": [
+        "multilingual",
+        "sentence-boundaries",
+        "span-accounting",
+        "documented-difference"
+      ]
+    },
+    {
+      "id": "khmer-no-space",
+      "purpose": "Khmer script no-space holdout without dictionary segmentation claim",
+      "source": {
+        "kind": "text",
+        "text": "ភាសាខ្មែរមិនមានចន្លោះ។សាកល្បង។"
+      },
+      "checks": [
+        "multilingual",
+        "sentence-boundaries",
+        "span-accounting",
+        "documented-difference"
+      ]
+    },
+    {
+      "id": "chinese-han",
+      "purpose": "Han script no-space holdout with CJK punctuation",
+      "source": {
+        "kind": "text",
+        "text": "中文没有空格。测试文本。"
+      },
+      "checks": [
+        "multilingual",
+        "sentence-boundaries",
+        "span-accounting",
+        "documented-difference"
+      ]
+    },
+    {
+      "id": "arabic-diacritic-clitic",
+      "purpose": "Arabic right-to-left holdout with clitic-like prefixes and diacritics",
+      "source": {
+        "kind": "text",
+        "text": "وَبِالْقَلَمِ نكتب. فَالْعِلْمُ نور."
+      },
+      "checks": [
+        "multilingual",
+        "right-to-left",
+        "sentence-boundaries",
+        "span-accounting",
+        "documented-difference"
+      ]
+    },
+    {
+      "id": "french-elision-diacritics",
+      "purpose": "Latin-script elision and diacritic holdout for span accounting",
+      "source": {
+        "kind": "text",
+        "text": "L’amour d’Élodie l’étonne. C’est l’été."
+      },
+      "checks": [
+        "multilingual",
+        "word-boundaries",
+        "sentence-boundaries",
+        "span-accounting",
+        "documented-difference"
+      ]
     }
   ]
 }

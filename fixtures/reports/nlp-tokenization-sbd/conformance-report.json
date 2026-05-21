@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 9,
+    "pass": 10,
     "fail": 0,
     "notRun": 0
   },
@@ -332,6 +332,47 @@
           "The aggregate publishes counts only and does not include raw corpus text.",
           "UAX #29 boundary behavior is not a language-specific tokenizer claim.",
           "The task remains slice-proven until holdout and comparator gates support a broader claim."
+        ]
+      }
+    },
+    {
+      "checkId": "holdout-breadth-recorded",
+      "status": "pass",
+      "message": "Repository-authored holdout fixtures cover selected scripts, word-boundary regimes, RTL, CJK, Thai, Lao, Khmer, clitic-like prefixes, and diacritics.",
+      "evidenceRefs": [
+        "fixtures/tokenization-sbd/corpus.v1.json",
+        "fixtures/tokenization-sbd/expected/devanagari-hindi.json",
+        "fixtures/tokenization-sbd/expected/korean-hangul.json",
+        "fixtures/tokenization-sbd/expected/arabic-diacritic-clitic.json",
+        "fixtures/tokenization-sbd/expected/chinese-han.json",
+        "fixtures/tokenization-sbd/expected/french-elision-diacritics.json",
+        "fixtures/tokenization-sbd/expected/khmer-no-space.json",
+        "fixtures/tokenization-sbd/expected/lao-no-space.json",
+        "fixtures/tokenization-sbd/expected/thai-punctuation-holdout.json"
+      ],
+      "traceability": {
+        "requirementRefs": [
+          "docs/specs/tokenization-sbd-readiness.md",
+          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
+          "docs/specs/task-evidence-tiers.md"
+        ],
+        "apiRefs": [
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "inputRefs": [
+          "fixtures/tokenization-sbd/corpus.v1.json",
+          "fixtures/tokenization-sbd/slices.json"
+        ],
+        "oracleRefs": [
+          "schemas/tokenization-sbd-corpus-gate-v1.schema.json",
+          "tools/validate-tokenization-sbd-readiness.mjs"
+        ],
+        "reportRefs": [
+          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
+        ],
+        "limitations": [
+          "Repository-authored holdouts do not prove broad multilingual support.",
+          "Language-specific segmentation beyond the frozen slices remains future work."
         ]
       }
     }

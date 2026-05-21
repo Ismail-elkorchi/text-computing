@@ -380,7 +380,13 @@
         "holdout": [
           "fixtures/tokenization-sbd/corpus.v1.json",
           "fixtures/tokenization-sbd/expected/devanagari-hindi.json",
-          "fixtures/tokenization-sbd/expected/korean-hangul.json"
+          "fixtures/tokenization-sbd/expected/korean-hangul.json",
+          "fixtures/tokenization-sbd/expected/arabic-diacritic-clitic.json",
+          "fixtures/tokenization-sbd/expected/chinese-han.json",
+          "fixtures/tokenization-sbd/expected/french-elision-diacritics.json",
+          "fixtures/tokenization-sbd/expected/khmer-no-space.json",
+          "fixtures/tokenization-sbd/expected/lao-no-space.json",
+          "fixtures/tokenization-sbd/expected/thai-punctuation-holdout.json"
         ],
         "negativeControls": [
           "fixtures/tokenization-sbd/expected/unpaired-high-surrogate.json",
@@ -398,7 +404,7 @@
         ]
       },
       "nextEvidenceTierBlockers": [
-        "Holdout slices exist only as a gate policy and are not sufficient for broad multilingual claims.",
+        "Holdout slices now cover selected scripts and word-boundary regimes, but they remain repository-authored fixtures and are not sufficient for broad multilingual claims.",
         "Comparator execution still depends on local availability of pinned external tools."
       ]
     },
