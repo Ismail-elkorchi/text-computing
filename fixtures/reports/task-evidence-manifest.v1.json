@@ -254,7 +254,7 @@
     {
       "taskId": "nlp-retrieval",
       "supportStatus": "slice-proven",
-      "claimBoundary": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
+      "claimBoundary": "Deterministic query parsing, boolean/phrase/proximity query clauses, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, streaming iteration, snippets, explain output, citation windows, quote grounding, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, durable index artifacts, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
       "reportPath": "fixtures/reports/nlp-retrieval/conformance-report.json",
       "evidenceRefs": [
         "docs/specs/retrieval-readiness.md",
@@ -271,12 +271,17 @@
         "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
         "fixtures/performance/gates.v1.json",
         "schemas/retrieval-qrels-v1.schema.json",
-        "schemas/retrieval-evaluation-v1.schema.json"
+        "schemas/retrieval-evaluation-v1.schema.json",
+        "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+        "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json",
+        "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+        "tools/prepare-retrieval-external-fixture.mjs"
       ],
       "comparatorRefs": [],
       "gapResolution": {
         "disposition": "claim-narrowed",
-        "reason": "No external retrieval comparator or external relevance dataset is recorded; the public claim remains limited to committed explicit-token corpora, qrels, and deterministic thresholds.",
+        "reason": "Lucene-style retrieval comparator evidence and broad multilingual retrieval benchmarks remain outside the public claim; the public claim is narrowed to committed explicit-token corpora, qrels, streaming iteration, durable artifacts, citation windows, quote grounding, and deterministic thresholds.",
         "evidenceRefs": [
           "docs/specs/support-status.v1.json",
           "fixtures/reports/evidence-replay.v1.json",
@@ -284,7 +289,7 @@
         ]
       },
       "knownGaps": [
-        "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented.",
+        "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented.",
         "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
       ]
     },

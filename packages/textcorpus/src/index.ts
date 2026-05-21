@@ -186,14 +186,28 @@ export interface TextCorpusParsedQuery {
   readonly raw: string;
   readonly tokens: readonly string[];
   readonly clauses: readonly TextCorpusParsedQueryClause[];
+  readonly expression?: TextCorpusQueryExpression;
+  readonly syntax?: TextCorpusQuerySyntax;
 }
 
 export type TextCorpusQueryClauseOperator = "should" | "must" | "must-not";
+export type TextCorpusParsedQueryClauseKind = "term" | "phrase" | "proximity";
+export type TextCorpusQueryExpressionKind = "clause" | "and" | "or" | "not";
+export type TextCorpusQuerySyntax = "terms" | "boolean";
 
 export interface TextCorpusParsedQueryClause {
   readonly term: string;
+  readonly terms?: readonly string[];
+  readonly kind?: TextCorpusParsedQueryClauseKind;
   readonly operator: TextCorpusQueryClauseOperator;
   readonly field?: string;
+  readonly proximity?: number;
+}
+
+export interface TextCorpusQueryExpression {
+  readonly kind: TextCorpusQueryExpressionKind;
+  readonly clause?: TextCorpusParsedQueryClause;
+  readonly children?: readonly TextCorpusQueryExpression[];
 }
 
 export interface TextCorpusParseQueryOptions {
@@ -262,6 +276,18 @@ export interface TextCorpusRetrievalIndexV1 {
   >;
 }
 
+export interface TextCorpusRetrievalIndexChecksum {
+  readonly algorithm: "fnv1a64-utf8";
+  readonly value: string;
+}
+
+export interface TextCorpusRetrievalIndexArtifactV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly artifactType: "textcorpus-retrieval-index-artifact-v1";
+  readonly index: TextCorpusRetrievalIndexV1;
+  readonly checksum: TextCorpusRetrievalIndexChecksum;
+}
+
 export interface TextCorpusRetrievalFieldContribution {
   readonly field: string;
   readonly tf: number;
@@ -306,6 +332,10 @@ export interface TextCorpusRetrievalSearchOptions {
   readonly includeZeroScores?: boolean;
 }
 
+export interface TextCorpusRetrievalStreamOptions extends TextCorpusRetrievalSearchOptions {
+  readonly failOnInvalidQuery?: boolean;
+}
+
 export interface TextCorpusRetrievalResultV1 {
   readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
   readonly corpusId: string;
@@ -330,7 +360,17 @@ export interface TextCorpusRetrievalQrelsV1 {
   readonly schemaVersion: TextCorpusRetrievalQrelsSchemaVersion;
   readonly taskId: "nlp-retrieval";
   readonly corpusId: string;
+  readonly source?: TextCorpusRetrievalQrelsSource;
   readonly judgments: readonly TextCorpusRelevanceJudgment[];
+}
+
+export interface TextCorpusRetrievalQrelsSource {
+  readonly datasetId: string;
+  readonly datasetVersion: string;
+  readonly split: string;
+  readonly license: string;
+  readonly sourceUrl: string;
+  readonly checksum: string;
 }
 
 export interface TextCorpusRetrievalEvaluationOptions {
@@ -368,6 +408,75 @@ export interface TextCorpusRetrievalEvaluationResultV1 {
   readonly tolerance: number;
   readonly summary: TextCorpusRetrievalEvaluationSummary;
   readonly queries: readonly TextCorpusRetrievalQueryEvaluation[];
+}
+
+export interface TextCorpusCitationWindowOptions {
+  readonly tokenWindow?: number;
+}
+
+export type TextCorpusCitationTextPolicy = "source-span" | "token-join";
+
+export interface TextCorpusCitationWindowV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly corpusId: string;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly queryId: string;
+  readonly docId: string;
+  readonly documentId: string;
+  readonly viewId: string;
+  readonly tokenLayerId: string;
+  readonly tokenStart: number;
+  readonly tokenEnd: number;
+  readonly text: string;
+  readonly textPolicy: TextCorpusCitationTextPolicy;
+  readonly span?: {
+    readonly startCU: number;
+    readonly endCU: number;
+  };
+  readonly score: number;
+  readonly formula: TextCorpusRetrievalFormulaId;
+  readonly loss: readonly string[];
+}
+
+export interface TextCorpusCitationWindowSetV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly windows: readonly TextCorpusCitationWindowV1[];
+}
+
+export interface TextCorpusQuoteGroundingOptions {
+  readonly docId: string;
+  readonly quoteTokens: readonly string[];
+  readonly tokenWindow?: number;
+}
+
+export interface TextCorpusQuoteGroundingMatchV1 {
+  readonly docId: string;
+  readonly documentId: string;
+  readonly viewId: string;
+  readonly tokenLayerId: string;
+  readonly tokenStart: number;
+  readonly tokenEnd: number;
+  readonly text: string;
+  readonly textPolicy: TextCorpusCitationTextPolicy;
+  readonly span?: {
+    readonly startCU: number;
+    readonly endCU: number;
+  };
+  readonly loss: readonly string[];
+}
+
+export interface TextCorpusQuoteGroundingResultV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly corpusId: string;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly docId: string;
+  readonly quoteTokens: readonly string[];
+  readonly status: "grounded" | "ambiguous" | "not-found";
+  readonly matches: readonly TextCorpusQuoteGroundingMatchV1[];
 }
 
 export interface TextCorpusAnalysisSelectionOptions {
@@ -520,8 +629,11 @@ export type TextCorpusArtifactV1 =
   | TextCorpusPairwiseRelationResultV1
   | TextCorpusScoringResultV1
   | TextCorpusRetrievalIndexV1
+  | TextCorpusRetrievalIndexArtifactV1
   | TextCorpusRetrievalResultV1
-  | TextCorpusRetrievalEvaluationResultV1;
+  | TextCorpusRetrievalEvaluationResultV1
+  | TextCorpusCitationWindowSetV1
+  | TextCorpusQuoteGroundingResultV1;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -621,7 +733,7 @@ function resolveTokenText(
   return document.text.slice(spanTarget.startCU, spanTarget.endCU);
 }
 
-function getEntryTokenTexts(entry: TextCorpusEntry): readonly string[] {
+function getEntryTokenAnnotations(entry: TextCorpusEntry): readonly TextDocDocumentTokenAnnotation[] {
   const tokenLayer = findTokenLayer(entry.document, entry.tokenLayerId, entry.viewId);
   if (!tokenLayer) {
     throw new Error(
@@ -629,9 +741,47 @@ function getEntryTokenTexts(entry: TextCorpusEntry): readonly string[] {
     );
   }
 
-  return tokenLayer.annotations
-    .filter((annotation) => annotation.lifecycle.state === "active")
-    .map((annotation) => resolveTokenText(entry.document, annotation));
+  return tokenLayer.annotations.filter((annotation) => annotation.lifecycle.state === "active");
+}
+
+function getEntryTokenTexts(entry: TextCorpusEntry): readonly string[] {
+  return getEntryTokenAnnotations(entry).map((annotation) => resolveTokenText(entry.document, annotation));
+}
+
+function tokenSpan(annotation: TextDocDocumentTokenAnnotation): { readonly startCU: number; readonly endCU: number } | undefined {
+  const target = annotation.targets.find((entry) => entry.kind === "span");
+  return target === undefined ? undefined : { startCU: target.startCU, endCU: target.endCU };
+}
+
+function citationTextFromTokens(
+  entry: TextCorpusEntry,
+  tokenStart: number,
+  tokenEnd: number,
+): {
+  readonly text: string;
+  readonly textPolicy: TextCorpusCitationTextPolicy;
+  readonly span?: { readonly startCU: number; readonly endCU: number };
+  readonly loss: readonly string[];
+} {
+  const annotations = getEntryTokenAnnotations(entry);
+  const effectiveStart = Math.max(0, Math.min(tokenStart, annotations.length));
+  const effectiveEnd = Math.max(effectiveStart, Math.min(tokenEnd, annotations.length));
+  const selected = annotations.slice(effectiveStart, effectiveEnd);
+  const firstSpan = selected.length > 0 ? tokenSpan(selected[0] as TextDocDocumentTokenAnnotation) : undefined;
+  const lastSpan = selected.length > 0 ? tokenSpan(selected[selected.length - 1] as TextDocDocumentTokenAnnotation) : undefined;
+  if (entry.document.text !== undefined && firstSpan !== undefined && lastSpan !== undefined) {
+    return {
+      text: entry.document.text.slice(firstSpan.startCU, lastSpan.endCU),
+      textPolicy: "source-span",
+      span: { startCU: firstSpan.startCU, endCU: lastSpan.endCU },
+      loss: [],
+    };
+  }
+  return {
+    text: selected.map((annotation) => resolveTokenText(entry.document, annotation)).join(" "),
+    textPolicy: "token-join",
+    loss: ["missing-source-span"],
+  };
 }
 
 function compareTerms(left: string, right: string): number {
@@ -951,6 +1101,18 @@ function isRelevanceJudgment(value: unknown): value is TextCorpusRelevanceJudgme
     Array.isArray(value.ratings) &&
     value.ratings.length > 0 &&
     value.ratings.every((rating) => isRelevanceRating(rating))
+  );
+}
+
+function isRetrievalQrelsSource(value: unknown): value is TextCorpusRetrievalQrelsSource {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.datasetId) &&
+    isNonEmptyString(value.datasetVersion) &&
+    isNonEmptyString(value.split) &&
+    isNonEmptyString(value.license) &&
+    isNonEmptyString(value.sourceUrl) &&
+    isNonEmptyString(value.checksum)
   );
 }
 
@@ -1416,8 +1578,36 @@ export function isTextCorpusParsedQuery(value: unknown): value is TextCorpusPars
         (clause.operator === "should" ||
           clause.operator === "must" ||
           clause.operator === "must-not") &&
+        (clause.kind === undefined ||
+          clause.kind === "term" ||
+          clause.kind === "phrase" ||
+          clause.kind === "proximity") &&
+        (clause.terms === undefined ||
+          (Array.isArray(clause.terms) && clause.terms.every((term) => typeof term === "string"))) &&
+        (clause.proximity === undefined ||
+          (typeof clause.proximity === "number" &&
+            Number.isInteger(clause.proximity) &&
+            clause.proximity >= 0)) &&
         (clause.field === undefined || isNonEmptyString(clause.field)),
-    )
+    ) &&
+    (value.expression === undefined || isTextCorpusQueryExpression(value.expression)) &&
+    (value.syntax === undefined || value.syntax === "terms" || value.syntax === "boolean")
+  );
+}
+
+function isTextCorpusQueryExpression(value: unknown): value is TextCorpusQueryExpression {
+  if (!isRecord(value)) return false;
+  if (value.kind === "clause") {
+    return (
+      value.clause === undefined ||
+      isTextCorpusParsedQuery({ id: "guard", raw: "", tokens: [], clauses: [value.clause] })
+    );
+  }
+  return (
+    (value.kind === "and" || value.kind === "or" || value.kind === "not") &&
+    Array.isArray(value.children) &&
+    value.children.length >= 1 &&
+    value.children.every((child) => isTextCorpusQueryExpression(child))
   );
 }
 
@@ -1483,6 +1673,7 @@ export function isTextCorpusRetrievalQrelsV1(value: unknown): value is TextCorpu
     value.schemaVersion === textCorpusRetrievalQrelsSchemaVersion &&
     value.taskId === "nlp-retrieval" &&
     isNonEmptyString(value.corpusId) &&
+    (value.source === undefined || isRetrievalQrelsSource(value.source)) &&
     Array.isArray(value.judgments) &&
     value.judgments.every((judgment) => isRelevanceJudgment(judgment))
   );
@@ -1546,6 +1737,81 @@ export function isTextCorpusRetrievalEvaluationResultV1(
     isRetrievalEvaluationSummary(value.summary) &&
     Array.isArray(value.queries) &&
     value.queries.every((query) => isRetrievalQueryEvaluation(query))
+  );
+}
+
+function isTextCorpusCitationWindowV1(value: unknown): value is TextCorpusCitationWindowV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    isNonEmptyString(value.queryId) &&
+    isNonEmptyString(value.docId) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.viewId) &&
+    isNonEmptyString(value.tokenLayerId) &&
+    typeof value.tokenStart === "number" &&
+    Number.isInteger(value.tokenStart) &&
+    value.tokenStart >= 0 &&
+    typeof value.tokenEnd === "number" &&
+    Number.isInteger(value.tokenEnd) &&
+    value.tokenEnd >= value.tokenStart &&
+    typeof value.text === "string" &&
+    (value.textPolicy === "source-span" || value.textPolicy === "token-join") &&
+    typeof value.score === "number" &&
+    Number.isFinite(value.score) &&
+    isRetrievalFormula(value.formula) &&
+    Array.isArray(value.loss) &&
+    value.loss.every((entry) => typeof entry === "string")
+  );
+}
+
+export function isTextCorpusCitationWindowSetV1(value: unknown): value is TextCorpusCitationWindowSetV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    selectionMatchesCorpus(value.selection, value.corpusId) &&
+    Array.isArray(value.windows) &&
+    value.windows.every((entry) => isTextCorpusCitationWindowV1(entry))
+  );
+}
+
+function isTextCorpusQuoteGroundingMatchV1(value: unknown): value is TextCorpusQuoteGroundingMatchV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.docId) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.viewId) &&
+    isNonEmptyString(value.tokenLayerId) &&
+    typeof value.tokenStart === "number" &&
+    Number.isInteger(value.tokenStart) &&
+    value.tokenStart >= 0 &&
+    typeof value.tokenEnd === "number" &&
+    Number.isInteger(value.tokenEnd) &&
+    value.tokenEnd >= value.tokenStart &&
+    typeof value.text === "string" &&
+    (value.textPolicy === "source-span" || value.textPolicy === "token-join") &&
+    Array.isArray(value.loss) &&
+    value.loss.every((entry) => typeof entry === "string")
+  );
+}
+
+export function isTextCorpusQuoteGroundingResultV1(value: unknown): value is TextCorpusQuoteGroundingResultV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    isNonEmptyString(value.corpusId) &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    isNonEmptyString(value.docId) &&
+    Array.isArray(value.quoteTokens) &&
+    value.quoteTokens.every((entry) => typeof entry === "string") &&
+    (value.status === "grounded" || value.status === "ambiguous" || value.status === "not-found") &&
+    Array.isArray(value.matches) &&
+    value.matches.every((entry) => isTextCorpusQuoteGroundingMatchV1(entry))
   );
 }
 
@@ -2108,32 +2374,251 @@ function normalizeQueryTokens(raw: string): readonly string[] {
     .filter((token) => token.length > 0);
 }
 
-function parseQuerySegment(rawSegment: string): readonly TextCorpusParsedQueryClause[] {
-  if (rawSegment.length === 0) return [];
-  let operator: TextCorpusQueryClauseOperator = "should";
-  let segment = rawSegment;
-  if (segment.startsWith("+")) {
-    operator = "must";
-    segment = segment.slice(1);
-  } else if (segment.startsWith("-")) {
-    operator = "must-not";
-    segment = segment.slice(1);
-  }
+type QueryToken =
+  | { readonly type: "atom"; readonly clause: TextCorpusParsedQueryClause }
+  | { readonly type: "operator"; readonly value: "AND" | "OR" | "NOT" }
+  | { readonly type: "unary"; readonly value: "+" | "-" }
+  | { readonly type: "paren"; readonly value: "(" | ")" };
 
-  if (segment.length === 0) return [];
-  const fieldSeparator = segment.indexOf(":");
-  const field =
-    fieldSeparator > 0 ? normalizeQueryTokens(segment.slice(0, fieldSeparator))[0] : undefined;
-  const value = fieldSeparator > 0 ? segment.slice(fieldSeparator + 1) : segment;
-  return normalizeQueryTokens(value).map((term) => ({
-    term,
-    operator,
-    ...(field ? { field } : {}),
-  }));
+function querySyntaxError(message: string): SyntaxError {
+  return new SyntaxError(`textcorpus query syntax error: ${message}`);
 }
 
-function parseQueryClauses(raw: string): readonly TextCorpusParsedQueryClause[] {
-  return raw.split(/\s+/u).flatMap(parseQuerySegment);
+function normalizeQueryField(raw: string): string {
+  const field = normalizeQueryTokens(raw)[0];
+  if (!isNonEmptyString(field)) throw querySyntaxError("field name must contain a token");
+  return field;
+}
+
+function makeQueryClause(
+  value: string,
+  options: {
+    readonly operator?: TextCorpusQueryClauseOperator;
+    readonly field?: string;
+    readonly proximity?: number;
+  } = {},
+): TextCorpusParsedQueryClause | undefined {
+  const terms = normalizeQueryTokens(value);
+  if (terms.length === 0) return undefined;
+  const operator = options.operator ?? "should";
+  if (terms.length === 1 && options.proximity === undefined) {
+    return {
+      term: terms[0] as string,
+      terms,
+      kind: "term",
+      operator,
+      ...(options.field ? { field: options.field } : {}),
+    };
+  }
+  return {
+    term: terms.join(" "),
+    terms,
+    kind: options.proximity === undefined ? "phrase" : "proximity",
+    operator,
+    ...(options.field ? { field: options.field } : {}),
+    ...(options.proximity === undefined ? {} : { proximity: options.proximity }),
+  };
+}
+
+function readQuotedQueryValue(raw: string, start: number): {
+  readonly value: string;
+  readonly end: number;
+  readonly proximity?: number;
+} {
+  let cursor = start + 1;
+  let value = "";
+  while (cursor < raw.length) {
+    const char = raw[cursor] as string;
+    if (char === "\"") {
+      cursor += 1;
+      let proximity: number | undefined;
+      if (raw[cursor] === "~") {
+        cursor += 1;
+        const numberStart = cursor;
+        while (cursor < raw.length && /[0-9]/u.test(raw[cursor] as string)) cursor += 1;
+        if (cursor === numberStart) throw querySyntaxError("proximity phrase must include an integer distance");
+        proximity = Number.parseInt(raw.slice(numberStart, cursor), 10);
+      }
+      return { value, end: cursor, ...(proximity === undefined ? {} : { proximity }) };
+    }
+    value += char;
+    cursor += 1;
+  }
+  throw querySyntaxError("unclosed quoted phrase");
+}
+
+function readQueryWord(raw: string, start: number): { readonly value: string; readonly end: number } {
+  let cursor = start;
+  while (cursor < raw.length && !/\s|\(|\)|"/u.test(raw[cursor] as string)) cursor += 1;
+  return { value: raw.slice(start, cursor), end: cursor };
+}
+
+function scanQueryTokens(raw: string): {
+  readonly tokens: readonly QueryToken[];
+  readonly usesBooleanSyntax: boolean;
+} {
+  const tokens: QueryToken[] = [];
+  let usesBooleanSyntax = false;
+  let cursor = 0;
+  while (cursor < raw.length) {
+    const char = raw[cursor] as string;
+    if (/\s/u.test(char)) {
+      cursor += 1;
+      continue;
+    }
+    if (char === "(" || char === ")") {
+      usesBooleanSyntax = true;
+      tokens.push({ type: "paren", value: char });
+      cursor += 1;
+      continue;
+    }
+    if (char === "+" || char === "-") {
+      tokens.push({ type: "unary", value: char });
+      cursor += 1;
+      continue;
+    }
+
+    let field: string | undefined;
+    if (char !== "\"") {
+      const prefix = readQueryWord(raw, cursor);
+      const fieldSeparator = prefix.value.indexOf(":");
+      if (fieldSeparator > 0) {
+        field = normalizeQueryField(prefix.value.slice(0, fieldSeparator));
+        const rest = prefix.value.slice(fieldSeparator + 1);
+        if (rest.length > 0) {
+          const clause = makeQueryClause(rest, { field });
+          if (clause !== undefined) tokens.push({ type: "atom", clause });
+          cursor = prefix.end;
+          continue;
+        }
+        cursor += fieldSeparator + 1;
+      }
+    }
+
+    if (raw[cursor] === "\"") {
+      const quoted = readQuotedQueryValue(raw, cursor);
+      const clause = makeQueryClause(quoted.value, {
+        ...(field === undefined ? {} : { field }),
+        ...(quoted.proximity === undefined ? {} : { proximity: quoted.proximity }),
+      });
+      if (clause !== undefined) tokens.push({ type: "atom", clause });
+      cursor = quoted.end;
+      continue;
+    }
+
+    const word = readQueryWord(raw, cursor);
+    const upper = word.value.toLocaleUpperCase("und");
+    if (upper === "AND" || upper === "OR" || upper === "NOT") {
+      usesBooleanSyntax = true;
+      tokens.push({ type: "operator", value: upper });
+    } else {
+      const clause = makeQueryClause(word.value, field === undefined ? {} : { field });
+      if (clause !== undefined) tokens.push({ type: "atom", clause });
+    }
+    cursor = word.end;
+  }
+  return { tokens, usesBooleanSyntax };
+}
+
+function queryExpressionFromClause(clause: TextCorpusParsedQueryClause): TextCorpusQueryExpression {
+  return { kind: "clause", clause };
+}
+
+function applyQueryOperator(
+  clause: TextCorpusParsedQueryClause,
+  operator: TextCorpusQueryClauseOperator,
+): TextCorpusParsedQueryClause {
+  return { ...clause, operator };
+}
+
+function collectExpressionClauses(expression: TextCorpusQueryExpression, output: TextCorpusParsedQueryClause[] = []): TextCorpusParsedQueryClause[] {
+  if (expression.kind === "clause" && expression.clause !== undefined) {
+    output.push(expression.clause);
+    return output;
+  }
+  for (const child of expression.children ?? []) collectExpressionClauses(child, output);
+  return output;
+}
+
+function parseQueryExpression(tokens: readonly QueryToken[]): TextCorpusQueryExpression | undefined {
+  let cursor = 0;
+
+  function peek(): QueryToken | undefined {
+    return tokens[cursor];
+  }
+
+  function consume(): QueryToken | undefined {
+    const token = tokens[cursor];
+    cursor += 1;
+    return token;
+  }
+
+  function parsePrimary(): TextCorpusQueryExpression {
+    const token = consume();
+    if (token === undefined) throw querySyntaxError("expected query clause");
+    if (token.type === "unary") {
+      const operator = token.value === "+" ? "must" : "must-not";
+      const child = parsePrimary();
+      if (child.kind === "clause" && child.clause !== undefined) {
+        return queryExpressionFromClause(applyQueryOperator(child.clause, operator));
+      }
+      return token.value === "-" ? { kind: "not", children: [child] } : child;
+    }
+    if (token.type === "operator" && token.value === "NOT") {
+      return { kind: "not", children: [parsePrimary()] };
+    }
+    if (token.type === "paren" && token.value === "(") {
+      const expression = parseOr();
+      const close = consume();
+      if (close?.type !== "paren" || close.value !== ")") throw querySyntaxError("unclosed parenthesized expression");
+      return expression;
+    }
+    if (token.type === "atom") return queryExpressionFromClause(token.clause);
+    throw querySyntaxError("unexpected query token");
+  }
+
+  function parseAnd(): TextCorpusQueryExpression {
+    let left = parsePrimary();
+    while (peek()?.type === "operator" && (peek() as { readonly value?: string }).value === "AND") {
+      consume();
+      left = { kind: "and", children: [left, parsePrimary()] };
+    }
+    return left;
+  }
+
+  function nextTokenStartsImplicitOr(): boolean {
+    const token = peek();
+    return token?.type === "atom" || token?.type === "unary" || (token?.type === "paren" && token.value === "(");
+  }
+
+  function parseOr(): TextCorpusQueryExpression {
+    let left = parseAnd();
+    while ((peek()?.type === "operator" && (peek() as { readonly value?: string }).value === "OR") || nextTokenStartsImplicitOr()) {
+      if (peek()?.type === "operator") consume();
+      left = { kind: "or", children: [left, parseAnd()] };
+    }
+    return left;
+  }
+
+  if (tokens.length === 0) return undefined;
+  const expression = parseOr();
+  if (cursor !== tokens.length) throw querySyntaxError("unexpected trailing query token");
+  return expression;
+}
+
+function parseQueryClauses(raw: string): {
+  readonly clauses: readonly TextCorpusParsedQueryClause[];
+  readonly expression?: TextCorpusQueryExpression;
+  readonly syntax: TextCorpusQuerySyntax;
+} {
+  const scanned = scanQueryTokens(raw);
+  const expression = parseQueryExpression(scanned.tokens);
+  const clauses = expression === undefined ? [] : collectExpressionClauses(expression);
+  return {
+    clauses,
+    ...(expression === undefined ? {} : { expression }),
+    syntax: scanned.usesBooleanSyntax ? "boolean" : "terms",
+  };
 }
 
 export function parseTextCorpusQuery(
@@ -2143,13 +2628,21 @@ export function parseTextCorpusQuery(
   if (typeof raw !== "string") {
     throw new TypeError("textcorpus query raw text must be a string");
   }
-  const clauses = parseQueryClauses(raw);
-  const tokens = clauses.map((clause) => clause.term);
+  const parsed = parseQueryClauses(raw);
+  const clauses = parsed.clauses;
+  const tokens = clauses.flatMap((clause) => clause.terms ?? [clause.term]);
   const id = options.id ?? `query:${tokens.join("-") || "empty"}`;
   if (!isNonEmptyString(id)) {
     throw new TypeError("textcorpus parsed query id must be a non-empty string");
   }
-  return { id, raw, tokens, clauses };
+  return {
+    id,
+    raw,
+    tokens,
+    clauses,
+    ...(parsed.expression === undefined ? {} : { expression: parsed.expression }),
+    syntax: parsed.syntax,
+  };
 }
 
 export function buildTextCorpusRetrievalIndex(
@@ -2404,7 +2897,7 @@ function evaluateQueryRetrieval(
 function scoringTokens(query: TextCorpusParsedQuery): readonly string[] {
   return query.clauses
     .filter((clause) => clause.operator !== "must-not" && clause.field === undefined)
-    .map((clause) => clause.term);
+    .flatMap((clause) => clause.terms ?? [clause.term]);
 }
 
 interface TextCorpusRetrievalScoringClause {
@@ -2423,9 +2916,10 @@ function scoringClauses(
   return query.clauses
     .filter((clause) => clause.operator !== "must-not")
     .flatMap((clause) => {
-      if (clause.field === undefined) return [{ term: clause.term }];
+      const terms = clause.terms ?? [clause.term];
+      if (clause.field === undefined) return terms.map((term) => ({ term }));
       if (!fieldSet.has(clause.field)) return [];
-      return [{ term: clause.term, field: clause.field }];
+      return terms.map((term) => ({ term, field: clause.field }));
     });
 }
 
@@ -2451,18 +2945,93 @@ function fieldTokens(document: TextCorpusRetrievalDocument, field: string): read
   return document.fields?.find((entry) => entry.id === field)?.tokens ?? [];
 }
 
+function includesTermSequence(tokens: readonly string[], terms: readonly string[]): boolean {
+  if (terms.length === 0) return true;
+  if (terms.length > tokens.length) return false;
+  for (let start = 0; start <= tokens.length - terms.length; start += 1) {
+    let matched = true;
+    for (let offset = 0; offset < terms.length; offset += 1) {
+      if (tokens[start + offset] !== terms[offset]) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) return true;
+  }
+  return false;
+}
+
+function includesTermsWithinProximity(
+  tokens: readonly string[],
+  terms: readonly string[],
+  proximity: number,
+): boolean {
+  if (terms.length <= 1) return terms.every((term) => tokens.includes(term));
+  const termPositions = terms.map((term) =>
+    tokens.flatMap((token, index) => (token === term ? [index] : [])),
+  );
+  if (termPositions.some((positions) => positions.length === 0)) return false;
+  for (const firstPosition of termPositions[0] ?? []) {
+    let previous = firstPosition;
+    let matched = true;
+    for (let termIndex = 1; termIndex < termPositions.length; termIndex += 1) {
+      const next = (termPositions[termIndex] ?? []).find(
+        (position) => position > previous && position - previous - 1 <= proximity,
+      );
+      if (next === undefined) {
+        matched = false;
+        break;
+      }
+      previous = next;
+    }
+    if (matched) return true;
+  }
+  return false;
+}
+
+function documentTokensForClause(
+  index: TextCorpusRetrievalIndexV1,
+  document: TextCorpusRetrievalDocument,
+  clause: TextCorpusParsedQueryClause,
+): readonly string[] {
+  if (clause.field !== undefined) {
+    if ((index.fieldOrder ?? []).includes(clause.field)) return fieldTokens(document, clause.field);
+    return metadataTokens(document, clause.field);
+  }
+  return document.tokens;
+}
+
 function documentMatchesClause(
   index: TextCorpusRetrievalIndexV1,
   document: TextCorpusRetrievalDocument,
   clause: TextCorpusParsedQueryClause,
 ): boolean {
-  if (clause.field !== undefined) {
-    if ((index.fieldOrder ?? []).includes(clause.field)) {
-      return fieldTokens(document, clause.field).includes(clause.term);
-    }
-    return metadataTokens(document, clause.field).includes(clause.term);
+  const terms = clause.terms ?? [clause.term];
+  const tokens = documentTokensForClause(index, document, clause);
+  if (clause.kind === "phrase") return includesTermSequence(tokens, terms);
+  if (clause.kind === "proximity") {
+    return includesTermsWithinProximity(tokens, terms, clause.proximity ?? 0);
   }
-  return positionsForTerm(index, clause.term, document.id).length > 0;
+  return terms.every((term) => tokens.includes(term));
+}
+
+function documentMatchesExpression(
+  index: TextCorpusRetrievalIndexV1,
+  document: TextCorpusRetrievalDocument,
+  expression: TextCorpusQueryExpression,
+): boolean {
+  if (expression.kind === "clause") {
+    if (expression.clause === undefined) return true;
+    const matched = documentMatchesClause(index, document, expression.clause);
+    return expression.clause.operator === "must-not" ? !matched : matched;
+  }
+  if (expression.kind === "not") {
+    return !(expression.children ?? []).some((child) => documentMatchesExpression(index, document, child));
+  }
+  if (expression.kind === "and") {
+    return (expression.children ?? []).every((child) => documentMatchesExpression(index, document, child));
+  }
+  return (expression.children ?? []).some((child) => documentMatchesExpression(index, document, child));
 }
 
 function documentMatchesQuery(
@@ -2470,6 +3039,9 @@ function documentMatchesQuery(
   document: TextCorpusRetrievalDocument,
   query: TextCorpusParsedQuery,
 ): boolean {
+  if (query.syntax === "boolean" && query.expression !== undefined) {
+    return documentMatchesExpression(index, document, query.expression);
+  }
   const mustClauses = query.clauses.filter((clause) => clause.operator === "must");
   if (!mustClauses.every((clause) => documentMatchesClause(index, document, clause))) return false;
   const prohibitedClauses = query.clauses.filter((clause) => clause.operator === "must-not");
@@ -2631,49 +3203,79 @@ function scoreBm25fRetrievalClause(
   };
 }
 
+function searchSingleTextCorpusRetrievalQuery(
+  index: TextCorpusRetrievalIndexV1,
+  query: TextCorpusParsedQuery,
+  options: Required<Pick<TextCorpusRetrievalSearchOptions, "topK" | "snippetWindow">> &
+    Pick<TextCorpusRetrievalSearchOptions, "includeZeroScores">,
+  documentById: ReadonlyMap<string, TextCorpusRetrievalDocument>,
+): TextCorpusRetrievalQueryResult {
+  const clausesForScoring = scoringClauses(index, query);
+  const tokensForSnippet = clausesForScoring
+    .filter((clause) => clause.field === undefined)
+    .map((clause) => clause.term);
+  const hits = index.documentOrder.flatMap((docId) => {
+    const document = documentById.get(docId);
+    if (document === undefined) return [];
+    if (!documentMatchesQuery(index, document, query)) return [];
+    const scored = scoreRetrievalDocument(index, document, clausesForScoring);
+    if (!options.includeZeroScores && scored.score <= 0) return [];
+    const snippet = createRetrievalSnippet(document, tokensForSnippet, options.snippetWindow);
+    return [
+      {
+        docId,
+        score: scored.score,
+        ...(snippet ? { snippet } : {}),
+        explain: scored.explain,
+      },
+    ];
+  });
+  hits.sort((left, right) => right.score - left.score || left.docId.localeCompare(right.docId));
+  return {
+    query,
+    hits: hits.slice(0, options.topK),
+  };
+}
+
+function normalizeRetrievalSearchOptions(
+  options: TextCorpusRetrievalSearchOptions = {},
+): Required<Pick<TextCorpusRetrievalSearchOptions, "topK" | "snippetWindow">> &
+  Pick<TextCorpusRetrievalSearchOptions, "includeZeroScores"> {
+  return {
+    topK: Math.max(0, Math.floor(options.topK ?? 10)),
+    snippetWindow: Math.max(0, Math.floor(options.snippetWindow ?? 2)),
+    ...(options.includeZeroScores === undefined ? {} : { includeZeroScores: options.includeZeroScores }),
+  };
+}
+
+export function* iterateTextCorpusRetrievalResults(
+  index: TextCorpusRetrievalIndexV1,
+  queries: readonly TextCorpusParsedQuery[],
+  options: TextCorpusRetrievalStreamOptions = {},
+): IterableIterator<TextCorpusRetrievalQueryResult> {
+  if (!isTextCorpusRetrievalIndexV1(index)) {
+    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
+  }
+  if (!Array.isArray(queries)) {
+    throw new TypeError("textcorpus retrieval queries must be an array");
+  }
+  const normalizedOptions = normalizeRetrievalSearchOptions(options);
+  const documentById = new Map(index.documents.map((document) => [document.id, document]));
+  for (const query of queries) {
+    if (!isTextCorpusParsedQuery(query)) {
+      if (options.failOnInvalidQuery === false) continue;
+      throw new TypeError("textcorpus retrieval queries must be parsed query objects");
+    }
+    yield searchSingleTextCorpusRetrievalQuery(index, query, normalizedOptions, documentById);
+  }
+}
+
 export function searchTextCorpusRetrievalIndex(
   index: TextCorpusRetrievalIndexV1,
   queries: readonly TextCorpusParsedQuery[],
   options: TextCorpusRetrievalSearchOptions = {},
 ): TextCorpusRetrievalResultV1 {
-  if (!isTextCorpusRetrievalIndexV1(index)) {
-    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
-  }
-  if (!Array.isArray(queries) || !queries.every((query) => isTextCorpusParsedQuery(query))) {
-    throw new TypeError("textcorpus retrieval queries must be parsed query objects");
-  }
-  const topK = Math.max(0, Math.floor(options.topK ?? 10));
-  const snippetWindow = Math.max(0, Math.floor(options.snippetWindow ?? 2));
-  const documentById = new Map(index.documents.map((document) => [document.id, document]));
-
-  const results = queries.map((query) => {
-    const clausesForScoring = scoringClauses(index, query);
-    const tokensForSnippet = clausesForScoring
-      .filter((clause) => clause.field === undefined)
-      .map((clause) => clause.term);
-    const hits = index.documentOrder.flatMap((docId) => {
-      const document = documentById.get(docId);
-      if (document === undefined) return [];
-      if (!documentMatchesQuery(index, document, query)) return [];
-      const scored = scoreRetrievalDocument(index, document, clausesForScoring);
-      if (!options.includeZeroScores && scored.score <= 0) return [];
-      const snippet = createRetrievalSnippet(document, tokensForSnippet, snippetWindow);
-      return [
-        {
-          docId,
-          score: scored.score,
-          ...(snippet ? { snippet } : {}),
-          explain: scored.explain,
-        },
-      ];
-    });
-    hits.sort((left, right) => right.score - left.score || left.docId.localeCompare(right.docId));
-    return {
-      query,
-      hits: hits.slice(0, topK),
-    };
-  });
-
+  const results = [...iterateTextCorpusRetrievalResults(index, queries, options)];
   return {
     schemaVersion: textCorpusRetrievalSchemaVersion,
     corpusId: index.corpusId,
@@ -2726,11 +3328,166 @@ export function evaluateTextCorpusRetrieval(
   };
 }
 
+function entryById(collection: TextCorpusCollectionV1): ReadonlyMap<string, TextCorpusEntry> {
+  return new Map(collection.entries.map((entry) => [entry.id, entry]));
+}
+
+function windowRangeForHit(
+  entry: TextCorpusEntry,
+  hit: TextCorpusRetrievalHit,
+  tokenWindow: number,
+): { readonly tokenStart: number; readonly tokenEnd: number } {
+  const tokens = getEntryTokenTexts(entry);
+  const baseStart = hit.snippet?.tokenStart ?? 0;
+  const baseEnd = hit.snippet?.tokenEnd ?? Math.min(tokens.length, 1);
+  return {
+    tokenStart: Math.max(0, baseStart - tokenWindow),
+    tokenEnd: Math.min(tokens.length, baseEnd + tokenWindow),
+  };
+}
+
+export function createTextCorpusCitationWindows(
+  collection: TextCorpusCollectionV1,
+  result: TextCorpusRetrievalResultV1,
+  options: TextCorpusCitationWindowOptions = {},
+): TextCorpusCitationWindowSetV1 {
+  if (!isTextCorpusCollectionV1(collection)) {
+    throw new TypeError("textcorpus collection must satisfy TextCorpusCollectionV1");
+  }
+  if (!isTextCorpusRetrievalResultV1(result)) {
+    throw new TypeError("textcorpus retrieval result must satisfy TextCorpusRetrievalResultV1");
+  }
+  if (collection.corpusId !== result.corpusId) {
+    throw new Error(`textcorpus citation corpus mismatch: ${collection.corpusId} != ${result.corpusId}`);
+  }
+  const tokenWindow = Math.max(0, Math.floor(options.tokenWindow ?? 0));
+  const byId = entryById(collection);
+  const { selection } = selectTextCorpusEntries(collection);
+  const windows = result.results.flatMap((queryResult) =>
+    queryResult.hits.flatMap((hit): readonly TextCorpusCitationWindowV1[] => {
+      const entry = byId.get(hit.docId);
+      if (entry === undefined) return [];
+      const range = windowRangeForHit(entry, hit, tokenWindow);
+      const text = citationTextFromTokens(entry, range.tokenStart, range.tokenEnd);
+      return [
+        {
+          schemaVersion: textCorpusRetrievalSchemaVersion,
+          corpusId: collection.corpusId,
+          evidenceClass: textCorpusEvidenceClassE2,
+          queryId: queryResult.query.id,
+          docId: entry.id,
+          documentId: entry.document.documentId,
+          viewId: entry.viewId,
+          tokenLayerId: entry.tokenLayerId,
+          tokenStart: range.tokenStart,
+          tokenEnd: range.tokenEnd,
+          text: text.text,
+          textPolicy: text.textPolicy,
+          ...(text.span ? { span: text.span } : {}),
+          score: hit.score,
+          formula: result.formula,
+          loss: text.loss,
+        },
+      ];
+    }),
+  );
+  return {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    corpusId: collection.corpusId,
+    tokenSource: textCorpusTokenSource,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection,
+    windows,
+  };
+}
+
+function findTokenSequenceMatches(tokens: readonly string[], sequence: readonly string[]): readonly number[] {
+  if (sequence.length === 0 || sequence.length > tokens.length) return [];
+  const starts: number[] = [];
+  for (let start = 0; start <= tokens.length - sequence.length; start += 1) {
+    let matched = true;
+    for (let offset = 0; offset < sequence.length; offset += 1) {
+      if (tokens[start + offset] !== sequence[offset]) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) starts.push(start);
+  }
+  return starts;
+}
+
+export function groundTextCorpusQuote(
+  collection: TextCorpusCollectionV1,
+  options: TextCorpusQuoteGroundingOptions,
+): TextCorpusQuoteGroundingResultV1 {
+  if (!isTextCorpusCollectionV1(collection)) {
+    throw new TypeError("textcorpus collection must satisfy TextCorpusCollectionV1");
+  }
+  if (!isNonEmptyString(options.docId)) {
+    throw new TypeError("textcorpus quote grounding docId must be a non-empty string");
+  }
+  if (!Array.isArray(options.quoteTokens) || options.quoteTokens.length === 0 || !options.quoteTokens.every((token) => typeof token === "string")) {
+    throw new TypeError("textcorpus quote grounding quoteTokens must be a non-empty string array");
+  }
+  const entry = entryById(collection).get(options.docId);
+  if (entry === undefined) {
+    throw new Error(`textcorpus quote grounding docId is not in the corpus: ${options.docId}`);
+  }
+  const tokenWindow = Math.max(0, Math.floor(options.tokenWindow ?? 0));
+  const tokens = getEntryTokenTexts(entry);
+  const starts = findTokenSequenceMatches(tokens, options.quoteTokens);
+  const matches = starts.map((start): TextCorpusQuoteGroundingMatchV1 => {
+    const tokenStart = Math.max(0, start - tokenWindow);
+    const tokenEnd = Math.min(tokens.length, start + options.quoteTokens.length + tokenWindow);
+    const text = citationTextFromTokens(entry, tokenStart, tokenEnd);
+    return {
+      docId: entry.id,
+      documentId: entry.document.documentId,
+      viewId: entry.viewId,
+      tokenLayerId: entry.tokenLayerId,
+      tokenStart,
+      tokenEnd,
+      text: text.text,
+      textPolicy: text.textPolicy,
+      ...(text.span ? { span: text.span } : {}),
+      loss: text.loss,
+    };
+  });
+  return {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    corpusId: collection.corpusId,
+    evidenceClass: textCorpusEvidenceClassE2,
+    docId: options.docId,
+    quoteTokens: options.quoteTokens,
+    status: matches.length === 0 ? "not-found" : matches.length === 1 ? "grounded" : "ambiguous",
+    matches,
+  };
+}
+
 export function stringifyTextCorpusRetrievalIndex(index: TextCorpusRetrievalIndexV1): string {
   if (!isTextCorpusRetrievalIndexV1(index)) {
     throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
   }
   return `${JSON.stringify(index, null, 2)}\n`;
+}
+
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((entry) => canonicalJson(entry)).join(",")}]`;
+  if (isRecord(value)) {
+    return `{${Object.entries(value)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, entry]) => `${JSON.stringify(key)}:${canonicalJson(entry)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function retrievalIndexChecksum(index: TextCorpusRetrievalIndexV1): TextCorpusRetrievalIndexChecksum {
+  return {
+    algorithm: "fnv1a64-utf8",
+    value: formatU64Hex(hash64Text(canonicalJson(index), { algo: "fnv1a64-utf8" })),
+  };
 }
 
 export function parseTextCorpusRetrievalIndex(serialized: string): TextCorpusRetrievalIndexV1 {
@@ -2750,6 +3507,63 @@ export function parseTextCorpusRetrievalIndex(serialized: string): TextCorpusRet
   return parsed;
 }
 
+export function createTextCorpusRetrievalIndexArtifact(
+  index: TextCorpusRetrievalIndexV1,
+): TextCorpusRetrievalIndexArtifactV1 {
+  if (!isTextCorpusRetrievalIndexV1(index)) {
+    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
+  }
+  return {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    artifactType: "textcorpus-retrieval-index-artifact-v1",
+    index,
+    checksum: retrievalIndexChecksum(index),
+  };
+}
+
+export function isTextCorpusRetrievalIndexArtifactV1(
+  value: unknown,
+): value is TextCorpusRetrievalIndexArtifactV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    value.artifactType === "textcorpus-retrieval-index-artifact-v1" &&
+    isTextCorpusRetrievalIndexV1(value.index) &&
+    isRecord(value.checksum) &&
+    value.checksum.algorithm === "fnv1a64-utf8" &&
+    isNonEmptyString(value.checksum.value) &&
+    value.checksum.value === retrievalIndexChecksum(value.index).value
+  );
+}
+
+export function stringifyTextCorpusRetrievalIndexArtifact(
+  artifact: TextCorpusRetrievalIndexArtifactV1,
+): string {
+  if (!isTextCorpusRetrievalIndexArtifactV1(artifact)) {
+    throw new TypeError("textcorpus retrieval index artifact checksum or shape is invalid");
+  }
+  return `${JSON.stringify(artifact, null, 2)}\n`;
+}
+
+export function parseTextCorpusRetrievalIndexArtifact(
+  serialized: string,
+): TextCorpusRetrievalIndexArtifactV1 {
+  if (typeof serialized !== "string") {
+    throw new TypeError("textcorpus retrieval index artifact JSON must be a string");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(serialized);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new SyntaxError(`textcorpus retrieval index artifact JSON parse failed: ${message}`);
+  }
+  if (!isTextCorpusRetrievalIndexArtifactV1(parsed)) {
+    throw new TypeError("textcorpus retrieval index artifact JSON must satisfy checksum and shape contracts");
+  }
+  return parsed;
+}
+
 export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtifactV1 {
   return (
     isTextCorpusConcordanceResultV1(value) ||
@@ -2760,8 +3574,11 @@ export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtif
     isTextCorpusPairwiseRelationResultV1(value) ||
     isTextCorpusScoringResultV1(value) ||
     isTextCorpusRetrievalIndexV1(value) ||
+    isTextCorpusRetrievalIndexArtifactV1(value) ||
     isTextCorpusRetrievalResultV1(value) ||
-    isTextCorpusRetrievalEvaluationResultV1(value)
+    isTextCorpusRetrievalEvaluationResultV1(value) ||
+    isTextCorpusCitationWindowSetV1(value) ||
+    isTextCorpusQuoteGroundingResultV1(value)
   );
 }
 

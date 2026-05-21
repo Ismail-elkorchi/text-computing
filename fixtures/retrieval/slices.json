@@ -7,7 +7,8 @@
   "expectedPaths": [
     "fixtures/retrieval/expected/retrieval-smoke.json",
     "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
-    "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json"
+    "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
+    "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json"
   ],
   "qrelsPath": "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
   "qrelsExpectedPath": "fixtures/retrieval/expected/retrieval-fielded-bm25f.json",
@@ -24,6 +25,12 @@
       "expectedPath": "fixtures/retrieval/expected/retrieval-licensed-news-bm25f.json",
       "qrelsPath": "fixtures/retrieval/qrels/retrieval-licensed-news-qrels.json",
       "evaluationPath": "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json"
+    },
+    {
+      "id": "beir-nfcorpus-title-subset",
+      "expectedPath": "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+      "qrelsPath": "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+      "evaluationPath": "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json"
     }
   ],
   "fieldedCorpora": [
@@ -33,7 +40,11 @@
       "documents": [
         {
           "id": "doc-a",
-          "tokens": ["alpha", "beta", "beta"],
+          "tokens": [
+            "alpha",
+            "beta",
+            "beta"
+          ],
           "metadata": {
             "language": "en",
             "genre": "news",
@@ -42,7 +53,10 @@
         },
         {
           "id": "doc-b",
-          "tokens": ["alpha", "gamma"],
+          "tokens": [
+            "alpha",
+            "gamma"
+          ],
           "metadata": {
             "language": "en",
             "genre": "news",
@@ -51,7 +65,9 @@
         },
         {
           "id": "doc-c",
-          "tokens": ["delta"],
+          "tokens": [
+            "delta"
+          ],
           "metadata": {
             "language": "en",
             "genre": "note",
@@ -83,7 +99,16 @@
       "documents": [
         {
           "id": "doc-climate-1",
-          "tokens": ["renewable", "energy", "climate", "policy", "solar", "transition", "grid", "resilience"],
+          "tokens": [
+            "renewable",
+            "energy",
+            "climate",
+            "policy",
+            "solar",
+            "transition",
+            "grid",
+            "resilience"
+          ],
           "metadata": {
             "language": "en",
             "genre": "news",
@@ -93,7 +118,16 @@
         },
         {
           "id": "doc-climate-2",
-          "tokens": ["climate", "adaptation", "flood", "resilience", "city", "planning", "water", "infrastructure"],
+          "tokens": [
+            "climate",
+            "adaptation",
+            "flood",
+            "resilience",
+            "city",
+            "planning",
+            "water",
+            "infrastructure"
+          ],
           "metadata": {
             "language": "en",
             "genre": "news",
@@ -103,7 +137,15 @@
         },
         {
           "id": "doc-health-1",
-          "tokens": ["vaccine", "clinic", "public", "health", "campaign", "community", "trust"],
+          "tokens": [
+            "vaccine",
+            "clinic",
+            "public",
+            "health",
+            "campaign",
+            "community",
+            "trust"
+          ],
           "metadata": {
             "language": "en",
             "genre": "health",
@@ -113,7 +155,15 @@
         },
         {
           "id": "doc-health-2",
-          "tokens": ["hospital", "data", "privacy", "patient", "records", "secure", "access"],
+          "tokens": [
+            "hospital",
+            "data",
+            "privacy",
+            "patient",
+            "records",
+            "secure",
+            "access"
+          ],
           "metadata": {
             "language": "en",
             "genre": "health",
@@ -123,7 +173,15 @@
         },
         {
           "id": "doc-tech-1",
-          "tokens": ["search", "index", "ranking", "query", "relevance", "benchmark", "corpus"],
+          "tokens": [
+            "search",
+            "index",
+            "ranking",
+            "query",
+            "relevance",
+            "benchmark",
+            "corpus"
+          ],
           "metadata": {
             "language": "en",
             "genre": "technology",
@@ -133,7 +191,15 @@
         },
         {
           "id": "doc-tech-2",
-          "tokens": ["typescript", "library", "deterministic", "text", "processing", "agent", "audit"],
+          "tokens": [
+            "typescript",
+            "library",
+            "deterministic",
+            "text",
+            "processing",
+            "agent",
+            "audit"
+          ],
           "metadata": {
             "language": "en",
             "genre": "technology",
@@ -143,7 +209,14 @@
         },
         {
           "id": "doc-finance-1",
-          "tokens": ["market", "regulation", "banking", "risk", "capital", "liquidity"],
+          "tokens": [
+            "market",
+            "regulation",
+            "banking",
+            "risk",
+            "capital",
+            "liquidity"
+          ],
           "metadata": {
             "language": "en",
             "genre": "finance",
@@ -153,7 +226,14 @@
         },
         {
           "id": "doc-legal-1",
-          "tokens": ["court", "evidence", "contract", "liability", "damages", "appeal"],
+          "tokens": [
+            "court",
+            "evidence",
+            "contract",
+            "liability",
+            "damages",
+            "appeal"
+          ],
           "metadata": {
             "language": "en",
             "genre": "legal",
@@ -163,7 +243,13 @@
         },
         {
           "id": "doc-ar-heritage",
-          "tokens": ["نص", "عربي", "تراث", "مخطوط", "تحقيق"],
+          "tokens": [
+            "نص",
+            "عربي",
+            "تراث",
+            "مخطوط",
+            "تحقيق"
+          ],
           "metadata": {
             "language": "ar",
             "genre": "heritage",
@@ -173,7 +259,14 @@
         },
         {
           "id": "doc-es-archive",
-          "tokens": ["texto", "español", "archivo", "búsqueda", "corpus", "lingüístico"],
+          "tokens": [
+            "texto",
+            "español",
+            "archivo",
+            "búsqueda",
+            "corpus",
+            "lingüístico"
+          ],
           "metadata": {
             "language": "es",
             "genre": "archive",
@@ -183,7 +276,14 @@
         },
         {
           "id": "doc-fr-archive",
-          "tokens": ["texte", "français", "archive", "recherche", "corpus", "linguistique"],
+          "tokens": [
+            "texte",
+            "français",
+            "archive",
+            "recherche",
+            "corpus",
+            "linguistique"
+          ],
           "metadata": {
             "language": "fr",
             "genre": "archive",
@@ -199,6 +299,158 @@
             "genre": "empty-control",
             "title": "Empty control",
             "license": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "id": "corpus-retrieval-beir-nfcorpus-title-subset",
+      "description": "BEIR NFCorpus title-token subset with external qrels for deterministic retrieval checks.",
+      "license": "cc-by-sa-4.0",
+      "provenance": "beir/nfcorpus test subset from https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nfcorpus.zip",
+      "contentHash": "sha256:6c604a0c005591de8277fdbb60a22323dfc984cae0324fa8189a2b0b7c9d137b",
+      "thresholds": {
+        "minDocuments": 5,
+        "minTokens": 50,
+        "minQueries": 2,
+        "maxSerializedIndexBytes": 50000
+      },
+      "documents": [
+        {
+          "id": "MED-10",
+          "tokens": [
+            "statin",
+            "use",
+            "and",
+            "breast",
+            "cancer",
+            "survival",
+            "a",
+            "nationwide",
+            "cohort",
+            "study",
+            "from",
+            "finland"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "external-reference",
+            "title": "Statin Use and Breast Cancer Survival: A Nationwide Cohort Study from Finland",
+            "license": "cc-by-sa-4.0",
+            "sourceDataset": "beir/nfcorpus",
+            "sourceDocumentId": "MED-10"
+          }
+        },
+        {
+          "id": "MED-14",
+          "tokens": [
+            "statin",
+            "use",
+            "after",
+            "diagnosis",
+            "of",
+            "breast",
+            "cancer",
+            "and",
+            "survival",
+            "a",
+            "population",
+            "based",
+            "cohort",
+            "study"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "external-reference",
+            "title": "Statin use after diagnosis of breast cancer and survival: a population-based cohort study.",
+            "license": "cc-by-sa-4.0",
+            "sourceDataset": "beir/nfcorpus",
+            "sourceDocumentId": "MED-14"
+          }
+        },
+        {
+          "id": "MED-118",
+          "tokens": [
+            "alkylphenols",
+            "in",
+            "human",
+            "milk",
+            "and",
+            "their",
+            "relations",
+            "to",
+            "dietary",
+            "habits",
+            "in",
+            "central",
+            "taiwan"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "external-reference",
+            "title": "Alkylphenols in human milk and their relations to dietary habits in central Taiwan.",
+            "license": "cc-by-sa-4.0",
+            "sourceDataset": "beir/nfcorpus",
+            "sourceDocumentId": "MED-118"
+          }
+        },
+        {
+          "id": "MED-2427",
+          "tokens": [
+            "elevated",
+            "levels",
+            "of",
+            "cholesterol",
+            "rich",
+            "lipid",
+            "rafts",
+            "in",
+            "cancer",
+            "cells",
+            "are",
+            "correlated",
+            "with",
+            "apoptosis",
+            "sensitivity",
+            "induced",
+            "by",
+            "cholesterol",
+            "depleting",
+            "agents"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "external-reference",
+            "title": "Elevated Levels of Cholesterol-Rich Lipid Rafts in Cancer Cells Are Correlated with Apoptosis Sensitivity Induced by Cholesterol-Depleting Agents",
+            "license": "cc-by-sa-4.0",
+            "sourceDataset": "beir/nfcorpus",
+            "sourceDocumentId": "MED-2427"
+          }
+        },
+        {
+          "id": "MED-2651",
+          "tokens": [
+            "alkylphenols",
+            "in",
+            "human",
+            "milk",
+            "and",
+            "their",
+            "relations",
+            "to",
+            "dietary",
+            "habits",
+            "in",
+            "central",
+            "taiwan"
+          ],
+          "metadata": {
+            "language": "en",
+            "genre": "external-reference",
+            "title": "Alkylphenols in human milk and their relations to dietary habits in central Taiwan.",
+            "license": "cc-by-sa-4.0",
+            "sourceDataset": "beir/nfcorpus",
+            "sourceDocumentId": "MED-2651"
           }
         }
       ]
@@ -220,11 +472,23 @@
     "qrels-evaluation",
     "bounded-large-corpus-test",
     "missing-query-control",
-    "stable-ordering"
+    "stable-ordering",
+    "external-qrels-subset",
+    "multilingual-qrels-subset",
+    "streaming-retrieval-api",
+    "durable-index-artifact",
+    "phrase-query",
+    "proximity-query",
+    "boolean-query",
+    "citation-window",
+    "quote-grounding"
   ],
   "notes": [
     "Retrieval uses the explicit-token corpus already frozen for TF-IDF/BM25 evidence.",
     "Baseline retrieval treats metadata field clauses as filters and scores only non-field, non-prohibited lexical query terms.",
-    "Fielded BM25F retrieval uses explicit field specs and remains limited to the committed fielded smoke corpus."
+    "Fielded BM25F retrieval uses explicit field specs and remains limited to the committed fielded smoke corpus.",
+    "External qrels are limited to the committed BEIR NFCorpus title-token subset and do not prove broad retrieval quality.",
+    "Streaming retrieval is package-level deterministic iteration over the same in-memory index semantics as batch retrieval.",
+    "Citation windows and quote grounding use textdoc token spans when available and declare token-join loss otherwise."
   ]
 }

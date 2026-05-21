@@ -324,14 +324,14 @@
             "tools/validate-retrieval-feature.mjs"
           ],
           "path": "tools/validate-retrieval-feature.mjs",
-          "sha256": "d7f925decea57597f9d9c5112ee9c3484fb57fb1bdb8e1d0ae97b23169d6694c"
+          "sha256": "fc3b55fbb7b932b544b4b3f49d26f71d44d5f36f18c70e0b1814bc37ce779696"
         }
       ],
       "comparisons": [],
       "conformanceReportRefs": [
         "fixtures/reports/nlp-retrieval/conformance-report.json"
       ],
-      "knownGap": "Retrieval behavior remains limited to committed explicit-token corpora, qrels, and deterministic thresholds; no external comparator-backed retrieval claim is made.",
+      "knownGap": "Retrieval behavior remains limited to committed explicit-token corpora, qrels, streaming iteration, durable artifacts, citation windows, quote grounding, and deterministic thresholds; no Lucene-style comparator-backed retrieval claim is made.",
       "gapDisposition": "claim-narrowed"
     },
     {

@@ -425,7 +425,7 @@
     {
       "id": "nlp-retrieval",
       "status": "slice-proven",
-      "scope": "Deterministic query parsing, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, snippets, explain output, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
+      "scope": "Deterministic query parsing, boolean/phrase/proximity query clauses, required/prohibited operators, metadata field filters, inverted-index lookup, BM25 ranking, fielded BM25F ranking, streaming iteration, snippets, explain output, citation windows, quote grounding, E2 corpus-selection disclosures, qrels evaluation, relevance judgments, licensed fixture thresholds, durable index artifacts, and index JSON round-trips exist only for committed retrieval fixtures and bounded package tests.",
       "evidence": [
         "docs/specs/retrieval-readiness.md",
         "fixtures/retrieval/slices.json",
@@ -443,15 +443,20 @@
         "fixtures/retrieval/evaluation/retrieval-licensed-news-evaluation.json",
         "fixtures/performance/gates.v1.json",
         "schemas/retrieval-qrels-v1.schema.json",
-        "schemas/retrieval-evaluation-v1.schema.json"
+        "schemas/retrieval-evaluation-v1.schema.json",
+        "fixtures/retrieval/expected/retrieval-beir-nfcorpus-title-subset-bm25f.json",
+        "fixtures/retrieval/qrels/retrieval-beir-nfcorpus-title-subset-qrels.json",
+        "fixtures/retrieval/evaluation/retrieval-beir-nfcorpus-title-subset-evaluation.json",
+        "fixtures/retrieval/sources/beir-nfcorpus-title-subset.v1.json",
+        "tools/prepare-retrieval-external-fixture.mjs"
       ],
       "limitations": [
-        "No streaming retrieval, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval fixture set is implemented",
+        "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval claim is implemented",
         "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests"
       ],
       "evidenceTier": "corpus-backed",
       "nextEvidenceTierBlockers": [
-        "No external relevance dataset, broad multilingual qrels set, streaming retrieval proof, or filesystem-backed index evidence is recorded."
+        "Comparator-backed or broader retrieval claims require executed Lucene-style comparator captures, larger external relevance datasets, held-out multilingual qrels, and storage-performance evidence beyond committed explicit-token fixtures."
       ]
     },
     {

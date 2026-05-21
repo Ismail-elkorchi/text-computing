@@ -10,8 +10,8 @@ This document keeps those surfaces tied to explicit fixtures before broader corp
 - Task id: `nlp-retrieval`
 - Status: `slice-proven`
 - Owning package: `textcorpus`
-- Current proof: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, plus fielded BM25F retrieval, standalone qrels, expected evaluation metrics, a repository-authored licensed corpus, and deterministic size thresholds over committed retrieval fixtures
-- Current non-proof: no streaming index, filesystem-backed index store, external relevance benchmark, or broad multilingual retrieval benchmark
+- Current proof: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, fielded BM25F retrieval, standalone qrels, expected evaluation metrics, a repository-authored licensed corpus, a pinned BEIR NFCorpus title-token subset with external qrels, streaming iteration over the package index, durable index artifacts, phrase/proximity/boolean query parsing, citation windows, quote grounding, and deterministic size thresholds over committed retrieval fixtures
+- Current non-proof: no broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval benchmark
 
 ## Input slices
 
@@ -34,8 +34,13 @@ and records:
 - deterministic snippets;
 - per-term explain values;
 - deterministic index JSON round-trip behavior;
+- deterministic retrieval index artifact checksums;
+- deterministic streaming iteration with the same output as batch retrieval;
+- phrase, proximity, and boolean query controls;
+- citation windows and quote grounding over `textdoc` token spans;
 - committed relevance judgments and standalone qrels for fielded smoke queries;
 - committed relevance judgments and standalone qrels for the repository-authored licensed retrieval corpus;
+- committed external qrels for the BEIR NFCorpus title-token subset;
 - precision@k, recall@k, MRR, and nDCG@k evaluation output for the committed qrels;
 - deterministic document-count, token-count, query-count, and serialized-index-size thresholds for the licensed retrieval corpus;
 - bounded large-corpus ordering behavior;

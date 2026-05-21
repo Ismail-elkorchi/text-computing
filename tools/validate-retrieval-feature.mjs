@@ -159,7 +159,7 @@ let thresholdCheckedCount = 0;
 
 for (const corpus of retrievalSlices.fieldedCorpora ?? []) {
   if (corpus.license !== undefined || corpus.provenance !== undefined || corpus.contentHash !== undefined) {
-    expect(corpus.license === "MIT", `${corpus.id} must declare the repository fixture license as MIT.`);
+    expect(typeof corpus.license === "string" && corpus.license.length > 0, `${corpus.id} must declare a license.`);
     expect(typeof corpus.provenance === "string" && corpus.provenance.length > 0, `${corpus.id} must declare provenance.`);
     expect(
       corpus.contentHash === `sha256:${sha256Json(corpus.documents)}`,
@@ -171,6 +171,27 @@ for (const corpus of retrievalSlices.fieldedCorpora ?? []) {
         document.metadata?.license === corpus.license,
         `${corpus.id}/${document.id} must carry matching license metadata.`,
       );
+    }
+  }
+}
+
+function assertQrelsSource(qrels, corpus, label) {
+  if (qrels.source === undefined) return;
+  expect(typeof qrels.source.datasetId === "string" && qrels.source.datasetId.length > 0, `${label} source datasetId missing.`);
+  expect(
+    qrels.source.checksum === `sha256:${sha256Json(qrels.judgments)}`,
+    `${label} source checksum must match normalized judgments.`,
+    { actual: qrels.source.checksum, expected: `sha256:${sha256Json(qrels.judgments)}` },
+  );
+  expect(
+    corpus.license === qrels.source.license,
+    `${label} qrels source license must match corpus license.`,
+    { qrelsLicense: qrels.source.license, corpusLicense: corpus.license },
+  );
+  const docIds = new Set(corpus.documents.map((document) => document.id));
+  for (const judgment of qrels.judgments) {
+    for (const rating of judgment.ratings) {
+      expect(docIds.has(rating.docId), `${label} qrels references missing corpus document ${rating.docId}.`);
     }
   }
 }
@@ -331,6 +352,7 @@ for (const expectedPath of expectedPaths) {
     const expectedEvaluation = await readJson(qrelsSet.evaluationPath);
     expect(validateQrels(qrels), `${qrelsSet.qrelsPath} failed retrieval qrels schema`, validateQrels.errors);
     expect(isTextCorpusRetrievalQrelsV1(qrels), `${qrelsSet.qrelsPath} failed retrieval qrels runtime guard.`);
+    assertQrelsSource(qrels, corpus, qrelsSet.qrelsPath);
     expect(
       JSON.stringify(qrels.judgments) === JSON.stringify(expected.relevanceJudgments),
       `${qrelsSet.qrelsPath} must match relevance judgments embedded in ${expectedPath}.`,

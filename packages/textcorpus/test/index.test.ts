@@ -9,9 +9,13 @@ import {
   computeTextCorpusNgrams,
   computeTextCorpusPairwiseRelations,
   computeTextCorpusScoring,
+  createTextCorpusCitationWindows,
   createTextCorpusCollection,
+  createTextCorpusRetrievalIndexArtifact,
   evaluateTextCorpusRetrieval,
+  groundTextCorpusQuote,
   isTextCorpusCollocateResultV1,
+  isTextCorpusCitationWindowSetV1,
   isTextCorpusCollectionV1,
   isTextCorpusConcordanceResultV1,
   isTextCorpusCooccurrenceResultV1,
@@ -20,17 +24,22 @@ import {
   isTextCorpusNgramResultV1,
   isTextCorpusPairwiseRelationResultV1,
   isTextCorpusParsedQuery,
+  isTextCorpusQuoteGroundingResultV1,
   isTextCorpusRetrievalEvaluationResultV1,
+  isTextCorpusRetrievalIndexArtifactV1,
   isTextCorpusRetrievalIndexV1,
   isTextCorpusRetrievalQrelsV1,
   isTextCorpusRetrievalResultV1,
   isTextCorpusScoringResultV1,
+  iterateTextCorpusRetrievalResults,
   packageName,
   parseTextCorpusArtifact,
   parseTextCorpusQuery,
+  parseTextCorpusRetrievalIndexArtifact,
   parseTextCorpusRetrievalIndex,
   searchTextCorpusRetrievalIndex,
   stringifyTextCorpusArtifact,
+  stringifyTextCorpusRetrievalIndexArtifact,
   stringifyTextCorpusRetrievalIndex,
   sliceTextCorpusByMetadata,
   textCorpusBm25fFormula,
@@ -982,6 +991,117 @@ const negativeFieldHits =
   bm25fResult.results.find((entry) => entry.query.id === "negative-field-control")?.hits ?? [];
 if (negativeFieldHits.length !== 0) {
   throw new Error("fielded retrieval should reject incompatible required body/title clauses");
+}
+
+const booleanPhraseQuery = parseTextCorpusQuery('("alpha beta" OR title:"gamma bulletin") AND -delta', {
+  id: "boolean-phrase",
+});
+if (
+  booleanPhraseQuery.syntax !== "boolean" ||
+  booleanPhraseQuery.tokens.join(",") !== "alpha,beta,gamma,bulletin,delta" ||
+  booleanPhraseQuery.clauses.filter((clause) => clause.kind === "phrase").length !== 2
+) {
+  throw new Error("retrieval parser should expose boolean phrase clauses deterministically");
+}
+const booleanPhraseResult = searchTextCorpusRetrievalIndex(fieldedIndex, [booleanPhraseQuery], {
+  topK: 3,
+  snippetWindow: 1,
+});
+if (booleanPhraseResult.results[0]?.hits.map((hit) => hit.docId).join(",") !== "doc-b,doc-a") {
+  throw new Error("boolean phrase retrieval should evaluate phrase, field, OR, AND, and NOT semantics");
+}
+
+const proximityQuery = parseTextCorpusQuery('"alpha beta"~1', { id: "proximity-alpha-beta" });
+if (proximityQuery.clauses[0]?.kind !== "proximity" || proximityQuery.clauses[0].proximity !== 1) {
+  throw new Error("retrieval parser should preserve proximity phrase metadata");
+}
+const proximityResult = searchTextCorpusRetrievalIndex(fieldedIndex, [proximityQuery], {
+  topK: 3,
+  snippetWindow: 0,
+});
+if (proximityResult.results[0]?.hits.map((hit) => hit.docId).join(",") !== "doc-a") {
+  throw new Error("proximity retrieval should match ordered terms within the declared distance");
+}
+
+let invalidQueryRejected = false;
+try {
+  parseTextCorpusQuery('"alpha beta', { id: "invalid-query" });
+} catch (error) {
+  invalidQueryRejected =
+    error instanceof SyntaxError &&
+    error.message === "textcorpus query syntax error: unclosed quoted phrase";
+}
+if (!invalidQueryRejected) {
+  throw new Error("retrieval parser should reject unclosed quoted phrases");
+}
+
+const streamedFielded = [...iterateTextCorpusRetrievalResults(fieldedIndex, bm25fResult.results.map((entry) => entry.query), {
+  topK: 3,
+  snippetWindow: 1,
+})];
+if (JSON.stringify(streamedFielded) !== JSON.stringify(bm25fResult.results)) {
+  throw new Error("streaming retrieval should produce the same query results as batch retrieval");
+}
+
+const stoppedStream = iterateTextCorpusRetrievalResults(fieldedIndex, bm25fResult.results.map((entry) => entry.query), {
+  topK: 3,
+  snippetWindow: 1,
+});
+const firstStreamed = stoppedStream.next();
+if (firstStreamed.done || firstStreamed.value.query.id !== "fielded-title-alpha-beta") {
+  throw new Error("streaming retrieval should allow deterministic early consumption");
+}
+
+const artifact = createTextCorpusRetrievalIndexArtifact(fieldedIndex);
+if (!isTextCorpusRetrievalIndexArtifactV1(artifact)) {
+  throw new Error("retrieval index artifact should satisfy checksum and shape contracts");
+}
+const artifactSerialized = stringifyTextCorpusRetrievalIndexArtifact(artifact);
+const artifactParsed = parseTextCorpusRetrievalIndexArtifact(artifactSerialized);
+if (JSON.stringify(artifactParsed) !== JSON.stringify(artifact)) {
+  throw new Error("retrieval index artifact should round-trip deterministically");
+}
+const tamperedArtifact = JSON.parse(artifactSerialized);
+tamperedArtifact.index.documentOrder = [...tamperedArtifact.index.documentOrder].reverse();
+if (isTextCorpusRetrievalIndexArtifactV1(tamperedArtifact)) {
+  throw new Error("retrieval index artifact should reject checksum drift");
+}
+
+const citationWindows = createTextCorpusCitationWindows(fieldedScoringCollection, bm25fResult, {
+  tokenWindow: 0,
+});
+if (!isTextCorpusCitationWindowSetV1(citationWindows)) {
+  throw new Error("citation windows should satisfy the runtime contract");
+}
+const docACitation = citationWindows.windows.find(
+  (entry) => entry.queryId === "fielded-title-alpha-beta" && entry.docId === "doc-a",
+);
+if (
+  docACitation?.text !== "alpha beta beta" ||
+  docACitation.textPolicy !== "source-span" ||
+  docACitation.tokenStart !== 0 ||
+  docACitation.tokenEnd !== 3
+) {
+  throw new Error("citation windows should ground retrieval hits to textdoc token spans");
+}
+
+const groundedQuote = groundTextCorpusQuote(fieldedScoringCollection, {
+  docId: "doc-a",
+  quoteTokens: ["beta"],
+});
+if (
+  !isTextCorpusQuoteGroundingResultV1(groundedQuote) ||
+  groundedQuote.status !== "ambiguous" ||
+  groundedQuote.matches.length !== 2
+) {
+  throw new Error("quote grounding should preserve ambiguity for repeated token sequences");
+}
+const missingQuote = groundTextCorpusQuote(fieldedScoringCollection, {
+  docId: "doc-a",
+  quoteTokens: ["missing"],
+});
+if (missingQuote.status !== "not-found" || missingQuote.matches.length !== 0) {
+  throw new Error("quote grounding should expose not-found controls");
 }
 
 let duplicateFieldRejected = false;
