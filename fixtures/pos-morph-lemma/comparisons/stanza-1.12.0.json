@@ -326,6 +326,15 @@
       "notes": [
         "Code-switch slice captured with the English Stanza pipeline; this is diagnostic evidence only."
       ]
+    },
+    {
+      "sliceId": "fi-rich-morphology",
+      "status": "not-run",
+      "reason": "Frozen executed comparator capture did not include a Finnish model for this repository-authored rich-morphology slice; no comparator-backed Finnish POS/morph/lemma claim is made.",
+      "tokens": [],
+      "notes": [
+        "Package behavior for this slice is validated by committed resources and corpus evaluation only."
+      ]
     }
   ],
   "notes": [

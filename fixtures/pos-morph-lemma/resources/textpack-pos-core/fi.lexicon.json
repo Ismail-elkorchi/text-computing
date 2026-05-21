@@ -1,0 +1,54 @@
+{
+  "entries": [
+    {
+      "surface": "talossani",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fi:talossani:noun-inessive-possessive",
+          "pos": "NOUN",
+          "lemma": "talo",
+          "morphology": [
+            { "name": "Case", "value": "Ine" },
+            { "name": "Number", "value": "Sing" },
+            { "name": "Number[psor]", "value": "Sing" },
+            { "name": "Person[psor]", "value": "1" }
+          ],
+          "notes": [
+            "Repository-authored rich morphology fixture: inessive case plus possessive features are explicit."
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "on",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fi:on:aux-fin",
+          "pos": "AUX",
+          "lemma": "olla",
+          "morphology": [
+            { "name": "Mood", "value": "Ind" },
+            { "name": "Number", "value": "Sing" },
+            { "name": "Person", "value": "3" },
+            { "name": "Tense", "value": "Pres" },
+            { "name": "VerbForm", "value": "Fin" }
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "kirja",
+      "analyses": [
+        {
+          "ruleId": "lexicon:fi:kirja:noun",
+          "pos": "NOUN",
+          "lemma": "kirja",
+          "morphology": [
+            { "name": "Case", "value": "Nom" },
+            { "name": "Number", "value": "Sing" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -177,7 +177,10 @@
         "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
         "schemas/pos-morph-lemma-corpus-evaluation-v1.schema.json",
         "schemas/pos-morph-lemma-corpus-evaluation-report-v1.schema.json",
-        "tools/evaluate-pos-morph-lemma-corpus.mjs"
+        "tools/evaluate-pos-morph-lemma-corpus.mjs",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-fi-core.json",
+        "fixtures/pos-morph-lemma/expected/fi-rich-morphology.json",
+        "fixtures/pos-morph-lemma/resources/textpack-pos-core/fi.lexicon.json"
       ],
       "comparatorRefs": [
         "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
@@ -185,7 +188,8 @@
       ],
       "knownGaps": [
         "No JavaScript comparator-backed POS/morph/lemma claim is made.",
-        "Not a trained or broad multilingual tagger; behavior remains fixture-bound."
+        "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+        "The rich-morphology slice is package-evaluation evidence only until external comparator execution covers it."
       ]
     },
     {

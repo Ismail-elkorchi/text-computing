@@ -31,7 +31,8 @@
               "multiword-token",
               "clitic",
               "historical-spelling",
-              "code-switching"
+              "code-switching",
+              "rich-morphology"
             ]
           }
         },

@@ -85,7 +85,8 @@ export type TextRulesPosMorphLemmaPhenomenon =
   | "multiword-token"
   | "clitic"
   | "historical-spelling"
-  | "code-switching";
+  | "code-switching"
+  | "rich-morphology";
 
 export interface TextRulesLexiconAnalysis {
   readonly ruleId: string;
@@ -1892,27 +1893,43 @@ function resolveAnalyses(
   return createUnknownTokenDiagnostics(token);
 }
 
+function analysisNotesInclude(
+  analyses: readonly TextRulesResolvedAnalysis[],
+  pattern: RegExp,
+): boolean {
+  return analyses.some((analysis) =>
+    (analysis.notes ?? []).some((note) => pattern.test(note)),
+  );
+}
+
+function hasRichMorphologyAnalysis(analyses: readonly TextRulesResolvedAnalysis[]): boolean {
+  return analyses.some((analysis) => {
+    const morphology = analysis.morphology ?? [];
+    return morphology.length >= 4 || morphology.some((feature) => feature.name.includes("["));
+  });
+}
+
 function createPhenomenonDiagnostics(
   token: TextRulesTokenSpan,
+  analyses: readonly TextRulesResolvedAnalysis[],
   phenomenaInput: readonly TextRulesPosMorphLemmaPhenomenon[] | undefined,
 ): readonly TextProtocolDiagnostic[] {
   const diagnostics: TextProtocolDiagnostic[] = [];
   const phenomena = new Set(phenomenaInput ?? []);
-  const normalized = normalizeSurface(token.text);
 
-  if (phenomena.has("unknown-word") && normalized === "florped") {
+  if (phenomena.has("unknown-word") && analyses.some((analysis) => analysis.ruleId.startsWith("fallback:"))) {
     diagnostics.push({
       code: "unknown-word",
       severity: "warning",
-      message: "Unknown token florped uses explicitly declared fallback-style analyses.",
+      message: `Unknown token ${token.text} uses explicitly declared fallback-style analyses.`,
     });
   }
 
-  if (phenomena.has("multiword-token") && normalized === "del") {
+  if (phenomena.has("multiword-token") && analysisNotesInclude(analyses, /contraction/iu)) {
     diagnostics.push({
       code: "multiword-token",
       severity: "info",
-      message: "Surface contraction Del keeps ambiguity explicit across POS, lemma, and morphology.",
+      message: `Surface contraction ${token.text} keeps ambiguity explicit across POS, lemma, and morphology.`,
     });
   }
 
@@ -1924,11 +1941,19 @@ function createPhenomenonDiagnostics(
     });
   }
 
-  if (phenomena.has("historical-spelling") && (normalized === "hoste" || normalized === "escrist")) {
+  if (phenomena.has("historical-spelling") && analysisNotesInclude(analyses, /historical|modernized/iu)) {
     diagnostics.push({
       code: "historical-spelling",
       severity: "info",
       message: `Historical surface ${token.text} keeps surface-preserving and normalized analyses.`,
+    });
+  }
+
+  if (phenomena.has("rich-morphology") && hasRichMorphologyAnalysis(analyses)) {
+    diagnostics.push({
+      code: "rich-morphology",
+      severity: "info",
+      message: `Token ${token.text} carries multiple explicit morphology features from a declared resource.`,
     });
   }
 
@@ -3466,7 +3491,10 @@ export function analyzePosMorphLemmaDocument(
 
   for (const token of tokens) {
     const { analyses, diagnostics: fallbackDiagnostics } = resolveAnalyses(token, entriesBySurface);
-    diagnostics.push(...fallbackDiagnostics, ...createPhenomenonDiagnostics(token, input.phenomena));
+    diagnostics.push(
+      ...fallbackDiagnostics,
+      ...createPhenomenonDiagnostics(token, analyses, input.phenomena),
+    );
 
     if (analyses.length === 0) continue;
 

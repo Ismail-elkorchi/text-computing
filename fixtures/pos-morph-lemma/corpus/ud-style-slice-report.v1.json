@@ -5,9 +5,9 @@
   "generatedAt": "2026-05-20T00:00:00.000Z",
   "inputRef": "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
   "summary": {
-    "documents": 4,
-    "tokens": 19,
-    "passedTokens": 19,
+    "documents": 5,
+    "tokens": 23,
+    "passedTokens": 23,
     "failedTokens": 0,
     "ambiguousGoldTokens": 7
   },
@@ -46,8 +46,6 @@
       "failedTokens": 0,
       "diagnostics": [
         "clitic-token",
-        "clitic-token",
-        "historical-spelling",
         "historical-spelling"
       ]
     },
@@ -62,11 +60,24 @@
       "diagnostics": [
         "code-switching-slice"
       ]
+    },
+    {
+      "id": "ud-style-fi-rich-morphology",
+      "sourceSliceId": "fi-rich-morphology",
+      "language": "fi",
+      "splitRole": "holdout",
+      "tokens": 4,
+      "passedTokens": 4,
+      "failedTokens": 0,
+      "diagnostics": [
+        "rich-morphology"
+      ]
     }
   ],
   "limitations": [
-    "Gold rows are repository-authored from committed slices and do not prove broad UD treebank performance.",
-    "The evaluation checks accepted alternatives instead of collapsing ambiguity to one tag.",
-    "Comparator execution for wider corpora remains a separate evidence gate."
+    "Corpus evaluation is limited to committed POS/morph/lemma slices and does not claim broad UD treebank performance.",
+    "Gold rows test accepted alternatives rather than collapsing ambiguity to one answer.",
+    "The rich-morphology slice is repository-authored fixture evidence backed by an explicit lexicon resource, not a broad Finnish tagger claim.",
+    "Wider comparator execution remains a separate gate before broader support claims."
   ]
 }

@@ -340,15 +340,18 @@
         "package tests",
         "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json",
         "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
-        "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json"
+        "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-fi-core.json",
+        "fixtures/pos-morph-lemma/expected/fi-rich-morphology.json"
       ],
       "limitations": [
-        "No JavaScript comparator-backed POS/morph/lemma claim is made",
-        "Not a trained or broad multilingual tagger; deterministic behavior remains bounded to committed slices and the UD-style slice corpus evaluation."
+        "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+        "Not a trained or broad multilingual tagger; deterministic behavior remains bounded to committed slices and the UD-style slice corpus evaluation.",
+        "The rich-morphology slice is repository-authored fixture evidence backed by an explicit lexicon resource; no broad Finnish POS/morph/lemma claim is made."
       ],
       "evidenceTier": "comparator-backed",
       "nextEvidenceTierBlockers": [
-        "UD-style corpus evaluation exists for committed slices only; broad unknown-word evaluation, holdout MWT/clitic corpus breadth, rich morphology, and wider corpus evidence remain absent."
+        "UD-style corpus evaluation exists for committed slices only; broader UD treebank evidence, comparator execution for the added rich-morphology slice, and wider language coverage remain absent."
       ]
     },
     {

@@ -45,7 +45,8 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
@@ -55,7 +56,8 @@
       "message": "Expected outputs validate through the feature validator.",
       "evidenceRefs": [
         "schemas/pos-morph-lemma-expected-v1.schema.json",
-        "tools/validate-pos-morph-lemma-feature.mjs"
+        "tools/validate-pos-morph-lemma-feature.mjs",
+        "fixtures/pos-morph-lemma/expected/fi-rich-morphology.json"
       ],
       "traceability": {
         "requirementRefs": [
@@ -66,7 +68,8 @@
           "tools/validate-pos-morph-lemma-feature.mjs"
         ],
         "inputRefs": [
-          "schemas/pos-morph-lemma-expected-v1.schema.json"
+          "schemas/pos-morph-lemma-expected-v1.schema.json",
+          "fixtures/pos-morph-lemma/expected/fi-rich-morphology.json"
         ],
         "oracleRefs": [
           "schemas/pos-morph-lemma-expected-v1.schema.json",
@@ -78,7 +81,8 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
@@ -90,7 +94,8 @@
         "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
         "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
         "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
-        "fixtures/pos-morph-lemma/README.md"
+        "fixtures/pos-morph-lemma/README.md",
+        "fixtures/pos-morph-lemma/manifests/textpack-pos-fi-core.json"
       ],
       "traceability": {
         "requirementRefs": [
@@ -103,7 +108,8 @@
         "inputRefs": [
           "fixtures/pos-morph-lemma/manifests/textpack-pos-en-core.json",
           "fixtures/pos-morph-lemma/manifests/textpack-pos-es-core.json",
-          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json"
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fr-core.json",
+          "fixtures/pos-morph-lemma/manifests/textpack-pos-fi-core.json"
         ],
         "oracleRefs": [
           "schemas/pos-morph-lemma-expected-v1.schema.json",
@@ -116,7 +122,8 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
@@ -152,7 +159,8 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
@@ -188,7 +196,8 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
@@ -223,7 +232,8 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
@@ -259,14 +269,15 @@
         "limitations": [
           "No JavaScript comparator-backed POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only."
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     },
     {
       "checkId": "ud-style-corpus-evaluation-recorded",
       "status": "pass",
-      "message": "UD-style corpus evaluation over committed POS/morph/lemma slices is recorded and regenerates from package behavior.",
+      "message": "UD-style corpus evaluation over committed POS/morph/lemma slices is recorded and regenerates from package behavior, including the rich-morphology fixture slice.",
       "evidenceRefs": [
         "fixtures/pos-morph-lemma/corpus/ud-style-slice-corpus.v1.json",
         "fixtures/pos-morph-lemma/corpus/ud-style-slice-report.v1.json",
@@ -297,7 +308,12 @@
         ],
         "limitations": [
           "UD-style corpus evaluation is limited to committed slices.",
-          "No broad UD treebank performance claim is made."
+          "No broad UD treebank performance claim is made.",
+          "The rich-morphology slice is not external-comparator-backed in this gate.",
+          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
+          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
         ]
       }
     }

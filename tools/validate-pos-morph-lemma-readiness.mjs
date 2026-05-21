@@ -77,6 +77,7 @@ const requiredPhenomena = new Set([
   "clitic",
   "historical-spelling",
   "code-switching",
+  "rich-morphology",
 ]);
 const seenPhenomena = new Set();
 const sliceIds = new Set();
@@ -106,7 +107,13 @@ for (const splitRole of ["development", "validation", "holdout"]) {
     `POS/morph/lemma corpus evaluation is missing split role ${splitRole}.`,
   );
 }
-for (const requiredSliceId of ["en-unknown-word", "es-multiword-token", "fr-clitic-historical", "code-switch-en-fr"]) {
+for (const requiredSliceId of [
+  "en-unknown-word",
+  "es-multiword-token",
+  "fr-clitic-historical",
+  "code-switch-en-fr",
+  "fi-rich-morphology",
+]) {
   expect(
     corpusEvaluationSliceIds.has(requiredSliceId),
     `POS/morph/lemma corpus evaluation is missing slice ${requiredSliceId}.`,

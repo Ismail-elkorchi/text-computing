@@ -241,6 +241,12 @@ for (const slice of slices.slices) {
       process.exit(1);
     }
   }
+  if (slice.phenomena.includes("rich-morphology")) {
+    if (!result.diagnostics.some((diagnostic) => diagnostic.code === "rich-morphology")) {
+      console.error(`${expectedPath} must emit a rich-morphology diagnostic`);
+      process.exit(1);
+    }
+  }
 
   if (slice.id === "en-unknown-word") {
     if ((findAnnotation(posLayer, "token-2:pos")?.alternatives?.length ?? 0) < 2) {
@@ -274,6 +280,28 @@ for (const slice of slices.slices) {
   if (slice.id === "code-switch-en-fr") {
     if ((findAnnotation(posLayer, "token-3:pos")?.alternatives?.length ?? 0) < 2) {
       console.error(`${expectedPath} must preserve ambiguity for signs in the code-switch slice`);
+      process.exit(1);
+    }
+  }
+
+  if (slice.id === "fi-rich-morphology") {
+    const morphology = findAnnotation(morphologyLayer, "token-1:morphology");
+    const featureSet = new Set(
+      morphology?.alternatives?.flatMap((alternative) =>
+        alternative.features.map((feature) => `${feature.name}=${feature.value}`),
+      ) ?? [],
+    );
+    for (const feature of ["Case=Ine", "Number=Sing", "Number[psor]=Sing", "Person[psor]=1"]) {
+      if (!featureSet.has(feature)) {
+        console.error(`${expectedPath} must preserve rich morphology feature ${feature}`);
+        process.exit(1);
+      }
+    }
+    const provenanceRefs = new Set(
+      morphology?.provenance?.references?.map((reference) => `${reference.kind}:${reference.id}`) ?? [],
+    );
+    if (!provenanceRefs.has("textpack-resource:pack:pos-fi-core:lexicon-fi-core")) {
+      console.error(`${expectedPath} must reference the explicit Finnish fixture lexicon resource`);
       process.exit(1);
     }
   }

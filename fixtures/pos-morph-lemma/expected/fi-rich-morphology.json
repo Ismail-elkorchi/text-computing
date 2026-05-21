@@ -1,0 +1,699 @@
+{
+  "schemaVersion": 1,
+  "sliceId": "fi-rich-morphology",
+  "source": {
+    "sliceId": "fi-rich-morphology",
+    "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+  },
+  "document": {
+    "schemaVersion": 1,
+    "documentId": "pos-morph-lemma:fi-rich-morphology",
+    "revision": "pos-morph-lemma-v1",
+    "textLengthCU": 19,
+    "text": "Talossani on kirja.",
+    "source": {
+      "id": "fi-rich-morphology",
+      "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+    },
+    "unicodeVersion": "17.0.0",
+    "units": {
+      "text": "utf16-code-unit"
+    },
+    "views": [
+      {
+        "id": "source-view",
+        "kind": "raw",
+        "description": "Original source text for POS, lemma, and morphology analysis."
+      },
+      {
+        "id": "analysis-view",
+        "kind": "task",
+        "description": "Deterministic textrules POS, lemma, and morphology annotations.",
+        "parentViewId": "source-view",
+        "spanMapIds": [
+          "span-map-source-analysis"
+        ]
+      }
+    ],
+    "spanMaps": [
+      {
+        "id": "span-map-source-analysis",
+        "sourceViewId": "source-view",
+        "targetViewId": "analysis-view",
+        "lifecycle": {
+          "state": "active"
+        },
+        "segments": [
+          {
+            "source": {
+              "startCU": 0,
+              "endCU": 19
+            },
+            "target": {
+              "startCU": 0,
+              "endCU": 19
+            },
+            "kind": "unchanged",
+            "reversible": true
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "tokens",
+        "kind": "token",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 0,
+                "endCU": 9
+              }
+            ],
+            "text": "Talossani",
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 10,
+                "endCU": 12
+              }
+            ],
+            "text": "on",
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 13,
+                "endCU": 18
+              }
+            ],
+            "text": "kirja",
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4",
+            "kind": "token",
+            "tokenKind": "lexical-token",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 18,
+                "endCU": 19
+              }
+            ],
+            "text": ".",
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "tokenizer:lexical-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "sentences",
+        "kind": "sentence",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "sentence-1",
+            "kind": "sentence",
+            "sentenceKind": "uax29-sentence",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "span",
+                "viewId": "analysis-view",
+                "startCU": 0,
+                "endCU": 19
+              }
+            ],
+            "text": "Talossani on kirja.",
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "sentence-boundary:terminal-punctuation-v1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pos",
+        "kind": "pos",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-1:pos:1",
+                "rank": 1,
+                "value": "NOUN",
+                "notes": [
+                  "Repository-authored rich morphology fixture: inessive case plus possessive features are explicit."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:talossani:noun-inessive-possessive"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-2:pos:1",
+                "rank": 1,
+                "value": "AUX"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:on:aux-fin"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-3:pos:1",
+                "rank": 1,
+                "value": "NOUN"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:kirja:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:pos",
+            "kind": "pos",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "tagSet": "ud-v2-upos",
+            "alternatives": [
+              {
+                "id": "token-4:pos:1",
+                "rank": 1,
+                "value": "PUNCT"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "lemmas",
+        "kind": "lemma",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:lemma:1",
+                "rank": 1,
+                "value": "talo",
+                "notes": [
+                  "Repository-authored rich morphology fixture: inessive case plus possessive features are explicit."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:talossani:noun-inessive-possessive"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:lemma:1",
+                "rank": 1,
+                "value": "olla"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:on:aux-fin"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:lemma:1",
+                "rank": 1,
+                "value": "kirja"
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:kirja:noun"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-4:lemma",
+            "kind": "lemma",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-4"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-4:lemma:1",
+                "rank": 1,
+                "value": "."
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textrules-rule",
+                  "id": "punctuation:terminal"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "morphology",
+        "kind": "morphology",
+        "viewId": "analysis-view",
+        "annotations": [
+          {
+            "id": "token-1:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-1"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-1:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Case",
+                    "value": "Ine"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "Number[psor]",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "Person[psor]",
+                    "value": "1"
+                  }
+                ],
+                "notes": [
+                  "Repository-authored rich morphology fixture: inessive case plus possessive features are explicit."
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:talossani:noun-inessive-possessive"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-2:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-2"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-2:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Mood",
+                    "value": "Ind"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  },
+                  {
+                    "name": "Person",
+                    "value": "3"
+                  },
+                  {
+                    "name": "Tense",
+                    "value": "Pres"
+                  },
+                  {
+                    "name": "VerbForm",
+                    "value": "Fin"
+                  }
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:on:aux-fin"
+                }
+              ]
+            }
+          },
+          {
+            "id": "token-3:morphology",
+            "kind": "morphology",
+            "lifecycle": {
+              "state": "active"
+            },
+            "targets": [
+              {
+                "kind": "annotation",
+                "annotationId": "token-3"
+              }
+            ],
+            "alternatives": [
+              {
+                "id": "token-3:morphology:1",
+                "rank": 1,
+                "features": [
+                  {
+                    "name": "Case",
+                    "value": "Nom"
+                  },
+                  {
+                    "name": "Number",
+                    "value": "Sing"
+                  }
+                ]
+              }
+            ],
+            "provenance": {
+              "source": {
+                "id": "fi-rich-morphology",
+                "sha256": "8b4339db6ac0fad858e10eebebc6ecd0017d1d1cdc653856ff9aed4c133a4563"
+              },
+              "references": [
+                {
+                  "kind": "textpack-resource",
+                  "id": "pack:pos-fi-core:lexicon-fi-core"
+                },
+                {
+                  "kind": "textrules-rule",
+                  "id": "lexicon:fi:kirja:noun"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "phenomenon:rich-morphology"
+    ]
+  },
+  "notes": [
+    "Generated from committed textpack lexicon resources and textrules POS/morph/lemma analysis."
+  ]
+}
