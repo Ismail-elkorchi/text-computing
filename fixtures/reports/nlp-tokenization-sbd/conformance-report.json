@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-tokenization-sbd",
+  "reportId": "conformance:nlp-tokenization-sbd",
   "subject": {
     "kind": "task",
     "id": "nlp-tokenization-sbd",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
@@ -24,9 +24,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -60,9 +58,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -94,9 +90,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -131,9 +125,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -161,15 +153,10 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status remains limited to frozen slices.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "docs/specs/task-coverage-matrix.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -195,30 +182,19 @@
       }
     },
     {
-      "checkId": "evidence-tier-policy-recorded",
+      "checkId": "fixture-boundary-recorded",
       "status": "pass",
-      "message": "Task evidence tier remains comparator-backed and records explicit blockers before corpus-backed or broader claims.",
-      "evidenceRefs": [
-        "docs/specs/task-evidence-tiers.md",
-        "fixtures/evidence/task-evidence-tier-policy.v1.json",
-        "schemas/task-evidence-tier-policy-v1.schema.json"
-      ],
+      "message": "Task conformance fixture records explicit blockers before corpus-backed or broader claims.",
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
         ],
-        "inputRefs": [
-          "fixtures/evidence/task-evidence-tier-policy.v1.json",
-          "schemas/task-evidence-tier-policy-v1.schema.json"
-        ],
-        "oracleRefs": [
-          "schemas/task-evidence-tier-policy-v1.schema.json"
-        ],
+        "inputRefs": [],
+        "oracleRefs": [],
         "reportRefs": [
           "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
         ],
@@ -240,9 +216,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -275,9 +249,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"
@@ -309,9 +281,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/derive-tokenization-sbd-corpus-aggregate.mjs",
@@ -352,9 +322,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md",
-          "docs/specs/nlp-tokenization-sbd-research-ledger.md",
-          "docs/specs/task-evidence-tiers.md"
+          "docs/specs/tokenization-sbd-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-tokenization-sbd-readiness.mjs"

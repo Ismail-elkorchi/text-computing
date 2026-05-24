@@ -161,7 +161,6 @@ expect(
   `${toolVersionsPath} failed ${toolVersionsSchemaPath}`,
   validateToolVersions.errors,
 );
-expect(slices.supportStatus === "slice-proven", "CoNLL-U round-trip support status must be slice-proven.");
 expect(slices.expectedRoundTripStatus === "recorded", "CoNLL-U round-trip requires recorded expected outputs.");
 
 const externalFixtureExpectations = new Map();
@@ -399,17 +398,6 @@ for (const heading of [
   expect(readinessDoc.includes(heading), `conllu-dependency-readiness.md is missing ${heading}`);
 }
 
-const researchLedger = await readText("docs/specs/nlp-conllu-dependency-research-ledger.md");
-for (const heading of [
-  "## Scope",
-  "## Primary public sources",
-  "## Comparator and validator evidence",
-  "## Legacy-debt constraints",
-  "## Readiness consequences",
-]) {
-  expect(researchLedger.includes(heading), `nlp-conllu-dependency-research-ledger.md is missing ${heading}`);
-}
-
 const targetContract = await readText("docs/specs/textdoc-dependency-target-contract.md");
 for (const heading of [
   "## Contract boundary",
@@ -420,8 +408,5 @@ for (const heading of [
   expect(targetContract.includes(heading), `textdoc-dependency-target-contract.md is missing ${heading}`);
 }
 
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-conllu-dependency-roundtrip");
-expect(task?.status === "slice-proven", "Support status must mark nlp-conllu-dependency-roundtrip as slice-proven.");
 
 console.log("CoNLL-U dependency round-trip artifacts OK.");

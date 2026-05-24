@@ -149,7 +149,6 @@ expect(
   `${toolVersionsPath} failed ${toolVersionsSchemaPath}`,
   validateToolVersions.errors,
 );
-expect(slices.supportStatus === "readiness-only", "Dependency parser support status must remain readiness-only.");
 expect(slices.expectedOutputStatus === "recorded", "Dependency parser expected arcs must be recorded.");
 expect(
   slices.comparatorStatus === "executed-captures-recorded",
@@ -320,48 +319,11 @@ for (const heading of [
   expect(readinessDoc.includes(heading), `dependency-parser-readiness.md is missing ${heading}`);
 }
 
-const researchLedger = await readText("docs/specs/nlp-dependency-parser-research-ledger.md");
-for (const heading of [
-  "## Scope",
-  "## Primary sources",
-  "## Comparator evidence",
-  "## Comparator limitations",
-  "## Readiness consequences",
-]) {
-  expect(researchLedger.includes(heading), `nlp-dependency-parser-research-ledger.md is missing ${heading}`);
-}
-
 const differencesDoc = await readText("docs/decisions/dependency-parser-output-differences.md");
 expect(
   differencesDoc.includes("## Documented non-failure differences"),
   "dependency-parser-output-differences.md must record non-failure differences.",
 );
 
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-dependency-parser");
-expect(
-  task?.status === "readiness-only" || task?.status === "slice-proven",
-  "Support status must mark nlp-dependency-parser as readiness-only or slice-proven.",
-);
-expect(
-  task.evidence.includes("docs/specs/dependency-parser-readiness.md"),
-  "Support status evidence must cite dependency-parser-readiness.md.",
-);
-expect(
-  task.evidence.includes("fixtures/dependency-parser/comparisons/spacy-3.8.json"),
-  "Support status evidence must cite the executed spaCy comparator capture.",
-);
-expect(
-  task.evidence.includes("fixtures/dependency-parser/comparisons/stanza-1.12.json"),
-  "Support status evidence must cite the executed Stanza comparator capture.",
-);
-expect(
-  !task.limitations.some((limitation) => limitation.includes("No executed parser comparator outputs are committed")),
-  "Support status must not retain the stale no-executed-comparator limitation.",
-);
-expect(
-  !task.limitations.some((limitation) => limitation.includes("Stanza model execution")),
-  "Support status must not retain the stale Stanza execution limitation.",
-);
 
 console.log("Dependency parser readiness artifacts OK.");

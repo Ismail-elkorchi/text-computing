@@ -2,7 +2,6 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const ROOT = process.cwd();
-const SCORECARD_PATH = "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json";
 const INCLUDED_ROOTS = [
   "README.md",
   "CONTRIBUTING.md",
@@ -79,18 +78,12 @@ async function collectIncludedFiles() {
   return files.sort();
 }
 
-const scorecard = JSON.parse(await readFile(path.join(ROOT, SCORECARD_PATH), "utf8"));
-if (scorecard.claimPolicy.blockedTermSetId !== "comparative-marketing-v1") {
-  console.error(`Unsupported claim term set: ${scorecard.claimPolicy.blockedTermSetId}`);
-  process.exit(1);
-}
 const blockedTerms = BLOCKED_PUBLIC_CLAIM_TERMS;
 const patterns = blockedTerms.map((term) => [term, termPattern(term)]);
 const files = await collectIncludedFiles();
 const errors = [];
 
 for (const file of files) {
-  if (file === SCORECARD_PATH) continue;
   const text = await readFile(path.join(ROOT, file), "utf8");
   for (const [term, pattern] of patterns) {
     for (const match of text.matchAll(pattern)) {

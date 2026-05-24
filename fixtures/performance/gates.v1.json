@@ -130,10 +130,7 @@
       ],
       "scalePolicy": "Broad conformance claims require report-count, check-count, evidence-ref-count, and render-size thresholds.",
       "regressionPolicy": "Future measurements must distinguish validation cost from report rendering cost.",
-      "evidenceRefs": [
-        "fixtures/reports/task-evidence-manifest.v1.json",
-        "tools/validate-task-evidence-reports.mjs"
-      ],
+      "evidenceRefs": [],
       "limitations": [
         "Current runner behavior is minimal and not a benchmark harness."
       ]
@@ -171,8 +168,7 @@
       "scalePolicy": "Large evidence-inspection claims require report-count, comparison-count, annotation-count, corpus-size, and render-size thresholds.",
       "regressionPolicy": "Future measurements must separate parsing, summarization, and rendering costs.",
       "evidenceRefs": [
-        "packages/textlab/test/index.test.mjs",
-        "fixtures/reports/evidence-replay.v1.json"
+        "packages/textlab/test/index.test.mjs"
       ],
       "limitations": [
         "Current textlab behavior is repository-fixture inspection, not an interactive or large-corpus UI."

@@ -23,4 +23,4 @@ Current limitations:
 
 - task-specific behavior remains frozen-slice only;
 - raw-text tokenization helpers are fixture helpers, not the default rule-engine input contract;
-- broad corpus-scale task support requires separate task evidence.
+- broad corpus-scale task behavior requires separate conformance fixtures and executable checks.

@@ -173,7 +173,6 @@ for (const file of comparisonFiles) {
 expect(executedCaptureCount >= 1, "POS/morph/lemma readiness requires at least one executed comparator capture.");
 
 const readinessDoc = await readText("docs/specs/pos-morph-lemma-readiness.md");
-const researchLedger = await readText("docs/specs/nlp-pos-morph-lemma-research-ledger.md");
 const differencesDoc = await readText("docs/decisions/pos-morph-lemma-output-differences.md");
 
 expect(
@@ -183,10 +182,6 @@ expect(
 expect(
   readinessDoc.includes("## Expected-output format"),
   "POS/morph/lemma readiness doc must define an expected-output format section.",
-);
-expect(
-  researchLedger.includes("## Primary sources"),
-  "POS/morph/lemma research ledger must list primary sources.",
 );
 expect(
   differencesDoc.includes("## Documented non-failure differences"),

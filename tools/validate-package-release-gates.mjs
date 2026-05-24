@@ -5,7 +5,6 @@ import path from "node:path";
 const ROOT = process.cwd();
 const GATES_PATH = "fixtures/package-release/gates.v1.json";
 const SCHEMA_PATH = "schemas/package-release-gates-v1.schema.json";
-const SUPPORT_STATUS_PATH = "docs/specs/support-status.v1.json";
 const DOWNSTREAM_API_STABILITY_PATH = "fixtures/package-release/downstream-api-stability.v1.json";
 const WORKSPACE_PACK_DRY_RUN_PATH = "tools/check-workspace-pack-dry-run.mjs";
 const ALPHA_PHASE = "alpha-foundation-release-0.1";
@@ -80,10 +79,9 @@ async function workspaceDownstreamDependents() {
 }
 
 const ajv = new Ajv({ allErrors: true, strict: true });
-const [schema, gates, supportStatus] = await Promise.all([
+const [schema, gates] = await Promise.all([
   readJson(SCHEMA_PATH),
   readJson(GATES_PATH),
-  readJson(SUPPORT_STATUS_PATH),
 ]);
 const validate = ajv.compile(schema);
 expect(validate(gates), `${GATES_PATH} failed ${SCHEMA_PATH}`, validate.errors);
@@ -106,7 +104,6 @@ expect(
   "Alpha phase claim boundary must prevent broad task-support interpretation.",
 );
 
-const supportByPackage = new Map(supportStatus.packages.map((entry) => [entry.name, entry]));
 const workspacePackageJsonsByName = new Map((await workspacePackageJsons()).map((packageJson) => [packageJson.name, packageJson]));
 const downstreamByPackage = await workspaceDownstreamDependents();
 const declaredNames = gates.packages.map((entry) => entry.packageName).sort();
@@ -153,9 +150,6 @@ for (const [packageName, packageJson] of workspacePackageJsonsByName) {
 for (const entry of gates.packages) {
   const packageDir = entry.packageName.split("/")[1];
   const packageJson = await readJson(`packages/${packageDir}/package.json`);
-  const support = supportByPackage.get(entry.packageName);
-  expect(support !== undefined, `${entry.packageName} missing from support status.`);
-  expect(entry.supportStatus === support.status, `${entry.packageName} support status mismatch.`);
   expect(
     JSON.stringify([...entry.gates].sort()) === JSON.stringify([...REQUIRED_GATES].sort()),
     `${entry.packageName} must list every required release gate.`,
@@ -220,10 +214,6 @@ for (const entry of gates.packages) {
     }
     expect(packageJson.private === true, `${entry.packageName} must remain private while releaseTrack is private-unreleased.`);
     expect(packageJson.version === "0.0.0", `${entry.packageName} private-unreleased version must remain 0.0.0.`);
-    expect(
-      support.limitations.some((item) => item.includes("Package remains private until broader release gates pass")),
-      `${entry.packageName} support status must state the package remains private.`,
-    );
   } else {
     expect(
       entry.releaseTrack === "public-beta" || entry.releaseTrack === "public-alpha",
@@ -243,14 +233,7 @@ for (const entry of gates.packages) {
     );
     expect(packageJson.private !== true, `${entry.packageName} public package must not be private.`);
     if (entry.releaseTrack === "public-alpha") {
-      expect(support.status === "alpha", `${entry.packageName} public-alpha package must be alpha in support status.`);
       expect(packageJson.version !== "0.0.0", `${entry.packageName} public-alpha package must not remain version 0.0.0.`);
-      expect(
-        !support.limitations.some((item) => item.includes("Package remains private")),
-        `${entry.packageName} public-alpha support status must not state the package remains private.`,
-      );
-    } else {
-      expect(support.status === "beta", `${entry.packageName} public-beta package must be beta in support status.`);
     }
   }
   for (const ref of entry.evidenceRefs) {

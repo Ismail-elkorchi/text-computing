@@ -8,26 +8,13 @@ A specification document must state its scope, version, normative language, and 
 
 - [`tokenization-sbd-readiness.md`](tokenization-sbd-readiness.md)
 - [`pos-morph-lemma-readiness.md`](pos-morph-lemma-readiness.md) — readiness gate for issue `#10`.
-- [`nlp-pos-morph-lemma-research-ledger.md`](nlp-pos-morph-lemma-research-ledger.md) — research ledger for POS, lemma, and morphology readiness.
 - [`rule-backed-ner-readiness.md`](rule-backed-ner-readiness.md) — readiness gate for issue `#13`.
-- [`nlp-rule-backed-ner-research-ledger.md`](nlp-rule-backed-ner-research-ledger.md) — research ledger for rule-backed NER readiness.
 - [`corpus-tfidf-bm25-readiness.md`](corpus-tfidf-bm25-readiness.md) — readiness gate for issue `#14`.
-- [`nlp-corpus-tfidf-bm25-research-ledger.md`](nlp-corpus-tfidf-bm25-research-ledger.md) — research ledger for corpus TF-IDF/BM25 readiness.
 - [`retrieval-readiness.md`](retrieval-readiness.md) — frozen-scope retrieval gate over explicit-token corpus fixtures.
 - [`conllu-dependency-readiness.md`](conllu-dependency-readiness.md) — fixture-scope CoNLL-U / Universal Dependencies import-export round-trip gate.
-- [`nlp-conllu-dependency-research-ledger.md`](nlp-conllu-dependency-research-ledger.md) — research ledger for CoNLL-U / UD round-trip work.
 - [`dependency-parser-readiness.md`](dependency-parser-readiness.md) — readiness gate and frozen-slice evidence for deterministic dependency parsing.
-- [`nlp-dependency-parser-research-ledger.md`](nlp-dependency-parser-research-ledger.md) — research ledger for dependency parser readiness.
 - [`relation-extraction-readiness.md`](relation-extraction-readiness.md) — typed relation extraction gate.
-- [`nlp-relation-extraction-research-ledger.md`](nlp-relation-extraction-research-ledger.md) — research ledger for relation extraction readiness.
 - [`coreference-readiness.md`](coreference-readiness.md) — frozen-slice mention and chain gate.
-- [`nlp-coreference-research-ledger.md`](nlp-coreference-research-ledger.md) — research ledger for coreference readiness.
-- [`nlp-tokenization-sbd-research-ledger.md`](nlp-tokenization-sbd-research-ledger.md) — research ledger for tokenization and sentence-boundary readiness.
-- [`support-status.md`](support-status.md) — canonical human-readable support matrix for current package and task scope.
-- [`toolkit-capability-scorecard.md`](toolkit-capability-scorecard.md) — evidence-linked capability gate for package and task claims.
-- [`task-coverage-matrix.md`](task-coverage-matrix.md) — public task coverage and gap matrix for next-generation NLP parity.
-- [`next-wave-readiness-roadmap.md`](next-wave-readiness-roadmap.md) — readiness order for dependency parsing, relation extraction, coreference, entity linking, retrieval, and inspection tooling.
-- [`multilingual-support-tiers.md`](multilingual-support-tiers.md) — support-tier language for multilingual evidence and fixture expansion.
 - [`performance-gates.md`](performance-gates.md) — performance and scale gate requirements before broad operational claims.
 - [`package-release-gates.md`](package-release-gates.md) — package release-track and gate requirements.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.
@@ -35,3 +22,4 @@ A specification document must state its scope, version, normative language, and 
 - [`textdoc-document-annotation-model.md`](textdoc-document-annotation-model.md) — structural contract for the document annotation model used by issue `#11`.
 - [`textpipeline-processor-contract.md`](textpipeline-processor-contract.md) — deterministic processor ordering and trace contract.
 - [`textpack-resource-manifest.md`](textpack-resource-manifest.md) — manifest and lookup contract for issue `#12`.
+- [`multilingual-coverage.md`](multilingual-coverage.md) — multilingual fixture coverage axes and input seeds; not a support matrix.

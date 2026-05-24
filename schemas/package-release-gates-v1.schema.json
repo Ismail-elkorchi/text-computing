@@ -110,7 +110,6 @@
       "required": [
         "packageName",
         "releaseTrack",
-        "supportStatus",
         "releaseReadiness",
         "gates",
         "downstreamApiStability",
@@ -123,9 +122,6 @@
         "packageName": { "type": "string", "pattern": "^@ismail-elkorchi/[a-z][a-z0-9-]*$" },
         "releaseTrack": {
           "enum": ["public-beta", "public-alpha", "private-unreleased"]
-        },
-        "supportStatus": {
-          "enum": ["scaffold", "readiness-only", "slice-proven", "alpha", "beta", "production-candidate"]
         },
         "releaseReadiness": {
           "enum": ["publishable", "blocked"]

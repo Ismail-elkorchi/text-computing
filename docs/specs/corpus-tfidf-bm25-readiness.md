@@ -51,6 +51,6 @@ Comparator outputs are diagnostic evidence, not normative expected outputs when 
 
 ## Verification
 
-`npm run -s check:fixtures` validates the corpus slice manifest, formula/version freeze, expected outputs, comparator captures, required readiness documentation headings, and support-status state before any feature PR for issue `#14`.
+`npm run -s check:fixtures` validates the corpus slice manifest, formula/version freeze, expected outputs, comparator captures, required readiness documentation headings, and fixture boundary before any feature PR for issue `#14`.
 
 The validator regenerates the committed expected outputs from `@ismail-elkorchi/textcorpus` scoring APIs and fails if any numeric value drifts beyond the recorded tolerance.

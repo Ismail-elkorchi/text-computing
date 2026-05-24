@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "scope": "conllu-dependency",
   "conlluVersion": "UD-v2-CoNLL-U",
-  "supportStatus": "slice-proven",
   "expectedRoundTripStatus": "recorded",
   "fixtures": {
     "valid": [

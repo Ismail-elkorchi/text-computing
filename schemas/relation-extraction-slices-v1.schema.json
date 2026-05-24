@@ -7,7 +7,6 @@
   "required": [
     "schemaVersion",
     "taskId",
-    "supportStatus",
     "expectedOutputStatus",
     "comparatorStatus",
     "allowedFixturePolicy",
@@ -17,89 +16,192 @@
     "negativeControls"
   ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "taskId": { "const": "nlp-relation-extraction" },
-    "supportStatus": { "enum": ["readiness-only", "slice-proven"] },
-    "expectedOutputStatus": { "enum": ["schema-defined", "recorded"] },
-    "comparatorStatus": { "const": "claim-downgraded" },
-    "allowedFixturePolicy": { "type": "string", "minLength": 1 },
-    "corpusEvidence": { "$ref": "#/definitions/corpusEvidence" },
+    "schemaVersion": {
+      "const": 1
+    },
+    "taskId": {
+      "const": "nlp-relation-extraction"
+    },
+    "expectedOutputStatus": {
+      "enum": [
+        "schema-defined",
+        "recorded"
+      ]
+    },
+    "comparatorStatus": {
+      "const": "claim-downgraded"
+    },
+    "allowedFixturePolicy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "corpusEvidence": {
+      "$ref": "#/definitions/corpusEvidence"
+    },
     "relationLabelPolicy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["labels", "argumentPolicy", "evidencePolicy"],
+      "required": [
+        "labels",
+        "argumentPolicy",
+        "evidencePolicy"
+      ],
       "properties": {
         "labels": {
           "type": "array",
           "minItems": 3,
           "uniqueItems": true,
           "items": {
-            "enum": ["employed-by", "located-in", "part-of", "no-relation"]
+            "enum": [
+              "employed-by",
+              "located-in",
+              "part-of",
+              "no-relation"
+            ]
           }
         },
-        "argumentPolicy": { "type": "string", "minLength": 1 },
-        "evidencePolicy": { "type": "string", "minLength": 1 }
+        "argumentPolicy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidencePolicy": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "fixtures": {
       "type": "array",
       "minItems": 4,
-      "items": { "$ref": "#/definitions/fixture" }
+      "items": {
+        "$ref": "#/definitions/fixture"
+      }
     },
     "negativeControls": {
       "type": "array",
       "minItems": 2,
-      "items": { "$ref": "#/definitions/negativeControl" }
+      "items": {
+        "$ref": "#/definitions/negativeControl"
+      }
     }
   },
   "definitions": {
     "corpusEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "status", "corpusClass", "splitPolicy", "supportBoundary", "documents"],
+      "required": [
+        "id",
+        "status",
+        "corpusClass",
+        "splitPolicy",
+        "supportBoundary",
+        "documents"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9:-]+$" },
-        "status": { "const": "committed" },
-        "corpusClass": { "const": "repository-authored-evaluation-slice" },
-        "splitPolicy": { "type": "string", "minLength": 1 },
-        "supportBoundary": { "type": "string", "minLength": 1 },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9:-]+$"
+        },
+        "status": {
+          "const": "committed"
+        },
+        "corpusClass": {
+          "const": "repository-authored-evaluation-slice"
+        },
+        "splitPolicy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supportBoundary": {
+          "type": "string",
+          "minLength": 1
+        },
         "documents": {
           "type": "array",
           "minItems": 1,
-          "items": { "$ref": "#/definitions/corpusDocument" }
+          "items": {
+            "$ref": "#/definitions/corpusDocument"
+          }
         }
       }
     },
     "corpusDocument": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["fixtureId", "expectedPath", "sourceSha256", "role"],
+      "required": [
+        "fixtureId",
+        "expectedPath",
+        "sourceSha256",
+        "role"
+      ],
       "properties": {
-        "fixtureId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-        "expectedPath": { "type": "string", "minLength": 1 },
-        "sourceSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-        "role": { "enum": ["evaluation", "negative-control"] }
+        "fixtureId": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "expectedPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "role": {
+          "enum": [
+            "evaluation",
+            "negative-control"
+          ]
+        }
       }
     },
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "text"],
+      "required": [
+        "kind",
+        "text"
+      ],
       "properties": {
-        "kind": { "const": "text" },
-        "text": { "type": "string", "minLength": 1 }
+        "kind": {
+          "const": "text"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "fixture": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "language", "script", "fixtureClass", "phenomena", "source"],
+      "required": [
+        "id",
+        "language",
+        "script",
+        "fixtureClass",
+        "phenomena",
+        "source"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-        "language": { "type": "string", "minLength": 2 },
-        "script": { "type": "string", "minLength": 4 },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2
+        },
+        "script": {
+          "type": "string",
+          "minLength": 4
+        },
         "fixtureClass": {
-          "enum": ["repository-authored", "public-domain", "cc0-compatible"]
+          "enum": [
+            "repository-authored",
+            "public-domain",
+            "cc0-compatible"
+          ]
         },
         "phenomena": {
           "type": "array",
@@ -119,19 +221,30 @@
             ]
           }
         },
-        "source": { "$ref": "#/definitions/source" },
+        "source": {
+          "$ref": "#/definitions/source"
+        },
         "notes": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
     "negativeControl": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "expectedFailure"],
+      "required": [
+        "id",
+        "expectedFailure"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
         "expectedFailure": {
           "enum": [
             "cooccurrence-without-relation",
@@ -142,7 +255,10 @@
         },
         "notes": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     }

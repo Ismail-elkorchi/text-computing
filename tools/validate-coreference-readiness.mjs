@@ -52,7 +52,6 @@ const validateReport = ajv.compile(conformanceSchema);
 expect(validateSlices(slices), `${slicesPath} failed ${slicesSchemaPath}`, validateSlices.errors);
 expect(validateReport(report), `${reportPath} failed ${conformanceSchemaPath}`, validateReport.errors);
 
-expect(slices.supportStatus === "slice-proven", "Coreference support status must be slice-proven.");
 expect(slices.expectedOutputStatus === "recorded", "Coreference feature gate requires recorded expected outputs.");
 expect(slices.comparatorStatus === "claim-downgraded", "Coreference readiness must explicitly downgrade comparator-backed claims.");
 
@@ -234,19 +233,5 @@ for (const heading of [
   expect(readinessDoc.includes(heading), `coreference-readiness.md missing heading: ${heading}`);
 }
 
-const researchLedger = await readText("docs/specs/nlp-coreference-research-ledger.md");
-for (const heading of [
-  "## Scope",
-  "## Primary sources",
-  "## Comparator capability evidence",
-  "## Comparator limitations",
-  "## Readiness consequences",
-]) {
-  expect(researchLedger.includes(heading), `nlp-coreference-research-ledger.md missing heading: ${heading}`);
-}
-
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-coreference");
-expect(task?.status === "slice-proven", "Support status must mark nlp-coreference as slice-proven.");
 
 console.log(`Coreference feature artifacts OK (fixtures=${slices.fixtures.length}).`);

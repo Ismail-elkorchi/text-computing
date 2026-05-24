@@ -2,7 +2,7 @@
 
 This directory contains public readiness fixtures for CoNLL-U / Universal Dependencies import-export and dependency-target annotation work.
 
-The fixture set is intentionally readiness-only:
+The fixture set is intentionally fixture-scoped:
 
 - `slices.json` records valid and invalid fixture paths and the recorded round-trip target contract.
 - `expected/` records the exact fixture-scope export strings and layer counts.

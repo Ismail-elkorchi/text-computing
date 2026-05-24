@@ -1,13 +1,6 @@
-# Changelog
+# @ismail-elkorchi/textlab
 
 ## 0.1.0
 
-- Add package, pack, document, conformance-diff, comparator-drift, retrieval-qrels, retrieval-evaluation, and release-readiness inspection APIs and CLI commands.
-- Add stable text and `--json` CLI output paths for inspection commands.
-- Promote package metadata to public alpha for the bounded inspection API and CLI scope.
-
-## 0.0.0
-
-- Adds deterministic annotation, evidence-replay, and corpus-fixture inspection APIs and CLI commands.
-- Establish package workspace metadata; no public API beyond the package identity export.
-- Add support-status summary API and `textlab support-status` CLI.
+- Add package, pack, document, annotation, conformance-report, conformance-diff, corpus-fixture, retrieval-qrels, retrieval-evaluation, and release-readiness inspection APIs and CLI commands.
+- Remove non-executable summary commands from the public package surface.

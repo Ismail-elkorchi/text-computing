@@ -8,34 +8,46 @@
     "schemaVersion",
     "scope",
     "conlluVersion",
-    "supportStatus",
     "expectedRoundTripStatus",
     "fixtures"
   ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "scope": { "const": "conllu-dependency" },
-    "conlluVersion": { "const": "UD-v2-CoNLL-U" },
-    "supportStatus": {
-      "enum": ["readiness-only", "slice-proven"]
+    "schemaVersion": {
+      "const": 1
+    },
+    "scope": {
+      "const": "conllu-dependency"
+    },
+    "conlluVersion": {
+      "const": "UD-v2-CoNLL-U"
     },
     "expectedRoundTripStatus": {
-      "enum": ["planned", "recorded"]
+      "enum": [
+        "planned",
+        "recorded"
+      ]
     },
     "fixtures": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["valid", "invalid"],
+      "required": [
+        "valid",
+        "invalid"
+      ],
       "properties": {
         "valid": {
           "type": "array",
           "minItems": 2,
-          "items": { "$ref": "#/definitions/validFixture" }
+          "items": {
+            "$ref": "#/definitions/validFixture"
+          }
         },
         "invalid": {
           "type": "array",
           "minItems": 3,
-          "items": { "$ref": "#/definitions/invalidFixture" }
+          "items": {
+            "$ref": "#/definitions/invalidFixture"
+          }
         }
       }
     }
@@ -72,7 +84,9 @@
           "type": "string",
           "pattern": "^[a-z0-9-]+$"
         },
-        "path": { "$ref": "#/definitions/fixturePath" },
+        "path": {
+          "$ref": "#/definitions/fixturePath"
+        },
         "expectedPath": {
           "type": "string",
           "pattern": "^fixtures/conllu-dependency/expected/[a-z0-9-]+\\.json$"
@@ -85,7 +99,9 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "$ref": "#/definitions/phenomenon" }
+          "items": {
+            "$ref": "#/definitions/phenomenon"
+          }
         },
         "roundTripPlan": {
           "type": "object",
@@ -96,9 +112,15 @@
             "annotationContract"
           ],
           "properties": {
-            "import": { "const": "planned" },
-            "export": { "const": "planned" },
-            "annotationContract": { "const": "textdoc-dependency-target-v1" }
+            "import": {
+              "const": "planned"
+            },
+            "export": {
+              "const": "planned"
+            },
+            "annotationContract": {
+              "const": "textdoc-dependency-target-v1"
+            }
           }
         },
         "notes": {
@@ -124,7 +146,9 @@
           "type": "string",
           "pattern": "^[a-z0-9-]+$"
         },
-        "path": { "$ref": "#/definitions/fixturePath" },
+        "path": {
+          "$ref": "#/definitions/fixturePath"
+        },
         "reason": {
           "type": "string",
           "minLength": 1

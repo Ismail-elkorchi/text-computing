@@ -1,12 +1,8 @@
 #!/usr/bin/env node
-import { execFile } from "node:child_process";
-import { access, readFile } from "node:fs/promises";
-import path from "node:path";
+import { readFile } from "node:fs/promises";
 import {
   inspectCorpusFixture,
-  inspectComparatorDrift,
   inspectConformanceReportDiff,
-  inspectEvidenceReplay,
   inspectPackageManifest,
   inspectReleaseReadiness,
   inspectRetrievalEvaluation,
@@ -14,25 +10,17 @@ import {
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
-  isTextlabTaskEvidenceManifest,
-  isTextlabSupportStatusDocument,
-  renderComparatorDriftInspection,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
-  renderEvidenceManifestSummary,
-  renderEvidenceReplayInspection,
   renderPackageInspection,
   renderReleaseReadinessInspection,
   renderRetrievalEvaluationInspection,
   renderRetrievalQrelsInspection,
-  renderSupportStatusSummary,
   renderTextdocDocumentInspection,
   renderTextdocAnnotationInspection,
   renderTextPackInspection,
   summarizeConformanceReport,
-  summarizeEvidenceManifest,
-  summarizeSupportStatus,
   type TextlabAnnotationInspectionOptions,
 } from "./index.js";
 
@@ -40,52 +28,6 @@ export interface TextlabCliResult {
   readonly exitCode: number;
   readonly stdout: string;
   readonly stderr: string;
-}
-
-function execFileText(binary: string, args: readonly string[], cwd: string): Promise<TextlabCliResult> {
-  return new Promise((resolve) => {
-    execFile(binary, [...args], { cwd, encoding: "utf8" }, (error, stdout, stderr) => {
-      const exitCode =
-        error !== null && typeof error === "object" && "code" in error && typeof error.code === "number"
-          ? error.code
-          : error === null
-            ? 0
-            : 1;
-      resolve({
-        exitCode,
-        stdout,
-        stderr,
-      });
-    });
-  });
-}
-
-async function pathExists(candidate: string): Promise<boolean> {
-  try {
-    await access(candidate);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function findRepositoryRoot(startDirectory = process.cwd()): Promise<string | undefined> {
-  let current = path.resolve(startDirectory);
-  while (true) {
-    const packagePath = path.join(current, "package.json");
-    const comparePath = path.join(current, "tools", "compare", "run.mjs");
-    if ((await pathExists(packagePath)) && (await pathExists(comparePath))) {
-      try {
-        const packageJson = JSON.parse(await readFile(packagePath, "utf8")) as { readonly name?: unknown };
-        if (packageJson.name === "text-computing") return current;
-      } catch {
-        return undefined;
-      }
-    }
-    const parent = path.dirname(current);
-    if (parent === current) return undefined;
-    current = parent;
-  }
 }
 
 function usage(): string {
@@ -97,14 +39,9 @@ function usage(): string {
     "  textlab annotations <path> [--layer-kind kind] [--lifecycle state] [--annotation-id id] [--json]",
     "  textlab conformance-report <path> [--json]",
     "  textlab conformance-diff <expected-path> <actual-path> [--json]",
-    "  textlab comparator-drift [path] [--json]",
     "  textlab retrieval-qrels <path> [--json]",
     "  textlab retrieval-evaluation <path> [--json]",
     "  textlab release-readiness [path] [--json]",
-    "  textlab support-status [path] [--json]",
-    "  textlab evidence [path] [--json]",
-    "  textlab evidence-replay [path] [--json]",
-    "  textlab evidence-run <replay|execute> [task]",
     "  textlab corpus-fixture <path> [--json]",
     "  textlab --help",
     "",
@@ -113,13 +50,8 @@ function usage(): string {
     "  pack            Inspect a textpack manifest.",
     "  document        Inspect a textdoc document summary.",
     "  annotations     Inspect or query a textdoc document annotation graph.",
-    "  support-status  Render a deterministic summary of docs/specs/support-status.v1.json.",
-    "  evidence        Render a deterministic summary of fixtures/reports/task-evidence-manifest.v1.json.",
     "  conformance-report  Render a deterministic summary of one conformance report.",
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
-    "  evidence-replay Render comparator/replay status counts.",
-    "  comparator-drift    Render comparator drift and not-run rows from evidence replay.",
-    "  evidence-run    Run the repository evidence replay or execution command.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
     "  retrieval-qrels Inspect retrieval relevance judgments.",
     "  retrieval-evaluation Inspect retrieval metric output.",
@@ -141,17 +73,12 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
   }
 
   if (
-    command !== "support-status" &&
-    command !== "evidence" &&
     command !== "package" &&
     command !== "pack" &&
     command !== "document" &&
     command !== "conformance-report" &&
     command !== "conformance-diff" &&
     command !== "annotations" &&
-    command !== "evidence-replay" &&
-    command !== "comparator-drift" &&
-    command !== "evidence-run" &&
     command !== "corpus-fixture" &&
     command !== "retrieval-qrels" &&
     command !== "retrieval-evaluation" &&
@@ -162,33 +89,6 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       stdout: "",
       stderr: `Unknown command: ${command}\n${usage()}`,
     };
-  }
-
-  if (command === "evidence-run") {
-    const [modeArg, taskArg = "all", ...extra] = [pathArg, ...rest];
-    if (modeArg !== "replay" && modeArg !== "execute") {
-      return {
-        exitCode: 2,
-        stdout: "",
-        stderr: `Missing or invalid evidence-run mode.\n${usage()}`,
-      };
-    }
-    if (extra.length > 0) {
-      return {
-        exitCode: 2,
-        stdout: "",
-        stderr: `Too many arguments for ${command}.\n${usage()}`,
-      };
-    }
-    const root = await findRepositoryRoot();
-    if (root === undefined) {
-      return {
-        exitCode: 1,
-        stdout: "",
-        stderr: "Could not find text-computing repository root for evidence-run.\n",
-      };
-    }
-    return execFileText(process.execPath, ["tools/compare/run.mjs", modeArg, taskArg], root);
   }
 
   if (command === "conformance-diff") {
@@ -263,17 +163,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     };
   }
 
-  const inputPath =
-    pathArg ??
-    (command === "support-status"
-      ? "docs/specs/support-status.v1.json"
-      : command === "evidence-replay"
-        ? "fixtures/reports/evidence-replay.v1.json"
-        : command === "comparator-drift"
-          ? "fixtures/reports/evidence-replay.v1.json"
-          : command === "release-readiness"
-            ? "fixtures/package-release/gates.v1.json"
-            : "fixtures/reports/task-evidence-manifest.v1.json");
+  const inputPath = pathArg ?? (command === "release-readiness" ? "fixtures/package-release/gates.v1.json" : "");
   let parsed: unknown;
   try {
     parsed = await readJson(inputPath);
@@ -333,74 +223,6 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid textdoc document: ${inputPath}`,
-      };
-    }
-  }
-
-  if (command === "support-status") {
-    if (!isTextlabSupportStatusDocument(parsed)) {
-      return {
-        exitCode: 1,
-        stdout: "",
-        stderr: `Invalid support status document: ${inputPath}`,
-      };
-    }
-
-    const summary = summarizeSupportStatus(parsed);
-    return {
-      exitCode: 0,
-      stdout: renderCliOutput(summary, renderSupportStatusSummary, json),
-      stderr: "",
-    };
-  }
-
-  if (command === "evidence") {
-    if (!isTextlabTaskEvidenceManifest(parsed)) {
-      return {
-        exitCode: 1,
-        stdout: "",
-        stderr: `Invalid task evidence manifest: ${inputPath}`,
-      };
-    }
-
-    const summary = summarizeEvidenceManifest(parsed);
-    return {
-      exitCode: 0,
-      stdout: renderCliOutput(summary, renderEvidenceManifestSummary, json),
-      stderr: "",
-    };
-  }
-
-  if (command === "evidence-replay") {
-    try {
-      const inspection = inspectEvidenceReplay(parsed);
-      return {
-        exitCode: 0,
-        stdout: renderCliOutput(inspection, renderEvidenceReplayInspection, json),
-        stderr: "",
-      };
-    } catch {
-      return {
-        exitCode: 1,
-        stdout: "",
-        stderr: `Invalid evidence replay document: ${inputPath}`,
-      };
-    }
-  }
-
-  if (command === "comparator-drift") {
-    try {
-      const inspection = inspectComparatorDrift(parsed);
-      return {
-        exitCode: 0,
-        stdout: renderCliOutput(inspection, renderComparatorDriftInspection, json),
-        stderr: "",
-      };
-    } catch {
-      return {
-        exitCode: 1,
-        stdout: "",
-        stderr: `Invalid evidence replay document: ${inputPath}`,
       };
     }
   }

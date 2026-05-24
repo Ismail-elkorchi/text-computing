@@ -5,7 +5,7 @@ slice.
 
 Current status:
 
-- `slice-proven` in support status for declared frozen slices;
+- deterministic expected arcs for declared frozen slices;
 - expected arcs are derived from repository-authored CoNLL-U fixture rows;
 - comparator files include executed spaCy and Stanza model-output captures, direct UD validation, and a JavaScript gap record;
 - broad Universal Dependencies support is not claimed.

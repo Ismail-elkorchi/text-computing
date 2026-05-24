@@ -54,13 +54,6 @@ const validateEnvelope = ajv.compile(envelopeSchema);
 const validateReport = ajv.compile(reportSchema);
 
 const slices = await readJson("fixtures/dependency-parser/slices.json");
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-dependency-parser");
-expect(task?.status === "slice-proven", "Support status must mark nlp-dependency-parser as slice-proven after feature validation.");
-expect(
-  task.evidence.includes("fixtures/reports/nlp-dependency-parser/conformance-report.json"),
-  "Support status evidence must cite the dependency-parser conformance report.",
-);
 
 for (const fixture of slices.fixtures) {
   const expected = await readJson(fixture.expectedPath);

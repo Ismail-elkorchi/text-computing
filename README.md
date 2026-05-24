@@ -2,8 +2,6 @@
 
 `text-computing` is the public workspace for deterministic text computing packages.
 
-Current package and task support status is tracked in [`docs/specs/support-status.md`](docs/specs/support-status.md).
-
 ## Packages
 
 - `@ismail-elkorchi/textfacts` — deterministic, Unicode-pinned text facts.
