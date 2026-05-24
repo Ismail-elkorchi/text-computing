@@ -23,7 +23,6 @@ function expect(condition, message, details) {
 const slicesSchemaPath = "schemas/pos-morph-lemma-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/pos-morph-lemma-tool-versions-v1.schema.json";
 const expectedSchemaPath = "schemas/pos-morph-lemma-expected-v1.schema.json";
-const comparisonSchemaPath = "schemas/pos-morph-lemma-comparison-v1.schema.json";
 const corpusEvaluationSchemaPath = "schemas/pos-morph-lemma-corpus-evaluation-v1.schema.json";
 const corpusEvaluationReportSchemaPath = "schemas/pos-morph-lemma-corpus-evaluation-report-v1.schema.json";
 const textdocSchemaPath = "schemas/textdoc-document-v1.schema.json";
@@ -31,14 +30,12 @@ const textdocSchemaPath = "schemas/textdoc-document-v1.schema.json";
 const slicesSchema = await readJson(slicesSchemaPath);
 const toolVersionsSchema = await readJson(toolVersionsSchemaPath);
 const expectedSchema = await readJson(expectedSchemaPath);
-const comparisonSchema = await readJson(comparisonSchemaPath);
 const corpusEvaluationSchema = await readJson(corpusEvaluationSchemaPath);
 const corpusEvaluationReportSchema = await readJson(corpusEvaluationReportSchemaPath);
 const textdocSchema = await readJson(textdocSchemaPath);
 
 const validateSlices = ajv.compile(slicesSchema);
 const validateToolVersions = ajv.compile(toolVersionsSchema);
-const validateComparison = ajv.compile(comparisonSchema);
 const validateCorpusEvaluation = ajv.compile(corpusEvaluationSchema);
 const validateCorpusEvaluationReport = ajv.compile(corpusEvaluationReportSchema);
 ajv.addSchema(textdocSchema, textdocSchema.$id);
@@ -136,44 +133,12 @@ expect(
   "POS/morph/lemma corpus evaluation must preserve at least one ambiguous gold token.",
 );
 
-const runtimes = new Set(toolVersions.comparators.map((entry) => entry.runtime));
 expect(
-  runtimes.has("python") || runtimes.has("jvm"),
-  "POS/morph/lemma readiness requires at least one frozen Python or JVM comparator.",
+  toolVersions.notes.some((note) => note.includes("target tag and morphology contract")),
+  "POS/morph/lemma readiness must describe the target tag and morphology contract.",
 );
-expect(
-  toolVersions.notes.some((note) => note.includes("no JavaScript comparator-backed POS/morph/lemma claim is made")),
-  "POS/morph/lemma readiness must explicitly state that no JavaScript comparator-backed claim is made.",
-);
-
-const comparisonDir = "fixtures/pos-morph-lemma/comparisons";
-const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
-expect(comparisonFiles.length >= 1, "POS/morph/lemma readiness requires at least one comparator capture.");
-
-let executedCaptureCount = 0;
-for (const file of comparisonFiles) {
-  const path = `${comparisonDir}/${file}`;
-  const comparison = await readJson(path);
-  expect(validateComparison(comparison), `${path} failed ${comparisonSchemaPath}`, validateComparison.errors);
-  const comparator = toolVersions.comparators.find(
-    (entry) => entry.name === comparison.comparator.name && entry.version === comparison.comparator.version,
-  );
-  expect(comparator !== undefined, `${path} comparator is not listed in tool-versions.json.`);
-  if (comparator?.capturePath !== undefined) {
-    expect(comparator.capturePath === path, `${path} must match capturePath in tool-versions.json.`);
-  }
-  expect(comparator?.executionStatus === "executed", `${path} must correspond to an executed comparator.`);
-  executedCaptureCount += 1;
-  const sliceIdsInCapture = new Set(comparison.slices.map((slice) => slice.sliceId));
-  for (const sliceId of sliceIds) {
-    expect(sliceIdsInCapture.has(sliceId), `${path} is missing slice ${sliceId}.`);
-  }
-}
-
-expect(executedCaptureCount >= 1, "POS/morph/lemma readiness requires at least one executed comparator capture.");
 
 const readinessDoc = await readText("docs/specs/pos-morph-lemma-readiness.md");
-const differencesDoc = await readText("docs/decisions/pos-morph-lemma-output-differences.md");
 
 expect(
   readinessDoc.includes("## Tag mapping policy"),
@@ -182,10 +147,6 @@ expect(
 expect(
   readinessDoc.includes("## Expected-output format"),
   "POS/morph/lemma readiness doc must define an expected-output format section.",
-);
-expect(
-  differencesDoc.includes("## Documented non-failure differences"),
-  "POS/morph/lemma output-differences doc must record non-failure differences.",
 );
 
 console.log("POS/morph/lemma readiness artifacts OK.");

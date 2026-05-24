@@ -1,48 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/pos-morph-lemma-tool-versions-v1.schema.json",
-  "title": "POS, morphology, and lemma tool versions v1",
+  "title": "POS, morphology, and lemma target contract v1",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schemaVersion",
     "targetTagSet",
     "targetMorphFeatures",
-    "retainAmbiguity",
-    "comparators"
+    "retainAmbiguity"
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
     "targetTagSet": { "const": "ud-v2-upos" },
     "targetMorphFeatures": { "const": "ud-v2-features" },
     "retainAmbiguity": { "const": true },
-    "comparators": {
-      "type": "array",
-      "minItems": 2,
-      "items": { "$ref": "#/definitions/comparator" }
-    },
     "notes": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 }
-    }
-  },
-  "definitions": {
-    "comparator": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["name", "runtime", "version"],
-      "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "runtime": { "enum": ["python", "javascript", "jvm"] },
-        "version": { "type": "string", "minLength": 1 },
-        "model": { "type": "string", "minLength": 1 },
-        "modelVersion": { "type": "string", "minLength": 1 },
-        "executionStatus": {
-          "enum": ["executed", "capability-recorded", "deferred"]
-        },
-        "capturePath": { "type": "string", "minLength": 1 },
-        "reason": { "type": "string", "minLength": 1 }
-      }
     }
   }
 }

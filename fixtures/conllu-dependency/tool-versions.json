@@ -31,17 +31,5 @@
       "capturePath": "fixtures/conllu-dependency/validation/universal-dependencies-tools-ee98e50.json",
       "role": "Executed external format and syntax validator for frozen CoNLL-U fixtures."
     }
-  ],
-  "futureComparators": [
-    {
-      "name": "UD-capable Python parser/exporter",
-      "runtime": "python",
-      "role": "Future dependency-arc comparator after readiness artifacts are frozen."
-    },
-    {
-      "name": "UD-capable JavaScript parser/exporter",
-      "runtime": "javascript",
-      "role": "Future TypeScript ecosystem comparator after readiness artifacts are frozen."
-    }
   ]
 }

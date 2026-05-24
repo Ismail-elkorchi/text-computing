@@ -6,7 +6,7 @@ The fixture set is intentionally fixture-scoped:
 
 - `slices.json` records valid and invalid fixture paths and the recorded round-trip target contract.
 - `expected/` records the exact fixture-scope export strings and layer counts.
-- `tool-versions.json` records public standards, validator sources, and future comparator roles.
+- `tool-versions.json` records public standards, validator sources, and validator roles.
 - `validation/` records executed external CoNLL-U validator outcomes for every frozen fixture.
 - `valid/` contains small repository-authored CoNLL-U inputs that should parse and map to dependency targets.
 - `invalid/` contains negative controls that must fail before importer/exporter behavior is implemented.

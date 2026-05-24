@@ -8,7 +8,6 @@ const REQUIRED_TIERS = [
   "unicode-invariant",
   "fixture-proven",
   "resource-backed",
-  "comparator-backed",
   "corpus-backed",
 ];
 const REQUIRED_SCRIPTS = [

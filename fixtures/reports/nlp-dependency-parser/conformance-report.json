@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 5,
+    "pass": 4,
     "fail": 0,
     "notRun": 0
   },
@@ -44,7 +44,7 @@
         ],
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
-          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "No trained parser or broad UD treebank support is implemented.",
           "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
@@ -77,44 +77,7 @@
         ],
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
-          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
-          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
-        ]
-      }
-    },
-    {
-      "checkId": "comparator-captures-recorded",
-      "status": "pass",
-      "message": "Executed spaCy, Stanza, and direct UD validation captures are committed.",
-      "evidenceRefs": [
-        "fixtures/dependency-parser/comparisons/spacy-3.8.json",
-        "fixtures/dependency-parser/comparisons/stanza-1.12.json",
-        "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
-      ],
-      "traceability": {
-        "requirementRefs": [
-          "docs/specs/dependency-parser-readiness.md"
-        ],
-        "apiRefs": [
-          "tools/validate-dependency-parser-readiness.mjs",
-          "tools/validate-dependency-parser-feature.mjs"
-        ],
-        "inputRefs": [
-          "fixtures/dependency-parser/comparisons/spacy-3.8.json",
-          "fixtures/dependency-parser/comparisons/stanza-1.12.json",
-          "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
-        ],
-        "oracleRefs": [
-          "schemas/dependency-parser-expected-v1.schema.json",
-          "tools/validate-dependency-parser-readiness.mjs",
-          "tools/validate-dependency-parser-feature.mjs"
-        ],
-        "reportRefs": [
-          "fixtures/reports/nlp-dependency-parser/conformance-report.json"
-        ],
-        "limitations": [
-          "Behavior is limited to deterministic rules for three frozen slices.",
-          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "No trained parser or broad UD treebank support is implemented.",
           "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
@@ -149,7 +112,7 @@
         ],
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
-          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "No trained parser or broad UD treebank support is implemented.",
           "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
@@ -178,7 +141,7 @@
         ],
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
-          "No trained parser, broad UD treebank support, or JavaScript parser comparator is implemented.",
+          "No trained parser or broad UD treebank support is implemented.",
           "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }

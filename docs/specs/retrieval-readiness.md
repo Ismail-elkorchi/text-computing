@@ -11,7 +11,7 @@ This document keeps those surfaces tied to explicit fixtures before broader corp
 - Status: `slice-proven`
 - Owning package: `textcorpus`
 - Current proof: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, fielded BM25F retrieval, standalone qrels, expected evaluation metrics, a repository-authored licensed corpus, a pinned BEIR NFCorpus title-token subset with external qrels, streaming iteration over the package index, durable index artifacts, phrase/proximity/boolean query parsing, citation windows, quote grounding, and deterministic size thresholds over committed retrieval fixtures
-- Current non-proof: no broad retrieval benchmark, filesystem-specific index store, Lucene-backed comparator claim, or broad multilingual retrieval benchmark
+- Current non-proof: no broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval benchmark
 
 ## Input slices
 

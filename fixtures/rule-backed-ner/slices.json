@@ -262,7 +262,7 @@
     ],
     "limitations": [
       "Corpus evidence is limited to committed repository-authored slices and does not claim broad NER dataset coverage.",
-      "Comparator captures remain diagnostic; new holdouts are not external-comparator-backed in this gate.",
+      "New holdouts remain fixture-bound in this gate.",
       "Labels remain limited to PER, ORG, and LOC."
     ]
   }

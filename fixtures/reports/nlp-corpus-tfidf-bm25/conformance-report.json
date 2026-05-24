@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 7,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -82,41 +82,6 @@
       }
     },
     {
-      "checkId": "comparator-captures-recorded",
-      "status": "pass",
-      "message": "Python and JavaScript diagnostic comparator captures are committed.",
-      "evidenceRefs": [
-        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
-        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
-        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
-      ],
-      "traceability": {
-        "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md"
-        ],
-        "apiRefs": [
-          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
-        ],
-        "inputRefs": [
-          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json"
-        ],
-        "oracleRefs": [
-          "schemas/corpus-tfidf-bm25-expected-v1.schema.json",
-          "tools/validate-corpus-tfidf-bm25-readiness.mjs"
-        ],
-        "reportRefs": [
-          "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
-        ],
-        "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
-          "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "Slice-proven for committed explicit-token corpora only."
-        ]
-      }
-    },
-    {
       "checkId": "numeric-tolerance-recorded",
       "status": "pass",
       "message": "The readiness validator enforces the recorded numeric tolerance.",
@@ -156,7 +121,6 @@
       "evidenceRefs": [
         "fixtures/corpus-tfidf-bm25/slices.json",
         "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-thresholds.json",
-        "fixtures/corpus-tfidf-bm25/comparisons/scikit-learn-1.8.0-rank-bm25-0.2.2-thresholds.json",
         "tools/validate-corpus-tfidf-bm25-readiness.mjs"
       ],
       "traceability": {
@@ -218,11 +182,10 @@
     {
       "checkId": "heldout-corpus-recorded",
       "status": "pass",
-      "message": "A held-out public-domain explicit-token corpus, expected scoring output, and bounded JavaScript comparator capture are committed without upgrading broad ranking claims.",
+      "message": "A held-out public-domain explicit-token corpus, expected scoring output, and bounded JavaScript repository expected output are committed without upgrading broad ranking claims.",
       "evidenceRefs": [
         "fixtures/corpus-tfidf-bm25/slices.json",
         "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
-        "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json",
         "tools/validate-corpus-tfidf-bm25-readiness.mjs"
       ],
       "traceability": {
@@ -235,8 +198,7 @@
         ],
         "inputRefs": [
           "fixtures/corpus-tfidf-bm25/slices.json",
-          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
-          "fixtures/corpus-tfidf-bm25/comparisons/natural-8.1.1-public-domain-holdout.json"
+          "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json"
         ],
         "oracleRefs": [
           "schemas/corpus-tfidf-bm25-expected-v1.schema.json",

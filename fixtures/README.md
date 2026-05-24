@@ -15,11 +15,11 @@ validation.
 
 - [`tokenization-sbd/`](tokenization-sbd/)
 - [`pos-morph-lemma/`](pos-morph-lemma/) — readiness slices, pack-backed lexicon fixtures, and recorded goldens for issue `#10`.
-- [`rule-backed-ner/`](rule-backed-ner/) — multilingual readiness slices, comparator captures, and recorded goldens for issue `#13`.
-- [`corpus-tfidf-bm25/`](corpus-tfidf-bm25/) — explicit-token corpus slices, formula goldens, and comparator captures for issue `#14`.
+- [`rule-backed-ner/`](rule-backed-ner/) — multilingual readiness slices and recorded goldens for issue `#13`.
+- [`corpus-tfidf-bm25/`](corpus-tfidf-bm25/) — explicit-token corpus slices and formula goldens for issue `#14`.
 - [`retrieval/`](retrieval/) — explicit-token retrieval slice, expected hits, snippets, and explain output.
 - [`conllu-dependency/`](conllu-dependency/) — valid, invalid, and expected-output CoNLL-U fixtures for dependency-target round-trip work.
-- [`dependency-parser/`](dependency-parser/) — frozen expected dependency arcs, comparator captures, and feature evidence for parser work.
+- [`dependency-parser/`](dependency-parser/) — frozen expected dependency arcs and feature evidence for parser work.
 - [`relation-extraction/`](relation-extraction/) — typed relation fixtures and negative controls.
 - [`coreference/`](coreference/) — frozen mention/chain fixtures, expected outputs, and negative controls.
 - [`multilingual-support/`](multilingual-support/) — coverage matrix and script input fixtures for multilingual fixture control.

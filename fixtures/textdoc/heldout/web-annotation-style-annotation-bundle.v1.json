@@ -393,7 +393,7 @@
     ]
   },
   "limitations": [
-    "Held-out bundle is repository-authored from an externally named interchange precedent; it is not an external comparator result.",
+    "Held-out bundle is repository-authored from an externally named interchange precedent; it is not an external system result.",
     "Evidence covers stand-off bundle restoration and graph validation only."
   ]
 }

@@ -9,8 +9,8 @@ This document freezes the minimum public contract required before parser code is
 
 - Task id: `nlp-dependency-parser`
 - Owning packages: `textrules`, `textpipeline`, `textdoc`, `textconformance`
-- Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, executed spaCy and Stanza model-output captures, one direct UD/CoNLL-U validator capture, and negative controls inherited from the CoNLL-U invalid fixtures
-- Current non-proof: no trained parser model, broad UD corpus support, broad UD treebank coverage, or JavaScript parser comparator
+- Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, one direct UD/CoNLL-U validator capture, and negative controls inherited from the CoNLL-U invalid fixtures
+- Current non-proof: no trained parser model, broad UD corpus support, or broad UD treebank coverage
 
 ## Input slices
 
@@ -40,29 +40,16 @@ Each expected file records:
 - exactly one root for the frozen sentence;
 - a support boundary stating that parser behavior is limited to the frozen slice.
 
-## Comparator freeze
+## Standards and validation sources
 
-Comparator metadata lives in `fixtures/dependency-parser/tool-versions.json`.
+Standards metadata lives in `fixtures/dependency-parser/tool-versions.json`.
 
 This gate records:
 
 - Universal Dependencies format and guideline sources;
-- an executed Python spaCy comparator capture with pinned runtime/model versions;
-- an executed Stanza 1.12.0 comparator capture with pinned runtime/dependency versions;
-- an executed UniversalDependencies/tools validation capture for the frozen CoNLL-U rows;
-- the absence of a committed JavaScript dependency-parser comparator for this gate;
-- the rule that broader executed comparator outputs must be added before parser behavior is merged.
+- an executed UniversalDependencies/tools validation capture for the frozen CoNLL-U rows.
 
-## Comparator outputs
-
-Files under `fixtures/dependency-parser/comparisons/*.json` record executed captures for this gate.
-
-- `spacy-3.8.json` records executed outputs from pinned spaCy package and model versions.
-- `stanza-1.12.json` records executed outputs from Stanza 1.12.0 and downloaded Stanza models for the frozen slices.
-- `ud-validator-ee98e50.json` records direct UD/CoNLL-U validation of the frozen expected arcs. It is not parser model-output evidence.
-- No JavaScript comparator-backed dependency-parser claim is made by this gate.
-
-The next feature gate must extend these records with broader corpus and language slices before feature code.
+The next feature gate must extend product expected outputs with broader corpus and language slices before broader parser behavior.
 
 ## Documented non-failure differences
 
@@ -78,4 +65,4 @@ npm run -s check:fixtures
 ```
 
 The validator checks schema validity, expected-arc consistency with the source CoNLL-U rows, negative
-controls, executed comparator output differences, remaining gap records, and the fixture boundary.
+controls, remaining gap records, and the fixture boundary.

@@ -38,7 +38,6 @@ function spansOverlap(left, right) {
 const slicesSchemaPath = "schemas/rule-backed-ner-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/rule-backed-ner-tool-versions-v1.schema.json";
 const expectedSchemaPath = "schemas/rule-backed-ner-expected-v1.schema.json";
-const comparisonSchemaPath = "schemas/rule-backed-ner-comparison-v1.schema.json";
 const textdocSchemaPath = "schemas/textdoc-document-v1.schema.json";
 const resultEnvelopeSchemaPath = "schemas/textprotocol-result-envelope-v1.schema.json";
 const conformanceSchemaPath = "schemas/textconformance-report-v1.schema.json";
@@ -47,7 +46,6 @@ const textpackManifestSchemaPath = "schemas/textpack-manifest-v1.schema.json";
 const slicesSchema = await readJson(slicesSchemaPath);
 const toolVersionsSchema = await readJson(toolVersionsSchemaPath);
 const expectedSchema = await readJson(expectedSchemaPath);
-const comparisonSchema = await readJson(comparisonSchemaPath);
 const textdocSchema = await readJson(textdocSchemaPath);
 const resultEnvelopeSchema = await readJson(resultEnvelopeSchemaPath);
 const conformanceSchema = await readJson(conformanceSchemaPath);
@@ -57,7 +55,6 @@ const validateSlices = ajv.compile(slicesSchema);
 const validateToolVersions = ajv.compile(toolVersionsSchema);
 ajv.addSchema(textdocSchema, "textdoc-document-v1.schema.json");
 const validateExpected = ajv.compile(expectedSchema);
-const validateComparison = ajv.compile(comparisonSchema);
 const validateResultEnvelope = ajv.compile(resultEnvelopeSchema);
 const validateConformanceReport = ajv.compile(conformanceSchema);
 const validateTextPackManifest = ajv.compile(textpackManifestSchema);
@@ -122,14 +119,9 @@ for (const label of ["MISC", "PRODUCT", "EVENT"]) {
   );
 }
 
-const runtimes = new Set(toolVersions.comparators.map((entry) => entry.runtime));
 expect(
-  runtimes.has("javascript"),
-  "Rule-backed NER readiness requires at least one frozen JavaScript comparator.",
-);
-expect(
-  runtimes.has("python") || runtimes.has("jvm"),
-  "Rule-backed NER readiness requires at least one frozen Python or JVM comparator.",
+  toolVersions.notes.some((note) => note.includes("target label policy")),
+  "Rule-backed NER readiness must describe the target label policy.",
 );
 
 const readinessDoc = await readText("docs/specs/rule-backed-ner-readiness.md");
@@ -141,8 +133,6 @@ for (const heading of [
   "## Rule priority and tie-break policy",
   "## Overlap and nested-span policy",
   "## Expected-output format",
-  "## Comparator freeze",
-  "## Comparator outputs",
   "## Verification",
 ]) {
   expect(
@@ -150,12 +140,6 @@ for (const heading of [
     `docs/specs/rule-backed-ner-readiness.md is missing heading: ${heading}`,
   );
 }
-
-const outputDifferences = await readText("docs/decisions/rule-backed-ner-output-differences.md");
-expect(
-  outputDifferences.includes("## Documented non-failure differences"),
-  "docs/decisions/rule-backed-ner-output-differences.md is missing documented differences.",
-);
 
 const expectedDir = "fixtures/rule-backed-ner/expected";
 const expectedFiles = (await readdir(expectedDir))
@@ -523,64 +507,5 @@ for (const sliceId of sliceIds) {
     `Rule-backed NER expected outputs are missing slice ${sliceId}`,
   );
 }
-
-const comparisonDir = "fixtures/rule-backed-ner/comparisons";
-const comparisonFiles = (await readdir(comparisonDir))
-  .filter((file) => file.endsWith(".json"))
-  .sort();
-expect(
-  comparisonFiles.length >= 2,
-  "Rule-backed NER comparisons require at least two comparator output files.",
-);
-
-let hasPythonOrJvmComparator = false;
-let hasJavaScriptComparator = false;
-for (const file of comparisonFiles) {
-  const dataPath = `${comparisonDir}/${file}`;
-  const data = await readJson(dataPath);
-  expect(validateComparison(data), `${dataPath} failed ${comparisonSchemaPath}`, validateComparison.errors);
-
-  const comparator = toolVersions.comparators.find(
-    (entry) => entry.name === data.comparator.name && entry.version === data.comparator.version,
-  );
-  expect(
-    comparator !== undefined,
-    `${dataPath} comparator ${data.comparator.name}@${data.comparator.version} is not listed in tool-versions.json`,
-  );
-  if (data.comparator.model) {
-    expect(
-      comparator.model === data.comparator.model.name &&
-        comparator.modelVersion === data.comparator.model.version,
-      `${dataPath} model ${data.comparator.model.name}@${data.comparator.model.version} does not match tool-versions.json`,
-    );
-  }
-
-  const comparisonSliceIds = new Set(data.slices.map((slice) => slice.sliceId));
-  for (const sliceId of sliceIds) {
-    expect(comparisonSliceIds.has(sliceId), `${dataPath} does not include slice ${sliceId}`);
-  }
-
-  for (const slice of data.slices) {
-    if (slice.status === "not-run") {
-      expect(
-        typeof slice.reason === "string" && slice.reason.length > 0,
-        `${dataPath} slice ${slice.sliceId} is not-run but does not record a reason`,
-      );
-    }
-  }
-
-  const runtime = data.comparator.runtime.toLowerCase();
-  if (runtime.includes("python") || runtime.includes("jvm") || runtime.includes("java")) {
-    hasPythonOrJvmComparator = true;
-  }
-  if (runtime.includes("node") || runtime.includes("javascript") || runtime.includes("js")) {
-    hasJavaScriptComparator = true;
-  }
-}
-
-expect(
-  hasPythonOrJvmComparator && hasJavaScriptComparator,
-  "Rule-backed NER comparisons require at least one Python/JVM comparator and one JavaScript comparator.",
-);
 
 console.log("Rule-backed NER readiness artifacts OK.");

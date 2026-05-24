@@ -120,7 +120,7 @@
     },
     "coverageLevels": {
       "type": "array",
-      "minItems": 5,
+      "minItems": 4,
       "items": {
         "$ref": "#/definitions/tier"
       }
@@ -132,7 +132,6 @@
         "unicode-invariant",
         "fixture-proven",
         "resource-backed",
-        "comparator-backed",
         "corpus-backed"
       ]
     },

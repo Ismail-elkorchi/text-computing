@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "tokenization-sbd-corpus-gate",
-  "claimBoundary": "This corpus gate records development, validation, holdout, and negative-control roles for existing tokenization/SBD fixtures. It does not upgrade tokenization/SBD beyond the current comparator-backed slice claim.",
+  "claimBoundary": "This corpus gate records development, validation, holdout, and negative-control roles for existing tokenization/SBD fixtures. It does not upgrade tokenization/SBD beyond the current fixture-bound slice claim.",
   "splitRoles": [
     "development",
     "validation",

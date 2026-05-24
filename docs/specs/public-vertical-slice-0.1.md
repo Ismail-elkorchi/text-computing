@@ -104,7 +104,7 @@ It does not claim broad tokenization, tagging, entity extraction, retrieval, par
 
 ## Non-goals for this phase
 
-This phase MUST NOT expand retrieval, dependency parsing, relation extraction, coreference, entity linking, word-sense disambiguation, topic modeling, embeddings, model inference, LLM/RAG workflows, PDF/XML/HTML ingestion, large-corpus browsing, new comparator matrices, or new support labels.
+This phase MUST NOT expand retrieval, dependency parsing, relation extraction, coreference, entity linking, word-sense disambiguation, topic modeling, embeddings, model inference, LLM/RAG workflows, PDF/XML/HTML ingestion, large-corpus browsing, new non-product evidence matrices, or new support labels.
 
 ## Acceptance commands
 

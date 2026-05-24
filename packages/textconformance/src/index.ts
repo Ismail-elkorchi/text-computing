@@ -29,7 +29,6 @@ export type TextConformanceCheckStatus = "pass" | "fail" | "not-run";
 export type TextConformanceReportDiffStatus = "same" | "changed" | "added" | "removed";
 export type TextConformanceClaimSupportLabel =
   | "fixture-proven"
-  | "comparator-backed"
   | "corpus-backed"
   | "performance-backed";
 export type TextConformanceSuiteClass =
@@ -44,7 +43,6 @@ export type TextConformanceFixtureRole =
   | "validation"
   | "holdout"
   | "negative-control"
-  | "comparator-capture"
   | "claim-narrowed-gap";
 export type TextConformanceOracleKind =
   | "exact"
@@ -396,7 +394,6 @@ export function isTextConformanceFixtureRole(
     value === "validation" ||
     value === "holdout" ||
     value === "negative-control" ||
-    value === "comparator-capture" ||
     value === "claim-narrowed-gap"
   );
 }
@@ -634,7 +631,6 @@ export function isTextConformanceClaimSupportLabel(
 ): value is TextConformanceClaimSupportLabel {
   return (
     value === "fixture-proven" ||
-    value === "comparator-backed" ||
     value === "corpus-backed" ||
     value === "performance-backed"
   );

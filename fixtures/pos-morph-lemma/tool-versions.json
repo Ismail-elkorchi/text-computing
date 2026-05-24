@@ -3,26 +3,8 @@
   "targetTagSet": "ud-v2-upos",
   "targetMorphFeatures": "ud-v2-features",
   "retainAmbiguity": true,
-  "comparators": [
-    {
-      "name": "spaCy",
-      "runtime": "python",
-      "version": "3.8.14",
-      "model": "en_core_web_sm / es_core_news_sm / fr_core_news_sm",
-      "modelVersion": "3.8.0",
-      "executionStatus": "executed",
-      "capturePath": "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
-    },
-    {
-      "name": "Stanza",
-      "runtime": "python",
-      "version": "1.12.0",
-      "executionStatus": "executed",
-      "capturePath": "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
-    }
-  ],
   "notes": [
-    "Comparator versions are frozen for readiness; feature work must record any later changes explicitly.",
-    "spaCy and Stanza have committed executed output in this gate; no JavaScript comparator-backed POS/morph/lemma claim is made."
+    "This manifest defines the target tag and morphology contract for repository-authored expected outputs.",
+    "No external-tool output is required for this readiness gate."
   ]
 }

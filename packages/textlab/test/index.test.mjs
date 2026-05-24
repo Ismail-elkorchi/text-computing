@@ -49,7 +49,7 @@ const conformanceReport = {
   checks: [
     { checkId: "fixture", status: "pass" },
     { checkId: "expected", status: "pass" },
-    { checkId: "comparator", status: "pass" },
+    { checkId: "replay", status: "pass" },
     { checkId: "negative", status: "fail" },
     { checkId: "future-a", status: "not-run" },
     { checkId: "future-b", status: "not-run" },
@@ -95,7 +95,7 @@ const changedConformanceReport = {
   checks: [
     { checkId: "fixture", status: "pass" },
     { checkId: "expected", status: "pass" },
-    { checkId: "comparator", status: "fail", message: "Comparator drift detected." },
+    { checkId: "replay", status: "fail", message: "Replay drift detected." },
     { checkId: "negative", status: "fail" },
     { checkId: "future-a", status: "not-run" },
     { checkId: "new-check", status: "pass" },
@@ -110,7 +110,7 @@ if (
   conformanceDiff.changed !== 1 ||
   conformanceDiff.added !== 1 ||
   conformanceDiff.removed !== 1 ||
-  conformanceDiff.changedCheckIds.join(",") !== "comparator,future-b,new-check"
+  conformanceDiff.changedCheckIds.join(",") !== "future-b,new-check,replay"
 ) {
   throw new Error("conformance diff inspection should expose changed, added, and removed checks");
 }

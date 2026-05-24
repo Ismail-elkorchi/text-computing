@@ -13,7 +13,7 @@
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Broad tokenization/SBD claims require slice count, code-unit count, script/family coverage, comparator execution records, and holdout split evidence before wall-clock thresholds become release gates.",
+      "scalePolicy": "Broad tokenization/SBD claims require slice count, code-unit count, script/family coverage, product-oracle records, and holdout split evidence before wall-clock thresholds become release gates.",
       "regressionPolicy": "Future measurements must pin corpus gate hash, expected-output hash set, runtime, command, and environment before timing or memory thresholds become blocking checks.",
       "evidenceRefs": [
         "fixtures/tokenization-sbd/slices.json",
