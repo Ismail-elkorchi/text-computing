@@ -2,7 +2,7 @@
 
 Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
 
-Workspace package sources live under `packages/*`; current package and task support status is tracked in `docs/specs/support-status.md`.
+Workspace package sources live under `packages/*`.
 
 **Prerequisites**
 - Node.js 24+

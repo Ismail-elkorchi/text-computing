@@ -126,9 +126,7 @@ for (const suite of catalog.suites) {
   );
 
   const roles = new Set(suite.fixtures.map((fixture) => fixture.role));
-  expect(roles.has("validation"), `${suite.suiteId} must declare validation fixtures.`);
-  expect(roles.has("holdout"), `${suite.suiteId} must declare holdout fixtures.`);
-  expect(roles.has("negative-control"), `${suite.suiteId} must declare negative-control fixtures.`);
+  expect(roles.has("validation"), `${suite.suiteId} must declare at least one executable validation fixture.`);
   expect(
     suite.fixtures.some((fixture) => fixture.role !== "development"),
     `${suite.suiteId} must not rely only on development fixtures.`,

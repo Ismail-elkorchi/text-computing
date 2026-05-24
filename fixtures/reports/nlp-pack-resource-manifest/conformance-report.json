@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-pack-resource-manifest",
+  "reportId": "conformance:nlp-pack-resource-manifest",
   "subject": {
     "kind": "task",
     "id": "nlp-pack-resource-manifest",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
@@ -196,10 +196,7 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status records current resource-manifest and catalog limits.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "docs/specs/task-coverage-matrix.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
           "docs/specs/textpack-resource-manifest.md"

@@ -8,7 +8,6 @@ This document freezes the minimum public contract required before parser code is
 ## Status
 
 - Task id: `nlp-dependency-parser`
-- Status: readiness artifacts complete; frozen-slice behavior is tracked in `docs/specs/support-status.v1.json`
 - Owning packages: `textrules`, `textpipeline`, `textdoc`, `textconformance`
 - Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, executed spaCy and Stanza model-output captures, one direct UD/CoNLL-U validator capture, and negative controls inherited from the CoNLL-U invalid fixtures
 - Current non-proof: no trained parser model, broad UD corpus support, broad UD treebank coverage, or JavaScript parser comparator
@@ -79,4 +78,4 @@ npm run -s check:fixtures
 ```
 
 The validator checks schema validity, expected-arc consistency with the source CoNLL-U rows, negative
-controls, executed comparator output differences, remaining gap records, and the support-status boundary.
+controls, executed comparator output differences, remaining gap records, and the fixture boundary.

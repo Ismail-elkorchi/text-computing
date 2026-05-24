@@ -73,7 +73,6 @@
     {
       "packageName": "@ismail-elkorchi/textconformance",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -126,8 +125,7 @@
           "evidenceRefs": [
             "packages/textconformance/src/index.ts",
             "schemas/textconformance-benchmark-report-v1.schema.json",
-            "packages/textconformance/test",
-            "docs/specs/support-status.v1.json"
+            "packages/textconformance/test"
           ]
         }
       ]
@@ -135,7 +133,6 @@
     {
       "packageName": "@ismail-elkorchi/textcorpus",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -186,8 +183,7 @@
           "decision": "Blocks broader corpus and retrieval release claims; it does not authorize task expansion during alpha foundation release.",
           "evidenceRefs": [
             "packages/textcorpus/src/index.ts",
-            "packages/textcorpus/test",
-            "docs/specs/support-status.v1.json"
+            "packages/textcorpus/test"
           ]
         }
       ]
@@ -195,7 +191,6 @@
     {
       "packageName": "@ismail-elkorchi/textdoc",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -245,8 +240,7 @@
           "decision": "Does not block alpha because the alpha scope requires bounded document/container interoperation, not broad task graph semantics.",
           "evidenceRefs": [
             "packages/textdoc/src/index.ts",
-            "packages/textdoc/test",
-            "docs/specs/support-status.v1.json"
+            "packages/textdoc/test"
           ]
         }
       ]
@@ -254,7 +248,6 @@
     {
       "packageName": "@ismail-elkorchi/textfacts",
       "releaseTrack": "public-beta",
-      "supportStatus": "beta",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -292,7 +285,6 @@
     {
       "packageName": "@ismail-elkorchi/textlab",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -340,8 +332,7 @@
           "decision": "Blocks broader inspection-tooling claims; it does not block foundation alpha packages unless their smoke output cannot be inspected.",
           "evidenceRefs": [
             "packages/textlab/src/index.ts",
-            "packages/textlab/test/index.test.mjs",
-            "docs/specs/support-status.v1.json"
+            "packages/textlab/test/index.test.mjs"
           ]
         }
       ]
@@ -349,7 +340,6 @@
     {
       "packageName": "@ismail-elkorchi/textpack",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -402,8 +392,7 @@
           "decision": "Does not block alpha because alpha requires explicit fixture resources and exact declared lookup behavior, not broad resource-marketplace coverage.",
           "evidenceRefs": [
             "packages/textpack/src/index.ts",
-            "packages/textpack/test",
-            "docs/specs/support-status.v1.json"
+            "packages/textpack/test"
           ]
         },
         {
@@ -412,8 +401,7 @@
           "decision": "Does not block alpha reference packs; it limits broad resource-catalog claims until review workflow and resource breadth expand.",
           "evidenceRefs": [
             "packages/textpack/src/index.ts",
-            "tools/validate-textpack-packages.mjs",
-            "docs/specs/support-status.v1.json"
+            "tools/validate-textpack-packages.mjs"
           ]
         }
       ]
@@ -421,7 +409,6 @@
     {
       "packageName": "@ismail-elkorchi/textpack-en-core",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -472,7 +459,6 @@
     {
       "packageName": "@ismail-elkorchi/textpack-en-legal",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -523,7 +509,6 @@
     {
       "packageName": "@ismail-elkorchi/textpack-fr-core",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -574,7 +559,6 @@
     {
       "packageName": "@ismail-elkorchi/textpipeline",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -619,8 +603,7 @@
           "decision": "Does not block alpha; it limits production-candidate operational claims beyond deterministic local execution and caller-provided cache semantics.",
           "evidenceRefs": [
             "packages/textpipeline/src/index.ts",
-            "packages/textpipeline/test",
-            "docs/specs/support-status.v1.json"
+            "packages/textpipeline/test"
           ]
         }
       ]
@@ -628,7 +611,6 @@
     {
       "packageName": "@ismail-elkorchi/textprotocol",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -674,7 +656,6 @@
     {
       "packageName": "@ismail-elkorchi/textrules",
       "releaseTrack": "public-alpha",
-      "supportStatus": "alpha",
       "releaseReadiness": "publishable",
       "gates": [
         "metadata",
@@ -722,17 +703,19 @@
           "decision": "Blocks broader task claims, not the foundation alpha package sequence; keep behavior slice-scoped.",
           "evidenceRefs": [
             "packages/textrules/src/index.ts",
-            "packages/textrules/test",
-            "docs/specs/support-status.v1.json"
+            "packages/textrules/test"
           ]
         },
         {
           "blocker": "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
           "maturity": "beta",
-          "decision": "Blocks broader task evidence claims; does not authorize new comparator matrices during alpha foundation release.",
+          "decision": "Blocks broader behavior claims; does not authorize new comparator matrices during alpha foundation release.",
           "evidenceRefs": [
-            "fixtures/reports/task-evidence-manifest.v1.json",
-            "docs/specs/support-status.v1.json"
+            "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
+            "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json",
+            "fixtures/dependency-parser/comparisons/stanza-1.12.json",
+            "fixtures/relation-extraction/slices.json",
+            "fixtures/coreference/slices.json"
           ]
         }
       ]

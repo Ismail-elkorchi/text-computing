@@ -27,4 +27,4 @@ New production code, tests, and docs MUST NOT import or recommend the removed le
 
 ## Claim boundary
 
-This migration narrows package ownership. It does not upgrade support status or claim broader kernel behavior.
+This migration narrows package ownership. It does not claim broader kernel behavior.

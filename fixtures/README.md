@@ -7,7 +7,7 @@ validation.
 - `expected/` contains expected outputs.
 - `generated/` contains generated artifacts that are checked in only when a repository command
   requires them.
-- `reports/` contains persisted task evidence reports and their manifest.
+- `reports/` contains task conformance report fixtures.
 - `quarantine/` contains inputs withheld from required checks until their expected behavior is
   specified.
 
@@ -20,14 +20,14 @@ validation.
 - [`retrieval/`](retrieval/) — explicit-token retrieval slice, expected hits, snippets, and explain output.
 - [`conllu-dependency/`](conllu-dependency/) — valid, invalid, and expected-output CoNLL-U fixtures for dependency-target round-trip work.
 - [`dependency-parser/`](dependency-parser/) — frozen expected dependency arcs, comparator captures, and feature evidence for parser work.
-- [`relation-extraction/`](relation-extraction/) — readiness-only typed relation fixtures and negative controls.
+- [`relation-extraction/`](relation-extraction/) — typed relation fixtures and negative controls.
 - [`coreference/`](coreference/) — frozen mention/chain fixtures, expected outputs, and negative controls.
-- [`multilingual-support/`](multilingual-support/) — support-tier matrix and readiness-only script fixtures for multilingual evidence control.
+- [`multilingual-support/`](multilingual-support/) — coverage matrix and script input fixtures for multilingual fixture control.
 - [`performance/`](performance/) — performance gate requirements for future operational claims.
 - [`package-release/`](package-release/) — package release-track and release-gate requirements.
 - [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
   `#11`.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue
   `#12`.
-- [`reports/`](reports/) — persisted task evidence manifest and `TextConformanceReportV1`
+- [`reports/`](reports/) — persisted `TextConformanceReportV1` fixture outputs
   artifacts for current slice-proven task surfaces.

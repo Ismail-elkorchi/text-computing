@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "taskId": "nlp-coreference",
-  "supportStatus": "slice-proven",
   "expectedOutputStatus": "recorded",
   "comparatorStatus": "claim-downgraded",
   "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
@@ -45,7 +44,12 @@
     ]
   },
   "chainPolicy": {
-    "mentionKinds": ["proper", "nominal", "pronoun", "singleton"],
+    "mentionKinds": [
+      "proper",
+      "nominal",
+      "pronoun",
+      "singleton"
+    ],
     "ambiguityPolicy": "Ambiguous antecedents must remain explicit diagnostics until a slice-specific policy selects a link.",
     "lossPolicy": "Singleton mentions and unsupported split antecedents must be preserved rather than silently dropped."
   },
@@ -55,7 +59,10 @@
       "language": "en",
       "script": "Latn",
       "fixtureClass": "repository-authored",
-      "phenomena": ["proper-mention", "pronoun-link"],
+      "phenomena": [
+        "proper-mention",
+        "pronoun-link"
+      ],
       "source": {
         "kind": "text",
         "text": "Mira checked the sensor because she calibrated it yesterday."
@@ -66,7 +73,10 @@
       "language": "en",
       "script": "Latn",
       "fixtureClass": "repository-authored",
-      "phenomena": ["proper-mention", "nominal-mention"],
+      "phenomena": [
+        "proper-mention",
+        "nominal-mention"
+      ],
       "source": {
         "kind": "text",
         "text": "Northwind Labs released the report. The company archived the draft."
@@ -77,7 +87,11 @@
       "language": "es",
       "script": "Latn",
       "fixtureClass": "repository-authored",
-      "phenomena": ["proper-mention", "pronoun-link", "non-english-latin-script"],
+      "phenomena": [
+        "proper-mention",
+        "pronoun-link",
+        "non-english-latin-script"
+      ],
       "source": {
         "kind": "text",
         "text": "Lucía encontró el cuaderno y ella lo guardó."
@@ -88,7 +102,12 @@
       "language": "ar",
       "script": "Arab",
       "fixtureClass": "repository-authored",
-      "phenomena": ["proper-mention", "pronoun-link", "non-latin-script", "right-to-left-script"],
+      "phenomena": [
+        "proper-mention",
+        "pronoun-link",
+        "non-latin-script",
+        "right-to-left-script"
+      ],
       "source": {
         "kind": "text",
         "text": "قرأت سلمى الرسالة ثم حفظتها."
@@ -99,7 +118,11 @@
       "language": "en",
       "script": "Latn",
       "fixtureClass": "repository-authored",
-      "phenomena": ["ambiguous-pronoun", "split-antecedent-control", "singleton-control"],
+      "phenomena": [
+        "ambiguous-pronoun",
+        "split-antecedent-control",
+        "singleton-control"
+      ],
       "source": {
         "kind": "text",
         "text": "Mira called Jana after she reviewed the file."
@@ -110,12 +133,16 @@
     {
       "id": "ambiguous-she",
       "expectedFailure": "ambiguous-antecedent",
-      "notes": ["The pronoun has two plausible antecedents and must not be resolved by hidden preference."]
+      "notes": [
+        "The pronoun has two plausible antecedents and must not be resolved by hidden preference."
+      ]
     },
     {
       "id": "unsupported-split",
       "expectedFailure": "split-antecedent-unsupported",
-      "notes": ["Unsupported split antecedents must become diagnostics, not silent chains."]
+      "notes": [
+        "Unsupported split antecedents must become diagnostics, not silent chains."
+      ]
     }
   ]
 }

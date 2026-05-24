@@ -41,4 +41,4 @@ The current manifest defines deterministic performance and scale gates. Broader 
 
 ## Verification
 
-Run `node tools/validate-performance-gates.mjs` and `npm run -s check:status-docs`.
+Run `node tools/validate-performance-gates.mjs`.

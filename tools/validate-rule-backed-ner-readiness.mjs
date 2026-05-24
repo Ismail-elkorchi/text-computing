@@ -151,20 +151,6 @@ for (const heading of [
   );
 }
 
-const researchLedger = await readText("docs/specs/nlp-rule-backed-ner-research-ledger.md");
-for (const heading of [
-  "## Scope",
-  "## Primary sources",
-  "## Comparator capability evidence",
-  "## Comparator limitations",
-  "## Readiness consequences",
-]) {
-  expect(
-    researchLedger.includes(heading),
-    `docs/specs/nlp-rule-backed-ner-research-ledger.md is missing heading: ${heading}`,
-  );
-}
-
 const outputDifferences = await readText("docs/decisions/rule-backed-ner-output-differences.md");
 expect(
   outputDifferences.includes("## Documented non-failure differences"),

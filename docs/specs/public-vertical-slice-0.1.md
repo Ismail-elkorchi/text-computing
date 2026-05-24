@@ -116,7 +116,6 @@ npm run -s build
 npm run -s schema:validate
 npm run -s check:fixtures
 npm run -s test:all
-npm run -s evidence:all
 npm run -s check:release-gates
 npm run -s check:pack:workspaces
 npm run -s smoke:public-vertical-slice

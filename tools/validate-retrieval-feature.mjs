@@ -389,9 +389,6 @@ for (const expectedPath of expectedPaths) {
   expect(JSON.stringify(result) === JSON.stringify(repeated), `${expectedPath} retrieval output must be deterministic.`);
 }
 
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-retrieval");
-expect(task?.status === "slice-proven", "Support status must mark nlp-retrieval as slice-proven.");
 
 console.log(
   `Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount} evaluatedQueries=${evaluatedQueryCount} thresholdSets=${thresholdCheckedCount}).`,

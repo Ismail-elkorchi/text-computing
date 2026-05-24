@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "scope": "dependency-parser",
-  "supportStatus": "readiness-only",
   "expectedOutputStatus": "recorded",
   "comparatorStatus": "executed-captures-recorded",
   "fixtures": [

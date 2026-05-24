@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-dependency-parser",
+  "reportId": "conformance:nlp-dependency-parser",
   "subject": {
     "kind": "task",
     "id": "nlp-dependency-parser",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
@@ -24,8 +24,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/dependency-parser-readiness.md",
-          "docs/specs/nlp-dependency-parser-research-ledger.md"
+          "docs/specs/dependency-parser-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-dependency-parser-readiness.mjs",
@@ -60,8 +59,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/dependency-parser-readiness.md",
-          "docs/specs/nlp-dependency-parser-research-ledger.md"
+          "docs/specs/dependency-parser-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-dependency-parser-readiness.mjs",
@@ -95,8 +93,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/dependency-parser-readiness.md",
-          "docs/specs/nlp-dependency-parser-research-ledger.md"
+          "docs/specs/dependency-parser-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-dependency-parser-readiness.mjs",
@@ -133,8 +130,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/dependency-parser-readiness.md",
-          "docs/specs/nlp-dependency-parser-research-ledger.md"
+          "docs/specs/dependency-parser-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-dependency-parser-readiness.mjs",
@@ -162,22 +158,16 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status remains limited to the frozen dependency-parser slices.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/dependency-parser-readiness.md",
-          "docs/specs/nlp-dependency-parser-research-ledger.md"
+          "docs/specs/dependency-parser-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-dependency-parser-readiness.mjs",
           "tools/validate-dependency-parser-feature.mjs"
         ],
-        "inputRefs": [
-          "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
-        ],
+        "inputRefs": [],
         "oracleRefs": [
           "schemas/dependency-parser-expected-v1.schema.json",
           "tools/validate-dependency-parser-readiness.mjs",

@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-rule-backed-ner",
+  "reportId": "conformance:nlp-rule-backed-ner",
   "subject": {
     "kind": "task",
     "id": "nlp-rule-backed-ner",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
@@ -24,8 +24,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/rule-backed-ner-readiness.md",
-          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+          "docs/specs/rule-backed-ner-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-rule-backed-ner-readiness.mjs"
@@ -60,8 +59,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/rule-backed-ner-readiness.md",
-          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+          "docs/specs/rule-backed-ner-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-rule-backed-ner-readiness.mjs"
@@ -95,8 +93,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/rule-backed-ner-readiness.md",
-          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+          "docs/specs/rule-backed-ner-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-rule-backed-ner-readiness.mjs"
@@ -132,8 +129,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/rule-backed-ner-readiness.md",
-          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+          "docs/specs/rule-backed-ner-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-rule-backed-ner-readiness.mjs"
@@ -163,14 +159,10 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status remains limited to PER/ORG/LOC frozen slices.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "docs/specs/task-coverage-matrix.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/rule-backed-ner-readiness.md",
-          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+          "docs/specs/rule-backed-ner-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-rule-backed-ner-readiness.mjs"
@@ -210,8 +202,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/rule-backed-ner-readiness.md",
-          "docs/specs/nlp-rule-backed-ner-research-ledger.md"
+          "docs/specs/rule-backed-ner-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",

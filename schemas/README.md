@@ -39,7 +39,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`relation-extraction-expected-v1.schema.json`](relation-extraction-expected-v1.schema.json) — expected-output schema for future relation extraction behavior.
 - [`coreference-slices-v1.schema.json`](coreference-slices-v1.schema.json) — fixture schema for coreference.
 - [`coreference-expected-v1.schema.json`](coreference-expected-v1.schema.json) — expected-output schema for frozen coreference behavior.
-- [`multilingual-support-tiers-v1.schema.json`](multilingual-support-tiers-v1.schema.json) — multilingual support-tier matrix schema.
+- [`multilingual-coverage-v1.schema.json`](multilingual-coverage-v1.schema.json) — multilingual coverage matrix schema.
 - [`performance-gates-v1.schema.json`](performance-gates-v1.schema.json) — performance gate requirement schema.
 - [`package-release-gates-v1.schema.json`](package-release-gates-v1.schema.json) — package release gate schema.
 - [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
@@ -49,8 +49,6 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textpipeline-trace-v1.schema.json`](textpipeline-trace-v1.schema.json) — deterministic processor trace schema.
 - [`textpack-manifest-v1.schema.json`](textpack-manifest-v1.schema.json) — pack manifest schema for issue `#12`.
 - [`textpack-catalog-v1.schema.json`](textpack-catalog-v1.schema.json) — pack catalog schema for reference-pack evidence.
-- [`support-status-v1.schema.json`](support-status-v1.schema.json) — canonical package and task support-status schema.
-- [`toolkit-capability-scorecard-v1.schema.json`](toolkit-capability-scorecard-v1.schema.json) — evidence-linked package and task capability scorecard schema.
 - [`textprotocol-result-envelope-v1.schema.json`](textprotocol-result-envelope-v1.schema.json) — result envelope schema for public repository outputs.
 - [`textprotocol-document-bundle-v1.schema.json`](textprotocol-document-bundle-v1.schema.json) — protocol document-bundle envelope schema.
 - [`textprotocol-annotation-bundle-v1.schema.json`](textprotocol-annotation-bundle-v1.schema.json) — protocol annotation-bundle envelope schema.
@@ -60,6 +58,4 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textprotocol-mapping-loss-report-v1.schema.json`](textprotocol-mapping-loss-report-v1.schema.json) — protocol mapping-loss report schema.
 - [`textprotocol-protocol-error-v1.schema.json`](textprotocol-protocol-error-v1.schema.json) — protocol error envelope schema.
 - [`textconformance-report-v1.schema.json`](textconformance-report-v1.schema.json) — machine-readable conformance report schema.
-- [`task-evidence-manifest-v1.schema.json`](task-evidence-manifest-v1.schema.json) — repository manifest for persisted task evidence reports.
 - [`evidence-run-v1.schema.json`](evidence-run-v1.schema.json) — replayable comparator/evidence run schema.
-- [`evidence-ledger-v1.schema.json`](evidence-ledger-v1.schema.json) — repository evidence ledger schema.

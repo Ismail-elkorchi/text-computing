@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-corpus-tfidf-bm25",
+  "reportId": "conformance:nlp-corpus-tfidf-bm25",
   "subject": {
     "kind": "task",
     "id": "nlp-corpus-tfidf-bm25",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
@@ -24,8 +24,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-corpus-tfidf-bm25-readiness.mjs"
@@ -60,8 +59,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-corpus-tfidf-bm25-readiness.mjs"
@@ -94,8 +92,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-corpus-tfidf-bm25-readiness.mjs"
@@ -129,8 +126,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-corpus-tfidf-bm25-readiness.mjs"
@@ -165,8 +161,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "packages/textcorpus/src/index.ts",
@@ -193,14 +188,10 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status remains limited to committed explicit-token corpora and does not upgrade broad corpus claims.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "docs/specs/task-coverage-matrix.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "tools/validate-corpus-tfidf-bm25-readiness.mjs"
@@ -236,8 +227,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/corpus-tfidf-bm25-readiness.md",
-          "docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md"
+          "docs/specs/corpus-tfidf-bm25-readiness.md"
         ],
         "apiRefs": [
           "packages/textcorpus/src/index.ts",

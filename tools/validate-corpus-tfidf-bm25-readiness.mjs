@@ -281,10 +281,6 @@ for (const heading of [
 ]) {
   expect(readinessDoc.includes(heading), `corpus-tfidf-bm25-readiness.md is missing ${heading}`);
 }
-const researchLedger = await readText("docs/specs/nlp-corpus-tfidf-bm25-research-ledger.md");
-for (const heading of ["## Scope", "## Primary sources", "## Comparator capability evidence", "## Readiness consequences"]) {
-  expect(researchLedger.includes(heading), `nlp-corpus-tfidf-bm25-research-ledger.md is missing ${heading}`);
-}
 const differencesDoc = await readText("docs/decisions/corpus-tfidf-bm25-output-differences.md");
 expect(differencesDoc.includes("## Documented non-failure differences"), "corpus output differences doc must record non-failure differences.");
 
@@ -373,11 +369,5 @@ for (const corpus of slices.corpora) {
   }
 }
 
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-corpus-tfidf-bm25");
-expect(
-  task?.status === "readiness-only" || task?.status === "slice-proven",
-  "Support status must mark nlp-corpus-tfidf-bm25 as readiness-only or slice-proven.",
-);
 
 console.log("Corpus TF-IDF/BM25 readiness artifacts OK.");

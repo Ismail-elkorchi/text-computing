@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-conllu-dependency-roundtrip",
+  "reportId": "conformance:nlp-conllu-dependency-roundtrip",
   "subject": {
     "kind": "task",
     "id": "nlp-conllu-dependency-roundtrip",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-15T00:00:00.000Z",
   "summary": {
@@ -27,7 +27,6 @@
       "traceability": {
         "requirementRefs": [
           "docs/specs/conllu-dependency-readiness.md",
-          "docs/specs/nlp-conllu-dependency-research-ledger.md",
           "docs/specs/textdoc-dependency-target-contract.md"
         ],
         "apiRefs": [
@@ -63,7 +62,6 @@
       "traceability": {
         "requirementRefs": [
           "docs/specs/conllu-dependency-readiness.md",
-          "docs/specs/nlp-conllu-dependency-research-ledger.md",
           "docs/specs/textdoc-dependency-target-contract.md"
         ],
         "apiRefs": [
@@ -104,7 +102,6 @@
       "traceability": {
         "requirementRefs": [
           "docs/specs/conllu-dependency-readiness.md",
-          "docs/specs/nlp-conllu-dependency-research-ledger.md",
           "docs/specs/textdoc-dependency-target-contract.md"
         ],
         "apiRefs": [
@@ -141,7 +138,6 @@
       "traceability": {
         "requirementRefs": [
           "docs/specs/conllu-dependency-readiness.md",
-          "docs/specs/nlp-conllu-dependency-research-ledger.md",
           "docs/specs/textdoc-dependency-target-contract.md"
         ],
         "apiRefs": [
@@ -176,7 +172,6 @@
       "traceability": {
         "requirementRefs": [
           "docs/specs/conllu-dependency-readiness.md",
-          "docs/specs/nlp-conllu-dependency-research-ledger.md",
           "docs/specs/textdoc-dependency-target-contract.md"
         ],
         "apiRefs": [
@@ -205,14 +200,10 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status excludes dependency parser and broad UD treebank behavior.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "docs/specs/task-coverage-matrix.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
           "docs/specs/conllu-dependency-readiness.md",
-          "docs/specs/nlp-conllu-dependency-research-ledger.md",
           "docs/specs/textdoc-dependency-target-contract.md"
         ],
         "apiRefs": [

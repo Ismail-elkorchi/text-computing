@@ -10,85 +10,6 @@ import { isTextPackManifestV1 } from "@ismail-elkorchi/textpack";
 export const packageName = "@ismail-elkorchi/textlab" as const;
 
 export type PackageName = typeof packageName;
-export type TextlabSupportStatusLabel =
-  | "scaffold"
-  | "readiness-only"
-  | "slice-proven"
-  | "alpha"
-  | "beta"
-  | "production-candidate";
-export type TextlabSupportStatusRowKind = "package" | "task";
-
-export interface TextlabSupportStatusEntry {
-  readonly status: TextlabSupportStatusLabel;
-  readonly scope: string;
-  readonly evidence: readonly string[];
-  readonly limitations: readonly string[];
-}
-
-export interface TextlabSupportStatusPackageEntry extends TextlabSupportStatusEntry {
-  readonly name: string;
-}
-
-export interface TextlabSupportStatusTaskEntry extends TextlabSupportStatusEntry {
-  readonly id: string;
-}
-
-export interface TextlabSupportStatusDocument {
-  readonly schemaVersion: 1;
-  readonly packages: readonly TextlabSupportStatusPackageEntry[];
-  readonly tasks: readonly TextlabSupportStatusTaskEntry[];
-}
-
-export interface TextlabSupportStatusRow extends TextlabSupportStatusEntry {
-  readonly kind: TextlabSupportStatusRowKind;
-  readonly id: string;
-}
-
-export interface TextlabSupportStatusCount {
-  readonly status: TextlabSupportStatusLabel;
-  readonly count: number;
-}
-
-export interface TextlabSupportStatusSummary {
-  readonly schemaVersion: 1;
-  readonly packageRows: readonly TextlabSupportStatusRow[];
-  readonly taskRows: readonly TextlabSupportStatusRow[];
-  readonly counts: readonly TextlabSupportStatusCount[];
-}
-
-export interface TextlabTaskEvidenceEntry {
-  readonly taskId: string;
-  readonly supportStatus: string;
-  readonly claimBoundary: string;
-  readonly reportPath: string;
-  readonly evidenceRefs: readonly string[];
-  readonly comparatorRefs?: readonly string[];
-  readonly knownGaps?: readonly string[];
-}
-
-export interface TextlabTaskEvidenceManifest {
-  readonly schemaVersion: 1;
-  readonly generatedAt: string;
-  readonly tasks: readonly TextlabTaskEvidenceEntry[];
-}
-
-export interface TextlabEvidenceSummaryRow {
-  readonly taskId: string;
-  readonly supportStatus: string;
-  readonly reportPath: string;
-  readonly evidenceRefCount: number;
-  readonly comparatorRefCount: number;
-  readonly knownGapCount: number;
-  readonly hasComparatorEvidence: boolean;
-}
-
-export interface TextlabEvidenceSummary {
-  readonly schemaVersion: 1;
-  readonly generatedAt: string;
-  readonly rows: readonly TextlabEvidenceSummaryRow[];
-}
-
 export interface TextlabConformanceReportSummary {
   readonly schemaVersion: 1;
   readonly reportId: string;
@@ -133,32 +54,6 @@ export interface TextlabAnnotationInspection {
   readonly layerKindCounts: readonly TextlabCount[];
   readonly lifecycleCounts: readonly TextlabCount[];
   readonly rows: readonly TextlabAnnotationInspectionRow[];
-}
-
-export interface TextlabEvidenceReplayComparisonSummary {
-  readonly status: string;
-  readonly count: number;
-}
-
-export interface TextlabEvidenceReplayRow {
-  readonly task: string;
-  readonly taskId: string;
-  readonly status: string;
-  readonly validatorCount: number;
-  readonly comparatorCount: number;
-  readonly passedComparisonCount: number;
-  readonly failedComparisonCount: number;
-  readonly notRunComparisonCount: number;
-  readonly conformanceReportCount: number;
-  readonly knownGapCount: number;
-}
-
-export interface TextlabEvidenceReplayInspection {
-  readonly schemaVersion: 1;
-  readonly generatedAt: string;
-  readonly rows: readonly TextlabEvidenceReplayRow[];
-  readonly statusCounts: readonly TextlabEvidenceReplayComparisonSummary[];
-  readonly comparisonStatusCounts: readonly TextlabEvidenceReplayComparisonSummary[];
 }
 
 export interface TextlabCorpusFixtureInspection {
@@ -231,22 +126,6 @@ export interface TextlabConformanceDiffInspection {
   readonly changedCheckIds: readonly string[];
 }
 
-export interface TextlabComparatorDriftRow {
-  readonly taskId: string;
-  readonly task: string;
-  readonly status: string;
-  readonly comparator: string;
-  readonly path: string;
-  readonly knownGap?: string;
-}
-
-export interface TextlabComparatorDriftInspection {
-  readonly schemaVersion: 1;
-  readonly generatedAt: string;
-  readonly driftCount: number;
-  readonly rows: readonly TextlabComparatorDriftRow[];
-}
-
 export interface TextlabRetrievalQrelsInspection {
   readonly schemaVersion: 1;
   readonly taskId: string;
@@ -273,7 +152,6 @@ export interface TextlabRetrievalEvaluationInspection {
 export interface TextlabReleaseReadinessRow {
   readonly packageName: string;
   readonly releaseTrack: string;
-  readonly supportStatus: string;
   readonly releaseReadiness: string;
   readonly downstreamApiStatus: string;
   readonly downstreamDependentCount: number;
@@ -292,15 +170,6 @@ export interface TextlabReleaseReadinessInspection {
   readonly rows: readonly TextlabReleaseReadinessRow[];
 }
 
-const statusLabels: readonly TextlabSupportStatusLabel[] = [
-  "scaffold",
-  "readiness-only",
-  "slice-proven",
-  "alpha",
-  "beta",
-  "production-candidate",
-];
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -311,90 +180,6 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
-}
-
-function isSupportStatusLabel(value: unknown): value is TextlabSupportStatusLabel {
-  return typeof value === "string" && statusLabels.includes(value as TextlabSupportStatusLabel);
-}
-
-function isSupportStatusEntry(value: unknown): value is TextlabSupportStatusEntry {
-  return (
-    isRecord(value) &&
-    isSupportStatusLabel(value.status) &&
-    isNonEmptyString(value.scope) &&
-    isStringArray(value.evidence) &&
-    value.evidence.length > 0 &&
-    isStringArray(value.limitations) &&
-    value.limitations.length > 0
-  );
-}
-
-function isSupportStatusPackageEntry(value: unknown): value is TextlabSupportStatusPackageEntry {
-  return isRecord(value) && isSupportStatusEntry(value) && isNonEmptyString(value.name);
-}
-
-function isSupportStatusTaskEntry(value: unknown): value is TextlabSupportStatusTaskEntry {
-  return isRecord(value) && isSupportStatusEntry(value) && isNonEmptyString(value.id);
-}
-
-function compareRows(left: TextlabSupportStatusRow, right: TextlabSupportStatusRow): number {
-  return `${left.kind}\u0000${left.id}`.localeCompare(`${right.kind}\u0000${right.id}`);
-}
-
-function toPackageRow(entry: TextlabSupportStatusPackageEntry): TextlabSupportStatusRow {
-  return {
-    kind: "package",
-    id: entry.name,
-    status: entry.status,
-    scope: entry.scope,
-    evidence: entry.evidence,
-    limitations: entry.limitations,
-  };
-}
-
-function toTaskRow(entry: TextlabSupportStatusTaskEntry): TextlabSupportStatusRow {
-  return {
-    kind: "task",
-    id: entry.id,
-    status: entry.status,
-    scope: entry.scope,
-    evidence: entry.evidence,
-    limitations: entry.limitations,
-  };
-}
-
-function countRows(rows: readonly TextlabSupportStatusRow[]): readonly TextlabSupportStatusCount[] {
-  return statusLabels
-    .map((status) => ({
-      status,
-      count: rows.filter((row) => row.status === status).length,
-    }))
-    .filter((entry) => entry.count > 0);
-}
-
-function renderRow(row: TextlabSupportStatusRow): string {
-  return `- ${row.kind}:${row.id} [${row.status}]`;
-}
-
-function isTaskEvidenceEntry(value: unknown): value is TextlabTaskEvidenceEntry {
-  return (
-    isRecord(value) &&
-    isNonEmptyString(value.taskId) &&
-    isNonEmptyString(value.supportStatus) &&
-    isNonEmptyString(value.claimBoundary) &&
-    isNonEmptyString(value.reportPath) &&
-    isStringArray(value.evidenceRefs) &&
-    value.evidenceRefs.length > 0 &&
-    (value.comparatorRefs === undefined || isStringArray(value.comparatorRefs)) &&
-    (value.knownGaps === undefined || isStringArray(value.knownGaps))
-  );
-}
-
-function compareEvidenceRows(
-  left: TextlabEvidenceSummaryRow,
-  right: TextlabEvidenceSummaryRow,
-): number {
-  return left.taskId.localeCompare(right.taskId);
 }
 
 function countById(values: readonly string[]): readonly TextlabCount[] {
@@ -499,52 +284,6 @@ function rowMatchesOptions(
   );
 }
 
-export function isTextlabSupportStatusDocument(value: unknown): value is TextlabSupportStatusDocument {
-  return (
-    isRecord(value) &&
-    value.schemaVersion === 1 &&
-    Array.isArray(value.packages) &&
-    value.packages.every((entry) => isSupportStatusPackageEntry(entry)) &&
-    Array.isArray(value.tasks) &&
-    value.tasks.every((entry) => isSupportStatusTaskEntry(entry))
-  );
-}
-
-export function summarizeSupportStatus(
-  document: TextlabSupportStatusDocument,
-): TextlabSupportStatusSummary {
-  if (!isTextlabSupportStatusDocument(document)) {
-    throw new TypeError("support status document is invalid");
-  }
-
-  const packageRows = document.packages.map(toPackageRow).sort(compareRows);
-  const taskRows = document.tasks.map(toTaskRow).sort(compareRows);
-  const allRows = [...packageRows, ...taskRows].sort(compareRows);
-
-  return {
-    schemaVersion: 1,
-    packageRows,
-    taskRows,
-    counts: countRows(allRows),
-  };
-}
-
-export function renderSupportStatusSummary(summary: TextlabSupportStatusSummary): string {
-  return [
-    "# textlab support-status summary",
-    "",
-    "## Counts",
-    ...summary.counts.map((entry) => `- ${entry.status}: ${entry.count}`),
-    "",
-    "## Packages",
-    ...summary.packageRows.map(renderRow),
-    "",
-    "## Tasks",
-    ...summary.taskRows.map(renderRow),
-    "",
-  ].join("\n");
-}
-
 export function inspectPackageManifest(value: unknown): TextlabPackageInspection {
   if (
     !isRecord(value) ||
@@ -637,59 +376,6 @@ export function renderTextPackInspection(inspection: TextlabPackInspection): str
     "",
     "## Provides",
     ...inspection.provides.map((entry) => `- ${entry.id}: ${entry.count}`),
-    "",
-  ].join("\n");
-}
-
-export function isTextlabTaskEvidenceManifest(value: unknown): value is TextlabTaskEvidenceManifest {
-  return (
-    isRecord(value) &&
-    value.schemaVersion === 1 &&
-    isNonEmptyString(value.generatedAt) &&
-    Array.isArray(value.tasks) &&
-    value.tasks.length > 0 &&
-    value.tasks.every((entry) => isTaskEvidenceEntry(entry))
-  );
-}
-
-export function summarizeEvidenceManifest(
-  manifest: TextlabTaskEvidenceManifest,
-): TextlabEvidenceSummary {
-  if (!isTextlabTaskEvidenceManifest(manifest)) {
-    throw new TypeError("task evidence manifest is invalid");
-  }
-
-  return {
-    schemaVersion: 1,
-    generatedAt: manifest.generatedAt,
-    rows: manifest.tasks
-      .map((entry) => {
-        const comparatorRefCount = entry.comparatorRefs?.length ?? 0;
-        return {
-          taskId: entry.taskId,
-          supportStatus: entry.supportStatus,
-          reportPath: entry.reportPath,
-          evidenceRefCount: entry.evidenceRefs.length,
-          comparatorRefCount,
-          knownGapCount: entry.knownGaps?.length ?? 0,
-          hasComparatorEvidence: comparatorRefCount > 0,
-        };
-      })
-      .sort(compareEvidenceRows),
-  };
-}
-
-export function renderEvidenceManifestSummary(summary: TextlabEvidenceSummary): string {
-  return [
-    "# textlab evidence summary",
-    "",
-    `Generated: ${summary.generatedAt}`,
-    "",
-    "## Tasks",
-    ...summary.rows.map(
-      (row) =>
-        `- ${row.taskId} [${row.supportStatus}] evidence=${row.evidenceRefCount} comparators=${row.comparatorRefCount} gaps=${row.knownGapCount} report=${row.reportPath}`,
-    ),
     "",
   ].join("\n");
 }
@@ -877,166 +563,6 @@ export function renderTextdocAnnotationInspection(
       (row) =>
         `- ${row.layerId} ${row.annotationKind}:${row.annotationId} lifecycle=${row.lifecycleState} targets=${row.targetCount} targetKinds=${row.targetKinds.join(",")} graphEdges=${row.graphEdgeCount}${
           row.details.length > 0 ? ` details=${row.details.join(";")}` : ""
-        }`,
-    ),
-    "",
-  ].join("\n");
-}
-
-function isEvidenceReplayDocument(value: unknown): value is Record<string, unknown> {
-  if (
-    !isRecord(value) ||
-    value.schemaVersion !== 1 ||
-    !isNonEmptyString(value.generatedAt) ||
-    !Array.isArray(value.tasks)
-  ) {
-    return false;
-  }
-
-  return value.tasks.every(
-    (task) =>
-      isRecord(task) &&
-      isNonEmptyString(task.task) &&
-      isNonEmptyString(task.taskId) &&
-      isNonEmptyString(task.status) &&
-      Array.isArray(task.validators) &&
-      Array.isArray(task.comparisons) &&
-      (task.conformanceReportRefs === undefined || isStringArray(task.conformanceReportRefs)) &&
-      (task.knownGap === undefined || isNonEmptyString(task.knownGap)),
-  );
-}
-
-function comparisonStatusCounts(tasks: readonly Record<string, unknown>[]) {
-  const statuses: string[] = [];
-  for (const task of tasks) {
-    for (const comparison of task.comparisons as readonly unknown[]) {
-      if (isRecord(comparison) && isNonEmptyString(comparison.status)) {
-        statuses.push(comparison.status);
-      }
-    }
-  }
-  return countById(statuses).map(({ id, count }) => ({ status: id, count }));
-}
-
-export function inspectEvidenceReplay(document: unknown): TextlabEvidenceReplayInspection {
-  if (!isEvidenceReplayDocument(document)) {
-    throw new TypeError("evidence replay document is invalid");
-  }
-
-  const tasks = document.tasks as readonly Record<string, unknown>[];
-  const rows = tasks
-    .map((task) => {
-      const comparisons = task.comparisons as readonly unknown[];
-      const comparisonStatuses = comparisons
-        .filter(isRecord)
-        .map((comparison) => comparison.status)
-        .filter((status): status is string => isNonEmptyString(status));
-      return {
-        task: task.task as string,
-        taskId: task.taskId as string,
-        status: task.status as string,
-        validatorCount: (task.validators as readonly unknown[]).length,
-        comparatorCount: comparisons.length,
-        passedComparisonCount: comparisonStatuses.filter((status) => status === "pass").length,
-        failedComparisonCount: comparisonStatuses.filter((status) => status === "fail").length,
-        notRunComparisonCount: comparisonStatuses.filter((status) => status === "not-run").length,
-        conformanceReportCount: Array.isArray(task.conformanceReportRefs)
-          ? task.conformanceReportRefs.length
-          : 0,
-        knownGapCount: isNonEmptyString(task.knownGap) ? 1 : 0,
-      };
-    })
-    .sort((left, right) => left.taskId.localeCompare(right.taskId));
-
-  return {
-    schemaVersion: 1,
-    generatedAt: document.generatedAt as string,
-    rows,
-    statusCounts: countById(rows.map((row) => row.status)).map(({ id, count }) => ({
-      status: id,
-      count,
-    })),
-    comparisonStatusCounts: comparisonStatusCounts(tasks),
-  };
-}
-
-export function renderEvidenceReplayInspection(
-  inspection: TextlabEvidenceReplayInspection,
-): string {
-  return [
-    "# textlab evidence replay inspection",
-    "",
-    `Generated: ${inspection.generatedAt}`,
-    "",
-    "## Task statuses",
-    ...inspection.statusCounts.map((entry) => `- ${entry.status}: ${entry.count}`),
-    "",
-    "## Comparison statuses",
-    ...inspection.comparisonStatusCounts.map((entry) => `- ${entry.status}: ${entry.count}`),
-    "",
-    "## Tasks",
-    ...inspection.rows.map(
-      (row) =>
-        `- ${row.taskId} [${row.status}] validators=${row.validatorCount} comparators=${row.comparatorCount} passComparisons=${row.passedComparisonCount} failComparisons=${row.failedComparisonCount} notRunComparisons=${row.notRunComparisonCount} reports=${row.conformanceReportCount} gaps=${row.knownGapCount}`,
-    ),
-    "",
-  ].join("\n");
-}
-
-function comparatorName(value: unknown): string {
-  if (!isRecord(value)) return "<unknown>";
-  const name = isNonEmptyString(value.name) ? value.name : "<unknown>";
-  const version = isNonEmptyString(value.version) ? value.version : "";
-  return version.length > 0 ? `${name}@${version}` : name;
-}
-
-export function inspectComparatorDrift(document: unknown): TextlabComparatorDriftInspection {
-  if (!isEvidenceReplayDocument(document)) {
-    throw new TypeError("evidence replay document is invalid");
-  }
-  const rows: TextlabComparatorDriftRow[] = [];
-  for (const task of document.tasks as readonly Record<string, unknown>[]) {
-    for (const comparison of task.comparisons as readonly unknown[]) {
-      if (!isRecord(comparison)) continue;
-      const status = isNonEmptyString(comparison.status) ? comparison.status : "<missing>";
-      if (status === "pass") continue;
-      rows.push({
-        taskId: task.taskId as string,
-        task: task.task as string,
-        status,
-        comparator: comparatorName(comparison.comparator),
-        path: isNonEmptyString(comparison.path) ? comparison.path : "<missing>",
-        ...(isNonEmptyString(task.knownGap) ? { knownGap: task.knownGap } : {}),
-      });
-    }
-  }
-  rows.sort((left, right) =>
-    `${left.taskId}\u0000${left.status}\u0000${left.path}`.localeCompare(
-      `${right.taskId}\u0000${right.status}\u0000${right.path}`,
-    ),
-  );
-  return {
-    schemaVersion: 1,
-    generatedAt: document.generatedAt as string,
-    driftCount: rows.length,
-    rows,
-  };
-}
-
-export function renderComparatorDriftInspection(
-  inspection: TextlabComparatorDriftInspection,
-): string {
-  return [
-    "# textlab comparator drift inspection",
-    "",
-    `Generated: ${inspection.generatedAt}`,
-    `Drift rows: ${inspection.driftCount}`,
-    "",
-    "## Rows",
-    ...inspection.rows.map(
-      (row) =>
-        `- ${row.taskId} [${row.status}] comparator=${row.comparator} path=${row.path}${
-          row.knownGap ? ` gap=${row.knownGap}` : ""
         }`,
     ),
     "",
@@ -1234,7 +760,6 @@ export function inspectReleaseReadiness(document: unknown): TextlabReleaseReadin
       return {
         packageName: isNonEmptyString(entry.packageName) ? entry.packageName : "<missing>",
         releaseTrack: isNonEmptyString(entry.releaseTrack) ? entry.releaseTrack : "<missing>",
-        supportStatus: isNonEmptyString(entry.supportStatus) ? entry.supportStatus : "<missing>",
         releaseReadiness: isNonEmptyString(entry.releaseReadiness)
           ? entry.releaseReadiness
           : "<missing>",

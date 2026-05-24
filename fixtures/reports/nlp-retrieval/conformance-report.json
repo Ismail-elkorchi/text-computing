@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-retrieval",
+  "reportId": "conformance:nlp-retrieval",
   "subject": {
     "kind": "task",
     "id": "nlp-retrieval",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
@@ -358,10 +358,7 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status remains limited to committed retrieval fixtures and bounded package tests.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
           "docs/specs/retrieval-readiness.md"
@@ -370,9 +367,7 @@
           "packages/textcorpus/src/index.ts",
           "tools/validate-retrieval-feature.mjs"
         ],
-        "inputRefs": [
-          "fixtures/capability-scorecard/toolkit-capability-scorecard.v1.json"
-        ],
+        "inputRefs": [],
         "oracleRefs": [
           "schemas/retrieval-expected-v1.schema.json",
           "tools/validate-retrieval-feature.mjs",

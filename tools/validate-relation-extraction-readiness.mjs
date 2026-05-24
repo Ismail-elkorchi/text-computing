@@ -52,7 +52,6 @@ const validateReport = ajv.compile(conformanceSchema);
 expect(validateSlices(slices), `${slicesPath} failed ${slicesSchemaPath}`, validateSlices.errors);
 expect(validateReport(report), `${reportPath} failed ${conformanceSchemaPath}`, validateReport.errors);
 
-expect(slices.supportStatus === "slice-proven", "Relation extraction support status must be slice-proven.");
 expect(
   slices.expectedOutputStatus === "recorded",
   "Relation extraction feature gate requires recorded expected outputs.",
@@ -222,19 +221,5 @@ for (const heading of [
   expect(readinessDoc.includes(heading), `relation-extraction-readiness.md missing heading: ${heading}`);
 }
 
-const researchLedger = await readText("docs/specs/nlp-relation-extraction-research-ledger.md");
-for (const heading of [
-  "## Scope",
-  "## Primary sources",
-  "## Comparator capability evidence",
-  "## Comparator limitations",
-  "## Readiness consequences",
-]) {
-  expect(researchLedger.includes(heading), `nlp-relation-extraction-research-ledger.md missing heading: ${heading}`);
-}
-
-const supportStatus = await readJson("docs/specs/support-status.v1.json");
-const task = supportStatus.tasks.find((entry) => entry.id === "nlp-relation-extraction");
-expect(task?.status === "slice-proven", "Support status must mark nlp-relation-extraction as slice-proven.");
 
 console.log(`Relation extraction feature artifacts OK (fixtures=${slices.fixtures.length}).`);

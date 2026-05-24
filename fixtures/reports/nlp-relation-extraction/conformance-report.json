@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-relation-extraction",
+  "reportId": "conformance:nlp-relation-extraction",
   "subject": {
     "kind": "task",
     "id": "nlp-relation-extraction",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
@@ -23,8 +23,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/relation-extraction-readiness.md",
-          "docs/specs/nlp-relation-extraction-research-ledger.md"
+          "docs/specs/relation-extraction-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",
@@ -62,8 +61,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/relation-extraction-readiness.md",
-          "docs/specs/nlp-relation-extraction-research-ledger.md"
+          "docs/specs/relation-extraction-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",
@@ -100,8 +98,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/relation-extraction-readiness.md",
-          "docs/specs/nlp-relation-extraction-research-ledger.md"
+          "docs/specs/relation-extraction-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",
@@ -136,8 +133,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/relation-extraction-readiness.md",
-          "docs/specs/nlp-relation-extraction-research-ledger.md"
+          "docs/specs/relation-extraction-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",
@@ -170,8 +166,7 @@
       ],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/relation-extraction-readiness.md",
-          "docs/specs/nlp-relation-extraction-research-ledger.md"
+          "docs/specs/relation-extraction-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",
@@ -200,13 +195,10 @@
       "checkId": "comparator-claim-boundary",
       "status": "pass",
       "message": "No external comparator-backed relation extraction claim is made in this gate.",
-      "evidenceRefs": [
-        "docs/specs/nlp-relation-extraction-research-ledger.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
-          "docs/specs/relation-extraction-readiness.md",
-          "docs/specs/nlp-relation-extraction-research-ledger.md"
+          "docs/specs/relation-extraction-readiness.md"
         ],
         "apiRefs": [
           "packages/textrules/src/index.ts",

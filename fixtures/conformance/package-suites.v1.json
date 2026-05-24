@@ -15,28 +15,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textfacts alpha API and repository tests.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textfacts/test/node.test.ts" },
-        { "role": "holdout", "ref": "packages/textfacts/test/metamorphic/metamorphic.test.ts" },
-        { "role": "negative-control", "ref": "packages/textfacts/test/_support/assert.ts" }
+        {
+          "role": "validation",
+          "ref": "packages/textfacts/test/node.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "packages/textfacts/test/metamorphic/metamorphic.test.ts"
+        },
+        {
+          "role": "negative-control",
+          "ref": "packages/textfacts/test/_support/assert.ts"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textfacts/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textfacts/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textfacts/test/node.test.ts"],
+          "evidenceRefs": [
+            "packages/textfacts/test/node.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textfacts/README.md"],
-            "apiRefs": ["packages/textfacts/mod.ts"],
-            "inputRefs": ["packages/textfacts/test/node.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textfacts/README.md"
+            ],
+            "apiRefs": [
+              "packages/textfacts/mod.ts"
+            ],
+            "inputRefs": [
+              "packages/textfacts/test/node.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -51,28 +78,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textdoc alpha API and repository tests.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textdoc/test/index.test.ts" },
-        { "role": "holdout", "ref": "fixtures/textdoc/examples/document-annotation-model-v1.json" },
-        { "role": "negative-control", "ref": "fixtures/textdoc/invalid/dangling-target.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textdoc/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "fixtures/textdoc/examples/document-annotation-model-v1.json"
+        },
+        {
+          "role": "negative-control",
+          "ref": "fixtures/textdoc/invalid/dangling-target.json"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textdoc/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textdoc/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textdoc/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textdoc/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textdoc/README.md"],
-            "apiRefs": ["packages/textdoc/src/index.ts"],
-            "inputRefs": ["packages/textdoc/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textdoc/README.md"
+            ],
+            "apiRefs": [
+              "packages/textdoc/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textdoc/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -87,28 +141,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textpack alpha API and resource fixtures.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textpack/test/index.test.ts" },
-        { "role": "holdout", "ref": "fixtures/textpack/manifests/textpack-en-legal.json" },
-        { "role": "negative-control", "ref": "fixtures/textpack/invalid/missing-provenance.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textpack/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "fixtures/textpack/manifests/textpack-en-legal.json"
+        },
+        {
+          "role": "negative-control",
+          "ref": "fixtures/textpack/invalid/missing-provenance.json"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textpack/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textpack/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textpack/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textpack/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textpack/README.md"],
-            "apiRefs": ["packages/textpack/src/index.ts"],
-            "inputRefs": ["packages/textpack/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textpack/README.md"
+            ],
+            "apiRefs": [
+              "packages/textpack/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textpack/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -123,28 +204,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textrules alpha API and package tests.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textrules/test/index.test.ts" },
-        { "role": "holdout", "ref": "fixtures/relation-extraction/expected/es-location.json" },
-        { "role": "negative-control", "ref": "fixtures/relation-extraction/expected/en-no-relation.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textrules/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "fixtures/relation-extraction/expected/es-location.json"
+        },
+        {
+          "role": "negative-control",
+          "ref": "fixtures/relation-extraction/expected/en-no-relation.json"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textrules/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textrules/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textrules/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textrules/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textrules/README.md"],
-            "apiRefs": ["packages/textrules/src/index.ts"],
-            "inputRefs": ["packages/textrules/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textrules/README.md"
+            ],
+            "apiRefs": [
+              "packages/textrules/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textrules/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -159,28 +267,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textpipeline alpha API and package tests.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textpipeline/test/index.test.ts" },
-        { "role": "holdout", "ref": "tools/smoke-public-vertical-slice.mjs" },
-        { "role": "negative-control", "ref": "packages/textpipeline/test/index.test.ts" }
+        {
+          "role": "validation",
+          "ref": "packages/textpipeline/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "tools/smoke-public-vertical-slice.mjs"
+        },
+        {
+          "role": "negative-control",
+          "ref": "packages/textpipeline/test/index.test.ts"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textpipeline/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textpipeline/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textpipeline/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textpipeline/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textpipeline/README.md"],
-            "apiRefs": ["packages/textpipeline/src/index.ts"],
-            "inputRefs": ["packages/textpipeline/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textpipeline/README.md"
+            ],
+            "apiRefs": [
+              "packages/textpipeline/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textpipeline/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -195,28 +330,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textcorpus alpha API and committed corpus fixtures.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textcorpus/test/index.test.ts" },
-        { "role": "holdout", "ref": "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json" },
-        { "role": "negative-control", "ref": "fixtures/retrieval/qrels/retrieval-fielded-qrels.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textcorpus/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json"
+        },
+        {
+          "role": "negative-control",
+          "ref": "fixtures/retrieval/qrels/retrieval-fielded-qrels.json"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textcorpus/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textcorpus/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textcorpus/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textcorpus/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textcorpus/README.md"],
-            "apiRefs": ["packages/textcorpus/src/index.ts"],
-            "inputRefs": ["packages/textcorpus/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textcorpus/README.md"
+            ],
+            "apiRefs": [
+              "packages/textcorpus/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textcorpus/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -231,28 +393,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textprotocol alpha API and schema fixtures.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textprotocol/test/index.test.ts" },
-        { "role": "holdout", "ref": "tools/smoke-public-vertical-slice.mjs" },
-        { "role": "negative-control", "ref": "schemas/textprotocol-result-envelope-v1.schema.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textprotocol/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "tools/smoke-public-vertical-slice.mjs"
+        },
+        {
+          "role": "negative-control",
+          "ref": "schemas/textprotocol-result-envelope-v1.schema.json"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textprotocol/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textprotocol/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textprotocol/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textprotocol/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textprotocol/README.md"],
-            "apiRefs": ["packages/textprotocol/src/index.ts"],
-            "inputRefs": ["packages/textprotocol/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textprotocol/README.md"
+            ],
+            "apiRefs": [
+              "packages/textprotocol/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textprotocol/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -267,28 +456,55 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textconformance alpha API, suite harness, and CLI.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textconformance/test/index.test.ts" },
-        { "role": "holdout", "ref": "fixtures/conformance/package-suites.v1.json" },
-        { "role": "negative-control", "ref": "schemas/textconformance-suite-v1.schema.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textconformance/test/index.test.ts"
+        },
+        {
+          "role": "holdout",
+          "ref": "fixtures/conformance/package-suites.v1.json"
+        },
+        {
+          "role": "negative-control",
+          "ref": "schemas/textconformance-suite-v1.schema.json"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textconformance/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textconformance/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textconformance/test/index.test.ts"],
+          "evidenceRefs": [
+            "packages/textconformance/test/index.test.ts"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textconformance/README.md"],
-            "apiRefs": ["packages/textconformance/src/index.ts"],
-            "inputRefs": ["packages/textconformance/test/index.test.ts"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textconformance/README.md"
+            ],
+            "apiRefs": [
+              "packages/textconformance/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textconformance/test/index.test.ts"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     },
     {
       "schemaId": "urn:ismail-elkorchi:textconformance:suite:v1",
@@ -303,28 +519,47 @@
       },
       "claimBoundary": "Package-level conformance suite for the current textlab alpha API and CLI inspection tests.",
       "fixtures": [
-        { "role": "validation", "ref": "packages/textlab/test/index.test.mjs" },
-        { "role": "holdout", "ref": "fixtures/reports/task-evidence-manifest.v1.json" },
-        { "role": "negative-control", "ref": "fixtures/reports/evidence-replay.v1.json" }
+        {
+          "role": "validation",
+          "ref": "packages/textlab/test/index.test.mjs"
+        }
       ],
       "oracles": [
-        { "oracleId": "package-tests", "kind": "runtime-guard", "ref": "packages/textlab/package.json" }
+        {
+          "oracleId": "package-tests",
+          "kind": "runtime-guard",
+          "ref": "packages/textlab/package.json"
+        }
       ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
           "oracleId": "package-tests",
-          "evidenceRefs": ["packages/textlab/test/index.test.mjs"],
+          "evidenceRefs": [
+            "packages/textlab/test/index.test.mjs"
+          ],
           "traceability": {
-            "requirementRefs": ["packages/textlab/README.md"],
-            "apiRefs": ["packages/textlab/src/index.ts"],
-            "inputRefs": ["packages/textlab/test/index.test.mjs"],
-            "oracleRefs": ["package-tests"],
-            "limitations": ["Suite catalog records package-level evidence; it does not widen task claims."]
+            "requirementRefs": [
+              "packages/textlab/README.md"
+            ],
+            "apiRefs": [
+              "packages/textlab/src/index.ts"
+            ],
+            "inputRefs": [
+              "packages/textlab/test/index.test.mjs"
+            ],
+            "oracleRefs": [
+              "package-tests"
+            ],
+            "limitations": [
+              "Suite catalog records package-level evidence; it does not widen task claims."
+            ]
           }
         }
       ],
-      "limitations": ["Conformance suite catalog entry only; package tests remain the executable oracle."]
+      "limitations": [
+        "Conformance suite catalog entry only; package tests remain the executable oracle."
+      ]
     }
   ]
 }

@@ -2,8 +2,8 @@ import Ajv from "ajv";
 import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 
-const MATRIX_PATH = "fixtures/multilingual-support/tier-matrix.v1.json";
-const SCHEMA_PATH = "schemas/multilingual-support-tiers-v1.schema.json";
+const MATRIX_PATH = "fixtures/multilingual-support/coverage.v1.json";
+const SCHEMA_PATH = "schemas/multilingual-coverage-v1.schema.json";
 const REQUIRED_TIERS = [
   "unicode-invariant",
   "fixture-proven",
@@ -89,10 +89,10 @@ if (!validate(matrix)) {
   fail(`${MATRIX_PATH} failed ${SCHEMA_PATH}`, validate.errors);
 }
 
-const tierNames = matrix.tiers.map((tier) => tier.name).sort();
+const tierNames = matrix.coverageLevels.map((tier) => tier.name).sort();
 const requiredTierNames = [...REQUIRED_TIERS].sort();
 if (JSON.stringify(tierNames) !== JSON.stringify(requiredTierNames)) {
-  fail("Multilingual support matrix must define exactly the canonical tier names.", {
+  fail("Multilingual coverage matrix must define exactly the canonical coverage level names.", {
     expected: requiredTierNames,
     actual: tierNames,
   });
@@ -104,10 +104,10 @@ if (
   matrix.externalReference.treebanks < 353 ||
   matrix.externalReference.languages < 193
 ) {
-  fail("Multilingual support matrix must anchor expansion against the current UD 2.18 breadth reference.");
+  fail("Multilingual coverage matrix must anchor expansion against the current UD 2.18 breadth reference.");
 }
 
-for (const tier of matrix.tiers) {
+for (const tier of matrix.coverageLevels) {
   if (tier.status === "present" && tier.evidenceRefs.length < 1) {
     fail(`${tier.name} is present but has no evidence references.`);
   }
@@ -127,7 +127,7 @@ for (const tier of matrix.tiers) {
 const scripts = new Set(matrix.scriptFixtures.map((fixture) => fixture.script));
 for (const script of REQUIRED_SCRIPTS) {
   if (!scripts.has(script)) {
-    fail(`Multilingual support matrix is missing readiness-only script fixture for ${script}.`);
+    fail(`Multilingual coverage matrix is missing coverage-seed script fixture for ${script}.`);
   }
 }
 for (const family of REQUIRED_FAMILIES) {
@@ -166,8 +166,8 @@ for (const fixture of matrix.scriptFixtures) {
       actual: actualHash,
     });
   }
-  if (fixture.supportTier === "readiness-only" && fixture.evidenceRefs.length > 0) {
-    fail(`${fixture.id} is readiness-only but lists behavior evidence refs.`);
+  if (fixture.fixtureRole === "coverage-seed" && fixture.evidenceRefs.length > 0) {
+    fail(`${fixture.id} is a coverage-seed but lists behavior evidence refs.`);
   }
   for (const ref of fixture.evidenceRefs) {
     if (!(await fileExists(ref))) {
@@ -176,17 +176,17 @@ for (const fixture of matrix.scriptFixtures) {
   }
 }
 
-const doc = await readFile("docs/specs/multilingual-support-tiers.md", "utf8");
+const doc = await readFile("docs/specs/multilingual-coverage.md", "utf8");
 for (const heading of [
   "## Why this document exists",
   "## Tier definitions",
-  "## Current support matrix",
+  "## Current coverage matrix",
   "## Script fixture expansion",
   "## Interpretation rules",
 ]) {
   if (!doc.includes(heading)) {
-    fail(`multilingual-support-tiers.md is missing ${heading}`);
+    fail(`multilingual-coverage.md is missing ${heading}`);
   }
 }
 
-console.log("Multilingual support tiers OK.");
+console.log("Multilingual coverage fixtures OK.");

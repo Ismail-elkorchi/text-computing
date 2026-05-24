@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "taskId": "nlp-retrieval",
-  "supportStatus": "slice-proven",
   "corpusRef": "fixtures/corpus-tfidf-bm25/slices.json#corpus-tfidf-bm25-smoke",
   "expectedPath": "fixtures/retrieval/expected/retrieval-smoke.json",
   "expectedPaths": [

@@ -1,11 +1,11 @@
 {
   "schemaId": "urn:ismail-elkorchi:textconformance:report:v1",
   "schemaVersion": 1,
-  "reportId": "task-evidence:nlp-document-annotation-model",
+  "reportId": "conformance:nlp-document-annotation-model",
   "subject": {
     "kind": "task",
     "id": "nlp-document-annotation-model",
-    "schemaId": "docs/specs/support-status.v1.json"
+    "schemaId": "schemas/textconformance-report-v1.schema.json"
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
@@ -156,10 +156,7 @@
       "checkId": "support-boundary-recorded",
       "status": "pass",
       "message": "Support status records current document-model limits.",
-      "evidenceRefs": [
-        "docs/specs/support-status.v1.json",
-        "docs/specs/task-coverage-matrix.md"
-      ],
+      "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
           "docs/specs/textdoc-document-annotation-model.md"
