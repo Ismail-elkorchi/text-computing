@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 8,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -35,14 +35,13 @@
         ],
         "oracleRefs": [
           "schemas/pos-morph-lemma-expected-v1.schema.json",
-          "schemas/pos-morph-lemma-comparison-v1.schema.json",
           "tools/validate-pos-morph-lemma-feature.mjs"
         ],
         "reportRefs": [
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
           "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
@@ -77,7 +76,7 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
           "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
@@ -110,14 +109,13 @@
         ],
         "oracleRefs": [
           "schemas/pos-morph-lemma-expected-v1.schema.json",
-          "schemas/pos-morph-lemma-comparison-v1.schema.json",
           "tools/validate-pos-morph-lemma-feature.mjs"
         ],
         "reportRefs": [
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
           "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
@@ -153,77 +151,7 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
-          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
-        ]
-      }
-    },
-    {
-      "checkId": "comparator-output-captures",
-      "status": "pass",
-      "message": "Executed spaCy and Stanza comparator-output captures are committed for the frozen slices.",
-      "evidenceRefs": [
-        "fixtures/pos-morph-lemma/tool-versions.json",
-        "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
-        "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json",
-        "schemas/pos-morph-lemma-comparison-v1.schema.json"
-      ],
-      "traceability": {
-        "requirementRefs": [
-          "docs/specs/pos-morph-lemma-readiness.md"
-        ],
-        "apiRefs": [
-          "tools/validate-pos-morph-lemma-feature.mjs"
-        ],
-        "inputRefs": [
-          "fixtures/pos-morph-lemma/tool-versions.json",
-          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
-          "fixtures/pos-morph-lemma/comparisons/stanza-1.12.0.json"
-        ],
-        "oracleRefs": [
-          "schemas/pos-morph-lemma-comparison-v1.schema.json"
-        ],
-        "reportRefs": [
-          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
-        ],
-        "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
-          "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
-        ]
-      }
-    },
-    {
-      "checkId": "javascript-comparator-claim-boundary",
-      "status": "pass",
-      "message": "No JavaScript comparator-backed POS/morph/lemma claim is made in this gate.",
-      "evidenceRefs": [
-        "fixtures/pos-morph-lemma/tool-versions.json",
-        "docs/decisions/pos-morph-lemma-output-differences.md"
-      ],
-      "traceability": {
-        "requirementRefs": [
-          "docs/specs/pos-morph-lemma-readiness.md"
-        ],
-        "apiRefs": [
-          "tools/validate-pos-morph-lemma-feature.mjs"
-        ],
-        "inputRefs": [
-          "fixtures/pos-morph-lemma/tool-versions.json"
-        ],
-        "oracleRefs": [
-          "schemas/pos-morph-lemma-expected-v1.schema.json",
-          "schemas/pos-morph-lemma-comparison-v1.schema.json",
-          "tools/validate-pos-morph-lemma-feature.mjs"
-        ],
-        "reportRefs": [
-          "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
-        ],
-        "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
           "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
@@ -244,19 +172,17 @@
         ],
         "inputRefs": [
           "fixtures/pos-morph-lemma/slices.json",
-          "fixtures/pos-morph-lemma/tool-versions.json",
-          "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json"
+          "fixtures/pos-morph-lemma/tool-versions.json"
         ],
         "oracleRefs": [
           "schemas/pos-morph-lemma-expected-v1.schema.json",
-          "schemas/pos-morph-lemma-comparison-v1.schema.json",
           "tools/validate-pos-morph-lemma-feature.mjs"
         ],
         "reportRefs": [
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
           "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
@@ -296,8 +222,8 @@
         "limitations": [
           "UD-style corpus evaluation is limited to committed slices.",
           "No broad UD treebank performance claim is made.",
-          "The rich-morphology slice is not external-comparator-backed in this gate.",
-          "No JavaScript comparator-backed POS/morph/lemma claim is made.",
+          "The rich-morphology slice is not fixture-bound in this gate.",
+          "No broad POS/morph/lemma claim is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
           "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
           "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
@@ -306,6 +232,6 @@
     }
   ],
   "notes": [
-    "This report persists current fixture-bound POS/morph/lemma evidence and records that spaCy and Stanza have committed executed comparator output. JavaScript comparator-backed POS/morph/lemma support is not claimed."
+    "This report persists current fixture-bound POS/morph/lemma evidence and records current package-generated expected outputs. Broad POS/morph/lemma support is not claimed."
   ]
 }

@@ -147,7 +147,7 @@
           "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
         ],
         "limitations": [
-          "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model comparator result.",
+          "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model system result.",
           "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
@@ -215,13 +215,13 @@
         ],
         "limitations": [
           "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-          "Held-out stand-off annotation-bundle evidence is repository-authored from named interchange precedents and is not an external document-model comparator result."
+          "Held-out stand-off annotation-bundle evidence is repository-authored from named interchange precedents and is not an external document-model system result."
         ]
       }
     }
   ],
   "notes": [
     "This report persists current document-model evidence; graph conventions remain slice-proven and do not claim broad task behavior.",
-    "Held-out annotation bundles are repository-authored from named interchange precedents and are not external comparator results."
+    "Held-out annotation bundles are repository-authored from named interchange precedents and are not external system results."
   ]
 }

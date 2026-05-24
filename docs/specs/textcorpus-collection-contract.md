@@ -55,7 +55,7 @@ This foundation does not yet define:
 - TF-IDF or BM25;
 - corpus ranking APIs;
 - corpus-level result envelopes; or
-- multilingual comparator fixtures for retrieval behavior.
+- multilingual relevance fixtures for retrieval behavior.
 
 ## Verification
 

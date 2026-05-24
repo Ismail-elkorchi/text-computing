@@ -8,7 +8,6 @@
     "schemaVersion",
     "taskId",
     "expectedOutputStatus",
-    "comparatorStatus",
     "allowedFixturePolicy",
     "corpusEvidence",
     "chainPolicy",
@@ -24,9 +23,6 @@
     },
     "expectedOutputStatus": {
       "const": "recorded"
-    },
-    "comparatorStatus": {
-      "const": "claim-downgraded"
     },
     "allowedFixturePolicy": {
       "type": "string",

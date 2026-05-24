@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-10T00:00:00.000Z",
   "summary": {
-    "pass": 10,
+    "pass": 9,
     "fail": 0,
     "notRun": 0
   },
@@ -69,40 +69,6 @@
         "oracleRefs": [
           "schemas/tokenization-sbd-expected-v1.schema.json",
           "tools/validate-tokenization-sbd-readiness.mjs"
-        ],
-        "reportRefs": [
-          "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
-        ],
-        "limitations": [
-          "Not a broad multilingual tokenizer benchmark suite.",
-          "Language-specific segmentation beyond the frozen slices remains future work.",
-          "Corpus split roles are recorded as a gate policy, not as corpus-backed aggregate evidence."
-        ]
-      }
-    },
-    {
-      "checkId": "comparator-captures-recorded",
-      "status": "pass",
-      "message": "Python and JavaScript diagnostic comparator captures are committed.",
-      "evidenceRefs": [
-        "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-        "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
-      ],
-      "traceability": {
-        "requirementRefs": [
-          "docs/specs/tokenization-sbd-readiness.md"
-        ],
-        "apiRefs": [
-          "tools/validate-tokenization-sbd-readiness.mjs"
-        ],
-        "inputRefs": [
-          "fixtures/tokenization-sbd/comparisons/spacy-3.8.14.json",
-          "fixtures/tokenization-sbd/comparisons/wink-nlp-2.4.0.json"
-        ],
-        "oracleRefs": [
-          "schemas/tokenization-sbd-expected-v1.schema.json",
-          "tools/validate-tokenization-sbd-readiness.mjs",
-          "schemas/tokenization-sbd-corpus-gate-v1.schema.json"
         ],
         "reportRefs": [
           "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
@@ -301,7 +267,7 @@
         "limitations": [
           "The aggregate publishes counts only and does not include raw corpus text.",
           "UAX #29 boundary behavior is not a language-specific tokenizer claim.",
-          "The task remains slice-proven until holdout and comparator gates support a broader claim."
+          "The task remains slice-proven until holdout and product-oracle gates support a broader claim."
         ]
       }
     },

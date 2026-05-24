@@ -13,10 +13,8 @@ Tokenization and sentence-boundary behavior starts only after these repository a
 - expected-output schema: [`schemas/tokenization-sbd-expected-v1.schema.json`](../../schemas/tokenization-sbd-expected-v1.schema.json)
 - slice schema: [`schemas/tokenization-sbd-slices-v1.schema.json`](../../schemas/tokenization-sbd-slices-v1.schema.json)
 - tool/version schema: [`schemas/tokenization-sbd-tool-versions-v1.schema.json`](../../schemas/tokenization-sbd-tool-versions-v1.schema.json)
-- comparison-output schema: [`schemas/tokenization-sbd-comparison-v1.schema.json`](../../schemas/tokenization-sbd-comparison-v1.schema.json)
 - result-envelope schema: [`schemas/textprotocol-result-envelope-v1.schema.json`](../../schemas/textprotocol-result-envelope-v1.schema.json)
 - conformance-report schema: [`schemas/textconformance-report-v1.schema.json`](../../schemas/textconformance-report-v1.schema.json)
-- diagnostic comparison outputs: [`fixtures/tokenization-sbd/comparisons/`](../../fixtures/tokenization-sbd/comparisons/)
 - expected outputs: [`fixtures/tokenization-sbd/expected/`](../../fixtures/tokenization-sbd/expected/)
 - output-difference policy: [`docs/decisions/tokenization-sbd-output-differences.md`](../decisions/tokenization-sbd-output-differences.md)
 - package-boundary decision: [`docs/decisions/package-boundary-ownership.md`](../decisions/package-boundary-ownership.md)
@@ -55,11 +53,7 @@ A fixture slice does not imply that every future tokenization package must suppo
 
 ## Tool/version manifest policy
 
-The tool/version manifest records normative references, package-under-test versions, and any diagnostic tools used to inspect outputs. Any future external diagnostic tool entry must include its name, version, command or API surface, license when known, and the artifact surface being inspected.
-
-## Diagnostic comparison outputs
-
-Diagnostic comparison outputs are snapshots from pinned tools, not normative expected outputs. They are used to document external behavior before package behavior changes. At least one Python or JVM comparator and one JavaScript comparator must be present before issue #9 feature code starts.
+The tool/version manifest records normative references and package-under-test versions. Static external-tool snapshots are not required for this gate because they do not execute product behavior.
 
 ## Result-envelope proof
 

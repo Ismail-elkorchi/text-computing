@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "scope": "dependency-parser",
   "expectedOutputStatus": "recorded",
-  "comparatorStatus": "executed-captures-recorded",
   "fixtures": [
     {
       "id": "en-basic",

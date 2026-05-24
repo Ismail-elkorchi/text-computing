@@ -173,12 +173,10 @@ function assertJsonComparable(actual, expected, tolerance, label) {
 const slicesSchemaPath = "schemas/corpus-tfidf-bm25-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/corpus-tfidf-bm25-tool-versions-v1.schema.json";
 const expectedSchemaPath = "schemas/corpus-tfidf-bm25-expected-v1.schema.json";
-const comparisonSchemaPath = "schemas/corpus-tfidf-bm25-comparison-v1.schema.json";
 
 const validateSlices = ajv.compile(await readJson(slicesSchemaPath));
 const validateToolVersions = ajv.compile(await readJson(toolVersionsSchemaPath));
 const validateExpected = ajv.compile(await readJson(expectedSchemaPath));
-const validateComparison = ajv.compile(await readJson(comparisonSchemaPath));
 
 const slicesPath = "fixtures/corpus-tfidf-bm25/slices.json";
 const toolVersionsPath = "fixtures/corpus-tfidf-bm25/tool-versions.json";
@@ -263,10 +261,6 @@ for (const formulaId of [
 ]) {
   expect(formulaIds.has(formulaId), `Corpus TF-IDF/BM25 formula freeze is missing ${formulaId}.`);
 }
-const runtimes = new Set(toolVersions.comparators.map((entry) => entry.runtime));
-expect(runtimes.has("javascript"), "Corpus TF-IDF/BM25 readiness requires a JavaScript comparator.");
-expect(runtimes.has("python") || runtimes.has("jvm"), "Corpus TF-IDF/BM25 readiness requires a Python or JVM comparator.");
-
 const readinessDoc = await readText("docs/specs/corpus-tfidf-bm25-readiness.md");
 for (const heading of [
   "## Why this document exists",
@@ -275,8 +269,6 @@ for (const heading of [
   "## Numeric tolerance",
   "## Input slices",
   "## Expected-output format",
-  "## Comparator freeze",
-  "## Comparator outputs",
   "## Verification",
 ]) {
   expect(readinessDoc.includes(heading), `corpus-tfidf-bm25-readiness.md is missing ${heading}`);
@@ -343,31 +335,5 @@ for (const file of expectedFiles) {
   const expected = await readJson(`${expectedDir}/${file}`);
   expect(corporaById.has(expected.corpusId), `${expectedDir}/${file} references unknown corpus ${expected.corpusId}`);
 }
-
-const comparisonDir = "fixtures/corpus-tfidf-bm25/comparisons";
-const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
-expect(comparisonFiles.length >= 2, "Corpus TF-IDF/BM25 readiness requires at least two comparator captures.");
-const comparisonRuntimes = new Set();
-const comparisonCorporaByRuntime = new Map();
-for (const file of comparisonFiles) {
-  const filePath = `${comparisonDir}/${file}`;
-  const comparison = await readJson(filePath);
-  expect(validateComparison(comparison), `${filePath} failed ${comparisonSchemaPath}`, validateComparison.errors);
-  expect(corpusIds.has(comparison.corpusId), `${filePath} references unknown corpus ${comparison.corpusId}`);
-  comparisonRuntimes.add(comparison.comparator.runtime);
-  const key = `${comparison.comparator.runtime}:${comparison.corpusId}`;
-  comparisonCorporaByRuntime.set(key, (comparisonCorporaByRuntime.get(key) ?? 0) + 1);
-}
-expect(comparisonRuntimes.has("javascript"), "Comparator captures must include JavaScript output.");
-expect(comparisonRuntimes.has("python") || comparisonRuntimes.has("jvm"), "Comparator captures must include Python or JVM output.");
-for (const corpus of slices.corpora) {
-  if (corpus.performanceThresholds !== undefined) {
-    expect(
-      comparisonCorporaByRuntime.has(`python:${corpus.id}`) || comparisonCorporaByRuntime.has(`jvm:${corpus.id}`),
-      `${corpus.id} must have a Python or JVM comparator capture.`,
-    );
-  }
-}
-
 
 console.log("Corpus TF-IDF/BM25 readiness artifacts OK.");

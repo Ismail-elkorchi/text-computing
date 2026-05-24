@@ -12,29 +12,25 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`tokenization-sbd-corpus-aggregate-v1.schema.json`](tokenization-sbd-corpus-aggregate-v1.schema.json) — curated corpus aggregate schema for tokenization/SBD evidence.
 - [`pos-morph-lemma-expected-v1.schema.json`](pos-morph-lemma-expected-v1.schema.json) — expected-output schema for issue `#10`.
 - [`pos-morph-lemma-slices-v1.schema.json`](pos-morph-lemma-slices-v1.schema.json) — readiness slice schema for issue `#10`.
-- [`pos-morph-lemma-tool-versions-v1.schema.json`](pos-morph-lemma-tool-versions-v1.schema.json) — frozen comparator/version schema for issue `#10`.
-- [`pos-morph-lemma-comparison-v1.schema.json`](pos-morph-lemma-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#10`.
+- [`pos-morph-lemma-tool-versions-v1.schema.json`](pos-morph-lemma-tool-versions-v1.schema.json) — target contract schema for issue `#10`.
 - [`pos-morph-lemma-corpus-evaluation-v1.schema.json`](pos-morph-lemma-corpus-evaluation-v1.schema.json) — UD-style corpus evaluation input schema for POS/morph/lemma evidence.
 - [`pos-morph-lemma-corpus-evaluation-report-v1.schema.json`](pos-morph-lemma-corpus-evaluation-report-v1.schema.json) — UD-style corpus evaluation report schema for POS/morph/lemma evidence.
 - [`rule-backed-ner-expected-v1.schema.json`](rule-backed-ner-expected-v1.schema.json) — expected-output schema for issue `#13`.
 - [`rule-backed-ner-slices-v1.schema.json`](rule-backed-ner-slices-v1.schema.json) — readiness slice schema for issue `#13`.
-- [`rule-backed-ner-tool-versions-v1.schema.json`](rule-backed-ner-tool-versions-v1.schema.json) — frozen comparator/version schema for issue `#13`.
-- [`rule-backed-ner-comparison-v1.schema.json`](rule-backed-ner-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#13`.
+- [`rule-backed-ner-tool-versions-v1.schema.json`](rule-backed-ner-tool-versions-v1.schema.json) — label policy schema for issue `#13`.
 - [`corpus-tfidf-bm25-expected-v1.schema.json`](corpus-tfidf-bm25-expected-v1.schema.json) — expected-output schema for issue `#14`.
 - [`corpus-tfidf-bm25-slices-v1.schema.json`](corpus-tfidf-bm25-slices-v1.schema.json) — readiness corpus schema for issue `#14`.
-- [`corpus-tfidf-bm25-tool-versions-v1.schema.json`](corpus-tfidf-bm25-tool-versions-v1.schema.json) — frozen formula/comparator schema for issue `#14`.
-- [`corpus-tfidf-bm25-comparison-v1.schema.json`](corpus-tfidf-bm25-comparison-v1.schema.json) — diagnostic comparator output schema for issue `#14`.
+- [`corpus-tfidf-bm25-tool-versions-v1.schema.json`](corpus-tfidf-bm25-tool-versions-v1.schema.json) — frozen formula schema for issue `#14`.
 - [`retrieval-expected-v1.schema.json`](retrieval-expected-v1.schema.json) — expected-output schema for frozen-scope retrieval behavior.
 - [`retrieval-qrels-v1.schema.json`](retrieval-qrels-v1.schema.json) — relevance-judgment schema for frozen-scope retrieval behavior.
 - [`retrieval-evaluation-v1.schema.json`](retrieval-evaluation-v1.schema.json) — expected evaluation-metric schema for frozen-scope retrieval behavior.
 - [`conllu-dependency-slices-v1.schema.json`](conllu-dependency-slices-v1.schema.json) — CoNLL-U / UD readiness fixture schema.
-- [`conllu-dependency-tool-versions-v1.schema.json`](conllu-dependency-tool-versions-v1.schema.json) — public source, validator, and future comparator role schema for CoNLL-U / UD readiness.
+- [`conllu-dependency-tool-versions-v1.schema.json`](conllu-dependency-tool-versions-v1.schema.json) — public source and validator schema for CoNLL-U / UD readiness.
 - [`conllu-dependency-roundtrip-expected-v1.schema.json`](conllu-dependency-roundtrip-expected-v1.schema.json) — expected-output schema for fixture-scope CoNLL-U round-trip behavior.
 - [`conllu-validator-capture-v1.schema.json`](conllu-validator-capture-v1.schema.json) — external CoNLL-U validator capture schema.
 - [`dependency-parser-slices-v1.schema.json`](dependency-parser-slices-v1.schema.json) — readiness slice schema for dependency-parser work.
 - [`dependency-parser-expected-v1.schema.json`](dependency-parser-expected-v1.schema.json) — expected dependency-arc schema for parser readiness.
-- [`dependency-parser-tool-versions-v1.schema.json`](dependency-parser-tool-versions-v1.schema.json) — comparator capability and standard source schema for parser readiness.
-- [`dependency-parser-comparison-v1.schema.json`](dependency-parser-comparison-v1.schema.json) — comparator capability/capture schema for parser readiness.
+- [`dependency-parser-tool-versions-v1.schema.json`](dependency-parser-tool-versions-v1.schema.json) — standard source schema for parser readiness.
 - [`relation-extraction-slices-v1.schema.json`](relation-extraction-slices-v1.schema.json) — readiness fixture schema for relation extraction.
 - [`relation-extraction-expected-v1.schema.json`](relation-extraction-expected-v1.schema.json) — expected-output schema for future relation extraction behavior.
 - [`coreference-slices-v1.schema.json`](coreference-slices-v1.schema.json) — fixture schema for coreference.
@@ -42,7 +38,6 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`multilingual-coverage-v1.schema.json`](multilingual-coverage-v1.schema.json) — multilingual coverage matrix schema.
 - [`performance-gates-v1.schema.json`](performance-gates-v1.schema.json) — performance gate requirement schema.
 - [`package-release-gates-v1.schema.json`](package-release-gates-v1.schema.json) — package release gate schema.
-- [`tokenization-sbd-comparison-v1.schema.json`](tokenization-sbd-comparison-v1.schema.json) — diagnostic comparator output schema for tokenization/SBD readiness.
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.
 - [`textdoc-document-v1.schema.json`](textdoc-document-v1.schema.json) — document annotation model schema for issue `#11`.
 - [`textdoc-dependency-target-v1.schema.json`](textdoc-dependency-target-v1.schema.json) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.
@@ -58,4 +53,3 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textprotocol-mapping-loss-report-v1.schema.json`](textprotocol-mapping-loss-report-v1.schema.json) — protocol mapping-loss report schema.
 - [`textprotocol-protocol-error-v1.schema.json`](textprotocol-protocol-error-v1.schema.json) — protocol error envelope schema.
 - [`textconformance-report-v1.schema.json`](textconformance-report-v1.schema.json) — machine-readable conformance report schema.
-- [`evidence-run-v1.schema.json`](evidence-run-v1.schema.json) — replayable comparator/evidence run schema.

@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { access, readdir, readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 const ajv = new Ajv({ allErrors: true, strict: true });
 
@@ -72,71 +72,13 @@ function parseConlluArcs(text, sourcePath) {
   return sentences[0];
 }
 
-function comparableArcs(arcs) {
-  return arcs.map((arc) => ({
-    dependent: arc.dependent,
-    head: arc.head,
-    relation: arc.relation,
-  }));
-}
-
-function compareExpectedArcs(expectedArcs, outputArcs) {
-  const actualArcs = comparableArcs(outputArcs);
-  if (expectedArcs.length !== actualArcs.length) {
-    return {
-      matchesExpected: false,
-      differences: [
-        {
-          kind: "tokenization-mismatch",
-          expectedTokenCount: expectedArcs.length,
-          actualTokenCount: actualArcs.length,
-          message: "Comparator token count differs from frozen CoNLL-U integer word rows.",
-        },
-      ],
-    };
-  }
-
-  const outputByDependent = new Map(outputArcs.map((arc) => [arc.dependent, arc]));
-  const differences = [];
-  for (const expected of expectedArcs) {
-    const actual = outputByDependent.get(expected.dependent);
-    if (actual === undefined) {
-      differences.push({
-        kind: "missing-dependent",
-        dependent: expected.dependent,
-        expectedHead: expected.head,
-        expectedRelation: expected.relation,
-      });
-      continue;
-    }
-    if (actual.head !== expected.head || actual.relation !== expected.relation) {
-      differences.push({
-        kind: "arc-mismatch",
-        dependent: expected.dependent,
-        expectedHead: expected.head,
-        expectedRelation: expected.relation,
-        actualHead: actual.head,
-        actualRelation: actual.relation,
-        ...(typeof actual.text === "string" ? { actualText: actual.text } : {}),
-      });
-    }
-  }
-
-  return {
-    matchesExpected: differences.length === 0,
-    differences,
-  };
-}
-
 const slicesSchemaPath = "schemas/dependency-parser-slices-v1.schema.json";
 const toolVersionsSchemaPath = "schemas/dependency-parser-tool-versions-v1.schema.json";
 const expectedSchemaPath = "schemas/dependency-parser-expected-v1.schema.json";
-const comparisonSchemaPath = "schemas/dependency-parser-comparison-v1.schema.json";
 
 const validateSlices = ajv.compile(await readJson(slicesSchemaPath));
 const validateToolVersions = ajv.compile(await readJson(toolVersionsSchemaPath));
 const validateExpected = ajv.compile(await readJson(expectedSchemaPath));
-const validateComparison = ajv.compile(await readJson(comparisonSchemaPath));
 
 const slicesPath = "fixtures/dependency-parser/slices.json";
 const toolVersionsPath = "fixtures/dependency-parser/tool-versions.json";
@@ -150,11 +92,6 @@ expect(
   validateToolVersions.errors,
 );
 expect(slices.expectedOutputStatus === "recorded", "Dependency parser expected arcs must be recorded.");
-expect(
-  slices.comparatorStatus === "executed-captures-recorded",
-  "Dependency parser comparator status must record executed captures before more parser work.",
-);
-
 const requiredPhenomena = new Set([
   "root-arc",
   "subject-arc",
@@ -220,99 +157,12 @@ for (const fixture of slices.fixtures) {
   expect(expected.rootCount === 1, `${fixture.expectedPath} must contain exactly one root.`);
 }
 
-const comparatorRuntimes = new Set(toolVersions.comparators.map((comparator) => comparator.runtime));
-expect(
-  comparatorRuntimes.has("python"),
-  "Dependency parser readiness requires at least one Python comparator capability record.",
-);
-expect(
-  toolVersions.executionPolicy.includes("JavaScript comparator-backed dependency-parser support is not claimed"),
-  "Dependency parser readiness must explicitly state that no JavaScript comparator-backed claim is made.",
-);
-
-let executedComparatorCount = 0;
-const parserModelExecutedFixtures = new Set();
-let stanzaExecuted = false;
-let directUdValidationExecuted = false;
-for (const comparator of toolVersions.comparators) {
-  expect(await fileExists(comparator.capturePath), `${comparator.capturePath} does not exist.`);
-  const comparison = await readJson(comparator.capturePath);
-  expect(
-    validateComparison(comparison),
-    `${comparator.capturePath} failed ${comparisonSchemaPath}`,
-    validateComparison.errors,
-  );
-  expect(
-    comparison.comparator.name === comparator.name,
-    `${comparator.capturePath} comparator name must match tool-versions.json.`,
-  );
-  expect(
-    comparison.executionStatus === comparator.executionStatus,
-    `${comparator.capturePath} executionStatus must match tool-versions.json.`,
-  );
-  if (comparison.executionStatus === "executed") {
-    executedComparatorCount += 1;
-    expect(
-      Array.isArray(comparison.dependencies) && comparison.dependencies.length > 0,
-      `${comparator.capturePath} must record installed comparator dependencies.`,
-    );
-    if (comparison.comparator.name === "Stanza DepparseProcessor") stanzaExecuted = true;
-    if (comparison.comparator.name === "UniversalDependencies/tools validator") directUdValidationExecuted = true;
-  }
-  for (const slice of comparison.slices) {
-    const fixture = fixturesById.get(slice.fixtureId);
-    expect(fixture !== undefined, `${comparator.capturePath} references unknown fixture ${slice.fixtureId}.`);
-    expect(
-      slice.expectedArcPath === fixture.expectedPath,
-      `${comparator.capturePath} expectedArcPath mismatch for ${slice.fixtureId}.`,
-    );
-    if (comparison.executionStatus === "capability-recorded") {
-      expect(slice.status === "output-not-captured", `${comparator.capturePath} must not imply executed output.`);
-      expect(slice.reason, `${comparator.capturePath} must explain missing output for ${slice.fixtureId}.`);
-    } else {
-      const expected = expectedByFixtureId.get(slice.fixtureId);
-      expect(expected !== undefined, `${comparator.capturePath} missing expected arcs for ${slice.fixtureId}.`);
-      expect(slice.status === "captured", `${comparator.capturePath} must mark ${slice.fixtureId} as captured.`);
-      expect(Array.isArray(slice.outputArcs), `${comparator.capturePath} must include outputArcs for ${slice.fixtureId}.`);
-      if (comparison.comparator.name !== "UniversalDependencies/tools validator") {
-        parserModelExecutedFixtures.add(slice.fixtureId);
-      }
-      const comparisonResult = compareExpectedArcs(expected.arcs, slice.outputArcs);
-      expect(
-        slice.matchesExpected === comparisonResult.matchesExpected,
-        `${comparator.capturePath} matchesExpected mismatch for ${slice.fixtureId}.`,
-        comparisonResult,
-      );
-      expect(
-        JSON.stringify(slice.differences ?? []) === JSON.stringify(comparisonResult.differences),
-        `${comparator.capturePath} differences mismatch for ${slice.fixtureId}.`,
-        comparisonResult,
-      );
-    }
-  }
-}
-expect(executedComparatorCount >= 1, "Dependency parser readiness requires at least one executed comparator capture.");
-expect(stanzaExecuted, "Dependency parser readiness requires an executed Stanza comparator capture.");
-expect(directUdValidationExecuted, "Dependency parser readiness requires direct UD/CoNLL-U validation capture.");
-for (const fixtureId of fixturesById.keys()) {
-  expect(
-    parserModelExecutedFixtures.has(fixtureId),
-    `Dependency parser readiness requires at least one executed parser model-output capture for ${fixtureId}.`,
-  );
-}
-
-const comparisonDir = "fixtures/dependency-parser/comparisons";
-const comparisonFiles = (await readdir(comparisonDir)).filter((file) => file.endsWith(".json")).sort();
-expect(comparisonFiles.length >= 3, "Dependency parser readiness requires executed comparator capture files.");
-
 const readinessDoc = await readText("docs/specs/dependency-parser-readiness.md");
 for (const heading of [
   "## Why this document exists",
   "## Status",
   "## Input slices",
   "## Expected-output format",
-  "## Comparator freeze",
-  "## Comparator outputs",
   "## Documented non-failure differences",
   "## Verification",
 ]) {

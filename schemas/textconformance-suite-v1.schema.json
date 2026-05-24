@@ -60,7 +60,6 @@
         "validation",
         "holdout",
         "negative-control",
-        "comparator-capture",
         "claim-narrowed-gap"
       ]
     },

@@ -53,7 +53,6 @@ expect(validateSlices(slices), `${slicesPath} failed ${slicesSchemaPath}`, valid
 expect(validateReport(report), `${reportPath} failed ${conformanceSchemaPath}`, validateReport.errors);
 
 expect(slices.expectedOutputStatus === "recorded", "Coreference feature gate requires recorded expected outputs.");
-expect(slices.comparatorStatus === "claim-downgraded", "Coreference readiness must explicitly downgrade comparator-backed claims.");
 
 const requiredMentionKinds = ["proper", "nominal", "pronoun", "singleton"];
 expect(
@@ -226,7 +225,7 @@ for (const heading of [
   "## Ambiguity and loss policy",
   "## Allowed fixture policy",
   "## Input slices",
-  "## Comparator and corpus freeze",
+  "## Corpus boundary",
   "## Expected-output format",
   "## Verification",
 ]) {

@@ -18,7 +18,7 @@ The readiness target is:
 
 - The target POS inventory is Universal Dependencies `UPOS`.
 - Morphology uses Universal Dependencies feature names and values.
-- Comparators with finer-grained or incompatible tag inventories are mapped explicitly to the target
+- Any upstream or resource-specific tag inventory must be mapped explicitly to the target
   representation instead of silently collapsed in code.
 - Lemma ambiguity remains explicit: multiple alternatives are ranked, not discarded.
 - Unknown words, historical spellings, and code-switched tokens may legitimately keep multiple
@@ -44,19 +44,13 @@ Recorded outputs validate against
 which wraps a `textdoc` document containing token, sentence, POS, lemma, and morphology layers for a
 single slice.
 
-## Comparator freeze
+## Contract manifest
 
-Frozen comparator versions live in
+The target contract lives in
 [`../../fixtures/pos-morph-lemma/tool-versions.json`](../../fixtures/pos-morph-lemma/tool-versions.json).
 
-Committed comparator captures live in
-[`../../fixtures/pos-morph-lemma/comparisons/`](../../fixtures/pos-morph-lemma/comparisons/).
-
-This gate includes executed spaCy and Stanza output over the frozen slices. wink-nlp and
-compromise remain recorded JavaScript comparator surfaces until bounded capture runners are added.
+Static external-tool captures are not required for this gate because they do not execute package behavior.
 
 ## Verification
 
-`npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, executed spaCy
-and Stanza captures, expected-output schema, required readiness documentation headings, pack-backed lexicon
-fixtures, and the recorded goldens produced by `@ismail-elkorchi/textrules`.
+`npm run -s check:fixtures` validates the slice manifest, target contract, expected-output schema, required readiness documentation headings, pack-backed lexicon fixtures, and the recorded goldens produced by `@ismail-elkorchi/textrules`.

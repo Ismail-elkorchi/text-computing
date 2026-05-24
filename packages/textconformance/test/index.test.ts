@@ -35,11 +35,11 @@ const report = runTextConformanceChecks(
       run: () => "pass",
     },
     {
-      checkId: "comparator-replay",
+      checkId: "fixture-replay",
       run: () => ({
-        checkId: "comparator-replay",
+        checkId: "fixture-replay",
         status: "not-run",
-        message: "Comparator replay is not attached to this unit test.",
+        message: "Fixture replay is not attached to this unit test.",
       }),
     },
     {
@@ -70,8 +70,8 @@ if (!renderedReport.endsWith("\n")) {
 if (
   !renderedReport.includes("# Textconformance unit report") ||
   !renderedReport.includes("- **Summary:** pass=1; fail=1; not-run=1") ||
-  !renderedReport.includes("| comparator-replay | not-run | Comparator replay is not attached to this unit test. | — |") ||
-  renderedReport.indexOf("| comparator-replay |") > renderedReport.indexOf("| negative-control |")
+  !renderedReport.includes("| fixture-replay | not-run | Fixture replay is not attached to this unit test. | — |") ||
+  renderedReport.indexOf("| fixture-replay |") > renderedReport.indexOf("| negative-control |")
 ) {
   throw new Error("report Markdown renderer should emit deterministic summary and check rows");
 }

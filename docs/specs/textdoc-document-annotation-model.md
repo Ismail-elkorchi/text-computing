@@ -75,7 +75,7 @@ The committed protocol envelope
 is generated from the structural example and validated against
 [`../../schemas/textprotocol-annotation-bundle-v1.schema.json`](../../schemas/textprotocol-annotation-bundle-v1.schema.json).
 It is ecosystem-style interchange evidence for the committed fixture only; it is not an external
-document-model comparator result.
+document-model external result.
 
 ## Result-envelope requirements
 

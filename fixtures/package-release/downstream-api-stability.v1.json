@@ -193,7 +193,7 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API import and smoke usage; it does not add an interactive UI, comparator execution engine, or large-corpus browser."
+        "This proves current built-package API import and smoke usage; it does not add an interactive UI, external-tool execution engine, or large-corpus browser."
       ]
     },
     {

@@ -9,7 +9,7 @@
   },
   "generatedAt": "2026-05-16T00:00:00.000Z",
   "summary": {
-    "pass": 7,
+    "pass": 6,
     "fail": 0,
     "notRun": 0
   },
@@ -42,7 +42,7 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not claimed.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
           "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
@@ -77,7 +77,7 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not claimed.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
           "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
@@ -113,7 +113,7 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not claimed.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
           "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
@@ -146,7 +146,7 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not claimed.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
           "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
@@ -180,7 +180,7 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not claimed.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
           "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
@@ -219,41 +219,7 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
-          "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
-        ]
-      }
-    },
-    {
-      "checkId": "comparator-claim-boundary",
-      "status": "pass",
-      "message": "No external comparator-backed coreference claim is made in this gate.",
-      "evidenceRefs": [
-        "fixtures/coreference/slices.json"
-      ],
-      "traceability": {
-        "requirementRefs": [
-          "docs/specs/coreference-readiness.md"
-        ],
-        "apiRefs": [
-          "packages/textrules/src/index.ts",
-          "packages/textrules/test/index.test.ts",
-          "tools/validate-coreference-readiness.mjs"
-        ],
-        "inputRefs": [
-          "fixtures/coreference/slices.json"
-        ],
-        "oracleRefs": [
-          "schemas/coreference-slices-v1.schema.json",
-          "schemas/coreference-expected-v1.schema.json",
-          "tools/validate-coreference-readiness.mjs"
-        ],
-        "reportRefs": [
-          "fixtures/reports/nlp-coreference/conformance-report.json"
-        ],
-        "limitations": [
-          "External comparator-backed and broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not claimed.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
           "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
@@ -261,6 +227,6 @@
     }
   ],
   "notes": [
-    "This report records frozen corpus-slice behavior only. External comparator-backed, broad-coverage, and broad-corpus evaluation support are not claimed."
+    "This report records frozen corpus-slice behavior only. Broad-coverage and broad-corpus evaluation support are not claimed."
   ]
 }

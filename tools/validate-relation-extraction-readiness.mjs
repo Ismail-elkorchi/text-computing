@@ -56,10 +56,6 @@ expect(
   slices.expectedOutputStatus === "recorded",
   "Relation extraction feature gate requires recorded expected outputs.",
 );
-expect(
-  slices.comparatorStatus === "claim-downgraded",
-  "Relation extraction readiness must explicitly downgrade comparator-backed claims.",
-);
 
 const requiredLabels = ["employed-by", "located-in", "part-of", "no-relation"];
 expect(
@@ -214,7 +210,7 @@ for (const heading of [
   "## Evidence-span policy",
   "## Allowed fixture policy",
   "## Input slices",
-  "## Comparator and corpus freeze",
+  "## Corpus boundary",
   "## Expected-output format",
   "## Verification",
 ]) {

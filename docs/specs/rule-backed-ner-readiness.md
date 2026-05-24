@@ -3,8 +3,8 @@
 ## Why this document exists
 
 Issue `#13` does not permit behavior until the repository records entity label policy, allowed
-fixture policy, expected-output format, documented output differences, and committed diagnostic
-comparators. This document defines that readiness gate.
+fixture policy, expected-output format, documented output differences, and package-executed
+expected outputs. This document defines that readiness gate.
 
 ## Target representation
 
@@ -20,23 +20,22 @@ The current rule-backed NER label policy is intentionally narrow:
 
 - `PER` — person names and aliases that identify a person mention.
 - `ORG` — organization names and organization aliases.
-- `LOC` — locations, including location mentions that external toolkits may label as `GPE` or
-  `FAC` when the current policy does not distinguish them.
+- `LOC` — locations, including location mentions that other label taxonomies may split into
+  narrower location classes when the current policy does not distinguish them.
 
 Consequences:
 
 - The current public label policy does **not** add `MISC`, `NORP`, `PRODUCT`, `EVENT`, or
-  toolkit-specific labels merely because an external comparator exposes them.
-- Comparator-specific label names must be mapped explicitly to `PER`, `ORG`, or `LOC` when
-  they fall inside the supported scope and documented as non-failure differences when they do not.
+  toolkit-specific labels merely because another taxonomy exposes them.
+- Any non-native label names must be mapped explicitly to `PER`, `ORG`, or `LOC` when
+  they fall inside the supported scope and documented as out of scope when they do not.
 
 ## Allowed fixture policy
 
 Only these fixture classes are allowed for issue `#13` readiness and later quality reporting:
 
 - repository-authored short texts with explicit provenance inside this repository;
-- public-domain or CC0-compatible short texts whose provenance is recorded in the slice manifest; and
-- derived comparator outputs generated locally from the allowed slice texts.
+- public-domain or CC0-compatible short texts whose provenance is recorded in the slice manifest.
 
 The repository does **not** allow:
 
@@ -73,8 +72,7 @@ The frozen readiness policy for future feature work is:
 - Nested spans are legal in repository outputs and must round-trip through `textdoc`.
 - Any expected artifact that contains overlapping or nested entity spans must set
   `allowSpanOverlap: true` on the entity layer.
-- Flat comparator outputs are diagnostic evidence only; they do not narrow the repository
-  representation.
+- Flat external outputs do not narrow the repository representation.
 
 ## Expected-output format
 
@@ -89,27 +87,7 @@ and records:
 - token and sentence layers over the frozen text; and
 - entity annotations using the `PER` / `ORG` / `LOC` label policy.
 
-## Comparator freeze
-
-Frozen comparator versions live in
-[`../../fixtures/rule-backed-ner/tool-versions.json`](../../fixtures/rule-backed-ner/tool-versions.json).
-
-The current frozen comparator set is English-first:
-
-- `spaCy 3.8.14` with `en_core_web_sm 3.8.0`;
-- `compromise 14.15.0`.
-
-## Comparator outputs
-
-Committed comparator captures live in
-[`../../fixtures/rule-backed-ner/comparisons/`](../../fixtures/rule-backed-ner/comparisons/).
-
-Comparator outputs are diagnostic evidence, not normative expected outputs. A slice may appear as
-`not-run` in a comparator capture when that frozen comparator is outside its declared language
-surface; the not-run reason is itself part of the committed artifact.
-
 ## Verification
 
-`npm run -s check:fixtures` validates the slice manifest, comparator/version freeze, committed
-comparator outputs, recorded expected outputs, required readiness documentation headings, and
+`npm run -s check:fixtures` validates the slice manifest, label policy, recorded expected outputs, required readiness documentation headings, and
 result-envelope/conformance representability before any feature PR for issue `#13`.

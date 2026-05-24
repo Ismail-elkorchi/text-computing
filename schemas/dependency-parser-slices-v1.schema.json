@@ -8,7 +8,6 @@
     "schemaVersion",
     "scope",
     "expectedOutputStatus",
-    "comparatorStatus",
     "fixtures",
     "negativeControls"
   ],
@@ -21,12 +20,6 @@
     },
     "expectedOutputStatus": {
       "const": "recorded"
-    },
-    "comparatorStatus": {
-      "enum": [
-        "capability-recorded",
-        "executed-captures-recorded"
-      ]
     },
     "fixtures": {
       "type": "array",

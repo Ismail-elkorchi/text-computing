@@ -322,12 +322,12 @@
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Interactive views, standalone comparator execution, and large-corpus browsing remain outside alpha scope.",
+        "Interactive views, standalone external-tool execution, and large-corpus browsing remain outside alpha scope.",
         "Public alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Interactive views, standalone comparator execution, and large-corpus browsing remain outside alpha scope.",
+          "blocker": "Interactive views, standalone external-tool execution, and large-corpus browsing remain outside alpha scope.",
           "maturity": "beta",
           "decision": "Blocks broader inspection-tooling claims; it does not block foundation alpha packages unless their smoke output cannot be inspected.",
           "evidenceRefs": [
@@ -693,7 +693,7 @@
       "limitations": [
         "Rule-backed task behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
         "Raw-text tokenization helpers are fixture helpers; the default rule-engine input contract is an existing textdoc token layer.",
-        "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+        "Corpus evaluation is incomplete for several implemented task surfaces.",
         "Public alpha scope is bounded to reusable rules, explicit resources, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
@@ -707,13 +707,10 @@
           ]
         },
         {
-          "blocker": "External comparator captures and corpus evaluation are incomplete for several implemented task surfaces.",
+          "blocker": "Corpus evaluation is incomplete for several implemented task surfaces.",
           "maturity": "beta",
-          "decision": "Blocks broader behavior claims; does not authorize new comparator matrices during alpha foundation release.",
+          "decision": "Blocks broader behavior claims; does not authorize new non-product evidence matrices during alpha foundation release.",
           "evidenceRefs": [
-            "fixtures/pos-morph-lemma/comparisons/spacy-3.8.14.json",
-            "fixtures/rule-backed-ner/comparisons/spacy-3.8.14.json",
-            "fixtures/dependency-parser/comparisons/stanza-1.12.json",
             "fixtures/relation-extraction/slices.json",
             "fixtures/coreference/slices.json"
           ]

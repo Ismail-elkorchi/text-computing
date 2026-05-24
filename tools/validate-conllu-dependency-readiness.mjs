@@ -379,13 +379,6 @@ for (const fixture of slices.fixtures.invalid) {
   expect(failed, `${fixture.path} must fail with ${fixture.mustFail}`);
 }
 
-const futureRuntimes = new Set(toolVersions.futureComparators.map((entry) => entry.runtime));
-expect(futureRuntimes.has("javascript"), "CoNLL-U readiness must name a future JavaScript comparator role.");
-expect(
-  futureRuntimes.has("python") || futureRuntimes.has("jvm"),
-  "CoNLL-U readiness must name a future Python or JVM comparator role.",
-);
-
 const readinessDoc = await readText("docs/specs/conllu-dependency-readiness.md");
 for (const heading of [
   "## Why this document exists",

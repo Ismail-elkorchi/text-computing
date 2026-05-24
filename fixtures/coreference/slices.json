@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "taskId": "nlp-coreference",
   "expectedOutputStatus": "recorded",
-  "comparatorStatus": "claim-downgraded",
-  "allowedFixturePolicy": "Repository-authored short texts only until redistribution and comparator-output policies are expanded.",
+  "allowedFixturePolicy": "Repository-authored short texts only until redistribution and corpus policies are expanded.",
   "corpusEvidence": {
     "id": "corpus:nlp-coreference-smoke-v1",
     "status": "committed",

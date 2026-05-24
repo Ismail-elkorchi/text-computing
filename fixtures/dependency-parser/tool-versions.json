@@ -14,43 +14,5 @@
       "version": "UD v2",
       "role": "Defines relation and annotation guidance used to interpret dependency labels."
     }
-  ],
-  "comparators": [
-    {
-      "name": "spaCy DependencyParser",
-      "version": "3.8.14",
-      "runtime": "python",
-      "model": {
-        "name": "en_core_web_sm / es_core_news_sm",
-        "version": "3.8.0"
-      },
-      "license": "MIT",
-      "artifactSurface": "Token.head, Token.dep, Doc.sents",
-      "executionStatus": "executed",
-      "capturePath": "fixtures/dependency-parser/comparisons/spacy-3.8.json"
-    },
-    {
-      "name": "Stanza DepparseProcessor",
-      "version": "1.12.0",
-      "runtime": "python",
-      "model": {
-        "name": "downloaded Stanza default models for en/es/ar",
-        "version": "2026-05-16 download"
-      },
-      "license": "Apache-2.0",
-      "artifactSurface": "UD-style head and dependency relation fields",
-      "executionStatus": "executed",
-      "capturePath": "fixtures/dependency-parser/comparisons/stanza-1.12.json"
-    },
-    {
-      "name": "UniversalDependencies/tools validator",
-      "version": "ee98e50bfc59b5a1a7e5024d7edbad148a992894",
-      "runtime": "other",
-      "license": "GPL-2.0",
-      "artifactSurface": "CoNLL-U HEAD/DEPREL row validation for frozen expected arcs",
-      "executionStatus": "executed",
-      "capturePath": "fixtures/dependency-parser/comparisons/ud-validator-ee98e50.json"
-    }
-  ],
-  "executionPolicy": "At least one executed parser model-output capture and one direct UD/CoNLL-U validation capture are required before this readiness gate passes. JavaScript comparator-backed dependency-parser support is not claimed by this gate."
+  ]
 }
