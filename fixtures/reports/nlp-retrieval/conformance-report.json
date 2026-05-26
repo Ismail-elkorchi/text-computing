@@ -46,7 +46,7 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
@@ -82,13 +82,13 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
     {
-      "checkId": "feature-output-proof",
+      "checkId": "feature-output-verification",
       "status": "pass",
       "message": "Retrieval index, query parsing, ranking, snippets, explain output, qrels evaluation, and JSON persistence pass feature validation.",
       "evidenceRefs": [
@@ -121,13 +121,13 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
     {
-      "checkId": "fielded-bm25f-proof",
+      "checkId": "fielded-bm25f-verification",
       "status": "pass",
       "message": "Fielded BM25F retrieval is tied to explicit field specs and a committed fielded smoke corpus.",
       "evidenceRefs": [
@@ -156,7 +156,7 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
@@ -197,13 +197,13 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
     {
-      "checkId": "qrels-evaluation-proof",
+      "checkId": "qrels-evaluation-verification",
       "status": "pass",
       "message": "The retrieval validator regenerates qrels metrics from current package code and fails on drift from committed evaluation output.",
       "evidenceRefs": [
@@ -235,13 +235,13 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
     {
-      "checkId": "licensed-corpus-threshold-proof",
+      "checkId": "licensed-corpus-threshold-verification",
       "status": "pass",
       "message": "The repository-authored licensed retrieval corpus declares corpus hash, qrels, metric expectations, and deterministic size thresholds checked by the retrieval and performance validators.",
       "evidenceRefs": [
@@ -274,7 +274,7 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
@@ -308,15 +308,15 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     },
     {
-      "checkId": "section-12-retrieval-proof",
+      "checkId": "section-12-retrieval-verification",
       "status": "pass",
-      "message": "Retrieval Section 12 features are tied to package APIs, committed external qrels, expected outputs, and validator oracles without changing the support label.",
+      "message": "Retrieval Section 12 features are tied to package APIs, committed external qrels, expected outputs, and validator oracles without changing the support level.",
       "evidenceRefs": [
         "packages/textcorpus/src/index.ts",
         "packages/textcorpus/test/index.test.ts",
@@ -349,7 +349,7 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
@@ -377,13 +377,13 @@
           "fixtures/reports/nlp-retrieval/conformance-report.json"
         ],
         "limitations": [
-          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval claim is implemented.",
+          "No broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval statement is implemented.",
           "Behavior uses explicit tokens from committed retrieval fixtures plus bounded package-level tests."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists retrieval evidence for committed explicit-token corpora, standalone qrels, deterministic size thresholds, streaming iteration, durable index artifacts, citation windows, quote grounding, and the pinned BEIR NFCorpus title-token subset only; it does not add a Lucene-backed relevance claim, filesystem-specific index store, broad multilingual retrieval benchmark, or broad retrieval-quality claim."
+    "This report persists retrieval evidence for committed explicit-token corpora, standalone qrels, deterministic size thresholds, streaming iteration, durable index artifacts, citation windows, quote grounding, and the pinned BEIR NFCorpus title-token subset only; it does not add a Lucene-backed relevance statement, filesystem-specific index store, broad multilingual retrieval benchmark, or broad retrieval-quality statement."
   ]
 }

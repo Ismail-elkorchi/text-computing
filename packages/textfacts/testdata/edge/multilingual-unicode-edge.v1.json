@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "claimBoundary": "Text-local Unicode edge coverage only; not language-aware NLP support.",
+  "scopeBoundary": "Text-local Unicode edge coverage only; not language-aware NLP support.",
   "cases": [
     {
       "id": "arabic-diacritics-rtl",

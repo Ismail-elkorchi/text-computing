@@ -26,7 +26,7 @@
           "schemas",
           "package-quality",
           "security-review",
-          "claim-hygiene",
+          "public-wording",
           "downstream-api-stability"
         ]
       }
@@ -34,7 +34,7 @@
     "phaseCompletionEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["phase", "evidenceRefs", "commands", "claimBoundary"],
+      "required": ["phase", "evidenceRefs", "commands", "scopeBoundary"],
       "properties": {
         "phase": { "const": "alpha-foundation-release-0.1" },
         "evidenceRefs": {
@@ -49,7 +49,7 @@
           "uniqueItems": true,
           "items": { "type": "string", "minLength": 1 }
         },
-        "claimBoundary": { "type": "string", "minLength": 1 }
+        "scopeBoundary": { "type": "string", "minLength": 1 }
       }
     },
     "dependencyReleaseOrder": {
@@ -137,7 +137,7 @@
               "schemas",
               "package-quality",
               "security-review",
-              "claim-hygiene",
+              "public-wording",
               "downstream-api-stability"
             ]
           }
@@ -154,7 +154,7 @@
           ],
           "properties": {
             "requiredBeforeRelease": { "type": "boolean" },
-            "status": { "enum": ["not-required", "blocked", "proven"] },
+            "status": { "enum": ["not-required", "blocked", "validated"] },
             "downstreamDependents": {
               "type": "array",
               "uniqueItems": true,

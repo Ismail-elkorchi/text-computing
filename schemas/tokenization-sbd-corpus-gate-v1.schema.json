@@ -7,14 +7,14 @@
   "required": [
     "schemaVersion",
     "scope",
-    "claimBoundary",
+    "scopeBoundary",
     "splitRoles",
     "corpusSlices"
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
     "scope": { "const": "tokenization-sbd-corpus-gate" },
-    "claimBoundary": { "type": "string", "minLength": 1 },
+    "scopeBoundary": { "type": "string", "minLength": 1 },
     "splitRoles": {
       "type": "array",
       "minItems": 4,
@@ -51,7 +51,7 @@
         "script",
         "boundaryRegime",
         "provenance",
-        "claimUse"
+        "fixtureUse"
       ],
       "properties": {
         "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
@@ -85,7 +85,7 @@
             "externalReference": { "type": "string", "minLength": 1 }
           }
         },
-        "claimUse": {
+        "fixtureUse": {
           "enum": [
             "development-only",
             "validation-only",

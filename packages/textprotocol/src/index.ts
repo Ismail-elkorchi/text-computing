@@ -112,7 +112,7 @@ export interface TextProtocolEnvelopeCompatibilityOptions {
   readonly expectedPayloadKind?: TextProtocolPayloadKind;
   readonly expectedProducerPackage?: string;
   readonly requireProvenance?: boolean;
-  readonly requireClaimBoundary?: boolean;
+  readonly requireScopeBoundary?: boolean;
   readonly requireLimitations?: boolean;
 }
 
@@ -161,7 +161,7 @@ export interface TextProtocolResultEnvelopeV1<
   readonly payload: TPayload;
   readonly provenance?: TextProtocolProvenance;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
-  readonly claimBoundary?: string;
+  readonly scopeBoundary?: string;
   readonly limitations?: readonly string[];
 }
 
@@ -1083,7 +1083,7 @@ export function isTextProtocolResultEnvelopeV1(
     (value.diagnostics === undefined ||
       (Array.isArray(value.diagnostics) &&
         value.diagnostics.every((entry) => isTextProtocolDiagnostic(entry)))) &&
-    (value.claimBoundary === undefined || isNonEmptyString(value.claimBoundary)) &&
+    (value.scopeBoundary === undefined || isNonEmptyString(value.scopeBoundary)) &&
     (value.limitations === undefined || isStringArray(value.limitations))
   );
 }
@@ -1261,18 +1261,18 @@ export function checkTextProtocolResultEnvelopeCompatibility(
     );
   }
 
-  if (value.claimBoundary === undefined) {
-    if (options.requireClaimBoundary === true) {
+  if (value.scopeBoundary === undefined) {
+    if (options.requireScopeBoundary === true) {
       diagnostics.push(
         compatibilityError(
-          "textprotocol.claim-boundary-missing",
-          "Result envelope claimBoundary is required.",
+          "textprotocol.scope-boundary-missing",
+          "Result envelope scopeBoundary is required.",
         ),
       );
     }
-  } else if (!isNonEmptyString(value.claimBoundary)) {
+  } else if (!isNonEmptyString(value.scopeBoundary)) {
     diagnostics.push(
-      compatibilityError("textprotocol.claim-boundary", "Result envelope claimBoundary is invalid."),
+      compatibilityError("textprotocol.scope-boundary", "Result envelope scopeBoundary is invalid."),
     );
   }
 

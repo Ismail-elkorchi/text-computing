@@ -13,4 +13,4 @@ The fixture set is intentionally fixture-scoped:
 
 CoNLL-U fixture files keep the sentence-final blank separator required by the external validator. Repository whitespace attributes allow that format-specific trailing blank line for `*.conllu` files only.
 
-No dependency parser or broad Universal Dependencies treebank support is claimed by these fixtures.
+No dependency parser or broad Universal Dependencies treebank support is stated by these fixtures.

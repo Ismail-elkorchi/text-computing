@@ -2232,7 +2232,7 @@ function textDocRawTextNotes(diagnostics: readonly TextDocRawTextDiagnostic[]): 
   return [
     "Created from raw text with @ismail-elkorchi/textfacts UAX #29 word and sentence segmentation.",
     ...(diagnostics.length > 0
-      ? ["Input contains Unicode integrity diagnostics; inspect the returned diagnostics before broad claims."]
+      ? ["Input contains Unicode integrity diagnostics; inspect the returned diagnostics before broad statements."]
       : []),
   ];
 }

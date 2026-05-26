@@ -3,7 +3,7 @@ export const conformanceReportSchemaId =
   "urn:ismail-elkorchi:textconformance:report:v1" as const;
 export const conformanceReportSchemaVersion = 1 as const;
 export const conformanceReportDiffSchemaVersion = 1 as const;
-export const conformanceClaimRegistrySchemaVersion = 1 as const;
+export const conformanceCapabilityRegistrySchemaVersion = 1 as const;
 export const conformanceSuiteSchemaId =
   "urn:ismail-elkorchi:textconformance:suite:v1" as const;
 export const conformanceSuiteSchemaVersion = 1 as const;
@@ -16,8 +16,8 @@ export type TextConformanceReportSchemaId = typeof conformanceReportSchemaId;
 export type TextConformanceReportSchemaVersion = typeof conformanceReportSchemaVersion;
 export type TextConformanceReportDiffSchemaVersion =
   typeof conformanceReportDiffSchemaVersion;
-export type TextConformanceClaimRegistrySchemaVersion =
-  typeof conformanceClaimRegistrySchemaVersion;
+export type TextConformanceCapabilityRegistrySchemaVersion =
+  typeof conformanceCapabilityRegistrySchemaVersion;
 export type TextConformanceSuiteSchemaId = typeof conformanceSuiteSchemaId;
 export type TextConformanceSuiteSchemaVersion = typeof conformanceSuiteSchemaVersion;
 export type TextConformanceBenchmarkReportSchemaId =
@@ -27,8 +27,8 @@ export type TextConformanceBenchmarkReportSchemaVersion =
 
 export type TextConformanceCheckStatus = "pass" | "fail" | "not-run";
 export type TextConformanceReportDiffStatus = "same" | "changed" | "added" | "removed";
-export type TextConformanceClaimSupportLabel =
-  | "fixture-proven"
+export type TextConformanceCapabilitySupportLevel =
+  | "fixture-validated"
   | "corpus-backed"
   | "performance-backed";
 export type TextConformanceSuiteClass =
@@ -43,7 +43,7 @@ export type TextConformanceFixtureRole =
   | "validation"
   | "holdout"
   | "negative-control"
-  | "claim-narrowed-gap";
+  | "scope-narrowed-gap";
 export type TextConformanceOracleKind =
   | "exact"
   | "schema"
@@ -126,7 +126,7 @@ export interface TextConformanceSuiteV1 {
   readonly suiteVersion: string;
   readonly suiteClass: TextConformanceSuiteClass;
   readonly subject: TextConformanceReportSubject;
-  readonly claimBoundary: string;
+  readonly scopeBoundary: string;
   readonly fixtures: readonly TextConformanceFixtureRefV1[];
   readonly oracles: readonly TextConformanceOracleRefV1[];
   readonly checks: readonly TextConformanceSuiteCheckV1[];
@@ -201,10 +201,10 @@ export interface TextConformanceReportDiffV1 {
   readonly checks: readonly TextConformanceReportDiffEntryV1[];
 }
 
-export interface TextConformanceClaimV1 {
-  readonly claimId: string;
+export interface TextConformanceCapabilityStatementV1 {
+  readonly statementId: string;
   readonly subject: TextConformanceReportSubject;
-  readonly supportLabel: TextConformanceClaimSupportLabel;
+  readonly supportLevel: TextConformanceCapabilitySupportLevel;
   readonly requirementRefs: readonly string[];
   readonly apiRefs: readonly string[];
   readonly inputRefs: readonly string[];
@@ -214,14 +214,14 @@ export interface TextConformanceClaimV1 {
   readonly limitations: readonly string[];
 }
 
-export interface TextConformanceClaimRegistryV1 {
-  readonly schemaVersion: TextConformanceClaimRegistrySchemaVersion;
+export interface TextConformanceCapabilityRegistryV1 {
+  readonly schemaVersion: TextConformanceCapabilityRegistrySchemaVersion;
   readonly registryId: string;
-  readonly claims: readonly TextConformanceClaimV1[];
+  readonly statements: readonly TextConformanceCapabilityStatementV1[];
   readonly notes?: readonly string[];
 }
 
-export interface TextConformanceClaimRegistryValidationOptions {
+export interface TextConformanceCapabilityRegistryValidationOptions {
   readonly reportId?: string;
   readonly generatedAt?: string;
   readonly knownReportIds?: readonly string[];
@@ -394,7 +394,7 @@ export function isTextConformanceFixtureRole(
     value === "validation" ||
     value === "holdout" ||
     value === "negative-control" ||
-    value === "claim-narrowed-gap"
+    value === "scope-narrowed-gap"
   );
 }
 
@@ -556,7 +556,7 @@ export function isTextConformanceSuiteV1(value: unknown): value is TextConforman
     isNonEmptyString(value.suiteVersion) &&
     isTextConformanceSuiteClass(value.suiteClass) &&
     isTextConformanceReportSubject(value.subject) &&
-    isNonEmptyString(value.claimBoundary) &&
+    isNonEmptyString(value.scopeBoundary) &&
     Array.isArray(value.fixtures) &&
     value.fixtures.length >= 1 &&
     value.fixtures.every((entry) => isTextConformanceFixtureRefV1(entry)) &&
@@ -626,22 +626,22 @@ export function isTextConformanceBenchmarkReportV1(
   );
 }
 
-export function isTextConformanceClaimSupportLabel(
+export function isTextConformanceCapabilitySupportLevel(
   value: unknown,
-): value is TextConformanceClaimSupportLabel {
+): value is TextConformanceCapabilitySupportLevel {
   return (
-    value === "fixture-proven" ||
+    value === "fixture-validated" ||
     value === "corpus-backed" ||
     value === "performance-backed"
   );
 }
 
-export function isTextConformanceClaimV1(value: unknown): value is TextConformanceClaimV1 {
+export function isTextConformanceCapabilityStatementV1(value: unknown): value is TextConformanceCapabilityStatementV1 {
   return (
     isRecord(value) &&
-    isNonEmptyString(value.claimId) &&
+    isNonEmptyString(value.statementId) &&
     isTextConformanceReportSubject(value.subject) &&
-    isTextConformanceClaimSupportLabel(value.supportLabel) &&
+    isTextConformanceCapabilitySupportLevel(value.supportLevel) &&
     isNonEmptyStringArray(value.requirementRefs) &&
     isNonEmptyStringArray(value.apiRefs) &&
     isNonEmptyStringArray(value.inputRefs) &&
@@ -652,17 +652,17 @@ export function isTextConformanceClaimV1(value: unknown): value is TextConforman
   );
 }
 
-export function isTextConformanceClaimRegistryV1(
+export function isTextConformanceCapabilityRegistryV1(
   value: unknown,
-): value is TextConformanceClaimRegistryV1 {
+): value is TextConformanceCapabilityRegistryV1 {
   return (
     isRecord(value) &&
-    value.schemaVersion === conformanceClaimRegistrySchemaVersion &&
+    value.schemaVersion === conformanceCapabilityRegistrySchemaVersion &&
     isNonEmptyString(value.registryId) &&
-    Array.isArray(value.claims) &&
-    value.claims.length >= 1 &&
-    value.claims.every((entry) => isTextConformanceClaimV1(entry)) &&
-    hasUniqueStrings(value.claims.map((entry) => entry.claimId)) &&
+    Array.isArray(value.statements) &&
+    value.statements.length >= 1 &&
+    value.statements.every((entry) => isTextConformanceCapabilityStatementV1(entry)) &&
+    hasUniqueStrings(value.statements.map((entry) => entry.statementId)) &&
     (value.notes === undefined || isStringArray(value.notes))
   );
 }
@@ -764,7 +764,7 @@ export function validateTextConformanceFixturePolicy(
         suite.fixtures.some((fixture) => fixture.role !== "development")
           ? "pass"
           : "fail",
-      message: "Development fixtures alone cannot prove a public claim.",
+      message: "Development fixtures alone cannot verify a public statement.",
       evidenceRefs,
     },
   ];
@@ -772,7 +772,7 @@ export function validateTextConformanceFixturePolicy(
     checks.push({
       checkId: "fixture-policy:negative-control",
       status: hasRole(suite.fixtures, "negative-control") ? "pass" : "fail",
-      message: "Negative-control fixtures are required for claim-bearing suites.",
+      message: "Negative-control fixtures are required for scope-bearing suites.",
       evidenceRefs,
     });
   }
@@ -780,7 +780,7 @@ export function validateTextConformanceFixturePolicy(
     checks.push({
       checkId: "fixture-policy:holdout",
       status: hasRole(suite.fixtures, "holdout") ? "pass" : "fail",
-      message: "Holdout fixtures are required before broad or upgrade claims.",
+      message: "Holdout fixtures are required before broad or upgrade statements.",
       evidenceRefs,
     });
   }
@@ -933,45 +933,45 @@ export function diffTextConformanceReports(
   return diff;
 }
 
-export function validateTextConformanceClaimRegistry(
-  registry: TextConformanceClaimRegistryV1,
-  options: TextConformanceClaimRegistryValidationOptions = {},
+export function validateTextConformanceCapabilityRegistry(
+  registry: TextConformanceCapabilityRegistryV1,
+  options: TextConformanceCapabilityRegistryValidationOptions = {},
 ): TextConformanceReportV1 {
   const knownReportIds = new Set(options.knownReportIds ?? []);
   return runTextConformanceChecks(
     [
       {
-        checkId: "claim-registry-runtime-guard",
-        run: () => (isTextConformanceClaimRegistryV1(registry) ? "pass" : "fail"),
+        checkId: "capability-registry-runtime-guard",
+        run: () => (isTextConformanceCapabilityRegistryV1(registry) ? "pass" : "fail"),
       },
-      ...registry.claims.map((claim) => ({
-        checkId: `claim-trace:${claim.claimId}`,
-        evidenceRefs: claim.evidenceRefs,
+      ...registry.statements.map((statement) => ({
+        checkId: `capability-trace:${statement.statementId}`,
+        evidenceRefs: statement.evidenceRefs,
         run: () => {
-          const missingReportRefs = claim.reportRefs.filter((reportRef) => !knownReportIds.has(reportRef));
+          const missingReportRefs = statement.reportRefs.filter((reportRef) => !knownReportIds.has(reportRef));
           const status: TextConformanceCheckStatus = missingReportRefs.length === 0 ? "pass" : "fail";
           return {
-            checkId: `claim-trace:${claim.claimId}`,
+            checkId: `capability-trace:${statement.statementId}`,
             status,
             ...(missingReportRefs.length > 0
               ? { message: `Missing report refs: ${missingReportRefs.join(", ")}` }
               : {}),
             evidenceRefs: [
-              ...claim.requirementRefs,
-              ...claim.apiRefs,
-              ...claim.inputRefs,
-              ...claim.oracleRefs,
-              ...claim.evidenceRefs,
-              ...claim.reportRefs,
+              ...statement.requirementRefs,
+              ...statement.apiRefs,
+              ...statement.inputRefs,
+              ...statement.oracleRefs,
+              ...statement.evidenceRefs,
+              ...statement.reportRefs,
             ].sort(),
           };
         },
       })),
     ],
     {
-      reportId: options.reportId ?? `claim-registry:${registry.registryId}`,
+      reportId: options.reportId ?? `capability-registry:${registry.registryId}`,
       subject: {
-        kind: "claim-registry",
+        kind: "capability-registry",
         id: registry.registryId,
       },
       ...(options.generatedAt ? { generatedAt: options.generatedAt } : {}),

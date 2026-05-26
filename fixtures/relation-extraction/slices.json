@@ -7,7 +7,7 @@
     "id": "corpus:nlp-relation-extraction-smoke-v1",
     "status": "committed",
     "corpusClass": "repository-authored-evaluation-slice",
-    "splitPolicy": "All documents are frozen evaluation or negative-control fixtures; no training split or broad benchmark score is claimed.",
+    "splitPolicy": "All documents are frozen evaluation or negative-control fixtures; no training split or broad benchmark score is stated.",
     "supportBoundary": "Corpus-backed evidence means this committed corpus slice validates expected outputs and negative controls; it does not imply broad relation extraction coverage.",
     "documents": [
       {

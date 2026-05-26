@@ -144,7 +144,7 @@ export interface TextPipelineRunResult {
 export interface TextPipelineTraceEnvelopeMetadata {
   readonly provenance?: TextProtocolProvenance;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
-  readonly claimBoundary?: string;
+  readonly scopeBoundary?: string;
   readonly limitations?: readonly string[];
 }
 
@@ -1091,7 +1091,7 @@ export function createTextPipelineTraceEnvelope(
     payload: trace,
     ...(metadata.provenance === undefined ? {} : { provenance: metadata.provenance }),
     ...(metadata.diagnostics === undefined ? {} : { diagnostics: metadata.diagnostics }),
-    ...(metadata.claimBoundary === undefined ? {} : { claimBoundary: metadata.claimBoundary }),
+    ...(metadata.scopeBoundary === undefined ? {} : { scopeBoundary: metadata.scopeBoundary }),
     ...(metadata.limitations === undefined ? {} : { limitations: metadata.limitations }),
   };
   const compatibility = checkTextProtocolResultEnvelopeCompatibility(envelope, {

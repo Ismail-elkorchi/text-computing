@@ -3,15 +3,15 @@
 ## Why this document exists
 
 Retrieval behavior combines query parsing, an inverted index, ranking, snippets, and explain output.
-This document keeps those surfaces tied to explicit fixtures before broader corpus claims are made.
+This document keeps those surfaces tied to explicit fixtures before broader corpus statements are made.
 
 ## Status
 
 - Task id: `nlp-retrieval`
-- Status: `slice-proven`
+- Status: `slice-validated`
 - Owning package: `textcorpus`
-- Current proof: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, fielded BM25F retrieval, standalone qrels, expected evaluation metrics, a repository-authored licensed corpus, a pinned BEIR NFCorpus title-token subset with external qrels, streaming iteration over the package index, durable index artifacts, phrase/proximity/boolean query parsing, citation windows, quote grounding, and deterministic size thresholds over committed retrieval fixtures
-- Current non-proof: no broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance claim, or broad multilingual retrieval benchmark
+- Current verification: deterministic baseline BM25 retrieval over the frozen explicit-token corpus used by the TF-IDF/BM25 gate, fielded BM25F retrieval, standalone qrels, expected evaluation metrics, a repository-authored licensed corpus, a pinned BEIR NFCorpus title-token subset with external qrels, streaming iteration over the package index, durable index artifacts, phrase/proximity/boolean query parsing, citation windows, quote grounding, and deterministic size thresholds over committed retrieval fixtures
+- Current non-verification: no broad retrieval benchmark, filesystem-specific index store, Lucene-backed relevance statement, or broad multilingual retrieval benchmark
 
 ## Input slices
 

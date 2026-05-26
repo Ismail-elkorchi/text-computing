@@ -23,11 +23,11 @@ validation.
 - [`relation-extraction/`](relation-extraction/) — typed relation fixtures and negative controls.
 - [`coreference/`](coreference/) — frozen mention/chain fixtures, expected outputs, and negative controls.
 - [`multilingual-support/`](multilingual-support/) — coverage matrix and script input fixtures for multilingual fixture control.
-- [`performance/`](performance/) — performance gate requirements for future operational claims.
+- [`performance/`](performance/) — performance gate requirements for future operational statements.
 - [`package-release/`](package-release/) — package release-track and release-gate requirements.
-- [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to prove issue
+- [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to verify issue
   `#11`.
-- [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to prove issue
+- [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to verify issue
   `#12`.
 - [`reports/`](reports/) — persisted `TextConformanceReportV1` fixture outputs
-  artifacts for current slice-proven task surfaces.
+  artifacts for current slice-validated task surfaces.

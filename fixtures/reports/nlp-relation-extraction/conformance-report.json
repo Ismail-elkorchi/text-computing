@@ -42,9 +42,9 @@
           "fixtures/reports/nlp-relation-extraction/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus relation extraction support are not claimed.",
+          "Broad-corpus relation extraction support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -82,9 +82,9 @@
           "fixtures/reports/nlp-relation-extraction/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus relation extraction support are not claimed.",
+          "Broad-corpus relation extraction support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -117,9 +117,9 @@
           "fixtures/reports/nlp-relation-extraction/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus relation extraction support are not claimed.",
+          "Broad-corpus relation extraction support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -150,9 +150,9 @@
           "fixtures/reports/nlp-relation-extraction/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus relation extraction support are not claimed.",
+          "Broad-corpus relation extraction support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -185,14 +185,14 @@
           "fixtures/reports/nlp-relation-extraction/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus relation extraction support are not claimed.",
+          "Broad-corpus relation extraction support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic typed relation outputs over the frozen repository-authored corpus slice only."
         ]
       }
     }
   ],
   "notes": [
-    "This report records slice-proven relation extraction evidence for a frozen repository-authored corpus slice only. Broad-corpus relation extraction support are not claimed."
+    "This report records slice-validated relation extraction evidence for a frozen repository-authored corpus slice only. Broad-corpus relation extraction support are not stated."
   ]
 }

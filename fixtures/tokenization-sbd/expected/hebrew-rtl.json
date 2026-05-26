@@ -91,6 +91,6 @@
     }
   ],
   "notes": [
-    "Fixture proves Unicode boundary behavior for this short Hebrew slice only."
+    "Fixture verifies Unicode boundary behavior for this short Hebrew slice only."
   ]
 }

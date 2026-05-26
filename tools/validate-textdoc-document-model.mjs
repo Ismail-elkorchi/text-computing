@@ -719,7 +719,7 @@ const annotationBundleEnvelope = {
   },
   limitations: [
     "Stand-off annotation bundle evidence covers the committed document-model fixture only.",
-    "No external document-model system is claimed by this artifact.",
+    "No external document-model system is stated by this artifact.",
   ],
 };
 

@@ -17,7 +17,7 @@
         "public-domain-source"
       ],
       "license": "public-domain-us-federal",
-      "provenance": "Manual explicit-token holdout derived from public-domain United States constitutional text themes; no tokenizer behavior is claimed by this corpus.",
+      "provenance": "Manual explicit-token holdout derived from public-domain United States constitutional text themes; no tokenizer behavior is stated by this corpus.",
       "contentHash": "sha256:c095c9ef2341e6e97d0e99631168610e81dc57781dd6f0361984ff2c62dea4fe",
       "documents": [
         {

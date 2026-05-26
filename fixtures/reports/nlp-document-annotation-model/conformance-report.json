@@ -40,8 +40,8 @@
           "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
         ],
         "limitations": [
-          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+          "Graph conventions are slice-validated for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-validated for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
     },
@@ -78,13 +78,13 @@
           "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
         ],
         "limitations": [
-          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+          "Graph conventions are slice-validated for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-validated for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
     },
     {
-      "checkId": "result-envelope-and-report-proof",
+      "checkId": "result-envelope-and-report-verification",
       "status": "pass",
       "message": "The document fixture is validated as result-envelope and conformance-report compatible.",
       "evidenceRefs": [
@@ -112,13 +112,13 @@
           "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
         ],
         "limitations": [
-          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+          "Graph conventions are slice-validated for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-validated for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
     },
     {
-      "checkId": "annotation-bundle-roundtrip-proof",
+      "checkId": "annotation-bundle-roundtrip-verification",
       "status": "pass",
       "message": "The document fixture exports to a textprotocol annotation bundle and restores onto a textdoc skeleton without layer or annotation-order loss.",
       "evidenceRefs": [
@@ -148,7 +148,7 @@
         ],
         "limitations": [
           "Stand-off annotation-bundle evidence covers the committed document-model fixture only and is not an external document-model system result.",
-          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+          "Slice-validated for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
     },
@@ -176,13 +176,13 @@
           "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
         ],
         "limitations": [
-          "Graph conventions are slice-proven for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
-          "Slice-proven for the current document annotation model fixture and invalid-reference cases only."
+          "Graph conventions are slice-validated for committed fixtures only; broad production relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Slice-validated for the current document annotation model fixture and invalid-reference cases only."
         ]
       }
     },
     {
-      "checkId": "heldout-annotation-bundles-proof",
+      "checkId": "heldout-annotation-bundles-verification",
       "status": "pass",
       "message": "Held-out stand-off annotation bundles restore onto source documents and satisfy graph validation without support-label upgrade.",
       "evidenceRefs": [
@@ -214,14 +214,14 @@
           "fixtures/reports/nlp-document-annotation-model/conformance-report.json"
         ],
         "limitations": [
-          "Graph conventions are slice-proven for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
+          "Graph conventions are slice-validated for committed fixtures only; broad relation extraction, coreference resolution, entity linking, parser behavior, and confidence/loss conventions remain future work.",
           "Held-out stand-off annotation-bundle evidence is repository-authored from named interchange precedents and is not an external document-model system result."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists current document-model evidence; graph conventions remain slice-proven and do not claim broad task behavior.",
+    "This report persists current document-model evidence; graph conventions remain slice-validated and do not assert broad task behavior.",
     "Held-out annotation bundles are repository-authored from named interchange precedents and are not external system results."
   ]
 }

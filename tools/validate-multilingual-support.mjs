@@ -6,7 +6,7 @@ const MATRIX_PATH = "fixtures/multilingual-support/coverage.v1.json";
 const SCHEMA_PATH = "schemas/multilingual-coverage-v1.schema.json";
 const REQUIRED_TIERS = [
   "unicode-invariant",
-  "fixture-proven",
+  "fixture-validated",
   "resource-backed",
   "corpus-backed",
 ];
@@ -112,9 +112,9 @@ for (const tier of matrix.coverageLevels) {
   }
   if (
     tier.name !== "unicode-invariant" &&
-    tier.claimBoundary.toLowerCase().includes("all languages")
+    tier.scopeBoundary.toLowerCase().includes("all languages")
   ) {
-    fail(`${tier.name} claimBoundary must not claim all-language support.`);
+    fail(`${tier.name} scopeBoundary must not assert all-language support.`);
   }
   for (const ref of tier.evidenceRefs) {
     if (!(await fileExists(ref))) {

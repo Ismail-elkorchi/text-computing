@@ -132,7 +132,7 @@ Generated at: 2026-02-05T00:00:00Z
 ### dossier
 
 - Kind: repo
-- Definition: A machine-readable method dossier documenting claims, falsifiers, and evidence.
+- Definition: A machine-readable method dossier documenting statements, falsifiers, and evidence.
 - Preferred phrases: method dossier
 
 ### duplication

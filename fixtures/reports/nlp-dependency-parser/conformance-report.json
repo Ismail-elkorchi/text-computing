@@ -45,7 +45,7 @@
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
           "No trained parser or broad UD treebank support is implemented.",
-          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+          "Slice-validated for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
     },
@@ -78,12 +78,12 @@
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
           "No trained parser or broad UD treebank support is implemented.",
-          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+          "Slice-validated for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
     },
     {
-      "checkId": "feature-output-proof",
+      "checkId": "feature-output-verification",
       "status": "pass",
       "message": "Generated dependency arcs validate as textdoc, result-envelope, and conformance-report compatible.",
       "evidenceRefs": [
@@ -113,7 +113,7 @@
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
           "No trained parser or broad UD treebank support is implemented.",
-          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+          "Slice-validated for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
     },
@@ -142,7 +142,7 @@
         "limitations": [
           "Behavior is limited to deterministic rules for three frozen slices.",
           "No trained parser or broad UD treebank support is implemented.",
-          "Slice-proven for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
+          "Slice-validated for deterministic dependency arcs over the frozen en-basic, es-mwt, and ar-nonlatin slices only."
         ]
       }
     }

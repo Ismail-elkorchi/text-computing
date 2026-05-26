@@ -1,13 +1,13 @@
 import {
   conformanceBenchmarkReportSchemaId,
   conformanceBenchmarkReportSchemaVersion,
-  conformanceClaimRegistrySchemaVersion,
+  conformanceCapabilityRegistrySchemaVersion,
   conformanceSuiteSchemaId,
   conformanceSuiteSchemaVersion,
   diffTextConformanceReports,
   isTextConformanceBenchmarkReportV1,
-  isTextConformanceClaimRegistryV1,
-  isTextConformanceClaimV1,
+  isTextConformanceCapabilityRegistryV1,
+  isTextConformanceCapabilityStatementV1,
   isTextConformanceReportDiffV1,
   isTextConformanceReportV1,
   isTextConformanceSuiteV1,
@@ -17,7 +17,7 @@ import {
   runTextConformanceDifferentialOracle,
   runTextConformanceChecks,
   runTextConformanceSuite,
-  validateTextConformanceClaimRegistry,
+  validateTextConformanceCapabilityRegistry,
   validateTextConformanceFixturePolicy,
 } from "../src/index.ts";
 import { execFileSync } from "node:child_process";
@@ -246,61 +246,61 @@ if (!duplicateCheckRejected) {
   throw new Error("report diff should reject duplicate expected check ids");
 }
 
-const claim = {
-  claimId: "claim:fixture-schema-valid",
+const statement = {
+  statementId: "statement:fixture-schema-valid",
   subject: {
     kind: "package",
     id: "@ismail-elkorchi/textconformance",
   },
-  supportLabel: "fixture-proven",
+  supportLevel: "fixture-validated",
   requirementRefs: ["packages/textconformance/README.md#conformance-report-package"],
   apiRefs: ["packages/textconformance/src/index.ts#runTextConformanceChecks"],
   inputRefs: ["packages/textconformance/test/index.test.ts#report"],
   oracleRefs: ["packages/textconformance/test/index.test.ts#isTextConformanceReportV1"],
   evidenceRefs: ["packages/textconformance/test/index.test.ts"],
   reportRefs: [actualReport.reportId],
-  limitations: ["This claim is limited to package unit-test evidence."],
+  limitations: ["This statement is limited to package unit-test evidence."],
 } as const;
-if (!isTextConformanceClaimV1(claim)) {
-  throw new Error("claim should satisfy the claim guard");
+if (!isTextConformanceCapabilityStatementV1(statement)) {
+  throw new Error("statement should satisfy the statement guard");
 }
 const registry = {
-  schemaVersion: conformanceClaimRegistrySchemaVersion,
+  schemaVersion: conformanceCapabilityRegistrySchemaVersion,
   registryId: "registry:textconformance-unit",
-  claims: [claim],
-  notes: ["Unit-test claim registry."],
+  statements: [statement],
+  notes: ["Unit-test capability registry."],
 };
-if (!isTextConformanceClaimRegistryV1(registry)) {
-  throw new Error("claim registry should satisfy the runtime guard");
+if (!isTextConformanceCapabilityRegistryV1(registry)) {
+  throw new Error("capability registry should satisfy the runtime guard");
 }
 if (
-  isTextConformanceClaimRegistryV1({
+  isTextConformanceCapabilityRegistryV1({
     ...registry,
-    claims: [claim, claim],
+    statements: [statement, statement],
   })
 ) {
-  throw new Error("claim registry should reject duplicate claim ids");
+  throw new Error("capability registry should reject duplicate statement ids");
 }
-const claimReport = validateTextConformanceClaimRegistry(registry, {
+const statementReport = validateTextConformanceCapabilityRegistry(registry, {
   knownReportIds: [actualReport.reportId],
   generatedAt: "2026-04-23T00:00:00.000Z",
 });
-if (!isTextConformanceReportV1(claimReport) || claimReport.summary.fail !== 0) {
-  throw new Error("claim registry validation should produce a passing report");
+if (!isTextConformanceReportV1(statementReport) || statementReport.summary.fail !== 0) {
+  throw new Error("capability registry validation should produce a passing report");
 }
-const missingReport = validateTextConformanceClaimRegistry(registry, {
+const missingReport = validateTextConformanceCapabilityRegistry(registry, {
   knownReportIds: [],
 });
 if (missingReport.summary.fail !== 1) {
-  throw new Error("claim registry validation should fail when report refs are missing");
+  throw new Error("capability registry validation should fail when report refs are missing");
 }
 if (
-  isTextConformanceClaimV1({
-    ...claim,
+  isTextConformanceCapabilityStatementV1({
+    ...statement,
     oracleRefs: [],
   })
 ) {
-  throw new Error("claim guard should reject empty oracle refs");
+  throw new Error("statement guard should reject empty oracle refs");
 }
 
 const suite = {
@@ -314,7 +314,7 @@ const suite = {
     id: "@ismail-elkorchi/textconformance",
     version: "0.1.0",
   },
-  claimBoundary: "Unit-test suite for the textconformance harness API.",
+  scopeBoundary: "Unit-test suite for the textconformance harness API.",
   fixtures: [
     {
       role: "validation",
@@ -352,7 +352,7 @@ const suite = {
       },
     },
   ],
-  limitations: ["Unit-test suite, not a repository-wide package claim."],
+  limitations: ["Unit-test suite, not a repository-wide package statement."],
 } as const;
 
 if (!isTextConformanceSuiteV1(suite)) {

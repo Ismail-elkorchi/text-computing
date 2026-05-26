@@ -44,7 +44,7 @@
         "limitations": [
           "No broad resource marketplace or update workflow is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+          "Slice-validated for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
@@ -80,12 +80,12 @@
         "limitations": [
           "No broad resource marketplace or update workflow is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+          "Slice-validated for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
     {
-      "checkId": "validator-proof-recorded",
+      "checkId": "validator-verification-recorded",
       "status": "pass",
       "message": "The textpack resource validator checks manifest and conflict behavior.",
       "evidenceRefs": [
@@ -113,12 +113,12 @@
         "limitations": [
           "No broad resource marketplace or update workflow is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+          "Slice-validated for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
     {
-      "checkId": "resource-loading-proof-recorded",
+      "checkId": "resource-loading-verification-recorded",
       "status": "pass",
       "message": "The textpack resource validator loads stopword, lexicon, and gazetteer fixture content through the package loader.",
       "evidenceRefs": [
@@ -150,12 +150,12 @@
         "limitations": [
           "No broad resource marketplace or update workflow is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+          "Slice-validated for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
     {
-      "checkId": "catalog-proof-recorded",
+      "checkId": "catalog-verification-recorded",
       "status": "pass",
       "message": "The textpack validator regenerates the committed reference-pack catalog from package APIs and fails on drift.",
       "evidenceRefs": [
@@ -188,7 +188,7 @@
         "limitations": [
           "No broad resource marketplace or update workflow is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+          "Slice-validated for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
@@ -218,12 +218,12 @@
         "limitations": [
           "No broad resource marketplace or update workflow is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "Slice-proven for committed textpack manifests, resources, catalog, and invalid controls only."
+          "Slice-validated for committed textpack manifests, resources, catalog, and invalid controls only."
         ]
       }
     },
     {
-      "checkId": "heldout-authoring-update-workflow-proof",
+      "checkId": "heldout-authoring-update-workflow-verification",
       "status": "pass",
       "message": "The textpack package API creates and updates a held-out authoring manifest while validators enforce resource, test, provenance, license, review-state, and compatibility rules.",
       "evidenceRefs": [
@@ -260,7 +260,7 @@
         "limitations": [
           "No broad resource marketplace is implemented.",
           "Reference pack coverage remains intentionally small and scope-limited.",
-          "The held-out authoring/update workflow is fixture-proven for one curated authoring example only."
+          "The held-out authoring/update workflow is fixture-validated for one curated authoring example only."
         ]
       }
     }

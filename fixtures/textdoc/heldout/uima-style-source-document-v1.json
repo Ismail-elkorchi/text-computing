@@ -85,6 +85,6 @@
     }
   ],
   "notes": [
-    "Held-out source document for annotation-bundle validation. It is repository-authored and does not claim external system coverage."
+    "Held-out source document for annotation-bundle validation. It is repository-authored and does not assert external system coverage."
   ]
 }

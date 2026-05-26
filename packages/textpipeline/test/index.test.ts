@@ -233,7 +233,7 @@ if (!isTextPipelineTraceV1(deterministicRun.trace)) {
 }
 
 const serializedEnvelope = createTextPipelineTraceEnvelope(deterministicRun.trace, "0.1.0", {
-  claimBoundary: "Package test trace serialization.",
+  scopeBoundary: "Package test trace serialization.",
   limitations: ["Package-local fixture only."],
 });
 

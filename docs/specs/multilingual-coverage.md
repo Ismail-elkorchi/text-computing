@@ -8,12 +8,12 @@
 
 ## Why this document exists
 
-Multilingual claims can drift from “Unicode handles this string” to “the library supports this language.” This document prevents that drift by separating Unicode-invariant behavior, fixture evidence, resource evidence, and corpus evidence.
+Multilingual statements can drift from “Unicode handles this string” to “the library supports this language.” This document prevents that drift by separating Unicode-invariant behavior, fixture evidence, resource evidence, and corpus evidence.
 
 ## Tier definitions
 
 - `unicode-invariant` — behavior is defined by Unicode-pinned algorithms and exact offset contracts.
-- `fixture-proven` — behavior is proven only for frozen named fixtures and expected outputs.
+- `fixture-validated` — behavior is validated only for frozen named fixtures and expected outputs.
 - `resource-backed` — behavior depends on declared resources with license and provenance metadata.
 - `corpus-backed` — behavior is backed by frozen corpus/document fixtures and aggregate expected outputs.
 
@@ -25,13 +25,13 @@ Current public evidence is partial. It includes Unicode conformance, tokenizatio
 
 ## Script fixture expansion
 
-The matrix adds coverage-seed inputs for Arabic, Armenian, Bengali, Cyrillic, Devanagari, Ethiopic, Georgian, Greek, Han, Hangul, Hebrew, Khmer, Latin-script language-family cases, Tamil, and Thai. These inputs are script and family coverage seeds. They are not task behavior claims until a task-specific gate records expected outputs and conformance reports.
+The matrix adds coverage-seed inputs for Arabic, Armenian, Bengali, Cyrillic, Devanagari, Ethiopic, Georgian, Greek, Han, Hangul, Hebrew, Khmer, Latin-script language-family cases, Tamil, and Thai. These inputs are script and family coverage seeds. They are not task behavior statements until a task-specific gate records expected outputs and conformance reports.
 
 The matrix also records breadth axes for families and morphology profiles represented in UD 2.18. These axes prevent a small fixture set from being read as language coverage.
 
 ## Interpretation rules
 
-- A language/script fixture is not a support claim by itself.
-- A Unicode-invariant claim does not imply language-aware morphology, parsing, NER, retrieval, or coreference.
-- External-tool snapshots are not support claims unless they execute a product decision oracle.
-- Public claims must stay at the lowest tier supported by committed evidence.
+- A language/script fixture is not a support statement by itself.
+- A Unicode-invariant statement does not imply language-aware morphology, parsing, NER, retrieval, or coreference.
+- External-tool snapshots are not support statements unless they execute a product decision oracle.
+- Public statements must stay at the lowest tier supported by committed evidence.

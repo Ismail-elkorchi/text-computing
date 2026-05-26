@@ -99,5 +99,5 @@ Negative controls live under `fixtures/textpack/invalid/`.
 
 `npm run -s check:fixtures` validates the pack manifest schema, checks fixture paths, rejects invalid
 metadata, exercises overlay conflicts, builds the registry, regenerates the catalog, loads committed
-resources, validates installable `textpack-*` package manifests, and proves deterministic lookup
+resources, validates installable `textpack-*` package manifests, and verifies deterministic lookup
 behavior with recorded provenance.

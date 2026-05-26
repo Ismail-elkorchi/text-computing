@@ -77,6 +77,6 @@
     }
   ],
   "notes": [
-    "Fixture proves Unicode boundary behavior for this short Greek slice only."
+    "Fixture verifies Unicode boundary behavior for this short Greek slice only."
   ]
 }

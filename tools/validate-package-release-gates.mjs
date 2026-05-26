@@ -15,7 +15,7 @@ const REQUIRED_GATES = [
   "schemas",
   "package-quality",
   "security-review",
-  "claim-hygiene",
+  "public-wording",
   "downstream-api-stability",
 ];
 
@@ -100,8 +100,8 @@ expect(
   "Alpha phase evidence must include the public vertical-slice smoke command.",
 );
 expect(
-  gates.phaseCompletionEvidence.claimBoundary.includes("not broad task support"),
-  "Alpha phase claim boundary must prevent broad task-support interpretation.",
+  gates.phaseCompletionEvidence.scopeBoundary.includes("not broad task support"),
+  "Alpha phase statement boundary must prevent broad task-support interpretation.",
 );
 
 const workspacePackageJsonsByName = new Map((await workspacePackageJsons()).map((packageJson) => [packageJson.name, packageJson]));
@@ -194,8 +194,8 @@ for (const entry of gates.packages) {
       `${entry.packageName} private-unreleased package must require downstream API stability before release.`,
     );
     expect(
-      entry.downstreamApiStability.status === "blocked" || entry.downstreamApiStability.status === "proven",
-      `${entry.packageName} private-unreleased package downstream API stability must be blocked or proven.`,
+      entry.downstreamApiStability.status === "blocked" || entry.downstreamApiStability.status === "validated",
+      `${entry.packageName} private-unreleased package downstream API stability must be blocked or validated.`,
     );
     if (entry.downstreamApiStability.status === "blocked") {
       expect(
@@ -205,11 +205,11 @@ for (const entry of gates.packages) {
     } else {
       expect(
         entry.downstreamApiStability.evidenceRefs.includes(DOWNSTREAM_API_STABILITY_PATH),
-        `${entry.packageName} proven downstream API stability must reference ${DOWNSTREAM_API_STABILITY_PATH}.`,
+        `${entry.packageName} validated downstream API stability must reference ${DOWNSTREAM_API_STABILITY_PATH}.`,
       );
       expect(
         !entry.releaseBlockers.some((blocker) => blocker.includes("Downstream API stability evidence")),
-        `${entry.packageName} proven downstream API stability must not keep a downstream API stability release blocker.`,
+        `${entry.packageName} validated downstream API stability must not keep a downstream API stability release blocker.`,
       );
     }
     expect(packageJson.private === true, `${entry.packageName} must remain private while releaseTrack is private-unreleased.`);
@@ -224,12 +224,12 @@ for (const entry of gates.packages) {
     expect(alphaBlockers.length === 0, `${entry.packageName} public package must not retain alpha blocker classifications.`);
     expect(
       entry.downstreamApiStability.requiredBeforeRelease === false ||
-        entry.downstreamApiStability.status === "proven",
-      `${entry.packageName} public package must either not require downstream API stability or have proven downstream API stability.`,
+        entry.downstreamApiStability.status === "validated",
+      `${entry.packageName} public package must either not require downstream API stability or have validated downstream API stability.`,
     );
     expect(
-      entry.downstreamApiStability.status === "not-required" || entry.downstreamApiStability.status === "proven",
-      `${entry.packageName} public package downstream API status must be not-required or proven.`,
+      entry.downstreamApiStability.status === "not-required" || entry.downstreamApiStability.status === "validated",
+      `${entry.packageName} public package downstream API status must be not-required or validated.`,
     );
     expect(packageJson.private !== true, `${entry.packageName} public package must not be private.`);
     if (entry.releaseTrack === "public-alpha") {

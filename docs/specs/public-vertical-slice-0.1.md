@@ -6,9 +6,9 @@ Draft public implementation target.
 
 ## Purpose
 
-This slice proves that an external TypeScript consumer can install built package tarballs and run one deterministic text-processing path through the core packages without workspace-path imports or unexported source imports.
+This slice verifies that an external TypeScript consumer can install built package tarballs and run one deterministic text-processing path through the core packages without workspace-path imports or unexported source imports.
 
-This document is not a new NLP task claim. It is a package-interoperation claim for one small fixture and one bounded pipeline.
+This document is not a new NLP task statement. It is a package-interoperation statement for one small fixture and one bounded pipeline.
 
 ## Pipeline
 
@@ -46,7 +46,7 @@ The public smoke fixture is:
 Alice visits Paris. Bob visits Paris.
 ```
 
-The fixture is intentionally small. It proves package interoperation and installability, not broad language coverage.
+The fixture is intentionally small. It verifies package interoperation and installability, not broad language coverage.
 
 ## Expected output contract
 
@@ -91,20 +91,20 @@ The sentence layer MUST preserve:
 
 The rule-backed annotation output MUST be derived only from explicit fixture resources and MUST include provenance references to the resource id and rule id used for each emitted annotation.
 
-## Claim boundary
+## Statement boundary
 
-This slice proves only:
+This slice verifies only:
 
 - packaged entrypoints can be installed from tarballs and used by an external consumer;
 - the listed packages can exchange the declared fixture payloads;
 - the fixture output is deterministic and traceable;
 - boundary checks reject new production imports from frozen legacy `textfacts` subpaths.
 
-It does not claim broad tokenization, tagging, entity extraction, retrieval, parsing, relation extraction, coreference, linking, topic modeling, embedding, model inference, or ingestion support.
+It does not assert broad tokenization, tagging, entity extraction, retrieval, parsing, relation extraction, coreference, linking, topic modeling, embedding, model inference, or ingestion support.
 
 ## Non-goals for this phase
 
-This phase MUST NOT expand retrieval, dependency parsing, relation extraction, coreference, entity linking, word-sense disambiguation, topic modeling, embeddings, model inference, LLM/RAG workflows, PDF/XML/HTML ingestion, large-corpus browsing, new non-product evidence matrices, or new support labels.
+This phase MUST NOT expand retrieval, dependency parsing, relation extraction, coreference, entity linking, word-sense disambiguation, topic modeling, embeddings, model inference, LLM/RAG workflows, PDF/XML/HTML ingestion, large-corpus browsing, new non-product evidence matrices, or new support levels.
 
 ## Acceptance commands
 

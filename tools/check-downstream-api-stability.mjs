@@ -87,16 +87,16 @@ async function assertDeclaredImports(entry) {
 
 async function assertBuiltPackageSmoke() {
   const releaseGates = await readJson(RELEASE_GATES_PATH);
-  const provenPackages = releaseGates.packages
+  const validatedPackages = releaseGates.packages
     .filter(
       (entry) =>
         entry.downstreamApiStability?.requiredBeforeRelease === true &&
-        entry.downstreamApiStability?.status === "proven",
+        entry.downstreamApiStability?.status === "validated",
     )
     .map((entry) => entry.packageName)
     .sort();
 
-  for (const packageName of provenPackages) {
+  for (const packageName of validatedPackages) {
     const packageDir = packageName.split("/")[1];
     expect(await fileExists(`packages/${packageDir}/dist/index.js`), `${packageName} dist output is missing; run npm run -s build first.`);
   }
@@ -262,14 +262,14 @@ const expectedProvenPackageNames = releaseGates.packages
   .filter(
     (entry) =>
       entry.downstreamApiStability?.requiredBeforeRelease === true &&
-      entry.downstreamApiStability?.status === "proven",
+      entry.downstreamApiStability?.status === "validated",
   )
   .map((entry) => entry.packageName)
   .sort();
 const declaredPackageNames = artifact.packages.map((entry) => entry.packageName).sort();
 expect(
   JSON.stringify(declaredPackageNames) === JSON.stringify(expectedProvenPackageNames),
-  "downstream API artifact must cover exactly the release-gate proven package set.",
+  "downstream API artifact must cover exactly the release-gate validated package set.",
   { expected: expectedProvenPackageNames, actual: declaredPackageNames },
 );
 

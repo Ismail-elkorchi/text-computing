@@ -75,9 +75,9 @@
     }
   ],
   "limitations": [
-    "Corpus evaluation is limited to committed POS/morph/lemma slices and does not claim broad UD treebank performance.",
+    "Corpus evaluation is limited to committed POS/morph/lemma slices and does not assert broad UD treebank performance.",
     "Gold rows test accepted alternatives rather than collapsing ambiguity to one answer.",
-    "The rich-morphology slice is repository-authored fixture evidence backed by an explicit lexicon resource, not a broad Finnish tagger claim.",
-    "Broader corpus-backed evaluation remains a separate gate before broader support claims."
+    "The rich-morphology slice is repository-authored fixture evidence backed by an explicit lexicon resource, not a broad Finnish tagger statement.",
+    "Broader corpus-backed evaluation remains a separate gate before broader support statements."
   ]
 }

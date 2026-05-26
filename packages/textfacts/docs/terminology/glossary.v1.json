@@ -151,7 +151,7 @@
     {
       "term": "dossier",
       "kind": "repo",
-      "definition": "A machine-readable method dossier documenting claims, falsifiers, and evidence.",
+      "definition": "A machine-readable method dossier documenting statements, falsifiers, and evidence.",
       "preferredPhrases": ["method dossier"]
     },
     {

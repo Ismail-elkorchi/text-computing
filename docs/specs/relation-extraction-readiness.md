@@ -8,10 +8,10 @@ classification. This gate records the typed relation surface for the current fro
 ## Status
 
 - Task id: `nlp-relation-extraction`
-- Status: `slice-proven`
+- Status: `slice-validated`
 - Owning packages: `textrules`, `textdoc`, `textconformance`
-- Current proof: public schemas, frozen fixtures, committed corpus evidence, recorded expected outputs, package behavior, negative controls, and conformance report exist
-- Current non-proof: no broad corpus benchmark exists
+- Current verification: public schemas, frozen fixtures, committed corpus evidence, recorded expected outputs, package behavior, negative controls, and conformance report exist
+- Current non-verification: no broad corpus benchmark exists
 
 ## Target representation
 

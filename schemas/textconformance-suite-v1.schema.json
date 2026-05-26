@@ -11,7 +11,7 @@
     "suiteVersion",
     "suiteClass",
     "subject",
-    "claimBoundary",
+    "scopeBoundary",
     "fixtures",
     "oracles",
     "checks",
@@ -24,7 +24,7 @@
     "suiteVersion": { "type": "string", "minLength": 1 },
     "suiteClass": { "$ref": "#/definitions/suiteClass" },
     "subject": { "$ref": "#/definitions/subject" },
-    "claimBoundary": { "type": "string", "minLength": 1 },
+    "scopeBoundary": { "type": "string", "minLength": 1 },
     "fixtures": {
       "type": "array",
       "minItems": 1,
@@ -60,7 +60,7 @@
         "validation",
         "holdout",
         "negative-control",
-        "claim-narrowed-gap"
+        "scope-narrowed-gap"
       ]
     },
     "oracleKind": {

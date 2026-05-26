@@ -13,7 +13,7 @@ The package also defines a small registered payload-kind set for package interop
 - `textconformance-report-v1`
 - `public-vertical-slice-0.1-result-v1`
 
-Compatibility checks can require producer identity, provenance, claim-boundary text, and limitation
+Compatibility checks can require producer identity, provenance, scope-boundary text, and limitation
 metadata before a result envelope is treated as release evidence.
 
 The package also declares these protocol schema families:

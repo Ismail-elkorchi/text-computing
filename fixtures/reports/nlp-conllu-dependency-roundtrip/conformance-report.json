@@ -45,8 +45,8 @@
         ],
         "limitations": [
           "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
-          "No broad UD treebank or language coverage is claimed.",
-          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+          "No broad UD treebank or language coverage is stated.",
+          "Slice-validated for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
         ]
       }
     },
@@ -82,8 +82,8 @@
         ],
         "limitations": [
           "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
-          "No broad UD treebank or language coverage is claimed.",
-          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+          "No broad UD treebank or language coverage is stated.",
+          "Slice-validated for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
         ]
       }
     },
@@ -122,8 +122,8 @@
         ],
         "limitations": [
           "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
-          "No broad UD treebank or language coverage is claimed.",
-          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+          "No broad UD treebank or language coverage is stated.",
+          "Slice-validated for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
         ]
       }
     },
@@ -155,13 +155,13 @@
         ],
         "limitations": [
           "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
-          "No broad UD treebank or language coverage is claimed.",
-          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+          "No broad UD treebank or language coverage is stated.",
+          "Slice-validated for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
         ]
       }
     },
     {
-      "checkId": "protocol-conformance-proof",
+      "checkId": "protocol-conformance-verification",
       "status": "pass",
       "message": "Round-trip outputs validate through result-envelope and conformance-report schemas.",
       "evidenceRefs": [
@@ -191,8 +191,8 @@
         ],
         "limitations": [
           "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
-          "No broad UD treebank or language coverage is claimed.",
-          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+          "No broad UD treebank or language coverage is stated.",
+          "Slice-validated for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
         ]
       }
     },
@@ -224,8 +224,8 @@
         ],
         "limitations": [
           "CoNLL-U round-trip artifacts do not implement dependency parser behavior.",
-          "No broad UD treebank or language coverage is claimed.",
-          "Slice-proven for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
+          "No broad UD treebank or language coverage is stated.",
+          "Slice-validated for CoNLL-U import/export round-trip over the frozen repository-authored fixtures only."
         ]
       }
     }

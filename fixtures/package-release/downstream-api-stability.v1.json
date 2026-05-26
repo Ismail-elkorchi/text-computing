@@ -4,7 +4,7 @@
   "packages": [
     {
       "packageName": "@ismail-elkorchi/textdoc",
-      "status": "proven",
+      "status": "validated",
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textcorpus",
@@ -54,12 +54,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API usage by declared downstream dependents; it does not publish the package."
+        "This verifies current built-package API usage by declared downstream dependents; it does not publish the package."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textpack",
-      "status": "proven",
+      "status": "validated",
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textpack-en-core",
@@ -119,12 +119,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API usage by declared downstream dependents; it does not publish the package."
+        "This verifies current built-package API usage by declared downstream dependents; it does not publish the package."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textprotocol",
-      "status": "proven",
+      "status": "validated",
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textpipeline",
@@ -154,12 +154,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API usage by declared downstream dependents; it does not standardize version negotiation or transport behavior."
+        "This verifies current built-package API usage by declared downstream dependents; it does not standardize version negotiation or transport behavior."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textconformance",
-      "status": "proven",
+      "status": "validated",
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textlab",
@@ -179,12 +179,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API usage by declared downstream dependents; it does not make the runner a full benchmark harness."
+        "This verifies current built-package API usage by declared downstream dependents; it does not make the runner a full benchmark harness."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textlab",
-      "status": "proven",
+      "status": "validated",
       "dependents": [],
       "evidenceRefs": [
         "packages/textlab/package.json",
@@ -193,12 +193,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API import and smoke usage; it does not add an interactive UI, external-tool execution engine, or large-corpus browser."
+        "This verifies current built-package API import and smoke usage; it does not add an interactive UI, external-tool execution engine, or large-corpus browser."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textpipeline",
-      "status": "proven",
+      "status": "validated",
       "dependents": [],
       "evidenceRefs": [
         "packages/textpipeline/package.json",
@@ -207,12 +207,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API import and smoke usage; it does not add remote orchestration, durable cache storage, distributed scheduling, worker execution, or recovery after a process boundary."
+        "This verifies current built-package API import and smoke usage; it does not add remote orchestration, durable cache storage, distributed scheduling, worker execution, or recovery after a process boundary."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textcorpus",
-      "status": "proven",
+      "status": "validated",
       "dependents": [
         {
           "packageName": "@ismail-elkorchi/textlab",
@@ -232,12 +232,12 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API import and smoke usage; it does not add external relevance datasets, streaming retrieval, or durable index storage."
+        "This verifies current built-package API import and smoke usage; it does not add external relevance datasets, streaming retrieval, or durable index storage."
       ]
     },
     {
       "packageName": "@ismail-elkorchi/textrules",
-      "status": "proven",
+      "status": "validated",
       "dependents": [],
       "evidenceRefs": [
         "packages/textrules/package.json",
@@ -246,7 +246,7 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This proves current built-package API import and smoke usage; it does not broaden POS, NER, dependency parsing, relation extraction, or coreference claims."
+        "This verifies current built-package API import and smoke usage; it does not broaden POS, NER, dependency parsing, relation extraction, or coreference statements."
       ]
     }
   ],

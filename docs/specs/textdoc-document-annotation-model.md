@@ -4,7 +4,7 @@
 
 Issue `#11` requires a public document container that downstream packages can target without
 inventing incompatible annotation shapes. This document records the structural examples, invalid
-reference policy, and result-envelope expectations before implementation claims depend on them.
+reference policy, and result-envelope expectations before implementation statements depend on them.
 
 ## Structural example
 
@@ -60,7 +60,7 @@ Deterministic ordering is preserved by the serialized array order for `views`, `
 
 Negative controls for those failures live under
 [`../../fixtures/textdoc/invalid/`](../../fixtures/textdoc/invalid/).
-The extension-id negative control proves that extension annotations require a declared scheme-like
+The extension-id negative control verifies that extension annotations require a declared scheme-like
 identifier instead of an unscoped label.
 
 ## Stand-off annotation round trip

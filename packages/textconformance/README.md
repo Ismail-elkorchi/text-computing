@@ -15,7 +15,7 @@ bounded suite classes: `spec`, `profile`, `pack`, `interchange`, `workflow`, or
 `benchmark`.
 
 Suite fixtures must declare their role. Development fixtures cannot be the sole
-basis for a public claim, and claim-bearing suites can require holdout and
+basis for a public statement, and scope-bearing suites can require holdout and
 negative-control fixtures through `validateTextConformanceFixturePolicy()`.
 
 Use `runTextConformanceDifferentialOracle()` for deterministic JSON comparison
@@ -36,13 +36,13 @@ textconformance diff-reports expected.json actual.json
 textconformance validate-suite fixtures/conformance/package-suites.v1.json
 ```
 
-## Report diff and claim registry
+## Report diff and capability registry
 
 Use `diffTextConformanceReports()` to compare expected and actual conformance
 reports by stable check id. The diff distinguishes unchanged, changed, added,
 and removed checks and rejects duplicate check ids.
 
-Use `validateTextConformanceClaimRegistry()` to verify that support claims carry
+Use `validateTextConformanceCapabilityRegistry()` to verify that support statements carry
 traceability links to requirements, APIs, inputs, oracles, evidence,
 conformance reports, and limitations.
 

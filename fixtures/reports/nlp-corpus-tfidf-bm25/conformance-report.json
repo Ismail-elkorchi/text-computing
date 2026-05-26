@@ -41,9 +41,9 @@
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance verification, or broad corpus-backed ranking statement is recorded.",
           "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "Slice-proven for committed explicit-token corpora only."
+          "Slice-validated for committed explicit-token corpora only."
         ]
       }
     },
@@ -75,9 +75,9 @@
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance verification, or broad corpus-backed ranking statement is recorded.",
           "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "Slice-proven for committed explicit-token corpora only."
+          "Slice-validated for committed explicit-token corpora only."
         ]
       }
     },
@@ -108,9 +108,9 @@
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance verification, or broad corpus-backed ranking statement is recorded.",
           "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "Slice-proven for committed explicit-token corpora only."
+          "Slice-validated for committed explicit-token corpora only."
         ]
       }
     },
@@ -142,16 +142,16 @@
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance verification, or broad corpus-backed ranking statement is recorded.",
           "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "Slice-proven for committed explicit-token corpora only."
+          "Slice-validated for committed explicit-token corpora only."
         ]
       }
     },
     {
       "checkId": "support-boundary-recorded",
       "status": "pass",
-      "message": "Support status remains limited to committed explicit-token corpora and does not upgrade broad corpus claims.",
+      "message": "Support status remains limited to committed explicit-token corpora and does not upgrade broad corpus statements.",
       "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
@@ -173,16 +173,16 @@
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance verification, or broad corpus-backed ranking statement is recorded.",
           "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "Slice-proven for committed explicit-token corpora only."
+          "Slice-validated for committed explicit-token corpora only."
         ]
       }
     },
     {
       "checkId": "heldout-corpus-recorded",
       "status": "pass",
-      "message": "A held-out public-domain explicit-token corpus, expected scoring output, and bounded JavaScript repository expected output are committed without upgrading broad ranking claims.",
+      "message": "A held-out public-domain explicit-token corpus, expected scoring output, and bounded JavaScript repository expected output are committed without upgrading broad ranking statements.",
       "evidenceRefs": [
         "fixtures/corpus-tfidf-bm25/slices.json",
         "fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-public-domain-holdout.json",
@@ -208,14 +208,14 @@
           "fixtures/reports/nlp-corpus-tfidf-bm25/conformance-report.json"
         ],
         "limitations": [
-          "No external large-corpus relevance benchmark, stable wall-clock/memory performance proof, or broad corpus-backed ranking claim is recorded.",
+          "No external large-corpus relevance benchmark, stable wall-clock/memory performance verification, or broad corpus-backed ranking statement is recorded.",
           "Fielded retrieval and relevance evaluation are tracked under the separate retrieval task.",
-          "The held-out public-domain corpus is explicit-token scoring evidence; it does not prove tokenizer behavior or broad ranking quality."
+          "The held-out public-domain corpus is explicit-token scoring evidence; it does not verify tokenizer behavior or broad ranking quality."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists corpus scoring evidence for committed explicit-token corpora, including one held-out public-domain corpus; it does not add an external relevance benchmark or stable wall-clock performance proof."
+    "This report persists corpus scoring evidence for committed explicit-token corpora, including one held-out public-domain corpus; it does not add an external relevance benchmark or stable wall-clock performance verification."
   ]
 }

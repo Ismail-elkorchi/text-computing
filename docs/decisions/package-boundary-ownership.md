@@ -32,7 +32,7 @@ growth starts.
 
 ## Consequences
 
-- Issue `#9` proof uses `textdoc` annotation sets wrapped by `textprotocol`
+- Issue `#9` verification uses `textdoc` annotation sets wrapped by `textprotocol`
   envelopes and referenced by `textconformance` reports.
 - Later work for issues `#11`, `#12`, `#10`, `#13`, and `#14` follows the same
   package boundary.

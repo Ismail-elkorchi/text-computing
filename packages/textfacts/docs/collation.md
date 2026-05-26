@@ -13,7 +13,7 @@ It provides **deterministic ordering** for agent workflows without relying on pl
 ## What It Is NOT
 
 - Locale tailoring (CLDR).
-- Cultural/linguistic “correctness” claims.
+- Cultural/linguistic “correctness” statements.
 - Probabilistic or heuristic ordering.
 
 ## API
