@@ -41,10 +41,10 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No broad POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma statement is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
+          "Slice-validated for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support statement."
         ]
       }
     },
@@ -76,10 +76,10 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No broad POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma statement is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
+          "Slice-validated for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support statement."
         ]
       }
     },
@@ -115,15 +115,15 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No broad POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma statement is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
+          "Slice-validated for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support statement."
         ]
       }
     },
     {
-      "checkId": "result-envelope-and-report-proof",
+      "checkId": "result-envelope-and-report-verification",
       "status": "pass",
       "message": "Generated outputs are validated as result-envelope and conformance-report compatible.",
       "evidenceRefs": [
@@ -151,10 +151,10 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No broad POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma statement is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
+          "Slice-validated for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support statement."
         ]
       }
     },
@@ -182,10 +182,10 @@
           "fixtures/reports/nlp-pos-morph-lemma/conformance-report.json"
         ],
         "limitations": [
-          "No broad POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma statement is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
+          "Slice-validated for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support statement."
         ]
       }
     },
@@ -221,17 +221,17 @@
         ],
         "limitations": [
           "UD-style corpus evaluation is limited to committed slices.",
-          "No broad UD treebank performance claim is made.",
+          "No broad UD treebank performance statement is made.",
           "The rich-morphology slice is not fixture-bound in this gate.",
-          "No broad POS/morph/lemma claim is made.",
+          "No broad POS/morph/lemma statement is made.",
           "Not a trained or broad multilingual tagger; behavior remains fixture-bound.",
-          "Slice-proven for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
-          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support claim."
+          "Slice-validated for deterministic POS, lemma, and morphology outputs over frozen issue #10 slices only.",
+          "The rich-morphology slice is repository-authored fixture evidence, not a broad language support statement."
         ]
       }
     }
   ],
   "notes": [
-    "This report persists current fixture-bound POS/morph/lemma evidence and records current package-generated expected outputs. Broad POS/morph/lemma support is not claimed."
+    "This report persists current fixture-bound POS/morph/lemma evidence and records current package-generated expected outputs. Broad POS/morph/lemma support is not stated."
   ]
 }

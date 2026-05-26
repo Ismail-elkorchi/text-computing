@@ -43,7 +43,7 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Slice-validated for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
           "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
           "Added multilingual holdouts are not fixture-bound in this gate."
         ]
@@ -77,14 +77,14 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Slice-validated for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
           "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
           "Added multilingual holdouts are not fixture-bound in this gate."
         ]
       }
     },
     {
-      "checkId": "result-envelope-and-report-proof",
+      "checkId": "result-envelope-and-report-verification",
       "status": "pass",
       "message": "Generated entity outputs are validated as result-envelope and conformance-report compatible.",
       "evidenceRefs": [
@@ -114,7 +114,7 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Slice-validated for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
           "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
           "Added multilingual holdouts are not fixture-bound in this gate."
         ]
@@ -147,7 +147,7 @@
         "limitations": [
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Broader labels, entity linking, and large multilingual datasets remain future work.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
+          "Slice-validated for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only.",
           "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
           "Added multilingual holdouts are not fixture-bound in this gate."
         ]
@@ -188,7 +188,7 @@
           "Only PER, ORG, LOC, and small curated resources are covered.",
           "Corpus-style evidence is limited to committed CC0-compatible fixture slices.",
           "Added multilingual holdouts are not fixture-bound in this gate.",
-          "Slice-proven for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
+          "Slice-validated for deterministic rule-backed PER, ORG, and LOC outputs over frozen issue #13 slices only."
         ]
       }
     }

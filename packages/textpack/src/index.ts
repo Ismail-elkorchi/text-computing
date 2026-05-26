@@ -1079,7 +1079,7 @@ export function validateTextPackManifestGovernance(
         code: "capability-without-resource",
         packId: manifest.id,
         ref: family,
-        message: `Manifest ${manifest.id} claims ${family} capability without declaring resources.`,
+        message: `Manifest ${manifest.id} statements ${family} capability without declaring resources.`,
       });
     }
 

@@ -486,7 +486,7 @@
     "Retrieval uses the explicit-token corpus already frozen for TF-IDF/BM25 evidence.",
     "Baseline retrieval treats metadata field clauses as filters and scores only non-field, non-prohibited lexical query terms.",
     "Fielded BM25F retrieval uses explicit field specs and remains limited to the committed fielded smoke corpus.",
-    "External qrels are limited to the committed BEIR NFCorpus title-token subset and do not prove broad retrieval quality.",
+    "External qrels are limited to the committed BEIR NFCorpus title-token subset and do not verify broad retrieval quality.",
     "Streaming retrieval is package-level deterministic iteration over the same in-memory index semantics as batch retrieval.",
     "Citation windows and quote grounding use textdoc token spans when available and declare token-join loss otherwise."
   ]

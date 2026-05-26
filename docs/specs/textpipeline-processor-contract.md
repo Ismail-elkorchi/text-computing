@@ -3,7 +3,7 @@
 ## Why this document exists
 
 The repository needs a public contract for deterministic processor ordering before higher-level task
-packages can claim orchestration semantics. This document records the local processor surface, the
+packages can declare orchestration semantics. This document records the local processor surface, the
 dependency policy, and the execution-trace payload validated for the alpha package scope.
 
 ## Processor descriptor

@@ -43,8 +43,8 @@ function envelope(producerPackage, payloadKind, payload) {
         },
       ],
     },
-    claimBoundary: "Repository interop smoke payload only.",
-    limitations: ["This validator proves package exchange shape, not broad task behavior."],
+    scopeBoundary: "Repository interop smoke payload only.",
+    limitations: ["This validator verifies package exchange shape, not broad task behavior."],
   };
 }
 
@@ -56,7 +56,7 @@ function assertEnvelope(value, payloadKind, producerPackage) {
     expectedPayloadKind: payloadKind,
     expectedProducerPackage: producerPackage,
     requireProvenance: true,
-    requireClaimBoundary: true,
+    requireScopeBoundary: true,
     requireLimitations: true,
   });
   if (!compatibility.ok) {

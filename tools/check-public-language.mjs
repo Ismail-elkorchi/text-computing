@@ -26,7 +26,7 @@ const SCANNED_EXTENSIONS = new Set([
   ".yml",
   ".yaml",
 ]);
-const BLOCKED_PUBLIC_CLAIM_TERMS = [
+const BLOCKED_PUBLIC_LANGUAGE_TERMS = [
   ["b", "est"].join(""),
   ["b", "etter"].join(""),
   ["sup", "erior"].join(""),
@@ -78,7 +78,7 @@ async function collectIncludedFiles() {
   return files.sort();
 }
 
-const blockedTerms = BLOCKED_PUBLIC_CLAIM_TERMS;
+const blockedTerms = BLOCKED_PUBLIC_LANGUAGE_TERMS;
 const patterns = blockedTerms.map((term) => [term, termPattern(term)]);
 const files = await collectIncludedFiles();
 const errors = [];
@@ -87,7 +87,7 @@ for (const file of files) {
   const text = await readFile(path.join(ROOT, file), "utf8");
   for (const [term, pattern] of patterns) {
     for (const match of text.matchAll(pattern)) {
-      errors.push(`${file}: blocked public claim term "${term}" near index ${match.index}`);
+      errors.push(`${file}: blocked public language term "${term}" near index ${match.index}`);
     }
   }
 }
@@ -97,4 +97,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`Public claim scan OK (${files.length} files).`);
+console.log(`Public language scan OK (${files.length} files).`);

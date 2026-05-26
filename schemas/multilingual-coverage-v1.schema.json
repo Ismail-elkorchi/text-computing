@@ -130,7 +130,7 @@
     "tierName": {
       "enum": [
         "unicode-invariant",
-        "fixture-proven",
+        "fixture-validated",
         "resource-backed",
         "corpus-backed"
       ]
@@ -142,7 +142,7 @@
         "name",
         "status",
         "definition",
-        "claimBoundary",
+        "scopeBoundary",
         "evidenceRefs",
         "limitations"
       ],
@@ -161,7 +161,7 @@
           "type": "string",
           "minLength": 1
         },
-        "claimBoundary": {
+        "scopeBoundary": {
           "type": "string",
           "minLength": 1
         },

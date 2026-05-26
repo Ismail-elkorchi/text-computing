@@ -9,8 +9,8 @@ This document freezes the minimum public contract required before parser code is
 
 - Task id: `nlp-dependency-parser`
 - Owning packages: `textrules`, `textpipeline`, `textdoc`, `textconformance`
-- Current proof: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, one direct UD/CoNLL-U validator capture, and negative controls inherited from the CoNLL-U invalid fixtures
-- Current non-proof: no trained parser model, broad UD corpus support, or broad UD treebank coverage
+- Current verification: expected dependency arcs over frozen repository-authored CoNLL-U fixtures, one direct UD/CoNLL-U validator capture, and negative controls inherited from the CoNLL-U invalid fixtures
+- Current non-verification: no trained parser model, broad UD corpus support, or broad UD treebank coverage
 
 ## Input slices
 

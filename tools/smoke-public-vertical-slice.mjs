@@ -227,10 +227,10 @@ function createEnvelope(payloadKind, producerPackage, producerVersion, payload, 
       source: { id: "input:public-vertical-slice-0.1", sha256: sha256(rawText) },
       references,
     },
-    claimBoundary: "Public Vertical Slice 0.1 fixture-only package interoperation smoke.",
+    scopeBoundary: "Public Vertical Slice 0.1 fixture-only package interoperation smoke.",
     limitations: [
-      "This smoke proves external installability and package interoperation for one fixture only.",
-      "It does not claim broad task, corpus, language, parser, retrieval, model, or ingestion support.",
+      "This smoke verifies external installability and package interoperation for one fixture only.",
+      "It does not assert broad task, corpus, language, parser, retrieval, model, or ingestion support.",
     ],
   };
   expect(isTextProtocolResultEnvelopeForPayloadKind(envelope, payloadKind), "Envelope payload kind guard failed.", {
@@ -241,7 +241,7 @@ function createEnvelope(payloadKind, producerPackage, producerVersion, payload, 
     expectedPayloadKind: payloadKind,
     expectedProducerPackage: producerPackage,
     requireProvenance: true,
-    requireClaimBoundary: true,
+    requireScopeBoundary: true,
     requireLimitations: true,
   });
   expect(compatibility.ok, "Envelope compatibility failed.", compatibility);
@@ -358,13 +358,13 @@ const conformanceReport = runTextConformanceChecks(
         const documentOk = checkTextProtocolResultEnvelopeCompatibility(textdocEnvelope, {
           expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
           requireProvenance: true,
-          requireClaimBoundary: true,
+          requireScopeBoundary: true,
           requireLimitations: true,
         }).ok;
         const traceOk = checkTextProtocolResultEnvelopeCompatibility(traceEnvelope, {
           expectedPayloadKind: textProtocolPayloadKindTextpipelineTraceV1,
           requireProvenance: true,
-          requireClaimBoundary: true,
+          requireScopeBoundary: true,
           requireLimitations: true,
         }).ok;
         return documentOk && traceOk ? "pass" : "fail";
@@ -623,7 +623,7 @@ async function main() {
 		);
 		expect(
 			Object.keys(output.imports ?? {}).length === 9,
-			"Smoke output import proof count mismatch.",
+			"Smoke output import verification count mismatch.",
 			output.imports,
 		);
 

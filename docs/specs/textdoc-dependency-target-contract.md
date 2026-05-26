@@ -1,12 +1,12 @@
 # textdoc dependency target contract
 
-- **Status:** Slice-proven for frozen CoNLL-U round-trip fixtures
+- **Status:** Slice-validated for frozen CoNLL-U round-trip fixtures
 - **Scope:** Minimal dependency-edge target shape for CoNLL-U import-export and later dependency parsing work
 - **Schema:** `schemas/textdoc-dependency-target-v1.schema.json`
 
 ## Contract boundary
 
-This contract defines the dependency edge shape that `textdoc` documents carry for the frozen CoNLL-U round-trip fixtures. It is not a parser, scorer, or Universal Dependencies completeness claim.
+This contract defines the dependency edge shape that `textdoc` documents carry for the frozen CoNLL-U round-trip fixtures. It is not a parser, scorer, or Universal Dependencies completeness statement.
 
 The repository-level document schema now accepts dependency-node and dependency layers for the frozen round-trip scope. That support must not be read as dependency parser behavior.
 
@@ -36,6 +36,6 @@ For CoNLL-U:
 ## Non-goals
 
 - no dependency parser behavior defined by this document;
-- no treebank-scale Universal Dependencies support claim;
+- no treebank-scale Universal Dependencies support statement;
 - no enhanced-dependency graph semantics beyond preserving the originating CoNLL-U columns;
 - no malformed-input recovery policy beyond rejecting current invalid fixtures.

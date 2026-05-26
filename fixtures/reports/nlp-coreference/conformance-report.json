@@ -42,9 +42,9 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -77,9 +77,9 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -113,9 +113,9 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -146,9 +146,9 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -180,9 +180,9 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
       }
     },
@@ -219,14 +219,14 @@
           "fixtures/reports/nlp-coreference/conformance-report.json"
         ],
         "limitations": [
-          "Broad-corpus coreference support are not claimed.",
+          "Broad-corpus coreference support are not stated.",
           "Behavior is limited to the repository-authored frozen corpus slice.",
-          "Slice-proven for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
+          "Slice-validated for deterministic mention and chain outputs over the frozen repository-authored corpus slice only."
         ]
       }
     }
   ],
   "notes": [
-    "This report records frozen corpus-slice behavior only. Broad-coverage and broad-corpus evaluation support are not claimed."
+    "This report records frozen corpus-slice behavior only. Broad-coverage and broad-corpus evaluation support are not stated."
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "tokenization-sbd-corpus-gate",
-  "claimBoundary": "This corpus gate records development, validation, holdout, and negative-control roles for existing tokenization/SBD fixtures. It does not upgrade tokenization/SBD beyond the current fixture-bound slice claim.",
+  "scopeBoundary": "This corpus gate records development, validation, holdout, and negative-control roles for existing tokenization/SBD fixtures. It does not upgrade tokenization/SBD beyond the current fixture-bound slice statement.",
   "splitRoles": [
     "development",
     "validation",
@@ -22,7 +22,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "development-only"
+      "fixtureUse": "development-only"
     },
     {
       "id": "dev-abbreviation-ambiguity",
@@ -37,7 +37,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "development-only",
+      "fixtureUse": "development-only",
       "notes": [
         "Abbreviation-sensitive sentence boundaries remain a documented future specialization surface."
       ]
@@ -55,7 +55,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "validation-only"
+      "fixtureUse": "validation-only"
     },
     {
       "id": "validation-japanese-mixed-script",
@@ -70,9 +70,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "validation-only",
+      "fixtureUse": "validation-only",
       "notes": [
-        "Dictionary word segmentation is not claimed by this gate."
+        "Dictionary word segmentation is not stated by this gate."
       ]
     },
     {
@@ -88,9 +88,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "validation-only",
+      "fixtureUse": "validation-only",
       "notes": [
-        "Language-specific word segmentation is not claimed by this gate."
+        "Language-specific word segmentation is not stated by this gate."
       ]
     },
     {
@@ -106,7 +106,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned"
+      "fixtureUse": "holdout-not-implementation-tuned"
     },
     {
       "id": "holdout-korean-hangul",
@@ -121,7 +121,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned"
+      "fixtureUse": "holdout-not-implementation-tuned"
     },
     {
       "id": "negative-unpaired-high-surrogate",
@@ -136,7 +136,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "negative-control",
+      "fixtureUse": "negative-control",
       "notes": [
         "Malformed UTF-16 is represented through explicit code-unit fixtures, not lossy replacement text."
       ]
@@ -154,7 +154,7 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "negative-control"
+      "fixtureUse": "negative-control"
     },
     {
       "id": "holdout-thai-punctuation",
@@ -169,9 +169,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned",
+      "fixtureUse": "holdout-not-implementation-tuned",
       "notes": [
-        "Thai holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+        "Thai holdout records UAX #29 behavior only; dictionary segmentation is not stated."
       ]
     },
     {
@@ -187,9 +187,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned",
+      "fixtureUse": "holdout-not-implementation-tuned",
       "notes": [
-        "Lao holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+        "Lao holdout records UAX #29 behavior only; dictionary segmentation is not stated."
       ]
     },
     {
@@ -205,9 +205,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned",
+      "fixtureUse": "holdout-not-implementation-tuned",
       "notes": [
-        "Khmer holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+        "Khmer holdout records UAX #29 behavior only; dictionary segmentation is not stated."
       ]
     },
     {
@@ -223,9 +223,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned",
+      "fixtureUse": "holdout-not-implementation-tuned",
       "notes": [
-        "Han-script holdout records UAX #29 behavior only; dictionary segmentation is not claimed."
+        "Han-script holdout records UAX #29 behavior only; dictionary segmentation is not stated."
       ]
     },
     {
@@ -241,9 +241,9 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned",
+      "fixtureUse": "holdout-not-implementation-tuned",
       "notes": [
-        "Arabic holdout includes diacritics and clitic-like prefixes; language-specific morphology is not claimed."
+        "Arabic holdout includes diacritics and clitic-like prefixes; language-specific morphology is not stated."
       ]
     },
     {
@@ -259,14 +259,14 @@
         "sourceRef": "fixtures/tokenization-sbd/slices.json",
         "license": "MIT"
       },
-      "claimUse": "holdout-not-implementation-tuned",
+      "fixtureUse": "holdout-not-implementation-tuned",
       "notes": [
-        "French holdout includes elision and diacritics; language-specific clitic analysis is not claimed."
+        "French holdout includes elision and diacritics; language-specific clitic analysis is not stated."
       ]
     }
   ],
   "limitations": [
     "This is a split-role corpus gate over committed fixtures, not a broad multilingual benchmark corpus.",
-    "Holdout slices are separated for future claim-upgrade validation; no broad multilingual support is claimed from this file alone."
+    "Holdout slices are separated for future scope-expansion validation; no broad multilingual support is stated from this file alone."
   ]
 }

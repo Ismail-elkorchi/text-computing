@@ -55,11 +55,11 @@ A fixture slice does not imply that every future tokenization package must suppo
 
 The tool/version manifest records normative references and package-under-test versions. Static external-tool snapshots are not required for this gate because they do not execute product behavior.
 
-## Result-envelope proof
+## Result-envelope verification
 
 Repository verification also derives a `textdoc` annotation set from every
 recorded expected output, wraps that annotation set in a `textprotocol`
 result envelope, and references the envelope from a `textconformance` report.
 
-The proof is executable through `npm run check:fixtures`; it is not maintained
+The verification is executable through `npm run check:fixtures`; it is not maintained
 as a duplicated checked-in artifact set.

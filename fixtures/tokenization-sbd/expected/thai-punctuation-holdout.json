@@ -245,6 +245,6 @@
     }
   ],
   "notes": [
-    "Expected output records current UAX #29 behavior for this fixture; it is not a language-specific tokenizer claim."
+    "Expected output records current UAX #29 behavior for this fixture; it is not a language-specific tokenizer statement."
   ]
 }

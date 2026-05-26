@@ -105,6 +105,6 @@
     }
   ],
   "notes": [
-    "Fixture proves Unicode boundary behavior for this short Devanagari slice only; it does not claim Hindi word segmentation completeness."
+    "Fixture verifies Unicode boundary behavior for this short Devanagari slice only; it does not assert Hindi word segmentation completeness."
   ]
 }

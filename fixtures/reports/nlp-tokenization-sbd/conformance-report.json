@@ -81,7 +81,7 @@
       }
     },
     {
-      "checkId": "result-envelope-and-report-proof",
+      "checkId": "result-envelope-and-report-verification",
       "status": "pass",
       "message": "Expected outputs are validated as result-envelope and conformance-report compatible.",
       "evidenceRefs": [
@@ -150,7 +150,7 @@
     {
       "checkId": "fixture-boundary-recorded",
       "status": "pass",
-      "message": "Task conformance fixture records explicit blockers before corpus-backed or broader claims.",
+      "message": "Task conformance fixture records explicit blockers before corpus-backed or broader statements.",
       "evidenceRefs": [],
       "traceability": {
         "requirementRefs": [
@@ -208,7 +208,7 @@
     {
       "checkId": "performance-gate-recorded",
       "status": "pass",
-      "message": "Tokenization/SBD performance evidence requirements are recorded before broad operational claims.",
+      "message": "Tokenization/SBD performance evidence requirements are recorded before broad operational statements.",
       "evidenceRefs": [
         "fixtures/performance/gates.v1.json",
         "tools/validate-performance-gates.mjs"
@@ -266,8 +266,8 @@
         ],
         "limitations": [
           "The aggregate publishes counts only and does not include raw corpus text.",
-          "UAX #29 boundary behavior is not a language-specific tokenizer claim.",
-          "The task remains slice-proven until holdout and product-oracle gates support a broader claim."
+          "UAX #29 boundary behavior is not a language-specific tokenizer statement.",
+          "The task remains slice-validated until holdout and product-oracle gates support a broader statement."
         ]
       }
     },
@@ -305,7 +305,7 @@
           "fixtures/reports/nlp-tokenization-sbd/conformance-report.json"
         ],
         "limitations": [
-          "Repository-authored holdouts do not prove broad multilingual support.",
+          "Repository-authored holdouts do not verify broad multilingual support.",
           "Language-specific segmentation beyond the frozen slices remains future work."
         ]
       }

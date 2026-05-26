@@ -2,12 +2,12 @@
 import { readFile } from "node:fs/promises";
 import {
   diffTextConformanceReports,
-  isTextConformanceClaimRegistryV1,
+  isTextConformanceCapabilityRegistryV1,
   isTextConformanceReportV1,
   isTextConformanceSuiteV1,
   renderTextConformanceReportMarkdown,
   runTextConformanceSuite,
-  validateTextConformanceClaimRegistry,
+  validateTextConformanceCapabilityRegistry,
 } from "./index.js";
 
 export interface TextConformanceCliResult {
@@ -43,7 +43,7 @@ function usage(): TextConformanceCliResult {
       "  textconformance render-report <report.json>",
       "  textconformance diff-reports <expected-report.json> <actual-report.json>",
       "  textconformance validate-suite <suite.json>",
-      "  textconformance validate-claim-registry <registry.json>",
+      "  textconformance validate-capability-registry <registry.json>",
       "",
     ].join("\n"),
   };
@@ -98,12 +98,12 @@ export async function runTextConformanceCli(args: readonly string[]): Promise<Te
       }
       return { exitCode: 0, stdout: jsonLine(runTextConformanceSuite(suite)), stderr: "" };
     }
-    if (command === "validate-claim-registry" && first !== undefined && second === undefined) {
+    if (command === "validate-capability-registry" && first !== undefined && second === undefined) {
       const registry = await readJson(first);
-      if (!isTextConformanceClaimRegistryV1(registry)) {
-        return { exitCode: 1, stdout: "", stderr: `Invalid claim registry: ${first}\n` };
+      if (!isTextConformanceCapabilityRegistryV1(registry)) {
+        return { exitCode: 1, stdout: "", stderr: `Invalid capability registry: ${first}\n` };
       }
-      return { exitCode: 0, stdout: jsonLine(validateTextConformanceClaimRegistry(registry)), stderr: "" };
+      return { exitCode: 0, stdout: jsonLine(validateTextConformanceCapabilityRegistry(registry)), stderr: "" };
     }
     return usage();
   } catch (error) {

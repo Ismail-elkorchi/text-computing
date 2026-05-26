@@ -9,10 +9,10 @@ recorded expected outputs.
 ## Status
 
 - Task id: `nlp-coreference`
-- Status: `slice-proven`
+- Status: `slice-validated`
 - Owning packages: `textdoc`, `textrules`, `textconformance`
-- Current proof: public schemas, frozen fixtures, committed corpus evidence, recorded expected outputs, package tests, and a conformance report exist
-- Current non-proof: broad corpus benchmark is not implemented
+- Current verification: public schemas, frozen fixtures, committed corpus evidence, recorded expected outputs, package tests, and a conformance report exist
+- Current non-verification: broad corpus benchmark is not implemented
 
 ## Target representation
 

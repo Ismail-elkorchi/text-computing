@@ -2,14 +2,12 @@ import Ajv from "ajv";
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 
-const PRIVATE_LEAK_TERMS = [
-  ["/", "home", "/"].join(""),
-  ["tse", "-", "workbench"].join(""),
-  ["projects", "/", "text-computing", "/", "private"].join(""),
+const PRIVATE_LEAK_PATTERNS = [
+  /\/home\//,
+  /(?:^|\/)projects\/[^/]+\/private(?:\/|$)/i,
+  /(?:^|\/)private\/(?:research|scratch|tmp|prompts)(?:\/|$)/i,
+  /\b(?:raw prompt|scratchpad)\b/i,
 ];
-const privateLeakPattern = new RegExp(
-  PRIVATE_LEAK_TERMS.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
-);
 
 const artifactPairs = [
   {
@@ -176,9 +174,12 @@ for (const requiredRegime of ["cjk", "right-to-left", "southeast-asian-no-space"
     process.exit(1);
   }
 }
-if (privateLeakPattern.test(JSON.stringify(corpusAggregate))) {
-  console.error("Tokenization/SBD UD 2.18 aggregate must not contain private paths.");
-  process.exit(1);
+const serializedCorpusAggregate = JSON.stringify(corpusAggregate);
+for (const pattern of PRIVATE_LEAK_PATTERNS) {
+  if (pattern.test(serializedCorpusAggregate)) {
+    console.error("Tokenization/SBD UD 2.18 aggregate must not contain private paths.");
+    process.exit(1);
+  }
 }
 
 const expectedSchema = await readJson("schemas/tokenization-sbd-expected-v1.schema.json");

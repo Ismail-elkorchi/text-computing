@@ -522,7 +522,7 @@
     }
   ],
   "notes": [
-    "This fixture is structural. It is not a claim that all task runtimes are implemented."
+    "This fixture is structural. It does not assert that all task runtimes are implemented."
   ],
   "spanMaps": [
     {

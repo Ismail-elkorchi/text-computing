@@ -10,7 +10,7 @@
     "title",
     "scope",
     "interpretations",
-    "claims",
+    "statements",
     "alternatives",
     "verificationChain",
     "failureModes",
@@ -38,9 +38,9 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["claim", "evidenceThatDistinguishes", "chosen"],
+        "required": ["statement", "evidenceThatDistinguishes", "chosen"],
         "properties": {
-          "claim": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
           "evidenceThatDistinguishes": {
             "type": "array",
             "items": { "type": "string", "minLength": 1 }
@@ -49,13 +49,13 @@
         }
       }
     },
-    "claims": {
+    "statements": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "claim",
+          "statement",
           "scope",
           "assumptions",
           "falsifiers",
@@ -63,7 +63,7 @@
           "residualUncertainty"
         ],
         "properties": {
-          "claim": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
           "scope": { "type": "string", "minLength": 1 },
           "assumptions": {
             "type": "array",

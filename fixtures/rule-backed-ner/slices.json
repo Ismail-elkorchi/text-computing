@@ -109,7 +109,7 @@
         "text": "太郎は東京を訪れた。"
       },
       "notes": [
-        "Japanese-script holdout with explicit textdoc token boundaries; this is fixture evidence, not a broad segmenter claim."
+        "Japanese-script holdout with explicit textdoc token boundaries; this is fixture evidence, not a broad segmenter statement."
       ]
     },
     {
@@ -261,7 +261,7 @@
       }
     ],
     "limitations": [
-      "Corpus evidence is limited to committed repository-authored slices and does not claim broad NER dataset coverage.",
+      "Corpus evidence is limited to committed repository-authored slices and does not assert broad NER dataset coverage.",
       "New holdouts remain fixture-bound in this gate.",
       "Labels remain limited to PER, ORG, and LOC."
     ]

@@ -7,4 +7,4 @@ This fixture set records readiness and slice-level feature evidence for rule-bac
 - `expected/` records current deterministic expected outputs.
 - `manifests/` and `resources/` contain the explicit gazetteer fixture resources consumed by the validator.
 
-The fixtures are package-evaluation evidence only. They do not claim broad NER dataset coverage, broad label coverage, entity linking, or broad multilingual NER support.
+The fixtures are package-evaluation evidence only. They do not assert broad NER dataset coverage, broad label coverage, entity linking, or broad multilingual NER support.

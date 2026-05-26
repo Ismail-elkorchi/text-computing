@@ -335,7 +335,7 @@ for (const fixture of slices.fixtures.valid) {
         evidenceRefs: [resultEnvelopeSchemaPath],
       },
       {
-        checkId: "no-parser-claim",
+        checkId: "no-parser-scope",
         status: "pass",
         evidenceRefs: ["docs/specs/conllu-dependency-readiness.md"],
       },

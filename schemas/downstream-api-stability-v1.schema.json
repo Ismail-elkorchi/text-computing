@@ -59,7 +59,7 @@
           "type": "string",
           "pattern": "^@ismail-elkorchi/[a-z][a-z0-9-]*$"
         },
-        "status": { "const": "proven" },
+        "status": { "const": "validated" },
         "dependents": {
           "type": "array",
           "minItems": 0,

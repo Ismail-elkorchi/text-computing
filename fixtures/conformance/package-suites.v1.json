@@ -13,7 +13,7 @@
         "id": "@ismail-elkorchi/textfacts",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textfacts alpha API and repository tests.",
+      "scopeBoundary": "Package-level conformance suite for the current textfacts alpha API and repository tests.",
       "fixtures": [
         {
           "role": "validation",
@@ -56,7 +56,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -76,7 +76,7 @@
         "id": "@ismail-elkorchi/textdoc",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textdoc alpha API and repository tests.",
+      "scopeBoundary": "Package-level conformance suite for the current textdoc alpha API and repository tests.",
       "fixtures": [
         {
           "role": "validation",
@@ -119,7 +119,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -139,7 +139,7 @@
         "id": "@ismail-elkorchi/textpack",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textpack alpha API and resource fixtures.",
+      "scopeBoundary": "Package-level conformance suite for the current textpack alpha API and resource fixtures.",
       "fixtures": [
         {
           "role": "validation",
@@ -182,7 +182,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -202,7 +202,7 @@
         "id": "@ismail-elkorchi/textrules",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textrules alpha API and package tests.",
+      "scopeBoundary": "Package-level conformance suite for the current textrules alpha API and package tests.",
       "fixtures": [
         {
           "role": "validation",
@@ -245,7 +245,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -265,7 +265,7 @@
         "id": "@ismail-elkorchi/textpipeline",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textpipeline alpha API and package tests.",
+      "scopeBoundary": "Package-level conformance suite for the current textpipeline alpha API and package tests.",
       "fixtures": [
         {
           "role": "validation",
@@ -308,7 +308,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -328,7 +328,7 @@
         "id": "@ismail-elkorchi/textcorpus",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textcorpus alpha API and committed corpus fixtures.",
+      "scopeBoundary": "Package-level conformance suite for the current textcorpus alpha API and committed corpus fixtures.",
       "fixtures": [
         {
           "role": "validation",
@@ -371,7 +371,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -391,7 +391,7 @@
         "id": "@ismail-elkorchi/textprotocol",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textprotocol alpha API and schema fixtures.",
+      "scopeBoundary": "Package-level conformance suite for the current textprotocol alpha API and schema fixtures.",
       "fixtures": [
         {
           "role": "validation",
@@ -434,7 +434,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -454,7 +454,7 @@
         "id": "@ismail-elkorchi/textconformance",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textconformance alpha API, suite harness, and CLI.",
+      "scopeBoundary": "Package-level conformance suite for the current textconformance alpha API, suite harness, and CLI.",
       "fixtures": [
         {
           "role": "validation",
@@ -497,7 +497,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }
@@ -517,7 +517,7 @@
         "id": "@ismail-elkorchi/textlab",
         "version": "0.1.0"
       },
-      "claimBoundary": "Package-level conformance suite for the current textlab alpha API and CLI inspection tests.",
+      "scopeBoundary": "Package-level conformance suite for the current textlab alpha API and CLI inspection tests.",
       "fixtures": [
         {
           "role": "validation",
@@ -552,7 +552,7 @@
               "package-tests"
             ],
             "limitations": [
-              "Suite catalog records package-level evidence; it does not widen task claims."
+              "Suite catalog records package-level evidence; it does not widen task statements."
             ]
           }
         }

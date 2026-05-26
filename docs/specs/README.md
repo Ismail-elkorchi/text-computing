@@ -15,7 +15,7 @@ A specification document must state its scope, version, normative language, and 
 - [`dependency-parser-readiness.md`](dependency-parser-readiness.md) — readiness gate and frozen-slice evidence for deterministic dependency parsing.
 - [`relation-extraction-readiness.md`](relation-extraction-readiness.md) — typed relation extraction gate.
 - [`coreference-readiness.md`](coreference-readiness.md) — frozen-slice mention and chain gate.
-- [`performance-gates.md`](performance-gates.md) — performance and scale gate requirements before broad operational claims.
+- [`performance-gates.md`](performance-gates.md) — performance and scale gate requirements before broad operational statements.
 - [`package-release-gates.md`](package-release-gates.md) — package release-track and gate requirements.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.
 - [`textdoc-dependency-target-contract.md`](textdoc-dependency-target-contract.md) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.

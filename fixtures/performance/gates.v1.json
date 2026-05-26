@@ -13,7 +13,7 @@
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Broad tokenization/SBD claims require slice count, code-unit count, script/family coverage, product-oracle records, and holdout split evidence before wall-clock thresholds become release gates.",
+      "scalePolicy": "Broad tokenization/SBD statements require slice count, code-unit count, script/family coverage, product-oracle records, and holdout split evidence before wall-clock thresholds become release gates.",
       "regressionPolicy": "Future measurements must pin corpus gate hash, expected-output hash set, runtime, command, and environment before timing or memory thresholds become blocking checks.",
       "evidenceRefs": [
         "fixtures/tokenization-sbd/slices.json",
@@ -33,7 +33,7 @@
         "memory",
         "regression-threshold"
       ],
-      "scalePolicy": "Future broad document claims require batch fixtures with declared document count, token count, annotation count, and maximum serialized size.",
+      "scalePolicy": "Future broad document statements require batch fixtures with declared document count, token count, annotation count, and maximum serialized size.",
       "regressionPolicy": "Future measurements must store baseline environment, command, input hash, and threshold before becoming required checks.",
       "evidenceRefs": [
         "tools/check-coverage.mjs",
@@ -53,7 +53,7 @@
         "streaming",
         "regression-threshold"
       ],
-      "scalePolicy": "Streaming, async, batching, cache, graph, and partial-run claims require package tests over multi-processor workflows and replay commands.",
+      "scalePolicy": "Streaming, async, batching, cache, graph, and partial-run statements require package tests over multi-processor workflows and replay commands.",
       "regressionPolicy": "Future measurements must fail on threshold regression only after a stable benchmark host policy exists.",
       "evidenceRefs": [
         "docs/specs/textpipeline-processor-contract.md",
@@ -74,8 +74,8 @@
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Corpus-analysis and retrieval scale claims require document-count, token-count, query-count where applicable, qrels where applicable, corpus hash, query policy, artifact size, and serialized-index thresholds.",
-      "regressionPolicy": "Corpus-analysis and retrieval measurements must pin corpus hash, query hash where applicable, formula, ordering policy, qrels where applicable, and metric tolerance before broader claims.",
+      "scalePolicy": "Corpus-analysis and retrieval scale statements require document-count, token-count, query-count where applicable, qrels where applicable, corpus hash, query policy, artifact size, and serialized-index thresholds.",
+      "regressionPolicy": "Corpus-analysis and retrieval measurements must pin corpus hash, query hash where applicable, formula, ordering policy, qrels where applicable, and metric tolerance before broader statements.",
       "thresholds": {
         "minDocuments": 12,
         "minTokens": 70,
@@ -96,7 +96,7 @@
         "tools/validate-corpus-tfidf-bm25-readiness.mjs"
       ],
       "limitations": [
-        "Current corpus-analysis and retrieval proof uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."
+        "Current corpus-analysis and retrieval verification uses committed explicit-token corpora and deterministic size thresholds; it does not persist stable wall-clock or memory measurements."
       ]
     },
     {
@@ -109,7 +109,7 @@
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Broad resource-pack claims require resource-count, overlay-count, and lookup-count thresholds.",
+      "scalePolicy": "Broad resource-pack statements require resource-count, overlay-count, and lookup-count thresholds.",
       "regressionPolicy": "Future measurements must include duplicate and overlay-conflict controls.",
       "evidenceRefs": [
         "docs/specs/textpack-resource-manifest.md",
@@ -128,7 +128,7 @@
         "memory",
         "regression-threshold"
       ],
-      "scalePolicy": "Broad conformance claims require report-count, check-count, evidence-ref-count, and render-size thresholds.",
+      "scalePolicy": "Broad conformance statements require report-count, check-count, evidence-ref-count, and render-size thresholds.",
       "regressionPolicy": "Future measurements must distinguish validation cost from report rendering cost.",
       "evidenceRefs": [],
       "limitations": [
@@ -145,14 +145,14 @@
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Broader rule-backed claims require rule-count, token-count, resource-count, and conflict-count thresholds.",
+      "scalePolicy": "Broader rule-backed statements require rule-count, token-count, resource-count, and conflict-count thresholds.",
       "regressionPolicy": "Future measurements must pin rule fixture hashes, resource fixture hashes, and deterministic match ordering policy.",
       "evidenceRefs": [
         "packages/textrules/test/index.test.ts",
         "tools/validate-rule-backed-ner-readiness.mjs"
       ],
       "limitations": [
-        "Current rule behavior is proven only for curated fixtures and small resources."
+        "Current rule behavior is validated only for curated fixtures and small resources."
       ]
     },
     {
@@ -165,7 +165,7 @@
         "large-corpus",
         "regression-threshold"
       ],
-      "scalePolicy": "Large evidence-inspection claims require report-count, comparison-count, annotation-count, corpus-size, and render-size thresholds.",
+      "scalePolicy": "Large evidence-inspection statements require report-count, comparison-count, annotation-count, corpus-size, and render-size thresholds.",
       "regressionPolicy": "Future measurements must separate parsing, summarization, and rendering costs.",
       "evidenceRefs": [
         "packages/textlab/test/index.test.mjs"
@@ -176,7 +176,7 @@
     }
   ],
   "notes": [
-    "This file records performance gate requirements before broad operational claims.",
+    "This file records performance gate requirements before broad operational statements.",
     "It intentionally avoids unstable wall-clock assertions until benchmark-host policy is defined."
   ]
 }

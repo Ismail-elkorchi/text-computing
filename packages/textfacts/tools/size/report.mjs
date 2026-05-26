@@ -264,7 +264,7 @@ async function evalBudgetConstraints(report) {
     }
     if (overages.length > 0) {
       errors.push(
-        `Size budgets exceeded: ${overages.join(", ")}. Provide a dossier budget increase claim and update budgets.v1.json`,
+        `Size budgets exceeded: ${overages.join(", ")}. Provide a dossier budget increase statement and update budgets.v1.json`,
       );
     }
   }

@@ -91,7 +91,7 @@ async function main() {
     const text = await readFile(filePath, "utf8");
     for (const snippet of check.forbidden) {
       if (text.includes(snippet)) {
-        errors.push(`${check.path} still contains stale claim: ${JSON.stringify(snippet)}`);
+        errors.push(`${check.path} still contains stale statement: ${JSON.stringify(snippet)}`);
       }
     }
   }

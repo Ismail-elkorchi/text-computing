@@ -18,8 +18,8 @@ const CORE_PACKAGES = [
 ];
 const PRIVATE_LEAK_PATTERNS = [
   /\/home\//,
-  new RegExp(["tse", "workbench"].join("-")),
-  new RegExp(["projects", "text-computing", "private"].join("\\/")),
+  /(?:^|\/)projects\/[^/]+\/private(?:\/|$)/i,
+  /(?:^|\/)private\/(?:research|scratch|tmp|prompts)(?:\/|$)/i,
   /\braw prompt\b/i,
   /\bscratchpad\b/i,
 ];

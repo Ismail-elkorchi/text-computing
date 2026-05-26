@@ -25,6 +25,6 @@ New cross-package behavior must land in the package that owns the concern.
 
 New production code, tests, and docs MUST NOT import or recommend the removed legacy subpaths above. The boundary check rejects reintroduced package exports, Deno exports, source directories, and import references.
 
-## Claim boundary
+## Statement boundary
 
-This migration narrows package ownership. It does not claim broader kernel behavior.
+This migration narrows package ownership. It does not assert broader kernel behavior.

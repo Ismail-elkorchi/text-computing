@@ -53,7 +53,7 @@ const validEnvelope = {
   payload: {
     ok: true,
   },
-  claimBoundary: "Runtime guard smoke payload only.",
+  scopeBoundary: "Runtime guard smoke payload only.",
   limitations: ["Payload kind is intentionally unregistered for generic guard coverage."],
   diagnostics: [
     {
@@ -71,7 +71,7 @@ if (!isTextProtocolResultEnvelopeV1(validEnvelope)) {
 const registeredEnvelope = {
   ...validEnvelope,
   payloadKind: textProtocolPayloadKindTextdocDocumentV1,
-  claimBoundary: "Document payload guard smoke scope only.",
+  scopeBoundary: "Document payload guard smoke scope only.",
   limitations: ["Payload schema is validated by the owning package."],
 };
 
@@ -138,7 +138,7 @@ const compatibility = checkTextProtocolResultEnvelopeCompatibility(registeredEnv
   expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
   expectedProducerPackage: packageName,
   requireProvenance: false,
-  requireClaimBoundary: true,
+  requireScopeBoundary: true,
   requireLimitations: true,
 });
 if (!compatibility.ok || compatibility.diagnostics.length !== 0) {
@@ -150,20 +150,20 @@ const incompatible = checkTextProtocolResultEnvelopeCompatibility(
     ...registeredEnvelope,
     schemaId: "wrong",
     payloadKind: "unregistered",
-    claimBoundary: "",
+    scopeBoundary: "",
     limitations: [""],
   },
   {
     expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
     expectedProducerPackage: "@ismail-elkorchi/other",
     requireProvenance: true,
-    requireClaimBoundary: true,
+    requireScopeBoundary: true,
     requireLimitations: true,
   },
 );
 const incompatibleCodes = incompatible.diagnostics.map((entry) => entry.code).sort();
 for (const requiredCode of [
-  "textprotocol.claim-boundary",
+  "textprotocol.scope-boundary",
   "textprotocol.limitations",
   "textprotocol.payload-kind-expected",
   "textprotocol.payload-kind-unregistered",
@@ -203,7 +203,7 @@ if (
 
 const transport = serializeTextProtocolResultEnvelopeJson(registeredEnvelope, {
   expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
-  requireClaimBoundary: true,
+  requireScopeBoundary: true,
   requireLimitations: true,
 });
 if (!isTextProtocolResultEnvelopeJsonTransportV1(transport)) {
@@ -214,7 +214,7 @@ if (transport.mediaType !== textProtocolResultEnvelopeJsonMediaType) {
 }
 const parsedEnvelope = parseTextProtocolResultEnvelopeJson(transport, {
   expectedPayloadKind: textProtocolPayloadKindTextdocDocumentV1,
-  requireClaimBoundary: true,
+  requireScopeBoundary: true,
   requireLimitations: true,
 });
 if (
@@ -366,7 +366,7 @@ const evidenceBundle = {
     records: [
       {
         id: "evidence:1",
-        kind: "fixture-proof",
+        kind: "fixture-verification",
         exactness: "E1",
         targets: [{ kind: "annotation", id: "ann:1" }],
         payload: { ok: true },

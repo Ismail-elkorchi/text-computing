@@ -207,7 +207,7 @@ try {
     limitations: [
       "This report publishes aggregate counts only; raw corpus text is not included.",
       "UAX #29 word and sentence segmentation is Unicode boundary behavior, not language-specific tokenization.",
-      "Universal Dependencies sentence text is used as an external corpus signal; it is not a public support claim for every included language.",
+      "Universal Dependencies sentence text is used as an external corpus signal; it is not a public support statement for every included language.",
     ],
   };
 

@@ -81,7 +81,7 @@
     },
     {
       "id": "thai-no-space",
-      "purpose": "no-space script input without claiming dictionary segmentation",
+      "purpose": "no-space script input without stating dictionary segmentation",
       "source": {
         "kind": "text",
         "text": "ภาษาไทยไม่มีเว้นวรรค"
@@ -272,7 +272,7 @@
     },
     {
       "id": "thai-punctuation-holdout",
-      "purpose": "Thai script no-space text with punctuation without dictionary segmentation claim",
+      "purpose": "Thai script no-space text with punctuation without dictionary segmentation scope",
       "source": {
         "kind": "text",
         "text": "ภาษาไทยไม่มีเว้นวรรค. ทดสอบข้อความ."
@@ -286,7 +286,7 @@
     },
     {
       "id": "lao-no-space",
-      "purpose": "Lao script no-space text without dictionary segmentation claim",
+      "purpose": "Lao script no-space text without dictionary segmentation scope",
       "source": {
         "kind": "text",
         "text": "ພາສາລາວບໍ່ມີຊ່ອງວ່າງ. ທົດສອບ."
@@ -300,7 +300,7 @@
     },
     {
       "id": "khmer-no-space",
-      "purpose": "Khmer script no-space holdout without dictionary segmentation claim",
+      "purpose": "Khmer script no-space holdout without dictionary segmentation scope",
       "source": {
         "kind": "text",
         "text": "ភាសាខ្មែរមិនមានចន្លោះ។សាកល្បង។"
