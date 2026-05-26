@@ -13,10 +13,49 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6.0.2
-
       - name: Dependency Review
-        uses: actions/dependency-review-action@v5.0.0
-        with:
-          fail-on-severity: moderate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          url="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/dependency-graph/compare/${BASE_SHA}...${HEAD_SHA}"
+          curl --fail-with-body --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${url}" > dependency-review.json
+
+          python3 <<'PY'
+          import json
+          import sys
+
+          with open("dependency-review.json", encoding="utf-8") as handle:
+              changes = json.load(handle)
+
+          if not isinstance(changes, list):
+              raise SystemExit("dependency review response must be a list")
+
+          blocked = {"moderate", "high", "critical"}
+          failures = []
+          for change in changes:
+              for vulnerability in change.get("vulnerabilities") or []:
+                  severity = str(vulnerability.get("severity", "")).lower()
+                  if severity in blocked:
+                      failures.append(
+                          {
+                              "package": change.get("name"),
+                              "version": change.get("version"),
+                              "severity": severity,
+                              "advisory": vulnerability.get("advisory_ghsa_id")
+                              or vulnerability.get("ghsa_id")
+                              or vulnerability.get("id"),
+                          }
+                      )
+
+          print(f"dependency review changes={len(changes)} blocked_vulnerabilities={len(failures)}")
+          if failures:
+              print(json.dumps(failures, indent=2, sort_keys=True))
+              sys.exit(1)
+          PY
