@@ -8,6 +8,7 @@ It can:
 - inspect textpack manifests;
 - inspect textdoc documents and annotation graphs;
 - inspect textpipeline traces;
+- inspect textpipeline batch run reports;
 - inspect pack-backed textrules annotation outputs;
 - render textconformance report summaries and diffs;
 - inspect corpus, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
@@ -27,6 +28,7 @@ textlab pack remove-resource ./my-pack --resource-id stopwords:local:v2
 textlab document fixtures/textdoc/examples/document-annotation-model-v1.json
 textlab annotations fixtures/textdoc/examples/document-annotation-model-v1.json --layer-kind relation
 textlab pipeline-trace pipeline-trace.json
+textlab pipeline-batch-report pipeline-batch-report.json
 textlab pack-backed-rules document-with-pack-backed-rules.json --resource-id lexicon-en-core
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textlab conformance-diff expected.json actual.json
