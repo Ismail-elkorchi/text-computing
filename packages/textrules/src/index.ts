@@ -1947,6 +1947,21 @@ function compareRuleMatches(
   );
 }
 
+function compareLongestWinRuleMatches(
+  left: { readonly rule: TextRulesRuleDeclarationV1; readonly match: TextRulesPatternMatch },
+  right: { readonly rule: TextRulesRuleDeclarationV1; readonly match: TextRulesPatternMatch },
+): number {
+  const leftLength = left.match.endTokenIndexExclusive - left.match.startTokenIndex;
+  const rightLength = right.match.endTokenIndexExclusive - right.match.startTokenIndex;
+  return (
+    rightLength - leftLength ||
+    right.rule.priority - left.rule.priority ||
+    left.match.startCU - right.match.startCU ||
+    left.rule.id.localeCompare(right.rule.id) ||
+    captureSignature(left.match).localeCompare(captureSignature(right.match))
+  );
+}
+
 function applyConflictPolicy(
   candidates: readonly {
     readonly rule: TextRulesRuleDeclarationV1;
@@ -1960,9 +1975,8 @@ function applyConflictPolicy(
   }[];
   readonly diagnostics: readonly TextProtocolDiagnostic[];
 } {
-  const ordered = [...candidates].sort(compareRuleMatches);
+  const ordered = [...candidates].sort(policy === "longest-win" ? compareLongestWinRuleMatches : compareRuleMatches);
   if (policy === "emit-all") return { selected: ordered, diagnostics: [] };
-  if (policy === "first-win") return { selected: ordered.slice(0, 1), diagnostics: [] };
 
   const selected: typeof ordered = [];
   const diagnostics: TextProtocolDiagnostic[] = [];
