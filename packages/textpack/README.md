@@ -60,6 +60,9 @@ Authoring helpers are immutable:
 - `addTextPackManifestResource` appends one paired resource path and provided resource id.
 - `updateTextPackManifestResource` updates one paired resource path/id without breaking the pair.
 - `removeTextPackManifestResource` removes one paired resource path/id and rederives capability flags.
+- `planTextPackResourceTransaction` plans add/update/remove resource operations, returns the next
+  manifest, validates metadata before and after the mutation, and includes the expected resource
+  inventory audit result.
 - `validateTextPackResourceInventory` checks a caller-supplied package-relative resource file
   inventory against the manifest and reports missing declared files, orphan files, duplicate provided
   ids, and stale resource/provides pairs.
@@ -89,3 +92,7 @@ and tests before a pack is considered releasable.
 [`../../examples/textpack-en-core-consumer.mjs`](../../examples/textpack-en-core-consumer.mjs)
 shows a consumer creating a manifest from `@ismail-elkorchi/textpack-en-core`, validating it,
 loading resources through package APIs, and performing deterministic lookup.
+
+[`../../examples/textpack-authoring-consumer.mjs`](../../examples/textpack-authoring-consumer.mjs)
+shows a consumer creating a local pack, planning add/update resource transactions, auditing the
+filesystem inventory, loading the resulting resources, and performing deterministic lookup.
