@@ -1,12 +1,15 @@
 import {
+  addTextPackManifestResource,
   checkTextPackCompatibility,
   composeTextPackResources,
+  createTextPackManifest,
   createTextPackCatalog,
   createTextPackManifestDraft,
   createTextPackResourceRegistry,
   isTextPackCatalogV1,
   isTextPackManifestV1,
   loadTextPackRegistryResources,
+  loadTextPackFromFileSystem,
   loadTextPackResources,
   lookupTextPackLoadedEntries,
   parseTextPackResourceContent,
@@ -18,7 +21,9 @@ import {
   type TextPackManifestV1,
   textPackDemoTrimLowercaseCanonicalizer,
   textPackManifestVersion,
+  updateTextPackManifestResource,
   updateTextPackManifest,
+  validateTextPackAuthoringMetadata,
   validateTextPackManifestGovernance,
 } from "../src/index.ts";
 
@@ -260,6 +265,22 @@ expectGovernanceCodes(
   },
   ["duplicate-provides-id"],
   "duplicate provided logical ids should be diagnosed",
+);
+
+expectGovernanceCodes(
+  {
+    ...baseManifest,
+    resources: {
+      ...baseManifest.resources,
+      stopwords: [baseStopwordsResourcePath, baseStopwordsResourcePath],
+    },
+    provides: {
+      ...baseManifest.provides,
+      stopwords: ["stopwords-en-core", "stopwords-en-core-copy"],
+    },
+  },
+  ["duplicate-resource-path"],
+  "duplicate package-relative resource paths should be diagnosed",
 );
 
 expectGovernanceCodes(
@@ -712,5 +733,164 @@ expectGovernanceCodes(
   ["resource-provides-length-mismatch"],
   "authoring workflow should preserve falsifiable resource/provides mismatches",
 );
+
+const createdManifest = createTextPackManifest({
+  id: "pack:authoring-smoke",
+  packageName: "@ismail-elkorchi/textpack-authoring-smoke",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["en"],
+    scripts: ["Latn"],
+    profiles: ["authoring"],
+  },
+  resources: {
+    stopwords: ["resources/stopwords.en.authoring.txt"],
+  },
+  provides: {
+    stopwords: ["stopwords-en-authoring"],
+  },
+  licenses: {
+    code: ["MIT"],
+    data: ["CC0-1.0"],
+  },
+  provenance: {
+    sources: ["repo:packages/textpack/test"],
+    generated: false,
+  },
+  tests: {
+    smoke: ["test:authoring:smoke"],
+    negative: ["test:authoring:negative"],
+    representative: ["test:authoring:representative"],
+  },
+});
+
+if (!validateTextPackAuthoringMetadata(createdManifest).ok) {
+  throw new Error("created manifest should validate license, provenance, and review metadata");
+}
+
+const manifestMissingLicense = {
+  ...createdManifest,
+  licenses: {
+    code: [],
+    data: [],
+  },
+};
+if (!validateTextPackAuthoringMetadata(manifestMissingLicense).diagnostics.some((entry) => entry.code === "missing-license")) {
+  throw new Error("authoring metadata validation should reject missing license metadata");
+}
+
+const manifestMissingProvenance = {
+  ...createdManifest,
+  provenance: {
+    ...createdManifest.provenance,
+    sources: [],
+  },
+};
+if (!validateTextPackAuthoringMetadata(manifestMissingProvenance).diagnostics.some((entry) => entry.code === "missing-provenance")) {
+  throw new Error("authoring metadata validation should reject missing provenance metadata");
+}
+
+const addedResourceManifest = addTextPackManifestResource(createdManifest, {
+  family: "lexicons",
+  resourcePath: "resources/lexicon.en.authoring.tsv",
+  resourceId: "lexicon-en-authoring",
+});
+if (
+  addedResourceManifest.resources.lexicons?.join(",") !== "resources/lexicon.en.authoring.tsv" ||
+  addedResourceManifest.provides.lexicons?.join(",") !== "lexicon-en-authoring" ||
+  addedResourceManifest.capabilities.lexicons !== true
+) {
+  throw new Error("resource authoring should add paired resource paths, ids, and capability flags");
+}
+
+const duplicateResourceManifest = addTextPackManifestResource(createdManifest, {
+  family: "stopwords",
+  resourcePath: "resources/stopwords.en.authoring.duplicate.txt",
+  resourceId: "stopwords-en-authoring",
+});
+if (!validateTextPackAuthoringMetadata(duplicateResourceManifest).diagnostics.some((entry) => entry.code === "duplicate-provides-id")) {
+  throw new Error("resource authoring should preserve duplicate-resource diagnostics");
+}
+
+const updatedResourceManifest = updateTextPackManifestResource(createdManifest, "stopwords-en-authoring", {
+  resourcePath: "resources/stopwords.en.authoring.updated.txt",
+  resourceId: "stopwords-en-authoring-v2",
+});
+if (
+  updatedResourceManifest.resources.stopwords?.join(",") !== "resources/stopwords.en.authoring.updated.txt" ||
+  updatedResourceManifest.provides.stopwords?.join(",") !== "stopwords-en-authoring-v2"
+) {
+  throw new Error("resource authoring should update paired resource path and id deterministically");
+}
+
+const authoringOverlayConflictManifest = addTextPackManifestResource(createdManifest, {
+  family: "stopwords",
+  resourcePath: "resources/stopwords.en.authoring.conflict.txt",
+  resourceId: "stopwords-en-authoring",
+});
+if (!validateTextPackAuthoringMetadata(authoringOverlayConflictManifest).diagnostics.some((entry) => entry.code === "overlay-conflict")) {
+  throw new Error("same-scope resource authoring should expose overlay conflict diagnostics");
+}
+
+const profileMismatchLoad = loadTextPackResources(
+  [createdManifest],
+  {
+    kind: "stopwords",
+    language: "en",
+    profile: "legal",
+  },
+  {
+    "resources/stopwords.en.authoring.txt": "the\n",
+  },
+);
+if (!profileMismatchLoad.diagnostics.some((entry) => entry.code === "profile-mismatch")) {
+  throw new Error("language/profile mismatch should remain explicit during authored pack loading");
+}
+
+const filesystemLoaded = await loadTextPackFromFileSystem({
+  manifest: updatedResourceManifest,
+  root: "/virtual/textpack-authoring",
+  request: {
+    kind: "stopwords",
+    language: "en",
+    profile: "authoring",
+  },
+  readText(resourcePath) {
+    if (resourcePath !== "/virtual/textpack-authoring/resources/stopwords.en.authoring.updated.txt") {
+      throw new Error(`unexpected filesystem path: ${resourcePath}`);
+    }
+    return "Alpha\nBeta\n";
+  },
+});
+const filesystemMatches = lookupTextPackLoadedEntries(filesystemLoaded.resources, "Beta");
+if (
+  filesystemLoaded.diagnostics.length !== 0 ||
+  filesystemLoaded.resources.map((entry) => entry.resource.resourceId).join(",") !== "stopwords-en-authoring-v2" ||
+  filesystemMatches[0]?.entry.value !== "Beta"
+) {
+  throw new Error("filesystem pack loading should preserve deterministic resource lookup after update");
+}
+
+let unsafeManifestReadAttempted = false;
+const unsafeFilesystemLoad = await loadTextPackFromFileSystem({
+  manifest: {
+    ...createdManifest,
+    resources: {
+      stopwords: ["../outside.txt"],
+    },
+  },
+  root: "/virtual/textpack-authoring",
+  readText() {
+    unsafeManifestReadAttempted = true;
+    return "unsafe\n";
+  },
+});
+if (
+  unsafeManifestReadAttempted ||
+  !unsafeFilesystemLoad.diagnostics.some((entry) => entry.code === "unsafe-resource-path")
+) {
+  throw new Error("filesystem loading should validate manifest governance before reading resources");
+}
 
 void expectedPackageName;

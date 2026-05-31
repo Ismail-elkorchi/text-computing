@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
+import path from "node:path";
 import {
   inspectCorpusFixture,
   inspectConformanceReportDiff,
@@ -10,6 +11,8 @@ import {
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
+  inspectTextPackResourceList,
+  inspectTextPackValidation,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
@@ -20,6 +23,8 @@ import {
   renderTextdocDocumentInspection,
   renderTextdocAnnotationInspection,
   renderTextPackInspection,
+  renderTextPackResourceListInspection,
+  renderTextPackValidationInspection,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
 } from "./index.js";
@@ -35,6 +40,9 @@ function usage(): string {
     "Usage:",
     "  textlab package <path> [--json]",
     "  textlab pack <path> [--json]",
+    "  textlab pack inspect <path> [--json]",
+    "  textlab pack validate <path> [--json]",
+    "  textlab pack list-resources <path> [--json]",
     "  textlab document <path> [--json]",
     "  textlab annotations <path> [--layer-kind kind] [--lifecycle state] [--annotation-id id] [--json]",
     "  textlab conformance-report <path> [--json]",
@@ -47,7 +55,7 @@ function usage(): string {
     "",
     "Commands:",
     "  package         Inspect a package manifest.",
-    "  pack            Inspect a textpack manifest.",
+    "  pack            Inspect, validate, or list resources from a textpack manifest or pack directory.",
     "  document        Inspect a textdoc document summary.",
     "  annotations     Inspect or query a textdoc document annotation graph.",
     "  conformance-report  Render a deterministic summary of one conformance report.",
@@ -89,6 +97,10 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       stdout: "",
       stderr: `Unknown command: ${command}\n${usage()}`,
     };
+  }
+
+  if (command === "pack") {
+    return runTextlabPackCli(pathArg, rest, json);
   }
 
   if (command === "conformance-diff") {
@@ -147,7 +159,6 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
 
   if (
     (command === "package" ||
-      command === "pack" ||
       command === "document" ||
       command === "conformance-report" ||
       command === "annotations" ||
@@ -189,23 +200,6 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid package manifest: ${inputPath}`,
-      };
-    }
-  }
-
-  if (command === "pack") {
-    try {
-      const inspection = inspectTextPackManifest(parsed);
-      return {
-        exitCode: 0,
-        stdout: renderCliOutput(inspection, renderTextPackInspection, json),
-        stderr: "",
-      };
-    } catch {
-      return {
-        exitCode: 1,
-        stdout: "",
-        stderr: `Invalid textpack manifest: ${inputPath}`,
       };
     }
   }
@@ -330,6 +324,99 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
 
 async function readJson(filePath: string): Promise<unknown> {
   return JSON.parse(await readFile(filePath, "utf8")) as unknown;
+}
+
+async function readTextPackManifestInput(inputPath: string): Promise<{
+  readonly manifestPath: string;
+  readonly parsed: unknown;
+}> {
+  const inputStat = await stat(inputPath);
+  const manifestPath = inputStat.isDirectory() ? path.join(inputPath, "pack.manifest.json") : inputPath;
+  return {
+    manifestPath,
+    parsed: await readJson(manifestPath),
+  };
+}
+
+async function runTextlabPackCli(
+  firstArg: string | undefined,
+  rest: readonly string[],
+  json: boolean,
+): Promise<TextlabCliResult> {
+  if (firstArg === undefined) {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `Missing path for pack.\n${usage()}`,
+    };
+  }
+
+  const subcommands = new Set(["inspect", "validate", "list-resources"]);
+  const subcommand = subcommands.has(firstArg) ? firstArg : "inspect";
+  const targetPath = subcommand === "inspect" && !subcommands.has(firstArg) ? firstArg : rest[0];
+  const extra = subcommand === "inspect" && !subcommands.has(firstArg) ? rest : rest.slice(1);
+  if (targetPath === undefined) {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `Missing path for pack ${subcommand}.\n${usage()}`,
+    };
+  }
+  if (extra.length > 0) {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `Too many arguments for pack ${subcommand}.\n${usage()}`,
+    };
+  }
+
+  let parsed: unknown;
+  let manifestPath: string;
+  try {
+    const input = await readTextPackManifestInput(targetPath);
+    parsed = input.parsed;
+    manifestPath = input.manifestPath;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      exitCode: 1,
+      stdout: "",
+      stderr: `Failed to read textpack manifest from ${targetPath}: ${message}`,
+    };
+  }
+
+  if (subcommand === "validate") {
+    const inspection = inspectTextPackValidation(parsed);
+    return {
+      exitCode: inspection.ok ? 0 : 1,
+      stdout: renderCliOutput(inspection, renderTextPackValidationInspection, json),
+      stderr: "",
+    };
+  }
+
+  try {
+    if (subcommand === "list-resources") {
+      const inspection = inspectTextPackResourceList(parsed);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderTextPackResourceListInspection, json),
+        stderr: "",
+      };
+    }
+
+    const inspection = inspectTextPackManifest(parsed);
+    return {
+      exitCode: 0,
+      stdout: renderCliOutput(inspection, renderTextPackInspection, json),
+      stderr: "",
+    };
+  } catch {
+    return {
+      exitCode: 1,
+      stdout: "",
+      stderr: `Invalid textpack manifest: ${manifestPath}`,
+    };
+  }
 }
 
 function renderCliOutput<T>(

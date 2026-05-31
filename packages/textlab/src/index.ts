@@ -5,7 +5,12 @@ import {
 } from "@ismail-elkorchi/textconformance";
 import { isTextCorpusRetrievalEvaluationResultV1, isTextCorpusRetrievalQrelsV1 } from "@ismail-elkorchi/textcorpus";
 import { isTextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
-import { isTextPackManifestV1 } from "@ismail-elkorchi/textpack";
+import {
+  createTextPackResourceRegistry,
+  isTextPackManifestV1,
+  validateTextPackManifestGovernance,
+  type TextPackManifestGovernanceDiagnostic,
+} from "@ismail-elkorchi/textpack";
 
 export const packageName = "@ismail-elkorchi/textlab" as const;
 
@@ -100,6 +105,45 @@ export interface TextlabPackInspection {
   readonly dataLicenseCount: number;
   readonly provenanceSourceCount: number;
   readonly limitations: readonly string[];
+}
+
+export interface TextlabPackValidationDiagnostic {
+  readonly code: string;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextlabPackValidationInspection {
+  readonly schemaVersion: 1;
+  readonly ok: boolean;
+  readonly packId: string;
+  readonly diagnosticCount: number;
+  readonly diagnostics: readonly TextlabPackValidationDiagnostic[];
+}
+
+export interface TextlabPackResourceRow {
+  readonly packId: string;
+  readonly resourceId: string;
+  readonly family: string;
+  readonly kind: string;
+  readonly path: string;
+  readonly language?: string;
+  readonly profiles: readonly string[];
+  readonly overlayPrecedence: number;
+  readonly reviewState: string;
+  readonly licenseId: string;
+  readonly provenanceId: string;
+}
+
+export interface TextlabPackResourceListInspection {
+  readonly schemaVersion: 1;
+  readonly packId: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly resourceCount: number;
+  readonly resources: readonly TextlabPackResourceRow[];
 }
 
 export interface TextlabDocumentInspection {
@@ -353,6 +397,92 @@ export function inspectTextPackManifest(value: unknown): TextlabPackInspection {
     provenanceSourceCount: value.provenance.sources.length,
     limitations: [...(value.limitations ?? [])].sort(),
   };
+}
+
+function packValidationDiagnosticRow(
+  diagnostic: TextPackManifestGovernanceDiagnostic,
+): TextlabPackValidationDiagnostic {
+  return {
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+export function inspectTextPackValidation(value: unknown): TextlabPackValidationInspection {
+  const validation = validateTextPackManifestGovernance(value);
+  const packId = isTextPackManifestV1(value) ? value.id : "<invalid>";
+  return {
+    schemaVersion: 1,
+    ok: validation.ok,
+    packId,
+    diagnosticCount: validation.diagnostics.length,
+    diagnostics: validation.diagnostics
+      .map(packValidationDiagnosticRow)
+      .sort((left, right) => `${left.code}\u0000${left.ref ?? ""}`.localeCompare(`${right.code}\u0000${right.ref ?? ""}`)),
+  };
+}
+
+export function renderTextPackValidationInspection(inspection: TextlabPackValidationInspection): string {
+  return [
+    "# textlab pack validation",
+    "",
+    `Pack: ${inspection.packId}`,
+    `Status: ${inspection.ok ? "valid" : "invalid"}`,
+    `Diagnostics: ${inspection.diagnosticCount}`,
+    "",
+    "## Diagnostics",
+    ...inspection.diagnostics.map((entry) =>
+      `- ${entry.code}${entry.resourceId === undefined ? "" : ` resource=${entry.resourceId}`}${entry.ref === undefined ? "" : ` ref=${entry.ref}`}: ${entry.message}`,
+    ),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextPackResourceList(value: unknown): TextlabPackResourceListInspection {
+  if (!isTextPackManifestV1(value)) {
+    throw new TypeError("textpack manifest is invalid");
+  }
+  const registry = createTextPackResourceRegistry([value]);
+  return {
+    schemaVersion: 1,
+    packId: value.id,
+    packageName: value.packageName,
+    version: value.version,
+    resourceCount: registry.resources.length,
+    resources: registry.resources.map((resource) => ({
+      packId: resource.packId,
+      resourceId: resource.resourceId,
+      family: resource.family,
+      kind: resource.kind,
+      path: resource.path,
+      ...(resource.language === undefined ? {} : { language: resource.language }),
+      profiles: [...(resource.profiles ?? [])].sort(),
+      overlayPrecedence: resource.overlayPrecedence,
+      reviewState: resource.reviewState,
+      licenseId: resource.licenseId,
+      provenanceId: resource.provenanceId,
+    })),
+  };
+}
+
+export function renderTextPackResourceListInspection(inspection: TextlabPackResourceListInspection): string {
+  return [
+    "# textlab pack resources",
+    "",
+    `Pack: ${inspection.packId}`,
+    `Package: ${inspection.packageName}`,
+    `Version: ${inspection.version}`,
+    `Resources: ${inspection.resourceCount}`,
+    "",
+    "## Resources",
+    ...inspection.resources.map((entry) =>
+      `- ${entry.resourceId} family=${entry.family} kind=${entry.kind} path=${entry.path} language=${entry.language ?? "none"} profiles=${entry.profiles.join(",") || "none"} overlay=${entry.overlayPrecedence}`,
+    ),
+    "",
+  ].join("\n");
 }
 
 export function renderTextPackInspection(inspection: TextlabPackInspection): string {

@@ -283,7 +283,11 @@ export type TextPackResourceContentSource = ReadonlyMap<string, string> | Readon
 
 export interface TextPackLoadResult {
   readonly resources: readonly TextPackLoadedResource[];
-  readonly diagnostics: readonly (TextPackLookupDiagnostic | TextPackResourceLoadDiagnostic)[];
+  readonly diagnostics: readonly (
+    | TextPackLookupDiagnostic
+    | TextPackResourceLoadDiagnostic
+    | TextPackManifestGovernanceDiagnostic
+  )[];
 }
 
 export interface TextPackEntryLookupMatch {
@@ -295,6 +299,7 @@ export interface TextPackEntryLookupMatch {
 export type TextPackManifestGovernanceDiagnosticCode =
   | "invalid-manifest-shape"
   | "duplicate-provides-id"
+  | "duplicate-resource-path"
   | "resource-provides-length-mismatch"
   | "unsupported-resource-family"
   | "resource-family-without-capability"
@@ -376,6 +381,18 @@ export interface TextPackManifestDraftOptions {
   readonly notes?: readonly string[];
 }
 
+export interface TextPackManifestResourceInput {
+  readonly family: TextPackResourceFamily;
+  readonly resourcePath: string;
+  readonly resourceId: string;
+}
+
+export interface TextPackManifestResourceUpdateOptions {
+  readonly family?: TextPackResourceFamily;
+  readonly resourcePath?: string;
+  readonly resourceId?: string;
+}
+
 export interface TextPackManifestUpdateOptions {
   readonly version?: string;
   readonly targets?: TextPackTargets;
@@ -387,6 +404,17 @@ export interface TextPackManifestUpdateOptions {
   readonly limitations?: readonly string[];
   readonly notes?: readonly string[];
   readonly provenanceNotes?: readonly string[];
+}
+
+export type TextPackFileSystemReadText = (path: string) => string | Promise<string>;
+export type TextPackFileSystemResolvePath = (root: string, resourcePath: string) => string;
+
+export interface TextPackFileSystemLoadOptions extends TextPackResourceParseOptions {
+  readonly manifest: TextPackManifestV1;
+  readonly root: string;
+  readonly request?: TextPackLookupRequest;
+  readonly readText: TextPackFileSystemReadText;
+  readonly resolvePath?: TextPackFileSystemResolvePath;
 }
 
 const resourceKindByFamily: Readonly<Record<TextPackResourceFamily, TextPackResourceKind>> = {
@@ -695,6 +723,57 @@ function normalizedTextPackResourceFamilyMap(
     }
   }
   return normalized;
+}
+
+function normalizedTextPackManifestResourceMaps(
+  resources: TextPackResourceFamilyMap,
+  provides: TextPackResourceFamilyMap,
+): {
+  readonly resources: TextPackResourceFamilyMap;
+  readonly provides: TextPackResourceFamilyMap;
+} {
+  const normalizedResources: Partial<Record<TextPackResourceFamily, readonly string[]>> = {};
+  const normalizedProvides: Partial<Record<TextPackResourceFamily, readonly string[]>> = {};
+
+  for (const family of textPackResourceFamilies) {
+    const paths = resources[family] ?? [];
+    const ids = provides[family] ?? [];
+    const pairs = Array.from({ length: Math.max(paths.length, ids.length) }, (_, index) => ({
+      path: paths[index],
+      id: ids[index],
+    })).sort((left, right) =>
+      `${left.id ?? ""}\u0000${left.path ?? ""}`.localeCompare(`${right.id ?? ""}\u0000${right.path ?? ""}`),
+    );
+    const normalizedPaths = pairs
+      .map((pair) => pair.path)
+      .filter((entry): entry is string => entry !== undefined);
+    const normalizedIds = pairs
+      .map((pair) => pair.id)
+      .filter((entry): entry is string => entry !== undefined);
+    if (normalizedPaths.length > 0) normalizedResources[family] = normalizedPaths;
+    if (normalizedIds.length > 0) normalizedProvides[family] = normalizedIds;
+  }
+
+  for (const [family, paths] of Object.entries(resources)) {
+    if (!isTextPackResourceFamily(family)) {
+      normalizedResources[family as TextPackResourceFamily] = [...paths].sort((left, right) =>
+        left.localeCompare(right),
+      );
+    }
+  }
+
+  for (const [family, ids] of Object.entries(provides)) {
+    if (!isTextPackResourceFamily(family)) {
+      normalizedProvides[family as TextPackResourceFamily] = [...ids].sort((left, right) =>
+        left.localeCompare(right),
+      );
+    }
+  }
+
+  return {
+    resources: normalizedResources,
+    provides: normalizedProvides,
+  };
 }
 
 function normalizedTextPackCapabilities(
@@ -1007,13 +1086,16 @@ export function validateTextPackManifestGovernance(
 ): TextPackManifestGovernanceResult {
   const diagnostics: TextPackManifestGovernanceDiagnostic[] = [];
   if (!isTextPackManifestV1(manifest)) {
+    const packId = isRecord(manifest) && isNonEmptyString(manifest.id) ? manifest.id : undefined;
     return {
       ok: false,
       diagnostics: [
         {
           code: "invalid-manifest-shape",
+          ...(packId === undefined ? {} : { packId }),
           message: "Textpack manifest does not satisfy the version 1 runtime shape.",
         },
+        ...metadataDiagnosticsForManifestLikeValue(manifest),
       ],
     };
   }
@@ -1051,6 +1133,7 @@ export function validateTextPackManifestGovernance(
   }
 
   const providedIds = new Set<string>();
+  const resourcePathKeys = new Set<string>();
   for (const family of textPackResourceFamilies) {
     const paths = manifest.resources[family] ?? [];
     const ids = manifest.provides[family] ?? [];
@@ -1084,6 +1167,16 @@ export function validateTextPackManifestGovernance(
     }
 
     for (const resourcePath of paths) {
+      const resourcePathKey = `${family}\u0000${canonicalManifestPath(resourcePath)}`;
+      if (resourcePathKeys.has(resourcePathKey)) {
+        addTextPackGovernanceDiagnostic(diagnostics, {
+          code: "duplicate-resource-path",
+          packId: manifest.id,
+          ref: resourcePath,
+          message: `Manifest ${manifest.id} repeats ${family} resource path ${resourcePath}.`,
+        });
+      }
+      resourcePathKeys.add(resourcePathKey);
       if (!isSafeTextPackPackageRelativePath(resourcePath)) {
         addTextPackGovernanceDiagnostic(diagnostics, {
           code: "unsafe-resource-path",
@@ -1171,6 +1264,44 @@ export function validateTextPackManifestGovernance(
     ok: diagnostics.length === 0,
     diagnostics,
   };
+}
+
+function metadataDiagnosticsForManifestLikeValue(
+  manifest: unknown,
+): readonly TextPackManifestGovernanceDiagnostic[] {
+  if (!isRecord(manifest)) return [];
+  const diagnostics: TextPackManifestGovernanceDiagnostic[] = [];
+  const packId = isNonEmptyString(manifest.id) ? manifest.id : undefined;
+  const licenses = manifest.licenses;
+  const provenance = manifest.provenance;
+
+  if (
+    !isRecord(licenses) ||
+    !Array.isArray(licenses.code) ||
+    licenses.code.length === 0 ||
+    !Array.isArray(licenses.data) ||
+    licenses.data.length === 0
+  ) {
+    diagnostics.push({
+      code: "missing-license",
+      ...(packId === undefined ? {} : { packId }),
+      message: "Manifest must declare code and data licenses.",
+    });
+  }
+
+  if (
+    !isRecord(provenance) ||
+    !Array.isArray(provenance.sources) ||
+    provenance.sources.length === 0
+  ) {
+    diagnostics.push({
+      code: "missing-provenance",
+      ...(packId === undefined ? {} : { packId }),
+      message: "Manifest must declare one or more provenance sources.",
+    });
+  }
+
+  return diagnostics;
 }
 
 function parseTextPackVersion(value: string): readonly [number, number, number] | undefined {
@@ -1299,8 +1430,9 @@ export function checkTextPackCompatibility(
 export function createTextPackManifestDraft(
   options: TextPackManifestDraftOptions,
 ): TextPackManifestV1 {
-  const resources = normalizedTextPackResourceFamilyMap(options.resources);
-  const provides = normalizedTextPackResourceFamilyMap(options.provides);
+  const normalizedMaps = normalizedTextPackManifestResourceMaps(options.resources, options.provides);
+  const resources = normalizedMaps.resources;
+  const provides = normalizedMaps.provides;
   const limitations = normalizedTextPackOptionalStrings(options.limitations);
   const notes = normalizedTextPackOptionalStrings(options.notes);
   return {
@@ -1331,12 +1463,22 @@ export function createTextPackManifestDraft(
   };
 }
 
+export function createTextPackManifest(
+  options: TextPackManifestDraftOptions,
+): TextPackManifestV1 {
+  return createTextPackManifestDraft(options);
+}
+
 export function updateTextPackManifest(
   manifest: TextPackManifestV1,
   options: TextPackManifestUpdateOptions,
 ): TextPackManifestV1 {
-  const resources = normalizedTextPackResourceFamilyMap(options.resources ?? manifest.resources);
-  const provides = normalizedTextPackResourceFamilyMap(options.provides ?? manifest.provides);
+  const normalizedMaps = normalizedTextPackManifestResourceMaps(
+    options.resources ?? manifest.resources,
+    options.provides ?? manifest.provides,
+  );
+  const resources = normalizedMaps.resources;
+  const provides = normalizedMaps.provides;
   const capabilities =
     options.capabilities !== undefined
       ? normalizedTextPackCapabilities(resources, options.capabilities)
@@ -1365,6 +1507,61 @@ export function updateTextPackManifest(
     ...(limitations === undefined ? {} : { limitations }),
     ...(notes === undefined ? {} : { notes }),
   };
+}
+
+export function addTextPackManifestResource(
+  manifest: TextPackManifestV1,
+  resource: TextPackManifestResourceInput,
+): TextPackManifestV1 {
+  const resources = {
+    ...manifest.resources,
+    [resource.family]: [...(manifest.resources[resource.family] ?? []), resource.resourcePath],
+  };
+  const provides = {
+    ...manifest.provides,
+    [resource.family]: [...(manifest.provides[resource.family] ?? []), resource.resourceId],
+  };
+  return updateTextPackManifest(manifest, { resources, provides });
+}
+
+export function updateTextPackManifestResource(
+  manifest: TextPackManifestV1,
+  resourceId: string,
+  options: TextPackManifestResourceUpdateOptions,
+): TextPackManifestV1 {
+  const currentFamily = textPackResourceFamilies.find((family) =>
+    (manifest.provides[family] ?? []).includes(resourceId),
+  );
+  if (currentFamily === undefined) {
+    throw new RangeError(`Textpack manifest resource ${resourceId} was not found.`);
+  }
+
+  const resources: Partial<Record<TextPackResourceFamily, string[]>> = {};
+  const provides: Partial<Record<TextPackResourceFamily, string[]>> = {};
+  for (const family of textPackResourceFamilies) {
+    resources[family] = [...(manifest.resources[family] ?? [])];
+    provides[family] = [...(manifest.provides[family] ?? [])];
+  }
+
+  const currentIndex = provides[currentFamily]?.indexOf(resourceId) ?? -1;
+  const currentPath = resources[currentFamily]?.[currentIndex];
+  if (currentIndex < 0 || currentPath === undefined) {
+    throw new RangeError(`Textpack manifest resource ${resourceId} has no paired path.`);
+  }
+
+  resources[currentFamily]?.splice(currentIndex, 1);
+  provides[currentFamily]?.splice(currentIndex, 1);
+  const nextFamily = options.family ?? currentFamily;
+  resources[nextFamily] = [...(resources[nextFamily] ?? []), options.resourcePath ?? currentPath];
+  provides[nextFamily] = [...(provides[nextFamily] ?? []), options.resourceId ?? resourceId];
+
+  return updateTextPackManifest(manifest, { resources, provides });
+}
+
+export function validateTextPackAuthoringMetadata(
+  manifest: unknown,
+): TextPackManifestGovernanceResult {
+  return validateTextPackManifestGovernance(manifest);
 }
 
 export function queryTextPackResourceRegistry(
@@ -1635,6 +1832,35 @@ export function loadTextPackRegistryResources(
   }
 
   return { resources, diagnostics };
+}
+
+function defaultTextPackFileSystemResourcePath(root: string, resourcePath: string): string {
+  const normalizedRoot = root.endsWith("/") ? root.slice(0, -1) : root;
+  return `${normalizedRoot}/${canonicalManifestPath(resourcePath)}`;
+}
+
+export async function loadTextPackFromFileSystem(
+  options: TextPackFileSystemLoadOptions,
+): Promise<TextPackLoadResult> {
+  const governance = validateTextPackManifestGovernance(options.manifest);
+  if (!governance.ok) {
+    return {
+      resources: [],
+      diagnostics: governance.diagnostics,
+    };
+  }
+
+  const registry = createTextPackResourceRegistry([options.manifest]);
+  const request = options.request ?? {};
+  const resolved = queryTextPackResourceRegistry(registry, request);
+  const contents: Record<string, string> = {};
+  const resolvePath = options.resolvePath ?? defaultTextPackFileSystemResourcePath;
+
+  for (const resource of resolved.resources) {
+    contents[resource.path] = await options.readText(resolvePath(options.root, resource.path));
+  }
+
+  return loadTextPackRegistryResources(registry, request, contents, options);
 }
 
 export function lookupTextPackLoadedEntries(
