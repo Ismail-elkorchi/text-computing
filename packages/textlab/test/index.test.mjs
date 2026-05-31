@@ -2,6 +2,11 @@ import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
+  resultEnvelopeSchemaId,
+  resultEnvelopeSchemaVersion,
+  textProtocolPayloadKindTextpipelineBatchRunReportV1,
+} from "@ismail-elkorchi/textprotocol";
+import {
   inspectCorpusFixture,
   inspectConformanceReportDiff,
   inspectPackageManifest,
@@ -17,6 +22,7 @@ import {
   inspectTextPackValidation,
   inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
+  inspectTextProtocolResultEnvelope,
   packageName,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
@@ -34,6 +40,7 @@ import {
   renderTextPackValidationInspection,
   renderTextPipelineBatchReportInspection,
   renderTextPipelineTraceInspection,
+  renderTextProtocolResultEnvelopeInspection,
   summarizeConformanceReport,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
@@ -639,6 +646,57 @@ if (!invalidPipelineBatchReportRejected) {
   throw new Error("invalid textpipeline batch reports should be rejected before inspection");
 }
 
+const resultEnvelope = {
+  schemaId: resultEnvelopeSchemaId,
+  schemaVersion: resultEnvelopeSchemaVersion,
+  producer: {
+    package: "@ismail-elkorchi/textpipeline",
+    version: "0.1.0",
+  },
+  payloadKind: textProtocolPayloadKindTextpipelineBatchRunReportV1,
+  payload: pipelineBatchReport,
+  provenance: {
+    references: [{ kind: "fixture", id: "textlab-result-envelope" }],
+  },
+  diagnostics: [
+    {
+      code: "textlab.fixture",
+      severity: "info",
+      message: "result envelope fixture",
+    },
+  ],
+  scopeBoundary: "Textlab result-envelope inspection fixture.",
+  limitations: ["The fixture validates envelope inspection, not broad payload behavior."],
+};
+
+const resultEnvelopeInspection = inspectTextProtocolResultEnvelope(resultEnvelope);
+if (
+  resultEnvelopeInspection.payloadKind !== textProtocolPayloadKindTextpipelineBatchRunReportV1 ||
+  !resultEnvelopeInspection.registeredPayloadKind ||
+  resultEnvelopeInspection.payloadOwnerPackage !== "@ismail-elkorchi/textpipeline" ||
+  resultEnvelopeInspection.provenanceReferenceCount !== 1 ||
+  resultEnvelopeInspection.diagnosticCount !== 1 ||
+  !resultEnvelopeInspection.compatibilityOk
+) {
+  throw new Error("result-envelope inspection should summarize registered envelope metadata");
+}
+
+if (!renderTextProtocolResultEnvelopeInspection(resultEnvelopeInspection).includes("Compatibility: pass")) {
+  throw new Error("result-envelope renderer should include compatibility state");
+}
+
+let invalidResultEnvelopeRejected = false;
+try {
+  inspectTextProtocolResultEnvelope({ schemaVersion: 1, payloadKind: "bad" });
+} catch (error) {
+  invalidResultEnvelopeRejected =
+    error instanceof TypeError && error.message === "textprotocol result envelope is invalid";
+}
+
+if (!invalidResultEnvelopeRejected) {
+  throw new Error("invalid textprotocol result envelopes should be rejected before inspection");
+}
+
 const packBackedRuleDocument = {
   ...textdocDocument,
   revision: "1>textrules.textpack-rules",
@@ -925,6 +983,8 @@ const pipelineTracePath = path.join(dir, "pipeline-trace.json");
 await writeFile(pipelineTracePath, `${JSON.stringify(pipelineTrace, null, 2)}\n`, "utf8");
 const pipelineBatchReportPath = path.join(dir, "pipeline-batch-report.json");
 await writeFile(pipelineBatchReportPath, `${JSON.stringify(pipelineBatchReport, null, 2)}\n`, "utf8");
+const resultEnvelopePath = path.join(dir, "result-envelope.json");
+await writeFile(resultEnvelopePath, `${JSON.stringify(resultEnvelope, null, 2)}\n`, "utf8");
 const packBackedRuleDocumentPath = path.join(dir, "pack-backed-rules-document.json");
 await writeFile(packBackedRuleDocumentPath, `${JSON.stringify(packBackedRuleDocument, null, 2)}\n`, "utf8");
 const corpusPath = path.join(dir, "corpus-fixture.json");
@@ -1301,6 +1361,39 @@ await writeFile(invalidPipelineTracePath, `${JSON.stringify({ schemaVersion: 1, 
 const invalidPipelineTraceCliResult = await runTextlabCli(["pipeline-trace", invalidPipelineTracePath]);
 if (invalidPipelineTraceCliResult.exitCode !== 1 || !invalidPipelineTraceCliResult.stderr.includes("Invalid textpipeline trace")) {
   throw new Error("pipeline-trace CLI should reject invalid trace input");
+}
+
+const resultEnvelopeCliResult = await runTextlabCli(["result-envelope", resultEnvelopePath]);
+
+if (resultEnvelopeCliResult.exitCode !== 0 || resultEnvelopeCliResult.stderr !== "") {
+  throw new Error(`result-envelope CLI should pass: ${resultEnvelopeCliResult.stderr}`);
+}
+
+if (!resultEnvelopeCliResult.stdout.includes("Payload kind: textpipeline-batch-run-report-v1")) {
+  throw new Error("result-envelope CLI should render payload kind");
+}
+
+const resultEnvelopeJsonCliResult = await runTextlabCli(["result-envelope", resultEnvelopePath, "--json"]);
+
+if (
+  resultEnvelopeJsonCliResult.exitCode !== 0 ||
+  JSON.parse(resultEnvelopeJsonCliResult.stdout).payloadOwnerPackage !== "@ismail-elkorchi/textpipeline"
+) {
+  throw new Error("result-envelope CLI should support stable JSON output");
+}
+
+const invalidResultEnvelopePath = path.join(dir, "invalid-result-envelope.json");
+await writeFile(
+  invalidResultEnvelopePath,
+  `${JSON.stringify({ schemaVersion: 1, payloadKind: "bad" }, null, 2)}\n`,
+  "utf8",
+);
+const invalidResultEnvelopeCliResult = await runTextlabCli(["result-envelope", invalidResultEnvelopePath]);
+if (
+  invalidResultEnvelopeCliResult.exitCode !== 1 ||
+  !invalidResultEnvelopeCliResult.stderr.includes("Invalid textprotocol result envelope")
+) {
+  throw new Error("result-envelope CLI should reject invalid envelope input");
 }
 
 const pipelineBatchReportCliResult = await runTextlabCli(["pipeline-batch-report", pipelineBatchReportPath]);

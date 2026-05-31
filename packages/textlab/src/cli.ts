@@ -27,6 +27,7 @@ import {
   inspectTextPackValidation,
   inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
+  inspectTextProtocolResultEnvelope,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
@@ -43,6 +44,7 @@ import {
   renderTextPackValidationInspection,
   renderTextPipelineBatchReportInspection,
   renderTextPipelineTraceInspection,
+  renderTextProtocolResultEnvelopeInspection,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
   type TextlabPackBackedRuleInspectionOptions,
@@ -68,6 +70,7 @@ function usage(): string {
     "  textlab pack remove-resource <pack-root> --resource-id id [--json]",
     "  textlab document <path> [--json]",
     "  textlab annotations <path> [--layer-kind kind] [--lifecycle state] [--annotation-id id] [--json]",
+    "  textlab result-envelope <path> [--json]",
     "  textlab pipeline-trace <path> [--json]",
     "  textlab pipeline-batch-report <path> [--json]",
     "  textlab pack-backed-rules <textdoc-path> [--pack-id id] [--resource-id id] [--rule-kind kind] [--json]",
@@ -84,6 +87,7 @@ function usage(): string {
     "  pack            Inspect, validate, audit, edit, or list resources from a textpack manifest or pack directory.",
     "  document        Inspect a textdoc document summary.",
     "  annotations     Inspect or query a textdoc document annotation graph.",
+    "  result-envelope Inspect a textprotocol result envelope payload.",
     "  pipeline-trace  Inspect a textpipeline trace payload.",
     "  pipeline-batch-report  Inspect a textpipeline batch run report payload.",
     "  pack-backed-rules Inspect pack-backed textrules annotations in a textdoc document.",
@@ -116,6 +120,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "conformance-report" &&
     command !== "conformance-diff" &&
     command !== "annotations" &&
+    command !== "result-envelope" &&
     command !== "pipeline-trace" &&
     command !== "pipeline-batch-report" &&
     command !== "pack-backed-rules" &&
@@ -205,6 +210,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       command === "document" ||
       command === "conformance-report" ||
       command === "annotations" ||
+      command === "result-envelope" ||
       command === "pipeline-trace" ||
       command === "pipeline-batch-report" ||
       command === "pack-backed-rules" ||
@@ -280,6 +286,23 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid textpipeline trace: ${inputPath}`,
+      };
+    }
+  }
+
+  if (command === "result-envelope") {
+    try {
+      const inspection = inspectTextProtocolResultEnvelope(parsed);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderTextProtocolResultEnvelopeInspection, json),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textprotocol result envelope: ${inputPath}`,
       };
     }
   }

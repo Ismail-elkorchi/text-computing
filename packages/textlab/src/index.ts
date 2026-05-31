@@ -19,6 +19,12 @@ import {
   type TextPipelineTraceEntry,
 } from "@ismail-elkorchi/textpipeline";
 import {
+  checkTextProtocolResultEnvelopeCompatibility,
+  getTextProtocolPayloadKindDescriptor,
+  isTextProtocolResultEnvelopeV1,
+  type TextProtocolDiagnostic,
+} from "@ismail-elkorchi/textprotocol";
+import {
   packageName as textRulesPackageName,
   type TextRulesTextPackRuleKind,
 } from "@ismail-elkorchi/textrules";
@@ -307,6 +313,35 @@ export interface TextlabPipelineBatchReportInspection {
   readonly rows: readonly TextlabPipelineBatchReportRow[];
 }
 
+export interface TextlabProtocolDiagnosticRow {
+  readonly code: string;
+  readonly severity: string;
+  readonly message?: string;
+}
+
+export interface TextlabProtocolResultEnvelopeInspection {
+  readonly schemaVersion: 1;
+  readonly envelopeSchemaId: string;
+  readonly envelopeSchemaVersion: number;
+  readonly producerPackage: string;
+  readonly producerVersion: string;
+  readonly payloadKind: string;
+  readonly registeredPayloadKind: boolean;
+  readonly payloadOwnerPackage?: string;
+  readonly payloadSchemaId?: string;
+  readonly payloadSchemaVersion?: string | number;
+  readonly payloadShape: string;
+  readonly payloadKeys: readonly string[];
+  readonly provenanceReferenceCount: number;
+  readonly diagnosticCount: number;
+  readonly scopeBoundaryPresent: boolean;
+  readonly limitationCount: number;
+  readonly compatibilityOk: boolean;
+  readonly compatibilityDiagnosticCounts: readonly TextlabCount[];
+  readonly diagnostics: readonly TextlabProtocolDiagnosticRow[];
+  readonly compatibilityDiagnostics: readonly TextlabProtocolDiagnosticRow[];
+}
+
 export interface TextlabPackBackedRuleInspectionOptions {
   readonly packIds?: readonly string[];
   readonly resourceIds?: readonly string[];
@@ -373,6 +408,16 @@ function recordKeys(value: unknown): readonly string[] {
   return isRecord(value) ? Object.keys(value).sort() : [];
 }
 
+function payloadShape(value: unknown): string {
+  if (Array.isArray(value)) return `array:${value.length}`;
+  if (isRecord(value)) {
+    const keys = recordKeys(value);
+    return `object:${keys.join(",") || "<empty>"}`;
+  }
+  if (value === null) return "null";
+  return typeof value;
+}
+
 function recordStringArrayEntries(value: unknown): readonly TextlabCount[] {
   if (!isRecord(value)) return [];
   return Object.entries(value)
@@ -431,6 +476,22 @@ function comparePipelineBatchRows(
   right: TextlabPipelineBatchReportRow,
 ): number {
   return left.inputIndex - right.inputIndex || left.documentId.localeCompare(right.documentId);
+}
+
+function protocolDiagnosticRows(
+  diagnostics: readonly TextProtocolDiagnostic[] | undefined,
+): readonly TextlabProtocolDiagnosticRow[] {
+  return (diagnostics ?? [])
+    .map((diagnostic) => ({
+      code: diagnostic.code,
+      severity: diagnostic.severity,
+      ...(diagnostic.message === undefined ? {} : { message: diagnostic.message }),
+    }))
+    .sort((left, right) =>
+      `${left.code}\u0000${left.severity}\u0000${left.message ?? ""}`.localeCompare(
+        `${right.code}\u0000${right.severity}\u0000${right.message ?? ""}`,
+      ),
+    );
 }
 
 function comparePackBackedRuleRows(
@@ -1094,6 +1155,76 @@ export function renderTextPipelineBatchReportInspection(
     ...inspection.rows.map(
       (row) =>
         `- [${row.inputIndex}] ${row.documentId} status=${row.runStatus} mode=${row.executionMode} cache=${row.cachePolicy} processors=${row.processorCount} traceEntries=${row.traceEntryCount} revision=${row.finalRevision}`,
+    ),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextProtocolResultEnvelope(
+  value: unknown,
+): TextlabProtocolResultEnvelopeInspection {
+  if (!isTextProtocolResultEnvelopeV1(value)) {
+    throw new TypeError("textprotocol result envelope is invalid");
+  }
+  const descriptor = getTextProtocolPayloadKindDescriptor(value.payloadKind);
+  const compatibility = checkTextProtocolResultEnvelopeCompatibility(value);
+  const diagnostics = protocolDiagnosticRows(value.diagnostics);
+  const compatibilityDiagnostics = protocolDiagnosticRows(compatibility.diagnostics);
+  const payloadKeys = recordKeys(value.payload);
+  return {
+    schemaVersion: 1,
+    envelopeSchemaId: value.schemaId,
+    envelopeSchemaVersion: value.schemaVersion,
+    producerPackage: value.producer.package,
+    producerVersion: value.producer.version,
+    payloadKind: value.payloadKind,
+    registeredPayloadKind: descriptor !== undefined,
+    ...(descriptor?.ownerPackage === undefined ? {} : { payloadOwnerPackage: descriptor.ownerPackage }),
+    ...(descriptor?.schemaId === undefined ? {} : { payloadSchemaId: descriptor.schemaId }),
+    ...(descriptor?.schemaVersion === undefined ? {} : { payloadSchemaVersion: descriptor.schemaVersion }),
+    payloadShape: payloadShape(value.payload),
+    payloadKeys,
+    provenanceReferenceCount: value.provenance?.references?.length ?? 0,
+    diagnosticCount: diagnostics.length,
+    scopeBoundaryPresent: isNonEmptyString(value.scopeBoundary),
+    limitationCount: value.limitations?.length ?? 0,
+    compatibilityOk: compatibility.ok,
+    compatibilityDiagnosticCounts: countById(compatibilityDiagnostics.map((entry) => entry.code)),
+    diagnostics,
+    compatibilityDiagnostics,
+  };
+}
+
+export function renderTextProtocolResultEnvelopeInspection(
+  inspection: TextlabProtocolResultEnvelopeInspection,
+): string {
+  return [
+    "# textlab result envelope inspection",
+    "",
+    `Schema: ${inspection.envelopeSchemaId}@${inspection.envelopeSchemaVersion}`,
+    `Producer: ${inspection.producerPackage}@${inspection.producerVersion}`,
+    `Payload kind: ${inspection.payloadKind}`,
+    `Registered payload kind: ${inspection.registeredPayloadKind ? "yes" : "no"}`,
+    `Payload owner: ${inspection.payloadOwnerPackage ?? "<unregistered>"}`,
+    `Payload schema: ${inspection.payloadSchemaId ?? "<none>"}`,
+    `Payload shape: ${inspection.payloadShape}`,
+    `Payload keys: ${inspection.payloadKeys.join(",") || "<none>"}`,
+    `Provenance references: ${inspection.provenanceReferenceCount}`,
+    `Diagnostics: ${inspection.diagnosticCount}`,
+    `Scope boundary: ${inspection.scopeBoundaryPresent ? "present" : "absent"}`,
+    `Limitations: ${inspection.limitationCount}`,
+    `Compatibility: ${inspection.compatibilityOk ? "pass" : "fail"}`,
+    "",
+    "## Compatibility diagnostics",
+    ...inspection.compatibilityDiagnostics.map(
+      (entry) =>
+        `- ${entry.code} severity=${entry.severity}${entry.message === undefined ? "" : ` message=${entry.message}`}`,
+    ),
+    "",
+    "## Envelope diagnostics",
+    ...inspection.diagnostics.map(
+      (entry) =>
+        `- ${entry.code} severity=${entry.severity}${entry.message === undefined ? "" : ` message=${entry.message}`}`,
     ),
     "",
   ].join("\n");

@@ -27,7 +27,7 @@ import {
   textPipelineTracePayloadKind,
 } from "@ismail-elkorchi/textpipeline";
 import { isTextConformanceReportV1, runTextConformanceChecks } from "@ismail-elkorchi/textconformance";
-import { inspectTextdocAnnotations } from "@ismail-elkorchi/textlab";
+import { inspectTextdocAnnotations, inspectTextProtocolResultEnvelope } from "@ismail-elkorchi/textlab";
 
 function fail(message, details) {
   console.error(message);
@@ -195,6 +195,13 @@ const ownedBatchReportEnvelope = createTextPipelineBatchRunReportEnvelope(batchR
 });
 if (!isTextPipelineBatchRunReportEnvelopeV1(ownedBatchReportEnvelope)) {
   fail("Owned batch report envelope must satisfy textpipeline runtime guard.", ownedBatchReportEnvelope);
+}
+const batchEnvelopeInspection = inspectTextProtocolResultEnvelope(ownedBatchReportEnvelope);
+if (
+  !batchEnvelopeInspection.registeredPayloadKind ||
+  batchEnvelopeInspection.payloadKind !== textProtocolPayloadKindTextpipelineBatchRunReportV1
+) {
+  fail("Interop textlab inspection must preserve batch report envelope metadata.", batchEnvelopeInspection);
 }
 
 const processorTrace = {

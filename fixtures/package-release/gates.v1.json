@@ -627,6 +627,7 @@
         "requiredBeforeRelease": true,
         "status": "validated",
         "downstreamDependents": [
+          "@ismail-elkorchi/textlab",
           "@ismail-elkorchi/textpipeline",
           "@ismail-elkorchi/textrules"
         ],

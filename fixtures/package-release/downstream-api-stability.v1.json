@@ -145,6 +145,16 @@
           "importSurfaces": [
             "@ismail-elkorchi/textprotocol"
           ]
+        },
+        {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textprotocol"
+          ]
         }
       ],
       "evidenceRefs": [
