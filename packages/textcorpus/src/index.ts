@@ -635,6 +635,28 @@ export type TextCorpusArtifactV1 =
   | TextCorpusCitationWindowSetV1
   | TextCorpusQuoteGroundingResultV1;
 
+export type TextCorpusMetricEnvelopeMetricValue = number | string;
+export type TextCorpusMetricEnvelopeMetricParameters = Readonly<Record<string, string | number | boolean>>;
+
+export interface TextCorpusMetricEnvelopeMetricV1 {
+  readonly metricId: string;
+  readonly kind: string;
+  readonly value: TextCorpusMetricEnvelopeMetricValue;
+  readonly unit?: string;
+  readonly parameters?: TextCorpusMetricEnvelopeMetricParameters;
+}
+
+export interface TextCorpusMetricEnvelopePayloadV1 {
+  readonly corpusId: string;
+  readonly metricSetId: string;
+  readonly metrics: readonly TextCorpusMetricEnvelopeMetricV1[];
+}
+
+export interface TextCorpusMetricEnvelopePayloadOptions {
+  readonly metricSetId?: string;
+  readonly includeSelectionMetrics?: boolean;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -1419,6 +1441,7 @@ export function isTextCorpusCooccurrenceResultV1(value: unknown): value is TextC
     value.tokenSource === textCorpusTokenSource &&
     isTextCorpusEvidenceClass(value.evidenceClass) &&
     selectionMatchesCorpus(value.selection, value.corpusId) &&
+    !("term" in value) &&
     typeof value.window === "number" &&
     Number.isInteger(value.window) &&
     value.window >= 1 &&
@@ -3569,8 +3592,8 @@ export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtif
     isTextCorpusConcordanceResultV1(value) ||
     isTextCorpusFrequencyResultV1(value) ||
     isTextCorpusNgramResultV1(value) ||
-    isTextCorpusCooccurrenceResultV1(value) ||
     isTextCorpusCollocateResultV1(value) ||
+    isTextCorpusCooccurrenceResultV1(value) ||
     isTextCorpusPairwiseRelationResultV1(value) ||
     isTextCorpusScoringResultV1(value) ||
     isTextCorpusRetrievalIndexV1(value) ||
@@ -3580,6 +3603,211 @@ export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtif
     isTextCorpusCitationWindowSetV1(value) ||
     isTextCorpusQuoteGroundingResultV1(value)
   );
+}
+
+function isTextCorpusMetricEnvelopeMetricParameters(
+  value: unknown,
+): value is TextCorpusMetricEnvelopeMetricParameters {
+  return (
+    isRecord(value) &&
+    Object.entries(value).every(
+      ([key, entryValue]) =>
+        isNonEmptyString(key) &&
+        (typeof entryValue === "string" ||
+          (typeof entryValue === "number" && Number.isFinite(entryValue)) ||
+          typeof entryValue === "boolean"),
+    )
+  );
+}
+
+function isTextCorpusMetricEnvelopeMetricV1(
+  value: unknown,
+): value is TextCorpusMetricEnvelopeMetricV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.metricId) &&
+    isNonEmptyString(value.kind) &&
+    ((typeof value.value === "number" && Number.isFinite(value.value)) || typeof value.value === "string") &&
+    (value.unit === undefined || isNonEmptyString(value.unit)) &&
+    (value.parameters === undefined || isTextCorpusMetricEnvelopeMetricParameters(value.parameters))
+  );
+}
+
+export function isTextCorpusMetricEnvelopePayloadV1(
+  value: unknown,
+): value is TextCorpusMetricEnvelopePayloadV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.corpusId) &&
+    isNonEmptyString(value.metricSetId) &&
+    Array.isArray(value.metrics) &&
+    value.metrics.length > 0 &&
+    value.metrics.every((entry) => isTextCorpusMetricEnvelopeMetricV1(entry))
+  );
+}
+
+function textCorpusMetric(
+  metricId: string,
+  kind: string,
+  value: TextCorpusMetricEnvelopeMetricValue,
+  options: {
+    readonly unit?: string;
+    readonly parameters?: TextCorpusMetricEnvelopeMetricParameters;
+  } = {},
+): TextCorpusMetricEnvelopeMetricV1 {
+  return {
+    metricId,
+    kind,
+    value,
+    ...(options.unit === undefined ? {} : { unit: options.unit }),
+    ...(options.parameters === undefined ? {} : { parameters: options.parameters }),
+  };
+}
+
+function textCorpusSelectionMetrics(
+  selection: TextCorpusSelectionProvenanceV1,
+): readonly TextCorpusMetricEnvelopeMetricV1[] {
+  return [
+    textCorpusMetric("selection.document-count", "selection", selection.documentOrder.length, { unit: "documents" }),
+    textCorpusMetric("selection.token-count", "selection", selection.tokenCount, { unit: "tokens" }),
+  ];
+}
+
+function textCorpusPostingCount(index: TextCorpusRetrievalIndexV1): number {
+  return Object.values(index.invertedIndex).reduce((sum, postings) => sum + postings.length, 0);
+}
+
+function textCorpusRetrievalHitCount(result: TextCorpusRetrievalResultV1): number {
+  return result.results.reduce((sum, queryResult) => sum + queryResult.hits.length, 0);
+}
+
+function textCorpusRelationCount(
+  result: TextCorpusPairwiseRelationResultV1,
+  relation: TextCorpusPairwiseRelationLabel,
+): number {
+  return result.rows.filter((row) => row.relation === relation).length;
+}
+
+function textCorpusMetricSetIdForArtifact(artifact: TextCorpusArtifactV1): string {
+  if (isTextCorpusRetrievalIndexArtifactV1(artifact)) {
+    return textCorpusMetricSetIdForArtifact(artifact.index);
+  }
+  if (isTextCorpusConcordanceResultV1(artifact)) return `textcorpus.concordance:${artifact.corpusId}:${artifact.query}`;
+  if (isTextCorpusFrequencyResultV1(artifact)) return `textcorpus.frequency:${artifact.corpusId}`;
+  if (isTextCorpusNgramResultV1(artifact)) return `textcorpus.ngram:${artifact.corpusId}:n-${artifact.n}`;
+  if (isTextCorpusCollocateResultV1(artifact)) return `textcorpus.collocate:${artifact.corpusId}:${artifact.term}:w-${artifact.window}`;
+  if (isTextCorpusCooccurrenceResultV1(artifact)) return `textcorpus.cooccurrence:${artifact.corpusId}:w-${artifact.window}`;
+  if (isTextCorpusPairwiseRelationResultV1(artifact)) return `textcorpus.pairwise:${artifact.corpusId}`;
+  if (isTextCorpusScoringResultV1(artifact)) return `textcorpus.scoring:${artifact.corpusId}`;
+  if (isTextCorpusRetrievalIndexV1(artifact)) return `textcorpus.retrieval-index:${artifact.corpusId}:${artifact.formula}`;
+  if (isTextCorpusRetrievalResultV1(artifact)) return `textcorpus.retrieval-result:${artifact.corpusId}:${artifact.formula}`;
+  if (isTextCorpusRetrievalEvaluationResultV1(artifact)) return `textcorpus.retrieval-evaluation:${artifact.corpusId}:${artifact.formula}:k-${artifact.k}`;
+  if (isTextCorpusCitationWindowSetV1(artifact)) return `textcorpus.citation-windows:${artifact.corpusId}`;
+  return `textcorpus.quote-grounding:${artifact.corpusId}:${artifact.docId}`;
+}
+
+export function exportTextCorpusMetricEnvelopePayloadV1(
+  artifact: TextCorpusArtifactV1,
+  options: TextCorpusMetricEnvelopePayloadOptions = {},
+): TextCorpusMetricEnvelopePayloadV1 {
+  if (!isTextCorpusArtifactV1(artifact)) {
+    throw new TypeError("textcorpus metric envelope payload requires a known TextCorpus artifact");
+  }
+  const source = isTextCorpusRetrievalIndexArtifactV1(artifact) ? artifact.index : artifact;
+  const metricSetId = options.metricSetId ?? textCorpusMetricSetIdForArtifact(source);
+  if (!isNonEmptyString(metricSetId)) {
+    throw new TypeError("textcorpus metricSetId must be a non-empty string");
+  }
+  const includeSelectionMetrics = options.includeSelectionMetrics ?? true;
+  const metrics: TextCorpusMetricEnvelopeMetricV1[] = [];
+  if (
+    includeSelectionMetrics &&
+    "selection" in source &&
+    isTextCorpusSelectionProvenanceV1(source.selection)
+  ) {
+    metrics.push(...textCorpusSelectionMetrics(source.selection));
+  }
+
+  if (isTextCorpusConcordanceResultV1(source)) {
+    metrics.push(textCorpusMetric("concordance.match-count", "concordance", source.rows.length, {
+      unit: "matches",
+      parameters: { query: source.query, window: source.window },
+    }));
+  } else if (isTextCorpusFrequencyResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("frequency.term-count", "frequency", source.rows.length, { unit: "terms" }),
+      textCorpusMetric("frequency.total-token-count", "frequency", source.rows.reduce((sum, row) => sum + row.count, 0), { unit: "tokens" }),
+    );
+  } else if (isTextCorpusNgramResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("ngram.row-count", "ngram", source.rows.length, { unit: "ngrams", parameters: { n: source.n } }),
+      textCorpusMetric("ngram.total-count", "ngram", source.rows.reduce((sum, row) => sum + row.count, 0), { unit: "ngrams", parameters: { n: source.n } }),
+    );
+  } else if (isTextCorpusCollocateResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("collocate.row-count", "collocate", source.rows.length, { unit: "rows", parameters: { term: source.term, window: source.window } }),
+      textCorpusMetric("collocate.total-count", "collocate", source.rows.reduce((sum, row) => sum + row.count, 0), { unit: "cooccurrences", parameters: { term: source.term, window: source.window } }),
+    );
+  } else if (isTextCorpusCooccurrenceResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("cooccurrence.row-count", "cooccurrence", source.rows.length, { unit: "pairs", parameters: { window: source.window } }),
+      textCorpusMetric("cooccurrence.total-count", "cooccurrence", source.rows.reduce((sum, row) => sum + row.count, 0), { unit: "pairs", parameters: { window: source.window } }),
+    );
+  } else if (isTextCorpusPairwiseRelationResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("pairwise.row-count", "pairwise", source.rows.length, { unit: "relations" }),
+      textCorpusMetric("pairwise.exact-duplicate-count", "pairwise", textCorpusRelationCount(source, "exact-duplicate"), { unit: "relations" }),
+      textCorpusMetric("pairwise.near-duplicate-count", "pairwise", textCorpusRelationCount(source, "near-duplicate"), { unit: "relations" }),
+      textCorpusMetric("pairwise.shared-reuse-count", "pairwise", textCorpusRelationCount(source, "shared-reuse"), { unit: "relations" }),
+    );
+  } else if (isTextCorpusScoringResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("scoring.document-count", "scoring", source.documentOrder.length, { unit: "documents" }),
+      textCorpusMetric("scoring.term-count", "scoring", source.termOrder.length, { unit: "terms" }),
+      textCorpusMetric("scoring.query-count", "scoring", source.queries.length, { unit: "queries" }),
+      textCorpusMetric("scoring.formula-count", "scoring", source.formulaSet.length, { unit: "formulas" }),
+    );
+  } else if (isTextCorpusRetrievalIndexV1(source)) {
+    metrics.push(
+      textCorpusMetric("retrieval-index.document-count", "retrieval", source.documentOrder.length, { unit: "documents", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-index.term-count", "retrieval", source.termOrder.length, { unit: "terms", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-index.average-document-length", "retrieval", source.averageDocumentLength, { unit: "tokens", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-index.posting-count", "retrieval", textCorpusPostingCount(source), { unit: "postings", parameters: { formula: source.formula } }),
+    );
+  } else if (isTextCorpusRetrievalResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("retrieval-result.query-count", "retrieval", source.results.length, { unit: "queries", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-result.hit-count", "retrieval", textCorpusRetrievalHitCount(source), { unit: "hits", parameters: { formula: source.formula } }),
+    );
+  } else if (isTextCorpusRetrievalEvaluationResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("retrieval-evaluation.query-count", "retrieval-evaluation", source.queries.length, { unit: "queries", parameters: { k: source.k, relevantGradeThreshold: source.relevantGradeThreshold } }),
+      textCorpusMetric("retrieval-evaluation.precision-at-k", "retrieval-evaluation", source.summary.precisionAtK, { unit: "ratio", parameters: { k: source.k } }),
+      textCorpusMetric("retrieval-evaluation.recall-at-k", "retrieval-evaluation", source.summary.recallAtK, { unit: "ratio", parameters: { k: source.k } }),
+      textCorpusMetric("retrieval-evaluation.mrr", "retrieval-evaluation", source.summary.mrr, { unit: "ratio", parameters: { k: source.k } }),
+      textCorpusMetric("retrieval-evaluation.ndcg-at-k", "retrieval-evaluation", source.summary.ndcgAtK, { unit: "ratio", parameters: { k: source.k } }),
+    );
+  } else if (isTextCorpusCitationWindowSetV1(source)) {
+    metrics.push(
+      textCorpusMetric("citation-window.window-count", "citation-window", source.windows.length, { unit: "windows" }),
+      textCorpusMetric("citation-window.loss-count", "citation-window", source.windows.reduce((sum, window) => sum + window.loss.length, 0), { unit: "loss-records" }),
+    );
+  } else if (isTextCorpusQuoteGroundingResultV1(source)) {
+    metrics.push(
+      textCorpusMetric("quote-grounding.match-count", "quote-grounding", source.matches.length, { unit: "matches" }),
+      textCorpusMetric("quote-grounding.status", "quote-grounding", source.status),
+    );
+  }
+
+  const payload = {
+    corpusId: source.corpusId,
+    metricSetId,
+    metrics,
+  };
+  if (!isTextCorpusMetricEnvelopePayloadV1(payload)) {
+    throw new TypeError("textcorpus metric envelope payload could not be produced");
+  }
+  return payload;
 }
 
 export function stringifyTextCorpusArtifact(artifact: TextCorpusArtifactV1): string {

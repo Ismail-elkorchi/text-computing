@@ -13,6 +13,7 @@ import {
   createTextCorpusCollection,
   createTextCorpusRetrievalIndexArtifact,
   evaluateTextCorpusRetrieval,
+  exportTextCorpusMetricEnvelopePayloadV1,
   groundTextCorpusQuote,
   isTextCorpusCollocateResultV1,
   isTextCorpusCitationWindowSetV1,
@@ -21,6 +22,7 @@ import {
   isTextCorpusCooccurrenceResultV1,
   isTextCorpusFingerprintIndex,
   isTextCorpusFrequencyResultV1,
+  isTextCorpusMetricEnvelopePayloadV1,
   isTextCorpusNgramResultV1,
   isTextCorpusPairwiseRelationResultV1,
   isTextCorpusParsedQuery,
@@ -302,6 +304,19 @@ if (
   "alpha:2:2,beta:2:2,delta:1:1,gamma:1:1"
 ) {
   throw new Error("frequency output should expose deterministic raw and document-frequency counts");
+}
+
+const frequencyMetricPayload = exportTextCorpusMetricEnvelopePayloadV1(frequency, {
+  metricSetId: "metrics:frequency-en",
+});
+if (!isTextCorpusMetricEnvelopePayloadV1(frequencyMetricPayload)) {
+  throw new Error("frequency metric payload should satisfy the corpus metric payload contract");
+}
+if (
+  frequencyMetricPayload.metrics.map((entry) => `${entry.metricId}:${entry.kind}:${entry.value}`).join(",") !==
+  "selection.document-count:selection:2,selection.token-count:selection:6,frequency.term-count:frequency:4,frequency.total-token-count:frequency:6"
+) {
+  throw new Error("frequency metric payload should expose selection and frequency metrics deterministically");
 }
 
 const ngrams = computeTextCorpusNgrams(collection, { n: 2, metadataFilters: { language: "en" } });
@@ -920,6 +935,17 @@ if (
   throw new Error("retrieval qrels evaluation should preserve zero-relevance negative controls");
 }
 
+const evaluationMetricPayload = exportTextCorpusMetricEnvelopePayloadV1(fieldedEvaluation, {
+  metricSetId: "metrics:fielded-evaluation",
+});
+if (
+  !isTextCorpusMetricEnvelopePayloadV1(evaluationMetricPayload) ||
+  evaluationMetricPayload.metrics.find((entry) => entry.metricId === "retrieval-evaluation.ndcg-at-k")?.value !==
+    2 / 3
+) {
+  throw new Error("retrieval evaluation metric payload should expose summary metrics");
+}
+
 let duplicateQrelsDocRejected = false;
 try {
   evaluateTextCorpusRetrieval(bm25fResult, {
@@ -1102,6 +1128,57 @@ const missingQuote = groundTextCorpusQuote(fieldedScoringCollection, {
 });
 if (missingQuote.status !== "not-found" || missingQuote.matches.length !== 0) {
   throw new Error("quote grounding should expose not-found controls");
+}
+
+const metricPayloads = [
+  concordance,
+  frequency,
+  ngrams,
+  cooccurrences,
+  collocates,
+  pairwiseRelations,
+  scoringResult,
+  retrievalIndex,
+  artifact,
+  retrievalResult,
+  fieldedEvaluation,
+  citationWindows,
+  groundedQuote,
+].map((corpusArtifact) => exportTextCorpusMetricEnvelopePayloadV1(corpusArtifact));
+
+if (!metricPayloads.every((payload) => isTextCorpusMetricEnvelopePayloadV1(payload))) {
+  throw new Error("metric payload export should cover all declared textcorpus artifact families");
+}
+
+const metricSetIds = metricPayloads.map((payload) => payload.metricSetId).join(",");
+if (
+  metricSetIds !==
+  "textcorpus.concordance:corpus:foundation:beta,textcorpus.frequency:corpus:foundation,textcorpus.ngram:corpus:foundation:n-2,textcorpus.cooccurrence:corpus:foundation:w-1,textcorpus.collocate:corpus:foundation:beta:w-1,textcorpus.pairwise:corpus:relations,textcorpus.scoring:corpus-tfidf-bm25-smoke,textcorpus.retrieval-index:corpus-tfidf-bm25-smoke:bm25.okapi.k1-1.5.b-0.75,textcorpus.retrieval-index:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded,textcorpus.retrieval-result:corpus-tfidf-bm25-smoke:bm25.okapi.k1-1.5.b-0.75,textcorpus.retrieval-evaluation:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded:k-3,textcorpus.citation-windows:corpus-retrieval-fielded-smoke,textcorpus.quote-grounding:corpus-retrieval-fielded-smoke:doc-a"
+) {
+  throw new Error(`metric payload export should use deterministic default metric set ids: ${metricSetIds}`);
+}
+
+let invalidMetricArtifactRejected = false;
+try {
+  exportTextCorpusMetricEnvelopePayloadV1({ corpusId: "bad" } as never);
+} catch (error) {
+  invalidMetricArtifactRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus metric envelope payload requires a known TextCorpus artifact";
+}
+if (!invalidMetricArtifactRejected) {
+  throw new Error("metric payload export should reject unknown artifacts");
+}
+
+let emptyMetricSetRejected = false;
+try {
+  exportTextCorpusMetricEnvelopePayloadV1(frequency, { metricSetId: "" });
+} catch (error) {
+  emptyMetricSetRejected =
+    error instanceof TypeError && error.message === "textcorpus metricSetId must be a non-empty string";
+}
+if (!emptyMetricSetRejected) {
+  throw new Error("metric payload export should reject empty metric set ids");
 }
 
 let duplicateFieldRejected = false;

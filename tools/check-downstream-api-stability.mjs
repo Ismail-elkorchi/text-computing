@@ -271,6 +271,36 @@ async function assertBuiltPackageSmoke() {
     { corpusId: "corpus:downstream-api" },
   );
   expect(textcorpus.isTextCorpusCollectionV1(collection), "textcorpus should consume textdoc documents through package APIs.");
+  const corpusFrequency = textcorpus.computeTextCorpusFrequencies(collection);
+  const corpusMetricPayload = textcorpus.exportTextCorpusMetricEnvelopePayloadV1(corpusFrequency, {
+    metricSetId: "metrics:downstream-api-frequency",
+  });
+  expect(
+    textcorpus.isTextCorpusMetricEnvelopePayloadV1(corpusMetricPayload),
+    "textcorpus should export corpus metric payloads through package APIs.",
+  );
+  const corpusMetricEnvelope = {
+    schemaId: textprotocol.textProtocolCorpusMetricEnvelopeSchemaId,
+    schemaVersion: textprotocol.textProtocolSchemaVersion,
+    producer: { package: "@ismail-elkorchi/textcorpus", version: "0.1.0" },
+    payload: corpusMetricPayload,
+    provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+    limitations: ["Downstream API stability corpus metric smoke."],
+  };
+  const corpusMetricTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    corpusMetricEnvelope,
+    { expectedFamily: "corpus-metric-envelope", requireProvenance: true, requireLimitations: true },
+  );
+  const parsedCorpusMetricEnvelope = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(corpusMetricTransport);
+  expect(
+    textprotocol.isTextProtocolCorpusMetricEnvelopeV1(parsedCorpusMetricEnvelope),
+    "textprotocol should serialize and parse textcorpus metric envelopes through package APIs.",
+  );
+  const corpusMetricInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedCorpusMetricEnvelope);
+  expect(
+    corpusMetricInspection.family === "corpus-metric-envelope" && corpusMetricInspection.compatibilityOk,
+    "textlab should inspect textcorpus metric envelopes through package APIs.",
+  );
   const inspection = textlab.inspectTextdocAnnotations(document);
   expect(inspection.layerCount === 1, "textlab should inspect textdoc documents through package APIs.");
 
