@@ -56,6 +56,7 @@
     "stopwords": true,
     "rules": true,
     "lexicons": true,
+    "gazetteers": true,
     "tagsets": true,
     "morphology": true,
     "benchmarks": true
@@ -69,6 +70,9 @@
     ],
     "lexicons": [
       "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"
+    ],
+    "gazetteers": [
+      "fixtures/textpack/resources/textpack-en-core/gazetteer.en.core.tsv"
     ],
     "tagsets": [
       "fixtures/textpack/resources/textpack-en-core/tagset.ud-lite.tsv"
@@ -90,6 +94,9 @@
     "lexicons": [
       "lexicon-en-core"
     ],
+    "gazetteers": [
+      "gazetteer-en-core"
+    ],
     "tagsets": [
       "tagset-ud-lite"
     ],
@@ -105,6 +112,6 @@
     "overlayPrecedence": 10
   },
   "limitations": [
-    "Repository fixture pack; not a broad language resource."
+    "Repository fixture pack for deterministic package workflows; not a comprehensive English lexicon or named-entity catalog."
   ]
 }

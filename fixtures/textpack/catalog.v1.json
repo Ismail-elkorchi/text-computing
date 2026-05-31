@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@ismail-elkorchi/textpack",
   "packCount": 3,
-  "resourceCount": 13,
+  "resourceCount": 14,
   "languages": [
     "en",
     "fr"
@@ -24,9 +24,10 @@
         "en"
       ],
       "profiles": [],
-      "resourceCount": 6,
+      "resourceCount": 7,
       "resourceFamilies": [
         "benchmarks",
+        "gazetteers",
         "lexicons",
         "morphology",
         "rules",
@@ -36,6 +37,7 @@
       "resourceIds": [
         "abbrev-en-core",
         "benchmark-en-smoke",
+        "gazetteer-en-core",
         "lexicon-en-core",
         "morph-en-core",
         "stopwords-en-core",
@@ -70,7 +72,7 @@
         ]
       },
       "limitations": [
-        "Repository fixture pack; not a broad language resource."
+        "Repository fixture pack for deterministic package workflows; not a comprehensive English lexicon or named-entity catalog."
       ]
     },
     {
@@ -193,8 +195,9 @@
     },
     {
       "family": "gazetteers",
-      "resourceCount": 1,
+      "resourceCount": 2,
       "resourceIds": [
+        "gazetteer-en-core",
         "gazetteer-en-legal"
       ]
     },

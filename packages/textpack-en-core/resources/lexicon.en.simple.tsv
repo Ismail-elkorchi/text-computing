@@ -1,2 +1,99 @@
 host	lemma=host	pos=VERB
 corpora	lemma=corpus	pos=NOUN
+Acme	lemma=Acme	pos=PROPN
+Alice	lemma=Alice	pos=PROPN
+Berlin	lemma=Berlin	pos=PROPN
+Bob	lemma=Bob	pos=PROPN
+London	lemma=London	pos=PROPN
+Paris	lemma=Paris	pos=PROPN
+York	lemma=York	pos=PROPN
+account	lemma=account	pos=NOUN	Number=Sing
+accounts	lemma=account	pos=NOUN	Number=Plur
+active	lemma=active	pos=ADJ
+analysis	lemma=analysis	pos=NOUN	Number=Sing
+analyses	lemma=analysis	pos=NOUN	Number=Plur
+analyst	lemma=analyst	pos=NOUN	Number=Sing
+analysts	lemma=analyst	pos=NOUN	Number=Plur
+annotation	lemma=annotation	pos=NOUN	Number=Sing
+annotations	lemma=annotation	pos=NOUN	Number=Plur
+artifact	lemma=artifact	pos=NOUN	Number=Sing
+artifacts	lemma=artifact	pos=NOUN	Number=Plur
+audit	lemma=audit	pos=VERB	VerbForm=Inf
+audited	lemma=audit	pos=VERB	Tense=Past	VerbForm=Fin
+auditing	lemma=audit	pos=VERB	VerbForm=Ger
+audits	lemma=audit	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+benchmark	lemma=benchmark	pos=NOUN	Number=Sing
+benchmarks	lemma=benchmark	pos=NOUN	Number=Plur
+build	lemma=build	pos=VERB	VerbForm=Inf
+builds	lemma=build	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+built	lemma=build	pos=VERB	Tense=Past	VerbForm=Fin
+cache	lemma=cache	pos=NOUN	Number=Sing
+caches	lemma=cache	pos=NOUN	Number=Plur
+catalog	lemma=catalog	pos=NOUN	Number=Sing
+catalogs	lemma=catalog	pos=NOUN	Number=Plur
+city	lemma=city	pos=NOUN	Number=Sing
+cities	lemma=city	pos=NOUN	Number=Plur
+corpus	lemma=corpus	pos=NOUN	Number=Sing
+create	lemma=create	pos=VERB	VerbForm=Inf
+created	lemma=create	pos=VERB	Tense=Past	VerbForm=Fin
+creates	lemma=create	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+creating	lemma=create	pos=VERB	VerbForm=Ger
+deterministic	lemma=deterministic	pos=ADJ
+document	lemma=document	pos=NOUN	Number=Sing
+documents	lemma=document	pos=NOUN	Number=Plur
+entry	lemma=entry	pos=NOUN	Number=Sing
+entries	lemma=entry	pos=NOUN	Number=Plur
+example	lemma=example	pos=NOUN	Number=Sing
+examples	lemma=example	pos=NOUN	Number=Plur
+feature	lemma=feature	pos=NOUN	Number=Sing
+features	lemma=feature	pos=NOUN	Number=Plur
+fixture	lemma=fixture	pos=NOUN	Number=Sing
+fixtures	lemma=fixture	pos=NOUN	Number=Plur
+graph	lemma=graph	pos=NOUN	Number=Sing
+graphs	lemma=graph	pos=NOUN	Number=Plur
+hosts	lemma=host	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+index	lemma=index	pos=NOUN	Number=Sing
+indexes	lemma=index	pos=NOUN	Number=Plur
+layer	lemma=layer	pos=NOUN	Number=Sing
+layers	lemma=layer	pos=NOUN	Number=Plur
+load	lemma=load	pos=VERB	VerbForm=Inf
+loaded	lemma=load	pos=VERB	Tense=Past	VerbForm=Fin
+loading	lemma=load	pos=VERB	VerbForm=Ger
+loads	lemma=load	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+package	lemma=package	pos=NOUN	Number=Sing
+packages	lemma=package	pos=NOUN	Number=Plur
+pipeline	lemma=pipeline	pos=NOUN	Number=Sing
+pipelines	lemma=pipeline	pos=NOUN	Number=Plur
+private	lemma=private	pos=ADJ
+processor	lemma=processor	pos=NOUN	Number=Sing
+processors	lemma=processor	pos=NOUN	Number=Plur
+public	lemma=public	pos=ADJ
+query	lemma=query	pos=VERB	VerbForm=Inf
+queried	lemma=query	pos=VERB	Tense=Past	VerbForm=Fin
+queries	lemma=query	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+querying	lemma=query	pos=VERB	VerbForm=Ger
+reference	lemma=reference	pos=NOUN	Number=Sing
+references	lemma=reference	pos=NOUN	Number=Plur
+resource	lemma=resource	pos=NOUN	Number=Sing
+resources	lemma=resource	pos=NOUN	Number=Plur
+run	lemma=run	pos=VERB	VerbForm=Inf
+running	lemma=run	pos=VERB	VerbForm=Ger
+runs	lemma=run	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+schema	lemma=schema	pos=NOUN	Number=Sing
+schemas	lemma=schema	pos=NOUN	Number=Plur
+sign	lemma=sign	pos=VERB	VerbForm=Inf
+signed	lemma=sign	pos=VERB	Tense=Past	VerbForm=Fin
+signing	lemma=sign	pos=VERB	VerbForm=Ger
+signs	lemma=sign	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+span	lemma=span	pos=NOUN	Number=Sing
+spans	lemma=span	pos=NOUN	Number=Plur
+token	lemma=token	pos=NOUN	Number=Sing
+tokens	lemma=token	pos=NOUN	Number=Plur
+trace	lemma=trace	pos=NOUN	Number=Sing
+traces	lemma=trace	pos=NOUN	Number=Plur
+validate	lemma=validate	pos=VERB	VerbForm=Inf
+validated	lemma=validate	pos=VERB	Tense=Past	VerbForm=Fin
+validates	lemma=validate	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+validating	lemma=validate	pos=VERB	VerbForm=Ger
+workflow	lemma=workflow	pos=NOUN	Number=Sing
+workflows	lemma=workflow	pos=NOUN	Number=Plur

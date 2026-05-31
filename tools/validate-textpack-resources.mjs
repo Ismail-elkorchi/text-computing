@@ -247,7 +247,7 @@ const catalog = await readJson(catalogPath);
 expect(validateCatalog(catalog), `${catalogPath} failed schemas/textpack-catalog-v1.schema.json`, validateCatalog.errors);
 expect(JSON.stringify(catalog) === JSON.stringify(generatedCatalog), `${catalogPath} is stale; run node tools/validate-textpack-resources.mjs --write.`);
 expect(catalog.packCount === 3, "Textpack catalog must include all committed reference packs.", catalog);
-expect(catalog.resourceCount === 13, "Textpack catalog must include the committed reference resources.", catalog);
+expect(catalog.resourceCount === 14, "Textpack catalog must include the committed reference resources.", catalog);
 expect(catalog.reviewStates.join(",") === "candidate,reference", "Textpack catalog must preserve review-state coverage.", catalog.reviewStates);
 expect(registry.languages.join(",") === "en,fr", "Registry languages must remain deterministic and include committed multilingual fixtures.", registry.languages);
 expect(
@@ -323,6 +323,7 @@ expect(
 
 const profileMismatchLookup = resolveTextPackResources(validManifests, {
   kind: "gazetteer",
+  resourceId: "gazetteer-en-legal",
   language: "en",
   profile: "medical",
 });

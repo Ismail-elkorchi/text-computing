@@ -61,10 +61,10 @@ const ruleResources = loaded.resources.filter(({ resource }) =>
 );
 const processor = createTextPackRulesPipelineProcessor({
   resources: ruleResources,
-  requiredResourceIds: ["stopwords-en-core", "lexicon-en-core", "abbrev-en-core"],
+  requiredResourceIds: ["stopwords-en-core", "lexicon-en-core", "gazetteer-en-core", "abbrev-en-core"],
 });
 
-const created = createTextDocDocumentFromTextSync("Dr. the host signs.", {
+const created = createTextDocDocumentFromTextSync("Dr. Alice audits Acme Corp in Paris.", {
   documentId: "example:textrules-textpack-consumer",
   sourceId: "example:textrules-textpack-consumer",
 });
