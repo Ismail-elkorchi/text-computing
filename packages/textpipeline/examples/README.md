@@ -1,4 +1,7 @@
 # @ismail-elkorchi/textpipeline examples
 
-This directory will contain runnable examples that compose `TextDocDocumentV1` inputs with
-deterministic processor descriptors and serialized `textpipeline-trace-v1` outputs.
+Runnable repository examples:
+
+- [`../../../examples/textpipeline-batch-report-consumer.mjs`](../../../examples/textpipeline-batch-report-consumer.mjs)
+  runs complete and partial document batches, then prints deterministic batch reports with per-document
+  completion state and trace sizes.
