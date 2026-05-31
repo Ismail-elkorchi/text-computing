@@ -47,6 +47,13 @@ the full annotation object. `applyTextDocAnnotationBundlePayloadV1()` restores t
 existing document skeleton and rejects duplicate annotation ids, layer/kind mismatches, document or
 revision mismatch, and representative-target drift.
 
+`exportTextDocDocumentBundlePayloadV1()` exports one or more validated `TextDocDocumentV1` records
+as the payload shape used by the `textprotocol` document-bundle schema family.
+`importTextDocDocumentBundlePayloadV1()` imports that payload shape back into validated textdoc
+documents and rejects empty payloads, malformed document entries, invalid documents, and duplicate
+document revisions. The helpers do not add a `textprotocol` dependency to `textdoc`; applications can
+wrap the payload with `textprotocol` transport helpers when exchange envelopes are needed.
+
 ## Extension annotations
 
 Core annotation kinds are reserved for cross-package semantics that this package can validate without
@@ -78,3 +85,9 @@ do not implement dependency parsing or broad Universal Dependencies treebank sup
 
 [`toTextDocDocumentV1`](./src/index.ts) converts the earlier token/sentence annotation set into the
 document model without widening `@ismail-elkorchi/textfacts`.
+
+## Runnable examples
+
+- [`../../examples/textdoc-document-bundle-consumer.mjs`](../../examples/textdoc-document-bundle-consumer.mjs)
+  exports textdoc documents as a document-bundle payload, wraps the payload in textprotocol
+  schema-family JSON transport, and imports the payload back through textdoc.

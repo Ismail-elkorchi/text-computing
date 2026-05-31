@@ -3,5 +3,8 @@
 Curated structural examples for the document annotation model live under
 [`../../../fixtures/textdoc/`](../../../fixtures/textdoc/).
 
-This package directory remains reserved for runnable examples after the repository-level document
-contract is exercised by multiple task packages.
+Runnable repository examples:
+
+- [`../../../examples/textdoc-document-bundle-consumer.mjs`](../../../examples/textdoc-document-bundle-consumer.mjs)
+  exports textdoc documents as a document-bundle payload, wraps the payload in textprotocol
+  schema-family JSON transport, and imports the payload back through textdoc.
