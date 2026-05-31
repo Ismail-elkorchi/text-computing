@@ -21,6 +21,7 @@ import {
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
   analyzeDependencyParser,
+  compileTextRulesFromTextPackResources,
   compileTextRulesRuleBundle,
   createCoreferenceConformanceReport,
   createCoreferenceResultEnvelope,
@@ -42,6 +43,7 @@ import {
   packageName,
   parseTextRulesRuleBundle,
   rewriteTextRulesTokenTexts,
+  runTextPackRulesOverTextDoc,
   runTextRules,
   textRulesTokenSpansFromTextDoc,
   tokenizeTextRulesFixtureText,
@@ -489,14 +491,22 @@ const textpackEnCoreManifest = {
   targets: { languages: ["en"], scripts: ["Latn"] },
   engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
   externalData: { unicode: "17.0.0" },
-  capabilities: { lexicons: true },
-  resources: { lexicons: ["fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"] },
-  provides: { lexicons: ["lexicon-en-core"] },
+  capabilities: { stopwords: true, lexicons: true, rules: true },
+  resources: {
+    stopwords: ["fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt"],
+    lexicons: ["fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"],
+    rules: ["fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt"],
+  },
+  provides: {
+    stopwords: ["stopwords-en-core"],
+    lexicons: ["lexicon-en-core"],
+    rules: ["abbrev-en-core"],
+  },
   entrypoints: {
     manifest: "fixtures/textpack/manifests/textpack-en-core.json",
   },
   licenses: { code: ["MIT"], data: ["CC0-1.0"] },
-  provenance: { sources: ["repo:fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"], generated: false },
+  provenance: { sources: ["repo:fixtures/textpack/resources/textpack-en-core"], generated: false },
   tests: {
     smoke: ["fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv"],
     negative: ["negative:no-hidden-canonicalizer"],
@@ -531,8 +541,10 @@ const textpackEnLegalManifest = {
   composition: { overlayPrecedence: 50 },
 } as never;
 const textpackContent = {
+  "fixtures/textpack/resources/textpack-en-core/stopwords.en.basic.txt": "a\nan\nthe\nand\n",
   "fixtures/textpack/resources/textpack-en-core/lexicon.en.simple.tsv":
     "host\tlemma=host\tpos=VERB\ncorpora\tlemma=corpus\tpos=NOUN\n",
+  "fixtures/textpack/resources/textpack-en-core/abbrev.en.common.txt": "Dr.\nMr.\nMs.\n",
   "fixtures/textpack/resources/textpack-en-legal/gazetteer.en.legal.tsv":
     "Supreme Court\tORG\nNew York\tGPE\n",
 };
@@ -698,6 +710,237 @@ const loadedEntityTexts = loadedNerResult.document.layers
   .join(",");
 if (loadedEntityTexts !== "Supreme Court") {
   throw new Error("resource-backed gazetteer conversion should drive NER output for supported labels");
+}
+
+const loadedCoreTextPackRules = loadTextPackResources(
+  [textpackEnCoreManifest],
+  { language: "en" },
+  textpackContent,
+);
+const compiledTextPackRules = compileTextRulesFromTextPackResources([
+  ...loadedCoreTextPackRules.resources,
+  ...loadedGazetteer.resources,
+], {
+  requiredResourceIds: ["stopwords-en-core", "lexicon-en-core", "gazetteer-en-legal", "abbrev-en-core"],
+});
+if (
+  loadedCoreTextPackRules.diagnostics.length !== 0 ||
+  loadedGazetteer.diagnostics.length !== 0 ||
+  compiledTextPackRules.diagnostics.some((diagnostic) => diagnostic.severity === "error")
+) {
+  throw new Error("textpack-backed rules should compile loaded stopword, lexicon, gazetteer, and rule resources");
+}
+
+const packBackedTextdoc: TextDocDocumentV1 = {
+  schemaVersion: 1,
+  documentId: "textrules:textpack-backed-rules",
+  revision: "tokens-from-textdoc",
+  textLengthCU: 33,
+  text: "Dr. the host heard Supreme Court.",
+  source: { id: "textrules:textpack-backed-rules" },
+  units: { text: "utf16-code-unit" },
+  views: [
+    { id: "source-view", kind: "raw" },
+    {
+      id: "analysis-view",
+      kind: "task",
+      parentViewId: "source-view",
+      spanMapIds: ["span-map-source-analysis"],
+    },
+  ],
+  spanMaps: [
+    {
+      id: "span-map-source-analysis",
+      sourceViewId: "source-view",
+      targetViewId: "analysis-view",
+      lifecycle: { state: "active" },
+      segments: [
+        {
+          source: { startCU: 0, endCU: 33 },
+          target: { startCU: 0, endCU: 33 },
+          kind: "unchanged",
+          reversible: true,
+        },
+      ],
+    },
+  ],
+  layers: [
+    {
+      id: "tokens",
+      kind: "token",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "pack-token-1",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 3 }],
+          text: "Dr.",
+        },
+        {
+          id: "pack-token-2",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 4, endCU: 7 }],
+          text: "the",
+        },
+        {
+          id: "pack-token-3",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 8, endCU: 12 }],
+          text: "host",
+        },
+        {
+          id: "pack-token-4",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 13, endCU: 18 }],
+          text: "heard",
+        },
+        {
+          id: "pack-token-5",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 19, endCU: 26 }],
+          text: "Supreme",
+        },
+        {
+          id: "pack-token-6",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 27, endCU: 32 }],
+          text: "Court",
+        },
+        {
+          id: "pack-token-7",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 32, endCU: 33 }],
+          text: ".",
+        },
+      ],
+    },
+  ],
+};
+const packBackedRun = runTextPackRulesOverTextDoc({
+  document: packBackedTextdoc,
+  compiled: compiledTextPackRules.compiled,
+  tokenLayerId: "tokens",
+});
+const packBackedSummary = packBackedRun.annotations
+  .map((annotation) => `${annotation.extensionId}:${String(annotation.data?.value)}`)
+  .join(",");
+if (
+  packBackedSummary !==
+    "textrules:textpack-rule:Dr.,textrules:textpack-stopword:the,textrules:textpack-lexicon:host,textrules:textpack-gazetteer:Supreme Court"
+) {
+  throw new Error("pack-backed rules should annotate rule-list, stopword, lexicon, and gazetteer entries over textdoc tokens");
+}
+const packBackedStopword = packBackedRun.annotations.find(
+  (annotation) => annotation.extensionId === "textrules:textpack-stopword",
+);
+if (
+  packBackedStopword?.confidence?.value !== 1 ||
+  packBackedStopword.confidence.method !== "textrules.textpack.exact-match.v1" ||
+  packBackedStopword.data?.packId !== "pack:en-core" ||
+  packBackedStopword.data.resourceId !== "stopwords-en-core" ||
+  packBackedStopword.data.line !== 3 ||
+  !packBackedStopword.provenance?.references?.some(
+    (reference) => reference.kind === "textpack-entry" && reference.id === "pack:en-core:stopwords-en-core:3",
+  )
+) {
+  throw new Error("pack-backed stopword annotation should carry explicit deterministic provenance");
+}
+const packBackedLexicon = packBackedRun.annotations.find(
+  (annotation) => annotation.extensionId === "textrules:textpack-lexicon",
+);
+const packBackedLexiconAttributes = packBackedLexicon?.data?.attributes as Record<string, string> | undefined;
+if (
+  !packBackedLexicon ||
+  packBackedLexiconAttributes?.lemma !== "host" ||
+  packBackedLexiconAttributes.pos !== "VERB"
+) {
+  throw new Error("pack-backed lexicon annotation should preserve entry attributes");
+}
+const packBackedGazetteer = packBackedRun.annotations.find(
+  (annotation) => annotation.extensionId === "textrules:textpack-gazetteer",
+);
+if (
+  packBackedGazetteer?.data?.label !== "ORG" ||
+  packBackedGazetteer.targets[0]?.kind !== "span" ||
+  packBackedGazetteer.targets[0].startCU !== 19 ||
+  packBackedGazetteer.targets[0].endCU !== 32
+) {
+  throw new Error("pack-backed gazetteer annotation should preserve label and document span");
+}
+const missingTextPackRuleResource = compileTextRulesFromTextPackResources([], {
+  requiredResourceIds: ["stopwords-en-core"],
+});
+if (
+  !missingTextPackRuleResource.diagnostics.some(
+    (diagnostic) => diagnostic.code === "missing-textpack-resource" && diagnostic.severity === "error",
+  )
+) {
+  throw new Error("pack-backed rule compilation should reject missing required resources");
+}
+let noRawTextFallbackRejected = false;
+try {
+  runTextPackRulesOverTextDoc({
+    document: { ...packBackedTextdoc, layers: [] },
+    compiled: compiledTextPackRules.compiled,
+  });
+} catch (error) {
+  noRawTextFallbackRejected = error instanceof TypeError && error.message.includes("token layer");
+}
+if (!noRawTextFallbackRejected) {
+  throw new Error("pack-backed rule execution should require textdoc token layers instead of tokenizing raw text");
+}
+const exactCaseDocument: TextDocDocumentV1 = {
+  ...packBackedTextdoc,
+  documentId: "textrules:textpack-exact-case",
+  textLengthCU: 3,
+  text: "The",
+  layers: [
+    {
+      id: "tokens",
+      kind: "token",
+      viewId: "analysis-view",
+      annotations: [
+        {
+          id: "case-token-1",
+          kind: "token",
+          tokenKind: "lexical-token",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis-view", startCU: 0, endCU: 3 }],
+          text: "The",
+        },
+      ],
+    },
+  ],
+};
+if (
+  runTextPackRulesOverTextDoc({
+    document: exactCaseDocument,
+    compiled: compiledTextPackRules.compiled,
+  }).annotations.length !== 0
+) {
+  throw new Error("pack-backed rule execution should not apply hidden lowercase or English fallback behavior");
+}
+const packBackedRunAgain = runTextPackRulesOverTextDoc({
+  document: packBackedTextdoc,
+  compiled: compiledTextPackRules.compiled,
+  tokenLayerId: "tokens",
+});
+if (JSON.stringify(packBackedRunAgain.annotations) !== JSON.stringify(packBackedRun.annotations)) {
+  throw new Error("pack-backed rule execution should produce deterministic output ordering");
 }
 
 const englishResourceData: TextRulesLexiconResourceData = {
