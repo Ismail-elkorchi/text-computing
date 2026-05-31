@@ -197,6 +197,23 @@ async function assertBuiltPackageSmoke() {
   const traceInspection = textlab.inspectTextPipelineTrace(pipelineRun.trace);
   expect(traceInspection.entryCount === 1, "textlab should inspect textpipeline traces through package APIs.");
   const batchReport = textpipeline.createTextPipelineBatchRunReport([pipelineRun]);
+  expect(textpipeline.isTextPipelineBatchRunReportV1(batchReport), "textpipeline should validate batch reports through package APIs.");
+  const batchReportEnvelope = textpipeline.createTextPipelineBatchRunReportEnvelope(
+    batchReport,
+    "0.1.0",
+    {
+      scopeBoundary: "Downstream API stability batch report smoke.",
+      limitations: ["The smoke verifies built package exchange shape."],
+    },
+  );
+  expect(
+    textpipeline.isTextPipelineBatchRunReportEnvelopeV1(batchReportEnvelope) &&
+      textprotocol.isTextProtocolResultEnvelopeForPayloadKind(
+        batchReportEnvelope,
+        textprotocol.textProtocolPayloadKindTextpipelineBatchRunReportV1,
+      ),
+    "textpipeline should wrap batch reports in registered textprotocol envelopes.",
+  );
   const batchReportInspection = textlab.inspectTextPipelineBatchReport(batchReport);
   expect(
     batchReportInspection.documentCount === 1 && batchReportInspection.completeCount === 1,

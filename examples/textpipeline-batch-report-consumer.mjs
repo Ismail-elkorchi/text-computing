@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { createTextDocDocumentFromTextSync } from "@ismail-elkorchi/textdoc";
 import {
+  createTextPipelineBatchRunReportEnvelope,
   runTextPipelineBatchAsyncWithReport,
   runTextPipelineBatchWithReport,
 } from "@ismail-elkorchi/textpipeline";
@@ -109,7 +110,18 @@ const partialBatch = await runTextPipelineBatchAsyncWithReport(
   { errorPolicy: "continue" },
 );
 
+const completeEnvelope = createTextPipelineBatchRunReportEnvelope(completeBatch.report, "0.1.0", {
+  scopeBoundary: "Example batch report envelope.",
+  limitations: ["The example demonstrates local deterministic batch report exchange."],
+});
+const partialEnvelope = createTextPipelineBatchRunReportEnvelope(partialBatch.report, "0.1.0", {
+  scopeBoundary: "Example batch report envelope.",
+  limitations: ["The example demonstrates local deterministic partial batch report exchange."],
+});
+
 console.log(JSON.stringify({
   complete: completeBatch.report,
+  completeEnvelope,
   partial: partialBatch.report,
+  partialEnvelope,
 }, null, 2));

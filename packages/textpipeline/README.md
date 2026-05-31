@@ -15,7 +15,7 @@ Current scope:
 - failed-processor and blocked-dependent trace entries when the caller selects continue-on-error behavior;
 - explicit processor descriptors with dependency metadata;
 - deterministic ready-queue ordering by `processor.id`;
-- machine-readable execution traces and typed result-envelope helpers.
+- machine-readable execution traces, batch run reports, and typed result-envelope helpers.
 
 This package does not define remote orchestration, distributed scheduling, durable cache storage, or
 worker pools. Callers provide documents, processors, versioned context, cancellation signals, and

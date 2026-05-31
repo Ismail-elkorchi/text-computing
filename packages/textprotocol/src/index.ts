@@ -6,6 +6,8 @@ export const textProtocolResultEnvelopeJsonMediaType =
   "application/vnd.ismail-elkorchi.textprotocol.result-envelope.v1+json" as const;
 export const textProtocolPayloadKindTextdocDocumentV1 = "textdoc-document-v1" as const;
 export const textProtocolPayloadKindTextpipelineTraceV1 = "textpipeline-trace-v1" as const;
+export const textProtocolPayloadKindTextpipelineBatchRunReportV1 =
+  "textpipeline-batch-run-report-v1" as const;
 export const textProtocolPayloadKindTextconformanceReportV1 =
   "textconformance-report-v1" as const;
 export const textProtocolPayloadKindVerticalSliceResultV1 =
@@ -36,6 +38,7 @@ export type TextProtocolResultEnvelopeJsonMediaType =
 export type TextProtocolPayloadKind =
   | typeof textProtocolPayloadKindTextdocDocumentV1
   | typeof textProtocolPayloadKindTextpipelineTraceV1
+  | typeof textProtocolPayloadKindTextpipelineBatchRunReportV1
   | typeof textProtocolPayloadKindTextconformanceReportV1
   | typeof textProtocolPayloadKindVerticalSliceResultV1;
 export type TextProtocolSchemaVersion = typeof textProtocolSchemaVersion;
@@ -353,6 +356,14 @@ export const textProtocolPayloadKindRegistry: readonly TextProtocolPayloadKindDe
       "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-trace-v1.schema.json",
     schemaVersion: 1,
     description: "textpipeline deterministic processor trace v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextpipelineBatchRunReportV1,
+    ownerPackage: "@ismail-elkorchi/textpipeline",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-batch-run-report-v1.schema.json",
+    schemaVersion: 1,
+    description: "textpipeline deterministic batch run report v1 payload.",
   },
   {
     payloadKind: textProtocolPayloadKindTextconformanceReportV1,

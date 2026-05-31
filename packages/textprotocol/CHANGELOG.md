@@ -3,6 +3,7 @@
 ## Next
 
 - Add protocol schema-family descriptors, structural guards, repository schemas, and canonical JSON helper for document bundles, annotation bundles, evidence bundles, processor traces, corpus metrics, mapping-loss reports, and protocol errors.
+- Register the `textpipeline-batch-run-report-v1` payload kind for textpipeline batch report exchange.
 
 ## 0.1.0
 

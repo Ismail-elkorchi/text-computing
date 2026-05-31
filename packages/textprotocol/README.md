@@ -10,6 +10,7 @@ The package also defines a small registered payload-kind set for package interop
 
 - `textdoc-document-v1`
 - `textpipeline-trace-v1`
+- `textpipeline-batch-run-report-v1`
 - `textconformance-report-v1`
 - `public-vertical-slice-0.1-result-v1`
 
