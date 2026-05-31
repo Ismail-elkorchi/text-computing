@@ -2,6 +2,7 @@ import {
   documentSchemaVersion,
   textDocDocumentPayloadKind,
   type TextDocAnnotation,
+  type TextDocConfidence,
   type TextDocCoreferenceChainAnnotation,
   type TextDocCoreferenceMentionAnnotation,
   type TextDocDependencyAnnotation,
@@ -170,6 +171,7 @@ export interface TextRulesTokenSpan {
   readonly startCU: number;
   readonly endCU: number;
   readonly text: string;
+  readonly viewId?: string;
   readonly notes?: readonly string[];
 }
 
@@ -474,6 +476,60 @@ export interface TextRulesRunResult {
   readonly annotations: readonly TextDocExtensionAnnotation[];
   readonly diagnostics: readonly TextProtocolDiagnostic[];
   readonly rewrites: readonly TextRulesRewriteArtifact[];
+}
+
+export type TextRulesTextPackRuleKind = "stopword" | "lexicon" | "gazetteer" | "rule-list";
+
+export type TextRulesTextPackRuleDiagnosticCode =
+  | "missing-textpack-resource"
+  | "unsupported-textpack-resource-kind"
+  | "empty-textpack-resource";
+
+export interface TextRulesTextPackRuleDiagnostic {
+  readonly code: TextRulesTextPackRuleDiagnosticCode;
+  readonly severity: "error" | "warning";
+  readonly message: string;
+  readonly packId?: string;
+  readonly resourceId?: string;
+}
+
+export interface TextRulesTextPackRuleCompileOptions {
+  readonly requiredResourceIds?: readonly string[];
+}
+
+export interface TextRulesTextPackCompiledRule {
+  readonly ruleId: string;
+  readonly kind: TextRulesTextPackRuleKind;
+  readonly packId: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly resourceId: string;
+  readonly resourceKind: TextPackResolvedResource["kind"];
+  readonly resourceFamily: TextPackResolvedResource["family"];
+  readonly lookupKey: string;
+  readonly overlayPrecedence: number;
+  readonly line: number;
+  readonly value: string;
+  readonly label?: string;
+  readonly attributes: Readonly<Record<string, string>>;
+  readonly confidence: TextDocConfidence;
+}
+
+export interface TextRulesCompiledTextPackRules {
+  readonly schemaVersion: 1;
+  readonly compiledId: string;
+  readonly rules: readonly TextRulesTextPackCompiledRule[];
+}
+
+export interface TextRulesTextPackRuleCompilationResult {
+  readonly compiled: TextRulesCompiledTextPackRules;
+  readonly diagnostics: readonly TextRulesTextPackRuleDiagnostic[];
+}
+
+export interface TextRulesTextPackRunInput extends TextRulesTextDocTokenLayerOptions {
+  readonly document: TextDocDocumentV1;
+  readonly compiled: TextRulesCompiledTextPackRules;
+  readonly outputLayerId?: string;
 }
 
 interface TextRulesResolvedAnalysis extends TextRulesLexiconAnalysis {
@@ -923,6 +979,7 @@ function tokenLayerFromTextDoc(
 }
 
 function spanTargetForTextRulesToken(annotation: TextDocDocumentTokenAnnotation): {
+  readonly viewId: string;
   readonly startCU: number;
   readonly endCU: number;
 } {
@@ -931,6 +988,7 @@ function spanTargetForTextRulesToken(annotation: TextDocDocumentTokenAnnotation)
     throw new TypeError(`token annotation ${annotation.id} must target a span`);
   }
   return {
+    viewId: target.viewId,
     startCU: target.startCU,
     endCU: target.endCU,
   };
@@ -961,6 +1019,7 @@ export function textRulesTokenSpansFromTextDoc(
         tokenKind: "lexical-token" as const,
         startCU: span.startCU,
         endCU: span.endCU,
+        viewId: span.viewId,
         text: tokenTextFromTextDocAnnotation(document, annotation, span.startCU, span.endCU),
         ...(annotation.notes ? { notes: annotation.notes } : {}),
       };
@@ -1259,6 +1318,303 @@ function resourceReferences(rule: TextRulesRuleDeclarationV1): readonly TextDocR
 function ruleProvenance(rule: TextRulesRuleDeclarationV1): TextDocProvenance {
   return {
     references: uniqueReferences([...resourceReferences(rule), ruleReference(rule)]),
+  };
+}
+
+function textPackRuleKindForResource(
+  resource: TextPackResolvedResource,
+): TextRulesTextPackRuleKind | undefined {
+  if (resource.kind === "stopwords") return "stopword";
+  if (resource.kind === "lexicon") return "lexicon";
+  if (resource.kind === "gazetteer") return "gazetteer";
+  if (resource.kind === "rule") return "rule-list";
+  return undefined;
+}
+
+function textPackRuleResourceKey(rule: TextRulesTextPackCompiledRule): string {
+  return `${rule.packId}:${rule.resourceId}`;
+}
+
+function textPackRuleId(
+  resource: TextPackResolvedResource,
+  kind: TextRulesTextPackRuleKind,
+  line: number,
+): string {
+  return `textpack:${resource.packId}:${resource.resourceId}:line-${line}:${kind}`;
+}
+
+function compareTextPackRuleDiagnostics(
+  left: TextRulesTextPackRuleDiagnostic,
+  right: TextRulesTextPackRuleDiagnostic,
+): number {
+  return (
+    left.severity.localeCompare(right.severity) ||
+    left.code.localeCompare(right.code) ||
+    (left.packId ?? "").localeCompare(right.packId ?? "") ||
+    (left.resourceId ?? "").localeCompare(right.resourceId ?? "") ||
+    left.message.localeCompare(right.message)
+  );
+}
+
+function compareTextPackCompiledRules(
+  left: TextRulesTextPackCompiledRule,
+  right: TextRulesTextPackCompiledRule,
+): number {
+  return (
+    left.overlayPrecedence - right.overlayPrecedence ||
+    left.packId.localeCompare(right.packId) ||
+    left.resourceId.localeCompare(right.resourceId) ||
+    left.line - right.line ||
+    left.lookupKey.localeCompare(right.lookupKey) ||
+    left.value.localeCompare(right.value) ||
+    left.ruleId.localeCompare(right.ruleId)
+  );
+}
+
+export function compileTextRulesFromTextPackResources(
+  resources: readonly TextPackLoadedResource[],
+  options: TextRulesTextPackRuleCompileOptions = {},
+): TextRulesTextPackRuleCompilationResult {
+  const diagnostics: TextRulesTextPackRuleDiagnostic[] = [];
+  const compiledRules: TextRulesTextPackCompiledRule[] = [];
+  const availableResourceIds = new Set<string>();
+
+  for (const loaded of resources) {
+    availableResourceIds.add(loaded.resource.resourceId);
+    const kind = textPackRuleKindForResource(loaded.resource);
+    if (kind === undefined) {
+      diagnostics.push({
+        code: "unsupported-textpack-resource-kind",
+        severity: "warning",
+        packId: loaded.resource.packId,
+        resourceId: loaded.resource.resourceId,
+        message: `Resource ${loaded.resource.resourceId} has unsupported kind ${loaded.resource.kind} for textrules pack compilation.`,
+      });
+      continue;
+    }
+
+    if (loaded.entries.length === 0) {
+      diagnostics.push({
+        code: "empty-textpack-resource",
+        severity: "warning",
+        packId: loaded.resource.packId,
+        resourceId: loaded.resource.resourceId,
+        message: `Resource ${loaded.resource.resourceId} has no entries to compile.`,
+      });
+    }
+
+    for (const entry of loaded.entries) {
+      compiledRules.push({
+        ruleId: textPackRuleId(loaded.resource, kind, entry.line),
+        kind,
+        packId: loaded.resource.packId,
+        packageName: loaded.resource.packageName,
+        version: loaded.resource.version,
+        resourceId: loaded.resource.resourceId,
+        resourceKind: loaded.resource.kind,
+        resourceFamily: loaded.resource.family,
+        lookupKey: entry.lookupToken,
+        overlayPrecedence: loaded.resource.overlayPrecedence,
+        line: entry.line,
+        value: entry.value,
+        ...(entry.label ? { label: entry.label } : {}),
+        attributes: entry.attributes,
+        confidence: {
+          value: 1,
+          method: "textrules.textpack.exact-match.v1",
+        },
+      });
+    }
+  }
+
+  for (const resourceId of [...new Set(options.requiredResourceIds ?? [])].sort((left, right) =>
+    left.localeCompare(right),
+  )) {
+    if (availableResourceIds.has(resourceId)) continue;
+    diagnostics.push({
+      code: "missing-textpack-resource",
+      severity: "error",
+      resourceId,
+      message: `Required textpack resource ${resourceId} was not loaded.`,
+    });
+  }
+
+  const rules = compiledRules.sort(compareTextPackCompiledRules);
+  const compiledWithoutId = {
+    schemaVersion: 1,
+    rules,
+  } as const;
+  return {
+    compiled: {
+      ...compiledWithoutId,
+      compiledId: `textrules-textpack:${stableHash(stableJson(compiledWithoutId))}`,
+    },
+    diagnostics: diagnostics.sort(compareTextPackRuleDiagnostics),
+  };
+}
+
+interface TextRulesTextPackRuleMatch {
+  readonly rule: TextRulesTextPackCompiledRule;
+  readonly startTokenIndex: number;
+  readonly endTokenIndexExclusive: number;
+  readonly startCU: number;
+  readonly endCU: number;
+  readonly viewId: string;
+  readonly text: string;
+  readonly tokenIds: readonly string[];
+}
+
+interface TextRulesTextPackCandidateMatch extends Omit<TextRulesTextPackRuleMatch, "rule"> {}
+
+function textPackRuleCandidateText(
+  document: TextDocDocumentV1,
+  tokens: readonly TextRulesTokenSpan[],
+  startIndex: number,
+  endIndexExclusive: number,
+): string {
+  const first = tokens[startIndex];
+  const last = tokens[endIndexExclusive - 1];
+  if (first === undefined || last === undefined) return "";
+  if (document.text !== undefined) return document.text.slice(first.startCU, last.endCU);
+  return tokens.slice(startIndex, endIndexExclusive).map((token) => token.text).join(" ");
+}
+
+function indexTextPackRulesByValue(
+  rules: readonly TextRulesTextPackCompiledRule[],
+): ReadonlyMap<string, readonly TextRulesTextPackCompiledRule[]> {
+  const index = new Map<string, TextRulesTextPackCompiledRule[]>();
+  for (const rule of rules) {
+    const bucket = index.get(rule.value) ?? [];
+    bucket.push(rule);
+    index.set(rule.value, bucket);
+  }
+  for (const [value, bucket] of index.entries()) {
+    index.set(value, bucket.sort(compareTextPackCompiledRules));
+  }
+  return index;
+}
+
+function textPackCandidateMatches(
+  document: TextDocDocumentV1,
+  tokens: readonly TextRulesTokenSpan[],
+  maxCandidateLength: number,
+): readonly TextRulesTextPackCandidateMatch[] {
+  const matches: TextRulesTextPackCandidateMatch[] = [];
+  for (let startIndex = 0; startIndex < tokens.length; startIndex += 1) {
+    for (let endIndexExclusive = startIndex + 1; endIndexExclusive <= tokens.length; endIndexExclusive += 1) {
+      const first = tokens[startIndex];
+      const last = tokens[endIndexExclusive - 1];
+      if (first === undefined || last === undefined) continue;
+      const candidate = textPackRuleCandidateText(document, tokens, startIndex, endIndexExclusive);
+      if (candidate.length > maxCandidateLength) break;
+      matches.push({
+        startTokenIndex: startIndex,
+        endTokenIndexExclusive: endIndexExclusive,
+        startCU: first.startCU,
+        endCU: last.endCU,
+        viewId: first.viewId ?? "source-view",
+        text: candidate,
+        tokenIds: tokens.slice(startIndex, endIndexExclusive).map((token) => token.id),
+      });
+    }
+  }
+  return matches;
+}
+
+function compareTextPackRuleMatches(
+  left: TextRulesTextPackRuleMatch,
+  right: TextRulesTextPackRuleMatch,
+): number {
+  return (
+    left.startCU - right.startCU ||
+    right.endCU - left.endCU ||
+    left.rule.kind.localeCompare(right.rule.kind) ||
+    left.rule.packId.localeCompare(right.rule.packId) ||
+    left.rule.resourceId.localeCompare(right.rule.resourceId) ||
+    left.rule.line - right.rule.line ||
+    left.rule.ruleId.localeCompare(right.rule.ruleId)
+  );
+}
+
+function textPackRuleReferences(rule: TextRulesTextPackCompiledRule): readonly TextDocReferenceRef[] {
+  return uniqueReferences([
+    { kind: "textpack-pack", id: rule.packId },
+    { kind: "textpack-resource", id: textPackRuleResourceKey(rule) },
+    { kind: "textpack-entry", id: `${textPackRuleResourceKey(rule)}:${rule.line}` },
+    { kind: "textrules-rule", id: rule.ruleId },
+  ]);
+}
+
+function textPackRuleExtensionId(kind: TextRulesTextPackRuleKind): string {
+  if (kind === "stopword") return "textrules:textpack-stopword";
+  if (kind === "lexicon") return "textrules:textpack-lexicon";
+  if (kind === "gazetteer") return "textrules:textpack-gazetteer";
+  return "textrules:textpack-rule";
+}
+
+function textPackRuleAnnotationForMatch(
+  match: TextRulesTextPackRuleMatch,
+  index: number,
+): TextDocExtensionAnnotation {
+  const { rule } = match;
+  return {
+    id: `textrules:textpack:${rule.kind}:match-${index + 1}`,
+    kind: "extension",
+    extensionId: textPackRuleExtensionId(rule.kind),
+    lifecycle: { state: "active" },
+    targets: [{ kind: "span", viewId: match.viewId, startCU: match.startCU, endCU: match.endCU }],
+    confidence: rule.confidence,
+    provenance: {
+      references: textPackRuleReferences(rule),
+    },
+    data: {
+      kind: rule.kind,
+      packId: rule.packId,
+      resourceId: rule.resourceId,
+      ruleId: rule.ruleId,
+      line: rule.line,
+      value: rule.value,
+      matchedText: match.text,
+      tokenIds: match.tokenIds,
+      lookupKey: rule.lookupKey,
+      resourceKind: rule.resourceKind,
+      resourceFamily: rule.resourceFamily,
+      ...(rule.label ? { label: rule.label } : {}),
+      attributes: rule.attributes,
+    },
+  };
+}
+
+export function runTextPackRulesOverTextDoc(input: TextRulesTextPackRunInput): TextRulesRunResult {
+  const tokens = textRulesTokenSpansFromTextDoc(
+    input.document,
+    input.tokenLayerId === undefined ? {} : { tokenLayerId: input.tokenLayerId },
+  );
+  const rulesByValue = indexTextPackRulesByValue(input.compiled.rules);
+  const maxRuleValueLength = Math.max(0, ...input.compiled.rules.map((rule) => rule.value.length));
+  const matches = textPackCandidateMatches(input.document, tokens, maxRuleValueLength)
+    .flatMap((candidate) => (rulesByValue.get(candidate.text) ?? []).map((rule) => ({ ...candidate, rule })))
+    .sort(compareTextPackRuleMatches);
+  const annotations = matches.map((match, index) => textPackRuleAnnotationForMatch(match, index));
+  const viewId = tokens[0]?.viewId ?? input.document.views[0]?.id ?? "source-view";
+  const extensionLayer: TextDocLayer<TextDocExtensionAnnotation> = {
+    id: input.outputLayerId ?? "textrules:textpack-rule-outputs",
+    kind: "extension",
+    viewId,
+    annotations,
+    notes: [`Compiled textpack rules ${input.compiled.compiledId}`],
+  };
+  return {
+    document: {
+      ...input.document,
+      layers: [
+        ...input.document.layers.filter((layer) => layer.id !== extensionLayer.id),
+        ...(annotations.length === 0 ? [] : [extensionLayer]),
+      ],
+    },
+    annotations,
+    diagnostics: [],
+    rewrites: [],
   };
 }
 
