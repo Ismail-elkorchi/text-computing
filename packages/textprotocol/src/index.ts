@@ -4,6 +4,8 @@ export const resultEnvelopeSchemaId =
 export const resultEnvelopeSchemaVersion = 1 as const;
 export const textProtocolResultEnvelopeJsonMediaType =
   "application/vnd.ismail-elkorchi.textprotocol.result-envelope.v1+json" as const;
+export const textProtocolSchemaFamilyEnvelopeJsonMediaType =
+  "application/vnd.ismail-elkorchi.textprotocol.schema-family-envelope.v1+json" as const;
 export const textProtocolPayloadKindTextdocDocumentV1 = "textdoc-document-v1" as const;
 export const textProtocolPayloadKindTextpipelineTraceV1 = "textpipeline-trace-v1" as const;
 export const textProtocolPayloadKindTextpipelineBatchRunReportV1 =
@@ -35,6 +37,8 @@ export type TextProtocolResultEnvelopeSchemaId = typeof resultEnvelopeSchemaId;
 export type TextProtocolResultEnvelopeSchemaVersion = typeof resultEnvelopeSchemaVersion;
 export type TextProtocolResultEnvelopeJsonMediaType =
   typeof textProtocolResultEnvelopeJsonMediaType;
+export type TextProtocolSchemaFamilyEnvelopeJsonMediaType =
+  typeof textProtocolSchemaFamilyEnvelopeJsonMediaType;
 export type TextProtocolPayloadKind =
   | typeof textProtocolPayloadKindTextdocDocumentV1
   | typeof textProtocolPayloadKindTextpipelineTraceV1
@@ -153,6 +157,14 @@ export interface TextProtocolResultEnvelopeJsonTransportV1 {
   readonly body: string;
 }
 
+export interface TextProtocolSchemaFamilyEnvelopeJsonTransportV1 {
+  readonly mediaType: TextProtocolSchemaFamilyEnvelopeJsonMediaType;
+  readonly schemaId: TextProtocolSchemaId;
+  readonly schemaVersion: TextProtocolSchemaVersion;
+  readonly family: TextProtocolSchemaFamily;
+  readonly body: string;
+}
+
 export interface TextProtocolResultEnvelopeV1<
   TPayload = unknown,
   TPayloadKind extends string = string,
@@ -178,6 +190,10 @@ export interface TextProtocolFamilyEnvelopeV1<TPayload = unknown, TSchemaId exte
   readonly limitations?: readonly string[];
   readonly extensions?: Readonly<Record<string, unknown>>;
 }
+
+export type TextProtocolSchemaFamilyEnvelopeV1 =
+  | TextProtocolFamilyEnvelopeV1
+  | TextProtocolResultEnvelopeV1;
 
 export interface TextProtocolDocumentBundleDocumentV1 {
   readonly documentId: string;
@@ -1166,6 +1182,23 @@ export function isTextProtocolResultEnvelopeJsonTransportV1(
   );
 }
 
+export function isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(
+  value: unknown,
+): value is TextProtocolSchemaFamilyEnvelopeJsonTransportV1 {
+  if (
+    !isRecord(value) ||
+    value.mediaType !== textProtocolSchemaFamilyEnvelopeJsonMediaType ||
+    !isTextProtocolSchemaId(value.schemaId) ||
+    value.schemaVersion !== textProtocolSchemaVersion ||
+    !isTextProtocolSchemaFamily(value.family) ||
+    !isNonEmptyString(value.body)
+  ) {
+    return false;
+  }
+  const descriptor = getTextProtocolSchemaFamilyDescriptorBySchemaId(value.schemaId);
+  return descriptor !== undefined && descriptor.family === value.family;
+}
+
 export function checkTextProtocolResultEnvelopeCompatibility(
   value: unknown,
   options: TextProtocolEnvelopeCompatibilityOptions = {},
@@ -1347,4 +1380,59 @@ export function parseTextProtocolResultEnvelopeJson(
     );
   }
   return parsed;
+}
+
+export function serializeTextProtocolSchemaFamilyEnvelopeJson(
+  value: TextProtocolSchemaFamilyEnvelopeV1,
+  options: TextProtocolSchemaFamilyValidationOptions = {},
+): TextProtocolSchemaFamilyEnvelopeJsonTransportV1 {
+  const compatibility = checkTextProtocolSchemaFamilyEnvelope(value, options);
+  if (!compatibility.ok || compatibility.family === undefined || !isRecord(value)) {
+    throw new TypeError(
+      `Cannot serialize incompatible textprotocol schema-family envelope: ${compatibility.diagnostics
+        .map((entry) => entry.code)
+        .join(", ")}`,
+    );
+  }
+  const schemaId = value.schemaId;
+  if (!isTextProtocolSchemaId(schemaId)) {
+    throw new TypeError("Cannot serialize textprotocol schema-family envelope with unregistered schemaId");
+  }
+  return {
+    mediaType: textProtocolSchemaFamilyEnvelopeJsonMediaType,
+    schemaId,
+    schemaVersion: textProtocolSchemaVersion,
+    family: compatibility.family,
+    body: canonicalizeTextProtocolJson(value),
+  };
+}
+
+export function parseTextProtocolSchemaFamilyEnvelopeJson(
+  transport: TextProtocolSchemaFamilyEnvelopeJsonTransportV1,
+  options: TextProtocolSchemaFamilyValidationOptions = {},
+): TextProtocolSchemaFamilyEnvelopeV1 {
+  if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(transport)) {
+    throw new TypeError("textprotocol schema-family JSON transport wrapper is invalid");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(transport.body);
+  } catch (error) {
+    throw new TypeError(`textprotocol schema-family JSON body is invalid: ${String(error)}`);
+  }
+  if (!isRecord(parsed) || parsed.schemaId !== transport.schemaId) {
+    throw new TypeError("Parsed textprotocol schema-family envelope does not match transport schemaId");
+  }
+  const compatibility = checkTextProtocolSchemaFamilyEnvelope(parsed, {
+    ...options,
+    expectedFamily: options.expectedFamily ?? transport.family,
+  });
+  if (!compatibility.ok) {
+    throw new TypeError(
+      `Parsed textprotocol schema-family envelope is incompatible: ${compatibility.diagnostics
+        .map((entry) => entry.code)
+        .join(", ")}`,
+    );
+  }
+  return parsed as unknown as TextProtocolSchemaFamilyEnvelopeV1;
 }

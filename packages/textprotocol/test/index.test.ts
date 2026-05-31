@@ -18,12 +18,15 @@ import {
   isTextProtocolResultEnvelopeV1,
   isTextProtocolResultEnvelopeForPayloadKind,
   isTextProtocolSchemaFamily,
+  isTextProtocolSchemaFamilyEnvelopeJsonTransportV1,
   isTextProtocolSchemaId,
   negotiateTextProtocolResultEnvelopeVersion,
   packageName,
+  parseTextProtocolSchemaFamilyEnvelopeJson,
   parseTextProtocolResultEnvelopeJson,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  serializeTextProtocolSchemaFamilyEnvelopeJson,
   serializeTextProtocolResultEnvelopeJson,
   textProtocolAnnotationBundleSchemaId,
   textProtocolCorpusMetricEnvelopeSchemaId,
@@ -37,6 +40,7 @@ import {
   textProtocolProcessorTraceSchemaId,
   textProtocolProtocolErrorSchemaId,
   textProtocolResultEnvelopeJsonMediaType,
+  textProtocolSchemaFamilyEnvelopeJsonMediaType,
   textProtocolSchemaFamilyRegistry,
   textProtocolSchemaVersion,
 } from "../src/index.ts";
@@ -517,6 +521,90 @@ for (const requiredCode of [
   if (!invalidFamilyCodes.includes(requiredCode)) {
     throw new Error(`schema-family compatibility should report ${requiredCode}`);
   }
+}
+
+const documentBundleTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(documentBundle, {
+  expectedFamily: "document-bundle",
+  requireProvenance: true,
+  requireLimitations: true,
+});
+if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport)) {
+  throw new Error("schema-family JSON transport wrapper should satisfy the runtime guard");
+}
+if (
+  documentBundleTransport.mediaType !== textProtocolSchemaFamilyEnvelopeJsonMediaType ||
+  documentBundleTransport.family !== "document-bundle" ||
+  documentBundleTransport.schemaId !== textProtocolDocumentBundleSchemaId
+) {
+  throw new Error("schema-family JSON transport should preserve media type, family, and schema id");
+}
+const parsedDocumentBundle = parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport, {
+  requireProvenance: true,
+  requireLimitations: true,
+});
+if (!isTextProtocolDocumentBundleV1(parsedDocumentBundle)) {
+  throw new Error("schema-family JSON transport parse should preserve document bundle shape");
+}
+if (
+  documentBundleTransport.body !==
+  serializeTextProtocolSchemaFamilyEnvelopeJson(parsedDocumentBundle).body
+) {
+  throw new Error("schema-family JSON transport serialization should be deterministic after parse");
+}
+
+const protocolErrorTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(protocolError, {
+  expectedFamily: "protocol-error",
+});
+if (
+  parseTextProtocolSchemaFamilyEnvelopeJson(protocolErrorTransport).schemaId !==
+  textProtocolProtocolErrorSchemaId
+) {
+  throw new Error("schema-family JSON transport should support protocol-error envelopes");
+}
+
+try {
+  serializeTextProtocolSchemaFamilyEnvelopeJson(
+    {
+      ...documentBundle,
+      payload: Number.NaN,
+    },
+    {
+      expectedFamily: "document-bundle",
+    },
+  );
+  throw new Error("schema-family JSON transport should reject non-finite payload values");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
+}
+
+try {
+  parseTextProtocolSchemaFamilyEnvelopeJson({
+    ...documentBundleTransport,
+    schemaId: textProtocolAnnotationBundleSchemaId,
+  });
+  throw new Error("schema-family JSON transport should reject wrapper/body schema mismatch");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
+}
+
+try {
+  parseTextProtocolSchemaFamilyEnvelopeJson({
+    ...documentBundleTransport,
+    body: JSON.stringify({
+      ...documentBundle,
+      payload: {
+        documents: [
+          {
+            documentId: "doc:bad",
+            document: {},
+          },
+        ],
+      },
+    }),
+  });
+  throw new Error("schema-family JSON transport should reject parsed invalid payloads");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
 }
 
 void expectedPackageName;

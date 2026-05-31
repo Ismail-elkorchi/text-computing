@@ -45,7 +45,19 @@ The package also defines one deterministic JSON transport wrapper:
 - body: stable JSON serialization of a compatible result envelope.
 
 Use `serializeTextProtocolResultEnvelopeJson()` and `parseTextProtocolResultEnvelopeJson()` for this
-transport. Other wire transports are not standardized by this package.
+transport.
+
+The package also defines a deterministic JSON transport wrapper for registered schema-family
+envelopes:
+
+- media type: `application/vnd.ismail-elkorchi.textprotocol.schema-family-envelope.v1+json`;
+- wrapper fields: `mediaType`, `schemaId`, `schemaVersion`, `family`, and `body`;
+- body: stable JSON serialization of a compatible registered schema-family envelope.
+
+Use `serializeTextProtocolSchemaFamilyEnvelopeJson()` and
+`parseTextProtocolSchemaFamilyEnvelopeJson()` for document bundles, annotation bundles, evidence
+bundles, processor traces, corpus metric envelopes, mapping-loss reports, protocol errors, and other
+registered schema-family envelopes. Other wire transports are not standardized by this package.
 
 Use `canonicalizeTextProtocolJson()` when a caller needs deterministic JSON text before caller-owned
 hashing or signing. This package does not define a network transport, signing protocol, or hash

@@ -1,7 +1,7 @@
 # @ismail-elkorchi/textprotocol examples
 
-Runnable examples are not published yet.
+Runnable repository examples:
 
-The package already exposes the `textprotocol-result-envelope-v1` contract. Future examples in this
-directory should wrap repository fixture outputs with explicit producer metadata, provenance, and
-diagnostics.
+- [`../../../examples/textprotocol-schema-family-transport-consumer.mjs`](../../../examples/textprotocol-schema-family-transport-consumer.mjs)
+  serializes and parses document-bundle and protocol-error schema-family envelopes with deterministic
+  textprotocol JSON transport wrappers.

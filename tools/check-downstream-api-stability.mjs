@@ -155,6 +155,33 @@ async function assertBuiltPackageSmoke() {
     payload: document,
   };
   expect(textprotocol.isTextProtocolResultEnvelopeV1(envelope), "textprotocol built API should validate a result envelope.");
+  const documentBundle = {
+    schemaId: textprotocol.textProtocolDocumentBundleSchemaId,
+    schemaVersion: textprotocol.textProtocolSchemaVersion,
+    producer: { package: "@ismail-elkorchi/textdoc", version: "0.0.0" },
+    payload: {
+      documents: [
+        {
+          documentId: document.documentId,
+          revision: document.revision,
+          document,
+        },
+      ],
+    },
+    provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+    limitations: ["Downstream API stability document-bundle smoke."],
+  };
+  const documentBundleTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    documentBundle,
+    { expectedFamily: "document-bundle", requireProvenance: true, requireLimitations: true },
+  );
+  expect(
+    textprotocol.isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport) &&
+      textprotocol.isTextProtocolDocumentBundleV1(
+        textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport),
+      ),
+    "textprotocol should serialize and parse schema-family envelopes through package APIs.",
+  );
 
   const conformanceReport = textconformance.runTextConformanceChecks(
     [
