@@ -1,6 +1,9 @@
 import {
+  applyTextDocAnnotationBundlePayloadV1,
+  exportTextDocAnnotationBundlePayloadV1,
   exportTextDocDocumentBundlePayloadV1,
   importTextDocDocumentBundlePayloadV1,
+  isTextDocAnnotationBundlePayloadV1,
   isTextDocDocumentBundlePayloadV1,
   isTextDocDocumentV1,
   packageName as textdocPackageName,
@@ -16,6 +19,7 @@ import {
 import {
   checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
+  isTextProtocolAnnotationBundleV1,
   isTextProtocolCorpusMetricEnvelopeV1,
   isTextProtocolDocumentBundleV1,
   isTextProtocolProcessorTraceV1,
@@ -25,6 +29,7 @@ import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
   serializeTextProtocolSchemaFamilyEnvelopeJson,
+  textProtocolAnnotationBundleSchemaId,
   textProtocolCorpusMetricEnvelopeSchemaId,
   textProtocolDocumentBundleSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
@@ -201,6 +206,56 @@ if (!importedDocumentBundle.ok || importedDocumentBundle.documents?.[0]?.documen
 const documentBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedDocumentBundle);
 if (documentBundleInspection.family !== "document-bundle" || !documentBundleInspection.compatibilityOk) {
   fail("Interop textlab inspection must preserve schema-family envelope metadata.", documentBundleInspection);
+}
+
+const annotationBundlePayload = exportTextDocAnnotationBundlePayloadV1(document);
+if (!isTextDocAnnotationBundlePayloadV1(annotationBundlePayload)) {
+  fail("Interop annotation-bundle payload must satisfy textdoc runtime guard.", annotationBundlePayload);
+}
+const annotationBundle = {
+  schemaId: textProtocolAnnotationBundleSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: textdocPackageName,
+    version: "0.0.0",
+  },
+  payload: annotationBundlePayload,
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural annotation-bundle interop smoke only."],
+};
+if (!isTextProtocolAnnotationBundleV1(annotationBundle)) {
+  fail("Interop annotation bundle must satisfy textprotocol structural guard.", annotationBundle);
+}
+assertProtocolFamily(annotationBundle, "annotation-bundle", textdocPackageName);
+const annotationBundleTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(annotationBundle, {
+  expectedFamily: "annotation-bundle",
+  expectedProducerPackage: textdocPackageName,
+  requireProvenance: true,
+  requireLimitations: true,
+});
+if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(annotationBundleTransport)) {
+  fail("Interop annotation-bundle transport must satisfy textprotocol transport guard.", annotationBundleTransport);
+}
+const parsedAnnotationBundle = parseTextProtocolSchemaFamilyEnvelopeJson(annotationBundleTransport);
+if (!isTextProtocolAnnotationBundleV1(parsedAnnotationBundle)) {
+  fail("Interop annotation-bundle transport must parse back into an annotation bundle.");
+}
+const annotationSkeletonDocument = {
+  ...document,
+  layers: document.layers.map((layer) => ({ ...layer, annotations: [] })),
+};
+const appliedAnnotationBundle = applyTextDocAnnotationBundlePayloadV1(
+  annotationSkeletonDocument,
+  parsedAnnotationBundle.payload,
+);
+if (!appliedAnnotationBundle.ok || appliedAnnotationBundle.document?.layers[0]?.annotations.length !== 1) {
+  fail("Interop annotation-bundle payload must apply through textdoc package APIs.", appliedAnnotationBundle);
+}
+const annotationBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedAnnotationBundle);
+if (annotationBundleInspection.family !== "annotation-bundle" || !annotationBundleInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve annotation-bundle envelope metadata.", annotationBundleInspection);
 }
 
 const corpusCollection = createTextCorpusCollection(
