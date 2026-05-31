@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
@@ -35,6 +35,15 @@ import {
   summarizeConformanceReport,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
+
+async function fileExists(filePath) {
+  try {
+    await readFile(filePath, "utf8");
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 if (packageName !== "@ismail-elkorchi/textlab") {
   throw new Error("package name should remain stable");
@@ -990,6 +999,178 @@ if (
   missingPackAuditCliJson.diagnostics[0]?.code !== "missing-resource-file"
 ) {
   throw new Error("pack audit CLI should fail when a declared resource file is missing");
+}
+
+const authoringRoot = path.join(dir, "pack-authoring");
+const authoringManifest = {
+  ...packManifest,
+  id: "textpack-authoring-smoke",
+  packageName: "@ismail-elkorchi/textpack-authoring-smoke",
+  capabilities: {},
+  resources: {},
+  provides: {},
+};
+await mkdir(authoringRoot, { recursive: true });
+await writeFile(path.join(authoringRoot, "pack.manifest.json"), `${JSON.stringify(authoringManifest, null, 2)}\n`, "utf8");
+
+const addResourceCliResult = await runTextlabCli([
+  "pack",
+  "add-resource",
+  authoringRoot,
+  "--family",
+  "stopwords",
+  "--resource-id",
+  "stopwords:authoring",
+  "--resource-path",
+  "resources/stopwords.authoring.txt",
+  "--content",
+  "the\nand\n",
+  "--json",
+]);
+const addResourceCliJson = JSON.parse(addResourceCliResult.stdout);
+const addedManifest = JSON.parse(await readFile(path.join(authoringRoot, "pack.manifest.json"), "utf8"));
+if (
+  addResourceCliResult.exitCode !== 0 ||
+  addResourceCliJson.ok !== true ||
+  addResourceCliJson.audit.ok !== true ||
+  addResourceCliJson.changedResourcePaths.join(",") !== "resources/stopwords.authoring.txt" ||
+  addedManifest.provides.stopwords.join(",") !== "stopwords:authoring" ||
+  await readFile(path.join(authoringRoot, "resources/stopwords.authoring.txt"), "utf8") !== "the\nand\n"
+) {
+  throw new Error("pack add-resource CLI should write resource content, update the manifest, and audit after write");
+}
+
+const updateResourceCliResult = await runTextlabCli([
+  "pack",
+  "update-resource",
+  authoringRoot,
+  "--resource-id",
+  "stopwords:authoring",
+  "--next-resource-id",
+  "stopwords:authoring:v2",
+  "--resource-path",
+  "resources/stopwords.authoring.v2.txt",
+  "--content",
+  "the\nor\n",
+  "--json",
+]);
+const updateResourceCliJson = JSON.parse(updateResourceCliResult.stdout);
+const updatedAuthoringManifest = JSON.parse(await readFile(path.join(authoringRoot, "pack.manifest.json"), "utf8"));
+if (
+  updateResourceCliResult.exitCode !== 0 ||
+  updateResourceCliJson.ok !== true ||
+  updateResourceCliJson.removedResourcePaths.join(",") !== "resources/stopwords.authoring.txt" ||
+  updateResourceCliJson.changedResourcePaths.join(",") !== "resources/stopwords.authoring.v2.txt" ||
+  updatedAuthoringManifest.provides.stopwords.join(",") !== "stopwords:authoring:v2" ||
+  await fileExists(path.join(authoringRoot, "resources/stopwords.authoring.txt")) ||
+  await readFile(path.join(authoringRoot, "resources/stopwords.authoring.v2.txt"), "utf8") !== "the\nor\n"
+) {
+  throw new Error("pack update-resource CLI should update manifest pairs, replace resource files, and audit after write");
+}
+
+const removeResourceCliResult = await runTextlabCli([
+  "pack",
+  "remove-resource",
+  authoringRoot,
+  "--resource-id",
+  "stopwords:authoring:v2",
+  "--json",
+]);
+const removeResourceCliJson = JSON.parse(removeResourceCliResult.stdout);
+const removedAuthoringManifest = JSON.parse(await readFile(path.join(authoringRoot, "pack.manifest.json"), "utf8"));
+if (
+  removeResourceCliResult.exitCode !== 0 ||
+  removeResourceCliJson.ok !== true ||
+  removeResourceCliJson.removedResourcePaths.join(",") !== "resources/stopwords.authoring.v2.txt" ||
+  removedAuthoringManifest.resources.stopwords !== undefined ||
+  await fileExists(path.join(authoringRoot, "resources/stopwords.authoring.v2.txt"))
+) {
+  throw new Error("pack remove-resource CLI should remove manifest pairs and resource files before audit");
+}
+
+const duplicateAuthoringRoot = path.join(dir, "pack-authoring-duplicate");
+await mkdir(path.join(duplicateAuthoringRoot, "resources"), { recursive: true });
+await writeFile(path.join(duplicateAuthoringRoot, "pack.manifest.json"), `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
+await writeFile(path.join(duplicateAuthoringRoot, "resources", "lexicon.tsv"), "Alice\tpos=PROPN\n", "utf8");
+await writeFile(path.join(duplicateAuthoringRoot, "resources", "stopwords.tsv"), "the\n", "utf8");
+const duplicateAddCliResult = await runTextlabCli([
+  "pack",
+  "add-resource",
+  duplicateAuthoringRoot,
+  "--family",
+  "stopwords",
+  "--resource-id",
+  "lexicon:smoke",
+  "--resource-path",
+  "resources/duplicate.tsv",
+  "--content",
+  "duplicate\n",
+  "--json",
+]);
+const duplicateAddCliJson = JSON.parse(duplicateAddCliResult.stdout);
+if (
+  duplicateAddCliResult.exitCode !== 1 ||
+  !duplicateAddCliJson.plan.diagnostics.some((entry) => entry.code === "duplicate-provides-id") ||
+  await fileExists(path.join(duplicateAuthoringRoot, "resources/duplicate.tsv"))
+) {
+  throw new Error("pack add-resource CLI should reject duplicate provided ids before writing files");
+}
+
+const invalidMetadataRoot = path.join(dir, "pack-authoring-invalid-metadata");
+const invalidMetadataManifest = {
+  ...authoringManifest,
+  reviewState: "deprecated",
+};
+await mkdir(invalidMetadataRoot, { recursive: true });
+await writeFile(path.join(invalidMetadataRoot, "pack.manifest.json"), `${JSON.stringify(invalidMetadataManifest, null, 2)}\n`, "utf8");
+const invalidMetadataCliResult = await runTextlabCli([
+  "pack",
+  "add-resource",
+  invalidMetadataRoot,
+  "--family",
+  "stopwords",
+  "--resource-id",
+  "stopwords:invalid",
+  "--resource-path",
+  "resources/invalid.txt",
+  "--content",
+  "invalid\n",
+  "--json",
+]);
+const invalidMetadataCliJson = JSON.parse(invalidMetadataCliResult.stdout);
+if (
+  invalidMetadataCliResult.exitCode !== 1 ||
+  !invalidMetadataCliJson.plan.diagnostics.some((entry) => entry.code === "deprecated-review-state") ||
+  await fileExists(path.join(invalidMetadataRoot, "resources/invalid.txt"))
+) {
+  throw new Error("pack add-resource CLI should reject metadata failures before writing files");
+}
+
+const staleAuthoringRoot = path.join(dir, "pack-authoring-stale");
+await mkdir(path.join(staleAuthoringRoot, "resources"), { recursive: true });
+await writeFile(path.join(staleAuthoringRoot, "pack.manifest.json"), `${JSON.stringify(authoringManifest, null, 2)}\n`, "utf8");
+await writeFile(path.join(staleAuthoringRoot, "resources", "orphan.txt"), "stale\n", "utf8");
+const staleAuthoringCliResult = await runTextlabCli([
+  "pack",
+  "add-resource",
+  staleAuthoringRoot,
+  "--family",
+  "stopwords",
+  "--resource-id",
+  "stopwords:stale",
+  "--resource-path",
+  "resources/stale.txt",
+  "--content",
+  "stale\n",
+  "--json",
+]);
+const staleAuthoringCliJson = JSON.parse(staleAuthoringCliResult.stdout);
+if (
+  staleAuthoringCliResult.exitCode !== 1 ||
+  staleAuthoringCliJson.plan.diagnostics.map((entry) => entry.code).join(",") !== "orphan-resource-file" ||
+  await fileExists(path.join(staleAuthoringRoot, "resources/stale.txt"))
+) {
+  throw new Error("pack add-resource CLI should reject stale resource inventory before writing files");
 }
 
 const packResourcesCliResult = await runTextlabCli(["pack", "list-resources", packPath, "--json"]);

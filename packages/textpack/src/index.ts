@@ -428,6 +428,68 @@ export interface TextPackManifestResourceUpdateOptions {
   readonly resourceId?: string;
 }
 
+export type TextPackResourceTransactionAction =
+  | "add-resource"
+  | "update-resource"
+  | "remove-resource";
+
+export interface TextPackResourceAddTransaction {
+  readonly action: "add-resource";
+  readonly resource: TextPackManifestResourceInput;
+}
+
+export interface TextPackResourceUpdateTransaction {
+  readonly action: "update-resource";
+  readonly resourceId: string;
+  readonly update: TextPackManifestResourceUpdateOptions;
+}
+
+export interface TextPackResourceRemoveTransaction {
+  readonly action: "remove-resource";
+  readonly resourceId: string;
+}
+
+export type TextPackResourceTransactionOperation =
+  | TextPackResourceAddTransaction
+  | TextPackResourceUpdateTransaction
+  | TextPackResourceRemoveTransaction;
+
+export type TextPackResourceTransactionDiagnosticCode =
+  | TextPackResourceInventoryDiagnosticCode
+  | "resource-not-found"
+  | "resource-path-missing";
+
+export interface TextPackResourceTransactionDiagnostic {
+  readonly code: TextPackResourceTransactionDiagnosticCode;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly family?: TextPackResourceFamily;
+  readonly path?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextPackResourceTransactionPlanOptions {
+  readonly manifest: TextPackManifestV1;
+  readonly operation: TextPackResourceTransactionOperation;
+  readonly inventoryResourcePaths: readonly string[];
+}
+
+export interface TextPackResourceTransactionPlan {
+  readonly ok: boolean;
+  readonly action: TextPackResourceTransactionAction;
+  readonly manifest: TextPackManifestV1;
+  readonly nextManifest: TextPackManifestV1;
+  readonly beforeMetadata: TextPackManifestGovernanceResult;
+  readonly afterMetadata: TextPackManifestGovernanceResult;
+  readonly beforeInventory: TextPackResourceInventoryValidationResult;
+  readonly afterInventory: TextPackResourceInventoryValidationResult;
+  readonly expectedInventoryResourcePaths: readonly string[];
+  readonly changedResourcePaths: readonly string[];
+  readonly removedResourcePaths: readonly string[];
+  readonly diagnostics: readonly TextPackResourceTransactionDiagnostic[];
+}
+
 export interface TextPackManifestUpdateOptions {
   readonly version?: string;
   readonly targets?: TextPackTargets;
@@ -938,6 +1000,15 @@ function compareTextPackResourceInventoryDiagnostics(
   );
 }
 
+function compareTextPackResourceTransactionDiagnostics(
+  left: TextPackResourceTransactionDiagnostic,
+  right: TextPackResourceTransactionDiagnostic,
+): number {
+  return `${left.code}\u0000${left.family ?? ""}\u0000${left.path ?? ""}\u0000${left.resourceId ?? ""}\u0000${left.ref ?? ""}`.localeCompare(
+    `${right.code}\u0000${right.family ?? ""}\u0000${right.path ?? ""}\u0000${right.resourceId ?? ""}\u0000${right.ref ?? ""}`,
+  );
+}
+
 function toTextPackResourceInventoryDiagnostic(
   diagnostic: TextPackManifestGovernanceDiagnostic,
 ): TextPackResourceInventoryDiagnostic {
@@ -948,6 +1019,59 @@ function toTextPackResourceInventoryDiagnostic(
     ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
     message: diagnostic.message,
   };
+}
+
+function toTextPackResourceTransactionDiagnostic(
+  diagnostic: TextPackResourceInventoryDiagnostic,
+): TextPackResourceTransactionDiagnostic {
+  return {
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.family === undefined ? {} : { family: diagnostic.family }),
+    ...(diagnostic.path === undefined ? {} : { path: diagnostic.path }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+function textPackManifestResourcePathForId(
+  manifest: TextPackManifestV1,
+  resourceId: string,
+): {
+  readonly family: TextPackResourceFamily;
+  readonly path: string;
+} | undefined {
+  for (const family of textPackResourceFamilies) {
+    const index = (manifest.provides[family] ?? []).indexOf(resourceId);
+    if (index < 0) continue;
+    const resourcePath = manifest.resources[family]?.[index];
+    if (resourcePath === undefined) continue;
+    return {
+      family,
+      path: canonicalManifestPath(resourcePath),
+    };
+  }
+  return undefined;
+}
+
+function addTextPackInventoryPath(
+  inventoryResourcePaths: readonly string[],
+  resourcePath: string,
+): readonly string[] {
+  return sortedUniqueTextPackValues([
+    ...inventoryResourcePaths.map(canonicalManifestPath),
+    canonicalManifestPath(resourcePath),
+  ]);
+}
+
+function removeTextPackInventoryPath(
+  inventoryResourcePaths: readonly string[],
+  resourcePath: string,
+): readonly string[] {
+  const normalized = canonicalManifestPath(resourcePath);
+  return sortedUniqueTextPackValues(inventoryResourcePaths.map(canonicalManifestPath))
+    .filter((entry) => entry !== normalized);
 }
 
 function textPackOverlayKey(resource: TextPackResolvedResource): string {
@@ -1753,6 +1877,101 @@ export function validateTextPackResourceInventory(
     stalePairCount: sortedDiagnostics.filter((entry) => entry.code === "resource-provides-length-mismatch").length,
     resourceFamilies,
     diagnostics: sortedDiagnostics,
+  };
+}
+
+export function planTextPackResourceTransaction(
+  options: TextPackResourceTransactionPlanOptions,
+): TextPackResourceTransactionPlan {
+  const manifest = options.manifest;
+  const beforeMetadata = validateTextPackManifestGovernance(manifest);
+  const beforeInventory = validateTextPackResourceInventory(manifest, options.inventoryResourcePaths);
+  let nextManifest = manifest;
+  let expectedInventoryResourcePaths = sortedUniqueTextPackValues(
+    options.inventoryResourcePaths.map(canonicalManifestPath),
+  );
+  let changedResourcePaths: readonly string[] = [];
+  let removedResourcePaths: readonly string[] = [];
+  const operationDiagnostics: TextPackResourceTransactionDiagnostic[] = [];
+
+  if (options.operation.action === "add-resource") {
+    nextManifest = addTextPackManifestResource(manifest, options.operation.resource);
+    expectedInventoryResourcePaths = addTextPackInventoryPath(
+      expectedInventoryResourcePaths,
+      options.operation.resource.resourcePath,
+    );
+    changedResourcePaths = [canonicalManifestPath(options.operation.resource.resourcePath)];
+  } else if (options.operation.action === "update-resource") {
+    const current = textPackManifestResourcePathForId(manifest, options.operation.resourceId);
+    if (current === undefined) {
+      operationDiagnostics.push({
+        code: "resource-not-found",
+        packId: manifest.id,
+        resourceId: options.operation.resourceId,
+        message: `Textpack manifest resource ${options.operation.resourceId} was not found.`,
+      });
+    } else {
+      nextManifest = updateTextPackManifestResource(
+        manifest,
+        options.operation.resourceId,
+        options.operation.update,
+      );
+      const nextResourceId = options.operation.update.resourceId ?? options.operation.resourceId;
+      const next = textPackManifestResourcePathForId(nextManifest, nextResourceId);
+      if (next === undefined) {
+        operationDiagnostics.push({
+          code: "resource-path-missing",
+          packId: manifest.id,
+          resourceId: nextResourceId,
+          message: `Textpack manifest resource ${nextResourceId} has no paired path after update.`,
+        });
+      } else if (next.path !== current.path) {
+        expectedInventoryResourcePaths = addTextPackInventoryPath(
+          removeTextPackInventoryPath(expectedInventoryResourcePaths, current.path),
+          next.path,
+        );
+        changedResourcePaths = [next.path];
+        removedResourcePaths = [current.path];
+      }
+    }
+  } else {
+    const current = textPackManifestResourcePathForId(manifest, options.operation.resourceId);
+    if (current === undefined) {
+      operationDiagnostics.push({
+        code: "resource-not-found",
+        packId: manifest.id,
+        resourceId: options.operation.resourceId,
+        message: `Textpack manifest resource ${options.operation.resourceId} was not found.`,
+      });
+    } else {
+      nextManifest = removeTextPackManifestResource(manifest, options.operation.resourceId);
+      expectedInventoryResourcePaths = removeTextPackInventoryPath(expectedInventoryResourcePaths, current.path);
+      removedResourcePaths = [current.path];
+    }
+  }
+
+  changedResourcePaths = sortedUniqueTextPackValues(changedResourcePaths);
+  removedResourcePaths = sortedUniqueTextPackValues(removedResourcePaths);
+  const afterMetadata = validateTextPackManifestGovernance(nextManifest);
+  const afterInventory = validateTextPackResourceInventory(nextManifest, expectedInventoryResourcePaths);
+  const diagnostics = [
+    ...operationDiagnostics,
+    ...afterInventory.diagnostics.map(toTextPackResourceTransactionDiagnostic),
+  ].sort(compareTextPackResourceTransactionDiagnostics);
+
+  return {
+    ok: operationDiagnostics.length === 0 && afterMetadata.ok && afterInventory.ok,
+    action: options.operation.action,
+    manifest,
+    nextManifest,
+    beforeMetadata,
+    afterMetadata,
+    beforeInventory,
+    afterInventory,
+    expectedInventoryResourcePaths,
+    changedResourcePaths,
+    removedResourcePaths,
+    diagnostics,
   };
 }
 

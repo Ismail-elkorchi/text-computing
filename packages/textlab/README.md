@@ -21,6 +21,9 @@ textlab pack inspect packages/textpack-en-core
 textlab pack validate packages/textpack-en-core
 textlab pack audit packages/textpack-en-core
 textlab pack list-resources packages/textpack-en-core
+textlab pack add-resource ./my-pack --family stopwords --resource-id stopwords:local --resource-path resources/stopwords.local.txt --content "the\n"
+textlab pack update-resource ./my-pack --resource-id stopwords:local --next-resource-id stopwords:local:v2 --resource-path resources/stopwords.local.v2.txt --content "the\nand\n"
+textlab pack remove-resource ./my-pack --resource-id stopwords:local:v2
 textlab document fixtures/textdoc/examples/document-annotation-model-v1.json
 textlab annotations fixtures/textdoc/examples/document-annotation-model-v1.json --layer-kind relation
 textlab pipeline-trace pipeline-trace.json

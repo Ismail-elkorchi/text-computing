@@ -1,6 +1,16 @@
 #!/usr/bin/env node
-import { readFile, readdir, stat } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import {
+  isTextPackManifestV1,
+  planTextPackResourceTransaction,
+  textPackResourceFamilies,
+  type TextPackManifestV1,
+  type TextPackResourceFamily,
+  type TextPackResourceTransactionAction,
+  type TextPackResourceTransactionOperation,
+  type TextPackResourceTransactionPlan,
+} from "@ismail-elkorchi/textpack";
 import {
   inspectCorpusFixture,
   inspectConformanceReportDiff,
@@ -51,6 +61,9 @@ function usage(): string {
     "  textlab pack validate <path> [--json]",
     "  textlab pack audit <pack-root> [--json]",
     "  textlab pack list-resources <path> [--json]",
+    "  textlab pack add-resource <pack-root> --family family --resource-id id --resource-path path --content text [--json]",
+    "  textlab pack update-resource <pack-root> --resource-id id [--family family] [--next-resource-id id] [--resource-path path] [--content text] [--json]",
+    "  textlab pack remove-resource <pack-root> --resource-id id [--json]",
     "  textlab document <path> [--json]",
     "  textlab annotations <path> [--layer-kind kind] [--lifecycle state] [--annotation-id id] [--json]",
     "  textlab pipeline-trace <path> [--json]",
@@ -65,7 +78,7 @@ function usage(): string {
     "",
     "Commands:",
     "  package         Inspect a package manifest.",
-    "  pack            Inspect, validate, audit, or list resources from a textpack manifest or pack directory.",
+    "  pack            Inspect, validate, audit, edit, or list resources from a textpack manifest or pack directory.",
     "  document        Inspect a textdoc document summary.",
     "  annotations     Inspect or query a textdoc document annotation graph.",
     "  pipeline-trace  Inspect a textpipeline trace payload.",
@@ -429,6 +442,313 @@ async function listTextPackResourceInventory(packRoot: string): Promise<readonly
   return paths.sort((left, right) => left.localeCompare(right));
 }
 
+interface TextlabPackAuthoringOptionMap {
+  readonly family?: string;
+  readonly resourceId?: string;
+  readonly nextResourceId?: string;
+  readonly resourcePath?: string;
+  readonly content?: string;
+}
+
+interface TextlabPackAuthoringInspection {
+  readonly schemaVersion: 1;
+  readonly ok: boolean;
+  readonly action: TextPackResourceTransactionAction;
+  readonly packRoot: string;
+  readonly manifestPath: string;
+  readonly changedResourcePaths: readonly string[];
+  readonly removedResourcePaths: readonly string[];
+  readonly plan: TextPackResourceTransactionPlan;
+  readonly audit: ReturnType<typeof inspectTextPackResourceAudit>;
+}
+
+function parsePackAuthoringOptions(args: readonly string[]): TextlabPackAuthoringOptionMap | string {
+  const values: Record<string, string> = {};
+  for (let index = 0; index < args.length; index += 2) {
+    const name = args[index];
+    const value = args[index + 1];
+    if (name === undefined || value === undefined) return "Missing value for pack resource option.";
+    if (!name.startsWith("--")) return `Unknown pack resource option: ${name}`;
+    const key = name.slice(2);
+    if (
+      key !== "family" &&
+      key !== "resource-id" &&
+      key !== "next-resource-id" &&
+      key !== "resource-path" &&
+      key !== "content"
+    ) {
+      return `Unknown pack resource option: ${name}`;
+    }
+    values[key] = value;
+  }
+  return {
+    ...(values["family"] === undefined ? {} : { family: values["family"] }),
+    ...(values["resource-id"] === undefined ? {} : { resourceId: values["resource-id"] }),
+    ...(values["next-resource-id"] === undefined ? {} : { nextResourceId: values["next-resource-id"] }),
+    ...(values["resource-path"] === undefined ? {} : { resourcePath: values["resource-path"] }),
+    ...(values["content"] === undefined ? {} : { content: values["content"] }),
+  };
+}
+
+function parseTextPackResourceFamily(value: string | undefined): {
+  readonly ok: true;
+  readonly family: TextPackResourceFamily;
+} | {
+  readonly ok: false;
+  readonly message: string;
+} {
+  if (value === undefined) return { ok: false, message: "Missing --family." };
+  if (textPackResourceFamilies.includes(value as TextPackResourceFamily)) {
+    return { ok: true, family: value as TextPackResourceFamily };
+  }
+  return { ok: false, message: `Unsupported textpack resource family: ${value}` };
+}
+
+function manifestResourcePathForId(manifest: TextPackManifestV1, resourceId: string): string | undefined {
+  for (const family of textPackResourceFamilies) {
+    const index = (manifest.provides[family] ?? []).indexOf(resourceId);
+    if (index < 0) continue;
+    return manifest.resources[family]?.[index];
+  }
+  return undefined;
+}
+
+function buildPackAuthoringOperation(
+  subcommand: string,
+  manifest: TextPackManifestV1,
+  args: readonly string[],
+): TextPackResourceTransactionOperation | string {
+  const options = parsePackAuthoringOptions(args);
+  if (typeof options === "string") return options;
+
+  if (subcommand === "add-resource") {
+    const family = parseTextPackResourceFamily(options.family);
+    if (!family.ok) return family.message;
+    if (options.resourceId === undefined) return "Missing --resource-id.";
+    if (options.resourcePath === undefined) return "Missing --resource-path.";
+    if (options.content === undefined) return "Missing --content.";
+    return {
+      action: "add-resource",
+      resource: {
+        family: family.family,
+        resourceId: options.resourceId,
+        resourcePath: options.resourcePath,
+      },
+    };
+  }
+
+  if (subcommand === "update-resource") {
+    if (options.resourceId === undefined) return "Missing --resource-id.";
+    if (
+      options.family === undefined &&
+      options.nextResourceId === undefined &&
+      options.resourcePath === undefined &&
+      options.content === undefined
+    ) {
+      return "Missing update option; provide --family, --next-resource-id, --resource-path, or --content.";
+    }
+    const family = options.family === undefined ? undefined : parseTextPackResourceFamily(options.family);
+    if (family !== undefined && !family.ok) return family.message;
+    if (options.resourcePath !== undefined && options.content === undefined) {
+      return "Changing --resource-path requires --content so the new resource file can be written.";
+    }
+    if (
+      options.content !== undefined &&
+      options.resourcePath === undefined &&
+      manifestResourcePathForId(manifest, options.resourceId) === undefined
+    ) {
+      return `Textpack manifest resource ${options.resourceId} was not found.`;
+    }
+    return {
+      action: "update-resource",
+      resourceId: options.resourceId,
+      update: {
+        ...(family === undefined ? {} : { family: family.family }),
+        ...(options.resourcePath === undefined ? {} : { resourcePath: options.resourcePath }),
+        ...(options.nextResourceId === undefined ? {} : { resourceId: options.nextResourceId }),
+      },
+    };
+  }
+
+  if (subcommand === "remove-resource") {
+    if (options.resourceId === undefined) return "Missing --resource-id.";
+    return {
+      action: "remove-resource",
+      resourceId: options.resourceId,
+    };
+  }
+
+  return `Unsupported pack authoring command: ${subcommand}`;
+}
+
+function canonicalPackRelativePath(resourcePath: string): string {
+  return resourcePath.startsWith("./") ? resourcePath.slice(2) : resourcePath;
+}
+
+function resolvePackRelativePath(packRoot: string, resourcePath: string): string {
+  const normalizedRoot = path.resolve(packRoot);
+  const resolved = path.resolve(normalizedRoot, canonicalPackRelativePath(resourcePath));
+  if (resolved !== normalizedRoot && !resolved.startsWith(`${normalizedRoot}${path.sep}`)) {
+    throw new Error(`Resource path escapes pack root: ${resourcePath}`);
+  }
+  return resolved;
+}
+
+async function writeTextFileAtomic(filePath: string, content: string): Promise<void> {
+  await mkdir(path.dirname(filePath), { recursive: true });
+  const tempPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  try {
+    await writeFile(tempPath, content, "utf8");
+    await rename(tempPath, filePath);
+  } catch (error) {
+    await rm(tempPath, { force: true });
+    throw error;
+  }
+}
+
+function renderPackAuthoringInspection(inspection: TextlabPackAuthoringInspection): string {
+  return [
+    "# textlab pack authoring",
+    "",
+    `Action: ${inspection.action}`,
+    `Status: ${inspection.ok ? "valid" : "invalid"}`,
+    `Pack root: ${inspection.packRoot}`,
+    `Manifest: ${inspection.manifestPath}`,
+    `Changed resources: ${inspection.changedResourcePaths.join(",") || "none"}`,
+    `Removed resources: ${inspection.removedResourcePaths.join(",") || "none"}`,
+    "",
+    renderTextPackAuditInspection(inspection.audit).trimEnd(),
+    "",
+  ].join("\n");
+}
+
+async function runTextlabPackAuthoringCli(
+  subcommand: string,
+  targetPath: string,
+  extra: readonly string[],
+  json: boolean,
+): Promise<TextlabCliResult> {
+  let parsed: unknown;
+  let manifestPath: string;
+  let rootPath: string;
+  try {
+    const input = await readTextPackManifestInput(targetPath);
+    parsed = input.parsed;
+    manifestPath = input.manifestPath;
+    rootPath = input.rootPath;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      exitCode: 1,
+      stdout: "",
+      stderr: `Failed to read textpack manifest from ${targetPath}: ${message}`,
+    };
+  }
+
+  if (!isTextPackManifestV1(parsed)) {
+    return {
+      exitCode: 1,
+      stdout: "",
+      stderr: `Invalid textpack manifest: ${manifestPath}`,
+    };
+  }
+
+  const operation = buildPackAuthoringOperation(subcommand, parsed, extra);
+  if (typeof operation === "string") {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `${operation}\n${usage()}`,
+    };
+  }
+  const authoringOptions = parsePackAuthoringOptions(extra);
+  if (typeof authoringOptions === "string") {
+    return {
+      exitCode: 2,
+      stdout: "",
+      stderr: `${authoringOptions}\n${usage()}`,
+    };
+  }
+
+  const inventoryResourcePaths = await listTextPackResourceInventory(rootPath);
+  const plan = planTextPackResourceTransaction({
+    manifest: parsed,
+    operation,
+    inventoryResourcePaths,
+  });
+  const plannedAudit = inspectTextPackResourceAudit(plan.nextManifest, plan.expectedInventoryResourcePaths);
+  if (!plan.ok) {
+    const inspection: TextlabPackAuthoringInspection = {
+      schemaVersion: 1,
+      ok: false,
+      action: plan.action,
+      packRoot: rootPath,
+      manifestPath,
+      changedResourcePaths: plan.changedResourcePaths,
+      removedResourcePaths: plan.removedResourcePaths,
+      plan,
+      audit: plannedAudit,
+    };
+    return {
+      exitCode: 1,
+      stdout: renderCliOutput(inspection, renderPackAuthoringInspection, json),
+      stderr: "",
+    };
+  }
+
+  try {
+    if (operation.action === "add-resource") {
+      await writeTextFileAtomic(
+        resolvePackRelativePath(rootPath, operation.resource.resourcePath),
+        authoringOptions.content ?? "",
+      );
+      await writeTextFileAtomic(manifestPath, `${JSON.stringify(plan.nextManifest, null, 2)}\n`);
+    } else if (operation.action === "update-resource") {
+      if (authoringOptions.content !== undefined) {
+        const resourcePath = operation.update.resourcePath ?? manifestResourcePathForId(parsed, operation.resourceId);
+        if (resourcePath === undefined) {
+          throw new Error(`Textpack manifest resource ${operation.resourceId} was not found.`);
+        }
+        await writeTextFileAtomic(resolvePackRelativePath(rootPath, resourcePath), authoringOptions.content);
+      }
+      await writeTextFileAtomic(manifestPath, `${JSON.stringify(plan.nextManifest, null, 2)}\n`);
+      for (const removedPath of plan.removedResourcePaths) {
+        await rm(resolvePackRelativePath(rootPath, removedPath), { force: true });
+      }
+    } else {
+      await writeTextFileAtomic(manifestPath, `${JSON.stringify(plan.nextManifest, null, 2)}\n`);
+      for (const removedPath of plan.removedResourcePaths) {
+        await rm(resolvePackRelativePath(rootPath, removedPath), { force: true });
+      }
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      exitCode: 1,
+      stdout: "",
+      stderr: `Failed to apply textpack resource transaction: ${message}`,
+    };
+  }
+
+  const audit = inspectTextPackResourceAudit(plan.nextManifest, await listTextPackResourceInventory(rootPath));
+  const inspection: TextlabPackAuthoringInspection = {
+    schemaVersion: 1,
+    ok: audit.ok,
+    action: plan.action,
+    packRoot: rootPath,
+    manifestPath,
+    changedResourcePaths: plan.changedResourcePaths,
+    removedResourcePaths: plan.removedResourcePaths,
+    plan,
+    audit,
+  };
+  return {
+    exitCode: inspection.ok ? 0 : 1,
+    stdout: renderCliOutput(inspection, renderPackAuthoringInspection, json),
+    stderr: "",
+  };
+}
+
 async function runTextlabPackCli(
   firstArg: string | undefined,
   rest: readonly string[],
@@ -442,7 +762,8 @@ async function runTextlabPackCli(
     };
   }
 
-  const subcommands = new Set(["inspect", "validate", "audit", "list-resources"]);
+  const authoringSubcommands = new Set(["add-resource", "update-resource", "remove-resource"]);
+  const subcommands = new Set(["inspect", "validate", "audit", "list-resources", ...authoringSubcommands]);
   const subcommand = subcommands.has(firstArg) ? firstArg : "inspect";
   const targetPath = subcommand === "inspect" && !subcommands.has(firstArg) ? firstArg : rest[0];
   const extra = subcommand === "inspect" && !subcommands.has(firstArg) ? rest : rest.slice(1);
@@ -453,12 +774,16 @@ async function runTextlabPackCli(
       stderr: `Missing path for pack ${subcommand}.\n${usage()}`,
     };
   }
-  if (extra.length > 0) {
+  if (!authoringSubcommands.has(subcommand) && extra.length > 0) {
     return {
       exitCode: 2,
       stdout: "",
       stderr: `Too many arguments for pack ${subcommand}.\n${usage()}`,
     };
+  }
+
+  if (authoringSubcommands.has(subcommand)) {
+    return runTextlabPackAuthoringCli(subcommand, targetPath, extra, json);
   }
 
   let parsed: unknown;

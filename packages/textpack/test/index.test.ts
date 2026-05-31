@@ -13,6 +13,7 @@ import {
   loadTextPackResources,
   lookupTextPackLoadedEntries,
   parseTextPackResourceContent,
+  planTextPackResourceTransaction,
   queryTextPackResourceRegistry,
   removeTextPackManifestResource,
   resolveTextPackResources,
@@ -924,6 +925,110 @@ if (
     "missing-resource-file:resources/a-first.txt,missing-resource-file:resources/z-last.txt,orphan-resource-file:resources/orphan-a.txt,orphan-resource-file:resources/orphan-b.txt,resource-provides-length-mismatch:stopwords"
 ) {
   throw new Error("resource inventory validation should return diagnostics in deterministic order");
+}
+
+const addTransaction = planTextPackResourceTransaction({
+  manifest: createdManifest,
+  operation: {
+    action: "add-resource",
+    resource: {
+      family: "lexicons",
+      resourcePath: "resources/lexicon.en.authoring.tsv",
+      resourceId: "lexicon-en-authoring",
+    },
+  },
+  inventoryResourcePaths: ["resources/stopwords.en.authoring.txt"],
+});
+if (
+  !addTransaction.ok ||
+  addTransaction.action !== "add-resource" ||
+  addTransaction.changedResourcePaths.join(",") !== "resources/lexicon.en.authoring.tsv" ||
+  addTransaction.expectedInventoryResourcePaths.join(",") !==
+    "resources/lexicon.en.authoring.tsv,resources/stopwords.en.authoring.txt" ||
+  addTransaction.afterInventory.ok !== true ||
+  addTransaction.nextManifest.provides.lexicons?.join(",") !== "lexicon-en-authoring"
+) {
+  throw new Error("resource transaction planning should add a resource and audit the expected inventory");
+}
+
+const updateTransaction = planTextPackResourceTransaction({
+  manifest: createdManifest,
+  operation: {
+    action: "update-resource",
+    resourceId: "stopwords-en-authoring",
+    update: {
+      resourcePath: "resources/stopwords.en.authoring.updated.txt",
+      resourceId: "stopwords-en-authoring-v2",
+    },
+  },
+  inventoryResourcePaths: ["resources/stopwords.en.authoring.txt"],
+});
+if (
+  !updateTransaction.ok ||
+  updateTransaction.changedResourcePaths.join(",") !== "resources/stopwords.en.authoring.updated.txt" ||
+  updateTransaction.removedResourcePaths.join(",") !== "resources/stopwords.en.authoring.txt" ||
+  updateTransaction.expectedInventoryResourcePaths.join(",") !== "resources/stopwords.en.authoring.updated.txt" ||
+  updateTransaction.afterInventory.ok !== true
+) {
+  throw new Error("resource transaction planning should update manifest pairs and inventory paths deterministically");
+}
+
+const removeTransaction = planTextPackResourceTransaction({
+  manifest: createdManifest,
+  operation: {
+    action: "remove-resource",
+    resourceId: "stopwords-en-authoring",
+  },
+  inventoryResourcePaths: ["resources/stopwords.en.authoring.txt"],
+});
+if (
+  !removeTransaction.ok ||
+  removeTransaction.removedResourcePaths.join(",") !== "resources/stopwords.en.authoring.txt" ||
+  removeTransaction.expectedInventoryResourcePaths.length !== 0 ||
+  removeTransaction.afterInventory.ok !== true ||
+  removeTransaction.nextManifest.resources.stopwords !== undefined
+) {
+  throw new Error("resource transaction planning should remove paired manifest entries and inventory paths");
+}
+
+const duplicateTransaction = planTextPackResourceTransaction({
+  manifest: createdManifest,
+  operation: {
+    action: "add-resource",
+    resource: {
+      family: "stopwords",
+      resourcePath: "resources/stopwords.en.authoring.duplicate.txt",
+      resourceId: "stopwords-en-authoring",
+    },
+  },
+  inventoryResourcePaths: [
+    "resources/stopwords.en.authoring.duplicate.txt",
+    "resources/stopwords.en.authoring.txt",
+  ],
+});
+if (
+  duplicateTransaction.ok ||
+  duplicateTransaction.beforeMetadata.ok !== true ||
+  duplicateTransaction.afterMetadata.ok !== false ||
+  !duplicateTransaction.diagnostics.some((entry) => entry.code === "duplicate-provides-id")
+) {
+  throw new Error("resource transaction planning should reject duplicate provided ids after mutation");
+}
+
+const missingTransaction = planTextPackResourceTransaction({
+  manifest: createdManifest,
+  operation: {
+    action: "remove-resource",
+    resourceId: "missing-resource",
+  },
+  inventoryResourcePaths: ["resources/stopwords.en.authoring.txt"],
+});
+if (
+  missingTransaction.ok ||
+  missingTransaction.diagnostics.map((entry) => `${entry.code}:${entry.resourceId ?? ""}`).join(",") !==
+    "resource-not-found:missing-resource"
+) {
+  throw new Error("resource transaction planning should report missing resource ids deterministically");
 }
 
 const authoringOverlayConflictManifest = addTextPackManifestResource(createdManifest, {
