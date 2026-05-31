@@ -7,8 +7,16 @@ import {
   textDocDocumentPayloadKind,
 } from "@ismail-elkorchi/textdoc";
 import {
+  computeTextCorpusFrequencies,
+  createTextCorpusCollection,
+  exportTextCorpusMetricEnvelopePayloadV1,
+  isTextCorpusMetricEnvelopePayloadV1,
+  packageName as textcorpusPackageName,
+} from "@ismail-elkorchi/textcorpus";
+import {
   checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
+  isTextProtocolCorpusMetricEnvelopeV1,
   isTextProtocolDocumentBundleV1,
   isTextProtocolProcessorTraceV1,
   isTextProtocolResultEnvelopeForPayloadKind,
@@ -17,6 +25,7 @@ import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
   serializeTextProtocolSchemaFamilyEnvelopeJson,
+  textProtocolCorpusMetricEnvelopeSchemaId,
   textProtocolDocumentBundleSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
@@ -192,6 +201,57 @@ if (!importedDocumentBundle.ok || importedDocumentBundle.documents?.[0]?.documen
 const documentBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedDocumentBundle);
 if (documentBundleInspection.family !== "document-bundle" || !documentBundleInspection.compatibilityOk) {
   fail("Interop textlab inspection must preserve schema-family envelope metadata.", documentBundleInspection);
+}
+
+const corpusCollection = createTextCorpusCollection(
+  [
+    {
+      id: "doc-a",
+      document,
+      viewId: "analysis",
+      tokenLayerId: "tokens",
+      metadata: { language: "en" },
+    },
+  ],
+  { corpusId: "corpus:textprotocol-interop" },
+);
+const corpusFrequency = computeTextCorpusFrequencies(corpusCollection);
+const corpusMetricPayload = exportTextCorpusMetricEnvelopePayloadV1(corpusFrequency, {
+  metricSetId: "metrics:textprotocol-interop-frequency",
+});
+if (!isTextCorpusMetricEnvelopePayloadV1(corpusMetricPayload)) {
+  fail("Interop corpus metric payload must satisfy textcorpus runtime guard.", corpusMetricPayload);
+}
+const corpusMetricEnvelope = {
+  schemaId: textProtocolCorpusMetricEnvelopeSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: textcorpusPackageName,
+    version: "0.0.0",
+  },
+  payload: corpusMetricPayload,
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural corpus-metric interop smoke only."],
+};
+if (!isTextProtocolCorpusMetricEnvelopeV1(corpusMetricEnvelope)) {
+  fail("Interop corpus metric envelope must satisfy textprotocol structural guard.", corpusMetricEnvelope);
+}
+assertProtocolFamily(corpusMetricEnvelope, "corpus-metric-envelope", textcorpusPackageName);
+const corpusMetricTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(corpusMetricEnvelope, {
+  expectedFamily: "corpus-metric-envelope",
+  expectedProducerPackage: textcorpusPackageName,
+  requireProvenance: true,
+  requireLimitations: true,
+});
+const parsedCorpusMetricEnvelope = parseTextProtocolSchemaFamilyEnvelopeJson(corpusMetricTransport);
+if (!isTextProtocolCorpusMetricEnvelopeV1(parsedCorpusMetricEnvelope)) {
+  fail("Interop corpus metric transport must parse back into a corpus metric envelope.");
+}
+const corpusMetricInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedCorpusMetricEnvelope);
+if (corpusMetricInspection.family !== "corpus-metric-envelope" || !corpusMetricInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve corpus metric envelope metadata.", corpusMetricInspection);
 }
 
 const traceEnvelope = envelope(

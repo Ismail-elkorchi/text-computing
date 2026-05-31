@@ -12,6 +12,13 @@ Current scope:
 - deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, and Okapi BM25 parameter-variant outputs for the frozen issue `#14` corpora; and
 - deterministic query parsing, required/prohibited term operators, metadata field filters, inverted-index retrieval, BM25 ranking, snippets, explain output, qrels evaluation, deterministic size thresholds, and index JSON round-trips for committed explicit-token retrieval slices;
 - E2 corpus selection provenance for corpus-analysis, scoring, retrieval, and evaluation outputs; and
-- deterministic JSON persistence helpers for declared textcorpus artifact families.
+- deterministic JSON persistence helpers for declared textcorpus artifact families; and
+- corpus metric payload export for wrapping textcorpus artifacts in `textprotocol` corpus-metric envelopes without adding a `textprotocol` dependency to this package.
 
-This package does not yet define streaming retrieval, durable filesystem index storage, external relevance benchmarks, broad field weighting, or corpus-level `textprotocol` result envelopes.
+This package does not yet define durable filesystem index storage, external relevance benchmarks, or broad field weighting.
+
+Runnable repository examples:
+
+- [`../../examples/textcorpus-corpus-metric-envelope-consumer.mjs`](../../examples/textcorpus-corpus-metric-envelope-consumer.mjs)
+  builds a textcorpus frequency artifact, exports corpus metric payloads, wraps them with
+  `textprotocol` schema-family JSON transport, and inspects the parsed envelope through `textlab`.
