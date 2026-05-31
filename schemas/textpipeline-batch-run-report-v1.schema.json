@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-batch-run-report-v1.schema.json",
+  "title": "textpipeline batch run report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentCount",
+    "completeCount",
+    "partialCount",
+    "executionModes",
+    "cachePolicies",
+    "contextFingerprints",
+    "items"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "documentCount": { "type": "integer", "minimum": 0 },
+    "completeCount": { "type": "integer", "minimum": 0 },
+    "partialCount": { "type": "integer", "minimum": 0 },
+    "executionModes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["sync", "async"] }
+    },
+    "cachePolicies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["none", "read-through"] }
+    },
+    "contextFingerprints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "inputIndex",
+          "documentId",
+          "finalRevision",
+          "runStatus",
+          "executionMode",
+          "cachePolicy",
+          "processorOrder",
+          "traceEntryCount"
+        ],
+        "properties": {
+          "inputIndex": { "type": "integer", "minimum": 0 },
+          "documentId": { "type": "string", "minLength": 1 },
+          "finalRevision": { "type": "string", "minLength": 1 },
+          "runStatus": { "enum": ["complete", "partial"] },
+          "executionMode": { "enum": ["sync", "async"] },
+          "cachePolicy": { "enum": ["none", "read-through"] },
+          "processorOrder": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "traceEntryCount": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

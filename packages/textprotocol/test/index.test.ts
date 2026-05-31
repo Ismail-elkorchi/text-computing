@@ -30,6 +30,7 @@ import {
   textProtocolDocumentBundleSchemaId,
   textProtocolEvidenceBundleSchemaId,
   textProtocolMappingLossReportSchemaId,
+  textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineTraceV1,
   textProtocolPayloadKindVerticalSliceResultV1,
@@ -77,6 +78,14 @@ const registeredEnvelope = {
 
 if (!isTextProtocolPayloadKind(textProtocolPayloadKindTextpipelineTraceV1)) {
   throw new Error("registered payload kinds should satisfy the payload-kind guard");
+}
+
+if (
+  getTextProtocolPayloadKindDescriptor(textProtocolPayloadKindTextpipelineBatchRunReportV1)
+    ?.schemaId !==
+  "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-batch-run-report-v1.schema.json"
+) {
+  throw new Error("batch report payload kind should expose its canonical schema");
 }
 
 if (isTextProtocolPayloadKind("textprotocol:test")) {

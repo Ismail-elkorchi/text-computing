@@ -5,6 +5,7 @@ import {
   isTextProtocolResultEnvelopeForPayloadKind,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextpipelineTraceV1,
   type TextProtocolDiagnostic,
   type TextProtocolProvenance,
@@ -13,11 +14,18 @@ import {
 
 export const packageName = "@ismail-elkorchi/textpipeline" as const;
 export const textPipelineTraceSchemaVersion = 1 as const;
+export const textPipelineBatchRunReportSchemaVersion = 1 as const;
 export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
+export const textPipelineBatchRunReportPayloadKind =
+  textProtocolPayloadKindTextpipelineBatchRunReportV1;
 
 export type PackageName = typeof packageName;
 export type TextPipelineTraceSchemaVersion = typeof textPipelineTraceSchemaVersion;
+export type TextPipelineBatchRunReportSchemaVersion =
+  typeof textPipelineBatchRunReportSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
+export type TextPipelineBatchRunReportPayloadKind =
+  typeof textPipelineBatchRunReportPayloadKind;
 export type TextPipelinePurity = "pure" | "stateful";
 export type TextPipelineTraceStatus = "applied" | "skipped" | "cached" | "failed";
 export type TextPipelineRunStatus = "complete" | "partial";
@@ -153,7 +161,7 @@ export interface TextPipelineBatchRunItem {
 }
 
 export interface TextPipelineBatchRunReport {
-  readonly schemaVersion: 1;
+  readonly schemaVersion: TextPipelineBatchRunReportSchemaVersion;
   readonly documentCount: number;
   readonly completeCount: number;
   readonly partialCount: number;
@@ -182,6 +190,11 @@ export type TextPipelineTraceEnvelopeV1 = TextProtocolResultEnvelopeV1<
   TextPipelineTracePayloadKind
 >;
 
+export type TextPipelineBatchRunReportEnvelopeV1 = TextProtocolResultEnvelopeV1<
+  TextPipelineBatchRunReport,
+  TextPipelineBatchRunReportPayloadKind
+>;
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -194,8 +207,16 @@ function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
 }
 
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
 function hasUniqueStrings(values: readonly string[]): boolean {
   return new Set(values).size === values.length;
+}
+
+function sameStringArray(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((entry, index) => entry === right[index]);
 }
 
 function isVersionRef(value: unknown): value is TextPipelineVersionRef {
@@ -681,6 +702,59 @@ export function isTextPipelineTraceV1(value: unknown): value is TextPipelineTrac
     (value.cachePolicy === "none" || value.cachePolicy === "read-through") &&
     Array.isArray(value.entries) &&
     value.entries.every((entry) => isTextPipelineTraceEntry(entry))
+  );
+}
+
+function isTextPipelineBatchRunItem(value: unknown): value is TextPipelineBatchRunItem {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.inputIndex) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.finalRevision) &&
+    (value.runStatus === "complete" || value.runStatus === "partial") &&
+    (value.executionMode === "sync" || value.executionMode === "async") &&
+    (value.cachePolicy === "none" || value.cachePolicy === "read-through") &&
+    isStringArray(value.processorOrder) &&
+    isNonNegativeInteger(value.traceEntryCount)
+  );
+}
+
+export function isTextPipelineBatchRunReportV1(
+  value: unknown,
+): value is TextPipelineBatchRunReport {
+  if (!isRecord(value) || value.schemaVersion !== textPipelineBatchRunReportSchemaVersion) {
+    return false;
+  }
+  if (
+    !isNonNegativeInteger(value.documentCount) ||
+    !isNonNegativeInteger(value.completeCount) ||
+    !isNonNegativeInteger(value.partialCount) ||
+    !isStringArray(value.executionModes) ||
+    !isStringArray(value.cachePolicies) ||
+    !isStringArray(value.contextFingerprints) ||
+    !hasUniqueStrings(value.executionModes) ||
+    !hasUniqueStrings(value.cachePolicies) ||
+    !hasUniqueStrings(value.contextFingerprints) ||
+    !Array.isArray(value.items) ||
+    !value.items.every((item) => isTextPipelineBatchRunItem(item))
+  ) {
+    return false;
+  }
+
+  const items = value.items;
+  const inputIndexes = items.map((item) => item.inputIndex);
+  if (!inputIndexes.every((inputIndex, index) => inputIndex === index)) return false;
+
+  const completeCount = items.filter((item) => item.runStatus === "complete").length;
+  const partialCount = items.filter((item) => item.runStatus === "partial").length;
+  return (
+    value.documentCount === items.length &&
+    value.completeCount === completeCount &&
+    value.partialCount === partialCount &&
+    value.completeCount + value.partialCount === value.documentCount &&
+    sameStringArray(value.executionModes, uniqueSortedStrings(items.map((item) => item.executionMode))) &&
+    sameStringArray(value.cachePolicies, uniqueSortedStrings(items.map((item) => item.cachePolicy))) &&
+    sameStringArray(value.contextFingerprints, uniqueSortedStrings(value.contextFingerprints))
   );
 }
 
@@ -1194,5 +1268,50 @@ export function isTextPipelineTraceEnvelopeV1(value: unknown): value is TextPipe
   return (
     isTextProtocolResultEnvelopeForPayloadKind(value, textPipelineTracePayloadKind) &&
     isTextPipelineTraceV1(value.payload)
+  );
+}
+
+export function createTextPipelineBatchRunReportEnvelope(
+  report: TextPipelineBatchRunReport,
+  producerVersion: string,
+  metadata: TextPipelineTraceEnvelopeMetadata = {},
+): TextPipelineBatchRunReportEnvelopeV1 {
+  if (!isTextPipelineBatchRunReportV1(report)) {
+    throw new TypeError("report must satisfy TextPipelineBatchRunReport");
+  }
+  if (!isNonEmptyString(producerVersion)) {
+    throw new TypeError("producerVersion must be a non-empty string");
+  }
+
+  const envelope: TextPipelineBatchRunReportEnvelopeV1 = {
+    schemaId: resultEnvelopeSchemaId,
+    schemaVersion: resultEnvelopeSchemaVersion,
+    producer: {
+      package: packageName,
+      version: producerVersion,
+    },
+    payloadKind: textPipelineBatchRunReportPayloadKind,
+    payload: report,
+    ...(metadata.provenance === undefined ? {} : { provenance: metadata.provenance }),
+    ...(metadata.diagnostics === undefined ? {} : { diagnostics: metadata.diagnostics }),
+    ...(metadata.scopeBoundary === undefined ? {} : { scopeBoundary: metadata.scopeBoundary }),
+    ...(metadata.limitations === undefined ? {} : { limitations: metadata.limitations }),
+  };
+  const compatibility = checkTextProtocolResultEnvelopeCompatibility(envelope, {
+    expectedPayloadKind: textPipelineBatchRunReportPayloadKind,
+    expectedProducerPackage: packageName,
+  });
+  if (!compatibility.ok) {
+    throw new Error(compatibility.diagnostics.map((entry) => entry.message ?? entry.code).join("; "));
+  }
+  return envelope;
+}
+
+export function isTextPipelineBatchRunReportEnvelopeV1(
+  value: unknown,
+): value is TextPipelineBatchRunReportEnvelopeV1 {
+  return (
+    isTextProtocolResultEnvelopeForPayloadKind(value, textPipelineBatchRunReportPayloadKind) &&
+    isTextPipelineBatchRunReportV1(value.payload)
   );
 }

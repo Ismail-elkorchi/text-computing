@@ -65,6 +65,22 @@ The trace payload is designed to sit inside
 [`../../schemas/textprotocol-result-envelope-v1.schema.json`](../../schemas/textprotocol-result-envelope-v1.schema.json)
 with payload kind `textpipeline-trace-v1`.
 
+## Batch report payload
+
+The canonical batch report schema is
+[`../../schemas/textpipeline-batch-run-report-v1.schema.json`](../../schemas/textpipeline-batch-run-report-v1.schema.json).
+It summarizes input-order batch execution without embedding full documents or full trace entries.
+
+Each batch report records:
+
+- `schemaVersion`, `documentCount`, `completeCount`, and `partialCount`;
+- deterministic `executionModes`, `cachePolicies`, and `contextFingerprints`;
+- ordered `items` with input index, document id, final revision, run status, execution mode, cache
+  policy, processor order, and trace-entry count.
+
+The batch report payload is designed to sit inside the result envelope with payload kind
+`textpipeline-batch-run-report-v1`.
+
 ## Deliberate v1 exclusions
 
 This contract does not define remote orchestration, distributed scheduling, durable cache storage,

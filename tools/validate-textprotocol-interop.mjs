@@ -10,12 +10,22 @@ import {
   textProtocolDocumentBundleSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
+  textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextpipelineTraceV1,
   textProtocolPayloadKindVerticalSliceResultV1,
   textProtocolProcessorTraceSchemaId,
   textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
-import { isTextPipelineTraceV1, runTextPipeline, textPipelineTracePayloadKind } from "@ismail-elkorchi/textpipeline";
+import {
+  createTextPipelineBatchRunReport,
+  createTextPipelineBatchRunReportEnvelope,
+  isTextPipelineBatchRunReportEnvelopeV1,
+  isTextPipelineBatchRunReportV1,
+  isTextPipelineTraceV1,
+  runTextPipeline,
+  textPipelineBatchRunReportPayloadKind,
+  textPipelineTracePayloadKind,
+} from "@ismail-elkorchi/textpipeline";
 import { isTextConformanceReportV1, runTextConformanceChecks } from "@ismail-elkorchi/textconformance";
 import { inspectTextdocAnnotations } from "@ismail-elkorchi/textlab";
 
@@ -82,6 +92,10 @@ if (textDocDocumentPayloadKind !== textProtocolPayloadKindTextdocDocumentV1) {
 
 if (textPipelineTracePayloadKind !== textProtocolPayloadKindTextpipelineTraceV1) {
   fail("textpipeline trace payload kind must match the textprotocol registry.");
+}
+
+if (textPipelineBatchRunReportPayloadKind !== textProtocolPayloadKindTextpipelineBatchRunReportV1) {
+  fail("textpipeline batch report payload kind must match the textprotocol registry.");
 }
 
 const document = {
@@ -155,6 +169,33 @@ const traceEnvelope = envelope(
   pipelineRun.trace,
 );
 assertEnvelope(traceEnvelope, textProtocolPayloadKindTextpipelineTraceV1, "@ismail-elkorchi/textpipeline");
+
+const batchReport = createTextPipelineBatchRunReport([pipelineRun]);
+if (!isTextPipelineBatchRunReportV1(batchReport)) {
+  fail("Interop batch report must satisfy textpipeline runtime guard.", batchReport);
+}
+
+const batchReportEnvelope = envelope(
+  "@ismail-elkorchi/textpipeline",
+  textProtocolPayloadKindTextpipelineBatchRunReportV1,
+  batchReport,
+);
+assertEnvelope(
+  batchReportEnvelope,
+  textProtocolPayloadKindTextpipelineBatchRunReportV1,
+  "@ismail-elkorchi/textpipeline",
+);
+
+const ownedBatchReportEnvelope = createTextPipelineBatchRunReportEnvelope(batchReport, "0.0.0", {
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  scopeBoundary: "Repository interop smoke payload only.",
+  limitations: ["This validator verifies batch report exchange shape, not broad task behavior."],
+});
+if (!isTextPipelineBatchRunReportEnvelopeV1(ownedBatchReportEnvelope)) {
+  fail("Owned batch report envelope must satisfy textpipeline runtime guard.", ownedBatchReportEnvelope);
+}
 
 const processorTrace = {
   schemaId: textProtocolProcessorTraceSchemaId,

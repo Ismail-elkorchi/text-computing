@@ -8,10 +8,13 @@ import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   createTextPipelineCacheKey,
   createTextPipelineBatchRunReport,
+  createTextPipelineBatchRunReportEnvelope,
   createTextPipelineContextFingerprint,
   createTextPipelineExecutionPlan,
   createTextPipelineTraceEnvelope,
   isTextPipelineProcessorDescriptor,
+  isTextPipelineBatchRunReportEnvelopeV1,
+  isTextPipelineBatchRunReportV1,
   isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
   packageName,
@@ -22,6 +25,8 @@ import {
   runTextPipelineBatchAsyncWithReport,
   runTextPipelineBatchWithReport,
   runTextPipelineStream,
+  textPipelineBatchRunReportPayloadKind,
+  textPipelineBatchRunReportSchemaVersion,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
   validateTextPipelineGraph,
@@ -33,7 +38,10 @@ import {
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textpipeline";
 const expectedPayloadKind: typeof textPipelineTracePayloadKind = "textpipeline-trace-v1";
+const expectedBatchRunReportPayloadKind: typeof textPipelineBatchRunReportPayloadKind =
+  "textpipeline-batch-run-report-v1";
 const expectedTraceSchemaVersion: typeof textPipelineTraceSchemaVersion = 1;
+const expectedBatchRunReportSchemaVersion: typeof textPipelineBatchRunReportSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
   schemaVersion: 1,
@@ -492,6 +500,7 @@ const batchRunWithReport = runTextPipelineBatchWithReport(
 );
 if (
   batchRunWithReport.report.documentCount !== 2 ||
+  batchRunWithReport.report.schemaVersion !== textPipelineBatchRunReportSchemaVersion ||
   batchRunWithReport.report.completeCount !== 2 ||
   batchRunWithReport.report.partialCount !== 0 ||
   batchRunWithReport.report.executionModes.join(",") !== "sync" ||
@@ -500,6 +509,41 @@ if (
     "0:doc:pipeline:complete:1,1:doc:pipeline:2:complete:1"
 ) {
   throw new Error("batch report should summarize sync document order, completion state, and trace sizes");
+}
+if (!isTextPipelineBatchRunReportV1(batchRunWithReport.report)) {
+  throw new Error("batch report should satisfy its owning runtime guard");
+}
+const batchReportEnvelope = createTextPipelineBatchRunReportEnvelope(
+  batchRunWithReport.report,
+  "0.1.0",
+  {
+    scopeBoundary: "Package test batch report envelope.",
+    limitations: ["The test covers local deterministic batch report exchange."],
+  },
+);
+if (
+  !isTextProtocolResultEnvelopeV1(batchReportEnvelope) ||
+  !isTextPipelineBatchRunReportEnvelopeV1(batchReportEnvelope) ||
+  batchReportEnvelope.payloadKind !== textPipelineBatchRunReportPayloadKind ||
+  batchReportEnvelope.payload.documentCount !== 2
+) {
+  throw new Error("batch report envelope should satisfy textprotocol and textpipeline guards");
+}
+let invalidBatchReportEnvelopeRejected = false;
+try {
+  createTextPipelineBatchRunReportEnvelope(
+    {
+      ...batchRunWithReport.report,
+      completeCount: 99,
+    },
+    "0.1.0",
+  );
+} catch (error) {
+  invalidBatchReportEnvelopeRejected =
+    error instanceof TypeError && error.message === "report must satisfy TextPipelineBatchRunReport";
+}
+if (!invalidBatchReportEnvelopeRejected) {
+  throw new Error("batch report envelope creation should reject inconsistent reports");
 }
 if (
   createTextPipelineBatchRunReport(batchRunWithReport.runs).contextFingerprints.join(",") !==
@@ -636,4 +680,6 @@ if (!midRunAbortRejected) {
 
 void expectedPackageName;
 void expectedPayloadKind;
+void expectedBatchRunReportPayloadKind;
 void expectedTraceSchemaVersion;
+void expectedBatchRunReportSchemaVersion;

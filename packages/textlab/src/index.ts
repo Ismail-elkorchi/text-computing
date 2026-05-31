@@ -14,6 +14,7 @@ import {
   type TextPackResourceInventoryDiagnostic,
 } from "@ismail-elkorchi/textpack";
 import {
+  isTextPipelineBatchRunReportV1,
   isTextPipelineTraceV1,
   type TextPipelineTraceEntry,
 } from "@ismail-elkorchi/textpipeline";
@@ -306,28 +307,6 @@ export interface TextlabPipelineBatchReportInspection {
   readonly rows: readonly TextlabPipelineBatchReportRow[];
 }
 
-interface TextlabPipelineBatchReportItemRecord {
-  readonly inputIndex: number;
-  readonly documentId: string;
-  readonly finalRevision: string;
-  readonly runStatus: "complete" | "partial";
-  readonly executionMode: "sync" | "async";
-  readonly cachePolicy: "none" | "read-through";
-  readonly processorOrder: readonly string[];
-  readonly traceEntryCount: number;
-}
-
-interface TextlabPipelineBatchReportRecord {
-  readonly schemaVersion: 1;
-  readonly documentCount: number;
-  readonly completeCount: number;
-  readonly partialCount: number;
-  readonly executionModes: readonly string[];
-  readonly cachePolicies: readonly string[];
-  readonly contextFingerprints: readonly string[];
-  readonly items: readonly TextlabPipelineBatchReportItemRecord[];
-}
-
 export interface TextlabPackBackedRuleInspectionOptions {
   readonly packIds?: readonly string[];
   readonly resourceIds?: readonly string[];
@@ -403,30 +382,6 @@ function recordStringArrayEntries(value: unknown): readonly TextlabCount[] {
 
 function numeric(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
-
-function isNonNegativeInteger(value: unknown): value is number {
-  return typeof value === "number" && Number.isInteger(value) && value >= 0;
-}
-
-function sameStringArray(left: readonly string[], right: readonly string[]): boolean {
-  return left.length === right.length && left.every((entry, index) => entry === right[index]);
-}
-
-function isSortedUniqueStringArray(value: unknown): value is readonly string[] {
-  return isStringArray(value) && sameStringArray(value, stringSet(value));
-}
-
-function isTextPipelineRunStatus(value: unknown): value is "complete" | "partial" {
-  return value === "complete" || value === "partial";
-}
-
-function isTextPipelineExecutionMode(value: unknown): value is "sync" | "async" {
-  return value === "sync" || value === "async";
-}
-
-function isTextPipelineCachePolicy(value: unknown): value is "none" | "read-through" {
-  return value === "none" || value === "read-through";
 }
 
 function isTextRulesTextPackRuleKind(value: unknown): value is TextRulesTextPackRuleKind {
@@ -1078,60 +1033,8 @@ export function renderTextPipelineTraceInspection(
   ].join("\n");
 }
 
-function isPipelineBatchReportItem(value: unknown): value is TextlabPipelineBatchReportItemRecord {
-  if (!isRecord(value)) return false;
-  return (
-    isNonNegativeInteger(value.inputIndex) &&
-    isNonEmptyString(value.documentId) &&
-    isNonEmptyString(value.finalRevision) &&
-    isTextPipelineRunStatus(value.runStatus) &&
-    isTextPipelineExecutionMode(value.executionMode) &&
-    isTextPipelineCachePolicy(value.cachePolicy) &&
-    isStringArray(value.processorOrder) &&
-    isNonNegativeInteger(value.traceEntryCount)
-  );
-}
-
-function isPipelineBatchReport(value: unknown): value is TextlabPipelineBatchReportRecord {
-  if (!isRecord(value) || value.schemaVersion !== 1) return false;
-  const items = value.items;
-  const executionModeValues = value.executionModes;
-  const cachePolicyValues = value.cachePolicies;
-  const contextFingerprintValues = value.contextFingerprints;
-  if (
-    !isNonNegativeInteger(value.documentCount) ||
-    !isNonNegativeInteger(value.completeCount) ||
-    !isNonNegativeInteger(value.partialCount) ||
-    !Array.isArray(items) ||
-    !isSortedUniqueStringArray(executionModeValues) ||
-    !isSortedUniqueStringArray(cachePolicyValues) ||
-    !isSortedUniqueStringArray(contextFingerprintValues)
-  ) {
-    return false;
-  }
-  if (!items.every(isPipelineBatchReportItem)) return false;
-
-  const inputIndexes = items.map((item) => item.inputIndex);
-  if (new Set(inputIndexes).size !== inputIndexes.length) return false;
-  if (!inputIndexes.every((inputIndex, index) => inputIndex === index)) return false;
-
-  const completeCount = items.filter((item) => item.runStatus === "complete").length;
-  const partialCount = items.filter((item) => item.runStatus === "partial").length;
-  const executionModes = stringSet(items.map((item) => item.executionMode));
-  const cachePolicies = stringSet(items.map((item) => item.cachePolicy));
-
-  return (
-    value.documentCount === items.length &&
-    value.completeCount === completeCount &&
-    value.partialCount === partialCount &&
-    value.completeCount + value.partialCount === value.documentCount &&
-    sameStringArray(executionModeValues, executionModes) &&
-    sameStringArray(cachePolicyValues, cachePolicies)
-  );
-}
-
 export function inspectTextPipelineBatchReport(value: unknown): TextlabPipelineBatchReportInspection {
-  if (!isPipelineBatchReport(value)) {
+  if (!isTextPipelineBatchRunReportV1(value)) {
     throw new TypeError("textpipeline batch report is invalid");
   }
   const rows = value.items
