@@ -39,7 +39,6 @@ const loaded = await loadTextPackFromFileSystem({
   manifest,
   root: packRoot,
   request: {
-    kind: "stopwords",
     language: "en",
   },
   readText: (resourcePath) => readFile(resourcePath, "utf8"),
@@ -49,14 +48,18 @@ if (loaded.diagnostics.length !== 0) {
   throw new Error(JSON.stringify(loaded.diagnostics));
 }
 
-const matches = lookupTextPackLoadedEntries(loaded.resources, "the");
+const queries = ["the", "analyses", "Acme Corp", "Prof.", "queries", "VERB"];
 console.log(JSON.stringify({
   packId: manifest.id,
   resources: loaded.resources.map((entry) => entry.resource.resourceId),
-  query: "the",
-  matches: matches.map((match) => ({
-    resourceId: match.resource.resourceId,
-    value: match.entry.value,
-    line: match.entry.line,
+  queries: queries.map((query) => ({
+    query,
+    matches: lookupTextPackLoadedEntries(loaded.resources, query).map((match) => ({
+      resourceId: match.resource.resourceId,
+      value: match.entry.value,
+      label: match.entry.label,
+      attributes: match.entry.attributes,
+      line: match.entry.line,
+    })),
   })),
 }, null, 2));

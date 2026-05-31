@@ -1,16 +1,17 @@
 # @ismail-elkorchi/textpack-en-core
 
-This package provides the pack:en-core reference resource pack for `@ismail-elkorchi/textpack` alpha validation.
+This package provides the `pack:en-core` reference resource pack for `@ismail-elkorchi/textpack` workflows.
 
 ## Scope
 
-Reference fixture pack for English resource loading; it is not broad language coverage.
+Reference English resources for deterministic pack loading, pack-backed rules, lookup, and package validation. It is not a comprehensive English lexicon or named-entity catalog.
 
 ## Resources
 
 - `stopwords`: `stopwords-en-core`
 - `rules`: `abbrev-en-core`
 - `lexicons`: `lexicon-en-core`
+- `gazetteers`: `gazetteer-en-core`
 - `tagsets`: `tagset-ud-lite`
 - `morphology`: `morph-en-core`
 - `benchmarks`: `benchmark-en-smoke`

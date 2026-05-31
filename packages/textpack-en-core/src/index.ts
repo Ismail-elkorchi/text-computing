@@ -26,6 +26,7 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     "stopwords": true,
     "rules": true,
     "lexicons": true,
+    "gazetteers": true,
     "tagsets": true,
     "morphology": true,
     "benchmarks": true
@@ -39,6 +40,9 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     ],
     "lexicons": [
       "resources/lexicon.en.simple.tsv"
+    ],
+    "gazetteers": [
+      "resources/gazetteer.en.core.tsv"
     ],
     "tagsets": [
       "resources/tagset.ud-lite.tsv"
@@ -59,6 +63,9 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     ],
     "lexicons": [
       "lexicon-en-core"
+    ],
+    "gazetteers": [
+      "gazetteer-en-core"
     ],
     "tagsets": [
       "tagset-ud-lite"
@@ -107,7 +114,7 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     "overlayPrecedence": 10
   },
   "limitations": [
-    "Reference fixture pack for English resource loading; it is not broad language coverage."
+    "Reference English resource pack for deterministic package workflows; it is not a comprehensive English lexicon or named-entity catalog."
   ]
 } as const;
 
