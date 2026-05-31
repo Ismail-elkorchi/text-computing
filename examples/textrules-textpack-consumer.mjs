@@ -7,7 +7,11 @@ import { loadTextPackFromFileSystem } from "@ismail-elkorchi/textpack";
 import { textPackEnCoreManifest } from "@ismail-elkorchi/textpack-en-core";
 import { runTextPipeline } from "@ismail-elkorchi/textpipeline";
 import { createTextPackRulesPipelineProcessor } from "@ismail-elkorchi/textrules";
-import { inspectTextdocAnnotations } from "@ismail-elkorchi/textlab";
+import {
+  inspectPackBackedRuleAnnotations,
+  inspectTextdocAnnotations,
+  inspectTextPipelineTrace,
+} from "@ismail-elkorchi/textlab";
 
 const manifestUrl = await import.meta.resolve("@ismail-elkorchi/textpack-en-core/pack.manifest.json");
 const packRoot = dirname(fileURLToPath(manifestUrl));
@@ -47,6 +51,8 @@ const annotations = ruleLayer?.annotations ?? [];
 const inspection = inspectTextdocAnnotations(pipelineRun.document, {
   layerKinds: ["extension"],
 });
+const traceInspection = inspectTextPipelineTrace(pipelineRun.trace);
+const packBackedRuleInspection = inspectPackBackedRuleAnnotations(pipelineRun.document);
 
 console.log(JSON.stringify({
   documentId: pipelineRun.document.documentId,
@@ -60,4 +66,6 @@ console.log(JSON.stringify({
     data: annotation.data,
   })),
   inspection,
+  traceInspection,
+  packBackedRuleInspection,
 }, null, 2));

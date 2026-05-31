@@ -5,6 +5,7 @@ import {
   inspectCorpusFixture,
   inspectConformanceReportDiff,
   inspectPackageManifest,
+  inspectPackBackedRuleAnnotations,
   inspectReleaseReadiness,
   inspectRetrievalEvaluation,
   inspectRetrievalQrels,
@@ -13,11 +14,13 @@ import {
   inspectTextPackManifest,
   inspectTextPackResourceList,
   inspectTextPackValidation,
+  inspectTextPipelineTrace,
   packageName,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
   renderPackageInspection,
+  renderPackBackedRuleInspection,
   renderReleaseReadinessInspection,
   renderRetrievalEvaluationInspection,
   renderRetrievalQrelsInspection,
@@ -26,6 +29,7 @@ import {
   renderTextPackInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
+  renderTextPipelineTraceInspection,
   summarizeConformanceReport,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
@@ -437,6 +441,154 @@ if (!invalidDocumentRejected) {
   throw new Error("invalid textdoc documents should be rejected before inspection");
 }
 
+const pipelineTrace = {
+  schemaVersion: 1,
+  documentId: "doc:inspection",
+  finalRevision: "1>textrules.textpack-rules",
+  executionMode: "sync",
+  runStatus: "complete",
+  processorOrder: ["textrules.textpack-rules"],
+  contextFingerprint: "fnv1a32:pipeline-inspection",
+  cachePolicy: "none",
+  entries: [
+    {
+      processorId: "textrules.textpack-rules",
+      version: "0.1.0",
+      status: "applied",
+      emittedViews: [],
+      emittedLayers: ["textrules:textpack-rule-outputs"],
+      inputRevision: "1",
+      outputRevision: "1>textrules.textpack-rules",
+    },
+  ],
+};
+
+const pipelineTraceInspection = inspectTextPipelineTrace(pipelineTrace);
+if (
+  pipelineTraceInspection.documentId !== "doc:inspection" ||
+  pipelineTraceInspection.processorCount !== 1 ||
+  pipelineTraceInspection.emittedLayerCount !== 1 ||
+  pipelineTraceInspection.rows.map((row) => `${row.processorId}:${row.status}`).join(",") !==
+    "textrules.textpack-rules:applied"
+) {
+  throw new Error("pipeline trace inspection should summarize deterministic processor trace output");
+}
+
+if (!renderTextPipelineTraceInspection(pipelineTraceInspection).includes("Run status: complete")) {
+  throw new Error("pipeline trace renderer should include run status");
+}
+
+let invalidPipelineTraceRejected = false;
+try {
+  inspectTextPipelineTrace({ schemaVersion: 1, entries: [] });
+} catch (error) {
+  invalidPipelineTraceRejected = error instanceof TypeError && error.message === "textpipeline trace is invalid";
+}
+
+if (!invalidPipelineTraceRejected) {
+  throw new Error("invalid textpipeline traces should be rejected before inspection");
+}
+
+const packBackedRuleDocument = {
+  ...textdocDocument,
+  revision: "1>textrules.textpack-rules",
+  layers: [
+    ...textdocDocument.layers,
+    {
+      id: "textrules:textpack-rule-outputs",
+      kind: "extension",
+      viewId: "analysis",
+      annotations: [
+        {
+          id: "textrules:textpack:lexicon:match-1",
+          kind: "extension",
+          extensionId: "textrules:textpack-lexicon",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis", startCU: 0, endCU: 5 }],
+          confidence: { value: 1, method: "textrules.textpack.exact-match.v1" },
+          provenance: {
+            references: [
+              { kind: "textpack-pack", id: "pack:en-core" },
+              { kind: "textpack-resource", id: "pack:en-core#lexicon-en-core" },
+              { kind: "textpack-entry", id: "pack:en-core#lexicon-en-core:3" },
+              { kind: "textrules-rule", id: "textpack:lexicon:lexicon-en-core:3" },
+            ],
+          },
+          data: {
+            kind: "lexicon",
+            packId: "pack:en-core",
+            resourceId: "lexicon-en-core",
+            ruleId: "textpack:lexicon:lexicon-en-core:3",
+            line: 3,
+            value: "Alice",
+            matchedText: "Alice",
+            tokenIds: ["token-1"],
+            lookupKey: "Alice",
+            resourceKind: "lexicon",
+            resourceFamily: "lexicons",
+            attributes: { pos: "PROPN" },
+          },
+        },
+        {
+          id: "textrules:textpack:stopword:match-2",
+          kind: "extension",
+          extensionId: "textrules:textpack-stopword",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "span", viewId: "analysis", startCU: 6, endCU: 11 }],
+          confidence: { value: 1, method: "textrules.textpack.exact-match.v1" },
+          provenance: {
+            references: [
+              { kind: "textpack-pack", id: "pack:en-core" },
+              { kind: "textpack-resource", id: "pack:en-core#stopwords-en-core" },
+              { kind: "textpack-entry", id: "pack:en-core#stopwords-en-core:5" },
+              { kind: "textrules-rule", id: "textpack:stopword:stopwords-en-core:5" },
+            ],
+          },
+          data: {
+            kind: "stopword",
+            packId: "pack:en-core",
+            resourceId: "stopwords-en-core",
+            ruleId: "textpack:stopword:stopwords-en-core:5",
+            line: 5,
+            value: "knows",
+            matchedText: "knows",
+            tokenIds: ["token-2"],
+            lookupKey: "knows",
+            resourceKind: "stopwords",
+            resourceFamily: "stopwords",
+            attributes: {},
+          },
+        },
+      ],
+    },
+  ],
+};
+
+const packBackedRuleInspection = inspectPackBackedRuleAnnotations(packBackedRuleDocument);
+if (
+  packBackedRuleInspection.sourcePackage !== "@ismail-elkorchi/textrules" ||
+  packBackedRuleInspection.ruleAnnotationCount !== 2 ||
+  packBackedRuleInspection.rows.map((row) => `${row.ruleKind}:${row.resourceId}:${row.line}`).join(",") !==
+    "lexicon:lexicon-en-core:3,stopword:stopwords-en-core:5"
+) {
+  throw new Error("pack-backed rule inspection should summarize textrules annotations deterministically");
+}
+
+const filteredPackBackedRuleInspection = inspectPackBackedRuleAnnotations(packBackedRuleDocument, {
+  resourceIds: ["stopwords-en-core"],
+  ruleKinds: ["stopword"],
+});
+if (
+  filteredPackBackedRuleInspection.filteredAnnotationCount !== 1 ||
+  filteredPackBackedRuleInspection.rows[0]?.annotationId !== "textrules:textpack:stopword:match-2"
+) {
+  throw new Error("pack-backed rule inspection should support deterministic resource and kind filtering");
+}
+
+if (!renderPackBackedRuleInspection(packBackedRuleInspection).includes("resource=lexicon-en-core")) {
+  throw new Error("pack-backed rule renderer should include resource identifiers");
+}
+
 
 const corpusFixture = {
   schemaVersion: 1,
@@ -619,6 +771,10 @@ const reportPath = path.join(dir, "conformance-report.json");
 await writeFile(reportPath, `${JSON.stringify(conformanceReport, null, 2)}\n`, "utf8");
 const textdocPath = path.join(dir, "document.json");
 await writeFile(textdocPath, `${JSON.stringify(textdocDocument, null, 2)}\n`, "utf8");
+const pipelineTracePath = path.join(dir, "pipeline-trace.json");
+await writeFile(pipelineTracePath, `${JSON.stringify(pipelineTrace, null, 2)}\n`, "utf8");
+const packBackedRuleDocumentPath = path.join(dir, "pack-backed-rules-document.json");
+await writeFile(packBackedRuleDocumentPath, `${JSON.stringify(packBackedRuleDocument, null, 2)}\n`, "utf8");
 const corpusPath = path.join(dir, "corpus-fixture.json");
 await writeFile(corpusPath, `${JSON.stringify(corpusFixture, null, 2)}\n`, "utf8");
 const changedReportPath = path.join(dir, "conformance-report-actual.json");
@@ -743,6 +899,73 @@ if (
   filteredAnnotationCliResult.stdout.includes("coreference-chain:chain-1")
 ) {
   throw new Error("annotations CLI should support deterministic layer-kind filtering");
+}
+
+const pipelineTraceCliResult = await runTextlabCli(["pipeline-trace", pipelineTracePath]);
+
+if (pipelineTraceCliResult.exitCode !== 0 || pipelineTraceCliResult.stderr !== "") {
+  throw new Error(`pipeline-trace CLI should pass: ${pipelineTraceCliResult.stderr}`);
+}
+
+if (!pipelineTraceCliResult.stdout.includes("Processors: 1")) {
+  throw new Error("pipeline-trace CLI should render processor counts");
+}
+
+const pipelineTraceJsonCliResult = await runTextlabCli(["pipeline-trace", pipelineTracePath, "--json"]);
+
+if (
+  pipelineTraceJsonCliResult.exitCode !== 0 ||
+  JSON.parse(pipelineTraceJsonCliResult.stdout).rows[0]?.processorId !== "textrules.textpack-rules"
+) {
+  throw new Error("pipeline-trace CLI should support stable JSON output");
+}
+
+const invalidPipelineTracePath = path.join(dir, "invalid-pipeline-trace.json");
+await writeFile(invalidPipelineTracePath, `${JSON.stringify({ schemaVersion: 1, entries: [] }, null, 2)}\n`, "utf8");
+const invalidPipelineTraceCliResult = await runTextlabCli(["pipeline-trace", invalidPipelineTracePath]);
+if (invalidPipelineTraceCliResult.exitCode !== 1 || !invalidPipelineTraceCliResult.stderr.includes("Invalid textpipeline trace")) {
+  throw new Error("pipeline-trace CLI should reject invalid trace input");
+}
+
+const packBackedRulesCliResult = await runTextlabCli(["pack-backed-rules", packBackedRuleDocumentPath]);
+
+if (packBackedRulesCliResult.exitCode !== 0 || packBackedRulesCliResult.stderr !== "") {
+  throw new Error(`pack-backed-rules CLI should pass: ${packBackedRulesCliResult.stderr}`);
+}
+
+if (!packBackedRulesCliResult.stdout.includes("Rule annotations: 2")) {
+  throw new Error("pack-backed-rules CLI should render rule annotation counts");
+}
+
+const filteredPackBackedRulesCliResult = await runTextlabCli([
+  "pack-backed-rules",
+  packBackedRuleDocumentPath,
+  "--resource-id",
+  "stopwords-en-core",
+  "--rule-kind",
+  "stopword",
+  "--json",
+]);
+const filteredPackBackedRulesCliJson = JSON.parse(filteredPackBackedRulesCliResult.stdout);
+if (
+  filteredPackBackedRulesCliResult.exitCode !== 0 ||
+  filteredPackBackedRulesCliJson.filteredAnnotationCount !== 1 ||
+  filteredPackBackedRulesCliJson.rows[0]?.resourceId !== "stopwords-en-core"
+) {
+  throw new Error("pack-backed-rules CLI should support deterministic filters and JSON output");
+}
+
+const invalidPackBackedRuleFilterCliResult = await runTextlabCli([
+  "pack-backed-rules",
+  packBackedRuleDocumentPath,
+  "--rule-kind",
+  "invalid-kind",
+]);
+if (
+  invalidPackBackedRuleFilterCliResult.exitCode !== 2 ||
+  !invalidPackBackedRuleFilterCliResult.stderr.includes("Invalid pack-backed rule kind")
+) {
+  throw new Error("pack-backed-rules CLI should reject invalid rule-kind filters");
 }
 
 

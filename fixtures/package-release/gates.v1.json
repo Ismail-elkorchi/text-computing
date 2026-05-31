@@ -572,7 +572,9 @@
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
         "status": "validated",
-        "downstreamDependents": [],
+        "downstreamDependents": [
+          "@ismail-elkorchi/textlab"
+        ],
         "evidenceRefs": [
           "packages/textpipeline/package.json",
           "fixtures/package-release/gates.v1.json",
@@ -669,7 +671,9 @@
       "downstreamApiStability": {
         "requiredBeforeRelease": true,
         "status": "validated",
-        "downstreamDependents": [],
+        "downstreamDependents": [
+          "@ismail-elkorchi/textlab"
+        ],
         "evidenceRefs": [
           "packages/textrules/package.json",
           "fixtures/package-release/gates.v1.json",
