@@ -5,8 +5,11 @@ import {
   isTextProtocolDocumentBundleV1,
   isTextProtocolProcessorTraceV1,
   isTextProtocolResultEnvelopeForPayloadKind,
+  isTextProtocolSchemaFamilyEnvelopeJsonTransportV1,
+  parseTextProtocolSchemaFamilyEnvelopeJson,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  serializeTextProtocolSchemaFamilyEnvelopeJson,
   textProtocolDocumentBundleSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
@@ -162,6 +165,18 @@ if (!isTextProtocolDocumentBundleV1(documentBundle)) {
   fail("Interop document bundle must satisfy textprotocol structural guard.", documentBundle);
 }
 assertProtocolFamily(documentBundle, "document-bundle", "@ismail-elkorchi/textdoc");
+const documentBundleTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(documentBundle, {
+  expectedFamily: "document-bundle",
+  expectedProducerPackage: "@ismail-elkorchi/textdoc",
+  requireProvenance: true,
+  requireLimitations: true,
+});
+if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport)) {
+  fail("Interop document-bundle transport must satisfy textprotocol transport guard.", documentBundleTransport);
+}
+if (!isTextProtocolDocumentBundleV1(parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport))) {
+  fail("Interop document-bundle transport must parse back into a document bundle.");
+}
 
 const traceEnvelope = envelope(
   "@ismail-elkorchi/textpipeline",
