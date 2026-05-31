@@ -219,6 +219,12 @@ async function assertBuiltPackageSmoke() {
     batchReportInspection.documentCount === 1 && batchReportInspection.completeCount === 1,
     "textlab should inspect textpipeline batch reports through package APIs.",
   );
+  const envelopeInspection = textlab.inspectTextProtocolResultEnvelope(batchReportEnvelope);
+  expect(
+    envelopeInspection.registeredPayloadKind &&
+      envelopeInspection.payloadKind === textprotocol.textProtocolPayloadKindTextpipelineBatchRunReportV1,
+    "textlab should inspect textprotocol result envelopes through package APIs.",
+  );
 
   const collection = textcorpus.createTextCorpusCollection(
     [

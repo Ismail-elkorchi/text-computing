@@ -31,6 +31,7 @@
     "@ismail-elkorchi/textdoc": "0.1.0",
     "@ismail-elkorchi/textpack": "0.1.0",
     "@ismail-elkorchi/textpipeline": "0.1.0",
+    "@ismail-elkorchi/textprotocol": "0.1.0",
     "@ismail-elkorchi/textrules": "0.1.0"
   },
   "license": "MIT",

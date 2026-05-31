@@ -7,6 +7,7 @@ It can:
 - inspect package manifests;
 - inspect textpack manifests;
 - inspect textdoc documents and annotation graphs;
+- inspect textprotocol result envelopes;
 - inspect textpipeline traces;
 - inspect textpipeline batch run reports;
 - inspect pack-backed textrules annotation outputs;
@@ -27,6 +28,7 @@ textlab pack update-resource ./my-pack --resource-id stopwords:local --next-reso
 textlab pack remove-resource ./my-pack --resource-id stopwords:local:v2
 textlab document fixtures/textdoc/examples/document-annotation-model-v1.json
 textlab annotations fixtures/textdoc/examples/document-annotation-model-v1.json --layer-kind relation
+textlab result-envelope result-envelope.json
 textlab pipeline-trace pipeline-trace.json
 textlab pipeline-batch-report pipeline-batch-report.json
 textlab pack-backed-rules document-with-pack-backed-rules.json --resource-id lexicon-en-core

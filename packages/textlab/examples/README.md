@@ -5,6 +5,7 @@ textlab package packages/textlab/package.json
 textlab pack packages/textpack-en-core/textpack.manifest.json
 textlab document fixtures/textdoc/examples/document-annotation-model-v1.json
 textlab annotations fixtures/textdoc/examples/document-annotation-model-v1.json --layer-kind relation
+textlab result-envelope result-envelope.json
 textlab pipeline-trace pipeline-trace.json
 textlab pipeline-batch-report pipeline-batch-report.json
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
@@ -18,3 +19,6 @@ Runnable repository examples:
 
 - [`../../../examples/textlab-pipeline-batch-report-consumer.mjs`](../../../examples/textlab-pipeline-batch-report-consumer.mjs)
   runs an async textpipeline batch and inspects its batch report through textlab.
+- [`../../../examples/textlab-result-envelope-consumer.mjs`](../../../examples/textlab-result-envelope-consumer.mjs)
+  runs a textpipeline batch, wraps the report in a textprotocol envelope, and inspects the envelope
+  through textlab.
