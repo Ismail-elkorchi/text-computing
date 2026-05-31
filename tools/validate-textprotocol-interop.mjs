@@ -4,10 +4,12 @@ import {
   applyTextDocAnnotationBundlePayloadV1,
   exportTextDocAnnotationBundlePayloadV1,
   exportTextDocDocumentBundlePayloadV1,
+  exportTextDocEvidenceBundlePayloadV1,
   exportTextDocMappingLossReportPayloadV1,
   importTextDocDocumentBundlePayloadV1,
   isTextDocAnnotationBundlePayloadV1,
   isTextDocDocumentBundlePayloadV1,
+  isTextDocEvidenceBundlePayloadV1,
   isTextDocDocumentV1,
   isTextDocMappingLossReportPayloadV1,
   packageName as textdocPackageName,
@@ -27,6 +29,7 @@ import {
   isTextProtocolAnnotationBundleV1,
   isTextProtocolCorpusMetricEnvelopeV1,
   isTextProtocolDocumentBundleV1,
+  isTextProtocolEvidenceBundleV1,
   isTextProtocolMappingLossReportV1,
   isTextProtocolProcessorTraceV1,
   isTextProtocolProtocolErrorV1,
@@ -40,6 +43,7 @@ import {
   textProtocolAnnotationBundleSchemaId,
   textProtocolCorpusMetricEnvelopeSchemaId,
   textProtocolDocumentBundleSchemaId,
+  textProtocolEvidenceBundleSchemaId,
   textProtocolMappingLossReportSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
@@ -210,6 +214,10 @@ const document = {
           lifecycle: { state: "active" },
           targets: [{ kind: "span", viewId: "analysis", startCU: 0, endCU: 5 }],
           text: "Alice",
+          provenance: {
+            references: [{ kind: "fixture", id: "textprotocol-interop-tokenizer" }],
+          },
+          confidence: { value: 0.9, method: "interop-fixture" },
         },
       ],
     },
@@ -319,6 +327,47 @@ if (!appliedAnnotationBundle.ok || appliedAnnotationBundle.document?.layers[0]?.
 const annotationBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedAnnotationBundle);
 if (annotationBundleInspection.family !== "annotation-bundle" || !annotationBundleInspection.compatibilityOk) {
   fail("Interop textlab inspection must preserve annotation-bundle envelope metadata.", annotationBundleInspection);
+}
+
+const evidenceBundlePayload = exportTextDocEvidenceBundlePayloadV1(document, {
+  recordIdPrefix: "evidence:textprotocol-interop",
+  supportByAnnotationId: {
+    "token-1": [{ kind: "fixture", id: "textprotocol-interop-support" }],
+  },
+});
+if (!isTextDocEvidenceBundlePayloadV1(evidenceBundlePayload) || evidenceBundlePayload.records.length !== 1) {
+  fail("Interop evidence-bundle payload must satisfy textdoc runtime guard.", evidenceBundlePayload);
+}
+const evidenceBundle = {
+  schemaId: textProtocolEvidenceBundleSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: textdocPackageName,
+    version: "0.0.0",
+  },
+  payload: evidenceBundlePayload,
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural evidence-bundle interop smoke only."],
+};
+if (!isTextProtocolEvidenceBundleV1(evidenceBundle)) {
+  fail("Interop evidence bundle must satisfy textprotocol structural guard.", evidenceBundle);
+}
+assertProtocolFamily(evidenceBundle, "evidence-bundle", textdocPackageName);
+const evidenceBundleTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(evidenceBundle, {
+  expectedFamily: "evidence-bundle",
+  expectedProducerPackage: textdocPackageName,
+  requireProvenance: true,
+  requireLimitations: true,
+});
+const parsedEvidenceBundle = parseTextProtocolSchemaFamilyEnvelopeJson(evidenceBundleTransport);
+if (!isTextProtocolEvidenceBundleV1(parsedEvidenceBundle)) {
+  fail("Interop evidence-bundle transport must parse back into an evidence bundle.");
+}
+const evidenceBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedEvidenceBundle);
+if (evidenceBundleInspection.family !== "evidence-bundle" || !evidenceBundleInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve evidence-bundle metadata.", evidenceBundleInspection);
 }
 
 const lossyDocument = addTextDocSpanMapV1(

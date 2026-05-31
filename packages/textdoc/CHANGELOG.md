@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add evidence-bundle payload export for textdoc annotations and a public protocol-exchange example.
 - Add mapping-loss report payload export for textdoc loss markers and a public protocol-exchange example.
 - Add a public annotation-bundle protocol exchange example and validation coverage.
 - Add document-bundle payload export/import helpers and a public protocol-exchange consumer example.

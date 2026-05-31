@@ -11,11 +11,13 @@ import {
   exportTextDocAnnotationBundlePayloadV1,
   exportTextDocDocumentBundlePayloadV1,
   exportTextDocDocumentV1ToConllu,
+  exportTextDocEvidenceBundlePayloadV1,
   exportTextDocMappingLossReportPayloadV1,
   importConlluToTextDocDocumentV1,
   importTextDocDocumentBundlePayloadV1,
   isTextDocAnnotationBundlePayloadV1,
   isTextDocDocumentBundlePayloadV1,
+  isTextDocEvidenceBundlePayloadV1,
   isTextDocExtensionId,
   isTextDocMappingLossReportPayloadV1,
   isTextDocDocumentV1,
@@ -635,6 +637,78 @@ try {
 }
 if (!emptyMappingLossIdRejected) {
   throw new Error("mapping-loss report export should reject empty mapping ids");
+}
+
+const evidenceBundlePayload = exportTextDocEvidenceBundlePayloadV1(graphFixtureDocument, {
+  recordIdPrefix: "evidence:graph-runtime",
+  exactnessByAnnotationId: {
+    "entity-1": "E1",
+  },
+  supportByAnnotationId: {
+    "relation-1": [{ kind: "fixture", id: "relation-support" }],
+  },
+});
+if (!isTextDocEvidenceBundlePayloadV1(evidenceBundlePayload)) {
+  throw new Error("evidence-bundle export should produce a runtime-valid payload");
+}
+if (evidenceBundlePayload.records.length !== graphAnnotationCount) {
+  throw new Error("evidence-bundle export should emit one record per graph annotation");
+}
+const evidenceRecordIds = evidenceBundlePayload.records.map((entry) => entry.id);
+if (
+  JSON.stringify(evidenceRecordIds) !==
+  JSON.stringify([...evidenceRecordIds].sort((left, right) => left.localeCompare(right)))
+) {
+  throw new Error("evidence-bundle export should use deterministic record ordering");
+}
+const entityEvidence = evidenceBundlePayload.records.find((entry) => entry.id === "evidence:graph-runtime:entities:entity-1");
+if (
+  entityEvidence?.exactness !== "E1" ||
+  !entityEvidence.targets.some((target) => target.kind === "span" && target.id.endsWith(":analysis-view:0-5"))
+) {
+  throw new Error("evidence-bundle export should preserve exactness overrides and span targets");
+}
+const relationEvidence = evidenceBundlePayload.records.find(
+  (entry) => entry.id === "evidence:graph-runtime:relations:relation-1",
+);
+if (
+  relationEvidence?.support?.map((entry) => `${entry.kind}:${entry.id}`).join(",") !==
+  "fixture:relation-support" ||
+  relationEvidence.uncertainty?.confidence === undefined ||
+  relationEvidence.uncertainty.ambiguitySet === undefined
+) {
+  throw new Error("evidence-bundle export should preserve support references and uncertainty metadata");
+}
+const linkEvidence = evidenceBundlePayload.records.find((entry) => entry.id === "evidence:graph-runtime:entity-links:link-1");
+if (
+  linkEvidence?.exactness !== "E2" ||
+  linkEvidence.loss?.[0]?.code !== "textdoc.mapping-loss.evidence-annotation.external-reference" ||
+  linkEvidence.provenance.references === undefined ||
+  !Array.isArray(linkEvidence.provenance.references)
+) {
+  throw new Error("evidence-bundle export should preserve annotation loss and provenance references");
+}
+
+let invalidEvidenceDocumentRejected = false;
+try {
+  exportTextDocEvidenceBundlePayloadV1({ ...graphFixtureDocument, layers: [] });
+} catch (error) {
+  invalidEvidenceDocumentRejected =
+    error instanceof TypeError && error.message === "textdoc evidence-bundle requires a valid TextDocDocumentV1";
+}
+if (!invalidEvidenceDocumentRejected) {
+  throw new Error("evidence-bundle export should reject invalid textdoc documents");
+}
+
+let emptyEvidencePrefixRejected = false;
+try {
+  exportTextDocEvidenceBundlePayloadV1(graphFixtureDocument, { recordIdPrefix: "" });
+} catch (error) {
+  emptyEvidencePrefixRejected =
+    error instanceof TypeError && error.message === "textdoc evidence-bundle recordIdPrefix must be a non-empty string";
+}
+if (!emptyEvidencePrefixRejected) {
+  throw new Error("evidence-bundle export should reject empty record id prefixes");
 }
 
 const targetMismatchBundle = {

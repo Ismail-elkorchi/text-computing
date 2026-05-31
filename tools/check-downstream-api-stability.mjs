@@ -131,6 +131,10 @@ async function assertBuiltPackageSmoke() {
             lifecycle: { state: "active" },
             targets: [{ kind: "span", viewId: "source-view", startCU: 0, endCU: 5 }],
             text: "Alice",
+            provenance: {
+              references: [{ kind: "fixture", id: "downstream-api-tokenizer" }],
+            },
+            confidence: { value: 0.9, method: "downstream-api-smoke" },
           },
           {
             id: "token-2",
@@ -266,6 +270,39 @@ async function assertBuiltPackageSmoke() {
   expect(
     annotationBundleInspection.family === "annotation-bundle" && annotationBundleInspection.compatibilityOk,
     "textlab should inspect textdoc annotation-bundle envelopes through package APIs.",
+  );
+  const evidenceBundlePayload = textdoc.exportTextDocEvidenceBundlePayloadV1(document, {
+    recordIdPrefix: "evidence:downstream-api",
+    supportByAnnotationId: {
+      "token-1": [{ kind: "fixture", id: "downstream-api-support" }],
+    },
+  });
+  expect(
+    textdoc.isTextDocEvidenceBundlePayloadV1(evidenceBundlePayload) &&
+      evidenceBundlePayload.records.some((record) => record.id === "evidence:downstream-api:tokens:token-1"),
+    "textdoc built API should export evidence-bundle payloads through package APIs.",
+  );
+  const evidenceBundle = {
+    schemaId: textprotocol.textProtocolEvidenceBundleSchemaId,
+    schemaVersion: textprotocol.textProtocolSchemaVersion,
+    producer: { package: "@ismail-elkorchi/textdoc", version: "0.0.0" },
+    payload: evidenceBundlePayload,
+    provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+    limitations: ["Downstream API stability evidence-bundle smoke."],
+  };
+  const evidenceBundleTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    evidenceBundle,
+    { expectedFamily: "evidence-bundle", requireProvenance: true, requireLimitations: true },
+  );
+  const parsedEvidenceBundle = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(evidenceBundleTransport);
+  expect(
+    textprotocol.isTextProtocolEvidenceBundleV1(parsedEvidenceBundle),
+    "textprotocol should serialize and parse textdoc evidence bundles through package APIs.",
+  );
+  const evidenceBundleInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedEvidenceBundle);
+  expect(
+    evidenceBundleInspection.family === "evidence-bundle" && evidenceBundleInspection.compatibilityOk,
+    "textlab should inspect textdoc evidence-bundle envelopes through package APIs.",
   );
   const mappingLossReport = {
     schemaId: textprotocol.textProtocolMappingLossReportSchemaId,
