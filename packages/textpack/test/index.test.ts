@@ -14,6 +14,7 @@ import {
   lookupTextPackLoadedEntries,
   parseTextPackResourceContent,
   queryTextPackResourceRegistry,
+  removeTextPackManifestResource,
   resolveTextPackResources,
   satisfiesTextPackVersionRange,
   type packageName,
@@ -25,6 +26,7 @@ import {
   updateTextPackManifest,
   validateTextPackAuthoringMetadata,
   validateTextPackManifestGovernance,
+  validateTextPackResourceInventory,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textpack";
@@ -822,6 +824,106 @@ if (
   updatedResourceManifest.provides.stopwords?.join(",") !== "stopwords-en-authoring-v2"
 ) {
   throw new Error("resource authoring should update paired resource path and id deterministically");
+}
+
+const removedResourceManifest = removeTextPackManifestResource(addedResourceManifest, "lexicon-en-authoring");
+if (
+  removedResourceManifest.resources.lexicons !== undefined ||
+  removedResourceManifest.provides.lexicons !== undefined ||
+  removedResourceManifest.capabilities.lexicons !== undefined ||
+  removedResourceManifest.resources.stopwords?.join(",") !== "resources/stopwords.en.authoring.txt"
+) {
+  throw new Error("resource authoring should remove paired resource paths, ids, and derived capability flags");
+}
+
+let missingRemoveRejected = false;
+try {
+  removeTextPackManifestResource(createdManifest, "missing-resource");
+} catch (error) {
+  missingRemoveRejected = error instanceof RangeError && error.message.includes("missing-resource");
+}
+if (!missingRemoveRejected) {
+  throw new Error("resource removal should reject unknown resource ids");
+}
+
+const validInventory = validateTextPackResourceInventory(createdManifest, [
+  "resources/stopwords.en.authoring.txt",
+]);
+if (
+  !validInventory.ok ||
+  validInventory.declaredResourceCount !== 1 ||
+  validInventory.inventoryResourceCount !== 1 ||
+  validInventory.resourceFamilies.map((entry) => `${entry.family}:${entry.declaredResourceCount}`).join(",") !== "stopwords:1"
+) {
+  throw new Error("resource inventory validation should accept matching declared files");
+}
+
+const missingInventory = validateTextPackResourceInventory(createdManifest, []);
+if (
+  missingInventory.ok ||
+  missingInventory.missingResourceCount !== 1 ||
+  missingInventory.diagnostics[0]?.code !== "missing-resource-file"
+) {
+  throw new Error("resource inventory validation should diagnose missing declared resources deterministically");
+}
+
+const orphanInventory = validateTextPackResourceInventory(createdManifest, [
+  "resources/orphan.en.authoring.txt",
+  "resources/stopwords.en.authoring.txt",
+]);
+if (
+  orphanInventory.ok ||
+  orphanInventory.orphanResourceCount !== 1 ||
+  !orphanInventory.diagnostics.some((entry) => entry.code === "orphan-resource-file" && entry.path === "resources/orphan.en.authoring.txt")
+) {
+  throw new Error("resource inventory validation should diagnose orphan resource files");
+}
+
+const duplicateInventory = validateTextPackResourceInventory(duplicateResourceManifest, [
+  "resources/stopwords.en.authoring.duplicate.txt",
+  "resources/stopwords.en.authoring.txt",
+]);
+if (
+  duplicateInventory.ok ||
+  duplicateInventory.duplicateProvidedIdCount !== 1 ||
+  !duplicateInventory.diagnostics.some((entry) => entry.code === "duplicate-provides-id")
+) {
+  throw new Error("resource inventory validation should surface duplicate provided ids");
+}
+
+const staleAfterRemoveInventory = validateTextPackResourceInventory(removedResourceManifest, [
+  "resources/lexicon.en.authoring.tsv",
+  "resources/stopwords.en.authoring.txt",
+]);
+if (
+  staleAfterRemoveInventory.ok ||
+  staleAfterRemoveInventory.orphanResourceCount !== 1 ||
+  staleAfterRemoveInventory.diagnostics[0]?.code !== "orphan-resource-file"
+) {
+  throw new Error("resource inventory validation should catch stale files after manifest resource removal");
+}
+
+const stalePairInventory = validateTextPackResourceInventory(
+  {
+    ...createdManifest,
+    resources: {
+      stopwords: [
+        "resources/z-last.txt",
+        "resources/a-first.txt",
+      ],
+    },
+    provides: {
+      stopwords: ["stopwords-en-authoring"],
+    },
+  },
+  ["resources/orphan-b.txt", "resources/orphan-a.txt"],
+);
+if (
+  stalePairInventory.stalePairCount !== 1 ||
+  stalePairInventory.diagnostics.map((entry) => `${entry.code}:${entry.path ?? entry.ref ?? ""}`).join(",") !==
+    "missing-resource-file:resources/a-first.txt,missing-resource-file:resources/z-last.txt,orphan-resource-file:resources/orphan-a.txt,orphan-resource-file:resources/orphan-b.txt,resource-provides-length-mismatch:stopwords"
+) {
+  throw new Error("resource inventory validation should return diagnostics in deterministic order");
 }
 
 const authoringOverlayConflictManifest = addTextPackManifestResource(createdManifest, {

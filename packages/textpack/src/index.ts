@@ -327,6 +327,41 @@ export interface TextPackManifestGovernanceResult {
   readonly diagnostics: readonly TextPackManifestGovernanceDiagnostic[];
 }
 
+export type TextPackResourceInventoryDiagnosticCode =
+  | TextPackManifestGovernanceDiagnosticCode
+  | "missing-resource-file"
+  | "orphan-resource-file";
+
+export interface TextPackResourceInventoryDiagnostic {
+  readonly code: TextPackResourceInventoryDiagnosticCode;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly family?: TextPackResourceFamily;
+  readonly path?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextPackResourceInventoryFamilySummary {
+  readonly family: TextPackResourceFamily;
+  readonly declaredResourceCount: number;
+  readonly missingResourceCount: number;
+}
+
+export interface TextPackResourceInventoryValidationResult {
+  readonly ok: boolean;
+  readonly manifestValid: boolean;
+  readonly packId?: string;
+  readonly declaredResourceCount: number;
+  readonly inventoryResourceCount: number;
+  readonly missingResourceCount: number;
+  readonly orphanResourceCount: number;
+  readonly duplicateProvidedIdCount: number;
+  readonly stalePairCount: number;
+  readonly resourceFamilies: readonly TextPackResourceInventoryFamilySummary[];
+  readonly diagnostics: readonly TextPackResourceInventoryDiagnostic[];
+}
+
 export type TextPackCompatibilityDiagnosticCode =
   | "engine-version-missing"
   | "engine-version-incompatible"
@@ -861,6 +896,58 @@ function canonicalManifestPath(value: string): string {
 
 function resourceIdsForManifest(manifest: TextPackManifestV1): readonly string[] {
   return textPackResourceFamilies.flatMap((family) => [...(manifest.provides[family] ?? [])]);
+}
+
+function declaredTextPackResourceEntries(manifest: TextPackManifestV1): readonly {
+  readonly family: TextPackResourceFamily;
+  readonly path: string;
+  readonly resourceId?: string;
+}[] {
+  const entries: {
+    readonly family: TextPackResourceFamily;
+    readonly path: string;
+    readonly resourceId?: string;
+  }[] = [];
+  for (const family of textPackResourceFamilies) {
+    const paths = manifest.resources[family] ?? [];
+    const provides = manifest.provides[family] ?? [];
+    for (let index = 0; index < paths.length; index += 1) {
+      const pathValue = paths[index];
+      if (pathValue === undefined) continue;
+      const resourceId = provides[index];
+      entries.push({
+        family,
+        path: canonicalManifestPath(pathValue),
+        ...(resourceId === undefined ? {} : { resourceId }),
+      });
+    }
+  }
+  return entries.sort((left, right) =>
+    `${left.family}\u0000${left.path}\u0000${left.resourceId ?? ""}`.localeCompare(
+      `${right.family}\u0000${right.path}\u0000${right.resourceId ?? ""}`,
+    ),
+  );
+}
+
+function compareTextPackResourceInventoryDiagnostics(
+  left: TextPackResourceInventoryDiagnostic,
+  right: TextPackResourceInventoryDiagnostic,
+): number {
+  return `${left.code}\u0000${left.family ?? ""}\u0000${left.path ?? ""}\u0000${left.resourceId ?? ""}\u0000${left.ref ?? ""}`.localeCompare(
+    `${right.code}\u0000${right.family ?? ""}\u0000${right.path ?? ""}\u0000${right.resourceId ?? ""}\u0000${right.ref ?? ""}`,
+  );
+}
+
+function toTextPackResourceInventoryDiagnostic(
+  diagnostic: TextPackManifestGovernanceDiagnostic,
+): TextPackResourceInventoryDiagnostic {
+  return {
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
 }
 
 function textPackOverlayKey(resource: TextPackResolvedResource): string {
@@ -1556,6 +1643,117 @@ export function updateTextPackManifestResource(
   provides[nextFamily] = [...(provides[nextFamily] ?? []), options.resourceId ?? resourceId];
 
   return updateTextPackManifest(manifest, { resources, provides });
+}
+
+export function removeTextPackManifestResource(
+  manifest: TextPackManifestV1,
+  resourceId: string,
+): TextPackManifestV1 {
+  const currentFamily = textPackResourceFamilies.find((family) =>
+    (manifest.provides[family] ?? []).includes(resourceId),
+  );
+  if (currentFamily === undefined) {
+    throw new RangeError(`Textpack manifest resource ${resourceId} was not found.`);
+  }
+
+  const resources: Partial<Record<TextPackResourceFamily, string[]>> = {};
+  const provides: Partial<Record<TextPackResourceFamily, string[]>> = {};
+  for (const family of textPackResourceFamilies) {
+    resources[family] = [...(manifest.resources[family] ?? [])];
+    provides[family] = [...(manifest.provides[family] ?? [])];
+  }
+
+  const currentIndex = provides[currentFamily]?.indexOf(resourceId) ?? -1;
+  const currentPath = resources[currentFamily]?.[currentIndex];
+  if (currentIndex < 0 || currentPath === undefined) {
+    throw new RangeError(`Textpack manifest resource ${resourceId} has no paired path.`);
+  }
+
+  resources[currentFamily]?.splice(currentIndex, 1);
+  provides[currentFamily]?.splice(currentIndex, 1);
+
+  return updateTextPackManifest(manifest, { resources, provides });
+}
+
+export function validateTextPackResourceInventory(
+  manifest: unknown,
+  resourcePaths: readonly string[],
+): TextPackResourceInventoryValidationResult {
+  const governance = validateTextPackManifestGovernance(manifest);
+  const governanceDiagnostics = governance.diagnostics.map(toTextPackResourceInventoryDiagnostic);
+  const packId = isRecord(manifest) && isNonEmptyString(manifest.id) ? manifest.id : undefined;
+  if (!isTextPackManifestV1(manifest)) {
+    const diagnostics = [...governanceDiagnostics].sort(compareTextPackResourceInventoryDiagnostics);
+    return {
+      ok: false,
+      manifestValid: false,
+      ...(packId === undefined ? {} : { packId }),
+      declaredResourceCount: 0,
+      inventoryResourceCount: sortedUniqueTextPackValues(resourcePaths.map(canonicalManifestPath)).length,
+      missingResourceCount: 0,
+      orphanResourceCount: 0,
+      duplicateProvidedIdCount: diagnostics.filter((entry) => entry.code === "duplicate-provides-id").length,
+      stalePairCount: diagnostics.filter((entry) => entry.code === "resource-provides-length-mismatch").length,
+      resourceFamilies: [],
+      diagnostics,
+    };
+  }
+
+  const declaredEntries = declaredTextPackResourceEntries(manifest);
+  const declaredPaths = new Set(declaredEntries.map((entry) => entry.path));
+  const inventoryPaths = sortedUniqueTextPackValues(resourcePaths.map(canonicalManifestPath));
+  const inventoryPathSet = new Set(inventoryPaths);
+  const diagnostics: TextPackResourceInventoryDiagnostic[] = [...governanceDiagnostics];
+
+  for (const entry of declaredEntries) {
+    if (!inventoryPathSet.has(entry.path)) {
+      diagnostics.push({
+        code: "missing-resource-file",
+        packId: manifest.id,
+        family: entry.family,
+        path: entry.path,
+        ...(entry.resourceId === undefined ? {} : { resourceId: entry.resourceId }),
+        message: `Declared ${entry.family} resource ${entry.path} is missing from the supplied resource inventory.`,
+      });
+    }
+  }
+
+  for (const pathValue of inventoryPaths) {
+    if (!declaredPaths.has(pathValue)) {
+      diagnostics.push({
+        code: "orphan-resource-file",
+        packId: manifest.id,
+        path: pathValue,
+        message: `Resource inventory contains undeclared file ${pathValue}.`,
+      });
+    }
+  }
+
+  const resourceFamilies = textPackResourceFamilies
+    .map((family): TextPackResourceInventoryFamilySummary => {
+      const familyEntries = declaredEntries.filter((entry) => entry.family === family);
+      return {
+        family,
+        declaredResourceCount: familyEntries.length,
+        missingResourceCount: familyEntries.filter((entry) => !inventoryPathSet.has(entry.path)).length,
+      };
+    })
+    .filter((entry) => entry.declaredResourceCount > 0 || entry.missingResourceCount > 0);
+  const sortedDiagnostics = diagnostics.sort(compareTextPackResourceInventoryDiagnostics);
+
+  return {
+    ok: sortedDiagnostics.length === 0,
+    manifestValid: governance.ok,
+    packId: manifest.id,
+    declaredResourceCount: declaredEntries.length,
+    inventoryResourceCount: inventoryPaths.length,
+    missingResourceCount: sortedDiagnostics.filter((entry) => entry.code === "missing-resource-file").length,
+    orphanResourceCount: sortedDiagnostics.filter((entry) => entry.code === "orphan-resource-file").length,
+    duplicateProvidedIdCount: sortedDiagnostics.filter((entry) => entry.code === "duplicate-provides-id").length,
+    stalePairCount: sortedDiagnostics.filter((entry) => entry.code === "resource-provides-length-mismatch").length,
+    resourceFamilies,
+    diagnostics: sortedDiagnostics,
+  };
 }
 
 export function validateTextPackAuthoringMetadata(

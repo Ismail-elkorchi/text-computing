@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile, stat } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import {
   inspectCorpusFixture,
@@ -12,6 +12,7 @@ import {
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
+  inspectTextPackResourceAudit,
   inspectTextPackResourceList,
   inspectTextPackValidation,
   inspectTextPipelineTrace,
@@ -26,6 +27,7 @@ import {
   renderTextdocDocumentInspection,
   renderTextdocAnnotationInspection,
   renderTextPackInspection,
+  renderTextPackAuditInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
   renderTextPipelineTraceInspection,
@@ -47,6 +49,7 @@ function usage(): string {
     "  textlab pack <path> [--json]",
     "  textlab pack inspect <path> [--json]",
     "  textlab pack validate <path> [--json]",
+    "  textlab pack audit <pack-root> [--json]",
     "  textlab pack list-resources <path> [--json]",
     "  textlab document <path> [--json]",
     "  textlab annotations <path> [--layer-kind kind] [--lifecycle state] [--annotation-id id] [--json]",
@@ -62,7 +65,7 @@ function usage(): string {
     "",
     "Commands:",
     "  package         Inspect a package manifest.",
-    "  pack            Inspect, validate, or list resources from a textpack manifest or pack directory.",
+    "  pack            Inspect, validate, audit, or list resources from a textpack manifest or pack directory.",
     "  document        Inspect a textdoc document summary.",
     "  annotations     Inspect or query a textdoc document annotation graph.",
     "  pipeline-trace  Inspect a textpipeline trace payload.",
@@ -386,14 +389,44 @@ async function readJson(filePath: string): Promise<unknown> {
 
 async function readTextPackManifestInput(inputPath: string): Promise<{
   readonly manifestPath: string;
+  readonly rootPath: string;
   readonly parsed: unknown;
 }> {
   const inputStat = await stat(inputPath);
   const manifestPath = inputStat.isDirectory() ? path.join(inputPath, "pack.manifest.json") : inputPath;
+  const rootPath = inputStat.isDirectory() ? inputPath : path.dirname(inputPath);
   return {
     manifestPath,
+    rootPath,
     parsed: await readJson(manifestPath),
   };
+}
+
+async function listTextPackResourceInventory(packRoot: string): Promise<readonly string[]> {
+  const resourcesRoot = path.join(packRoot, "resources");
+  try {
+    const resourcesStat = await stat(resourcesRoot);
+    if (!resourcesStat.isDirectory()) return [];
+  } catch {
+    return [];
+  }
+
+  const paths: string[] = [];
+  const stack = [resourcesRoot];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (current === undefined) continue;
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(absolutePath);
+      } else if (entry.isFile()) {
+        paths.push(path.relative(packRoot, absolutePath).split(path.sep).join("/"));
+      }
+    }
+  }
+  return paths.sort((left, right) => left.localeCompare(right));
 }
 
 async function runTextlabPackCli(
@@ -409,7 +442,7 @@ async function runTextlabPackCli(
     };
   }
 
-  const subcommands = new Set(["inspect", "validate", "list-resources"]);
+  const subcommands = new Set(["inspect", "validate", "audit", "list-resources"]);
   const subcommand = subcommands.has(firstArg) ? firstArg : "inspect";
   const targetPath = subcommand === "inspect" && !subcommands.has(firstArg) ? firstArg : rest[0];
   const extra = subcommand === "inspect" && !subcommands.has(firstArg) ? rest : rest.slice(1);
@@ -430,10 +463,12 @@ async function runTextlabPackCli(
 
   let parsed: unknown;
   let manifestPath: string;
+  let rootPath: string;
   try {
     const input = await readTextPackManifestInput(targetPath);
     parsed = input.parsed;
     manifestPath = input.manifestPath;
+    rootPath = input.rootPath;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     return {
@@ -448,6 +483,16 @@ async function runTextlabPackCli(
     return {
       exitCode: inspection.ok ? 0 : 1,
       stdout: renderCliOutput(inspection, renderTextPackValidationInspection, json),
+      stderr: "",
+    };
+  }
+
+  if (subcommand === "audit") {
+    const inventoryResourcePaths = await listTextPackResourceInventory(rootPath);
+    const inspection = inspectTextPackResourceAudit(parsed, inventoryResourcePaths);
+    return {
+      exitCode: inspection.ok ? 0 : 1,
+      stdout: renderCliOutput(inspection, renderTextPackAuditInspection, json),
       stderr: "",
     };
   }

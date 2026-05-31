@@ -8,8 +8,10 @@ import { isTextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
 import {
   createTextPackResourceRegistry,
   isTextPackManifestV1,
+  validateTextPackResourceInventory,
   validateTextPackManifestGovernance,
   type TextPackManifestGovernanceDiagnostic,
+  type TextPackResourceInventoryDiagnostic,
 } from "@ismail-elkorchi/textpack";
 import {
   isTextPipelineTraceV1,
@@ -152,6 +154,32 @@ export interface TextlabPackResourceListInspection {
   readonly version: string;
   readonly resourceCount: number;
   readonly resources: readonly TextlabPackResourceRow[];
+}
+
+export interface TextlabPackAuditDiagnostic {
+  readonly code: string;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly family?: string;
+  readonly path?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextlabPackAuditInspection {
+  readonly schemaVersion: 1;
+  readonly ok: boolean;
+  readonly manifestValid: boolean;
+  readonly packId?: string;
+  readonly declaredResourceCount: number;
+  readonly inventoryResourceCount: number;
+  readonly missingResourceCount: number;
+  readonly orphanResourceCount: number;
+  readonly duplicateProvidedIdCount: number;
+  readonly stalePairCount: number;
+  readonly diagnosticCount: number;
+  readonly resourceFamilies: readonly TextlabCount[];
+  readonly diagnostics: readonly TextlabPackAuditDiagnostic[];
 }
 
 export interface TextlabDocumentInspection {
@@ -543,6 +571,20 @@ function packValidationDiagnosticRow(
   };
 }
 
+function packAuditDiagnosticRow(
+  diagnostic: TextPackResourceInventoryDiagnostic,
+): TextlabPackAuditDiagnostic {
+  return {
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.family === undefined ? {} : { family: diagnostic.family }),
+    ...(diagnostic.path === undefined ? {} : { path: diagnostic.path }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
 export function inspectTextPackValidation(value: unknown): TextlabPackValidationInspection {
   const validation = validateTextPackManifestGovernance(value);
   const packId = isTextPackManifestV1(value) ? value.id : "<invalid>";
@@ -600,6 +642,37 @@ export function inspectTextPackResourceList(value: unknown): TextlabPackResource
   };
 }
 
+export function inspectTextPackResourceAudit(
+  manifest: unknown,
+  inventoryResourcePaths: readonly string[],
+): TextlabPackAuditInspection {
+  const validation = validateTextPackResourceInventory(manifest, inventoryResourcePaths);
+  return {
+    schemaVersion: 1,
+    ok: validation.ok,
+    manifestValid: validation.manifestValid,
+    ...(validation.packId === undefined ? {} : { packId: validation.packId }),
+    declaredResourceCount: validation.declaredResourceCount,
+    inventoryResourceCount: validation.inventoryResourceCount,
+    missingResourceCount: validation.missingResourceCount,
+    orphanResourceCount: validation.orphanResourceCount,
+    duplicateProvidedIdCount: validation.duplicateProvidedIdCount,
+    stalePairCount: validation.stalePairCount,
+    diagnosticCount: validation.diagnostics.length,
+    resourceFamilies: validation.resourceFamilies.map((entry) => ({
+      id: entry.family,
+      count: entry.declaredResourceCount,
+    })),
+    diagnostics: validation.diagnostics
+      .map(packAuditDiagnosticRow)
+      .sort((left, right) =>
+        `${left.code}\u0000${left.family ?? ""}\u0000${left.path ?? ""}\u0000${left.resourceId ?? ""}\u0000${left.ref ?? ""}`.localeCompare(
+          `${right.code}\u0000${right.family ?? ""}\u0000${right.path ?? ""}\u0000${right.resourceId ?? ""}\u0000${right.ref ?? ""}`,
+        ),
+      ),
+  };
+}
+
 export function renderTextPackResourceListInspection(inspection: TextlabPackResourceListInspection): string {
   return [
     "# textlab pack resources",
@@ -613,6 +686,34 @@ export function renderTextPackResourceListInspection(inspection: TextlabPackReso
     ...inspection.resources.map((entry) =>
       `- ${entry.resourceId} family=${entry.family} kind=${entry.kind} path=${entry.path} language=${entry.language ?? "none"} profiles=${entry.profiles.join(",") || "none"} overlay=${entry.overlayPrecedence}`,
     ),
+    "",
+  ].join("\n");
+}
+
+export function renderTextPackAuditInspection(inspection: TextlabPackAuditInspection): string {
+  return [
+    "# textlab textpack audit",
+    "",
+    `Pack: ${inspection.packId ?? "<invalid>"}`,
+    `Status: ${inspection.ok ? "valid" : "invalid"}`,
+    `Manifest valid: ${inspection.manifestValid ? "yes" : "no"}`,
+    `Declared resources: ${inspection.declaredResourceCount}`,
+    `Inventory resources: ${inspection.inventoryResourceCount}`,
+    `Missing resources: ${inspection.missingResourceCount}`,
+    `Orphan resources: ${inspection.orphanResourceCount}`,
+    `Duplicate provided ids: ${inspection.duplicateProvidedIdCount}`,
+    `Stale resource/provides pairs: ${inspection.stalePairCount}`,
+    `Diagnostics: ${inspection.diagnosticCount}`,
+    "",
+    "## Resource families",
+    ...inspection.resourceFamilies.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Diagnostics",
+    ...(inspection.diagnostics.length === 0
+      ? ["- none"]
+      : inspection.diagnostics.map((entry) =>
+          `- ${entry.code}${entry.family === undefined ? "" : ` family=${entry.family}`}${entry.path === undefined ? "" : ` path=${entry.path}`}${entry.resourceId === undefined ? "" : ` resource=${entry.resourceId}`}${entry.ref === undefined ? "" : ` ref=${entry.ref}`}: ${entry.message}`,
+        )),
     "",
   ].join("\n");
 }

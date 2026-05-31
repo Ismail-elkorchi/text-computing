@@ -59,6 +59,10 @@ Authoring helpers are immutable:
 - `createTextPackManifest` creates a normalized manifest from explicit package metadata.
 - `addTextPackManifestResource` appends one paired resource path and provided resource id.
 - `updateTextPackManifestResource` updates one paired resource path/id without breaking the pair.
+- `removeTextPackManifestResource` removes one paired resource path/id and rederives capability flags.
+- `validateTextPackResourceInventory` checks a caller-supplied package-relative resource file
+  inventory against the manifest and reports missing declared files, orphan files, duplicate provided
+  ids, and stale resource/provides pairs.
 - `validateTextPackAuthoringMetadata` validates license, provenance, review, test, resource, and
   overlay metadata before a pack is used.
 - `loadTextPackFromFileSystem` loads resources from a caller-provided filesystem reader in the
