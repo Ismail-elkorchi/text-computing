@@ -11,11 +11,13 @@ import {
   exportTextDocAnnotationBundlePayloadV1,
   exportTextDocDocumentBundlePayloadV1,
   exportTextDocDocumentV1ToConllu,
+  exportTextDocMappingLossReportPayloadV1,
   importConlluToTextDocDocumentV1,
   importTextDocDocumentBundlePayloadV1,
   isTextDocAnnotationBundlePayloadV1,
   isTextDocDocumentBundlePayloadV1,
   isTextDocExtensionId,
+  isTextDocMappingLossReportPayloadV1,
   isTextDocDocumentV1,
   isTextDocSpanInRange,
   packageName,
@@ -580,6 +582,59 @@ if (
     .diagnostics.some((entry) => entry.code === "textdoc.document-bundle.shape")
 ) {
   throw new Error("document bundle import should reject invalid payload shape");
+}
+
+const mappingLossPayload = exportTextDocMappingLossReportPayloadV1(graphFixtureDocument, {
+  mappingId: "mapping:graph-runtime-loss",
+});
+if (!isTextDocMappingLossReportPayloadV1(mappingLossPayload)) {
+  throw new Error("mapping-loss report export should produce a runtime-valid payload");
+}
+if (
+  mappingLossPayload.mappingId !== "mapping:graph-runtime-loss" ||
+  mappingLossPayload.source.id !== "doc:graph-runtime@2026-05-16" ||
+  mappingLossPayload.target.schemaId !== "urn:ismail-elkorchi:textprotocol:mapping-loss-report:v1"
+) {
+  throw new Error("mapping-loss report should expose deterministic source and target metadata");
+}
+const mappingLossRecords = mappingLossPayload.losses
+  .map((entry) => `${entry.code}:${entry.class}:${entry.sourcePath}`)
+  .join(",");
+if (
+  mappingLossRecords !==
+  "textdoc.mapping-loss.annotation.external-reference:unknown-loss:/layers/5/annotations/0/loss/0"
+) {
+  throw new Error("mapping-loss report should expose deterministic annotation loss records");
+}
+
+const emptyMappingLossPayload = exportTextDocMappingLossReportPayloadV1(rawTextDocument);
+if (
+  !isTextDocMappingLossReportPayloadV1(emptyMappingLossPayload) ||
+  emptyMappingLossPayload.losses.length !== 0
+) {
+  throw new Error("mapping-loss report export should allow explicit empty loss reports");
+}
+
+let invalidMappingLossDocumentRejected = false;
+try {
+  exportTextDocMappingLossReportPayloadV1({ ...graphFixtureDocument, layers: [] });
+} catch (error) {
+  invalidMappingLossDocumentRejected =
+    error instanceof TypeError && error.message === "textdoc mapping-loss report requires a valid TextDocDocumentV1";
+}
+if (!invalidMappingLossDocumentRejected) {
+  throw new Error("mapping-loss report export should reject invalid textdoc documents");
+}
+
+let emptyMappingLossIdRejected = false;
+try {
+  exportTextDocMappingLossReportPayloadV1(graphFixtureDocument, { mappingId: "" });
+} catch (error) {
+  emptyMappingLossIdRejected =
+    error instanceof TypeError && error.message === "textdoc mapping-loss report mappingId must be a non-empty string";
+}
+if (!emptyMappingLossIdRejected) {
+  throw new Error("mapping-loss report export should reject empty mapping ids");
 }
 
 const targetMismatchBundle = {
