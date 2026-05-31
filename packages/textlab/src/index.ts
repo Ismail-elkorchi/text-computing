@@ -19,10 +19,14 @@ import {
   type TextPipelineTraceEntry,
 } from "@ismail-elkorchi/textpipeline";
 import {
+  checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
   getTextProtocolPayloadKindDescriptor,
+  getTextProtocolSchemaFamilyDescriptorBySchemaId,
+  isTextProtocolProducerRef,
   isTextProtocolResultEnvelopeV1,
   type TextProtocolDiagnostic,
+  type TextProtocolSchemaFamilyEnvelopeV1,
 } from "@ismail-elkorchi/textprotocol";
 import {
   packageName as textRulesPackageName,
@@ -336,6 +340,28 @@ export interface TextlabProtocolResultEnvelopeInspection {
   readonly diagnosticCount: number;
   readonly scopeBoundaryPresent: boolean;
   readonly limitationCount: number;
+  readonly compatibilityOk: boolean;
+  readonly compatibilityDiagnosticCounts: readonly TextlabCount[];
+  readonly diagnostics: readonly TextlabProtocolDiagnosticRow[];
+  readonly compatibilityDiagnostics: readonly TextlabProtocolDiagnosticRow[];
+}
+
+export interface TextlabProtocolSchemaFamilyEnvelopeInspection {
+  readonly schemaVersion: 1;
+  readonly envelopeSchemaId: string;
+  readonly envelopeSchemaVersion: number;
+  readonly family: string;
+  readonly registeredSchemaFamily: boolean;
+  readonly ownerPackage?: string;
+  readonly schemaPath?: string;
+  readonly producerPackage: string;
+  readonly producerVersion: string;
+  readonly payloadShape: string;
+  readonly payloadKeys: readonly string[];
+  readonly provenanceReferenceCount: number;
+  readonly diagnosticCount: number;
+  readonly limitationCount: number;
+  readonly extensionKeyCount: number;
   readonly compatibilityOk: boolean;
   readonly compatibilityDiagnosticCounts: readonly TextlabCount[];
   readonly diagnostics: readonly TextlabProtocolDiagnosticRow[];
@@ -1213,6 +1239,82 @@ export function renderTextProtocolResultEnvelopeInspection(
     `Diagnostics: ${inspection.diagnosticCount}`,
     `Scope boundary: ${inspection.scopeBoundaryPresent ? "present" : "absent"}`,
     `Limitations: ${inspection.limitationCount}`,
+    `Compatibility: ${inspection.compatibilityOk ? "pass" : "fail"}`,
+    "",
+    "## Compatibility diagnostics",
+    ...inspection.compatibilityDiagnostics.map(
+      (entry) =>
+        `- ${entry.code} severity=${entry.severity}${entry.message === undefined ? "" : ` message=${entry.message}`}`,
+    ),
+    "",
+    "## Envelope diagnostics",
+    ...inspection.diagnostics.map(
+      (entry) =>
+        `- ${entry.code} severity=${entry.severity}${entry.message === undefined ? "" : ` message=${entry.message}`}`,
+    ),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextProtocolSchemaFamilyEnvelope(
+  value: unknown,
+): TextlabProtocolSchemaFamilyEnvelopeInspection {
+  const compatibility = checkTextProtocolSchemaFamilyEnvelope(value);
+  if (!isRecord(value)) {
+    throw new TypeError("textprotocol schema-family envelope is invalid");
+  }
+  const descriptor =
+    typeof value.schemaId === "string"
+      ? getTextProtocolSchemaFamilyDescriptorBySchemaId(value.schemaId)
+      : undefined;
+  if (!compatibility.ok || descriptor === undefined || !isTextProtocolProducerRef(value.producer)) {
+    throw new TypeError("textprotocol schema-family envelope is invalid");
+  }
+  const envelope = value as unknown as TextProtocolSchemaFamilyEnvelopeV1;
+  const diagnostics = protocolDiagnosticRows(envelope.diagnostics);
+  const compatibilityDiagnostics = protocolDiagnosticRows(compatibility.diagnostics);
+  const payloadKeys = recordKeys(envelope.payload);
+  return {
+    schemaVersion: 1,
+    envelopeSchemaId: envelope.schemaId,
+    envelopeSchemaVersion: envelope.schemaVersion,
+    family: compatibility.family ?? descriptor.family,
+    registeredSchemaFamily: true,
+    ownerPackage: descriptor.ownerPackage,
+    schemaPath: descriptor.schemaPath,
+    producerPackage: envelope.producer.package,
+    producerVersion: envelope.producer.version,
+    payloadShape: payloadShape(envelope.payload),
+    payloadKeys,
+    provenanceReferenceCount: envelope.provenance?.references?.length ?? 0,
+    diagnosticCount: diagnostics.length,
+    limitationCount: envelope.limitations?.length ?? 0,
+    extensionKeyCount: recordKeys(value.extensions).length,
+    compatibilityOk: compatibility.ok,
+    compatibilityDiagnosticCounts: countById(compatibilityDiagnostics.map((entry) => entry.code)),
+    diagnostics,
+    compatibilityDiagnostics,
+  };
+}
+
+export function renderTextProtocolSchemaFamilyEnvelopeInspection(
+  inspection: TextlabProtocolSchemaFamilyEnvelopeInspection,
+): string {
+  return [
+    "# textlab schema-family envelope inspection",
+    "",
+    `Schema: ${inspection.envelopeSchemaId}@${inspection.envelopeSchemaVersion}`,
+    `Family: ${inspection.family}`,
+    `Registered schema family: ${inspection.registeredSchemaFamily ? "yes" : "no"}`,
+    `Owner: ${inspection.ownerPackage ?? "<unregistered>"}`,
+    `Schema path: ${inspection.schemaPath ?? "<none>"}`,
+    `Producer: ${inspection.producerPackage}@${inspection.producerVersion}`,
+    `Payload shape: ${inspection.payloadShape}`,
+    `Payload keys: ${inspection.payloadKeys.join(",") || "<none>"}`,
+    `Provenance references: ${inspection.provenanceReferenceCount}`,
+    `Diagnostics: ${inspection.diagnosticCount}`,
+    `Limitations: ${inspection.limitationCount}`,
+    `Extension keys: ${inspection.extensionKeyCount}`,
     `Compatibility: ${inspection.compatibilityOk ? "pass" : "fail"}`,
     "",
     "## Compatibility diagnostics",

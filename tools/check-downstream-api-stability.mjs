@@ -175,12 +175,16 @@ async function assertBuiltPackageSmoke() {
     documentBundle,
     { expectedFamily: "document-bundle", requireProvenance: true, requireLimitations: true },
   );
+  const parsedDocumentBundle = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport);
   expect(
     textprotocol.isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport) &&
-      textprotocol.isTextProtocolDocumentBundleV1(
-        textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport),
-      ),
+      textprotocol.isTextProtocolDocumentBundleV1(parsedDocumentBundle),
     "textprotocol should serialize and parse schema-family envelopes through package APIs.",
+  );
+  const schemaFamilyInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedDocumentBundle);
+  expect(
+    schemaFamilyInspection.family === "document-bundle" && schemaFamilyInspection.compatibilityOk,
+    "textlab should inspect textprotocol schema-family envelopes through package APIs.",
   );
 
   const conformanceReport = textconformance.runTextConformanceChecks(

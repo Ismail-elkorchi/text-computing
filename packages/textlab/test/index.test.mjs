@@ -4,7 +4,9 @@ import path from "node:path";
 import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  textProtocolDocumentBundleSchemaId,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
+  textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
 import {
   inspectCorpusFixture,
@@ -23,6 +25,7 @@ import {
   inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
   inspectTextProtocolResultEnvelope,
+  inspectTextProtocolSchemaFamilyEnvelope,
   packageName,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
@@ -41,6 +44,7 @@ import {
   renderTextPipelineBatchReportInspection,
   renderTextPipelineTraceInspection,
   renderTextProtocolResultEnvelopeInspection,
+  renderTextProtocolSchemaFamilyEnvelopeInspection,
   summarizeConformanceReport,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
@@ -697,6 +701,76 @@ if (!invalidResultEnvelopeRejected) {
   throw new Error("invalid textprotocol result envelopes should be rejected before inspection");
 }
 
+const schemaFamilyEnvelope = {
+  schemaId: textProtocolDocumentBundleSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: "@ismail-elkorchi/textdoc",
+    version: "0.1.0",
+  },
+  payload: {
+    documents: [
+      {
+        documentId: textdocDocument.documentId,
+        revision: textdocDocument.revision,
+        document: textdocDocument,
+      },
+    ],
+  },
+  provenance: {
+    references: [{ kind: "fixture", id: "textlab-schema-family-envelope" }],
+  },
+  diagnostics: [
+    {
+      code: "textlab.schema-family.fixture",
+      severity: "info",
+      message: "schema family envelope fixture",
+    },
+  ],
+  limitations: ["The fixture validates schema-family envelope inspection."],
+  extensions: {
+    fixture: true,
+  },
+};
+
+const schemaFamilyEnvelopeInspection = inspectTextProtocolSchemaFamilyEnvelope(schemaFamilyEnvelope);
+if (
+  schemaFamilyEnvelopeInspection.family !== "document-bundle" ||
+  !schemaFamilyEnvelopeInspection.registeredSchemaFamily ||
+  schemaFamilyEnvelopeInspection.ownerPackage !== "@ismail-elkorchi/textprotocol" ||
+  schemaFamilyEnvelopeInspection.schemaPath !== "schemas/textprotocol-document-bundle-v1.schema.json" ||
+  schemaFamilyEnvelopeInspection.producerPackage !== "@ismail-elkorchi/textdoc" ||
+  schemaFamilyEnvelopeInspection.payloadShape !== "object:documents" ||
+  schemaFamilyEnvelopeInspection.payloadKeys.join(",") !== "documents" ||
+  schemaFamilyEnvelopeInspection.provenanceReferenceCount !== 1 ||
+  schemaFamilyEnvelopeInspection.diagnosticCount !== 1 ||
+  schemaFamilyEnvelopeInspection.limitationCount !== 1 ||
+  schemaFamilyEnvelopeInspection.extensionKeyCount !== 1 ||
+  !schemaFamilyEnvelopeInspection.compatibilityOk
+) {
+  throw new Error("schema-family envelope inspection should summarize registered protocol metadata");
+}
+
+if (!renderTextProtocolSchemaFamilyEnvelopeInspection(schemaFamilyEnvelopeInspection).includes("Family: document-bundle")) {
+  throw new Error("schema-family envelope renderer should include family metadata");
+}
+
+let invalidSchemaFamilyEnvelopeRejected = false;
+try {
+  inspectTextProtocolSchemaFamilyEnvelope({
+    schemaId: textProtocolDocumentBundleSchemaId,
+    schemaVersion: textProtocolSchemaVersion,
+    payload: {},
+  });
+} catch (error) {
+  invalidSchemaFamilyEnvelopeRejected =
+    error instanceof TypeError && error.message === "textprotocol schema-family envelope is invalid";
+}
+
+if (!invalidSchemaFamilyEnvelopeRejected) {
+  throw new Error("invalid textprotocol schema-family envelopes should be rejected before inspection");
+}
+
 const packBackedRuleDocument = {
   ...textdocDocument,
   revision: "1>textrules.textpack-rules",
@@ -985,6 +1059,8 @@ const pipelineBatchReportPath = path.join(dir, "pipeline-batch-report.json");
 await writeFile(pipelineBatchReportPath, `${JSON.stringify(pipelineBatchReport, null, 2)}\n`, "utf8");
 const resultEnvelopePath = path.join(dir, "result-envelope.json");
 await writeFile(resultEnvelopePath, `${JSON.stringify(resultEnvelope, null, 2)}\n`, "utf8");
+const schemaFamilyEnvelopePath = path.join(dir, "schema-family-envelope.json");
+await writeFile(schemaFamilyEnvelopePath, `${JSON.stringify(schemaFamilyEnvelope, null, 2)}\n`, "utf8");
 const packBackedRuleDocumentPath = path.join(dir, "pack-backed-rules-document.json");
 await writeFile(packBackedRuleDocumentPath, `${JSON.stringify(packBackedRuleDocument, null, 2)}\n`, "utf8");
 const corpusPath = path.join(dir, "corpus-fixture.json");
@@ -1394,6 +1470,49 @@ if (
   !invalidResultEnvelopeCliResult.stderr.includes("Invalid textprotocol result envelope")
 ) {
   throw new Error("result-envelope CLI should reject invalid envelope input");
+}
+
+const schemaFamilyEnvelopeCliResult = await runTextlabCli([
+  "schema-family-envelope",
+  schemaFamilyEnvelopePath,
+]);
+
+if (schemaFamilyEnvelopeCliResult.exitCode !== 0 || schemaFamilyEnvelopeCliResult.stderr !== "") {
+  throw new Error(`schema-family-envelope CLI should pass: ${schemaFamilyEnvelopeCliResult.stderr}`);
+}
+
+if (!schemaFamilyEnvelopeCliResult.stdout.includes("Family: document-bundle")) {
+  throw new Error("schema-family-envelope CLI should render family metadata");
+}
+
+const schemaFamilyEnvelopeJsonCliResult = await runTextlabCli([
+  "schema-family-envelope",
+  schemaFamilyEnvelopePath,
+  "--json",
+]);
+
+if (
+  schemaFamilyEnvelopeJsonCliResult.exitCode !== 0 ||
+  JSON.parse(schemaFamilyEnvelopeJsonCliResult.stdout).ownerPackage !== "@ismail-elkorchi/textprotocol"
+) {
+  throw new Error("schema-family-envelope CLI should support stable JSON output");
+}
+
+const invalidSchemaFamilyEnvelopePath = path.join(dir, "invalid-schema-family-envelope.json");
+await writeFile(
+  invalidSchemaFamilyEnvelopePath,
+  `${JSON.stringify({ schemaId: textProtocolDocumentBundleSchemaId, schemaVersion: textProtocolSchemaVersion, payload: {} }, null, 2)}\n`,
+  "utf8",
+);
+const invalidSchemaFamilyEnvelopeCliResult = await runTextlabCli([
+  "schema-family-envelope",
+  invalidSchemaFamilyEnvelopePath,
+]);
+if (
+  invalidSchemaFamilyEnvelopeCliResult.exitCode !== 1 ||
+  !invalidSchemaFamilyEnvelopeCliResult.stderr.includes("Invalid textprotocol schema-family envelope")
+) {
+  throw new Error("schema-family-envelope CLI should reject invalid envelope input");
 }
 
 const pipelineBatchReportCliResult = await runTextlabCli(["pipeline-batch-report", pipelineBatchReportPath]);

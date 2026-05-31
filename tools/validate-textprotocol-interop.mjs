@@ -30,7 +30,11 @@ import {
   textPipelineTracePayloadKind,
 } from "@ismail-elkorchi/textpipeline";
 import { isTextConformanceReportV1, runTextConformanceChecks } from "@ismail-elkorchi/textconformance";
-import { inspectTextdocAnnotations, inspectTextProtocolResultEnvelope } from "@ismail-elkorchi/textlab";
+import {
+  inspectTextdocAnnotations,
+  inspectTextProtocolResultEnvelope,
+  inspectTextProtocolSchemaFamilyEnvelope,
+} from "@ismail-elkorchi/textlab";
 
 function fail(message, details) {
   console.error(message);
@@ -174,8 +178,13 @@ const documentBundleTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(do
 if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport)) {
   fail("Interop document-bundle transport must satisfy textprotocol transport guard.", documentBundleTransport);
 }
-if (!isTextProtocolDocumentBundleV1(parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport))) {
+const parsedDocumentBundle = parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport);
+if (!isTextProtocolDocumentBundleV1(parsedDocumentBundle)) {
   fail("Interop document-bundle transport must parse back into a document bundle.");
+}
+const documentBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedDocumentBundle);
+if (documentBundleInspection.family !== "document-bundle" || !documentBundleInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve schema-family envelope metadata.", documentBundleInspection);
 }
 
 const traceEnvelope = envelope(
