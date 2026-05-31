@@ -194,6 +194,8 @@ async function assertBuiltPackageSmoke() {
   ]);
   expect(textdoc.isTextDocDocumentV1(pipelineRun.document), "textpipeline should preserve the textdoc document contract.");
   expect(textpipeline.isTextPipelineTraceV1(pipelineRun.trace), "textpipeline should emit a valid trace.");
+  const traceInspection = textlab.inspectTextPipelineTrace(pipelineRun.trace);
+  expect(traceInspection.entryCount === 1, "textlab should inspect textpipeline traces through package APIs.");
 
   const collection = textcorpus.createTextCorpusCollection(
     [
@@ -245,6 +247,11 @@ async function assertBuiltPackageSmoke() {
   const lexiconResources = textrules.createTextRulesLexiconResourcesFromLoadedPack(loadedPack.resources);
   expect(lexiconResources.diagnostics.length === 0, "textrules should consume loaded textpack resources.");
   expect(lexiconResources.resources.length === 1, "textrules should expose one loaded lexicon resource.");
+  const compiledRules = textrules.compileTextRulesFromTextPackResources(loadedPack.resources);
+  expect(compiledRules.diagnostics.length === 0, "textrules should compile loaded textpack resources.");
+  const packRuleRun = textrules.runTextPackRulesOverTextDoc({ document, compiled: compiledRules.compiled });
+  const packRuleInspection = textlab.inspectPackBackedRuleAnnotations(packRuleRun.document);
+  expect(packRuleInspection.ruleAnnotationCount === 1, "textlab should inspect pack-backed textrules annotations through package APIs.");
 }
 
 const [schema, artifact, releaseGates] = await Promise.all([

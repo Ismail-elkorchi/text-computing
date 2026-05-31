@@ -7,6 +7,8 @@ It can:
 - inspect package manifests;
 - inspect textpack manifests;
 - inspect textdoc documents and annotation graphs;
+- inspect textpipeline traces;
+- inspect pack-backed textrules annotation outputs;
 - render textconformance report summaries and diffs;
 - inspect corpus, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
 
@@ -20,6 +22,8 @@ textlab pack validate packages/textpack-en-core
 textlab pack list-resources packages/textpack-en-core
 textlab document fixtures/textdoc/examples/document-annotation-model-v1.json
 textlab annotations fixtures/textdoc/examples/document-annotation-model-v1.json --layer-kind relation
+textlab pipeline-trace pipeline-trace.json
+textlab pack-backed-rules document-with-pack-backed-rules.json --resource-id lexicon-en-core
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textlab conformance-diff expected.json actual.json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json

@@ -199,7 +199,18 @@
     {
       "packageName": "@ismail-elkorchi/textpipeline",
       "status": "validated",
-      "dependents": [],
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textpipeline"
+          ]
+        }
+      ],
       "evidenceRefs": [
         "packages/textpipeline/package.json",
         "packages/textpipeline/src/index.ts",
@@ -238,7 +249,18 @@
     {
       "packageName": "@ismail-elkorchi/textrules",
       "status": "validated",
-      "dependents": [],
+      "dependents": [
+        {
+          "packageName": "@ismail-elkorchi/textlab",
+          "evidenceRefs": [
+            "packages/textlab/src/index.ts",
+            "packages/textlab/test/index.test.mjs"
+          ],
+          "importSurfaces": [
+            "@ismail-elkorchi/textrules"
+          ]
+        }
+      ],
       "evidenceRefs": [
         "packages/textrules/package.json",
         "packages/textrules/src/index.ts",

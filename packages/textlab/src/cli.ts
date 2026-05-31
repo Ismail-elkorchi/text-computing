@@ -5,6 +5,7 @@ import {
   inspectCorpusFixture,
   inspectConformanceReportDiff,
   inspectPackageManifest,
+  inspectPackBackedRuleAnnotations,
   inspectReleaseReadiness,
   inspectRetrievalEvaluation,
   inspectRetrievalQrels,
@@ -13,10 +14,12 @@ import {
   inspectTextPackManifest,
   inspectTextPackResourceList,
   inspectTextPackValidation,
+  inspectTextPipelineTrace,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
   renderPackageInspection,
+  renderPackBackedRuleInspection,
   renderReleaseReadinessInspection,
   renderRetrievalEvaluationInspection,
   renderRetrievalQrelsInspection,
@@ -25,8 +28,10 @@ import {
   renderTextPackInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
+  renderTextPipelineTraceInspection,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
+  type TextlabPackBackedRuleInspectionOptions,
 } from "./index.js";
 
 export interface TextlabCliResult {
@@ -45,6 +50,8 @@ function usage(): string {
     "  textlab pack list-resources <path> [--json]",
     "  textlab document <path> [--json]",
     "  textlab annotations <path> [--layer-kind kind] [--lifecycle state] [--annotation-id id] [--json]",
+    "  textlab pipeline-trace <path> [--json]",
+    "  textlab pack-backed-rules <textdoc-path> [--pack-id id] [--resource-id id] [--rule-kind kind] [--json]",
     "  textlab conformance-report <path> [--json]",
     "  textlab conformance-diff <expected-path> <actual-path> [--json]",
     "  textlab retrieval-qrels <path> [--json]",
@@ -58,6 +65,8 @@ function usage(): string {
     "  pack            Inspect, validate, or list resources from a textpack manifest or pack directory.",
     "  document        Inspect a textdoc document summary.",
     "  annotations     Inspect or query a textdoc document annotation graph.",
+    "  pipeline-trace  Inspect a textpipeline trace payload.",
+    "  pack-backed-rules Inspect pack-backed textrules annotations in a textdoc document.",
     "  conformance-report  Render a deterministic summary of one conformance report.",
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
@@ -87,6 +96,8 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "conformance-report" &&
     command !== "conformance-diff" &&
     command !== "annotations" &&
+    command !== "pipeline-trace" &&
+    command !== "pack-backed-rules" &&
     command !== "corpus-fixture" &&
     command !== "retrieval-qrels" &&
     command !== "retrieval-evaluation" &&
@@ -139,6 +150,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
   }
 
   let annotationOptions: TextlabAnnotationInspectionOptions = {};
+  let packBackedRuleOptions: TextlabPackBackedRuleInspectionOptions = {};
   if (command === "annotations") {
     const parsedOptions = parseAnnotationOptions(rest);
     if (typeof parsedOptions === "string") {
@@ -149,6 +161,16 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       };
     }
     annotationOptions = parsedOptions;
+  } else if (command === "pack-backed-rules") {
+    const parsedOptions = parsePackBackedRuleOptions(rest);
+    if (typeof parsedOptions === "string") {
+      return {
+        exitCode: 2,
+        stdout: "",
+        stderr: `${parsedOptions}\n${usage()}`,
+      };
+    }
+    packBackedRuleOptions = parsedOptions;
   } else if (rest.length > 0) {
     return {
       exitCode: 2,
@@ -162,6 +184,8 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       command === "document" ||
       command === "conformance-report" ||
       command === "annotations" ||
+      command === "pipeline-trace" ||
+      command === "pack-backed-rules" ||
       command === "corpus-fixture" ||
       command === "retrieval-qrels" ||
       command === "retrieval-evaluation") &&
@@ -221,12 +245,46 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     }
   }
 
+  if (command === "pipeline-trace") {
+    try {
+      const inspection = inspectTextPipelineTrace(parsed);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderTextPipelineTraceInspection, json),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textpipeline trace: ${inputPath}`,
+      };
+    }
+  }
+
   if (command === "annotations") {
     try {
       const inspection = inspectTextdocAnnotations(parsed, annotationOptions);
       return {
         exitCode: 0,
         stdout: renderCliOutput(inspection, renderTextdocAnnotationInspection, json),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textdoc document: ${inputPath}`,
+      };
+    }
+  }
+
+  if (command === "pack-backed-rules") {
+    try {
+      const inspection = inspectPackBackedRuleAnnotations(parsed, packBackedRuleOptions);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderPackBackedRuleInspection, json),
         stderr: "",
       };
     } catch {
@@ -451,6 +509,36 @@ function parseAnnotationOptions(args: readonly string[]): TextlabAnnotationInspe
     ...(layerKinds.length > 0 ? { layerKinds } : {}),
     ...(lifecycleStates.length > 0 ? { lifecycleStates } : {}),
     ...(annotationIds.length > 0 ? { annotationIds } : {}),
+  };
+}
+
+function parsePackBackedRuleOptions(args: readonly string[]): TextlabPackBackedRuleInspectionOptions | string {
+  const packIds: string[] = [];
+  const resourceIds: string[] = [];
+  const ruleKinds: Array<NonNullable<TextlabPackBackedRuleInspectionOptions["ruleKinds"]>[number]> = [];
+  for (let index = 0; index < args.length; index += 2) {
+    const name = args[index];
+    const value = args[index + 1];
+    if (name === undefined || value === undefined) {
+      return "Missing value for pack-backed-rules filter.";
+    }
+    if (name === "--pack-id") {
+      packIds.push(value);
+    } else if (name === "--resource-id") {
+      resourceIds.push(value);
+    } else if (name === "--rule-kind") {
+      if (value !== "stopword" && value !== "lexicon" && value !== "gazetteer" && value !== "rule-list") {
+        return `Invalid pack-backed rule kind: ${value}`;
+      }
+      ruleKinds.push(value);
+    } else {
+      return `Unknown pack-backed-rules option: ${name}`;
+    }
+  }
+  return {
+    ...(packIds.length > 0 ? { packIds } : {}),
+    ...(resourceIds.length > 0 ? { resourceIds } : {}),
+    ...(ruleKinds.length > 0 ? { ruleKinds } : {}),
   };
 }
 

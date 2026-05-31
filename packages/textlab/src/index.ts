@@ -11,6 +11,14 @@ import {
   validateTextPackManifestGovernance,
   type TextPackManifestGovernanceDiagnostic,
 } from "@ismail-elkorchi/textpack";
+import {
+  isTextPipelineTraceV1,
+  type TextPipelineTraceEntry,
+} from "@ismail-elkorchi/textpipeline";
+import {
+  packageName as textRulesPackageName,
+  type TextRulesTextPackRuleKind,
+} from "@ismail-elkorchi/textrules";
 
 export const packageName = "@ismail-elkorchi/textlab" as const;
 
@@ -214,6 +222,71 @@ export interface TextlabReleaseReadinessInspection {
   readonly rows: readonly TextlabReleaseReadinessRow[];
 }
 
+export interface TextlabPipelineTraceRow {
+  readonly processorId: string;
+  readonly version: string;
+  readonly status: string;
+  readonly inputRevision: string;
+  readonly outputRevision: string;
+  readonly emittedViewCount: number;
+  readonly emittedLayerCount: number;
+  readonly diagnosticCount: number;
+  readonly cacheKey?: string;
+}
+
+export interface TextlabPipelineTraceInspection {
+  readonly schemaVersion: 1;
+  readonly documentId: string;
+  readonly finalRevision: string;
+  readonly executionMode: string;
+  readonly runStatus: string;
+  readonly processorCount: number;
+  readonly entryCount: number;
+  readonly emittedViewCount: number;
+  readonly emittedLayerCount: number;
+  readonly diagnosticCount: number;
+  readonly cacheHitCount: number;
+  readonly statusCounts: readonly TextlabCount[];
+  readonly processorOrder: readonly string[];
+  readonly rows: readonly TextlabPipelineTraceRow[];
+}
+
+export interface TextlabPackBackedRuleInspectionOptions {
+  readonly packIds?: readonly string[];
+  readonly resourceIds?: readonly string[];
+  readonly ruleKinds?: readonly TextRulesTextPackRuleKind[];
+}
+
+export interface TextlabPackBackedRuleRow {
+  readonly layerId: string;
+  readonly annotationId: string;
+  readonly extensionId: string;
+  readonly ruleKind: TextRulesTextPackRuleKind;
+  readonly packId: string;
+  readonly resourceId: string;
+  readonly ruleId: string;
+  readonly line: number;
+  readonly matchedText: string;
+  readonly value: string;
+  readonly targetStartCU: number;
+  readonly targetEndCU: number;
+  readonly confidence?: number;
+  readonly provenanceRefs: readonly string[];
+}
+
+export interface TextlabPackBackedRuleInspection {
+  readonly schemaVersion: 1;
+  readonly sourcePackage: string;
+  readonly documentId: string;
+  readonly revision: string;
+  readonly ruleAnnotationCount: number;
+  readonly filteredAnnotationCount: number;
+  readonly packCounts: readonly TextlabCount[];
+  readonly resourceCounts: readonly TextlabCount[];
+  readonly ruleKindCounts: readonly TextlabCount[];
+  readonly rows: readonly TextlabPackBackedRuleRow[];
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -253,6 +326,65 @@ function recordStringArrayEntries(value: unknown): readonly TextlabCount[] {
 
 function numeric(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function isTextRulesTextPackRuleKind(value: unknown): value is TextRulesTextPackRuleKind {
+  return value === "stopword" || value === "lexicon" || value === "gazetteer" || value === "rule-list";
+}
+
+function firstSpanTarget(annotation: Record<string, unknown>): { startCU: number; endCU: number } {
+  const targets = annotation.targets;
+  if (!Array.isArray(targets)) return { startCU: 0, endCU: 0 };
+  for (const target of targets) {
+    if (
+      isRecord(target) &&
+      target.kind === "span" &&
+      typeof target.startCU === "number" &&
+      typeof target.endCU === "number"
+    ) {
+      return {
+        startCU: target.startCU,
+        endCU: target.endCU,
+      };
+    }
+  }
+  return { startCU: 0, endCU: 0 };
+}
+
+function provenanceRefs(annotation: Record<string, unknown>): readonly string[] {
+  const provenance = annotation.provenance;
+  if (!isRecord(provenance) || !Array.isArray(provenance.references)) return [];
+  return provenance.references
+    .filter((reference): reference is Record<string, unknown> => isRecord(reference))
+    .map((reference) => {
+      const kind = isNonEmptyString(reference.kind) ? reference.kind : "<missing-kind>";
+      const id = isNonEmptyString(reference.id) ? reference.id : "<missing-id>";
+      return `${kind}:${id}`;
+    })
+    .sort();
+}
+
+function compareTraceRows(left: TextlabPipelineTraceRow, right: TextlabPipelineTraceRow): number {
+  return `${left.processorId}\u0000${left.inputRevision}\u0000${left.outputRevision}`.localeCompare(
+    `${right.processorId}\u0000${right.inputRevision}\u0000${right.outputRevision}`,
+  );
+}
+
+function comparePackBackedRuleRows(
+  left: TextlabPackBackedRuleRow,
+  right: TextlabPackBackedRuleRow,
+): number {
+  return (
+    left.targetStartCU - right.targetStartCU ||
+    right.targetEndCU - left.targetEndCU ||
+    left.layerId.localeCompare(right.layerId) ||
+    left.packId.localeCompare(right.packId) ||
+    left.resourceId.localeCompare(right.resourceId) ||
+    left.ruleKind.localeCompare(right.ruleKind) ||
+    left.line - right.line ||
+    left.ruleId.localeCompare(right.ruleId) ||
+    left.annotationId.localeCompare(right.annotationId)
+  );
 }
 
 function annotationGraphEdgeCount(annotation: Record<string, unknown>): number {
@@ -694,6 +826,183 @@ export function renderTextdocAnnotationInspection(
         `- ${row.layerId} ${row.annotationKind}:${row.annotationId} lifecycle=${row.lifecycleState} targets=${row.targetCount} targetKinds=${row.targetKinds.join(",")} graphEdges=${row.graphEdgeCount}${
           row.details.length > 0 ? ` details=${row.details.join(";")}` : ""
         }`,
+    ),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextPipelineTrace(value: unknown): TextlabPipelineTraceInspection {
+  if (!isTextPipelineTraceV1(value)) {
+    throw new TypeError("textpipeline trace is invalid");
+  }
+  const rows = value.entries
+    .map((entry: TextPipelineTraceEntry): TextlabPipelineTraceRow => ({
+      processorId: entry.processorId,
+      version: entry.version,
+      status: entry.status,
+      inputRevision: entry.inputRevision,
+      outputRevision: entry.outputRevision,
+      emittedViewCount: entry.emittedViews.length,
+      emittedLayerCount: entry.emittedLayers.length,
+      diagnosticCount: entry.diagnostics?.length ?? 0,
+      ...(entry.cacheKey === undefined ? {} : { cacheKey: entry.cacheKey }),
+    }))
+    .sort(compareTraceRows);
+  return {
+    schemaVersion: 1,
+    documentId: value.documentId,
+    finalRevision: value.finalRevision,
+    executionMode: value.executionMode,
+    runStatus: value.runStatus,
+    processorCount: value.processorOrder.length,
+    entryCount: value.entries.length,
+    emittedViewCount: rows.reduce((sum, row) => sum + row.emittedViewCount, 0),
+    emittedLayerCount: rows.reduce((sum, row) => sum + row.emittedLayerCount, 0),
+    diagnosticCount: rows.reduce((sum, row) => sum + row.diagnosticCount, 0),
+    cacheHitCount: rows.filter((row) => row.status === "cached").length,
+    statusCounts: countById(rows.map((row) => row.status)),
+    processorOrder: [...value.processorOrder],
+    rows,
+  };
+}
+
+export function renderTextPipelineTraceInspection(
+  inspection: TextlabPipelineTraceInspection,
+): string {
+  return [
+    "# textlab pipeline trace inspection",
+    "",
+    `Document: ${inspection.documentId}`,
+    `Final revision: ${inspection.finalRevision}`,
+    `Execution mode: ${inspection.executionMode}`,
+    `Run status: ${inspection.runStatus}`,
+    `Processors: ${inspection.processorCount}`,
+    `Entries: ${inspection.entryCount}`,
+    `Emitted views: ${inspection.emittedViewCount}`,
+    `Emitted layers: ${inspection.emittedLayerCount}`,
+    `Diagnostics: ${inspection.diagnosticCount}`,
+    `Cache hits: ${inspection.cacheHitCount}`,
+    "",
+    "## Statuses",
+    ...inspection.statusCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Processor order",
+    ...inspection.processorOrder.map((entry) => `- ${entry}`),
+    "",
+    "## Entries",
+    ...inspection.rows.map((row) =>
+      `- ${row.processorId}@${row.version} status=${row.status} input=${row.inputRevision} output=${row.outputRevision} emittedViews=${row.emittedViewCount} emittedLayers=${row.emittedLayerCount} diagnostics=${row.diagnosticCount}`,
+    ),
+    "",
+  ].join("\n");
+}
+
+function packBackedRuleRowFromAnnotation(
+  layerId: string,
+  annotation: Record<string, unknown>,
+): TextlabPackBackedRuleRow | undefined {
+  if (annotation.kind !== "extension" || !isNonEmptyString(annotation.extensionId)) return undefined;
+  if (!annotation.extensionId.startsWith("textrules:textpack-")) return undefined;
+  const data = annotation.data;
+  if (!isRecord(data) || !isTextRulesTextPackRuleKind(data.kind)) return undefined;
+  if (
+    !isNonEmptyString(annotation.id) ||
+    !isNonEmptyString(data.packId) ||
+    !isNonEmptyString(data.resourceId) ||
+    !isNonEmptyString(data.ruleId) ||
+    !isNonEmptyString(data.matchedText) ||
+    !isNonEmptyString(data.value) ||
+    typeof data.line !== "number"
+  ) {
+    return undefined;
+  }
+  const target = firstSpanTarget(annotation);
+  const confidence = isRecord(annotation.confidence) ? numeric(annotation.confidence.value) : undefined;
+  return {
+    layerId,
+    annotationId: annotation.id,
+    extensionId: annotation.extensionId,
+    ruleKind: data.kind,
+    packId: data.packId,
+    resourceId: data.resourceId,
+    ruleId: data.ruleId,
+    line: data.line,
+    matchedText: data.matchedText,
+    value: data.value,
+    targetStartCU: target.startCU,
+    targetEndCU: target.endCU,
+    ...(confidence === undefined ? {} : { confidence }),
+    provenanceRefs: provenanceRefs(annotation),
+  };
+}
+
+function packBackedRuleRowMatchesOptions(
+  row: TextlabPackBackedRuleRow,
+  options: TextlabPackBackedRuleInspectionOptions,
+): boolean {
+  return (
+    (options.packIds === undefined || options.packIds.includes(row.packId)) &&
+    (options.resourceIds === undefined || options.resourceIds.includes(row.resourceId)) &&
+    (options.ruleKinds === undefined || options.ruleKinds.includes(row.ruleKind))
+  );
+}
+
+export function inspectPackBackedRuleAnnotations(
+  document: unknown,
+  options: TextlabPackBackedRuleInspectionOptions = {},
+): TextlabPackBackedRuleInspection {
+  if (!isTextDocDocumentV1(document)) {
+    throw new TypeError("textdoc document is invalid");
+  }
+
+  const allRows: TextlabPackBackedRuleRow[] = [];
+  for (const layer of document.layers) {
+    for (const annotation of layer.annotations) {
+      const row = packBackedRuleRowFromAnnotation(layer.id, annotation as unknown as Record<string, unknown>);
+      if (row !== undefined) allRows.push(row);
+    }
+  }
+
+  const sortedAllRows = allRows.sort(comparePackBackedRuleRows);
+  const rows = sortedAllRows.filter((row) => packBackedRuleRowMatchesOptions(row, options));
+  return {
+    schemaVersion: 1,
+    sourcePackage: textRulesPackageName,
+    documentId: document.documentId,
+    revision: document.revision,
+    ruleAnnotationCount: sortedAllRows.length,
+    filteredAnnotationCount: rows.length,
+    packCounts: countById(sortedAllRows.map((row) => row.packId)),
+    resourceCounts: countById(sortedAllRows.map((row) => row.resourceId)),
+    ruleKindCounts: countById(sortedAllRows.map((row) => row.ruleKind)),
+    rows,
+  };
+}
+
+export function renderPackBackedRuleInspection(
+  inspection: TextlabPackBackedRuleInspection,
+): string {
+  return [
+    "# textlab pack-backed rule inspection",
+    "",
+    `Document: ${inspection.documentId}`,
+    `Revision: ${inspection.revision}`,
+    `Source package: ${inspection.sourcePackage}`,
+    `Rule annotations: ${inspection.ruleAnnotationCount}`,
+    `Filtered annotations: ${inspection.filteredAnnotationCount}`,
+    "",
+    "## Packs",
+    ...inspection.packCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Resources",
+    ...inspection.resourceCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Rule kinds",
+    ...inspection.ruleKindCounts.map((entry) => `- ${entry.id}: ${entry.count}`),
+    "",
+    "## Rows",
+    ...inspection.rows.map((row) =>
+      `- ${row.annotationId} ${row.ruleKind} pack=${row.packId} resource=${row.resourceId} rule=${row.ruleId} line=${row.line} span=${row.targetStartCU}-${row.targetEndCU} text=${JSON.stringify(row.matchedText)}`,
     ),
     "",
   ].join("\n");
