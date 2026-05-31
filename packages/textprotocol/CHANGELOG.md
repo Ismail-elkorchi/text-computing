@@ -2,6 +2,7 @@
 
 ## Next
 
+- Add protocol-error helper APIs for converting compatibility diagnostics into schema-family envelopes.
 - Add protocol schema-family descriptors, structural guards, repository schemas, and canonical JSON helper for document bundles, annotation bundles, evidence bundles, processor traces, corpus metrics, mapping-loss reports, and protocol errors.
 - Register the `textpipeline-batch-run-report-v1` payload kind for textpipeline batch report exchange.
 - Add deterministic JSON transport helpers for registered schema-family envelopes.

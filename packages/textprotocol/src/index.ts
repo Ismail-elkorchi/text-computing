@@ -357,6 +357,25 @@ export type TextProtocolProtocolErrorV1 = TextProtocolFamilyEnvelopeV1<
   typeof textProtocolProtocolErrorSchemaId
 >;
 
+export interface TextProtocolProtocolErrorEnvelopeOptions {
+  readonly producerPackage: string;
+  readonly producerVersion: string;
+  readonly provenance?: TextProtocolProvenance;
+  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly limitations?: readonly string[];
+  readonly extensions?: Readonly<Record<string, unknown>>;
+}
+
+export interface TextProtocolProtocolErrorFromDiagnosticsOptions
+  extends TextProtocolProtocolErrorEnvelopeOptions {
+  readonly code?: string;
+  readonly severity?: TextProtocolDiagnosticSeverity;
+  readonly message?: string;
+  readonly schemaId?: string;
+  readonly path?: string;
+  readonly remediation?: string;
+}
+
 export const textProtocolPayloadKindRegistry: readonly TextProtocolPayloadKindDescriptor[] = [
   {
     payloadKind: textProtocolPayloadKindTextdocDocumentV1,
@@ -848,6 +867,114 @@ export function isTextProtocolProtocolErrorV1(
   return (
     isTextProtocolCommonFamilyEnvelope(value, textProtocolProtocolErrorSchemaId) &&
     isProtocolErrorPayload(value.payload)
+  );
+}
+
+function textProtocolDiagnosticSeverityRank(severity: TextProtocolDiagnosticSeverity): number {
+  if (severity === "error") return 3;
+  if (severity === "warning") return 2;
+  return 1;
+}
+
+function textProtocolWorstDiagnosticSeverity(
+  diagnostics: readonly TextProtocolDiagnostic[],
+): TextProtocolDiagnosticSeverity {
+  return diagnostics.reduce<TextProtocolDiagnosticSeverity>(
+    (selected, diagnostic) =>
+      textProtocolDiagnosticSeverityRank(diagnostic.severity) > textProtocolDiagnosticSeverityRank(selected)
+        ? diagnostic.severity
+        : selected,
+    "info",
+  );
+}
+
+function textProtocolDiagnosticMessage(diagnostic: TextProtocolDiagnostic): string {
+  return diagnostic.message ?? diagnostic.code;
+}
+
+function textProtocolProtocolErrorPayloadFromDiagnostic(
+  diagnostic: TextProtocolDiagnostic,
+  options: Pick<TextProtocolProtocolErrorFromDiagnosticsOptions, "schemaId" | "path" | "remediation"> = {},
+): TextProtocolProtocolErrorPayloadV1 {
+  return {
+    code: diagnostic.code,
+    severity: diagnostic.severity,
+    message: textProtocolDiagnosticMessage(diagnostic),
+    ...(options.schemaId === undefined ? {} : { schemaId: options.schemaId }),
+    ...(options.path === undefined ? {} : { path: options.path }),
+    ...(options.remediation === undefined ? {} : { remediation: options.remediation }),
+  };
+}
+
+export function createTextProtocolProtocolErrorPayloadFromDiagnostics(
+  diagnostics: readonly TextProtocolDiagnostic[],
+  options: Pick<
+    TextProtocolProtocolErrorFromDiagnosticsOptions,
+    "code" | "severity" | "message" | "schemaId" | "path" | "remediation"
+  > = {},
+): TextProtocolProtocolErrorPayloadV1 {
+  if (!Array.isArray(diagnostics) || diagnostics.length === 0) {
+    throw new TypeError("textprotocol protocol-error payload requires at least one diagnostic");
+  }
+  if (!diagnostics.every((entry) => isTextProtocolDiagnostic(entry))) {
+    throw new TypeError("textprotocol protocol-error payload diagnostics are invalid");
+  }
+  const firstDiagnostic = diagnostics[0];
+  if (firstDiagnostic === undefined) {
+    throw new TypeError("textprotocol protocol-error payload requires at least one diagnostic");
+  }
+  const causeOptions = {
+    ...(options.schemaId === undefined ? {} : { schemaId: options.schemaId }),
+    ...(options.path === undefined ? {} : { path: options.path }),
+    ...(options.remediation === undefined ? {} : { remediation: options.remediation }),
+  };
+  const payload = {
+    code: options.code ?? firstDiagnostic.code,
+    severity: options.severity ?? textProtocolWorstDiagnosticSeverity(diagnostics),
+    message: options.message ?? textProtocolDiagnosticMessage(firstDiagnostic),
+    ...(options.schemaId === undefined ? {} : { schemaId: options.schemaId }),
+    ...(options.path === undefined ? {} : { path: options.path }),
+    ...(options.remediation === undefined ? {} : { remediation: options.remediation }),
+    causes: diagnostics.map((diagnostic) =>
+      textProtocolProtocolErrorPayloadFromDiagnostic(diagnostic, causeOptions),
+    ),
+  };
+  if (!isProtocolErrorPayload(payload)) {
+    throw new TypeError("textprotocol protocol-error payload could not be produced");
+  }
+  return payload;
+}
+
+export function createTextProtocolProtocolErrorEnvelopeV1(
+  payload: TextProtocolProtocolErrorPayloadV1,
+  options: TextProtocolProtocolErrorEnvelopeOptions,
+): TextProtocolProtocolErrorV1 {
+  const envelope = {
+    schemaId: textProtocolProtocolErrorSchemaId,
+    schemaVersion: textProtocolSchemaVersion,
+    producer: {
+      package: options.producerPackage,
+      version: options.producerVersion,
+    },
+    payload,
+    ...(options.provenance === undefined ? {} : { provenance: options.provenance }),
+    ...(options.diagnostics === undefined ? {} : { diagnostics: options.diagnostics }),
+    ...(options.limitations === undefined ? {} : { limitations: options.limitations }),
+    ...(options.extensions === undefined ? {} : { extensions: options.extensions }),
+  };
+  if (!isTextProtocolProtocolErrorV1(envelope)) {
+    throw new TypeError("textprotocol protocol-error envelope could not be produced");
+  }
+  return envelope;
+}
+
+export function createTextProtocolProtocolErrorEnvelopeFromDiagnostics(
+  diagnostics: readonly TextProtocolDiagnostic[],
+  options: TextProtocolProtocolErrorFromDiagnosticsOptions,
+): TextProtocolProtocolErrorV1 {
+  return createTextProtocolProtocolErrorEnvelopeV1(
+    createTextProtocolProtocolErrorPayloadFromDiagnostics(diagnostics, options),
+    options,
   );
 }
 

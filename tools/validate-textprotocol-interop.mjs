@@ -23,13 +23,16 @@ import {
 import {
   checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
+  createTextProtocolProtocolErrorEnvelopeFromDiagnostics,
   isTextProtocolAnnotationBundleV1,
   isTextProtocolCorpusMetricEnvelopeV1,
   isTextProtocolDocumentBundleV1,
   isTextProtocolMappingLossReportV1,
   isTextProtocolProcessorTraceV1,
+  isTextProtocolProtocolErrorV1,
   isTextProtocolResultEnvelopeForPayloadKind,
   isTextProtocolSchemaFamilyEnvelopeJsonTransportV1,
+  packageName as textprotocolPackageName,
   parseTextProtocolSchemaFamilyEnvelopeJson,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
@@ -130,6 +133,60 @@ if (textPipelineTracePayloadKind !== textProtocolPayloadKindTextpipelineTraceV1)
 
 if (textPipelineBatchRunReportPayloadKind !== textProtocolPayloadKindTextpipelineBatchRunReportV1) {
   fail("textpipeline batch report payload kind must match the textprotocol registry.");
+}
+
+const invalidSchemaFamilyCheck = checkTextProtocolSchemaFamilyEnvelope(
+  {
+    schemaId: textProtocolAnnotationBundleSchemaId,
+    schemaVersion: textProtocolSchemaVersion,
+    producer: {
+      package: textprotocolPackageName,
+      version: "0.0.0",
+    },
+    payload: { annotations: [] },
+    limitations: [""],
+  },
+  {
+    expectedFamily: "document-bundle",
+    requireLimitations: true,
+  },
+);
+if (invalidSchemaFamilyCheck.ok || invalidSchemaFamilyCheck.diagnostics.length === 0) {
+  fail("Interop invalid schema-family fixture must produce compatibility diagnostics.", invalidSchemaFamilyCheck);
+}
+const protocolErrorFromDiagnostics = createTextProtocolProtocolErrorEnvelopeFromDiagnostics(
+  invalidSchemaFamilyCheck.diagnostics,
+  {
+    producerPackage: textprotocolPackageName,
+    producerVersion: "0.0.0",
+    code: "textprotocol.interop.schema-family-invalid",
+    message: "Interop schema-family fixture failed compatibility checks.",
+    schemaId: textProtocolAnnotationBundleSchemaId,
+    path: "/",
+    remediation: "Use a registered family and valid payload shape.",
+    provenance: {
+      references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+    },
+    limitations: ["Structural protocol-error diagnostic conversion smoke only."],
+  },
+);
+if (!isTextProtocolProtocolErrorV1(protocolErrorFromDiagnostics)) {
+  fail("Interop protocol-error helper must produce a structural protocol-error envelope.", protocolErrorFromDiagnostics);
+}
+assertProtocolFamily(protocolErrorFromDiagnostics, "protocol-error", textprotocolPackageName);
+const protocolErrorTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(protocolErrorFromDiagnostics, {
+  expectedFamily: "protocol-error",
+  expectedProducerPackage: textprotocolPackageName,
+  requireProvenance: true,
+  requireLimitations: true,
+});
+const parsedProtocolError = parseTextProtocolSchemaFamilyEnvelopeJson(protocolErrorTransport);
+if (!isTextProtocolProtocolErrorV1(parsedProtocolError)) {
+  fail("Interop protocol-error transport must parse back into a protocol-error envelope.");
+}
+const protocolErrorInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedProtocolError);
+if (protocolErrorInspection.family !== "protocol-error" || !protocolErrorInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve protocol-error metadata.", protocolErrorInspection);
 }
 
 const document = {
