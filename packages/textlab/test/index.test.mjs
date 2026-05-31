@@ -15,6 +15,7 @@ import {
   inspectTextPackResourceAudit,
   inspectTextPackResourceList,
   inspectTextPackValidation,
+  inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
   packageName,
   renderCorpusFixtureInspection,
@@ -31,6 +32,7 @@ import {
   renderTextPackAuditInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
+  renderTextPipelineBatchReportInspection,
   renderTextPipelineTraceInspection,
   summarizeConformanceReport,
 } from "../dist/index.js";
@@ -576,6 +578,67 @@ if (!invalidPipelineTraceRejected) {
   throw new Error("invalid textpipeline traces should be rejected before inspection");
 }
 
+const pipelineBatchReport = {
+  schemaVersion: 1,
+  documentCount: 2,
+  completeCount: 1,
+  partialCount: 1,
+  executionModes: ["async", "sync"],
+  cachePolicies: ["none", "read-through"],
+  contextFingerprints: ["fnv1a32:batch-a", "fnv1a32:batch-b"],
+  items: [
+    {
+      inputIndex: 0,
+      documentId: "doc:inspection:batch:complete",
+      finalRevision: "1>normalize>annotate",
+      runStatus: "complete",
+      executionMode: "sync",
+      cachePolicy: "none",
+      processorOrder: ["annotate", "normalize"],
+      traceEntryCount: 2,
+    },
+    {
+      inputIndex: 1,
+      documentId: "doc:inspection:batch:partial",
+      finalRevision: "1>failing",
+      runStatus: "partial",
+      executionMode: "async",
+      cachePolicy: "read-through",
+      processorOrder: ["blocked", "failing"],
+      traceEntryCount: 2,
+    },
+  ],
+};
+
+const pipelineBatchReportInspection = inspectTextPipelineBatchReport(pipelineBatchReport);
+if (
+  pipelineBatchReportInspection.documentCount !== 2 ||
+  pipelineBatchReportInspection.completeCount !== 1 ||
+  pipelineBatchReportInspection.partialCount !== 1 ||
+  pipelineBatchReportInspection.contextFingerprintCount !== 2 ||
+  pipelineBatchReportInspection.processorIds.join(",") !== "annotate,blocked,failing,normalize" ||
+  pipelineBatchReportInspection.rows.map((row) => `${row.inputIndex}:${row.runStatus}:${row.traceEntryCount}`).join(",") !==
+    "0:complete:2,1:partial:2"
+) {
+  throw new Error("pipeline batch report inspection should summarize deterministic batch execution output");
+}
+
+if (!renderTextPipelineBatchReportInspection(pipelineBatchReportInspection).includes("Partial: 1")) {
+  throw new Error("pipeline batch report renderer should include partial count");
+}
+
+let invalidPipelineBatchReportRejected = false;
+try {
+  inspectTextPipelineBatchReport({ schemaVersion: 1, items: [] });
+} catch (error) {
+  invalidPipelineBatchReportRejected =
+    error instanceof TypeError && error.message === "textpipeline batch report is invalid";
+}
+
+if (!invalidPipelineBatchReportRejected) {
+  throw new Error("invalid textpipeline batch reports should be rejected before inspection");
+}
+
 const packBackedRuleDocument = {
   ...textdocDocument,
   revision: "1>textrules.textpack-rules",
@@ -860,6 +923,8 @@ const textdocPath = path.join(dir, "document.json");
 await writeFile(textdocPath, `${JSON.stringify(textdocDocument, null, 2)}\n`, "utf8");
 const pipelineTracePath = path.join(dir, "pipeline-trace.json");
 await writeFile(pipelineTracePath, `${JSON.stringify(pipelineTrace, null, 2)}\n`, "utf8");
+const pipelineBatchReportPath = path.join(dir, "pipeline-batch-report.json");
+await writeFile(pipelineBatchReportPath, `${JSON.stringify(pipelineBatchReport, null, 2)}\n`, "utf8");
 const packBackedRuleDocumentPath = path.join(dir, "pack-backed-rules-document.json");
 await writeFile(packBackedRuleDocumentPath, `${JSON.stringify(packBackedRuleDocument, null, 2)}\n`, "utf8");
 const corpusPath = path.join(dir, "corpus-fixture.json");
@@ -1236,6 +1301,42 @@ await writeFile(invalidPipelineTracePath, `${JSON.stringify({ schemaVersion: 1, 
 const invalidPipelineTraceCliResult = await runTextlabCli(["pipeline-trace", invalidPipelineTracePath]);
 if (invalidPipelineTraceCliResult.exitCode !== 1 || !invalidPipelineTraceCliResult.stderr.includes("Invalid textpipeline trace")) {
   throw new Error("pipeline-trace CLI should reject invalid trace input");
+}
+
+const pipelineBatchReportCliResult = await runTextlabCli(["pipeline-batch-report", pipelineBatchReportPath]);
+
+if (pipelineBatchReportCliResult.exitCode !== 0 || pipelineBatchReportCliResult.stderr !== "") {
+  throw new Error(`pipeline-batch-report CLI should pass: ${pipelineBatchReportCliResult.stderr}`);
+}
+
+if (!pipelineBatchReportCliResult.stdout.includes("Documents: 2")) {
+  throw new Error("pipeline-batch-report CLI should render document counts");
+}
+
+const pipelineBatchReportJsonCliResult = await runTextlabCli(["pipeline-batch-report", pipelineBatchReportPath, "--json"]);
+
+if (
+  pipelineBatchReportJsonCliResult.exitCode !== 0 ||
+  JSON.parse(pipelineBatchReportJsonCliResult.stdout).rows[1]?.runStatus !== "partial"
+) {
+  throw new Error("pipeline-batch-report CLI should support stable JSON output");
+}
+
+const invalidPipelineBatchReportPath = path.join(dir, "invalid-pipeline-batch-report.json");
+await writeFile(
+  invalidPipelineBatchReportPath,
+  `${JSON.stringify({ schemaVersion: 1, documentCount: 0, items: [] }, null, 2)}\n`,
+  "utf8",
+);
+const invalidPipelineBatchReportCliResult = await runTextlabCli([
+  "pipeline-batch-report",
+  invalidPipelineBatchReportPath,
+]);
+if (
+  invalidPipelineBatchReportCliResult.exitCode !== 1 ||
+  !invalidPipelineBatchReportCliResult.stderr.includes("Invalid textpipeline batch report")
+) {
+  throw new Error("pipeline-batch-report CLI should reject invalid batch report input");
 }
 
 const packBackedRulesCliResult = await runTextlabCli(["pack-backed-rules", packBackedRuleDocumentPath]);

@@ -196,6 +196,12 @@ async function assertBuiltPackageSmoke() {
   expect(textpipeline.isTextPipelineTraceV1(pipelineRun.trace), "textpipeline should emit a valid trace.");
   const traceInspection = textlab.inspectTextPipelineTrace(pipelineRun.trace);
   expect(traceInspection.entryCount === 1, "textlab should inspect textpipeline traces through package APIs.");
+  const batchReport = textpipeline.createTextPipelineBatchRunReport([pipelineRun]);
+  const batchReportInspection = textlab.inspectTextPipelineBatchReport(batchReport);
+  expect(
+    batchReportInspection.documentCount === 1 && batchReportInspection.completeCount === 1,
+    "textlab should inspect textpipeline batch reports through package APIs.",
+  );
 
   const collection = textcorpus.createTextCorpusCollection(
     [
