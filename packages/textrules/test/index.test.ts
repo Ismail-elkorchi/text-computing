@@ -1,4 +1,5 @@
 import { loadTextPackResources } from "@ismail-elkorchi/textpack";
+import { runTextPipeline, type TextPipelineProcessor } from "@ismail-elkorchi/textpipeline";
 import { isTextConformanceReportV1 } from "@ismail-elkorchi/textconformance";
 import {
   isTextDocDocumentV1,
@@ -21,6 +22,7 @@ import {
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
   analyzeDependencyParser,
+  createTextPackRulesPipelineProcessor,
   compileTextRulesFromTextPackResources,
   compileTextRulesRuleBundle,
   createCoreferenceConformanceReport,
@@ -941,6 +943,114 @@ const packBackedRunAgain = runTextPackRulesOverTextDoc({
 });
 if (JSON.stringify(packBackedRunAgain.annotations) !== JSON.stringify(packBackedRun.annotations)) {
   throw new Error("pack-backed rule execution should produce deterministic output ordering");
+}
+
+const pipelinePrepareProcessor: TextPipelineProcessor = {
+  descriptor: {
+    id: "00.prepare-textpack-rules",
+    version: "0.1.0",
+    purity: "pure",
+    parallelSafe: true,
+  },
+  run(document) {
+    return {
+      document: {
+        ...document,
+        revision: `${document.revision}>prepare`,
+      },
+    };
+  },
+};
+const packBackedPipelineProcessor = createTextPackRulesPipelineProcessor({
+  id: "textrules.textpack-rules",
+  version: "0.1.0",
+  dependsOn: [pipelinePrepareProcessor.descriptor.id],
+  resources: [...loadedCoreTextPackRules.resources, ...loadedGazetteer.resources],
+  requiredResourceIds: ["stopwords-en-core", "lexicon-en-core", "gazetteer-en-legal", "abbrev-en-core"],
+  tokenLayerId: "tokens",
+});
+const packBackedPipelineRun = runTextPipeline(
+  packBackedTextdoc,
+  [packBackedPipelineProcessor, pipelinePrepareProcessor],
+  { packs: ["pack:en-core", "pack:en-legal"] },
+);
+if (
+  packBackedPipelineRun.trace.processorOrder.join(",") !==
+    "00.prepare-textpack-rules,textrules.textpack-rules" ||
+  packBackedPipelineRun.trace.entries.map((entry) => entry.processorId).join(",") !==
+    "00.prepare-textpack-rules,textrules.textpack-rules" ||
+  packBackedPipelineRun.document.revision !== "tokens-from-textdoc>prepare>textrules.textpack-rules"
+) {
+  throw new Error("pack-backed textpipeline processor should preserve dependency ordering and revision trace");
+}
+const packBackedPipelineTrace = packBackedPipelineRun.trace.entries[1];
+if (
+  packBackedPipelineTrace?.status !== "applied" ||
+  packBackedPipelineTrace.emittedLayers.join(",") !== "textrules:textpack-rule-outputs" ||
+  packBackedPipelineTrace.inputRevision !== "tokens-from-textdoc>prepare" ||
+  packBackedPipelineTrace.outputRevision !== "tokens-from-textdoc>prepare>textrules.textpack-rules"
+) {
+  throw new Error("pack-backed textpipeline processor should emit a deterministic trace entry");
+}
+const packBackedPipelineRunAgain = runTextPipeline(
+  packBackedTextdoc,
+  [packBackedPipelineProcessor, pipelinePrepareProcessor],
+  { packs: ["pack:en-core", "pack:en-legal"] },
+);
+if (JSON.stringify(packBackedPipelineRunAgain.trace) !== JSON.stringify(packBackedPipelineRun.trace)) {
+  throw new Error("pack-backed textpipeline processor trace should be deterministic");
+}
+let missingTokenLayerThroughPipelineRejected = false;
+try {
+  runTextPipeline(
+    {
+      ...packBackedTextdoc,
+      layers: [
+        {
+          id: "sentences",
+          kind: "sentence",
+          viewId: "analysis-view",
+          annotations: [],
+        },
+      ],
+    },
+    [createTextPackRulesPipelineProcessor({
+      resources: [...loadedCoreTextPackRules.resources, ...loadedGazetteer.resources],
+      requiredResourceIds: ["stopwords-en-core"],
+    })],
+    { packs: ["pack:en-core", "pack:en-legal"] },
+  );
+} catch (error) {
+  missingTokenLayerThroughPipelineRejected =
+    error instanceof TypeError && error.message.includes("token layer");
+}
+if (!missingTokenLayerThroughPipelineRejected) {
+  throw new Error("pack-backed textpipeline processor should reject documents without token layers");
+}
+let missingRequiredResourceThroughPipelineRejected = false;
+try {
+  runTextPipeline(
+    packBackedTextdoc,
+    [createTextPackRulesPipelineProcessor({
+      resources: loadedCoreTextPackRules.resources,
+      requiredResourceIds: ["gazetteer-en-legal"],
+    })],
+    { packs: ["pack:en-core"] },
+  );
+} catch (error) {
+  missingRequiredResourceThroughPipelineRejected =
+    error instanceof TypeError &&
+    error.message === "textrules textpack processor missing required resources: gazetteer-en-legal";
+}
+if (!missingRequiredResourceThroughPipelineRejected) {
+  throw new Error("pack-backed textpipeline processor should reject missing required resources");
+}
+if (
+  packBackedPipelineRun.document.layers
+    .find((layer) => layer.id === "textrules:textpack-rule-outputs")
+    ?.annotations.length !== 4
+) {
+  throw new Error("package-imported textpipeline should execute pack-backed rules without workspace-path wiring");
 }
 
 const englishResourceData: TextRulesLexiconResourceData = {

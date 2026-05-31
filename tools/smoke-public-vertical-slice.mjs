@@ -102,10 +102,7 @@ import {
   textDocDocumentPayloadKind,
 } from "@ismail-elkorchi/textdoc";
 import { loadTextPackResources, textPackManifestVersion } from "@ismail-elkorchi/textpack";
-import {
-  analyzeRuleBackedNer,
-  createTextRulesEntityResourcesFromLoadedPack,
-} from "@ismail-elkorchi/textrules";
+import { createTextPackRulesPipelineProcessor } from "@ismail-elkorchi/textrules";
 import { runTextPipeline, textPipelineTracePayloadKind } from "@ismail-elkorchi/textpipeline";
 import {
   checkTextProtocolResultEnvelopeCompatibility,
@@ -274,46 +271,23 @@ const loadedPack = loadTextPackResources(
 expect(loadedPack.diagnostics.length === 0, "textpack resource loading emitted diagnostics.", loadedPack.diagnostics);
 expect(loadedPack.resources.length === 1, "textpack must load one fixture resource.", loadedPack);
 
-const entityResources = createTextRulesEntityResourcesFromLoadedPack(loadedPack.resources);
-expect(entityResources.diagnostics.length === 0, "textrules resource conversion emitted diagnostics.", entityResources.diagnostics);
-expect(entityResources.resources.length === 1, "textrules must create one entity resource.", entityResources);
-
-const processor = {
-  descriptor: {
-    id: "textrules.resource-backed-entities",
-    version: "0.0.0",
-    requires: {
-      layers: ["tokens", "sentences"],
-      packs: [manifest.id],
-    },
-    emits: {
-      views: ["analysis-view"],
-      layers: ["entities"],
-    },
-    purity: "pure",
-    parallelSafe: true,
-  },
-  run(document) {
-    return analyzeRuleBackedNer(
-      {
-        document,
-        languageHint: "en",
-      },
-      entityResources.resources,
-    );
-  },
-};
+const processor = createTextPackRulesPipelineProcessor({
+  id: "textrules.textpack-rules",
+  version: "0.1.0",
+  resources: loadedPack.resources,
+  requiredResourceIds: ["gazetteer-public-vertical-slice"],
+});
 
 const pipelineRun = runTextPipeline(initialDocument, [processor], { packs: [manifest.id] });
-const entityLayer = pipelineRun.document.layers.find((layer) => layer.id === "entities");
-expect(entityLayer !== undefined, "Pipeline did not emit an entities layer.", pipelineRun.document.layers);
-expect(entityLayer.annotations.length === 4, "Expected four entity annotations for the smoke fixture.", entityLayer);
+const ruleLayer = pipelineRun.document.layers.find((layer) => layer.id === "textrules:textpack-rule-outputs");
+expect(ruleLayer !== undefined, "Pipeline did not emit a textrules extension layer.", pipelineRun.document.layers);
+expect(ruleLayer.annotations.length === 4, "Expected four resource-backed annotations for the smoke fixture.", ruleLayer);
 expect(
-  entityLayer.annotations.every((annotation) =>
+  ruleLayer.annotations.every((annotation) =>
     annotation.provenance?.references?.some((reference) => reference.kind === "textpack-resource")
   ),
-  "Every entity annotation must reference a textpack resource.",
-  entityLayer.annotations,
+  "Every resource-backed annotation must reference a textpack resource.",
+  ruleLayer.annotations,
 );
 
 const textdocEnvelope = createEnvelope(
@@ -339,9 +313,9 @@ const conformanceReport = runTextConformanceChecks(
       run: () => (isTextDocDocumentV1(pipelineRun.document) ? "pass" : "fail"),
     },
     {
-      checkId: "entities-from-fixture-resource",
+      checkId: "annotations-from-fixture-resource",
       evidenceRefs: [manifest.provides.gazetteers[0]],
-      run: () => (entityLayer.annotations.length === 4 ? "pass" : "fail"),
+      run: () => (ruleLayer.annotations.length === 4 ? "pass" : "fail"),
     },
     {
       checkId: "pipeline-trace-applied",
@@ -427,10 +401,10 @@ const output = {
     })),
   },
   textrules: {
-    annotations: entityLayer.annotations.map((annotation) => ({
+    annotations: ruleLayer.annotations.map((annotation) => ({
       id: annotation.id,
-      label: annotation.label,
-      text: annotation.text,
+      extensionId: annotation.extensionId,
+      data: annotation.data,
       targets: annotation.targets,
       provenance: annotation.provenance,
     })),
@@ -464,7 +438,7 @@ const verticalSliceEnvelope = createEnvelope(
     schemaVersion: 1,
     sliceId,
     documentId: pipelineRun.document.documentId,
-    entityAnnotationCount: entityLayer.annotations.length,
+    ruleAnnotationCount: ruleLayer.annotations.length,
     conformanceSummary: conformanceReport.summary,
   },
   [
@@ -602,7 +576,7 @@ async function main() {
 		);
 		expect(
 			output.textrules?.annotations?.length === 4,
-			"Smoke output entity count mismatch.",
+			"Smoke output pack-backed annotation count mismatch.",
 			output.textrules,
 		);
 		expect(
