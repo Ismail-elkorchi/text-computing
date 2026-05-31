@@ -389,10 +389,74 @@ const conflictBundle = compileTextRulesRuleBundle({
       when: { pattern: placePattern },
       emit: { extensionId: "demo:Long" },
     },
+    {
+      id: "demo.conflict.sign",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 15,
+      when: { pattern: { ruleId: "sign", atoms: [{ kind: "literal", value: "sign" }] } },
+      emit: { extensionId: "demo:Sign" },
+    },
   ],
 });
-if (runTextRules(textdocPatternDocument, conflictBundle).annotations.map((entry) => entry.extensionId).join(",") !== "demo:Long") {
-  throw new Error("first-win conflict policy should select the highest-priority overlapping match");
+if (runTextRules(textdocPatternDocument, conflictBundle).annotations.map((entry) => entry.extensionId).join(",") !== "demo:Long,demo:Sign") {
+  throw new Error("first-win conflict policy should select highest-priority non-overlapping matches");
+}
+
+const longestWinBundle = compileTextRulesRuleBundle({
+  schemaVersion: 1,
+  id: "demo-longest-win-conflicts",
+  namespace: "demo",
+  conflictPolicy: "longest-win",
+  rules: [
+    {
+      id: "demo.longest.short",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 100,
+      when: { pattern: { ruleId: "short", atoms: [{ kind: "literal", value: "New" }] } },
+      emit: { extensionId: "demo:Short" },
+    },
+    {
+      id: "demo.longest.long",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 1,
+      when: { pattern: placePattern },
+      emit: { extensionId: "demo:Long" },
+    },
+  ],
+});
+if (runTextRules(textdocPatternDocument, longestWinBundle).annotations.map((entry) => entry.extensionId).join(",") !== "demo:Long") {
+  throw new Error("longest-win conflict policy should prefer longer overlapping matches before priority");
+}
+
+const conflictErrorBundle = compileTextRulesRuleBundle({
+  schemaVersion: 1,
+  id: "demo-error-conflicts",
+  namespace: "demo",
+  conflictPolicy: "error",
+  rules: [
+    {
+      id: "demo.error.short",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 100,
+      when: { pattern: { ruleId: "short", atoms: [{ kind: "literal", value: "New" }] } },
+      emit: { extensionId: "demo:Short" },
+    },
+    {
+      id: "demo.error.long",
+      kind: "span-pattern",
+      namespace: "demo",
+      priority: 90,
+      when: { pattern: placePattern },
+      emit: { extensionId: "demo:Long" },
+    },
+  ],
+});
+if (!runTextRules(textdocPatternDocument, conflictErrorBundle).diagnostics.some((entry) => entry.code === "textrules-conflict")) {
+  throw new Error("error conflict policy should emit conflict diagnostics for overlapping matches");
 }
 
 const primitiveDependencyTokens = tokenizeTextRulesText("Cats chase mice.");
