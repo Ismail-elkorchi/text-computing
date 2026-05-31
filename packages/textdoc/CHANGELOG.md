@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add a public annotation-bundle protocol exchange example and validation coverage.
 - Add document-bundle payload export/import helpers and a public protocol-exchange consumer example.
 - Add raw-text document creation helpers backed by `@ismail-elkorchi/textfacts` UAX #29 segmentation.
 - Promote the document container package surface to public alpha for bounded package interop.

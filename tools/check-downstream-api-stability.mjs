@@ -151,6 +151,11 @@ async function assertBuiltPackageSmoke() {
     textdoc.isTextDocDocumentBundlePayloadV1(documentBundlePayload),
     "textdoc built API should export a document-bundle payload through package APIs.",
   );
+  const annotationBundlePayload = textdoc.exportTextDocAnnotationBundlePayloadV1(document);
+  expect(
+    textdoc.isTextDocAnnotationBundlePayloadV1(annotationBundlePayload),
+    "textdoc built API should export an annotation-bundle payload through package APIs.",
+  );
 
   const envelope = {
     schemaId: textprotocol.resultEnvelopeSchemaId,
@@ -187,6 +192,44 @@ async function assertBuiltPackageSmoke() {
   expect(
     schemaFamilyInspection.family === "document-bundle" && schemaFamilyInspection.compatibilityOk,
     "textlab should inspect textprotocol schema-family envelopes through package APIs.",
+  );
+  const annotationBundle = {
+    schemaId: textprotocol.textProtocolAnnotationBundleSchemaId,
+    schemaVersion: textprotocol.textProtocolSchemaVersion,
+    producer: { package: "@ismail-elkorchi/textdoc", version: "0.0.0" },
+    payload: annotationBundlePayload,
+    provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+    limitations: ["Downstream API stability annotation-bundle smoke."],
+  };
+  const annotationBundleTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    annotationBundle,
+    { expectedFamily: "annotation-bundle", requireProvenance: true, requireLimitations: true },
+  );
+  const parsedAnnotationBundle = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(annotationBundleTransport);
+  expect(
+    textprotocol.isTextProtocolAnnotationBundleV1(parsedAnnotationBundle),
+    "textprotocol should serialize and parse textdoc annotation bundles through package APIs.",
+  );
+  const annotationSkeletonDocument = {
+    ...document,
+    layers: document.layers.map((layer) => ({ ...layer, annotations: [] })),
+  };
+  const appliedAnnotationBundle = textdoc.applyTextDocAnnotationBundlePayloadV1(
+    annotationSkeletonDocument,
+    parsedAnnotationBundle.payload,
+  );
+  const restoredAnnotationIds = appliedAnnotationBundle.document?.layers
+    .flatMap((layer) => layer.annotations.map((annotation) => annotation.id))
+    .join(",");
+  expect(
+    appliedAnnotationBundle.ok &&
+      restoredAnnotationIds === "token-1,token-2",
+    "textdoc should apply parsed annotation-bundle payloads through package APIs.",
+  );
+  const annotationBundleInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedAnnotationBundle);
+  expect(
+    annotationBundleInspection.family === "annotation-bundle" && annotationBundleInspection.compatibilityOk,
+    "textlab should inspect textdoc annotation-bundle envelopes through package APIs.",
   );
 
   const conformanceReport = textconformance.runTextConformanceChecks(
