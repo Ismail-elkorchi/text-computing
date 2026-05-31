@@ -156,6 +156,42 @@ async function assertBuiltPackageSmoke() {
     textdoc.isTextDocAnnotationBundlePayloadV1(annotationBundlePayload),
     "textdoc built API should export an annotation-bundle payload through package APIs.",
   );
+  const lossyDocument = textdoc.addTextDocSpanMapV1(
+    textdoc.addTextDocViewV1(
+      document,
+      {
+        id: "normalized-view",
+        kind: "normalized",
+        parentViewId: "source-view",
+        spanMapIds: ["span-map-source-normalized"],
+        loss: [{ kind: "lossy-normalization", reason: "Downstream smoke declares view normalization loss." }],
+      },
+      { revision: "r2" },
+    ),
+    {
+      id: "span-map-source-normalized",
+      sourceViewId: "source-view",
+      targetViewId: "normalized-view",
+      lifecycle: { state: "active" },
+      segments: [
+        {
+          source: { startCU: 0, endCU: document.textLengthCU },
+          target: { startCU: 0, endCU: document.textLengthCU },
+          kind: "normalized",
+          reversible: false,
+          loss: [{ kind: "lossy-normalization", reason: "Downstream smoke declares segment normalization loss." }],
+        },
+      ],
+    },
+    { revision: "r3" },
+  );
+  const mappingLossPayload = textdoc.exportTextDocMappingLossReportPayloadV1(lossyDocument, {
+    mappingId: "mapping:downstream-api-loss",
+  });
+  expect(
+    textdoc.isTextDocMappingLossReportPayloadV1(mappingLossPayload) && mappingLossPayload.losses.length === 2,
+    "textdoc built API should export mapping-loss report payloads through package APIs.",
+  );
 
   const envelope = {
     schemaId: textprotocol.resultEnvelopeSchemaId,
@@ -230,6 +266,28 @@ async function assertBuiltPackageSmoke() {
   expect(
     annotationBundleInspection.family === "annotation-bundle" && annotationBundleInspection.compatibilityOk,
     "textlab should inspect textdoc annotation-bundle envelopes through package APIs.",
+  );
+  const mappingLossReport = {
+    schemaId: textprotocol.textProtocolMappingLossReportSchemaId,
+    schemaVersion: textprotocol.textProtocolSchemaVersion,
+    producer: { package: "@ismail-elkorchi/textdoc", version: "0.0.0" },
+    payload: mappingLossPayload,
+    provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+    limitations: ["Downstream API stability mapping-loss smoke."],
+  };
+  const mappingLossTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    mappingLossReport,
+    { expectedFamily: "mapping-loss-report", requireProvenance: true, requireLimitations: true },
+  );
+  const parsedMappingLossReport = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(mappingLossTransport);
+  expect(
+    textprotocol.isTextProtocolMappingLossReportV1(parsedMappingLossReport),
+    "textprotocol should serialize and parse textdoc mapping-loss reports through package APIs.",
+  );
+  const mappingLossInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedMappingLossReport);
+  expect(
+    mappingLossInspection.family === "mapping-loss-report" && mappingLossInspection.compatibilityOk,
+    "textlab should inspect textdoc mapping-loss report envelopes through package APIs.",
   );
 
   const conformanceReport = textconformance.runTextConformanceChecks(

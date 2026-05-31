@@ -11,3 +11,6 @@ Runnable repository examples:
 - [`../../../examples/textdoc-annotation-bundle-consumer.mjs`](../../../examples/textdoc-annotation-bundle-consumer.mjs)
   exports textdoc annotations as an annotation-bundle payload, wraps the payload in textprotocol
   schema-family JSON transport, and applies the parsed payload back onto a document skeleton.
+- [`../../../examples/textdoc-mapping-loss-report-consumer.mjs`](../../../examples/textdoc-mapping-loss-report-consumer.mjs)
+  exports textdoc loss markers as a mapping-loss-report payload, wraps the payload in textprotocol
+  schema-family JSON transport, and inspects the parsed envelope through textlab.

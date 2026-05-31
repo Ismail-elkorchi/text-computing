@@ -501,6 +501,45 @@ export interface TextDocDocumentBundleImportResult {
   readonly diagnostics: readonly TextDocDocumentValidationDiagnostic[];
 }
 
+export type TextDocMappingLossReportSeverity = "info" | "warning" | "error";
+
+export type TextDocMappingLossReportLossClass =
+  | "offset-loss"
+  | "view-loss"
+  | "feature-loss"
+  | "type-loss"
+  | "ordering-loss"
+  | "unknown-loss";
+
+export interface TextDocMappingLossReportArtifactRefV1 {
+  readonly kind: string;
+  readonly id: string;
+  readonly schemaId?: string;
+}
+
+export interface TextDocMappingLossReportEntryV1 {
+  readonly code: string;
+  readonly severity: TextDocMappingLossReportSeverity;
+  readonly class: TextDocMappingLossReportLossClass;
+  readonly reason: string;
+  readonly sourcePath?: string;
+  readonly targetPath?: string;
+  readonly affectedTargets?: readonly TextDocReferenceRef[];
+}
+
+export interface TextDocMappingLossReportPayloadV1 {
+  readonly mappingId: string;
+  readonly source: TextDocMappingLossReportArtifactRefV1;
+  readonly target: TextDocMappingLossReportArtifactRefV1;
+  readonly losses: readonly TextDocMappingLossReportEntryV1[];
+}
+
+export interface TextDocMappingLossReportPayloadOptions {
+  readonly mappingId?: string;
+  readonly source?: TextDocMappingLossReportArtifactRefV1;
+  readonly target?: TextDocMappingLossReportArtifactRefV1;
+}
+
 export interface TextDocAnnotationBundleApplyResult {
   readonly ok: boolean;
   readonly document?: TextDocDocumentV1;
@@ -2064,6 +2103,184 @@ export function importTextDocDocumentBundlePayloadV1(
     ),
     diagnostics,
   };
+}
+
+function textDocMappingLossClass(loss: TextDocLossMarker): TextDocMappingLossReportLossClass {
+  switch (loss.kind) {
+    case "lossy-normalization":
+      return "offset-loss";
+    case "truncated-context":
+      return "view-loss";
+    case "omitted-alternative":
+      return "feature-loss";
+    case "external-reference":
+      return "unknown-loss";
+  }
+}
+
+function textDocMappingLossEntry(
+  scope: string,
+  loss: TextDocLossMarker,
+  sourcePath: string,
+  targetPath: string,
+  affectedTargets: readonly TextDocReferenceRef[],
+): TextDocMappingLossReportEntryV1 {
+  return {
+    code: `textdoc.mapping-loss.${scope}.${loss.kind}`,
+    severity: "warning",
+    class: textDocMappingLossClass(loss),
+    reason: loss.reason,
+    sourcePath,
+    targetPath,
+    affectedTargets,
+  };
+}
+
+function textDocDocumentArtifactRef(document: TextDocDocumentV1): TextDocMappingLossReportArtifactRefV1 {
+  return {
+    kind: textDocDocumentPayloadKind,
+    id: `${document.documentId}@${document.revision}`,
+    schemaId: "https://github.com/Ismail-elkorchi/text-computing/schemas/textdoc-document-v1.schema.json",
+  };
+}
+
+function textDocMappingLossReportArtifactRef(mappingId: string): TextDocMappingLossReportArtifactRefV1 {
+  return {
+    kind: "textprotocol-mapping-loss-report-v1",
+    id: mappingId,
+    schemaId: "urn:ismail-elkorchi:textprotocol:mapping-loss-report:v1",
+  };
+}
+
+function isTextDocMappingLossReportSeverity(value: unknown): value is TextDocMappingLossReportSeverity {
+  return value === "info" || value === "warning" || value === "error";
+}
+
+function isTextDocMappingLossReportLossClass(value: unknown): value is TextDocMappingLossReportLossClass {
+  return (
+    value === "offset-loss" ||
+    value === "view-loss" ||
+    value === "feature-loss" ||
+    value === "type-loss" ||
+    value === "ordering-loss" ||
+    value === "unknown-loss"
+  );
+}
+
+function isTextDocMappingLossReportArtifactRefV1(
+  value: unknown,
+): value is TextDocMappingLossReportArtifactRefV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.kind) &&
+    isNonEmptyString(value.id) &&
+    (value.schemaId === undefined || isNonEmptyString(value.schemaId))
+  );
+}
+
+function isTextDocMappingLossReportEntryV1(value: unknown): value is TextDocMappingLossReportEntryV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.code) &&
+    isTextDocMappingLossReportSeverity(value.severity) &&
+    isTextDocMappingLossReportLossClass(value.class) &&
+    isNonEmptyString(value.reason) &&
+    (value.sourcePath === undefined || isNonEmptyString(value.sourcePath)) &&
+    (value.targetPath === undefined || isNonEmptyString(value.targetPath)) &&
+    (value.affectedTargets === undefined ||
+      (Array.isArray(value.affectedTargets) &&
+        value.affectedTargets.every((entry) => isTextDocReferenceRef(entry))))
+  );
+}
+
+export function isTextDocMappingLossReportPayloadV1(
+  value: unknown,
+): value is TextDocMappingLossReportPayloadV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.mappingId) &&
+    isTextDocMappingLossReportArtifactRefV1(value.source) &&
+    isTextDocMappingLossReportArtifactRefV1(value.target) &&
+    Array.isArray(value.losses) &&
+    value.losses.every((entry) => isTextDocMappingLossReportEntryV1(entry))
+  );
+}
+
+export function exportTextDocMappingLossReportPayloadV1(
+  document: TextDocDocumentV1,
+  options: TextDocMappingLossReportPayloadOptions = {},
+): TextDocMappingLossReportPayloadV1 {
+  const validation = validateTextDocDocumentV1(document);
+  if (!validation.ok) {
+    throw new TypeError("textdoc mapping-loss report requires a valid TextDocDocumentV1");
+  }
+  const mappingId = options.mappingId ?? `textdoc.mapping-loss:${document.documentId}:${document.revision}`;
+  if (!isNonEmptyString(mappingId)) {
+    throw new TypeError("textdoc mapping-loss report mappingId must be a non-empty string");
+  }
+
+  const losses: TextDocMappingLossReportEntryV1[] = [];
+  document.views.forEach((view, viewIndex) => {
+    view.loss?.forEach((loss, lossIndex) => {
+      losses.push(textDocMappingLossEntry(
+        "view",
+        loss,
+        `/views/${viewIndex}/loss/${lossIndex}`,
+        `/views/${viewIndex}`,
+        [{ kind: "view", id: view.id }],
+      ));
+    });
+  });
+  document.spanMaps?.forEach((spanMap, spanMapIndex) => {
+    spanMap.loss?.forEach((loss, lossIndex) => {
+      losses.push(textDocMappingLossEntry(
+        "span-map",
+        loss,
+        `/spanMaps/${spanMapIndex}/loss/${lossIndex}`,
+        `/spanMaps/${spanMapIndex}`,
+        [{ kind: "span-map", id: spanMap.id }],
+      ));
+    });
+    spanMap.segments.forEach((segment, segmentIndex) => {
+      segment.loss?.forEach((loss, lossIndex) => {
+        losses.push(textDocMappingLossEntry(
+          "span-map-segment",
+          loss,
+          `/spanMaps/${spanMapIndex}/segments/${segmentIndex}/loss/${lossIndex}`,
+          `/spanMaps/${spanMapIndex}/segments/${segmentIndex}`,
+          [{ kind: "span-map", id: spanMap.id }],
+        ));
+      });
+    });
+  });
+  document.layers.forEach((layer, layerIndex) => {
+    layer.annotations.forEach((annotation, annotationIndex) => {
+      annotation.loss?.forEach((loss, lossIndex) => {
+        losses.push(textDocMappingLossEntry(
+          "annotation",
+          loss,
+          `/layers/${layerIndex}/annotations/${annotationIndex}/loss/${lossIndex}`,
+          `/layers/${layerIndex}/annotations/${annotationIndex}`,
+          [{ kind: "annotation", id: annotation.id }],
+        ));
+      });
+    });
+  });
+
+  const payload = {
+    mappingId,
+    source: options.source ?? textDocDocumentArtifactRef(document),
+    target: options.target ?? textDocMappingLossReportArtifactRef(mappingId),
+    losses: losses.sort((left, right) =>
+      left.sourcePath?.localeCompare(right.sourcePath ?? "") ||
+      left.code.localeCompare(right.code) ||
+      left.reason.localeCompare(right.reason),
+    ),
+  };
+  if (!isTextDocMappingLossReportPayloadV1(payload)) {
+    throw new TypeError("textdoc mapping-loss report payload could not be produced");
+  }
+  return payload;
 }
 
 export function exportTextDocAnnotationBundlePayloadV1(

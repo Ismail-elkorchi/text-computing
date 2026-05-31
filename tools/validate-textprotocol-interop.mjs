@@ -1,11 +1,15 @@
 import {
+  addTextDocSpanMapV1,
+  addTextDocViewV1,
   applyTextDocAnnotationBundlePayloadV1,
   exportTextDocAnnotationBundlePayloadV1,
   exportTextDocDocumentBundlePayloadV1,
+  exportTextDocMappingLossReportPayloadV1,
   importTextDocDocumentBundlePayloadV1,
   isTextDocAnnotationBundlePayloadV1,
   isTextDocDocumentBundlePayloadV1,
   isTextDocDocumentV1,
+  isTextDocMappingLossReportPayloadV1,
   packageName as textdocPackageName,
   textDocDocumentPayloadKind,
 } from "@ismail-elkorchi/textdoc";
@@ -22,6 +26,7 @@ import {
   isTextProtocolAnnotationBundleV1,
   isTextProtocolCorpusMetricEnvelopeV1,
   isTextProtocolDocumentBundleV1,
+  isTextProtocolMappingLossReportV1,
   isTextProtocolProcessorTraceV1,
   isTextProtocolResultEnvelopeForPayloadKind,
   isTextProtocolSchemaFamilyEnvelopeJsonTransportV1,
@@ -32,6 +37,7 @@ import {
   textProtocolAnnotationBundleSchemaId,
   textProtocolCorpusMetricEnvelopeSchemaId,
   textProtocolDocumentBundleSchemaId,
+  textProtocolMappingLossReportSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
@@ -256,6 +262,73 @@ if (!appliedAnnotationBundle.ok || appliedAnnotationBundle.document?.layers[0]?.
 const annotationBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedAnnotationBundle);
 if (annotationBundleInspection.family !== "annotation-bundle" || !annotationBundleInspection.compatibilityOk) {
   fail("Interop textlab inspection must preserve annotation-bundle envelope metadata.", annotationBundleInspection);
+}
+
+const lossyDocument = addTextDocSpanMapV1(
+  addTextDocViewV1(
+    document,
+    {
+      id: "normalized-analysis",
+      kind: "normalized",
+      parentViewId: "analysis",
+      spanMapIds: ["span-map-analysis-normalized"],
+      loss: [{ kind: "lossy-normalization", reason: "Interop fixture declares view normalization loss." }],
+    },
+    { revision: "2" },
+  ),
+  {
+    id: "span-map-analysis-normalized",
+    sourceViewId: "analysis",
+    targetViewId: "normalized-analysis",
+    lifecycle: { state: "active" },
+    segments: [
+      {
+        source: { startCU: 0, endCU: 5 },
+        target: { startCU: 0, endCU: 5 },
+        kind: "normalized",
+        reversible: false,
+        loss: [{ kind: "lossy-normalization", reason: "Interop fixture declares segment normalization loss." }],
+      },
+    ],
+  },
+  { revision: "3" },
+);
+const mappingLossPayload = exportTextDocMappingLossReportPayloadV1(lossyDocument, {
+  mappingId: "mapping:textprotocol-interop-loss",
+});
+if (!isTextDocMappingLossReportPayloadV1(mappingLossPayload) || mappingLossPayload.losses.length !== 2) {
+  fail("Interop mapping-loss payload must satisfy textdoc runtime guard.", mappingLossPayload);
+}
+const mappingLossReport = {
+  schemaId: textProtocolMappingLossReportSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: textdocPackageName,
+    version: "0.0.0",
+  },
+  payload: mappingLossPayload,
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural mapping-loss interop smoke only."],
+};
+if (!isTextProtocolMappingLossReportV1(mappingLossReport)) {
+  fail("Interop mapping-loss report must satisfy textprotocol structural guard.", mappingLossReport);
+}
+assertProtocolFamily(mappingLossReport, "mapping-loss-report", textdocPackageName);
+const mappingLossTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(mappingLossReport, {
+  expectedFamily: "mapping-loss-report",
+  expectedProducerPackage: textdocPackageName,
+  requireProvenance: true,
+  requireLimitations: true,
+});
+const parsedMappingLossReport = parseTextProtocolSchemaFamilyEnvelopeJson(mappingLossTransport);
+if (!isTextProtocolMappingLossReportV1(parsedMappingLossReport)) {
+  fail("Interop mapping-loss transport must parse back into a mapping-loss report.");
+}
+const mappingLossInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedMappingLossReport);
+if (mappingLossInspection.family !== "mapping-loss-report" || !mappingLossInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve mapping-loss report metadata.", mappingLossInspection);
 }
 
 const corpusCollection = createTextCorpusCollection(

@@ -54,6 +54,11 @@ documents and rejects empty payloads, malformed document entries, invalid docume
 document revisions. The helpers do not add a `textprotocol` dependency to `textdoc`; applications can
 wrap the payload with `textprotocol` transport helpers when exchange envelopes are needed.
 
+`exportTextDocMappingLossReportPayloadV1()` exports view, span-map, span-map segment, and annotation
+loss markers as the payload shape used by the `textprotocol` mapping-loss-report schema family.
+`isTextDocMappingLossReportPayloadV1()` validates the payload shape without adding a `textprotocol`
+dependency to this package.
+
 ## Extension annotations
 
 Core annotation kinds are reserved for cross-package semantics that this package can validate without
@@ -94,3 +99,6 @@ document model without widening `@ismail-elkorchi/textfacts`.
 - [`../../examples/textdoc-annotation-bundle-consumer.mjs`](../../examples/textdoc-annotation-bundle-consumer.mjs)
   exports textdoc annotations as an annotation-bundle payload, wraps the payload in textprotocol
   schema-family JSON transport, and applies the parsed payload back onto a document skeleton.
+- [`../../examples/textdoc-mapping-loss-report-consumer.mjs`](../../examples/textdoc-mapping-loss-report-consumer.mjs)
+  exports textdoc loss markers as a mapping-loss-report payload, wraps the payload in textprotocol
+  schema-family JSON transport, and inspects the parsed envelope through textlab.
