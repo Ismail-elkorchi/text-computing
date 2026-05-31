@@ -11,6 +11,8 @@ import {
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
+  inspectTextPackResourceList,
+  inspectTextPackValidation,
   packageName,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
@@ -22,6 +24,8 @@ import {
   renderTextdocAnnotationInspection,
   renderTextdocDocumentInspection,
   renderTextPackInspection,
+  renderTextPackResourceListInspection,
+  renderTextPackValidationInspection,
   summarizeConformanceReport,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
@@ -191,6 +195,41 @@ if (
 
 if (!renderTextPackInspection(packInspection).includes("Review state: experimental")) {
   throw new Error("textpack renderer should include review state");
+}
+
+const packValidationInspection = inspectTextPackValidation(packManifest);
+if (!packValidationInspection.ok || packValidationInspection.diagnosticCount !== 0) {
+  throw new Error("textpack validation inspection should accept valid pack metadata");
+}
+
+if (!renderTextPackValidationInspection(packValidationInspection).includes("Status: valid")) {
+  throw new Error("textpack validation renderer should include validation status");
+}
+
+const invalidPackValidationInspection = inspectTextPackValidation({
+  ...packManifest,
+  licenses: {
+    code: [],
+    data: [],
+  },
+});
+if (
+  invalidPackValidationInspection.ok ||
+  !invalidPackValidationInspection.diagnostics.some((entry) => entry.code === "missing-license")
+) {
+  throw new Error("textpack validation inspection should expose missing license diagnostics");
+}
+
+const packResourceList = inspectTextPackResourceList(packManifest);
+if (
+  packResourceList.resourceCount !== 2 ||
+  packResourceList.resources.map((entry) => entry.resourceId).join(",") !== "lexicon:smoke,stopwords:smoke"
+) {
+  throw new Error("textpack resource list inspection should expose deterministic resource rows");
+}
+
+if (!renderTextPackResourceListInspection(packResourceList).includes("Resources: 2")) {
+  throw new Error("textpack resource list renderer should include resource count");
 }
 
 const textdocDocument = {
@@ -588,6 +627,8 @@ const packagePath = path.join(dir, "package.json");
 await writeFile(packagePath, `${JSON.stringify(packageManifest, null, 2)}\n`, "utf8");
 const packPath = path.join(dir, "textpack.manifest.json");
 await writeFile(packPath, `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
+const packDirectoryManifestPath = path.join(dir, "pack.manifest.json");
+await writeFile(packDirectoryManifestPath, `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
 const qrelsPath = path.join(dir, "qrels.json");
 await writeFile(qrelsPath, `${JSON.stringify(retrievalQrels, null, 2)}\n`, "utf8");
 const retrievalEvaluationPath = path.join(dir, "retrieval-evaluation.json");
@@ -639,6 +680,39 @@ const packCliResult = await runTextlabCli(["pack", packPath, "--json"]);
 
 if (packCliResult.exitCode !== 0 || JSON.parse(packCliResult.stdout).id !== "textpack-reference-smoke") {
   throw new Error(`pack CLI should support JSON output: ${packCliResult.stderr}`);
+}
+
+const packInspectCliResult = await runTextlabCli(["pack", "inspect", dir]);
+if (packInspectCliResult.exitCode !== 0 || !packInspectCliResult.stdout.includes("Pack: textpack-reference-smoke")) {
+  throw new Error(`pack inspect CLI should accept a pack directory: ${packInspectCliResult.stderr}`);
+}
+
+const packValidateCliResult = await runTextlabCli(["pack", "validate", dir, "--json"]);
+if (packValidateCliResult.exitCode !== 0 || JSON.parse(packValidateCliResult.stdout).ok !== true) {
+  throw new Error(`pack validate CLI should validate pack metadata: ${packValidateCliResult.stderr}`);
+}
+
+const invalidPackPath = path.join(dir, "invalid-pack.manifest.json");
+await writeFile(
+  invalidPackPath,
+  `${JSON.stringify({ ...packManifest, provenance: { ...packManifest.provenance, sources: [] } }, null, 2)}\n`,
+  "utf8",
+);
+const invalidPackValidateCliResult = await runTextlabCli(["pack", "validate", invalidPackPath, "--json"]);
+if (
+  invalidPackValidateCliResult.exitCode !== 1 ||
+  !JSON.parse(invalidPackValidateCliResult.stdout).diagnostics.some((entry) => entry.code === "missing-provenance")
+) {
+  throw new Error("pack validate CLI should fail invalid provenance metadata");
+}
+
+const packResourcesCliResult = await runTextlabCli(["pack", "list-resources", packPath, "--json"]);
+const packResourcesCliJson = JSON.parse(packResourcesCliResult.stdout);
+if (
+  packResourcesCliResult.exitCode !== 0 ||
+  packResourcesCliJson.resources.map((entry) => entry.resourceId).join(",") !== "lexicon:smoke,stopwords:smoke"
+) {
+  throw new Error(`pack list-resources CLI should emit deterministic resource rows: ${packResourcesCliResult.stderr}`);
 }
 
 const documentCliResult = await runTextlabCli(["document", textdocPath]);

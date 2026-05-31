@@ -54,6 +54,19 @@ discovers packs implicitly.
 `loadTextPackRegistryResources` loads selected registry resources from caller-provided content while
 preserving license, provenance, and overlay metadata.
 
+Authoring helpers are immutable:
+
+- `createTextPackManifest` creates a normalized manifest from explicit package metadata.
+- `addTextPackManifestResource` appends one paired resource path and provided resource id.
+- `updateTextPackManifestResource` updates one paired resource path/id without breaking the pair.
+- `validateTextPackAuthoringMetadata` validates license, provenance, review, test, resource, and
+  overlay metadata before a pack is used.
+- `loadTextPackFromFileSystem` loads resources from a caller-provided filesystem reader in the
+  deterministic registry order.
+
+`loadTextPackFromFileSystem` still keeps the package pure: callers provide the file reader and path
+resolver. The package does not import Node filesystem APIs.
+
 ## Manifest governance and compatibility
 
 `validateTextPackManifestGovernance` checks a manifest before registry construction. It reports
@@ -66,3 +79,9 @@ mandatory resource identifiers, minimum review state, and explicit mutually excl
 The validator does not read files and does not treat fixture identifiers as resource paths. Pack
 authors remain responsible for supplying package-relative resources, explicit provenance, licenses,
 and tests before a pack is considered releasable.
+
+## Consumer example
+
+[`../../examples/textpack-en-core-consumer.mjs`](../../examples/textpack-en-core-consumer.mjs)
+shows a consumer creating a manifest from `@ismail-elkorchi/textpack-en-core`, validating it,
+loading resources through package APIs, and performing deterministic lookup.
