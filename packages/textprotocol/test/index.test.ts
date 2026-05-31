@@ -2,6 +2,8 @@ import {
   canonicalizeTextProtocolJson,
   checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
+  createTextProtocolProtocolErrorEnvelopeFromDiagnostics,
+  createTextProtocolProtocolErrorPayloadFromDiagnostics,
   getTextProtocolPayloadKindDescriptor,
   getTextProtocolSchemaFamilyDescriptor,
   getTextProtocolSchemaFamilyDescriptorBySchemaId,
@@ -520,6 +522,70 @@ for (const requiredCode of [
 ]) {
   if (!invalidFamilyCodes.includes(requiredCode)) {
     throw new Error(`schema-family compatibility should report ${requiredCode}`);
+  }
+}
+
+const diagnosticProtocolError = createTextProtocolProtocolErrorEnvelopeFromDiagnostics(
+  invalidFamilyCheck.diagnostics,
+  {
+    producerPackage: packageName,
+    producerVersion: "0.1.0",
+    code: "textprotocol.schema-family.invalid",
+    message: "Schema-family envelope failed compatibility checks.",
+    schemaId: textProtocolAnnotationBundleSchemaId,
+    path: "/",
+    remediation: "Use the expected schema family and valid payload shape.",
+    provenance: {
+      references: [{ kind: "fixture", id: "textprotocol-protocol-error-diagnostics" }],
+    },
+    limitations: ["Fixture validates diagnostic conversion to protocol-error envelopes."],
+  },
+);
+if (
+  !isTextProtocolProtocolErrorV1(diagnosticProtocolError) ||
+  diagnosticProtocolError.payload.severity !== "error" ||
+  diagnosticProtocolError.payload.causes?.length !== invalidFamilyCheck.diagnostics.length
+) {
+  throw new Error("protocol-error diagnostics helper should produce a valid error envelope with causes");
+}
+
+const diagnosticProtocolErrorTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(
+  diagnosticProtocolError,
+  {
+    expectedFamily: "protocol-error",
+    expectedProducerPackage: packageName,
+    requireProvenance: true,
+    requireLimitations: true,
+  },
+);
+if (!isTextProtocolProtocolErrorV1(parseTextProtocolSchemaFamilyEnvelopeJson(diagnosticProtocolErrorTransport))) {
+  throw new Error("protocol-error diagnostics helper output should serialize through schema-family transport");
+}
+
+try {
+  createTextProtocolProtocolErrorPayloadFromDiagnostics([]);
+  throw new Error("protocol-error diagnostics helper should reject empty diagnostic lists");
+} catch (error) {
+  if (
+    !(error instanceof TypeError) ||
+    error.message !== "textprotocol protocol-error payload requires at least one diagnostic"
+  ) {
+    throw error;
+  }
+}
+
+try {
+  createTextProtocolProtocolErrorEnvelopeFromDiagnostics(invalidFamilyCheck.diagnostics, {
+    producerPackage: "",
+    producerVersion: "0.1.0",
+  });
+  throw new Error("protocol-error envelope helper should reject invalid producers");
+} catch (error) {
+  if (
+    !(error instanceof TypeError) ||
+    error.message !== "textprotocol protocol-error envelope could not be produced"
+  ) {
+    throw error;
   }
 }
 

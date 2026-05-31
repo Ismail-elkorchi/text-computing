@@ -289,6 +289,54 @@ async function assertBuiltPackageSmoke() {
     mappingLossInspection.family === "mapping-loss-report" && mappingLossInspection.compatibilityOk,
     "textlab should inspect textdoc mapping-loss report envelopes through package APIs.",
   );
+  const invalidSchemaFamilyCheck = textprotocol.checkTextProtocolSchemaFamilyEnvelope(
+    {
+      schemaId: textprotocol.textProtocolAnnotationBundleSchemaId,
+      schemaVersion: textprotocol.textProtocolSchemaVersion,
+      producer: { package: "@ismail-elkorchi/textprotocol", version: "0.0.0" },
+      payload: { annotations: [] },
+      limitations: [""],
+    },
+    { expectedFamily: "document-bundle", requireLimitations: true },
+  );
+  expect(
+    !invalidSchemaFamilyCheck.ok && invalidSchemaFamilyCheck.diagnostics.length > 0,
+    "textprotocol should expose schema-family compatibility diagnostics through package APIs.",
+  );
+  const protocolErrorFromDiagnostics = textprotocol.createTextProtocolProtocolErrorEnvelopeFromDiagnostics(
+    invalidSchemaFamilyCheck.diagnostics,
+    {
+      producerPackage: "@ismail-elkorchi/textprotocol",
+      producerVersion: "0.0.0",
+      code: "textprotocol.downstream.schema-family-invalid",
+      message: "Downstream schema-family fixture failed compatibility checks.",
+      schemaId: textprotocol.textProtocolAnnotationBundleSchemaId,
+      path: "/",
+      remediation: "Use a registered family and valid payload shape.",
+      provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+      limitations: ["Downstream API stability protocol-error diagnostic conversion smoke."],
+    },
+  );
+  const protocolErrorTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    protocolErrorFromDiagnostics,
+    {
+      expectedFamily: "protocol-error",
+      expectedProducerPackage: "@ismail-elkorchi/textprotocol",
+      requireProvenance: true,
+      requireLimitations: true,
+    },
+  );
+  const parsedProtocolError = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(protocolErrorTransport);
+  expect(
+    textprotocol.isTextProtocolProtocolErrorV1(parsedProtocolError) &&
+      parsedProtocolError.payload.causes?.length === invalidSchemaFamilyCheck.diagnostics.length,
+    "textprotocol should convert diagnostics into protocol-error envelopes through package APIs.",
+  );
+  const protocolErrorInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedProtocolError);
+  expect(
+    protocolErrorInspection.family === "protocol-error" && protocolErrorInspection.compatibilityOk,
+    "textlab should inspect protocol-error diagnostic envelopes through package APIs.",
+  );
 
   const conformanceReport = textconformance.runTextConformanceChecks(
     [

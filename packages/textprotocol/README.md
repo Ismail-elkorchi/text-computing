@@ -31,6 +31,10 @@ The package also declares these protocol schema families:
 
 Family guards validate protocol-owned envelope shapes without importing downstream package code.
 The `pack-manifest` schema remains owned by `@ismail-elkorchi/textpack`.
+`createTextProtocolProtocolErrorPayloadFromDiagnostics()`,
+`createTextProtocolProtocolErrorEnvelopeV1()`, and
+`createTextProtocolProtocolErrorEnvelopeFromDiagnostics()` convert compatibility diagnostics into
+machine-readable `protocol-error` envelopes for schema-family exchange.
 
 ## Compatibility policy
 
