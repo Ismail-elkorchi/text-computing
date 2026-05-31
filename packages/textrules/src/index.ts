@@ -532,6 +532,56 @@ export interface TextRulesTextPackRunInput extends TextRulesTextDocTokenLayerOpt
   readonly outputLayerId?: string;
 }
 
+export interface TextRulesPipelineVersionRef {
+  readonly id: string;
+  readonly version: string;
+}
+
+export interface TextRulesPipelineRequirementSet {
+  readonly views?: readonly string[];
+  readonly layers?: readonly string[];
+  readonly packages?: readonly string[];
+  readonly packs?: readonly string[];
+  readonly profiles?: readonly string[];
+  readonly packageVersions?: readonly TextRulesPipelineVersionRef[];
+  readonly packVersions?: readonly TextRulesPipelineVersionRef[];
+  readonly profileVersions?: readonly TextRulesPipelineVersionRef[];
+}
+
+export interface TextRulesPipelineEmitSet {
+  readonly views?: readonly string[];
+  readonly layers?: readonly string[];
+}
+
+export interface TextRulesTextPackPipelineProcessorDescriptor {
+  readonly id: string;
+  readonly version: string;
+  readonly dependsOn?: readonly string[];
+  readonly requires?: TextRulesPipelineRequirementSet;
+  readonly emits?: TextRulesPipelineEmitSet;
+  readonly purity: "pure";
+  readonly parallelSafe: true;
+}
+
+export interface TextRulesTextPackPipelineProcessorRunResult {
+  readonly document: TextDocDocumentV1;
+  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+}
+
+export interface TextRulesTextPackPipelineProcessor {
+  readonly descriptor: TextRulesTextPackPipelineProcessorDescriptor;
+  run(document: TextDocDocumentV1): TextRulesTextPackPipelineProcessorRunResult;
+}
+
+export interface TextRulesTextPackPipelineProcessorOptions extends TextRulesTextDocTokenLayerOptions {
+  readonly id?: string;
+  readonly version?: string;
+  readonly dependsOn?: readonly string[];
+  readonly resources: readonly TextPackLoadedResource[];
+  readonly requiredResourceIds?: readonly string[];
+  readonly outputLayerId?: string;
+}
+
 interface TextRulesResolvedAnalysis extends TextRulesLexiconAnalysis {
   readonly resourceRefs: readonly TextDocReferenceRef[];
 }
@@ -1615,6 +1665,86 @@ export function runTextPackRulesOverTextDoc(input: TextRulesTextPackRunInput): T
     annotations,
     diagnostics: [],
     rewrites: [],
+  };
+}
+
+function textPackRuleCompilationDiagnosticsToProtocol(
+  diagnostics: readonly TextRulesTextPackRuleDiagnostic[],
+): readonly TextProtocolDiagnostic[] {
+  return diagnostics.map((diagnostic) => ({
+    code: `textrules.textpack.${diagnostic.code}`,
+    severity: diagnostic.severity,
+    message: diagnostic.message,
+  }));
+}
+
+function textPackRuleCompilationErrorMessage(
+  diagnostics: readonly TextRulesTextPackRuleDiagnostic[],
+): string {
+  return diagnostics
+    .filter((diagnostic) => diagnostic.severity === "error")
+    .map((diagnostic) => diagnostic.resourceId ?? diagnostic.message)
+    .join(", ");
+}
+
+function uniqueTextPackResourcePackIds(resources: readonly TextPackLoadedResource[]): readonly string[] {
+  return [...new Set(resources.map((resource) => resource.resource.packId))]
+    .sort((left, right) => left.localeCompare(right));
+}
+
+export function createTextPackRulesPipelineProcessor(
+  options: TextRulesTextPackPipelineProcessorOptions,
+): TextRulesTextPackPipelineProcessor {
+  const id = options.id ?? "textrules.textpack-rules";
+  const version = options.version ?? "0.1.0";
+  const outputLayerId = options.outputLayerId ?? "textrules:textpack-rule-outputs";
+  const packIds = uniqueTextPackResourcePackIds(options.resources);
+  const descriptor: TextRulesTextPackPipelineProcessorDescriptor = {
+    id,
+    version,
+    ...(options.dependsOn ? { dependsOn: options.dependsOn } : {}),
+    ...(packIds.length > 0
+      ? {
+          requires: {
+            packs: packIds,
+          },
+        }
+      : {}),
+    emits: {
+      layers: [outputLayerId],
+    },
+    purity: "pure",
+    parallelSafe: true,
+  };
+
+  return {
+    descriptor,
+    run(document) {
+      const compilation = compileTextRulesFromTextPackResources(
+        options.resources,
+        options.requiredResourceIds === undefined ? {} : { requiredResourceIds: options.requiredResourceIds },
+      );
+      const errorMessage = textPackRuleCompilationErrorMessage(compilation.diagnostics);
+      if (errorMessage.length > 0) {
+        throw new TypeError(`textrules textpack processor missing required resources: ${errorMessage}`);
+      }
+      const result = runTextPackRulesOverTextDoc({
+        document,
+        compiled: compilation.compiled,
+        ...(options.tokenLayerId === undefined ? {} : { tokenLayerId: options.tokenLayerId }),
+        outputLayerId,
+      });
+      return {
+        document: {
+          ...result.document,
+          revision: `${document.revision}>${id}`,
+        },
+        diagnostics: [
+          ...textPackRuleCompilationDiagnosticsToProtocol(compilation.diagnostics),
+          ...result.diagnostics,
+        ],
+      };
+    },
   };
 }
 
