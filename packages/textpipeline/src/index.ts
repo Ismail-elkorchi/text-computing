@@ -141,6 +141,33 @@ export interface TextPipelineRunResult {
   readonly trace: TextPipelineTraceV1;
 }
 
+export interface TextPipelineBatchRunItem {
+  readonly inputIndex: number;
+  readonly documentId: string;
+  readonly finalRevision: string;
+  readonly runStatus: TextPipelineRunStatus;
+  readonly executionMode: TextPipelineExecutionMode;
+  readonly cachePolicy: TextPipelineCachePolicy;
+  readonly processorOrder: readonly string[];
+  readonly traceEntryCount: number;
+}
+
+export interface TextPipelineBatchRunReport {
+  readonly schemaVersion: 1;
+  readonly documentCount: number;
+  readonly completeCount: number;
+  readonly partialCount: number;
+  readonly executionModes: readonly TextPipelineExecutionMode[];
+  readonly cachePolicies: readonly TextPipelineCachePolicy[];
+  readonly contextFingerprints: readonly string[];
+  readonly items: readonly TextPipelineBatchRunItem[];
+}
+
+export interface TextPipelineBatchRunResult {
+  readonly runs: readonly TextPipelineRunResult[];
+  readonly report: TextPipelineBatchRunReport;
+}
+
 export interface TextPipelineTraceEnvelopeMetadata {
   readonly provenance?: TextProtocolProvenance;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
@@ -1040,6 +1067,52 @@ export function runTextPipelineBatch(
   return documents.map((document) => runTextPipeline(document, processors, context));
 }
 
+export function createTextPipelineBatchRunReport(
+  runs: readonly TextPipelineRunResult[],
+): TextPipelineBatchRunReport {
+  const items = runs.map((run, inputIndex) => {
+    if (!isTextPipelineTraceV1(run.trace)) {
+      throw new TypeError(`batch run ${inputIndex} trace must satisfy TextPipelineTraceV1`);
+    }
+    if (run.document.documentId !== run.trace.documentId) {
+      throw new Error(`batch run ${inputIndex} documentId does not match its trace`);
+    }
+    return {
+      inputIndex,
+      documentId: run.trace.documentId,
+      finalRevision: run.trace.finalRevision,
+      runStatus: run.trace.runStatus,
+      executionMode: run.trace.executionMode,
+      cachePolicy: run.trace.cachePolicy,
+      processorOrder: run.trace.processorOrder,
+      traceEntryCount: run.trace.entries.length,
+    } satisfies TextPipelineBatchRunItem;
+  });
+
+  return {
+    schemaVersion: 1,
+    documentCount: items.length,
+    completeCount: items.filter((item) => item.runStatus === "complete").length,
+    partialCount: items.filter((item) => item.runStatus === "partial").length,
+    executionModes: uniqueSortedStrings(items.map((item) => item.executionMode)) as readonly TextPipelineExecutionMode[],
+    cachePolicies: uniqueSortedStrings(items.map((item) => item.cachePolicy)) as readonly TextPipelineCachePolicy[],
+    contextFingerprints: uniqueSortedStrings(runs.map((run) => run.trace.contextFingerprint)),
+    items,
+  };
+}
+
+export function runTextPipelineBatchWithReport(
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineProcessor[],
+  context: TextPipelineContext = {},
+): TextPipelineBatchRunResult {
+  const runs = runTextPipelineBatch(documents, processors, context);
+  return {
+    runs,
+    report: createTextPipelineBatchRunReport(runs),
+  };
+}
+
 export async function runTextPipelineBatchAsync(
   documents: readonly TextDocDocumentV1[],
   processors: readonly TextPipelineAsyncProcessor[],
@@ -1052,6 +1125,19 @@ export async function runTextPipelineBatchAsync(
     results.push(await runTextPipelineAsync(document, processors, context, options));
   }
   return results;
+}
+
+export async function runTextPipelineBatchAsyncWithReport(
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext = {},
+  options: TextPipelineRunOptions = {},
+): Promise<TextPipelineBatchRunResult> {
+  const runs = await runTextPipelineBatchAsync(documents, processors, context, options);
+  return {
+    runs,
+    report: createTextPipelineBatchRunReport(runs),
+  };
 }
 
 export async function* runTextPipelineStream(

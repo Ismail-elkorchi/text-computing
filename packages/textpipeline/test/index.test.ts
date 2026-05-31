@@ -7,6 +7,7 @@ import type {
 import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   createTextPipelineCacheKey,
+  createTextPipelineBatchRunReport,
   createTextPipelineContextFingerprint,
   createTextPipelineExecutionPlan,
   createTextPipelineTraceEnvelope,
@@ -18,6 +19,8 @@ import {
   runTextPipelineAsync,
   runTextPipelineBatch,
   runTextPipelineBatchAsync,
+  runTextPipelineBatchAsyncWithReport,
+  runTextPipelineBatchWithReport,
   runTextPipelineStream,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
@@ -482,6 +485,28 @@ const batchRun = runTextPipelineBatch([baseDocument, { ...baseDocument, document
 if (batchRun.map((entry) => entry.document.revision).join(",") !== "r0>alpha,r0>alpha") {
   throw new Error("batch execution should run documents deterministically in input order");
 }
+const batchRunWithReport = runTextPipelineBatchWithReport(
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:2" }],
+  [alpha],
+  { packageVersions: [{ id: packageName, version: "0.1.0" }] },
+);
+if (
+  batchRunWithReport.report.documentCount !== 2 ||
+  batchRunWithReport.report.completeCount !== 2 ||
+  batchRunWithReport.report.partialCount !== 0 ||
+  batchRunWithReport.report.executionModes.join(",") !== "sync" ||
+  batchRunWithReport.report.cachePolicies.join(",") !== "none" ||
+  batchRunWithReport.report.items.map((item) => `${item.inputIndex}:${item.documentId}:${item.runStatus}:${item.traceEntryCount}`).join(",") !==
+    "0:doc:pipeline:complete:1,1:doc:pipeline:2:complete:1"
+) {
+  throw new Error("batch report should summarize sync document order, completion state, and trace sizes");
+}
+if (
+  createTextPipelineBatchRunReport(batchRunWithReport.runs).contextFingerprints.join(",") !==
+    batchRunWithReport.report.contextFingerprints.join(",")
+) {
+  throw new Error("batch report generation should be deterministic from existing runs");
+}
 
 const asyncBatchRun = await runTextPipelineBatchAsync(
   [baseDocument, { ...baseDocument, documentId: "doc:pipeline:3" }],
@@ -529,6 +554,41 @@ if (
   cacheStore.size !== cacheStoreBeforeFailure
 ) {
   throw new Error("continue error policy should record failed processors and block dependents");
+}
+const asyncBatchWithReport = await runTextPipelineBatchAsyncWithReport(
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:4" }],
+  [
+    {
+      descriptor: {
+        id: "batch-failing",
+        version: "1.0.0",
+        purity: "pure",
+        parallelSafe: true,
+      },
+      run() {
+        throw new Error("batch failure");
+      },
+    },
+    {
+      ...asyncAlpha,
+      descriptor: {
+        ...asyncAlpha.descriptor,
+        id: "batch-dependent",
+        dependsOn: ["batch-failing"],
+      },
+    },
+  ],
+  {},
+  { errorPolicy: "continue" },
+);
+if (
+  asyncBatchWithReport.report.documentCount !== 2 ||
+  asyncBatchWithReport.report.completeCount !== 0 ||
+  asyncBatchWithReport.report.partialCount !== 2 ||
+  asyncBatchWithReport.report.executionModes.join(",") !== "async" ||
+  asyncBatchWithReport.report.items.some((item) => item.runStatus !== "partial" || item.traceEntryCount !== 2)
+) {
+  throw new Error("async batch report should preserve partial-output state per input document");
 }
 
 const abortController = new AbortController();
