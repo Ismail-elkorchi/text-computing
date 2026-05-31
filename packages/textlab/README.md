@@ -19,6 +19,7 @@ textlab package packages/textlab/package.json
 textlab pack packages/textpack-en-core/pack.manifest.json
 textlab pack inspect packages/textpack-en-core
 textlab pack validate packages/textpack-en-core
+textlab pack audit packages/textpack-en-core
 textlab pack list-resources packages/textpack-en-core
 textlab document fixtures/textdoc/examples/document-annotation-model-v1.json
 textlab annotations fixtures/textdoc/examples/document-annotation-model-v1.json --layer-kind relation

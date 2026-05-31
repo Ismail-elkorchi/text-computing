@@ -1,4 +1,4 @@
-import { mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
@@ -12,6 +12,7 @@ import {
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
+  inspectTextPackResourceAudit,
   inspectTextPackResourceList,
   inspectTextPackValidation,
   inspectTextPipelineTrace,
@@ -27,6 +28,7 @@ import {
   renderTextdocAnnotationInspection,
   renderTextdocDocumentInspection,
   renderTextPackInspection,
+  renderTextPackAuditInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
   renderTextPipelineTraceInspection,
@@ -234,6 +236,82 @@ if (
 
 if (!renderTextPackResourceListInspection(packResourceList).includes("Resources: 2")) {
   throw new Error("textpack resource list renderer should include resource count");
+}
+
+const packAudit = inspectTextPackResourceAudit(packManifest, [
+  "resources/lexicon.tsv",
+  "resources/stopwords.tsv",
+]);
+if (
+  !packAudit.ok ||
+  !packAudit.manifestValid ||
+  packAudit.declaredResourceCount !== 2 ||
+  packAudit.inventoryResourceCount !== 2 ||
+  packAudit.resourceFamilies.map((entry) => `${entry.id}:${entry.count}`).join(",") !== "lexicons:1,stopwords:1"
+) {
+  throw new Error("textpack audit inspection should accept matching manifest and resource inventory");
+}
+
+if (!renderTextPackAuditInspection(packAudit).includes("Status: valid")) {
+  throw new Error("textpack audit renderer should include status");
+}
+
+const missingPackAudit = inspectTextPackResourceAudit(packManifest, ["resources/lexicon.tsv"]);
+if (
+  missingPackAudit.ok ||
+  missingPackAudit.missingResourceCount !== 1 ||
+  missingPackAudit.diagnostics[0]?.code !== "missing-resource-file"
+) {
+  throw new Error("textpack audit inspection should report missing declared resources");
+}
+
+const orphanPackAudit = inspectTextPackResourceAudit(packManifest, [
+  "resources/lexicon.tsv",
+  "resources/orphan.tsv",
+  "resources/stopwords.tsv",
+]);
+if (
+  orphanPackAudit.ok ||
+  orphanPackAudit.orphanResourceCount !== 1 ||
+  !orphanPackAudit.diagnostics.some((entry) => entry.code === "orphan-resource-file" && entry.path === "resources/orphan.tsv")
+) {
+  throw new Error("textpack audit inspection should report orphan resource files");
+}
+
+const duplicatePackAudit = inspectTextPackResourceAudit(
+  {
+    ...packManifest,
+    provides: {
+      ...packManifest.provides,
+      stopwords: ["lexicon:smoke"],
+    },
+  },
+  ["resources/lexicon.tsv", "resources/stopwords.tsv"],
+);
+if (
+  duplicatePackAudit.ok ||
+  duplicatePackAudit.duplicateProvidedIdCount !== 1 ||
+  !duplicatePackAudit.diagnostics.some((entry) => entry.code === "duplicate-provides-id")
+) {
+  throw new Error("textpack audit inspection should report duplicate provided ids");
+}
+
+const stalePairPackAudit = inspectTextPackResourceAudit(
+  {
+    ...packManifest,
+    resources: {
+      ...packManifest.resources,
+      stopwords: ["resources/stopwords.tsv", "resources/stale.tsv"],
+    },
+  },
+  ["resources/lexicon.tsv", "resources/orphan.tsv"],
+);
+if (
+  stalePairPackAudit.stalePairCount !== 1 ||
+  stalePairPackAudit.diagnostics.map((entry) => `${entry.code}:${entry.path ?? entry.ref ?? ""}`).join(",") !==
+    "missing-resource-file:resources/stale.tsv,missing-resource-file:resources/stopwords.tsv,orphan-resource-file:resources/orphan.tsv,resource-provides-length-mismatch:stopwords"
+) {
+  throw new Error("textpack audit inspection should return deterministic stale-pair diagnostics");
 }
 
 const textdocDocument = {
@@ -785,6 +863,9 @@ const packPath = path.join(dir, "textpack.manifest.json");
 await writeFile(packPath, `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
 const packDirectoryManifestPath = path.join(dir, "pack.manifest.json");
 await writeFile(packDirectoryManifestPath, `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
+await mkdir(path.join(dir, "resources"), { recursive: true });
+await writeFile(path.join(dir, "resources", "lexicon.tsv"), "Alice\tpos=PROPN\n", "utf8");
+await writeFile(path.join(dir, "resources", "stopwords.tsv"), "the\n", "utf8");
 const qrelsPath = path.join(dir, "qrels.json");
 await writeFile(qrelsPath, `${JSON.stringify(retrievalQrels, null, 2)}\n`, "utf8");
 const retrievalEvaluationPath = path.join(dir, "retrieval-evaluation.json");
@@ -860,6 +941,55 @@ if (
   !JSON.parse(invalidPackValidateCliResult.stdout).diagnostics.some((entry) => entry.code === "missing-provenance")
 ) {
   throw new Error("pack validate CLI should fail invalid provenance metadata");
+}
+
+const packAuditCliResult = await runTextlabCli(["pack", "audit", dir]);
+if (
+  packAuditCliResult.exitCode !== 0 ||
+  packAuditCliResult.stderr !== "" ||
+  !packAuditCliResult.stdout.includes("Status: valid")
+) {
+  throw new Error(`pack audit CLI should accept a matching pack directory: ${packAuditCliResult.stderr}`);
+}
+
+const packAuditJsonCliResult = await runTextlabCli(["pack", "audit", dir, "--json"]);
+const packAuditJson = JSON.parse(packAuditJsonCliResult.stdout);
+if (
+  packAuditJsonCliResult.exitCode !== 0 ||
+  packAuditJson.declaredResourceCount !== 2 ||
+  packAuditJson.inventoryResourceCount !== 2
+) {
+  throw new Error("pack audit CLI should support deterministic JSON output");
+}
+
+const orphanPackRoot = path.join(dir, "pack-orphan");
+await mkdir(path.join(orphanPackRoot, "resources"), { recursive: true });
+await writeFile(path.join(orphanPackRoot, "pack.manifest.json"), `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
+await writeFile(path.join(orphanPackRoot, "resources", "lexicon.tsv"), "Alice\tpos=PROPN\n", "utf8");
+await writeFile(path.join(orphanPackRoot, "resources", "orphan.tsv"), "orphan\n", "utf8");
+await writeFile(path.join(orphanPackRoot, "resources", "stopwords.tsv"), "the\n", "utf8");
+const orphanPackAuditCliResult = await runTextlabCli(["pack", "audit", orphanPackRoot, "--json"]);
+const orphanPackAuditCliJson = JSON.parse(orphanPackAuditCliResult.stdout);
+if (
+  orphanPackAuditCliResult.exitCode !== 1 ||
+  orphanPackAuditCliJson.orphanResourceCount !== 1 ||
+  !orphanPackAuditCliJson.diagnostics.some((entry) => entry.code === "orphan-resource-file")
+) {
+  throw new Error("pack audit CLI should fail when resource inventory contains orphan files");
+}
+
+const missingPackRoot = path.join(dir, "pack-missing");
+await mkdir(path.join(missingPackRoot, "resources"), { recursive: true });
+await writeFile(path.join(missingPackRoot, "pack.manifest.json"), `${JSON.stringify(packManifest, null, 2)}\n`, "utf8");
+await writeFile(path.join(missingPackRoot, "resources", "lexicon.tsv"), "Alice\tpos=PROPN\n", "utf8");
+const missingPackAuditCliResult = await runTextlabCli(["pack", "audit", missingPackRoot, "--json"]);
+const missingPackAuditCliJson = JSON.parse(missingPackAuditCliResult.stdout);
+if (
+  missingPackAuditCliResult.exitCode !== 1 ||
+  missingPackAuditCliJson.missingResourceCount !== 1 ||
+  missingPackAuditCliJson.diagnostics[0]?.code !== "missing-resource-file"
+) {
+  throw new Error("pack audit CLI should fail when a declared resource file is missing");
 }
 
 const packResourcesCliResult = await runTextlabCli(["pack", "list-resources", packPath, "--json"]);

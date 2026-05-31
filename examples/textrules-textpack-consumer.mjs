@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createTextDocDocumentFromTextSync } from "@ismail-elkorchi/textdoc";
@@ -9,12 +9,37 @@ import { runTextPipeline } from "@ismail-elkorchi/textpipeline";
 import { createTextPackRulesPipelineProcessor } from "@ismail-elkorchi/textrules";
 import {
   inspectPackBackedRuleAnnotations,
+  inspectTextPackResourceAudit,
   inspectTextdocAnnotations,
   inspectTextPipelineTrace,
 } from "@ismail-elkorchi/textlab";
 
+async function listPackResourceFiles(packRoot) {
+  const resourcesRoot = `${packRoot}/resources`;
+  const paths = [];
+  const stack = [resourcesRoot];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = `${current}/${entry.name}`;
+      if (entry.isDirectory()) {
+        stack.push(absolutePath);
+      } else if (entry.isFile()) {
+        paths.push(absolutePath.slice(packRoot.length + 1));
+      }
+    }
+  }
+  return paths.sort((left, right) => left.localeCompare(right));
+}
+
 const manifestUrl = await import.meta.resolve("@ismail-elkorchi/textpack-en-core/pack.manifest.json");
 const packRoot = dirname(fileURLToPath(manifestUrl));
+const packAudit = inspectTextPackResourceAudit(textPackEnCoreManifest, await listPackResourceFiles(packRoot));
+if (!packAudit.ok) {
+  throw new Error(JSON.stringify(packAudit.diagnostics));
+}
+
 const loaded = await loadTextPackFromFileSystem({
   manifest: textPackEnCoreManifest,
   root: packRoot,
@@ -66,6 +91,7 @@ console.log(JSON.stringify({
     data: annotation.data,
   })),
   inspection,
+  packAudit,
   traceInspection,
   packBackedRuleInspection,
 }, null, 2));
