@@ -14,3 +14,6 @@ Runnable repository examples:
 - [`../../../examples/textdoc-mapping-loss-report-consumer.mjs`](../../../examples/textdoc-mapping-loss-report-consumer.mjs)
   exports textdoc loss markers as a mapping-loss-report payload, wraps the payload in textprotocol
   schema-family JSON transport, and inspects the parsed envelope through textlab.
+- [`../../../examples/textdoc-evidence-bundle-consumer.mjs`](../../../examples/textdoc-evidence-bundle-consumer.mjs)
+  exports textdoc annotation evidence records as an evidence-bundle payload, wraps the payload in
+  textprotocol schema-family JSON transport, and inspects the parsed envelope through textlab.

@@ -59,6 +59,12 @@ loss markers as the payload shape used by the `textprotocol` mapping-loss-report
 `isTextDocMappingLossReportPayloadV1()` validates the payload shape without adding a `textprotocol`
 dependency to this package.
 
+`exportTextDocEvidenceBundlePayloadV1()` exports annotation evidence records as the payload shape
+used by the `textprotocol` evidence-bundle schema family. The records preserve annotation targets,
+document and layer provenance, confidence and ambiguity metadata, support references, exactness
+classes, and annotation loss accounting. `isTextDocEvidenceBundlePayloadV1()` validates the payload
+shape without adding a `textprotocol` dependency to this package.
+
 ## Extension annotations
 
 Core annotation kinds are reserved for cross-package semantics that this package can validate without
@@ -102,3 +108,6 @@ document model without widening `@ismail-elkorchi/textfacts`.
 - [`../../examples/textdoc-mapping-loss-report-consumer.mjs`](../../examples/textdoc-mapping-loss-report-consumer.mjs)
   exports textdoc loss markers as a mapping-loss-report payload, wraps the payload in textprotocol
   schema-family JSON transport, and inspects the parsed envelope through textlab.
+- [`../../examples/textdoc-evidence-bundle-consumer.mjs`](../../examples/textdoc-evidence-bundle-consumer.mjs)
+  exports annotation evidence records as an evidence-bundle payload, wraps the payload in
+  textprotocol schema-family JSON transport, and inspects the parsed envelope through textlab.

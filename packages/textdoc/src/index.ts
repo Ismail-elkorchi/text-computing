@@ -540,6 +540,35 @@ export interface TextDocMappingLossReportPayloadOptions {
   readonly target?: TextDocMappingLossReportArtifactRefV1;
 }
 
+export type TextDocEvidenceBundleExactnessClass = "E0" | "E1" | "E2" | "E3";
+
+export interface TextDocEvidenceBundleTargetV1 {
+  readonly kind: string;
+  readonly id: string;
+}
+
+export interface TextDocEvidenceBundleRecordV1 {
+  readonly id: string;
+  readonly kind: string;
+  readonly exactness: TextDocEvidenceBundleExactnessClass;
+  readonly targets: readonly TextDocEvidenceBundleTargetV1[];
+  readonly payload: Readonly<Record<string, unknown>>;
+  readonly provenance: Readonly<Record<string, unknown>>;
+  readonly uncertainty?: Readonly<Record<string, unknown>>;
+  readonly support?: readonly TextDocReferenceRef[];
+  readonly loss?: readonly TextDocMappingLossReportEntryV1[];
+}
+
+export interface TextDocEvidenceBundlePayloadV1 {
+  readonly records: readonly TextDocEvidenceBundleRecordV1[];
+}
+
+export interface TextDocEvidenceBundlePayloadOptions {
+  readonly recordIdPrefix?: string;
+  readonly exactnessByAnnotationId?: Readonly<Record<string, TextDocEvidenceBundleExactnessClass>>;
+  readonly supportByAnnotationId?: Readonly<Record<string, readonly TextDocReferenceRef[]>>;
+}
+
 export interface TextDocAnnotationBundleApplyResult {
   readonly ok: boolean;
   readonly document?: TextDocDocumentV1;
@@ -2279,6 +2308,198 @@ export function exportTextDocMappingLossReportPayloadV1(
   };
   if (!isTextDocMappingLossReportPayloadV1(payload)) {
     throw new TypeError("textdoc mapping-loss report payload could not be produced");
+  }
+  return payload;
+}
+
+function isTextDocEvidenceBundleExactnessClass(
+  value: unknown,
+): value is TextDocEvidenceBundleExactnessClass {
+  return value === "E0" || value === "E1" || value === "E2" || value === "E3";
+}
+
+function isTextDocEvidenceBundleTargetV1(
+  value: unknown,
+): value is TextDocEvidenceBundleTargetV1 {
+  return isRecord(value) && isNonEmptyString(value.kind) && isNonEmptyString(value.id);
+}
+
+function isTextDocEvidenceBundleRecordV1(
+  value: unknown,
+): value is TextDocEvidenceBundleRecordV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.kind) &&
+    isTextDocEvidenceBundleExactnessClass(value.exactness) &&
+    Array.isArray(value.targets) &&
+    value.targets.every((entry) => isTextDocEvidenceBundleTargetV1(entry)) &&
+    isRecord(value.payload) &&
+    isRecord(value.provenance) &&
+    (value.uncertainty === undefined || isRecord(value.uncertainty)) &&
+    (value.support === undefined ||
+      (Array.isArray(value.support) && value.support.every((entry) => isTextDocReferenceRef(entry)))) &&
+    (value.loss === undefined ||
+      (Array.isArray(value.loss) && value.loss.every((entry) => isTextDocMappingLossReportEntryV1(entry))))
+  );
+}
+
+export function isTextDocEvidenceBundlePayloadV1(
+  value: unknown,
+): value is TextDocEvidenceBundlePayloadV1 {
+  return (
+    isRecord(value) &&
+    Array.isArray(value.records) &&
+    value.records.every((entry) => isTextDocEvidenceBundleRecordV1(entry))
+  );
+}
+
+function textDocAnnotationTargetRef(
+  document: TextDocDocumentV1,
+  target: TextDocTarget,
+): TextDocEvidenceBundleTargetV1 {
+  switch (target.kind) {
+    case "annotation":
+      return { kind: "annotation", id: target.annotationId };
+    case "document":
+      return { kind: "document", id: `${document.documentId}@${document.revision}` };
+    case "span":
+      return {
+        kind: "span",
+        id: `${document.documentId}@${document.revision}:${target.viewId}:${target.startCU}-${target.endCU}`,
+      };
+  }
+}
+
+function textDocReferenceKey(reference: TextDocReferenceRef): string {
+  return `${reference.kind}\u0000${reference.id}`;
+}
+
+function textDocSortedUniqueReferences(
+  references: readonly TextDocReferenceRef[],
+): readonly TextDocReferenceRef[] {
+  const byKey = new Map<string, TextDocReferenceRef>();
+  for (const reference of references) byKey.set(textDocReferenceKey(reference), reference);
+  return [...byKey.values()].sort((left, right) =>
+    left.kind.localeCompare(right.kind) || left.id.localeCompare(right.id),
+  );
+}
+
+function textDocEvidenceExactness(annotation: TextDocAnnotation): TextDocEvidenceBundleExactnessClass {
+  if (annotation.lifecycle.state !== "active") return "E3";
+  if (annotation.loss !== undefined && annotation.loss.length > 0) return "E2";
+  if (annotation.ambiguitySet !== undefined && annotation.ambiguitySet.role !== "selected") return "E2";
+  if (annotation.confidence !== undefined) {
+    if (annotation.confidence.value >= 1) return "E0";
+    if (annotation.confidence.value >= 0.8) return "E1";
+    return "E2";
+  }
+  if (annotation.ambiguitySet?.role === "selected") return "E1";
+  return "E0";
+}
+
+function textDocEvidenceUncertainty(
+  annotation: TextDocAnnotation,
+): Readonly<Record<string, unknown>> | undefined {
+  const uncertainty: Record<string, unknown> = {};
+  if (annotation.confidence !== undefined) uncertainty.confidence = cloneJsonValue(annotation.confidence);
+  if (annotation.ambiguitySet !== undefined) uncertainty.ambiguitySet = cloneJsonValue(annotation.ambiguitySet);
+  if (annotation.lifecycle.state !== "active") uncertainty.lifecycle = cloneJsonValue(annotation.lifecycle);
+  return Object.keys(uncertainty).length > 0 ? uncertainty : undefined;
+}
+
+function textDocEvidenceSupport(
+  annotation: TextDocAnnotation,
+  extraReferences: readonly TextDocReferenceRef[] = [],
+): readonly TextDocReferenceRef[] | undefined {
+  const documentRefSupport = annotation.documentRefs?.map((reference): TextDocReferenceRef => ({
+    kind: `external-document:${reference.role}`,
+    id: `${reference.documentId}${reference.revision === undefined ? "" : `@${reference.revision}`}`,
+  })) ?? [];
+  const support = textDocSortedUniqueReferences([
+    ...(annotation.provenance?.references ?? []),
+    ...documentRefSupport,
+    ...extraReferences,
+  ]);
+  return support.length > 0 ? support : undefined;
+}
+
+function textDocEvidenceProvenance(
+  document: TextDocDocumentV1,
+  layer: TextDocLayer,
+  annotation: TextDocAnnotation,
+): Readonly<Record<string, unknown>> {
+  const references = textDocSortedUniqueReferences([
+    { kind: "textdoc-document", id: `${document.documentId}@${document.revision}` },
+    { kind: "textdoc-layer", id: layer.id },
+    ...(annotation.provenance?.references ?? []),
+  ]);
+  return {
+    ...(annotation.provenance?.source ?? document.source
+      ? { source: cloneJsonValue(annotation.provenance?.source ?? document.source) }
+      : {}),
+    references,
+  };
+}
+
+export function exportTextDocEvidenceBundlePayloadV1(
+  document: TextDocDocumentV1,
+  options: TextDocEvidenceBundlePayloadOptions = {},
+): TextDocEvidenceBundlePayloadV1 {
+  const validation = validateTextDocDocumentV1(document);
+  if (!validation.ok) {
+    throw new TypeError("textdoc evidence-bundle requires a valid TextDocDocumentV1");
+  }
+  const recordIdPrefix = options.recordIdPrefix ?? `textdoc.evidence:${document.documentId}:${document.revision}`;
+  if (!isNonEmptyString(recordIdPrefix)) {
+    throw new TypeError("textdoc evidence-bundle recordIdPrefix must be a non-empty string");
+  }
+
+  const records: TextDocEvidenceBundleRecordV1[] = [];
+  document.layers.forEach((layer, layerIndex) => {
+    layer.annotations.forEach((annotation, annotationIndex) => {
+      const loss = annotation.loss?.map((entry, lossIndex) =>
+        textDocMappingLossEntry(
+          "evidence-annotation",
+          entry,
+          `/layers/${layerIndex}/annotations/${annotationIndex}/loss/${lossIndex}`,
+          `/layers/${layerIndex}/annotations/${annotationIndex}`,
+          [{ kind: "annotation", id: annotation.id }],
+        ),
+      );
+      const uncertainty = textDocEvidenceUncertainty(annotation);
+      const support = textDocEvidenceSupport(
+        annotation,
+        options.supportByAnnotationId?.[annotation.id] ?? [],
+      );
+      records.push({
+        id: `${recordIdPrefix}:${layer.id}:${annotation.id}`,
+        kind: `textdoc.annotation.${annotation.kind}`,
+        exactness: options.exactnessByAnnotationId?.[annotation.id] ?? textDocEvidenceExactness(annotation),
+        targets: [
+          { kind: "annotation", id: annotation.id },
+          ...annotation.targets.map((target) => textDocAnnotationTargetRef(document, target)),
+        ],
+        payload: {
+          documentId: document.documentId,
+          documentRevision: document.revision,
+          layerId: layer.id,
+          layerKind: layer.kind,
+          annotation: cloneJsonValue(annotation),
+        },
+        provenance: textDocEvidenceProvenance(document, layer, annotation),
+        ...(uncertainty !== undefined ? { uncertainty } : {}),
+        ...(support !== undefined ? { support } : {}),
+        ...(loss !== undefined && loss.length > 0 ? { loss } : {}),
+      });
+    });
+  });
+
+  const payload = {
+    records: records.sort((left, right) => left.id.localeCompare(right.id)),
+  };
+  if (!isTextDocEvidenceBundlePayloadV1(payload)) {
+    throw new TypeError("textdoc evidence-bundle payload could not be produced");
   }
   return payload;
 }
