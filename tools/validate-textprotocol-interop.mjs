@@ -1,4 +1,11 @@
-import { isTextDocDocumentV1, textDocDocumentPayloadKind } from "@ismail-elkorchi/textdoc";
+import {
+  exportTextDocDocumentBundlePayloadV1,
+  importTextDocDocumentBundlePayloadV1,
+  isTextDocDocumentBundlePayloadV1,
+  isTextDocDocumentV1,
+  packageName as textdocPackageName,
+  textDocDocumentPayloadKind,
+} from "@ismail-elkorchi/textdoc";
 import {
   checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
@@ -141,25 +148,21 @@ if (!isTextPipelineTraceV1(pipelineRun.trace)) {
   fail("Interop pipeline trace must satisfy textpipeline runtime guard.", pipelineRun.trace);
 }
 
-const textdocEnvelope = envelope("@ismail-elkorchi/textdoc", textProtocolPayloadKindTextdocDocumentV1, document);
-assertEnvelope(textdocEnvelope, textProtocolPayloadKindTextdocDocumentV1, "@ismail-elkorchi/textdoc");
+const textdocEnvelope = envelope(textdocPackageName, textProtocolPayloadKindTextdocDocumentV1, document);
+assertEnvelope(textdocEnvelope, textProtocolPayloadKindTextdocDocumentV1, textdocPackageName);
 
+const documentBundlePayload = exportTextDocDocumentBundlePayloadV1([document]);
+if (!isTextDocDocumentBundlePayloadV1(documentBundlePayload)) {
+  fail("Interop document-bundle payload must satisfy textdoc runtime guard.", documentBundlePayload);
+}
 const documentBundle = {
   schemaId: textProtocolDocumentBundleSchemaId,
   schemaVersion: textProtocolSchemaVersion,
   producer: {
-    package: "@ismail-elkorchi/textdoc",
+    package: textdocPackageName,
     version: "0.0.0",
   },
-  payload: {
-    documents: [
-      {
-        documentId: document.documentId,
-        revision: document.revision,
-        document,
-      },
-    ],
-  },
+  payload: documentBundlePayload,
   provenance: {
     references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
   },
@@ -168,10 +171,10 @@ const documentBundle = {
 if (!isTextProtocolDocumentBundleV1(documentBundle)) {
   fail("Interop document bundle must satisfy textprotocol structural guard.", documentBundle);
 }
-assertProtocolFamily(documentBundle, "document-bundle", "@ismail-elkorchi/textdoc");
+assertProtocolFamily(documentBundle, "document-bundle", textdocPackageName);
 const documentBundleTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(documentBundle, {
   expectedFamily: "document-bundle",
-  expectedProducerPackage: "@ismail-elkorchi/textdoc",
+  expectedProducerPackage: textdocPackageName,
   requireProvenance: true,
   requireLimitations: true,
 });
@@ -181,6 +184,10 @@ if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport))
 const parsedDocumentBundle = parseTextProtocolSchemaFamilyEnvelopeJson(documentBundleTransport);
 if (!isTextProtocolDocumentBundleV1(parsedDocumentBundle)) {
   fail("Interop document-bundle transport must parse back into a document bundle.");
+}
+const importedDocumentBundle = importTextDocDocumentBundlePayloadV1(parsedDocumentBundle.payload);
+if (!importedDocumentBundle.ok || importedDocumentBundle.documents?.[0]?.documentId !== document.documentId) {
+  fail("Interop document-bundle payload must import through textdoc package APIs.", importedDocumentBundle);
 }
 const documentBundleInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedDocumentBundle);
 if (documentBundleInspection.family !== "document-bundle" || !documentBundleInspection.compatibilityOk) {

@@ -146,6 +146,11 @@ async function assertBuiltPackageSmoke() {
   };
 
   expect(textdoc.isTextDocDocumentV1(document), "textdoc built API should validate a downstream document fixture.");
+  const documentBundlePayload = textdoc.exportTextDocDocumentBundlePayloadV1([document]);
+  expect(
+    textdoc.isTextDocDocumentBundlePayloadV1(documentBundlePayload),
+    "textdoc built API should export a document-bundle payload through package APIs.",
+  );
 
   const envelope = {
     schemaId: textprotocol.resultEnvelopeSchemaId,
@@ -159,15 +164,7 @@ async function assertBuiltPackageSmoke() {
     schemaId: textprotocol.textProtocolDocumentBundleSchemaId,
     schemaVersion: textprotocol.textProtocolSchemaVersion,
     producer: { package: "@ismail-elkorchi/textdoc", version: "0.0.0" },
-    payload: {
-      documents: [
-        {
-          documentId: document.documentId,
-          revision: document.revision,
-          document,
-        },
-      ],
-    },
+    payload: documentBundlePayload,
     provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
     limitations: ["Downstream API stability document-bundle smoke."],
   };
@@ -180,6 +177,11 @@ async function assertBuiltPackageSmoke() {
     textprotocol.isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(documentBundleTransport) &&
       textprotocol.isTextProtocolDocumentBundleV1(parsedDocumentBundle),
     "textprotocol should serialize and parse schema-family envelopes through package APIs.",
+  );
+  const importedDocumentBundle = textdoc.importTextDocDocumentBundlePayloadV1(parsedDocumentBundle.payload);
+  expect(
+    importedDocumentBundle.ok && importedDocumentBundle.documents?.[0]?.documentId === document.documentId,
+    "textdoc should import parsed document-bundle payloads through package APIs.",
   );
   const schemaFamilyInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedDocumentBundle);
   expect(

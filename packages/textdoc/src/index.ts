@@ -485,6 +485,22 @@ export interface TextDocAnnotationBundlePayloadV1 {
   readonly annotations: readonly TextDocAnnotationBundleAnnotationV1[];
 }
 
+export interface TextDocDocumentBundleDocumentV1 {
+  readonly documentId: string;
+  readonly revision: string;
+  readonly document: TextDocDocumentV1;
+}
+
+export interface TextDocDocumentBundlePayloadV1 {
+  readonly documents: readonly TextDocDocumentBundleDocumentV1[];
+}
+
+export interface TextDocDocumentBundleImportResult {
+  readonly ok: boolean;
+  readonly documents?: readonly TextDocDocumentV1[];
+  readonly diagnostics: readonly TextDocDocumentValidationDiagnostic[];
+}
+
 export interface TextDocAnnotationBundleApplyResult {
   readonly ok: boolean;
   readonly document?: TextDocDocumentV1;
@@ -1933,6 +1949,121 @@ export function queryTextDocAnnotations(
 
 function firstTextDocTarget(annotation: TextDocAnnotation): TextDocTarget | undefined {
   return annotation.targets[0];
+}
+
+function compareTextDocDocumentBundleEntries(
+  left: TextDocDocumentBundleDocumentV1,
+  right: TextDocDocumentBundleDocumentV1,
+): number {
+  return (
+    left.documentId.localeCompare(right.documentId) ||
+    left.revision.localeCompare(right.revision)
+  );
+}
+
+function textDocDocumentBundleEntryKey(entry: Pick<TextDocDocumentBundleDocumentV1, "documentId" | "revision">): string {
+  return `${entry.documentId}\u0000${entry.revision}`;
+}
+
+export function exportTextDocDocumentBundlePayloadV1(
+  documents: readonly TextDocDocumentV1[],
+): TextDocDocumentBundlePayloadV1 {
+  if (!Array.isArray(documents) || documents.length === 0) {
+    throw new TypeError("textdoc document bundle requires at least one document");
+  }
+  const seen = new Set<string>();
+  const entries = documents.map((document): TextDocDocumentBundleDocumentV1 => {
+    const validation = validateTextDocDocumentV1(document);
+    if (!validation.ok) {
+      throw new TypeError(
+        `Document ${isRecord(document) && typeof document.documentId === "string" ? document.documentId : "<unknown>"} cannot be exported as a textdoc document bundle`,
+      );
+    }
+    const entry = {
+      documentId: document.documentId,
+      revision: document.revision,
+      document: cloneJsonValue(document),
+    };
+    const key = textDocDocumentBundleEntryKey(entry);
+    if (seen.has(key)) {
+      throw new TypeError(`textdoc document bundle repeats document revision ${document.documentId}@${document.revision}`);
+    }
+    seen.add(key);
+    return entry;
+  });
+  return {
+    documents: entries.sort(compareTextDocDocumentBundleEntries),
+  };
+}
+
+function isTextDocDocumentBundleDocumentV1(
+  value: unknown,
+): value is TextDocDocumentBundleDocumentV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.revision) &&
+    isTextDocDocumentV1(value.document) &&
+    value.document.documentId === value.documentId &&
+    value.document.revision === value.revision
+  );
+}
+
+export function isTextDocDocumentBundlePayloadV1(
+  value: unknown,
+): value is TextDocDocumentBundlePayloadV1 {
+  return (
+    isRecord(value) &&
+    Array.isArray(value.documents) &&
+    value.documents.length > 0 &&
+    value.documents.every((entry) => isTextDocDocumentBundleDocumentV1(entry))
+  );
+}
+
+export function importTextDocDocumentBundlePayloadV1(
+  bundle: unknown,
+): TextDocDocumentBundleImportResult {
+  const diagnostics: TextDocDocumentValidationDiagnostic[] = [];
+  if (!isTextDocDocumentBundlePayloadV1(bundle)) {
+    return {
+      ok: false,
+      diagnostics: [
+        textDocValidationDiagnostic(
+          "textdoc.document-bundle.shape",
+          "Document bundle payload does not satisfy TextDocDocumentBundlePayloadV1.",
+        ),
+      ],
+    };
+  }
+
+  const seen = new Set<string>();
+  const documents: TextDocDocumentV1[] = [];
+  for (const entry of bundle.documents) {
+    const key = textDocDocumentBundleEntryKey(entry);
+    if (seen.has(key)) {
+      diagnostics.push(textDocValidationDiagnostic(
+        "textdoc.document-bundle.document-duplicate",
+        `Document bundle repeats document revision ${entry.documentId}@${entry.revision}.`,
+        { targetId: entry.documentId },
+      ));
+    }
+    seen.add(key);
+    const validation = validateTextDocDocumentV1(entry.document);
+    diagnostics.push(...validation.diagnostics);
+    documents.push(cloneJsonValue(entry.document));
+  }
+
+  if (hasErrorDiagnostics(diagnostics)) {
+    return { ok: false, diagnostics };
+  }
+
+  return {
+    ok: true,
+    documents: documents.sort((left, right) =>
+      left.documentId.localeCompare(right.documentId) || left.revision.localeCompare(right.revision),
+    ),
+    diagnostics,
+  };
 }
 
 export function exportTextDocAnnotationBundlePayloadV1(

@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add document-bundle payload export/import helpers and a public protocol-exchange consumer example.
 - Add raw-text document creation helpers backed by `@ismail-elkorchi/textfacts` UAX #29 segmentation.
 - Promote the document container package surface to public alpha for bounded package interop.
 - Keep task-specific graph semantics outside the alpha support statement.

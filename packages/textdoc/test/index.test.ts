@@ -9,9 +9,12 @@ import {
   applyTextDocAnnotationBundlePayloadV1,
   documentSchemaVersion,
   exportTextDocAnnotationBundlePayloadV1,
+  exportTextDocDocumentBundlePayloadV1,
   exportTextDocDocumentV1ToConllu,
   importConlluToTextDocDocumentV1,
+  importTextDocDocumentBundlePayloadV1,
   isTextDocAnnotationBundlePayloadV1,
+  isTextDocDocumentBundlePayloadV1,
   isTextDocExtensionId,
   isTextDocDocumentV1,
   isTextDocSpanInRange,
@@ -514,6 +517,69 @@ if (
     .diagnostics.some((entry) => entry.code === "textdoc.annotation-bundle.annotation-duplicate")
 ) {
   throw new Error("annotation bundle import should reject duplicate annotation ids");
+}
+
+const documentBundlePayload = exportTextDocDocumentBundlePayloadV1([
+  rawTextDocument,
+  graphFixtureDocument,
+]);
+if (!isTextDocDocumentBundlePayloadV1(documentBundlePayload)) {
+  throw new Error("exportTextDocDocumentBundlePayloadV1 should produce a runtime-valid payload");
+}
+if (
+  documentBundlePayload.documents.map((entry) => `${entry.documentId}@${entry.revision}`).join(",") !==
+  "doc:graph-runtime@2026-05-16,doc:raw-text-sync@raw-text-uax29-v1"
+) {
+  throw new Error("document bundle export should use deterministic document/revision ordering");
+}
+const documentBundleRoundTrip = importTextDocDocumentBundlePayloadV1(documentBundlePayload);
+if (
+  !documentBundleRoundTrip.ok ||
+  JSON.stringify(documentBundleRoundTrip.documents) !==
+    JSON.stringify([graphFixtureDocument, rawTextDocument])
+) {
+  throw new Error("document bundle import should restore document payloads without loss");
+}
+
+let emptyDocumentBundleRejected = false;
+try {
+  exportTextDocDocumentBundlePayloadV1([]);
+} catch (error) {
+  emptyDocumentBundleRejected =
+    error instanceof TypeError && error.message === "textdoc document bundle requires at least one document";
+}
+if (!emptyDocumentBundleRejected) {
+  throw new Error("document bundle export should reject empty document lists");
+}
+
+const duplicateDocumentBundle = {
+  documents: [...documentBundlePayload.documents, documentBundlePayload.documents[0]],
+};
+if (
+  !importTextDocDocumentBundlePayloadV1(duplicateDocumentBundle)
+    .diagnostics.some((entry) => entry.code === "textdoc.document-bundle.document-duplicate")
+) {
+  throw new Error("document bundle import should reject duplicate document revisions");
+}
+
+const mismatchedDocumentBundle = {
+  documents: [
+    {
+      documentId: "doc:mismatch",
+      revision: graphFixtureDocument.revision,
+      document: graphFixtureDocument,
+    },
+  ],
+};
+if (isTextDocDocumentBundlePayloadV1(mismatchedDocumentBundle)) {
+  throw new Error("document bundle guard should reject document id mismatches");
+}
+
+if (
+  !importTextDocDocumentBundlePayloadV1({ documents: [] })
+    .diagnostics.some((entry) => entry.code === "textdoc.document-bundle.shape")
+) {
+  throw new Error("document bundle import should reject invalid payload shape");
 }
 
 const targetMismatchBundle = {
