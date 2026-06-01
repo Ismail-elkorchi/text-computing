@@ -469,6 +469,44 @@ async function assertBuiltPackageSmoke() {
   expect(textpipeline.isTextPipelineTraceV1(pipelineRun.trace), "textpipeline should emit a valid trace.");
   const traceInspection = textlab.inspectTextPipelineTrace(pipelineRun.trace);
   expect(traceInspection.entryCount === 1, "textlab should inspect textpipeline traces through package APIs.");
+  let snapshotProcessorRuns = 0;
+  const snapshotProcessor = {
+    descriptor: {
+      id: "snapshot-cache-smoke",
+      version: "1.0.0",
+      purity: "pure",
+      parallelSafe: true,
+    },
+    run(inputDocument) {
+      snapshotProcessorRuns += 1;
+      return { document: { ...inputDocument, revision: `${inputDocument.revision}>snapshot-cache-smoke` } };
+    },
+  };
+  const snapshotCache = textpipeline.createTextPipelineSnapshotBackedDocumentCache(undefined, {
+    namespace: "downstream-api",
+  });
+  await textpipeline.runTextPipelineAsync(document, [snapshotProcessor], {}, {
+    cache: snapshotCache,
+    cacheNamespace: "downstream-api",
+  });
+  const cacheSnapshot = textpipeline.parseTextPipelineCacheSnapshot(
+    textpipeline.stringifyTextPipelineCacheSnapshot(snapshotCache.snapshot()),
+  );
+  expect(
+    textpipeline.isTextPipelineCacheSnapshotV1(cacheSnapshot) && cacheSnapshot.entryCount === 1,
+    "textpipeline should serialize caller-managed cache snapshots through package APIs.",
+  );
+  const restoredSnapshotCache = textpipeline.createTextPipelineSnapshotBackedDocumentCache(cacheSnapshot, {
+    namespace: "downstream-api",
+  });
+  const restoredSnapshotRun = await textpipeline.runTextPipelineAsync(document, [snapshotProcessor], {}, {
+    cache: restoredSnapshotCache,
+    cacheNamespace: "downstream-api",
+  });
+  expect(
+    restoredSnapshotRun.trace.entries[0]?.status === "cached" && snapshotProcessorRuns === 1,
+    "textpipeline should restore snapshot-backed cache entries through package APIs.",
+  );
   const processorTraceEnvelope = textpipeline.createTextPipelineProcessorTraceEnvelopeV1(
     pipelineRun.trace,
     "0.1.0",

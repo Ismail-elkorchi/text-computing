@@ -12,11 +12,13 @@ import {
   createTextPipelineContextFingerprint,
   createTextPipelineExecutionPlan,
   createTextPipelineProcessorTraceEnvelopeV1,
+  createTextPipelineSnapshotBackedDocumentCache,
   createTextPipelineTraceEnvelope,
   exportTextPipelineProcessorTracePayloadV1,
   isTextPipelineProcessorDescriptor,
   isTextPipelineBatchRunReportEnvelopeV1,
   isTextPipelineBatchRunReportV1,
+  isTextPipelineCacheSnapshotV1,
   isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
@@ -28,7 +30,10 @@ import {
   runTextPipelineBatchAsyncWithReport,
   runTextPipelineBatchWithReport,
   runTextPipelineStream,
+  parseTextPipelineCacheSnapshot,
+  stringifyTextPipelineCacheSnapshot,
   textPipelineBatchRunReportPayloadKind,
+  textPipelineCacheSnapshotSchemaVersion,
   textPipelineBatchRunReportSchemaVersion,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
@@ -45,6 +50,7 @@ const expectedBatchRunReportPayloadKind: typeof textPipelineBatchRunReportPayloa
   "textpipeline-batch-run-report-v1";
 const expectedTraceSchemaVersion: typeof textPipelineTraceSchemaVersion = 1;
 const expectedBatchRunReportSchemaVersion: typeof textPipelineBatchRunReportSchemaVersion = 1;
+const expectedCacheSnapshotSchemaVersion: typeof textPipelineCacheSnapshotSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
   schemaVersion: 1,
@@ -507,6 +513,92 @@ if (contextCachedRun.trace.entries[0]?.status !== "applied" || cacheStore.size !
   throw new Error("pipeline cache keys should include context profile versions");
 }
 
+let snapshotCachedProcessorRuns = 0;
+const snapshotCachedProcessor: TextPipelineAsyncProcessor = {
+  ...cachedProcessor,
+  descriptor: {
+    ...cachedProcessor.descriptor,
+    id: "snapshot-cached",
+    emits: {
+      views: ["snapshot-cached-view"],
+      layers: ["snapshot-cached-layer"],
+    },
+  },
+  run(document) {
+    snapshotCachedProcessorRuns += 1;
+    return {
+      document: appendAnalysisArtifacts(
+        document,
+        `${document.revision}>snapshot-cached`,
+        "snapshot-cached-view",
+        "snapshot-cached-layer",
+        "lemma",
+      ),
+    };
+  },
+};
+const snapshotBackedCache = createTextPipelineSnapshotBackedDocumentCache(undefined, {
+  namespace: "snapshot-fixture",
+});
+const snapshotFirstRun = await runTextPipelineAsync(
+  baseDocument,
+  [snapshotCachedProcessor],
+  {},
+  { cache: snapshotBackedCache, cacheNamespace: "snapshot-fixture" },
+);
+const cacheSnapshot = snapshotBackedCache.snapshot();
+if (
+  snapshotFirstRun.trace.entries[0]?.status !== "applied" ||
+  !isTextPipelineCacheSnapshotV1(cacheSnapshot) ||
+  cacheSnapshot.schemaVersion !== textPipelineCacheSnapshotSchemaVersion ||
+  cacheSnapshot.namespace !== "snapshot-fixture" ||
+  cacheSnapshot.entryCount !== 1
+) {
+  throw new Error("snapshot-backed cache should export a valid cache snapshot after a run");
+}
+const parsedCacheSnapshot = parseTextPipelineCacheSnapshot(stringifyTextPipelineCacheSnapshot(cacheSnapshot));
+if (JSON.stringify(parsedCacheSnapshot) !== JSON.stringify(cacheSnapshot)) {
+  throw new Error("cache snapshots should round-trip through JSON helpers");
+}
+const restoredSnapshotCache = createTextPipelineSnapshotBackedDocumentCache(parsedCacheSnapshot, {
+  namespace: "snapshot-fixture",
+});
+const snapshotRestoredRun = await runTextPipelineAsync(
+  baseDocument,
+  [snapshotCachedProcessor],
+  {},
+  { cache: restoredSnapshotCache, cacheNamespace: "snapshot-fixture" },
+);
+if (
+  snapshotRestoredRun.trace.entries[0]?.status !== "cached" ||
+  snapshotRestoredRun.document.revision !== "r0>snapshot-cached" ||
+  snapshotCachedProcessorRuns !== 1
+) {
+  throw new Error("restored snapshot-backed cache should replay cached documents across cache instances");
+}
+let cacheSnapshotNamespaceMismatchRejected = false;
+try {
+  createTextPipelineSnapshotBackedDocumentCache(cacheSnapshot, { namespace: "other-snapshot" });
+} catch (error) {
+  cacheSnapshotNamespaceMismatchRejected =
+    error instanceof Error &&
+    error.message === "textpipeline cache snapshot namespace mismatch: snapshot-fixture != other-snapshot";
+}
+if (!cacheSnapshotNamespaceMismatchRejected) {
+  throw new Error("snapshot-backed cache should reject namespace mismatches");
+}
+let invalidCacheSnapshotRejected = false;
+try {
+  parseTextPipelineCacheSnapshot("{\"schemaVersion\":1,\"artifactType\":\"textpipeline-cache-snapshot-v1\"}");
+} catch (error) {
+  invalidCacheSnapshotRejected =
+    error instanceof TypeError &&
+    error.message === "textpipeline cache snapshot JSON must satisfy TextPipelineCacheSnapshotV1";
+}
+if (!invalidCacheSnapshotRejected) {
+  throw new Error("cache snapshot parser should reject invalid snapshots");
+}
+
 const revisedDocument: TextDocDocumentV1 = { ...baseDocument, revision: "r1" };
 const baseCacheKey = createTextPipelineCacheKey(cachedProcessor, baseDocument, {}, { cacheNamespace: "n1" });
 const revisedCacheKey = createTextPipelineCacheKey(cachedProcessor, revisedDocument, {}, { cacheNamespace: "n1" });
@@ -719,3 +811,4 @@ void expectedPayloadKind;
 void expectedBatchRunReportPayloadKind;
 void expectedTraceSchemaVersion;
 void expectedBatchRunReportSchemaVersion;
+void expectedCacheSnapshotSchemaVersion;

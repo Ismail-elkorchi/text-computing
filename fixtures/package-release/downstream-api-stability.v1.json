@@ -231,7 +231,7 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API import and smoke usage; it does not add remote orchestration, durable cache storage, distributed scheduling, worker execution, or recovery after a process boundary."
+        "This verifies current built-package API import and smoke usage, including snapshot-backed cache import/export; it does not add remote orchestration, distributed scheduling, worker execution, or automatic recovery coordination."
       ]
     },
     {
