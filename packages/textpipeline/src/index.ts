@@ -26,6 +26,7 @@ export const textPipelineWorkerRunReportSchemaVersion = 1 as const;
 export const textPipelineWorkerPoolRunReportSchemaVersion = 1 as const;
 export const textPipelineRecoveryPlanSchemaVersion = 1 as const;
 export const textPipelineRecoveryExecutionReportSchemaVersion = 1 as const;
+export const textPipelineDistributedScheduleSchemaVersion = 1 as const;
 export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
 export const textPipelineBatchRunReportPayloadKind =
   textProtocolPayloadKindTextpipelineBatchRunReportV1;
@@ -44,6 +45,8 @@ export type TextPipelineRecoveryPlanSchemaVersion =
   typeof textPipelineRecoveryPlanSchemaVersion;
 export type TextPipelineRecoveryExecutionReportSchemaVersion =
   typeof textPipelineRecoveryExecutionReportSchemaVersion;
+export type TextPipelineDistributedScheduleSchemaVersion =
+  typeof textPipelineDistributedScheduleSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
 export type TextPipelineBatchRunReportPayloadKind =
   typeof textPipelineBatchRunReportPayloadKind;
@@ -54,6 +57,7 @@ export type TextPipelineExecutionMode = "sync" | "async";
 export type TextPipelineErrorPolicy = "throw" | "continue";
 export type TextPipelineCachePolicy = "none" | "read-through";
 export type TextPipelineWorkerPoolStrategy = "round-robin";
+export type TextPipelineDistributedScheduleStrategy = "capacity-round-robin";
 export type TextPipelineRecoverySourceKind =
   | "batch-run-report"
   | "worker-run-report"
@@ -297,6 +301,60 @@ export interface TextPipelineWorkerPoolRunReport {
 export interface TextPipelineWorkerPoolBatchRunResult {
   readonly runs: readonly TextPipelineRunResult[];
   readonly report: TextPipelineWorkerPoolRunReport;
+}
+
+export interface TextPipelineDistributedNodeSpec {
+  readonly nodeId: string;
+  readonly workerIds: readonly string[];
+  readonly maxConcurrentDocuments?: number;
+  readonly labels?: readonly string[];
+}
+
+export interface TextPipelineDistributedScheduleOptions {
+  readonly scheduleId?: string;
+  readonly strategy?: TextPipelineDistributedScheduleStrategy;
+  readonly cacheNamespace?: string;
+  readonly requireParallelSafeProcessors?: boolean;
+}
+
+export interface TextPipelineDistributedScheduleNodeV1 {
+  readonly nodeId: string;
+  readonly nodeSlot: number;
+  readonly workerIds: readonly string[];
+  readonly activeWorkerIds: readonly string[];
+  readonly maxConcurrentDocuments: number;
+  readonly labels?: readonly string[];
+}
+
+export interface TextPipelineDistributedScheduleItem {
+  readonly inputIndex: number;
+  readonly documentId: string;
+  readonly nodeId: string;
+  readonly nodeSlot: number;
+  readonly workerId: string;
+  readonly workerSlot: number;
+  readonly globalWorkerSlot: number;
+  readonly processorOrder: readonly string[];
+  readonly contextFingerprint: string;
+}
+
+export interface TextPipelineDistributedSchedulePlanV1 {
+  readonly schemaVersion: TextPipelineDistributedScheduleSchemaVersion;
+  readonly artifactType: "textpipeline-distributed-schedule-plan-v1";
+  readonly scheduleId: string;
+  readonly strategy: TextPipelineDistributedScheduleStrategy;
+  readonly documentCount: number;
+  readonly nodeCount: number;
+  readonly workerCount: number;
+  readonly processorOrder: readonly string[];
+  readonly contextFingerprint: string;
+  readonly parallelSafe: boolean;
+  readonly nonParallelSafeProcessorIds: readonly string[];
+  readonly cacheNamespace?: string;
+  readonly nodeIds: readonly string[];
+  readonly workerIds: readonly string[];
+  readonly nodes: readonly TextPipelineDistributedScheduleNodeV1[];
+  readonly items: readonly TextPipelineDistributedScheduleItem[];
 }
 
 export type TextPipelineRecoverySourceReport =
@@ -1231,6 +1289,121 @@ export function isTextPipelineWorkerPoolRunReportV1(
   );
 }
 
+function isTextPipelineDistributedScheduleStrategy(
+  value: unknown,
+): value is TextPipelineDistributedScheduleStrategy {
+  return value === "capacity-round-robin";
+}
+
+function isTextPipelineDistributedScheduleNodeV1(
+  value: unknown,
+): value is TextPipelineDistributedScheduleNodeV1 {
+  if (!isRecord(value)) return false;
+  const workerIds = value.workerIds;
+  const activeWorkerIds = value.activeWorkerIds;
+  const maxConcurrentDocuments = value.maxConcurrentDocuments;
+  const labels = value.labels;
+  if (
+    !isNonEmptyString(value.nodeId) ||
+    !isNonNegativeInteger(value.nodeSlot) ||
+    !isStringArray(workerIds) ||
+    workerIds.length === 0 ||
+    !hasUniqueStrings(workerIds) ||
+    !isStringArray(activeWorkerIds) ||
+    activeWorkerIds.length === 0 ||
+    !hasUniqueStrings(activeWorkerIds) ||
+    !isNonNegativeInteger(maxConcurrentDocuments) ||
+    maxConcurrentDocuments < 1 ||
+    maxConcurrentDocuments > workerIds.length ||
+    activeWorkerIds.length !== maxConcurrentDocuments ||
+    !activeWorkerIds.every((workerId) => workerIds.includes(workerId)) ||
+    !sameStringArray(activeWorkerIds, workerIds.slice(0, maxConcurrentDocuments)) ||
+    (labels !== undefined && (!isStringArray(labels) || !hasUniqueStrings(labels)))
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isTextPipelineDistributedScheduleItem(
+  value: unknown,
+): value is TextPipelineDistributedScheduleItem {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.inputIndex) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.nodeId) &&
+    isNonNegativeInteger(value.nodeSlot) &&
+    isNonEmptyString(value.workerId) &&
+    isNonNegativeInteger(value.workerSlot) &&
+    isNonNegativeInteger(value.globalWorkerSlot) &&
+    isStringArray(value.processorOrder) &&
+    isNonEmptyString(value.contextFingerprint)
+  );
+}
+
+export function isTextPipelineDistributedSchedulePlanV1(
+  value: unknown,
+): value is TextPipelineDistributedSchedulePlanV1 {
+  if (!isRecord(value)) return false;
+  const processorOrder = value.processorOrder;
+  const nonParallelSafeProcessorIds = value.nonParallelSafeProcessorIds;
+  const nodeIds = value.nodeIds;
+  const workerIds = value.workerIds;
+  const nodes = value.nodes;
+  const items = value.items;
+  if (
+    value.schemaVersion !== textPipelineDistributedScheduleSchemaVersion ||
+    value.artifactType !== "textpipeline-distributed-schedule-plan-v1" ||
+    !isNonEmptyString(value.scheduleId) ||
+    !isTextPipelineDistributedScheduleStrategy(value.strategy) ||
+    !isNonNegativeInteger(value.documentCount) ||
+    !isNonNegativeInteger(value.nodeCount) ||
+    !isNonNegativeInteger(value.workerCount) ||
+    !isStringArray(processorOrder) ||
+    !hasUniqueStrings(processorOrder) ||
+    !isNonEmptyString(value.contextFingerprint) ||
+    typeof value.parallelSafe !== "boolean" ||
+    !isStringArray(nonParallelSafeProcessorIds) ||
+    !hasUniqueStrings(nonParallelSafeProcessorIds) ||
+    (value.cacheNamespace !== undefined && !isNonEmptyString(value.cacheNamespace)) ||
+    !isStringArray(nodeIds) ||
+    !hasUniqueStrings(nodeIds) ||
+    !isStringArray(workerIds) ||
+    !hasUniqueStrings(workerIds) ||
+    !Array.isArray(nodes) ||
+    !nodes.every((node) => isTextPipelineDistributedScheduleNodeV1(node)) ||
+    !Array.isArray(items) ||
+    !items.every((item) => isTextPipelineDistributedScheduleItem(item))
+  ) {
+    return false;
+  }
+
+  const activeWorkerIds = nodes.flatMap((node) => node.activeWorkerIds);
+  return (
+    value.documentCount === items.length &&
+    value.nodeCount === nodes.length &&
+    value.workerCount === activeWorkerIds.length &&
+    sameStringArray(nodeIds, nodes.map((node) => node.nodeId)) &&
+    sameStringArray(workerIds, activeWorkerIds) &&
+    value.parallelSafe === (nonParallelSafeProcessorIds.length === 0) &&
+    nonParallelSafeProcessorIds.every((processorId) => processorOrder.includes(processorId)) &&
+    nodes.every((node, nodeSlot) => node.nodeSlot === nodeSlot) &&
+    items.every((item, inputIndex) => {
+      const node = nodes[item.nodeSlot];
+      if (node === undefined) return false;
+      return (
+        item.inputIndex === inputIndex &&
+        item.nodeId === node.nodeId &&
+        node.workerIds[item.workerSlot] === item.workerId &&
+        workerIds[item.globalWorkerSlot] === item.workerId &&
+        sameStringArray(item.processorOrder, processorOrder) &&
+        item.contextFingerprint === value.contextFingerprint
+      );
+    })
+  );
+}
+
 function isTextPipelineRecoverySourceKind(value: unknown): value is TextPipelineRecoverySourceKind {
   return value === "batch-run-report" || value === "worker-run-report" || value === "worker-pool-run-report";
 }
@@ -1932,6 +2105,190 @@ export function createTextPipelineWorkerPoolRunReport(
   } satisfies TextPipelineWorkerPoolRunReport;
   if (!isTextPipelineWorkerPoolRunReportV1(report)) {
     throw new TypeError("textpipeline worker pool run report is invalid");
+  }
+  return report;
+}
+
+interface NormalizedTextPipelineDistributedNode {
+  readonly nodeId: string;
+  readonly workerIds: readonly string[];
+  readonly activeWorkerIds: readonly string[];
+  readonly maxConcurrentDocuments: number;
+  readonly labels?: readonly string[];
+}
+
+function normalizeTextPipelineDistributedNodes(
+  nodes: readonly TextPipelineDistributedNodeSpec[],
+): readonly NormalizedTextPipelineDistributedNode[] {
+  if (!Array.isArray(nodes) || nodes.length === 0) {
+    throw new TypeError("textpipeline distributed schedule nodes must be a non-empty array");
+  }
+  const seenNodeIds = new Set<string>();
+  const seenWorkerIds = new Set<string>();
+  const normalized = nodes.map((node): NormalizedTextPipelineDistributedNode => {
+    const nodeValue = node as unknown;
+    if (!isRecord(nodeValue) || !isNonEmptyString(nodeValue.nodeId)) {
+      throw new TypeError("textpipeline distributed schedule node id must be a non-empty string");
+    }
+    const nodeId = nodeValue.nodeId;
+    const rawWorkerIds = nodeValue.workerIds;
+    const rawMaxConcurrentDocuments = nodeValue.maxConcurrentDocuments;
+    const rawLabels = nodeValue.labels;
+    if (seenNodeIds.has(nodeId)) {
+      throw new Error(`duplicate textpipeline distributed schedule node id: ${nodeId}`);
+    }
+    seenNodeIds.add(nodeId);
+    if (!isStringArray(rawWorkerIds) || rawWorkerIds.length === 0) {
+      throw new TypeError(`textpipeline distributed schedule node ${nodeId} worker ids must be non-empty strings`);
+    }
+    const workerIds = uniqueSortedStrings(rawWorkerIds);
+    if (workerIds.length !== rawWorkerIds.length) {
+      throw new Error(`duplicate textpipeline distributed schedule worker id in node: ${nodeId}`);
+    }
+    for (const workerId of workerIds) {
+      if (seenWorkerIds.has(workerId)) {
+        throw new Error(`duplicate textpipeline distributed schedule worker id: ${workerId}`);
+      }
+      seenWorkerIds.add(workerId);
+    }
+    if (
+      rawMaxConcurrentDocuments !== undefined &&
+      (typeof rawMaxConcurrentDocuments !== "number" || !Number.isInteger(rawMaxConcurrentDocuments))
+    ) {
+      throw new RangeError(
+        `textpipeline distributed schedule node ${nodeId} maxConcurrentDocuments must be between 1 and its worker count`,
+      );
+    }
+    const maxConcurrentDocuments = rawMaxConcurrentDocuments === undefined
+      ? workerIds.length
+      : rawMaxConcurrentDocuments;
+    if (
+      maxConcurrentDocuments < 1 ||
+      maxConcurrentDocuments > workerIds.length
+    ) {
+      throw new RangeError(
+        `textpipeline distributed schedule node ${nodeId} maxConcurrentDocuments must be between 1 and its worker count`,
+      );
+    }
+    let labels: readonly string[] | undefined;
+    if (rawLabels !== undefined) {
+      if (!isStringArray(rawLabels)) {
+        throw new TypeError(`textpipeline distributed schedule node ${nodeId} labels must be unique non-empty strings`);
+      }
+      labels = uniqueSortedStrings(rawLabels);
+      if (labels.length !== rawLabels.length) {
+        throw new TypeError(`textpipeline distributed schedule node ${nodeId} labels must be unique non-empty strings`);
+      }
+    }
+    return {
+      nodeId,
+      workerIds,
+      activeWorkerIds: workerIds.slice(0, maxConcurrentDocuments),
+      maxConcurrentDocuments,
+      ...(labels === undefined ? {} : { labels }),
+    };
+  });
+  return normalized.sort((left, right) => left.nodeId.localeCompare(right.nodeId));
+}
+
+export function createTextPipelineDistributedSchedulePlan(
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineExecutableProcessor[],
+  nodes: readonly TextPipelineDistributedNodeSpec[],
+  context: TextPipelineContext = {},
+  options: TextPipelineDistributedScheduleOptions = {},
+): TextPipelineDistributedSchedulePlanV1 {
+  if (!Array.isArray(documents) || !documents.every((document) => isTextDocDocumentV1(document))) {
+    throw new TypeError("textpipeline distributed schedule documents must satisfy TextDocDocumentV1");
+  }
+  if (!isTextPipelineContext(context)) {
+    throw new TypeError("pipeline context is invalid");
+  }
+  if (!isRecord(options)) {
+    throw new TypeError("textpipeline distributed schedule options must be a record");
+  }
+  const strategy = options.strategy ?? "capacity-round-robin";
+  if (!isTextPipelineDistributedScheduleStrategy(strategy)) {
+    throw new TypeError("textpipeline distributed schedule strategy is invalid");
+  }
+  const cacheNamespace = options.cacheNamespace;
+  if (cacheNamespace !== undefined && !isNonEmptyString(cacheNamespace)) {
+    throw new TypeError("textpipeline distributed schedule cache namespace must be a non-empty string");
+  }
+  const plan = createTextPipelineExecutionPlan(processors);
+  const nonParallelSafeProcessorIds = processors
+    .filter((processor) => !processor.descriptor.parallelSafe)
+    .map((processor) => processor.descriptor.id)
+    .sort((left, right) => left.localeCompare(right));
+  if ((options.requireParallelSafeProcessors ?? true) && nonParallelSafeProcessorIds.length > 0) {
+    throw new Error(
+      `textpipeline distributed scheduling requires parallel-safe processors: ${nonParallelSafeProcessorIds.join(", ")}`,
+    );
+  }
+  const normalizedNodes = normalizeTextPipelineDistributedNodes(nodes);
+  const scheduleNodes = normalizedNodes.map((node, nodeSlot): TextPipelineDistributedScheduleNodeV1 => ({
+    nodeId: node.nodeId,
+    nodeSlot,
+    workerIds: node.workerIds,
+    activeWorkerIds: node.activeWorkerIds,
+    maxConcurrentDocuments: node.maxConcurrentDocuments,
+    ...(node.labels === undefined ? {} : { labels: node.labels }),
+  }));
+  const activeSlots = scheduleNodes.flatMap((node) =>
+    node.activeWorkerIds.map((workerId) => {
+      const workerSlot = node.workerIds.indexOf(workerId);
+      if (workerSlot < 0) throw new Error(`textpipeline distributed schedule lost worker ${workerId}`);
+      return {
+        nodeId: node.nodeId,
+        nodeSlot: node.nodeSlot,
+        workerId,
+        workerSlot,
+      };
+    }),
+  ).map((slot, globalWorkerSlot) => ({ ...slot, globalWorkerSlot }));
+  if (activeSlots.length === 0) {
+    throw new TypeError("textpipeline distributed schedule must include at least one active worker");
+  }
+  const contextFingerprint = createTextPipelineContextFingerprint(context);
+  const scheduleId = options.scheduleId ?? `textpipeline.distributed-schedule:${contextFingerprint}`;
+  if (!isNonEmptyString(scheduleId)) {
+    throw new TypeError("textpipeline distributed schedule id must be a non-empty string");
+  }
+  const items = documents.map((document, inputIndex): TextPipelineDistributedScheduleItem => {
+    const slot = activeSlots[inputIndex % activeSlots.length];
+    if (slot === undefined) throw new Error(`textpipeline distributed schedule lost active slot for input ${inputIndex}`);
+    return {
+      inputIndex,
+      documentId: document.documentId,
+      nodeId: slot.nodeId,
+      nodeSlot: slot.nodeSlot,
+      workerId: slot.workerId,
+      workerSlot: slot.workerSlot,
+      globalWorkerSlot: slot.globalWorkerSlot,
+      processorOrder: plan.processorOrder,
+      contextFingerprint,
+    };
+  });
+  const report = {
+    schemaVersion: textPipelineDistributedScheduleSchemaVersion,
+    artifactType: "textpipeline-distributed-schedule-plan-v1",
+    scheduleId,
+    strategy,
+    documentCount: documents.length,
+    nodeCount: scheduleNodes.length,
+    workerCount: activeSlots.length,
+    processorOrder: plan.processorOrder,
+    contextFingerprint,
+    parallelSafe: nonParallelSafeProcessorIds.length === 0,
+    nonParallelSafeProcessorIds,
+    ...(cacheNamespace === undefined ? {} : { cacheNamespace }),
+    nodeIds: scheduleNodes.map((node) => node.nodeId),
+    workerIds: activeSlots.map((slot) => slot.workerId),
+    nodes: scheduleNodes,
+    items,
+  } satisfies TextPipelineDistributedSchedulePlanV1;
+  if (!isTextPipelineDistributedSchedulePlanV1(report)) {
+    throw new TypeError("textpipeline distributed schedule plan is invalid");
   }
   return report;
 }

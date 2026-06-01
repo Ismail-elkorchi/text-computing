@@ -883,6 +883,24 @@ async function assertBuiltPackageSmoke() {
     "textpipeline should execute caller-provided worker pools through package APIs.",
     workerPoolBatch.report,
   );
+  const distributedSchedule = textpipeline.createTextPipelineDistributedSchedulePlan(
+    [document, { ...document, documentId: "doc:downstream-api:distributed" }],
+    [identityProcessor],
+    [
+      { nodeId: "node-b", workerIds: ["worker-b"], maxConcurrentDocuments: 1 },
+      { nodeId: "node-a", workerIds: ["worker-a"], maxConcurrentDocuments: 1 },
+    ],
+    { packageVersions: [{ id: "@ismail-elkorchi/textpipeline", version: "0.1.0" }] },
+    { scheduleId: "downstream-api:distributed-schedule" },
+  );
+  expect(
+    textpipeline.isTextPipelineDistributedSchedulePlanV1(distributedSchedule) &&
+      distributedSchedule.strategy === "capacity-round-robin" &&
+      distributedSchedule.items.map((item) => `${item.nodeId}:${item.workerId}`).join(",") ===
+        "node-a:worker-a,node-b:worker-b",
+    "textpipeline should create deterministic distributed schedule plans through package APIs.",
+    distributedSchedule,
+  );
   const envelopeInspection = textlab.inspectTextProtocolResultEnvelope(batchReportEnvelope);
   expect(
     envelopeInspection.registeredPayloadKind &&
