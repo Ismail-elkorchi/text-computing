@@ -49,6 +49,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textpack-manifest-v1.schema.json`](textpack-manifest-v1.schema.json) — pack manifest schema for issue `#12`.
 - [`textpack-catalog-v1.schema.json`](textpack-catalog-v1.schema.json) — pack catalog schema for reference-pack evidence.
 - [`textpack-review-report-v1.schema.json`](textpack-review-report-v1.schema.json) — pack review and vetting report schema.
+- [`textpack-catalog-update-plan-v1.schema.json`](textpack-catalog-update-plan-v1.schema.json) — pack catalog update plan schema.
 - [`textprotocol-result-envelope-v1.schema.json`](textprotocol-result-envelope-v1.schema.json) — result envelope schema for public repository outputs.
 - [`textprotocol-document-bundle-v1.schema.json`](textprotocol-document-bundle-v1.schema.json) — protocol document-bundle envelope schema.
 - [`textprotocol-annotation-bundle-v1.schema.json`](textprotocol-annotation-bundle-v1.schema.json) — protocol annotation-bundle envelope schema.

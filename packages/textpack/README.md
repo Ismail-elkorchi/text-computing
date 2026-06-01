@@ -63,6 +63,9 @@ Authoring helpers are immutable:
 - `planTextPackResourceTransaction` plans add/update/remove resource operations, returns the next
   manifest, validates metadata before and after the mutation, and includes the expected resource
   inventory audit result.
+- `createTextPackCatalogUpdatePlan` compares before/after manifest sets, emits before/after catalogs,
+  summarizes pack additions, removals, retained packs, version/review/resource deltas, and audits
+  caller-supplied resource inventories.
 - `createTextPackReviewReport` emits a machine-readable pack review/vetting report over manifest
   governance, resource inventory, compatibility policy, review-state transition, required evidence,
   and deterministic diagnostics.
@@ -104,6 +107,9 @@ loading resources through package APIs, and performing deterministic lookup.
 [`../../examples/textpack-authoring-consumer.mjs`](../../examples/textpack-authoring-consumer.mjs)
 shows a consumer creating a local pack, planning add/update resource transactions, auditing the
 filesystem inventory, loading the resulting resources, and performing deterministic lookup.
+
+[`../../examples/textpack-catalog-update-plan-consumer.mjs`](../../examples/textpack-catalog-update-plan-consumer.mjs)
+shows a consumer creating a catalog update plan for a versioned pack resource update.
 
 [`../../examples/textpack-pack-manifest-envelope-consumer.mjs`](../../examples/textpack-pack-manifest-envelope-consumer.mjs)
 shows a consumer validating a textpack manifest with `textpack`, wrapping it in a `textprotocol`

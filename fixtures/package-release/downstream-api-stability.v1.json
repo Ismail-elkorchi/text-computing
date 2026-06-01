@@ -119,6 +119,8 @@
         "packages/textpack/package.json",
         "packages/textpack/src/index.ts",
         "packages/textpack/test/index.test.ts",
+        "schemas/textpack-catalog-update-plan-v1.schema.json",
+        "examples/textpack-catalog-update-plan-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [

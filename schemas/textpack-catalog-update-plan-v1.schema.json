@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-catalog-update-plan-v1.schema.json",
+  "title": "textpack catalog update plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packageName",
+    "ok",
+    "beforeCatalog",
+    "afterCatalog",
+    "packCountBefore",
+    "packCountAfter",
+    "addedPackCount",
+    "removedPackCount",
+    "updatedPackCount",
+    "retainedPackCount",
+    "diagnosticCount",
+    "packs",
+    "diagnostics"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packageName": { "const": "@ismail-elkorchi/textpack" },
+    "ok": { "type": "boolean" },
+    "beforeCatalog": { "$ref": "#/definitions/catalog" },
+    "afterCatalog": { "$ref": "#/definitions/catalog" },
+    "packCountBefore": { "type": "integer", "minimum": 0 },
+    "packCountAfter": { "type": "integer", "minimum": 0 },
+    "addedPackCount": { "type": "integer", "minimum": 0 },
+    "removedPackCount": { "type": "integer", "minimum": 0 },
+    "updatedPackCount": { "type": "integer", "minimum": 0 },
+    "retainedPackCount": { "type": "integer", "minimum": 0 },
+    "diagnosticCount": { "type": "integer", "minimum": 0 },
+    "packs": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/packPlan" }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/diagnostic" }
+    }
+  },
+  "definitions": {
+    "reviewState": {
+      "enum": ["experimental", "candidate", "stable", "reference", "deprecated"]
+    },
+    "reviewTransition": {
+      "enum": ["retain", "promote", "demote", "deprecate", "restore", "unavailable"]
+    },
+    "resourceFamily": {
+      "enum": [
+        "profiles",
+        "rules",
+        "lexicons",
+        "stopwords",
+        "gazetteers",
+        "tagsets",
+        "morphology",
+        "transducers",
+        "structures",
+        "benchmarks"
+      ]
+    },
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "familyArray": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/resourceFamily" }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schemaVersion",
+        "packageName",
+        "packCount",
+        "resourceCount",
+        "languages",
+        "profiles",
+        "reviewStates",
+        "packs",
+        "resourcesByFamily"
+      ],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "packageName": { "const": "@ismail-elkorchi/textpack" },
+        "packCount": { "type": "integer", "minimum": 0 },
+        "resourceCount": { "type": "integer", "minimum": 0 },
+        "languages": { "$ref": "#/definitions/stringArray" },
+        "profiles": { "$ref": "#/definitions/stringArray" },
+        "reviewStates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/reviewState" }
+        },
+        "packs": { "type": "array" },
+        "resourcesByFamily": { "type": "array" }
+      }
+    },
+    "packPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packId",
+        "action",
+        "versionChange",
+        "reviewTransition",
+        "beforeResourceCount",
+        "afterResourceCount",
+        "addedResourceIds",
+        "removedResourceIds",
+        "retainedResourceIds",
+        "addedResourceFamilies",
+        "removedResourceFamilies",
+        "addedLanguages",
+        "removedLanguages",
+        "addedProfiles",
+        "removedProfiles",
+        "beforeInventoryOk",
+        "afterInventoryOk",
+        "diagnosticCount"
+      ],
+      "properties": {
+        "packId": { "type": "string", "minLength": 1 },
+        "action": { "enum": ["add-pack", "remove-pack", "update-pack", "retain-pack"] },
+        "packageName": { "type": "string", "minLength": 1 },
+        "beforeVersion": { "type": "string", "minLength": 1 },
+        "afterVersion": { "type": "string", "minLength": 1 },
+        "versionChange": { "enum": ["none", "upgrade", "downgrade", "changed", "not-applicable"] },
+        "beforeReviewState": { "$ref": "#/definitions/reviewState" },
+        "afterReviewState": { "$ref": "#/definitions/reviewState" },
+        "reviewTransition": { "$ref": "#/definitions/reviewTransition" },
+        "beforeResourceCount": { "type": "integer", "minimum": 0 },
+        "afterResourceCount": { "type": "integer", "minimum": 0 },
+        "addedResourceIds": { "$ref": "#/definitions/stringArray" },
+        "removedResourceIds": { "$ref": "#/definitions/stringArray" },
+        "retainedResourceIds": { "$ref": "#/definitions/stringArray" },
+        "addedResourceFamilies": { "$ref": "#/definitions/familyArray" },
+        "removedResourceFamilies": { "$ref": "#/definitions/familyArray" },
+        "addedLanguages": { "$ref": "#/definitions/stringArray" },
+        "removedLanguages": { "$ref": "#/definitions/stringArray" },
+        "addedProfiles": { "$ref": "#/definitions/stringArray" },
+        "removedProfiles": { "$ref": "#/definitions/stringArray" },
+        "beforeInventoryOk": { "type": "boolean" },
+        "afterInventoryOk": { "type": "boolean" },
+        "diagnosticCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "code", "message"],
+      "properties": {
+        "source": {
+          "enum": ["before-manifest", "after-manifest", "before-inventory", "after-inventory", "catalog"]
+        },
+        "code": { "type": "string", "minLength": 1 },
+        "packId": { "type": "string", "minLength": 1 },
+        "resourceId": { "type": "string", "minLength": 1 },
+        "family": { "$ref": "#/definitions/resourceFamily" },
+        "path": { "type": "string", "minLength": 1 },
+        "ref": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

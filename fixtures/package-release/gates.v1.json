@@ -382,7 +382,9 @@
         "packages/textpack/README.md",
         "packages/textpack/CHANGELOG.md",
         "packages/textpack/test",
+        "schemas/textpack-catalog-update-plan-v1.schema.json",
         "schemas/textpack-review-report-v1.schema.json",
+        "examples/textpack-catalog-update-plan-consumer.mjs",
         "fixtures/textpack/review-report.v1.json",
         "examples/textpack-review-report-consumer.mjs",
         "tools/validate-package-readiness.mjs",
@@ -391,18 +393,20 @@
         "tools/validate-textpack-packages.mjs"
       ],
       "limitations": [
-        "Multilingual pack coverage and update workflow are not broad enough for package release.",
+        "Catalog update plans and authoring transactions exist; multilingual pack coverage remains limited to reference packs.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence.",
         "Reference packs and review-report workflow exist for alpha validation; external resource-vetting breadth remains limited."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Multilingual pack coverage and update workflow are not broad enough for package release.",
+          "blocker": "Catalog update plans and authoring transactions exist; multilingual pack coverage remains limited to reference packs.",
           "maturity": "beta",
-          "decision": "Does not block alpha because alpha requires explicit fixture resources and exact declared lookup behavior, not broad resource-marketplace coverage.",
+          "decision": "Does not block alpha because alpha requires explicit fixture resources, deterministic update planning, and exact declared lookup behavior, not broad resource-marketplace coverage.",
           "evidenceRefs": [
             "packages/textpack/src/index.ts",
-            "packages/textpack/test"
+            "packages/textpack/test",
+            "schemas/textpack-catalog-update-plan-v1.schema.json",
+            "examples/textpack-catalog-update-plan-consumer.mjs"
           ]
         },
         {
