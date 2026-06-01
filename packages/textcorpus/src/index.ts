@@ -522,6 +522,18 @@ export interface TextCorpusRetrievalFieldWeightCalibrationOptions
   readonly snippetWindow?: number;
 }
 
+export interface TextCorpusRetrievalFieldWeightSearchSpaceEntry {
+  readonly field: string;
+  readonly weights: readonly number[];
+}
+
+export interface TextCorpusRetrievalFieldWeightLearningOptions
+  extends TextCorpusRetrievalFieldWeightCalibrationOptions {
+  readonly searchSpace: readonly TextCorpusRetrievalFieldWeightSearchSpaceEntry[];
+  readonly profileIdPrefix?: string;
+  readonly maxCandidateCount?: number;
+}
+
 export interface TextCorpusRetrievalCalibrationCandidateV1 {
   readonly candidateId: string;
   readonly rank: number;
@@ -3917,6 +3929,140 @@ export function calibrateTextCorpusRetrievalFieldWeightProfiles(
     });
   }
   return createTextCorpusRetrievalCalibrationReport(candidates, options);
+}
+
+function normalizeRetrievalFieldWeightLearningSearchSpace(
+  index: TextCorpusRetrievalIndexV1,
+  searchSpace: readonly TextCorpusRetrievalFieldWeightSearchSpaceEntry[],
+): readonly TextCorpusRetrievalFieldWeightSearchSpaceEntry[] {
+  if (!Array.isArray(searchSpace) || searchSpace.length === 0) {
+    throw new TypeError("textcorpus retrieval field-weight learning search space must be a non-empty array");
+  }
+  const fieldSet = new Set(index.fieldOrder ?? []);
+  const seenFields = new Set<string>();
+  const normalized = searchSpace.map((entry): TextCorpusRetrievalFieldWeightSearchSpaceEntry => {
+    if (!isRecord(entry) || !isNonEmptyString(entry.field)) {
+      throw new TypeError("textcorpus retrieval field-weight learning search field must be a non-empty string");
+    }
+    if (!fieldSet.has(entry.field)) {
+      throw new Error(`textcorpus retrieval field-weight learning references unknown field: ${entry.field}`);
+    }
+    if (seenFields.has(entry.field)) {
+      throw new Error(`duplicate textcorpus retrieval field-weight learning field: ${entry.field}`);
+    }
+    seenFields.add(entry.field);
+    if (
+      !Array.isArray(entry.weights) ||
+      entry.weights.length === 0 ||
+      !entry.weights.every((weight) => typeof weight === "number" && Number.isFinite(weight) && weight >= 0)
+    ) {
+      throw new TypeError(
+        `textcorpus retrieval field-weight learning weights for ${entry.field} must be non-negative finite numbers`,
+      );
+    }
+    const sortedWeights = [...entry.weights].sort((left, right) => left - right);
+    const weightIds = sortedWeights.map((weight) => String(weight));
+    if (new Set(weightIds).size !== weightIds.length) {
+      throw new Error(`duplicate textcorpus retrieval field-weight learning weight for field: ${entry.field}`);
+    }
+    return {
+      field: entry.field,
+      weights: sortedWeights,
+    };
+  });
+  return normalized.sort((left, right) => compareTerms(left.field, right.field));
+}
+
+function retrievalFieldWeightLearningCandidateCount(
+  searchSpace: readonly TextCorpusRetrievalFieldWeightSearchSpaceEntry[],
+): number {
+  return searchSpace.reduce((count, entry) => count * entry.weights.length, 1);
+}
+
+function retrievalFieldWeightLearningProfileId(
+  profileIdPrefix: string,
+  sequence: number,
+  width: number,
+  fields: readonly TextCorpusRetrievalFieldWeightV1[],
+): string {
+  const encodedWeights = fields.map((entry) => `${entry.field}=${entry.weight}`).join(",");
+  return `${profileIdPrefix}:${String(sequence).padStart(width, "0")}:${encodedWeights}`;
+}
+
+function createRetrievalFieldWeightLearningProfiles(
+  searchSpace: readonly TextCorpusRetrievalFieldWeightSearchSpaceEntry[],
+  profileIdPrefix: string,
+  candidateCount: number,
+): readonly TextCorpusRetrievalFieldWeightProfileV1[] {
+  const profiles: TextCorpusRetrievalFieldWeightProfileV1[] = [];
+  const width = String(candidateCount).length;
+  const selectedFields: TextCorpusRetrievalFieldWeightV1[] = [];
+  const visit = (fieldIndex: number): void => {
+    if (fieldIndex === searchSpace.length) {
+      const fields = [...selectedFields].sort((left, right) => compareTerms(left.field, right.field));
+      profiles.push(createTextCorpusRetrievalFieldWeightProfile({
+        profileId: retrievalFieldWeightLearningProfileId(profileIdPrefix, profiles.length + 1, width, fields),
+        fields: Object.fromEntries(fields.map((entry) => [entry.field, entry.weight])),
+      }));
+      return;
+    }
+    const entry = searchSpace[fieldIndex];
+    if (entry === undefined) return;
+    for (const weight of entry.weights) {
+      selectedFields.push({ field: entry.field, weight });
+      visit(fieldIndex + 1);
+      selectedFields.pop();
+    }
+  };
+  visit(0);
+  return profiles;
+}
+
+export function learnTextCorpusRetrievalFieldWeightProfile(
+  index: TextCorpusRetrievalIndexV1,
+  queries: readonly TextCorpusParsedQuery[],
+  qrels: TextCorpusRetrievalQrelsV1,
+  options: TextCorpusRetrievalFieldWeightLearningOptions,
+): TextCorpusRetrievalCalibrationReportV1 {
+  if (!isTextCorpusRetrievalIndexV1(index)) {
+    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
+  }
+  if (index.formula !== textCorpusBm25fFormula) {
+    throw new TypeError("textcorpus retrieval field-weight learning requires a BM25F retrieval index");
+  }
+  if (!isRecord(options)) {
+    throw new TypeError("textcorpus retrieval field-weight learning options must be a record");
+  }
+  const profileIdPrefix = options.profileIdPrefix ?? "learned-field-weights";
+  if (!isNonEmptyString(profileIdPrefix)) {
+    throw new TypeError("textcorpus retrieval field-weight learning profile id prefix must be a non-empty string");
+  }
+  const maxCandidateCount = Math.max(1, Math.floor(options.maxCandidateCount ?? 1024));
+  if (!Number.isFinite(maxCandidateCount)) {
+    throw new TypeError("textcorpus retrieval field-weight learning max candidate count must be finite");
+  }
+  const searchSpace = normalizeRetrievalFieldWeightLearningSearchSpace(index, options.searchSpace);
+  const candidateCount = retrievalFieldWeightLearningCandidateCount(searchSpace);
+  if (candidateCount > maxCandidateCount) {
+    throw new RangeError(
+      `textcorpus retrieval field-weight learning candidate count exceeds maxCandidateCount: ${candidateCount} > ${maxCandidateCount}`,
+    );
+  }
+  const profiles = createRetrievalFieldWeightLearningProfiles(searchSpace, profileIdPrefix, candidateCount);
+  const calibrationOptions: TextCorpusRetrievalFieldWeightCalibrationOptions = {
+    reportId: options.reportId ?? `textcorpus.retrieval-field-weight-learning:${index.corpusId}`,
+    ...(options.optimizeMetric === undefined ? {} : { optimizeMetric: options.optimizeMetric }),
+    ...(options.baselineCandidateId === undefined ? {} : { baselineCandidateId: options.baselineCandidateId }),
+    ...(options.tolerance === undefined ? {} : { tolerance: options.tolerance }),
+    ...(options.k === undefined ? {} : { k: options.k }),
+    ...(options.relevantGradeThreshold === undefined
+      ? {}
+      : { relevantGradeThreshold: options.relevantGradeThreshold }),
+    ...(options.includeBaseline === undefined ? {} : { includeBaseline: options.includeBaseline }),
+    ...(options.searchTopK === undefined ? {} : { searchTopK: options.searchTopK }),
+    ...(options.snippetWindow === undefined ? {} : { snippetWindow: options.snippetWindow }),
+  };
+  return calibrateTextCorpusRetrievalFieldWeightProfiles(index, queries, qrels, profiles, calibrationOptions);
 }
 
 function entryById(collection: TextCorpusCollectionV1): ReadonlyMap<string, TextCorpusEntry> {

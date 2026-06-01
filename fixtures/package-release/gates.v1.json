@@ -178,6 +178,7 @@
         "examples/textcorpus-retrieval-index-storage-consumer.mjs",
         "examples/textcorpus-field-weighting-consumer.mjs",
         "examples/textcorpus-relevance-calibration-consumer.mjs",
+        "examples/textcorpus-field-weight-learning-consumer.mjs",
         "schemas/retrieval-calibration-report-v1.schema.json",
         "tools/validate-package-readiness.mjs",
         "fixtures/retrieval/qrels/retrieval-fielded-qrels.json",
@@ -188,12 +189,12 @@
         "tools/check-workspace-pack-dry-run.mjs"
       ],
       "limitations": [
-        "Corpus analysis, retrieval, and corpus scoring remain bounded to committed/caller-provided qrels; deterministic relevance-calibration reports exist for explicit evaluations and BM25F profiles, but broad external relevance benchmarks and learned relevance-calibrated weighting remain out of scope.",
+        "Corpus analysis, retrieval, and corpus scoring remain bounded to committed/caller-provided qrels; deterministic relevance-calibration and field-weight learning exist for explicit evaluations and BM25F search spaces, but broad external relevance benchmarks remain out of scope.",
         "Public alpha scope is bounded to explicit-token corpus APIs, frozen retrieval fixtures, package tests, and package dry-run evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Corpus analysis, retrieval, and corpus scoring remain bounded to committed/caller-provided qrels; deterministic relevance-calibration reports exist for explicit evaluations and BM25F profiles, but broad external relevance benchmarks and learned relevance-calibrated weighting remain out of scope.",
+          "blocker": "Corpus analysis, retrieval, and corpus scoring remain bounded to committed/caller-provided qrels; deterministic relevance-calibration and field-weight learning exist for explicit evaluations and BM25F search spaces, but broad external relevance benchmarks remain out of scope.",
           "maturity": "beta",
           "decision": "Blocks broader corpus and retrieval release statements; it does not authorize task expansion during alpha foundation release.",
           "evidenceRefs": [
@@ -202,6 +203,7 @@
             "examples/textcorpus-retrieval-index-storage-consumer.mjs",
             "examples/textcorpus-field-weighting-consumer.mjs",
             "examples/textcorpus-relevance-calibration-consumer.mjs",
+            "examples/textcorpus-field-weight-learning-consumer.mjs",
             "schemas/retrieval-calibration-report-v1.schema.json"
           ]
         }

@@ -24,7 +24,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`retrieval-expected-v1.schema.json`](retrieval-expected-v1.schema.json) — expected-output schema for frozen-scope retrieval behavior.
 - [`retrieval-qrels-v1.schema.json`](retrieval-qrels-v1.schema.json) — relevance-judgment schema for frozen-scope retrieval behavior.
 - [`retrieval-evaluation-v1.schema.json`](retrieval-evaluation-v1.schema.json) — expected evaluation-metric schema for frozen-scope retrieval behavior.
-- [`retrieval-calibration-report-v1.schema.json`](retrieval-calibration-report-v1.schema.json) — calibration report schema for caller-provided retrieval qrels/evaluations and explicit BM25F field-weight profiles.
+- [`retrieval-calibration-report-v1.schema.json`](retrieval-calibration-report-v1.schema.json) — calibration report schema for caller-provided retrieval qrels/evaluations and explicit or generated BM25F field-weight profiles.
 - [`conllu-dependency-slices-v1.schema.json`](conllu-dependency-slices-v1.schema.json) — CoNLL-U / UD readiness fixture schema.
 - [`conllu-dependency-tool-versions-v1.schema.json`](conllu-dependency-tool-versions-v1.schema.json) — public source and validator schema for CoNLL-U / UD readiness.
 - [`conllu-dependency-roundtrip-expected-v1.schema.json`](conllu-dependency-roundtrip-expected-v1.schema.json) — expected-output schema for fixture-scope CoNLL-U round-trip behavior.

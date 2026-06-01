@@ -41,6 +41,7 @@ import {
   isTextCorpusScoringResultV1,
   iterateTextCorpusRetrievalResults,
   createTextCorpusRetrievalIndexFileSystemKey,
+  learnTextCorpusRetrievalFieldWeightProfile,
   loadTextCorpusRetrievalIndexArtifactFromFileSystem,
   loadTextCorpusRetrievalIndexArtifactFromStore,
   packageName,
@@ -1207,6 +1208,79 @@ try {
 }
 if (!nonBm25fCalibrationRejected) {
   throw new Error("retrieval calibration should require BM25F indexes for field-weight profiles");
+}
+
+const fieldWeightLearningReport = learnTextCorpusRetrievalFieldWeightProfile(
+  fieldedIndex,
+  bm25fResult.results.map((entry) => entry.query),
+  fieldedQrels,
+  {
+    reportId: "calibration:field-weight-learning",
+    profileIdPrefix: "learned:test",
+    searchSpace: [
+      { field: "title", weights: [0, 2] },
+      { field: "body", weights: [0, 1] },
+    ],
+    includeBaseline: false,
+    optimizeMetric: "ndcgAtK",
+    k: 3,
+    relevantGradeThreshold: 1,
+    tolerance: 1e-12,
+    searchTopK: 3,
+    maxCandidateCount: 4,
+  },
+);
+const selectedLearningCandidate = fieldWeightLearningReport.candidates.find((candidate) => candidate.selected);
+if (
+  !isTextCorpusRetrievalCalibrationReportV1(fieldWeightLearningReport) ||
+  fieldWeightLearningReport.reportId !== "calibration:field-weight-learning" ||
+  fieldWeightLearningReport.candidates.length !== 4 ||
+  !fieldWeightLearningReport.selectedCandidateId.startsWith("learned:test:") ||
+  !selectedLearningCandidate?.fieldWeightProfile ||
+  selectedLearningCandidate.metricScore <= 0
+) {
+  throw new Error("retrieval field-weight learning should generate and rank deterministic BM25F profiles");
+}
+let unknownLearningFieldRejected = false;
+try {
+  learnTextCorpusRetrievalFieldWeightProfile(
+    fieldedIndex,
+    bm25fResult.results.map((entry) => entry.query),
+    fieldedQrels,
+    {
+      searchSpace: [{ field: "unknown", weights: [1] }],
+    },
+  );
+} catch (error) {
+  unknownLearningFieldRejected =
+    error instanceof Error &&
+    error.message === "textcorpus retrieval field-weight learning references unknown field: unknown";
+}
+if (!unknownLearningFieldRejected) {
+  throw new Error("retrieval field-weight learning should reject unknown fields");
+}
+let learningCandidateCapRejected = false;
+try {
+  learnTextCorpusRetrievalFieldWeightProfile(
+    fieldedIndex,
+    bm25fResult.results.map((entry) => entry.query),
+    fieldedQrels,
+    {
+      searchSpace: [
+        { field: "title", weights: [0, 1] },
+        { field: "body", weights: [0, 1] },
+      ],
+      maxCandidateCount: 3,
+    },
+  );
+} catch (error) {
+  learningCandidateCapRejected =
+    error instanceof RangeError &&
+    error.message ===
+      "textcorpus retrieval field-weight learning candidate count exceeds maxCandidateCount: 4 > 3";
+}
+if (!learningCandidateCapRejected) {
+  throw new Error("retrieval field-weight learning should enforce candidate-count caps");
 }
 
 const fieldedDeltaHits =
