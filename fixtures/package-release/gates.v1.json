@@ -317,6 +317,7 @@
         "packages/textlab/src/cli.ts",
         "packages/textlab/test",
         "examples/textlab-benchmark-report-consumer.mjs",
+        "examples/textlab-corpus-artifact-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "fixtures/package-release/gates.v1.json",
         "fixtures/package-release/downstream-api-stability.v1.json",

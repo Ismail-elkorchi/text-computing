@@ -202,6 +202,7 @@
         "packages/textlab/src/index.ts",
         "packages/textlab/test/index.test.mjs",
         "examples/textlab-benchmark-report-consumer.mjs",
+        "examples/textlab-corpus-artifact-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [

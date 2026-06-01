@@ -4,7 +4,24 @@ import {
   isTextConformanceReportV1,
   type TextConformanceReportDiffV1,
 } from "@ismail-elkorchi/textconformance";
-import { isTextCorpusRetrievalEvaluationResultV1, isTextCorpusRetrievalQrelsV1 } from "@ismail-elkorchi/textcorpus";
+import {
+  isTextCorpusArtifactV1,
+  isTextCorpusCitationWindowSetV1,
+  isTextCorpusCollocateResultV1,
+  isTextCorpusConcordanceResultV1,
+  isTextCorpusCooccurrenceResultV1,
+  isTextCorpusFrequencyResultV1,
+  isTextCorpusMetricEnvelopePayloadV1,
+  isTextCorpusNgramResultV1,
+  isTextCorpusPairwiseRelationResultV1,
+  isTextCorpusQuoteGroundingResultV1,
+  isTextCorpusRetrievalEvaluationResultV1,
+  isTextCorpusRetrievalIndexArtifactV1,
+  isTextCorpusRetrievalIndexV1,
+  isTextCorpusRetrievalQrelsV1,
+  isTextCorpusRetrievalResultV1,
+  isTextCorpusScoringResultV1,
+} from "@ismail-elkorchi/textcorpus";
 import { isTextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
 import {
   createTextPackResourceRegistry,
@@ -95,6 +112,23 @@ export interface TextlabCorpusFixtureInspection {
   readonly hitCount: number;
   readonly scoredHitCount: number;
   readonly explainEntryCount: number;
+}
+
+export interface TextlabCorpusArtifactInspection {
+  readonly schemaVersion: 1;
+  readonly artifactKind: string;
+  readonly corpusId: string;
+  readonly metricSetId?: string;
+  readonly evidenceClass?: string;
+  readonly tokenSource?: string;
+  readonly documentCount: number;
+  readonly tokenCount: number;
+  readonly rowCount: number;
+  readonly queryCount: number;
+  readonly hitCount: number;
+  readonly metricCount: number;
+  readonly formulaIds: readonly string[];
+  readonly checksum?: string;
 }
 
 export interface TextlabPackageInspection {
@@ -1513,6 +1547,137 @@ export function renderPackBackedRuleInspection(
     ...inspection.rows.map((row) =>
       `- ${row.annotationId} ${row.ruleKind} pack=${row.packId} resource=${row.resourceId} rule=${row.ruleId} line=${row.line} span=${row.targetStartCU}-${row.targetEndCU} text=${JSON.stringify(row.matchedText)}`,
     ),
+    "",
+  ].join("\n");
+}
+
+function corpusArtifactSource(value: unknown): unknown {
+  return isTextCorpusRetrievalIndexArtifactV1(value) ? value.index : value;
+}
+
+function corpusArtifactKind(value: unknown): string {
+  if (isTextCorpusMetricEnvelopePayloadV1(value)) return "metric-envelope-payload";
+  if (isTextCorpusRetrievalIndexArtifactV1(value)) return "retrieval-index-artifact";
+  const source = corpusArtifactSource(value);
+  if (isTextCorpusConcordanceResultV1(source)) return "concordance";
+  if (isTextCorpusFrequencyResultV1(source)) return "frequency";
+  if (isTextCorpusNgramResultV1(source)) return "ngram";
+  if (isTextCorpusCooccurrenceResultV1(source)) return "cooccurrence";
+  if (isTextCorpusCollocateResultV1(source)) return "collocate";
+  if (isTextCorpusPairwiseRelationResultV1(source)) return "pairwise-relation";
+  if (isTextCorpusScoringResultV1(source)) return "scoring";
+  if (isTextCorpusRetrievalIndexV1(source)) return "retrieval-index";
+  if (isTextCorpusRetrievalResultV1(source)) return "retrieval-result";
+  if (isTextCorpusRetrievalEvaluationResultV1(source)) return "retrieval-evaluation";
+  if (isTextCorpusCitationWindowSetV1(source)) return "citation-window-set";
+  if (isTextCorpusQuoteGroundingResultV1(source)) return "quote-grounding";
+  return "unknown";
+}
+
+function corpusArtifactRowCount(source: unknown): number {
+  if (
+    isTextCorpusConcordanceResultV1(source) ||
+    isTextCorpusFrequencyResultV1(source) ||
+    isTextCorpusNgramResultV1(source) ||
+    isTextCorpusCooccurrenceResultV1(source) ||
+    isTextCorpusCollocateResultV1(source) ||
+    isTextCorpusPairwiseRelationResultV1(source)
+  ) {
+    return source.rows.length;
+  }
+  if (isTextCorpusRetrievalEvaluationResultV1(source)) return source.queries.length;
+  if (isTextCorpusCitationWindowSetV1(source)) return source.windows.length;
+  if (isTextCorpusQuoteGroundingResultV1(source)) return source.matches.length;
+  if (isTextCorpusMetricEnvelopePayloadV1(source)) return source.metrics.length;
+  return 0;
+}
+
+function corpusArtifactQueryCount(source: unknown): number {
+  if (isTextCorpusScoringResultV1(source)) return source.queries.length;
+  if (isTextCorpusRetrievalResultV1(source)) return source.results.length;
+  if (isTextCorpusRetrievalEvaluationResultV1(source)) return source.queries.length;
+  if (isTextCorpusCitationWindowSetV1(source)) {
+    return stringSet(source.windows.map((window) => window.queryId)).length;
+  }
+  return 0;
+}
+
+function corpusArtifactHitCount(source: unknown): number {
+  if (isTextCorpusRetrievalResultV1(source)) {
+    return source.results.reduce((sum, result) => sum + result.hits.length, 0);
+  }
+  if (isTextCorpusCitationWindowSetV1(source)) return source.windows.length;
+  if (isTextCorpusQuoteGroundingResultV1(source)) return source.matches.length;
+  return 0;
+}
+
+function corpusArtifactFormulaIds(source: unknown): readonly string[] {
+  if (isRecord(source) && isNonEmptyString(source.formula)) return [source.formula];
+  if (isRecord(source) && isStringArray(source.formulaSet)) return stringSet(source.formulaSet);
+  return [];
+}
+
+function corpusArtifactDocumentCount(source: unknown): number {
+  if (isTextCorpusRetrievalIndexV1(source)) return source.documents.length;
+  if (isTextCorpusScoringResultV1(source)) return source.documents.length;
+  if (isRecord(source) && isRecord(source.selection) && isStringArray(source.selection.documentOrder)) {
+    return source.selection.documentOrder.length;
+  }
+  return 0;
+}
+
+function corpusArtifactTokenCount(source: unknown): number {
+  if (isRecord(source) && isRecord(source.selection) && typeof source.selection.tokenCount === "number") {
+    return source.selection.tokenCount;
+  }
+  return 0;
+}
+
+export function inspectTextCorpusArtifact(value: unknown): TextlabCorpusArtifactInspection {
+  if (!isTextCorpusArtifactV1(value) && !isTextCorpusMetricEnvelopePayloadV1(value)) {
+    throw new TypeError("textcorpus artifact is invalid");
+  }
+  const source = corpusArtifactSource(value);
+  const sourceRecord = isRecord(source) ? source : {};
+  return {
+    schemaVersion: 1,
+    artifactKind: corpusArtifactKind(value),
+    corpusId: isTextCorpusMetricEnvelopePayloadV1(value) ? value.corpusId : (sourceRecord.corpusId as string),
+    ...(isTextCorpusMetricEnvelopePayloadV1(value) ? { metricSetId: value.metricSetId } : {}),
+    ...(isNonEmptyString(sourceRecord.evidenceClass)
+      ? { evidenceClass: sourceRecord.evidenceClass }
+      : {}),
+    ...(isNonEmptyString(sourceRecord.tokenSource) ? { tokenSource: sourceRecord.tokenSource } : {}),
+    documentCount: corpusArtifactDocumentCount(source),
+    tokenCount: corpusArtifactTokenCount(source),
+    rowCount: corpusArtifactRowCount(source),
+    queryCount: corpusArtifactQueryCount(source),
+    hitCount: corpusArtifactHitCount(source),
+    metricCount: isTextCorpusMetricEnvelopePayloadV1(value) ? value.metrics.length : 0,
+    formulaIds: corpusArtifactFormulaIds(source),
+    ...(isTextCorpusRetrievalIndexArtifactV1(value) ? { checksum: value.checksum.value } : {}),
+  };
+}
+
+export function renderTextCorpusArtifactInspection(
+  inspection: TextlabCorpusArtifactInspection,
+): string {
+  return [
+    "# textlab textcorpus artifact inspection",
+    "",
+    `Kind: ${inspection.artifactKind}`,
+    `Corpus: ${inspection.corpusId}`,
+    `Metric set: ${inspection.metricSetId ?? "none"}`,
+    `Evidence class: ${inspection.evidenceClass ?? "none"}`,
+    `Token source: ${inspection.tokenSource ?? "none"}`,
+    `Documents: ${inspection.documentCount}`,
+    `Tokens: ${inspection.tokenCount}`,
+    `Rows: ${inspection.rowCount}`,
+    `Queries: ${inspection.queryCount}`,
+    `Hits: ${inspection.hitCount}`,
+    `Metrics: ${inspection.metricCount}`,
+    `Formulas: ${inspection.formulaIds.join(",") || "none"}`,
+    `Checksum: ${inspection.checksum ?? "none"}`,
     "",
   ].join("\n");
 }

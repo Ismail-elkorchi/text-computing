@@ -530,6 +530,17 @@ async function assertBuiltPackageSmoke() {
     textcorpus.isTextCorpusMetricEnvelopePayloadV1(corpusMetricPayload),
     "textcorpus should export corpus metric payloads through package APIs.",
   );
+  const corpusArtifactInspection = textlab.inspectTextCorpusArtifact(corpusFrequency);
+  expect(
+    corpusArtifactInspection.artifactKind === "frequency" && corpusArtifactInspection.rowCount > 0,
+    "textlab should inspect textcorpus persisted artifacts through package APIs.",
+  );
+  const corpusMetricPayloadInspection = textlab.inspectTextCorpusArtifact(corpusMetricPayload);
+  expect(
+    corpusMetricPayloadInspection.metricSetId === "metrics:downstream-api-frequency" &&
+      corpusMetricPayloadInspection.metricCount > 0,
+    "textlab should inspect textcorpus metric-envelope payloads through package APIs.",
+  );
   const corpusMetricEnvelope = {
     schemaId: textprotocol.textProtocolCorpusMetricEnvelopeSchemaId,
     schemaVersion: textprotocol.textProtocolSchemaVersion,

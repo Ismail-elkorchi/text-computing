@@ -14,7 +14,7 @@ It can:
 - inspect pack-backed textrules annotation outputs;
 - render textconformance report summaries and diffs;
 - inspect textconformance benchmark reports without treating them as conformance;
-- inspect corpus, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
+- inspect corpus fixtures, persisted textcorpus artifacts, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
 
 ## CLI
 
@@ -39,6 +39,7 @@ textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-rep
 textlab conformance-diff expected.json actual.json
 textlab benchmark-report benchmark-report.json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
+textlab corpus-artifact corpus-artifact.json
 textlab retrieval-qrels fixtures/retrieval/qrels/retrieval-fielded-qrels.json
 textlab retrieval-evaluation fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json
 textlab release-readiness fixtures/package-release/gates.v1.json
