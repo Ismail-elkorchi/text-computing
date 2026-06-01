@@ -11,6 +11,7 @@ textlab pipeline-trace pipeline-trace.json
 textlab pipeline-batch-report pipeline-batch-report.json
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textlab benchmark-report benchmark-report.json
+textlab inspection-session inspection-rows.json --session-id session:local --subject-id artifact:index --page-size 20 --command next-page --json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
 textlab corpus-artifact corpus-artifact.json
 textlab retrieval-qrels fixtures/retrieval/qrels/retrieval-fielded-qrels.json
@@ -32,3 +33,7 @@ Runnable repository examples:
   from pass/fail conformance reports.
 - [`../../../examples/textlab-corpus-artifact-consumer.mjs`](../../../examples/textlab-corpus-artifact-consumer.mjs)
   builds a textcorpus frequency artifact and metric-envelope payload, then inspects both through textlab.
+- [`../../../examples/textlab-inspection-session-consumer.mjs`](../../../examples/textlab-inspection-session-consumer.mjs)
+  creates and navigates deterministic inspection sessions through textlab APIs.
+- [`../../../examples/textlab-inspection-session-cli-consumer.mjs`](../../../examples/textlab-inspection-session-cli-consumer.mjs)
+  creates and continues deterministic inspection sessions through the textlab CLI API.

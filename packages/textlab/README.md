@@ -15,7 +15,7 @@ It can:
 - render textconformance report summaries and diffs;
 - inspect textconformance benchmark reports without treating them as conformance;
 - execute explicit external-tool command specs without shell expansion and return bounded execution reports;
-- create deterministic inspection sessions with page navigation over caller-provided inspection rows;
+- create deterministic inspection sessions with API and CLI page navigation over caller-provided inspection rows;
 - inspect corpus fixtures, persisted textcorpus artifacts with deterministic pagination, retrieval-index storage refs, retrieval qrels, retrieval evaluation, retrieval calibration reports, and release-readiness artifacts.
 
 ## CLI
@@ -42,6 +42,7 @@ textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-rep
 textlab conformance-diff expected.json actual.json
 textlab benchmark-report benchmark-report.json
 textlab external-tool external-tool-spec.json --json
+textlab inspection-session inspection-rows.json --session-id session:local --subject-id artifact:index --page-size 20 --command next-page --json
 node examples/textlab-inspection-session-consumer.mjs
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
 textlab corpus-artifact corpus-artifact.json --limit 20 --offset 0

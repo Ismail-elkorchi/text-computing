@@ -1,5 +1,6 @@
 import Ajv from "ajv";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 const ROOT = process.cwd();
@@ -109,6 +110,7 @@ async function assertBuiltPackageSmoke() {
   const textcorpus = await import("@ismail-elkorchi/textcorpus");
   const textrules = await import("@ismail-elkorchi/textrules");
   const textlab = await import("@ismail-elkorchi/textlab");
+  const textlabCli = await import("@ismail-elkorchi/textlab/cli");
 
   const document = {
     schemaVersion: 1,
@@ -689,6 +691,35 @@ async function assertBuiltPackageSmoke() {
     "textlab should create deterministic inspection sessions through package APIs.",
     inspectionSession,
   );
+  const inspectionSessionCliDir = await mkdtemp(path.join(tmpdir(), "textlab-downstream-inspection-session-"));
+  try {
+    const inspectionRowsPath = path.join(inspectionSessionCliDir, "rows.json");
+    await writeFile(inspectionRowsPath, `${JSON.stringify(inspectionRows, null, 2)}\n`, "utf8");
+    const inspectionSessionCliResult = await textlabCli.runTextlabCli([
+      "inspection-session",
+      inspectionRowsPath,
+      "--session-id",
+      "downstream-api:inspection-session-cli",
+      "--subject-id",
+      "downstream-api:artifact-index",
+      "--page-size",
+      "2",
+      "--command",
+      "next-page",
+      "--json",
+    ]);
+    const inspectionSessionCliJson =
+      inspectionSessionCliResult.exitCode === 0 ? JSON.parse(inspectionSessionCliResult.stdout) : {};
+    expect(
+      inspectionSessionCliResult.exitCode === 0 &&
+        inspectionSessionCliJson.pageIndex === 1 &&
+        inspectionSessionCliJson.pageRows?.length === 1,
+      "textlab CLI should create deterministic inspection sessions through the public cli export.",
+      { stderr: inspectionSessionCliResult.stderr, stdout: inspectionSessionCliResult.stdout },
+    );
+  } finally {
+    await rm(inspectionSessionCliDir, { recursive: true, force: true });
+  }
 
   const identityProcessor = {
     descriptor: {

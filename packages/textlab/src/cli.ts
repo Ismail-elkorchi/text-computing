@@ -17,6 +17,8 @@ import {
   type TextPackResourceTransactionPlan,
 } from "@ismail-elkorchi/textpack";
 import {
+  applyTextlabInspectionSessionCommand,
+  createTextlabInspectionSession,
   inspectCorpusFixture,
   inspectConformanceReportDiff,
   inspectPackageManifest,
@@ -38,6 +40,7 @@ import {
   inspectTextProtocolSchemaFamilyEnvelope,
   inspectTextConformanceBenchmarkReport,
   executeTextlabExternalTool,
+  isTextlabInspectionSessionV1,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
@@ -60,10 +63,15 @@ import {
   renderTextProtocolSchemaFamilyEnvelopeInspection,
   renderTextConformanceBenchmarkReportInspection,
   renderTextlabExternalToolExecutionReport,
+  renderTextlabInspectionSession,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
   type TextlabCorpusArtifactInspectionOptions,
   type TextlabExternalToolExecutionSpec,
+  type TextlabInspectionSessionCommand,
+  type TextlabInspectionSessionCommandKind,
+  type TextlabInspectionSessionOptions,
+  type TextlabInspectionSessionV1,
   type TextlabPackBackedRuleInspectionOptions,
 } from "./index.js";
 
@@ -97,6 +105,8 @@ function usage(): string {
     "  textlab conformance-diff <expected-path> <actual-path> [--json]",
     "  textlab benchmark-report <path> [--json]",
     "  textlab external-tool <spec-json-path> [--json]",
+    "  textlab inspection-session <rows-json-path> --session-id id --subject-id id [--title title] [--page-size n] [--initial-page-index n] [--command kind] [--page-index n] [--json]",
+    "  textlab inspection-session <rows-json-path> --from-session session-json-path [--command kind] [--page-index n] [--json]",
     "  textlab retrieval-qrels <path> [--json]",
     "  textlab retrieval-evaluation <path> [--json]",
     "  textlab release-readiness [path] [--json]",
@@ -118,6 +128,7 @@ function usage(): string {
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
     "  benchmark-report    Inspect a textconformance benchmark report without treating it as conformance.",
     "  external-tool       Execute an explicit external command spec and report bounded stdout/stderr previews.",
+    "  inspection-session  Create, render, or navigate deterministic inspection-session pages.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
     "  corpus-artifact Inspect a persisted textcorpus artifact or metric-envelope payload.",
     "  retrieval-qrels Inspect retrieval relevance judgments.",
@@ -147,6 +158,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "conformance-diff" &&
     command !== "benchmark-report" &&
     command !== "external-tool" &&
+    command !== "inspection-session" &&
     command !== "annotations" &&
     command !== "result-envelope" &&
     command !== "schema-family-envelope" &&
@@ -207,6 +219,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
 
   let annotationOptions: TextlabAnnotationInspectionOptions = {};
   let corpusArtifactOptions: TextlabCorpusArtifactInspectionOptions = {};
+  let inspectionSessionOptions: TextlabInspectionSessionCliOptions = {};
   let packBackedRuleOptions: TextlabPackBackedRuleInspectionOptions = {};
   if (command === "annotations") {
     const parsedOptions = parseAnnotationOptions(rest);
@@ -238,6 +251,16 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       };
     }
     corpusArtifactOptions = parsedOptions;
+  } else if (command === "inspection-session") {
+    const parsedOptions = parseInspectionSessionOptions(rest);
+    if (typeof parsedOptions === "string") {
+      return {
+        exitCode: 2,
+        stdout: "",
+        stderr: `${parsedOptions}\n${usage()}`,
+      };
+    }
+    inspectionSessionOptions = parsedOptions;
   } else if (rest.length > 0) {
     return {
       exitCode: 2,
@@ -252,6 +275,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       command === "conformance-report" ||
       command === "benchmark-report" ||
       command === "external-tool" ||
+      command === "inspection-session" ||
       command === "annotations" ||
       command === "result-envelope" ||
       command === "schema-family-envelope" ||
@@ -315,6 +339,24 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid external tool execution spec: ${message}`,
+      };
+    }
+  }
+
+  if (command === "inspection-session") {
+    try {
+      const session = await buildInspectionSessionCliOutput(parsed, inspectionSessionOptions);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(session, renderTextlabInspectionSession, json),
+        stderr: "",
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid inspection session input: ${message}`,
       };
     }
   }
@@ -558,6 +600,145 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
 
 async function readJson(filePath: string): Promise<unknown> {
   return JSON.parse(await readFile(filePath, "utf8")) as unknown;
+}
+
+interface TextlabInspectionSessionCliOptions {
+  readonly fromSessionPath?: string;
+  readonly sessionOptions?: TextlabInspectionSessionOptions;
+  readonly command?: TextlabInspectionSessionCommand;
+}
+
+const textlabInspectionSessionCommandKinds = new Set<TextlabInspectionSessionCommandKind>([
+  "first-page",
+  "previous-page",
+  "next-page",
+  "last-page",
+  "goto-page",
+]);
+
+function parsePositiveIntegerCliOption(value: string | undefined, optionName: string): number | string {
+  const parsed = parseNonNegativeIntegerCliOption(value, optionName);
+  if (typeof parsed === "string") return parsed;
+  if (parsed < 1) return `${optionName} must be a positive integer.`;
+  return parsed;
+}
+
+function parseInspectionSessionOptions(args: readonly string[]): TextlabInspectionSessionCliOptions | string {
+  let fromSessionPath: string | undefined;
+  let sessionId: string | undefined;
+  let subjectId: string | undefined;
+  let title: string | undefined;
+  let pageSize: number | undefined;
+  let initialPageIndex: number | undefined;
+  let commandKind: TextlabInspectionSessionCommandKind | undefined;
+  let pageIndex: number | undefined;
+
+  for (let index = 0; index < args.length; index += 2) {
+    const name = args[index];
+    const value = args[index + 1];
+    if (name === undefined || value === undefined) return "Missing value for inspection-session option.";
+    if (name === "--from-session") {
+      fromSessionPath = value;
+    } else if (name === "--session-id") {
+      sessionId = value;
+    } else if (name === "--subject-id") {
+      subjectId = value;
+    } else if (name === "--title") {
+      title = value;
+    } else if (name === "--page-size") {
+      const parsed = parsePositiveIntegerCliOption(value, name);
+      if (typeof parsed === "string") return parsed;
+      pageSize = parsed;
+    } else if (name === "--initial-page-index") {
+      const parsed = parseNonNegativeIntegerCliOption(value, name);
+      if (typeof parsed === "string") return parsed;
+      initialPageIndex = parsed;
+    } else if (name === "--command") {
+      if (!textlabInspectionSessionCommandKinds.has(value as TextlabInspectionSessionCommandKind)) {
+        return `Unsupported inspection-session command: ${value}`;
+      }
+      commandKind = value as TextlabInspectionSessionCommandKind;
+    } else if (name === "--page-index") {
+      const parsed = parseNonNegativeIntegerCliOption(value, name);
+      if (typeof parsed === "string") return parsed;
+      pageIndex = parsed;
+    } else {
+      return `Unknown inspection-session option: ${name}`;
+    }
+  }
+
+  if (fromSessionPath !== undefined) {
+    if (
+      sessionId !== undefined ||
+      subjectId !== undefined ||
+      title !== undefined ||
+      pageSize !== undefined ||
+      initialPageIndex !== undefined
+    ) {
+      return "--from-session cannot be combined with inspection-session creation options.";
+    }
+  } else {
+    if (sessionId === undefined) return "Missing --session-id.";
+    if (subjectId === undefined) return "Missing --subject-id.";
+  }
+  if (pageIndex !== undefined && commandKind !== "goto-page") {
+    return "--page-index is only valid with --command goto-page.";
+  }
+  if (commandKind === "goto-page" && pageIndex === undefined) {
+    return "--command goto-page requires --page-index.";
+  }
+
+  return {
+    ...(fromSessionPath === undefined ? {} : { fromSessionPath }),
+    ...(fromSessionPath !== undefined
+      ? {}
+      : {
+          sessionOptions: {
+            sessionId: sessionId ?? "",
+            subjectId: subjectId ?? "",
+            ...(title === undefined ? {} : { title }),
+            ...(pageSize === undefined ? {} : { pageSize }),
+            ...(initialPageIndex === undefined ? {} : { initialPageIndex }),
+          },
+        }),
+    ...(commandKind === undefined
+      ? {}
+      : {
+          command: {
+            command: commandKind,
+            ...(pageIndex === undefined ? {} : { pageIndex }),
+          },
+        }),
+  };
+}
+
+async function buildInspectionSessionCliOutput(
+  rowsInput: unknown,
+  options: TextlabInspectionSessionCliOptions,
+): Promise<TextlabInspectionSessionV1> {
+  if (!Array.isArray(rowsInput)) {
+    throw new TypeError("textlab inspection session rows must be an array");
+  }
+
+  let session: TextlabInspectionSessionV1;
+  if (options.fromSessionPath !== undefined) {
+    const parsedSession = await readJson(options.fromSessionPath);
+    if (!isTextlabInspectionSessionV1(parsedSession)) {
+      throw new TypeError("textlab inspection session file is invalid");
+    }
+    if (rowsInput.length !== parsedSession.rowCount) {
+      throw new Error("textlab inspection session rows must match the session row count");
+    }
+    session = parsedSession;
+  } else if (options.sessionOptions !== undefined) {
+    session = createTextlabInspectionSession(rowsInput, options.sessionOptions);
+  } else {
+    throw new Error("Missing inspection-session creation options.");
+  }
+
+  return options.command === undefined
+    ? session
+    : applyTextlabInspectionSessionCommand(session, rowsInput, options.command);
 }
 
 async function readTextPackManifestInput(inputPath: string): Promise<{

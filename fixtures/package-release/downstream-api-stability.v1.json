@@ -210,15 +210,19 @@
       "evidenceRefs": [
         "packages/textlab/package.json",
         "packages/textlab/src/index.ts",
+        "packages/textlab/src/cli.ts",
         "packages/textlab/test/index.test.mjs",
         "examples/textlab-benchmark-report-consumer.mjs",
         "examples/textlab-corpus-artifact-consumer.mjs",
         "examples/textlab-external-tool-consumer.mjs",
+        "examples/textlab-inspection-session-consumer.mjs",
+        "examples/textlab-inspection-session-cli-consumer.mjs",
         "schemas/textlab-external-tool-execution-report-v1.schema.json",
+        "schemas/textlab-inspection-session-v1.schema.json",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API import, smoke usage, paginated corpus artifact inspection, and explicit external-tool execution reports; it does not add an interactive UI."
+        "This verifies current built-package API and CLI import, smoke usage, paginated corpus artifact inspection, deterministic inspection sessions, and explicit external-tool execution reports; it does not add an interactive UI."
       ]
     },
     {
