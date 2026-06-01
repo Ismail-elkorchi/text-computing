@@ -1,5 +1,6 @@
 import {
   diffTextConformanceReports,
+  isTextConformanceBenchmarkMatrixReportV1,
   isTextConformanceBenchmarkReportV1,
   isTextConformanceReportV1,
   type TextConformanceReportDiffV1,
@@ -424,6 +425,37 @@ export interface TextlabBenchmarkReportInspection {
   readonly limitationCount: number;
   readonly noteCount: number;
   readonly metrics: readonly TextlabBenchmarkMetricInspectionRow[];
+}
+
+export interface TextlabBenchmarkMatrixMetricInspectionRow {
+  readonly benchmarkId: string;
+  readonly subject: string;
+  readonly metricId: string;
+  readonly status: "complete" | "incomplete";
+  readonly runCount: number;
+  readonly observedRunCount: number;
+  readonly missingRunCount: number;
+  readonly min: number;
+  readonly max: number;
+  readonly mean: number;
+  readonly median: number;
+  readonly unit: string;
+}
+
+export interface TextlabBenchmarkMatrixInspection {
+  readonly schemaVersion: 1;
+  readonly matrixId: string;
+  readonly runCount: number;
+  readonly benchmarkCount: number;
+  readonly subjectCount: number;
+  readonly hostCount: number;
+  readonly metricCount: number;
+  readonly completeMetricCount: number;
+  readonly incompleteMetricCount: number;
+  readonly evidenceRefCount: number;
+  readonly limitationCount: number;
+  readonly noteCount: number;
+  readonly rows: readonly TextlabBenchmarkMatrixMetricInspectionRow[];
 }
 
 export interface TextlabRetrievalQrelsInspection {
@@ -1738,6 +1770,74 @@ export function renderTextConformanceBenchmarkReportInspection(
     ...inspection.metrics.map(
       (metric) =>
         `- ${metric.metricId}: ${metric.value} ${metric.unit} (preference=${metric.preference})`,
+    ),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextConformanceBenchmarkMatrixReport(
+  value: unknown,
+): TextlabBenchmarkMatrixInspection {
+  if (!isTextConformanceBenchmarkMatrixReportV1(value)) {
+    throw new TypeError("benchmark matrix report is invalid");
+  }
+  const rows = [...value.rows].sort((left, right) =>
+    left.benchmarkId.localeCompare(right.benchmarkId) ||
+    `${left.subject.kind}:${left.subject.id}`.localeCompare(`${right.subject.kind}:${right.subject.id}`) ||
+    left.metricId.localeCompare(right.metricId),
+  );
+  return {
+    schemaVersion: 1,
+    matrixId: value.matrixId,
+    runCount: value.runCount,
+    benchmarkCount: value.benchmarkCount,
+    subjectCount: value.subjectCount,
+    hostCount: value.hostCount,
+    metricCount: value.metricCount,
+    completeMetricCount: value.summary.complete,
+    incompleteMetricCount: value.summary.incomplete,
+    evidenceRefCount: value.evidenceRefs.length,
+    limitationCount: value.limitations.length,
+    noteCount: value.notes?.length ?? 0,
+    rows: rows.map((row) => ({
+      benchmarkId: row.benchmarkId,
+      subject: `${row.subject.kind}:${row.subject.id}`,
+      metricId: row.metricId,
+      status: row.status,
+      runCount: row.runCount,
+      observedRunCount: row.observedRunCount,
+      missingRunCount: row.missingRunIds.length,
+      min: row.min,
+      max: row.max,
+      mean: row.mean,
+      median: row.median,
+      unit: row.unit,
+    })),
+  };
+}
+
+export function renderTextConformanceBenchmarkMatrixInspection(
+  inspection: TextlabBenchmarkMatrixInspection,
+): string {
+  return [
+    "# textlab benchmark matrix inspection",
+    "",
+    `Matrix: ${inspection.matrixId}`,
+    `Runs: ${inspection.runCount}`,
+    `Benchmarks: ${inspection.benchmarkCount}`,
+    `Subjects: ${inspection.subjectCount}`,
+    `Hosts: ${inspection.hostCount}`,
+    `Metrics: ${inspection.metricCount}`,
+    `Complete metrics: ${inspection.completeMetricCount}`,
+    `Incomplete metrics: ${inspection.incompleteMetricCount}`,
+    `Evidence refs: ${inspection.evidenceRefCount}`,
+    `Limitations: ${inspection.limitationCount}`,
+    `Notes: ${inspection.noteCount}`,
+    "",
+    "## Metrics",
+    ...inspection.rows.map(
+      (row) =>
+        `- ${row.benchmarkId} ${row.subject} ${row.metricId}: ${row.status}; observed=${row.observedRunCount}/${row.runCount}; min=${row.min} ${row.unit}; max=${row.max} ${row.unit}; mean=${row.mean} ${row.unit}; median=${row.median} ${row.unit}; missing=${row.missingRunCount}`,
     ),
     "",
   ].join("\n");

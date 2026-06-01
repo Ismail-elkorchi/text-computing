@@ -673,6 +673,14 @@ async function assertBuiltPackageSmoke() {
     "textconformance built API should create benchmark matrix reports over caller-provided report runs.",
     benchmarkMatrix,
   );
+  const benchmarkMatrixInspection = textlab.inspectTextConformanceBenchmarkMatrixReport(benchmarkMatrix);
+  expect(
+    benchmarkMatrixInspection.matrixId === "matrix:downstream-api-stability" &&
+      benchmarkMatrixInspection.incompleteMetricCount === 1 &&
+      textlab.renderTextConformanceBenchmarkMatrixInspection(benchmarkMatrixInspection).includes("Incomplete metrics: 1"),
+    "textlab should inspect textconformance benchmark matrix reports through package APIs.",
+    benchmarkMatrixInspection,
+  );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(
     benchmarkInspection.metricCount === 4 &&
