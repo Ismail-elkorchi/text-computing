@@ -15,6 +15,16 @@ export const textProtocolPayloadKindTextpipelineBatchRunReportV1 =
   "textpipeline-batch-run-report-v1" as const;
 export const textProtocolPayloadKindTextconformanceReportV1 =
   "textconformance-report-v1" as const;
+export const textProtocolPayloadKindTextconformanceBenchmarkReportV1 =
+  "textconformance-benchmark-report-v1" as const;
+export const textProtocolPayloadKindTextconformanceBenchmarkCalibrationReportV1 =
+  "textconformance-benchmark-calibration-report-v1" as const;
+export const textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1 =
+  "textconformance-benchmark-matrix-report-v1" as const;
+export const textProtocolPayloadKindTextconformanceBenchmarkThresholdPolicyV1 =
+  "textconformance-benchmark-threshold-policy-v1" as const;
+export const textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1 =
+  "textconformance-benchmark-threshold-evaluation-v1" as const;
 export const textProtocolPayloadKindVerticalSliceResultV1 =
   "public-vertical-slice-0.1-result-v1" as const;
 export const textProtocolPackManifestSchemaId =
@@ -51,6 +61,11 @@ export type TextProtocolPayloadKind =
   | typeof textProtocolPayloadKindTextpipelineTraceV1
   | typeof textProtocolPayloadKindTextpipelineBatchRunReportV1
   | typeof textProtocolPayloadKindTextconformanceReportV1
+  | typeof textProtocolPayloadKindTextconformanceBenchmarkReportV1
+  | typeof textProtocolPayloadKindTextconformanceBenchmarkCalibrationReportV1
+  | typeof textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1
+  | typeof textProtocolPayloadKindTextconformanceBenchmarkThresholdPolicyV1
+  | typeof textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1
   | typeof textProtocolPayloadKindVerticalSliceResultV1;
 export type TextProtocolSchemaVersion = typeof textProtocolSchemaVersion;
 export type TextProtocolSchemaId =
@@ -464,6 +479,46 @@ export const textProtocolPayloadKindRegistry: readonly TextProtocolPayloadKindDe
       "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-report-v1.schema.json",
     schemaVersion: 1,
     description: "textconformance report v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextconformanceBenchmarkReportV1,
+    ownerPackage: "@ismail-elkorchi/textconformance",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-benchmark-report-v1.schema.json",
+    schemaVersion: 1,
+    description: "textconformance benchmark report v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextconformanceBenchmarkCalibrationReportV1,
+    ownerPackage: "@ismail-elkorchi/textconformance",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-benchmark-calibration-report-v1.schema.json",
+    schemaVersion: 1,
+    description: "textconformance benchmark calibration report v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+    ownerPackage: "@ismail-elkorchi/textconformance",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-benchmark-matrix-report-v1.schema.json",
+    schemaVersion: 1,
+    description: "textconformance benchmark matrix report v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextconformanceBenchmarkThresholdPolicyV1,
+    ownerPackage: "@ismail-elkorchi/textconformance",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
+    schemaVersion: 1,
+    description: "textconformance benchmark threshold policy v1 payload.",
+  },
+  {
+    payloadKind: textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1,
+    ownerPackage: "@ismail-elkorchi/textconformance",
+    schemaId:
+      "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
+    schemaVersion: 1,
+    description: "textconformance benchmark threshold evaluation v1 payload.",
   },
   {
     payloadKind: textProtocolPayloadKindVerticalSliceResultV1,

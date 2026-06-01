@@ -12,6 +12,11 @@ The package also defines a small registered payload-kind set for package interop
 - `textpipeline-trace-v1`
 - `textpipeline-batch-run-report-v1`
 - `textconformance-report-v1`
+- `textconformance-benchmark-report-v1`
+- `textconformance-benchmark-calibration-report-v1`
+- `textconformance-benchmark-matrix-report-v1`
+- `textconformance-benchmark-threshold-policy-v1`
+- `textconformance-benchmark-threshold-evaluation-v1`
 - `public-vertical-slice-0.1-result-v1`
 
 Compatibility checks can require producer identity, provenance, scope-boundary text, and limitation

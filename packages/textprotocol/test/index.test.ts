@@ -43,6 +43,9 @@ import {
   textProtocolEvidenceBundleSchemaId,
   textProtocolMappingLossReportSchemaId,
   textProtocolPackManifestSchemaId,
+  textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+  textProtocolPayloadKindTextconformanceBenchmarkReportV1,
+  textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineTraceV1,
@@ -103,6 +106,21 @@ if (
 ) {
   throw new Error("batch report payload kind should expose its canonical schema");
 }
+if (
+  getTextProtocolPayloadKindDescriptor(textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1)
+    ?.schemaId !==
+  "https://github.com/Ismail-elkorchi/text-computing/schemas/textconformance-benchmark-matrix-report-v1.schema.json"
+) {
+  throw new Error("benchmark matrix payload kind should expose its canonical schema");
+}
+if (
+  getTextProtocolPayloadKindDescriptor(textProtocolPayloadKindTextconformanceBenchmarkReportV1)
+    ?.ownerPackage !== "@ismail-elkorchi/textconformance" ||
+  getTextProtocolPayloadKindDescriptor(textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1)
+    ?.schemaVersion !== 1
+) {
+  throw new Error("benchmark payload-kind descriptors should expose owner and schema metadata");
+}
 
 if (isTextProtocolPayloadKind("textprotocol:test")) {
   throw new Error("unregistered payload kinds should not satisfy the payload-kind guard");
@@ -158,7 +176,7 @@ const registryManifest = createTextProtocolRegistryManifestV1({
 if (
   !isTextProtocolRegistryManifestV1(registryManifest) ||
   registryManifest.schemaVersion !== textProtocolRegistryManifestSchemaVersion ||
-  registryManifest.summary.payloadKindCount < 5 ||
+  registryManifest.summary.payloadKindCount < 10 ||
   registryManifest.summary.schemaFamilyCount !== textProtocolSchemaFamilyRegistry.length ||
   registryManifest.summary.externallyOwnedSchemaFamilyCount !== 1 ||
   !registryManifest.schemaFamilyEnvelope.registeredFamilies.includes("protocol-error")

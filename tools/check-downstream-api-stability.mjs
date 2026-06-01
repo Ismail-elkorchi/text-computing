@@ -505,7 +505,10 @@ async function assertBuiltPackageSmoke() {
     textprotocol.isTextProtocolRegistryManifestV1(parsedRegistryManifest) &&
       textprotocol.isTextProtocolRegistryManifestJsonTransportV1(registryManifestTransport) &&
       parsedRegistryManifest.summary.schemaFamilyCount >= 9 &&
-      parsedRegistryManifest.summary.payloadKindCount >= 5,
+      parsedRegistryManifest.summary.payloadKindCount >= 10 &&
+      textprotocol.getTextProtocolPayloadKindDescriptor(
+        textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+      )?.ownerPackage === "@ismail-elkorchi/textconformance",
     "textprotocol should expose registry manifest transport through package APIs.",
   );
 
@@ -680,6 +683,35 @@ async function assertBuiltPackageSmoke() {
       textlab.renderTextConformanceBenchmarkMatrixInspection(benchmarkMatrixInspection).includes("Incomplete metrics: 1"),
     "textlab should inspect textconformance benchmark matrix reports through package APIs.",
     benchmarkMatrixInspection,
+  );
+  const benchmarkMatrixEnvelope = {
+    schemaId: textprotocol.resultEnvelopeSchemaId,
+    schemaVersion: textprotocol.resultEnvelopeSchemaVersion,
+    producer: {
+      package: "@ismail-elkorchi/textconformance",
+      version: "0.1.0",
+    },
+    payloadKind: textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+    payload: benchmarkMatrix,
+    scopeBoundary: "Downstream smoke benchmark matrix payload envelope.",
+    limitations: ["Payload shape is validated by textconformance."],
+  };
+  const benchmarkMatrixEnvelopeCompatibility = textprotocol.checkTextProtocolResultEnvelopeCompatibility(
+    benchmarkMatrixEnvelope,
+    {
+      expectedPayloadKind: textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+      expectedProducerPackage: "@ismail-elkorchi/textconformance",
+      requireScopeBoundary: true,
+      requireLimitations: true,
+    },
+  );
+  expect(
+    textprotocol.isTextProtocolResultEnvelopeForPayloadKind(
+      benchmarkMatrixEnvelope,
+      textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+    ) && benchmarkMatrixEnvelopeCompatibility.ok,
+    "textprotocol should register textconformance benchmark matrix payload envelopes.",
+    benchmarkMatrixEnvelopeCompatibility,
   );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(

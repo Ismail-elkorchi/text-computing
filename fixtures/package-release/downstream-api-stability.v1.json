@@ -167,11 +167,16 @@
         "packages/textprotocol/src/index.ts",
         "packages/textprotocol/test/index.test.ts",
         "schemas/textprotocol-registry-manifest-v1.schema.json",
+        "schemas/textconformance-benchmark-report-v1.schema.json",
+        "schemas/textconformance-benchmark-calibration-report-v1.schema.json",
+        "schemas/textconformance-benchmark-matrix-report-v1.schema.json",
+        "schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
+        "schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
         "examples/textprotocol-registry-manifest-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API usage by declared downstream dependents; it does not standardize version negotiation or transport behavior."
+        "This verifies current built-package API usage by declared downstream dependents and registered benchmark artifact payload kinds; externally owned schema payloads still require owner validation."
       ]
     },
     {
