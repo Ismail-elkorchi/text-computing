@@ -611,26 +611,30 @@
         "packages/textpipeline/test",
         "examples/textpipeline-cache-snapshot-consumer.mjs",
         "examples/textpipeline-worker-batch-consumer.mjs",
+        "examples/textpipeline-worker-pool-consumer.mjs",
         "schemas/textpipeline-worker-run-report-v1.schema.json",
+        "schemas/textpipeline-worker-pool-run-report-v1.schema.json",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Snapshot-backed cache import/export and caller-provided worker execution exist; remote orchestration, distributed scheduling, worker-pool management, and automatic recovery coordination are not release-ready.",
+        "Snapshot-backed cache import/export, caller-provided worker execution, and deterministic worker-pool assignment reports exist; remote orchestration, distributed scheduling, and automatic recovery coordination are not release-ready.",
         "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Snapshot-backed cache import/export and caller-provided worker execution exist; remote orchestration, distributed scheduling, worker-pool management, and automatic recovery coordination are not release-ready.",
+          "blocker": "Snapshot-backed cache import/export, caller-provided worker execution, and deterministic worker-pool assignment reports exist; remote orchestration, distributed scheduling, and automatic recovery coordination are not release-ready.",
           "maturity": "production-candidate",
-          "decision": "Does not block alpha; it limits production-candidate operational statements beyond deterministic local execution, caller-managed cache snapshot semantics, and caller-provided worker adapters.",
+          "decision": "Does not block alpha; it limits production-candidate operational statements beyond deterministic local execution, caller-managed cache snapshot semantics, caller-provided worker adapters, and deterministic local worker-pool assignment.",
           "evidenceRefs": [
             "packages/textpipeline/src/index.ts",
             "packages/textpipeline/test",
             "examples/textpipeline-cache-snapshot-consumer.mjs",
             "examples/textpipeline-worker-batch-consumer.mjs",
-            "schemas/textpipeline-worker-run-report-v1.schema.json"
+            "examples/textpipeline-worker-pool-consumer.mjs",
+            "schemas/textpipeline-worker-run-report-v1.schema.json",
+            "schemas/textpipeline-worker-pool-run-report-v1.schema.json"
           ]
         }
       ]

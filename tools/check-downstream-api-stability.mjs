@@ -728,6 +728,24 @@ async function assertBuiltPackageSmoke() {
       workerBatch.report.completeCount === 1,
     "textpipeline should execute caller-provided workers through package APIs.",
   );
+  const workerPoolBatch = await textpipeline.runTextPipelineBatchWithWorkerPool(
+    [document, { ...document, documentId: "doc:downstream:worker-pool" }],
+    [identityProcessor],
+    [
+      textpipeline.createTextPipelineLocalWorker("downstream-api-worker-a"),
+      textpipeline.createTextPipelineLocalWorker("downstream-api-worker-b"),
+    ],
+    {},
+    { poolId: "downstream-api-worker-pool", maxConcurrency: 2 },
+  );
+  expect(
+    textpipeline.isTextPipelineWorkerPoolRunReportV1(workerPoolBatch.report) &&
+      workerPoolBatch.report.workerIds.join(",") === "downstream-api-worker-a,downstream-api-worker-b" &&
+      workerPoolBatch.report.items.map((item) => `${item.inputIndex}:${item.workerId}:${item.workerSlot}`).join(",") ===
+        "0:downstream-api-worker-a:0,1:downstream-api-worker-b:1",
+    "textpipeline should execute caller-provided worker pools through package APIs.",
+    workerPoolBatch.report,
+  );
   const envelopeInspection = textlab.inspectTextProtocolResultEnvelope(batchReportEnvelope);
   expect(
     envelopeInspection.registeredPayloadKind &&

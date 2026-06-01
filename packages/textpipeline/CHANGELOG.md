@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add caller-provided worker-pool execution with deterministic round-robin assignment reports.
 - Add caller-provided worker execution APIs and deterministic worker run reports.
 - Promote package metadata to public alpha for deterministic local pipeline execution.
 - Add exported graph-plan validation, versioned requirement checks, conservative cache-key creation,
