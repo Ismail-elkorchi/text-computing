@@ -66,9 +66,26 @@ bundles, processor traces, corpus metric envelopes, mapping-loss reports, protoc
 externally validated pack manifests, and other registered schema-family envelopes. Other wire
 transports are not standardized by this package.
 
+The package also exposes a registry manifest for the current protocol surface:
+
+- `createTextProtocolRegistryManifestV1()`
+- `isTextProtocolRegistryManifestV1()`
+- `serializeTextProtocolRegistryManifestJson()`
+- `parseTextProtocolRegistryManifestJson()`
+
+The manifest lists registered payload-kind descriptors, schema-family descriptors, result-envelope
+version support, JSON media types, summary counts, and limitations. Its schema is
+[`../../schemas/textprotocol-registry-manifest-v1.schema.json`](../../schemas/textprotocol-registry-manifest-v1.schema.json).
+The registry manifest does not replace owner validation for externally owned schema payloads.
+
 Processor-trace envelopes can carry full textpipeline trace metadata, including execution mode, run
 status, processor order, context fingerprint, cache policy, and cached processor entries.
 
 Use `canonicalizeTextProtocolJson()` when a caller needs deterministic JSON text before caller-owned
 hashing or signing. This package does not define a network transport, signing protocol, or hash
 algorithm.
+
+## Runnable examples
+
+- [`../../examples/textprotocol-registry-manifest-consumer.mjs`](../../examples/textprotocol-registry-manifest-consumer.mjs)
+  creates the registry manifest and round-trips it through canonical JSON transport.
