@@ -11,12 +11,15 @@ import {
   isTextConformanceReportDiffV1,
   isTextConformanceReportV1,
   isTextConformanceSuiteV1,
+  isTextConformanceSuiteTargetProbeV1,
   packageName,
   renderTextConformanceReportDiffMarkdown,
   renderTextConformanceReportMarkdown,
   runTextConformanceDifferentialOracle,
   runTextConformanceChecks,
   runTextConformanceSuite,
+  runTextConformanceSuiteTargetChecks,
+  runTextConformanceSuiteWithTargets,
   validateTextConformanceCapabilityRegistry,
   validateTextConformanceFixturePolicy,
 } from "../src/index.ts";
@@ -336,6 +339,26 @@ const suite = {
       ref: "packages/textconformance/src/index.ts#isTextConformanceSuiteV1",
     },
   ],
+  targets: [
+    {
+      targetId: "textconformance-test-fixture",
+      kind: "package-fixture",
+      ref: "packages/textconformance/test/index.test.ts",
+      description: "Package-local fixture and harness assertions.",
+    },
+    {
+      targetId: "textconformance-cli-artifact",
+      kind: "generated-package-artifact",
+      ref: "packages/textconformance/dist/cli.js",
+      description: "Built CLI artifact used by external automation.",
+    },
+    {
+      targetId: "textconformance-consumer-example",
+      kind: "external-consumer-project",
+      ref: "examples/textconformance-suite-target-consumer.mjs",
+      description: "Repository-level consumer script that imports the built package entrypoint.",
+    },
+  ],
   checks: [
     {
       checkId: "suite-runtime-guard",
@@ -367,6 +390,48 @@ if (!isTextConformanceReportV1(suiteReport) || suiteReport.summary.fail !== 0) {
 }
 if (suiteReport.checks[0]?.checkId !== "fixture-policy:development-not-sole-evidence") {
   throw new Error("suite runner should emit deterministic sorted check rows");
+}
+const targetProbe = {
+  targetId: "textconformance-test-fixture",
+  kind: "package-fixture",
+  ref: "packages/textconformance/test/index.test.ts",
+  status: "pass",
+  evidenceRefs: ["packages/textconformance/test/index.test.ts"],
+} as const;
+if (!isTextConformanceSuiteTargetProbeV1(targetProbe)) {
+  throw new Error("target probe should satisfy the target probe guard");
+}
+const missingTargetChecks = runTextConformanceSuiteTargetChecks(suite);
+if (missingTargetChecks.length !== 3 || missingTargetChecks.some((entry) => entry.status !== "fail")) {
+  throw new Error("suite target checks should fail required targets without probes");
+}
+const targetReport = runTextConformanceSuiteWithTargets(suite, {
+  generatedAt: "2026-04-23T00:00:00.000Z",
+  fixturePolicy: { requireHoldout: true },
+  targets: [
+    targetProbe,
+    {
+      targetId: "textconformance-cli-artifact",
+      kind: "generated-package-artifact",
+      ref: "packages/textconformance/dist/cli.js",
+      status: "pass",
+      evidenceRefs: ["packages/textconformance/dist/cli.js"],
+    },
+    {
+      targetId: "textconformance-consumer-example",
+      kind: "external-consumer-project",
+      ref: "examples/textconformance-suite-target-consumer.mjs",
+      status: "pass",
+      evidenceRefs: ["examples/textconformance-suite-target-consumer.mjs"],
+    },
+  ],
+});
+if (
+  !isTextConformanceReportV1(targetReport) ||
+  targetReport.summary.pass !== 8 ||
+  targetReport.checks[7]?.checkId !== "target:textconformance-test-fixture"
+) {
+  throw new Error("suite target runner should append deterministic target checks");
 }
 
 const devOnlySuite = {
@@ -434,6 +499,7 @@ const cliDir = mkdtempSync(path.join(tmpdir(), "textconformance-cli-"));
 const reportPath = path.join(cliDir, "report.json");
 const suitePath = path.join(cliDir, "suite.json");
 const invalidPath = path.join(cliDir, "invalid.json");
+const repoRoot = path.resolve("../..");
 writeFileSync(reportPath, `${JSON.stringify(suiteReport, null, 2)}\n`);
 writeFileSync(suitePath, `${JSON.stringify(suite, null, 2)}\n`);
 writeFileSync(invalidPath, "{\"schemaVersion\":1}\n");
@@ -455,6 +521,19 @@ const suiteCli = execFileSync(process.execPath, [cliPath, "validate-suite", suit
 });
 if (!suiteCli.includes("\"reportId\":\"suite:suite:textconformance-unit\"")) {
   throw new Error("CLI should validate and execute suite files");
+}
+const runSuiteCli = execFileSync(
+  process.execPath,
+  [cliPath, "run-suite", suitePath, "--target-root", repoRoot],
+  {
+    encoding: "utf8",
+  },
+);
+if (
+  !runSuiteCli.includes("\"pass\":7") ||
+  !runSuiteCli.includes("\"target:textconformance-consumer-example\"")
+) {
+  throw new Error("CLI should run suite files against declared filesystem targets");
 }
 let invalidCliRejected = false;
 try {

@@ -145,6 +145,25 @@ for (const suite of catalog.suites) {
     }
   }
 
+  expect(Array.isArray(suite.targets), `${suite.suiteId} must declare executable suite targets.`);
+  const targetIds = new Set(suite.targets.map((target) => target.targetId));
+  expect(targetIds.size === suite.targets.length, `${suite.suiteId} target ids must be unique.`);
+  const targetKinds = new Set(suite.targets.map((target) => target.kind));
+  for (const kind of ["package-fixture", "external-consumer-project", "generated-package-artifact"]) {
+    expect(targetKinds.has(kind), `${suite.suiteId} must declare a ${kind} target.`);
+  }
+  for (const target of suite.targets) {
+    assertRepoRef(target.ref, `${suite.suiteId} target ref`);
+    if (target.kind === "generated-package-artifact") {
+      expect(
+        target.ref.startsWith("packages/") && target.ref.includes("/dist/"),
+        `${suite.suiteId} generated target must reference a package dist artifact: ${target.ref}`,
+      );
+    } else {
+      expect(await fileExists(target.ref), `${suite.suiteId} target ref does not exist: ${target.ref}`);
+    }
+  }
+
   const checkIds = new Set();
   for (const check of suite.checks) {
     expect(!checkIds.has(check.checkId), `${suite.suiteId} duplicate check id: ${check.checkId}`);

@@ -51,6 +51,10 @@ export type TextConformanceOracleKind =
   | "round-trip"
   | "differential"
   | "benchmark";
+export type TextConformanceSuiteTargetKind =
+  | "package-fixture"
+  | "external-consumer-project"
+  | "generated-package-artifact";
 
 export interface TextConformanceReportSubject {
   readonly kind: string;
@@ -110,6 +114,14 @@ export interface TextConformanceOracleRefV1 {
   readonly ref?: string;
 }
 
+export interface TextConformanceSuiteTargetV1 {
+  readonly targetId: string;
+  readonly kind: TextConformanceSuiteTargetKind;
+  readonly ref: string;
+  readonly required?: boolean;
+  readonly description?: string;
+}
+
 export interface TextConformanceSuiteCheckV1 {
   readonly checkId: string;
   readonly oracleId: string;
@@ -129,6 +141,7 @@ export interface TextConformanceSuiteV1 {
   readonly scopeBoundary: string;
   readonly fixtures: readonly TextConformanceFixtureRefV1[];
   readonly oracles: readonly TextConformanceOracleRefV1[];
+  readonly targets?: readonly TextConformanceSuiteTargetV1[];
   readonly checks: readonly TextConformanceSuiteCheckV1[];
   readonly limitations: readonly string[];
   readonly notes?: readonly string[];
@@ -144,6 +157,25 @@ export interface TextConformanceSuiteRunnerOptions {
   readonly reportId?: string;
   readonly generatedAt?: string;
   readonly fixturePolicy?: TextConformanceFixturePolicyOptions;
+}
+
+export interface TextConformanceSuiteTargetProbeV1 {
+  readonly targetId: string;
+  readonly kind: TextConformanceSuiteTargetKind;
+  readonly ref: string;
+  readonly status: TextConformanceCheckStatus;
+  readonly message?: string;
+  readonly evidenceRefs?: readonly string[];
+}
+
+export interface TextConformanceSuiteTargetCheckOptions {
+  readonly requireDeclaredTargets?: boolean;
+}
+
+export interface TextConformanceSuiteTargetRunnerOptions
+  extends TextConformanceSuiteRunnerOptions,
+    TextConformanceSuiteTargetCheckOptions {
+  readonly targets?: readonly TextConformanceSuiteTargetProbeV1[];
 }
 
 export interface TextConformanceDifferentialOracleInput {
@@ -279,6 +311,13 @@ function compareCheckIds(left: string, right: string): number {
   return left.localeCompare(right);
 }
 
+function compareTargetIds(
+  left: TextConformanceSuiteTargetV1,
+  right: TextConformanceSuiteTargetV1,
+): number {
+  return left.targetId.localeCompare(right.targetId);
+}
+
 function checkIdentity(value: TextConformanceCheckV1): string {
   return JSON.stringify({
     status: value.status,
@@ -409,6 +448,16 @@ export function isTextConformanceOracleKind(value: unknown): value is TextConfor
   );
 }
 
+export function isTextConformanceSuiteTargetKind(
+  value: unknown,
+): value is TextConformanceSuiteTargetKind {
+  return (
+    value === "package-fixture" ||
+    value === "external-consumer-project" ||
+    value === "generated-package-artifact"
+  );
+}
+
 export function isTextConformanceTraceabilityV1(
   value: unknown,
 ): value is TextConformanceTraceabilityV1 {
@@ -504,6 +553,19 @@ export function isTextConformanceOracleRefV1(
   );
 }
 
+export function isTextConformanceSuiteTargetV1(
+  value: unknown,
+): value is TextConformanceSuiteTargetV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.targetId) &&
+    isTextConformanceSuiteTargetKind(value.kind) &&
+    isNonEmptyString(value.ref) &&
+    (value.required === undefined || typeof value.required === "boolean") &&
+    (value.description === undefined || isNonEmptyString(value.description))
+  );
+}
+
 export function isTextConformanceSuiteCheckV1(
   value: unknown,
 ): value is TextConformanceSuiteCheckV1 {
@@ -564,6 +626,10 @@ export function isTextConformanceSuiteV1(value: unknown): value is TextConforman
     value.oracles.length >= 1 &&
     value.oracles.every((entry) => isTextConformanceOracleRefV1(entry)) &&
     hasUniqueStrings(value.oracles.map((entry) => entry.oracleId)) &&
+    (value.targets === undefined ||
+      (Array.isArray(value.targets) &&
+        value.targets.every((entry) => isTextConformanceSuiteTargetV1(entry)) &&
+        hasUniqueStrings(value.targets.map((entry) => entry.targetId)))) &&
     Array.isArray(value.checks) &&
     value.checks.length >= 1 &&
     value.checks.every((entry) => isTextConformanceSuiteCheckV1(entry)) &&
@@ -623,6 +689,20 @@ export function isTextConformanceBenchmarkReportV1(
     isNonEmptyStringArray(value.evidenceRefs) &&
     isNonEmptyStringArray(value.limitations) &&
     (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+export function isTextConformanceSuiteTargetProbeV1(
+  value: unknown,
+): value is TextConformanceSuiteTargetProbeV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.targetId) &&
+    isTextConformanceSuiteTargetKind(value.kind) &&
+    isNonEmptyString(value.ref) &&
+    (value.status === "pass" || value.status === "fail" || value.status === "not-run") &&
+    (value.message === undefined || isNonEmptyString(value.message)) &&
+    (value.evidenceRefs === undefined || isStringArray(value.evidenceRefs))
   );
 }
 
@@ -833,6 +913,80 @@ export function runTextConformanceSuite(
     throw new TypeError("conformance suite produced an invalid report");
   }
   return report;
+}
+
+export function runTextConformanceSuiteTargetChecks(
+  suite: TextConformanceSuiteV1,
+  probes: readonly TextConformanceSuiteTargetProbeV1[] = [],
+  options: TextConformanceSuiteTargetCheckOptions = {},
+): readonly TextConformanceCheckV1[] {
+  if (!isTextConformanceSuiteV1(suite)) {
+    throw new TypeError("conformance suite is invalid");
+  }
+  if (!probes.every((probe) => isTextConformanceSuiteTargetProbeV1(probe))) {
+    throw new TypeError("conformance suite target probes are invalid");
+  }
+  if (!hasUniqueStrings(probes.map((probe) => probe.targetId))) {
+    throw new TypeError("conformance suite target probes contain duplicate target ids");
+  }
+  const requireDeclaredTargets = options.requireDeclaredTargets ?? true;
+  const probesById = new Map(probes.map((probe) => [probe.targetId, probe]));
+  return [...(suite.targets ?? [])].sort(compareTargetIds).map((target) => {
+    const probe = probesById.get(target.targetId);
+    const required = target.required ?? true;
+    if (probe === undefined) {
+      return {
+        checkId: `target:${target.targetId}`,
+        status: required && requireDeclaredTargets ? "fail" : "not-run",
+        message: required
+          ? "Required suite target was not evaluated."
+          : "Optional suite target was not evaluated.",
+        evidenceRefs: [target.ref],
+      };
+    }
+    if (probe.kind !== target.kind || probe.ref !== target.ref) {
+      return {
+        checkId: `target:${target.targetId}`,
+        status: "fail",
+        message: `Target probe does not match declared ${target.kind} target ${target.ref}.`,
+        evidenceRefs: [target.ref, probe.ref],
+      };
+    }
+    return {
+      checkId: `target:${target.targetId}`,
+      status: probe.status,
+      message:
+        probe.message ??
+        (probe.status === "pass"
+          ? `Declared ${target.kind} target is available.`
+          : `Declared ${target.kind} target is unavailable.`),
+      evidenceRefs: probe.evidenceRefs ?? [target.ref],
+    };
+  });
+}
+
+export function runTextConformanceSuiteWithTargets(
+  suite: TextConformanceSuiteV1,
+  options: TextConformanceSuiteTargetRunnerOptions = {},
+): TextConformanceReportV1 {
+  const report = runTextConformanceSuite(suite, options);
+  const targetChecks = runTextConformanceSuiteTargetChecks(suite, options.targets ?? [], options);
+  if (targetChecks.length === 0) return report;
+  const checks = [...report.checks, ...targetChecks].sort((left, right) =>
+    compareCheckIds(left.checkId, right.checkId),
+  );
+  if (!hasUniqueStrings(checks.map((check) => check.checkId))) {
+    throw new TypeError("conformance suite target run produced duplicate check ids");
+  }
+  const targetReport: TextConformanceReportV1 = {
+    ...report,
+    summary: summarizeChecks(checks),
+    checks,
+  };
+  if (!isTextConformanceReportV1(targetReport)) {
+    throw new TypeError("conformance suite target run produced an invalid report");
+  }
+  return targetReport;
 }
 
 export function runTextConformanceDifferentialOracle(

@@ -2,6 +2,9 @@
 
 ## 0.1.0
 
+- Add suite target declarations, target probe guards, target-backed suite reports,
+  the `run-suite` CLI path, and a consumer example for fixture, external consumer,
+  and generated-artifact evidence.
 - Add declarative conformance suite classes, fixture-role policy checks, a differential oracle helper, a separated benchmark report contract, and the `textconformance` CLI.
 - Promote the conformance report package surface to public alpha for bounded package interop.
 - Keep broad benchmark-runner behavior outside the alpha support statement.
