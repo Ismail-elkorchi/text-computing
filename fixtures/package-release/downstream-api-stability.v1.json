@@ -187,10 +187,11 @@
         "packages/textconformance/src/index.ts",
         "packages/textconformance/test/index.test.ts",
         "examples/textconformance-suite-target-consumer.mjs",
+        "examples/textconformance-benchmark-runner-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API usage by declared downstream dependents; it does not make the runner a full benchmark harness."
+        "This verifies current built-package API usage by declared downstream dependents and local benchmark threshold evaluation; it does not provide cross-host benchmark calibration."
       ]
     },
     {

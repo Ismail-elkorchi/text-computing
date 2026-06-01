@@ -55,3 +55,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textprotocol-mapping-loss-report-v1.schema.json`](textprotocol-mapping-loss-report-v1.schema.json) — protocol mapping-loss report schema.
 - [`textprotocol-protocol-error-v1.schema.json`](textprotocol-protocol-error-v1.schema.json) — protocol error envelope schema.
 - [`textconformance-report-v1.schema.json`](textconformance-report-v1.schema.json) — machine-readable conformance report schema.
+- [`textconformance-suite-v1.schema.json`](textconformance-suite-v1.schema.json) — declarative conformance suite schema.
+- [`textconformance-benchmark-report-v1.schema.json`](textconformance-benchmark-report-v1.schema.json) — benchmark report schema separate from conformance reports.
+- [`textconformance-benchmark-threshold-policy-v1.schema.json`](textconformance-benchmark-threshold-policy-v1.schema.json) — benchmark threshold policy schema.
+- [`textconformance-benchmark-threshold-evaluation-v1.schema.json`](textconformance-benchmark-threshold-evaluation-v1.schema.json) — benchmark threshold evaluation schema.

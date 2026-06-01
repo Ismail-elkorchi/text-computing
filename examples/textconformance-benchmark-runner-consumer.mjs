@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import {
+  conformanceBenchmarkThresholdPolicySchemaVersion,
+  evaluateTextConformanceBenchmarkThresholds,
   isTextConformanceBenchmarkReportV1,
+  isTextConformanceBenchmarkThresholdEvaluationReportV1,
   isTextConformanceReportV1,
   runTextConformanceBenchmark,
   runTextConformanceSuite,
@@ -69,8 +72,40 @@ if (isTextConformanceReportV1(benchmarkReport)) {
   throw new Error("benchmark reports must remain separate from conformance reports");
 }
 
+const thresholdPolicy = {
+  schemaVersion: conformanceBenchmarkThresholdPolicySchemaVersion,
+  policyId: "policy:example:textconformance-suite-runner",
+  benchmarkId: benchmarkReport.benchmarkId,
+  subject: suite.subject,
+  calibratedAt: "2026-04-23T00:00:00.000Z",
+  thresholds: [
+    {
+      metricId: "suite-runner.duration-ms.mean",
+      unit: "ms",
+      max: 4,
+      warnMax: 3,
+      evidenceRefs: ["examples/textconformance-benchmark-runner-consumer.mjs#threshold-mean"],
+    },
+    {
+      metricId: "suite-runner.iterations",
+      unit: "count",
+      min: 2,
+      evidenceRefs: ["examples/textconformance-benchmark-runner-consumer.mjs#threshold-iterations"],
+    },
+  ],
+  evidenceRefs: ["examples/textconformance-benchmark-runner-consumer.mjs#threshold-policy"],
+  limitations: ["Example threshold policy uses an injected deterministic clock and local calibration."],
+};
+const thresholdEvaluation = evaluateTextConformanceBenchmarkThresholds(benchmarkReport, thresholdPolicy, {
+  generatedAt: "2026-04-23T00:00:00.000Z",
+});
+if (!isTextConformanceBenchmarkThresholdEvaluationReportV1(thresholdEvaluation)) {
+  throw new Error("benchmark threshold evaluation produced an invalid report");
+}
+
 console.log(JSON.stringify({
   benchmarkId: benchmarkReport.benchmarkId,
   metricIds: benchmarkReport.metrics.map((metric) => metric.metricId),
   meanDurationMs: benchmarkReport.metrics.find((metric) => metric.metricId === "suite-runner.duration-ms.mean")?.value,
+  thresholdSummary: thresholdEvaluation.summary,
 }, null, 2));

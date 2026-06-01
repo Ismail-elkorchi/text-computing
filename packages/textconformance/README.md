@@ -33,6 +33,9 @@ The benchmark report contract is intentionally separate from the conformance
 report contract. Use `runTextConformanceBenchmark()` to execute warmup and
 measurement iterations for caller-provided benchmark cases. Benchmark metrics
 can be recorded, but benchmark metrics are not pass/fail conformance results.
+Use `evaluateTextConformanceBenchmarkThresholds()` to apply a calibrated
+benchmark threshold policy to a benchmark report and produce a deterministic
+pass/warn/fail/missing threshold-evaluation record.
 
 ## CLI
 
@@ -45,6 +48,7 @@ textconformance diff-reports expected.json actual.json
 textconformance validate-suite fixtures/conformance/package-suites.v1.json
 textconformance run-suite fixtures/conformance/package-suites.v1.json --target-root .
 textconformance run-benchmark fixtures/conformance/package-suites.v1.json --target-root . --iterations 3 --warmup 1
+textconformance evaluate-benchmark benchmark-report.json threshold-policy.json --markdown
 ```
 
 Runnable repository examples:

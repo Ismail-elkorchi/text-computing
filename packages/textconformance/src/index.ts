@@ -10,6 +10,8 @@ export const conformanceSuiteSchemaVersion = 1 as const;
 export const conformanceBenchmarkReportSchemaId =
   "urn:ismail-elkorchi:textconformance:benchmark-report:v1" as const;
 export const conformanceBenchmarkReportSchemaVersion = 1 as const;
+export const conformanceBenchmarkThresholdPolicySchemaVersion = 1 as const;
+export const conformanceBenchmarkThresholdEvaluationSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextConformanceReportSchemaId = typeof conformanceReportSchemaId;
@@ -24,6 +26,10 @@ export type TextConformanceBenchmarkReportSchemaId =
   typeof conformanceBenchmarkReportSchemaId;
 export type TextConformanceBenchmarkReportSchemaVersion =
   typeof conformanceBenchmarkReportSchemaVersion;
+export type TextConformanceBenchmarkThresholdPolicySchemaVersion =
+  typeof conformanceBenchmarkThresholdPolicySchemaVersion;
+export type TextConformanceBenchmarkThresholdEvaluationSchemaVersion =
+  typeof conformanceBenchmarkThresholdEvaluationSchemaVersion;
 
 export type TextConformanceCheckStatus = "pass" | "fail" | "not-run";
 export type TextConformanceReportDiffStatus = "same" | "changed" | "added" | "removed";
@@ -55,6 +61,7 @@ export type TextConformanceSuiteTargetKind =
   | "package-fixture"
   | "external-consumer-project"
   | "generated-package-artifact";
+export type TextConformanceBenchmarkThresholdStatus = "pass" | "warn" | "fail" | "missing";
 
 export interface TextConformanceReportSubject {
   readonly kind: string;
@@ -203,6 +210,66 @@ export interface TextConformanceBenchmarkReportV1 {
   readonly metrics: readonly TextConformanceBenchmarkMetricV1[];
   readonly evidenceRefs: readonly string[];
   readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkThresholdV1 {
+  readonly metricId: string;
+  readonly unit?: string;
+  readonly min?: number;
+  readonly max?: number;
+  readonly warnMin?: number;
+  readonly warnMax?: number;
+  readonly evidenceRefs?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkThresholdPolicyV1 {
+  readonly schemaVersion: TextConformanceBenchmarkThresholdPolicySchemaVersion;
+  readonly policyId: string;
+  readonly benchmarkId: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly calibratedAt: string;
+  readonly thresholds: readonly TextConformanceBenchmarkThresholdV1[];
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkThresholdEvaluationSummaryV1 {
+  readonly pass: number;
+  readonly warn: number;
+  readonly fail: number;
+  readonly missing: number;
+}
+
+export interface TextConformanceBenchmarkThresholdEvaluationRowV1 {
+  readonly metricId: string;
+  readonly status: TextConformanceBenchmarkThresholdStatus;
+  readonly value?: number;
+  readonly unit?: string;
+  readonly min?: number;
+  readonly max?: number;
+  readonly warnMin?: number;
+  readonly warnMax?: number;
+  readonly message: string;
+  readonly evidenceRefs: readonly string[];
+}
+
+export interface TextConformanceBenchmarkThresholdEvaluationReportV1 {
+  readonly schemaVersion: TextConformanceBenchmarkThresholdEvaluationSchemaVersion;
+  readonly policyId: string;
+  readonly benchmarkId: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly generatedAt: string;
+  readonly summary: TextConformanceBenchmarkThresholdEvaluationSummaryV1;
+  readonly rows: readonly TextConformanceBenchmarkThresholdEvaluationRowV1[];
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkThresholdEvaluationOptions {
+  readonly generatedAt?: string;
   readonly notes?: readonly string[];
 }
 
@@ -436,6 +503,33 @@ function sortedBenchmarkCases(
   cases: readonly TextConformanceBenchmarkCase[],
 ): readonly TextConformanceBenchmarkCase[] {
   return [...cases].sort((left, right) => left.caseId.localeCompare(right.caseId));
+}
+
+function sortedBenchmarkThresholds(
+  thresholds: readonly TextConformanceBenchmarkThresholdV1[],
+): readonly TextConformanceBenchmarkThresholdV1[] {
+  return [...thresholds].sort((left, right) => left.metricId.localeCompare(right.metricId));
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function hasBenchmarkThresholdBound(value: TextConformanceBenchmarkThresholdV1): boolean {
+  return (
+    value.min !== undefined ||
+    value.max !== undefined ||
+    value.warnMin !== undefined ||
+    value.warnMax !== undefined
+  );
+}
+
+function hasConsistentBenchmarkThresholdBounds(value: TextConformanceBenchmarkThresholdV1): boolean {
+  if (value.min !== undefined && value.max !== undefined && value.min > value.max) return false;
+  if (value.warnMin !== undefined && value.warnMax !== undefined && value.warnMin > value.warnMax) return false;
+  if (value.min !== undefined && value.warnMin !== undefined && value.warnMin < value.min) return false;
+  if (value.max !== undefined && value.warnMax !== undefined && value.warnMax > value.max) return false;
+  return true;
 }
 
 function defaultBenchmarkClock(): number {
@@ -747,6 +841,97 @@ export function isTextConformanceBenchmarkReportV1(
   );
 }
 
+export function isTextConformanceBenchmarkThresholdV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.metricId) &&
+    (value.unit === undefined || isNonEmptyString(value.unit)) &&
+    (value.min === undefined || isFiniteNumber(value.min)) &&
+    (value.max === undefined || isFiniteNumber(value.max)) &&
+    (value.warnMin === undefined || isFiniteNumber(value.warnMin)) &&
+    (value.warnMax === undefined || isFiniteNumber(value.warnMax)) &&
+    (value.evidenceRefs === undefined || isStringArray(value.evidenceRefs)) &&
+    hasBenchmarkThresholdBound(value as unknown as TextConformanceBenchmarkThresholdV1) &&
+    hasConsistentBenchmarkThresholdBounds(value as unknown as TextConformanceBenchmarkThresholdV1)
+  );
+}
+
+export function isTextConformanceBenchmarkThresholdPolicyV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdPolicyV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === conformanceBenchmarkThresholdPolicySchemaVersion &&
+    isNonEmptyString(value.policyId) &&
+    isNonEmptyString(value.benchmarkId) &&
+    isTextConformanceReportSubject(value.subject) &&
+    isNonEmptyString(value.calibratedAt) &&
+    Array.isArray(value.thresholds) &&
+    value.thresholds.length >= 1 &&
+    value.thresholds.every((entry) => isTextConformanceBenchmarkThresholdV1(entry)) &&
+    hasUniqueStrings(value.thresholds.map((entry) => entry.metricId)) &&
+    isNonEmptyStringArray(value.evidenceRefs) &&
+    isNonEmptyStringArray(value.limitations) &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+export function isTextConformanceBenchmarkThresholdEvaluationSummaryV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdEvaluationSummaryV1 {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.pass) &&
+    isNonNegativeInteger(value.warn) &&
+    isNonNegativeInteger(value.fail) &&
+    isNonNegativeInteger(value.missing)
+  );
+}
+
+export function isTextConformanceBenchmarkThresholdEvaluationRowV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdEvaluationRowV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.metricId) &&
+    (value.status === "pass" ||
+      value.status === "warn" ||
+      value.status === "fail" ||
+      value.status === "missing") &&
+    (value.value === undefined || isFiniteNumber(value.value)) &&
+    (value.unit === undefined || isNonEmptyString(value.unit)) &&
+    (value.min === undefined || isFiniteNumber(value.min)) &&
+    (value.max === undefined || isFiniteNumber(value.max)) &&
+    (value.warnMin === undefined || isFiniteNumber(value.warnMin)) &&
+    (value.warnMax === undefined || isFiniteNumber(value.warnMax)) &&
+    isNonEmptyString(value.message) &&
+    isStringArray(value.evidenceRefs)
+  );
+}
+
+export function isTextConformanceBenchmarkThresholdEvaluationReportV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdEvaluationReportV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === conformanceBenchmarkThresholdEvaluationSchemaVersion &&
+    isNonEmptyString(value.policyId) &&
+    isNonEmptyString(value.benchmarkId) &&
+    isTextConformanceReportSubject(value.subject) &&
+    isNonEmptyString(value.generatedAt) &&
+    isTextConformanceBenchmarkThresholdEvaluationSummaryV1(value.summary) &&
+    Array.isArray(value.rows) &&
+    value.rows.length >= 1 &&
+    value.rows.every((entry) => isTextConformanceBenchmarkThresholdEvaluationRowV1(entry)) &&
+    hasUniqueStrings(value.rows.map((entry) => entry.metricId)) &&
+    isNonEmptyStringArray(value.evidenceRefs) &&
+    isNonEmptyStringArray(value.limitations) &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
 function benchmarkDurationMetrics(
   caseId: string,
   durations: readonly number[],
@@ -878,6 +1063,177 @@ export async function runTextConformanceBenchmark(
     throw new TypeError("textconformance benchmark runner produced an invalid report");
   }
   return report;
+}
+
+function benchmarkThresholdRow(
+  threshold: TextConformanceBenchmarkThresholdV1,
+  metric: TextConformanceBenchmarkMetricV1 | undefined,
+): TextConformanceBenchmarkThresholdEvaluationRowV1 {
+  const evidenceRefs = [...new Set(threshold.evidenceRefs ?? [])].sort();
+  if (metric === undefined) {
+    return {
+      metricId: threshold.metricId,
+      status: "missing",
+      ...(threshold.unit === undefined ? {} : { unit: threshold.unit }),
+      ...(threshold.min === undefined ? {} : { min: threshold.min }),
+      ...(threshold.max === undefined ? {} : { max: threshold.max }),
+      ...(threshold.warnMin === undefined ? {} : { warnMin: threshold.warnMin }),
+      ...(threshold.warnMax === undefined ? {} : { warnMax: threshold.warnMax }),
+      message: `Metric ${threshold.metricId} is missing from benchmark report.`,
+      evidenceRefs,
+    };
+  }
+  const rowBase = {
+    metricId: threshold.metricId,
+    value: metric.value,
+    unit: metric.unit,
+    ...(threshold.min === undefined ? {} : { min: threshold.min }),
+    ...(threshold.max === undefined ? {} : { max: threshold.max }),
+    ...(threshold.warnMin === undefined ? {} : { warnMin: threshold.warnMin }),
+    ...(threshold.warnMax === undefined ? {} : { warnMax: threshold.warnMax }),
+    evidenceRefs,
+  };
+  if (threshold.unit !== undefined && metric.unit !== threshold.unit) {
+    return {
+      ...rowBase,
+      status: "fail",
+      message: `Metric ${threshold.metricId} uses unit ${metric.unit}; expected ${threshold.unit}.`,
+    };
+  }
+  if (threshold.min !== undefined && metric.value < threshold.min) {
+    return {
+      ...rowBase,
+      status: "fail",
+      message: `Metric ${threshold.metricId} value ${metric.value} is below minimum ${threshold.min}.`,
+    };
+  }
+  if (threshold.max !== undefined && metric.value > threshold.max) {
+    return {
+      ...rowBase,
+      status: "fail",
+      message: `Metric ${threshold.metricId} value ${metric.value} is above maximum ${threshold.max}.`,
+    };
+  }
+  if (threshold.warnMin !== undefined && metric.value < threshold.warnMin) {
+    return {
+      ...rowBase,
+      status: "warn",
+      message: `Metric ${threshold.metricId} value ${metric.value} is below warning minimum ${threshold.warnMin}.`,
+    };
+  }
+  if (threshold.warnMax !== undefined && metric.value > threshold.warnMax) {
+    return {
+      ...rowBase,
+      status: "warn",
+      message: `Metric ${threshold.metricId} value ${metric.value} is above warning maximum ${threshold.warnMax}.`,
+    };
+  }
+  return {
+    ...rowBase,
+    status: "pass",
+    message: `Metric ${threshold.metricId} satisfies threshold policy.`,
+  };
+}
+
+export function evaluateTextConformanceBenchmarkThresholds(
+  benchmarkReport: unknown,
+  policy: unknown,
+  options: TextConformanceBenchmarkThresholdEvaluationOptions = {},
+): TextConformanceBenchmarkThresholdEvaluationReportV1 {
+  if (!isTextConformanceBenchmarkReportV1(benchmarkReport)) {
+    throw new TypeError("benchmark report is invalid");
+  }
+  if (!isTextConformanceBenchmarkThresholdPolicyV1(policy)) {
+    throw new TypeError("benchmark threshold policy is invalid");
+  }
+  if (benchmarkReport.benchmarkId !== policy.benchmarkId) {
+    throw new TypeError(
+      `benchmark threshold policy ${policy.policyId} targets ${policy.benchmarkId}; received ${benchmarkReport.benchmarkId}`,
+    );
+  }
+  if (canonicalJson(benchmarkReport.subject) !== canonicalJson(policy.subject)) {
+    throw new TypeError(`benchmark threshold policy ${policy.policyId} subject does not match benchmark report`);
+  }
+  if (options.generatedAt !== undefined && !isNonEmptyString(options.generatedAt)) {
+    throw new TypeError("benchmark threshold evaluation generatedAt must be a non-empty string");
+  }
+  if (options.notes !== undefined && !isStringArray(options.notes)) {
+    throw new TypeError("benchmark threshold evaluation notes must be strings");
+  }
+  const metrics = new Map(benchmarkReport.metrics.map((metric) => [metric.metricId, metric]));
+  const rows = sortedBenchmarkThresholds(policy.thresholds).map((threshold) =>
+    benchmarkThresholdRow(threshold, metrics.get(threshold.metricId)),
+  );
+  const summary: TextConformanceBenchmarkThresholdEvaluationSummaryV1 = {
+    pass: rows.filter((row) => row.status === "pass").length,
+    warn: rows.filter((row) => row.status === "warn").length,
+    fail: rows.filter((row) => row.status === "fail").length,
+    missing: rows.filter((row) => row.status === "missing").length,
+  };
+  const evidenceRefs = new Set<string>([...benchmarkReport.evidenceRefs, ...policy.evidenceRefs]);
+  for (const threshold of policy.thresholds) {
+    for (const ref of threshold.evidenceRefs ?? []) evidenceRefs.add(ref);
+  }
+  const notes = [...(policy.notes ?? []), ...(options.notes ?? [])];
+  const evaluation: TextConformanceBenchmarkThresholdEvaluationReportV1 = {
+    schemaVersion: conformanceBenchmarkThresholdEvaluationSchemaVersion,
+    policyId: policy.policyId,
+    benchmarkId: benchmarkReport.benchmarkId,
+    subject: benchmarkReport.subject,
+    generatedAt: options.generatedAt ?? benchmarkReport.generatedAt,
+    summary,
+    rows,
+    evidenceRefs: [...evidenceRefs].sort(),
+    limitations: [...new Set([...policy.limitations, ...benchmarkReport.limitations])].sort(),
+    ...(notes.length === 0 ? {} : { notes }),
+  };
+  if (!isTextConformanceBenchmarkThresholdEvaluationReportV1(evaluation)) {
+    throw new TypeError("benchmark threshold evaluation is invalid");
+  }
+  return evaluation;
+}
+
+function benchmarkThresholdBoundsText(row: TextConformanceBenchmarkThresholdEvaluationRowV1): string {
+  const entries = [
+    row.min === undefined ? "" : `min=${row.min}`,
+    row.max === undefined ? "" : `max=${row.max}`,
+    row.warnMin === undefined ? "" : `warnMin=${row.warnMin}`,
+    row.warnMax === undefined ? "" : `warnMax=${row.warnMax}`,
+  ].filter((entry) => entry.length > 0);
+  return entries.join("; ");
+}
+
+export function renderTextConformanceBenchmarkThresholdEvaluationMarkdown(
+  evaluation: TextConformanceBenchmarkThresholdEvaluationReportV1,
+  options: TextConformanceMarkdownRenderOptions = {},
+): string {
+  if (!isTextConformanceBenchmarkThresholdEvaluationReportV1(evaluation)) {
+    throw new TypeError("benchmark threshold evaluation is invalid");
+  }
+  const title = options.title ?? `Benchmark threshold evaluation ${evaluation.benchmarkId}`;
+  const rows = evaluation.rows.map((row) =>
+    [
+      markdownTableCell(row.metricId),
+      markdownTableCell(row.status),
+      markdownTableCell(row.value === undefined ? undefined : String(row.value)),
+      markdownTableCell(row.unit),
+      markdownTableCell(benchmarkThresholdBoundsText(row)),
+      markdownTableCell(row.message),
+      markdownTableList(row.evidenceRefs),
+    ].join(" | "),
+  );
+  return [
+    `# ${markdownText(title)}`,
+    "",
+    `- **Policy:** ${markdownText(evaluation.policyId)}`,
+    `- **Benchmark:** ${markdownText(evaluation.benchmarkId)}`,
+    `- **Summary:** pass=${evaluation.summary.pass}; warn=${evaluation.summary.warn}; fail=${evaluation.summary.fail}; missing=${evaluation.summary.missing}`,
+    "",
+    "| Metric | Status | Value | Unit | Bounds | Message | Evidence |",
+    "| --- | --- | ---: | --- | --- | --- | --- |",
+    ...rows.map((row) => `| ${row} |`),
+    "",
+  ].join("\n");
 }
 
 export function isTextConformanceSuiteTargetProbeV1(

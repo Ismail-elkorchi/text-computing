@@ -1,11 +1,15 @@
 import {
   conformanceBenchmarkReportSchemaId,
   conformanceBenchmarkReportSchemaVersion,
+  conformanceBenchmarkThresholdPolicySchemaVersion,
   conformanceCapabilityRegistrySchemaVersion,
   conformanceSuiteSchemaId,
   conformanceSuiteSchemaVersion,
   diffTextConformanceReports,
+  evaluateTextConformanceBenchmarkThresholds,
   isTextConformanceBenchmarkReportV1,
+  isTextConformanceBenchmarkThresholdEvaluationReportV1,
+  isTextConformanceBenchmarkThresholdPolicyV1,
   isTextConformanceCapabilityRegistryV1,
   isTextConformanceCapabilityStatementV1,
   isTextConformanceReportDiffV1,
@@ -13,6 +17,7 @@ import {
   isTextConformanceSuiteV1,
   isTextConformanceSuiteTargetProbeV1,
   packageName,
+  renderTextConformanceBenchmarkThresholdEvaluationMarkdown,
   renderTextConformanceReportDiffMarkdown,
   renderTextConformanceReportMarkdown,
   runTextConformanceDifferentialOracle,
@@ -562,13 +567,105 @@ if (!duplicateBenchmarkCaseRejected) {
   throw new Error("benchmark runner should reject duplicate case ids");
 }
 
+const benchmarkThresholdPolicy = {
+  schemaVersion: conformanceBenchmarkThresholdPolicySchemaVersion,
+  policyId: "policy:textconformance-suite-runner",
+  benchmarkId: "benchmark:textconformance-suite-runner",
+  subject: {
+    kind: "package",
+    id: "@ismail-elkorchi/textconformance",
+  },
+  calibratedAt: "2026-04-23T00:00:00.000Z",
+  thresholds: [
+    {
+      metricId: "suite-runner.duration-ms.mean",
+      unit: "ms",
+      max: 6,
+      warnMax: 4,
+      evidenceRefs: ["packages/textconformance/test/index.test.ts#threshold-mean"],
+    },
+    {
+      metricId: "suite-runner.duration-ms.max",
+      unit: "ms",
+      max: 4,
+      evidenceRefs: ["packages/textconformance/test/index.test.ts#threshold-max"],
+    },
+    {
+      metricId: "suite-runner.duration-ms.p95",
+      unit: "ms",
+      max: 6,
+      evidenceRefs: ["packages/textconformance/test/index.test.ts#threshold-missing"],
+    },
+    {
+      metricId: "suite-runner.iterations",
+      unit: "count",
+      min: 3,
+      evidenceRefs: ["packages/textconformance/test/index.test.ts#threshold-iterations"],
+    },
+  ],
+  evidenceRefs: ["packages/textconformance/test/index.test.ts#benchmark-threshold-policy"],
+  limitations: ["Synthetic threshold policy for deterministic unit testing."],
+} as const;
+if (!isTextConformanceBenchmarkThresholdPolicyV1(benchmarkThresholdPolicy)) {
+  throw new Error("benchmark threshold policy should satisfy the runtime guard");
+}
+const benchmarkThresholdEvaluation = evaluateTextConformanceBenchmarkThresholds(
+  executedBenchmarkReport,
+  benchmarkThresholdPolicy,
+  { generatedAt: "2026-04-23T00:00:00.000Z" },
+);
+const thresholdStatusByMetric = new Map(
+  benchmarkThresholdEvaluation.rows.map((row) => [row.metricId, row.status]),
+);
+if (
+  !isTextConformanceBenchmarkThresholdEvaluationReportV1(benchmarkThresholdEvaluation) ||
+  benchmarkThresholdEvaluation.summary.pass !== 1 ||
+  benchmarkThresholdEvaluation.summary.warn !== 1 ||
+  benchmarkThresholdEvaluation.summary.fail !== 1 ||
+  benchmarkThresholdEvaluation.summary.missing !== 1 ||
+  thresholdStatusByMetric.get("suite-runner.duration-ms.mean") !== "warn" ||
+  thresholdStatusByMetric.get("suite-runner.duration-ms.max") !== "fail" ||
+  thresholdStatusByMetric.get("suite-runner.duration-ms.p95") !== "missing" ||
+  thresholdStatusByMetric.get("suite-runner.iterations") !== "pass"
+) {
+  throw new Error("benchmark threshold evaluation should classify pass, warn, fail, and missing metrics");
+}
+const renderedThresholdEvaluation = renderTextConformanceBenchmarkThresholdEvaluationMarkdown(
+  benchmarkThresholdEvaluation,
+);
+if (
+  !renderedThresholdEvaluation.includes("- **Summary:** pass=1; warn=1; fail=1; missing=1") ||
+  !renderedThresholdEvaluation.includes("| suite-runner.duration-ms.max | fail | 5 | ms | max=4 |")
+) {
+  throw new Error("benchmark threshold evaluation renderer should expose summary and row status");
+}
+let mismatchedBenchmarkPolicyRejected = false;
+try {
+  evaluateTextConformanceBenchmarkThresholds(executedBenchmarkReport, {
+    ...benchmarkThresholdPolicy,
+    benchmarkId: "benchmark:other",
+  });
+} catch (error) {
+  mismatchedBenchmarkPolicyRejected =
+    error instanceof TypeError &&
+    error.message ===
+      "benchmark threshold policy policy:textconformance-suite-runner targets benchmark:other; received benchmark:textconformance-suite-runner";
+}
+if (!mismatchedBenchmarkPolicyRejected) {
+  throw new Error("benchmark threshold evaluation should reject mismatched policies");
+}
+
 const cliDir = mkdtempSync(path.join(tmpdir(), "textconformance-cli-"));
 const reportPath = path.join(cliDir, "report.json");
 const suitePath = path.join(cliDir, "suite.json");
+const benchmarkReportPath = path.join(cliDir, "benchmark-report.json");
+const benchmarkThresholdPolicyPath = path.join(cliDir, "benchmark-threshold-policy.json");
 const invalidPath = path.join(cliDir, "invalid.json");
 const repoRoot = path.resolve("../..");
 writeFileSync(reportPath, `${JSON.stringify(suiteReport, null, 2)}\n`);
 writeFileSync(suitePath, `${JSON.stringify(suite, null, 2)}\n`);
+writeFileSync(benchmarkReportPath, `${JSON.stringify(executedBenchmarkReport, null, 2)}\n`);
+writeFileSync(benchmarkThresholdPolicyPath, `${JSON.stringify(benchmarkThresholdPolicy, null, 2)}\n`);
 writeFileSync(invalidPath, "{\"schemaVersion\":1}\n");
 const cliPath = path.resolve("dist/cli.js");
 const validateCli = execFileSync(process.execPath, [cliPath, "validate-report", reportPath], {
@@ -617,6 +714,31 @@ if (
     ?.value !== 2
 ) {
   throw new Error("CLI should run benchmark reports over suite files");
+}
+const benchmarkThresholdCli = execFileSync(
+  process.execPath,
+  [cliPath, "evaluate-benchmark", benchmarkReportPath, benchmarkThresholdPolicyPath],
+  {
+    encoding: "utf8",
+  },
+);
+const benchmarkThresholdCliReport = JSON.parse(benchmarkThresholdCli);
+if (
+  !isTextConformanceBenchmarkThresholdEvaluationReportV1(benchmarkThresholdCliReport) ||
+  benchmarkThresholdCliReport.summary.fail !== 1 ||
+  benchmarkThresholdCliReport.summary.missing !== 1
+) {
+  throw new Error("CLI should evaluate benchmark threshold policies");
+}
+const benchmarkThresholdMarkdownCli = execFileSync(
+  process.execPath,
+  [cliPath, "evaluate-benchmark", benchmarkReportPath, benchmarkThresholdPolicyPath, "--markdown"],
+  {
+    encoding: "utf8",
+  },
+);
+if (!benchmarkThresholdMarkdownCli.includes("# Benchmark threshold evaluation benchmark:textconformance-suite-runner")) {
+  throw new Error("CLI should render benchmark threshold evaluations as Markdown");
 }
 let invalidCliRejected = false;
 try {
