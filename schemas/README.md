@@ -43,6 +43,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textdoc-dependency-target-v1.schema.json`](textdoc-dependency-target-v1.schema.json) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.
 - [`textpipeline-trace-v1.schema.json`](textpipeline-trace-v1.schema.json) — deterministic processor trace schema.
 - [`textpipeline-batch-run-report-v1.schema.json`](textpipeline-batch-run-report-v1.schema.json) — deterministic textpipeline batch run report schema.
+- [`textpipeline-worker-run-report-v1.schema.json`](textpipeline-worker-run-report-v1.schema.json) — deterministic textpipeline worker run report schema.
 - [`textpack-manifest-v1.schema.json`](textpack-manifest-v1.schema.json) — pack manifest schema for issue `#12`.
 - [`textpack-catalog-v1.schema.json`](textpack-catalog-v1.schema.json) — pack catalog schema for reference-pack evidence.
 - [`textpack-review-report-v1.schema.json`](textpack-review-report-v1.schema.json) — pack review and vetting report schema.

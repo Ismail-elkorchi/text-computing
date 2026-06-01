@@ -11,9 +11,11 @@ import {
   createTextPipelineBatchRunReportEnvelope,
   createTextPipelineContextFingerprint,
   createTextPipelineExecutionPlan,
+  createTextPipelineLocalWorker,
   createTextPipelineProcessorTraceEnvelopeV1,
   createTextPipelineSnapshotBackedDocumentCache,
   createTextPipelineTraceEnvelope,
+  createTextPipelineWorkerRunReport,
   exportTextPipelineProcessorTracePayloadV1,
   isTextPipelineProcessorDescriptor,
   isTextPipelineBatchRunReportEnvelopeV1,
@@ -22,6 +24,7 @@ import {
   isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
+  isTextPipelineWorkerRunReportV1,
   packageName,
   runTextPipeline,
   runTextPipelineAsync,
@@ -29,6 +32,7 @@ import {
   runTextPipelineBatchAsync,
   runTextPipelineBatchAsyncWithReport,
   runTextPipelineBatchWithReport,
+  runTextPipelineBatchWithWorker,
   runTextPipelineStream,
   parseTextPipelineCacheSnapshot,
   stringifyTextPipelineCacheSnapshot,
@@ -37,11 +41,13 @@ import {
   textPipelineBatchRunReportSchemaVersion,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
+  textPipelineWorkerRunReportSchemaVersion,
   validateTextPipelineGraph,
   type TextPipelineAsyncProcessor,
   type TextPipelineEmitSet,
   type TextPipelineProcessor,
   type TextPipelineRequirementSet,
+  type TextPipelineWorker,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textpipeline";
@@ -51,6 +57,7 @@ const expectedBatchRunReportPayloadKind: typeof textPipelineBatchRunReportPayloa
 const expectedTraceSchemaVersion: typeof textPipelineTraceSchemaVersion = 1;
 const expectedBatchRunReportSchemaVersion: typeof textPipelineBatchRunReportSchemaVersion = 1;
 const expectedCacheSnapshotSchemaVersion: typeof textPipelineCacheSnapshotSchemaVersion = 1;
+const expectedWorkerRunReportSchemaVersion: typeof textPipelineWorkerRunReportSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
   schemaVersion: 1,
@@ -763,6 +770,70 @@ if (
   throw new Error("async batch report should preserve partial-output state per input document");
 }
 
+const workerInvocations: string[] = [];
+const worker: TextPipelineWorker = {
+  workerId: "fixture-worker",
+  async run(input) {
+    workerInvocations.push(`${input.inputIndex}:${input.document.documentId}:${input.processors.length}`);
+    return runTextPipelineAsync(input.document, input.processors, input.context, input.options);
+  },
+};
+const workerBatch = await runTextPipelineBatchWithWorker(
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:worker" }],
+  [asyncAlpha],
+  worker,
+  { packageVersions: [{ id: packageName, version: "0.1.0" }] },
+);
+if (
+  workerBatch.report.schemaVersion !== textPipelineWorkerRunReportSchemaVersion ||
+  workerBatch.report.workerId !== "fixture-worker" ||
+  workerBatch.report.documentCount !== 2 ||
+  workerBatch.report.completeCount !== 2 ||
+  workerBatch.report.partialCount !== 0 ||
+  workerBatch.report.executionModes.join(",") !== "async" ||
+  workerBatch.report.items.map((item) => `${item.inputIndex}:${item.workerId}:${item.documentId}:${item.traceEntryCount}`).join(",") !==
+    "0:fixture-worker:doc:pipeline:1,1:fixture-worker:doc:pipeline:worker:1" ||
+  workerInvocations.join(",") !== "0:doc:pipeline:1,1:doc:pipeline:worker:1"
+) {
+  throw new Error("worker batch execution should preserve worker id, input order, and run status");
+}
+if (!isTextPipelineWorkerRunReportV1(workerBatch.report)) {
+  throw new Error("worker batch report should satisfy its owning runtime guard");
+}
+if (
+  createTextPipelineWorkerRunReport("fixture-worker", workerBatch.runs).contextFingerprints.join(",") !==
+    workerBatch.report.contextFingerprints.join(",")
+) {
+  throw new Error("worker report generation should be deterministic from existing runs");
+}
+const localWorkerBatch = await runTextPipelineBatchWithWorker([baseDocument], [asyncAlpha], createTextPipelineLocalWorker("local-fixture"));
+if (
+  localWorkerBatch.report.workerId !== "local-fixture" ||
+  localWorkerBatch.runs[0]?.document.revision !== "r0>async-alpha"
+) {
+  throw new Error("local worker helper should execute async processors through the package API");
+}
+let invalidWorkerResultRejected = false;
+try {
+  await runTextPipelineBatchWithWorker(
+    [baseDocument],
+    [asyncAlpha],
+    {
+      workerId: "bad-worker",
+      async run() {
+        return runTextPipelineAsync({ ...baseDocument, documentId: "doc:other" }, [asyncAlpha]);
+      },
+    },
+  );
+} catch (error) {
+  invalidWorkerResultRejected =
+    error instanceof Error &&
+    error.message === "textpipeline worker bad-worker returned result for unexpected document at input 0";
+}
+if (!invalidWorkerResultRejected) {
+  throw new Error("worker batch execution should reject mismatched worker output documents");
+}
+
 const abortController = new AbortController();
 abortController.abort();
 let abortedRunRejected = false;
@@ -812,3 +883,4 @@ void expectedBatchRunReportPayloadKind;
 void expectedTraceSchemaVersion;
 void expectedBatchRunReportSchemaVersion;
 void expectedCacheSnapshotSchemaVersion;
+void expectedWorkerRunReportSchemaVersion;

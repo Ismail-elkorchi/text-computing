@@ -229,10 +229,11 @@
         "packages/textpipeline/package.json",
         "packages/textpipeline/src/index.ts",
         "packages/textpipeline/test/index.test.ts",
+        "examples/textpipeline-worker-batch-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API import and smoke usage, including snapshot-backed cache import/export; it does not add remote orchestration, distributed scheduling, worker execution, or automatic recovery coordination."
+        "This verifies current built-package API import and smoke usage, including snapshot-backed cache import/export and caller-provided worker execution; it does not add remote orchestration, distributed scheduling, worker-pool management, or automatic recovery coordination."
       ]
     },
     {
