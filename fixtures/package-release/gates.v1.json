@@ -714,13 +714,18 @@
         "packages/textprotocol/README.md",
         "packages/textprotocol/CHANGELOG.md",
         "schemas/textprotocol-registry-manifest-v1.schema.json",
+        "schemas/textconformance-benchmark-report-v1.schema.json",
+        "schemas/textconformance-benchmark-calibration-report-v1.schema.json",
+        "schemas/textconformance-benchmark-matrix-report-v1.schema.json",
+        "schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
+        "schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
         "examples/textprotocol-registry-manifest-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Registry manifests standardize current payload-kind and schema-family descriptors; externally owned schema payloads still require owner validation.",
+        "Registry manifests standardize current payload-kind and schema-family descriptors, including textconformance benchmark artifact payload kinds; externally owned schema payloads still require owner validation.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": []

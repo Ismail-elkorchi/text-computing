@@ -2,6 +2,7 @@
 
 ## Next
 
+- Register textconformance benchmark payload kinds for benchmark reports, calibration reports, matrix reports, threshold policies, and threshold evaluations.
 - Add registry manifest creation, guards, schema, and deterministic JSON transport for registered protocol descriptors.
 - Extend processor-trace schema-family payloads to carry full textpipeline trace metadata and cached entries.
 - Add external-validation assertions for schema-family transport of pack manifests owned by textpack.
