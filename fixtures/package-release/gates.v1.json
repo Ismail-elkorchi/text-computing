@@ -626,10 +626,12 @@
         "examples/textpipeline-cache-snapshot-consumer.mjs",
         "examples/textpipeline-worker-batch-consumer.mjs",
         "examples/textpipeline-worker-pool-consumer.mjs",
+        "examples/textpipeline-distributed-schedule-consumer.mjs",
         "examples/textpipeline-recovery-plan-consumer.mjs",
         "examples/textpipeline-recovery-execution-consumer.mjs",
         "schemas/textpipeline-worker-run-report-v1.schema.json",
         "schemas/textpipeline-worker-pool-run-report-v1.schema.json",
+        "schemas/textpipeline-distributed-schedule-plan-v1.schema.json",
         "schemas/textpipeline-recovery-plan-v1.schema.json",
         "schemas/textpipeline-recovery-execution-report-v1.schema.json",
         "tools/validate-package-readiness.mjs",
@@ -637,24 +639,26 @@
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Snapshot-backed cache import/export, caller-provided worker execution, deterministic worker-pool assignment reports, caller-managed recovery plans, and automatic local recovery execution exist; remote orchestration and distributed scheduling are not release-ready.",
+        "Snapshot-backed cache import/export, caller-provided worker execution, deterministic worker-pool assignment reports, distributed schedule plans, caller-managed recovery plans, and automatic local recovery execution exist; remote orchestration is not release-ready.",
         "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Snapshot-backed cache import/export, caller-provided worker execution, deterministic worker-pool assignment reports, caller-managed recovery plans, and automatic local recovery execution exist; remote orchestration and distributed scheduling are not release-ready.",
+          "blocker": "Snapshot-backed cache import/export, caller-provided worker execution, deterministic worker-pool assignment reports, distributed schedule plans, caller-managed recovery plans, and automatic local recovery execution exist; remote orchestration is not release-ready.",
           "maturity": "production-candidate",
-          "decision": "Does not block alpha; it limits production-candidate operational statements beyond deterministic local execution, caller-managed cache snapshot semantics, caller-provided worker adapters, deterministic local worker-pool assignment, recovery-plan metadata, and automatic local recovery execution.",
+          "decision": "Does not block alpha; it limits production-candidate operational statements beyond deterministic local execution, caller-managed cache snapshot semantics, caller-provided worker adapters, deterministic local worker-pool assignment, caller-declared distributed schedule plans, recovery-plan metadata, and automatic local recovery execution.",
           "evidenceRefs": [
             "packages/textpipeline/src/index.ts",
             "packages/textpipeline/test",
             "examples/textpipeline-cache-snapshot-consumer.mjs",
             "examples/textpipeline-worker-batch-consumer.mjs",
             "examples/textpipeline-worker-pool-consumer.mjs",
+            "examples/textpipeline-distributed-schedule-consumer.mjs",
             "examples/textpipeline-recovery-plan-consumer.mjs",
             "examples/textpipeline-recovery-execution-consumer.mjs",
             "schemas/textpipeline-worker-run-report-v1.schema.json",
             "schemas/textpipeline-worker-pool-run-report-v1.schema.json",
+            "schemas/textpipeline-distributed-schedule-plan-v1.schema.json",
             "schemas/textpipeline-recovery-plan-v1.schema.json",
             "schemas/textpipeline-recovery-execution-report-v1.schema.json"
           ]

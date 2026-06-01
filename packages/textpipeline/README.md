@@ -9,6 +9,7 @@ Current scope:
 - input-order batch and stream runners;
 - caller-provided worker execution with deterministic worker run reports;
 - caller-provided worker-pool execution with deterministic round-robin assignment reports;
+- deterministic distributed schedule plans over caller-declared nodes, workers, and active capacity;
 - caller-managed recovery plan reports for partial batch, worker, and worker-pool run reports;
 - automatic local recovery execution for retrying recovery plan items with deterministic execution reports;
 - cancellation via `AbortSignal`;
@@ -23,8 +24,9 @@ Current scope:
 - machine-readable execution traces, batch run reports, and typed result-envelope helpers.
 - processor-trace schema-family payload and envelope helpers for textprotocol JSON transport.
 
-This package does not define remote orchestration or distributed scheduling. Callers provide
-documents, processors, workers, versioned context, cancellation signals, and optional cache objects.
+This package does not define remote orchestration. Distributed scheduling is a deterministic plan
+artifact over caller-declared nodes and workers; callers provide documents, processors, workers,
+versioned context, cancellation signals, and optional cache objects.
 Cache durability is caller-managed through snapshot JSON helpers, and recovery execution is local to
 the caller-provided documents and processors.
 
@@ -44,6 +46,8 @@ the caller-provided documents and processors.
 - [`../../examples/textpipeline-worker-pool-consumer.mjs`](../../examples/textpipeline-worker-pool-consumer.mjs)
   runs a batch through a caller-provided local worker pool and prints deterministic round-robin
   assignments.
+- [`../../examples/textpipeline-distributed-schedule-consumer.mjs`](../../examples/textpipeline-distributed-schedule-consumer.mjs)
+  creates a deterministic capacity-round-robin schedule plan over caller-declared nodes and workers.
 - [`../../examples/textpipeline-recovery-plan-consumer.mjs`](../../examples/textpipeline-recovery-plan-consumer.mjs)
   creates a recovery plan from a partial batch report and prints retry input indexes with failed/skipped processor ids.
 - [`../../examples/textpipeline-recovery-execution-consumer.mjs`](../../examples/textpipeline-recovery-execution-consumer.mjs)

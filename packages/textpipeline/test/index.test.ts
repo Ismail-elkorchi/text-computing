@@ -10,6 +10,7 @@ import {
   createTextPipelineBatchRunReport,
   createTextPipelineBatchRunReportEnvelope,
   createTextPipelineContextFingerprint,
+  createTextPipelineDistributedSchedulePlan,
   createTextPipelineExecutionPlan,
   createTextPipelineLocalWorker,
   createTextPipelineProcessorTraceEnvelopeV1,
@@ -25,6 +26,7 @@ import {
   isTextPipelineBatchRunReportV1,
   isTextPipelineCacheSnapshotV1,
   isTextPipelineRecoveryExecutionReportV1,
+  isTextPipelineDistributedSchedulePlanV1,
   isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineRecoveryPlanV1,
   isTextPipelineTraceEnvelopeV1,
@@ -46,6 +48,7 @@ import {
   textPipelineBatchRunReportPayloadKind,
   textPipelineCacheSnapshotSchemaVersion,
   textPipelineBatchRunReportSchemaVersion,
+  textPipelineDistributedScheduleSchemaVersion,
   textPipelineRecoveryExecutionReportSchemaVersion,
   textPipelineRecoveryPlanSchemaVersion,
   textPipelineTracePayloadKind,
@@ -70,6 +73,7 @@ const expectedBatchRunReportSchemaVersion: typeof textPipelineBatchRunReportSche
 const expectedCacheSnapshotSchemaVersion: typeof textPipelineCacheSnapshotSchemaVersion = 1;
 const expectedWorkerRunReportSchemaVersion: typeof textPipelineWorkerRunReportSchemaVersion = 1;
 const expectedWorkerPoolRunReportSchemaVersion: typeof textPipelineWorkerPoolRunReportSchemaVersion = 1;
+const expectedDistributedScheduleSchemaVersion: typeof textPipelineDistributedScheduleSchemaVersion = 1;
 const expectedRecoveryPlanSchemaVersion: typeof textPipelineRecoveryPlanSchemaVersion = 1;
 const expectedRecoveryExecutionReportSchemaVersion: typeof textPipelineRecoveryExecutionReportSchemaVersion = 1;
 
@@ -1119,6 +1123,105 @@ if (
 ) {
   throw new Error("worker pool maxConcurrency should deterministically limit active workers");
 }
+const distributedSchedule = createTextPipelineDistributedSchedulePlan(
+  [
+    baseDocument,
+    { ...baseDocument, documentId: "doc:pipeline:distributed:1" },
+    { ...baseDocument, documentId: "doc:pipeline:distributed:2" },
+    { ...baseDocument, documentId: "doc:pipeline:distributed:3" },
+  ],
+  [asyncAlpha],
+  [
+    { nodeId: "node-b", workerIds: ["worker-b"], maxConcurrentDocuments: 1, labels: ["zone-b"] },
+    { nodeId: "node-a", workerIds: ["worker-a2", "worker-a1"], maxConcurrentDocuments: 2, labels: ["zone-a"] },
+  ],
+  { packageVersions: [{ id: packageName, version: "0.1.0" }] },
+  { scheduleId: "fixture:distributed-schedule", cacheNamespace: "fixture-distributed-cache" },
+);
+if (
+  distributedSchedule.schemaVersion !== expectedDistributedScheduleSchemaVersion ||
+  !isTextPipelineDistributedSchedulePlanV1(distributedSchedule) ||
+  distributedSchedule.strategy !== "capacity-round-robin" ||
+  distributedSchedule.nodeIds.join(",") !== "node-a,node-b" ||
+  distributedSchedule.workerIds.join(",") !== "worker-a1,worker-a2,worker-b" ||
+  distributedSchedule.items.map((item) => `${item.inputIndex}:${item.nodeId}:${item.workerId}:${item.globalWorkerSlot}`).join(",") !==
+    "0:node-a:worker-a1:0,1:node-a:worker-a2:1,2:node-b:worker-b:2,3:node-a:worker-a1:0" ||
+  distributedSchedule.parallelSafe !== true ||
+  distributedSchedule.cacheNamespace !== "fixture-distributed-cache"
+) {
+  throw new Error("distributed scheduling should produce deterministic capacity-round-robin assignments");
+}
+let duplicateDistributedWorkerRejected = false;
+try {
+  createTextPipelineDistributedSchedulePlan(
+    [baseDocument],
+    [asyncAlpha],
+    [
+      { nodeId: "node-a", workerIds: ["duplicate-worker"] },
+      { nodeId: "node-b", workerIds: ["duplicate-worker"] },
+    ],
+  );
+} catch (error) {
+  duplicateDistributedWorkerRejected =
+    error instanceof Error &&
+    error.message === "duplicate textpipeline distributed schedule worker id: duplicate-worker";
+}
+if (!duplicateDistributedWorkerRejected) {
+  throw new Error("distributed scheduling should reject duplicate worker ids across nodes");
+}
+let nonParallelDistributedProcessorRejected = false;
+try {
+  createTextPipelineDistributedSchedulePlan(
+    [baseDocument],
+    [
+      {
+        descriptor: {
+          id: "stateful-distributed",
+          version: "1.0.0",
+          purity: "stateful",
+          parallelSafe: false,
+        },
+        run(document) {
+          return { document };
+        },
+      },
+    ],
+    [{ nodeId: "node-a", workerIds: ["worker-a"] }],
+  );
+} catch (error) {
+  nonParallelDistributedProcessorRejected =
+    error instanceof Error &&
+    error.message === "textpipeline distributed scheduling requires parallel-safe processors: stateful-distributed";
+}
+if (!nonParallelDistributedProcessorRejected) {
+  throw new Error("distributed scheduling should reject non-parallel-safe processors by default");
+}
+const nonParallelDistributedSchedule = createTextPipelineDistributedSchedulePlan(
+  [baseDocument],
+  [
+    {
+      descriptor: {
+        id: "stateful-distributed",
+        version: "1.0.0",
+        purity: "stateful",
+        parallelSafe: false,
+      },
+      run(document) {
+        return { document };
+      },
+    },
+  ],
+  [{ nodeId: "node-a", workerIds: ["worker-a"] }],
+  {},
+  { requireParallelSafeProcessors: false },
+);
+if (
+  !isTextPipelineDistributedSchedulePlanV1(nonParallelDistributedSchedule) ||
+  nonParallelDistributedSchedule.parallelSafe !== false ||
+  nonParallelDistributedSchedule.nonParallelSafeProcessorIds.join(",") !== "stateful-distributed"
+) {
+  throw new Error("distributed scheduling should disclose non-parallel-safe processor overrides");
+}
 let duplicatePoolWorkerRejected = false;
 try {
   await runTextPipelineBatchWithWorkerPool([baseDocument], [asyncAlpha], [
@@ -1216,5 +1319,6 @@ void expectedBatchRunReportSchemaVersion;
 void expectedCacheSnapshotSchemaVersion;
 void expectedWorkerRunReportSchemaVersion;
 void expectedWorkerPoolRunReportSchemaVersion;
+void expectedDistributedScheduleSchemaVersion;
 void expectedRecoveryPlanSchemaVersion;
 void expectedRecoveryExecutionReportSchemaVersion;

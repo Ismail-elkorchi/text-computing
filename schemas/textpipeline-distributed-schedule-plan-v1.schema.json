@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-distributed-schedule-plan-v1.schema.json",
+  "title": "textpipeline distributed schedule plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "scheduleId",
+    "strategy",
+    "documentCount",
+    "nodeCount",
+    "workerCount",
+    "processorOrder",
+    "contextFingerprint",
+    "parallelSafe",
+    "nonParallelSafeProcessorIds",
+    "nodeIds",
+    "workerIds",
+    "nodes",
+    "items"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "artifactType": { "const": "textpipeline-distributed-schedule-plan-v1" },
+    "scheduleId": { "type": "string", "minLength": 1 },
+    "strategy": { "const": "capacity-round-robin" },
+    "documentCount": { "type": "integer", "minimum": 0 },
+    "nodeCount": { "type": "integer", "minimum": 0 },
+    "workerCount": { "type": "integer", "minimum": 0 },
+    "processorOrder": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "contextFingerprint": { "type": "string", "minLength": 1 },
+    "parallelSafe": { "type": "boolean" },
+    "nonParallelSafeProcessorIds": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "cacheNamespace": { "type": "string", "minLength": 1 },
+    "nodeIds": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "workerIds": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/node" }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/item" }
+    }
+  },
+  "definitions": {
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "nodeSlot",
+        "workerIds",
+        "activeWorkerIds",
+        "maxConcurrentDocuments"
+      ],
+      "properties": {
+        "nodeId": { "type": "string", "minLength": 1 },
+        "nodeSlot": { "type": "integer", "minimum": 0 },
+        "workerIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "activeWorkerIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "maxConcurrentDocuments": { "type": "integer", "minimum": 1 },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputIndex",
+        "documentId",
+        "nodeId",
+        "nodeSlot",
+        "workerId",
+        "workerSlot",
+        "globalWorkerSlot",
+        "processorOrder",
+        "contextFingerprint"
+      ],
+      "properties": {
+        "inputIndex": { "type": "integer", "minimum": 0 },
+        "documentId": { "type": "string", "minLength": 1 },
+        "nodeId": { "type": "string", "minLength": 1 },
+        "nodeSlot": { "type": "integer", "minimum": 0 },
+        "workerId": { "type": "string", "minLength": 1 },
+        "workerSlot": { "type": "integer", "minimum": 0 },
+        "globalWorkerSlot": { "type": "integer", "minimum": 0 },
+        "processorOrder": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "contextFingerprint": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
