@@ -6,6 +6,7 @@
 - Add corpus-analysis APIs for KWIC/concordance, frequency, n-grams, co-occurrence, collocates, and pairwise document relations over explicit token layers.
 - Add E2 corpus selection provenance to corpus-analysis, scoring, retrieval-index, retrieval-result, and retrieval-evaluation outputs.
 - Add deterministic JSON persistence helpers for declared textcorpus artifact families.
+- Add retrieval-index storage-ref save/load helpers for caller-provided durable text stores.
 - Add corpus metric payload export for textprotocol corpus-metric envelope exchange.
 
 ## 0.0.0

@@ -541,6 +541,40 @@ async function assertBuiltPackageSmoke() {
       corpusMetricPayloadInspection.metricCount > 0,
     "textlab should inspect textcorpus metric-envelope payloads through package APIs.",
   );
+  const retrievalIndex = textcorpus.buildTextCorpusRetrievalIndex(collection);
+  const retrievalIndexArtifact = textcorpus.createTextCorpusRetrievalIndexArtifact(retrievalIndex);
+  const retrievalIndexStore = new Map();
+  const retrievalIndexStorageRef = await textcorpus.saveTextCorpusRetrievalIndexArtifactToStore(
+    retrievalIndexArtifact,
+    {
+      key: "memory://downstream-api/retrieval-index-artifact.json",
+      writeText(key, text) {
+        retrievalIndexStore.set(key, text);
+      },
+    },
+  );
+  expect(
+    textcorpus.isTextCorpusRetrievalIndexStorageRefV1(retrievalIndexStorageRef),
+    "textcorpus should create retrieval-index storage refs through package APIs.",
+  );
+  const loadedRetrievalIndexArtifact = await textcorpus.loadTextCorpusRetrievalIndexArtifactFromStore(
+    retrievalIndexStorageRef,
+    {
+      readText(key) {
+        return retrievalIndexStore.get(key) ?? "";
+      },
+    },
+  );
+  expect(
+    JSON.stringify(loadedRetrievalIndexArtifact) === JSON.stringify(retrievalIndexArtifact),
+    "textcorpus should load retrieval-index artifacts through storage refs.",
+  );
+  const retrievalIndexStorageInspection = textlab.inspectTextCorpusArtifact(retrievalIndexStorageRef);
+  expect(
+    retrievalIndexStorageInspection.artifactKind === "retrieval-index-storage-ref" &&
+      retrievalIndexStorageInspection.byteLength === retrievalIndexStorageRef.byteLength,
+    "textlab should inspect textcorpus retrieval-index storage refs through package APIs.",
+  );
   const corpusMetricEnvelope = {
     schemaId: textprotocol.textProtocolCorpusMetricEnvelopeSchemaId,
     schemaVersion: textprotocol.textProtocolSchemaVersion,

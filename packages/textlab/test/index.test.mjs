@@ -1143,6 +1143,37 @@ if (
 ) {
   throw new Error("textcorpus artifact inspection should summarize metric-envelope payloads");
 }
+const corpusRetrievalIndexStorageRef = {
+  schemaVersion: 1,
+  artifactType: "textcorpus-retrieval-index-storage-ref-v1",
+  key: "file://indexes/corpus-artifact-smoke/bm25.json",
+  checksum: {
+    algorithm: "fnv1a64-utf8",
+    value: "0000000000000001",
+  },
+  byteLength: 2048,
+  corpusId: "corpus-artifact-smoke",
+  tokenSource: "explicit-textdoc-token-layer",
+  evidenceClass: "E2",
+  formula: "bm25.okapi.k1-1.5.b-0.75",
+  documentCount: 2,
+  termCount: 3,
+  fieldCount: 0,
+};
+const corpusStorageRefInspection = inspectTextCorpusArtifact(corpusRetrievalIndexStorageRef);
+if (
+  corpusStorageRefInspection.artifactKind !== "retrieval-index-storage-ref" ||
+  corpusStorageRefInspection.storageKey !== "file://indexes/corpus-artifact-smoke/bm25.json" ||
+  corpusStorageRefInspection.byteLength !== 2048 ||
+  corpusStorageRefInspection.checksum !== "0000000000000001" ||
+  corpusStorageRefInspection.documentCount !== 2 ||
+  corpusStorageRefInspection.formulaIds.join(",") !== "bm25.okapi.k1-1.5.b-0.75"
+) {
+  throw new Error("textcorpus artifact inspection should summarize retrieval-index storage refs");
+}
+if (!renderTextCorpusArtifactInspection(corpusStorageRefInspection).includes("Storage key: file://indexes/corpus-artifact-smoke/bm25.json")) {
+  throw new Error("textcorpus artifact renderer should include storage-ref key");
+}
 let invalidCorpusArtifactRejected = false;
 try {
   inspectTextCorpusArtifact(corpusFixture);
@@ -1311,6 +1342,8 @@ const corpusArtifactPath = path.join(dir, "corpus-artifact.json");
 await writeFile(corpusArtifactPath, `${JSON.stringify(corpusArtifact, null, 2)}\n`, "utf8");
 const corpusMetricPayloadPath = path.join(dir, "corpus-metric-payload.json");
 await writeFile(corpusMetricPayloadPath, `${JSON.stringify(corpusMetricPayload, null, 2)}\n`, "utf8");
+const corpusStorageRefPath = path.join(dir, "corpus-retrieval-index-storage-ref.json");
+await writeFile(corpusStorageRefPath, `${JSON.stringify(corpusRetrievalIndexStorageRef, null, 2)}\n`, "utf8");
 const changedReportPath = path.join(dir, "conformance-report-actual.json");
 await writeFile(changedReportPath, `${JSON.stringify(changedConformanceReport, null, 2)}\n`, "utf8");
 const benchmarkReportPath = path.join(dir, "benchmark-report.json");
@@ -1931,6 +1964,17 @@ if (
   JSON.parse(corpusMetricPayloadCliResult.stdout).metricSetId !== "metrics:corpus-artifact-smoke"
 ) {
   throw new Error("corpus-artifact CLI should support metric-envelope JSON output");
+}
+const corpusStorageRefCliResult = await runTextlabCli(["corpus-artifact", corpusStorageRefPath, "--json"]);
+const corpusStorageRefCliInspection =
+  corpusStorageRefCliResult.exitCode === 0 ? JSON.parse(corpusStorageRefCliResult.stdout) : {};
+if (
+  corpusStorageRefCliResult.exitCode !== 0 ||
+  corpusStorageRefCliInspection.artifactKind !== "retrieval-index-storage-ref" ||
+  corpusStorageRefCliInspection.storageKey !== "file://indexes/corpus-artifact-smoke/bm25.json" ||
+  corpusStorageRefCliInspection.byteLength !== 2048
+) {
+  throw new Error("corpus-artifact CLI should support retrieval-index storage-ref JSON output");
 }
 
 const qrelsCliResult = await runTextlabCli(["retrieval-qrels", qrelsPath]);

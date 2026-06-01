@@ -14,7 +14,7 @@ It can:
 - inspect pack-backed textrules annotation outputs;
 - render textconformance report summaries and diffs;
 - inspect textconformance benchmark reports without treating them as conformance;
-- inspect corpus fixtures, persisted textcorpus artifacts, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
+- inspect corpus fixtures, persisted textcorpus artifacts, retrieval-index storage refs, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
 
 ## CLI
 

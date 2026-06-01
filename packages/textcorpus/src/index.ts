@@ -288,6 +288,39 @@ export interface TextCorpusRetrievalIndexArtifactV1 {
   readonly checksum: TextCorpusRetrievalIndexChecksum;
 }
 
+export interface TextCorpusRetrievalIndexStorageRefV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly artifactType: "textcorpus-retrieval-index-storage-ref-v1";
+  readonly key: string;
+  readonly checksum: TextCorpusRetrievalIndexChecksum;
+  readonly byteLength: number;
+  readonly corpusId: string;
+  readonly tokenSource: TextCorpusTokenSource;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly formula: TextCorpusRetrievalFormulaId;
+  readonly documentCount: number;
+  readonly termCount: number;
+  readonly fieldCount: number;
+}
+
+export type TextCorpusRetrievalIndexStoreWriteText = (
+  key: string,
+  text: string,
+) => void | Promise<void>;
+
+export type TextCorpusRetrievalIndexStoreReadText = (
+  key: string,
+) => string | Promise<string>;
+
+export interface SaveTextCorpusRetrievalIndexArtifactOptions {
+  readonly key: string;
+  readonly writeText: TextCorpusRetrievalIndexStoreWriteText;
+}
+
+export interface LoadTextCorpusRetrievalIndexArtifactOptions {
+  readonly readText: TextCorpusRetrievalIndexStoreReadText;
+}
+
 export interface TextCorpusRetrievalFieldContribution {
   readonly field: string;
   readonly tf: number;
@@ -630,6 +663,7 @@ export type TextCorpusArtifactV1 =
   | TextCorpusScoringResultV1
   | TextCorpusRetrievalIndexV1
   | TextCorpusRetrievalIndexArtifactV1
+  | TextCorpusRetrievalIndexStorageRefV1
   | TextCorpusRetrievalResultV1
   | TextCorpusRetrievalEvaluationResultV1
   | TextCorpusCitationWindowSetV1
@@ -3513,6 +3547,46 @@ function retrievalIndexChecksum(index: TextCorpusRetrievalIndexV1): TextCorpusRe
   };
 }
 
+function utf8ByteLength(value: string): number {
+  return new TextEncoder().encode(value).length;
+}
+
+function isTextCorpusRetrievalIndexChecksum(
+  value: unknown,
+): value is TextCorpusRetrievalIndexChecksum {
+  return (
+    isRecord(value) &&
+    value.algorithm === "fnv1a64-utf8" &&
+    isNonEmptyString(value.value)
+  );
+}
+
+function isNonNegativeIntegerValue(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function createTextCorpusRetrievalIndexStorageRef(
+  artifact: TextCorpusRetrievalIndexArtifactV1,
+  key: string,
+  serialized: string,
+): TextCorpusRetrievalIndexStorageRefV1 {
+  const index = artifact.index;
+  return {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    artifactType: "textcorpus-retrieval-index-storage-ref-v1",
+    key,
+    checksum: artifact.checksum,
+    byteLength: utf8ByteLength(serialized),
+    corpusId: index.corpusId,
+    tokenSource: index.tokenSource,
+    evidenceClass: index.evidenceClass,
+    formula: index.formula,
+    documentCount: index.documentOrder.length,
+    termCount: index.termOrder.length,
+    fieldCount: index.fieldOrder?.length ?? 0,
+  };
+}
+
 export function parseTextCorpusRetrievalIndex(serialized: string): TextCorpusRetrievalIndexV1 {
   if (typeof serialized !== "string") {
     throw new TypeError("textcorpus retrieval index JSON must be a string");
@@ -3552,11 +3626,94 @@ export function isTextCorpusRetrievalIndexArtifactV1(
     value.schemaVersion === textCorpusRetrievalSchemaVersion &&
     value.artifactType === "textcorpus-retrieval-index-artifact-v1" &&
     isTextCorpusRetrievalIndexV1(value.index) &&
-    isRecord(value.checksum) &&
-    value.checksum.algorithm === "fnv1a64-utf8" &&
-    isNonEmptyString(value.checksum.value) &&
+    isTextCorpusRetrievalIndexChecksum(value.checksum) &&
     value.checksum.value === retrievalIndexChecksum(value.index).value
   );
+}
+
+export function isTextCorpusRetrievalIndexStorageRefV1(
+  value: unknown,
+): value is TextCorpusRetrievalIndexStorageRefV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textCorpusRetrievalSchemaVersion &&
+    value.artifactType === "textcorpus-retrieval-index-storage-ref-v1" &&
+    isNonEmptyString(value.key) &&
+    isTextCorpusRetrievalIndexChecksum(value.checksum) &&
+    isNonNegativeIntegerValue(value.byteLength) &&
+    isNonEmptyString(value.corpusId) &&
+    value.tokenSource === textCorpusTokenSource &&
+    isTextCorpusEvidenceClass(value.evidenceClass) &&
+    isRetrievalFormula(value.formula) &&
+    isNonNegativeIntegerValue(value.documentCount) &&
+    isNonNegativeIntegerValue(value.termCount) &&
+    isNonNegativeIntegerValue(value.fieldCount)
+  );
+}
+
+function assertTextCorpusRetrievalIndexStorageRefMatchesArtifact(
+  ref: TextCorpusRetrievalIndexStorageRefV1,
+  artifact: TextCorpusRetrievalIndexArtifactV1,
+  serialized: string,
+): void {
+  const expected = createTextCorpusRetrievalIndexStorageRef(artifact, ref.key, serialized);
+  if (ref.byteLength !== expected.byteLength) {
+    throw new TypeError("textcorpus retrieval index storage ref byteLength does not match stored artifact");
+  }
+  if (
+    ref.checksum.algorithm !== expected.checksum.algorithm ||
+    ref.checksum.value !== expected.checksum.value
+  ) {
+    throw new TypeError("textcorpus retrieval index storage ref checksum does not match stored artifact");
+  }
+  if (
+    ref.corpusId !== expected.corpusId ||
+    ref.tokenSource !== expected.tokenSource ||
+    ref.evidenceClass !== expected.evidenceClass ||
+    ref.formula !== expected.formula ||
+    ref.documentCount !== expected.documentCount ||
+    ref.termCount !== expected.termCount ||
+    ref.fieldCount !== expected.fieldCount
+  ) {
+    throw new TypeError("textcorpus retrieval index storage ref metadata does not match stored artifact");
+  }
+}
+
+export async function saveTextCorpusRetrievalIndexArtifactToStore(
+  artifact: TextCorpusRetrievalIndexArtifactV1,
+  options: SaveTextCorpusRetrievalIndexArtifactOptions,
+): Promise<TextCorpusRetrievalIndexStorageRefV1> {
+  if (!isTextCorpusRetrievalIndexArtifactV1(artifact)) {
+    throw new TypeError("textcorpus retrieval index artifact checksum or shape is invalid");
+  }
+  if (!isRecord(options) || !isNonEmptyString(options.key)) {
+    throw new TypeError("textcorpus retrieval index storage key must be a non-empty string");
+  }
+  if (typeof options.writeText !== "function") {
+    throw new TypeError("textcorpus retrieval index storage writeText must be a function");
+  }
+  const serialized = stringifyTextCorpusRetrievalIndexArtifact(artifact);
+  await options.writeText(options.key, serialized);
+  return createTextCorpusRetrievalIndexStorageRef(artifact, options.key, serialized);
+}
+
+export async function loadTextCorpusRetrievalIndexArtifactFromStore(
+  ref: TextCorpusRetrievalIndexStorageRefV1,
+  options: LoadTextCorpusRetrievalIndexArtifactOptions,
+): Promise<TextCorpusRetrievalIndexArtifactV1> {
+  if (!isTextCorpusRetrievalIndexStorageRefV1(ref)) {
+    throw new TypeError("textcorpus retrieval index storage ref is invalid");
+  }
+  if (!isRecord(options) || typeof options.readText !== "function") {
+    throw new TypeError("textcorpus retrieval index storage readText must be a function");
+  }
+  const serialized = await options.readText(ref.key);
+  if (typeof serialized !== "string") {
+    throw new TypeError("textcorpus retrieval index storage readText must return a string");
+  }
+  const artifact = parseTextCorpusRetrievalIndexArtifact(serialized);
+  assertTextCorpusRetrievalIndexStorageRefMatchesArtifact(ref, artifact, serialized);
+  return artifact;
 }
 
 export function stringifyTextCorpusRetrievalIndexArtifact(
@@ -3598,6 +3755,7 @@ export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtif
     isTextCorpusScoringResultV1(value) ||
     isTextCorpusRetrievalIndexV1(value) ||
     isTextCorpusRetrievalIndexArtifactV1(value) ||
+    isTextCorpusRetrievalIndexStorageRefV1(value) ||
     isTextCorpusRetrievalResultV1(value) ||
     isTextCorpusRetrievalEvaluationResultV1(value) ||
     isTextCorpusCitationWindowSetV1(value) ||
@@ -3692,6 +3850,9 @@ function textCorpusMetricSetIdForArtifact(artifact: TextCorpusArtifactV1): strin
   if (isTextCorpusRetrievalIndexArtifactV1(artifact)) {
     return textCorpusMetricSetIdForArtifact(artifact.index);
   }
+  if (isTextCorpusRetrievalIndexStorageRefV1(artifact)) {
+    return `textcorpus.retrieval-index-storage-ref:${artifact.corpusId}:${artifact.formula}`;
+  }
   if (isTextCorpusConcordanceResultV1(artifact)) return `textcorpus.concordance:${artifact.corpusId}:${artifact.query}`;
   if (isTextCorpusFrequencyResultV1(artifact)) return `textcorpus.frequency:${artifact.corpusId}`;
   if (isTextCorpusNgramResultV1(artifact)) return `textcorpus.ngram:${artifact.corpusId}:n-${artifact.n}`;
@@ -3773,6 +3934,13 @@ export function exportTextCorpusMetricEnvelopePayloadV1(
       textCorpusMetric("retrieval-index.term-count", "retrieval", source.termOrder.length, { unit: "terms", parameters: { formula: source.formula } }),
       textCorpusMetric("retrieval-index.average-document-length", "retrieval", source.averageDocumentLength, { unit: "tokens", parameters: { formula: source.formula } }),
       textCorpusMetric("retrieval-index.posting-count", "retrieval", textCorpusPostingCount(source), { unit: "postings", parameters: { formula: source.formula } }),
+    );
+  } else if (isTextCorpusRetrievalIndexStorageRefV1(source)) {
+    metrics.push(
+      textCorpusMetric("retrieval-index-storage-ref.document-count", "retrieval", source.documentCount, { unit: "documents", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-index-storage-ref.term-count", "retrieval", source.termCount, { unit: "terms", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-index-storage-ref.field-count", "retrieval", source.fieldCount, { unit: "fields", parameters: { formula: source.formula } }),
+      textCorpusMetric("retrieval-index-storage-ref.byte-length", "retrieval", source.byteLength, { unit: "utf8-bytes", parameters: { formula: source.formula } }),
     );
   } else if (isTextCorpusRetrievalResultV1(source)) {
     metrics.push(

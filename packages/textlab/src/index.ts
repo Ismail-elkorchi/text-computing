@@ -17,6 +17,7 @@ import {
   isTextCorpusQuoteGroundingResultV1,
   isTextCorpusRetrievalEvaluationResultV1,
   isTextCorpusRetrievalIndexArtifactV1,
+  isTextCorpusRetrievalIndexStorageRefV1,
   isTextCorpusRetrievalIndexV1,
   isTextCorpusRetrievalQrelsV1,
   isTextCorpusRetrievalResultV1,
@@ -135,6 +136,8 @@ export interface TextlabCorpusArtifactInspection {
   readonly metricCount: number;
   readonly formulaIds: readonly string[];
   readonly checksum?: string;
+  readonly storageKey?: string;
+  readonly byteLength?: number;
 }
 
 export interface TextlabPackageInspection {
@@ -1722,6 +1725,7 @@ function corpusArtifactSource(value: unknown): unknown {
 function corpusArtifactKind(value: unknown): string {
   if (isTextCorpusMetricEnvelopePayloadV1(value)) return "metric-envelope-payload";
   if (isTextCorpusRetrievalIndexArtifactV1(value)) return "retrieval-index-artifact";
+  if (isTextCorpusRetrievalIndexStorageRefV1(value)) return "retrieval-index-storage-ref";
   const source = corpusArtifactSource(value);
   if (isTextCorpusConcordanceResultV1(source)) return "concordance";
   if (isTextCorpusFrequencyResultV1(source)) return "frequency";
@@ -1783,6 +1787,7 @@ function corpusArtifactFormulaIds(source: unknown): readonly string[] {
 
 function corpusArtifactDocumentCount(source: unknown): number {
   if (isTextCorpusRetrievalIndexV1(source)) return source.documents.length;
+  if (isTextCorpusRetrievalIndexStorageRefV1(source)) return source.documentCount;
   if (isTextCorpusScoringResultV1(source)) return source.documents.length;
   if (isRecord(source) && isRecord(source.selection) && isStringArray(source.selection.documentOrder)) {
     return source.selection.documentOrder.length;
@@ -1820,6 +1825,9 @@ export function inspectTextCorpusArtifact(value: unknown): TextlabCorpusArtifact
     metricCount: isTextCorpusMetricEnvelopePayloadV1(value) ? value.metrics.length : 0,
     formulaIds: corpusArtifactFormulaIds(source),
     ...(isTextCorpusRetrievalIndexArtifactV1(value) ? { checksum: value.checksum.value } : {}),
+    ...(isTextCorpusRetrievalIndexStorageRefV1(value)
+      ? { checksum: value.checksum.value, storageKey: value.key, byteLength: value.byteLength }
+      : {}),
   };
 }
 
@@ -1842,6 +1850,8 @@ export function renderTextCorpusArtifactInspection(
     `Metrics: ${inspection.metricCount}`,
     `Formulas: ${inspection.formulaIds.join(",") || "none"}`,
     `Checksum: ${inspection.checksum ?? "none"}`,
+    `Storage key: ${inspection.storageKey ?? "none"}`,
+    `Byte length: ${inspection.byteLength ?? 0}`,
     "",
   ].join("\n");
 }
