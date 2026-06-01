@@ -10,6 +10,7 @@ export const conformanceSuiteSchemaVersion = 1 as const;
 export const conformanceBenchmarkReportSchemaId =
   "urn:ismail-elkorchi:textconformance:benchmark-report:v1" as const;
 export const conformanceBenchmarkReportSchemaVersion = 1 as const;
+export const conformanceBenchmarkCalibrationReportSchemaVersion = 1 as const;
 export const conformanceBenchmarkThresholdPolicySchemaVersion = 1 as const;
 export const conformanceBenchmarkThresholdEvaluationSchemaVersion = 1 as const;
 
@@ -26,6 +27,8 @@ export type TextConformanceBenchmarkReportSchemaId =
   typeof conformanceBenchmarkReportSchemaId;
 export type TextConformanceBenchmarkReportSchemaVersion =
   typeof conformanceBenchmarkReportSchemaVersion;
+export type TextConformanceBenchmarkCalibrationReportSchemaVersion =
+  typeof conformanceBenchmarkCalibrationReportSchemaVersion;
 export type TextConformanceBenchmarkThresholdPolicySchemaVersion =
   typeof conformanceBenchmarkThresholdPolicySchemaVersion;
 export type TextConformanceBenchmarkThresholdEvaluationSchemaVersion =
@@ -62,6 +65,11 @@ export type TextConformanceSuiteTargetKind =
   | "external-consumer-project"
   | "generated-package-artifact";
 export type TextConformanceBenchmarkThresholdStatus = "pass" | "warn" | "fail" | "missing";
+export type TextConformanceBenchmarkCalibrationStatus =
+  | "observed"
+  | "stable"
+  | "variable"
+  | "incomplete";
 
 export interface TextConformanceReportSubject {
   readonly kind: string;
@@ -209,6 +217,84 @@ export interface TextConformanceBenchmarkReportV1 {
   readonly generatedAt: string;
   readonly metrics: readonly TextConformanceBenchmarkMetricV1[];
   readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkCalibrationHostV1 {
+  readonly hostId: string;
+  readonly label?: string;
+  readonly runtime?: string;
+  readonly os?: string;
+  readonly arch?: string;
+  readonly evidenceRefs?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkCalibrationInput {
+  readonly host: TextConformanceBenchmarkCalibrationHostV1;
+  readonly report: TextConformanceBenchmarkReportV1;
+}
+
+export interface TextConformanceBenchmarkCalibrationHostValueV1 {
+  readonly hostId: string;
+  readonly value: number;
+  readonly generatedAt: string;
+  readonly evidenceRefs: readonly string[];
+}
+
+export interface TextConformanceBenchmarkCalibrationMetricRowV1 {
+  readonly metricId: string;
+  readonly unit: string;
+  readonly higherIsPreferred?: boolean;
+  readonly status: TextConformanceBenchmarkCalibrationStatus;
+  readonly hostCount: number;
+  readonly observedHostCount: number;
+  readonly missingHostIds: readonly string[];
+  readonly min: number;
+  readonly max: number;
+  readonly mean: number;
+  readonly median: number;
+  readonly relativeSpread: number | null;
+  readonly baselineHostId?: string;
+  readonly baselineValue?: number;
+  readonly baselineDelta?: number;
+  readonly baselineRatio?: number | null;
+  readonly hostValues: readonly TextConformanceBenchmarkCalibrationHostValueV1[];
+}
+
+export interface TextConformanceBenchmarkCalibrationSummaryV1 {
+  readonly observed: number;
+  readonly stable: number;
+  readonly variable: number;
+  readonly incomplete: number;
+}
+
+export interface TextConformanceBenchmarkCalibrationReportV1 {
+  readonly schemaVersion: TextConformanceBenchmarkCalibrationReportSchemaVersion;
+  readonly artifactType: "textconformance-benchmark-calibration-report-v1";
+  readonly calibrationId: string;
+  readonly benchmarkId: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly generatedAt: string;
+  readonly hostCount: number;
+  readonly metricCount: number;
+  readonly baselineHostId?: string;
+  readonly maxRelativeSpread?: number;
+  readonly summary: TextConformanceBenchmarkCalibrationSummaryV1;
+  readonly hosts: readonly TextConformanceBenchmarkCalibrationHostV1[];
+  readonly rows: readonly TextConformanceBenchmarkCalibrationMetricRowV1[];
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkCalibrationOptions {
+  readonly calibrationId?: string;
+  readonly generatedAt?: string;
+  readonly baselineHostId?: string;
+  readonly maxRelativeSpread?: number;
+  readonly metricIds?: readonly string[];
+  readonly evidenceRefs?: readonly string[];
   readonly limitations: readonly string[];
   readonly notes?: readonly string[];
 }
@@ -841,6 +927,138 @@ export function isTextConformanceBenchmarkReportV1(
   );
 }
 
+function isTextConformanceBenchmarkCalibrationStatus(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationStatus {
+  return value === "observed" || value === "stable" || value === "variable" || value === "incomplete";
+}
+
+export function isTextConformanceBenchmarkCalibrationHostV1(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationHostV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.hostId) &&
+    (value.label === undefined || isNonEmptyString(value.label)) &&
+    (value.runtime === undefined || isNonEmptyString(value.runtime)) &&
+    (value.os === undefined || isNonEmptyString(value.os)) &&
+    (value.arch === undefined || isNonEmptyString(value.arch)) &&
+    (value.evidenceRefs === undefined || isStringArray(value.evidenceRefs))
+  );
+}
+
+export function isTextConformanceBenchmarkCalibrationHostValueV1(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationHostValueV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.hostId) &&
+    isFiniteNumber(value.value) &&
+    isNonEmptyString(value.generatedAt) &&
+    isStringArray(value.evidenceRefs)
+  );
+}
+
+export function isTextConformanceBenchmarkCalibrationMetricRowV1(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationMetricRowV1 {
+  if (
+    !isRecord(value) ||
+    !isNonEmptyString(value.metricId) ||
+    !isNonEmptyString(value.unit) ||
+    (value.higherIsPreferred !== undefined && typeof value.higherIsPreferred !== "boolean") ||
+    !isTextConformanceBenchmarkCalibrationStatus(value.status) ||
+    !isNonNegativeInteger(value.hostCount) ||
+    !isNonNegativeInteger(value.observedHostCount) ||
+    !isStringArray(value.missingHostIds) ||
+    !isFiniteNumber(value.min) ||
+    !isFiniteNumber(value.max) ||
+    !isFiniteNumber(value.mean) ||
+    !isFiniteNumber(value.median) ||
+    (value.relativeSpread !== null && !isFiniteNumber(value.relativeSpread)) ||
+    (value.baselineHostId !== undefined && !isNonEmptyString(value.baselineHostId)) ||
+    (value.baselineValue !== undefined && !isFiniteNumber(value.baselineValue)) ||
+    (value.baselineDelta !== undefined && !isFiniteNumber(value.baselineDelta)) ||
+    (value.baselineRatio !== undefined && value.baselineRatio !== null && !isFiniteNumber(value.baselineRatio)) ||
+    !Array.isArray(value.hostValues) ||
+    !value.hostValues.every((entry) => isTextConformanceBenchmarkCalibrationHostValueV1(entry))
+  ) {
+    return false;
+  }
+  return (
+    value.hostCount >= 2 &&
+    value.observedHostCount === value.hostValues.length &&
+    value.observedHostCount >= 1 &&
+    value.missingHostIds.length + value.observedHostCount === value.hostCount &&
+    hasUniqueStrings(value.missingHostIds) &&
+    hasUniqueStrings(value.hostValues.map((entry) => entry.hostId)) &&
+    (value.status === "incomplete" ? value.missingHostIds.length > 0 : value.missingHostIds.length === 0) &&
+    (value.baselineHostId === undefined ||
+      (value.baselineValue !== undefined && value.baselineDelta !== undefined && value.baselineRatio !== undefined))
+  );
+}
+
+export function isTextConformanceBenchmarkCalibrationSummaryV1(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationSummaryV1 {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.observed) &&
+    isNonNegativeInteger(value.stable) &&
+    isNonNegativeInteger(value.variable) &&
+    isNonNegativeInteger(value.incomplete)
+  );
+}
+
+export function isTextConformanceBenchmarkCalibrationReportV1(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationReportV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== conformanceBenchmarkCalibrationReportSchemaVersion ||
+    value.artifactType !== "textconformance-benchmark-calibration-report-v1" ||
+    !isNonEmptyString(value.calibrationId) ||
+    !isNonEmptyString(value.benchmarkId) ||
+    !isTextConformanceReportSubject(value.subject) ||
+    !isNonEmptyString(value.generatedAt) ||
+    !isNonNegativeInteger(value.hostCount) ||
+    value.hostCount < 2 ||
+    !isNonNegativeInteger(value.metricCount) ||
+    (value.baselineHostId !== undefined && !isNonEmptyString(value.baselineHostId)) ||
+    (value.maxRelativeSpread !== undefined && !isFiniteNumber(value.maxRelativeSpread)) ||
+    !isTextConformanceBenchmarkCalibrationSummaryV1(value.summary) ||
+    !Array.isArray(value.hosts) ||
+    !value.hosts.every((entry) => isTextConformanceBenchmarkCalibrationHostV1(entry)) ||
+    !Array.isArray(value.rows) ||
+    !value.rows.every((entry) => isTextConformanceBenchmarkCalibrationMetricRowV1(entry)) ||
+    !isNonEmptyStringArray(value.evidenceRefs) ||
+    !isNonEmptyStringArray(value.limitations) ||
+    (value.notes !== undefined && !isStringArray(value.notes))
+  ) {
+    return false;
+  }
+  const hosts = value.hosts;
+  const rows = value.rows;
+  const hostIds = hosts.map((host) => host.hostId);
+  const summary = value.summary as TextConformanceBenchmarkCalibrationSummaryV1;
+  return (
+    value.hostCount === hosts.length &&
+    hasUniqueStrings(hostIds) &&
+    (value.baselineHostId === undefined || hostIds.includes(value.baselineHostId)) &&
+    value.metricCount === rows.length &&
+    hasUniqueStrings(rows.map((row) => row.metricId)) &&
+    rows.every((row) =>
+      row.hostCount === value.hostCount &&
+      row.hostValues.every((entry) => hostIds.includes(entry.hostId)) &&
+      row.missingHostIds.every((hostId) => hostIds.includes(hostId))
+    ) &&
+    summary.observed === rows.filter((row) => row.status === "observed").length &&
+    summary.stable === rows.filter((row) => row.status === "stable").length &&
+    summary.variable === rows.filter((row) => row.status === "variable").length &&
+    summary.incomplete === rows.filter((row) => row.status === "incomplete").length
+  );
+}
+
 export function isTextConformanceBenchmarkThresholdV1(
   value: unknown,
 ): value is TextConformanceBenchmarkThresholdV1 {
@@ -1193,6 +1411,217 @@ export function evaluateTextConformanceBenchmarkThresholds(
   return evaluation;
 }
 
+function sortedBenchmarkCalibrationInputs(
+  inputs: readonly TextConformanceBenchmarkCalibrationInput[],
+): readonly TextConformanceBenchmarkCalibrationInput[] {
+  return [...inputs].sort((left, right) => left.host.hostId.localeCompare(right.host.hostId));
+}
+
+function medianNumber(values: readonly number[]): number {
+  const sorted = [...values].sort((left, right) => left - right);
+  const middle = Math.floor(sorted.length / 2);
+  const right = sorted[middle];
+  if (right === undefined) throw new TypeError("median requires at least one value");
+  if (sorted.length % 2 === 1) return right;
+  const left = sorted[middle - 1];
+  if (left === undefined) throw new TypeError("median requires a left value for even-length input");
+  return (left + right) / 2;
+}
+
+function calibrationRelativeSpread(min: number, max: number, mean: number): number | null {
+  if (mean === 0) return min === max ? 0 : null;
+  return (max - min) / Math.abs(mean);
+}
+
+function calibrationStatus(
+  missingHostCount: number,
+  maxRelativeSpread: number | undefined,
+  relativeSpread: number | null,
+): TextConformanceBenchmarkCalibrationStatus {
+  if (missingHostCount > 0) return "incomplete";
+  if (maxRelativeSpread === undefined) return "observed";
+  return relativeSpread !== null && relativeSpread <= maxRelativeSpread ? "stable" : "variable";
+}
+
+function sortedUniqueStrings(values: readonly string[]): readonly string[] {
+  return [...new Set(values)].sort((left, right) => left.localeCompare(right));
+}
+
+function assertBenchmarkCalibrationInput(
+  input: unknown,
+  index: number,
+): asserts input is TextConformanceBenchmarkCalibrationInput {
+  if (!isRecord(input) || !isTextConformanceBenchmarkCalibrationHostV1(input.host)) {
+    throw new TypeError(`benchmark calibration input ${index} host is invalid`);
+  }
+  if (!isTextConformanceBenchmarkReportV1(input.report)) {
+    throw new TypeError(`benchmark calibration input ${index} report is invalid`);
+  }
+}
+
+export function calibrateTextConformanceBenchmarkReports(
+  inputs: readonly TextConformanceBenchmarkCalibrationInput[],
+  options: TextConformanceBenchmarkCalibrationOptions,
+): TextConformanceBenchmarkCalibrationReportV1 {
+  if (!Array.isArray(inputs) || inputs.length < 2) {
+    throw new TypeError("benchmark calibration requires at least two host reports");
+  }
+  inputs.forEach((input, index) => assertBenchmarkCalibrationInput(input, index));
+  if (!isRecord(options)) {
+    throw new TypeError("benchmark calibration options must be a record");
+  }
+  if (options.calibrationId !== undefined && !isNonEmptyString(options.calibrationId)) {
+    throw new TypeError("benchmark calibration id must be a non-empty string");
+  }
+  if (options.generatedAt !== undefined && !isNonEmptyString(options.generatedAt)) {
+    throw new TypeError("benchmark calibration generatedAt must be a non-empty string");
+  }
+  if (options.baselineHostId !== undefined && !isNonEmptyString(options.baselineHostId)) {
+    throw new TypeError("benchmark calibration baseline host id must be a non-empty string");
+  }
+  if (
+    options.maxRelativeSpread !== undefined &&
+    (!isFiniteNumber(options.maxRelativeSpread) || options.maxRelativeSpread < 0)
+  ) {
+    throw new TypeError("benchmark calibration maxRelativeSpread must be a non-negative finite number");
+  }
+  if (options.metricIds !== undefined && (!isNonEmptyStringArray(options.metricIds) || !hasUniqueStrings(options.metricIds))) {
+    throw new TypeError("benchmark calibration metricIds must be unique non-empty strings");
+  }
+  if (options.evidenceRefs !== undefined && !isStringArray(options.evidenceRefs)) {
+    throw new TypeError("benchmark calibration evidence refs must be strings");
+  }
+  if (!isNonEmptyStringArray(options.limitations)) {
+    throw new TypeError("benchmark calibration limitations must be a non-empty string array");
+  }
+  if (options.notes !== undefined && !isStringArray(options.notes)) {
+    throw new TypeError("benchmark calibration notes must be strings");
+  }
+
+  const sortedInputs = sortedBenchmarkCalibrationInputs(inputs);
+  const hostIds = sortedInputs.map((input) => input.host.hostId);
+  if (!hasUniqueStrings(hostIds)) {
+    throw new TypeError("benchmark calibration host ids must be unique");
+  }
+  if (options.baselineHostId !== undefined && !hostIds.includes(options.baselineHostId)) {
+    throw new TypeError(`benchmark calibration baseline host ${options.baselineHostId} is not declared`);
+  }
+
+  const firstReport = sortedInputs[0]?.report;
+  if (firstReport === undefined) {
+    throw new TypeError("benchmark calibration requires at least one report");
+  }
+  for (const input of sortedInputs) {
+    if (input.report.benchmarkId !== firstReport.benchmarkId) {
+      throw new TypeError("benchmark calibration reports must share a benchmark id");
+    }
+    if (canonicalJson(input.report.subject) !== canonicalJson(firstReport.subject)) {
+      throw new TypeError("benchmark calibration reports must share a subject");
+    }
+  }
+
+  const metricIds = options.metricIds ??
+    sortedUniqueStrings(sortedInputs.flatMap((input) => input.report.metrics.map((metric) => metric.metricId)));
+  const rows = metricIds.map((metricId): TextConformanceBenchmarkCalibrationMetricRowV1 => {
+    const hostValues: TextConformanceBenchmarkCalibrationHostValueV1[] = [];
+    const missingHostIds: string[] = [];
+    const units = new Set<string>();
+    const preferences = new Set<boolean>();
+    for (const input of sortedInputs) {
+      const metric = input.report.metrics.find((entry) => entry.metricId === metricId);
+      if (metric === undefined) {
+        missingHostIds.push(input.host.hostId);
+        continue;
+      }
+      units.add(metric.unit);
+      if (metric.higherIsPreferred !== undefined) preferences.add(metric.higherIsPreferred);
+      hostValues.push({
+        hostId: input.host.hostId,
+        value: metric.value,
+        generatedAt: input.report.generatedAt,
+        evidenceRefs: input.report.evidenceRefs,
+      });
+    }
+    if (hostValues.length === 0) {
+      throw new TypeError(`benchmark calibration metric ${metricId} is missing from every host report`);
+    }
+    if (units.size !== 1) {
+      throw new TypeError(`benchmark calibration metric ${metricId} has inconsistent units`);
+    }
+    if (preferences.size > 1) {
+      throw new TypeError(`benchmark calibration metric ${metricId} has inconsistent preference direction`);
+    }
+    const values = hostValues.map((entry) => entry.value);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+    const median = medianNumber(values);
+    const relativeSpread = calibrationRelativeSpread(min, max, mean);
+    const baselineValue = options.baselineHostId === undefined
+      ? undefined
+      : hostValues.find((entry) => entry.hostId === options.baselineHostId)?.value;
+    const unit = [...units][0];
+    if (unit === undefined) throw new TypeError(`benchmark calibration metric ${metricId} unit is missing`);
+    const preference = [...preferences][0];
+    return {
+      metricId,
+      unit,
+      ...(preference === undefined ? {} : { higherIsPreferred: preference }),
+      status: calibrationStatus(missingHostIds.length, options.maxRelativeSpread, relativeSpread),
+      hostCount: sortedInputs.length,
+      observedHostCount: hostValues.length,
+      missingHostIds,
+      min,
+      max,
+      mean,
+      median,
+      relativeSpread,
+      ...(options.baselineHostId === undefined || baselineValue === undefined
+        ? {}
+        : {
+          baselineHostId: options.baselineHostId,
+          baselineValue,
+          baselineDelta: mean - baselineValue,
+          baselineRatio: baselineValue === 0 ? (mean === 0 ? 1 : null) : mean / baselineValue,
+        }),
+      hostValues,
+    };
+  });
+
+  const evidenceRefs = sortedUniqueStrings([
+    ...(options.evidenceRefs ?? []),
+    ...sortedInputs.flatMap((input) => input.host.evidenceRefs ?? []),
+    ...sortedInputs.flatMap((input) => input.report.evidenceRefs),
+  ]);
+  const report = {
+    schemaVersion: conformanceBenchmarkCalibrationReportSchemaVersion,
+    artifactType: "textconformance-benchmark-calibration-report-v1",
+    calibrationId: options.calibrationId ?? `calibration:${firstReport.benchmarkId}`,
+    benchmarkId: firstReport.benchmarkId,
+    subject: firstReport.subject,
+    generatedAt: options.generatedAt ?? firstReport.generatedAt,
+    hostCount: sortedInputs.length,
+    metricCount: rows.length,
+    ...(options.baselineHostId === undefined ? {} : { baselineHostId: options.baselineHostId }),
+    ...(options.maxRelativeSpread === undefined ? {} : { maxRelativeSpread: options.maxRelativeSpread }),
+    summary: {
+      observed: rows.filter((row) => row.status === "observed").length,
+      stable: rows.filter((row) => row.status === "stable").length,
+      variable: rows.filter((row) => row.status === "variable").length,
+      incomplete: rows.filter((row) => row.status === "incomplete").length,
+    },
+    hosts: sortedInputs.map((input) => input.host),
+    rows,
+    evidenceRefs,
+    limitations: [...options.limitations],
+    ...(options.notes === undefined ? {} : { notes: [...options.notes] }),
+  } satisfies TextConformanceBenchmarkCalibrationReportV1;
+  if (!isTextConformanceBenchmarkCalibrationReportV1(report)) {
+    throw new TypeError("benchmark calibration report is invalid");
+  }
+  return report;
+}
+
 function benchmarkThresholdBoundsText(row: TextConformanceBenchmarkThresholdEvaluationRowV1): string {
   const entries = [
     row.min === undefined ? "" : `min=${row.min}`,
@@ -1231,6 +1660,50 @@ export function renderTextConformanceBenchmarkThresholdEvaluationMarkdown(
     "",
     "| Metric | Status | Value | Unit | Bounds | Message | Evidence |",
     "| --- | --- | ---: | --- | --- | --- | --- |",
+    ...rows.map((row) => `| ${row} |`),
+    "",
+  ].join("\n");
+}
+
+function calibrationNumberText(value: number | null | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return "n/a";
+  return String(value);
+}
+
+export function renderTextConformanceBenchmarkCalibrationMarkdown(
+  calibration: TextConformanceBenchmarkCalibrationReportV1,
+  options: TextConformanceMarkdownRenderOptions = {},
+): string {
+  if (!isTextConformanceBenchmarkCalibrationReportV1(calibration)) {
+    throw new TypeError("benchmark calibration report is invalid");
+  }
+  const title = options.title ?? `Benchmark calibration ${calibration.benchmarkId}`;
+  const rows = calibration.rows.map((row) =>
+    [
+      markdownTableCell(row.metricId),
+      markdownTableCell(row.status),
+      markdownTableCell(String(row.observedHostCount)),
+      markdownTableList(row.missingHostIds),
+      markdownTableCell(calibrationNumberText(row.min)),
+      markdownTableCell(calibrationNumberText(row.max)),
+      markdownTableCell(calibrationNumberText(row.mean)),
+      markdownTableCell(calibrationNumberText(row.median)),
+      markdownTableCell(calibrationNumberText(row.relativeSpread)),
+      markdownTableCell(row.baselineHostId),
+      markdownTableCell(calibrationNumberText(row.baselineRatio)),
+    ].join(" | "),
+  );
+  return [
+    `# ${markdownText(title)}`,
+    "",
+    `- **Calibration:** ${markdownText(calibration.calibrationId)}`,
+    `- **Benchmark:** ${markdownText(calibration.benchmarkId)}`,
+    `- **Hosts:** ${calibration.hostCount}`,
+    `- **Summary:** observed=${calibration.summary.observed}; stable=${calibration.summary.stable}; variable=${calibration.summary.variable}; incomplete=${calibration.summary.incomplete}`,
+    "",
+    "| Metric | Status | Observed hosts | Missing hosts | Min | Max | Mean | Median | Relative spread | Baseline host | Baseline ratio |",
+    "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |",
     ...rows.map((row) => `| ${row} |`),
     "",
   ].join("\n");

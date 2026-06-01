@@ -601,6 +601,49 @@ async function assertBuiltPackageSmoke() {
       benchmarkThresholdEvaluation.summary.pass === 1,
     "textconformance built API should evaluate benchmark threshold policies.",
   );
+  const benchmarkCalibration = textconformance.calibrateTextConformanceBenchmarkReports(
+    [
+      {
+        host: {
+          hostId: "downstream-host-a",
+          runtime: "node-24",
+          evidenceRefs: [ARTIFACT_PATH],
+        },
+        report: benchmarkReport,
+      },
+      {
+        host: {
+          hostId: "downstream-host-b",
+          runtime: "node-24",
+          evidenceRefs: [ARTIFACT_PATH],
+        },
+        report: {
+          ...benchmarkReport,
+          generatedAt: "1970-01-02T00:00:00.000Z",
+          evidenceRefs: [ARTIFACT_PATH],
+          metrics: benchmarkReport.metrics.map((metric) => {
+            if (metric.metricId === "downstream-api-smoke.duration-ms.mean") return { ...metric, value: 1.1 };
+            if (metric.metricId === "downstream-api-smoke.duration-ms.max") return { ...metric, value: 2 };
+            return metric;
+          }),
+        },
+      },
+    ],
+    {
+      calibrationId: "calibration:downstream-api-stability",
+      generatedAt: "1970-01-03T00:00:00.000Z",
+      baselineHostId: "downstream-host-a",
+      maxRelativeSpread: 0.2,
+      limitations: ["Downstream smoke calibration over caller-provided benchmark reports."],
+    },
+  );
+  expect(
+    textconformance.isTextConformanceBenchmarkCalibrationReportV1(benchmarkCalibration) &&
+      benchmarkCalibration.summary.stable === 3 &&
+      benchmarkCalibration.summary.variable === 1,
+    "textconformance built API should calibrate benchmark reports across declared hosts.",
+    benchmarkCalibration,
+  );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(
     benchmarkInspection.metricCount === 4 &&
