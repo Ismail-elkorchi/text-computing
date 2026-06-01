@@ -595,6 +595,14 @@ async function assertBuiltPackageSmoke() {
     corpusArtifactInspection.artifactKind === "frequency" && corpusArtifactInspection.rowCount > 0,
     "textlab should inspect textcorpus persisted artifacts through package APIs.",
   );
+  const corpusArtifactPagedInspection = textlab.inspectTextCorpusArtifact(corpusFrequency, { offset: 0, limit: 1 });
+  expect(
+    corpusArtifactPagedInspection.pageOffset === 0 &&
+      corpusArtifactPagedInspection.pageLimit === 1 &&
+      corpusArtifactPagedInspection.pageRowCount === 1 &&
+      corpusArtifactPagedInspection.pageRows.length === 1,
+    "textlab should inspect bounded textcorpus artifact pages through package APIs.",
+  );
   const corpusMetricPayloadInspection = textlab.inspectTextCorpusArtifact(corpusMetricPayload);
   expect(
     corpusMetricPayloadInspection.metricSetId === "metrics:downstream-api-frequency" &&

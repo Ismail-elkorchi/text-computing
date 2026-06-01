@@ -121,6 +121,11 @@ export interface TextlabCorpusFixtureInspection {
   readonly explainEntryCount: number;
 }
 
+export interface TextlabCorpusArtifactInspectionOptions {
+  readonly offset?: number;
+  readonly limit?: number;
+}
+
 export interface TextlabCorpusArtifactInspection {
   readonly schemaVersion: 1;
   readonly artifactKind: string;
@@ -135,6 +140,12 @@ export interface TextlabCorpusArtifactInspection {
   readonly hitCount: number;
   readonly metricCount: number;
   readonly formulaIds: readonly string[];
+  readonly pageOffset: number;
+  readonly pageLimit: number;
+  readonly pageEnd: number;
+  readonly pageRowCount: number;
+  readonly hasNextPage: boolean;
+  readonly pageRows: readonly unknown[];
   readonly checksum?: string;
   readonly storageKey?: string;
   readonly byteLength?: number;
@@ -1743,6 +1754,10 @@ function corpusArtifactKind(value: unknown): string {
 }
 
 function corpusArtifactRowCount(source: unknown): number {
+  return corpusArtifactRows(source).length;
+}
+
+function corpusArtifactRows(source: unknown): readonly unknown[] {
   if (
     isTextCorpusConcordanceResultV1(source) ||
     isTextCorpusFrequencyResultV1(source) ||
@@ -1751,13 +1766,16 @@ function corpusArtifactRowCount(source: unknown): number {
     isTextCorpusCollocateResultV1(source) ||
     isTextCorpusPairwiseRelationResultV1(source)
   ) {
-    return source.rows.length;
+    return source.rows;
   }
-  if (isTextCorpusRetrievalEvaluationResultV1(source)) return source.queries.length;
-  if (isTextCorpusCitationWindowSetV1(source)) return source.windows.length;
-  if (isTextCorpusQuoteGroundingResultV1(source)) return source.matches.length;
-  if (isTextCorpusMetricEnvelopePayloadV1(source)) return source.metrics.length;
-  return 0;
+  if (isTextCorpusScoringResultV1(source)) return source.documents;
+  if (isTextCorpusRetrievalIndexV1(source)) return source.documents;
+  if (isTextCorpusRetrievalResultV1(source)) return source.results;
+  if (isTextCorpusRetrievalEvaluationResultV1(source)) return source.queries;
+  if (isTextCorpusCitationWindowSetV1(source)) return source.windows;
+  if (isTextCorpusQuoteGroundingResultV1(source)) return source.matches;
+  if (isTextCorpusMetricEnvelopePayloadV1(source)) return source.metrics;
+  return [];
 }
 
 function corpusArtifactQueryCount(source: unknown): number {
@@ -1802,12 +1820,28 @@ function corpusArtifactTokenCount(source: unknown): number {
   return 0;
 }
 
-export function inspectTextCorpusArtifact(value: unknown): TextlabCorpusArtifactInspection {
+function nonNegativeIntegerOption(value: number | undefined, label: string, fallback: number): number {
+  if (value === undefined) return fallback;
+  if (!Number.isInteger(value) || value < 0) {
+    throw new TypeError(`textcorpus artifact ${label} must be a non-negative integer`);
+  }
+  return value;
+}
+
+export function inspectTextCorpusArtifact(
+  value: unknown,
+  options: TextlabCorpusArtifactInspectionOptions = {},
+): TextlabCorpusArtifactInspection {
   if (!isTextCorpusArtifactV1(value) && !isTextCorpusMetricEnvelopePayloadV1(value)) {
     throw new TypeError("textcorpus artifact is invalid");
   }
   const source = corpusArtifactSource(value);
   const sourceRecord = isRecord(source) ? source : {};
+  const rows = corpusArtifactRows(source);
+  const pageOffset = nonNegativeIntegerOption(options.offset, "offset", 0);
+  const pageLimit = nonNegativeIntegerOption(options.limit, "limit", 20);
+  const pageRows = rows.slice(pageOffset, pageOffset + pageLimit);
+  const pageEnd = pageOffset + pageRows.length;
   return {
     schemaVersion: 1,
     artifactKind: corpusArtifactKind(value),
@@ -1824,6 +1858,12 @@ export function inspectTextCorpusArtifact(value: unknown): TextlabCorpusArtifact
     hitCount: corpusArtifactHitCount(source),
     metricCount: isTextCorpusMetricEnvelopePayloadV1(value) ? value.metrics.length : 0,
     formulaIds: corpusArtifactFormulaIds(source),
+    pageOffset,
+    pageLimit,
+    pageEnd,
+    pageRowCount: pageRows.length,
+    hasNextPage: pageEnd < rows.length,
+    pageRows,
     ...(isTextCorpusRetrievalIndexArtifactV1(value) ? { checksum: value.checksum.value } : {}),
     ...(isTextCorpusRetrievalIndexStorageRefV1(value)
       ? { checksum: value.checksum.value, storageKey: value.key, byteLength: value.byteLength }
@@ -1849,6 +1889,11 @@ export function renderTextCorpusArtifactInspection(
     `Hits: ${inspection.hitCount}`,
     `Metrics: ${inspection.metricCount}`,
     `Formulas: ${inspection.formulaIds.join(",") || "none"}`,
+    `Page offset: ${inspection.pageOffset}`,
+    `Page limit: ${inspection.pageLimit}`,
+    `Page rows: ${inspection.pageRowCount}`,
+    `Page end: ${inspection.pageEnd}`,
+    `Has next page: ${inspection.hasNextPage ? "yes" : "no"}`,
     `Checksum: ${inspection.checksum ?? "none"}`,
     `Storage key: ${inspection.storageKey ?? "none"}`,
     `Byte length: ${inspection.byteLength ?? 0}`,
