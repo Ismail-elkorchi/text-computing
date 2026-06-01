@@ -1108,6 +1108,18 @@ const corpusArtifact = {
       documentFrequency: 1,
       relativeFrequency: 0.25,
     },
+    {
+      term: "delta",
+      count: 1,
+      documentFrequency: 1,
+      relativeFrequency: 0.25,
+    },
+    {
+      term: "gamma",
+      count: 1,
+      documentFrequency: 1,
+      relativeFrequency: 0.25,
+    },
   ],
 };
 const corpusArtifactInspection = inspectTextCorpusArtifact(corpusArtifact);
@@ -1115,13 +1127,51 @@ if (
   corpusArtifactInspection.artifactKind !== "frequency" ||
   corpusArtifactInspection.documentCount !== 2 ||
   corpusArtifactInspection.tokenCount !== 4 ||
-  corpusArtifactInspection.rowCount !== 2 ||
+  corpusArtifactInspection.rowCount !== 4 ||
+  corpusArtifactInspection.pageOffset !== 0 ||
+  corpusArtifactInspection.pageLimit !== 20 ||
+  corpusArtifactInspection.pageRowCount !== 4 ||
+  corpusArtifactInspection.hasNextPage !== false ||
   corpusArtifactInspection.evidenceClass !== "E2"
 ) {
   throw new Error("textcorpus artifact inspection should summarize frequency artifacts");
 }
 if (!renderTextCorpusArtifactInspection(corpusArtifactInspection).includes("Kind: frequency")) {
   throw new Error("textcorpus artifact renderer should include artifact kind");
+}
+const pagedCorpusArtifactInspection = inspectTextCorpusArtifact(corpusArtifact, { offset: 1, limit: 2 });
+if (
+  pagedCorpusArtifactInspection.rowCount !== 4 ||
+  pagedCorpusArtifactInspection.pageOffset !== 1 ||
+  pagedCorpusArtifactInspection.pageLimit !== 2 ||
+  pagedCorpusArtifactInspection.pageRowCount !== 2 ||
+  pagedCorpusArtifactInspection.pageEnd !== 3 ||
+  pagedCorpusArtifactInspection.hasNextPage !== true ||
+  pagedCorpusArtifactInspection.pageRows[0]?.term !== "beta" ||
+  pagedCorpusArtifactInspection.pageRows[1]?.term !== "delta"
+) {
+  throw new Error("textcorpus artifact inspection should expose deterministic page windows");
+}
+if (!renderTextCorpusArtifactInspection(pagedCorpusArtifactInspection).includes("Page rows: 2")) {
+  throw new Error("textcorpus artifact renderer should include page metadata");
+}
+const emptyCorpusArtifactPage = inspectTextCorpusArtifact(corpusArtifact, { offset: 10, limit: 2 });
+if (
+  emptyCorpusArtifactPage.pageRowCount !== 0 ||
+  emptyCorpusArtifactPage.pageEnd !== 10 ||
+  emptyCorpusArtifactPage.hasNextPage !== false
+) {
+  throw new Error("textcorpus artifact inspection should expose empty out-of-range pages");
+}
+let invalidCorpusArtifactPageRejected = false;
+try {
+  inspectTextCorpusArtifact(corpusArtifact, { offset: -1 });
+} catch (error) {
+  invalidCorpusArtifactPageRejected =
+    error instanceof TypeError && error.message === "textcorpus artifact offset must be a non-negative integer";
+}
+if (!invalidCorpusArtifactPageRejected) {
+  throw new Error("textcorpus artifact inspection should reject invalid page options");
 }
 const corpusMetricPayload = {
   corpusId: "corpus-artifact-smoke",
@@ -1955,6 +2005,41 @@ if (corpusArtifactCliResult.exitCode !== 0 || corpusArtifactCliResult.stderr !==
 
 if (!corpusArtifactCliResult.stdout.includes("Kind: frequency")) {
   throw new Error("corpus-artifact CLI should render artifact kind");
+}
+
+const corpusArtifactPagedCliResult = await runTextlabCli([
+  "corpus-artifact",
+  corpusArtifactPath,
+  "--offset",
+  "1",
+  "--limit",
+  "2",
+  "--json",
+]);
+const corpusArtifactPagedCliInspection =
+  corpusArtifactPagedCliResult.exitCode === 0 ? JSON.parse(corpusArtifactPagedCliResult.stdout) : {};
+if (
+  corpusArtifactPagedCliResult.exitCode !== 0 ||
+  corpusArtifactPagedCliInspection.pageOffset !== 1 ||
+  corpusArtifactPagedCliInspection.pageLimit !== 2 ||
+  corpusArtifactPagedCliInspection.pageRowCount !== 2 ||
+  corpusArtifactPagedCliInspection.hasNextPage !== true ||
+  corpusArtifactPagedCliInspection.pageRows?.[0]?.term !== "beta"
+) {
+  throw new Error("corpus-artifact CLI should support paginated JSON output");
+}
+
+const corpusArtifactInvalidPageCliResult = await runTextlabCli([
+  "corpus-artifact",
+  corpusArtifactPath,
+  "--limit",
+  "bad",
+]);
+if (
+  corpusArtifactInvalidPageCliResult.exitCode !== 2 ||
+  !corpusArtifactInvalidPageCliResult.stderr.includes("--limit must be a non-negative integer.")
+) {
+  throw new Error("corpus-artifact CLI should reject invalid pagination options");
 }
 
 const corpusMetricPayloadCliResult = await runTextlabCli(["corpus-artifact", corpusMetricPayloadPath, "--json"]);

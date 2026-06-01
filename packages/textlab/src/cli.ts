@@ -60,6 +60,7 @@ import {
   renderTextConformanceBenchmarkReportInspection,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
+  type TextlabCorpusArtifactInspectionOptions,
   type TextlabPackBackedRuleInspectionOptions,
 } from "./index.js";
 
@@ -96,7 +97,7 @@ function usage(): string {
     "  textlab retrieval-evaluation <path> [--json]",
     "  textlab release-readiness [path] [--json]",
     "  textlab corpus-fixture <path> [--json]",
-    "  textlab corpus-artifact <path> [--json]",
+    "  textlab corpus-artifact <path> [--limit n] [--offset n] [--json]",
     "  textlab --help",
     "",
     "Commands:",
@@ -199,6 +200,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
   }
 
   let annotationOptions: TextlabAnnotationInspectionOptions = {};
+  let corpusArtifactOptions: TextlabCorpusArtifactInspectionOptions = {};
   let packBackedRuleOptions: TextlabPackBackedRuleInspectionOptions = {};
   if (command === "annotations") {
     const parsedOptions = parseAnnotationOptions(rest);
@@ -220,6 +222,16 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       };
     }
     packBackedRuleOptions = parsedOptions;
+  } else if (command === "corpus-artifact") {
+    const parsedOptions = parseCorpusArtifactOptions(rest);
+    if (typeof parsedOptions === "string") {
+      return {
+        exitCode: 2,
+        stdout: "",
+        stderr: `${parsedOptions}\n${usage()}`,
+      };
+    }
+    corpusArtifactOptions = parsedOptions;
   } else if (rest.length > 0) {
     return {
       exitCode: 2,
@@ -437,7 +449,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
 
   if (command === "corpus-artifact") {
     try {
-      const inspection = inspectTextCorpusArtifact(parsed);
+      const inspection = inspectTextCorpusArtifact(parsed, corpusArtifactOptions);
       return {
         exitCode: 0,
         stdout: renderCliOutput(inspection, renderTextCorpusArtifactInspection, json),
@@ -1159,6 +1171,41 @@ function parseAnnotationOptions(args: readonly string[]): TextlabAnnotationInspe
     ...(layerKinds.length > 0 ? { layerKinds } : {}),
     ...(lifecycleStates.length > 0 ? { lifecycleStates } : {}),
     ...(annotationIds.length > 0 ? { annotationIds } : {}),
+  };
+}
+
+function parseNonNegativeIntegerCliOption(value: string | undefined, optionName: string): number | string {
+  if (value === undefined) return `Missing value for ${optionName}.`;
+  if (!/^(0|[1-9][0-9]*)$/.test(value)) return `${optionName} must be a non-negative integer.`;
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed)) return `${optionName} must be a safe non-negative integer.`;
+  return parsed;
+}
+
+function parseCorpusArtifactOptions(args: readonly string[]): TextlabCorpusArtifactInspectionOptions | string {
+  let limit: number | undefined;
+  let offset: number | undefined;
+  for (let index = 0; index < args.length; index += 2) {
+    const name = args[index];
+    const value = args[index + 1];
+    if (name === undefined || value === undefined) {
+      return "Missing value for corpus-artifact option.";
+    }
+    if (name === "--limit") {
+      const parsed = parseNonNegativeIntegerCliOption(value, name);
+      if (typeof parsed === "string") return parsed;
+      limit = parsed;
+    } else if (name === "--offset") {
+      const parsed = parseNonNegativeIntegerCliOption(value, name);
+      if (typeof parsed === "string") return parsed;
+      offset = parsed;
+    } else {
+      return `Unknown corpus-artifact option: ${name}`;
+    }
+  }
+  return {
+    ...(limit === undefined ? {} : { limit }),
+    ...(offset === undefined ? {} : { offset }),
   };
 }
 
