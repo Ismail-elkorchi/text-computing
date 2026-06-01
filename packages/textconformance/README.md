@@ -36,6 +36,10 @@ can be recorded, but benchmark metrics are not pass/fail conformance results.
 Use `evaluateTextConformanceBenchmarkThresholds()` to apply a calibrated
 benchmark threshold policy to a benchmark report and produce a deterministic
 pass/warn/fail/missing threshold-evaluation record.
+Use `calibrateTextConformanceBenchmarkReports()` to compare multiple
+caller-provided benchmark reports for the same benchmark and subject across
+declared hosts, producing deterministic observed/stable/variable/incomplete
+metric rows without provisioning hosts.
 
 ## CLI
 
@@ -55,6 +59,8 @@ Runnable repository examples:
 
 - [`../../examples/textconformance-benchmark-runner-consumer.mjs`](../../examples/textconformance-benchmark-runner-consumer.mjs)
   runs a suite benchmark through package APIs and keeps benchmark output separate from conformance reports.
+- [`../../examples/textconformance-benchmark-calibration-consumer.mjs`](../../examples/textconformance-benchmark-calibration-consumer.mjs)
+  calibrates benchmark reports from declared hosts and prints the resulting cross-host metric summary.
 
 ## Report diff and capability registry
 
@@ -69,7 +75,9 @@ conformance reports, and limitations.
 ## Markdown rendering
 
 Use `renderTextConformanceReportMarkdown()` and
-`renderTextConformanceReportDiffMarkdown()` to produce deterministic
-release-oriented Markdown summaries from machine-readable reports and report
-diffs. The renderers validate their inputs, sort check rows by stable check id,
-escape table cells, and emit a final newline.
+`renderTextConformanceReportDiffMarkdown()`,
+`renderTextConformanceBenchmarkThresholdEvaluationMarkdown()`, and
+`renderTextConformanceBenchmarkCalibrationMarkdown()` to produce deterministic
+release-oriented Markdown summaries from machine-readable reports and benchmark
+artifacts. The renderers validate their inputs, sort rows by stable ids, escape
+table cells, and emit a final newline.

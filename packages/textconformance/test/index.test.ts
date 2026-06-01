@@ -1,4 +1,6 @@
 import {
+  calibrateTextConformanceBenchmarkReports,
+  conformanceBenchmarkCalibrationReportSchemaVersion,
   conformanceBenchmarkReportSchemaId,
   conformanceBenchmarkReportSchemaVersion,
   conformanceBenchmarkThresholdPolicySchemaVersion,
@@ -7,6 +9,7 @@ import {
   conformanceSuiteSchemaVersion,
   diffTextConformanceReports,
   evaluateTextConformanceBenchmarkThresholds,
+  isTextConformanceBenchmarkCalibrationReportV1,
   isTextConformanceBenchmarkReportV1,
   isTextConformanceBenchmarkThresholdEvaluationReportV1,
   isTextConformanceBenchmarkThresholdPolicyV1,
@@ -17,6 +20,7 @@ import {
   isTextConformanceSuiteV1,
   isTextConformanceSuiteTargetProbeV1,
   packageName,
+  renderTextConformanceBenchmarkCalibrationMarkdown,
   renderTextConformanceBenchmarkThresholdEvaluationMarkdown,
   renderTextConformanceReportDiffMarkdown,
   renderTextConformanceReportMarkdown,
@@ -35,6 +39,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textconformance";
+const expectedBenchmarkCalibrationReportSchemaVersion: typeof conformanceBenchmarkCalibrationReportSchemaVersion = 1;
 
 const report = runTextConformanceChecks(
   [
@@ -654,6 +659,118 @@ try {
 if (!mismatchedBenchmarkPolicyRejected) {
   throw new Error("benchmark threshold evaluation should reject mismatched policies");
 }
+const calibrationHostAReport = {
+  ...executedBenchmarkReport,
+  generatedAt: "2026-04-23T00:00:00.000Z",
+  evidenceRefs: ["packages/textconformance/test/index.test.ts#calibration-host-a"],
+  metrics: [
+    ...executedBenchmarkReport.metrics,
+    {
+      metricId: "suite-runner.host-a-only",
+      value: 1,
+      unit: "count",
+      higherIsPreferred: true,
+    },
+  ],
+};
+const calibrationHostBReport = {
+  ...executedBenchmarkReport,
+  generatedAt: "2026-04-24T00:00:00.000Z",
+  evidenceRefs: ["packages/textconformance/test/index.test.ts#calibration-host-b"],
+  metrics: executedBenchmarkReport.metrics.map((metric) => {
+    if (metric.metricId === "suite-runner.duration-ms.mean") return { ...metric, value: 5.1 };
+    if (metric.metricId === "suite-runner.duration-ms.max") return { ...metric, value: 9 };
+    return metric;
+  }),
+};
+const benchmarkCalibration = calibrateTextConformanceBenchmarkReports(
+  [
+    {
+      host: {
+        hostId: "linux-x64",
+        runtime: "node-24",
+        os: "linux",
+        arch: "x64",
+        evidenceRefs: ["packages/textconformance/test/index.test.ts#host-linux"],
+      },
+      report: calibrationHostAReport,
+    },
+    {
+      host: {
+        hostId: "macos-arm64",
+        runtime: "node-24",
+        os: "macos",
+        arch: "arm64",
+        evidenceRefs: ["packages/textconformance/test/index.test.ts#host-macos"],
+      },
+      report: calibrationHostBReport,
+    },
+  ],
+  {
+    calibrationId: "calibration:textconformance-suite-runner",
+    generatedAt: "2026-04-25T00:00:00.000Z",
+    baselineHostId: "linux-x64",
+    maxRelativeSpread: 0.1,
+    limitations: ["Synthetic cross-host calibration test over caller-provided benchmark reports."],
+  },
+);
+const calibrationStatusByMetric = new Map(
+  benchmarkCalibration.rows.map((row) => [row.metricId, row.status]),
+);
+if (
+  !isTextConformanceBenchmarkCalibrationReportV1(benchmarkCalibration) ||
+  benchmarkCalibration.schemaVersion !== expectedBenchmarkCalibrationReportSchemaVersion ||
+  benchmarkCalibration.hostCount !== 2 ||
+  benchmarkCalibration.summary.stable !== 3 ||
+  benchmarkCalibration.summary.variable !== 1 ||
+  benchmarkCalibration.summary.incomplete !== 1 ||
+  calibrationStatusByMetric.get("suite-runner.duration-ms.mean") !== "stable" ||
+  calibrationStatusByMetric.get("suite-runner.duration-ms.max") !== "variable" ||
+  calibrationStatusByMetric.get("suite-runner.host-a-only") !== "incomplete" ||
+  benchmarkCalibration.rows.find((row) => row.metricId === "suite-runner.duration-ms.mean")?.baselineRatio !== 1.01
+) {
+  throw new Error("benchmark calibration should classify stable, variable, and incomplete cross-host metrics");
+}
+const renderedBenchmarkCalibration = renderTextConformanceBenchmarkCalibrationMarkdown(benchmarkCalibration);
+if (
+  !renderedBenchmarkCalibration.includes("# Benchmark calibration benchmark:textconformance-suite-runner") ||
+  !renderedBenchmarkCalibration.includes("- **Summary:** observed=0; stable=3; variable=1; incomplete=1") ||
+  !renderedBenchmarkCalibration.includes("| suite-runner.duration-ms.max | variable | 2 |")
+) {
+  throw new Error("benchmark calibration renderer should expose summary and row status");
+}
+let inconsistentCalibrationUnitRejected = false;
+try {
+  calibrateTextConformanceBenchmarkReports(
+    [
+      {
+        host: { hostId: "linux-x64" },
+        report: calibrationHostAReport,
+      },
+      {
+        host: { hostId: "macos-arm64" },
+        report: {
+          ...calibrationHostBReport,
+          metrics: calibrationHostBReport.metrics.map((metric) =>
+            metric.metricId === "suite-runner.duration-ms.mean" ? { ...metric, unit: "seconds" } : metric,
+          ),
+        },
+      },
+    ],
+    {
+      calibrationId: "calibration:unit-mismatch",
+      metricIds: ["suite-runner.duration-ms.mean"],
+      limitations: ["Unit-mismatch negative control."],
+    },
+  );
+} catch (error) {
+  inconsistentCalibrationUnitRejected =
+    error instanceof TypeError &&
+    error.message === "benchmark calibration metric suite-runner.duration-ms.mean has inconsistent units";
+}
+if (!inconsistentCalibrationUnitRejected) {
+  throw new Error("benchmark calibration should reject inconsistent metric units");
+}
 
 const cliDir = mkdtempSync(path.join(tmpdir(), "textconformance-cli-"));
 const reportPath = path.join(cliDir, "report.json");
@@ -754,3 +871,4 @@ if (!invalidCliRejected) {
 }
 
 void expectedPackageName;
+void expectedBenchmarkCalibrationReportSchemaVersion;

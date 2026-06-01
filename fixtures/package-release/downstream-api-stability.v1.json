@@ -195,10 +195,12 @@
         "packages/textconformance/test/index.test.ts",
         "examples/textconformance-suite-target-consumer.mjs",
         "examples/textconformance-benchmark-runner-consumer.mjs",
+        "examples/textconformance-benchmark-calibration-consumer.mjs",
+        "schemas/textconformance-benchmark-calibration-report-v1.schema.json",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API usage by declared downstream dependents and local benchmark threshold evaluation; it does not provide cross-host benchmark calibration."
+        "This verifies current built-package API usage by declared downstream dependents, local benchmark threshold evaluation, and cross-host calibration over caller-provided benchmark reports; it does not provision hosts."
       ]
     },
     {

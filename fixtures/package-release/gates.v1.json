@@ -107,10 +107,12 @@
         "packages/textconformance/src/index.ts",
         "schemas/textconformance-suite-v1.schema.json",
         "schemas/textconformance-benchmark-report-v1.schema.json",
+        "schemas/textconformance-benchmark-calibration-report-v1.schema.json",
         "schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
         "schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
         "examples/textconformance-suite-target-consumer.mjs",
         "examples/textconformance-benchmark-runner-consumer.mjs",
+        "examples/textconformance-benchmark-calibration-consumer.mjs",
         "fixtures/conformance/package-suites.v1.json",
         "tools/validate-textconformance-suites.mjs",
         "tools/validate-package-readiness.mjs",
@@ -118,21 +120,23 @@
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Benchmark threshold policy evaluation exists for deterministic benchmark reports; broad cross-host benchmark calibration remains outside the alpha scope.",
+        "Benchmark threshold policy evaluation and cross-host calibration reports exist for deterministic benchmark reports over caller-provided host reports; host provisioning and broad production benchmark matrices remain outside the alpha scope.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Benchmark threshold policy evaluation exists for deterministic benchmark reports; broad cross-host benchmark calibration remains outside the alpha scope.",
+          "blocker": "Benchmark threshold policy evaluation and cross-host calibration reports exist for deterministic benchmark reports over caller-provided host reports; host provisioning and broad production benchmark matrices remain outside the alpha scope.",
           "maturity": "beta",
-          "decision": "Does not block alpha because alpha requires declared conformance reports, separated benchmark records, local threshold evaluation, and package checks, not cross-host calibration.",
+          "decision": "Does not block alpha because alpha requires declared conformance reports, separated benchmark records, local threshold evaluation, caller-provided calibration reports, and package checks, not host provisioning or broad production benchmark matrices.",
           "evidenceRefs": [
             "packages/textconformance/src/index.ts",
             "schemas/textconformance-benchmark-report-v1.schema.json",
+            "schemas/textconformance-benchmark-calibration-report-v1.schema.json",
             "schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
             "schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
             "packages/textconformance/test",
-            "examples/textconformance-benchmark-runner-consumer.mjs"
+            "examples/textconformance-benchmark-runner-consumer.mjs",
+            "examples/textconformance-benchmark-calibration-consumer.mjs"
           ]
         }
       ]
