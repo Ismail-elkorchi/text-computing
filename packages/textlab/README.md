@@ -5,7 +5,7 @@
 It can:
 
 - inspect package manifests;
-- inspect textpack manifests;
+- inspect textpack manifests, inventories, resource lists, and review reports;
 - inspect textdoc documents and annotation graphs;
 - inspect textprotocol result envelopes;
 - inspect textprotocol schema-family envelopes;
@@ -24,6 +24,7 @@ textlab pack packages/textpack-en-core/pack.manifest.json
 textlab pack inspect packages/textpack-en-core
 textlab pack validate packages/textpack-en-core
 textlab pack audit packages/textpack-en-core
+textlab pack review packages/textpack-en-core --target-state reference --engine @ismail-elkorchi/textpack=0.1.0
 textlab pack list-resources packages/textpack-en-core
 textlab pack add-resource ./my-pack --family stopwords --resource-id stopwords:local --resource-path resources/stopwords.local.txt --content "the\n"
 textlab pack update-resource ./my-pack --resource-id stopwords:local --next-resource-id stopwords:local:v2 --resource-path resources/stopwords.local.v2.txt --content "the\nand\n"

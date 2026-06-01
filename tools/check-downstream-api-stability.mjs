@@ -588,6 +588,7 @@ async function assertBuiltPackageSmoke() {
     },
     reviewState: "experimental",
     composition: { overlayPrecedence: 1 },
+    limitations: ["Downstream API stability fixture; not a broad English resource pack."],
   };
   expect(textpack.isTextPackManifestV1(manifest), "textpack built API should validate a manifest.");
   const packManifestValidationOptions = {
@@ -632,6 +633,24 @@ async function assertBuiltPackageSmoke() {
   expect(
     packManifestInspection.family === "pack-manifest" && packManifestInspection.compatibilityOk,
     "textlab should inspect externally validated textpack manifest envelopes through package APIs.",
+  );
+  const packReviewReport = textpack.createTextPackReviewReport(manifest, {
+    targetReviewState: "candidate",
+    inventoryResourcePaths: ["resources/lexicon.tsv"],
+    packageVersions: { "@ismail-elkorchi/textpack": "0.1.0" },
+    mandatoryResources: ["lexicon-downstream-api"],
+    requireCompatibility: true,
+  });
+  expect(
+    textpack.isTextPackReviewReportV1(packReviewReport) && packReviewReport.ok,
+    "textpack built API should create an accepted pack review report.",
+    packReviewReport,
+  );
+  const packReviewInspection = textlab.inspectTextPackReviewReport(packReviewReport);
+  expect(
+    packReviewInspection.ok && packReviewInspection.transition === "promote",
+    "textlab should inspect textpack review reports through package APIs.",
+    packReviewInspection,
   );
 
   const loadedPack = textpack.loadTextPackResources(

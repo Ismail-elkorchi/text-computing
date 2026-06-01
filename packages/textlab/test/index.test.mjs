@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { createTextPackReviewReport } from "@ismail-elkorchi/textpack";
 import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
@@ -23,6 +24,8 @@ import {
   inspectTextPackManifest,
   inspectTextPackResourceAudit,
   inspectTextPackResourceList,
+  inspectTextPackReview,
+  inspectTextPackReviewReport,
   inspectTextPackValidation,
   inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
@@ -43,6 +46,7 @@ import {
   renderTextdocDocumentInspection,
   renderTextPackInspection,
   renderTextPackAuditInspection,
+  renderTextPackReviewInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
   renderTextPipelineBatchReportInspection,
@@ -377,6 +381,58 @@ if (
   !duplicatePackAudit.diagnostics.some((entry) => entry.code === "duplicate-provides-id")
 ) {
   throw new Error("textpack audit inspection should report duplicate provided ids");
+}
+
+const packReview = inspectTextPackReview(
+  {
+    ...packManifest,
+    reviewState: "candidate",
+  },
+  ["resources/lexicon.tsv", "resources/stopwords.tsv"],
+  {
+    targetReviewState: "candidate",
+    packageVersions: { textpack: "0.1.0" },
+    mandatoryResources: ["lexicon:smoke", "stopwords:smoke"],
+    requireCompatibility: true,
+  },
+);
+if (
+  !packReview.ok ||
+  packReview.decision !== "accepted" ||
+  packReview.transition !== "retain" ||
+  packReview.resourceInventoryOk !== true ||
+  packReview.compatibilityOk !== true ||
+  packReview.failedRequirementCount !== 0
+) {
+  throw new Error("textpack review inspection should accept a vetted candidate pack");
+}
+
+if (!renderTextPackReviewInspection(packReview).includes("Decision: accepted")) {
+  throw new Error("textpack review renderer should include review decision");
+}
+
+const rawPackReviewReport = createTextPackReviewReport(packManifest, {
+  targetReviewState: "candidate",
+  inventoryResourcePaths: ["resources/lexicon.tsv", "resources/stopwords.tsv"],
+  requiredEvidence: ["reviewer"],
+});
+const blockedPackReview = inspectTextPackReviewReport(rawPackReviewReport);
+if (
+  blockedPackReview.ok ||
+  blockedPackReview.transition !== "promote" ||
+  !blockedPackReview.diagnostics.some((entry) => entry.code === "missing-reviewer-evidence")
+) {
+  throw new Error("textpack review report inspection should expose required evidence failures");
+}
+
+let invalidPackReviewReportRejected = false;
+try {
+  inspectTextPackReviewReport({ schemaVersion: 1 });
+} catch (error) {
+  invalidPackReviewReportRejected = error instanceof TypeError && error.message === "textpack review report is invalid";
+}
+if (!invalidPackReviewReportRejected) {
+  throw new Error("textpack review report inspection should reject invalid report payloads");
 }
 
 const stalePairPackAudit = inspectTextPackResourceAudit(
@@ -1381,6 +1437,50 @@ if (
   packAuditJson.inventoryResourceCount !== 2
 ) {
   throw new Error("pack audit CLI should support deterministic JSON output");
+}
+
+const packReviewJsonCliResult = await runTextlabCli([
+  "pack",
+  "review",
+  dir,
+  "--target-state",
+  "candidate",
+  "--engine",
+  "textpack=0.1.0",
+  "--mandatory-resource",
+  "lexicon:smoke",
+  "--mandatory-resource",
+  "stopwords:smoke",
+  "--require-compatibility",
+  "true",
+  "--json",
+]);
+const packReviewCliJson = JSON.parse(packReviewJsonCliResult.stdout);
+if (
+  packReviewJsonCliResult.exitCode !== 0 ||
+  packReviewCliJson.decision !== "accepted" ||
+  packReviewCliJson.transition !== "promote" ||
+  packReviewCliJson.compatibilityChecked !== true
+) {
+  throw new Error("pack review CLI should validate inventory, compatibility policy, and candidate evidence");
+}
+
+const blockedPackReviewCliResult = await runTextlabCli([
+  "pack",
+  "review",
+  dir,
+  "--target-state",
+  "candidate",
+  "--required-evidence",
+  "reviewer",
+  "--json",
+]);
+const blockedPackReviewCliJson = JSON.parse(blockedPackReviewCliResult.stdout);
+if (
+  blockedPackReviewCliResult.exitCode !== 1 ||
+  !blockedPackReviewCliJson.diagnostics.some((entry) => entry.code === "missing-reviewer-evidence")
+) {
+  throw new Error("pack review CLI should fail when required review evidence is missing");
 }
 
 const orphanPackRoot = path.join(dir, "pack-orphan");

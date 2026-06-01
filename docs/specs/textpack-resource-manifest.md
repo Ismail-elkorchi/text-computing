@@ -74,6 +74,20 @@ The repository treats these conditions as failures or diagnostics:
 Malformed resource rows, duplicate loaded entries, and missing resource content are explicit loader
 diagnostics.
 
+## Review and vetting reports
+
+`createTextPackReviewReport` emits a `textpack-review-report-v1` artifact over a manifest and caller
+supplied policy. The report records:
+
+- current and target review state plus the derived transition;
+- manifest-governance, resource-inventory, compatibility-policy, metadata, limitation, and evidence
+  requirements;
+- caller-supplied reviewer, conformance, benchmark, security, or migration evidence references; and
+- deterministic diagnostics separated by manifest, inventory, compatibility, or evidence source.
+
+The report is an exchange artifact. It does not discover packs, fetch remote evidence, execute
+committee workflow, or assign support claims beyond the supplied manifest and policy.
+
 ## Fixture inventory
 
 Repository-level fixture manifests and resources live under
@@ -86,6 +100,7 @@ Repository-level fixture manifests and resources live under
 - `resources/textpack-en-legal/*`
 - `resources/textpack-fr-core/*`
 - `catalog.v1.json`
+- `review-report.v1.json`
 
 Installable reference packs live under:
 
@@ -98,6 +113,6 @@ Negative controls live under `fixtures/textpack/invalid/`.
 ## Verification
 
 `npm run -s check:fixtures` validates the pack manifest schema, checks fixture paths, rejects invalid
-metadata, exercises overlay conflicts, builds the registry, regenerates the catalog, loads committed
-resources, validates installable `textpack-*` package manifests, and verifies deterministic lookup
-behavior with recorded provenance.
+metadata, exercises overlay conflicts, builds the registry, regenerates the catalog and review report,
+loads committed resources, validates installable `textpack-*` package manifests, and verifies
+deterministic lookup behavior with recorded provenance.

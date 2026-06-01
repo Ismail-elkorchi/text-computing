@@ -378,6 +378,9 @@
         "packages/textpack/README.md",
         "packages/textpack/CHANGELOG.md",
         "packages/textpack/test",
+        "schemas/textpack-review-report-v1.schema.json",
+        "fixtures/textpack/review-report.v1.json",
+        "examples/textpack-review-report-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs",
@@ -386,7 +389,7 @@
       "limitations": [
         "Multilingual pack coverage and update workflow are not broad enough for package release.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence.",
-        "Reference packs exist for alpha validation; resource-vetting breadth remains limited."
+        "Reference packs and review-report workflow exist for alpha validation; external resource-vetting breadth remains limited."
       ],
       "blockerClassifications": [
         {
@@ -399,14 +402,16 @@
           ]
         },
         {
-          "blocker": "Reference packs exist for alpha validation; resource-vetting breadth remains limited.",
-          "maturity": "beta",
-          "decision": "Does not block alpha reference packs; it limits broad resource-catalog statements until review workflow and resource breadth expand.",
-          "evidenceRefs": [
-            "packages/textpack/src/index.ts",
-            "tools/validate-textpack-packages.mjs"
-          ]
-        }
+        "blocker": "Reference packs and review-report workflow exist for alpha validation; external resource-vetting breadth remains limited.",
+        "maturity": "beta",
+        "decision": "Does not block alpha reference packs; it limits broad resource-catalog statements until resource breadth and external review evidence expand.",
+        "evidenceRefs": [
+          "packages/textpack/src/index.ts",
+          "schemas/textpack-review-report-v1.schema.json",
+          "fixtures/textpack/review-report.v1.json",
+          "tools/validate-textpack-packages.mjs"
+        ]
+      }
       ]
     },
     {

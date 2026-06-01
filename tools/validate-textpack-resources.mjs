@@ -5,8 +5,10 @@ import {
   composeTextPackResources,
   createTextPackCatalog,
   createTextPackManifestDraft,
+  createTextPackReviewReport,
   createTextPackResourceRegistry,
   isTextPackCatalogV1,
+  isTextPackReviewReportV1,
   loadTextPackRegistryResources,
   loadTextPackResources,
   lookupTextPackLoadedEntries,
@@ -44,8 +46,10 @@ function comparableJson(value) {
 
 const manifestSchema = await readJson("schemas/textpack-manifest-v1.schema.json");
 const catalogSchema = await readJson("schemas/textpack-catalog-v1.schema.json");
+const reviewReportSchema = await readJson("schemas/textpack-review-report-v1.schema.json");
 const validateManifest = ajv.compile(manifestSchema);
 const validateCatalog = ajv.compile(catalogSchema);
+const validateReviewReport = ajv.compile(reviewReportSchema);
 
 const validManifestPaths = [
   "fixtures/textpack/manifests/textpack-en-core.json",
@@ -53,6 +57,7 @@ const validManifestPaths = [
   "fixtures/textpack/manifests/textpack-fr-core.json",
 ];
 const catalogPath = "fixtures/textpack/catalog.v1.json";
+const reviewReportPath = "fixtures/textpack/review-report.v1.json";
 const validManifests = [];
 const resourceContents = {};
 
@@ -260,6 +265,30 @@ expect(
   "Registry resource families must remain deterministic.",
   registry.families,
 );
+
+const referenceManifest = validManifests.find((manifest) => manifest.id === "pack:en-core");
+expect(referenceManifest !== undefined, "Reference English manifest must be available for review-report generation.");
+const referenceResourcePaths = Object.values(referenceManifest.resources).flat();
+const generatedReviewReport = createTextPackReviewReport(referenceManifest, {
+  targetReviewState: "reference",
+  inventoryResourcePaths: referenceResourcePaths,
+  packageVersions: { "@ismail-elkorchi/textpack": "0.1.0" },
+  requireCompatibility: true,
+  requiredEvidence: ["reviewer", "conformance", "benchmark"],
+  evidence: {
+    reviewerIds: ["reviewer:textpack-maintainer"],
+    conformanceRefs: ["fixtures/conformance/package-suites.v1.json#textpack"],
+    benchmarkRefs: ["fixtures/textpack/resources/textpack-en-core/benchmark.smoke.txt"],
+  },
+});
+expect(isTextPackReviewReportV1(generatedReviewReport), "Generated textpack review report failed runtime validation.", generatedReviewReport);
+expect(generatedReviewReport.ok, "Generated textpack review report must accept the reference fixture pack.", generatedReviewReport);
+if (WRITE_MODE) {
+  await writeFile(reviewReportPath, `${JSON.stringify(generatedReviewReport, null, 2)}\n`);
+}
+const reviewReport = await readJson(reviewReportPath);
+expect(validateReviewReport(reviewReport), `${reviewReportPath} failed schemas/textpack-review-report-v1.schema.json`, validateReviewReport.errors);
+expect(JSON.stringify(reviewReport) === JSON.stringify(generatedReviewReport), `${reviewReportPath} is stale; run node tools/validate-textpack-resources.mjs --write.`);
 
 const frenchStopwordLookup = queryTextPackResourceRegistry(registry, {
   kind: "stopwords",

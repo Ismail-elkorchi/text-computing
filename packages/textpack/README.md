@@ -63,6 +63,9 @@ Authoring helpers are immutable:
 - `planTextPackResourceTransaction` plans add/update/remove resource operations, returns the next
   manifest, validates metadata before and after the mutation, and includes the expected resource
   inventory audit result.
+- `createTextPackReviewReport` emits a machine-readable pack review/vetting report over manifest
+  governance, resource inventory, compatibility policy, review-state transition, required evidence,
+  and deterministic diagnostics.
 - `validateTextPackResourceInventory` checks a caller-supplied package-relative resource file
   inventory against the manifest and reports missing declared files, orphan files, duplicate provided
   ids, and stale resource/provides pairs.
@@ -83,6 +86,11 @@ capability/resource mismatches, deprecated review state, and same-scope overlay 
 `checkTextPackCompatibility` checks caller-supplied policy for engine versions, required profiles,
 mandatory resource identifiers, minimum review state, and explicit mutually exclusive overlays.
 
+`createTextPackReviewReport` combines governance, inventory, compatibility, and evidence policy into
+a JSON review report for pack promotion, retention, downgrade, or deprecation decisions. It does not
+perform committee workflow, network lookup, or hidden registry access; callers supply the resource
+inventory and any reviewer, conformance, benchmark, security, or migration evidence references.
+
 The validator does not read files and does not treat fixture identifiers as resource paths. Pack
 authors remain responsible for supplying package-relative resources, explicit provenance, licenses,
 and tests before a pack is considered releasable.
@@ -100,3 +108,7 @@ filesystem inventory, loading the resulting resources, and performing determinis
 [`../../examples/textpack-pack-manifest-envelope-consumer.mjs`](../../examples/textpack-pack-manifest-envelope-consumer.mjs)
 shows a consumer validating a textpack manifest with `textpack`, wrapping it in a `textprotocol`
 pack-manifest schema-family JSON transport, parsing it, and revalidating the parsed manifest.
+
+[`../../examples/textpack-review-report-consumer.mjs`](../../examples/textpack-review-report-consumer.mjs)
+shows a consumer creating a textpack review report for an installed reference pack and rendering it
+through `textlab`.

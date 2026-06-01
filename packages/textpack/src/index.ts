@@ -1,10 +1,12 @@
 export const packageName = "@ismail-elkorchi/textpack" as const;
 export const textPackManifestVersion = "1.0.0" as const;
 export const textPackCatalogSchemaVersion = 1 as const;
+export const textPackReviewReportSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextPackManifestVersion = typeof textPackManifestVersion;
 export type TextPackCatalogSchemaVersion = typeof textPackCatalogSchemaVersion;
+export type TextPackReviewReportSchemaVersion = typeof textPackReviewReportSchemaVersion;
 
 export const textPackKinds = [
   "profile",
@@ -37,9 +39,35 @@ export const textPackReviewStates = [
   "deprecated",
 ] as const;
 
+export const textPackReviewEvidenceKinds = [
+  "reviewer",
+  "conformance",
+  "benchmark",
+  "security",
+  "migration",
+] as const;
+
+export const textPackReviewRequirementIds = [
+  "manifest-governance",
+  "resource-inventory",
+  "compatibility-policy",
+  "target-scope",
+  "license-metadata",
+  "provenance-metadata",
+  "test-coverage",
+  "limitations",
+  "reviewer-evidence",
+  "conformance-evidence",
+  "benchmark-evidence",
+  "security-evidence",
+  "migration-evidence",
+] as const;
+
 export type TextPackKind = (typeof textPackKinds)[number];
 export type TextPackResourceFamily = (typeof textPackResourceFamilies)[number];
 export type TextPackReviewState = (typeof textPackReviewStates)[number];
+export type TextPackReviewEvidenceKind = (typeof textPackReviewEvidenceKinds)[number];
+export type TextPackReviewRequirementId = (typeof textPackReviewRequirementIds)[number];
 
 export type TextPackResourceKind =
   | "profile"
@@ -390,6 +418,107 @@ export interface TextPackCompatibilityResult {
   readonly diagnostics: readonly TextPackCompatibilityDiagnostic[];
 }
 
+export type TextPackReviewRequirementStatus = "pass" | "fail" | "not-applicable";
+export type TextPackReviewDecision = "accepted" | "blocked";
+export type TextPackReviewCurrentState = TextPackReviewState | "unknown";
+export type TextPackReviewTransition =
+  | "retain"
+  | "promote"
+  | "demote"
+  | "deprecate"
+  | "restore"
+  | "unavailable";
+export type TextPackReviewDiagnosticSource =
+  | "manifest"
+  | "inventory"
+  | "compatibility"
+  | "evidence";
+
+export interface TextPackReviewEvidence {
+  readonly reviewerIds?: readonly string[];
+  readonly conformanceRefs?: readonly string[];
+  readonly benchmarkRefs?: readonly string[];
+  readonly securityRefs?: readonly string[];
+  readonly migrationRefs?: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextPackReviewPolicy {
+  readonly targetReviewState?: TextPackReviewState;
+  readonly inventoryResourcePaths?: readonly string[];
+  readonly packageVersions?: Readonly<Record<string, string>>;
+  readonly requiredProfiles?: readonly string[];
+  readonly mandatoryResources?: readonly string[];
+  readonly activePackIds?: readonly string[];
+  readonly minimumCompatibleReviewState?: Exclude<TextPackReviewState, "deprecated">;
+  readonly requireInventory?: boolean;
+  readonly requireCompatibility?: boolean;
+  readonly requiredEvidence?: readonly TextPackReviewEvidenceKind[];
+  readonly evidence?: TextPackReviewEvidence;
+}
+
+export type TextPackReviewDiagnosticCode =
+  | TextPackManifestGovernanceDiagnosticCode
+  | TextPackResourceInventoryDiagnosticCode
+  | TextPackCompatibilityDiagnosticCode
+  | "missing-resource-inventory"
+  | "missing-compatibility-policy"
+  | "missing-target-scope"
+  | "missing-license-evidence"
+  | "missing-provenance-evidence"
+  | "missing-test-evidence"
+  | "missing-limitation-evidence"
+  | "missing-reviewer-evidence"
+  | "missing-conformance-evidence"
+  | "missing-benchmark-evidence"
+  | "missing-security-evidence"
+  | "missing-migration-evidence";
+
+export interface TextPackReviewDiagnostic {
+  readonly source: TextPackReviewDiagnosticSource;
+  readonly code: TextPackReviewDiagnosticCode;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly family?: TextPackResourceFamily;
+  readonly path?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextPackReviewRequirementResult {
+  readonly id: TextPackReviewRequirementId;
+  readonly status: TextPackReviewRequirementStatus;
+  readonly message: string;
+  readonly refs: readonly string[];
+}
+
+export interface TextPackReviewReportV1 {
+  readonly schemaVersion: TextPackReviewReportSchemaVersion;
+  readonly packageName: PackageName;
+  readonly packId: string;
+  readonly packPackageName: string;
+  readonly version: string;
+  readonly currentReviewState: TextPackReviewCurrentState;
+  readonly targetReviewState: TextPackReviewState;
+  readonly transition: TextPackReviewTransition;
+  readonly decision: TextPackReviewDecision;
+  readonly ok: boolean;
+  readonly manifestOk: boolean;
+  readonly resourceInventoryChecked: boolean;
+  readonly resourceInventoryOk: boolean;
+  readonly compatibilityChecked: boolean;
+  readonly compatibilityOk: boolean;
+  readonly resourceCount: number;
+  readonly requirementCount: number;
+  readonly passedRequirementCount: number;
+  readonly failedRequirementCount: number;
+  readonly notApplicableRequirementCount: number;
+  readonly diagnosticCount: number;
+  readonly evidenceRefs: readonly string[];
+  readonly requirements: readonly TextPackReviewRequirementResult[];
+  readonly diagnostics: readonly TextPackReviewDiagnostic[];
+}
+
 export interface TextPackCompositionInput {
   readonly manifest: TextPackManifestV1;
   readonly precedence?: number;
@@ -561,6 +690,10 @@ function isTextPackKind(value: unknown): value is TextPackKind {
 
 function isTextPackReviewState(value: unknown): value is TextPackReviewState {
   return textPackReviewStates.includes(value as TextPackReviewState);
+}
+
+function isTextPackReviewRequirementId(value: unknown): value is TextPackReviewRequirementId {
+  return textPackReviewRequirementIds.includes(value as TextPackReviewRequirementId);
 }
 
 function isTextPackResourceFamily(value: unknown): value is TextPackResourceFamily {
@@ -1292,6 +1425,103 @@ export function isTextPackCatalogV1(value: unknown): value is TextPackCatalogV1 
   );
 }
 
+function isTextPackReviewCurrentState(value: unknown): value is TextPackReviewCurrentState {
+  return value === "unknown" || isTextPackReviewState(value);
+}
+
+function isTextPackReviewRequirementStatus(value: unknown): value is TextPackReviewRequirementStatus {
+  return value === "pass" || value === "fail" || value === "not-applicable";
+}
+
+function isTextPackReviewDecision(value: unknown): value is TextPackReviewDecision {
+  return value === "accepted" || value === "blocked";
+}
+
+function isTextPackReviewTransition(value: unknown): value is TextPackReviewTransition {
+  return (
+    value === "retain" ||
+    value === "promote" ||
+    value === "demote" ||
+    value === "deprecate" ||
+    value === "restore" ||
+    value === "unavailable"
+  );
+}
+
+function isTextPackReviewDiagnosticSource(value: unknown): value is TextPackReviewDiagnosticSource {
+  return value === "manifest" || value === "inventory" || value === "compatibility" || value === "evidence";
+}
+
+function isTextPackReviewRequirementResult(value: unknown): value is TextPackReviewRequirementResult {
+  return (
+    isRecord(value) &&
+    isTextPackReviewRequirementId(value.id) &&
+    isTextPackReviewRequirementStatus(value.status) &&
+    isNonEmptyString(value.message) &&
+    isPossiblyEmptyStringArray(value.refs)
+  );
+}
+
+function isTextPackReviewDiagnostic(value: unknown): value is TextPackReviewDiagnostic {
+  return (
+    isRecord(value) &&
+    isTextPackReviewDiagnosticSource(value.source) &&
+    isNonEmptyString(value.code) &&
+    (value.packId === undefined || isNonEmptyString(value.packId)) &&
+    (value.resourceId === undefined || isNonEmptyString(value.resourceId)) &&
+    (value.family === undefined || isTextPackResourceFamily(value.family)) &&
+    (value.path === undefined || isNonEmptyString(value.path)) &&
+    (value.ref === undefined || isNonEmptyString(value.ref)) &&
+    isNonEmptyString(value.message)
+  );
+}
+
+export function isTextPackReviewReportV1(value: unknown): value is TextPackReviewReportV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textPackReviewReportSchemaVersion &&
+    value.packageName === packageName &&
+    isNonEmptyString(value.packId) &&
+    isNonEmptyString(value.packPackageName) &&
+    isNonEmptyString(value.version) &&
+    isTextPackReviewCurrentState(value.currentReviewState) &&
+    isTextPackReviewState(value.targetReviewState) &&
+    isTextPackReviewTransition(value.transition) &&
+    isTextPackReviewDecision(value.decision) &&
+    typeof value.ok === "boolean" &&
+    typeof value.manifestOk === "boolean" &&
+    typeof value.resourceInventoryChecked === "boolean" &&
+    typeof value.resourceInventoryOk === "boolean" &&
+    typeof value.compatibilityChecked === "boolean" &&
+    typeof value.compatibilityOk === "boolean" &&
+    typeof value.resourceCount === "number" &&
+    Number.isInteger(value.resourceCount) &&
+    value.resourceCount >= 0 &&
+    typeof value.requirementCount === "number" &&
+    Number.isInteger(value.requirementCount) &&
+    value.requirementCount >= 0 &&
+    typeof value.passedRequirementCount === "number" &&
+    Number.isInteger(value.passedRequirementCount) &&
+    value.passedRequirementCount >= 0 &&
+    typeof value.failedRequirementCount === "number" &&
+    Number.isInteger(value.failedRequirementCount) &&
+    value.failedRequirementCount >= 0 &&
+    typeof value.notApplicableRequirementCount === "number" &&
+    Number.isInteger(value.notApplicableRequirementCount) &&
+    value.notApplicableRequirementCount >= 0 &&
+    typeof value.diagnosticCount === "number" &&
+    Number.isInteger(value.diagnosticCount) &&
+    value.diagnosticCount >= 0 &&
+    isPossiblyEmptyStringArray(value.evidenceRefs) &&
+    Array.isArray(value.requirements) &&
+    value.requirements.every((entry) => isTextPackReviewRequirementResult(entry)) &&
+    Array.isArray(value.diagnostics) &&
+    value.diagnostics.every((entry) => isTextPackReviewDiagnostic(entry)) &&
+    value.requirementCount === value.requirements.length &&
+    value.diagnosticCount === value.diagnostics.length
+  );
+}
+
 export function validateTextPackManifestGovernance(
   manifest: unknown,
 ): TextPackManifestGovernanceResult {
@@ -1634,6 +1864,413 @@ export function checkTextPackCompatibility(
 
   return {
     ok: diagnostics.length === 0,
+    diagnostics,
+  };
+}
+
+function textPackReviewTargetAtLeast(
+  targetReviewState: TextPackReviewState,
+  minimumReviewState: Exclude<TextPackReviewState, "deprecated">,
+): boolean {
+  if (targetReviewState === "deprecated") return false;
+  return reviewStateRank[targetReviewState] >= reviewStateRank[minimumReviewState];
+}
+
+function textPackReviewTransitionFor(
+  currentReviewState: TextPackReviewCurrentState,
+  targetReviewState: TextPackReviewState,
+): TextPackReviewTransition {
+  if (currentReviewState === "unknown") return "unavailable";
+  if (currentReviewState === targetReviewState) return "retain";
+  if (targetReviewState === "deprecated") return "deprecate";
+  if (currentReviewState === "deprecated") return "restore";
+  return reviewStateRank[targetReviewState] > reviewStateRank[currentReviewState] ? "promote" : "demote";
+}
+
+function hasTextPackCompatibilityPolicy(policy: TextPackReviewPolicy): boolean {
+  return (
+    policy.packageVersions !== undefined ||
+    policy.requiredProfiles !== undefined ||
+    policy.mandatoryResources !== undefined ||
+    policy.activePackIds !== undefined ||
+    policy.minimumCompatibleReviewState !== undefined
+  );
+}
+
+function textPackReviewEvidenceRefs(evidence: TextPackReviewEvidence | undefined): readonly string[] {
+  return sortedUniqueTextPackValues([
+    ...(evidence?.conformanceRefs ?? []),
+    ...(evidence?.benchmarkRefs ?? []),
+    ...(evidence?.securityRefs ?? []),
+    ...(evidence?.migrationRefs ?? []),
+  ]);
+}
+
+function textPackReviewEvidenceRefsForKind(
+  evidence: TextPackReviewEvidence | undefined,
+  kind: TextPackReviewEvidenceKind,
+): readonly string[] {
+  if (kind === "reviewer") return sortedUniqueTextPackValues(evidence?.reviewerIds ?? []);
+  if (kind === "conformance") return sortedUniqueTextPackValues(evidence?.conformanceRefs ?? []);
+  if (kind === "benchmark") return sortedUniqueTextPackValues(evidence?.benchmarkRefs ?? []);
+  if (kind === "security") return sortedUniqueTextPackValues(evidence?.securityRefs ?? []);
+  return sortedUniqueTextPackValues(evidence?.migrationRefs ?? []);
+}
+
+function textPackReviewEvidenceRequirementId(kind: TextPackReviewEvidenceKind): TextPackReviewRequirementId {
+  if (kind === "reviewer") return "reviewer-evidence";
+  if (kind === "conformance") return "conformance-evidence";
+  if (kind === "benchmark") return "benchmark-evidence";
+  if (kind === "security") return "security-evidence";
+  return "migration-evidence";
+}
+
+function textPackReviewEvidenceDiagnosticCode(kind: TextPackReviewEvidenceKind): TextPackReviewDiagnosticCode {
+  if (kind === "reviewer") return "missing-reviewer-evidence";
+  if (kind === "conformance") return "missing-conformance-evidence";
+  if (kind === "benchmark") return "missing-benchmark-evidence";
+  if (kind === "security") return "missing-security-evidence";
+  return "missing-migration-evidence";
+}
+
+function textPackReviewEvidenceLabel(kind: TextPackReviewEvidenceKind): string {
+  if (kind === "reviewer") return "reviewer";
+  if (kind === "conformance") return "conformance";
+  if (kind === "benchmark") return "benchmark";
+  if (kind === "security") return "security";
+  return "migration";
+}
+
+function toTextPackReviewManifestDiagnostic(
+  diagnostic: TextPackManifestGovernanceDiagnostic,
+): TextPackReviewDiagnostic {
+  return {
+    source: "manifest",
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+function toTextPackReviewInventoryDiagnostic(
+  diagnostic: TextPackResourceInventoryDiagnostic,
+): TextPackReviewDiagnostic {
+  return {
+    source: "inventory",
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.family === undefined ? {} : { family: diagnostic.family }),
+    ...(diagnostic.path === undefined ? {} : { path: diagnostic.path }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+function toTextPackReviewCompatibilityDiagnostic(
+  diagnostic: TextPackCompatibilityDiagnostic,
+): TextPackReviewDiagnostic {
+  return {
+    source: "compatibility",
+    code: diagnostic.code,
+    packId: diagnostic.packId,
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+function compareTextPackReviewRequirements(
+  left: TextPackReviewRequirementResult,
+  right: TextPackReviewRequirementResult,
+): number {
+  return textPackReviewRequirementIds.indexOf(left.id) - textPackReviewRequirementIds.indexOf(right.id);
+}
+
+function compareTextPackReviewDiagnostics(
+  left: TextPackReviewDiagnostic,
+  right: TextPackReviewDiagnostic,
+): number {
+  return `${left.source}\u0000${left.code}\u0000${left.family ?? ""}\u0000${left.path ?? ""}\u0000${left.resourceId ?? ""}\u0000${left.ref ?? ""}`.localeCompare(
+    `${right.source}\u0000${right.code}\u0000${right.family ?? ""}\u0000${right.path ?? ""}\u0000${right.resourceId ?? ""}\u0000${right.ref ?? ""}`,
+  );
+}
+
+export function createTextPackReviewReport(
+  manifest: unknown,
+  policy: TextPackReviewPolicy = {},
+): TextPackReviewReportV1 {
+  const manifestRecord = isRecord(manifest) ? manifest : {};
+  const manifestOk = isTextPackManifestV1(manifest);
+  const packId = isNonEmptyString(manifestRecord.id) ? manifestRecord.id : "<invalid>";
+  const packPackageName = isNonEmptyString(manifestRecord.packageName)
+    ? manifestRecord.packageName
+    : "<invalid>";
+  const version = isNonEmptyString(manifestRecord.version) ? manifestRecord.version : "<invalid>";
+  const currentReviewState = isTextPackReviewState(manifestRecord.reviewState)
+    ? manifestRecord.reviewState
+    : "unknown";
+  const targetReviewState = policy.targetReviewState ?? (currentReviewState === "unknown" ? "experimental" : currentReviewState);
+  const transition = textPackReviewTransitionFor(currentReviewState, targetReviewState);
+  const targetRequiresCandidateEvidence = textPackReviewTargetAtLeast(targetReviewState, "candidate");
+  const requiredEvidence = new Set(policy.requiredEvidence ?? []);
+  const evidence = policy.evidence;
+  const requirements: TextPackReviewRequirementResult[] = [];
+  const requirementDiagnostics: TextPackReviewDiagnostic[] = [];
+
+  function addRequirement(
+    id: TextPackReviewRequirementId,
+    status: TextPackReviewRequirementStatus,
+    message: string,
+    refs: readonly string[] = [],
+    diagnosticCode?: TextPackReviewDiagnosticCode,
+    diagnosticSource: TextPackReviewDiagnosticSource = "evidence",
+  ): void {
+    requirements.push({
+      id,
+      status,
+      message,
+      refs: sortedUniqueTextPackValues(refs),
+    });
+    if (status === "fail" && diagnosticCode !== undefined) {
+      requirementDiagnostics.push({
+        source: diagnosticSource,
+        code: diagnosticCode,
+        packId,
+        ref: id,
+        message,
+      });
+    }
+  }
+
+  const governance = validateTextPackManifestGovernance(manifest);
+  addRequirement(
+    "manifest-governance",
+    governance.ok ? "pass" : "fail",
+    governance.ok ? "Manifest governance validation passed." : "Manifest governance validation failed.",
+  );
+
+  const resourceInventoryChecked = policy.inventoryResourcePaths !== undefined;
+  const inventoryRequired = policy.requireInventory ?? targetRequiresCandidateEvidence;
+  const inventory = resourceInventoryChecked
+    ? validateTextPackResourceInventory(manifest, policy.inventoryResourcePaths ?? [])
+    : undefined;
+  const resourceInventoryOk = inventory === undefined ? !inventoryRequired : inventory.ok;
+  if (inventory !== undefined) {
+    addRequirement(
+      "resource-inventory",
+      inventory.ok ? "pass" : "fail",
+      inventory.ok
+        ? "Declared resource inventory matches the supplied package file inventory."
+        : "Declared resource inventory does not match the supplied package file inventory.",
+    );
+  } else if (inventoryRequired) {
+    addRequirement(
+      "resource-inventory",
+      "fail",
+      "Target review state requires a supplied package resource inventory.",
+      [],
+      "missing-resource-inventory",
+      "inventory",
+    );
+  } else {
+    addRequirement(
+      "resource-inventory",
+      "not-applicable",
+      "No package resource inventory was supplied or required.",
+    );
+  }
+
+  const wantsCompatibility = policy.requireCompatibility === true || hasTextPackCompatibilityPolicy(policy);
+  const compatibilityChecked = manifestOk && wantsCompatibility;
+  const compatibility = compatibilityChecked
+    ? checkTextPackCompatibility(manifest, {
+        ...(policy.packageVersions === undefined ? {} : { packageVersions: policy.packageVersions }),
+        ...(policy.requiredProfiles === undefined ? {} : { requiredProfiles: policy.requiredProfiles }),
+        ...(policy.mandatoryResources === undefined ? {} : { mandatoryResources: policy.mandatoryResources }),
+        ...(policy.activePackIds === undefined ? {} : { activePackIds: policy.activePackIds }),
+        ...(policy.minimumCompatibleReviewState === undefined
+          ? {}
+          : { minimumReviewState: policy.minimumCompatibleReviewState }),
+      })
+    : undefined;
+  const compatibilityOk = compatibility === undefined ? !wantsCompatibility : compatibility.ok;
+  if (compatibility !== undefined) {
+    addRequirement(
+      "compatibility-policy",
+      compatibility.ok ? "pass" : "fail",
+      compatibility.ok
+        ? "Compatibility policy validation passed."
+        : "Compatibility policy validation failed.",
+    );
+  } else if (wantsCompatibility) {
+    addRequirement(
+      "compatibility-policy",
+      "fail",
+      "Compatibility policy requires a valid manifest before validation can run.",
+      [],
+      "missing-compatibility-policy",
+      "compatibility",
+    );
+  } else {
+    addRequirement(
+      "compatibility-policy",
+      "not-applicable",
+      "No compatibility policy was supplied or required.",
+    );
+  }
+
+  addRequirement(
+    "target-scope",
+    targetRequiresCandidateEvidence
+      ? manifestOk && hasAnyTargetScope(manifest.targets)
+        ? "pass"
+        : "fail"
+      : "not-applicable",
+    targetRequiresCandidateEvidence
+      ? "Candidate-or-stronger review requires explicit target scope."
+      : "Target review state does not require target-scope evidence.",
+    [],
+    targetRequiresCandidateEvidence && (!manifestOk || !hasAnyTargetScope(manifest.targets)) ? "missing-target-scope" : undefined,
+    "manifest",
+  );
+
+  addRequirement(
+    "license-metadata",
+    targetRequiresCandidateEvidence
+      ? manifestOk && manifest.licenses.code.length > 0 && manifest.licenses.data.length > 0
+        ? "pass"
+        : "fail"
+      : "not-applicable",
+    targetRequiresCandidateEvidence
+      ? "Candidate-or-stronger review requires code and data license metadata."
+      : "Target review state does not require license evidence.",
+    manifestOk ? [...manifest.licenses.code, ...manifest.licenses.data] : [],
+    targetRequiresCandidateEvidence &&
+      (!manifestOk || manifest.licenses.code.length === 0 || manifest.licenses.data.length === 0)
+      ? "missing-license-evidence"
+      : undefined,
+    "manifest",
+  );
+
+  addRequirement(
+    "provenance-metadata",
+    targetRequiresCandidateEvidence
+      ? manifestOk && manifest.provenance.sources.length > 0
+        ? "pass"
+        : "fail"
+      : "not-applicable",
+    targetRequiresCandidateEvidence
+      ? "Candidate-or-stronger review requires provenance source metadata."
+      : "Target review state does not require provenance evidence.",
+    manifestOk ? manifest.provenance.sources : [],
+    targetRequiresCandidateEvidence && (!manifestOk || manifest.provenance.sources.length === 0)
+      ? "missing-provenance-evidence"
+      : undefined,
+    "manifest",
+  );
+
+  addRequirement(
+    "test-coverage",
+    targetRequiresCandidateEvidence
+      ? manifestOk &&
+          manifest.tests.smoke.length > 0 &&
+          manifest.tests.negative.length > 0 &&
+          manifest.tests.representative.length > 0
+        ? "pass"
+        : "fail"
+      : "not-applicable",
+    targetRequiresCandidateEvidence
+      ? "Candidate-or-stronger review requires smoke, negative, and representative test references."
+      : "Target review state does not require test evidence.",
+    manifestOk ? [...manifest.tests.smoke, ...manifest.tests.negative, ...manifest.tests.representative] : [],
+    targetRequiresCandidateEvidence &&
+      (!manifestOk ||
+        manifest.tests.smoke.length === 0 ||
+        manifest.tests.negative.length === 0 ||
+        manifest.tests.representative.length === 0)
+      ? "missing-test-evidence"
+      : undefined,
+    "manifest",
+  );
+
+  addRequirement(
+    "limitations",
+    targetRequiresCandidateEvidence
+      ? manifestOk && (manifest.limitations?.length ?? 0) > 0
+        ? "pass"
+        : "fail"
+      : "not-applicable",
+    targetRequiresCandidateEvidence
+      ? "Candidate-or-stronger review requires explicit limitations."
+      : "Target review state does not require limitation evidence.",
+    manifestOk ? (manifest.limitations ?? []) : [],
+    targetRequiresCandidateEvidence && (!manifestOk || (manifest.limitations?.length ?? 0) === 0)
+      ? "missing-limitation-evidence"
+      : undefined,
+  );
+
+  const autoRequiredEvidence = new Set<TextPackReviewEvidenceKind>();
+  if (manifestOk && manifest.provenance.generated && targetRequiresCandidateEvidence) {
+    autoRequiredEvidence.add("security");
+  }
+  if (targetReviewState === "deprecated") {
+    autoRequiredEvidence.add("migration");
+  }
+  for (const kind of textPackReviewEvidenceKinds) {
+    const refs = textPackReviewEvidenceRefsForKind(evidence, kind);
+    const required = requiredEvidence.has(kind) || autoRequiredEvidence.has(kind);
+    const label = textPackReviewEvidenceLabel(kind);
+    addRequirement(
+      textPackReviewEvidenceRequirementId(kind),
+      refs.length > 0 ? "pass" : required ? "fail" : "not-applicable",
+      refs.length > 0
+        ? `${label} evidence was supplied.`
+        : required
+          ? `${label} evidence is required by review policy.`
+          : `${label} evidence is not required by review policy.`,
+      refs,
+      required && refs.length === 0 ? textPackReviewEvidenceDiagnosticCode(kind) : undefined,
+    );
+  }
+
+  const diagnostics = [
+    ...governance.diagnostics.map(toTextPackReviewManifestDiagnostic),
+    ...(inventory?.diagnostics.map(toTextPackReviewInventoryDiagnostic) ?? []),
+    ...(compatibility?.diagnostics.map(toTextPackReviewCompatibilityDiagnostic) ?? []),
+    ...requirementDiagnostics,
+  ].sort(compareTextPackReviewDiagnostics);
+  const sortedRequirements = requirements.sort(compareTextPackReviewRequirements);
+  const passedRequirementCount = sortedRequirements.filter((entry) => entry.status === "pass").length;
+  const failedRequirementCount = sortedRequirements.filter((entry) => entry.status === "fail").length;
+  const notApplicableRequirementCount = sortedRequirements.filter((entry) => entry.status === "not-applicable").length;
+  const decision: TextPackReviewDecision = failedRequirementCount === 0 ? "accepted" : "blocked";
+
+  return {
+    schemaVersion: textPackReviewReportSchemaVersion,
+    packageName,
+    packId,
+    packPackageName,
+    version,
+    currentReviewState,
+    targetReviewState,
+    transition,
+    decision,
+    ok: decision === "accepted",
+    manifestOk: governance.ok,
+    resourceInventoryChecked,
+    resourceInventoryOk,
+    compatibilityChecked,
+    compatibilityOk,
+    resourceCount: manifestOk ? resourceIdsForManifest(manifest).length : 0,
+    requirementCount: sortedRequirements.length,
+    passedRequirementCount,
+    failedRequirementCount,
+    notApplicableRequirementCount,
+    diagnosticCount: diagnostics.length,
+    evidenceRefs: textPackReviewEvidenceRefs(evidence),
+    requirements: sortedRequirements,
     diagnostics,
   };
 }
