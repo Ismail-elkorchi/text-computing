@@ -238,11 +238,13 @@
         "packages/textpipeline/test/index.test.ts",
         "examples/textpipeline-worker-batch-consumer.mjs",
         "examples/textpipeline-worker-pool-consumer.mjs",
+        "examples/textpipeline-recovery-plan-consumer.mjs",
         "schemas/textpipeline-worker-pool-run-report-v1.schema.json",
+        "schemas/textpipeline-recovery-plan-v1.schema.json",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API import and smoke usage, including snapshot-backed cache import/export, caller-provided worker execution, and deterministic worker-pool assignment reports; it does not add remote orchestration, distributed scheduling, or automatic recovery coordination."
+        "This verifies current built-package API import and smoke usage, including snapshot-backed cache import/export, caller-provided worker execution, deterministic worker-pool assignment reports, and caller-managed recovery plans for partial reports; it does not add remote orchestration, distributed scheduling, or automatic retry execution."
       ]
     },
     {

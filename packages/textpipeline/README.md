@@ -9,6 +9,7 @@ Current scope:
 - input-order batch and stream runners;
 - caller-provided worker execution with deterministic worker run reports;
 - caller-provided worker-pool execution with deterministic round-robin assignment reports;
+- caller-managed recovery plan reports for partial batch, worker, and worker-pool run reports;
 - cancellation via `AbortSignal`;
 - deterministic dependency graph validation and exported execution plans;
 - requirements over declared views, layers, packages, packs, profiles, and their versions;
@@ -22,8 +23,9 @@ Current scope:
 - processor-trace schema-family payload and envelope helpers for textprotocol JSON transport.
 
 This package does not define remote orchestration, distributed scheduling, or automatic recovery
-coordination. Callers provide documents, processors, workers, versioned context, cancellation signals,
-and optional cache objects. Cache durability is caller-managed through snapshot JSON helpers.
+execution. Callers provide documents, processors, workers, versioned context, cancellation signals,
+optional cache objects, and any retry execution loop. Cache durability is caller-managed through
+snapshot JSON helpers, and recovery plans are deterministic retry metadata for caller-managed execution.
 
 ## Runnable examples
 
@@ -41,3 +43,5 @@ and optional cache objects. Cache durability is caller-managed through snapshot 
 - [`../../examples/textpipeline-worker-pool-consumer.mjs`](../../examples/textpipeline-worker-pool-consumer.mjs)
   runs a batch through a caller-provided local worker pool and prints deterministic round-robin
   assignments.
+- [`../../examples/textpipeline-recovery-plan-consumer.mjs`](../../examples/textpipeline-recovery-plan-consumer.mjs)
+  creates a recovery plan from a partial batch report and prints retry input indexes with failed/skipped processor ids.

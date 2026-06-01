@@ -13,6 +13,7 @@ import {
   createTextPipelineExecutionPlan,
   createTextPipelineLocalWorker,
   createTextPipelineProcessorTraceEnvelopeV1,
+  createTextPipelineRecoveryPlan,
   createTextPipelineSnapshotBackedDocumentCache,
   createTextPipelineTraceEnvelope,
   createTextPipelineWorkerPoolRunReport,
@@ -23,6 +24,7 @@ import {
   isTextPipelineBatchRunReportV1,
   isTextPipelineCacheSnapshotV1,
   isTextPipelineProcessorTraceEnvelopeV1,
+  isTextPipelineRecoveryPlanV1,
   isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
   isTextPipelineWorkerPoolRunReportV1,
@@ -42,6 +44,7 @@ import {
   textPipelineBatchRunReportPayloadKind,
   textPipelineCacheSnapshotSchemaVersion,
   textPipelineBatchRunReportSchemaVersion,
+  textPipelineRecoveryPlanSchemaVersion,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
   textPipelineWorkerPoolRunReportSchemaVersion,
@@ -51,6 +54,7 @@ import {
   type TextPipelineEmitSet,
   type TextPipelineProcessor,
   type TextPipelineRequirementSet,
+  type TextPipelineRunResult,
   type TextPipelineWorker,
 } from "../src/index.ts";
 
@@ -63,6 +67,7 @@ const expectedBatchRunReportSchemaVersion: typeof textPipelineBatchRunReportSche
 const expectedCacheSnapshotSchemaVersion: typeof textPipelineCacheSnapshotSchemaVersion = 1;
 const expectedWorkerRunReportSchemaVersion: typeof textPipelineWorkerRunReportSchemaVersion = 1;
 const expectedWorkerPoolRunReportSchemaVersion: typeof textPipelineWorkerPoolRunReportSchemaVersion = 1;
+const expectedRecoveryPlanSchemaVersion: typeof textPipelineRecoveryPlanSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
   schemaVersion: 1,
@@ -774,6 +779,61 @@ if (
 ) {
   throw new Error("async batch report should preserve partial-output state per input document");
 }
+const recoveryPlan = createTextPipelineRecoveryPlan(
+  asyncBatchWithReport.report,
+  asyncBatchWithReport.runs,
+  {
+    planId: "fixture:batch-recovery",
+    maxRetryAttempts: 2,
+  },
+);
+if (
+  recoveryPlan.schemaVersion !== textPipelineRecoveryPlanSchemaVersion ||
+  !isTextPipelineRecoveryPlanV1(recoveryPlan) ||
+  recoveryPlan.sourceKind !== "batch-run-report" ||
+  recoveryPlan.retryCount !== 2 ||
+  recoveryPlan.retryInputIndexes.join(",") !== "0,1" ||
+  recoveryPlan.items.some((item) => item.recoveryAction !== "retry" || item.maxAttempts !== 2) ||
+  recoveryPlan.items[0]?.failedProcessorIds.join(",") !== "batch-failing" ||
+  recoveryPlan.items[0]?.skippedProcessorIds.join(",") !== "batch-dependent"
+) {
+  throw new Error("recovery plan should derive retry actions from partial batch reports and traces");
+}
+const completeRecoveryPlan = createTextPipelineRecoveryPlan(batchRunWithReport.report, batchRunWithReport.runs, {
+  planId: "fixture:complete-recovery",
+  includeCompleteItems: false,
+});
+if (
+  !isTextPipelineRecoveryPlanV1(completeRecoveryPlan) ||
+  completeRecoveryPlan.retryCount !== 0 ||
+  completeRecoveryPlan.items.length !== 0
+) {
+  throw new Error("recovery plan should support empty retry-only plans for complete reports");
+}
+const reportOnlyRecoveryPlan = createTextPipelineRecoveryPlan(asyncBatchWithReport.report, {
+  planId: "fixture:report-only-recovery",
+  includeCompleteItems: false,
+});
+if (
+  !isTextPipelineRecoveryPlanV1(reportOnlyRecoveryPlan) ||
+  reportOnlyRecoveryPlan.retryCount !== 2 ||
+  reportOnlyRecoveryPlan.items.some(
+    (item) => item.failedProcessorIds.length !== 0 || item.skippedProcessorIds.length !== 0,
+  )
+) {
+  throw new Error("recovery plan should support report-only options without trace-derived processor ids");
+}
+let recoveryRunMismatchRejected = false;
+try {
+  createTextPipelineRecoveryPlan(asyncBatchWithReport.report, [asyncBatchWithReport.runs[0] as TextPipelineRunResult]);
+} catch (error) {
+  recoveryRunMismatchRejected =
+    error instanceof TypeError &&
+    error.message === "textpipeline recovery runs must match source report document count";
+}
+if (!recoveryRunMismatchRejected) {
+  throw new Error("recovery plan should reject runs that do not match report document count");
+}
 
 const workerInvocations: string[] = [];
 const worker: TextPipelineWorker = {
@@ -872,6 +932,51 @@ if (
   JSON.stringify(regeneratedWorkerPoolReport) !== JSON.stringify(workerPoolBatch.report)
 ) {
   throw new Error("worker pool report generation should be deterministic from existing runs and assignments");
+}
+const partialWorkerPoolBatch = await runTextPipelineBatchWithWorkerPool(
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:pool:partial" }],
+  [
+    {
+      descriptor: {
+        id: "pool-failing",
+        version: "1.0.0",
+        purity: "pure",
+        parallelSafe: true,
+      },
+      run() {
+        throw new Error("pool failure");
+      },
+    },
+    {
+      ...asyncAlpha,
+      descriptor: {
+        ...asyncAlpha.descriptor,
+        id: "pool-dependent",
+        dependsOn: ["pool-failing"],
+      },
+    },
+  ],
+  poolWorkers,
+  {},
+  { poolId: "recovery-pool", maxConcurrency: 2, errorPolicy: "continue" },
+);
+const workerPoolRecoveryPlan = createTextPipelineRecoveryPlan(
+  partialWorkerPoolBatch.report,
+  partialWorkerPoolBatch.runs,
+  { planId: "fixture:worker-pool-recovery", includeCompleteItems: false },
+);
+if (
+  !isTextPipelineRecoveryPlanV1(workerPoolRecoveryPlan) ||
+  workerPoolRecoveryPlan.sourceKind !== "worker-pool-run-report" ||
+  workerPoolRecoveryPlan.retryCount !== 2 ||
+  workerPoolRecoveryPlan.items.map((item) => `${item.inputIndex}:${item.workerId}:${item.workerSlot}`).join(",") !==
+    "0:pool-a:0,1:pool-b:1" ||
+  workerPoolRecoveryPlan.items.some(
+    (item) => item.failedProcessorIds.join(",") !== "pool-failing" ||
+      item.skippedProcessorIds.join(",") !== "pool-dependent",
+  )
+) {
+  throw new Error("worker-pool recovery plan should preserve retry assignments and failed processors");
 }
 const limitedWorkerPoolBatch = await runTextPipelineBatchWithWorkerPool(
   [baseDocument, { ...baseDocument, documentId: "doc:pipeline:pool:limited" }],
@@ -983,3 +1088,5 @@ void expectedTraceSchemaVersion;
 void expectedBatchRunReportSchemaVersion;
 void expectedCacheSnapshotSchemaVersion;
 void expectedWorkerRunReportSchemaVersion;
+void expectedWorkerPoolRunReportSchemaVersion;
+void expectedRecoveryPlanSchemaVersion;
