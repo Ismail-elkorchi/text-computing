@@ -18,11 +18,13 @@ import {
   createTextPipelineTraceEnvelope,
   createTextPipelineWorkerPoolRunReport,
   createTextPipelineWorkerRunReport,
+  executeTextPipelineRecoveryPlan,
   exportTextPipelineProcessorTracePayloadV1,
   isTextPipelineProcessorDescriptor,
   isTextPipelineBatchRunReportEnvelopeV1,
   isTextPipelineBatchRunReportV1,
   isTextPipelineCacheSnapshotV1,
+  isTextPipelineRecoveryExecutionReportV1,
   isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineRecoveryPlanV1,
   isTextPipelineTraceEnvelopeV1,
@@ -44,6 +46,7 @@ import {
   textPipelineBatchRunReportPayloadKind,
   textPipelineCacheSnapshotSchemaVersion,
   textPipelineBatchRunReportSchemaVersion,
+  textPipelineRecoveryExecutionReportSchemaVersion,
   textPipelineRecoveryPlanSchemaVersion,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
@@ -68,6 +71,7 @@ const expectedCacheSnapshotSchemaVersion: typeof textPipelineCacheSnapshotSchema
 const expectedWorkerRunReportSchemaVersion: typeof textPipelineWorkerRunReportSchemaVersion = 1;
 const expectedWorkerPoolRunReportSchemaVersion: typeof textPipelineWorkerPoolRunReportSchemaVersion = 1;
 const expectedRecoveryPlanSchemaVersion: typeof textPipelineRecoveryPlanSchemaVersion = 1;
+const expectedRecoveryExecutionReportSchemaVersion: typeof textPipelineRecoveryExecutionReportSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
   schemaVersion: 1,
@@ -744,8 +748,12 @@ if (
 ) {
   throw new Error("continue error policy should record failed processors and block dependents");
 }
+const recoveryBatchDocuments: readonly TextDocDocumentV1[] = [
+  baseDocument,
+  { ...baseDocument, documentId: "doc:pipeline:4" },
+];
 const asyncBatchWithReport = await runTextPipelineBatchAsyncWithReport(
-  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:4" }],
+  recoveryBatchDocuments,
   [
     {
       descriptor: {
@@ -833,6 +841,125 @@ try {
 }
 if (!recoveryRunMismatchRejected) {
   throw new Error("recovery plan should reject runs that do not match report document count");
+}
+const retainedRecoveryExecution = await executeTextPipelineRecoveryPlan(
+  createTextPipelineRecoveryPlan(batchRunWithReport.report, batchRunWithReport.runs, {
+    planId: "fixture:retained-recovery-execution",
+  }),
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:2" }],
+  [],
+);
+if (
+  !isTextPipelineRecoveryExecutionReportV1(retainedRecoveryExecution.report) ||
+  retainedRecoveryExecution.report.schemaVersion !== expectedRecoveryExecutionReportSchemaVersion ||
+  retainedRecoveryExecution.report.retainedCount !== 2 ||
+  retainedRecoveryExecution.report.retryCount !== 0 ||
+  retainedRecoveryExecution.runs.length !== 0 ||
+  retainedRecoveryExecution.report.items.some((item) => item.executionStatus !== "retained" || item.attemptedAttempts !== 0)
+) {
+  throw new Error("recovery execution should retain complete plan items without retry runs");
+}
+const recoveryExecutionProcessors: readonly TextPipelineAsyncProcessor[] = [
+  createProcessor("batch-failing", {
+    apply(document) {
+      return appendAnalysisArtifacts(
+        document,
+        `${document.revision}>batch-failing-recovered`,
+        "batch-failing-recovered-view",
+        "batch-failing-recovered-layer",
+        "lemma",
+      );
+    },
+  }),
+  createProcessor("batch-dependent", {
+    dependsOn: ["batch-failing"],
+    apply(document) {
+      return appendAnalysisArtifacts(
+        document,
+        `${document.revision}>batch-dependent-recovered`,
+        "batch-dependent-recovered-view",
+        "batch-dependent-recovered-layer",
+        "lemma",
+      );
+    },
+  }),
+];
+const recoveryExecutorInvocations: string[] = [];
+const recoveryExecution = await executeTextPipelineRecoveryPlan(
+  recoveryPlan,
+  recoveryBatchDocuments,
+  recoveryExecutionProcessors,
+  {},
+  {
+    executor: {
+      run(input) {
+        recoveryExecutorInvocations.push(`${input.inputIndex}:${input.attempt}:${input.planItem.documentId}`);
+        return runTextPipelineAsync(input.document, input.processors, input.context, input.options);
+      },
+    },
+  },
+);
+if (
+  recoveryExecution.report.planId !== "fixture:batch-recovery" ||
+  recoveryExecution.report.completeRetryCount !== 2 ||
+  recoveryExecution.report.exhaustedRetryCount !== 0 ||
+  recoveryExecution.report.attemptCount !== 2 ||
+  recoveryExecution.runs.map((run) => run.trace.runStatus).join(",") !== "complete,complete" ||
+  recoveryExecution.report.items.map((item) => `${item.inputIndex}:${item.executionStatus}:${item.finalAttempt}`).join(",") !==
+    "0:retry-complete:1,1:retry-complete:1" ||
+  recoveryExecution.report.items.some((item) => item.failedProcessorIds.length !== 0 || item.skippedProcessorIds.length !== 0) ||
+  recoveryExecutorInvocations.join(",") !== "0:1:doc:pipeline,1:1:doc:pipeline:4"
+) {
+  throw new Error("recovery execution should automatically retry partial plan items until completion");
+}
+const exhaustedRecoveryExecution = await executeTextPipelineRecoveryPlan(
+  recoveryPlan,
+  recoveryBatchDocuments,
+  [
+    {
+      descriptor: {
+        id: "batch-failing",
+        version: "1.0.0",
+        purity: "pure",
+        parallelSafe: true,
+      },
+      run() {
+        throw new Error("still failing");
+      },
+    },
+    createProcessor("batch-dependent", { dependsOn: ["batch-failing"] }),
+  ],
+  {},
+  { errorPolicy: "continue" },
+);
+if (
+  !isTextPipelineRecoveryExecutionReportV1(exhaustedRecoveryExecution.report) ||
+  exhaustedRecoveryExecution.report.completeRetryCount !== 0 ||
+  exhaustedRecoveryExecution.report.exhaustedRetryCount !== 2 ||
+  exhaustedRecoveryExecution.report.attemptCount !== 4 ||
+  exhaustedRecoveryExecution.report.items.map((item) => `${item.inputIndex}:${item.executionStatus}:${item.finalAttempt}`).join(",") !==
+    "0:retry-exhausted:2,1:retry-exhausted:2" ||
+  exhaustedRecoveryExecution.report.items.some(
+    (item) => item.failedProcessorIds.join(",") !== "batch-failing" ||
+      item.skippedProcessorIds.join(",") !== "batch-dependent",
+  )
+) {
+  throw new Error("recovery execution should report exhausted retries after max attempts");
+}
+let recoveryExecutionDocumentMismatchRejected = false;
+try {
+  await executeTextPipelineRecoveryPlan(
+    recoveryPlan,
+    [baseDocument, { ...baseDocument, documentId: "doc:pipeline:mismatch" }],
+    recoveryExecutionProcessors,
+  );
+} catch (error) {
+  recoveryExecutionDocumentMismatchRejected =
+    error instanceof Error &&
+    error.message === "textpipeline recovery execution document 1 does not match plan documentId";
+}
+if (!recoveryExecutionDocumentMismatchRejected) {
+  throw new Error("recovery execution should reject documents that do not match plan input indexes");
 }
 
 const workerInvocations: string[] = [];
@@ -1090,3 +1217,4 @@ void expectedCacheSnapshotSchemaVersion;
 void expectedWorkerRunReportSchemaVersion;
 void expectedWorkerPoolRunReportSchemaVersion;
 void expectedRecoveryPlanSchemaVersion;
+void expectedRecoveryExecutionReportSchemaVersion;

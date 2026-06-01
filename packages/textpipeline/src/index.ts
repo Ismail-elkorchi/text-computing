@@ -25,6 +25,7 @@ export const textPipelineCacheSnapshotSchemaVersion = 1 as const;
 export const textPipelineWorkerRunReportSchemaVersion = 1 as const;
 export const textPipelineWorkerPoolRunReportSchemaVersion = 1 as const;
 export const textPipelineRecoveryPlanSchemaVersion = 1 as const;
+export const textPipelineRecoveryExecutionReportSchemaVersion = 1 as const;
 export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
 export const textPipelineBatchRunReportPayloadKind =
   textProtocolPayloadKindTextpipelineBatchRunReportV1;
@@ -41,6 +42,8 @@ export type TextPipelineWorkerPoolRunReportSchemaVersion =
   typeof textPipelineWorkerPoolRunReportSchemaVersion;
 export type TextPipelineRecoveryPlanSchemaVersion =
   typeof textPipelineRecoveryPlanSchemaVersion;
+export type TextPipelineRecoveryExecutionReportSchemaVersion =
+  typeof textPipelineRecoveryExecutionReportSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
 export type TextPipelineBatchRunReportPayloadKind =
   typeof textPipelineBatchRunReportPayloadKind;
@@ -57,6 +60,10 @@ export type TextPipelineRecoverySourceKind =
   | "worker-pool-run-report";
 export type TextPipelineRecoveryAction = "retain" | "retry";
 export type TextPipelineRecoveryReason = "complete-run" | "partial-run";
+export type TextPipelineRecoveryExecutionStatus =
+  | "retained"
+  | "retry-complete"
+  | "retry-exhausted";
 
 export interface TextPipelineVersionRef {
   readonly id: string;
@@ -332,6 +339,74 @@ export interface TextPipelineRecoveryPlanV1 {
   readonly maxRetryAttempts: number;
   readonly retryInputIndexes: readonly number[];
   readonly items: readonly TextPipelineRecoveryPlanItem[];
+}
+
+export interface TextPipelineRecoveryExecutionAttempt {
+  readonly attempt: number;
+  readonly runStatus: TextPipelineRunStatus;
+  readonly finalRevision: string;
+  readonly traceEntryCount: number;
+  readonly failedProcessorIds: readonly string[];
+  readonly skippedProcessorIds: readonly string[];
+}
+
+export interface TextPipelineRecoveryExecutionReportItem {
+  readonly inputIndex: number;
+  readonly documentId: string;
+  readonly recoveryAction: TextPipelineRecoveryAction;
+  readonly executionStatus: TextPipelineRecoveryExecutionStatus;
+  readonly startAttempt: number;
+  readonly maxAttempts: number;
+  readonly attemptedAttempts: number;
+  readonly finalAttempt: number;
+  readonly finalRevision: string;
+  readonly traceEntryCount: number;
+  readonly failedProcessorIds: readonly string[];
+  readonly skippedProcessorIds: readonly string[];
+  readonly attempts: readonly TextPipelineRecoveryExecutionAttempt[];
+  readonly workerId?: string;
+  readonly workerSlot?: number;
+}
+
+export interface TextPipelineRecoveryExecutionReportV1 {
+  readonly schemaVersion: TextPipelineRecoveryExecutionReportSchemaVersion;
+  readonly artifactType: "textpipeline-recovery-execution-report-v1";
+  readonly planId: string;
+  readonly sourceKind: TextPipelineRecoverySourceKind;
+  readonly documentCount: number;
+  readonly retainedCount: number;
+  readonly retryCount: number;
+  readonly attemptedRetryCount: number;
+  readonly completeRetryCount: number;
+  readonly exhaustedRetryCount: number;
+  readonly attemptCount: number;
+  readonly retryInputIndexes: readonly number[];
+  readonly items: readonly TextPipelineRecoveryExecutionReportItem[];
+}
+
+export interface TextPipelineRecoveryExecutionInput {
+  readonly inputIndex: number;
+  readonly document: TextDocDocumentV1;
+  readonly planItem: TextPipelineRecoveryPlanItem;
+  readonly attempt: number;
+  readonly processors: readonly TextPipelineAsyncProcessor[];
+  readonly context: TextPipelineContext;
+  readonly options: TextPipelineRunOptions;
+}
+
+export interface TextPipelineRecoveryExecutor {
+  run(
+    input: TextPipelineRecoveryExecutionInput,
+  ): TextPipelineRunResult | Promise<TextPipelineRunResult>;
+}
+
+export interface TextPipelineRecoveryExecutionOptions extends TextPipelineRunOptions {
+  readonly executor?: TextPipelineRecoveryExecutor;
+}
+
+export interface TextPipelineRecoveryExecutionResult {
+  readonly runs: readonly TextPipelineRunResult[];
+  readonly report: TextPipelineRecoveryExecutionReportV1;
 }
 
 export interface TextPipelineTraceEnvelopeMetadata {
@@ -1229,6 +1304,132 @@ export function isTextPipelineRecoveryPlanV1(value: unknown): value is TextPipel
   );
 }
 
+function isTextPipelineRecoveryExecutionStatus(value: unknown): value is TextPipelineRecoveryExecutionStatus {
+  return value === "retained" || value === "retry-complete" || value === "retry-exhausted";
+}
+
+function isTextPipelineRecoveryExecutionAttempt(
+  value: unknown,
+): value is TextPipelineRecoveryExecutionAttempt {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.attempt) &&
+    value.attempt >= 1 &&
+    (value.runStatus === "complete" || value.runStatus === "partial") &&
+    isNonEmptyString(value.finalRevision) &&
+    isNonNegativeInteger(value.traceEntryCount) &&
+    isStringArray(value.failedProcessorIds) &&
+    hasUniqueStrings(value.failedProcessorIds) &&
+    isStringArray(value.skippedProcessorIds) &&
+    hasUniqueStrings(value.skippedProcessorIds)
+  );
+}
+
+function isTextPipelineRecoveryExecutionReportItem(
+  value: unknown,
+): value is TextPipelineRecoveryExecutionReportItem {
+  if (
+    !isRecord(value) ||
+    !isNonNegativeInteger(value.inputIndex) ||
+    !isNonEmptyString(value.documentId) ||
+    !isTextPipelineRecoveryAction(value.recoveryAction) ||
+    !isTextPipelineRecoveryExecutionStatus(value.executionStatus) ||
+    !isNonNegativeInteger(value.startAttempt) ||
+    !isNonNegativeInteger(value.maxAttempts) ||
+    value.maxAttempts < 1 ||
+    !isNonNegativeInteger(value.attemptedAttempts) ||
+    !isNonNegativeInteger(value.finalAttempt) ||
+    !isNonEmptyString(value.finalRevision) ||
+    !isNonNegativeInteger(value.traceEntryCount) ||
+    !isStringArray(value.failedProcessorIds) ||
+    !hasUniqueStrings(value.failedProcessorIds) ||
+    !isStringArray(value.skippedProcessorIds) ||
+    !hasUniqueStrings(value.skippedProcessorIds) ||
+    !Array.isArray(value.attempts) ||
+    !value.attempts.every((attempt) => isTextPipelineRecoveryExecutionAttempt(attempt)) ||
+    (value.workerId !== undefined && !isNonEmptyString(value.workerId)) ||
+    (value.workerSlot !== undefined && !isNonNegativeInteger(value.workerSlot))
+  ) {
+    return false;
+  }
+
+  if (value.recoveryAction === "retain") {
+    return (
+      value.executionStatus === "retained" &&
+      value.startAttempt === 0 &&
+      value.attemptedAttempts === 0 &&
+      value.finalAttempt === 0 &&
+      value.attempts.length === 0
+    );
+  }
+
+  const startAttempt = value.startAttempt as number;
+  const maxAttempts = value.maxAttempts as number;
+  const finalAttempt = value.finalAttempt as number;
+  const attempts = value.attempts;
+  const firstAttempt = attempts[0];
+  const lastAttempt = attempts[attempts.length - 1];
+  if (firstAttempt === undefined || lastAttempt === undefined) return false;
+  return (
+    value.executionStatus !== "retained" &&
+    startAttempt >= 1 &&
+    value.attemptedAttempts === attempts.length &&
+    firstAttempt.attempt === startAttempt &&
+    attempts.every((attempt, index) => attempt.attempt === startAttempt + index) &&
+    finalAttempt === lastAttempt.attempt &&
+    finalAttempt <= maxAttempts &&
+    value.finalRevision === lastAttempt.finalRevision &&
+    value.traceEntryCount === lastAttempt.traceEntryCount &&
+    sameStringArray(value.failedProcessorIds, lastAttempt.failedProcessorIds) &&
+    sameStringArray(value.skippedProcessorIds, lastAttempt.skippedProcessorIds) &&
+    (value.executionStatus === "retry-complete"
+      ? lastAttempt.runStatus === "complete"
+      : lastAttempt.runStatus === "partial" && finalAttempt === maxAttempts)
+  );
+}
+
+export function isTextPipelineRecoveryExecutionReportV1(
+  value: unknown,
+): value is TextPipelineRecoveryExecutionReportV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textPipelineRecoveryExecutionReportSchemaVersion ||
+    value.artifactType !== "textpipeline-recovery-execution-report-v1" ||
+    !isNonEmptyString(value.planId) ||
+    !isTextPipelineRecoverySourceKind(value.sourceKind) ||
+    !isNonNegativeInteger(value.documentCount) ||
+    !isNonNegativeInteger(value.retainedCount) ||
+    !isNonNegativeInteger(value.retryCount) ||
+    !isNonNegativeInteger(value.attemptedRetryCount) ||
+    !isNonNegativeInteger(value.completeRetryCount) ||
+    !isNonNegativeInteger(value.exhaustedRetryCount) ||
+    !isNonNegativeInteger(value.attemptCount) ||
+    !Array.isArray(value.retryInputIndexes) ||
+    !value.retryInputIndexes.every((entry) => isNonNegativeInteger(entry)) ||
+    !Array.isArray(value.items) ||
+    !value.items.every((item) => isTextPipelineRecoveryExecutionReportItem(item))
+  ) {
+    return false;
+  }
+  const documentCount = value.documentCount as number;
+  const items = value.items;
+  const retainedItems = items.filter((item) => item.executionStatus === "retained");
+  const retryItems = items.filter((item) => item.recoveryAction === "retry");
+  const attemptedRetryItems = retryItems.filter((item) => item.attemptedAttempts > 0);
+  const completeRetryItems = retryItems.filter((item) => item.executionStatus === "retry-complete");
+  const exhaustedRetryItems = retryItems.filter((item) => item.executionStatus === "retry-exhausted");
+  return (
+    items.every((item) => item.inputIndex < documentCount) &&
+    value.retainedCount === retainedItems.length &&
+    value.retryCount === retryItems.length &&
+    value.attemptedRetryCount === attemptedRetryItems.length &&
+    value.completeRetryCount === completeRetryItems.length &&
+    value.exhaustedRetryCount === exhaustedRetryItems.length &&
+    value.attemptCount === items.reduce((sum, item) => sum + item.attemptedAttempts, 0) &&
+    sameNumberArray(value.retryInputIndexes, retryItems.map((item) => item.inputIndex))
+  );
+}
+
 function assertNotAborted(signal: AbortSignal | undefined): void {
   if (signal?.aborted === true) {
     throw new Error("textpipeline run aborted");
@@ -1789,7 +1990,7 @@ function assertRecoveryRunsMatchReport(
   }
 }
 
-function recoveryWorkerFields(item: TextPipelineBatchRunItem): {
+function recoveryWorkerFields(item: unknown): {
   readonly workerId?: string;
   readonly workerSlot?: number;
 } {
@@ -1862,6 +2063,236 @@ export function createTextPipelineRecoveryPlan(
     throw new TypeError("textpipeline recovery plan is invalid");
   }
   return plan;
+}
+
+function textPipelineRecoveryExecutionRunOptions(
+  options: TextPipelineRecoveryExecutionOptions,
+): TextPipelineRunOptions {
+  return {
+    ...(options.signal === undefined ? {} : { signal: options.signal }),
+    ...(options.errorPolicy === undefined ? {} : { errorPolicy: options.errorPolicy }),
+    ...(options.cache === undefined ? {} : { cache: options.cache }),
+    ...(options.cacheNamespace === undefined ? {} : { cacheNamespace: options.cacheNamespace }),
+  };
+}
+
+function assertRecoveryExecutionInputs(
+  plan: TextPipelineRecoveryPlanV1,
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext,
+): TextPipelineExecutionPlan {
+  if (!isTextPipelineRecoveryPlanV1(plan)) {
+    throw new TypeError("textpipeline recovery execution plan must satisfy TextPipelineRecoveryPlanV1");
+  }
+  if (!Array.isArray(documents) || documents.length !== plan.documentCount) {
+    throw new TypeError("textpipeline recovery execution documents must match plan document count");
+  }
+  if (!documents.every((document) => isTextDocDocumentV1(document))) {
+    throw new TypeError("textpipeline recovery execution documents must satisfy TextDocDocumentV1");
+  }
+  if (!isTextPipelineContext(context)) {
+    throw new TypeError("pipeline context is invalid");
+  }
+  const executionPlan = createTextPipelineExecutionPlan(processors);
+  for (const item of plan.items) {
+    const document = documents[item.inputIndex];
+    if (document === undefined) {
+      throw new Error(`textpipeline recovery execution missing document at input ${item.inputIndex}`);
+    }
+    if (document.documentId !== item.documentId) {
+      throw new Error(`textpipeline recovery execution document ${item.inputIndex} does not match plan documentId`);
+    }
+    if (item.recoveryAction === "retry") {
+      if (item.nextAttempt > item.maxAttempts) {
+        throw new RangeError(`textpipeline recovery execution input ${item.inputIndex} has no remaining attempts`);
+      }
+      if (!sameStringArray(executionPlan.processorOrder, item.processorOrder)) {
+        throw new Error(`textpipeline recovery execution processors do not match plan item ${item.inputIndex}`);
+      }
+    }
+  }
+  return executionPlan;
+}
+
+function assertRecoveryExecutor(executor: TextPipelineRecoveryExecutor): void {
+  if (!isRecord(executor) || typeof executor.run !== "function") {
+    throw new TypeError("textpipeline recovery executor must expose a run function");
+  }
+}
+
+function assertRecoveryExecutionRun(
+  item: TextPipelineRecoveryPlanItem,
+  inputDocument: TextDocDocumentV1,
+  result: TextPipelineRunResult,
+): void {
+  if (!isRecord(result) || !isTextDocDocumentV1(result.document) || !isTextPipelineTraceV1(result.trace)) {
+    throw new TypeError(`textpipeline recovery execution input ${item.inputIndex} returned an invalid run result`);
+  }
+  if (result.document.documentId !== inputDocument.documentId || result.trace.documentId !== inputDocument.documentId) {
+    throw new Error(`textpipeline recovery execution input ${item.inputIndex} returned an unexpected document`);
+  }
+  if (!sameStringArray(result.trace.processorOrder, item.processorOrder)) {
+    throw new Error(`textpipeline recovery execution input ${item.inputIndex} returned an unexpected processor order`);
+  }
+}
+
+function recoveryExecutionAttempt(
+  attempt: number,
+  run: TextPipelineRunResult,
+): TextPipelineRecoveryExecutionAttempt {
+  return {
+    attempt,
+    runStatus: run.trace.runStatus,
+    finalRevision: run.trace.finalRevision,
+    traceEntryCount: run.trace.entries.length,
+    failedProcessorIds: traceProcessorIdsByStatus(run, "failed"),
+    skippedProcessorIds: traceProcessorIdsByStatus(run, "skipped"),
+  };
+}
+
+function retainedRecoveryExecutionReportItem(
+  item: TextPipelineRecoveryPlanItem,
+): TextPipelineRecoveryExecutionReportItem {
+  return {
+    inputIndex: item.inputIndex,
+    documentId: item.documentId,
+    recoveryAction: item.recoveryAction,
+    executionStatus: "retained",
+    startAttempt: 0,
+    maxAttempts: item.maxAttempts,
+    attemptedAttempts: 0,
+    finalAttempt: 0,
+    finalRevision: item.finalRevision,
+    traceEntryCount: item.traceEntryCount,
+    failedProcessorIds: item.failedProcessorIds,
+    skippedProcessorIds: item.skippedProcessorIds,
+    attempts: [],
+    ...recoveryWorkerFields(item),
+  };
+}
+
+async function executeTextPipelineRecoveryPlanItem(
+  item: TextPipelineRecoveryPlanItem,
+  document: TextDocDocumentV1,
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext,
+  runOptions: TextPipelineRunOptions,
+  executor: TextPipelineRecoveryExecutor,
+): Promise<{
+  readonly run: TextPipelineRunResult;
+  readonly reportItem: TextPipelineRecoveryExecutionReportItem;
+}> {
+  const attempts: TextPipelineRecoveryExecutionAttempt[] = [];
+  let lastRun: TextPipelineRunResult | undefined;
+  for (let attempt = item.nextAttempt; attempt <= item.maxAttempts; attempt += 1) {
+    assertNotAborted(runOptions.signal);
+    const run = await executor.run({
+      inputIndex: item.inputIndex,
+      document,
+      planItem: item,
+      attempt,
+      processors,
+      context,
+      options: runOptions,
+    });
+    assertRecoveryExecutionRun(item, document, run);
+    lastRun = run;
+    attempts.push(recoveryExecutionAttempt(attempt, run));
+    assertNotAborted(runOptions.signal);
+    if (run.trace.runStatus === "complete") break;
+  }
+  if (lastRun === undefined) {
+    throw new Error(`textpipeline recovery execution input ${item.inputIndex} did not produce a retry run`);
+  }
+  const lastAttempt = attempts[attempts.length - 1];
+  if (lastAttempt === undefined) {
+    throw new Error(`textpipeline recovery execution input ${item.inputIndex} did not record a retry attempt`);
+  }
+  return {
+    run: lastRun,
+    reportItem: {
+      inputIndex: item.inputIndex,
+      documentId: item.documentId,
+      recoveryAction: item.recoveryAction,
+      executionStatus: lastAttempt.runStatus === "complete" ? "retry-complete" : "retry-exhausted",
+      startAttempt: item.nextAttempt,
+      maxAttempts: item.maxAttempts,
+      attemptedAttempts: attempts.length,
+      finalAttempt: lastAttempt.attempt,
+      finalRevision: lastAttempt.finalRevision,
+      traceEntryCount: lastAttempt.traceEntryCount,
+      failedProcessorIds: lastAttempt.failedProcessorIds,
+      skippedProcessorIds: lastAttempt.skippedProcessorIds,
+      attempts,
+      ...recoveryWorkerFields(item),
+    },
+  };
+}
+
+export async function executeTextPipelineRecoveryPlan(
+  plan: TextPipelineRecoveryPlanV1,
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineAsyncProcessor[],
+  context: TextPipelineContext = {},
+  options: TextPipelineRecoveryExecutionOptions = {},
+): Promise<TextPipelineRecoveryExecutionResult> {
+  assertRecoveryExecutionInputs(plan, documents, processors, context);
+  const runOptions = textPipelineRecoveryExecutionRunOptions(options);
+  const executor = options.executor ?? {
+    run(input: TextPipelineRecoveryExecutionInput) {
+      return runTextPipelineAsync(input.document, input.processors, input.context, input.options);
+    },
+  };
+  assertRecoveryExecutor(executor);
+
+  const reportItems: TextPipelineRecoveryExecutionReportItem[] = [];
+  const runs: TextPipelineRunResult[] = [];
+  for (const item of plan.items) {
+    if (item.recoveryAction === "retain") {
+      reportItems.push(retainedRecoveryExecutionReportItem(item));
+      continue;
+    }
+    const document = documents[item.inputIndex];
+    if (document === undefined) {
+      throw new Error(`textpipeline recovery execution missing document at input ${item.inputIndex}`);
+    }
+    const retry = await executeTextPipelineRecoveryPlanItem(
+      item,
+      document,
+      processors,
+      context,
+      runOptions,
+      executor,
+    );
+    runs.push(retry.run);
+    reportItems.push(retry.reportItem);
+  }
+
+  const completeRetryCount = reportItems.filter((item) => item.executionStatus === "retry-complete").length;
+  const exhaustedRetryCount = reportItems.filter((item) => item.executionStatus === "retry-exhausted").length;
+  const report = {
+    schemaVersion: textPipelineRecoveryExecutionReportSchemaVersion,
+    artifactType: "textpipeline-recovery-execution-report-v1",
+    planId: plan.planId,
+    sourceKind: plan.sourceKind,
+    documentCount: plan.documentCount,
+    retainedCount: reportItems.filter((item) => item.executionStatus === "retained").length,
+    retryCount: plan.retryCount,
+    attemptedRetryCount: reportItems.filter((item) => item.recoveryAction === "retry" && item.attemptedAttempts > 0).length,
+    completeRetryCount,
+    exhaustedRetryCount,
+    attemptCount: reportItems.reduce((sum, item) => sum + item.attemptedAttempts, 0),
+    retryInputIndexes: plan.retryInputIndexes,
+    items: reportItems,
+  } satisfies TextPipelineRecoveryExecutionReportV1;
+  if (!isTextPipelineRecoveryExecutionReportV1(report)) {
+    throw new TypeError("textpipeline recovery execution report is invalid");
+  }
+  return {
+    runs,
+    report,
+  };
 }
 
 function assertTextPipelineWorker(worker: TextPipelineWorker): void {
