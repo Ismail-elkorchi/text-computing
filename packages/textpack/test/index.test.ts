@@ -4,9 +4,11 @@ import {
   composeTextPackResources,
   createTextPackManifest,
   createTextPackCatalog,
+  createTextPackCatalogUpdatePlan,
   createTextPackManifestDraft,
   createTextPackResourceRegistry,
   createTextPackReviewReport,
+  isTextPackCatalogUpdatePlanV1,
   isTextPackCatalogV1,
   isTextPackManifestV1,
   isTextPackReviewReportV1,
@@ -1116,6 +1118,169 @@ if (
     "resource-not-found:missing-resource"
 ) {
   throw new Error("resource transaction planning should report missing resource ids deterministically");
+}
+
+const catalogUpdatedManifest = updateTextPackManifest(updatedResourceManifest, {
+  version: "0.2.0",
+  reviewState: "candidate",
+  provenanceNotes: ["catalog update plan fixture"],
+});
+const catalogUpdatePlan = createTextPackCatalogUpdatePlan({
+  beforeManifests: [createdManifest],
+  afterManifests: [catalogUpdatedManifest],
+  beforeInventoryResourcePathsByPackId: {
+    [createdManifest.id]: ["resources/stopwords.en.authoring.txt"],
+  },
+  afterInventoryResourcePathsByPackId: {
+    [catalogUpdatedManifest.id]: ["resources/stopwords.en.authoring.updated.txt"],
+  },
+});
+const catalogUpdateRow = catalogUpdatePlan.packs[0];
+if (
+  !isTextPackCatalogUpdatePlanV1(catalogUpdatePlan) ||
+  !catalogUpdatePlan.ok ||
+  catalogUpdatePlan.updatedPackCount !== 1 ||
+  catalogUpdatePlan.beforeCatalog.resourceCount !== 1 ||
+  catalogUpdatePlan.afterCatalog.resourceCount !== 1 ||
+  catalogUpdateRow?.action !== "update-pack" ||
+  catalogUpdateRow.versionChange !== "upgrade" ||
+  catalogUpdateRow.reviewTransition !== "promote" ||
+  catalogUpdateRow.removedResourceIds.join(",") !== "stopwords-en-authoring" ||
+  catalogUpdateRow.addedResourceIds.join(",") !== "stopwords-en-authoring-v2" ||
+  catalogUpdateRow.afterInventoryOk !== true
+) {
+  throw new Error("catalog update planning should summarize manifest, resource, review, and inventory deltas");
+}
+
+const catalogBrokenInventoryPlan = createTextPackCatalogUpdatePlan({
+  beforeManifests: [createdManifest],
+  afterManifests: [catalogUpdatedManifest],
+  afterInventoryResourcePathsByPackId: {
+    [catalogUpdatedManifest.id]: [],
+  },
+});
+if (
+  catalogBrokenInventoryPlan.ok ||
+  catalogBrokenInventoryPlan.packs[0]?.afterInventoryOk !== false ||
+  !catalogBrokenInventoryPlan.diagnostics.some(
+    (entry) => entry.source === "after-inventory" && entry.code === "missing-resource-file",
+  )
+) {
+  throw new Error("catalog update planning should surface after-inventory failures");
+}
+
+const catalogAddedManifest = createTextPackManifest({
+  id: "pack:catalog-added",
+  packageName: "@ismail-elkorchi/textpack-catalog-added",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["fr"],
+    scripts: ["Latn"],
+    profiles: ["catalog"],
+  },
+  resources: {
+    gazetteers: ["resources/gazetteer.fr.catalog.tsv"],
+  },
+  provides: {
+    gazetteers: ["gazetteer-fr-catalog"],
+  },
+  licenses: {
+    code: ["MIT"],
+    data: ["CC0-1.0"],
+  },
+  provenance: {
+    sources: ["repo:packages/textpack/test"],
+    generated: false,
+  },
+  tests: {
+    smoke: ["test:catalog:add:smoke"],
+    negative: ["test:catalog:add:negative"],
+    representative: ["test:catalog:add:representative"],
+  },
+});
+const catalogRemovedManifest = createTextPackManifest({
+  id: "pack:catalog-removed",
+  packageName: "@ismail-elkorchi/textpack-catalog-removed",
+  version: "0.1.0",
+  kind: ["domain"],
+  targets: {
+    languages: ["en"],
+    scripts: ["Latn"],
+    profiles: ["removed"],
+  },
+  resources: {
+    morphology: ["resources/morphology.en.removed.tsv"],
+  },
+  provides: {
+    morphology: ["morphology-en-removed"],
+  },
+  licenses: {
+    code: ["MIT"],
+    data: ["CC0-1.0"],
+  },
+  provenance: {
+    sources: ["repo:packages/textpack/test"],
+    generated: false,
+  },
+  tests: {
+    smoke: ["test:catalog:remove:smoke"],
+    negative: ["test:catalog:remove:negative"],
+    representative: ["test:catalog:remove:representative"],
+  },
+});
+const catalogPackTransitionPlan = createTextPackCatalogUpdatePlan({
+  beforeManifests: [createdManifest, catalogRemovedManifest],
+  afterManifests: [createdManifest, catalogAddedManifest],
+  beforeInventoryResourcePathsByPackId: {
+    [createdManifest.id]: ["resources/stopwords.en.authoring.txt"],
+    [catalogRemovedManifest.id]: ["resources/morphology.en.removed.tsv"],
+  },
+  afterInventoryResourcePathsByPackId: {
+    [createdManifest.id]: ["resources/stopwords.en.authoring.txt"],
+    [catalogAddedManifest.id]: ["resources/gazetteer.fr.catalog.tsv"],
+  },
+});
+const catalogAddedRow = catalogPackTransitionPlan.packs.find((entry) => entry.packId === catalogAddedManifest.id);
+const catalogRemovedRow = catalogPackTransitionPlan.packs.find((entry) => entry.packId === catalogRemovedManifest.id);
+const catalogRetainedRow = catalogPackTransitionPlan.packs.find((entry) => entry.packId === createdManifest.id);
+if (
+  !catalogPackTransitionPlan.ok ||
+  catalogPackTransitionPlan.addedPackCount !== 1 ||
+  catalogPackTransitionPlan.removedPackCount !== 1 ||
+  catalogPackTransitionPlan.retainedPackCount !== 1 ||
+  catalogAddedRow?.action !== "add-pack" ||
+  catalogAddedRow.versionChange !== "not-applicable" ||
+  catalogAddedRow.reviewTransition !== "unavailable" ||
+  catalogAddedRow.addedResourceFamilies.join(",") !== "gazetteers" ||
+  catalogAddedRow.addedLanguages.join(",") !== "fr" ||
+  catalogAddedRow.addedProfiles.join(",") !== "catalog" ||
+  catalogRemovedRow?.action !== "remove-pack" ||
+  catalogRemovedRow.removedResourceFamilies.join(",") !== "morphology" ||
+  catalogRemovedRow.removedResourceIds.join(",") !== "morphology-en-removed" ||
+  catalogRetainedRow?.action !== "retain-pack" ||
+  catalogRetainedRow.versionChange !== "none" ||
+  catalogRetainedRow.retainedResourceIds.join(",") !== "stopwords-en-authoring"
+) {
+  throw new Error("catalog update planning should summarize added, removed, and retained packs");
+}
+
+const catalogDuplicatePlan = createTextPackCatalogUpdatePlan({
+  beforeManifests: [
+    createdManifest,
+    {
+      ...createdManifest,
+      version: "0.1.1",
+    },
+  ],
+  afterManifests: [createdManifest],
+});
+if (
+  catalogDuplicatePlan.ok ||
+  catalogDuplicatePlan.diagnostics[0]?.code !== "duplicate-before-pack-id" ||
+  catalogDuplicatePlan.diagnostics[0].packId !== createdManifest.id
+) {
+  throw new Error("catalog update planning should report duplicate before-pack ids deterministically");
 }
 
 const authoringOverlayConflictManifest = addTextPackManifestResource(createdManifest, {

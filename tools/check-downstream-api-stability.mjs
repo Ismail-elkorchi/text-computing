@@ -957,6 +957,35 @@ async function assertBuiltPackageSmoke() {
     "textlab should inspect textpack review reports through package APIs.",
     packReviewInspection,
   );
+  const updatedManifest = textpack.updateTextPackManifest(
+    textpack.updateTextPackManifestResource(manifest, "lexicon-downstream-api", {
+      resourcePath: "resources/lexicon.v2.tsv",
+      resourceId: "lexicon-downstream-api-v2",
+    }),
+    {
+      version: "0.2.0",
+      reviewState: "candidate",
+      provenanceNotes: ["Downstream API stability catalog update smoke."],
+    },
+  );
+  const catalogUpdatePlan = textpack.createTextPackCatalogUpdatePlan({
+    beforeManifests: [manifest],
+    afterManifests: [updatedManifest],
+    beforeInventoryResourcePathsByPackId: {
+      [manifest.id]: ["resources/lexicon.tsv"],
+    },
+    afterInventoryResourcePathsByPackId: {
+      [updatedManifest.id]: ["resources/lexicon.v2.tsv"],
+    },
+  });
+  expect(
+    textpack.isTextPackCatalogUpdatePlanV1(catalogUpdatePlan) &&
+      catalogUpdatePlan.ok &&
+      catalogUpdatePlan.packs[0]?.versionChange === "upgrade" &&
+      catalogUpdatePlan.packs[0]?.reviewTransition === "promote",
+    "textpack built API should create inventory-audited catalog update plans.",
+    catalogUpdatePlan,
+  );
 
   const loadedPack = textpack.loadTextPackResources(
     [manifest],

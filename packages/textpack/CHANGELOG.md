@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Add catalog update-plan APIs for before/after manifest catalogs, version/review/resource deltas,
+  and inventory-audited update workflow evidence.
 - Add textpack review-report APIs for manifest governance, inventory, compatibility, review-state
   transition, and evidence-policy diagnostics.
 - Add a public pack-manifest schema-family exchange example with textprotocol transport.
@@ -10,7 +12,7 @@
 - Add compatibility checks, explicit pack composition, package governance diagnostics, and support
   for reference `textpack-*` package validation.
 - Promote the resource package surface to public alpha for bounded package interop.
-- Keep multilingual pack breadth and resource-vetting workflow outside the alpha support statement.
+- Keep multilingual pack breadth and external resource-vetting breadth outside the alpha support statement.
 
 ## 0.0.0
 

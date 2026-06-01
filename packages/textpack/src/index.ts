@@ -2,11 +2,14 @@ export const packageName = "@ismail-elkorchi/textpack" as const;
 export const textPackManifestVersion = "1.0.0" as const;
 export const textPackCatalogSchemaVersion = 1 as const;
 export const textPackReviewReportSchemaVersion = 1 as const;
+export const textPackCatalogUpdatePlanSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextPackManifestVersion = typeof textPackManifestVersion;
 export type TextPackCatalogSchemaVersion = typeof textPackCatalogSchemaVersion;
 export type TextPackReviewReportSchemaVersion = typeof textPackReviewReportSchemaVersion;
+export type TextPackCatalogUpdatePlanSchemaVersion =
+  typeof textPackCatalogUpdatePlanSchemaVersion;
 
 export const textPackKinds = [
   "profile",
@@ -252,6 +255,93 @@ export interface TextPackCatalogV1 {
   readonly reviewStates: readonly TextPackReviewState[];
   readonly packs: readonly TextPackCatalogPackSummaryV1[];
   readonly resourcesByFamily: readonly TextPackCatalogFamilySummaryV1[];
+}
+
+export type TextPackCatalogUpdateAction =
+  | "add-pack"
+  | "remove-pack"
+  | "update-pack"
+  | "retain-pack";
+
+export type TextPackCatalogUpdateVersionChange =
+  | "none"
+  | "upgrade"
+  | "downgrade"
+  | "changed"
+  | "not-applicable";
+
+export type TextPackCatalogUpdateDiagnosticSource =
+  | "before-manifest"
+  | "after-manifest"
+  | "before-inventory"
+  | "after-inventory"
+  | "catalog";
+
+export type TextPackCatalogUpdateDiagnosticCode =
+  | TextPackManifestGovernanceDiagnosticCode
+  | TextPackResourceInventoryDiagnosticCode
+  | "duplicate-before-pack-id"
+  | "duplicate-after-pack-id";
+
+export interface TextPackCatalogUpdateDiagnostic {
+  readonly source: TextPackCatalogUpdateDiagnosticSource;
+  readonly code: TextPackCatalogUpdateDiagnosticCode;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly family?: TextPackResourceFamily;
+  readonly path?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextPackCatalogUpdatePackPlanV1 {
+  readonly packId: string;
+  readonly action: TextPackCatalogUpdateAction;
+  readonly packageName?: string;
+  readonly beforeVersion?: string;
+  readonly afterVersion?: string;
+  readonly versionChange: TextPackCatalogUpdateVersionChange;
+  readonly beforeReviewState?: TextPackReviewState;
+  readonly afterReviewState?: TextPackReviewState;
+  readonly reviewTransition: TextPackReviewTransition;
+  readonly beforeResourceCount: number;
+  readonly afterResourceCount: number;
+  readonly addedResourceIds: readonly string[];
+  readonly removedResourceIds: readonly string[];
+  readonly retainedResourceIds: readonly string[];
+  readonly addedResourceFamilies: readonly TextPackResourceFamily[];
+  readonly removedResourceFamilies: readonly TextPackResourceFamily[];
+  readonly addedLanguages: readonly string[];
+  readonly removedLanguages: readonly string[];
+  readonly addedProfiles: readonly string[];
+  readonly removedProfiles: readonly string[];
+  readonly beforeInventoryOk: boolean;
+  readonly afterInventoryOk: boolean;
+  readonly diagnosticCount: number;
+}
+
+export interface TextPackCatalogUpdatePlanOptions {
+  readonly beforeManifests: readonly TextPackManifestV1[];
+  readonly afterManifests: readonly TextPackManifestV1[];
+  readonly beforeInventoryResourcePathsByPackId?: Readonly<Record<string, readonly string[]>>;
+  readonly afterInventoryResourcePathsByPackId?: Readonly<Record<string, readonly string[]>>;
+}
+
+export interface TextPackCatalogUpdatePlanV1 {
+  readonly schemaVersion: TextPackCatalogUpdatePlanSchemaVersion;
+  readonly packageName: PackageName;
+  readonly ok: boolean;
+  readonly beforeCatalog: TextPackCatalogV1;
+  readonly afterCatalog: TextPackCatalogV1;
+  readonly packCountBefore: number;
+  readonly packCountAfter: number;
+  readonly addedPackCount: number;
+  readonly removedPackCount: number;
+  readonly updatedPackCount: number;
+  readonly retainedPackCount: number;
+  readonly diagnosticCount: number;
+  readonly packs: readonly TextPackCatalogUpdatePackPlanV1[];
+  readonly diagnostics: readonly TextPackCatalogUpdateDiagnostic[];
 }
 
 export interface TextPackCanonicalizer {
@@ -1423,6 +1513,370 @@ export function isTextPackCatalogV1(value: unknown): value is TextPackCatalogV1 
     Array.isArray(value.resourcesByFamily) &&
     value.resourcesByFamily.every((entry) => isTextPackCatalogFamilySummaryV1(entry))
   );
+}
+
+function isTextPackCatalogUpdateAction(value: unknown): value is TextPackCatalogUpdateAction {
+  return value === "add-pack" || value === "remove-pack" || value === "update-pack" || value === "retain-pack";
+}
+
+function isTextPackCatalogUpdateVersionChange(value: unknown): value is TextPackCatalogUpdateVersionChange {
+  return (
+    value === "none" ||
+    value === "upgrade" ||
+    value === "downgrade" ||
+    value === "changed" ||
+    value === "not-applicable"
+  );
+}
+
+function isTextPackCatalogUpdateDiagnosticSource(
+  value: unknown,
+): value is TextPackCatalogUpdateDiagnosticSource {
+  return (
+    value === "before-manifest" ||
+    value === "after-manifest" ||
+    value === "before-inventory" ||
+    value === "after-inventory" ||
+    value === "catalog"
+  );
+}
+
+function isTextPackCatalogUpdateDiagnostic(
+  value: unknown,
+): value is TextPackCatalogUpdateDiagnostic {
+  return (
+    isRecord(value) &&
+    isTextPackCatalogUpdateDiagnosticSource(value.source) &&
+    isNonEmptyString(value.code) &&
+    (value.packId === undefined || isNonEmptyString(value.packId)) &&
+    (value.resourceId === undefined || isNonEmptyString(value.resourceId)) &&
+    (value.family === undefined || isTextPackResourceFamily(value.family)) &&
+    (value.path === undefined || isNonEmptyString(value.path)) &&
+    (value.ref === undefined || isNonEmptyString(value.ref)) &&
+    isNonEmptyString(value.message)
+  );
+}
+
+function isTextPackCatalogUpdatePackPlanV1(
+  value: unknown,
+): value is TextPackCatalogUpdatePackPlanV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.packId) &&
+    isTextPackCatalogUpdateAction(value.action) &&
+    (value.packageName === undefined || isNonEmptyString(value.packageName)) &&
+    (value.beforeVersion === undefined || isNonEmptyString(value.beforeVersion)) &&
+    (value.afterVersion === undefined || isNonEmptyString(value.afterVersion)) &&
+    isTextPackCatalogUpdateVersionChange(value.versionChange) &&
+    (value.beforeReviewState === undefined || isTextPackReviewState(value.beforeReviewState)) &&
+    (value.afterReviewState === undefined || isTextPackReviewState(value.afterReviewState)) &&
+    isTextPackReviewTransition(value.reviewTransition) &&
+    typeof value.beforeResourceCount === "number" &&
+    Number.isInteger(value.beforeResourceCount) &&
+    value.beforeResourceCount >= 0 &&
+    typeof value.afterResourceCount === "number" &&
+    Number.isInteger(value.afterResourceCount) &&
+    value.afterResourceCount >= 0 &&
+    isPossiblyEmptyStringArray(value.addedResourceIds) &&
+    isPossiblyEmptyStringArray(value.removedResourceIds) &&
+    isPossiblyEmptyStringArray(value.retainedResourceIds) &&
+    isTextPackResourceFamilyArray(value.addedResourceFamilies) &&
+    isTextPackResourceFamilyArray(value.removedResourceFamilies) &&
+    isPossiblyEmptyStringArray(value.addedLanguages) &&
+    isPossiblyEmptyStringArray(value.removedLanguages) &&
+    isPossiblyEmptyStringArray(value.addedProfiles) &&
+    isPossiblyEmptyStringArray(value.removedProfiles) &&
+    typeof value.beforeInventoryOk === "boolean" &&
+    typeof value.afterInventoryOk === "boolean" &&
+    typeof value.diagnosticCount === "number" &&
+    Number.isInteger(value.diagnosticCount) &&
+    value.diagnosticCount >= 0
+  );
+}
+
+export function isTextPackCatalogUpdatePlanV1(value: unknown): value is TextPackCatalogUpdatePlanV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textPackCatalogUpdatePlanSchemaVersion &&
+    value.packageName === packageName &&
+    typeof value.ok === "boolean" &&
+    isTextPackCatalogV1(value.beforeCatalog) &&
+    isTextPackCatalogV1(value.afterCatalog) &&
+    typeof value.packCountBefore === "number" &&
+    Number.isInteger(value.packCountBefore) &&
+    value.packCountBefore >= 0 &&
+    typeof value.packCountAfter === "number" &&
+    Number.isInteger(value.packCountAfter) &&
+    value.packCountAfter >= 0 &&
+    typeof value.addedPackCount === "number" &&
+    Number.isInteger(value.addedPackCount) &&
+    value.addedPackCount >= 0 &&
+    typeof value.removedPackCount === "number" &&
+    Number.isInteger(value.removedPackCount) &&
+    value.removedPackCount >= 0 &&
+    typeof value.updatedPackCount === "number" &&
+    Number.isInteger(value.updatedPackCount) &&
+    value.updatedPackCount >= 0 &&
+    typeof value.retainedPackCount === "number" &&
+    Number.isInteger(value.retainedPackCount) &&
+    value.retainedPackCount >= 0 &&
+    typeof value.diagnosticCount === "number" &&
+    Number.isInteger(value.diagnosticCount) &&
+    value.diagnosticCount >= 0 &&
+    Array.isArray(value.packs) &&
+    value.packs.every((entry) => isTextPackCatalogUpdatePackPlanV1(entry)) &&
+    Array.isArray(value.diagnostics) &&
+    value.diagnostics.every((entry) => isTextPackCatalogUpdateDiagnostic(entry)) &&
+    value.diagnosticCount === value.diagnostics.length
+  );
+}
+
+function compareTextPackCatalogUpdateDiagnostics(
+  left: TextPackCatalogUpdateDiagnostic,
+  right: TextPackCatalogUpdateDiagnostic,
+): number {
+  return (
+    left.source.localeCompare(right.source) ||
+    (left.packId ?? "").localeCompare(right.packId ?? "") ||
+    left.code.localeCompare(right.code) ||
+    (left.family ?? "").localeCompare(right.family ?? "") ||
+    (left.path ?? "").localeCompare(right.path ?? "") ||
+    (left.resourceId ?? "").localeCompare(right.resourceId ?? "") ||
+    (left.ref ?? "").localeCompare(right.ref ?? "")
+  );
+}
+
+function toTextPackCatalogUpdateDiagnostic(
+  source: TextPackCatalogUpdateDiagnosticSource,
+  diagnostic: TextPackManifestGovernanceDiagnostic | TextPackResourceInventoryDiagnostic,
+): TextPackCatalogUpdateDiagnostic {
+  return {
+    source,
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...("family" in diagnostic && diagnostic.family !== undefined ? { family: diagnostic.family } : {}),
+    ...("path" in diagnostic && diagnostic.path !== undefined ? { path: diagnostic.path } : {}),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+function textPackCatalogManifestMap(
+  manifests: readonly TextPackManifestV1[],
+  source: "before" | "after",
+  diagnostics: TextPackCatalogUpdateDiagnostic[],
+): ReadonlyMap<string, TextPackManifestV1> {
+  const map = new Map<string, TextPackManifestV1>();
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+  for (const manifest of manifests) {
+    if (seen.has(manifest.id)) duplicates.add(manifest.id);
+    seen.add(manifest.id);
+    map.set(manifest.id, manifest);
+  }
+  for (const duplicate of [...duplicates].sort((left, right) => left.localeCompare(right))) {
+    diagnostics.push({
+      source: "catalog",
+      code: source === "before" ? "duplicate-before-pack-id" : "duplicate-after-pack-id",
+      packId: duplicate,
+      message: `Catalog update input repeats ${source} pack id ${duplicate}.`,
+    });
+  }
+  return map;
+}
+
+function textPackDeclaredInventoryPaths(manifest: TextPackManifestV1): readonly string[] {
+  return sortedUniqueTextPackValues(declaredTextPackResourceEntries(manifest).map((entry) => entry.path));
+}
+
+function textPackCatalogResourceIds(manifest: TextPackManifestV1 | undefined): readonly string[] {
+  return manifest === undefined ? [] : [...resourceIdsForManifest(manifest)].sort((left, right) => left.localeCompare(right));
+}
+
+function textPackCatalogResourceFamilies(manifest: TextPackManifestV1 | undefined): readonly TextPackResourceFamily[] {
+  if (manifest === undefined) return [];
+  return sortedUniqueTextPackValues(
+    resolveTextPackManifestResources(manifest).map((resource) => resource.family),
+  ) as readonly TextPackResourceFamily[];
+}
+
+function textPackSetAdded(left: readonly string[], right: readonly string[]): readonly string[] {
+  const leftSet = new Set(left);
+  return right.filter((entry) => !leftSet.has(entry)).sort((a, b) => a.localeCompare(b));
+}
+
+function textPackSetRetained(left: readonly string[], right: readonly string[]): readonly string[] {
+  const rightSet = new Set(right);
+  return left.filter((entry) => rightSet.has(entry)).sort((a, b) => a.localeCompare(b));
+}
+
+function textPackFamilySetAdded(
+  left: readonly TextPackResourceFamily[],
+  right: readonly TextPackResourceFamily[],
+): readonly TextPackResourceFamily[] {
+  return textPackSetAdded(left, right) as readonly TextPackResourceFamily[];
+}
+
+function textPackCatalogVersionChange(
+  before: TextPackManifestV1 | undefined,
+  after: TextPackManifestV1 | undefined,
+): TextPackCatalogUpdateVersionChange {
+  if (before === undefined || after === undefined) return "not-applicable";
+  if (before.version === after.version) return "none";
+  const comparison = compareTextPackVersions(after.version, before.version);
+  if (comparison > 0) return "upgrade";
+  if (comparison < 0) return "downgrade";
+  return "changed";
+}
+
+function textPackCatalogUpdateAction(
+  before: TextPackManifestV1 | undefined,
+  after: TextPackManifestV1 | undefined,
+  addedResourceIds: readonly string[],
+  removedResourceIds: readonly string[],
+  versionChange: TextPackCatalogUpdateVersionChange,
+): TextPackCatalogUpdateAction {
+  if (before === undefined) return "add-pack";
+  if (after === undefined) return "remove-pack";
+  if (
+    versionChange !== "none" ||
+    before.reviewState !== after.reviewState ||
+    addedResourceIds.length > 0 ||
+    removedResourceIds.length > 0 ||
+    JSON.stringify(normalizedTextPackTargets(before.targets)) !== JSON.stringify(normalizedTextPackTargets(after.targets))
+  ) {
+    return "update-pack";
+  }
+  return "retain-pack";
+}
+
+export function createTextPackCatalogUpdatePlan(
+  options: TextPackCatalogUpdatePlanOptions,
+): TextPackCatalogUpdatePlanV1 {
+  for (const manifest of [...options.beforeManifests, ...options.afterManifests]) {
+    if (!isTextPackManifestV1(manifest)) {
+      throw new TypeError("textpack catalog update planning requires TextPackManifestV1 inputs");
+    }
+  }
+
+  const diagnostics: TextPackCatalogUpdateDiagnostic[] = [];
+  const beforeById = textPackCatalogManifestMap(options.beforeManifests, "before", diagnostics);
+  const afterById = textPackCatalogManifestMap(options.afterManifests, "after", diagnostics);
+  const beforeCatalog = createTextPackCatalog(createTextPackResourceRegistry(options.beforeManifests));
+  const afterCatalog = createTextPackCatalog(createTextPackResourceRegistry(options.afterManifests));
+  const packIds = sortedUniqueTextPackValues([
+    ...options.beforeManifests.map((manifest) => manifest.id),
+    ...options.afterManifests.map((manifest) => manifest.id),
+  ]);
+
+  const packs: TextPackCatalogUpdatePackPlanV1[] = [];
+  for (const packId of packIds) {
+    const before = beforeById.get(packId);
+    const after = afterById.get(packId);
+    const beforePaths = before === undefined
+      ? []
+      : (options.beforeInventoryResourcePathsByPackId?.[packId] ?? textPackDeclaredInventoryPaths(before));
+    const afterPaths = after === undefined
+      ? []
+      : (options.afterInventoryResourcePathsByPackId?.[packId] ?? textPackDeclaredInventoryPaths(after));
+    const beforeInventory = before === undefined
+      ? undefined
+      : validateTextPackResourceInventory(before, beforePaths);
+    const afterInventory = after === undefined
+      ? undefined
+      : validateTextPackResourceInventory(after, afterPaths);
+
+    if (before !== undefined) {
+      diagnostics.push(
+        ...validateTextPackManifestGovernance(before).diagnostics.map((entry) =>
+          toTextPackCatalogUpdateDiagnostic("before-manifest", entry),
+        ),
+      );
+      diagnostics.push(
+        ...(beforeInventory?.diagnostics ?? []).map((entry) =>
+          toTextPackCatalogUpdateDiagnostic("before-inventory", entry),
+        ),
+      );
+    }
+    if (after !== undefined) {
+      diagnostics.push(
+        ...validateTextPackManifestGovernance(after).diagnostics.map((entry) =>
+          toTextPackCatalogUpdateDiagnostic("after-manifest", entry),
+        ),
+      );
+      diagnostics.push(
+        ...(afterInventory?.diagnostics ?? []).map((entry) =>
+          toTextPackCatalogUpdateDiagnostic("after-inventory", entry),
+        ),
+      );
+    }
+
+    const beforeResourceIds = textPackCatalogResourceIds(before);
+    const afterResourceIds = textPackCatalogResourceIds(after);
+    const beforeFamilies = textPackCatalogResourceFamilies(before);
+    const afterFamilies = textPackCatalogResourceFamilies(after);
+    const beforeLanguages = before?.targets.languages ?? [];
+    const afterLanguages = after?.targets.languages ?? [];
+    const beforeProfiles = before?.targets.profiles ?? [];
+    const afterProfiles = after?.targets.profiles ?? [];
+    const versionChange = textPackCatalogVersionChange(before, after);
+    const addedResourceIds = textPackSetAdded(beforeResourceIds, afterResourceIds);
+    const removedResourceIds = textPackSetAdded(afterResourceIds, beforeResourceIds);
+    const action = textPackCatalogUpdateAction(before, after, addedResourceIds, removedResourceIds, versionChange);
+    const packDiagnostics = diagnostics.filter((entry) => entry.packId === packId);
+    const packPackageName = after?.packageName ?? before?.packageName;
+    packs.push({
+      packId,
+      action,
+      ...(packPackageName === undefined ? {} : { packageName: packPackageName }),
+      ...(before === undefined ? {} : { beforeVersion: before.version }),
+      ...(after === undefined ? {} : { afterVersion: after.version }),
+      versionChange,
+      ...(before === undefined ? {} : { beforeReviewState: before.reviewState }),
+      ...(after === undefined ? {} : { afterReviewState: after.reviewState }),
+      reviewTransition: before !== undefined && after !== undefined
+        ? textPackReviewTransitionFor(before.reviewState, after.reviewState)
+        : "unavailable",
+      beforeResourceCount: beforeResourceIds.length,
+      afterResourceCount: afterResourceIds.length,
+      addedResourceIds,
+      removedResourceIds,
+      retainedResourceIds: textPackSetRetained(beforeResourceIds, afterResourceIds),
+      addedResourceFamilies: textPackFamilySetAdded(beforeFamilies, afterFamilies),
+      removedResourceFamilies: textPackFamilySetAdded(afterFamilies, beforeFamilies),
+      addedLanguages: textPackSetAdded(beforeLanguages, afterLanguages),
+      removedLanguages: textPackSetAdded(afterLanguages, beforeLanguages),
+      addedProfiles: textPackSetAdded(beforeProfiles, afterProfiles),
+      removedProfiles: textPackSetAdded(afterProfiles, beforeProfiles),
+      beforeInventoryOk: beforeInventory?.ok ?? true,
+      afterInventoryOk: afterInventory?.ok ?? true,
+      diagnosticCount: packDiagnostics.length,
+    });
+  }
+
+  const sortedPacks = packs.sort((left, right) => left.packId.localeCompare(right.packId));
+  const sortedDiagnostics = diagnostics.sort(compareTextPackCatalogUpdateDiagnostics);
+  const plan: TextPackCatalogUpdatePlanV1 = {
+    schemaVersion: textPackCatalogUpdatePlanSchemaVersion,
+    packageName,
+    ok: sortedDiagnostics.length === 0,
+    beforeCatalog,
+    afterCatalog,
+    packCountBefore: beforeCatalog.packCount,
+    packCountAfter: afterCatalog.packCount,
+    addedPackCount: sortedPacks.filter((entry) => entry.action === "add-pack").length,
+    removedPackCount: sortedPacks.filter((entry) => entry.action === "remove-pack").length,
+    updatedPackCount: sortedPacks.filter((entry) => entry.action === "update-pack").length,
+    retainedPackCount: sortedPacks.filter((entry) => entry.action === "retain-pack").length,
+    diagnosticCount: sortedDiagnostics.length,
+    packs: sortedPacks,
+    diagnostics: sortedDiagnostics,
+  };
+  if (!isTextPackCatalogUpdatePlanV1(plan)) {
+    throw new TypeError("textpack catalog update plan could not be produced");
+  }
+  return plan;
 }
 
 function isTextPackReviewCurrentState(value: unknown): value is TextPackReviewCurrentState {
