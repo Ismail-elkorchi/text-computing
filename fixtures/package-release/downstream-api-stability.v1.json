@@ -213,10 +213,12 @@
         "packages/textlab/test/index.test.mjs",
         "examples/textlab-benchmark-report-consumer.mjs",
         "examples/textlab-corpus-artifact-consumer.mjs",
+        "examples/textlab-external-tool-consumer.mjs",
+        "schemas/textlab-external-tool-execution-report-v1.schema.json",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API import, smoke usage, and paginated corpus artifact inspection; it does not add an interactive UI or external-tool execution engine."
+        "This verifies current built-package API import, smoke usage, paginated corpus artifact inspection, and explicit external-tool execution reports; it does not add an interactive UI."
       ]
     },
     {

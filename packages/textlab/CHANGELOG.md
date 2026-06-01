@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add standalone external-tool execution reports and CLI output over explicit command specs.
 - Add textcorpus retrieval-calibration report inspection through the corpus-artifact API.
 - Add deterministic corpus-artifact pagination for API and CLI inspection output.
 - Add textpack review-report inspection APIs, CLI output, and a public consumer example.

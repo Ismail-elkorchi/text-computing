@@ -59,10 +59,52 @@ import {
   packageName as textRulesPackageName,
   type TextRulesTextPackRuleKind,
 } from "@ismail-elkorchi/textrules";
+import { execFile } from "node:child_process";
+import { performance } from "node:perf_hooks";
 
 export const packageName = "@ismail-elkorchi/textlab" as const;
+export const textlabExternalToolExecutionReportSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
+export type TextlabExternalToolExecutionReportSchemaVersion =
+  typeof textlabExternalToolExecutionReportSchemaVersion;
+export type TextlabExternalToolExecutionStatus = "passed" | "failed" | "timed-out";
+
+export interface TextlabExternalToolExecutionSpec {
+  readonly toolId: string;
+  readonly command: string;
+  readonly args?: readonly string[];
+  readonly cwd?: string;
+  readonly timeoutMs?: number;
+  readonly env?: Readonly<Record<string, string>>;
+  readonly maxOutputChars?: number;
+  readonly evidenceRefs?: readonly string[];
+  readonly limitations?: readonly string[];
+}
+
+export interface TextlabExternalToolExecutionReportV1 {
+  readonly schemaVersion: TextlabExternalToolExecutionReportSchemaVersion;
+  readonly artifactType: "textlab-external-tool-execution-report-v1";
+  readonly toolId: string;
+  readonly command: string;
+  readonly args: readonly string[];
+  readonly cwd?: string;
+  readonly status: TextlabExternalToolExecutionStatus;
+  readonly exitCode?: number;
+  readonly signal?: string;
+  readonly failureCode?: string;
+  readonly timedOut: boolean;
+  readonly durationMs: number;
+  readonly stdoutLength: number;
+  readonly stderrLength: number;
+  readonly stdoutPreview: string;
+  readonly stderrPreview: string;
+  readonly stdoutTruncated: boolean;
+  readonly stderrTruncated: boolean;
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+}
+
 export interface TextlabConformanceReportSummary {
   readonly schemaVersion: 1;
   readonly reportId: string;
@@ -533,6 +575,224 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
+function isStringRecord(value: unknown): value is Readonly<Record<string, string>> {
+  return isRecord(value) && Object.values(value).every((entry) => typeof entry === "string");
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isNonNegativeFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+function positiveInteger(value: unknown, label: string): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    throw new TypeError(`${label} must be a positive integer`);
+  }
+  return value;
+}
+
+function isTextlabExternalToolExecutionStatus(value: unknown): value is TextlabExternalToolExecutionStatus {
+  return value === "passed" || value === "failed" || value === "timed-out";
+}
+
+export function isTextlabExternalToolExecutionReportV1(
+  value: unknown,
+): value is TextlabExternalToolExecutionReportV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textlabExternalToolExecutionReportSchemaVersion &&
+    value.artifactType === "textlab-external-tool-execution-report-v1" &&
+    isNonEmptyString(value.toolId) &&
+    isNonEmptyString(value.command) &&
+    isStringArray(value.args) &&
+    (value.cwd === undefined || isNonEmptyString(value.cwd)) &&
+    isTextlabExternalToolExecutionStatus(value.status) &&
+    (value.exitCode === undefined || isNonNegativeInteger(value.exitCode)) &&
+    (value.signal === undefined || isNonEmptyString(value.signal)) &&
+    (value.failureCode === undefined || isNonEmptyString(value.failureCode)) &&
+    typeof value.timedOut === "boolean" &&
+    isNonNegativeFiniteNumber(value.durationMs) &&
+    isNonNegativeInteger(value.stdoutLength) &&
+    isNonNegativeInteger(value.stderrLength) &&
+    typeof value.stdoutPreview === "string" &&
+    typeof value.stderrPreview === "string" &&
+    typeof value.stdoutTruncated === "boolean" &&
+    typeof value.stderrTruncated === "boolean" &&
+    isStringArray(value.evidenceRefs) &&
+    isStringArray(value.limitations) &&
+    value.limitations.length >= 1 &&
+    (value.status === "timed-out" ? value.timedOut : true)
+  );
+}
+
+function assertTextlabExternalToolExecutionSpec(
+  spec: TextlabExternalToolExecutionSpec,
+): void {
+  if (!isRecord(spec)) {
+    throw new TypeError("external tool execution spec must be a record");
+  }
+  if (!isNonEmptyString(spec.toolId)) {
+    throw new TypeError("external tool id must be a non-empty string");
+  }
+  if (!isNonEmptyString(spec.command)) {
+    throw new TypeError("external tool command must be a non-empty string");
+  }
+  if (spec.args !== undefined && !isStringArray(spec.args)) {
+    throw new TypeError("external tool args must be strings");
+  }
+  if (spec.cwd !== undefined && !isNonEmptyString(spec.cwd)) {
+    throw new TypeError("external tool cwd must be a non-empty string");
+  }
+  if (spec.timeoutMs !== undefined) positiveInteger(spec.timeoutMs, "external tool timeoutMs");
+  if (spec.maxOutputChars !== undefined) positiveInteger(spec.maxOutputChars, "external tool maxOutputChars");
+  if (spec.env !== undefined && !isStringRecord(spec.env)) {
+    throw new TypeError("external tool env must be a string record");
+  }
+  if (spec.evidenceRefs !== undefined && !isStringArray(spec.evidenceRefs)) {
+    throw new TypeError("external tool evidence refs must be strings");
+  }
+  if (spec.limitations !== undefined && (!isStringArray(spec.limitations) || spec.limitations.length === 0)) {
+    throw new TypeError("external tool limitations must be a non-empty string array");
+  }
+}
+
+function previewOutput(value: string, maxOutputChars: number): {
+  readonly preview: string;
+  readonly truncated: boolean;
+} {
+  return {
+    preview: value.length <= maxOutputChars ? value : value.slice(0, maxOutputChars),
+    truncated: value.length > maxOutputChars,
+  };
+}
+
+interface TextlabExecFileResult {
+  readonly exitCode?: number;
+  readonly signal?: string;
+  readonly failureCode?: string;
+  readonly timedOut: boolean;
+  readonly stdout: string;
+  readonly stderr: string;
+}
+
+function runExecFile(spec: TextlabExternalToolExecutionSpec): Promise<TextlabExecFileResult> {
+  const timeout = spec.timeoutMs ?? 30_000;
+  return new Promise((resolve) => {
+    execFile(
+      spec.command,
+      [...(spec.args ?? [])],
+      {
+        ...(spec.cwd === undefined ? {} : { cwd: spec.cwd }),
+        env: spec.env === undefined ? process.env : { ...process.env, ...spec.env },
+        encoding: "utf8",
+        timeout,
+        windowsHide: true,
+      },
+      (error, stdout, stderr) => {
+        if (error === null) {
+          resolve({
+            exitCode: 0,
+            timedOut: false,
+            stdout,
+            stderr,
+          });
+          return;
+        }
+        const execError = error as Error & {
+          readonly code?: number | string;
+          readonly signal?: string;
+          readonly killed?: boolean;
+        };
+        const exitCode = typeof execError.code === "number" ? execError.code : undefined;
+        const failureCode = typeof execError.code === "string" ? execError.code : undefined;
+        const signal = typeof execError.signal === "string" ? execError.signal : undefined;
+        resolve({
+          ...(exitCode === undefined ? {} : { exitCode }),
+          ...(signal === undefined ? {} : { signal }),
+          ...(failureCode === undefined ? {} : { failureCode }),
+          timedOut: execError.killed === true && signal === "SIGTERM",
+          stdout,
+          stderr,
+        });
+      },
+    );
+  });
+}
+
+export async function executeTextlabExternalTool(
+  spec: TextlabExternalToolExecutionSpec,
+): Promise<TextlabExternalToolExecutionReportV1> {
+  assertTextlabExternalToolExecutionSpec(spec);
+  const maxOutputChars = spec.maxOutputChars ?? 4096;
+  const started = performance.now();
+  const result = await runExecFile(spec);
+  const durationMs = Math.max(0, performance.now() - started);
+  const stdout = previewOutput(result.stdout, maxOutputChars);
+  const stderr = previewOutput(result.stderr, maxOutputChars);
+  const status: TextlabExternalToolExecutionStatus = result.timedOut
+    ? "timed-out"
+    : result.exitCode === 0
+      ? "passed"
+      : "failed";
+  const report = {
+    schemaVersion: textlabExternalToolExecutionReportSchemaVersion,
+    artifactType: "textlab-external-tool-execution-report-v1",
+    toolId: spec.toolId,
+    command: spec.command,
+    args: [...(spec.args ?? [])],
+    ...(spec.cwd === undefined ? {} : { cwd: spec.cwd }),
+    status,
+    ...(result.exitCode === undefined ? {} : { exitCode: result.exitCode }),
+    ...(result.signal === undefined ? {} : { signal: result.signal }),
+    ...(result.failureCode === undefined ? {} : { failureCode: result.failureCode }),
+    timedOut: result.timedOut,
+    durationMs,
+    stdoutLength: result.stdout.length,
+    stderrLength: result.stderr.length,
+    stdoutPreview: stdout.preview,
+    stderrPreview: stderr.preview,
+    stdoutTruncated: stdout.truncated,
+    stderrTruncated: stderr.truncated,
+    evidenceRefs: [...(spec.evidenceRefs ?? [])],
+    limitations: [
+      ...(spec.limitations ?? [
+        "External tool execution report records one local child-process result for an explicit command and argument vector.",
+      ]),
+    ],
+  } satisfies TextlabExternalToolExecutionReportV1;
+  if (!isTextlabExternalToolExecutionReportV1(report)) {
+    throw new TypeError("external tool execution report is invalid");
+  }
+  return report;
+}
+
+export function renderTextlabExternalToolExecutionReport(
+  report: TextlabExternalToolExecutionReportV1,
+): string {
+  if (!isTextlabExternalToolExecutionReportV1(report)) {
+    throw new TypeError("external tool execution report is invalid");
+  }
+  return [
+    "# textlab external tool execution",
+    `Tool: ${report.toolId}`,
+    `Command: ${[report.command, ...report.args].join(" ")}`,
+    `Status: ${report.status}`,
+    `Exit code: ${report.exitCode ?? "none"}`,
+    `Signal: ${report.signal ?? "none"}`,
+    `Duration ms: ${report.durationMs}`,
+    `Stdout length: ${report.stdoutLength}`,
+    `Stderr length: ${report.stderrLength}`,
+    `Stdout truncated: ${String(report.stdoutTruncated)}`,
+    `Stderr truncated: ${String(report.stderrTruncated)}`,
+    report.stdoutPreview.length === 0 ? "Stdout: " : `Stdout: ${report.stdoutPreview}`,
+    report.stderrPreview.length === 0 ? "Stderr: " : `Stderr: ${report.stderrPreview}`,
+    "",
+  ].join("\n");
 }
 
 function countById(values: readonly string[]): readonly TextlabCount[] {
