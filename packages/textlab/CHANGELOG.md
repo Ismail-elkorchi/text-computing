@@ -2,7 +2,7 @@
 
 ## 0.1.0
 
-- Add deterministic inspection-session APIs for page navigation over caller-provided inspection rows.
+- Add deterministic inspection-session APIs and CLI navigation over caller-provided inspection rows.
 - Add standalone external-tool execution reports and CLI output over explicit command specs.
 - Add textcorpus retrieval-calibration report inspection through the corpus-artifact API.
 - Add deterministic corpus-artifact pagination for API and CLI inspection output.

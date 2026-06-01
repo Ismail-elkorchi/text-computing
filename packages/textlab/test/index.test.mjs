@@ -1643,6 +1643,10 @@ const retrievalEvaluationPath = path.join(dir, "retrieval-evaluation.json");
 await writeFile(retrievalEvaluationPath, `${JSON.stringify(retrievalEvaluation, null, 2)}\n`, "utf8");
 const releaseReadinessPath = path.join(dir, "release-readiness.json");
 await writeFile(releaseReadinessPath, `${JSON.stringify(releaseReadiness, null, 2)}\n`, "utf8");
+const inspectionRowsPath = path.join(dir, "inspection-session-rows.json");
+await writeFile(inspectionRowsPath, `${JSON.stringify(inspectionRows, null, 2)}\n`, "utf8");
+const inspectionSessionPath = path.join(dir, "inspection-session.json");
+await writeFile(inspectionSessionPath, `${JSON.stringify(inspectionSession, null, 2)}\n`, "utf8");
 
 
 const reportCliResult = await runTextlabCli(["conformance-report", reportPath]);
@@ -1701,6 +1705,65 @@ if (
   externalToolCliReport.toolId !== "fixture-cli-node"
 ) {
   throw new Error(`external-tool CLI should execute command specs: ${externalToolCliResult.stderr}`);
+}
+
+const inspectionSessionCliResult = await runTextlabCli([
+  "inspection-session",
+  inspectionRowsPath,
+  "--session-id",
+  "session:cli",
+  "--subject-id",
+  "artifact:cli",
+  "--title",
+  "CLI artifact index",
+  "--page-size",
+  "2",
+  "--command",
+  "next-page",
+  "--json",
+]);
+const inspectionSessionCliJson =
+  inspectionSessionCliResult.exitCode === 0 ? JSON.parse(inspectionSessionCliResult.stdout) : {};
+if (
+  inspectionSessionCliResult.exitCode !== 0 ||
+  inspectionSessionCliJson.pageIndex !== 1 ||
+  inspectionSessionCliJson.pageRows?.[0]?.id !== "gamma" ||
+  inspectionSessionCliJson.commandHistory?.[0]?.command !== "next-page"
+) {
+  throw new Error(`inspection-session CLI should create and navigate deterministic pages: ${inspectionSessionCliResult.stderr}`);
+}
+
+const inspectionSessionContinueCliResult = await runTextlabCli([
+  "inspection-session",
+  inspectionRowsPath,
+  "--from-session",
+  inspectionSessionPath,
+  "--command",
+  "last-page",
+]);
+if (
+  inspectionSessionContinueCliResult.exitCode !== 0 ||
+  !inspectionSessionContinueCliResult.stdout.includes("Page: 2 / 2") ||
+  !inspectionSessionContinueCliResult.stdout.includes("Commands: 1")
+) {
+  throw new Error(`inspection-session CLI should continue from existing session state: ${inspectionSessionContinueCliResult.stderr}`);
+}
+
+const invalidInspectionSessionCliResult = await runTextlabCli([
+  "inspection-session",
+  inspectionRowsPath,
+  "--session-id",
+  "session:cli-invalid",
+  "--subject-id",
+  "artifact:cli",
+  "--page-size",
+  "0",
+]);
+if (
+  invalidInspectionSessionCliResult.exitCode !== 2 ||
+  !invalidInspectionSessionCliResult.stderr.includes("--page-size must be a positive integer.")
+) {
+  throw new Error("inspection-session CLI should reject invalid page sizes before execution");
 }
 
 const packageCliResult = await runTextlabCli(["package", packagePath]);
