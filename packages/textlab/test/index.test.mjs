@@ -17,6 +17,7 @@ import {
   inspectReleaseReadiness,
   inspectRetrievalEvaluation,
   inspectRetrievalQrels,
+  inspectTextCorpusArtifact,
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
@@ -37,6 +38,7 @@ import {
   renderReleaseReadinessInspection,
   renderRetrievalEvaluationInspection,
   renderRetrievalQrelsInspection,
+  renderTextCorpusArtifactInspection,
   renderTextdocAnnotationInspection,
   renderTextdocDocumentInspection,
   renderTextPackInspection,
@@ -1005,6 +1007,96 @@ if (!renderCorpusFixtureInspection(corpusInspection).includes("Empty documents: 
   throw new Error("corpus fixture renderer should include empty-document count");
 }
 
+const corpusSelection = {
+  schemaVersion: 1,
+  corpusId: "corpus-artifact-smoke",
+  tokenSource: "explicit-textdoc-token-layer",
+  units: "utf16-code-unit",
+  documentOrder: ["doc-a", "doc-b"],
+  tokenCount: 4,
+  documents: [
+    {
+      id: "doc-a",
+      documentId: "doc:a",
+      revision: "r1",
+      viewId: "source",
+      tokenLayerId: "tokens",
+      tokenCount: 2,
+    },
+    {
+      id: "doc-b",
+      documentId: "doc:b",
+      revision: "r1",
+      viewId: "source",
+      tokenLayerId: "tokens",
+      tokenCount: 2,
+    },
+  ],
+};
+const corpusArtifact = {
+  schemaVersion: 1,
+  corpusId: "corpus-artifact-smoke",
+  tokenSource: "explicit-textdoc-token-layer",
+  evidenceClass: "E2",
+  selection: corpusSelection,
+  rows: [
+    {
+      term: "alpha",
+      count: 2,
+      documentFrequency: 2,
+      relativeFrequency: 0.5,
+    },
+    {
+      term: "beta",
+      count: 1,
+      documentFrequency: 1,
+      relativeFrequency: 0.25,
+    },
+  ],
+};
+const corpusArtifactInspection = inspectTextCorpusArtifact(corpusArtifact);
+if (
+  corpusArtifactInspection.artifactKind !== "frequency" ||
+  corpusArtifactInspection.documentCount !== 2 ||
+  corpusArtifactInspection.tokenCount !== 4 ||
+  corpusArtifactInspection.rowCount !== 2 ||
+  corpusArtifactInspection.evidenceClass !== "E2"
+) {
+  throw new Error("textcorpus artifact inspection should summarize frequency artifacts");
+}
+if (!renderTextCorpusArtifactInspection(corpusArtifactInspection).includes("Kind: frequency")) {
+  throw new Error("textcorpus artifact renderer should include artifact kind");
+}
+const corpusMetricPayload = {
+  corpusId: "corpus-artifact-smoke",
+  metricSetId: "metrics:corpus-artifact-smoke",
+  metrics: [
+    {
+      metricId: "frequency.term-count",
+      kind: "frequency",
+      value: 2,
+      unit: "terms",
+    },
+  ],
+};
+const corpusMetricInspection = inspectTextCorpusArtifact(corpusMetricPayload);
+if (
+  corpusMetricInspection.artifactKind !== "metric-envelope-payload" ||
+  corpusMetricInspection.metricSetId !== "metrics:corpus-artifact-smoke" ||
+  corpusMetricInspection.metricCount !== 1
+) {
+  throw new Error("textcorpus artifact inspection should summarize metric-envelope payloads");
+}
+let invalidCorpusArtifactRejected = false;
+try {
+  inspectTextCorpusArtifact(corpusFixture);
+} catch (error) {
+  invalidCorpusArtifactRejected = error instanceof TypeError && error.message === "textcorpus artifact is invalid";
+}
+if (!invalidCorpusArtifactRejected) {
+  throw new Error("textcorpus artifact inspection should reject non-artifact corpus fixtures");
+}
+
 const retrievalQrels = {
   schemaVersion: 1,
   taskId: "nlp-retrieval",
@@ -1159,6 +1251,10 @@ const packBackedRuleDocumentPath = path.join(dir, "pack-backed-rules-document.js
 await writeFile(packBackedRuleDocumentPath, `${JSON.stringify(packBackedRuleDocument, null, 2)}\n`, "utf8");
 const corpusPath = path.join(dir, "corpus-fixture.json");
 await writeFile(corpusPath, `${JSON.stringify(corpusFixture, null, 2)}\n`, "utf8");
+const corpusArtifactPath = path.join(dir, "corpus-artifact.json");
+await writeFile(corpusArtifactPath, `${JSON.stringify(corpusArtifact, null, 2)}\n`, "utf8");
+const corpusMetricPayloadPath = path.join(dir, "corpus-metric-payload.json");
+await writeFile(corpusMetricPayloadPath, `${JSON.stringify(corpusMetricPayload, null, 2)}\n`, "utf8");
 const changedReportPath = path.join(dir, "conformance-report-actual.json");
 await writeFile(changedReportPath, `${JSON.stringify(changedConformanceReport, null, 2)}\n`, "utf8");
 const benchmarkReportPath = path.join(dir, "benchmark-report.json");
@@ -1716,6 +1812,25 @@ if (corpusCliResult.exitCode !== 0 || corpusCliResult.stderr !== "") {
 
 if (!corpusCliResult.stdout.includes("Corpus: corpus-smoke")) {
   throw new Error("corpus-fixture CLI should render corpus identity");
+}
+
+const corpusArtifactCliResult = await runTextlabCli(["corpus-artifact", corpusArtifactPath]);
+
+if (corpusArtifactCliResult.exitCode !== 0 || corpusArtifactCliResult.stderr !== "") {
+  throw new Error(`corpus-artifact CLI should pass: ${corpusArtifactCliResult.stderr}`);
+}
+
+if (!corpusArtifactCliResult.stdout.includes("Kind: frequency")) {
+  throw new Error("corpus-artifact CLI should render artifact kind");
+}
+
+const corpusMetricPayloadCliResult = await runTextlabCli(["corpus-artifact", corpusMetricPayloadPath, "--json"]);
+
+if (
+  corpusMetricPayloadCliResult.exitCode !== 0 ||
+  JSON.parse(corpusMetricPayloadCliResult.stdout).metricSetId !== "metrics:corpus-artifact-smoke"
+) {
+  throw new Error("corpus-artifact CLI should support metric-envelope JSON output");
 }
 
 const qrelsCliResult = await runTextlabCli(["retrieval-qrels", qrelsPath]);

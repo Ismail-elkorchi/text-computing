@@ -12,6 +12,7 @@ textlab pipeline-batch-report pipeline-batch-report.json
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textlab benchmark-report benchmark-report.json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
+textlab corpus-artifact corpus-artifact.json
 textlab retrieval-qrels fixtures/retrieval/qrels/retrieval-fielded-qrels.json
 textlab retrieval-evaluation fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json
 textlab release-readiness fixtures/package-release/gates.v1.json
@@ -29,3 +30,5 @@ Runnable repository examples:
 - [`../../../examples/textlab-benchmark-report-consumer.mjs`](../../../examples/textlab-benchmark-report-consumer.mjs)
   inspects a textconformance benchmark report through textlab while keeping benchmark metrics separate
   from pass/fail conformance reports.
+- [`../../../examples/textlab-corpus-artifact-consumer.mjs`](../../../examples/textlab-corpus-artifact-consumer.mjs)
+  builds a textcorpus frequency artifact and metric-envelope payload, then inspects both through textlab.

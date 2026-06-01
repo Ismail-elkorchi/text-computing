@@ -19,6 +19,7 @@ import {
   inspectReleaseReadiness,
   inspectRetrievalEvaluation,
   inspectRetrievalQrels,
+  inspectTextCorpusArtifact,
   inspectTextdocDocument,
   inspectTextdocAnnotations,
   inspectTextPackManifest,
@@ -38,6 +39,7 @@ import {
   renderReleaseReadinessInspection,
   renderRetrievalEvaluationInspection,
   renderRetrievalQrelsInspection,
+  renderTextCorpusArtifactInspection,
   renderTextdocDocumentInspection,
   renderTextdocAnnotationInspection,
   renderTextPackInspection,
@@ -86,6 +88,7 @@ function usage(): string {
     "  textlab retrieval-evaluation <path> [--json]",
     "  textlab release-readiness [path] [--json]",
     "  textlab corpus-fixture <path> [--json]",
+    "  textlab corpus-artifact <path> [--json]",
     "  textlab --help",
     "",
     "Commands:",
@@ -102,6 +105,7 @@ function usage(): string {
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
     "  benchmark-report    Inspect a textconformance benchmark report without treating it as conformance.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
+    "  corpus-artifact Inspect a persisted textcorpus artifact or metric-envelope payload.",
     "  retrieval-qrels Inspect retrieval relevance judgments.",
     "  retrieval-evaluation Inspect retrieval metric output.",
     "  release-readiness Inspect package release gate readiness.",
@@ -135,6 +139,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "pipeline-batch-report" &&
     command !== "pack-backed-rules" &&
     command !== "corpus-fixture" &&
+    command !== "corpus-artifact" &&
     command !== "retrieval-qrels" &&
     command !== "retrieval-evaluation" &&
     command !== "release-readiness"
@@ -227,6 +232,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       command === "pipeline-batch-report" ||
       command === "pack-backed-rules" ||
       command === "corpus-fixture" ||
+      command === "corpus-artifact" ||
       command === "retrieval-qrels" ||
       command === "retrieval-evaluation") &&
     pathArg === undefined
@@ -417,6 +423,23 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid corpus fixture: ${inputPath}`,
+      };
+    }
+  }
+
+  if (command === "corpus-artifact") {
+    try {
+      const inspection = inspectTextCorpusArtifact(parsed);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderTextCorpusArtifactInspection, json),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textcorpus artifact: ${inputPath}`,
       };
     }
   }
