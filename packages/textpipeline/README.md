@@ -8,6 +8,7 @@ Current scope:
 - asynchronous processor execution;
 - input-order batch and stream runners;
 - caller-provided worker execution with deterministic worker run reports;
+- caller-provided worker-pool execution with deterministic round-robin assignment reports;
 - cancellation via `AbortSignal`;
 - deterministic dependency graph validation and exported execution plans;
 - requirements over declared views, layers, packages, packs, profiles, and their versions;
@@ -20,8 +21,8 @@ Current scope:
 - machine-readable execution traces, batch run reports, and typed result-envelope helpers.
 - processor-trace schema-family payload and envelope helpers for textprotocol JSON transport.
 
-This package does not define remote orchestration, distributed scheduling, worker pools, or automatic
-recovery coordination. Callers provide documents, processors, versioned context, cancellation signals,
+This package does not define remote orchestration, distributed scheduling, or automatic recovery
+coordination. Callers provide documents, processors, workers, versioned context, cancellation signals,
 and optional cache objects. Cache durability is caller-managed through snapshot JSON helpers.
 
 ## Runnable examples
@@ -37,3 +38,6 @@ and optional cache objects. Cache durability is caller-managed through snapshot 
   and verifies the next pipeline run uses a cached processor result.
 - [`../../examples/textpipeline-worker-batch-consumer.mjs`](../../examples/textpipeline-worker-batch-consumer.mjs)
   runs a batch through a caller-provided local worker and prints the deterministic worker run report.
+- [`../../examples/textpipeline-worker-pool-consumer.mjs`](../../examples/textpipeline-worker-pool-consumer.mjs)
+  runs a batch through a caller-provided local worker pool and prints deterministic round-robin
+  assignments.

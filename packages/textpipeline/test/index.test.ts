@@ -15,6 +15,7 @@ import {
   createTextPipelineProcessorTraceEnvelopeV1,
   createTextPipelineSnapshotBackedDocumentCache,
   createTextPipelineTraceEnvelope,
+  createTextPipelineWorkerPoolRunReport,
   createTextPipelineWorkerRunReport,
   exportTextPipelineProcessorTracePayloadV1,
   isTextPipelineProcessorDescriptor,
@@ -24,6 +25,7 @@ import {
   isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
+  isTextPipelineWorkerPoolRunReportV1,
   isTextPipelineWorkerRunReportV1,
   packageName,
   runTextPipeline,
@@ -33,6 +35,7 @@ import {
   runTextPipelineBatchAsyncWithReport,
   runTextPipelineBatchWithReport,
   runTextPipelineBatchWithWorker,
+  runTextPipelineBatchWithWorkerPool,
   runTextPipelineStream,
   parseTextPipelineCacheSnapshot,
   stringifyTextPipelineCacheSnapshot,
@@ -41,6 +44,7 @@ import {
   textPipelineBatchRunReportSchemaVersion,
   textPipelineTracePayloadKind,
   textPipelineTraceSchemaVersion,
+  textPipelineWorkerPoolRunReportSchemaVersion,
   textPipelineWorkerRunReportSchemaVersion,
   validateTextPipelineGraph,
   type TextPipelineAsyncProcessor,
@@ -58,6 +62,7 @@ const expectedTraceSchemaVersion: typeof textPipelineTraceSchemaVersion = 1;
 const expectedBatchRunReportSchemaVersion: typeof textPipelineBatchRunReportSchemaVersion = 1;
 const expectedCacheSnapshotSchemaVersion: typeof textPipelineCacheSnapshotSchemaVersion = 1;
 const expectedWorkerRunReportSchemaVersion: typeof textPipelineWorkerRunReportSchemaVersion = 1;
+const expectedWorkerPoolRunReportSchemaVersion: typeof textPipelineWorkerPoolRunReportSchemaVersion = 1;
 
 const baseDocument: TextDocDocumentV1 = {
   schemaVersion: 1,
@@ -812,6 +817,100 @@ if (
   localWorkerBatch.runs[0]?.document.revision !== "r0>async-alpha"
 ) {
   throw new Error("local worker helper should execute async processors through the package API");
+}
+const workerPoolInvocations: string[] = [];
+const poolWorkers: readonly TextPipelineWorker[] = ["pool-a", "pool-b"].map((workerId) => ({
+  workerId,
+  async run(input) {
+    workerPoolInvocations.push(`${input.inputIndex}:${workerId}:${input.document.documentId}`);
+    return runTextPipelineAsync(input.document, input.processors, input.context, input.options);
+  },
+}));
+const workerPoolBatch = await runTextPipelineBatchWithWorkerPool(
+  [
+    baseDocument,
+    { ...baseDocument, documentId: "doc:pipeline:pool:1" },
+    { ...baseDocument, documentId: "doc:pipeline:pool:2" },
+  ],
+  [asyncAlpha],
+  poolWorkers,
+  { packageVersions: [{ id: packageName, version: "0.1.0" }] },
+  { poolId: "fixture-pool", maxConcurrency: 2 },
+);
+if (
+  workerPoolBatch.report.schemaVersion !== expectedWorkerPoolRunReportSchemaVersion ||
+  workerPoolBatch.report.poolId !== "fixture-pool" ||
+  workerPoolBatch.report.strategy !== "round-robin" ||
+  workerPoolBatch.report.workerIds.join(",") !== "pool-a,pool-b" ||
+  workerPoolBatch.report.documentCount !== 3 ||
+  workerPoolBatch.report.completeCount !== 3 ||
+  workerPoolBatch.report.partialCount !== 0 ||
+  workerPoolBatch.report.items.map((item) => `${item.inputIndex}:${item.workerId}:${item.workerSlot}`).join(",") !==
+    "0:pool-a:0,1:pool-b:1,2:pool-a:0" ||
+  workerPoolBatch.runs.map((run) => run.document.revision).join(",") !==
+    "r0>async-alpha,r0>async-alpha,r0>async-alpha"
+) {
+  throw new Error("worker pool execution should preserve deterministic round-robin assignments and input order");
+}
+if (!isTextPipelineWorkerPoolRunReportV1(workerPoolBatch.report)) {
+  throw new Error("worker pool report should satisfy its owning runtime guard");
+}
+if (workerPoolInvocations.slice().sort().join(",") !== "0:pool-a:doc:pipeline,1:pool-b:doc:pipeline:pool:1,2:pool-a:doc:pipeline:pool:2") {
+  throw new Error("worker pool should dispatch each input to its assigned worker");
+}
+const regeneratedWorkerPoolReport = createTextPipelineWorkerPoolRunReport(
+  "fixture-pool",
+  "round-robin",
+  ["pool-a", "pool-b"],
+  workerPoolBatch.report.items.map((item) => ({
+    workerId: item.workerId,
+    workerSlot: item.workerSlot,
+  })),
+  workerPoolBatch.runs,
+);
+if (
+  JSON.stringify(regeneratedWorkerPoolReport) !== JSON.stringify(workerPoolBatch.report)
+) {
+  throw new Error("worker pool report generation should be deterministic from existing runs and assignments");
+}
+const limitedWorkerPoolBatch = await runTextPipelineBatchWithWorkerPool(
+  [baseDocument, { ...baseDocument, documentId: "doc:pipeline:pool:limited" }],
+  [asyncAlpha],
+  poolWorkers,
+  {},
+  { poolId: "limited-pool", maxConcurrency: 1 },
+);
+if (
+  limitedWorkerPoolBatch.report.workerIds.join(",") !== "pool-a" ||
+  limitedWorkerPoolBatch.report.items.map((item) => `${item.inputIndex}:${item.workerId}:${item.workerSlot}`).join(",") !==
+    "0:pool-a:0,1:pool-a:0"
+) {
+  throw new Error("worker pool maxConcurrency should deterministically limit active workers");
+}
+let duplicatePoolWorkerRejected = false;
+try {
+  await runTextPipelineBatchWithWorkerPool([baseDocument], [asyncAlpha], [
+    createTextPipelineLocalWorker("duplicate-pool-worker"),
+    createTextPipelineLocalWorker("duplicate-pool-worker"),
+  ]);
+} catch (error) {
+  duplicatePoolWorkerRejected =
+    error instanceof TypeError &&
+    error.message === "textpipeline worker pool worker ids must be unique";
+}
+if (!duplicatePoolWorkerRejected) {
+  throw new Error("worker pool should reject duplicate worker ids");
+}
+let invalidPoolConcurrencyRejected = false;
+try {
+  await runTextPipelineBatchWithWorkerPool([baseDocument], [asyncAlpha], poolWorkers, {}, { maxConcurrency: 3 });
+} catch (error) {
+  invalidPoolConcurrencyRejected =
+    error instanceof RangeError &&
+    error.message === "textpipeline worker pool maxConcurrency must be between 1 and the worker count";
+}
+if (!invalidPoolConcurrencyRejected) {
+  throw new Error("worker pool should reject maxConcurrency larger than the worker count");
 }
 let invalidWorkerResultRejected = false;
 try {
