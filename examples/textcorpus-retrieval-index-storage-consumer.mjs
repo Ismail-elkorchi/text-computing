@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createTextDocDocumentFromTextSync } from "@ismail-elkorchi/textdoc";
@@ -8,9 +8,9 @@ import {
   createTextCorpusCollection,
   createTextCorpusRetrievalIndexArtifact,
   isTextCorpusRetrievalIndexStorageRefV1,
-  loadTextCorpusRetrievalIndexArtifactFromStore,
+  loadTextCorpusRetrievalIndexArtifactFromFileSystem,
   parseTextCorpusQuery,
-  saveTextCorpusRetrievalIndexArtifactToStore,
+  saveTextCorpusRetrievalIndexArtifactToFileSystem,
   searchTextCorpusRetrievalIndex,
 } from "@ismail-elkorchi/textcorpus";
 import { inspectTextCorpusArtifact } from "@ismail-elkorchi/textlab";
@@ -41,11 +41,11 @@ const index = buildTextCorpusRetrievalIndex(collection);
 const artifact = createTextCorpusRetrievalIndexArtifact(index);
 
 const dir = await mkdtemp(path.join(tmpdir(), "textcorpus-index-storage-"));
-const storageKey = path.join(dir, "retrieval-index-artifact.json");
-const storageRef = await saveTextCorpusRetrievalIndexArtifactToStore(artifact, {
-  key: storageKey,
-  async writeText(key, text) {
-    await writeFile(key, text, "utf8");
+const storageRef = await saveTextCorpusRetrievalIndexArtifactToFileSystem(artifact, {
+  root: dir,
+  async writeText(filePath, text) {
+    await mkdir(path.dirname(filePath), { recursive: true });
+    await writeFile(filePath, text, "utf8");
   },
 });
 
@@ -53,9 +53,10 @@ if (!isTextCorpusRetrievalIndexStorageRefV1(storageRef)) {
   throw new Error("textcorpus retrieval index storage ref is invalid");
 }
 
-const loadedArtifact = await loadTextCorpusRetrievalIndexArtifactFromStore(storageRef, {
-  readText(key) {
-    return readFile(key, "utf8");
+const loadedArtifact = await loadTextCorpusRetrievalIndexArtifactFromFileSystem(storageRef, {
+  root: dir,
+  readText(filePath) {
+    return readFile(filePath, "utf8");
   },
 });
 const result = searchTextCorpusRetrievalIndex(
@@ -67,6 +68,7 @@ const inspection = inspectTextCorpusArtifact(storageRef);
 
 console.log(JSON.stringify({
   storage: {
+    key: storageRef.key,
     keyBasename: path.basename(storageRef.key),
     byteLength: storageRef.byteLength,
     checksum: storageRef.checksum.value,

@@ -14,9 +14,10 @@ Current scope:
 - E2 corpus selection provenance for corpus-analysis, scoring, retrieval, and evaluation outputs; and
 - deterministic JSON persistence helpers for declared textcorpus artifact families;
 - caller-provided text-store save/load helpers for retrieval-index artifacts, with storage refs carrying byte length, checksum, corpus, formula, document-count, term-count, and field-count metadata; and
+- package-owned filesystem key/path helpers for retrieval-index artifact save/load over caller-supplied filesystem IO callbacks; and
 - corpus metric payload export for wrapping textcorpus artifacts in `textprotocol` corpus-metric envelopes without adding a `textprotocol` dependency to this package.
 
-This package does not yet define package-owned filesystem storage, external relevance benchmarks, or broad field weighting.
+This package does not yet define external relevance benchmarks or broad field weighting. Filesystem storage is bounded to local retrieval-index artifact JSON.
 
 Runnable repository examples:
 
@@ -24,5 +25,5 @@ Runnable repository examples:
   builds a textcorpus frequency artifact, exports corpus metric payloads, wraps them with
   `textprotocol` schema-family JSON transport, and inspects the parsed envelope through `textlab`.
 - [`../../examples/textcorpus-retrieval-index-storage-consumer.mjs`](../../examples/textcorpus-retrieval-index-storage-consumer.mjs)
-  builds a retrieval index artifact, persists it through caller-provided filesystem callbacks,
+  builds a retrieval index artifact, persists it through package-owned filesystem key/path helpers and caller-provided filesystem callbacks,
   reloads it through the storage-ref contract, and inspects the storage ref through `textlab`.

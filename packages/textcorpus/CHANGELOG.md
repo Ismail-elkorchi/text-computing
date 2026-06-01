@@ -7,6 +7,7 @@
 - Add E2 corpus selection provenance to corpus-analysis, scoring, retrieval-index, retrieval-result, and retrieval-evaluation outputs.
 - Add deterministic JSON persistence helpers for declared textcorpus artifact families.
 - Add retrieval-index storage-ref save/load helpers for caller-provided durable text stores.
+- Add package-owned filesystem key/path helpers for retrieval-index artifact storage.
 - Add corpus metric payload export for textprotocol corpus-metric envelope exchange.
 
 ## 0.0.0
