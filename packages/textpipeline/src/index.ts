@@ -22,6 +22,7 @@ export const packageName = "@ismail-elkorchi/textpipeline" as const;
 export const textPipelineTraceSchemaVersion = 1 as const;
 export const textPipelineBatchRunReportSchemaVersion = 1 as const;
 export const textPipelineCacheSnapshotSchemaVersion = 1 as const;
+export const textPipelineWorkerRunReportSchemaVersion = 1 as const;
 export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
 export const textPipelineBatchRunReportPayloadKind =
   textProtocolPayloadKindTextpipelineBatchRunReportV1;
@@ -32,6 +33,8 @@ export type TextPipelineBatchRunReportSchemaVersion =
   typeof textPipelineBatchRunReportSchemaVersion;
 export type TextPipelineCacheSnapshotSchemaVersion =
   typeof textPipelineCacheSnapshotSchemaVersion;
+export type TextPipelineWorkerRunReportSchemaVersion =
+  typeof textPipelineWorkerRunReportSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
 export type TextPipelineBatchRunReportPayloadKind =
   typeof textPipelineBatchRunReportPayloadKind;
@@ -207,6 +210,40 @@ export interface TextPipelineBatchRunResult {
   readonly report: TextPipelineBatchRunReport;
 }
 
+export interface TextPipelineWorkerRunInput {
+  readonly inputIndex: number;
+  readonly document: TextDocDocumentV1;
+  readonly processors: readonly TextPipelineExecutableProcessor[];
+  readonly context: TextPipelineContext;
+  readonly options: TextPipelineRunOptions;
+}
+
+export interface TextPipelineWorker {
+  readonly workerId: string;
+  run(input: TextPipelineWorkerRunInput): TextPipelineRunResult | Promise<TextPipelineRunResult>;
+}
+
+export interface TextPipelineWorkerRunItem extends TextPipelineBatchRunItem {
+  readonly workerId: string;
+}
+
+export interface TextPipelineWorkerRunReport {
+  readonly schemaVersion: TextPipelineWorkerRunReportSchemaVersion;
+  readonly workerId: string;
+  readonly documentCount: number;
+  readonly completeCount: number;
+  readonly partialCount: number;
+  readonly executionModes: readonly TextPipelineExecutionMode[];
+  readonly cachePolicies: readonly TextPipelineCachePolicy[];
+  readonly contextFingerprints: readonly string[];
+  readonly items: readonly TextPipelineWorkerRunItem[];
+}
+
+export interface TextPipelineWorkerBatchRunResult {
+  readonly runs: readonly TextPipelineRunResult[];
+  readonly report: TextPipelineWorkerRunReport;
+}
+
 export interface TextPipelineTraceEnvelopeMetadata {
   readonly provenance?: TextProtocolProvenance;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
@@ -221,7 +258,7 @@ export interface TextPipelineProcessorTraceEnvelopeMetadata {
   readonly extensions?: Readonly<Record<string, unknown>>;
 }
 
-type TextPipelineExecutableProcessor = TextPipelineProcessor | TextPipelineAsyncProcessor;
+export type TextPipelineExecutableProcessor = TextPipelineProcessor | TextPipelineAsyncProcessor;
 
 export type TextPipelineTraceEnvelopeV1 = TextProtocolResultEnvelopeV1<
   TextPipelineTraceV1,
@@ -883,6 +920,10 @@ function isTextPipelineBatchRunItem(value: unknown): value is TextPipelineBatchR
   );
 }
 
+function isTextPipelineWorkerRunItem(value: unknown): value is TextPipelineWorkerRunItem {
+  return isRecord(value) && isTextPipelineBatchRunItem(value) && isNonEmptyString(value.workerId);
+}
+
 export function isTextPipelineBatchRunReportV1(
   value: unknown,
 ): value is TextPipelineBatchRunReport {
@@ -908,6 +949,46 @@ export function isTextPipelineBatchRunReportV1(
   const items = value.items;
   const inputIndexes = items.map((item) => item.inputIndex);
   if (!inputIndexes.every((inputIndex, index) => inputIndex === index)) return false;
+
+  const completeCount = items.filter((item) => item.runStatus === "complete").length;
+  const partialCount = items.filter((item) => item.runStatus === "partial").length;
+  return (
+    value.documentCount === items.length &&
+    value.completeCount === completeCount &&
+    value.partialCount === partialCount &&
+    value.completeCount + value.partialCount === value.documentCount &&
+    sameStringArray(value.executionModes, uniqueSortedStrings(items.map((item) => item.executionMode))) &&
+    sameStringArray(value.cachePolicies, uniqueSortedStrings(items.map((item) => item.cachePolicy))) &&
+    sameStringArray(value.contextFingerprints, uniqueSortedStrings(value.contextFingerprints))
+  );
+}
+
+export function isTextPipelineWorkerRunReportV1(
+  value: unknown,
+): value is TextPipelineWorkerRunReport {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textPipelineWorkerRunReportSchemaVersion ||
+    !isNonEmptyString(value.workerId) ||
+    !isNonNegativeInteger(value.documentCount) ||
+    !isNonNegativeInteger(value.completeCount) ||
+    !isNonNegativeInteger(value.partialCount) ||
+    !isStringArray(value.executionModes) ||
+    !isStringArray(value.cachePolicies) ||
+    !isStringArray(value.contextFingerprints) ||
+    !hasUniqueStrings(value.executionModes) ||
+    !hasUniqueStrings(value.cachePolicies) ||
+    !hasUniqueStrings(value.contextFingerprints) ||
+    !Array.isArray(value.items) ||
+    !value.items.every((item) => isTextPipelineWorkerRunItem(item))
+  ) {
+    return false;
+  }
+
+  const items = value.items;
+  const inputIndexes = items.map((item) => item.inputIndex);
+  if (!inputIndexes.every((inputIndex, index) => inputIndex === index)) return false;
+  if (!items.every((item) => item.workerId === value.workerId)) return false;
 
   const completeCount = items.filter((item) => item.runStatus === "complete").length;
   const partialCount = items.filter((item) => item.runStatus === "partial").length;
@@ -1336,6 +1417,115 @@ export function createTextPipelineBatchRunReport(
     cachePolicies: uniqueSortedStrings(items.map((item) => item.cachePolicy)) as readonly TextPipelineCachePolicy[],
     contextFingerprints: uniqueSortedStrings(runs.map((run) => run.trace.contextFingerprint)),
     items,
+  };
+}
+
+export function createTextPipelineWorkerRunReport(
+  workerId: string,
+  runs: readonly TextPipelineRunResult[],
+): TextPipelineWorkerRunReport {
+  if (!isNonEmptyString(workerId)) {
+    throw new TypeError("textpipeline worker id must be a non-empty string");
+  }
+  const batchReport = createTextPipelineBatchRunReport(runs);
+  const items = batchReport.items.map((item) => ({
+    ...item,
+    workerId,
+  })) satisfies readonly TextPipelineWorkerRunItem[];
+  const report = {
+    schemaVersion: textPipelineWorkerRunReportSchemaVersion,
+    workerId,
+    documentCount: batchReport.documentCount,
+    completeCount: batchReport.completeCount,
+    partialCount: batchReport.partialCount,
+    executionModes: batchReport.executionModes,
+    cachePolicies: batchReport.cachePolicies,
+    contextFingerprints: batchReport.contextFingerprints,
+    items,
+  } satisfies TextPipelineWorkerRunReport;
+  if (!isTextPipelineWorkerRunReportV1(report)) {
+    throw new TypeError("textpipeline worker run report is invalid");
+  }
+  return report;
+}
+
+function assertTextPipelineWorker(worker: TextPipelineWorker): void {
+  if (!isRecord(worker) || !isNonEmptyString(worker.workerId) || typeof worker.run !== "function") {
+    throw new TypeError("textpipeline worker must expose a workerId and run function");
+  }
+}
+
+function assertTextPipelineWorkerResult(
+  worker: TextPipelineWorker,
+  inputIndex: number,
+  inputDocument: TextDocDocumentV1,
+  plan: TextPipelineExecutionPlan,
+  result: TextPipelineRunResult,
+): void {
+  if (!isRecord(result) || !isTextDocDocumentV1(result.document) || !isTextPipelineTraceV1(result.trace)) {
+    throw new TypeError(`textpipeline worker ${worker.workerId} returned an invalid run result`);
+  }
+  if (result.document.documentId !== inputDocument.documentId || result.trace.documentId !== inputDocument.documentId) {
+    throw new Error(`textpipeline worker ${worker.workerId} returned result for unexpected document at input ${inputIndex}`);
+  }
+  if (!sameStringArray(result.trace.processorOrder, plan.processorOrder)) {
+    throw new Error(`textpipeline worker ${worker.workerId} returned an unexpected processor order at input ${inputIndex}`);
+  }
+}
+
+export function createTextPipelineLocalWorker(workerId = "local"): TextPipelineWorker {
+  if (!isNonEmptyString(workerId)) {
+    throw new TypeError("textpipeline worker id must be a non-empty string");
+  }
+  return {
+    workerId,
+    run(input) {
+      return runTextPipelineAsync(input.document, input.processors, input.context, input.options);
+    },
+  };
+}
+
+export async function runTextPipelineBatchWithWorker(
+  documents: readonly TextDocDocumentV1[],
+  processors: readonly TextPipelineExecutableProcessor[],
+  worker: TextPipelineWorker,
+  context: TextPipelineContext = {},
+  options: TextPipelineRunOptions = {},
+): Promise<TextPipelineWorkerBatchRunResult> {
+  assertTextPipelineWorker(worker);
+  if (!Array.isArray(documents) || !documents.every((document) => isTextDocDocumentV1(document))) {
+    throw new TypeError("pipeline worker batch documents must satisfy TextDocDocumentV1");
+  }
+  if (!isTextPipelineContext(context)) {
+    throw new TypeError("pipeline context is invalid");
+  }
+  const plan = createTextPipelineExecutionPlan(processors);
+  const runs: TextPipelineRunResult[] = [];
+  for (let inputIndex = 0; inputIndex < documents.length; inputIndex += 1) {
+    assertNotAborted(options.signal);
+    const document = documents[inputIndex];
+    if (document === undefined) throw new Error(`textpipeline worker batch lost input ${inputIndex}`);
+    try {
+      const result = await worker.run({
+        inputIndex,
+        document,
+        processors,
+        context,
+        options,
+      });
+      assertTextPipelineWorkerResult(worker, inputIndex, document, plan, result);
+      runs.push(result);
+    } catch (error) {
+      if (options.errorPolicy !== "continue") throw error;
+      throw new Error(
+        `textpipeline worker ${worker.workerId} failed for input ${inputIndex}: ${error instanceof Error ? error.message : "worker failed"}`,
+      );
+    }
+    assertNotAborted(options.signal);
+  }
+  return {
+    runs,
+    report: createTextPipelineWorkerRunReport(worker.workerId, runs),
   };
 }
 

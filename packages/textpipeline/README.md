@@ -7,6 +7,7 @@ Current scope:
 - synchronous, in-memory processor execution;
 - asynchronous processor execution;
 - input-order batch and stream runners;
+- caller-provided worker execution with deterministic worker run reports;
 - cancellation via `AbortSignal`;
 - deterministic dependency graph validation and exported execution plans;
 - requirements over declared views, layers, packages, packs, profiles, and their versions;
@@ -34,3 +35,5 @@ and optional cache objects. Cache durability is caller-managed through snapshot 
 - [`../../examples/textpipeline-cache-snapshot-consumer.mjs`](../../examples/textpipeline-cache-snapshot-consumer.mjs)
   persists a snapshot-backed document cache through caller-provided filesystem writes, restores it,
   and verifies the next pipeline run uses a cached processor result.
+- [`../../examples/textpipeline-worker-batch-consumer.mjs`](../../examples/textpipeline-worker-batch-consumer.mjs)
+  runs a batch through a caller-provided local worker and prints the deterministic worker run report.

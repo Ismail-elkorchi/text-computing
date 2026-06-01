@@ -478,19 +478,18 @@ async function assertBuiltPackageSmoke() {
     "textlab should inspect textconformance benchmark reports through package APIs.",
   );
 
-  const pipelineRun = textpipeline.runTextPipeline(document, [
-    {
-      descriptor: {
-        id: "identity",
-        version: "1.0.0",
-        purity: "pure",
-        parallelSafe: true,
-      },
-      run(inputDocument) {
-        return { document: inputDocument };
-      },
+  const identityProcessor = {
+    descriptor: {
+      id: "identity",
+      version: "1.0.0",
+      purity: "pure",
+      parallelSafe: true,
     },
-  ]);
+    run(inputDocument) {
+      return { document: inputDocument };
+    },
+  };
+  const pipelineRun = textpipeline.runTextPipeline(document, [identityProcessor]);
   expect(textdoc.isTextDocDocumentV1(pipelineRun.document), "textpipeline should preserve the textdoc document contract.");
   expect(textpipeline.isTextPipelineTraceV1(pipelineRun.trace), "textpipeline should emit a valid trace.");
   const traceInspection = textlab.inspectTextPipelineTrace(pipelineRun.trace);
@@ -585,6 +584,17 @@ async function assertBuiltPackageSmoke() {
   expect(
     batchReportInspection.documentCount === 1 && batchReportInspection.completeCount === 1,
     "textlab should inspect textpipeline batch reports through package APIs.",
+  );
+  const workerBatch = await textpipeline.runTextPipelineBatchWithWorker(
+    [document],
+    [identityProcessor],
+    textpipeline.createTextPipelineLocalWorker("downstream-api-worker"),
+  );
+  expect(
+    textpipeline.isTextPipelineWorkerRunReportV1(workerBatch.report) &&
+      workerBatch.report.workerId === "downstream-api-worker" &&
+      workerBatch.report.completeCount === 1,
+    "textpipeline should execute caller-provided workers through package APIs.",
   );
   const envelopeInspection = textlab.inspectTextProtocolResultEnvelope(batchReportEnvelope);
   expect(
