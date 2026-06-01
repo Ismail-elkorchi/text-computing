@@ -1,15 +1,18 @@
 import {
   calibrateTextConformanceBenchmarkReports,
   conformanceBenchmarkCalibrationReportSchemaVersion,
+  conformanceBenchmarkMatrixReportSchemaVersion,
   conformanceBenchmarkReportSchemaId,
   conformanceBenchmarkReportSchemaVersion,
   conformanceBenchmarkThresholdPolicySchemaVersion,
   conformanceCapabilityRegistrySchemaVersion,
   conformanceSuiteSchemaId,
   conformanceSuiteSchemaVersion,
+  createTextConformanceBenchmarkMatrixReport,
   diffTextConformanceReports,
   evaluateTextConformanceBenchmarkThresholds,
   isTextConformanceBenchmarkCalibrationReportV1,
+  isTextConformanceBenchmarkMatrixReportV1,
   isTextConformanceBenchmarkReportV1,
   isTextConformanceBenchmarkThresholdEvaluationReportV1,
   isTextConformanceBenchmarkThresholdPolicyV1,
@@ -21,6 +24,7 @@ import {
   isTextConformanceSuiteTargetProbeV1,
   packageName,
   renderTextConformanceBenchmarkCalibrationMarkdown,
+  renderTextConformanceBenchmarkMatrixMarkdown,
   renderTextConformanceBenchmarkThresholdEvaluationMarkdown,
   renderTextConformanceReportDiffMarkdown,
   renderTextConformanceReportMarkdown,
@@ -40,6 +44,7 @@ import path from "node:path";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textconformance";
 const expectedBenchmarkCalibrationReportSchemaVersion: typeof conformanceBenchmarkCalibrationReportSchemaVersion = 1;
+const expectedBenchmarkMatrixReportSchemaVersion: typeof conformanceBenchmarkMatrixReportSchemaVersion = 1;
 
 const report = runTextConformanceChecks(
   [
@@ -739,6 +744,86 @@ if (
 ) {
   throw new Error("benchmark calibration renderer should expose summary and row status");
 }
+
+const benchmarkMatrix = createTextConformanceBenchmarkMatrixReport(
+  [
+    {
+      runId: "linux-run",
+      host: { hostId: "linux-x64", runtime: "node-24" },
+      report: calibrationHostAReport,
+    },
+    {
+      runId: "macos-run",
+      host: { hostId: "macos-arm64", runtime: "node-24" },
+      report: calibrationHostBReport,
+    },
+    {
+      runId: "doc-run",
+      report: {
+        ...executedBenchmarkReport,
+        benchmarkId: "benchmark:textconformance-doc-runner",
+        subject: {
+          kind: "package",
+          id: "@ismail-elkorchi/textdoc",
+        },
+        generatedAt: "2026-04-26T00:00:00.000Z",
+        evidenceRefs: ["packages/textconformance/test/index.test.ts#matrix-doc-run"],
+      },
+    },
+  ],
+  {
+    matrixId: "matrix:textconformance-suite-runners",
+    generatedAt: "2026-04-27T00:00:00.000Z",
+    evidenceRefs: ["packages/textconformance/test/index.test.ts#benchmark-matrix"],
+    limitations: ["Synthetic benchmark matrix over caller-provided reports."],
+  },
+);
+const matrixStatusByMetric = new Map(
+  benchmarkMatrix.rows.map((row) => [`${row.benchmarkId}:${row.metricId}`, row.status]),
+);
+if (
+  !isTextConformanceBenchmarkMatrixReportV1(benchmarkMatrix) ||
+  benchmarkMatrix.schemaVersion !== expectedBenchmarkMatrixReportSchemaVersion ||
+  benchmarkMatrix.runCount !== 3 ||
+  benchmarkMatrix.benchmarkCount !== 2 ||
+  benchmarkMatrix.subjectCount !== 2 ||
+  benchmarkMatrix.hostCount !== 2 ||
+  benchmarkMatrix.summary.incomplete !== 1 ||
+  matrixStatusByMetric.get("benchmark:textconformance-suite-runner:suite-runner.host-a-only") !== "incomplete" ||
+  benchmarkMatrix.rows.find(
+    (row) =>
+      row.benchmarkId === "benchmark:textconformance-suite-runner" &&
+      row.metricId === "suite-runner.duration-ms.mean",
+  )?.mean !== 5.05
+) {
+  throw new Error("benchmark matrix should summarize multi-run benchmark report rows");
+}
+const renderedBenchmarkMatrix = renderTextConformanceBenchmarkMatrixMarkdown(benchmarkMatrix);
+if (
+  !renderedBenchmarkMatrix.includes("# Benchmark matrix matrix:textconformance-suite-runners") ||
+  !renderedBenchmarkMatrix.includes("- **Summary:** complete=8; incomplete=1") ||
+  !renderedBenchmarkMatrix.includes("| benchmark:textconformance-suite-runner | package:@ismail-elkorchi/textconformance | suite-runner.host-a-only | incomplete | 1 | macos-run |")
+) {
+  throw new Error("benchmark matrix renderer should expose matrix summary and missing runs");
+}
+let duplicateBenchmarkMatrixRunRejected = false;
+try {
+  createTextConformanceBenchmarkMatrixReport(
+    [
+      { runId: "duplicate-run", report: calibrationHostAReport },
+      { runId: "duplicate-run", report: calibrationHostBReport },
+    ],
+    {
+      limitations: ["Duplicate-run negative control."],
+    },
+  );
+} catch (error) {
+  duplicateBenchmarkMatrixRunRejected =
+    error instanceof TypeError && error.message === "benchmark matrix run ids must be unique";
+}
+if (!duplicateBenchmarkMatrixRunRejected) {
+  throw new Error("benchmark matrix should reject duplicate run ids");
+}
 let inconsistentCalibrationUnitRejected = false;
 try {
   calibrateTextConformanceBenchmarkReports(
@@ -776,12 +861,25 @@ const cliDir = mkdtempSync(path.join(tmpdir(), "textconformance-cli-"));
 const reportPath = path.join(cliDir, "report.json");
 const suitePath = path.join(cliDir, "suite.json");
 const benchmarkReportPath = path.join(cliDir, "benchmark-report.json");
+const benchmarkMatrixInputPath = path.join(cliDir, "benchmark-matrix-input.json");
 const benchmarkThresholdPolicyPath = path.join(cliDir, "benchmark-threshold-policy.json");
 const invalidPath = path.join(cliDir, "invalid.json");
 const repoRoot = path.resolve("../..");
 writeFileSync(reportPath, `${JSON.stringify(suiteReport, null, 2)}\n`);
 writeFileSync(suitePath, `${JSON.stringify(suite, null, 2)}\n`);
 writeFileSync(benchmarkReportPath, `${JSON.stringify(executedBenchmarkReport, null, 2)}\n`);
+writeFileSync(
+  benchmarkMatrixInputPath,
+  `${JSON.stringify({
+    matrixId: "matrix:textconformance-cli",
+    generatedAt: "2026-04-27T00:00:00.000Z",
+    limitations: ["CLI benchmark matrix over caller-provided reports."],
+    inputs: [
+      { runId: "linux-run", host: { hostId: "linux-x64" }, report: calibrationHostAReport },
+      { runId: "macos-run", host: { hostId: "macos-arm64" }, report: calibrationHostBReport },
+    ],
+  }, null, 2)}\n`,
+);
 writeFileSync(benchmarkThresholdPolicyPath, `${JSON.stringify(benchmarkThresholdPolicy, null, 2)}\n`);
 writeFileSync(invalidPath, "{\"schemaVersion\":1}\n");
 const cliPath = path.resolve("dist/cli.js");
@@ -857,6 +955,31 @@ const benchmarkThresholdMarkdownCli = execFileSync(
 if (!benchmarkThresholdMarkdownCli.includes("# Benchmark threshold evaluation benchmark:textconformance-suite-runner")) {
   throw new Error("CLI should render benchmark threshold evaluations as Markdown");
 }
+const benchmarkMatrixCli = execFileSync(
+  process.execPath,
+  [cliPath, "benchmark-matrix", benchmarkMatrixInputPath],
+  {
+    encoding: "utf8",
+  },
+);
+const benchmarkMatrixCliReport = JSON.parse(benchmarkMatrixCli);
+if (
+  !isTextConformanceBenchmarkMatrixReportV1(benchmarkMatrixCliReport) ||
+  benchmarkMatrixCliReport.matrixId !== "matrix:textconformance-cli" ||
+  benchmarkMatrixCliReport.summary.incomplete !== 1
+) {
+  throw new Error("CLI should create benchmark matrix reports from caller-provided report inputs");
+}
+const benchmarkMatrixMarkdownCli = execFileSync(
+  process.execPath,
+  [cliPath, "benchmark-matrix", benchmarkMatrixInputPath, "--markdown"],
+  {
+    encoding: "utf8",
+  },
+);
+if (!benchmarkMatrixMarkdownCli.includes("# Benchmark matrix matrix:textconformance-cli")) {
+  throw new Error("CLI should render benchmark matrix reports as Markdown");
+}
 let invalidCliRejected = false;
 try {
   execFileSync(process.execPath, [cliPath, "validate-report", invalidPath], {
@@ -872,3 +995,4 @@ if (!invalidCliRejected) {
 
 void expectedPackageName;
 void expectedBenchmarkCalibrationReportSchemaVersion;
+void expectedBenchmarkMatrixReportSchemaVersion;

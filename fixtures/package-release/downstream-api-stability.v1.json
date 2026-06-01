@@ -196,11 +196,13 @@
         "examples/textconformance-suite-target-consumer.mjs",
         "examples/textconformance-benchmark-runner-consumer.mjs",
         "examples/textconformance-benchmark-calibration-consumer.mjs",
+        "examples/textconformance-benchmark-matrix-consumer.mjs",
         "schemas/textconformance-benchmark-calibration-report-v1.schema.json",
+        "schemas/textconformance-benchmark-matrix-report-v1.schema.json",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API usage by declared downstream dependents, local benchmark threshold evaluation, and cross-host calibration over caller-provided benchmark reports; it does not provision hosts."
+        "This verifies current built-package API usage by declared downstream dependents, local benchmark threshold evaluation, cross-host calibration, and benchmark matrix reports over caller-provided benchmark reports; it does not provision hosts."
       ]
     },
     {

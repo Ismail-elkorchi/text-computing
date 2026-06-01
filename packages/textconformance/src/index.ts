@@ -11,6 +11,7 @@ export const conformanceBenchmarkReportSchemaId =
   "urn:ismail-elkorchi:textconformance:benchmark-report:v1" as const;
 export const conformanceBenchmarkReportSchemaVersion = 1 as const;
 export const conformanceBenchmarkCalibrationReportSchemaVersion = 1 as const;
+export const conformanceBenchmarkMatrixReportSchemaVersion = 1 as const;
 export const conformanceBenchmarkThresholdPolicySchemaVersion = 1 as const;
 export const conformanceBenchmarkThresholdEvaluationSchemaVersion = 1 as const;
 
@@ -29,6 +30,8 @@ export type TextConformanceBenchmarkReportSchemaVersion =
   typeof conformanceBenchmarkReportSchemaVersion;
 export type TextConformanceBenchmarkCalibrationReportSchemaVersion =
   typeof conformanceBenchmarkCalibrationReportSchemaVersion;
+export type TextConformanceBenchmarkMatrixReportSchemaVersion =
+  typeof conformanceBenchmarkMatrixReportSchemaVersion;
 export type TextConformanceBenchmarkThresholdPolicySchemaVersion =
   typeof conformanceBenchmarkThresholdPolicySchemaVersion;
 export type TextConformanceBenchmarkThresholdEvaluationSchemaVersion =
@@ -70,6 +73,7 @@ export type TextConformanceBenchmarkCalibrationStatus =
   | "stable"
   | "variable"
   | "incomplete";
+export type TextConformanceBenchmarkMatrixRowStatus = "complete" | "incomplete";
 
 export interface TextConformanceReportSubject {
   readonly kind: string;
@@ -294,6 +298,68 @@ export interface TextConformanceBenchmarkCalibrationOptions {
   readonly baselineHostId?: string;
   readonly maxRelativeSpread?: number;
   readonly metricIds?: readonly string[];
+  readonly evidenceRefs?: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkMatrixInput {
+  readonly runId?: string;
+  readonly host?: TextConformanceBenchmarkCalibrationHostV1;
+  readonly report: TextConformanceBenchmarkReportV1;
+}
+
+export interface TextConformanceBenchmarkMatrixMetricValueV1 {
+  readonly runId: string;
+  readonly value: number;
+  readonly generatedAt: string;
+  readonly evidenceRefs: readonly string[];
+  readonly hostId?: string;
+}
+
+export interface TextConformanceBenchmarkMatrixMetricRowV1 {
+  readonly benchmarkId: string;
+  readonly subjectKey: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly metricId: string;
+  readonly unit: string;
+  readonly higherIsPreferred?: boolean;
+  readonly status: TextConformanceBenchmarkMatrixRowStatus;
+  readonly runCount: number;
+  readonly observedRunCount: number;
+  readonly missingRunIds: readonly string[];
+  readonly min: number;
+  readonly max: number;
+  readonly mean: number;
+  readonly median: number;
+  readonly values: readonly TextConformanceBenchmarkMatrixMetricValueV1[];
+}
+
+export interface TextConformanceBenchmarkMatrixSummaryV1 {
+  readonly complete: number;
+  readonly incomplete: number;
+}
+
+export interface TextConformanceBenchmarkMatrixReportV1 {
+  readonly schemaVersion: TextConformanceBenchmarkMatrixReportSchemaVersion;
+  readonly artifactType: "textconformance-benchmark-matrix-report-v1";
+  readonly matrixId: string;
+  readonly generatedAt: string;
+  readonly runCount: number;
+  readonly benchmarkCount: number;
+  readonly subjectCount: number;
+  readonly hostCount: number;
+  readonly metricCount: number;
+  readonly summary: TextConformanceBenchmarkMatrixSummaryV1;
+  readonly rows: readonly TextConformanceBenchmarkMatrixMetricRowV1[];
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkMatrixOptions {
+  readonly matrixId?: string;
+  readonly generatedAt?: string;
   readonly evidenceRefs?: readonly string[];
   readonly limitations: readonly string[];
   readonly notes?: readonly string[];
@@ -1059,6 +1125,107 @@ export function isTextConformanceBenchmarkCalibrationReportV1(
   );
 }
 
+function isTextConformanceBenchmarkMatrixRowStatus(
+  value: unknown,
+): value is TextConformanceBenchmarkMatrixRowStatus {
+  return value === "complete" || value === "incomplete";
+}
+
+export function isTextConformanceBenchmarkMatrixMetricValueV1(
+  value: unknown,
+): value is TextConformanceBenchmarkMatrixMetricValueV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.runId) &&
+    isFiniteNumber(value.value) &&
+    isNonEmptyString(value.generatedAt) &&
+    isStringArray(value.evidenceRefs) &&
+    (value.hostId === undefined || isNonEmptyString(value.hostId))
+  );
+}
+
+export function isTextConformanceBenchmarkMatrixMetricRowV1(
+  value: unknown,
+): value is TextConformanceBenchmarkMatrixMetricRowV1 {
+  if (
+    !isRecord(value) ||
+    !isNonEmptyString(value.benchmarkId) ||
+    !isNonEmptyString(value.subjectKey) ||
+    !isTextConformanceReportSubject(value.subject) ||
+    !isNonEmptyString(value.metricId) ||
+    !isNonEmptyString(value.unit) ||
+    (value.higherIsPreferred !== undefined && typeof value.higherIsPreferred !== "boolean") ||
+    !isTextConformanceBenchmarkMatrixRowStatus(value.status) ||
+    !isNonNegativeInteger(value.runCount) ||
+    !isNonNegativeInteger(value.observedRunCount) ||
+    !isStringArray(value.missingRunIds) ||
+    !isFiniteNumber(value.min) ||
+    !isFiniteNumber(value.max) ||
+    !isFiniteNumber(value.mean) ||
+    !isFiniteNumber(value.median) ||
+    !Array.isArray(value.values) ||
+    !value.values.every((entry) => isTextConformanceBenchmarkMatrixMetricValueV1(entry))
+  ) {
+    return false;
+  }
+  return (
+    value.runCount >= 1 &&
+    value.observedRunCount === value.values.length &&
+    value.observedRunCount >= 1 &&
+    value.missingRunIds.length + value.observedRunCount === value.runCount &&
+    hasUniqueStrings(value.missingRunIds) &&
+    hasUniqueStrings(value.values.map((entry) => entry.runId)) &&
+    (value.status === "incomplete" ? value.missingRunIds.length > 0 : value.missingRunIds.length === 0)
+  );
+}
+
+export function isTextConformanceBenchmarkMatrixSummaryV1(
+  value: unknown,
+): value is TextConformanceBenchmarkMatrixSummaryV1 {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.complete) &&
+    isNonNegativeInteger(value.incomplete)
+  );
+}
+
+export function isTextConformanceBenchmarkMatrixReportV1(
+  value: unknown,
+): value is TextConformanceBenchmarkMatrixReportV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== conformanceBenchmarkMatrixReportSchemaVersion ||
+    value.artifactType !== "textconformance-benchmark-matrix-report-v1" ||
+    !isNonEmptyString(value.matrixId) ||
+    !isNonEmptyString(value.generatedAt) ||
+    !isNonNegativeInteger(value.runCount) ||
+    value.runCount < 1 ||
+    !isNonNegativeInteger(value.benchmarkCount) ||
+    !isNonNegativeInteger(value.subjectCount) ||
+    !isNonNegativeInteger(value.hostCount) ||
+    !isNonNegativeInteger(value.metricCount) ||
+    !isTextConformanceBenchmarkMatrixSummaryV1(value.summary) ||
+    !Array.isArray(value.rows) ||
+    !value.rows.every((entry) => isTextConformanceBenchmarkMatrixMetricRowV1(entry)) ||
+    !isNonEmptyStringArray(value.evidenceRefs) ||
+    !isNonEmptyStringArray(value.limitations) ||
+    (value.notes !== undefined && !isStringArray(value.notes))
+  ) {
+    return false;
+  }
+  const rows = value.rows;
+  const summary = value.summary as TextConformanceBenchmarkMatrixSummaryV1;
+  const runCount = value.runCount as number;
+  return (
+    value.metricCount === rows.length &&
+    value.benchmarkCount === new Set(rows.map((row) => row.benchmarkId)).size &&
+    value.subjectCount === new Set(rows.map((row) => row.subjectKey)).size &&
+    rows.every((row) => row.runCount <= runCount) &&
+    summary.complete === rows.filter((row) => row.status === "complete").length &&
+    summary.incomplete === rows.filter((row) => row.status === "incomplete").length
+  );
+}
+
 export function isTextConformanceBenchmarkThresholdV1(
   value: unknown,
 ): value is TextConformanceBenchmarkThresholdV1 {
@@ -1447,6 +1614,198 @@ function sortedUniqueStrings(values: readonly string[]): readonly string[] {
   return [...new Set(values)].sort((left, right) => left.localeCompare(right));
 }
 
+interface NormalizedBenchmarkMatrixInput {
+  readonly runId: string;
+  readonly host?: TextConformanceBenchmarkCalibrationHostV1;
+  readonly report: TextConformanceBenchmarkReportV1;
+}
+
+function benchmarkMatrixDefaultRunId(report: TextConformanceBenchmarkReportV1): string {
+  return `${report.benchmarkId}:${report.subject.kind}:${report.subject.id}:${report.generatedAt}`;
+}
+
+function benchmarkMatrixSubjectKey(subject: TextConformanceReportSubject): string {
+  return canonicalJson(subject);
+}
+
+function assertBenchmarkMatrixInput(
+  input: unknown,
+  index: number,
+): asserts input is TextConformanceBenchmarkMatrixInput {
+  if (!isRecord(input)) {
+    throw new TypeError(`benchmark matrix input ${index} must be a record`);
+  }
+  if (input.runId !== undefined && !isNonEmptyString(input.runId)) {
+    throw new TypeError(`benchmark matrix input ${index} runId must be a non-empty string`);
+  }
+  if (input.host !== undefined && !isTextConformanceBenchmarkCalibrationHostV1(input.host)) {
+    throw new TypeError(`benchmark matrix input ${index} host is invalid`);
+  }
+  if (!isTextConformanceBenchmarkReportV1(input.report)) {
+    throw new TypeError(`benchmark matrix input ${index} report is invalid`);
+  }
+}
+
+function normalizedBenchmarkMatrixInputs(
+  inputs: readonly TextConformanceBenchmarkMatrixInput[],
+): readonly NormalizedBenchmarkMatrixInput[] {
+  const normalized = inputs.map((input) => ({
+    runId: input.runId ?? benchmarkMatrixDefaultRunId(input.report),
+    ...(input.host === undefined ? {} : { host: input.host }),
+    report: input.report,
+  }));
+  if (!hasUniqueStrings(normalized.map((input) => input.runId))) {
+    throw new TypeError("benchmark matrix run ids must be unique");
+  }
+  return normalized.sort((left, right) => left.runId.localeCompare(right.runId));
+}
+
+function compareBenchmarkMatrixRows(
+  left: TextConformanceBenchmarkMatrixMetricRowV1,
+  right: TextConformanceBenchmarkMatrixMetricRowV1,
+): number {
+  return (
+    left.benchmarkId.localeCompare(right.benchmarkId) ||
+    left.subjectKey.localeCompare(right.subjectKey) ||
+    left.metricId.localeCompare(right.metricId)
+  );
+}
+
+export function createTextConformanceBenchmarkMatrixReport(
+  inputs: readonly TextConformanceBenchmarkMatrixInput[],
+  options: TextConformanceBenchmarkMatrixOptions,
+): TextConformanceBenchmarkMatrixReportV1 {
+  if (!Array.isArray(inputs) || inputs.length < 1) {
+    throw new TypeError("benchmark matrix requires at least one report input");
+  }
+  inputs.forEach((input, index) => assertBenchmarkMatrixInput(input, index));
+  if (!isRecord(options)) {
+    throw new TypeError("benchmark matrix options must be a record");
+  }
+  if (options.matrixId !== undefined && !isNonEmptyString(options.matrixId)) {
+    throw new TypeError("benchmark matrix id must be a non-empty string");
+  }
+  if (options.generatedAt !== undefined && !isNonEmptyString(options.generatedAt)) {
+    throw new TypeError("benchmark matrix generatedAt must be a non-empty string");
+  }
+  if (options.evidenceRefs !== undefined && !isStringArray(options.evidenceRefs)) {
+    throw new TypeError("benchmark matrix evidence refs must be strings");
+  }
+  if (!isNonEmptyStringArray(options.limitations)) {
+    throw new TypeError("benchmark matrix limitations must be a non-empty string array");
+  }
+  if (options.notes !== undefined && !isStringArray(options.notes)) {
+    throw new TypeError("benchmark matrix notes must be strings");
+  }
+
+  const sortedInputs = normalizedBenchmarkMatrixInputs(inputs);
+  const inputGroups = new Map<string, NormalizedBenchmarkMatrixInput[]>();
+  for (const input of sortedInputs) {
+    const subjectKey = benchmarkMatrixSubjectKey(input.report.subject);
+    const key = `${input.report.benchmarkId}\u0000${subjectKey}`;
+    inputGroups.set(key, [...(inputGroups.get(key) ?? []), input]);
+  }
+
+  const rows: TextConformanceBenchmarkMatrixMetricRowV1[] = [];
+  for (const groupInputs of [...inputGroups.values()].sort((left, right) => {
+    const leftReport = left[0]?.report;
+    const rightReport = right[0]?.report;
+    if (leftReport === undefined || rightReport === undefined) return 0;
+    return (
+      leftReport.benchmarkId.localeCompare(rightReport.benchmarkId) ||
+      benchmarkMatrixSubjectKey(leftReport.subject).localeCompare(benchmarkMatrixSubjectKey(rightReport.subject))
+    );
+  })) {
+    const firstReport = groupInputs[0]?.report;
+    if (firstReport === undefined) continue;
+    const metricIds = sortedUniqueStrings(groupInputs.flatMap((input) => input.report.metrics.map((metric) => metric.metricId)));
+    for (const metricId of metricIds) {
+      const values: TextConformanceBenchmarkMatrixMetricValueV1[] = [];
+      const missingRunIds: string[] = [];
+      const units = new Set<string>();
+      const preferences = new Set<boolean>();
+      for (const input of groupInputs) {
+        const metric = input.report.metrics.find((entry) => entry.metricId === metricId);
+        if (metric === undefined) {
+          missingRunIds.push(input.runId);
+          continue;
+        }
+        units.add(metric.unit);
+        if (metric.higherIsPreferred !== undefined) preferences.add(metric.higherIsPreferred);
+        values.push({
+          runId: input.runId,
+          value: metric.value,
+          generatedAt: input.report.generatedAt,
+          evidenceRefs: input.report.evidenceRefs,
+          ...(input.host === undefined ? {} : { hostId: input.host.hostId }),
+        });
+      }
+      if (values.length === 0) {
+        throw new TypeError(`benchmark matrix metric ${metricId} is missing from every report`);
+      }
+      if (units.size !== 1) {
+        throw new TypeError(`benchmark matrix metric ${metricId} has inconsistent units`);
+      }
+      if (preferences.size > 1) {
+        throw new TypeError(`benchmark matrix metric ${metricId} has inconsistent preference direction`);
+      }
+      const unit = [...units][0];
+      if (unit === undefined) throw new TypeError(`benchmark matrix metric ${metricId} unit is missing`);
+      const preference = [...preferences][0];
+      const metricValues = values.map((entry) => entry.value);
+      const min = Math.min(...metricValues);
+      const max = Math.max(...metricValues);
+      rows.push({
+        benchmarkId: firstReport.benchmarkId,
+        subjectKey: benchmarkMatrixSubjectKey(firstReport.subject),
+        subject: firstReport.subject,
+        metricId,
+        unit,
+        ...(preference === undefined ? {} : { higherIsPreferred: preference }),
+        status: missingRunIds.length === 0 ? "complete" : "incomplete",
+        runCount: groupInputs.length,
+        observedRunCount: values.length,
+        missingRunIds,
+        min,
+        max,
+        mean: metricValues.reduce((sum, value) => sum + value, 0) / metricValues.length,
+        median: medianNumber(metricValues),
+        values,
+      });
+    }
+  }
+
+  rows.sort(compareBenchmarkMatrixRows);
+  const evidenceRefs = sortedUniqueStrings([
+    ...(options.evidenceRefs ?? []),
+    ...sortedInputs.flatMap((input) => input.host?.evidenceRefs ?? []),
+    ...sortedInputs.flatMap((input) => input.report.evidenceRefs),
+  ]);
+  const report = {
+    schemaVersion: conformanceBenchmarkMatrixReportSchemaVersion,
+    artifactType: "textconformance-benchmark-matrix-report-v1",
+    matrixId: options.matrixId ?? "matrix:textconformance-benchmarks",
+    generatedAt: options.generatedAt ?? sortedInputs[0]?.report.generatedAt ?? "1970-01-01T00:00:00.000Z",
+    runCount: sortedInputs.length,
+    benchmarkCount: new Set(rows.map((row) => row.benchmarkId)).size,
+    subjectCount: new Set(rows.map((row) => row.subjectKey)).size,
+    hostCount: new Set(sortedInputs.flatMap((input) => (input.host === undefined ? [] : [input.host.hostId]))).size,
+    metricCount: rows.length,
+    summary: {
+      complete: rows.filter((row) => row.status === "complete").length,
+      incomplete: rows.filter((row) => row.status === "incomplete").length,
+    },
+    rows,
+    evidenceRefs,
+    limitations: sortedUniqueStrings([...options.limitations, ...sortedInputs.flatMap((input) => input.report.limitations)]),
+    ...(options.notes === undefined ? {} : { notes: [...options.notes] }),
+  } satisfies TextConformanceBenchmarkMatrixReportV1;
+  if (!isTextConformanceBenchmarkMatrixReportV1(report)) {
+    throw new TypeError("benchmark matrix report is invalid");
+  }
+  return report;
+}
+
 function assertBenchmarkCalibrationInput(
   input: unknown,
   index: number,
@@ -1704,6 +2063,49 @@ export function renderTextConformanceBenchmarkCalibrationMarkdown(
     "",
     "| Metric | Status | Observed hosts | Missing hosts | Min | Max | Mean | Median | Relative spread | Baseline host | Baseline ratio |",
     "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |",
+    ...rows.map((row) => `| ${row} |`),
+    "",
+  ].join("\n");
+}
+
+function benchmarkMatrixSubjectText(subject: TextConformanceReportSubject): string {
+  return `${subject.kind}:${subject.id}`;
+}
+
+export function renderTextConformanceBenchmarkMatrixMarkdown(
+  matrix: TextConformanceBenchmarkMatrixReportV1,
+  options: TextConformanceMarkdownRenderOptions = {},
+): string {
+  if (!isTextConformanceBenchmarkMatrixReportV1(matrix)) {
+    throw new TypeError("benchmark matrix report is invalid");
+  }
+  const title = options.title ?? `Benchmark matrix ${matrix.matrixId}`;
+  const rows = matrix.rows.map((row) =>
+    [
+      markdownTableCell(row.benchmarkId),
+      markdownTableCell(benchmarkMatrixSubjectText(row.subject)),
+      markdownTableCell(row.metricId),
+      markdownTableCell(row.status),
+      markdownTableCell(String(row.observedRunCount)),
+      markdownTableList(row.missingRunIds),
+      markdownTableCell(calibrationNumberText(row.min)),
+      markdownTableCell(calibrationNumberText(row.max)),
+      markdownTableCell(calibrationNumberText(row.mean)),
+      markdownTableCell(calibrationNumberText(row.median)),
+    ].join(" | "),
+  );
+  return [
+    `# ${markdownText(title)}`,
+    "",
+    `- **Matrix:** ${markdownText(matrix.matrixId)}`,
+    `- **Runs:** ${matrix.runCount}`,
+    `- **Benchmarks:** ${matrix.benchmarkCount}`,
+    `- **Subjects:** ${matrix.subjectCount}`,
+    `- **Hosts:** ${matrix.hostCount}`,
+    `- **Summary:** complete=${matrix.summary.complete}; incomplete=${matrix.summary.incomplete}`,
+    "",
+    "| Benchmark | Subject | Metric | Status | Observed runs | Missing runs | Min | Max | Mean | Median |",
+    "| --- | --- | --- | --- | ---: | --- | ---: | ---: | ---: | ---: |",
     ...rows.map((row) => `| ${row} |`),
     "",
   ].join("\n");

@@ -40,6 +40,9 @@ Use `calibrateTextConformanceBenchmarkReports()` to compare multiple
 caller-provided benchmark reports for the same benchmark and subject across
 declared hosts, producing deterministic observed/stable/variable/incomplete
 metric rows without provisioning hosts.
+Use `createTextConformanceBenchmarkMatrixReport()` to summarize caller-provided
+benchmark reports across runs, benchmark ids, subjects, optional hosts, and
+metric coverage without provisioning hosts.
 
 ## CLI
 
@@ -52,6 +55,7 @@ textconformance diff-reports expected.json actual.json
 textconformance validate-suite fixtures/conformance/package-suites.v1.json
 textconformance run-suite fixtures/conformance/package-suites.v1.json --target-root .
 textconformance run-benchmark fixtures/conformance/package-suites.v1.json --target-root . --iterations 3 --warmup 1
+textconformance benchmark-matrix benchmark-matrix-input.json --markdown
 textconformance evaluate-benchmark benchmark-report.json threshold-policy.json --markdown
 ```
 
@@ -61,6 +65,8 @@ Runnable repository examples:
   runs a suite benchmark through package APIs and keeps benchmark output separate from conformance reports.
 - [`../../examples/textconformance-benchmark-calibration-consumer.mjs`](../../examples/textconformance-benchmark-calibration-consumer.mjs)
   calibrates benchmark reports from declared hosts and prints the resulting cross-host metric summary.
+- [`../../examples/textconformance-benchmark-matrix-consumer.mjs`](../../examples/textconformance-benchmark-matrix-consumer.mjs)
+  builds a deterministic benchmark matrix from caller-provided benchmark reports and declared hosts.
 
 ## Report diff and capability registry
 
@@ -77,7 +83,8 @@ conformance reports, and limitations.
 Use `renderTextConformanceReportMarkdown()` and
 `renderTextConformanceReportDiffMarkdown()`,
 `renderTextConformanceBenchmarkThresholdEvaluationMarkdown()`, and
-`renderTextConformanceBenchmarkCalibrationMarkdown()` to produce deterministic
+`renderTextConformanceBenchmarkCalibrationMarkdown()`, and
+`renderTextConformanceBenchmarkMatrixMarkdown()` to produce deterministic
 release-oriented Markdown summaries from machine-readable reports and benchmark
 artifacts. The renderers validate their inputs, sort rows by stable ids, escape
 table cells, and emit a final newline.
