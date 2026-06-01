@@ -57,14 +57,15 @@ import {
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextpipelineTraceV1,
   textProtocolPayloadKindVerticalSliceResultV1,
-  textProtocolProcessorTraceSchemaId,
   textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
 import {
   createTextPipelineBatchRunReport,
   createTextPipelineBatchRunReportEnvelope,
+  createTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineBatchRunReportEnvelopeV1,
   isTextPipelineBatchRunReportV1,
+  isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineTraceV1,
   runTextPipeline,
   textPipelineBatchRunReportPayloadKind,
@@ -621,23 +622,30 @@ if (
   fail("Interop textlab inspection must preserve batch report envelope metadata.", batchEnvelopeInspection);
 }
 
-const processorTrace = {
-  schemaId: textProtocolProcessorTraceSchemaId,
-  schemaVersion: textProtocolSchemaVersion,
-  producer: {
-    package: "@ismail-elkorchi/textpipeline",
-    version: "0.0.0",
-  },
-  payload: pipelineRun.trace,
+const processorTrace = createTextPipelineProcessorTraceEnvelopeV1(pipelineRun.trace, "0.0.0", {
   provenance: {
     references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
   },
   limitations: ["Structural processor-trace interop smoke only."],
-};
-if (!isTextProtocolProcessorTraceV1(processorTrace)) {
+});
+if (!isTextPipelineProcessorTraceEnvelopeV1(processorTrace) || !isTextProtocolProcessorTraceV1(processorTrace)) {
   fail("Interop processor trace must satisfy textprotocol structural guard.", processorTrace);
 }
 assertProtocolFamily(processorTrace, "processor-trace", "@ismail-elkorchi/textpipeline");
+const processorTraceTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(processorTrace, {
+  expectedFamily: "processor-trace",
+  expectedProducerPackage: "@ismail-elkorchi/textpipeline",
+  requireProvenance: true,
+  requireLimitations: true,
+});
+const parsedProcessorTrace = parseTextProtocolSchemaFamilyEnvelopeJson(processorTraceTransport);
+if (!isTextProtocolProcessorTraceV1(parsedProcessorTrace)) {
+  fail("Interop processor-trace transport must parse back into a processor trace.");
+}
+const processorTraceInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedProcessorTrace);
+if (processorTraceInspection.family !== "processor-trace" || !processorTraceInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve processor-trace metadata.", processorTraceInspection);
+}
 
 const report = runTextConformanceChecks(
   [

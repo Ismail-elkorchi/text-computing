@@ -399,8 +399,14 @@ const processorTrace = {
   ...commonFamilyEnvelopeFields,
   schemaId: textProtocolProcessorTraceSchemaId,
   payload: {
+    schemaVersion: 1,
     documentId: "doc:1",
     finalRevision: "rev:2",
+    executionMode: "async",
+    runStatus: "complete",
+    processorOrder: ["processor:demo", "processor:cache"],
+    contextFingerprint: "{}",
+    cachePolicy: "read-through",
     entries: [
       {
         processorId: "processor:demo",
@@ -410,6 +416,16 @@ const processorTrace = {
         outputRevision: "rev:2",
         emittedViews: ["view:analysis"],
         emittedLayers: ["layer:token"],
+      },
+      {
+        processorId: "processor:cache",
+        version: "0.0.0",
+        status: "cached",
+        inputRevision: "rev:2",
+        outputRevision: "rev:2",
+        cacheKey: "cache:processor:cache:rev:2",
+        emittedViews: [],
+        emittedLayers: [],
       },
     ],
   },

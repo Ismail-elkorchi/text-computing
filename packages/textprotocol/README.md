@@ -66,6 +66,9 @@ bundles, processor traces, corpus metric envelopes, mapping-loss reports, protoc
 externally validated pack manifests, and other registered schema-family envelopes. Other wire
 transports are not standardized by this package.
 
+Processor-trace envelopes can carry full textpipeline trace metadata, including execution mode, run
+status, processor order, context fingerprint, cache policy, and cached processor entries.
+
 Use `canonicalizeTextProtocolJson()` when a caller needs deterministic JSON text before caller-owned
 hashing or signing. This package does not define a network transport, signing protocol, or hash
 algorithm.

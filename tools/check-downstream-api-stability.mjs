@@ -415,6 +415,36 @@ async function assertBuiltPackageSmoke() {
   expect(textpipeline.isTextPipelineTraceV1(pipelineRun.trace), "textpipeline should emit a valid trace.");
   const traceInspection = textlab.inspectTextPipelineTrace(pipelineRun.trace);
   expect(traceInspection.entryCount === 1, "textlab should inspect textpipeline traces through package APIs.");
+  const processorTraceEnvelope = textpipeline.createTextPipelineProcessorTraceEnvelopeV1(
+    pipelineRun.trace,
+    "0.1.0",
+    {
+      provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+      limitations: ["Downstream API stability processor-trace smoke."],
+    },
+  );
+  expect(
+    textpipeline.isTextPipelineProcessorTraceEnvelopeV1(processorTraceEnvelope) &&
+      textprotocol.isTextProtocolProcessorTraceV1(processorTraceEnvelope),
+    "textpipeline should wrap processor traces in registered textprotocol schema-family envelopes.",
+  );
+  const processorTraceTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    processorTraceEnvelope,
+    {
+      expectedFamily: "processor-trace",
+      expectedProducerPackage: "@ismail-elkorchi/textpipeline",
+      requireProvenance: true,
+      requireLimitations: true,
+    },
+  );
+  const parsedProcessorTrace = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(processorTraceTransport);
+  const processorTraceInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(parsedProcessorTrace);
+  expect(
+    textprotocol.isTextProtocolProcessorTraceV1(parsedProcessorTrace) &&
+      processorTraceInspection.family === "processor-trace" &&
+      processorTraceInspection.compatibilityOk,
+    "textprotocol and textlab should round-trip and inspect processor-trace schema-family envelopes.",
+  );
   const batchReport = textpipeline.createTextPipelineBatchRunReport([pipelineRun]);
   expect(textpipeline.isTextPipelineBatchRunReportV1(batchReport), "textpipeline should validate batch reports through package APIs.");
   const batchReportEnvelope = textpipeline.createTextPipelineBatchRunReportEnvelope(

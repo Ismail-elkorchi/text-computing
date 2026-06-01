@@ -17,6 +17,11 @@
         "documentId": { "type": "string", "minLength": 1 },
         "schemaVersion": { "const": 1 },
         "finalRevision": { "type": "string", "minLength": 1 },
+        "executionMode": { "enum": ["sync", "async"] },
+        "runStatus": { "enum": ["complete", "partial"] },
+        "processorOrder": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "contextFingerprint": { "type": "string", "minLength": 1 },
+        "cachePolicy": { "enum": ["none", "read-through"] },
         "entries": {
           "type": "array",
           "items": {
@@ -26,9 +31,10 @@
             "properties": {
               "processorId": { "type": "string", "minLength": 1 },
               "version": { "type": "string", "minLength": 1 },
-              "status": { "enum": ["applied", "skipped", "failed"] },
+              "status": { "enum": ["applied", "skipped", "cached", "failed"] },
               "inputRevision": { "type": "string", "minLength": 1 },
               "outputRevision": { "type": "string", "minLength": 1 },
+              "cacheKey": { "type": "string", "minLength": 1 },
               "emittedViews": { "type": "array", "items": { "type": "string", "minLength": 1 } },
               "emittedLayers": { "type": "array", "items": { "type": "string", "minLength": 1 } },
               "diagnostics": { "$ref": "#/definitions/diagnostics" },
