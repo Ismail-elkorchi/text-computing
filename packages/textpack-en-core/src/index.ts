@@ -23,15 +23,21 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     "unicode": "17.0.0"
   },
   "capabilities": {
+    "profiles": true,
     "stopwords": true,
     "rules": true,
     "lexicons": true,
     "gazetteers": true,
     "tagsets": true,
     "morphology": true,
+    "transducers": true,
+    "structures": true,
     "benchmarks": true
   },
   "resources": {
+    "profiles": [
+      "resources/profile.en.core.txt"
+    ],
     "stopwords": [
       "resources/stopwords.en.basic.txt"
     ],
@@ -50,11 +56,20 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     "morphology": [
       "resources/morph.en.simple.tsv"
     ],
+    "transducers": [
+      "resources/transducer.en.core.txt"
+    ],
+    "structures": [
+      "resources/structure.en.core.txt"
+    ],
     "benchmarks": [
       "resources/benchmark.smoke.txt"
     ]
   },
   "provides": {
+    "profiles": [
+      "profile-en-core"
+    ],
     "stopwords": [
       "stopwords-en-core"
     ],
@@ -72,6 +87,12 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     ],
     "morphology": [
       "morph-en-core"
+    ],
+    "transducers": [
+      "transducer-en-core"
+    ],
+    "structures": [
+      "structure-en-core"
     ],
     "benchmarks": [
       "benchmark-en-smoke"
@@ -114,7 +135,7 @@ export const textPackEnCoreManifest: TextPackManifestV1 = {
     "overlayPrecedence": 10
   },
   "limitations": [
-    "Reference English resource pack for deterministic package workflows; it is not a comprehensive English lexicon or named-entity catalog."
+    "Reference English resource pack with every textpack resource family for deterministic package workflows; it is not a comprehensive English lexicon or named-entity catalog."
   ]
 } as const;
 

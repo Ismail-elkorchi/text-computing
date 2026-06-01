@@ -1,0 +1,2 @@
+sentence-basic-svo
+noun-phrase-det-adj-noun

@@ -1,7 +1,10 @@
 import Ajv from "ajv";
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { validateTextPackManifestGovernance } from "../packages/textpack/src/index.ts";
+import {
+  textPackResourceFamilies,
+  validateTextPackManifestGovernance,
+} from "../packages/textpack/src/index.ts";
 
 const ROOT = process.cwd();
 const PACKAGES_DIR = path.join(ROOT, "packages");
@@ -67,10 +70,22 @@ for (const packDir of packDirs) {
   expect(governance.ok, `${manifestPath} failed manifest governance.`, governance.diagnostics);
 
   expect(manifest.entrypoints.manifest === "./pack.manifest.json", `${manifestPath} must publish ./pack.manifest.json as its manifest entrypoint.`);
+  for (const family of textPackResourceFamilies) {
+    const resourcePaths = manifest.resources[family] ?? [];
+    const providedIds = manifest.provides[family] ?? [];
+    expect(resourcePaths.length > 0, `${manifestPath} must declare at least one ${family} resource.`);
+    expect(providedIds.length === resourcePaths.length, `${manifestPath} ${family} resources/provides length mismatch.`);
+  }
   for (const paths of Object.values(manifest.resources)) {
     for (const resourcePath of paths) {
       assertPackageRelativePath(resourcePath, `${manifest.packageName} resource path ${resourcePath}`);
       expect(await fileExists(`packages/${packDir}/${resourcePath}`), `${manifest.packageName} missing resource ${resourcePath}.`);
+      const content = await readFile(path.join(ROOT, `packages/${packDir}/${resourcePath}`), "utf8");
+      const nonEmptyLineCount = content
+        .split(/\r?\n/u)
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0).length;
+      expect(nonEmptyLineCount >= 2, `${manifest.packageName} resource ${resourcePath} must contain at least two non-empty entries.`);
     }
   }
   for (const refs of Object.values(manifest.tests)) {

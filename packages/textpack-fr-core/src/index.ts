@@ -23,18 +23,32 @@ export const textPackFrCoreManifest: TextPackManifestV1 = {
     "unicode": "17.0.0"
   },
   "capabilities": {
+    "profiles": true,
+    "rules": true,
     "stopwords": true,
     "lexicons": true,
+    "gazetteers": true,
     "tagsets": true,
     "morphology": true,
+    "transducers": true,
+    "structures": true,
     "benchmarks": true
   },
   "resources": {
+    "profiles": [
+      "resources/profile.fr.core.txt"
+    ],
+    "rules": [
+      "resources/abbrev.fr.common.txt"
+    ],
     "stopwords": [
       "resources/stopwords.fr.basic.txt"
     ],
     "lexicons": [
       "resources/lexicon.fr.simple.tsv"
+    ],
+    "gazetteers": [
+      "resources/gazetteer.fr.core.tsv"
     ],
     "tagsets": [
       "resources/tagset.ud-lite.tsv"
@@ -42,22 +56,43 @@ export const textPackFrCoreManifest: TextPackManifestV1 = {
     "morphology": [
       "resources/morph.fr.simple.tsv"
     ],
+    "transducers": [
+      "resources/transducer.fr.core.txt"
+    ],
+    "structures": [
+      "resources/structure.fr.core.txt"
+    ],
     "benchmarks": [
       "resources/benchmark.smoke.txt"
     ]
   },
   "provides": {
+    "profiles": [
+      "profile-fr-core"
+    ],
+    "rules": [
+      "abbrev-fr-core"
+    ],
     "stopwords": [
       "stopwords-fr-core"
     ],
     "lexicons": [
       "lexicon-fr-core"
     ],
+    "gazetteers": [
+      "gazetteer-fr-core"
+    ],
     "tagsets": [
       "tagset-fr-ud-lite"
     ],
     "morphology": [
       "morph-fr-core"
+    ],
+    "transducers": [
+      "transducer-fr-core"
+    ],
+    "structures": [
+      "structure-fr-core"
     ],
     "benchmarks": [
       "benchmark-fr-smoke"
@@ -100,7 +135,7 @@ export const textPackFrCoreManifest: TextPackManifestV1 = {
     "overlayPrecedence": 10
   },
   "limitations": [
-    "Reference fixture pack for French resource loading; it is not broad language coverage."
+    "Reference French resource pack with every textpack resource family for deterministic package workflows; it is not comprehensive French language coverage."
   ]
 } as const;
 

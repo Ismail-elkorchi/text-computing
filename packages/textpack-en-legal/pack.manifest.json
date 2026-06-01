@@ -28,27 +28,76 @@
     "unicode": "17.0.0"
   },
   "capabilities": {
+    "profiles": true,
+    "rules": true,
+    "lexicons": true,
     "stopwords": true,
     "gazetteers": true,
+    "tagsets": true,
+    "morphology": true,
+    "transducers": true,
+    "structures": true,
     "benchmarks": true
   },
   "resources": {
+    "profiles": [
+      "resources/profile.en.legal.txt"
+    ],
+    "rules": [
+      "resources/rule.en.legal.txt"
+    ],
+    "lexicons": [
+      "resources/lexicon.en.legal.tsv"
+    ],
     "stopwords": [
       "resources/stopwords.en.legal.txt"
     ],
     "gazetteers": [
       "resources/gazetteer.en.legal.tsv"
     ],
+    "tagsets": [
+      "resources/tagset.legal-lite.tsv"
+    ],
+    "morphology": [
+      "resources/morph.en.legal.tsv"
+    ],
+    "transducers": [
+      "resources/transducer.en.legal.txt"
+    ],
+    "structures": [
+      "resources/structure.en.legal.txt"
+    ],
     "benchmarks": [
       "resources/benchmark.legal-smoke.txt"
     ]
   },
   "provides": {
+    "profiles": [
+      "profile-en-legal"
+    ],
+    "rules": [
+      "rule-en-legal"
+    ],
+    "lexicons": [
+      "lexicon-en-legal"
+    ],
     "stopwords": [
       "stopwords-en-legal"
     ],
     "gazetteers": [
       "gazetteer-en-legal"
+    ],
+    "tagsets": [
+      "tagset-en-legal-lite"
+    ],
+    "morphology": [
+      "morph-en-legal"
+    ],
+    "transducers": [
+      "transducer-en-legal"
+    ],
+    "structures": [
+      "structure-en-legal"
     ],
     "benchmarks": [
       "benchmark-en-legal-smoke"
@@ -91,6 +140,6 @@
     "overlayPrecedence": 50
   },
   "limitations": [
-    "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage."
+    "Reference legal-domain resource pack with every textpack resource family for deterministic package workflows; it is not comprehensive legal-domain coverage."
   ]
 }

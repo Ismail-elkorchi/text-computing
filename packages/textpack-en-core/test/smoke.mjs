@@ -14,6 +14,12 @@ for (const paths of Object.values(textPackEnCoreManifest.resources)) {
 }
 const expectedEntries = [
   {
+    kind: "profile",
+    resourceId: "profile-en-core",
+    query: "en-core-default",
+    verify: (entry) => entry?.value === "en-core-default",
+  },
+  {
     kind: "stopwords",
     resourceId: "stopwords-en-core",
     query: "the",
@@ -48,6 +54,18 @@ const expectedEntries = [
     resourceId: "morph-en-core",
     query: "queries",
     verify: (entry) => entry?.attributes.lemma === "query" && entry.attributes.Person === "3",
+  },
+  {
+    kind: "transducer",
+    resourceId: "transducer-en-core",
+    query: "plural-s->singular",
+    verify: (entry) => entry?.value === "plural-s->singular",
+  },
+  {
+    kind: "structure",
+    resourceId: "structure-en-core",
+    query: "sentence-basic-svo",
+    verify: (entry) => entry?.value === "sentence-basic-svo",
   },
   {
     kind: "benchmark",

@@ -8,12 +8,15 @@ Reference English resources for deterministic pack loading, pack-backed rules, l
 
 ## Resources
 
+- `profiles`: `profile-en-core`
 - `stopwords`: `stopwords-en-core`
 - `rules`: `abbrev-en-core`
 - `lexicons`: `lexicon-en-core`
 - `gazetteers`: `gazetteer-en-core`
 - `tagsets`: `tagset-ud-lite`
 - `morphology`: `morph-en-core`
+- `transducers`: `transducer-en-core`
+- `structures`: `structure-en-core`
 - `benchmarks`: `benchmark-en-smoke`
 
 ## Verification
