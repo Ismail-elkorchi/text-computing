@@ -16,6 +16,7 @@ import {
   renderTextConformanceReportDiffMarkdown,
   renderTextConformanceReportMarkdown,
   runTextConformanceDifferentialOracle,
+  runTextConformanceBenchmark,
   runTextConformanceChecks,
   runTextConformanceSuite,
   runTextConformanceSuiteTargetChecks,
@@ -494,6 +495,72 @@ if (!isTextConformanceBenchmarkReportV1(benchmarkReport)) {
 if (isTextConformanceReportV1(benchmarkReport)) {
   throw new Error("benchmark report must not satisfy the conformance report guard");
 }
+let benchmarkClock = 0;
+const benchmarkInvocations: string[] = [];
+const executedBenchmarkReport = await runTextConformanceBenchmark({
+  benchmarkId: "benchmark:textconformance-suite-runner",
+  subject: {
+    kind: "package",
+    id: "@ismail-elkorchi/textconformance",
+  },
+  generatedAt: "2026-04-23T00:00:00.000Z",
+  iterations: 3,
+  warmupIterations: 1,
+  clock() {
+    const value = benchmarkClock;
+    benchmarkClock += 5;
+    return value;
+  },
+  evidenceRefs: ["packages/textconformance/test/index.test.ts#benchmark-runner"],
+  limitations: ["Synthetic benchmark runner test; metrics use an injected deterministic clock."],
+  cases: [
+    {
+      caseId: "suite-runner",
+      evidenceRefs: ["packages/textconformance/test/index.test.ts#suite"],
+      run(context) {
+        benchmarkInvocations.push(`${context.phase}:${context.iteration}`);
+        runTextConformanceSuite(suite, {
+          generatedAt: "2026-04-23T00:00:00.000Z",
+          fixturePolicy: { requireHoldout: true },
+        });
+      },
+    },
+  ],
+});
+if (
+  !isTextConformanceBenchmarkReportV1(executedBenchmarkReport) ||
+  executedBenchmarkReport.metrics.find((metric) => metric.metricId === "suite-runner.duration-ms.mean")?.value !== 5 ||
+  executedBenchmarkReport.metrics.find((metric) => metric.metricId === "suite-runner.iterations")?.value !== 3 ||
+  executedBenchmarkReport.evidenceRefs.join(",") !==
+    "packages/textconformance/test/index.test.ts#benchmark-runner,packages/textconformance/test/index.test.ts#suite"
+) {
+  throw new Error("benchmark runner should produce deterministic benchmark report metrics");
+}
+if (benchmarkInvocations.join(",") !== "warmup:0,measurement:0,measurement:1,measurement:2") {
+  throw new Error("benchmark runner should execute warmup and measurement iterations in order");
+}
+if (isTextConformanceReportV1(executedBenchmarkReport)) {
+  throw new Error("executed benchmark report must not satisfy the conformance report guard");
+}
+let duplicateBenchmarkCaseRejected = false;
+try {
+  await runTextConformanceBenchmark({
+    benchmarkId: "benchmark:duplicate-case",
+    subject: { kind: "package", id: "@ismail-elkorchi/textconformance" },
+    cases: [
+      { caseId: "duplicate", run() {} },
+      { caseId: "duplicate", run() {} },
+    ],
+    evidenceRefs: ["packages/textconformance/test/index.test.ts#duplicate-benchmark-case"],
+    limitations: ["Duplicate-case negative control."],
+  });
+} catch (error) {
+  duplicateBenchmarkCaseRejected =
+    error instanceof TypeError && error.message === "textconformance benchmark case ids must be unique";
+}
+if (!duplicateBenchmarkCaseRejected) {
+  throw new Error("benchmark runner should reject duplicate case ids");
+}
 
 const cliDir = mkdtempSync(path.join(tmpdir(), "textconformance-cli-"));
 const reportPath = path.join(cliDir, "report.json");
@@ -534,6 +601,22 @@ if (
   !runSuiteCli.includes("\"target:textconformance-consumer-example\"")
 ) {
   throw new Error("CLI should run suite files against declared filesystem targets");
+}
+const benchmarkCli = execFileSync(
+  process.execPath,
+  [cliPath, "run-benchmark", suitePath, "--target-root", repoRoot, "--iterations", "2", "--warmup", "1"],
+  {
+    encoding: "utf8",
+  },
+);
+const benchmarkCliReport = JSON.parse(benchmarkCli);
+if (
+  !isTextConformanceBenchmarkReportV1(benchmarkCliReport) ||
+  benchmarkCliReport.benchmarkId !== "benchmark:suite:textconformance-unit" ||
+  benchmarkCliReport.metrics.find((metric) => metric.metricId === "suite:suite:textconformance-unit.iterations")
+    ?.value !== 2
+) {
+  throw new Error("CLI should run benchmark reports over suite files");
 }
 let invalidCliRejected = false;
 try {
