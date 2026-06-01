@@ -14,3 +14,5 @@ Runnable repository examples:
 - [`../../../examples/textpack-pack-manifest-envelope-consumer.mjs`](../../../examples/textpack-pack-manifest-envelope-consumer.mjs)
   validates a textpack manifest, wraps it in textprotocol pack-manifest schema-family JSON transport,
   parses it, and revalidates the parsed manifest.
+- [`../../../examples/textpack-review-report-consumer.mjs`](../../../examples/textpack-review-report-consumer.mjs)
+  creates a machine-readable pack review report and renders it through textlab.

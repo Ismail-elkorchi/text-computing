@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "packageName": "@ismail-elkorchi/textpack",
+  "packId": "pack:en-core",
+  "packPackageName": "@ismail-elkorchi/textpack-en-core",
+  "version": "0.1.0",
+  "currentReviewState": "reference",
+  "targetReviewState": "reference",
+  "transition": "retain",
+  "decision": "accepted",
+  "ok": true,
+  "manifestOk": true,
+  "resourceInventoryChecked": true,
+  "resourceInventoryOk": true,
+  "compatibilityChecked": true,
+  "compatibilityOk": true,
+  "resourceCount": 7,
+  "requirementCount": 13,
+  "passedRequirementCount": 11,
+  "failedRequirementCount": 0,
+  "notApplicableRequirementCount": 2,
+  "diagnosticCount": 0,
+  "evidenceRefs": [
+    "fixtures/conformance/package-suites.v1.json#textpack",
+    "fixtures/textpack/resources/textpack-en-core/benchmark.smoke.txt"
+  ],
+  "requirements": [
+    {
+      "id": "manifest-governance",
+      "status": "pass",
+      "message": "Manifest governance validation passed.",
+      "refs": []
+    },
+    {
+      "id": "resource-inventory",
+      "status": "pass",
+      "message": "Declared resource inventory matches the supplied package file inventory.",
+      "refs": []
+    },
+    {
+      "id": "compatibility-policy",
+      "status": "pass",
+      "message": "Compatibility policy validation passed.",
+      "refs": []
+    },
+    {
+      "id": "target-scope",
+      "status": "pass",
+      "message": "Candidate-or-stronger review requires explicit target scope.",
+      "refs": []
+    },
+    {
+      "id": "license-metadata",
+      "status": "pass",
+      "message": "Candidate-or-stronger review requires code and data license metadata.",
+      "refs": [
+        "CC0-1.0",
+        "MIT"
+      ]
+    },
+    {
+      "id": "provenance-metadata",
+      "status": "pass",
+      "message": "Candidate-or-stronger review requires provenance source metadata.",
+      "refs": [
+        "repo:fixtures/textpack"
+      ]
+    },
+    {
+      "id": "test-coverage",
+      "status": "pass",
+      "message": "Candidate-or-stronger review requires smoke, negative, and representative test references.",
+      "refs": [
+        "test/negative.spec.ts",
+        "test/representative.spec.ts",
+        "test/smoke.spec.ts"
+      ]
+    },
+    {
+      "id": "limitations",
+      "status": "pass",
+      "message": "Candidate-or-stronger review requires explicit limitations.",
+      "refs": [
+        "Repository fixture pack for deterministic package workflows; not a comprehensive English lexicon or named-entity catalog."
+      ]
+    },
+    {
+      "id": "reviewer-evidence",
+      "status": "pass",
+      "message": "reviewer evidence was supplied.",
+      "refs": [
+        "reviewer:textpack-maintainer"
+      ]
+    },
+    {
+      "id": "conformance-evidence",
+      "status": "pass",
+      "message": "conformance evidence was supplied.",
+      "refs": [
+        "fixtures/conformance/package-suites.v1.json#textpack"
+      ]
+    },
+    {
+      "id": "benchmark-evidence",
+      "status": "pass",
+      "message": "benchmark evidence was supplied.",
+      "refs": [
+        "fixtures/textpack/resources/textpack-en-core/benchmark.smoke.txt"
+      ]
+    },
+    {
+      "id": "security-evidence",
+      "status": "not-applicable",
+      "message": "security evidence is not required by review policy.",
+      "refs": []
+    },
+    {
+      "id": "migration-evidence",
+      "status": "not-applicable",
+      "message": "migration evidence is not required by review policy.",
+      "refs": []
+    }
+  ],
+  "diagnostics": []
+}

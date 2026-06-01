@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Add textpack review-report APIs for manifest governance, inventory, compatibility, review-state
+  transition, and evidence-policy diagnostics.
 - Add a public pack-manifest schema-family exchange example with textprotocol transport.
 - Migrate the manifest model to `manifestVersion`, pack `id`, resource-family maps, `provides`,
   compatibility metadata, review state, and required pack tests.

@@ -24,11 +24,17 @@ import {
 } from "@ismail-elkorchi/textcorpus";
 import { isTextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
 import {
+  createTextPackReviewReport,
   createTextPackResourceRegistry,
   isTextPackManifestV1,
+  isTextPackReviewReportV1,
   validateTextPackResourceInventory,
   validateTextPackManifestGovernance,
   type TextPackManifestGovernanceDiagnostic,
+  type TextPackReviewDiagnostic,
+  type TextPackReviewPolicy,
+  type TextPackReviewReportV1,
+  type TextPackReviewRequirementResult,
   type TextPackResourceInventoryDiagnostic,
 } from "@ismail-elkorchi/textpack";
 import {
@@ -227,6 +233,50 @@ export interface TextlabPackAuditInspection {
   readonly diagnosticCount: number;
   readonly resourceFamilies: readonly TextlabCount[];
   readonly diagnostics: readonly TextlabPackAuditDiagnostic[];
+}
+
+export interface TextlabPackReviewRequirementRow {
+  readonly id: string;
+  readonly status: string;
+  readonly message: string;
+  readonly refs: readonly string[];
+}
+
+export interface TextlabPackReviewDiagnostic {
+  readonly source: string;
+  readonly code: string;
+  readonly packId?: string;
+  readonly resourceId?: string;
+  readonly family?: string;
+  readonly path?: string;
+  readonly ref?: string;
+  readonly message: string;
+}
+
+export interface TextlabPackReviewInspection {
+  readonly schemaVersion: 1;
+  readonly ok: boolean;
+  readonly decision: string;
+  readonly packId: string;
+  readonly packageName: string;
+  readonly version: string;
+  readonly currentReviewState: string;
+  readonly targetReviewState: string;
+  readonly transition: string;
+  readonly manifestOk: boolean;
+  readonly resourceInventoryChecked: boolean;
+  readonly resourceInventoryOk: boolean;
+  readonly compatibilityChecked: boolean;
+  readonly compatibilityOk: boolean;
+  readonly resourceCount: number;
+  readonly requirementCount: number;
+  readonly passedRequirementCount: number;
+  readonly failedRequirementCount: number;
+  readonly notApplicableRequirementCount: number;
+  readonly evidenceRefCount: number;
+  readonly diagnosticCount: number;
+  readonly requirements: readonly TextlabPackReviewRequirementRow[];
+  readonly diagnostics: readonly TextlabPackReviewDiagnostic[];
 }
 
 export interface TextlabDocumentInspection {
@@ -761,6 +811,60 @@ function packAuditDiagnosticRow(
   };
 }
 
+function packReviewRequirementRow(
+  requirement: TextPackReviewRequirementResult,
+): TextlabPackReviewRequirementRow {
+  return {
+    id: requirement.id,
+    status: requirement.status,
+    message: requirement.message,
+    refs: [...requirement.refs].sort(),
+  };
+}
+
+function packReviewDiagnosticRow(
+  diagnostic: TextPackReviewDiagnostic,
+): TextlabPackReviewDiagnostic {
+  return {
+    source: diagnostic.source,
+    code: diagnostic.code,
+    ...(diagnostic.packId === undefined ? {} : { packId: diagnostic.packId }),
+    ...(diagnostic.resourceId === undefined ? {} : { resourceId: diagnostic.resourceId }),
+    ...(diagnostic.family === undefined ? {} : { family: diagnostic.family }),
+    ...(diagnostic.path === undefined ? {} : { path: diagnostic.path }),
+    ...(diagnostic.ref === undefined ? {} : { ref: diagnostic.ref }),
+    message: diagnostic.message,
+  };
+}
+
+function inspectTextPackReviewReportValue(report: TextPackReviewReportV1): TextlabPackReviewInspection {
+  return {
+    schemaVersion: 1,
+    ok: report.ok,
+    decision: report.decision,
+    packId: report.packId,
+    packageName: report.packPackageName,
+    version: report.version,
+    currentReviewState: report.currentReviewState,
+    targetReviewState: report.targetReviewState,
+    transition: report.transition,
+    manifestOk: report.manifestOk,
+    resourceInventoryChecked: report.resourceInventoryChecked,
+    resourceInventoryOk: report.resourceInventoryOk,
+    compatibilityChecked: report.compatibilityChecked,
+    compatibilityOk: report.compatibilityOk,
+    resourceCount: report.resourceCount,
+    requirementCount: report.requirementCount,
+    passedRequirementCount: report.passedRequirementCount,
+    failedRequirementCount: report.failedRequirementCount,
+    notApplicableRequirementCount: report.notApplicableRequirementCount,
+    evidenceRefCount: report.evidenceRefs.length,
+    diagnosticCount: report.diagnosticCount,
+    requirements: report.requirements.map(packReviewRequirementRow),
+    diagnostics: report.diagnostics.map(packReviewDiagnosticRow),
+  };
+}
+
 export function inspectTextPackValidation(value: unknown): TextlabPackValidationInspection {
   const validation = validateTextPackManifestGovernance(value);
   const packId = isTextPackManifestV1(value) ? value.id : "<invalid>";
@@ -773,6 +877,26 @@ export function inspectTextPackValidation(value: unknown): TextlabPackValidation
       .map(packValidationDiagnosticRow)
       .sort((left, right) => `${left.code}\u0000${left.ref ?? ""}`.localeCompare(`${right.code}\u0000${right.ref ?? ""}`)),
   };
+}
+
+export function inspectTextPackReview(
+  manifest: unknown,
+  inventoryResourcePaths: readonly string[] = [],
+  policy: TextPackReviewPolicy = {},
+): TextlabPackReviewInspection {
+  return inspectTextPackReviewReportValue(
+    createTextPackReviewReport(manifest, {
+      ...policy,
+      inventoryResourcePaths,
+    }),
+  );
+}
+
+export function inspectTextPackReviewReport(value: unknown): TextlabPackReviewInspection {
+  if (!isTextPackReviewReportV1(value)) {
+    throw new TypeError("textpack review report is invalid");
+  }
+  return inspectTextPackReviewReportValue(value);
 }
 
 export function renderTextPackValidationInspection(inspection: TextlabPackValidationInspection): string {
@@ -889,6 +1013,46 @@ export function renderTextPackAuditInspection(inspection: TextlabPackAuditInspec
       ? ["- none"]
       : inspection.diagnostics.map((entry) =>
           `- ${entry.code}${entry.family === undefined ? "" : ` family=${entry.family}`}${entry.path === undefined ? "" : ` path=${entry.path}`}${entry.resourceId === undefined ? "" : ` resource=${entry.resourceId}`}${entry.ref === undefined ? "" : ` ref=${entry.ref}`}: ${entry.message}`,
+        )),
+    "",
+  ].join("\n");
+}
+
+export function renderTextPackReviewInspection(inspection: TextlabPackReviewInspection): string {
+  return [
+    "# textlab textpack review",
+    "",
+    `Pack: ${inspection.packId}`,
+    `Package: ${inspection.packageName}`,
+    `Version: ${inspection.version}`,
+    `Decision: ${inspection.decision}`,
+    `Status: ${inspection.ok ? "accepted" : "blocked"}`,
+    `Current review state: ${inspection.currentReviewState}`,
+    `Target review state: ${inspection.targetReviewState}`,
+    `Transition: ${inspection.transition}`,
+    `Manifest valid: ${inspection.manifestOk ? "yes" : "no"}`,
+    `Inventory checked: ${inspection.resourceInventoryChecked ? "yes" : "no"}`,
+    `Inventory valid: ${inspection.resourceInventoryOk ? "yes" : "no"}`,
+    `Compatibility checked: ${inspection.compatibilityChecked ? "yes" : "no"}`,
+    `Compatibility valid: ${inspection.compatibilityOk ? "yes" : "no"}`,
+    `Resources: ${inspection.resourceCount}`,
+    `Requirements: ${inspection.requirementCount}`,
+    `Requirements passed: ${inspection.passedRequirementCount}`,
+    `Requirements failed: ${inspection.failedRequirementCount}`,
+    `Requirements not applicable: ${inspection.notApplicableRequirementCount}`,
+    `Evidence refs: ${inspection.evidenceRefCount}`,
+    `Diagnostics: ${inspection.diagnosticCount}`,
+    "",
+    "## Requirements",
+    ...inspection.requirements.map((entry) =>
+      `- ${entry.id} status=${entry.status} refs=${entry.refs.join(",") || "none"}: ${entry.message}`,
+    ),
+    "",
+    "## Diagnostics",
+    ...(inspection.diagnostics.length === 0
+      ? ["- none"]
+      : inspection.diagnostics.map((entry) =>
+          `- ${entry.source}:${entry.code}${entry.family === undefined ? "" : ` family=${entry.family}`}${entry.path === undefined ? "" : ` path=${entry.path}`}${entry.resourceId === undefined ? "" : ` resource=${entry.resourceId}`}${entry.ref === undefined ? "" : ` ref=${entry.ref}`}: ${entry.message}`,
         )),
     "",
   ].join("\n");

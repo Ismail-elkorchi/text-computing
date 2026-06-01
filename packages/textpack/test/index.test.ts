@@ -6,8 +6,10 @@ import {
   createTextPackCatalog,
   createTextPackManifestDraft,
   createTextPackResourceRegistry,
+  createTextPackReviewReport,
   isTextPackCatalogV1,
   isTextPackManifestV1,
+  isTextPackReviewReportV1,
   loadTextPackRegistryResources,
   loadTextPackFromFileSystem,
   loadTextPackResources,
@@ -710,6 +712,91 @@ const promotedCompatibility = checkTextPackCompatibility(promotedManifest, {
 });
 if (!promotedCompatibility.ok) {
   throw new Error("promoted authoring manifest should satisfy compatibility policy");
+}
+
+const promotedReviewReport = createTextPackReviewReport(promotedManifest, {
+  targetReviewState: "candidate",
+  inventoryResourcePaths: [
+    "resources/lexicon.es.heldout.tsv",
+    "resources/stopwords.es.heldout.txt",
+  ],
+  packageVersions: {
+    "@ismail-elkorchi/textpack": "0.1.0",
+  },
+  mandatoryResources: ["lexicon-es-heldout", "stopwords-es-heldout"],
+  requireCompatibility: true,
+});
+if (
+  !isTextPackReviewReportV1(promotedReviewReport) ||
+  !promotedReviewReport.ok ||
+  promotedReviewReport.decision !== "accepted" ||
+  promotedReviewReport.transition !== "retain" ||
+  promotedReviewReport.failedRequirementCount !== 0 ||
+  promotedReviewReport.resourceInventoryChecked !== true ||
+  promotedReviewReport.compatibilityChecked !== true
+) {
+  throw new Error("textpack review report should accept a candidate pack with inventory and compatibility evidence");
+}
+
+const blockedReferenceReviewReport = createTextPackReviewReport(promotedManifest, {
+  targetReviewState: "reference",
+  inventoryResourcePaths: [
+    "resources/lexicon.es.heldout.tsv",
+    "resources/stopwords.es.heldout.txt",
+  ],
+  requiredEvidence: ["reviewer", "conformance"],
+});
+if (
+  blockedReferenceReviewReport.ok ||
+  blockedReferenceReviewReport.transition !== "promote" ||
+  !blockedReferenceReviewReport.diagnostics.some((entry) => entry.code === "missing-reviewer-evidence") ||
+  !blockedReferenceReviewReport.diagnostics.some((entry) => entry.code === "missing-conformance-evidence")
+) {
+  throw new Error("textpack review report should block required external review evidence when absent");
+}
+
+const acceptedReferenceReviewReport = createTextPackReviewReport(promotedManifest, {
+  targetReviewState: "reference",
+  inventoryResourcePaths: [
+    "resources/lexicon.es.heldout.tsv",
+    "resources/stopwords.es.heldout.txt",
+  ],
+  requiredEvidence: ["reviewer", "conformance", "benchmark"],
+  evidence: {
+    reviewerIds: ["reviewer:pack-maintainer"],
+    conformanceRefs: ["fixtures/conformance/package-suites.v1.json#textpack"],
+    benchmarkRefs: ["resources/benchmark.smoke.txt"],
+  },
+});
+if (
+  !acceptedReferenceReviewReport.ok ||
+  acceptedReferenceReviewReport.evidenceRefs.join(",") !==
+    "fixtures/conformance/package-suites.v1.json#textpack,resources/benchmark.smoke.txt"
+) {
+  throw new Error("textpack review report should accept required external evidence when supplied deterministically");
+}
+
+const generatedReviewReport = createTextPackReviewReport(
+  {
+    ...promotedManifest,
+    provenance: {
+      ...promotedManifest.provenance,
+      generated: true,
+    },
+  },
+  {
+    targetReviewState: "candidate",
+    inventoryResourcePaths: [
+      "resources/lexicon.es.heldout.tsv",
+      "resources/stopwords.es.heldout.txt",
+    ],
+  },
+);
+if (
+  generatedReviewReport.ok ||
+  !generatedReviewReport.diagnostics.some((entry) => entry.code === "missing-security-evidence")
+) {
+  throw new Error("textpack review report should require security evidence for generated candidate resources");
 }
 
 const resourceUpdatedManifest = updateTextPackManifest(authoredManifest, {

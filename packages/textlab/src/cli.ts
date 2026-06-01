@@ -4,8 +4,13 @@ import path from "node:path";
 import {
   isTextPackManifestV1,
   planTextPackResourceTransaction,
+  textPackReviewEvidenceKinds,
+  textPackReviewStates,
   textPackResourceFamilies,
   type TextPackManifestV1,
+  type TextPackReviewEvidenceKind,
+  type TextPackReviewPolicy,
+  type TextPackReviewState,
   type TextPackResourceFamily,
   type TextPackResourceTransactionAction,
   type TextPackResourceTransactionOperation,
@@ -25,6 +30,7 @@ import {
   inspectTextPackManifest,
   inspectTextPackResourceAudit,
   inspectTextPackResourceList,
+  inspectTextPackReview,
   inspectTextPackValidation,
   inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
@@ -44,6 +50,7 @@ import {
   renderTextdocAnnotationInspection,
   renderTextPackInspection,
   renderTextPackAuditInspection,
+  renderTextPackReviewInspection,
   renderTextPackResourceListInspection,
   renderTextPackValidationInspection,
   renderTextPipelineBatchReportInspection,
@@ -70,6 +77,7 @@ function usage(): string {
     "  textlab pack inspect <path> [--json]",
     "  textlab pack validate <path> [--json]",
     "  textlab pack audit <pack-root> [--json]",
+    "  textlab pack review <pack-root> [--target-state state] [--engine package=version] [--required-profile id] [--mandatory-resource id] [--active-pack id] [--minimum-compatible-review-state state] [--require-compatibility true] [--required-evidence kind] [--reviewer id] [--conformance-ref ref] [--benchmark-ref ref] [--security-ref ref] [--migration-ref ref] [--json]",
     "  textlab pack list-resources <path> [--json]",
     "  textlab pack add-resource <pack-root> --family family --resource-id id --resource-path path --content text [--json]",
     "  textlab pack update-resource <pack-root> --resource-id id [--family family] [--next-resource-id id] [--resource-path path] [--content text] [--json]",
@@ -619,6 +627,145 @@ function parseTextPackResourceFamily(value: string | undefined): {
   return { ok: false, message: `Unsupported textpack resource family: ${value}` };
 }
 
+function parseTextPackReviewState(value: string | undefined, optionName: string): {
+  readonly ok: true;
+  readonly state: TextPackReviewState;
+} | {
+  readonly ok: false;
+  readonly message: string;
+} {
+  if (value === undefined) return { ok: false, message: `Missing value for ${optionName}.` };
+  if (textPackReviewStates.includes(value as TextPackReviewState)) {
+    return { ok: true, state: value as TextPackReviewState };
+  }
+  return { ok: false, message: `Unsupported textpack review state for ${optionName}: ${value}` };
+}
+
+function parseTextPackReviewEvidenceKind(value: string | undefined): {
+  readonly ok: true;
+  readonly kind: TextPackReviewEvidenceKind;
+} | {
+  readonly ok: false;
+  readonly message: string;
+} {
+  if (value === undefined) return { ok: false, message: "Missing value for --required-evidence." };
+  if (textPackReviewEvidenceKinds.includes(value as TextPackReviewEvidenceKind)) {
+    return { ok: true, kind: value as TextPackReviewEvidenceKind };
+  }
+  return { ok: false, message: `Unsupported textpack review evidence kind: ${value}` };
+}
+
+function parseBooleanOption(value: string | undefined, optionName: string): boolean | string {
+  if (value === undefined) return `Missing value for ${optionName}.`;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return `${optionName} must be true or false.`;
+}
+
+function parseEngineVersionOption(value: string | undefined): {
+  readonly packageName: string;
+  readonly version: string;
+} | string {
+  if (value === undefined) return "Missing value for --engine.";
+  const separatorIndex = value.lastIndexOf("=");
+  if (separatorIndex <= 0 || separatorIndex === value.length - 1) {
+    return "--engine must use package=version.";
+  }
+  return {
+    packageName: value.slice(0, separatorIndex),
+    version: value.slice(separatorIndex + 1),
+  };
+}
+
+function parsePackReviewOptions(args: readonly string[]): TextPackReviewPolicy | string {
+  let targetReviewState: TextPackReviewState | undefined;
+  let minimumCompatibleReviewState: Exclude<TextPackReviewState, "deprecated"> | undefined;
+  let requireCompatibility: boolean | undefined;
+  const packageVersions: Record<string, string> = {};
+  const requiredProfiles: string[] = [];
+  const mandatoryResources: string[] = [];
+  const activePackIds: string[] = [];
+  const requiredEvidence: TextPackReviewEvidenceKind[] = [];
+  const reviewerIds: string[] = [];
+  const conformanceRefs: string[] = [];
+  const benchmarkRefs: string[] = [];
+  const securityRefs: string[] = [];
+  const migrationRefs: string[] = [];
+
+  for (let index = 0; index < args.length; index += 2) {
+    const name = args[index];
+    const value = args[index + 1];
+    if (name === undefined || value === undefined) return "Missing value for pack review option.";
+    if (!name.startsWith("--")) return `Unknown pack review option: ${name}`;
+    if (name === "--target-state") {
+      const parsed = parseTextPackReviewState(value, name);
+      if (!parsed.ok) return parsed.message;
+      targetReviewState = parsed.state;
+    } else if (name === "--minimum-compatible-review-state") {
+      const parsed = parseTextPackReviewState(value, name);
+      if (!parsed.ok) return parsed.message;
+      if (parsed.state === "deprecated") return "--minimum-compatible-review-state cannot be deprecated.";
+      minimumCompatibleReviewState = parsed.state;
+    } else if (name === "--require-compatibility") {
+      const parsed = parseBooleanOption(value, name);
+      if (typeof parsed === "string") return parsed;
+      requireCompatibility = parsed;
+    } else if (name === "--engine") {
+      const parsed = parseEngineVersionOption(value);
+      if (typeof parsed === "string") return parsed;
+      packageVersions[parsed.packageName] = parsed.version;
+    } else if (name === "--required-profile") {
+      requiredProfiles.push(value);
+    } else if (name === "--mandatory-resource") {
+      mandatoryResources.push(value);
+    } else if (name === "--active-pack") {
+      activePackIds.push(value);
+    } else if (name === "--required-evidence") {
+      const parsed = parseTextPackReviewEvidenceKind(value);
+      if (!parsed.ok) return parsed.message;
+      requiredEvidence.push(parsed.kind);
+    } else if (name === "--reviewer") {
+      reviewerIds.push(value);
+    } else if (name === "--conformance-ref") {
+      conformanceRefs.push(value);
+    } else if (name === "--benchmark-ref") {
+      benchmarkRefs.push(value);
+    } else if (name === "--security-ref") {
+      securityRefs.push(value);
+    } else if (name === "--migration-ref") {
+      migrationRefs.push(value);
+    } else {
+      return `Unknown pack review option: ${name}`;
+    }
+  }
+
+  return {
+    ...(targetReviewState === undefined ? {} : { targetReviewState }),
+    ...(Object.keys(packageVersions).length === 0 ? {} : { packageVersions }),
+    ...(requiredProfiles.length === 0 ? {} : { requiredProfiles: [...new Set(requiredProfiles)].sort() }),
+    ...(mandatoryResources.length === 0 ? {} : { mandatoryResources: [...new Set(mandatoryResources)].sort() }),
+    ...(activePackIds.length === 0 ? {} : { activePackIds: [...new Set(activePackIds)].sort() }),
+    ...(minimumCompatibleReviewState === undefined ? {} : { minimumCompatibleReviewState }),
+    ...(requireCompatibility === undefined ? {} : { requireCompatibility }),
+    ...(requiredEvidence.length === 0 ? {} : { requiredEvidence: [...new Set(requiredEvidence)].sort() }),
+    ...(reviewerIds.length === 0 &&
+    conformanceRefs.length === 0 &&
+    benchmarkRefs.length === 0 &&
+    securityRefs.length === 0 &&
+    migrationRefs.length === 0
+      ? {}
+      : {
+          evidence: {
+            ...(reviewerIds.length === 0 ? {} : { reviewerIds: [...new Set(reviewerIds)].sort() }),
+            ...(conformanceRefs.length === 0 ? {} : { conformanceRefs: [...new Set(conformanceRefs)].sort() }),
+            ...(benchmarkRefs.length === 0 ? {} : { benchmarkRefs: [...new Set(benchmarkRefs)].sort() }),
+            ...(securityRefs.length === 0 ? {} : { securityRefs: [...new Set(securityRefs)].sort() }),
+            ...(migrationRefs.length === 0 ? {} : { migrationRefs: [...new Set(migrationRefs)].sort() }),
+          },
+        }),
+  };
+}
+
 function manifestResourcePathForId(manifest: TextPackManifestV1, resourceId: string): string | undefined {
   for (const family of textPackResourceFamilies) {
     const index = (manifest.provides[family] ?? []).indexOf(resourceId);
@@ -878,7 +1025,7 @@ async function runTextlabPackCli(
   }
 
   const authoringSubcommands = new Set(["add-resource", "update-resource", "remove-resource"]);
-  const subcommands = new Set(["inspect", "validate", "audit", "list-resources", ...authoringSubcommands]);
+  const subcommands = new Set(["inspect", "validate", "audit", "review", "list-resources", ...authoringSubcommands]);
   const subcommand = subcommands.has(firstArg) ? firstArg : "inspect";
   const targetPath = subcommand === "inspect" && !subcommands.has(firstArg) ? firstArg : rest[0];
   const extra = subcommand === "inspect" && !subcommands.has(firstArg) ? rest : rest.slice(1);
@@ -889,7 +1036,7 @@ async function runTextlabPackCli(
       stderr: `Missing path for pack ${subcommand}.\n${usage()}`,
     };
   }
-  if (!authoringSubcommands.has(subcommand) && extra.length > 0) {
+  if (!authoringSubcommands.has(subcommand) && subcommand !== "review" && extra.length > 0) {
     return {
       exitCode: 2,
       stdout: "",
@@ -933,6 +1080,24 @@ async function runTextlabPackCli(
     return {
       exitCode: inspection.ok ? 0 : 1,
       stdout: renderCliOutput(inspection, renderTextPackAuditInspection, json),
+      stderr: "",
+    };
+  }
+
+  if (subcommand === "review") {
+    const reviewPolicy = parsePackReviewOptions(extra);
+    if (typeof reviewPolicy === "string") {
+      return {
+        exitCode: 2,
+        stdout: "",
+        stderr: `${reviewPolicy}\n${usage()}`,
+      };
+    }
+    const inventoryResourcePaths = await listTextPackResourceInventory(rootPath);
+    const inspection = inspectTextPackReview(parsed, inventoryResourcePaths, reviewPolicy);
+    return {
+      exitCode: inspection.ok ? 0 : 1,
+      stdout: renderCliOutput(inspection, renderTextPackReviewInspection, json),
       stderr: "",
     };
   }
