@@ -574,6 +574,9 @@ async function assertBuiltPackageSmoke() {
         document,
         viewId: "source-view",
         tokenLayerId: "tokens",
+        metadata: {
+          title: "Alice works",
+        },
       },
     ],
     { corpusId: "corpus:downstream-api" },
@@ -640,6 +643,32 @@ async function assertBuiltPackageSmoke() {
     retrievalIndexStorageInspection.artifactKind === "retrieval-index-storage-ref" &&
       retrievalIndexStorageInspection.byteLength === retrievalIndexStorageRef.byteLength,
     "textlab should inspect textcorpus retrieval-index storage refs through package APIs.",
+  );
+  const fieldedRetrievalIndex = textcorpus.buildTextCorpusRetrievalIndex(collection, {
+    formula: textcorpus.textCorpusBm25fFormula,
+    fields: [
+      { id: "title", source: "metadata", weight: 2, b: 0.25 },
+      { id: "body", source: "tokens", weight: 1, b: 0.75 },
+    ],
+  });
+  const fieldWeightProfile = textcorpus.createTextCorpusRetrievalFieldWeightProfile({
+    profileId: "downstream-api:title-boost",
+    fields: {
+      title: 2,
+      body: 1,
+    },
+  });
+  const fieldedRetrieval = textcorpus.searchTextCorpusRetrievalIndex(
+    fieldedRetrievalIndex,
+    [textcorpus.parseTextCorpusQuery("title:alice", { id: "downstream-api-title" })],
+    { fieldWeightProfile },
+  );
+  expect(
+    textcorpus.isTextCorpusRetrievalFieldWeightProfileV1(fieldWeightProfile) &&
+      textcorpus.isTextCorpusRetrievalResultV1(fieldedRetrieval) &&
+      fieldedRetrieval.fieldWeightProfile?.profileId === "downstream-api:title-boost",
+    "textcorpus should apply and disclose BM25F field-weight profiles through package APIs.",
+    fieldedRetrieval,
   );
   const corpusMetricEnvelope = {
     schemaId: textprotocol.textProtocolCorpusMetricEnvelopeSchemaId,

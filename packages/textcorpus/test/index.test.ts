@@ -11,6 +11,7 @@ import {
   computeTextCorpusScoring,
   createTextCorpusCitationWindows,
   createTextCorpusCollection,
+  createTextCorpusRetrievalFieldWeightProfile,
   createTextCorpusRetrievalIndexArtifact,
   evaluateTextCorpusRetrieval,
   exportTextCorpusMetricEnvelopePayloadV1,
@@ -28,6 +29,7 @@ import {
   isTextCorpusParsedQuery,
   isTextCorpusQuoteGroundingResultV1,
   isTextCorpusRetrievalEvaluationResultV1,
+  isTextCorpusRetrievalFieldWeightProfileV1,
   isTextCorpusRetrievalIndexArtifactV1,
   isTextCorpusRetrievalIndexStorageRefV1,
   isTextCorpusRetrievalIndexV1,
@@ -1013,6 +1015,97 @@ const fieldedBetaExplain = fieldedTitleAlphaHits[0]?.explain.find(
 );
 expectNear(fieldedBetaExplain?.contribution, 0.9092952648057796, "fielded beta body contribution");
 expectNear(fieldedTitleAlphaHits[0]?.score, 2.0390257453220513, "fielded title/body score");
+
+const titleBoostProfile = createTextCorpusRetrievalFieldWeightProfile({
+  profileId: "profile:title-boost",
+  fields: {
+    title: 3,
+    body: 0.5,
+  },
+});
+if (
+  !isTextCorpusRetrievalFieldWeightProfileV1(titleBoostProfile) ||
+  titleBoostProfile.fields.map((field) => `${field.field}:${field.weight}`).join(",") !== "body:0.5,title:3"
+) {
+  throw new Error("retrieval field weight profile should normalize and sort field weights");
+}
+const boostedFieldedResult = searchTextCorpusRetrievalIndex(
+  fieldedIndex,
+  [parseTextCorpusQuery("title:alpha +beta genre:news", { id: "fielded-title-alpha-beta-boosted" })],
+  {
+    topK: 3,
+    snippetWindow: 1,
+    fieldWeightProfile: titleBoostProfile,
+  },
+);
+const boostedHit = boostedFieldedResult.results[0]?.hits[0];
+const boostedTitleExplain = boostedHit?.explain.find(
+  (entry) => entry.term === "alpha" && entry.field === "title",
+);
+if (
+  boostedFieldedResult.fieldWeightProfile?.profileId !== "profile:title-boost" ||
+  boostedTitleExplain?.fieldContributions?.[0]?.baseWeight !== 2 ||
+  boostedTitleExplain.fieldContributions[0].queryWeight !== 3 ||
+  boostedTitleExplain.fieldContributions[0].weight !== 6 ||
+  (boostedHit?.score ?? 0) <= (fieldedTitleAlphaHits[0]?.score ?? 0)
+) {
+  throw new Error("retrieval field weight profiles should alter BM25F scores with disclosed weights");
+}
+
+const bodyOnlyFieldedResult = searchTextCorpusRetrievalIndex(
+  fieldedIndex,
+  [parseTextCorpusQuery("title:alpha +beta genre:news", { id: "fielded-title-alpha-beta-body-only" })],
+  {
+    topK: 3,
+    snippetWindow: 1,
+    fieldWeights: {
+      title: 0,
+      body: 1,
+    },
+  },
+);
+const bodyOnlyTitleExplain = bodyOnlyFieldedResult.results[0]?.hits[0]?.explain.find(
+  (entry) => entry.term === "alpha" && entry.field === "title",
+);
+if (
+  bodyOnlyFieldedResult.fieldWeightProfile?.profileId !== "inline" ||
+  bodyOnlyTitleExplain?.contribution !== 0 ||
+  bodyOnlyTitleExplain.fieldContributions?.[0]?.queryWeight !== 0
+) {
+  throw new Error("inline retrieval field weights should support zero-weight field controls");
+}
+
+let unknownFieldWeightRejected = false;
+try {
+  searchTextCorpusRetrievalIndex(fieldedIndex, [parseTextCorpusQuery("alpha", { id: "unknown-field-weight" })], {
+    fieldWeights: {
+      unknown: 1,
+    },
+  });
+} catch (error) {
+  unknownFieldWeightRejected =
+    error instanceof Error &&
+    error.message === "textcorpus retrieval field weight references unknown field: unknown";
+}
+if (!unknownFieldWeightRejected) {
+  throw new Error("retrieval field weights should reject unknown fields");
+}
+
+let nonBm25fFieldWeightRejected = false;
+try {
+  searchTextCorpusRetrievalIndex(retrievalIndex, [parseTextCorpusQuery("alpha", { id: "non-bm25f-weight" })], {
+    fieldWeights: {
+      title: 1,
+    },
+  });
+} catch (error) {
+  nonBm25fFieldWeightRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus retrieval field weights require a BM25F retrieval index";
+}
+if (!nonBm25fFieldWeightRejected) {
+  throw new Error("retrieval field weights should require BM25F retrieval indexes");
+}
 
 const fieldedDeltaHits =
   bm25fResult.results.find((entry) => entry.query.id === "fielded-delta-note")?.hits ?? [];
