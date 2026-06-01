@@ -11,6 +11,8 @@ import {
   textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
 import {
+  applyTextlabInspectionSessionCommand,
+  createTextlabInspectionSession,
   executeTextlabExternalTool,
   inspectCorpusFixture,
   inspectConformanceReportDiff,
@@ -33,6 +35,7 @@ import {
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
   inspectTextConformanceBenchmarkReport,
+  isTextlabInspectionSessionV1,
   isTextlabExternalToolExecutionReportV1,
   packageName,
   renderCorpusFixtureInspection,
@@ -56,8 +59,10 @@ import {
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
   renderTextConformanceBenchmarkReportInspection,
+  renderTextlabInspectionSession,
   renderTextlabExternalToolExecutionReport,
   summarizeConformanceReport,
+  textlabInspectionSessionSchemaVersion,
   textlabExternalToolExecutionReportSchemaVersion,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
@@ -73,6 +78,81 @@ async function fileExists(filePath) {
 
 if (packageName !== "@ismail-elkorchi/textlab") {
   throw new Error("package name should remain stable");
+}
+
+const inspectionRows = [
+  { id: "alpha", status: "pass" },
+  { id: "beta", status: "fail" },
+  { id: "gamma", status: "pass" },
+];
+const inspectionSession = createTextlabInspectionSession(inspectionRows, {
+  sessionId: "session:fixture",
+  subjectId: "artifact:fixture",
+  title: "Fixture artifact",
+  pageSize: 2,
+});
+if (
+  !isTextlabInspectionSessionV1(inspectionSession) ||
+  inspectionSession.schemaVersion !== textlabInspectionSessionSchemaVersion ||
+  inspectionSession.pageIndex !== 0 ||
+  inspectionSession.pageCount !== 2 ||
+  inspectionSession.pageRows.map((row) => row.id).join(",") !== "alpha,beta" ||
+  !inspectionSession.hasNextPage ||
+  !renderTextlabInspectionSession(inspectionSession).includes("Page: 1 / 2")
+) {
+  throw new Error("inspection session should expose the first deterministic page");
+}
+const nextInspectionSession = applyTextlabInspectionSessionCommand(
+  inspectionSession,
+  inspectionRows,
+  { command: "next-page" },
+);
+if (
+  nextInspectionSession.pageIndex !== 1 ||
+  nextInspectionSession.pageRows.map((row) => row.id).join(",") !== "gamma" ||
+  nextInspectionSession.commandHistory[0]?.command !== "next-page" ||
+  nextInspectionSession.commandHistory[0]?.fromPageIndex !== 0 ||
+  nextInspectionSession.commandHistory[0]?.toPageIndex !== 1
+) {
+  throw new Error("inspection session should apply next-page commands deterministically");
+}
+const clampedInspectionSession = applyTextlabInspectionSessionCommand(
+  nextInspectionSession,
+  inspectionRows,
+  { command: "goto-page", pageIndex: 9 },
+);
+if (
+  clampedInspectionSession.pageIndex !== 1 ||
+  clampedInspectionSession.commandHistory[1]?.command !== "goto-page" ||
+  clampedInspectionSession.commandHistory[1]?.pageIndex !== 9
+) {
+  throw new Error("inspection session goto-page should record requested and clamped pages");
+}
+let invalidSessionPageSizeRejected = false;
+try {
+  createTextlabInspectionSession(inspectionRows, {
+    sessionId: "session:invalid",
+    subjectId: "artifact:fixture",
+    pageSize: 0,
+  });
+} catch (error) {
+  invalidSessionPageSizeRejected =
+    error instanceof RangeError &&
+    error.message === "textlab inspection session pageSize must be a positive integer";
+}
+if (!invalidSessionPageSizeRejected) {
+  throw new Error("inspection session should reject invalid page sizes");
+}
+let mismatchedSessionRowsRejected = false;
+try {
+  applyTextlabInspectionSessionCommand(inspectionSession, inspectionRows.slice(0, 2), { command: "next-page" });
+} catch (error) {
+  mismatchedSessionRowsRejected =
+    error instanceof Error &&
+    error.message === "textlab inspection session rows must match the session row count";
+}
+if (!mismatchedSessionRowsRejected) {
+  throw new Error("inspection session should reject row-count mismatches");
 }
 
 const externalToolReport = await executeTextlabExternalTool({

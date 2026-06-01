@@ -667,6 +667,28 @@ async function assertBuiltPackageSmoke() {
     "textlab should execute explicit external-tool specs through package APIs.",
     externalToolReport,
   );
+  const inspectionRows = [
+    { id: "trace", status: "complete" },
+    { id: "batch", status: "partial" },
+    { id: "corpus", status: "complete" },
+  ];
+  const inspectionSession = textlab.applyTextlabInspectionSessionCommand(
+    textlab.createTextlabInspectionSession(inspectionRows, {
+      sessionId: "downstream-api:inspection-session",
+      subjectId: "downstream-api:artifact-index",
+      pageSize: 2,
+    }),
+    inspectionRows,
+    { command: "next-page" },
+  );
+  expect(
+    textlab.isTextlabInspectionSessionV1(inspectionSession) &&
+      inspectionSession.pageIndex === 1 &&
+      inspectionSession.pageRows.length === 1 &&
+      textlab.renderTextlabInspectionSession(inspectionSession).includes("Page: 2 / 2"),
+    "textlab should create deterministic inspection sessions through package APIs.",
+    inspectionSession,
+  );
 
   const identityProcessor = {
     descriptor: {

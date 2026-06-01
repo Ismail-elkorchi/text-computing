@@ -64,11 +64,20 @@ import { performance } from "node:perf_hooks";
 
 export const packageName = "@ismail-elkorchi/textlab" as const;
 export const textlabExternalToolExecutionReportSchemaVersion = 1 as const;
+export const textlabInspectionSessionSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextlabExternalToolExecutionReportSchemaVersion =
   typeof textlabExternalToolExecutionReportSchemaVersion;
+export type TextlabInspectionSessionSchemaVersion =
+  typeof textlabInspectionSessionSchemaVersion;
 export type TextlabExternalToolExecutionStatus = "passed" | "failed" | "timed-out";
+export type TextlabInspectionSessionCommandKind =
+  | "first-page"
+  | "previous-page"
+  | "next-page"
+  | "last-page"
+  | "goto-page";
 
 export interface TextlabExternalToolExecutionSpec {
   readonly toolId: string;
@@ -103,6 +112,45 @@ export interface TextlabExternalToolExecutionReportV1 {
   readonly stderrTruncated: boolean;
   readonly evidenceRefs: readonly string[];
   readonly limitations: readonly string[];
+}
+
+export interface TextlabInspectionSessionOptions {
+  readonly sessionId: string;
+  readonly subjectId: string;
+  readonly title?: string;
+  readonly pageSize?: number;
+  readonly initialPageIndex?: number;
+}
+
+export interface TextlabInspectionSessionCommand {
+  readonly command: TextlabInspectionSessionCommandKind;
+  readonly pageIndex?: number;
+}
+
+export interface TextlabInspectionSessionCommandRecord {
+  readonly command: TextlabInspectionSessionCommandKind;
+  readonly fromPageIndex: number;
+  readonly toPageIndex: number;
+  readonly pageIndex?: number;
+}
+
+export interface TextlabInspectionSessionV1 {
+  readonly schemaVersion: TextlabInspectionSessionSchemaVersion;
+  readonly artifactType: "textlab-inspection-session-v1";
+  readonly sessionId: string;
+  readonly subjectId: string;
+  readonly title?: string;
+  readonly rowCount: number;
+  readonly pageSize: number;
+  readonly pageCount: number;
+  readonly pageIndex: number;
+  readonly pageStart: number;
+  readonly pageEnd: number;
+  readonly pageRowCount: number;
+  readonly hasPreviousPage: boolean;
+  readonly hasNextPage: boolean;
+  readonly pageRows: readonly unknown[];
+  readonly commandHistory: readonly TextlabInspectionSessionCommandRecord[];
 }
 
 export interface TextlabConformanceReportSummary {
@@ -575,6 +623,213 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
+function isTextlabInspectionSessionCommandKind(
+  value: unknown,
+): value is TextlabInspectionSessionCommandKind {
+  return (
+    value === "first-page" ||
+    value === "previous-page" ||
+    value === "next-page" ||
+    value === "last-page" ||
+    value === "goto-page"
+  );
+}
+
+function isTextlabInspectionSessionCommandRecord(
+  value: unknown,
+): value is TextlabInspectionSessionCommandRecord {
+  return (
+    isRecord(value) &&
+    isTextlabInspectionSessionCommandKind(value.command) &&
+    isNonNegativeInteger(value.fromPageIndex) &&
+    isNonNegativeInteger(value.toPageIndex) &&
+    (value.pageIndex === undefined || isNonNegativeInteger(value.pageIndex))
+  );
+}
+
+export function isTextlabInspectionSessionV1(
+  value: unknown,
+): value is TextlabInspectionSessionV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textlabInspectionSessionSchemaVersion ||
+    value.artifactType !== "textlab-inspection-session-v1" ||
+    !isNonEmptyString(value.sessionId) ||
+    !isNonEmptyString(value.subjectId) ||
+    (value.title !== undefined && !isNonEmptyString(value.title)) ||
+    !isNonNegativeInteger(value.rowCount) ||
+    !isNonNegativeInteger(value.pageSize) ||
+    value.pageSize < 1 ||
+    !isNonNegativeInteger(value.pageCount) ||
+    !isNonNegativeInteger(value.pageIndex) ||
+    !isNonNegativeInteger(value.pageStart) ||
+    !isNonNegativeInteger(value.pageEnd) ||
+    !isNonNegativeInteger(value.pageRowCount) ||
+    typeof value.hasPreviousPage !== "boolean" ||
+    typeof value.hasNextPage !== "boolean" ||
+    !Array.isArray(value.pageRows) ||
+    !Array.isArray(value.commandHistory) ||
+    !value.commandHistory.every((entry) => isTextlabInspectionSessionCommandRecord(entry))
+  ) {
+    return false;
+  }
+  const maxPageIndex = Math.max(0, value.pageCount - 1);
+  return (
+    value.pageIndex <= maxPageIndex &&
+    value.pageStart <= value.pageEnd &&
+    value.pageEnd <= value.rowCount &&
+    value.pageRowCount === value.pageRows.length &&
+    value.pageRowCount === value.pageEnd - value.pageStart &&
+    value.hasPreviousPage === (value.pageIndex > 0) &&
+    value.hasNextPage === (value.pageIndex + 1 < value.pageCount)
+  );
+}
+
+function normalizeTextlabSessionPageSize(pageSize: number | undefined): number {
+  const normalized = pageSize ?? 20;
+  if (!Number.isInteger(normalized) || normalized < 1) {
+    throw new RangeError("textlab inspection session pageSize must be a positive integer");
+  }
+  return normalized;
+}
+
+function clampTextlabSessionPageIndex(pageIndex: number, pageCount: number): number {
+  if (pageCount === 0) return 0;
+  return Math.min(Math.max(0, pageIndex), pageCount - 1);
+}
+
+function createTextlabInspectionSessionPage(
+  rows: readonly unknown[],
+  options: TextlabInspectionSessionOptions,
+  pageIndex: number,
+  commandHistory: readonly TextlabInspectionSessionCommandRecord[],
+): TextlabInspectionSessionV1 {
+  if (!isRecord(options) || !isNonEmptyString(options.sessionId)) {
+    throw new TypeError("textlab inspection session id must be a non-empty string");
+  }
+  if (!isNonEmptyString(options.subjectId)) {
+    throw new TypeError("textlab inspection session subject id must be a non-empty string");
+  }
+  if (options.title !== undefined && !isNonEmptyString(options.title)) {
+    throw new TypeError("textlab inspection session title must be a non-empty string");
+  }
+  const pageSize = normalizeTextlabSessionPageSize(options.pageSize);
+  const pageCount = rows.length === 0 ? 0 : Math.ceil(rows.length / pageSize);
+  const normalizedPageIndex = clampTextlabSessionPageIndex(pageIndex, pageCount);
+  const pageStart = pageCount === 0 ? 0 : normalizedPageIndex * pageSize;
+  const pageEnd = Math.min(rows.length, pageStart + pageSize);
+  const session = {
+    schemaVersion: textlabInspectionSessionSchemaVersion,
+    artifactType: "textlab-inspection-session-v1",
+    sessionId: options.sessionId,
+    subjectId: options.subjectId,
+    ...(options.title === undefined ? {} : { title: options.title }),
+    rowCount: rows.length,
+    pageSize,
+    pageCount,
+    pageIndex: normalizedPageIndex,
+    pageStart,
+    pageEnd,
+    pageRowCount: pageEnd - pageStart,
+    hasPreviousPage: normalizedPageIndex > 0,
+    hasNextPage: normalizedPageIndex + 1 < pageCount,
+    pageRows: rows.slice(pageStart, pageEnd),
+    commandHistory,
+  } satisfies TextlabInspectionSessionV1;
+  if (!isTextlabInspectionSessionV1(session)) {
+    throw new TypeError("textlab inspection session is invalid");
+  }
+  return session;
+}
+
+export function createTextlabInspectionSession(
+  rows: readonly unknown[],
+  options: TextlabInspectionSessionOptions,
+): TextlabInspectionSessionV1 {
+  if (!Array.isArray(rows)) {
+    throw new TypeError("textlab inspection session rows must be an array");
+  }
+  const initialPageIndex = options.initialPageIndex ?? 0;
+  if (!isNonNegativeInteger(initialPageIndex)) {
+    throw new RangeError("textlab inspection session initialPageIndex must be a non-negative integer");
+  }
+  return createTextlabInspectionSessionPage(rows, options, initialPageIndex, []);
+}
+
+export function applyTextlabInspectionSessionCommand(
+  session: TextlabInspectionSessionV1,
+  rows: readonly unknown[],
+  command: TextlabInspectionSessionCommand,
+): TextlabInspectionSessionV1 {
+  if (!isTextlabInspectionSessionV1(session)) {
+    throw new TypeError("textlab inspection session must satisfy TextlabInspectionSessionV1");
+  }
+  if (!Array.isArray(rows)) {
+    throw new TypeError("textlab inspection session rows must be an array");
+  }
+  if (!isRecord(command) || !isTextlabInspectionSessionCommandKind(command.command)) {
+    throw new TypeError("textlab inspection session command is invalid");
+  }
+  if (rows.length !== session.rowCount) {
+    throw new Error("textlab inspection session rows must match the session row count");
+  }
+  const maxPageIndex = Math.max(0, session.pageCount - 1);
+  let targetPageIndex = session.pageIndex;
+  if (command.command === "first-page") targetPageIndex = 0;
+  if (command.command === "previous-page") targetPageIndex = Math.max(0, session.pageIndex - 1);
+  if (command.command === "next-page") targetPageIndex = Math.min(maxPageIndex, session.pageIndex + 1);
+  if (command.command === "last-page") targetPageIndex = maxPageIndex;
+  if (command.command === "goto-page") {
+    if (!isNonNegativeInteger(command.pageIndex)) {
+      throw new RangeError("textlab inspection session goto-page requires a non-negative pageIndex");
+    }
+    targetPageIndex = clampTextlabSessionPageIndex(command.pageIndex, session.pageCount);
+  }
+  return createTextlabInspectionSessionPage(
+    rows,
+    {
+      sessionId: session.sessionId,
+      subjectId: session.subjectId,
+      ...(session.title === undefined ? {} : { title: session.title }),
+      pageSize: session.pageSize,
+    },
+    targetPageIndex,
+    [
+      ...session.commandHistory,
+      {
+        command: command.command,
+        fromPageIndex: session.pageIndex,
+        toPageIndex: targetPageIndex,
+        ...(command.pageIndex === undefined ? {} : { pageIndex: command.pageIndex }),
+      },
+    ],
+  );
+}
+
+export function renderTextlabInspectionSession(session: TextlabInspectionSessionV1): string {
+  if (!isTextlabInspectionSessionV1(session)) {
+    throw new TypeError("textlab inspection session must satisfy TextlabInspectionSessionV1");
+  }
+  return [
+    "# textlab inspection session",
+    "",
+    `Session: ${session.sessionId}`,
+    `Subject: ${session.subjectId}`,
+    `Title: ${session.title ?? "none"}`,
+    `Rows: ${session.rowCount}`,
+    `Page: ${session.pageCount === 0 ? 0 : session.pageIndex + 1} / ${session.pageCount}`,
+    `Page size: ${session.pageSize}`,
+    `Page rows: ${session.pageRowCount}`,
+    `Has previous page: ${session.hasPreviousPage ? "yes" : "no"}`,
+    `Has next page: ${session.hasNextPage ? "yes" : "no"}`,
+    `Commands: ${session.commandHistory.length}`,
+    "",
+    "## Rows",
+    ...session.pageRows.map((row, index) => `- ${session.pageStart + index}: ${JSON.stringify(row)}`),
+    "",
+  ].join("\n");
 }
 
 function isStringRecord(value: unknown): value is Readonly<Record<string, string>> {
