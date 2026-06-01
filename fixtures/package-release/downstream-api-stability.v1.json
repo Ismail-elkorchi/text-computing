@@ -214,6 +214,7 @@
         "packages/textlab/src/index.ts",
         "packages/textlab/src/cli.ts",
         "packages/textlab/test/index.test.mjs",
+        "examples/textlab-benchmark-matrix-consumer.mjs",
         "examples/textlab-benchmark-report-consumer.mjs",
         "examples/textlab-corpus-artifact-consumer.mjs",
         "examples/textlab-external-tool-consumer.mjs",
@@ -224,7 +225,7 @@
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API and CLI import, smoke usage, paginated corpus artifact inspection, deterministic inspection sessions, and explicit external-tool execution reports; it does not add an interactive UI."
+        "This verifies current built-package API and CLI import, smoke usage, benchmark matrix inspection, paginated corpus artifact inspection, deterministic inspection sessions, and explicit external-tool execution reports; it does not add an interactive UI."
       ]
     },
     {

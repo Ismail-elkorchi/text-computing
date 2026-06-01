@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add textconformance benchmark-matrix inspection APIs, CLI output, and a public consumer example.
 - Add deterministic inspection-session APIs and CLI navigation over caller-provided inspection rows.
 - Add standalone external-tool execution reports and CLI output over explicit command specs.
 - Add textcorpus retrieval-calibration report inspection through the corpus-artifact API.

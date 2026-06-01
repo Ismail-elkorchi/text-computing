@@ -32,6 +32,7 @@ import {
   inspectTextPackValidation,
   inspectTextPipelineBatchReport,
   inspectTextPipelineTrace,
+  inspectTextConformanceBenchmarkMatrixReport,
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
   inspectTextConformanceBenchmarkReport,
@@ -56,6 +57,7 @@ import {
   renderTextPackValidationInspection,
   renderTextPipelineBatchReportInspection,
   renderTextPipelineTraceInspection,
+  renderTextConformanceBenchmarkMatrixInspection,
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
   renderTextConformanceBenchmarkReportInspection,
@@ -333,6 +335,118 @@ try {
 }
 if (!invalidBenchmarkRejected) {
   throw new Error("benchmark report inspection should reject conformance reports");
+}
+
+const benchmarkMatrixReport = {
+  schemaVersion: 1,
+  artifactType: "textconformance-benchmark-matrix-report-v1",
+  matrixId: "matrix:textlab-inspection",
+  generatedAt: "2026-06-01T00:00:00.000Z",
+  runCount: 2,
+  benchmarkCount: 1,
+  subjectCount: 1,
+  hostCount: 2,
+  metricCount: 2,
+  summary: {
+    complete: 1,
+    incomplete: 1,
+  },
+  rows: [
+    {
+      benchmarkId: "benchmark:textlab-inspection",
+      subjectKey: "{\"id\":\"@ismail-elkorchi/textlab\",\"kind\":\"package\"}",
+      subject: {
+        kind: "package",
+        id: "@ismail-elkorchi/textlab",
+      },
+      metricId: "latency-ms",
+      unit: "ms",
+      higherIsPreferred: false,
+      status: "complete",
+      runCount: 2,
+      observedRunCount: 2,
+      missingRunIds: [],
+      min: 12,
+      max: 14,
+      mean: 13,
+      median: 13,
+      values: [
+        {
+          runId: "linux-run",
+          value: 12,
+          generatedAt: "2026-05-31T00:00:00.000Z",
+          evidenceRefs: ["packages/textlab/test/index.test.mjs#benchmark-matrix-linux"],
+          hostId: "linux-x64",
+        },
+        {
+          runId: "macos-run",
+          value: 14,
+          generatedAt: "2026-06-01T00:00:00.000Z",
+          evidenceRefs: ["packages/textlab/test/index.test.mjs#benchmark-matrix-macos"],
+          hostId: "macos-arm64",
+        },
+      ],
+    },
+    {
+      benchmarkId: "benchmark:textlab-inspection",
+      subjectKey: "{\"id\":\"@ismail-elkorchi/textlab\",\"kind\":\"package\"}",
+      subject: {
+        kind: "package",
+        id: "@ismail-elkorchi/textlab",
+      },
+      metricId: "throughput-docs-per-second",
+      unit: "docs/s",
+      higherIsPreferred: true,
+      status: "incomplete",
+      runCount: 2,
+      observedRunCount: 1,
+      missingRunIds: ["macos-run"],
+      min: 42,
+      max: 42,
+      mean: 42,
+      median: 42,
+      values: [
+        {
+          runId: "linux-run",
+          value: 42,
+          generatedAt: "2026-05-31T00:00:00.000Z",
+          evidenceRefs: ["packages/textlab/test/index.test.mjs#benchmark-matrix-linux"],
+          hostId: "linux-x64",
+        },
+      ],
+    },
+  ],
+  evidenceRefs: ["packages/textlab/test/index.test.mjs#benchmark-matrix"],
+  limitations: ["Synthetic benchmark matrix fixture; it is not a conformance result."],
+  notes: ["Used to verify textlab benchmark matrix inspection only."],
+};
+const benchmarkMatrixInspection = inspectTextConformanceBenchmarkMatrixReport(benchmarkMatrixReport);
+if (
+  benchmarkMatrixInspection.matrixId !== "matrix:textlab-inspection" ||
+  benchmarkMatrixInspection.runCount !== 2 ||
+  benchmarkMatrixInspection.completeMetricCount !== 1 ||
+  benchmarkMatrixInspection.incompleteMetricCount !== 1 ||
+  benchmarkMatrixInspection.rows[0]?.metricId !== "latency-ms" ||
+  benchmarkMatrixInspection.rows[1]?.missingRunCount !== 1
+) {
+  throw new Error("benchmark matrix inspection should expose deterministic metric rows");
+}
+if (
+  !renderTextConformanceBenchmarkMatrixInspection(benchmarkMatrixInspection).includes(
+    "Incomplete metrics: 1",
+  )
+) {
+  throw new Error("benchmark matrix renderer should include incomplete metric counts");
+}
+let invalidBenchmarkMatrixRejected = false;
+try {
+  inspectTextConformanceBenchmarkMatrixReport(benchmarkReport);
+} catch (error) {
+  invalidBenchmarkMatrixRejected =
+    error instanceof TypeError && error.message === "benchmark matrix report is invalid";
+}
+if (!invalidBenchmarkMatrixRejected) {
+  throw new Error("benchmark matrix inspection should reject benchmark reports");
 }
 
 const packageManifest = {
@@ -1615,6 +1729,8 @@ const changedReportPath = path.join(dir, "conformance-report-actual.json");
 await writeFile(changedReportPath, `${JSON.stringify(changedConformanceReport, null, 2)}\n`, "utf8");
 const benchmarkReportPath = path.join(dir, "benchmark-report.json");
 await writeFile(benchmarkReportPath, `${JSON.stringify(benchmarkReport, null, 2)}\n`, "utf8");
+const benchmarkMatrixPath = path.join(dir, "benchmark-matrix.json");
+await writeFile(benchmarkMatrixPath, `${JSON.stringify(benchmarkMatrixReport, null, 2)}\n`, "utf8");
 const externalToolSpecPath = path.join(dir, "external-tool.json");
 await writeFile(
   externalToolSpecPath,
@@ -1695,6 +1811,25 @@ if (
   JSON.parse(benchmarkReportJsonCliResult.stdout).metrics[0].metricId !== "latency-ms"
 ) {
   throw new Error("benchmark-report CLI should support stable JSON output");
+}
+
+const benchmarkMatrixCliResult = await runTextlabCli(["benchmark-matrix", benchmarkMatrixPath]);
+
+if (benchmarkMatrixCliResult.exitCode !== 0 || benchmarkMatrixCliResult.stderr !== "") {
+  throw new Error(`benchmark-matrix CLI should pass: ${benchmarkMatrixCliResult.stderr}`);
+}
+
+if (!benchmarkMatrixCliResult.stdout.includes("Matrix: matrix:textlab-inspection")) {
+  throw new Error("benchmark-matrix CLI should render matrix identity");
+}
+
+const benchmarkMatrixJsonCliResult = await runTextlabCli(["benchmark-matrix", benchmarkMatrixPath, "--json"]);
+
+if (
+  benchmarkMatrixJsonCliResult.exitCode !== 0 ||
+  JSON.parse(benchmarkMatrixJsonCliResult.stdout).incompleteMetricCount !== 1
+) {
+  throw new Error("benchmark-matrix CLI should support stable JSON output");
 }
 const externalToolCliResult = await runTextlabCli(["external-tool", externalToolSpecPath, "--json"]);
 const externalToolCliReport = externalToolCliResult.exitCode === 0 ? JSON.parse(externalToolCliResult.stdout) : {};

@@ -38,6 +38,7 @@ import {
   inspectTextPipelineTrace,
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
+  inspectTextConformanceBenchmarkMatrixReport,
   inspectTextConformanceBenchmarkReport,
   executeTextlabExternalTool,
   isTextlabInspectionSessionV1,
@@ -61,6 +62,7 @@ import {
   renderTextPipelineTraceInspection,
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
+  renderTextConformanceBenchmarkMatrixInspection,
   renderTextConformanceBenchmarkReportInspection,
   renderTextlabExternalToolExecutionReport,
   renderTextlabInspectionSession,
@@ -103,6 +105,7 @@ function usage(): string {
     "  textlab pack-backed-rules <textdoc-path> [--pack-id id] [--resource-id id] [--rule-kind kind] [--json]",
     "  textlab conformance-report <path> [--json]",
     "  textlab conformance-diff <expected-path> <actual-path> [--json]",
+    "  textlab benchmark-matrix <path> [--json]",
     "  textlab benchmark-report <path> [--json]",
     "  textlab external-tool <spec-json-path> [--json]",
     "  textlab inspection-session <rows-json-path> --session-id id --subject-id id [--title title] [--page-size n] [--initial-page-index n] [--command kind] [--page-index n] [--json]",
@@ -126,6 +129,7 @@ function usage(): string {
     "  pack-backed-rules Inspect pack-backed textrules annotations in a textdoc document.",
     "  conformance-report  Render a deterministic summary of one conformance report.",
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
+    "  benchmark-matrix    Inspect a textconformance benchmark matrix report.",
     "  benchmark-report    Inspect a textconformance benchmark report without treating it as conformance.",
     "  external-tool       Execute an explicit external command spec and report bounded stdout/stderr previews.",
     "  inspection-session  Create, render, or navigate deterministic inspection-session pages.",
@@ -156,6 +160,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "document" &&
     command !== "conformance-report" &&
     command !== "conformance-diff" &&
+    command !== "benchmark-matrix" &&
     command !== "benchmark-report" &&
     command !== "external-tool" &&
     command !== "inspection-session" &&
@@ -273,6 +278,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     (command === "package" ||
       command === "document" ||
       command === "conformance-report" ||
+      command === "benchmark-matrix" ||
       command === "benchmark-report" ||
       command === "external-tool" ||
       command === "inspection-session" ||
@@ -459,6 +465,23 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid textconformance benchmark report: ${inputPath}`,
+      };
+    }
+  }
+
+  if (command === "benchmark-matrix") {
+    try {
+      const inspection = inspectTextConformanceBenchmarkMatrixReport(parsed);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderTextConformanceBenchmarkMatrixInspection, json),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textconformance benchmark matrix report: ${inputPath}`,
       };
     }
   }
