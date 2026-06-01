@@ -12,13 +12,17 @@ Current scope:
 - deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, and Okapi BM25 parameter-variant outputs for the frozen issue `#14` corpora; and
 - deterministic query parsing, required/prohibited term operators, metadata field filters, inverted-index retrieval, BM25 ranking, snippets, explain output, qrels evaluation, deterministic size thresholds, and index JSON round-trips for committed explicit-token retrieval slices;
 - E2 corpus selection provenance for corpus-analysis, scoring, retrieval, and evaluation outputs; and
-- deterministic JSON persistence helpers for declared textcorpus artifact families; and
+- deterministic JSON persistence helpers for declared textcorpus artifact families;
+- caller-provided text-store save/load helpers for retrieval-index artifacts, with storage refs carrying byte length, checksum, corpus, formula, document-count, term-count, and field-count metadata; and
 - corpus metric payload export for wrapping textcorpus artifacts in `textprotocol` corpus-metric envelopes without adding a `textprotocol` dependency to this package.
 
-This package does not yet define durable filesystem index storage, external relevance benchmarks, or broad field weighting.
+This package does not yet define package-owned filesystem storage, external relevance benchmarks, or broad field weighting.
 
 Runnable repository examples:
 
 - [`../../examples/textcorpus-corpus-metric-envelope-consumer.mjs`](../../examples/textcorpus-corpus-metric-envelope-consumer.mjs)
   builds a textcorpus frequency artifact, exports corpus metric payloads, wraps them with
   `textprotocol` schema-family JSON transport, and inspects the parsed envelope through `textlab`.
+- [`../../examples/textcorpus-retrieval-index-storage-consumer.mjs`](../../examples/textcorpus-retrieval-index-storage-consumer.mjs)
+  builds a retrieval index artifact, persists it through caller-provided filesystem callbacks,
+  reloads it through the storage-ref contract, and inspects the storage ref through `textlab`.

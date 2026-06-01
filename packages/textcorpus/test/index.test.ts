@@ -29,16 +29,19 @@ import {
   isTextCorpusQuoteGroundingResultV1,
   isTextCorpusRetrievalEvaluationResultV1,
   isTextCorpusRetrievalIndexArtifactV1,
+  isTextCorpusRetrievalIndexStorageRefV1,
   isTextCorpusRetrievalIndexV1,
   isTextCorpusRetrievalQrelsV1,
   isTextCorpusRetrievalResultV1,
   isTextCorpusScoringResultV1,
   iterateTextCorpusRetrievalResults,
+  loadTextCorpusRetrievalIndexArtifactFromStore,
   packageName,
   parseTextCorpusArtifact,
   parseTextCorpusQuery,
   parseTextCorpusRetrievalIndexArtifact,
   parseTextCorpusRetrievalIndex,
+  saveTextCorpusRetrievalIndexArtifactToStore,
   searchTextCorpusRetrievalIndex,
   stringifyTextCorpusArtifact,
   stringifyTextCorpusRetrievalIndexArtifact,
@@ -1091,6 +1094,78 @@ const tamperedArtifact = JSON.parse(artifactSerialized);
 tamperedArtifact.index.documentOrder = [...tamperedArtifact.index.documentOrder].reverse();
 if (isTextCorpusRetrievalIndexArtifactV1(tamperedArtifact)) {
   throw new Error("retrieval index artifact should reject checksum drift");
+}
+const storedIndexArtifacts = new Map<string, string>();
+const storageRef = await saveTextCorpusRetrievalIndexArtifactToStore(artifact, {
+  key: "memory://textcorpus/fielded-index.json",
+  writeText(key, text) {
+    storedIndexArtifacts.set(key, text);
+  },
+});
+if (
+  !isTextCorpusRetrievalIndexStorageRefV1(storageRef) ||
+  storageRef.checksum.value !== artifact.checksum.value ||
+  storageRef.byteLength !== new TextEncoder().encode(artifactSerialized).length ||
+  storageRef.documentCount !== artifact.index.documentOrder.length ||
+  storageRef.termCount !== artifact.index.termOrder.length ||
+  storageRef.fieldCount !== (artifact.index.fieldOrder?.length ?? 0)
+) {
+  throw new Error("retrieval index storage ref should summarize persisted artifact identity");
+}
+const storageRefParsed = parseTextCorpusArtifact(stringifyTextCorpusArtifact(storageRef));
+if (JSON.stringify(storageRefParsed) !== JSON.stringify(storageRef)) {
+  throw new Error("retrieval index storage ref should round-trip through generic artifact JSON helpers");
+}
+const storageMetricPayload = exportTextCorpusMetricEnvelopePayloadV1(storageRef, {
+  metricSetId: "metrics:retrieval-index-storage-ref",
+});
+if (
+  !isTextCorpusMetricEnvelopePayloadV1(storageMetricPayload) ||
+  !storageMetricPayload.metrics.some((metric) => metric.metricId === "retrieval-index-storage-ref.byte-length")
+) {
+  throw new Error("retrieval index storage ref should export metric-envelope payloads");
+}
+const loadedArtifact = await loadTextCorpusRetrievalIndexArtifactFromStore(storageRef, {
+  readText(key) {
+    return storedIndexArtifacts.get(key) ?? "";
+  },
+});
+if (JSON.stringify(loadedArtifact) !== JSON.stringify(artifact)) {
+  throw new Error("retrieval index storage adapter should load the stored artifact");
+}
+let byteLengthMismatchRejected = false;
+try {
+  await loadTextCorpusRetrievalIndexArtifactFromStore(
+    { ...storageRef, byteLength: storageRef.byteLength + 1 },
+    {
+      readText(key) {
+        return storedIndexArtifacts.get(key) ?? "";
+      },
+    },
+  );
+} catch (error) {
+  byteLengthMismatchRejected =
+    error instanceof TypeError && error.message.includes("byteLength");
+}
+if (!byteLengthMismatchRejected) {
+  throw new Error("retrieval index storage loader should reject byteLength drift");
+}
+let checksumMismatchRejected = false;
+try {
+  await loadTextCorpusRetrievalIndexArtifactFromStore(
+    { ...storageRef, checksum: { algorithm: "fnv1a64-utf8", value: "0000000000000000" } },
+    {
+      readText(key) {
+        return storedIndexArtifacts.get(key) ?? "";
+      },
+    },
+  );
+} catch (error) {
+  checksumMismatchRejected =
+    error instanceof TypeError && error.message.includes("checksum");
+}
+if (!checksumMismatchRejected) {
+  throw new Error("retrieval index storage loader should reject checksum drift");
 }
 
 const citationWindows = createTextCorpusCitationWindows(fieldedScoringCollection, bm25fResult, {

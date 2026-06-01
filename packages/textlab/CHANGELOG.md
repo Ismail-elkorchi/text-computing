@@ -3,6 +3,7 @@
 ## 0.1.0
 
 - Add textpack review-report inspection APIs, CLI output, and a public consumer example.
+- Add textcorpus retrieval-index storage-ref inspection through the corpus-artifact API and CLI.
 - Add generic textcorpus artifact inspection APIs, CLI output, and a public consumer example.
 - Add textconformance benchmark-report inspection APIs, CLI output, and a public consumer example.
 - Add package, pack, document, annotation, conformance-report, conformance-diff, corpus-fixture, retrieval-qrels, retrieval-evaluation, and release-readiness inspection APIs and CLI commands.
