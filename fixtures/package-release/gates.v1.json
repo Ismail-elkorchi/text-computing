@@ -332,7 +332,9 @@
         "examples/textlab-benchmark-report-consumer.mjs",
         "examples/textlab-corpus-artifact-consumer.mjs",
         "examples/textlab-external-tool-consumer.mjs",
+        "examples/textlab-inspection-session-consumer.mjs",
         "schemas/textlab-external-tool-execution-report-v1.schema.json",
+        "schemas/textlab-inspection-session-v1.schema.json",
         "tools/validate-package-readiness.mjs",
         "fixtures/package-release/gates.v1.json",
         "fixtures/package-release/downstream-api-stability.v1.json",
@@ -340,12 +342,12 @@
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Standalone external-tool execution reports exist for explicit command specs; interactive views remain outside alpha scope, and corpus artifact browsing is bounded to deterministic API and CLI pagination.",
+        "Standalone external-tool execution reports and deterministic inspection-session models exist; terminal interactive views remain outside alpha scope, and corpus artifact browsing is bounded to deterministic API and CLI pagination.",
         "Public alpha scope is bounded to deterministic inspection APIs, CLI commands, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Standalone external-tool execution reports exist for explicit command specs; interactive views remain outside alpha scope, and corpus artifact browsing is bounded to deterministic API and CLI pagination.",
+          "blocker": "Standalone external-tool execution reports and deterministic inspection-session models exist; terminal interactive views remain outside alpha scope, and corpus artifact browsing is bounded to deterministic API and CLI pagination.",
           "maturity": "beta",
           "decision": "Blocks broader inspection-tooling statements; it does not block foundation alpha packages unless their smoke output cannot be inspected.",
           "evidenceRefs": [
@@ -353,7 +355,9 @@
             "packages/textlab/test/index.test.mjs",
             "examples/textlab-corpus-artifact-consumer.mjs",
             "examples/textlab-external-tool-consumer.mjs",
-            "schemas/textlab-external-tool-execution-report-v1.schema.json"
+            "examples/textlab-inspection-session-consumer.mjs",
+            "schemas/textlab-external-tool-execution-report-v1.schema.json",
+            "schemas/textlab-inspection-session-v1.schema.json"
           ]
         }
       ]
