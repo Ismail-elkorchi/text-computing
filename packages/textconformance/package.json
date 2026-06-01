@@ -23,6 +23,9 @@
     "prepack": "npm run build"
   },
   "license": "MIT",
+  "dependencies": {
+    "@ismail-elkorchi/textprotocol": "0.1.0"
+  },
   "files": [
     "dist",
     "README.md",

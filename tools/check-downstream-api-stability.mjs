@@ -684,34 +684,38 @@ async function assertBuiltPackageSmoke() {
     "textlab should inspect textconformance benchmark matrix reports through package APIs.",
     benchmarkMatrixInspection,
   );
-  const benchmarkMatrixEnvelope = {
-    schemaId: textprotocol.resultEnvelopeSchemaId,
-    schemaVersion: textprotocol.resultEnvelopeSchemaVersion,
-    producer: {
-      package: "@ismail-elkorchi/textconformance",
-      version: "0.1.0",
-    },
-    payloadKind: textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
-    payload: benchmarkMatrix,
-    scopeBoundary: "Downstream smoke benchmark matrix payload envelope.",
-    limitations: ["Payload shape is validated by textconformance."],
-  };
-  const benchmarkMatrixEnvelopeCompatibility = textprotocol.checkTextProtocolResultEnvelopeCompatibility(
-    benchmarkMatrixEnvelope,
-    {
-      expectedPayloadKind: textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+  const benchmarkArtifactEnvelopes = [
+    textconformance.createTextConformanceBenchmarkReportEnvelope(benchmarkReport, "0.1.0"),
+    textconformance.createTextConformanceBenchmarkThresholdPolicyEnvelope(benchmarkThresholdPolicy, "0.1.0"),
+    textconformance.createTextConformanceBenchmarkThresholdEvaluationEnvelope(
+      benchmarkThresholdEvaluation,
+      "0.1.0",
+    ),
+    textconformance.createTextConformanceBenchmarkCalibrationReportEnvelope(
+      benchmarkCalibration,
+      "0.1.0",
+    ),
+    textconformance.createTextConformanceBenchmarkMatrixReportEnvelope(benchmarkMatrix, "0.1.0"),
+  ];
+  const benchmarkArtifactEnvelopeCompatibility = benchmarkArtifactEnvelopes.map((envelope) =>
+    textprotocol.checkTextProtocolResultEnvelopeCompatibility(envelope, {
+      expectedPayloadKind: envelope.payloadKind,
       expectedProducerPackage: "@ismail-elkorchi/textconformance",
+      requireProvenance: true,
       requireScopeBoundary: true,
       requireLimitations: true,
-    },
+    }),
   );
   expect(
-    textprotocol.isTextProtocolResultEnvelopeForPayloadKind(
-      benchmarkMatrixEnvelope,
-      textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
-    ) && benchmarkMatrixEnvelopeCompatibility.ok,
-    "textprotocol should register textconformance benchmark matrix payload envelopes.",
-    benchmarkMatrixEnvelopeCompatibility,
+    benchmarkArtifactEnvelopes.every((envelope) =>
+      textconformance.isTextConformanceBenchmarkArtifactEnvelopeV1(envelope),
+    ) &&
+      benchmarkArtifactEnvelopeCompatibility.every((compatibility) => compatibility.ok) &&
+      benchmarkArtifactEnvelopes
+        .map((envelope) => envelope.payloadKind)
+        .includes(textprotocol.textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1),
+    "textconformance should expose benchmark artifact result envelopes through package APIs.",
+    benchmarkArtifactEnvelopeCompatibility,
   );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(
