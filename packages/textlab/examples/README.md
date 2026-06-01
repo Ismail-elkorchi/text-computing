@@ -10,6 +10,7 @@ textlab schema-family-envelope schema-family-envelope.json
 textlab pipeline-trace pipeline-trace.json
 textlab pipeline-batch-report pipeline-batch-report.json
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
+textlab benchmark-report benchmark-report.json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
 textlab retrieval-qrels fixtures/retrieval/qrels/retrieval-fielded-qrels.json
 textlab retrieval-evaluation fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json
@@ -25,3 +26,6 @@ Runnable repository examples:
   through textlab.
 - [`../../../examples/textlab-schema-family-envelope-consumer.mjs`](../../../examples/textlab-schema-family-envelope-consumer.mjs)
   serializes textprotocol schema-family envelopes and inspects the parsed envelopes through textlab.
+- [`../../../examples/textlab-benchmark-report-consumer.mjs`](../../../examples/textlab-benchmark-report-consumer.mjs)
+  inspects a textconformance benchmark report through textlab while keeping benchmark metrics separate
+  from pass/fail conformance reports.

@@ -29,6 +29,7 @@ import {
   inspectTextPipelineTrace,
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
+  inspectTextConformanceBenchmarkReport,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
@@ -47,6 +48,7 @@ import {
   renderTextPipelineTraceInspection,
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
+  renderTextConformanceBenchmarkReportInspection,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
   type TextlabPackBackedRuleInspectionOptions,
@@ -79,6 +81,7 @@ function usage(): string {
     "  textlab pack-backed-rules <textdoc-path> [--pack-id id] [--resource-id id] [--rule-kind kind] [--json]",
     "  textlab conformance-report <path> [--json]",
     "  textlab conformance-diff <expected-path> <actual-path> [--json]",
+    "  textlab benchmark-report <path> [--json]",
     "  textlab retrieval-qrels <path> [--json]",
     "  textlab retrieval-evaluation <path> [--json]",
     "  textlab release-readiness [path] [--json]",
@@ -97,6 +100,7 @@ function usage(): string {
     "  pack-backed-rules Inspect pack-backed textrules annotations in a textdoc document.",
     "  conformance-report  Render a deterministic summary of one conformance report.",
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
+    "  benchmark-report    Inspect a textconformance benchmark report without treating it as conformance.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
     "  retrieval-qrels Inspect retrieval relevance judgments.",
     "  retrieval-evaluation Inspect retrieval metric output.",
@@ -123,6 +127,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "document" &&
     command !== "conformance-report" &&
     command !== "conformance-diff" &&
+    command !== "benchmark-report" &&
     command !== "annotations" &&
     command !== "result-envelope" &&
     command !== "schema-family-envelope" &&
@@ -214,6 +219,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     (command === "package" ||
       command === "document" ||
       command === "conformance-report" ||
+      command === "benchmark-report" ||
       command === "annotations" ||
       command === "result-envelope" ||
       command === "schema-family-envelope" ||
@@ -343,6 +349,23 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid textpipeline batch report: ${inputPath}`,
+      };
+    }
+  }
+
+  if (command === "benchmark-report") {
+    try {
+      const inspection = inspectTextConformanceBenchmarkReport(parsed);
+      return {
+        exitCode: 0,
+        stdout: renderCliOutput(inspection, renderTextConformanceBenchmarkReportInspection, json),
+        stderr: "",
+      };
+    } catch {
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid textconformance benchmark report: ${inputPath}`,
       };
     }
   }

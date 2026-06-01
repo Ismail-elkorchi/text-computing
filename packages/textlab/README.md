@@ -13,6 +13,7 @@ It can:
 - inspect textpipeline batch run reports;
 - inspect pack-backed textrules annotation outputs;
 - render textconformance report summaries and diffs;
+- inspect textconformance benchmark reports without treating them as conformance;
 - inspect corpus, retrieval qrels, retrieval evaluation, and release-readiness artifacts.
 
 ## CLI
@@ -36,6 +37,7 @@ textlab pipeline-batch-report pipeline-batch-report.json
 textlab pack-backed-rules document-with-pack-backed-rules.json --resource-id lexicon-en-core
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textlab conformance-diff expected.json actual.json
+textlab benchmark-report benchmark-report.json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
 textlab retrieval-qrels fixtures/retrieval/qrels/retrieval-fielded-qrels.json
 textlab retrieval-evaluation fixtures/retrieval/evaluation/retrieval-fielded-evaluation.json

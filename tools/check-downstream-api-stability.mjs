@@ -397,6 +397,41 @@ async function assertBuiltPackageSmoke() {
     },
   );
   expect(textconformance.isTextConformanceReportV1(conformanceReport), "textconformance built API should produce a report.");
+  const conformanceSummary = textlab.summarizeConformanceReport(conformanceReport);
+  expect(
+    conformanceSummary.reportId === "downstream-api-stability" && conformanceSummary.pass === 1,
+    "textlab should summarize conformance reports through package APIs.",
+  );
+  const benchmarkReport = {
+    schemaId: textconformance.conformanceBenchmarkReportSchemaId,
+    schemaVersion: textconformance.conformanceBenchmarkReportSchemaVersion,
+    benchmarkId: "benchmark:downstream-api-stability",
+    subject: {
+      kind: "package-release-gate",
+      id: "downstream-api-stability",
+      schemaId: "urn:ismail-elkorchi:package-release:downstream-api-stability:v1",
+    },
+    generatedAt: "1970-01-01T00:00:00.000Z",
+    metrics: [
+      {
+        metricId: "smoke-check-count",
+        value: 1,
+        unit: "checks",
+        higherIsPreferred: true,
+      },
+    ],
+    evidenceRefs: [ARTIFACT_PATH],
+    limitations: ["Downstream smoke metric only; benchmark report is not conformance."],
+  };
+  expect(
+    textconformance.isTextConformanceBenchmarkReportV1(benchmarkReport),
+    "textconformance built API should validate benchmark reports.",
+  );
+  const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
+  expect(
+    benchmarkInspection.metricCount === 1 && benchmarkInspection.metrics[0]?.preference === "higher",
+    "textlab should inspect textconformance benchmark reports through package APIs.",
+  );
 
   const pipelineRun = textpipeline.runTextPipeline(document, [
     {
