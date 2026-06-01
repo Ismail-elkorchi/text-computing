@@ -457,16 +457,17 @@
         "tools/check-workspace-pack-dry-run.mjs"
       ],
       "limitations": [
-        "Reference fixture pack for English resource loading; it is not broad language coverage.",
+        "Reference English pack covers every textpack resource family for deterministic workflows; comprehensive English lexicon and named-entity catalog coverage remains outside scope.",
         "Alpha scope is bounded to package-relative resources, manifest validation, package tests, and workspace pack dry-run evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Reference fixture pack for English resource loading; it is not broad language coverage.",
+          "blocker": "Reference English pack covers every textpack resource family for deterministic workflows; comprehensive English lexicon and named-entity catalog coverage remains outside scope.",
           "maturity": "beta",
-          "decision": "Does not block alpha because the reference pack is intentionally small and explicitly scoped.",
+          "decision": "Does not block alpha because every textpack resource family is declared and validated; comprehensive English coverage is not required for alpha package release.",
           "evidenceRefs": [
             "packages/textpack-en-core/pack.manifest.json",
+            "packages/textpack-en-core/resources",
             "packages/textpack-en-core/README.md"
           ]
         }
@@ -507,16 +508,17 @@
         "tools/check-workspace-pack-dry-run.mjs"
       ],
       "limitations": [
-        "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage.",
+        "Reference legal-domain pack covers every textpack resource family for deterministic workflows; comprehensive legal-domain coverage remains outside scope.",
         "Alpha scope is bounded to package-relative resources, manifest validation, package tests, and workspace pack dry-run evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Reference fixture pack for legal-domain resource loading; it is not broad legal coverage.",
+          "blocker": "Reference legal-domain pack covers every textpack resource family for deterministic workflows; comprehensive legal-domain coverage remains outside scope.",
           "maturity": "beta",
-          "decision": "Does not block alpha because the reference pack is intentionally small and explicitly scoped.",
+          "decision": "Does not block alpha because every textpack resource family is declared and validated; comprehensive legal-domain coverage is not required for alpha package release.",
           "evidenceRefs": [
             "packages/textpack-en-legal/pack.manifest.json",
+            "packages/textpack-en-legal/resources",
             "packages/textpack-en-legal/README.md"
           ]
         }
@@ -557,16 +559,17 @@
         "tools/check-workspace-pack-dry-run.mjs"
       ],
       "limitations": [
-        "Reference fixture pack for French resource loading; it is not broad language coverage.",
+        "Reference French pack covers every textpack resource family for deterministic workflows; comprehensive French language coverage remains outside scope.",
         "Alpha scope is bounded to package-relative resources, manifest validation, package tests, and workspace pack dry-run evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Reference fixture pack for French resource loading; it is not broad language coverage.",
+          "blocker": "Reference French pack covers every textpack resource family for deterministic workflows; comprehensive French language coverage remains outside scope.",
           "maturity": "beta",
-          "decision": "Does not block alpha because the reference pack is intentionally small and explicitly scoped.",
+          "decision": "Does not block alpha because every textpack resource family is declared and validated; comprehensive French coverage is not required for alpha package release.",
           "evidenceRefs": [
             "packages/textpack-fr-core/pack.manifest.json",
+            "packages/textpack-fr-core/resources",
             "packages/textpack-fr-core/README.md"
           ]
         }

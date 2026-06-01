@@ -17,3 +17,9 @@ const request = { family: firstFamily, ...(textPackEnLegalManifest.targets.profi
 const loaded = loadTextPackResources([textPackEnLegalManifest], request, contents);
 if (loaded.diagnostics.length !== 0) throw new Error(JSON.stringify(loaded.diagnostics));
 if (loaded.resources.length === 0) throw new Error("expected at least one loaded resource");
+const allRequest = { language: "en", ...(textPackEnLegalManifest.targets.profiles?.[0] ? { profile: textPackEnLegalManifest.targets.profiles[0] } : {}) };
+const loadedAll = loadTextPackResources([textPackEnLegalManifest], allRequest, contents);
+if (loadedAll.diagnostics.length !== 0) throw new Error(JSON.stringify(loadedAll.diagnostics));
+if (loadedAll.resources.length !== Object.values(textPackEnLegalManifest.provides).flat().length) {
+  throw new Error("expected every declared legal resource family to load");
+}

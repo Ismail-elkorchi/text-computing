@@ -17,3 +17,8 @@ const request = { family: firstFamily, ...(textPackFrCoreManifest.targets.profil
 const loaded = loadTextPackResources([textPackFrCoreManifest], request, contents);
 if (loaded.diagnostics.length !== 0) throw new Error(JSON.stringify(loaded.diagnostics));
 if (loaded.resources.length === 0) throw new Error("expected at least one loaded resource");
+const loadedAll = loadTextPackResources([textPackFrCoreManifest], { language: "fr" }, contents);
+if (loadedAll.diagnostics.length !== 0) throw new Error(JSON.stringify(loadedAll.diagnostics));
+if (loadedAll.resources.length !== Object.values(textPackFrCoreManifest.provides).flat().length) {
+  throw new Error("expected every declared French resource family to load");
+}

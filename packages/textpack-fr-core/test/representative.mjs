@@ -1,8 +1,11 @@
-import { createTextPackResourceRegistry, queryTextPackResourceRegistry } from "@ismail-elkorchi/textpack";
+import { createTextPackResourceRegistry, queryTextPackResourceRegistry, textPackResourceFamilies } from "@ismail-elkorchi/textpack";
 import { textPackFrCoreManifest } from "@ismail-elkorchi/textpack-fr-core";
 
 const registry = createTextPackResourceRegistry([textPackFrCoreManifest]);
 if (!registry.languages.includes("fr")) throw new Error("manifest language target missing from registry");
+for (const family of textPackResourceFamilies) {
+  if (!registry.families.includes(family)) throw new Error(`French ${family} family missing from registry`);
+}
 for (const [family, ids] of Object.entries(textPackFrCoreManifest.provides)) {
   for (const id of ids) {
     const request = { family, resourceId: id, ...(textPackFrCoreManifest.targets.profiles?.[0] ? { profile: textPackFrCoreManifest.targets.profiles[0] } : {}) };

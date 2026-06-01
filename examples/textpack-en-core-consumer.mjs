@@ -48,7 +48,17 @@ if (loaded.diagnostics.length !== 0) {
   throw new Error(JSON.stringify(loaded.diagnostics));
 }
 
-const queries = ["the", "analyses", "Acme Corp", "Prof.", "queries", "VERB"];
+const queries = [
+  "en-core-default",
+  "the",
+  "analyses",
+  "Acme Corp",
+  "Prof.",
+  "queries",
+  "VERB",
+  "plural-s->singular",
+  "sentence-basic-svo",
+];
 console.log(JSON.stringify({
   packId: manifest.id,
   resources: loaded.resources.map((entry) => entry.resource.resourceId),
