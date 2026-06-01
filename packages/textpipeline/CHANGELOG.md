@@ -5,6 +5,7 @@
 - Promote package metadata to public alpha for deterministic local pipeline execution.
 - Add exported graph-plan validation, versioned requirement checks, conservative cache-key creation,
   partial-run traces, blocked-dependent recovery semantics, and typed trace-envelope helpers.
+- Add processor-trace schema-family payload and envelope helpers for textprotocol transport.
 - Add batch run report schema, runtime guard, payload kind, and typed result-envelope helpers.
 
 ## 0.0.0

@@ -4,17 +4,20 @@ import type {
   TextDocSpanMapV1,
   TextDocView,
 } from "@ismail-elkorchi/textdoc";
-import { isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
+import { isTextProtocolProcessorTraceV1, isTextProtocolResultEnvelopeV1 } from "@ismail-elkorchi/textprotocol";
 import {
   createTextPipelineCacheKey,
   createTextPipelineBatchRunReport,
   createTextPipelineBatchRunReportEnvelope,
   createTextPipelineContextFingerprint,
   createTextPipelineExecutionPlan,
+  createTextPipelineProcessorTraceEnvelopeV1,
   createTextPipelineTraceEnvelope,
+  exportTextPipelineProcessorTracePayloadV1,
   isTextPipelineProcessorDescriptor,
   isTextPipelineBatchRunReportEnvelopeV1,
   isTextPipelineBatchRunReportV1,
+  isTextPipelineProcessorTraceEnvelopeV1,
   isTextPipelineTraceEnvelopeV1,
   isTextPipelineTraceV1,
   packageName,
@@ -256,6 +259,31 @@ if (!isTextPipelineTraceEnvelopeV1(serializedEnvelope)) {
   throw new Error("trace envelope should satisfy the textpipeline payload contract");
 }
 
+const processorTracePayload = exportTextPipelineProcessorTracePayloadV1(deterministicRun.trace);
+if (
+  processorTracePayload.schemaVersion !== 1 ||
+  processorTracePayload.executionMode !== "sync" ||
+  processorTracePayload.runStatus !== "complete" ||
+  processorTracePayload.processorOrder?.join(",") !== "alpha,beta,gamma" ||
+  processorTracePayload.contextFingerprint !== deterministicRun.trace.contextFingerprint ||
+  processorTracePayload.cachePolicy !== "none" ||
+  processorTracePayload.entries[2]?.processorId !== "gamma"
+) {
+  throw new Error("processor-trace payload export should preserve full textpipeline trace metadata");
+}
+const processorTraceEnvelope = createTextPipelineProcessorTraceEnvelopeV1(deterministicRun.trace, "0.1.0", {
+  provenance: {
+    references: [{ kind: "fixture", id: "textpipeline-processor-trace" }],
+  },
+  limitations: ["Package-local processor-trace schema-family fixture."],
+});
+if (!isTextPipelineProcessorTraceEnvelopeV1(processorTraceEnvelope)) {
+  throw new Error("processor-trace envelope should satisfy the textpipeline schema-family contract");
+}
+if (!isTextProtocolProcessorTraceV1(processorTraceEnvelope)) {
+  throw new Error("processor-trace envelope should satisfy the textprotocol schema-family contract");
+}
+
 const contextFingerprint = createTextPipelineContextFingerprint({
   packageVersions: [{ id: "@ismail-elkorchi/textdoc", version: "0.1.0" }],
   packVersions: [{ id: "pack:core", version: "1.0.0" }],
@@ -459,6 +487,14 @@ if (
   cacheSetCount !== 1
 ) {
   throw new Error("async pipeline cache should replay cached documents with explicit trace status");
+}
+const cachedProcessorTracePayload = exportTextPipelineProcessorTracePayloadV1(secondCachedRun.trace);
+if (
+  cachedProcessorTracePayload.entries[0]?.status !== "cached" ||
+  cachedProcessorTracePayload.entries[0]?.cacheKey === undefined ||
+  cachedProcessorTracePayload.cachePolicy !== "read-through"
+) {
+  throw new Error("processor-trace payload export should preserve cached entries and cache policy");
 }
 
 const contextCachedRun = await runTextPipelineAsync(

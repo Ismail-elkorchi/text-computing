@@ -269,19 +269,26 @@ export type TextProtocolEvidenceBundleV1 = TextProtocolFamilyEnvelopeV1<
 export interface TextProtocolProcessorTraceEntryV1 {
   readonly processorId: string;
   readonly version: string;
-  readonly status: "applied" | "skipped" | "failed";
+  readonly status: "applied" | "skipped" | "cached" | "failed";
   readonly inputRevision: string;
   readonly outputRevision: string;
   readonly emittedViews: readonly string[];
   readonly emittedLayers: readonly string[];
+  readonly cacheKey?: string;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
   readonly resources?: readonly TextProtocolReferenceRef[];
   readonly parentTraceRefs?: readonly string[];
 }
 
 export interface TextProtocolProcessorTracePayloadV1 {
+  readonly schemaVersion?: TextProtocolSchemaVersion;
   readonly documentId: string;
   readonly finalRevision: string;
+  readonly executionMode?: "sync" | "async";
+  readonly runStatus?: "complete" | "partial";
+  readonly processorOrder?: readonly string[];
+  readonly contextFingerprint?: string;
+  readonly cachePolicy?: "none" | "read-through";
   readonly entries: readonly TextProtocolProcessorTraceEntryV1[];
 }
 
@@ -745,11 +752,15 @@ function isProcessorTraceEntry(value: unknown): value is TextProtocolProcessorTr
     isRecord(value) &&
     isNonEmptyString(value.processorId) &&
     isNonEmptyString(value.version) &&
-    (value.status === "applied" || value.status === "skipped" || value.status === "failed") &&
+    (value.status === "applied" ||
+      value.status === "skipped" ||
+      value.status === "cached" ||
+      value.status === "failed") &&
     isNonEmptyString(value.inputRevision) &&
     isNonEmptyString(value.outputRevision) &&
     isNonEmptyStringArray(value.emittedViews) &&
     isNonEmptyStringArray(value.emittedLayers) &&
+    (value.cacheKey === undefined || isNonEmptyString(value.cacheKey)) &&
     (value.diagnostics === undefined ||
       (Array.isArray(value.diagnostics) &&
         value.diagnostics.every((entry) => isTextProtocolDiagnostic(entry)))) &&
@@ -828,8 +839,23 @@ export function isTextProtocolProcessorTraceV1(
   return (
     isTextProtocolCommonFamilyEnvelope(value, textProtocolProcessorTraceSchemaId) &&
     isRecord(value.payload) &&
+    (value.payload.schemaVersion === undefined ||
+      value.payload.schemaVersion === textProtocolSchemaVersion) &&
     isNonEmptyString(value.payload.documentId) &&
     isNonEmptyString(value.payload.finalRevision) &&
+    (value.payload.executionMode === undefined ||
+      value.payload.executionMode === "sync" ||
+      value.payload.executionMode === "async") &&
+    (value.payload.runStatus === undefined ||
+      value.payload.runStatus === "complete" ||
+      value.payload.runStatus === "partial") &&
+    (value.payload.processorOrder === undefined ||
+      isNonEmptyStringArray(value.payload.processorOrder)) &&
+    (value.payload.contextFingerprint === undefined ||
+      isNonEmptyString(value.payload.contextFingerprint)) &&
+    (value.payload.cachePolicy === undefined ||
+      value.payload.cachePolicy === "none" ||
+      value.payload.cachePolicy === "read-through") &&
     Array.isArray(value.payload.entries) &&
     value.payload.entries.every((entry) => isProcessorTraceEntry(entry))
   );

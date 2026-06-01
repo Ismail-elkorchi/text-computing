@@ -1,13 +1,19 @@
 import { isTextDocDocumentV1, type TextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
 import {
+  checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
   isTextProtocolDiagnostic,
+  isTextProtocolProcessorTraceV1,
   isTextProtocolResultEnvelopeForPayloadKind,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextpipelineTraceV1,
+  textProtocolProcessorTraceSchemaId,
+  textProtocolSchemaVersion,
   type TextProtocolDiagnostic,
+  type TextProtocolProcessorTracePayloadV1,
+  type TextProtocolProcessorTraceV1,
   type TextProtocolProvenance,
   type TextProtocolResultEnvelopeV1,
 } from "@ismail-elkorchi/textprotocol";
@@ -183,12 +189,23 @@ export interface TextPipelineTraceEnvelopeMetadata {
   readonly limitations?: readonly string[];
 }
 
+export interface TextPipelineProcessorTraceEnvelopeMetadata {
+  readonly provenance?: TextProtocolProvenance;
+  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly limitations?: readonly string[];
+  readonly extensions?: Readonly<Record<string, unknown>>;
+}
+
 type TextPipelineExecutableProcessor = TextPipelineProcessor | TextPipelineAsyncProcessor;
 
 export type TextPipelineTraceEnvelopeV1 = TextProtocolResultEnvelopeV1<
   TextPipelineTraceV1,
   TextPipelineTracePayloadKind
 >;
+
+export type TextPipelineProcessorTracePayloadV1 = TextProtocolProcessorTracePayloadV1;
+
+export type TextPipelineProcessorTraceEnvelopeV1 = TextProtocolProcessorTraceV1;
 
 export type TextPipelineBatchRunReportEnvelopeV1 = TextProtocolResultEnvelopeV1<
   TextPipelineBatchRunReport,
@@ -1269,6 +1286,72 @@ export function isTextPipelineTraceEnvelopeV1(value: unknown): value is TextPipe
     isTextProtocolResultEnvelopeForPayloadKind(value, textPipelineTracePayloadKind) &&
     isTextPipelineTraceV1(value.payload)
   );
+}
+
+export function exportTextPipelineProcessorTracePayloadV1(
+  trace: TextPipelineTraceV1,
+): TextPipelineProcessorTracePayloadV1 {
+  if (!isTextPipelineTraceV1(trace)) {
+    throw new TypeError("trace must satisfy TextPipelineTraceV1");
+  }
+  return {
+    schemaVersion: textProtocolSchemaVersion,
+    documentId: trace.documentId,
+    finalRevision: trace.finalRevision,
+    executionMode: trace.executionMode,
+    runStatus: trace.runStatus,
+    processorOrder: [...trace.processorOrder],
+    contextFingerprint: trace.contextFingerprint,
+    cachePolicy: trace.cachePolicy,
+    entries: trace.entries.map((entry) => ({
+      processorId: entry.processorId,
+      version: entry.version,
+      status: entry.status,
+      inputRevision: entry.inputRevision,
+      outputRevision: entry.outputRevision,
+      emittedViews: [...entry.emittedViews],
+      emittedLayers: [...entry.emittedLayers],
+      ...(entry.cacheKey === undefined ? {} : { cacheKey: entry.cacheKey }),
+      ...(entry.diagnostics === undefined ? {} : { diagnostics: entry.diagnostics }),
+    })),
+  };
+}
+
+export function createTextPipelineProcessorTraceEnvelopeV1(
+  trace: TextPipelineTraceV1,
+  producerVersion: string,
+  metadata: TextPipelineProcessorTraceEnvelopeMetadata = {},
+): TextPipelineProcessorTraceEnvelopeV1 {
+  if (!isNonEmptyString(producerVersion)) {
+    throw new TypeError("producerVersion must be a non-empty string");
+  }
+  const envelope: TextPipelineProcessorTraceEnvelopeV1 = {
+    schemaId: textProtocolProcessorTraceSchemaId,
+    schemaVersion: textProtocolSchemaVersion,
+    producer: {
+      package: packageName,
+      version: producerVersion,
+    },
+    payload: exportTextPipelineProcessorTracePayloadV1(trace),
+    ...(metadata.provenance === undefined ? {} : { provenance: metadata.provenance }),
+    ...(metadata.diagnostics === undefined ? {} : { diagnostics: metadata.diagnostics }),
+    ...(metadata.limitations === undefined ? {} : { limitations: metadata.limitations }),
+    ...(metadata.extensions === undefined ? {} : { extensions: metadata.extensions }),
+  };
+  const compatibility = checkTextProtocolSchemaFamilyEnvelope(envelope, {
+    expectedFamily: "processor-trace",
+    expectedProducerPackage: packageName,
+  });
+  if (!compatibility.ok) {
+    throw new Error(compatibility.diagnostics.map((entry) => entry.message ?? entry.code).join("; "));
+  }
+  return envelope;
+}
+
+export function isTextPipelineProcessorTraceEnvelopeV1(
+  value: unknown,
+): value is TextPipelineProcessorTraceEnvelopeV1 {
+  return isTextProtocolProcessorTraceV1(value) && value.producer.package === packageName;
 }
 
 export function createTextPipelineBatchRunReportEnvelope(
