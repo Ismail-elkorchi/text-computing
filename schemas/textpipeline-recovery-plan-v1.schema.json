@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-recovery-plan-v1.schema.json",
+  "title": "Textpipeline recovery plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "planId",
+    "sourceKind",
+    "documentCount",
+    "completeCount",
+    "partialCount",
+    "retryCount",
+    "maxRetryAttempts",
+    "retryInputIndexes",
+    "items"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "artifactType": { "const": "textpipeline-recovery-plan-v1" },
+    "planId": { "type": "string", "minLength": 1 },
+    "sourceKind": {
+      "enum": ["batch-run-report", "worker-run-report", "worker-pool-run-report"]
+    },
+    "documentCount": { "type": "integer", "minimum": 0 },
+    "completeCount": { "type": "integer", "minimum": 0 },
+    "partialCount": { "type": "integer", "minimum": 0 },
+    "retryCount": { "type": "integer", "minimum": 0 },
+    "maxRetryAttempts": { "type": "integer", "minimum": 1 },
+    "retryInputIndexes": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 0 }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/item" }
+    }
+  },
+  "definitions": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputIndex",
+        "documentId",
+        "finalRevision",
+        "recoveryAction",
+        "reason",
+        "nextAttempt",
+        "maxAttempts",
+        "processorOrder",
+        "traceEntryCount",
+        "cachePolicy",
+        "failedProcessorIds",
+        "skippedProcessorIds"
+      ],
+      "properties": {
+        "inputIndex": { "type": "integer", "minimum": 0 },
+        "documentId": { "type": "string", "minLength": 1 },
+        "finalRevision": { "type": "string", "minLength": 1 },
+        "recoveryAction": { "enum": ["retain", "retry"] },
+        "reason": { "enum": ["complete-run", "partial-run"] },
+        "nextAttempt": { "type": "integer", "minimum": 0 },
+        "maxAttempts": { "type": "integer", "minimum": 1 },
+        "processorOrder": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "traceEntryCount": { "type": "integer", "minimum": 0 },
+        "cachePolicy": { "enum": ["none", "read-through"] },
+        "failedProcessorIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "skippedProcessorIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "workerId": { "type": "string", "minLength": 1 },
+        "workerSlot": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

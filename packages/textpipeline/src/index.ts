@@ -24,6 +24,7 @@ export const textPipelineBatchRunReportSchemaVersion = 1 as const;
 export const textPipelineCacheSnapshotSchemaVersion = 1 as const;
 export const textPipelineWorkerRunReportSchemaVersion = 1 as const;
 export const textPipelineWorkerPoolRunReportSchemaVersion = 1 as const;
+export const textPipelineRecoveryPlanSchemaVersion = 1 as const;
 export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
 export const textPipelineBatchRunReportPayloadKind =
   textProtocolPayloadKindTextpipelineBatchRunReportV1;
@@ -38,6 +39,8 @@ export type TextPipelineWorkerRunReportSchemaVersion =
   typeof textPipelineWorkerRunReportSchemaVersion;
 export type TextPipelineWorkerPoolRunReportSchemaVersion =
   typeof textPipelineWorkerPoolRunReportSchemaVersion;
+export type TextPipelineRecoveryPlanSchemaVersion =
+  typeof textPipelineRecoveryPlanSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
 export type TextPipelineBatchRunReportPayloadKind =
   typeof textPipelineBatchRunReportPayloadKind;
@@ -48,6 +51,12 @@ export type TextPipelineExecutionMode = "sync" | "async";
 export type TextPipelineErrorPolicy = "throw" | "continue";
 export type TextPipelineCachePolicy = "none" | "read-through";
 export type TextPipelineWorkerPoolStrategy = "round-robin";
+export type TextPipelineRecoverySourceKind =
+  | "batch-run-report"
+  | "worker-run-report"
+  | "worker-pool-run-report";
+export type TextPipelineRecoveryAction = "retain" | "retry";
+export type TextPipelineRecoveryReason = "complete-run" | "partial-run";
 
 export interface TextPipelineVersionRef {
   readonly id: string;
@@ -283,6 +292,48 @@ export interface TextPipelineWorkerPoolBatchRunResult {
   readonly report: TextPipelineWorkerPoolRunReport;
 }
 
+export type TextPipelineRecoverySourceReport =
+  | TextPipelineBatchRunReport
+  | TextPipelineWorkerRunReport
+  | TextPipelineWorkerPoolRunReport;
+
+export interface TextPipelineRecoveryPlanOptions {
+  readonly planId?: string;
+  readonly maxRetryAttempts?: number;
+  readonly includeCompleteItems?: boolean;
+}
+
+export interface TextPipelineRecoveryPlanItem {
+  readonly inputIndex: number;
+  readonly documentId: string;
+  readonly finalRevision: string;
+  readonly recoveryAction: TextPipelineRecoveryAction;
+  readonly reason: TextPipelineRecoveryReason;
+  readonly nextAttempt: number;
+  readonly maxAttempts: number;
+  readonly processorOrder: readonly string[];
+  readonly traceEntryCount: number;
+  readonly cachePolicy: TextPipelineCachePolicy;
+  readonly failedProcessorIds: readonly string[];
+  readonly skippedProcessorIds: readonly string[];
+  readonly workerId?: string;
+  readonly workerSlot?: number;
+}
+
+export interface TextPipelineRecoveryPlanV1 {
+  readonly schemaVersion: TextPipelineRecoveryPlanSchemaVersion;
+  readonly artifactType: "textpipeline-recovery-plan-v1";
+  readonly planId: string;
+  readonly sourceKind: TextPipelineRecoverySourceKind;
+  readonly documentCount: number;
+  readonly completeCount: number;
+  readonly partialCount: number;
+  readonly retryCount: number;
+  readonly maxRetryAttempts: number;
+  readonly retryInputIndexes: readonly number[];
+  readonly items: readonly TextPipelineRecoveryPlanItem[];
+}
+
 export interface TextPipelineTraceEnvelopeMetadata {
   readonly provenance?: TextProtocolProvenance;
   readonly diagnostics?: readonly TextProtocolDiagnostic[];
@@ -334,6 +385,10 @@ function hasUniqueStrings(values: readonly string[]): boolean {
 }
 
 function sameStringArray(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((entry, index) => entry === right[index]);
+}
+
+function sameNumberArray(left: readonly number[], right: readonly number[]): boolean {
   return left.length === right.length && left.every((entry, index) => entry === right[index]);
 }
 
@@ -1101,6 +1156,79 @@ export function isTextPipelineWorkerPoolRunReportV1(
   );
 }
 
+function isTextPipelineRecoverySourceKind(value: unknown): value is TextPipelineRecoverySourceKind {
+  return value === "batch-run-report" || value === "worker-run-report" || value === "worker-pool-run-report";
+}
+
+function isTextPipelineRecoveryAction(value: unknown): value is TextPipelineRecoveryAction {
+  return value === "retain" || value === "retry";
+}
+
+function isTextPipelineRecoveryReason(value: unknown): value is TextPipelineRecoveryReason {
+  return value === "complete-run" || value === "partial-run";
+}
+
+function isTextPipelineRecoveryPlanItem(value: unknown): value is TextPipelineRecoveryPlanItem {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.inputIndex) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.finalRevision) &&
+    isTextPipelineRecoveryAction(value.recoveryAction) &&
+    isTextPipelineRecoveryReason(value.reason) &&
+    isNonNegativeInteger(value.nextAttempt) &&
+    isNonNegativeInteger(value.maxAttempts) &&
+    value.maxAttempts >= 1 &&
+    isStringArray(value.processorOrder) &&
+    hasUniqueStrings(value.processorOrder) &&
+    isNonNegativeInteger(value.traceEntryCount) &&
+    (value.cachePolicy === "none" || value.cachePolicy === "read-through") &&
+    isStringArray(value.failedProcessorIds) &&
+    hasUniqueStrings(value.failedProcessorIds) &&
+    isStringArray(value.skippedProcessorIds) &&
+    hasUniqueStrings(value.skippedProcessorIds) &&
+    (value.workerId === undefined || isNonEmptyString(value.workerId)) &&
+    (value.workerSlot === undefined || isNonNegativeInteger(value.workerSlot)) &&
+    (value.recoveryAction === "retry"
+      ? value.reason === "partial-run" && value.nextAttempt >= 1
+      : value.reason === "complete-run" && value.nextAttempt === 0)
+  );
+}
+
+export function isTextPipelineRecoveryPlanV1(value: unknown): value is TextPipelineRecoveryPlanV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textPipelineRecoveryPlanSchemaVersion ||
+    value.artifactType !== "textpipeline-recovery-plan-v1" ||
+    !isNonEmptyString(value.planId) ||
+    !isTextPipelineRecoverySourceKind(value.sourceKind) ||
+    !isNonNegativeInteger(value.documentCount) ||
+    !isNonNegativeInteger(value.completeCount) ||
+    !isNonNegativeInteger(value.partialCount) ||
+    !isNonNegativeInteger(value.retryCount) ||
+    !isNonNegativeInteger(value.maxRetryAttempts) ||
+    value.maxRetryAttempts < 1 ||
+    !Array.isArray(value.retryInputIndexes) ||
+    !value.retryInputIndexes.every((entry) => isNonNegativeInteger(entry)) ||
+    !Array.isArray(value.items) ||
+    !value.items.every((item) => isTextPipelineRecoveryPlanItem(item))
+  ) {
+    return false;
+  }
+  const documentCount = value.documentCount as number;
+  const completeCount = value.completeCount as number;
+  const partialCount = value.partialCount as number;
+  const retryCount = value.retryCount as number;
+  const maxRetryAttempts = value.maxRetryAttempts as number;
+  const retryItems = value.items.filter((item) => item.recoveryAction === "retry");
+  return (
+    completeCount + partialCount === documentCount &&
+    retryCount === retryItems.length &&
+    sameNumberArray(value.retryInputIndexes, retryItems.map((item) => item.inputIndex)) &&
+    value.items.every((item) => item.inputIndex < documentCount && item.maxAttempts === maxRetryAttempts)
+  );
+}
+
 function assertNotAborted(signal: AbortSignal | undefined): void {
   if (signal?.aborted === true) {
     throw new Error("textpipeline run aborted");
@@ -1605,6 +1733,135 @@ export function createTextPipelineWorkerPoolRunReport(
     throw new TypeError("textpipeline worker pool run report is invalid");
   }
   return report;
+}
+
+function textPipelineRecoverySourceKind(report: TextPipelineRecoverySourceReport): TextPipelineRecoverySourceKind {
+  if (isTextPipelineWorkerPoolRunReportV1(report)) return "worker-pool-run-report";
+  if (isTextPipelineWorkerRunReportV1(report)) return "worker-run-report";
+  if (isTextPipelineBatchRunReportV1(report)) return "batch-run-report";
+  throw new TypeError("textpipeline recovery source report is invalid");
+}
+
+function uniqueStringsInOrder(values: readonly string[]): readonly string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const value of values) {
+    if (seen.has(value)) continue;
+    seen.add(value);
+    result.push(value);
+  }
+  return result;
+}
+
+function traceProcessorIdsByStatus(
+  run: TextPipelineRunResult | undefined,
+  status: TextPipelineTraceStatus,
+): readonly string[] {
+  return uniqueStringsInOrder(
+    (run?.trace.entries ?? [])
+      .filter((entry) => entry.status === status)
+      .map((entry) => entry.processorId),
+  );
+}
+
+function assertRecoveryRunsMatchReport(
+  report: TextPipelineRecoverySourceReport,
+  runs: readonly TextPipelineRunResult[] | undefined,
+): void {
+  if (runs === undefined) return;
+  if (!Array.isArray(runs) || runs.length !== report.documentCount) {
+    throw new TypeError("textpipeline recovery runs must match source report document count");
+  }
+  for (const item of report.items) {
+    const run = runs[item.inputIndex];
+    if (run === undefined || !isTextPipelineTraceV1(run.trace)) {
+      throw new TypeError(`textpipeline recovery run ${item.inputIndex} trace is invalid`);
+    }
+    if (run.trace.documentId !== item.documentId) {
+      throw new Error(`textpipeline recovery run ${item.inputIndex} documentId does not match source report`);
+    }
+    if (run.trace.finalRevision !== item.finalRevision) {
+      throw new Error(`textpipeline recovery run ${item.inputIndex} final revision does not match source report`);
+    }
+    if (run.trace.entries.length !== item.traceEntryCount) {
+      throw new Error(`textpipeline recovery run ${item.inputIndex} trace size does not match source report`);
+    }
+  }
+}
+
+function recoveryWorkerFields(item: TextPipelineBatchRunItem): {
+  readonly workerId?: string;
+  readonly workerSlot?: number;
+} {
+  const record = item as unknown as Record<string, unknown>;
+  return {
+    ...(isNonEmptyString(record.workerId) ? { workerId: record.workerId } : {}),
+    ...(isNonNegativeInteger(record.workerSlot) ? { workerSlot: record.workerSlot } : {}),
+  };
+}
+
+export function createTextPipelineRecoveryPlan(
+  report: TextPipelineRecoverySourceReport,
+  runsOrOptions?: readonly TextPipelineRunResult[] | TextPipelineRecoveryPlanOptions,
+  options: TextPipelineRecoveryPlanOptions = {},
+): TextPipelineRecoveryPlanV1 {
+  const sourceKind = textPipelineRecoverySourceKind(report);
+  const hasRuns = Array.isArray(runsOrOptions);
+  const runs = hasRuns ? runsOrOptions as readonly TextPipelineRunResult[] : undefined;
+  const planOptions: TextPipelineRecoveryPlanOptions = hasRuns
+    ? options
+    : ((runsOrOptions as TextPipelineRecoveryPlanOptions | undefined) ?? options);
+  assertRecoveryRunsMatchReport(report, runs);
+  const maxRetryAttempts = planOptions.maxRetryAttempts ?? 1;
+  if (!Number.isInteger(maxRetryAttempts) || maxRetryAttempts < 1) {
+    throw new RangeError("textpipeline recovery maxRetryAttempts must be a positive integer");
+  }
+  const includeCompleteItems = planOptions.includeCompleteItems ?? true;
+  const planId = planOptions.planId ?? `textpipeline.recovery-plan:${sourceKind}:partial-${report.partialCount}`;
+  if (!isNonEmptyString(planId)) {
+    throw new TypeError("textpipeline recovery plan id must be a non-empty string");
+  }
+
+  const items = report.items.flatMap((item): readonly TextPipelineRecoveryPlanItem[] => {
+    const retry = item.runStatus === "partial";
+    if (!retry && !includeCompleteItems) return [];
+    const run = runs?.[item.inputIndex];
+    return [
+      {
+        inputIndex: item.inputIndex,
+        documentId: item.documentId,
+        finalRevision: item.finalRevision,
+        recoveryAction: retry ? "retry" : "retain",
+        reason: retry ? "partial-run" : "complete-run",
+        nextAttempt: retry ? 1 : 0,
+        maxAttempts: maxRetryAttempts,
+        processorOrder: item.processorOrder,
+        traceEntryCount: item.traceEntryCount,
+        cachePolicy: item.cachePolicy,
+        failedProcessorIds: traceProcessorIdsByStatus(run, "failed"),
+        skippedProcessorIds: traceProcessorIdsByStatus(run, "skipped"),
+        ...recoveryWorkerFields(item),
+      },
+    ];
+  });
+  const retryItems = items.filter((item) => item.recoveryAction === "retry");
+  const plan = {
+    schemaVersion: textPipelineRecoveryPlanSchemaVersion,
+    artifactType: "textpipeline-recovery-plan-v1",
+    planId,
+    sourceKind,
+    documentCount: report.documentCount,
+    completeCount: report.completeCount,
+    partialCount: report.partialCount,
+    retryCount: retryItems.length,
+    maxRetryAttempts,
+    retryInputIndexes: retryItems.map((item) => item.inputIndex),
+    items,
+  } satisfies TextPipelineRecoveryPlanV1;
+  if (!isTextPipelineRecoveryPlanV1(plan)) {
+    throw new TypeError("textpipeline recovery plan is invalid");
+  }
+  return plan;
 }
 
 function assertTextPipelineWorker(worker: TextPipelineWorker): void {

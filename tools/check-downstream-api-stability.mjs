@@ -717,6 +717,47 @@ async function assertBuiltPackageSmoke() {
     batchReportInspection.documentCount === 1 && batchReportInspection.completeCount === 1,
     "textlab should inspect textpipeline batch reports through package APIs.",
   );
+  const failingProcessor = {
+    descriptor: {
+      id: "downstream-api-failing",
+      version: "1.0.0",
+      purity: "pure",
+      parallelSafe: true,
+    },
+    run() {
+      throw new Error("downstream failure");
+    },
+  };
+  const dependentProcessor = {
+    descriptor: {
+      id: "downstream-api-dependent",
+      version: "1.0.0",
+      dependsOn: ["downstream-api-failing"],
+      purity: "pure",
+      parallelSafe: true,
+    },
+    run(inputDocument) {
+      return { document: inputDocument };
+    },
+  };
+  const partialBatch = await textpipeline.runTextPipelineBatchAsyncWithReport(
+    [document, { ...document, documentId: "doc:downstream:recovery" }],
+    [failingProcessor, dependentProcessor],
+    {},
+    { errorPolicy: "continue" },
+  );
+  const recoveryPlan = textpipeline.createTextPipelineRecoveryPlan(partialBatch.report, partialBatch.runs, {
+    planId: "downstream-api:recovery-plan",
+    maxRetryAttempts: 2,
+  });
+  expect(
+    textpipeline.isTextPipelineRecoveryPlanV1(recoveryPlan) &&
+      recoveryPlan.retryCount === 2 &&
+      recoveryPlan.items[0]?.failedProcessorIds.join(",") === "downstream-api-failing" &&
+      recoveryPlan.items[0]?.skippedProcessorIds.join(",") === "downstream-api-dependent",
+    "textpipeline should create caller-managed recovery plans from partial reports through package APIs.",
+    recoveryPlan,
+  );
   const workerBatch = await textpipeline.runTextPipelineBatchWithWorker(
     [document],
     [identityProcessor],
