@@ -236,25 +236,18 @@
         "packages/textdoc/src/index.ts",
         "packages/textdoc/README.md",
         "packages/textdoc/CHANGELOG.md",
+        "schemas/textdoc-task-graph-profile-v1.schema.json",
+        "schemas/textdoc-task-graph-validation-report-v1.schema.json",
+        "examples/textdoc-task-graph-profile-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
+        "Task graph profiles validate declared graph structure; they do not evaluate model quality or infer ontology semantics.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
-      "blockerClassifications": [
-        {
-          "blocker": "Task-specific graph semantics remain limited beyond package-level graph integrity checks.",
-          "maturity": "beta",
-          "decision": "Does not block alpha because the alpha scope requires bounded document/container interoperation, not broad task graph semantics.",
-          "evidenceRefs": [
-            "packages/textdoc/src/index.ts",
-            "packages/textdoc/test"
-          ]
-        }
-      ]
+      "blockerClassifications": []
     },
     {
       "packageName": "@ismail-elkorchi/textfacts",

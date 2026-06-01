@@ -7,12 +7,18 @@ export type PackageName = typeof packageName;
 
 export const tokenSentenceAnnotationSchemaVersion = 1 as const;
 export const documentSchemaVersion = 1 as const;
+export const textDocTaskGraphProfileSchemaVersion = 1 as const;
+export const textDocTaskGraphValidationReportSchemaVersion = 1 as const;
 export const textDocDocumentPayloadKind = "textdoc-document-v1" as const;
 export const textDocConlluRoundTripPayloadKind = "textdoc-conllu-roundtrip" as const;
 
 export type TextDocTokenSentenceAnnotationSchemaVersion =
   typeof tokenSentenceAnnotationSchemaVersion;
 export type TextDocDocumentSchemaVersion = typeof documentSchemaVersion;
+export type TextDocTaskGraphProfileSchemaVersion =
+  typeof textDocTaskGraphProfileSchemaVersion;
+export type TextDocTaskGraphValidationReportSchemaVersion =
+  typeof textDocTaskGraphValidationReportSchemaVersion;
 export type TextDocDocumentPayloadKind = typeof textDocDocumentPayloadKind;
 export type TextDocConlluRoundTripPayloadKind = typeof textDocConlluRoundTripPayloadKind;
 
@@ -573,6 +579,108 @@ export interface TextDocAnnotationBundleApplyResult {
   readonly ok: boolean;
   readonly document?: TextDocDocumentV1;
   readonly diagnostics: readonly TextDocDocumentValidationDiagnostic[];
+}
+
+export interface TextDocTaskGraphRequiredViewV1 {
+  readonly id: string;
+  readonly kind?: TextDocViewKind;
+}
+
+export interface TextDocTaskGraphRequiredLayerV1 {
+  readonly id: string;
+  readonly kind: TextDocLayerKind;
+  readonly viewId?: string;
+  readonly lifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+  readonly minAnnotations?: number;
+}
+
+export interface TextDocTaskGraphAnnotationPatternV1 {
+  readonly id: string;
+  readonly annotationKind: TextDocLayerKind;
+  readonly layerId?: string;
+  readonly viewId?: string;
+  readonly lifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+  readonly minAnnotations?: number;
+  readonly requiredTargetKinds?: readonly TextDocTarget["kind"][];
+  readonly requiredTargetAnnotationKinds?: readonly TextDocLayerKind[];
+  readonly requiredProvenanceReferences?: readonly TextDocReferenceRef[];
+}
+
+export interface TextDocTaskGraphRelationArgumentRoleV1 {
+  readonly role: string;
+  readonly targetAnnotationKinds?: readonly TextDocLayerKind[];
+  readonly minCount?: number;
+}
+
+export interface TextDocTaskGraphRelationArgumentRuleV1 {
+  readonly id: string;
+  readonly layerId?: string;
+  readonly viewId?: string;
+  readonly relationType?: string;
+  readonly lifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+  readonly minRelations?: number;
+  readonly requiredRoles: readonly TextDocTaskGraphRelationArgumentRoleV1[];
+}
+
+export type TextDocTaskGraphCoverageMode =
+  | "annotation-target"
+  | "span-overlap"
+  | "span-contained";
+
+export interface TextDocTaskGraphCoverageRuleV1 {
+  readonly id: string;
+  readonly sourceAnnotationKind: TextDocLayerKind;
+  readonly sourceLayerId?: string;
+  readonly sourceLifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+  readonly coveringAnnotationKind: TextDocLayerKind;
+  readonly coveringLayerId?: string;
+  readonly coveringLifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+  readonly mode: TextDocTaskGraphCoverageMode;
+  readonly minCoveringAnnotations?: number;
+}
+
+export interface TextDocTaskGraphProfileV1 {
+  readonly schemaVersion: TextDocTaskGraphProfileSchemaVersion;
+  readonly profileId: string;
+  readonly task: string;
+  readonly requiredViews?: readonly TextDocTaskGraphRequiredViewV1[];
+  readonly requiredLayers?: readonly TextDocTaskGraphRequiredLayerV1[];
+  readonly annotationPatterns?: readonly TextDocTaskGraphAnnotationPatternV1[];
+  readonly relationArgumentRules?: readonly TextDocTaskGraphRelationArgumentRuleV1[];
+  readonly coverageRules?: readonly TextDocTaskGraphCoverageRuleV1[];
+  readonly evidenceRefs: readonly TextDocReferenceRef[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextDocTaskGraphValidationDiagnostic extends TextDocDocumentValidationDiagnostic {
+  readonly profileId: string;
+  readonly requirementId?: string;
+}
+
+export interface TextDocTaskGraphValidationSummaryV1 {
+  readonly viewRequirements: number;
+  readonly layerRequirements: number;
+  readonly annotationPatternRequirements: number;
+  readonly relationArgumentRequirements: number;
+  readonly coverageRequirements: number;
+  readonly passCount: number;
+  readonly failCount: number;
+  readonly diagnosticCount: number;
+}
+
+export interface TextDocTaskGraphValidationReportV1 {
+  readonly schemaVersion: TextDocTaskGraphValidationReportSchemaVersion;
+  readonly profileId: string;
+  readonly task: string;
+  readonly documentId: string;
+  readonly documentRevision: string;
+  readonly ok: boolean;
+  readonly summary: TextDocTaskGraphValidationSummaryV1;
+  readonly diagnostics: readonly TextDocTaskGraphValidationDiagnostic[];
+  readonly evidenceRefs: readonly TextDocReferenceRef[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
 }
 
 interface ParsedConlluRow {
@@ -2013,6 +2121,691 @@ export function queryTextDocAnnotations(
     }
   }
   return results.sort(compareTextDocQueryResults);
+}
+
+function isTextDocViewKind(value: unknown): value is TextDocViewKind {
+  return (
+    value === "raw" ||
+    value === "normalized" ||
+    value === "tailored" ||
+    value === "task" ||
+    value === "imported" ||
+    value === "extension"
+  );
+}
+
+function isTextDocTargetKind(value: unknown): value is TextDocTarget["kind"] {
+  return value === "span" || value === "document" || value === "annotation";
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isTextDocLifecycleStateArray(
+  value: unknown,
+): value is readonly TextDocAnnotationLifecycleState[] {
+  return Array.isArray(value) && value.length > 0 && value.every((entry) => isTextDocLifecycleState(entry));
+}
+
+function isTextDocLayerKindArray(value: unknown): value is readonly TextDocLayerKind[] {
+  return Array.isArray(value) && value.length > 0 && value.every((entry) => isTextDocLayerKind(entry));
+}
+
+function isTextDocTargetKindArray(value: unknown): value is readonly TextDocTarget["kind"][] {
+  return Array.isArray(value) && value.length > 0 && value.every((entry) => isTextDocTargetKind(entry));
+}
+
+function isTextDocReferenceRefArray(value: unknown): value is readonly TextDocReferenceRef[] {
+  return Array.isArray(value) && value.length > 0 && value.every((entry) => isTextDocReferenceRef(entry));
+}
+
+function isTextDocTaskGraphRequiredViewV1(
+  value: unknown,
+): value is TextDocTaskGraphRequiredViewV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    (value.kind === undefined || isTextDocViewKind(value.kind))
+  );
+}
+
+function isTextDocTaskGraphRequiredLayerV1(
+  value: unknown,
+): value is TextDocTaskGraphRequiredLayerV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isTextDocLayerKind(value.kind) &&
+    (value.viewId === undefined || isNonEmptyString(value.viewId)) &&
+    (value.lifecycleStates === undefined || isTextDocLifecycleStateArray(value.lifecycleStates)) &&
+    (value.minAnnotations === undefined || isNonNegativeInteger(value.minAnnotations))
+  );
+}
+
+function isTextDocTaskGraphAnnotationPatternV1(
+  value: unknown,
+): value is TextDocTaskGraphAnnotationPatternV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isTextDocLayerKind(value.annotationKind) &&
+    (value.layerId === undefined || isNonEmptyString(value.layerId)) &&
+    (value.viewId === undefined || isNonEmptyString(value.viewId)) &&
+    (value.lifecycleStates === undefined || isTextDocLifecycleStateArray(value.lifecycleStates)) &&
+    (value.minAnnotations === undefined || isNonNegativeInteger(value.minAnnotations)) &&
+    (value.requiredTargetKinds === undefined || isTextDocTargetKindArray(value.requiredTargetKinds)) &&
+    (value.requiredTargetAnnotationKinds === undefined ||
+      isTextDocLayerKindArray(value.requiredTargetAnnotationKinds)) &&
+    (value.requiredProvenanceReferences === undefined ||
+      isTextDocReferenceRefArray(value.requiredProvenanceReferences))
+  );
+}
+
+function isTextDocTaskGraphRelationArgumentRoleV1(
+  value: unknown,
+): value is TextDocTaskGraphRelationArgumentRoleV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.role) &&
+    (value.targetAnnotationKinds === undefined || isTextDocLayerKindArray(value.targetAnnotationKinds)) &&
+    (value.minCount === undefined || isNonNegativeInteger(value.minCount))
+  );
+}
+
+function isTextDocTaskGraphRelationArgumentRuleV1(
+  value: unknown,
+): value is TextDocTaskGraphRelationArgumentRuleV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    (value.layerId === undefined || isNonEmptyString(value.layerId)) &&
+    (value.viewId === undefined || isNonEmptyString(value.viewId)) &&
+    (value.relationType === undefined || isNonEmptyString(value.relationType)) &&
+    (value.lifecycleStates === undefined || isTextDocLifecycleStateArray(value.lifecycleStates)) &&
+    (value.minRelations === undefined || isNonNegativeInteger(value.minRelations)) &&
+    Array.isArray(value.requiredRoles) &&
+    value.requiredRoles.length > 0 &&
+    value.requiredRoles.every((entry) => isTextDocTaskGraphRelationArgumentRoleV1(entry))
+  );
+}
+
+function isTextDocTaskGraphCoverageMode(value: unknown): value is TextDocTaskGraphCoverageMode {
+  return value === "annotation-target" || value === "span-overlap" || value === "span-contained";
+}
+
+function isTextDocTaskGraphCoverageRuleV1(
+  value: unknown,
+): value is TextDocTaskGraphCoverageRuleV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isTextDocLayerKind(value.sourceAnnotationKind) &&
+    (value.sourceLayerId === undefined || isNonEmptyString(value.sourceLayerId)) &&
+    (value.sourceLifecycleStates === undefined || isTextDocLifecycleStateArray(value.sourceLifecycleStates)) &&
+    isTextDocLayerKind(value.coveringAnnotationKind) &&
+    (value.coveringLayerId === undefined || isNonEmptyString(value.coveringLayerId)) &&
+    (value.coveringLifecycleStates === undefined ||
+      isTextDocLifecycleStateArray(value.coveringLifecycleStates)) &&
+    isTextDocTaskGraphCoverageMode(value.mode) &&
+    (value.minCoveringAnnotations === undefined || isNonNegativeInteger(value.minCoveringAnnotations))
+  );
+}
+
+export function isTextDocTaskGraphProfileV1(value: unknown): value is TextDocTaskGraphProfileV1 {
+  if (!isRecord(value)) return false;
+  const hasRequirement =
+    (Array.isArray(value.requiredViews) && value.requiredViews.length > 0) ||
+    (Array.isArray(value.requiredLayers) && value.requiredLayers.length > 0) ||
+    (Array.isArray(value.annotationPatterns) && value.annotationPatterns.length > 0) ||
+    (Array.isArray(value.relationArgumentRules) && value.relationArgumentRules.length > 0) ||
+    (Array.isArray(value.coverageRules) && value.coverageRules.length > 0);
+  return (
+    value.schemaVersion === textDocTaskGraphProfileSchemaVersion &&
+    isNonEmptyString(value.profileId) &&
+    isNonEmptyString(value.task) &&
+    (value.requiredViews === undefined ||
+      (Array.isArray(value.requiredViews) &&
+        value.requiredViews.every((entry) => isTextDocTaskGraphRequiredViewV1(entry)))) &&
+    (value.requiredLayers === undefined ||
+      (Array.isArray(value.requiredLayers) &&
+        value.requiredLayers.every((entry) => isTextDocTaskGraphRequiredLayerV1(entry)))) &&
+    (value.annotationPatterns === undefined ||
+      (Array.isArray(value.annotationPatterns) &&
+        value.annotationPatterns.every((entry) => isTextDocTaskGraphAnnotationPatternV1(entry)))) &&
+    (value.relationArgumentRules === undefined ||
+      (Array.isArray(value.relationArgumentRules) &&
+        value.relationArgumentRules.every((entry) => isTextDocTaskGraphRelationArgumentRuleV1(entry)))) &&
+    (value.coverageRules === undefined ||
+      (Array.isArray(value.coverageRules) &&
+        value.coverageRules.every((entry) => isTextDocTaskGraphCoverageRuleV1(entry)))) &&
+    hasRequirement &&
+    isTextDocReferenceRefArray(value.evidenceRefs) &&
+    isStringArray(value.limitations) &&
+    value.limitations.length > 0 &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+function isTextDocTaskGraphValidationDiagnostic(
+  value: unknown,
+): value is TextDocTaskGraphValidationDiagnostic {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.code) &&
+    (value.severity === "error" || value.severity === "warning") &&
+    isNonEmptyString(value.message) &&
+    isNonEmptyString(value.profileId) &&
+    (value.requirementId === undefined || isNonEmptyString(value.requirementId)) &&
+    (value.viewId === undefined || isNonEmptyString(value.viewId)) &&
+    (value.layerId === undefined || isNonEmptyString(value.layerId)) &&
+    (value.annotationId === undefined || isNonEmptyString(value.annotationId)) &&
+    (value.targetId === undefined || isNonEmptyString(value.targetId))
+  );
+}
+
+function isTextDocTaskGraphValidationSummaryV1(
+  value: unknown,
+): value is TextDocTaskGraphValidationSummaryV1 {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.viewRequirements) &&
+    isNonNegativeInteger(value.layerRequirements) &&
+    isNonNegativeInteger(value.annotationPatternRequirements) &&
+    isNonNegativeInteger(value.relationArgumentRequirements) &&
+    isNonNegativeInteger(value.coverageRequirements) &&
+    isNonNegativeInteger(value.passCount) &&
+    isNonNegativeInteger(value.failCount) &&
+    isNonNegativeInteger(value.diagnosticCount)
+  );
+}
+
+export function isTextDocTaskGraphValidationReportV1(
+  value: unknown,
+): value is TextDocTaskGraphValidationReportV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textDocTaskGraphValidationReportSchemaVersion &&
+    isNonEmptyString(value.profileId) &&
+    isNonEmptyString(value.task) &&
+    isNonEmptyString(value.documentId) &&
+    isNonEmptyString(value.documentRevision) &&
+    typeof value.ok === "boolean" &&
+    isTextDocTaskGraphValidationSummaryV1(value.summary) &&
+    Array.isArray(value.diagnostics) &&
+    value.diagnostics.every((entry) => isTextDocTaskGraphValidationDiagnostic(entry)) &&
+    value.summary.diagnosticCount === value.diagnostics.length &&
+    isTextDocReferenceRefArray(value.evidenceRefs) &&
+    isStringArray(value.limitations) &&
+    value.limitations.length > 0 &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+interface TextDocTaskGraphRequirementCounts {
+  readonly viewRequirements: number;
+  readonly layerRequirements: number;
+  readonly annotationPatternRequirements: number;
+  readonly relationArgumentRequirements: number;
+  readonly coverageRequirements: number;
+}
+
+interface TextDocTaskGraphAnnotationIndexEntry {
+  readonly layer: TextDocLayer;
+  readonly annotation: TextDocAnnotation;
+}
+
+interface TextDocTaskGraphAnnotationCriteria {
+  readonly annotationKind: TextDocLayerKind;
+  readonly layerId?: string;
+  readonly viewId?: string;
+  readonly lifecycleStates?: readonly TextDocAnnotationLifecycleState[];
+}
+
+function textDocTaskGraphRequirementCounts(
+  profile: TextDocTaskGraphProfileV1,
+): TextDocTaskGraphRequirementCounts {
+  return {
+    viewRequirements: profile.requiredViews?.length ?? 0,
+    layerRequirements: profile.requiredLayers?.length ?? 0,
+    annotationPatternRequirements: profile.annotationPatterns?.length ?? 0,
+    relationArgumentRequirements: profile.relationArgumentRules?.length ?? 0,
+    coverageRequirements: profile.coverageRules?.length ?? 0,
+  };
+}
+
+function textDocTaskGraphRequirementTotal(counts: TextDocTaskGraphRequirementCounts): number {
+  return (
+    counts.viewRequirements +
+    counts.layerRequirements +
+    counts.annotationPatternRequirements +
+    counts.relationArgumentRequirements +
+    counts.coverageRequirements
+  );
+}
+
+function textDocTaskGraphDiagnostic(
+  profileId: string,
+  code: string,
+  message: string,
+  context: Omit<TextDocTaskGraphValidationDiagnostic, "code" | "message" | "severity" | "profileId"> = {},
+): TextDocTaskGraphValidationDiagnostic {
+  return {
+    code,
+    severity: "error",
+    message,
+    profileId,
+    ...context,
+  };
+}
+
+function textDocTaskGraphLifecycleSet(
+  lifecycleStates: readonly TextDocAnnotationLifecycleState[] | undefined,
+): Set<TextDocAnnotationLifecycleState> {
+  return new Set(lifecycleStates ?? ["active"]);
+}
+
+function textDocTaskGraphAnnotationEntries(
+  document: TextDocDocumentV1,
+): readonly TextDocTaskGraphAnnotationIndexEntry[] {
+  return document.layers.flatMap((layer) =>
+    layer.annotations.map((annotation): TextDocTaskGraphAnnotationIndexEntry => ({ layer, annotation })),
+  );
+}
+
+function textDocTaskGraphMatchingEntries(
+  entries: readonly TextDocTaskGraphAnnotationIndexEntry[],
+  criteria: TextDocTaskGraphAnnotationCriteria,
+): readonly TextDocTaskGraphAnnotationIndexEntry[] {
+  const lifecycleStates = textDocTaskGraphLifecycleSet(criteria.lifecycleStates);
+  return entries.filter(
+    (entry) =>
+      entry.annotation.kind === criteria.annotationKind &&
+      (criteria.layerId === undefined || entry.layer.id === criteria.layerId) &&
+      (criteria.viewId === undefined || entry.layer.viewId === criteria.viewId) &&
+      lifecycleStates.has(entry.annotation.lifecycle.state),
+  );
+}
+
+function textDocTaskGraphAnnotationTargets(
+  annotation: TextDocAnnotation,
+  annotationById: ReadonlyMap<string, TextDocTaskGraphAnnotationIndexEntry>,
+): readonly TextDocTaskGraphAnnotationIndexEntry[] {
+  return annotation.targets
+    .filter((target): target is TextDocAnnotationTarget => target.kind === "annotation")
+    .map((target) => annotationById.get(target.annotationId))
+    .filter((entry): entry is TextDocTaskGraphAnnotationIndexEntry => entry !== undefined);
+}
+
+function textDocTaskGraphHasProvenanceReference(
+  annotation: TextDocAnnotation,
+  reference: TextDocReferenceRef,
+): boolean {
+  return annotation.provenance?.references?.some(
+    (entry) => entry.kind === reference.kind && entry.id === reference.id,
+  ) ?? false;
+}
+
+function textDocTaskGraphSpanTargets(annotation: TextDocAnnotation): readonly TextDocSpanTarget[] {
+  return annotation.targets.filter((target): target is TextDocSpanTarget => target.kind === "span");
+}
+
+function textDocTaskGraphCoversSource(
+  source: TextDocTaskGraphAnnotationIndexEntry,
+  coverer: TextDocTaskGraphAnnotationIndexEntry,
+  mode: TextDocTaskGraphCoverageMode,
+): boolean {
+  if (mode === "annotation-target") {
+    return coverer.annotation.targets.some(
+      (target) => target.kind === "annotation" && target.annotationId === source.annotation.id,
+    );
+  }
+  const sourceSpans = textDocTaskGraphSpanTargets(source.annotation);
+  const covererSpans = textDocTaskGraphSpanTargets(coverer.annotation);
+  return sourceSpans.some((sourceSpan) =>
+    covererSpans.some((covererSpan) => {
+      if (sourceSpan.viewId !== covererSpan.viewId) return false;
+      if (mode === "span-overlap") return spanOverlaps(sourceSpan, covererSpan);
+      return spanContains(covererSpan, sourceSpan);
+    }),
+  );
+}
+
+function textDocTaskGraphReport(
+  document: TextDocDocumentV1,
+  profile: TextDocTaskGraphProfileV1,
+  counts: TextDocTaskGraphRequirementCounts,
+  passCount: number,
+  failCount: number,
+  diagnostics: readonly TextDocTaskGraphValidationDiagnostic[],
+): TextDocTaskGraphValidationReportV1 {
+  const summary: TextDocTaskGraphValidationSummaryV1 = {
+    ...counts,
+    passCount,
+    failCount,
+    diagnosticCount: diagnostics.length,
+  };
+  const report: TextDocTaskGraphValidationReportV1 = {
+    schemaVersion: textDocTaskGraphValidationReportSchemaVersion,
+    profileId: profile.profileId,
+    task: profile.task,
+    documentId: document.documentId,
+    documentRevision: document.revision,
+    ok: failCount === 0 && diagnostics.length === 0,
+    summary,
+    diagnostics,
+    evidenceRefs: profile.evidenceRefs.map((reference) => ({ ...reference })),
+    limitations: [...profile.limitations],
+    ...(profile.notes !== undefined ? { notes: [...profile.notes] } : {}),
+  };
+  if (!isTextDocTaskGraphValidationReportV1(report)) {
+    throw new TypeError("textdoc task graph validation report could not be produced");
+  }
+  return report;
+}
+
+export function validateTextDocTaskGraphProfile(
+  document: TextDocDocumentV1,
+  profile: TextDocTaskGraphProfileV1,
+): TextDocTaskGraphValidationReportV1 {
+  if (!isTextDocTaskGraphProfileV1(profile)) {
+    throw new TypeError("textdoc task graph profile must satisfy TextDocTaskGraphProfileV1");
+  }
+  if (!isTextDocDocumentV1(document)) {
+    throw new TypeError("textdoc task graph validation requires a TextDocDocumentV1");
+  }
+
+  const counts = textDocTaskGraphRequirementCounts(profile);
+  const baseValidation = validateTextDocDocumentV1(document);
+  if (!baseValidation.ok) {
+    const diagnostics = baseValidation.diagnostics.map((diagnostic) =>
+      textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.document-invalid",
+        `Package-level document validation failed: ${diagnostic.code}: ${diagnostic.message}`,
+        {
+          requirementId: "textdoc-document-v1",
+          ...(diagnostic.viewId !== undefined ? { viewId: diagnostic.viewId } : {}),
+          ...(diagnostic.layerId !== undefined ? { layerId: diagnostic.layerId } : {}),
+          ...(diagnostic.annotationId !== undefined ? { annotationId: diagnostic.annotationId } : {}),
+          ...(diagnostic.targetId !== undefined ? { targetId: diagnostic.targetId } : {}),
+        },
+      ),
+    );
+    return textDocTaskGraphReport(
+      document,
+      profile,
+      counts,
+      0,
+      Math.max(1, textDocTaskGraphRequirementTotal(counts)),
+      diagnostics,
+    );
+  }
+
+  const diagnostics: TextDocTaskGraphValidationDiagnostic[] = [];
+  let passCount = 0;
+  let failCount = 0;
+  const recordRequirement = (
+    requirementDiagnostics: readonly TextDocTaskGraphValidationDiagnostic[],
+  ): void => {
+    if (requirementDiagnostics.length === 0) {
+      passCount += 1;
+    } else {
+      failCount += 1;
+      diagnostics.push(...requirementDiagnostics);
+    }
+  };
+
+  const viewById = new Map(document.views.map((view) => [view.id, view] as const));
+  const layerById = new Map(document.layers.map((layer) => [layer.id, layer] as const));
+  const entries = textDocTaskGraphAnnotationEntries(document);
+  const annotationById = new Map(entries.map((entry) => [entry.annotation.id, entry] as const));
+
+  for (const requirement of profile.requiredViews ?? []) {
+    const requirementDiagnostics: TextDocTaskGraphValidationDiagnostic[] = [];
+    const view = viewById.get(requirement.id);
+    if (view === undefined) {
+      requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.view-missing",
+        `Task graph profile ${profile.profileId} requires missing view ${requirement.id}.`,
+        { requirementId: requirement.id, viewId: requirement.id },
+      ));
+    } else if (requirement.kind !== undefined && view.kind !== requirement.kind) {
+      requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.view-kind",
+        `Task graph profile ${profile.profileId} requires view ${requirement.id} kind ${requirement.kind}, received ${view.kind}.`,
+        { requirementId: requirement.id, viewId: requirement.id },
+      ));
+    }
+    recordRequirement(requirementDiagnostics);
+  }
+
+  for (const requirement of profile.requiredLayers ?? []) {
+    const requirementDiagnostics: TextDocTaskGraphValidationDiagnostic[] = [];
+    const layer = layerById.get(requirement.id);
+    if (layer === undefined) {
+      requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.layer-missing",
+        `Task graph profile ${profile.profileId} requires missing layer ${requirement.id}.`,
+        { requirementId: requirement.id, layerId: requirement.id },
+      ));
+    } else {
+      if (layer.kind !== requirement.kind) {
+        requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+          profile.profileId,
+          "textdoc.task-graph.layer-kind",
+          `Task graph profile ${profile.profileId} requires layer ${requirement.id} kind ${requirement.kind}, received ${layer.kind}.`,
+          { requirementId: requirement.id, layerId: requirement.id },
+        ));
+      }
+      if (requirement.viewId !== undefined && layer.viewId !== requirement.viewId) {
+        requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+          profile.profileId,
+          "textdoc.task-graph.layer-view",
+          `Task graph profile ${profile.profileId} requires layer ${requirement.id} on view ${requirement.viewId}, received ${layer.viewId}.`,
+          { requirementId: requirement.id, layerId: requirement.id, viewId: layer.viewId },
+        ));
+      }
+      if (requirement.minAnnotations !== undefined) {
+        const lifecycleStates = textDocTaskGraphLifecycleSet(requirement.lifecycleStates);
+        const annotationCount = layer.annotations.filter((annotation) =>
+          lifecycleStates.has(annotation.lifecycle.state),
+        ).length;
+        if (annotationCount < requirement.minAnnotations) {
+          requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+            profile.profileId,
+            "textdoc.task-graph.layer-min-annotations",
+            `Task graph profile ${profile.profileId} requires layer ${requirement.id} to contain at least ${requirement.minAnnotations} matching annotations, received ${annotationCount}.`,
+            { requirementId: requirement.id, layerId: requirement.id },
+          ));
+        }
+      }
+    }
+    recordRequirement(requirementDiagnostics);
+  }
+
+  for (const pattern of profile.annotationPatterns ?? []) {
+    const requirementDiagnostics: TextDocTaskGraphValidationDiagnostic[] = [];
+    const candidates = textDocTaskGraphMatchingEntries(entries, {
+      annotationKind: pattern.annotationKind,
+      ...(pattern.layerId !== undefined ? { layerId: pattern.layerId } : {}),
+      ...(pattern.viewId !== undefined ? { viewId: pattern.viewId } : {}),
+      ...(pattern.lifecycleStates !== undefined ? { lifecycleStates: pattern.lifecycleStates } : {}),
+    });
+    const minAnnotations = pattern.minAnnotations ?? 1;
+    if (candidates.length < minAnnotations) {
+      requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.annotation-pattern-min-count",
+        `Task graph profile ${profile.profileId} requires pattern ${pattern.id} to match at least ${minAnnotations} annotations, received ${candidates.length}.`,
+        {
+          requirementId: pattern.id,
+          ...(pattern.layerId !== undefined ? { layerId: pattern.layerId } : {}),
+        },
+      ));
+    }
+    for (const candidate of candidates) {
+      for (const targetKind of pattern.requiredTargetKinds ?? []) {
+        if (!candidate.annotation.targets.some((target) => target.kind === targetKind)) {
+          requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+            profile.profileId,
+            "textdoc.task-graph.annotation-pattern-target-kind",
+            `Annotation ${candidate.annotation.id} does not declare required target kind ${targetKind} for task graph pattern ${pattern.id}.`,
+            {
+              requirementId: pattern.id,
+              layerId: candidate.layer.id,
+              annotationId: candidate.annotation.id,
+            },
+          ));
+        }
+      }
+      const targetEntries = textDocTaskGraphAnnotationTargets(candidate.annotation, annotationById);
+      for (const targetAnnotationKind of pattern.requiredTargetAnnotationKinds ?? []) {
+        if (!targetEntries.some((entry) => entry.annotation.kind === targetAnnotationKind)) {
+          requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+            profile.profileId,
+            "textdoc.task-graph.annotation-pattern-target-annotation-kind",
+            `Annotation ${candidate.annotation.id} does not target a required ${targetAnnotationKind} annotation for task graph pattern ${pattern.id}.`,
+            {
+              requirementId: pattern.id,
+              layerId: candidate.layer.id,
+              annotationId: candidate.annotation.id,
+            },
+          ));
+        }
+      }
+      for (const reference of pattern.requiredProvenanceReferences ?? []) {
+        if (!textDocTaskGraphHasProvenanceReference(candidate.annotation, reference)) {
+          requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+            profile.profileId,
+            "textdoc.task-graph.annotation-pattern-provenance-reference",
+            `Annotation ${candidate.annotation.id} does not declare required provenance reference ${reference.kind}:${reference.id} for task graph pattern ${pattern.id}.`,
+            {
+              requirementId: pattern.id,
+              layerId: candidate.layer.id,
+              annotationId: candidate.annotation.id,
+            },
+          ));
+        }
+      }
+    }
+    recordRequirement(requirementDiagnostics);
+  }
+
+  for (const rule of profile.relationArgumentRules ?? []) {
+    const requirementDiagnostics: TextDocTaskGraphValidationDiagnostic[] = [];
+    const relationEntries = textDocTaskGraphMatchingEntries(entries, {
+      annotationKind: "relation",
+      ...(rule.layerId !== undefined ? { layerId: rule.layerId } : {}),
+      ...(rule.viewId !== undefined ? { viewId: rule.viewId } : {}),
+      ...(rule.lifecycleStates !== undefined ? { lifecycleStates: rule.lifecycleStates } : {}),
+    }).filter((entry) =>
+      entry.annotation.kind === "relation" &&
+      (rule.relationType === undefined || entry.annotation.relationType === rule.relationType),
+    );
+    const minRelations = rule.minRelations ?? 1;
+    if (relationEntries.length < minRelations) {
+      requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.relation-min-count",
+        `Task graph profile ${profile.profileId} requires relation rule ${rule.id} to match at least ${minRelations} relations, received ${relationEntries.length}.`,
+        {
+          requirementId: rule.id,
+          ...(rule.layerId !== undefined ? { layerId: rule.layerId } : {}),
+        },
+      ));
+    }
+    for (const relationEntry of relationEntries) {
+      if (relationEntry.annotation.kind !== "relation") continue;
+      for (const roleRule of rule.requiredRoles) {
+        const matchingArguments = relationEntry.annotation.arguments.filter(
+          (argument) => argument.role === roleRule.role,
+        );
+        const minCount = roleRule.minCount ?? 1;
+        if (matchingArguments.length < minCount) {
+          requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+            profile.profileId,
+            "textdoc.task-graph.relation-role-missing",
+            `Relation ${relationEntry.annotation.id} does not declare required role ${roleRule.role} at least ${minCount} times for task graph rule ${rule.id}.`,
+            {
+              requirementId: rule.id,
+              layerId: relationEntry.layer.id,
+              annotationId: relationEntry.annotation.id,
+            },
+          ));
+          continue;
+        }
+        if (roleRule.targetAnnotationKinds !== undefined) {
+          const hasExpectedKind = matchingArguments.some((argument) => {
+            const target = annotationById.get(argument.annotationId);
+            return target !== undefined && roleRule.targetAnnotationKinds?.includes(target.annotation.kind);
+          });
+          if (!hasExpectedKind) {
+            requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+              profile.profileId,
+              "textdoc.task-graph.relation-role-target-kind",
+              `Relation ${relationEntry.annotation.id} role ${roleRule.role} does not point to an allowed annotation kind for task graph rule ${rule.id}.`,
+              {
+                requirementId: rule.id,
+                layerId: relationEntry.layer.id,
+                annotationId: relationEntry.annotation.id,
+              },
+            ));
+          }
+        }
+      }
+    }
+    recordRequirement(requirementDiagnostics);
+  }
+
+  for (const rule of profile.coverageRules ?? []) {
+    const requirementDiagnostics: TextDocTaskGraphValidationDiagnostic[] = [];
+    const sourceEntries = textDocTaskGraphMatchingEntries(entries, {
+      annotationKind: rule.sourceAnnotationKind,
+      ...(rule.sourceLayerId !== undefined ? { layerId: rule.sourceLayerId } : {}),
+      ...(rule.sourceLifecycleStates !== undefined ? { lifecycleStates: rule.sourceLifecycleStates } : {}),
+    });
+    const coveringEntries = textDocTaskGraphMatchingEntries(entries, {
+      annotationKind: rule.coveringAnnotationKind,
+      ...(rule.coveringLayerId !== undefined ? { layerId: rule.coveringLayerId } : {}),
+      ...(rule.coveringLifecycleStates !== undefined ? { lifecycleStates: rule.coveringLifecycleStates } : {}),
+    });
+    if (sourceEntries.length === 0) {
+      requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+        profile.profileId,
+        "textdoc.task-graph.coverage-source-missing",
+        `Task graph profile ${profile.profileId} coverage rule ${rule.id} matched no source annotations.`,
+        {
+          requirementId: rule.id,
+          ...(rule.sourceLayerId !== undefined ? { layerId: rule.sourceLayerId } : {}),
+        },
+      ));
+    }
+    const minCoveringAnnotations = rule.minCoveringAnnotations ?? 1;
+    for (const source of sourceEntries) {
+      const coverageCount = coveringEntries.filter((coverer) =>
+        textDocTaskGraphCoversSource(source, coverer, rule.mode),
+      ).length;
+      if (coverageCount < minCoveringAnnotations) {
+        requirementDiagnostics.push(textDocTaskGraphDiagnostic(
+          profile.profileId,
+          "textdoc.task-graph.coverage-missing",
+          `Annotation ${source.annotation.id} has ${coverageCount} covering annotations for task graph coverage rule ${rule.id}; required ${minCoveringAnnotations}.`,
+          {
+            requirementId: rule.id,
+            layerId: source.layer.id,
+            annotationId: source.annotation.id,
+          },
+        ));
+      }
+    }
+    recordRequirement(requirementDiagnostics);
+  }
+
+  return textDocTaskGraphReport(document, profile, counts, passCount, failCount, diagnostics);
 }
 
 function firstTextDocTarget(annotation: TextDocAnnotation): TextDocTarget | undefined {

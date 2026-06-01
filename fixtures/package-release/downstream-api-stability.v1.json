@@ -51,6 +51,9 @@
         "packages/textdoc/package.json",
         "packages/textdoc/src/index.ts",
         "packages/textdoc/test/index.test.ts",
+        "schemas/textdoc-task-graph-profile-v1.schema.json",
+        "schemas/textdoc-task-graph-validation-report-v1.schema.json",
+        "examples/textdoc-task-graph-profile-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
