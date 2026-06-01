@@ -6,4 +6,5 @@
 - Add textpipeline batch report inspection APIs, CLI output, and a public consumer example.
 - Add textprotocol result-envelope inspection APIs, CLI output, and a public consumer example.
 - Add textprotocol schema-family envelope inspection APIs, CLI output, and a public consumer example.
+- Add schema-family inspection options for externally validated pack-manifest envelopes.
 - Remove non-executable summary commands from the public package surface.

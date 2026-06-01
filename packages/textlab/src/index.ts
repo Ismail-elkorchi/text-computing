@@ -27,6 +27,7 @@ import {
   isTextProtocolResultEnvelopeV1,
   type TextProtocolDiagnostic,
   type TextProtocolSchemaFamilyEnvelopeV1,
+  type TextProtocolSchemaFamilyValidationOptions,
 } from "@ismail-elkorchi/textprotocol";
 import {
   packageName as textRulesPackageName,
@@ -1258,8 +1259,9 @@ export function renderTextProtocolResultEnvelopeInspection(
 
 export function inspectTextProtocolSchemaFamilyEnvelope(
   value: unknown,
+  options: TextProtocolSchemaFamilyValidationOptions = {},
 ): TextlabProtocolSchemaFamilyEnvelopeInspection {
-  const compatibility = checkTextProtocolSchemaFamilyEnvelope(value);
+  const compatibility = checkTextProtocolSchemaFamilyEnvelope(value, options);
   if (!isRecord(value)) {
     throw new TypeError("textprotocol schema-family envelope is invalid");
   }

@@ -96,3 +96,7 @@ loading resources through package APIs, and performing deterministic lookup.
 [`../../examples/textpack-authoring-consumer.mjs`](../../examples/textpack-authoring-consumer.mjs)
 shows a consumer creating a local pack, planning add/update resource transactions, auditing the
 filesystem inventory, loading the resulting resources, and performing deterministic lookup.
+
+[`../../examples/textpack-pack-manifest-envelope-consumer.mjs`](../../examples/textpack-pack-manifest-envelope-consumer.mjs)
+shows a consumer validating a textpack manifest with `textpack`, wrapping it in a `textprotocol`
+pack-manifest schema-family JSON transport, parsing it, and revalidating the parsed manifest.

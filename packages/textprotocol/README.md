@@ -30,7 +30,9 @@ The package also declares these protocol schema families:
 - `protocol-error`
 
 Family guards validate protocol-owned envelope shapes without importing downstream package code.
-The `pack-manifest` schema remains owned by `@ismail-elkorchi/textpack`.
+The `pack-manifest` schema remains owned by `@ismail-elkorchi/textpack`; callers that validate a
+manifest with the owning package can pass `externallyValidatedFamilies: ["pack-manifest"]` when
+checking, serializing, parsing, or inspecting that schema family.
 `createTextProtocolProtocolErrorPayloadFromDiagnostics()`,
 `createTextProtocolProtocolErrorEnvelopeV1()`, and
 `createTextProtocolProtocolErrorEnvelopeFromDiagnostics()` convert compatibility diagnostics into
@@ -60,8 +62,9 @@ envelopes:
 
 Use `serializeTextProtocolSchemaFamilyEnvelopeJson()` and
 `parseTextProtocolSchemaFamilyEnvelopeJson()` for document bundles, annotation bundles, evidence
-bundles, processor traces, corpus metric envelopes, mapping-loss reports, protocol errors, and other
-registered schema-family envelopes. Other wire transports are not standardized by this package.
+bundles, processor traces, corpus metric envelopes, mapping-loss reports, protocol errors,
+externally validated pack manifests, and other registered schema-family envelopes. Other wire
+transports are not standardized by this package.
 
 Use `canonicalizeTextProtocolJson()` when a caller needs deterministic JSON text before caller-owned
 hashing or signing. This package does not define a network transport, signing protocol, or hash

@@ -35,6 +35,7 @@ import {
   textProtocolDocumentBundleSchemaId,
   textProtocolEvidenceBundleSchemaId,
   textProtocolMappingLossReportSchemaId,
+  textProtocolPackManifestSchemaId,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineTraceV1,
@@ -488,6 +489,52 @@ if (!familyCheck.ok || familyCheck.family !== "document-bundle") {
   throw new Error("schema-family compatibility should accept a valid document bundle");
 }
 
+const packManifestEnvelope = {
+  schemaId: textProtocolPackManifestSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: "@ismail-elkorchi/textpack",
+    version: "0.1.0",
+  },
+  payload: {
+    manifestVersion: "1.0.0",
+    id: "pack:textprotocol-test",
+  },
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-pack-manifest" }],
+  },
+  limitations: ["Fixture validates externally owned schema-family exchange."],
+};
+const unassertedPackManifestCheck = checkTextProtocolSchemaFamilyEnvelope(packManifestEnvelope, {
+  expectedFamily: "pack-manifest",
+  requireProvenance: true,
+  requireLimitations: true,
+});
+if (
+  unassertedPackManifestCheck.ok ||
+  !unassertedPackManifestCheck.diagnostics.some(
+    (entry) => entry.code === "textprotocol.schema-family-external-validation" && entry.severity === "error",
+  )
+) {
+  throw new Error("pack-manifest compatibility should require an external-validation assertion");
+}
+const assertedPackManifestCheck = checkTextProtocolSchemaFamilyEnvelope(packManifestEnvelope, {
+  expectedFamily: "pack-manifest",
+  expectedProducerPackage: "@ismail-elkorchi/textpack",
+  requireProvenance: true,
+  requireLimitations: true,
+  externallyValidatedFamilies: ["pack-manifest"],
+});
+if (
+  !assertedPackManifestCheck.ok ||
+  assertedPackManifestCheck.family !== "pack-manifest" ||
+  !assertedPackManifestCheck.diagnostics.some(
+    (entry) => entry.code === "textprotocol.schema-family-external-validation" && entry.severity === "info",
+  )
+) {
+  throw new Error("pack-manifest compatibility should accept caller-asserted external validation");
+}
+
 const invalidFamilyCheck = checkTextProtocolSchemaFamilyEnvelope(
   {
     ...documentBundle,
@@ -626,6 +673,22 @@ if (
   textProtocolProtocolErrorSchemaId
 ) {
   throw new Error("schema-family JSON transport should support protocol-error envelopes");
+}
+
+const packManifestTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(packManifestEnvelope, {
+  expectedFamily: "pack-manifest",
+  expectedProducerPackage: "@ismail-elkorchi/textpack",
+  requireProvenance: true,
+  requireLimitations: true,
+  externallyValidatedFamilies: ["pack-manifest"],
+});
+if (
+  packManifestTransport.family !== "pack-manifest" ||
+  parseTextProtocolSchemaFamilyEnvelopeJson(packManifestTransport, {
+    externallyValidatedFamilies: ["pack-manifest"],
+  }).schemaId !== textProtocolPackManifestSchemaId
+) {
+  throw new Error("schema-family JSON transport should support externally validated pack manifests");
 }
 
 try {

@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add a public pack-manifest schema-family exchange example with textprotocol transport.
 - Migrate the manifest model to `manifestVersion`, pack `id`, resource-family maps, `provides`,
   compatibility metadata, review state, and required pack tests.
 - Add compatibility checks, explicit pack composition, package governance diagnostics, and support
