@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add benchmark matrix reports and CLI output over caller-provided benchmark reports.
 - Add cross-host benchmark calibration reports over caller-provided benchmark reports.
 - Add benchmark threshold policy APIs, schemas, Markdown rendering, and the `evaluate-benchmark` CLI path.
 - Add benchmark runner APIs and the `run-benchmark` CLI path for suite-execution benchmark reports.

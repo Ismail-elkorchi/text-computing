@@ -69,6 +69,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textconformance-suite-v1.schema.json`](textconformance-suite-v1.schema.json) — declarative conformance suite schema.
 - [`textconformance-benchmark-report-v1.schema.json`](textconformance-benchmark-report-v1.schema.json) — benchmark report schema separate from conformance reports.
 - [`textconformance-benchmark-calibration-report-v1.schema.json`](textconformance-benchmark-calibration-report-v1.schema.json) — cross-host benchmark calibration report schema over caller-provided benchmark reports.
+- [`textconformance-benchmark-matrix-report-v1.schema.json`](textconformance-benchmark-matrix-report-v1.schema.json) — multi-run benchmark matrix report schema over caller-provided benchmark reports.
 - [`textconformance-benchmark-threshold-policy-v1.schema.json`](textconformance-benchmark-threshold-policy-v1.schema.json) — benchmark threshold policy schema.
 - [`textconformance-benchmark-threshold-evaluation-v1.schema.json`](textconformance-benchmark-threshold-evaluation-v1.schema.json) — benchmark threshold evaluation schema.
 - [`textlab-external-tool-execution-report-v1.schema.json`](textlab-external-tool-execution-report-v1.schema.json) — bounded external tool execution report schema for textlab command specs.

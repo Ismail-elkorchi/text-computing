@@ -2,6 +2,7 @@
 import { readFile, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
+  createTextConformanceBenchmarkMatrixReport,
   diffTextConformanceReports,
   evaluateTextConformanceBenchmarkThresholds,
   isTextConformanceBenchmarkReportV1,
@@ -10,6 +11,7 @@ import {
   isTextConformanceReportV1,
   isTextConformanceSuiteV1,
   isTextConformanceSuiteTargetProbeV1,
+  renderTextConformanceBenchmarkMatrixMarkdown,
   renderTextConformanceBenchmarkThresholdEvaluationMarkdown,
   renderTextConformanceReportMarkdown,
   runTextConformanceBenchmark,
@@ -18,6 +20,8 @@ import {
   validateTextConformanceCapabilityRegistry,
 } from "./index.js";
 import type {
+  TextConformanceBenchmarkMatrixInput,
+  TextConformanceBenchmarkMatrixOptions,
   TextConformanceSuiteTargetProbeV1,
   TextConformanceSuiteV1,
 } from "./index.js";
@@ -43,6 +47,50 @@ function isSuiteCatalog(value: unknown): value is { readonly suites: readonly un
     !Array.isArray(value) &&
     Array.isArray((value as { readonly suites?: unknown }).suites)
   );
+}
+
+function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isStringArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.every((entry) => typeof entry === "string" && entry.length > 0);
+}
+
+function benchmarkMatrixPayloadToRequest(value: unknown): {
+  readonly inputs: readonly TextConformanceBenchmarkMatrixInput[];
+  readonly options: TextConformanceBenchmarkMatrixOptions;
+} {
+  const defaultLimitations = [
+    "Benchmark matrix uses caller-provided benchmark reports and does not provision benchmark hosts.",
+  ];
+  if (Array.isArray(value)) {
+    return {
+      inputs: value.map((report, index) => ({ runId: `run:${index}`, report })) as readonly TextConformanceBenchmarkMatrixInput[],
+      options: { limitations: defaultLimitations },
+    };
+  }
+  if (!isRecord(value)) {
+    throw new TypeError("benchmark matrix payload must be an array or record");
+  }
+  const rawInputs = Array.isArray(value.inputs)
+    ? value.inputs
+    : Array.isArray(value.reports)
+      ? value.reports.map((report, index) => ({ runId: `run:${index}`, report }))
+      : undefined;
+  if (rawInputs === undefined) {
+    throw new TypeError("benchmark matrix payload must provide inputs or reports");
+  }
+  return {
+    inputs: rawInputs as readonly TextConformanceBenchmarkMatrixInput[],
+    options: {
+      ...(typeof value.matrixId === "string" ? { matrixId: value.matrixId } : {}),
+      ...(typeof value.generatedAt === "string" ? { generatedAt: value.generatedAt } : {}),
+      ...(isStringArray(value.evidenceRefs) ? { evidenceRefs: value.evidenceRefs } : {}),
+      limitations: isStringArray(value.limitations) ? value.limitations : defaultLimitations,
+      ...(isStringArray(value.notes) ? { notes: value.notes } : {}),
+    },
+  };
 }
 
 function targetProbePayloadToArray(value: unknown): readonly unknown[] {
@@ -242,6 +290,7 @@ function usage(): TextConformanceCliResult {
       "  textconformance validate-suite <suite.json>",
       "  textconformance run-suite <suite.json> [--target-root <repo>] [--target-results <targets.json>]",
       "  textconformance run-benchmark <suite.json> [--target-root <repo>] [--target-results <targets.json>] [--iterations <n>] [--warmup <n>]",
+      "  textconformance benchmark-matrix <matrix-input.json> [--markdown]",
       "  textconformance evaluate-benchmark <benchmark-report.json> <threshold-policy.json> [--markdown]",
       "  textconformance validate-capability-registry <registry.json>",
       "",
@@ -369,6 +418,17 @@ export async function runTextConformanceCli(args: readonly string[]): Promise<Te
         stdout: markdown
           ? renderTextConformanceBenchmarkThresholdEvaluationMarkdown(evaluation)
           : jsonLine(evaluation),
+        stderr: "",
+      };
+    }
+    if (command === "benchmark-matrix" && first !== undefined) {
+      const markdown = second === "--markdown";
+      if (args.length > (markdown ? 3 : 2)) return usage();
+      const payload = benchmarkMatrixPayloadToRequest(await readJson(first));
+      const matrix = createTextConformanceBenchmarkMatrixReport(payload.inputs, payload.options);
+      return {
+        exitCode: 0,
+        stdout: markdown ? renderTextConformanceBenchmarkMatrixMarkdown(matrix) : jsonLine(matrix),
         stderr: "",
       };
     }

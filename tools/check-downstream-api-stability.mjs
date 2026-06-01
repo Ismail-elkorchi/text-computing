@@ -646,6 +646,33 @@ async function assertBuiltPackageSmoke() {
     "textconformance built API should calibrate benchmark reports across declared hosts.",
     benchmarkCalibration,
   );
+  const benchmarkMatrix = textconformance.createTextConformanceBenchmarkMatrixReport(
+    [
+      { runId: "downstream-host-a-run", host: { hostId: "downstream-host-a" }, report: benchmarkReport },
+      {
+        runId: "downstream-host-b-run",
+        host: { hostId: "downstream-host-b" },
+        report: {
+          ...benchmarkReport,
+          generatedAt: "1970-01-02T00:00:00.000Z",
+          evidenceRefs: [ARTIFACT_PATH],
+          metrics: benchmarkReport.metrics.filter((metric) => metric.metricId !== "downstream-api-smoke.duration-ms.max"),
+        },
+      },
+    ],
+    {
+      matrixId: "matrix:downstream-api-stability",
+      generatedAt: "1970-01-03T00:00:00.000Z",
+      limitations: ["Downstream smoke matrix over caller-provided benchmark reports."],
+    },
+  );
+  expect(
+    textconformance.isTextConformanceBenchmarkMatrixReportV1(benchmarkMatrix) &&
+      benchmarkMatrix.summary.incomplete === 1 &&
+      textconformance.renderTextConformanceBenchmarkMatrixMarkdown(benchmarkMatrix).includes("matrix:downstream-api-stability"),
+    "textconformance built API should create benchmark matrix reports over caller-provided report runs.",
+    benchmarkMatrix,
+  );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(
     benchmarkInspection.metricCount === 4 &&
