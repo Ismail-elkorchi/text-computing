@@ -1,5 +1,6 @@
 import {
   diffTextConformanceReports,
+  isTextConformanceBenchmarkReportV1,
   isTextConformanceReportV1,
   type TextConformanceReportDiffV1,
 } from "@ismail-elkorchi/textconformance";
@@ -216,6 +217,24 @@ export interface TextlabConformanceDiffInspection {
   readonly added: number;
   readonly removed: number;
   readonly changedCheckIds: readonly string[];
+}
+
+export interface TextlabBenchmarkMetricInspectionRow {
+  readonly metricId: string;
+  readonly value: number;
+  readonly unit: string;
+  readonly preference: "higher" | "lower" | "unspecified";
+}
+
+export interface TextlabBenchmarkReportInspection {
+  readonly schemaVersion: 1;
+  readonly benchmarkId: string;
+  readonly subject: string;
+  readonly metricCount: number;
+  readonly evidenceRefCount: number;
+  readonly limitationCount: number;
+  readonly noteCount: number;
+  readonly metrics: readonly TextlabBenchmarkMetricInspectionRow[];
 }
 
 export interface TextlabRetrievalQrelsInspection {
@@ -939,6 +958,59 @@ export function renderConformanceDiffInspection(
     "",
     "## Changed checks",
     ...inspection.changedCheckIds.map((entry) => `- ${entry}`),
+    "",
+  ].join("\n");
+}
+
+export function inspectTextConformanceBenchmarkReport(
+  value: unknown,
+): TextlabBenchmarkReportInspection {
+  if (!isTextConformanceBenchmarkReportV1(value)) {
+    throw new TypeError("benchmark report is invalid");
+  }
+  const metrics = [...value.metrics].sort((left, right) =>
+    left.metricId.localeCompare(right.metricId),
+  );
+  return {
+    schemaVersion: 1,
+    benchmarkId: value.benchmarkId,
+    subject: `${value.subject.kind}:${value.subject.id}`,
+    metricCount: metrics.length,
+    evidenceRefCount: value.evidenceRefs.length,
+    limitationCount: value.limitations.length,
+    noteCount: value.notes?.length ?? 0,
+    metrics: metrics.map((metric) => ({
+      metricId: metric.metricId,
+      value: metric.value,
+      unit: metric.unit,
+      preference:
+        metric.higherIsPreferred === undefined
+          ? "unspecified"
+          : metric.higherIsPreferred
+            ? "higher"
+            : "lower",
+    })),
+  };
+}
+
+export function renderTextConformanceBenchmarkReportInspection(
+  inspection: TextlabBenchmarkReportInspection,
+): string {
+  return [
+    "# textlab benchmark report inspection",
+    "",
+    `Benchmark: ${inspection.benchmarkId}`,
+    `Subject: ${inspection.subject}`,
+    `Metrics: ${inspection.metricCount}`,
+    `Evidence refs: ${inspection.evidenceRefCount}`,
+    `Limitations: ${inspection.limitationCount}`,
+    `Notes: ${inspection.noteCount}`,
+    "",
+    "## Metrics",
+    ...inspection.metrics.map(
+      (metric) =>
+        `- ${metric.metricId}: ${metric.value} ${metric.unit} (preference=${metric.preference})`,
+    ),
     "",
   ].join("\n");
 }

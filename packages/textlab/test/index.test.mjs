@@ -27,6 +27,7 @@ import {
   inspectTextPipelineTrace,
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
+  inspectTextConformanceBenchmarkReport,
   packageName,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
@@ -46,6 +47,7 @@ import {
   renderTextPipelineTraceInspection,
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
+  renderTextConformanceBenchmarkReportInspection,
   summarizeConformanceReport,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
@@ -150,6 +152,62 @@ if (
 
 if (!renderConformanceDiffInspection(conformanceDiff).includes("Changed: 1")) {
   throw new Error("conformance diff renderer should include changed count");
+}
+
+const benchmarkReport = {
+  schemaId: "urn:ismail-elkorchi:textconformance:benchmark-report:v1",
+  schemaVersion: 1,
+  benchmarkId: "benchmark:textlab-inspection",
+  subject: {
+    kind: "package",
+    id: "@ismail-elkorchi/textlab",
+    version: "0.1.0",
+  },
+  generatedAt: "2026-05-31T00:00:00.000Z",
+  metrics: [
+    {
+      metricId: "throughput-docs-per-second",
+      value: 42,
+      unit: "docs/s",
+      higherIsPreferred: true,
+    },
+    {
+      metricId: "latency-ms",
+      value: 12,
+      unit: "ms",
+      higherIsPreferred: false,
+    },
+  ],
+  evidenceRefs: ["packages/textlab/test/index.test.mjs#benchmark"],
+  limitations: ["Synthetic benchmark report fixture; it is not a conformance result."],
+  notes: ["Used to verify textlab benchmark report inspection only."],
+};
+const benchmarkInspection = inspectTextConformanceBenchmarkReport(benchmarkReport);
+if (
+  benchmarkInspection.benchmarkId !== "benchmark:textlab-inspection" ||
+  benchmarkInspection.subject !== "package:@ismail-elkorchi/textlab" ||
+  benchmarkInspection.metricCount !== 2 ||
+  benchmarkInspection.metrics[0]?.metricId !== "latency-ms" ||
+  benchmarkInspection.metrics[0]?.preference !== "lower" ||
+  benchmarkInspection.metrics[1]?.preference !== "higher"
+) {
+  throw new Error("benchmark report inspection should expose deterministic metric rows");
+}
+if (
+  !renderTextConformanceBenchmarkReportInspection(benchmarkInspection).includes(
+    "preference=lower",
+  )
+) {
+  throw new Error("benchmark report renderer should include metric preference");
+}
+let invalidBenchmarkRejected = false;
+try {
+  inspectTextConformanceBenchmarkReport(conformanceReport);
+} catch (error) {
+  invalidBenchmarkRejected = error instanceof TypeError && error.message === "benchmark report is invalid";
+}
+if (!invalidBenchmarkRejected) {
+  throw new Error("benchmark report inspection should reject conformance reports");
 }
 
 const packageManifest = {
@@ -1103,6 +1161,8 @@ const corpusPath = path.join(dir, "corpus-fixture.json");
 await writeFile(corpusPath, `${JSON.stringify(corpusFixture, null, 2)}\n`, "utf8");
 const changedReportPath = path.join(dir, "conformance-report-actual.json");
 await writeFile(changedReportPath, `${JSON.stringify(changedConformanceReport, null, 2)}\n`, "utf8");
+const benchmarkReportPath = path.join(dir, "benchmark-report.json");
+await writeFile(benchmarkReportPath, `${JSON.stringify(benchmarkReport, null, 2)}\n`, "utf8");
 const packagePath = path.join(dir, "package.json");
 await writeFile(packagePath, `${JSON.stringify(packageManifest, null, 2)}\n`, "utf8");
 const packPath = path.join(dir, "textpack.manifest.json");
@@ -1147,6 +1207,25 @@ if (conformanceDiffCliResult.exitCode !== 0 || conformanceDiffCliResult.stderr !
 
 if (!conformanceDiffCliResult.stdout.includes("Removed: 1")) {
   throw new Error("conformance-diff CLI should render removed check counts");
+}
+
+const benchmarkReportCliResult = await runTextlabCli(["benchmark-report", benchmarkReportPath]);
+
+if (benchmarkReportCliResult.exitCode !== 0 || benchmarkReportCliResult.stderr !== "") {
+  throw new Error(`benchmark-report CLI should pass: ${benchmarkReportCliResult.stderr}`);
+}
+
+if (!benchmarkReportCliResult.stdout.includes("Benchmark: benchmark:textlab-inspection")) {
+  throw new Error("benchmark-report CLI should render benchmark identity");
+}
+
+const benchmarkReportJsonCliResult = await runTextlabCli(["benchmark-report", benchmarkReportPath, "--json"]);
+
+if (
+  benchmarkReportJsonCliResult.exitCode !== 0 ||
+  JSON.parse(benchmarkReportJsonCliResult.stdout).metrics[0].metricId !== "latency-ms"
+) {
+  throw new Error("benchmark-report CLI should support stable JSON output");
 }
 
 const packageCliResult = await runTextlabCli(["package", packagePath]);
