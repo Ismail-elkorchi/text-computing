@@ -43,6 +43,16 @@ metric rows without provisioning hosts.
 Use `createTextConformanceBenchmarkMatrixReport()` to summarize caller-provided
 benchmark reports across runs, benchmark ids, subjects, optional hosts, and
 metric coverage without provisioning hosts.
+Use `createTextConformanceBenchmarkReportEnvelope()`,
+`createTextConformanceBenchmarkCalibrationReportEnvelope()`,
+`createTextConformanceBenchmarkMatrixReportEnvelope()`,
+`createTextConformanceBenchmarkThresholdPolicyEnvelope()`, and
+`createTextConformanceBenchmarkThresholdEvaluationEnvelope()` to wrap benchmark
+artifacts in `textprotocol` result envelopes with registered payload kinds,
+producer metadata, evidence provenance, scope boundary text, and limitations.
+The matching `isTextConformanceBenchmark*EnvelopeV1()` guards validate the
+envelope payload kind, textconformance producer package, and owner payload
+shape.
 
 ## CLI
 
@@ -67,6 +77,9 @@ Runnable repository examples:
   calibrates benchmark reports from declared hosts and prints the resulting cross-host metric summary.
 - [`../../examples/textconformance-benchmark-matrix-consumer.mjs`](../../examples/textconformance-benchmark-matrix-consumer.mjs)
   builds a deterministic benchmark matrix from caller-provided benchmark reports and declared hosts.
+- [`../../examples/textconformance-benchmark-protocol-envelope-consumer.mjs`](../../examples/textconformance-benchmark-protocol-envelope-consumer.mjs)
+  wraps benchmark reports, threshold policies, threshold evaluations, calibration reports, and matrix reports in
+  textprotocol result envelopes.
 
 ## Report diff and capability registry
 

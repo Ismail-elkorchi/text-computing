@@ -8,13 +8,24 @@ import {
   conformanceCapabilityRegistrySchemaVersion,
   conformanceSuiteSchemaId,
   conformanceSuiteSchemaVersion,
+  createTextConformanceBenchmarkCalibrationReportEnvelope,
+  createTextConformanceBenchmarkMatrixReportEnvelope,
   createTextConformanceBenchmarkMatrixReport,
+  createTextConformanceBenchmarkReportEnvelope,
+  createTextConformanceBenchmarkThresholdEvaluationEnvelope,
+  createTextConformanceBenchmarkThresholdPolicyEnvelope,
   diffTextConformanceReports,
   evaluateTextConformanceBenchmarkThresholds,
+  isTextConformanceBenchmarkArtifactEnvelopeV1,
+  isTextConformanceBenchmarkCalibrationReportEnvelopeV1,
   isTextConformanceBenchmarkCalibrationReportV1,
+  isTextConformanceBenchmarkMatrixReportEnvelopeV1,
   isTextConformanceBenchmarkMatrixReportV1,
+  isTextConformanceBenchmarkReportEnvelopeV1,
   isTextConformanceBenchmarkReportV1,
+  isTextConformanceBenchmarkThresholdEvaluationEnvelopeV1,
   isTextConformanceBenchmarkThresholdEvaluationReportV1,
+  isTextConformanceBenchmarkThresholdPolicyEnvelopeV1,
   isTextConformanceBenchmarkThresholdPolicyV1,
   isTextConformanceCapabilityRegistryV1,
   isTextConformanceCapabilityStatementV1,
@@ -34,6 +45,11 @@ import {
   runTextConformanceSuite,
   runTextConformanceSuiteTargetChecks,
   runTextConformanceSuiteWithTargets,
+  textConformanceBenchmarkCalibrationReportPayloadKind,
+  textConformanceBenchmarkMatrixReportPayloadKind,
+  textConformanceBenchmarkReportPayloadKind,
+  textConformanceBenchmarkThresholdEvaluationPayloadKind,
+  textConformanceBenchmarkThresholdPolicyPayloadKind,
   validateTextConformanceCapabilityRegistry,
   validateTextConformanceFixturePolicy,
 } from "../src/index.ts";
@@ -805,6 +821,86 @@ if (
   !renderedBenchmarkMatrix.includes("| benchmark:textconformance-suite-runner | package:@ismail-elkorchi/textconformance | suite-runner.host-a-only | incomplete | 1 | macos-run |")
 ) {
   throw new Error("benchmark matrix renderer should expose matrix summary and missing runs");
+}
+
+const benchmarkReportEnvelope = createTextConformanceBenchmarkReportEnvelope(
+  executedBenchmarkReport,
+  "0.1.0",
+);
+const benchmarkThresholdPolicyEnvelope = createTextConformanceBenchmarkThresholdPolicyEnvelope(
+  benchmarkThresholdPolicy,
+  "0.1.0",
+);
+const benchmarkThresholdEvaluationEnvelope = createTextConformanceBenchmarkThresholdEvaluationEnvelope(
+  benchmarkThresholdEvaluation,
+  "0.1.0",
+);
+const benchmarkCalibrationEnvelope = createTextConformanceBenchmarkCalibrationReportEnvelope(
+  benchmarkCalibration,
+  "0.1.0",
+);
+const benchmarkMatrixEnvelope = createTextConformanceBenchmarkMatrixReportEnvelope(
+  benchmarkMatrix,
+  "0.1.0",
+  {
+    scopeBoundary: "Unit test benchmark matrix envelope for protocol exchange.",
+    limitations: ["Unit test matrix envelope over caller-provided benchmark reports."],
+  },
+);
+const benchmarkEnvelopePayloadKinds = [
+  benchmarkReportEnvelope.payloadKind,
+  benchmarkCalibrationEnvelope.payloadKind,
+  benchmarkMatrixEnvelope.payloadKind,
+  benchmarkThresholdPolicyEnvelope.payloadKind,
+  benchmarkThresholdEvaluationEnvelope.payloadKind,
+].join(",");
+if (
+  benchmarkEnvelopePayloadKinds !==
+    [
+      textConformanceBenchmarkReportPayloadKind,
+      textConformanceBenchmarkCalibrationReportPayloadKind,
+      textConformanceBenchmarkMatrixReportPayloadKind,
+      textConformanceBenchmarkThresholdPolicyPayloadKind,
+      textConformanceBenchmarkThresholdEvaluationPayloadKind,
+    ].join(",") ||
+  !isTextConformanceBenchmarkReportEnvelopeV1(benchmarkReportEnvelope) ||
+  !isTextConformanceBenchmarkCalibrationReportEnvelopeV1(benchmarkCalibrationEnvelope) ||
+  !isTextConformanceBenchmarkMatrixReportEnvelopeV1(benchmarkMatrixEnvelope) ||
+  !isTextConformanceBenchmarkThresholdPolicyEnvelopeV1(benchmarkThresholdPolicyEnvelope) ||
+  !isTextConformanceBenchmarkThresholdEvaluationEnvelopeV1(benchmarkThresholdEvaluationEnvelope) ||
+  !isTextConformanceBenchmarkArtifactEnvelopeV1(benchmarkMatrixEnvelope) ||
+  benchmarkReportEnvelope.provenance?.references?.[0]?.id !==
+    "packages/textconformance/test/index.test.ts#benchmark-runner" ||
+  benchmarkMatrixEnvelope.scopeBoundary !== "Unit test benchmark matrix envelope for protocol exchange." ||
+  benchmarkMatrixEnvelope.limitations?.[0] !==
+    "Unit test matrix envelope over caller-provided benchmark reports."
+) {
+  throw new Error("benchmark artifact envelopes should expose protocol payload kinds and owner guards");
+}
+let invalidBenchmarkEnvelopeRejected = false;
+try {
+  createTextConformanceBenchmarkReportEnvelope(
+    { ...executedBenchmarkReport, metrics: [] },
+    "0.1.0",
+  );
+} catch (error) {
+  invalidBenchmarkEnvelopeRejected =
+    error instanceof TypeError && error.message === "benchmark report is invalid";
+}
+if (!invalidBenchmarkEnvelopeRejected) {
+  throw new Error("benchmark report envelope should reject invalid benchmark reports");
+}
+let invalidBenchmarkEnvelopeMetadataRejected = false;
+try {
+  createTextConformanceBenchmarkReportEnvelope(executedBenchmarkReport, "0.1.0", {
+    scopeBoundary: "",
+  });
+} catch (error) {
+  invalidBenchmarkEnvelopeMetadataRejected =
+    error instanceof Error && error.message.includes("Result envelope scopeBoundary is invalid.");
+}
+if (!invalidBenchmarkEnvelopeMetadataRejected) {
+  throw new Error("benchmark report envelope should reject invalid result-envelope metadata");
 }
 let duplicateBenchmarkMatrixRunRejected = false;
 try {

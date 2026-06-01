@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+
+- Add textprotocol result-envelope helpers for benchmark reports, calibration reports, matrix reports, threshold policies, and threshold evaluations.
+
 ## 0.1.0
 
 - Add benchmark matrix reports and CLI output over caller-provided benchmark reports.

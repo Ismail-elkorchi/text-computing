@@ -1,3 +1,18 @@
+import {
+  checkTextProtocolResultEnvelopeCompatibility,
+  isTextProtocolResultEnvelopeForPayloadKind,
+  resultEnvelopeSchemaId,
+  resultEnvelopeSchemaVersion,
+  textProtocolPayloadKindTextconformanceBenchmarkCalibrationReportV1,
+  textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1,
+  textProtocolPayloadKindTextconformanceBenchmarkReportV1,
+  textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1,
+  textProtocolPayloadKindTextconformanceBenchmarkThresholdPolicyV1,
+  type TextProtocolDiagnostic,
+  type TextProtocolProvenance,
+  type TextProtocolResultEnvelopeV1,
+} from "@ismail-elkorchi/textprotocol";
+
 export const packageName = "@ismail-elkorchi/textconformance" as const;
 export const conformanceReportSchemaId =
   "urn:ismail-elkorchi:textconformance:report:v1" as const;
@@ -14,6 +29,16 @@ export const conformanceBenchmarkCalibrationReportSchemaVersion = 1 as const;
 export const conformanceBenchmarkMatrixReportSchemaVersion = 1 as const;
 export const conformanceBenchmarkThresholdPolicySchemaVersion = 1 as const;
 export const conformanceBenchmarkThresholdEvaluationSchemaVersion = 1 as const;
+export const textConformanceBenchmarkReportPayloadKind =
+  textProtocolPayloadKindTextconformanceBenchmarkReportV1;
+export const textConformanceBenchmarkCalibrationReportPayloadKind =
+  textProtocolPayloadKindTextconformanceBenchmarkCalibrationReportV1;
+export const textConformanceBenchmarkMatrixReportPayloadKind =
+  textProtocolPayloadKindTextconformanceBenchmarkMatrixReportV1;
+export const textConformanceBenchmarkThresholdPolicyPayloadKind =
+  textProtocolPayloadKindTextconformanceBenchmarkThresholdPolicyV1;
+export const textConformanceBenchmarkThresholdEvaluationPayloadKind =
+  textProtocolPayloadKindTextconformanceBenchmarkThresholdEvaluationV1;
 
 export type PackageName = typeof packageName;
 export type TextConformanceReportSchemaId = typeof conformanceReportSchemaId;
@@ -36,6 +61,58 @@ export type TextConformanceBenchmarkThresholdPolicySchemaVersion =
   typeof conformanceBenchmarkThresholdPolicySchemaVersion;
 export type TextConformanceBenchmarkThresholdEvaluationSchemaVersion =
   typeof conformanceBenchmarkThresholdEvaluationSchemaVersion;
+export type TextConformanceBenchmarkReportPayloadKind =
+  typeof textConformanceBenchmarkReportPayloadKind;
+export type TextConformanceBenchmarkCalibrationReportPayloadKind =
+  typeof textConformanceBenchmarkCalibrationReportPayloadKind;
+export type TextConformanceBenchmarkMatrixReportPayloadKind =
+  typeof textConformanceBenchmarkMatrixReportPayloadKind;
+export type TextConformanceBenchmarkThresholdPolicyPayloadKind =
+  typeof textConformanceBenchmarkThresholdPolicyPayloadKind;
+export type TextConformanceBenchmarkThresholdEvaluationPayloadKind =
+  typeof textConformanceBenchmarkThresholdEvaluationPayloadKind;
+export type TextConformanceBenchmarkPayloadKind =
+  | TextConformanceBenchmarkReportPayloadKind
+  | TextConformanceBenchmarkCalibrationReportPayloadKind
+  | TextConformanceBenchmarkMatrixReportPayloadKind
+  | TextConformanceBenchmarkThresholdPolicyPayloadKind
+  | TextConformanceBenchmarkThresholdEvaluationPayloadKind;
+export type TextConformanceBenchmarkReportEnvelopeV1 = TextProtocolResultEnvelopeV1<
+  TextConformanceBenchmarkReportV1,
+  TextConformanceBenchmarkReportPayloadKind
+>;
+export type TextConformanceBenchmarkCalibrationReportEnvelopeV1 =
+  TextProtocolResultEnvelopeV1<
+    TextConformanceBenchmarkCalibrationReportV1,
+    TextConformanceBenchmarkCalibrationReportPayloadKind
+  >;
+export type TextConformanceBenchmarkMatrixReportEnvelopeV1 =
+  TextProtocolResultEnvelopeV1<
+    TextConformanceBenchmarkMatrixReportV1,
+    TextConformanceBenchmarkMatrixReportPayloadKind
+  >;
+export type TextConformanceBenchmarkThresholdPolicyEnvelopeV1 =
+  TextProtocolResultEnvelopeV1<
+    TextConformanceBenchmarkThresholdPolicyV1,
+    TextConformanceBenchmarkThresholdPolicyPayloadKind
+  >;
+export type TextConformanceBenchmarkThresholdEvaluationEnvelopeV1 =
+  TextProtocolResultEnvelopeV1<
+    TextConformanceBenchmarkThresholdEvaluationReportV1,
+    TextConformanceBenchmarkThresholdEvaluationPayloadKind
+  >;
+export type TextConformanceBenchmarkArtifactV1 =
+  | TextConformanceBenchmarkReportV1
+  | TextConformanceBenchmarkCalibrationReportV1
+  | TextConformanceBenchmarkMatrixReportV1
+  | TextConformanceBenchmarkThresholdPolicyV1
+  | TextConformanceBenchmarkThresholdEvaluationReportV1;
+export type TextConformanceBenchmarkArtifactEnvelopeV1 =
+  | TextConformanceBenchmarkReportEnvelopeV1
+  | TextConformanceBenchmarkCalibrationReportEnvelopeV1
+  | TextConformanceBenchmarkMatrixReportEnvelopeV1
+  | TextConformanceBenchmarkThresholdPolicyEnvelopeV1
+  | TextConformanceBenchmarkThresholdEvaluationEnvelopeV1;
 
 export type TextConformanceCheckStatus = "pass" | "fail" | "not-run";
 export type TextConformanceReportDiffStatus = "same" | "changed" | "added" | "removed";
@@ -423,6 +500,13 @@ export interface TextConformanceBenchmarkThresholdEvaluationReportV1 {
 export interface TextConformanceBenchmarkThresholdEvaluationOptions {
   readonly generatedAt?: string;
   readonly notes?: readonly string[];
+}
+
+export interface TextConformanceBenchmarkEnvelopeMetadata {
+  readonly provenance?: TextProtocolProvenance;
+  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly scopeBoundary?: string;
+  readonly limitations?: readonly string[];
 }
 
 export type TextConformanceBenchmarkPhase = "warmup" | "measurement";
@@ -1314,6 +1398,232 @@ export function isTextConformanceBenchmarkThresholdEvaluationReportV1(
     isNonEmptyStringArray(value.evidenceRefs) &&
     isNonEmptyStringArray(value.limitations) &&
     (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+type TextConformanceBenchmarkArtifactGuard<TPayload extends TextConformanceBenchmarkArtifactV1> = (
+  value: unknown,
+) => value is TPayload;
+
+function benchmarkEnvelopeCompatibilityMessage(
+  diagnostics: readonly TextProtocolDiagnostic[],
+): string {
+  return diagnostics.map((entry) => entry.message ?? entry.code).join("; ");
+}
+
+function benchmarkEnvelopeDefaultProvenance(
+  artifact: TextConformanceBenchmarkArtifactV1,
+): TextProtocolProvenance {
+  return {
+    references: sortedUniqueStrings(artifact.evidenceRefs).map((ref) => ({
+      kind: "evidence",
+      id: ref,
+    })),
+  };
+}
+
+function benchmarkEnvelopeDefaultScopeBoundary(payloadKind: TextConformanceBenchmarkPayloadKind): string {
+  return `${payloadKind} is a textconformance benchmark artifact payload; benchmark metrics are not conformance pass/fail results.`;
+}
+
+function createTextConformanceBenchmarkArtifactEnvelope<
+  TPayload extends TextConformanceBenchmarkArtifactV1,
+  TPayloadKind extends TextConformanceBenchmarkPayloadKind,
+>(
+  artifact: unknown,
+  payloadKind: TPayloadKind,
+  guard: TextConformanceBenchmarkArtifactGuard<TPayload>,
+  producerVersion: string,
+  metadata: TextConformanceBenchmarkEnvelopeMetadata,
+  artifactName: string,
+): TextProtocolResultEnvelopeV1<TPayload, TPayloadKind> {
+  if (!guard(artifact)) {
+    throw new TypeError(`${artifactName} is invalid`);
+  }
+  if (!isNonEmptyString(producerVersion)) {
+    throw new TypeError("producerVersion must be a non-empty string");
+  }
+  if (!isRecord(metadata)) {
+    throw new TypeError("benchmark envelope metadata must be a record");
+  }
+  const envelopeMetadata = metadata as TextConformanceBenchmarkEnvelopeMetadata;
+  const envelope: TextProtocolResultEnvelopeV1<TPayload, TPayloadKind> = {
+    schemaId: resultEnvelopeSchemaId,
+    schemaVersion: resultEnvelopeSchemaVersion,
+    producer: {
+      package: packageName,
+      version: producerVersion,
+    },
+    payloadKind,
+    payload: artifact,
+    provenance: envelopeMetadata.provenance ?? benchmarkEnvelopeDefaultProvenance(artifact),
+    ...(envelopeMetadata.diagnostics === undefined ? {} : { diagnostics: envelopeMetadata.diagnostics }),
+    scopeBoundary:
+      envelopeMetadata.scopeBoundary ?? benchmarkEnvelopeDefaultScopeBoundary(payloadKind),
+    limitations: envelopeMetadata.limitations ?? artifact.limitations,
+  };
+  const compatibility = checkTextProtocolResultEnvelopeCompatibility(envelope, {
+    expectedPayloadKind: payloadKind,
+    expectedProducerPackage: packageName,
+    requireProvenance: true,
+    requireScopeBoundary: true,
+    requireLimitations: true,
+  });
+  if (!compatibility.ok) {
+    throw new Error(benchmarkEnvelopeCompatibilityMessage(compatibility.diagnostics));
+  }
+  return envelope;
+}
+
+function isTextConformanceBenchmarkArtifactEnvelopeWithPayload<
+  TPayload extends TextConformanceBenchmarkArtifactV1,
+  TPayloadKind extends TextConformanceBenchmarkPayloadKind,
+>(
+  value: unknown,
+  payloadKind: TPayloadKind,
+  guard: TextConformanceBenchmarkArtifactGuard<TPayload>,
+): value is TextProtocolResultEnvelopeV1<TPayload, TPayloadKind> {
+  return (
+    isTextProtocolResultEnvelopeForPayloadKind(value, payloadKind) &&
+    value.producer.package === packageName &&
+    guard(value.payload)
+  );
+}
+
+export function createTextConformanceBenchmarkReportEnvelope(
+  report: unknown,
+  producerVersion: string,
+  metadata: TextConformanceBenchmarkEnvelopeMetadata = {},
+): TextConformanceBenchmarkReportEnvelopeV1 {
+  return createTextConformanceBenchmarkArtifactEnvelope(
+    report,
+    textConformanceBenchmarkReportPayloadKind,
+    isTextConformanceBenchmarkReportV1,
+    producerVersion,
+    metadata,
+    "benchmark report",
+  );
+}
+
+export function isTextConformanceBenchmarkReportEnvelopeV1(
+  value: unknown,
+): value is TextConformanceBenchmarkReportEnvelopeV1 {
+  return isTextConformanceBenchmarkArtifactEnvelopeWithPayload(
+    value,
+    textConformanceBenchmarkReportPayloadKind,
+    isTextConformanceBenchmarkReportV1,
+  );
+}
+
+export function createTextConformanceBenchmarkCalibrationReportEnvelope(
+  report: unknown,
+  producerVersion: string,
+  metadata: TextConformanceBenchmarkEnvelopeMetadata = {},
+): TextConformanceBenchmarkCalibrationReportEnvelopeV1 {
+  return createTextConformanceBenchmarkArtifactEnvelope(
+    report,
+    textConformanceBenchmarkCalibrationReportPayloadKind,
+    isTextConformanceBenchmarkCalibrationReportV1,
+    producerVersion,
+    metadata,
+    "benchmark calibration report",
+  );
+}
+
+export function isTextConformanceBenchmarkCalibrationReportEnvelopeV1(
+  value: unknown,
+): value is TextConformanceBenchmarkCalibrationReportEnvelopeV1 {
+  return isTextConformanceBenchmarkArtifactEnvelopeWithPayload(
+    value,
+    textConformanceBenchmarkCalibrationReportPayloadKind,
+    isTextConformanceBenchmarkCalibrationReportV1,
+  );
+}
+
+export function createTextConformanceBenchmarkMatrixReportEnvelope(
+  report: unknown,
+  producerVersion: string,
+  metadata: TextConformanceBenchmarkEnvelopeMetadata = {},
+): TextConformanceBenchmarkMatrixReportEnvelopeV1 {
+  return createTextConformanceBenchmarkArtifactEnvelope(
+    report,
+    textConformanceBenchmarkMatrixReportPayloadKind,
+    isTextConformanceBenchmarkMatrixReportV1,
+    producerVersion,
+    metadata,
+    "benchmark matrix report",
+  );
+}
+
+export function isTextConformanceBenchmarkMatrixReportEnvelopeV1(
+  value: unknown,
+): value is TextConformanceBenchmarkMatrixReportEnvelopeV1 {
+  return isTextConformanceBenchmarkArtifactEnvelopeWithPayload(
+    value,
+    textConformanceBenchmarkMatrixReportPayloadKind,
+    isTextConformanceBenchmarkMatrixReportV1,
+  );
+}
+
+export function createTextConformanceBenchmarkThresholdPolicyEnvelope(
+  policy: unknown,
+  producerVersion: string,
+  metadata: TextConformanceBenchmarkEnvelopeMetadata = {},
+): TextConformanceBenchmarkThresholdPolicyEnvelopeV1 {
+  return createTextConformanceBenchmarkArtifactEnvelope(
+    policy,
+    textConformanceBenchmarkThresholdPolicyPayloadKind,
+    isTextConformanceBenchmarkThresholdPolicyV1,
+    producerVersion,
+    metadata,
+    "benchmark threshold policy",
+  );
+}
+
+export function isTextConformanceBenchmarkThresholdPolicyEnvelopeV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdPolicyEnvelopeV1 {
+  return isTextConformanceBenchmarkArtifactEnvelopeWithPayload(
+    value,
+    textConformanceBenchmarkThresholdPolicyPayloadKind,
+    isTextConformanceBenchmarkThresholdPolicyV1,
+  );
+}
+
+export function createTextConformanceBenchmarkThresholdEvaluationEnvelope(
+  evaluation: unknown,
+  producerVersion: string,
+  metadata: TextConformanceBenchmarkEnvelopeMetadata = {},
+): TextConformanceBenchmarkThresholdEvaluationEnvelopeV1 {
+  return createTextConformanceBenchmarkArtifactEnvelope(
+    evaluation,
+    textConformanceBenchmarkThresholdEvaluationPayloadKind,
+    isTextConformanceBenchmarkThresholdEvaluationReportV1,
+    producerVersion,
+    metadata,
+    "benchmark threshold evaluation",
+  );
+}
+
+export function isTextConformanceBenchmarkThresholdEvaluationEnvelopeV1(
+  value: unknown,
+): value is TextConformanceBenchmarkThresholdEvaluationEnvelopeV1 {
+  return isTextConformanceBenchmarkArtifactEnvelopeWithPayload(
+    value,
+    textConformanceBenchmarkThresholdEvaluationPayloadKind,
+    isTextConformanceBenchmarkThresholdEvaluationReportV1,
+  );
+}
+
+export function isTextConformanceBenchmarkArtifactEnvelopeV1(
+  value: unknown,
+): value is TextConformanceBenchmarkArtifactEnvelopeV1 {
+  return (
+    isTextConformanceBenchmarkReportEnvelopeV1(value) ||
+    isTextConformanceBenchmarkCalibrationReportEnvelopeV1(value) ||
+    isTextConformanceBenchmarkMatrixReportEnvelopeV1(value) ||
+    isTextConformanceBenchmarkThresholdPolicyEnvelopeV1(value) ||
+    isTextConformanceBenchmarkThresholdEvaluationEnvelopeV1(value)
   );
 }
 

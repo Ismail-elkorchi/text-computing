@@ -9,6 +9,9 @@
   calibrates caller-provided benchmark reports across declared hosts.
 - [`../../../examples/textconformance-benchmark-matrix-consumer.mjs`](../../../examples/textconformance-benchmark-matrix-consumer.mjs)
   builds a deterministic benchmark matrix from caller-provided report runs.
+- [`../../../examples/textconformance-benchmark-protocol-envelope-consumer.mjs`](../../../examples/textconformance-benchmark-protocol-envelope-consumer.mjs)
+  wraps benchmark artifacts in registered textprotocol result envelopes.
 
 The package exposes conformance report, suite-target, benchmark, threshold,
-calibration, and matrix helpers for fixture, consumer, and generated-artifact evidence.
+calibration, matrix, and benchmark artifact envelope helpers for fixture,
+consumer, generated-artifact, and protocol-exchange evidence.
