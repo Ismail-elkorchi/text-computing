@@ -1,6 +1,8 @@
 # @ismail-elkorchi/textconformance examples
 
-Runnable examples are not published yet.
+- [`../../../examples/textconformance-suite-target-consumer.mjs`](../../../examples/textconformance-suite-target-consumer.mjs)
+  runs a target-backed suite through the public package entrypoint and emits a
+  conformance report summary.
 
-The package already exposes the `textconformance-report-v1` contract. Future examples in this
-directory should show fixture-backed conformance reports rather than placeholder package-name usage.
+The package exposes the `textconformance-report-v1` contract plus suite-target
+helpers for fixture, consumer, and generated-artifact evidence.

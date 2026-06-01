@@ -107,6 +107,7 @@
         "packages/textconformance/src/index.ts",
         "schemas/textconformance-suite-v1.schema.json",
         "schemas/textconformance-benchmark-report-v1.schema.json",
+        "examples/textconformance-suite-target-consumer.mjs",
         "fixtures/conformance/package-suites.v1.json",
         "tools/validate-textconformance-suites.mjs",
         "tools/validate-package-readiness.mjs",

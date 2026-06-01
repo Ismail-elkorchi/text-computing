@@ -21,6 +21,12 @@ negative-control fixtures through `validateTextConformanceFixturePolicy()`.
 Use `runTextConformanceDifferentialOracle()` for deterministic JSON comparison
 when expected and actual outputs have an explicit allowed-difference policy.
 
+Use `runTextConformanceSuiteWithTargets()` when a suite needs to verify declared
+package fixtures, external consumer evidence, and generated package artifacts in
+the same conformance report. The target runner keeps those checks in the
+conformance report model; benchmark measurements still belong in benchmark
+reports.
+
 The benchmark report contract is intentionally separate from the conformance
 report contract. Benchmark metrics can be recorded, but benchmark metrics are
 not pass/fail conformance results.
@@ -34,6 +40,7 @@ textconformance validate-report fixtures/reports/nlp-tokenization-sbd/conformanc
 textconformance render-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textconformance diff-reports expected.json actual.json
 textconformance validate-suite fixtures/conformance/package-suites.v1.json
+textconformance run-suite fixtures/conformance/package-suites.v1.json --target-root .
 ```
 
 ## Report diff and capability registry

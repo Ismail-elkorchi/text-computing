@@ -35,6 +35,23 @@
           "ref": "packages/textfacts/package.json"
         }
       ],
+      "targets": [
+        {
+          "targetId": "textfacts-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textfacts/test/node.test.ts"
+        },
+        {
+          "targetId": "textfacts-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textfacts/dist/mod.js"
+        },
+        {
+          "targetId": "textfacts-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "tools/check-downstream-api-stability.mjs"
+        }
+      ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
@@ -96,6 +113,23 @@
           "oracleId": "package-tests",
           "kind": "runtime-guard",
           "ref": "packages/textdoc/package.json"
+        }
+      ],
+      "targets": [
+        {
+          "targetId": "textdoc-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textdoc/test/index.test.ts"
+        },
+        {
+          "targetId": "textdoc-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textdoc/dist/index.js"
+        },
+        {
+          "targetId": "textdoc-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textdoc-document-bundle-consumer.mjs"
         }
       ],
       "checks": [
@@ -161,6 +195,23 @@
           "ref": "packages/textpack/package.json"
         }
       ],
+      "targets": [
+        {
+          "targetId": "textpack-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textpack/test/index.test.ts"
+        },
+        {
+          "targetId": "textpack-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textpack/dist/index.js"
+        },
+        {
+          "targetId": "textpack-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textpack-authoring-consumer.mjs"
+        }
+      ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
@@ -222,6 +273,23 @@
           "oracleId": "package-tests",
           "kind": "runtime-guard",
           "ref": "packages/textrules/package.json"
+        }
+      ],
+      "targets": [
+        {
+          "targetId": "textrules-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textrules/test/index.test.ts"
+        },
+        {
+          "targetId": "textrules-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textrules/dist/index.js"
+        },
+        {
+          "targetId": "textrules-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textrules-textpack-consumer.mjs"
         }
       ],
       "checks": [
@@ -287,6 +355,23 @@
           "ref": "packages/textpipeline/package.json"
         }
       ],
+      "targets": [
+        {
+          "targetId": "textpipeline-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textpipeline/test/index.test.ts"
+        },
+        {
+          "targetId": "textpipeline-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textpipeline/dist/index.js"
+        },
+        {
+          "targetId": "textpipeline-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textpipeline-processor-trace-envelope-consumer.mjs"
+        }
+      ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
@@ -348,6 +433,23 @@
           "oracleId": "package-tests",
           "kind": "runtime-guard",
           "ref": "packages/textcorpus/package.json"
+        }
+      ],
+      "targets": [
+        {
+          "targetId": "textcorpus-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textcorpus/test/index.test.ts"
+        },
+        {
+          "targetId": "textcorpus-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textcorpus/dist/index.js"
+        },
+        {
+          "targetId": "textcorpus-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textcorpus-corpus-metric-envelope-consumer.mjs"
         }
       ],
       "checks": [
@@ -413,6 +515,23 @@
           "ref": "packages/textprotocol/package.json"
         }
       ],
+      "targets": [
+        {
+          "targetId": "textprotocol-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textprotocol/test/index.test.ts"
+        },
+        {
+          "targetId": "textprotocol-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textprotocol/dist/index.js"
+        },
+        {
+          "targetId": "textprotocol-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textprotocol-schema-family-transport-consumer.mjs"
+        }
+      ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
@@ -476,6 +595,23 @@
           "ref": "packages/textconformance/package.json"
         }
       ],
+      "targets": [
+        {
+          "targetId": "textconformance-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textconformance/test/index.test.ts"
+        },
+        {
+          "targetId": "textconformance-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textconformance/dist/index.js"
+        },
+        {
+          "targetId": "textconformance-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textconformance-suite-target-consumer.mjs"
+        }
+      ],
       "checks": [
         {
           "checkId": "package-test-oracle-recorded",
@@ -522,6 +658,14 @@
         {
           "role": "validation",
           "ref": "packages/textlab/test/index.test.mjs"
+        },
+        {
+          "role": "holdout",
+          "ref": "fixtures/package-release/gates.v1.json"
+        },
+        {
+          "role": "negative-control",
+          "ref": "packages/textlab/test/index.test.mjs"
         }
       ],
       "oracles": [
@@ -529,6 +673,23 @@
           "oracleId": "package-tests",
           "kind": "runtime-guard",
           "ref": "packages/textlab/package.json"
+        }
+      ],
+      "targets": [
+        {
+          "targetId": "textlab-package-fixture",
+          "kind": "package-fixture",
+          "ref": "packages/textlab/test/index.test.mjs"
+        },
+        {
+          "targetId": "textlab-generated-artifact",
+          "kind": "generated-package-artifact",
+          "ref": "packages/textlab/dist/index.js"
+        },
+        {
+          "targetId": "textlab-external-consumer",
+          "kind": "external-consumer-project",
+          "ref": "examples/textlab-result-envelope-consumer.mjs"
         }
       ],
       "checks": [

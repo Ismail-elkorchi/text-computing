@@ -186,6 +186,7 @@
         "packages/textconformance/package.json",
         "packages/textconformance/src/index.ts",
         "packages/textconformance/test/index.test.ts",
+        "examples/textconformance-suite-target-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
