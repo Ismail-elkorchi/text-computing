@@ -44,6 +44,7 @@ export const coreferenceRevision = "coreference-v1" as const;
 const textRulesConformanceReportSchemaId =
   "urn:ismail-elkorchi:textconformance:report:v1" as const;
 const textRulesConformanceReportSchemaVersion = 1 as const;
+export const textRulesCorpusEvaluationSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
@@ -56,6 +57,17 @@ export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
 export type TextRulesRelationLabel = "employed-by" | "located-in" | "part-of";
 export type TextRulesCoreferenceMentionKind = "proper" | "nominal" | "pronoun" | "singleton";
 export type TextRulesConformanceCheckStatus = "pass" | "fail" | "not-run";
+export type TextRulesCorpusEvaluationTaskKind =
+  | "pos-morph-lemma"
+  | "rule-backed-ner"
+  | "dependency-parser"
+  | "relation-extraction"
+  | "coreference";
+export type TextRulesCorpusEvaluationRole =
+  | "development"
+  | "evaluation"
+  | "holdout"
+  | "negative-control";
 
 export interface TextRulesConformanceReportV1 {
   readonly schemaId: typeof textRulesConformanceReportSchemaId;
@@ -78,6 +90,60 @@ export interface TextRulesConformanceReportV1 {
     readonly message?: string;
     readonly evidenceRefs?: readonly string[];
   }[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextRulesCorpusEvaluationInput {
+  readonly taskKind: TextRulesCorpusEvaluationTaskKind;
+  readonly sliceId: string;
+  readonly role: TextRulesCorpusEvaluationRole;
+  readonly report: TextRulesConformanceReportV1;
+  readonly expectedArtifactPath?: string;
+}
+
+export interface TextRulesCorpusEvaluationRowV1 {
+  readonly taskKind: TextRulesCorpusEvaluationTaskKind;
+  readonly sliceId: string;
+  readonly role: TextRulesCorpusEvaluationRole;
+  readonly reportId: string;
+  readonly status: "pass" | "fail";
+  readonly pass: number;
+  readonly fail: number;
+  readonly notRun: number;
+  readonly expectedOutputMatched: boolean;
+  readonly evidenceRefs: readonly string[];
+}
+
+export interface TextRulesCorpusEvaluationTaskSummaryV1 {
+  readonly taskKind: TextRulesCorpusEvaluationTaskKind;
+  readonly sliceCount: number;
+  readonly passCount: number;
+  readonly failCount: number;
+  readonly negativeControlCount: number;
+  readonly expectedOutputMatchCount: number;
+}
+
+export interface TextRulesCorpusEvaluationReportV1 {
+  readonly schemaVersion: typeof textRulesCorpusEvaluationSchemaVersion;
+  readonly evaluationId: string;
+  readonly generatedAt: string;
+  readonly taskKinds: readonly TextRulesCorpusEvaluationTaskKind[];
+  readonly sliceCount: number;
+  readonly passCount: number;
+  readonly failCount: number;
+  readonly negativeControlCount: number;
+  readonly expectedOutputMatchCount: number;
+  readonly rows: readonly TextRulesCorpusEvaluationRowV1[];
+  readonly taskSummaries: readonly TextRulesCorpusEvaluationTaskSummaryV1[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
+export interface TextRulesCorpusEvaluationOptions {
+  readonly evaluationId: string;
+  readonly inputs: readonly TextRulesCorpusEvaluationInput[];
+  readonly generatedAt?: string;
+  readonly limitations: readonly string[];
   readonly notes?: readonly string[];
 }
 
@@ -721,6 +787,18 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
+function isNonEmptyStringArray(value: unknown): value is readonly string[] {
+  return isStringArray(value) && value.length > 0;
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function uniqueSortedStrings(values: readonly string[]): readonly string[] {
+  return [...new Set(values)].sort((left, right) => left.localeCompare(right));
 }
 
 function isWhitespace(char: string): boolean {
@@ -4423,6 +4501,233 @@ export function createPosMorphLemmaResultEnvelope(
 
 function conformanceStatus(matchesExpected: boolean): TextRulesConformanceCheckStatus {
   return matchesExpected ? "pass" : "fail";
+}
+
+export function isTextRulesConformanceReportV1(value: unknown): value is TextRulesConformanceReportV1 {
+  return (
+    isRecord(value) &&
+    value.schemaId === textRulesConformanceReportSchemaId &&
+    value.schemaVersion === textRulesConformanceReportSchemaVersion &&
+    isNonEmptyString(value.reportId) &&
+    isRecord(value.subject) &&
+    isNonEmptyString(value.subject.kind) &&
+    isNonEmptyString(value.subject.id) &&
+    (value.subject.schemaId === undefined || isNonEmptyString(value.subject.schemaId)) &&
+    isNonEmptyString(value.generatedAt) &&
+    isRecord(value.summary) &&
+    isNonNegativeInteger(value.summary.pass) &&
+    isNonNegativeInteger(value.summary.fail) &&
+    isNonNegativeInteger(value.summary.notRun) &&
+    Array.isArray(value.checks) &&
+    value.checks.length > 0 &&
+    value.checks.every(
+      (check) =>
+        isRecord(check) &&
+        isNonEmptyString(check.checkId) &&
+        (check.status === "pass" || check.status === "fail" || check.status === "not-run") &&
+        (check.message === undefined || isNonEmptyString(check.message)) &&
+        (check.evidenceRefs === undefined || isStringArray(check.evidenceRefs)),
+    ) &&
+    value.summary.pass === value.checks.filter((check) => isRecord(check) && check.status === "pass").length &&
+    value.summary.fail === value.checks.filter((check) => isRecord(check) && check.status === "fail").length &&
+    value.summary.notRun === value.checks.filter((check) => isRecord(check) && check.status === "not-run").length &&
+    (value.notes === undefined || isStringArray(value.notes))
+  );
+}
+
+function isTextRulesCorpusEvaluationTaskKind(value: unknown): value is TextRulesCorpusEvaluationTaskKind {
+  return (
+    value === "pos-morph-lemma" ||
+    value === "rule-backed-ner" ||
+    value === "dependency-parser" ||
+    value === "relation-extraction" ||
+    value === "coreference"
+  );
+}
+
+function isTextRulesCorpusEvaluationRole(value: unknown): value is TextRulesCorpusEvaluationRole {
+  return value === "development" || value === "evaluation" || value === "holdout" || value === "negative-control";
+}
+
+function isTextRulesCorpusEvaluationRowV1(value: unknown): value is TextRulesCorpusEvaluationRowV1 {
+  return (
+    isRecord(value) &&
+    isTextRulesCorpusEvaluationTaskKind(value.taskKind) &&
+    isNonEmptyString(value.sliceId) &&
+    isTextRulesCorpusEvaluationRole(value.role) &&
+    isNonEmptyString(value.reportId) &&
+    (value.status === "pass" || value.status === "fail") &&
+    isNonNegativeInteger(value.pass) &&
+    isNonNegativeInteger(value.fail) &&
+    isNonNegativeInteger(value.notRun) &&
+    typeof value.expectedOutputMatched === "boolean" &&
+    isStringArray(value.evidenceRefs)
+  );
+}
+
+function isTextRulesCorpusEvaluationTaskSummaryV1(
+  value: unknown,
+): value is TextRulesCorpusEvaluationTaskSummaryV1 {
+  return (
+    isRecord(value) &&
+    isTextRulesCorpusEvaluationTaskKind(value.taskKind) &&
+    isNonNegativeInteger(value.sliceCount) &&
+    isNonNegativeInteger(value.passCount) &&
+    isNonNegativeInteger(value.failCount) &&
+    isNonNegativeInteger(value.negativeControlCount) &&
+    isNonNegativeInteger(value.expectedOutputMatchCount)
+  );
+}
+
+export function isTextRulesCorpusEvaluationReportV1(
+  value: unknown,
+): value is TextRulesCorpusEvaluationReportV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textRulesCorpusEvaluationSchemaVersion ||
+    !isNonEmptyString(value.evaluationId) ||
+    !isNonEmptyString(value.generatedAt) ||
+    !Array.isArray(value.taskKinds) ||
+    !value.taskKinds.every((entry) => isTextRulesCorpusEvaluationTaskKind(entry)) ||
+    !isNonNegativeInteger(value.sliceCount) ||
+    !isNonNegativeInteger(value.passCount) ||
+    !isNonNegativeInteger(value.failCount) ||
+    !isNonNegativeInteger(value.negativeControlCount) ||
+    !isNonNegativeInteger(value.expectedOutputMatchCount) ||
+    !Array.isArray(value.rows) ||
+    value.rows.length === 0 ||
+    !value.rows.every((entry) => isTextRulesCorpusEvaluationRowV1(entry)) ||
+    !Array.isArray(value.taskSummaries) ||
+    !value.taskSummaries.every((entry) => isTextRulesCorpusEvaluationTaskSummaryV1(entry)) ||
+    !isNonEmptyStringArray(value.limitations) ||
+    (value.notes !== undefined && !isStringArray(value.notes))
+  ) {
+    return false;
+  }
+  const rows = value.rows as readonly TextRulesCorpusEvaluationRowV1[];
+  const taskSummaries = value.taskSummaries as readonly TextRulesCorpusEvaluationTaskSummaryV1[];
+  const taskKinds = uniqueSortedStrings(rows.map((row) => row.taskKind)) as readonly TextRulesCorpusEvaluationTaskKind[];
+  const rowKeys = rows.map((row) => `${row.taskKind}\u0000${row.sliceId}`);
+  const taskSummariesMatch = taskKinds.every((taskKind) => {
+    const actual = taskSummaries.find((entry) => entry.taskKind === taskKind);
+    if (actual === undefined) return false;
+    return JSON.stringify(actual) === JSON.stringify(corpusEvaluationTaskSummary(taskKind, rows));
+  });
+  return (
+    value.sliceCount === rows.length &&
+    value.passCount === rows.filter((row) => row.status === "pass").length &&
+    value.failCount === rows.filter((row) => row.status === "fail").length &&
+    value.negativeControlCount === rows.filter((row) => row.role === "negative-control").length &&
+    value.expectedOutputMatchCount === rows.filter((row) => row.expectedOutputMatched).length &&
+    JSON.stringify(value.taskKinds) === JSON.stringify(taskKinds) &&
+    new Set(rowKeys).size === rowKeys.length &&
+    JSON.stringify(taskSummaries.map((entry) => entry.taskKind)) === JSON.stringify(taskKinds) &&
+    taskSummariesMatch
+  );
+}
+
+function expectedOutputMatched(report: TextRulesConformanceReportV1): boolean {
+  return report.checks.find((check) => check.checkId === "expected-output-match")?.status === "pass";
+}
+
+function reportEvidenceRefs(report: TextRulesConformanceReportV1, expectedArtifactPath: string | undefined): readonly string[] {
+  return uniqueSortedStrings([
+    ...(expectedArtifactPath === undefined ? [] : [expectedArtifactPath]),
+    ...report.checks.flatMap((check) => check.evidenceRefs ?? []),
+  ]);
+}
+
+function corpusEvaluationTaskSummary(
+  taskKind: TextRulesCorpusEvaluationTaskKind,
+  rows: readonly TextRulesCorpusEvaluationRowV1[],
+): TextRulesCorpusEvaluationTaskSummaryV1 {
+  const taskRows = rows.filter((row) => row.taskKind === taskKind);
+  return {
+    taskKind,
+    sliceCount: taskRows.length,
+    passCount: taskRows.filter((row) => row.status === "pass").length,
+    failCount: taskRows.filter((row) => row.status === "fail").length,
+    negativeControlCount: taskRows.filter((row) => row.role === "negative-control").length,
+    expectedOutputMatchCount: taskRows.filter((row) => row.expectedOutputMatched).length,
+  };
+}
+
+export function createTextRulesCorpusEvaluationReport(
+  options: TextRulesCorpusEvaluationOptions,
+): TextRulesCorpusEvaluationReportV1 {
+  if (!isRecord(options)) {
+    throw new TypeError("textrules corpus evaluation options must be a record");
+  }
+  if (!isNonEmptyString(options.evaluationId)) {
+    throw new TypeError("textrules corpus evaluation id must be a non-empty string");
+  }
+  if (!Array.isArray(options.inputs) || options.inputs.length === 0) {
+    throw new TypeError("textrules corpus evaluation inputs must be a non-empty array");
+  }
+  if (!isNonEmptyStringArray(options.limitations)) {
+    throw new TypeError("textrules corpus evaluation limitations must be a non-empty string array");
+  }
+  if (options.notes !== undefined && !isStringArray(options.notes)) {
+    throw new TypeError("textrules corpus evaluation notes must be strings");
+  }
+  const rows = options.inputs
+    .map((input): TextRulesCorpusEvaluationRowV1 => {
+      if (!isRecord(input)) {
+        throw new TypeError("textrules corpus evaluation input must be a record");
+      }
+      if (!isTextRulesCorpusEvaluationTaskKind(input.taskKind)) {
+        throw new TypeError("textrules corpus evaluation taskKind is invalid");
+      }
+      if (!isNonEmptyString(input.sliceId)) {
+        throw new TypeError("textrules corpus evaluation sliceId must be a non-empty string");
+      }
+      if (!isTextRulesCorpusEvaluationRole(input.role)) {
+        throw new TypeError("textrules corpus evaluation role is invalid");
+      }
+      if (!isTextRulesConformanceReportV1(input.report)) {
+        throw new TypeError("textrules corpus evaluation report is invalid");
+      }
+      if (input.expectedArtifactPath !== undefined && !isNonEmptyString(input.expectedArtifactPath)) {
+        throw new TypeError("textrules corpus evaluation expectedArtifactPath must be a non-empty string");
+      }
+      return {
+        taskKind: input.taskKind,
+        sliceId: input.sliceId,
+        role: input.role,
+        reportId: input.report.reportId,
+        status: input.report.summary.fail === 0 ? "pass" : "fail",
+        pass: input.report.summary.pass,
+        fail: input.report.summary.fail,
+        notRun: input.report.summary.notRun,
+        expectedOutputMatched: expectedOutputMatched(input.report),
+        evidenceRefs: reportEvidenceRefs(input.report, input.expectedArtifactPath),
+      };
+    })
+    .sort((left, right) => `${left.taskKind}\u0000${left.sliceId}`.localeCompare(`${right.taskKind}\u0000${right.sliceId}`));
+  const rowKeys = rows.map((row) => `${row.taskKind}\u0000${row.sliceId}`);
+  if (new Set(rowKeys).size !== rowKeys.length) {
+    throw new TypeError("textrules corpus evaluation inputs must have unique taskKind/sliceId pairs");
+  }
+  const taskKinds = uniqueSortedStrings(rows.map((row) => row.taskKind)) as readonly TextRulesCorpusEvaluationTaskKind[];
+  const report = {
+    schemaVersion: textRulesCorpusEvaluationSchemaVersion,
+    evaluationId: options.evaluationId,
+    generatedAt: options.generatedAt ?? "1970-01-01T00:00:00.000Z",
+    taskKinds,
+    sliceCount: rows.length,
+    passCount: rows.filter((row) => row.status === "pass").length,
+    failCount: rows.filter((row) => row.status === "fail").length,
+    negativeControlCount: rows.filter((row) => row.role === "negative-control").length,
+    expectedOutputMatchCount: rows.filter((row) => row.expectedOutputMatched).length,
+    rows,
+    taskSummaries: taskKinds.map((taskKind) => corpusEvaluationTaskSummary(taskKind, rows)),
+    limitations: options.limitations,
+    ...(options.notes ? { notes: options.notes } : {}),
+  } satisfies TextRulesCorpusEvaluationReportV1;
+  if (!isTextRulesCorpusEvaluationReportV1(report)) {
+    throw new TypeError("textrules corpus evaluation report is invalid");
+  }
+  return report;
 }
 
 export function createPosMorphLemmaConformanceReport(

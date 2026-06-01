@@ -19,10 +19,12 @@ Current public scope:
 - deterministic dependency arcs for the frozen dependency-parser slices;
 - ambiguity-preserving alternatives in `textdoc`;
 - result-envelope serialization through `textprotocol`; and
-- machine-readable conformance reports through `textconformance`.
+- machine-readable conformance reports through `textconformance`;
+- package-local conformance report guards; and
+- deterministic corpus evaluation report aggregation across the implemented task conformance reports.
 
 Current limitations:
 
 - task-specific behavior remains frozen-slice only;
 - raw-text tokenization helpers are fixture helpers, not the default rule-engine input contract;
-- broad corpus-scale task behavior requires separate conformance fixtures and executable checks.
+- corpus evaluation aggregation covers committed deterministic task reports and does not claim external corpus generalization.

@@ -4,6 +4,7 @@
 
 - Add alpha rule declarations, bundle validation, deterministic compilation, general runtime families, conflict policies, rewrite view/span-map output, validation diagnostics, and unweighted transducer-style ambiguity output.
 - Move unknown-word fallback behavior behind explicit fixture lexicon resources for the frozen POS/morph/lemma slice.
+- Add deterministic corpus evaluation report aggregation across implemented task conformance reports.
 - Promote package metadata to public alpha for the bounded resource-backed rules scope.
 
 ## 0.0.0
