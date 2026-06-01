@@ -514,6 +514,49 @@ async function assertBuiltPackageSmoke() {
     composition: { overlayPrecedence: 1 },
   };
   expect(textpack.isTextPackManifestV1(manifest), "textpack built API should validate a manifest.");
+  const packManifestValidationOptions = {
+    expectedFamily: "pack-manifest",
+    expectedProducerPackage: "@ismail-elkorchi/textpack",
+    requireProvenance: true,
+    requireLimitations: true,
+    externallyValidatedFamilies: ["pack-manifest"],
+  };
+  const packManifestEnvelope = {
+    schemaId: textprotocol.textProtocolPackManifestSchemaId,
+    schemaVersion: textprotocol.textProtocolSchemaVersion,
+    producer: { package: "@ismail-elkorchi/textpack", version: "0.1.0" },
+    payload: manifest,
+    provenance: { references: [{ kind: "fixture", id: "downstream-api-smoke" }] },
+    limitations: ["Downstream API stability pack-manifest smoke."],
+  };
+  const packManifestCompatibility = textprotocol.checkTextProtocolSchemaFamilyEnvelope(
+    packManifestEnvelope,
+    packManifestValidationOptions,
+  );
+  expect(
+    packManifestCompatibility.ok && packManifestCompatibility.family === "pack-manifest",
+    "textprotocol should accept externally validated textpack manifest envelopes through package APIs.",
+  );
+  const packManifestTransport = textprotocol.serializeTextProtocolSchemaFamilyEnvelopeJson(
+    packManifestEnvelope,
+    packManifestValidationOptions,
+  );
+  const parsedPackManifestEnvelope = textprotocol.parseTextProtocolSchemaFamilyEnvelopeJson(
+    packManifestTransport,
+    packManifestValidationOptions,
+  );
+  expect(
+    textpack.isTextPackManifestV1(parsedPackManifestEnvelope.payload),
+    "textprotocol should serialize and parse textpack manifest envelopes through package APIs.",
+  );
+  const packManifestInspection = textlab.inspectTextProtocolSchemaFamilyEnvelope(
+    parsedPackManifestEnvelope,
+    packManifestValidationOptions,
+  );
+  expect(
+    packManifestInspection.family === "pack-manifest" && packManifestInspection.compatibilityOk,
+    "textlab should inspect externally validated textpack manifest envelopes through package APIs.",
+  );
 
   const loadedPack = textpack.loadTextPackResources(
     [manifest],

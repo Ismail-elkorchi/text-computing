@@ -23,6 +23,12 @@ import {
   packageName as textcorpusPackageName,
 } from "@ismail-elkorchi/textcorpus";
 import {
+  createTextPackManifest,
+  isTextPackManifestV1,
+  packageName as textpackPackageName,
+  validateTextPackManifestGovernance,
+} from "@ismail-elkorchi/textpack";
+import {
   checkTextProtocolSchemaFamilyEnvelope,
   checkTextProtocolResultEnvelopeCompatibility,
   createTextProtocolProtocolErrorEnvelopeFromDiagnostics,
@@ -45,6 +51,7 @@ import {
   textProtocolDocumentBundleSchemaId,
   textProtocolEvidenceBundleSchemaId,
   textProtocolMappingLossReportSchemaId,
+  textProtocolPackManifestSchemaId,
   textProtocolPayloadKindTextconformanceReportV1,
   textProtocolPayloadKindTextdocDocumentV1,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
@@ -191,6 +198,91 @@ if (!isTextProtocolProtocolErrorV1(parsedProtocolError)) {
 const protocolErrorInspection = inspectTextProtocolSchemaFamilyEnvelope(parsedProtocolError);
 if (protocolErrorInspection.family !== "protocol-error" || !protocolErrorInspection.compatibilityOk) {
   fail("Interop textlab inspection must preserve protocol-error metadata.", protocolErrorInspection);
+}
+
+const packManifest = createTextPackManifest({
+  id: "pack:textprotocol-interop",
+  packageName: "@ismail-elkorchi/textpack-interop",
+  version: "0.1.0",
+  kind: ["language"],
+  targets: {
+    languages: ["en"],
+    scripts: ["Latn"],
+    profiles: ["interop"],
+  },
+  resources: {
+    stopwords: ["resources/stopwords.en.interop.txt"],
+  },
+  provides: {
+    stopwords: ["stopwords-en-interop"],
+  },
+  licenses: {
+    code: ["MIT"],
+    data: ["CC0-1.0"],
+  },
+  provenance: {
+    sources: ["repo:tools/validate-textprotocol-interop.mjs"],
+    generated: false,
+  },
+  tests: {
+    smoke: ["resources/stopwords.en.interop.txt"],
+    negative: ["negative:no-implicit-registry"],
+    representative: ["representative:interop-stopwords"],
+  },
+});
+if (!isTextPackManifestV1(packManifest) || !validateTextPackManifestGovernance(packManifest).ok) {
+  fail("Interop pack manifest must satisfy textpack runtime and governance checks.", packManifest);
+}
+const packManifestValidationOptions = {
+  expectedFamily: "pack-manifest",
+  expectedProducerPackage: textpackPackageName,
+  requireProvenance: true,
+  requireLimitations: true,
+  externallyValidatedFamilies: ["pack-manifest"],
+};
+const packManifestEnvelope = {
+  schemaId: textProtocolPackManifestSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: textpackPackageName,
+    version: "0.1.0",
+  },
+  payload: packManifest,
+  provenance: {
+    references: [{ kind: "fixture", id: "textprotocol-interop-smoke" }],
+  },
+  limitations: ["Structural pack-manifest interop smoke only."],
+};
+const packManifestCompatibility = checkTextProtocolSchemaFamilyEnvelope(
+  packManifestEnvelope,
+  packManifestValidationOptions,
+);
+if (!packManifestCompatibility.ok || packManifestCompatibility.family !== "pack-manifest") {
+  fail("Interop pack-manifest envelope must satisfy asserted textprotocol compatibility.", packManifestCompatibility);
+}
+const packManifestTransport = serializeTextProtocolSchemaFamilyEnvelopeJson(
+  packManifestEnvelope,
+  packManifestValidationOptions,
+);
+if (!isTextProtocolSchemaFamilyEnvelopeJsonTransportV1(packManifestTransport)) {
+  fail("Interop pack-manifest transport must satisfy textprotocol transport guard.", packManifestTransport);
+}
+const parsedPackManifestEnvelope = parseTextProtocolSchemaFamilyEnvelopeJson(
+  packManifestTransport,
+  packManifestValidationOptions,
+);
+if (
+  !isTextPackManifestV1(parsedPackManifestEnvelope.payload) ||
+  !validateTextPackManifestGovernance(parsedPackManifestEnvelope.payload).ok
+) {
+  fail("Interop pack-manifest transport must parse back into a textpack-valid manifest.", parsedPackManifestEnvelope);
+}
+const packManifestInspection = inspectTextProtocolSchemaFamilyEnvelope(
+  parsedPackManifestEnvelope,
+  packManifestValidationOptions,
+);
+if (packManifestInspection.family !== "pack-manifest" || !packManifestInspection.compatibilityOk) {
+  fail("Interop textlab inspection must preserve pack-manifest metadata.", packManifestInspection);
 }
 
 const document = {

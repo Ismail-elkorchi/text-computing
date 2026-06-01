@@ -142,6 +142,7 @@ export interface TextProtocolSchemaFamilyValidationOptions {
   readonly expectedProducerPackage?: string;
   readonly requireProvenance?: boolean;
   readonly requireLimitations?: boolean;
+  readonly externallyValidatedFamilies?: readonly TextProtocolSchemaFamily[];
 }
 
 export interface TextProtocolSchemaFamilyValidationResult {
@@ -1011,6 +1012,13 @@ function familyGuardForDescriptor(
   }
 }
 
+function isExternallyValidatedFamily(
+  descriptor: TextProtocolSchemaFamilyDescriptor,
+  options: TextProtocolSchemaFamilyValidationOptions,
+): boolean {
+  return options.externallyValidatedFamilies?.includes(descriptor.family) === true;
+}
+
 function uniqueSortedNumbers(values: readonly number[]): readonly number[] {
   return [...new Set(values)].sort((left, right) => right - left);
 }
@@ -1200,12 +1208,20 @@ export function checkTextProtocolSchemaFamilyEnvelope(
   if (descriptor !== undefined) {
     const guard = familyGuardForDescriptor(descriptor);
     if (guard === undefined) {
-      diagnostics.push(
-        compatibilityError(
-          "textprotocol.schema-family-external-validation",
-          `Schema family ${descriptor.family} is owned by ${descriptor.ownerPackage} and is validated by its JSON Schema.`,
-        ),
-      );
+      if (isExternallyValidatedFamily(descriptor, options)) {
+        diagnostics.push({
+          code: "textprotocol.schema-family-external-validation",
+          severity: "info",
+          message: `Schema family ${descriptor.family} is owned by ${descriptor.ownerPackage} and was asserted as externally validated by the caller.`,
+        });
+      } else {
+        diagnostics.push(
+          compatibilityError(
+            "textprotocol.schema-family-external-validation",
+            `Schema family ${descriptor.family} is owned by ${descriptor.ownerPackage} and is validated by its JSON Schema.`,
+          ),
+        );
+      }
     } else if (!guard(value)) {
       diagnostics.push(
         compatibilityError(

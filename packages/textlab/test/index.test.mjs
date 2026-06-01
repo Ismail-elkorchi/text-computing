@@ -5,6 +5,7 @@ import {
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
   textProtocolDocumentBundleSchemaId,
+  textProtocolPackManifestSchemaId,
   textProtocolPayloadKindTextpipelineBatchRunReportV1,
   textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
@@ -753,6 +754,41 @@ if (
 
 if (!renderTextProtocolSchemaFamilyEnvelopeInspection(schemaFamilyEnvelopeInspection).includes("Family: document-bundle")) {
   throw new Error("schema-family envelope renderer should include family metadata");
+}
+
+const packManifestEnvelope = {
+  schemaId: textProtocolPackManifestSchemaId,
+  schemaVersion: textProtocolSchemaVersion,
+  producer: {
+    package: "@ismail-elkorchi/textpack",
+    version: "0.1.0",
+  },
+  payload: {
+    manifestVersion: "1.0.0",
+    id: "pack:textlab-schema-family",
+  },
+  provenance: {
+    references: [{ kind: "fixture", id: "textlab-pack-manifest-schema-family" }],
+  },
+  limitations: ["The fixture validates externally owned schema-family inspection."],
+};
+const packManifestEnvelopeInspection = inspectTextProtocolSchemaFamilyEnvelope(packManifestEnvelope, {
+  expectedFamily: "pack-manifest",
+  expectedProducerPackage: "@ismail-elkorchi/textpack",
+  requireProvenance: true,
+  requireLimitations: true,
+  externallyValidatedFamilies: ["pack-manifest"],
+});
+if (
+  packManifestEnvelopeInspection.family !== "pack-manifest" ||
+  packManifestEnvelopeInspection.ownerPackage !== "@ismail-elkorchi/textpack" ||
+  packManifestEnvelopeInspection.schemaPath !== "schemas/textpack-manifest-v1.schema.json" ||
+  !packManifestEnvelopeInspection.compatibilityOk ||
+  !packManifestEnvelopeInspection.compatibilityDiagnosticCounts.some(
+    (entry) => entry.id === "textprotocol.schema-family-external-validation" && entry.count === 1,
+  )
+) {
+  throw new Error("schema-family envelope inspection should accept externally validated pack manifests");
 }
 
 let invalidSchemaFamilyEnvelopeRejected = false;
