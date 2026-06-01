@@ -652,6 +652,21 @@ async function assertBuiltPackageSmoke() {
       ),
     "textlab should inspect textconformance benchmark reports through package APIs.",
   );
+  const externalToolReport = await textlab.executeTextlabExternalTool({
+    toolId: "downstream-api-node-version",
+    command: process.execPath,
+    args: ["--version"],
+    maxOutputChars: 80,
+    evidenceRefs: [ARTIFACT_PATH],
+    limitations: ["Downstream smoke executes the current Node binary with explicit arguments."],
+  });
+  expect(
+    textlab.isTextlabExternalToolExecutionReportV1(externalToolReport) &&
+      externalToolReport.status === "passed" &&
+      externalToolReport.stdoutPreview.startsWith("v"),
+    "textlab should execute explicit external-tool specs through package APIs.",
+    externalToolReport,
+  );
 
   const identityProcessor = {
     descriptor: {

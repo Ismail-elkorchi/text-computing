@@ -11,6 +11,7 @@ import {
   textProtocolSchemaVersion,
 } from "@ismail-elkorchi/textprotocol";
 import {
+  executeTextlabExternalTool,
   inspectCorpusFixture,
   inspectConformanceReportDiff,
   inspectPackageManifest,
@@ -32,6 +33,7 @@ import {
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
   inspectTextConformanceBenchmarkReport,
+  isTextlabExternalToolExecutionReportV1,
   packageName,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
@@ -54,7 +56,9 @@ import {
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
   renderTextConformanceBenchmarkReportInspection,
+  renderTextlabExternalToolExecutionReport,
   summarizeConformanceReport,
+  textlabExternalToolExecutionReportSchemaVersion,
 } from "../dist/index.js";
 import { runTextlabCli } from "../dist/cli.js";
 
@@ -71,6 +75,41 @@ if (packageName !== "@ismail-elkorchi/textlab") {
   throw new Error("package name should remain stable");
 }
 
+const externalToolReport = await executeTextlabExternalTool({
+  toolId: "fixture-node-stdout",
+  command: process.execPath,
+  args: ["-e", "process.stdout.write('alpha\\n'); process.stderr.write('beta\\n');"],
+  maxOutputChars: 3,
+  evidenceRefs: ["packages/textlab/test/index.test.mjs#external-tool"],
+  limitations: ["Package test executes the current Node binary with explicit arguments."],
+});
+if (
+  !isTextlabExternalToolExecutionReportV1(externalToolReport) ||
+  externalToolReport.schemaVersion !== textlabExternalToolExecutionReportSchemaVersion ||
+  externalToolReport.status !== "passed" ||
+  externalToolReport.exitCode !== 0 ||
+  externalToolReport.stdoutPreview !== "alp" ||
+  !externalToolReport.stdoutTruncated ||
+  externalToolReport.stderrPreview !== "bet" ||
+  !renderTextlabExternalToolExecutionReport(externalToolReport).includes("Status: passed")
+) {
+  throw new Error("external tool execution should report bounded stdout and stderr previews");
+}
+const failedExternalToolReport = await executeTextlabExternalTool({
+  toolId: "fixture-node-failure",
+  command: process.execPath,
+  args: ["-e", "process.stderr.write('failure\\n'); process.exit(7);"],
+  evidenceRefs: ["packages/textlab/test/index.test.mjs#external-tool-failure"],
+  limitations: ["Package test executes a failing command to validate report status."],
+});
+if (
+  !isTextlabExternalToolExecutionReportV1(failedExternalToolReport) ||
+  failedExternalToolReport.status !== "failed" ||
+  failedExternalToolReport.exitCode !== 7 ||
+  !failedExternalToolReport.stderrPreview.includes("failure")
+) {
+  throw new Error("external tool execution should report non-zero exit status");
+}
 
 const conformanceReport = {
   schemaId: "urn:ismail-elkorchi:textconformance:report:v1",
@@ -1496,6 +1535,19 @@ const changedReportPath = path.join(dir, "conformance-report-actual.json");
 await writeFile(changedReportPath, `${JSON.stringify(changedConformanceReport, null, 2)}\n`, "utf8");
 const benchmarkReportPath = path.join(dir, "benchmark-report.json");
 await writeFile(benchmarkReportPath, `${JSON.stringify(benchmarkReport, null, 2)}\n`, "utf8");
+const externalToolSpecPath = path.join(dir, "external-tool.json");
+await writeFile(
+  externalToolSpecPath,
+  `${JSON.stringify({
+    toolId: "fixture-cli-node",
+    command: process.execPath,
+    args: ["-e", "process.stdout.write('cli-alpha\\n');"],
+    maxOutputChars: 20,
+    evidenceRefs: ["packages/textlab/test/index.test.mjs#external-tool-cli"],
+    limitations: ["CLI test executes the current Node binary with explicit arguments."],
+  }, null, 2)}\n`,
+  "utf8",
+);
 const packagePath = path.join(dir, "package.json");
 await writeFile(packagePath, `${JSON.stringify(packageManifest, null, 2)}\n`, "utf8");
 const packPath = path.join(dir, "textpack.manifest.json");
@@ -1559,6 +1611,16 @@ if (
   JSON.parse(benchmarkReportJsonCliResult.stdout).metrics[0].metricId !== "latency-ms"
 ) {
   throw new Error("benchmark-report CLI should support stable JSON output");
+}
+const externalToolCliResult = await runTextlabCli(["external-tool", externalToolSpecPath, "--json"]);
+const externalToolCliReport = externalToolCliResult.exitCode === 0 ? JSON.parse(externalToolCliResult.stdout) : {};
+if (
+  externalToolCliResult.exitCode !== 0 ||
+  externalToolCliReport.status !== "passed" ||
+  externalToolCliReport.stdoutPreview !== "cli-alpha\n" ||
+  externalToolCliReport.toolId !== "fixture-cli-node"
+) {
+  throw new Error(`external-tool CLI should execute command specs: ${externalToolCliResult.stderr}`);
 }
 
 const packageCliResult = await runTextlabCli(["package", packagePath]);

@@ -14,6 +14,7 @@ It can:
 - inspect pack-backed textrules annotation outputs;
 - render textconformance report summaries and diffs;
 - inspect textconformance benchmark reports without treating them as conformance;
+- execute explicit external-tool command specs without shell expansion and return bounded execution reports;
 - inspect corpus fixtures, persisted textcorpus artifacts with deterministic pagination, retrieval-index storage refs, retrieval qrels, retrieval evaluation, retrieval calibration reports, and release-readiness artifacts.
 
 ## CLI
@@ -39,6 +40,7 @@ textlab pack-backed-rules document-with-pack-backed-rules.json --resource-id lex
 textlab conformance-report fixtures/reports/nlp-tokenization-sbd/conformance-report.json
 textlab conformance-diff expected.json actual.json
 textlab benchmark-report benchmark-report.json
+textlab external-tool external-tool-spec.json --json
 textlab corpus-fixture fixtures/corpus-tfidf-bm25/expected/corpus-tfidf-bm25-smoke.json
 textlab corpus-artifact corpus-artifact.json --limit 20 --offset 0
 textlab retrieval-qrels fixtures/retrieval/qrels/retrieval-fielded-qrels.json

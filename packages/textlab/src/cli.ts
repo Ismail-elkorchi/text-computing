@@ -37,6 +37,7 @@ import {
   inspectTextProtocolResultEnvelope,
   inspectTextProtocolSchemaFamilyEnvelope,
   inspectTextConformanceBenchmarkReport,
+  executeTextlabExternalTool,
   renderCorpusFixtureInspection,
   renderConformanceDiffInspection,
   renderConformanceReportSummary,
@@ -58,9 +59,11 @@ import {
   renderTextProtocolResultEnvelopeInspection,
   renderTextProtocolSchemaFamilyEnvelopeInspection,
   renderTextConformanceBenchmarkReportInspection,
+  renderTextlabExternalToolExecutionReport,
   summarizeConformanceReport,
   type TextlabAnnotationInspectionOptions,
   type TextlabCorpusArtifactInspectionOptions,
+  type TextlabExternalToolExecutionSpec,
   type TextlabPackBackedRuleInspectionOptions,
 } from "./index.js";
 
@@ -93,6 +96,7 @@ function usage(): string {
     "  textlab conformance-report <path> [--json]",
     "  textlab conformance-diff <expected-path> <actual-path> [--json]",
     "  textlab benchmark-report <path> [--json]",
+    "  textlab external-tool <spec-json-path> [--json]",
     "  textlab retrieval-qrels <path> [--json]",
     "  textlab retrieval-evaluation <path> [--json]",
     "  textlab release-readiness [path] [--json]",
@@ -113,6 +117,7 @@ function usage(): string {
     "  conformance-report  Render a deterministic summary of one conformance report.",
     "  conformance-diff    Render a deterministic diff between two conformance reports.",
     "  benchmark-report    Inspect a textconformance benchmark report without treating it as conformance.",
+    "  external-tool       Execute an explicit external command spec and report bounded stdout/stderr previews.",
     "  corpus-fixture  Inspect corpus or retrieval expected-output fixtures.",
     "  corpus-artifact Inspect a persisted textcorpus artifact or metric-envelope payload.",
     "  retrieval-qrels Inspect retrieval relevance judgments.",
@@ -141,6 +146,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
     command !== "conformance-report" &&
     command !== "conformance-diff" &&
     command !== "benchmark-report" &&
+    command !== "external-tool" &&
     command !== "annotations" &&
     command !== "result-envelope" &&
     command !== "schema-family-envelope" &&
@@ -245,6 +251,7 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
       command === "document" ||
       command === "conformance-report" ||
       command === "benchmark-report" ||
+      command === "external-tool" ||
       command === "annotations" ||
       command === "result-envelope" ||
       command === "schema-family-envelope" ||
@@ -290,6 +297,24 @@ export async function runTextlabCli(argv: readonly string[]): Promise<TextlabCli
         exitCode: 1,
         stdout: "",
         stderr: `Invalid package manifest: ${inputPath}`,
+      };
+    }
+  }
+
+  if (command === "external-tool") {
+    try {
+      const report = await executeTextlabExternalTool(parsed as TextlabExternalToolExecutionSpec);
+      return {
+        exitCode: report.status === "passed" ? 0 : 1,
+        stdout: renderCliOutput(report, renderTextlabExternalToolExecutionReport, json),
+        stderr: "",
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        exitCode: 1,
+        stdout: "",
+        stderr: `Invalid external tool execution spec: ${message}`,
       };
     }
   }
