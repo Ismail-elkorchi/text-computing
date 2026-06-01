@@ -8,6 +8,7 @@
 - Add deterministic JSON persistence helpers for declared textcorpus artifact families.
 - Add retrieval-index storage-ref save/load helpers for caller-provided durable text stores.
 - Add package-owned filesystem key/path helpers for retrieval-index artifact storage.
+- Add deterministic BM25F retrieval field-weight profiles for query-time field weighting.
 - Add corpus metric payload export for textprotocol corpus-metric envelope exchange.
 
 ## 0.0.0

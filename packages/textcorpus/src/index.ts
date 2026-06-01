@@ -248,6 +248,23 @@ export interface TextCorpusRetrievalDocumentField {
   readonly tokens: readonly string[];
 }
 
+export interface TextCorpusRetrievalFieldWeightV1 {
+  readonly field: string;
+  readonly weight: number;
+}
+
+export interface TextCorpusRetrievalFieldWeightProfileV1 {
+  readonly schemaVersion: TextCorpusRetrievalSchemaVersion;
+  readonly profileId: string;
+  readonly formula: typeof textCorpusBm25fFormula;
+  readonly fields: readonly TextCorpusRetrievalFieldWeightV1[];
+}
+
+export interface CreateTextCorpusRetrievalFieldWeightProfileOptions {
+  readonly profileId: string;
+  readonly fields: Readonly<Record<string, number>>;
+}
+
 export interface TextCorpusRetrievalDocument {
   readonly id: string;
   readonly length: number;
@@ -354,6 +371,8 @@ export interface TextCorpusRetrievalFieldContribution {
   readonly length: number;
   readonly averageLength: number;
   readonly weight: number;
+  readonly baseWeight?: number;
+  readonly queryWeight?: number;
   readonly normalizedTf: number;
 }
 
@@ -390,6 +409,8 @@ export interface TextCorpusRetrievalSearchOptions {
   readonly topK?: number;
   readonly snippetWindow?: number;
   readonly includeZeroScores?: boolean;
+  readonly fieldWeights?: Readonly<Record<string, number>>;
+  readonly fieldWeightProfile?: TextCorpusRetrievalFieldWeightProfileV1;
 }
 
 export interface TextCorpusRetrievalStreamOptions extends TextCorpusRetrievalSearchOptions {
@@ -403,6 +424,7 @@ export interface TextCorpusRetrievalResultV1 {
   readonly evidenceClass: TextCorpusEvidenceClass;
   readonly selection: TextCorpusSelectionProvenanceV1;
   readonly formula: TextCorpusRetrievalFormulaId;
+  readonly fieldWeightProfile?: TextCorpusRetrievalFieldWeightProfileV1;
   readonly results: readonly TextCorpusRetrievalQueryResult[];
 }
 
@@ -1243,6 +1265,35 @@ function isRetrievalFieldSpec(value: unknown): value is TextCorpusRetrievalNorma
   );
 }
 
+function isTextCorpusRetrievalFieldWeightV1(value: unknown): value is TextCorpusRetrievalFieldWeightV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.field) &&
+    typeof value.weight === "number" &&
+    Number.isFinite(value.weight) &&
+    value.weight >= 0
+  );
+}
+
+export function isTextCorpusRetrievalFieldWeightProfileV1(
+  value: unknown,
+): value is TextCorpusRetrievalFieldWeightProfileV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textCorpusRetrievalSchemaVersion ||
+    !isNonEmptyString(value.profileId) ||
+    value.formula !== textCorpusBm25fFormula ||
+    !Array.isArray(value.fields) ||
+    value.fields.length === 0 ||
+    !value.fields.every((entry) => isTextCorpusRetrievalFieldWeightV1(entry))
+  ) {
+    return false;
+  }
+  const fieldIds = value.fields.map((entry) => entry.field);
+  return new Set(fieldIds).size === fieldIds.length &&
+    JSON.stringify(fieldIds) === JSON.stringify([...fieldIds].sort(compareTerms));
+}
+
 function isNumberRecord(value: unknown): value is Readonly<Record<string, number>> {
   return (
     isRecord(value) &&
@@ -1268,6 +1319,39 @@ function isFieldInvertedIndex(
         Object.values(fieldIndex).every((entry) => isPostingArray(entry)),
     )
   );
+}
+
+function normalizeRetrievalFieldWeightEntries(
+  fields: Readonly<Record<string, number>>,
+): readonly TextCorpusRetrievalFieldWeightV1[] {
+  if (!isNumberRecord(fields)) {
+    throw new TypeError("textcorpus retrieval field weights must be a string-to-non-negative-number record");
+  }
+  const entries = Object.entries(fields)
+    .map(([field, weight]) => ({ field, weight }))
+    .sort((left, right) => compareTerms(left.field, right.field));
+  if (entries.length === 0) {
+    throw new TypeError("textcorpus retrieval field weights must include at least one field");
+  }
+  return entries;
+}
+
+export function createTextCorpusRetrievalFieldWeightProfile(
+  options: CreateTextCorpusRetrievalFieldWeightProfileOptions,
+): TextCorpusRetrievalFieldWeightProfileV1 {
+  if (!isRecord(options) || !isNonEmptyString(options.profileId)) {
+    throw new TypeError("textcorpus retrieval field weight profile id must be a non-empty string");
+  }
+  const profile = {
+    schemaVersion: textCorpusRetrievalSchemaVersion,
+    profileId: options.profileId,
+    formula: textCorpusBm25fFormula,
+    fields: normalizeRetrievalFieldWeightEntries(options.fields),
+  } satisfies TextCorpusRetrievalFieldWeightProfileV1;
+  if (!isTextCorpusRetrievalFieldWeightProfileV1(profile)) {
+    throw new TypeError("textcorpus retrieval field weight profile is invalid");
+  }
+  return profile;
 }
 
 function validateEntry(entry: TextCorpusEntry): void {
@@ -1733,6 +1817,9 @@ export function isTextCorpusRetrievalResultV1(value: unknown): value is TextCorp
     isTextCorpusEvidenceClass(value.evidenceClass) &&
     selectionMatchesCorpus(value.selection, value.corpusId) &&
     isRetrievalFormula(value.formula) &&
+    (value.fieldWeightProfile === undefined ||
+      (isTextCorpusRetrievalFieldWeightProfileV1(value.fieldWeightProfile) &&
+        value.fieldWeightProfile.formula === value.formula)) &&
     Array.isArray(value.results) &&
     value.results.every(
       (entry) =>
@@ -3166,13 +3253,14 @@ function scoreRetrievalDocument(
   index: TextCorpusRetrievalIndexV1,
   document: TextCorpusRetrievalDocument,
   clauses: readonly TextCorpusRetrievalScoringClause[],
+  fieldWeights: Readonly<Record<string, number>> | undefined,
 ): {
   readonly score: number;
   readonly explain: readonly TextCorpusRetrievalTermExplanation[];
 } {
   if (index.formula === textCorpusBm25fFormula) {
     const explain = uniqueScoringClauses(clauses).map((clause) =>
-      scoreBm25fRetrievalClause(index, document, clause),
+      scoreBm25fRetrievalClause(index, document, clause, fieldWeights),
     );
     return {
       score: explain.reduce((sum, entry) => sum + entry.contribution, 0),
@@ -3239,11 +3327,14 @@ function scoreBm25fRetrievalClause(
   index: TextCorpusRetrievalIndexV1,
   document: TextCorpusRetrievalDocument,
   clause: TextCorpusRetrievalScoringClause,
+  fieldWeights: Readonly<Record<string, number>> | undefined,
 ): TextCorpusRetrievalTermExplanation {
   const fieldIds = clause.field !== undefined ? [clause.field] : index.fieldOrder ?? [];
   const fieldContributions = fieldIds.flatMap((fieldId): readonly TextCorpusRetrievalFieldContribution[] => {
     const fieldSpec = fieldSpecById(index, fieldId);
     if (fieldSpec === undefined) return [];
+    const queryWeight = fieldWeights?.[fieldId] ?? 1;
+    const effectiveWeight = fieldSpec.weight * queryWeight;
     const tf = positionsForFieldTerm(index, fieldId, clause.term, document.id).length;
     const length = fieldLength(document, fieldId);
     const averageLength = index.fieldAverageLengths?.[fieldId] ?? 0;
@@ -3254,20 +3345,22 @@ function scoreBm25fRetrievalClause(
           tf,
           length,
           averageLength,
-          weight: fieldSpec.weight,
+          weight: effectiveWeight,
+          ...(fieldWeights === undefined ? {} : { baseWeight: fieldSpec.weight, queryWeight }),
           normalizedTf: 0,
         },
       ];
     }
     const denominator = 1 - fieldSpec.b + fieldSpec.b * (length / averageLength);
-    const normalizedTf = denominator === 0 ? 0 : fieldSpec.weight * (tf / denominator);
+    const normalizedTf = denominator === 0 ? 0 : effectiveWeight * (tf / denominator);
     return [
       {
         field: fieldId,
         tf,
         length,
         averageLength,
-        weight: fieldSpec.weight,
+        weight: effectiveWeight,
+        ...(fieldWeights === undefined ? {} : { baseWeight: fieldSpec.weight, queryWeight }),
         normalizedTf,
       },
     ];
@@ -3290,8 +3383,7 @@ function scoreBm25fRetrievalClause(
 function searchSingleTextCorpusRetrievalQuery(
   index: TextCorpusRetrievalIndexV1,
   query: TextCorpusParsedQuery,
-  options: Required<Pick<TextCorpusRetrievalSearchOptions, "topK" | "snippetWindow">> &
-    Pick<TextCorpusRetrievalSearchOptions, "includeZeroScores">,
+  options: TextCorpusNormalizedRetrievalSearchOptions,
   documentById: ReadonlyMap<string, TextCorpusRetrievalDocument>,
 ): TextCorpusRetrievalQueryResult {
   const clausesForScoring = scoringClauses(index, query);
@@ -3302,7 +3394,7 @@ function searchSingleTextCorpusRetrievalQuery(
     const document = documentById.get(docId);
     if (document === undefined) return [];
     if (!documentMatchesQuery(index, document, query)) return [];
-    const scored = scoreRetrievalDocument(index, document, clausesForScoring);
+    const scored = scoreRetrievalDocument(index, document, clausesForScoring, options.fieldWeights);
     if (!options.includeZeroScores && scored.score <= 0) return [];
     const snippet = createRetrievalSnippet(document, tokensForSnippet, options.snippetWindow);
     return [
@@ -3321,14 +3413,59 @@ function searchSingleTextCorpusRetrievalQuery(
   };
 }
 
+interface TextCorpusNormalizedRetrievalSearchOptions {
+  readonly topK: number;
+  readonly snippetWindow: number;
+  readonly includeZeroScores?: boolean;
+  readonly fieldWeights?: Readonly<Record<string, number>>;
+  readonly fieldWeightProfile?: TextCorpusRetrievalFieldWeightProfileV1;
+}
+
+function normalizeSearchFieldWeightProfile(
+  index: TextCorpusRetrievalIndexV1,
+  options: TextCorpusRetrievalSearchOptions,
+): TextCorpusRetrievalFieldWeightProfileV1 | undefined {
+  if (options.fieldWeights !== undefined && options.fieldWeightProfile !== undefined) {
+    throw new TypeError("textcorpus retrieval field weights must be provided directly or as a profile, not both");
+  }
+  const profile = options.fieldWeightProfile ??
+    (options.fieldWeights === undefined
+      ? undefined
+      : createTextCorpusRetrievalFieldWeightProfile({
+          profileId: "inline",
+          fields: options.fieldWeights,
+        }));
+  if (profile === undefined) return undefined;
+  if (index.formula !== textCorpusBm25fFormula) {
+    throw new TypeError("textcorpus retrieval field weights require a BM25F retrieval index");
+  }
+  if (!isTextCorpusRetrievalFieldWeightProfileV1(profile)) {
+    throw new TypeError("textcorpus retrieval field weight profile is invalid");
+  }
+  const fieldSet = new Set(index.fieldOrder ?? []);
+  for (const field of profile.fields) {
+    if (!fieldSet.has(field.field)) {
+      throw new Error(`textcorpus retrieval field weight references unknown field: ${field.field}`);
+    }
+  }
+  return profile;
+}
+
 function normalizeRetrievalSearchOptions(
+  index: TextCorpusRetrievalIndexV1,
   options: TextCorpusRetrievalSearchOptions = {},
-): Required<Pick<TextCorpusRetrievalSearchOptions, "topK" | "snippetWindow">> &
-  Pick<TextCorpusRetrievalSearchOptions, "includeZeroScores"> {
+): TextCorpusNormalizedRetrievalSearchOptions {
+  const fieldWeightProfile = normalizeSearchFieldWeightProfile(index, options);
   return {
     topK: Math.max(0, Math.floor(options.topK ?? 10)),
     snippetWindow: Math.max(0, Math.floor(options.snippetWindow ?? 2)),
     ...(options.includeZeroScores === undefined ? {} : { includeZeroScores: options.includeZeroScores }),
+    ...(fieldWeightProfile === undefined
+      ? {}
+      : {
+          fieldWeightProfile,
+          fieldWeights: Object.fromEntries(fieldWeightProfile.fields.map((field) => [field.field, field.weight])),
+        }),
   };
 }
 
@@ -3343,7 +3480,7 @@ export function* iterateTextCorpusRetrievalResults(
   if (!Array.isArray(queries)) {
     throw new TypeError("textcorpus retrieval queries must be an array");
   }
-  const normalizedOptions = normalizeRetrievalSearchOptions(options);
+  const normalizedOptions = normalizeRetrievalSearchOptions(index, options);
   const documentById = new Map(index.documents.map((document) => [document.id, document]));
   for (const query of queries) {
     if (!isTextCorpusParsedQuery(query)) {
@@ -3359,6 +3496,7 @@ export function searchTextCorpusRetrievalIndex(
   queries: readonly TextCorpusParsedQuery[],
   options: TextCorpusRetrievalSearchOptions = {},
 ): TextCorpusRetrievalResultV1 {
+  const normalizedOptions = normalizeRetrievalSearchOptions(index, options);
   const results = [...iterateTextCorpusRetrievalResults(index, queries, options)];
   return {
     schemaVersion: textCorpusRetrievalSchemaVersion,
@@ -3367,6 +3505,9 @@ export function searchTextCorpusRetrievalIndex(
     evidenceClass: textCorpusEvidenceClassE2,
     selection: index.selection,
     formula: index.formula,
+    ...(normalizedOptions.fieldWeightProfile === undefined
+      ? {}
+      : { fieldWeightProfile: normalizedOptions.fieldWeightProfile }),
     results,
   };
 }
