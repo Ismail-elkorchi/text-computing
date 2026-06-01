@@ -864,6 +864,50 @@ async function assertBuiltPackageSmoke() {
     "textcorpus should apply and disclose BM25F field-weight profiles through package APIs.",
     fieldedRetrieval,
   );
+  const zeroFieldWeightProfile = textcorpus.createTextCorpusRetrievalFieldWeightProfile({
+    profileId: "downstream-api:zero-control",
+    fields: {
+      title: 0,
+      body: 0,
+    },
+  });
+  const retrievalCalibrationReport = textcorpus.calibrateTextCorpusRetrievalFieldWeightProfiles(
+    fieldedRetrievalIndex,
+    [textcorpus.parseTextCorpusQuery("title:alice", { id: "downstream-api-title" })],
+    {
+      schemaVersion: textcorpus.textCorpusRetrievalQrelsSchemaVersion,
+      taskId: "nlp-retrieval",
+      corpusId: "corpus:downstream-api",
+      judgments: [
+        {
+          queryId: "downstream-api-title",
+          ratings: [{ docId: "doc-a", grade: 2 }],
+        },
+      ],
+    },
+    [fieldWeightProfile, zeroFieldWeightProfile],
+    {
+      reportId: "downstream-api:retrieval-calibration",
+      optimizeMetric: "ndcgAtK",
+      k: 1,
+      relevantGradeThreshold: 1,
+      tolerance: 1e-12,
+      searchTopK: 1,
+    },
+  );
+  expect(
+    textcorpus.isTextCorpusRetrievalCalibrationReportV1(retrievalCalibrationReport) &&
+      retrievalCalibrationReport.selectedCandidateId === "baseline" &&
+      retrievalCalibrationReport.candidates.length === 3,
+    "textcorpus should compare BM25F field-weight profiles against caller-provided qrels through package APIs.",
+    retrievalCalibrationReport,
+  );
+  const retrievalCalibrationInspection = textlab.inspectTextCorpusArtifact(retrievalCalibrationReport);
+  expect(
+    retrievalCalibrationInspection.artifactKind === "retrieval-calibration" &&
+      retrievalCalibrationInspection.rowCount === retrievalCalibrationReport.candidates.length,
+    "textlab should inspect textcorpus retrieval calibration reports through package APIs.",
+  );
   const corpusMetricEnvelope = {
     schemaId: textprotocol.textProtocolCorpusMetricEnvelopeSchemaId,
     schemaVersion: textprotocol.textProtocolSchemaVersion,

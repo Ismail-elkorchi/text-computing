@@ -480,7 +480,8 @@
     "proximity-query",
     "boolean-query",
     "citation-window",
-    "quote-grounding"
+    "quote-grounding",
+    "relevance-calibration-report"
   ],
   "notes": [
     "Retrieval uses the explicit-token corpus already frozen for TF-IDF/BM25 evidence.",
@@ -488,6 +489,7 @@
     "Fielded BM25F retrieval uses explicit field specs and remains limited to the committed fielded smoke corpus.",
     "External qrels are limited to the committed BEIR NFCorpus title-token subset and do not verify broad retrieval quality.",
     "Streaming retrieval is package-level deterministic iteration over the same in-memory index semantics as batch retrieval.",
-    "Citation windows and quote grounding use textdoc token spans when available and declare token-join loss otherwise."
+    "Citation windows and quote grounding use textdoc token spans when available and declare token-join loss otherwise.",
+    "Relevance-calibration reports compare deterministic evaluation summaries for caller-provided qrels and explicit BM25F field-weight profiles; they do not train learned ranking weights."
   ]
 }

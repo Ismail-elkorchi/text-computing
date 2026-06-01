@@ -3,8 +3,11 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import {
   buildTextCorpusRetrievalIndex,
+  calibrateTextCorpusRetrievalFieldWeightProfiles,
   createTextCorpusCollection,
+  createTextCorpusRetrievalFieldWeightProfile,
   evaluateTextCorpusRetrieval,
+  isTextCorpusRetrievalCalibrationReportV1,
   isTextCorpusRetrievalIndexV1,
   isTextCorpusRetrievalQrelsV1,
   isTextCorpusRetrievalResultV1,
@@ -133,9 +136,11 @@ function comparableResult(result) {
 const expectedSchema = await readJson("schemas/retrieval-expected-v1.schema.json");
 const qrelsSchema = await readJson("schemas/retrieval-qrels-v1.schema.json");
 const evaluationSchema = await readJson("schemas/retrieval-evaluation-v1.schema.json");
+const calibrationSchema = await readJson("schemas/retrieval-calibration-report-v1.schema.json");
 const validateExpected = ajv.compile(expectedSchema);
 const validateQrels = ajv.compile(qrelsSchema);
 const validateEvaluation = ajv.compile(evaluationSchema);
+const validateCalibration = ajv.compile(calibrationSchema);
 const retrievalSlices = await readJson("fixtures/retrieval/slices.json");
 const corpusSlices = await readJson("fixtures/corpus-tfidf-bm25/slices.json");
 const expectedPaths = retrievalSlices.expectedPaths ?? [retrievalSlices.expectedPath];
@@ -156,6 +161,7 @@ const qrelsSetByExpectedPath = new Map(qrelsSets.map((entry) => [entry.expectedP
 let expectedQueryCount = 0;
 let evaluatedQueryCount = 0;
 let thresholdCheckedCount = 0;
+let calibratedCandidateCount = 0;
 
 for (const corpus of retrievalSlices.fieldedCorpora ?? []) {
   if (corpus.license !== undefined || corpus.provenance !== undefined || corpus.contentHash !== undefined) {
@@ -369,6 +375,49 @@ for (const expectedPath of expectedPaths) {
     });
     assertEvaluation(evaluation, expectedEvaluation, expectedEvaluation.tolerance, qrelsSet.evaluationPath);
     evaluatedQueryCount += evaluation.queries.length;
+    if (expected.formula === "bm25f.k1-1.2.b-0.75.fielded") {
+      const fieldIds = expected.fieldSpecs.map((fieldSpec) => fieldSpec.id);
+      const titleBoostProfile = createTextCorpusRetrievalFieldWeightProfile({
+        profileId: `${qrelsSet.id}:title-boost`,
+        fields: Object.fromEntries(fieldIds.map((fieldId) => [fieldId, fieldId === "title" ? 3 : 0.5])),
+      });
+      const zeroProfile = createTextCorpusRetrievalFieldWeightProfile({
+        profileId: `${qrelsSet.id}:zero-control`,
+        fields: Object.fromEntries(fieldIds.map((fieldId) => [fieldId, 0])),
+      });
+      const calibration = calibrateTextCorpusRetrievalFieldWeightProfiles(
+        index,
+        queries,
+        qrels,
+        [titleBoostProfile, zeroProfile],
+        {
+          reportId: `${qrelsSet.id}:retrieval-calibration`,
+          optimizeMetric: "ndcgAtK",
+          k: expectedEvaluation.k,
+          relevantGradeThreshold: expectedEvaluation.relevantGradeThreshold,
+          tolerance: expectedEvaluation.tolerance,
+          searchTopK: 3,
+        },
+      );
+      expect(
+        isTextCorpusRetrievalCalibrationReportV1(calibration),
+        `${qrelsSet.id} retrieval calibration failed runtime guard.`,
+        calibration,
+      );
+      expect(
+        validateCalibration(calibration),
+        `${qrelsSet.id} retrieval calibration failed schema validation.`,
+        validateCalibration.errors,
+      );
+      expect(
+        calibration.baselineCandidateId === "baseline" &&
+          calibration.candidates.length === 3 &&
+          calibration.candidateOrder.includes(`${qrelsSet.id}:zero-control`),
+        `${qrelsSet.id} retrieval calibration should compare baseline and caller-provided profiles.`,
+        calibration,
+      );
+      calibratedCandidateCount += calibration.candidates.length;
+    }
     const threshold = corpus.thresholds;
     if (threshold !== undefined) {
       const tokenCount = corpus.documents.reduce((sum, document) => sum + document.tokens.length, 0);
@@ -391,5 +440,5 @@ for (const expectedPath of expectedPaths) {
 
 
 console.log(
-  `Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount} evaluatedQueries=${evaluatedQueryCount} thresholdSets=${thresholdCheckedCount}).`,
+  `Retrieval feature artifacts OK (expectedFiles=${expectedPaths.length} queries=${expectedQueryCount} evaluatedQueries=${evaluatedQueryCount} calibratedCandidates=${calibratedCandidateCount} thresholdSets=${thresholdCheckedCount}).`,
 );

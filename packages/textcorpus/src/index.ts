@@ -13,6 +13,7 @@ export const textCorpusScoringSchemaVersion = 1 as const;
 export const textCorpusRetrievalSchemaVersion = 1 as const;
 export const textCorpusRetrievalQrelsSchemaVersion = 1 as const;
 export const textCorpusRetrievalEvaluationSchemaVersion = 1 as const;
+export const textCorpusRetrievalCalibrationSchemaVersion = 1 as const;
 export const textCorpusAnalysisSchemaVersion = 1 as const;
 export const textCorpusTokenSource = "explicit-textdoc-token-layer" as const;
 export const textCorpusEvidenceClassE2 = "E2" as const;
@@ -31,6 +32,8 @@ export type TextCorpusRetrievalSchemaVersion = typeof textCorpusRetrievalSchemaV
 export type TextCorpusRetrievalQrelsSchemaVersion = typeof textCorpusRetrievalQrelsSchemaVersion;
 export type TextCorpusRetrievalEvaluationSchemaVersion =
   typeof textCorpusRetrievalEvaluationSchemaVersion;
+export type TextCorpusRetrievalCalibrationSchemaVersion =
+  typeof textCorpusRetrievalCalibrationSchemaVersion;
 export type TextCorpusAnalysisSchemaVersion = typeof textCorpusAnalysisSchemaVersion;
 export type TextCorpusTokenSource = typeof textCorpusTokenSource;
 export type TextCorpusEvidenceClass = typeof textCorpusEvidenceClassE2;
@@ -492,6 +495,63 @@ export interface TextCorpusRetrievalEvaluationResultV1 {
   readonly queries: readonly TextCorpusRetrievalQueryEvaluation[];
 }
 
+export type TextCorpusRetrievalCalibrationMetric =
+  | "precisionAtK"
+  | "recallAtK"
+  | "mrr"
+  | "ndcgAtK";
+
+export interface TextCorpusRetrievalCalibrationCandidateInput {
+  readonly candidateId: string;
+  readonly evaluation: TextCorpusRetrievalEvaluationResultV1;
+  readonly fieldWeightProfile?: TextCorpusRetrievalFieldWeightProfileV1;
+}
+
+export interface TextCorpusRetrievalCalibrationOptions {
+  readonly reportId?: string;
+  readonly optimizeMetric?: TextCorpusRetrievalCalibrationMetric;
+  readonly baselineCandidateId?: string;
+  readonly tolerance?: number;
+}
+
+export interface TextCorpusRetrievalFieldWeightCalibrationOptions
+  extends TextCorpusRetrievalCalibrationOptions,
+    TextCorpusRetrievalEvaluationOptions {
+  readonly includeBaseline?: boolean;
+  readonly searchTopK?: number;
+  readonly snippetWindow?: number;
+}
+
+export interface TextCorpusRetrievalCalibrationCandidateV1 {
+  readonly candidateId: string;
+  readonly rank: number;
+  readonly selected: boolean;
+  readonly formula: TextCorpusRetrievalFormulaId;
+  readonly fieldWeightProfile?: TextCorpusRetrievalFieldWeightProfileV1;
+  readonly summary: TextCorpusRetrievalEvaluationSummary;
+  readonly deltasFromBaseline: TextCorpusRetrievalEvaluationSummary;
+  readonly metricScore: number;
+  readonly withinToleranceOfSelected: boolean;
+}
+
+export interface TextCorpusRetrievalCalibrationReportV1 {
+  readonly schemaVersion: TextCorpusRetrievalCalibrationSchemaVersion;
+  readonly taskId: "nlp-retrieval";
+  readonly reportId: string;
+  readonly corpusId: string;
+  readonly evidenceClass: TextCorpusEvidenceClass;
+  readonly selection: TextCorpusSelectionProvenanceV1;
+  readonly formula: TextCorpusRetrievalFormulaId;
+  readonly k: number;
+  readonly relevantGradeThreshold: number;
+  readonly tolerance: number;
+  readonly optimizeMetric: TextCorpusRetrievalCalibrationMetric;
+  readonly baselineCandidateId: string;
+  readonly selectedCandidateId: string;
+  readonly candidateOrder: readonly string[];
+  readonly candidates: readonly TextCorpusRetrievalCalibrationCandidateV1[];
+}
+
 export interface TextCorpusCitationWindowOptions {
   readonly tokenWindow?: number;
 }
@@ -715,6 +775,7 @@ export type TextCorpusArtifactV1 =
   | TextCorpusRetrievalIndexStorageRefV1
   | TextCorpusRetrievalResultV1
   | TextCorpusRetrievalEvaluationResultV1
+  | TextCorpusRetrievalCalibrationReportV1
   | TextCorpusCitationWindowSetV1
   | TextCorpusQuoteGroundingResultV1;
 
@@ -1908,6 +1969,80 @@ export function isTextCorpusRetrievalEvaluationResultV1(
     isRetrievalEvaluationSummary(value.summary) &&
     Array.isArray(value.queries) &&
     value.queries.every((query) => isRetrievalQueryEvaluation(query))
+  );
+}
+
+function isTextCorpusRetrievalCalibrationMetric(
+  value: unknown,
+): value is TextCorpusRetrievalCalibrationMetric {
+  return value === "precisionAtK" || value === "recallAtK" || value === "mrr" || value === "ndcgAtK";
+}
+
+function isTextCorpusRetrievalCalibrationCandidateV1(
+  value: unknown,
+): value is TextCorpusRetrievalCalibrationCandidateV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.candidateId) &&
+    typeof value.rank === "number" &&
+    Number.isInteger(value.rank) &&
+    value.rank >= 1 &&
+    typeof value.selected === "boolean" &&
+    isRetrievalFormula(value.formula) &&
+    (value.fieldWeightProfile === undefined ||
+      (isTextCorpusRetrievalFieldWeightProfileV1(value.fieldWeightProfile) &&
+        value.fieldWeightProfile.formula === value.formula)) &&
+    isRetrievalEvaluationSummary(value.summary) &&
+    isRetrievalEvaluationSummary(value.deltasFromBaseline) &&
+    typeof value.metricScore === "number" &&
+    Number.isFinite(value.metricScore) &&
+    typeof value.withinToleranceOfSelected === "boolean"
+  );
+}
+
+export function isTextCorpusRetrievalCalibrationReportV1(
+  value: unknown,
+): value is TextCorpusRetrievalCalibrationReportV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textCorpusRetrievalCalibrationSchemaVersion ||
+    value.taskId !== "nlp-retrieval" ||
+    !isNonEmptyString(value.reportId) ||
+    !isNonEmptyString(value.corpusId) ||
+    !isTextCorpusEvidenceClass(value.evidenceClass) ||
+    !selectionMatchesCorpus(value.selection, value.corpusId) ||
+    !isRetrievalFormula(value.formula) ||
+    typeof value.k !== "number" ||
+    !Number.isInteger(value.k) ||
+    value.k < 1 ||
+    typeof value.relevantGradeThreshold !== "number" ||
+    !Number.isInteger(value.relevantGradeThreshold) ||
+    value.relevantGradeThreshold < 1 ||
+    typeof value.tolerance !== "number" ||
+    !Number.isFinite(value.tolerance) ||
+    value.tolerance < 0 ||
+    !isTextCorpusRetrievalCalibrationMetric(value.optimizeMetric) ||
+    !isNonEmptyString(value.baselineCandidateId) ||
+    !isNonEmptyString(value.selectedCandidateId) ||
+    !Array.isArray(value.candidateOrder) ||
+    !value.candidateOrder.every((candidateId) => isNonEmptyString(candidateId)) ||
+    !Array.isArray(value.candidates) ||
+    value.candidates.length === 0 ||
+    !value.candidates.every((candidate) => isTextCorpusRetrievalCalibrationCandidateV1(candidate))
+  ) {
+    return false;
+  }
+  const candidateIds = value.candidates.map((candidate) => candidate.candidateId);
+  return (
+    new Set(candidateIds).size === candidateIds.length &&
+    JSON.stringify(value.candidateOrder) === JSON.stringify(candidateIds) &&
+    candidateIds.includes(value.baselineCandidateId) &&
+    candidateIds.includes(value.selectedCandidateId) &&
+    value.candidates.filter((candidate) => candidate.selected).length === 1 &&
+    value.candidates.some(
+      (candidate) => candidate.selected && candidate.candidateId === value.selectedCandidateId,
+    ) &&
+    value.candidates.every((candidate) => candidate.formula === value.formula)
   );
 }
 
@@ -3553,6 +3688,237 @@ export function evaluateTextCorpusRetrieval(
   };
 }
 
+function retrievalEvaluationMetric(
+  summary: TextCorpusRetrievalEvaluationSummary,
+  metric: TextCorpusRetrievalCalibrationMetric,
+): number {
+  return summary[metric];
+}
+
+function subtractRetrievalEvaluationSummary(
+  left: TextCorpusRetrievalEvaluationSummary,
+  right: TextCorpusRetrievalEvaluationSummary,
+): TextCorpusRetrievalEvaluationSummary {
+  return {
+    precisionAtK: left.precisionAtK - right.precisionAtK,
+    recallAtK: left.recallAtK - right.recallAtK,
+    mrr: left.mrr - right.mrr,
+    ndcgAtK: left.ndcgAtK - right.ndcgAtK,
+  };
+}
+
+function validateRetrievalCalibrationCandidateInput(
+  candidate: TextCorpusRetrievalCalibrationCandidateInput,
+): void {
+  if (!isRecord(candidate) || !isNonEmptyString(candidate.candidateId)) {
+    throw new TypeError("textcorpus retrieval calibration candidate id must be a non-empty string");
+  }
+  if (!isTextCorpusRetrievalEvaluationResultV1(candidate.evaluation)) {
+    throw new TypeError("textcorpus retrieval calibration candidate evaluation is invalid");
+  }
+  if (
+    candidate.fieldWeightProfile !== undefined &&
+    !isTextCorpusRetrievalFieldWeightProfileV1(candidate.fieldWeightProfile)
+  ) {
+    throw new TypeError("textcorpus retrieval calibration field weight profile is invalid");
+  }
+  if (
+    candidate.fieldWeightProfile !== undefined &&
+    candidate.fieldWeightProfile.formula !== candidate.evaluation.formula
+  ) {
+    throw new Error(
+      `textcorpus retrieval calibration profile formula mismatch for candidate ${candidate.candidateId}`,
+    );
+  }
+}
+
+function assertComparableRetrievalCalibrationEvaluation(
+  reference: TextCorpusRetrievalEvaluationResultV1,
+  candidate: TextCorpusRetrievalEvaluationResultV1,
+  candidateId: string,
+): void {
+  if (candidate.corpusId !== reference.corpusId) {
+    throw new Error(`textcorpus retrieval calibration corpus mismatch for candidate ${candidateId}`);
+  }
+  if (candidate.formula !== reference.formula) {
+    throw new Error(`textcorpus retrieval calibration formula mismatch for candidate ${candidateId}`);
+  }
+  if (candidate.k !== reference.k) {
+    throw new Error(`textcorpus retrieval calibration k mismatch for candidate ${candidateId}`);
+  }
+  if (candidate.relevantGradeThreshold !== reference.relevantGradeThreshold) {
+    throw new Error(
+      `textcorpus retrieval calibration relevant grade threshold mismatch for candidate ${candidateId}`,
+    );
+  }
+  if (candidate.tolerance !== reference.tolerance) {
+    throw new Error(`textcorpus retrieval calibration evaluation tolerance mismatch for candidate ${candidateId}`);
+  }
+  if (JSON.stringify(candidate.selection) !== JSON.stringify(reference.selection)) {
+    throw new Error(`textcorpus retrieval calibration selection mismatch for candidate ${candidateId}`);
+  }
+}
+
+export function createTextCorpusRetrievalCalibrationReport(
+  candidates: readonly TextCorpusRetrievalCalibrationCandidateInput[],
+  options: TextCorpusRetrievalCalibrationOptions = {},
+): TextCorpusRetrievalCalibrationReportV1 {
+  if (!Array.isArray(candidates) || candidates.length === 0) {
+    throw new TypeError("textcorpus retrieval calibration candidates must be a non-empty array");
+  }
+  for (const candidate of candidates) validateRetrievalCalibrationCandidateInput(candidate);
+  const normalizedCandidates = [...candidates].sort((left, right) =>
+    left.candidateId.localeCompare(right.candidateId),
+  );
+  const candidateIds = normalizedCandidates.map((candidate) => candidate.candidateId);
+  if (new Set(candidateIds).size !== candidateIds.length) {
+    throw new Error("duplicate textcorpus retrieval calibration candidate id");
+  }
+
+  const referenceEvaluation = normalizedCandidates[0]?.evaluation;
+  if (referenceEvaluation === undefined) {
+    throw new TypeError("textcorpus retrieval calibration candidates must include an evaluation");
+  }
+  for (const candidate of normalizedCandidates) {
+    assertComparableRetrievalCalibrationEvaluation(
+      referenceEvaluation,
+      candidate.evaluation,
+      candidate.candidateId,
+    );
+  }
+
+  const optimizeMetric = options.optimizeMetric ?? "ndcgAtK";
+  if (!isTextCorpusRetrievalCalibrationMetric(optimizeMetric)) {
+    throw new TypeError("textcorpus retrieval calibration optimize metric is invalid");
+  }
+  const tolerance = options.tolerance ?? referenceEvaluation.tolerance;
+  if (typeof tolerance !== "number" || !Number.isFinite(tolerance) || tolerance < 0) {
+    throw new TypeError("textcorpus retrieval calibration tolerance must be a non-negative finite number");
+  }
+  const baselineCandidateId =
+    options.baselineCandidateId ??
+    (candidateIds.includes("baseline") ? "baseline" : (candidateIds[0] as string));
+  if (!candidateIds.includes(baselineCandidateId)) {
+    throw new Error(`textcorpus retrieval calibration baseline candidate is missing: ${baselineCandidateId}`);
+  }
+  const reportId = options.reportId ?? `textcorpus.retrieval-calibration:${referenceEvaluation.corpusId}`;
+  if (!isNonEmptyString(reportId)) {
+    throw new TypeError("textcorpus retrieval calibration report id must be a non-empty string");
+  }
+
+  const baselineEvaluation = normalizedCandidates.find(
+    (candidate) => candidate.candidateId === baselineCandidateId,
+  )?.evaluation;
+  if (baselineEvaluation === undefined) {
+    throw new Error(`textcorpus retrieval calibration baseline candidate is missing: ${baselineCandidateId}`);
+  }
+  const ranked = normalizedCandidates.sort((left, right) => {
+    const leftScore = retrievalEvaluationMetric(left.evaluation.summary, optimizeMetric);
+    const rightScore = retrievalEvaluationMetric(right.evaluation.summary, optimizeMetric);
+    const delta = rightScore - leftScore;
+    if (Math.abs(delta) > tolerance) return delta;
+    return left.candidateId.localeCompare(right.candidateId);
+  });
+  const selectedCandidate = ranked[0];
+  if (selectedCandidate === undefined) {
+    throw new TypeError("textcorpus retrieval calibration candidates must include a selected candidate");
+  }
+  const selectedMetricScore = retrievalEvaluationMetric(selectedCandidate.evaluation.summary, optimizeMetric);
+  const reportCandidates = ranked.map((candidate, index): TextCorpusRetrievalCalibrationCandidateV1 => {
+    const metricScore = retrievalEvaluationMetric(candidate.evaluation.summary, optimizeMetric);
+    return {
+      candidateId: candidate.candidateId,
+      rank: index + 1,
+      selected: candidate.candidateId === selectedCandidate.candidateId,
+      formula: candidate.evaluation.formula,
+      ...(candidate.fieldWeightProfile === undefined ? {} : { fieldWeightProfile: candidate.fieldWeightProfile }),
+      summary: candidate.evaluation.summary,
+      deltasFromBaseline: subtractRetrievalEvaluationSummary(
+        candidate.evaluation.summary,
+        baselineEvaluation.summary,
+      ),
+      metricScore,
+      withinToleranceOfSelected: Math.abs(selectedMetricScore - metricScore) <= tolerance,
+    };
+  });
+  const report = {
+    schemaVersion: textCorpusRetrievalCalibrationSchemaVersion,
+    taskId: "nlp-retrieval",
+    reportId,
+    corpusId: referenceEvaluation.corpusId,
+    evidenceClass: textCorpusEvidenceClassE2,
+    selection: referenceEvaluation.selection,
+    formula: referenceEvaluation.formula,
+    k: referenceEvaluation.k,
+    relevantGradeThreshold: referenceEvaluation.relevantGradeThreshold,
+    tolerance,
+    optimizeMetric,
+    baselineCandidateId,
+    selectedCandidateId: selectedCandidate.candidateId,
+    candidateOrder: reportCandidates.map((candidate) => candidate.candidateId),
+    candidates: reportCandidates,
+  } satisfies TextCorpusRetrievalCalibrationReportV1;
+  if (!isTextCorpusRetrievalCalibrationReportV1(report)) {
+    throw new TypeError("textcorpus retrieval calibration report is invalid");
+  }
+  return report;
+}
+
+export function calibrateTextCorpusRetrievalFieldWeightProfiles(
+  index: TextCorpusRetrievalIndexV1,
+  queries: readonly TextCorpusParsedQuery[],
+  qrels: TextCorpusRetrievalQrelsV1,
+  profiles: readonly TextCorpusRetrievalFieldWeightProfileV1[],
+  options: TextCorpusRetrievalFieldWeightCalibrationOptions = {},
+): TextCorpusRetrievalCalibrationReportV1 {
+  if (!isTextCorpusRetrievalIndexV1(index)) {
+    throw new TypeError("textcorpus retrieval index must satisfy TextCorpusRetrievalIndexV1");
+  }
+  if (index.formula !== textCorpusBm25fFormula) {
+    throw new TypeError("textcorpus retrieval field-weight calibration requires a BM25F retrieval index");
+  }
+  if (!Array.isArray(queries) || !queries.every((query) => isTextCorpusParsedQuery(query))) {
+    throw new TypeError("textcorpus retrieval calibration queries must be parsed textcorpus queries");
+  }
+  validateRetrievalQrels(qrels);
+  if (!Array.isArray(profiles) || !profiles.every((profile) => isTextCorpusRetrievalFieldWeightProfileV1(profile))) {
+    throw new TypeError("textcorpus retrieval calibration profiles must satisfy TextCorpusRetrievalFieldWeightProfileV1");
+  }
+  const evaluationK = Math.max(1, Math.floor(options.k ?? 10));
+  const searchTopK = Math.max(evaluationK, Math.max(1, Math.floor(options.searchTopK ?? evaluationK)));
+  const evaluationOptions: TextCorpusRetrievalEvaluationOptions = {
+    k: evaluationK,
+    ...(options.relevantGradeThreshold === undefined
+      ? {}
+      : { relevantGradeThreshold: options.relevantGradeThreshold }),
+    ...(options.tolerance === undefined ? {} : { tolerance: options.tolerance }),
+  };
+  const candidates: TextCorpusRetrievalCalibrationCandidateInput[] = [];
+  if (options.includeBaseline !== false) {
+    const baselineResult = searchTextCorpusRetrievalIndex(index, queries, {
+      topK: searchTopK,
+      ...(options.snippetWindow === undefined ? {} : { snippetWindow: options.snippetWindow }),
+    });
+    candidates.push({
+      candidateId: options.baselineCandidateId ?? "baseline",
+      evaluation: evaluateTextCorpusRetrieval(baselineResult, qrels, evaluationOptions),
+    });
+  }
+  for (const profile of [...profiles].sort((left, right) => left.profileId.localeCompare(right.profileId))) {
+    const result = searchTextCorpusRetrievalIndex(index, queries, {
+      topK: searchTopK,
+      ...(options.snippetWindow === undefined ? {} : { snippetWindow: options.snippetWindow }),
+      fieldWeightProfile: profile,
+    });
+    candidates.push({
+      candidateId: profile.profileId,
+      evaluation: evaluateTextCorpusRetrieval(result, qrels, evaluationOptions),
+      fieldWeightProfile: profile,
+    });
+  }
+  return createTextCorpusRetrievalCalibrationReport(candidates, options);
+}
+
 function entryById(collection: TextCorpusCollectionV1): ReadonlyMap<string, TextCorpusEntry> {
   return new Map(collection.entries.map((entry) => [entry.id, entry]));
 }
@@ -4025,6 +4391,7 @@ export function isTextCorpusArtifactV1(value: unknown): value is TextCorpusArtif
     isTextCorpusRetrievalIndexStorageRefV1(value) ||
     isTextCorpusRetrievalResultV1(value) ||
     isTextCorpusRetrievalEvaluationResultV1(value) ||
+    isTextCorpusRetrievalCalibrationReportV1(value) ||
     isTextCorpusCitationWindowSetV1(value) ||
     isTextCorpusQuoteGroundingResultV1(value)
   );
@@ -4130,6 +4497,7 @@ function textCorpusMetricSetIdForArtifact(artifact: TextCorpusArtifactV1): strin
   if (isTextCorpusRetrievalIndexV1(artifact)) return `textcorpus.retrieval-index:${artifact.corpusId}:${artifact.formula}`;
   if (isTextCorpusRetrievalResultV1(artifact)) return `textcorpus.retrieval-result:${artifact.corpusId}:${artifact.formula}`;
   if (isTextCorpusRetrievalEvaluationResultV1(artifact)) return `textcorpus.retrieval-evaluation:${artifact.corpusId}:${artifact.formula}:k-${artifact.k}`;
+  if (isTextCorpusRetrievalCalibrationReportV1(artifact)) return `textcorpus.retrieval-calibration:${artifact.corpusId}:${artifact.formula}:k-${artifact.k}:${artifact.optimizeMetric}`;
   if (isTextCorpusCitationWindowSetV1(artifact)) return `textcorpus.citation-windows:${artifact.corpusId}`;
   return `textcorpus.quote-grounding:${artifact.corpusId}:${artifact.docId}`;
 }
@@ -4221,6 +4589,14 @@ export function exportTextCorpusMetricEnvelopePayloadV1(
       textCorpusMetric("retrieval-evaluation.recall-at-k", "retrieval-evaluation", source.summary.recallAtK, { unit: "ratio", parameters: { k: source.k } }),
       textCorpusMetric("retrieval-evaluation.mrr", "retrieval-evaluation", source.summary.mrr, { unit: "ratio", parameters: { k: source.k } }),
       textCorpusMetric("retrieval-evaluation.ndcg-at-k", "retrieval-evaluation", source.summary.ndcgAtK, { unit: "ratio", parameters: { k: source.k } }),
+    );
+  } else if (isTextCorpusRetrievalCalibrationReportV1(source)) {
+    const selectedCandidate = source.candidates.find((candidate) => candidate.selected);
+    metrics.push(
+      textCorpusMetric("retrieval-calibration.candidate-count", "retrieval-calibration", source.candidates.length, { unit: "candidates", parameters: { k: source.k, optimizeMetric: source.optimizeMetric } }),
+      textCorpusMetric("retrieval-calibration.selected-candidate-id", "retrieval-calibration", source.selectedCandidateId, { parameters: { optimizeMetric: source.optimizeMetric } }),
+      textCorpusMetric("retrieval-calibration.selected-metric-score", "retrieval-calibration", selectedCandidate?.metricScore ?? 0, { unit: "ratio", parameters: { optimizeMetric: source.optimizeMetric } }),
+      textCorpusMetric("retrieval-calibration.within-tolerance-count", "retrieval-calibration", source.candidates.filter((candidate) => candidate.withinToleranceOfSelected).length, { unit: "candidates", parameters: { tolerance: source.tolerance } }),
     );
   } else if (isTextCorpusCitationWindowSetV1(source)) {
     metrics.push(

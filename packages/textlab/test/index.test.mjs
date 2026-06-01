@@ -1224,6 +1224,104 @@ if (
 if (!renderTextCorpusArtifactInspection(corpusStorageRefInspection).includes("Storage key: file://indexes/corpus-artifact-smoke/bm25.json")) {
   throw new Error("textcorpus artifact renderer should include storage-ref key");
 }
+const corpusRetrievalCalibrationReport = {
+  schemaVersion: 1,
+  taskId: "nlp-retrieval",
+  reportId: "calibration:corpus-artifact-smoke",
+  corpusId: "corpus-artifact-smoke",
+  evidenceClass: "E2",
+  selection: {
+    schemaVersion: 1,
+    corpusId: "corpus-artifact-smoke",
+    tokenSource: "explicit-textdoc-token-layer",
+    units: "utf16-code-unit",
+    documentOrder: ["doc-a", "doc-b"],
+    tokenCount: 4,
+    documents: [
+      {
+        id: "doc-a",
+        documentId: "doc:corpus-artifact-a",
+        revision: "r1",
+        viewId: "analysis-view",
+        tokenLayerId: "tokens",
+        tokenCount: 2,
+      },
+      {
+        id: "doc-b",
+        documentId: "doc:corpus-artifact-b",
+        revision: "r1",
+        viewId: "analysis-view",
+        tokenLayerId: "tokens",
+        tokenCount: 2,
+      },
+    ],
+  },
+  formula: "bm25f.k1-1.2.b-0.75.fielded",
+  k: 2,
+  relevantGradeThreshold: 1,
+  tolerance: 1e-12,
+  optimizeMetric: "ndcgAtK",
+  baselineCandidateId: "baseline",
+  selectedCandidateId: "baseline",
+  candidateOrder: ["baseline", "profile:zero"],
+  candidates: [
+    {
+      candidateId: "baseline",
+      rank: 1,
+      selected: true,
+      formula: "bm25f.k1-1.2.b-0.75.fielded",
+      summary: {
+        precisionAtK: 0.5,
+        recallAtK: 1,
+        mrr: 1,
+        ndcgAtK: 1,
+      },
+      deltasFromBaseline: {
+        precisionAtK: 0,
+        recallAtK: 0,
+        mrr: 0,
+        ndcgAtK: 0,
+      },
+      metricScore: 1,
+      withinToleranceOfSelected: true,
+    },
+    {
+      candidateId: "profile:zero",
+      rank: 2,
+      selected: false,
+      formula: "bm25f.k1-1.2.b-0.75.fielded",
+      summary: {
+        precisionAtK: 0,
+        recallAtK: 0,
+        mrr: 0,
+        ndcgAtK: 0,
+      },
+      deltasFromBaseline: {
+        precisionAtK: -0.5,
+        recallAtK: -1,
+        mrr: -1,
+        ndcgAtK: -1,
+      },
+      metricScore: 0,
+      withinToleranceOfSelected: false,
+    },
+  ],
+};
+const corpusCalibrationInspection = inspectTextCorpusArtifact(corpusRetrievalCalibrationReport, {
+  offset: 1,
+  limit: 1,
+});
+if (
+  corpusCalibrationInspection.artifactKind !== "retrieval-calibration" ||
+  corpusCalibrationInspection.rowCount !== 2 ||
+  corpusCalibrationInspection.pageRows[0]?.candidateId !== "profile:zero" ||
+  corpusCalibrationInspection.formulaIds.join(",") !== "bm25f.k1-1.2.b-0.75.fielded"
+) {
+  throw new Error("textcorpus artifact inspection should summarize retrieval calibration reports");
+}
+if (!renderTextCorpusArtifactInspection(corpusCalibrationInspection).includes("Kind: retrieval-calibration")) {
+  throw new Error("textcorpus artifact renderer should include calibration artifact kind");
+}
 let invalidCorpusArtifactRejected = false;
 try {
   inspectTextCorpusArtifact(corpusFixture);

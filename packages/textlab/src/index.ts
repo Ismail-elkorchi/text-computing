@@ -15,6 +15,7 @@ import {
   isTextCorpusNgramResultV1,
   isTextCorpusPairwiseRelationResultV1,
   isTextCorpusQuoteGroundingResultV1,
+  isTextCorpusRetrievalCalibrationReportV1,
   isTextCorpusRetrievalEvaluationResultV1,
   isTextCorpusRetrievalIndexArtifactV1,
   isTextCorpusRetrievalIndexStorageRefV1,
@@ -1748,6 +1749,7 @@ function corpusArtifactKind(value: unknown): string {
   if (isTextCorpusRetrievalIndexV1(source)) return "retrieval-index";
   if (isTextCorpusRetrievalResultV1(source)) return "retrieval-result";
   if (isTextCorpusRetrievalEvaluationResultV1(source)) return "retrieval-evaluation";
+  if (isTextCorpusRetrievalCalibrationReportV1(source)) return "retrieval-calibration";
   if (isTextCorpusCitationWindowSetV1(source)) return "citation-window-set";
   if (isTextCorpusQuoteGroundingResultV1(source)) return "quote-grounding";
   return "unknown";
@@ -1772,6 +1774,7 @@ function corpusArtifactRows(source: unknown): readonly unknown[] {
   if (isTextCorpusRetrievalIndexV1(source)) return source.documents;
   if (isTextCorpusRetrievalResultV1(source)) return source.results;
   if (isTextCorpusRetrievalEvaluationResultV1(source)) return source.queries;
+  if (isTextCorpusRetrievalCalibrationReportV1(source)) return source.candidates;
   if (isTextCorpusCitationWindowSetV1(source)) return source.windows;
   if (isTextCorpusQuoteGroundingResultV1(source)) return source.matches;
   if (isTextCorpusMetricEnvelopePayloadV1(source)) return source.metrics;
