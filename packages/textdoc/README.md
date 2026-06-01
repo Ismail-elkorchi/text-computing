@@ -65,6 +65,22 @@ document and layer provenance, confidence and ambiguity metadata, support refere
 classes, and annotation loss accounting. `isTextDocEvidenceBundlePayloadV1()` validates the payload
 shape without adding a `textprotocol` dependency to this package.
 
+## Task graph profiles
+
+`validateTextDocTaskGraphProfile()` evaluates a validated `TextDocDocumentV1` against a declarative
+`TextDocTaskGraphProfileV1`. Profiles can require views, layers, annotation patterns, relation
+argument roles, and annotation coverage rules such as entity-link coverage or span-contained token
+coverage. The result is a deterministic `TextDocTaskGraphValidationReportV1` with pass/fail counts
+and diagnostics keyed by requirement id.
+
+The profile and report schemas live at:
+
+- [`../../schemas/textdoc-task-graph-profile-v1.schema.json`](../../schemas/textdoc-task-graph-profile-v1.schema.json)
+- [`../../schemas/textdoc-task-graph-validation-report-v1.schema.json`](../../schemas/textdoc-task-graph-validation-report-v1.schema.json)
+
+Task graph profiles validate declared graph structure. They do not run NLP models, infer ontologies,
+or score task correctness against external corpora.
+
 ## Extension annotations
 
 Core annotation kinds are reserved for cross-package semantics that this package can validate without
@@ -111,3 +127,6 @@ document model without widening `@ismail-elkorchi/textfacts`.
 - [`../../examples/textdoc-evidence-bundle-consumer.mjs`](../../examples/textdoc-evidence-bundle-consumer.mjs)
   exports annotation evidence records as an evidence-bundle payload, wraps the payload in
   textprotocol schema-family JSON transport, and inspects the parsed envelope through textlab.
+- [`../../examples/textdoc-task-graph-profile-consumer.mjs`](../../examples/textdoc-task-graph-profile-consumer.mjs)
+  validates a document against a declarative task graph profile for required layers, relation roles,
+  and annotation coverage.

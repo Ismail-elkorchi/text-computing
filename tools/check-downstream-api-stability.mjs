@@ -196,6 +196,125 @@ async function assertBuiltPackageSmoke() {
     textdoc.isTextDocMappingLossReportPayloadV1(mappingLossPayload) && mappingLossPayload.losses.length === 2,
     "textdoc built API should export mapping-loss report payloads through package APIs.",
   );
+  const taskGraphDocument = textdoc.addTextDocLayerV1(
+    textdoc.addTextDocLayerV1(
+      textdoc.addTextDocLayerV1(
+        document,
+        {
+          id: "entities",
+          kind: "entity",
+          viewId: "source-view",
+          annotations: [
+            {
+              id: "entity-1",
+              kind: "entity",
+              label: "PERSON",
+              lifecycle: { state: "active" },
+              targets: [{ kind: "span", viewId: "source-view", startCU: 0, endCU: 5 }],
+              text: "Alice",
+            },
+          ],
+        },
+        { revision: "r4" },
+      ),
+      {
+        id: "relations",
+        kind: "relation",
+        viewId: "source-view",
+        annotations: [
+          {
+            id: "relation-1",
+            kind: "relation",
+            relationType: "surface-mention",
+            lifecycle: { state: "active" },
+            targets: [
+              { kind: "annotation", annotationId: "entity-1" },
+              { kind: "annotation", annotationId: "token-1" },
+            ],
+            arguments: [
+              { role: "entity", annotationId: "entity-1" },
+              { role: "surface", annotationId: "token-1" },
+            ],
+          },
+        ],
+      },
+      { revision: "r5" },
+    ),
+    {
+      id: "entity-links",
+      kind: "entity-link",
+      viewId: "source-view",
+      annotations: [
+        {
+          id: "link-1",
+          kind: "entity-link",
+          lifecycle: { state: "active" },
+          targets: [{ kind: "annotation", annotationId: "entity-1" }],
+          nil: { reason: "downstream-smoke-no-kb" },
+        },
+      ],
+    },
+    { revision: "r6" },
+  );
+  const taskGraphProfile = {
+    schemaVersion: textdoc.textDocTaskGraphProfileSchemaVersion,
+    profileId: "profile:downstream-api-task-graph",
+    task: "entity-surface-link-graph",
+    requiredViews: [{ id: "source-view", kind: "raw" }],
+    requiredLayers: [
+      { id: "tokens", kind: "token", viewId: "source-view", minAnnotations: 1 },
+      { id: "entities", kind: "entity", viewId: "source-view", minAnnotations: 1 },
+      { id: "relations", kind: "relation", viewId: "source-view", minAnnotations: 1 },
+      { id: "entity-links", kind: "entity-link", viewId: "source-view", minAnnotations: 1 },
+    ],
+    annotationPatterns: [
+      {
+        id: "relation-targets",
+        annotationKind: "relation",
+        layerId: "relations",
+        minAnnotations: 1,
+        requiredTargetAnnotationKinds: ["entity", "token"],
+      },
+    ],
+    relationArgumentRules: [
+      {
+        id: "surface-mention-roles",
+        layerId: "relations",
+        relationType: "surface-mention",
+        requiredRoles: [
+          { role: "entity", targetAnnotationKinds: ["entity"] },
+          { role: "surface", targetAnnotationKinds: ["token"] },
+        ],
+      },
+    ],
+    coverageRules: [
+      {
+        id: "entity-has-link",
+        sourceAnnotationKind: "entity",
+        sourceLayerId: "entities",
+        coveringAnnotationKind: "entity-link",
+        coveringLayerId: "entity-links",
+        mode: "annotation-target",
+      },
+      {
+        id: "entity-covered-by-token",
+        sourceAnnotationKind: "entity",
+        sourceLayerId: "entities",
+        coveringAnnotationKind: "token",
+        coveringLayerId: "tokens",
+        mode: "span-contained",
+      },
+    ],
+    evidenceRefs: [{ kind: "fixture", id: "downstream-api-task-graph" }],
+    limitations: ["Downstream API stability task graph profile smoke."],
+  };
+  const taskGraphReport = textdoc.validateTextDocTaskGraphProfile(taskGraphDocument, taskGraphProfile);
+  expect(
+    textdoc.isTextDocTaskGraphProfileV1(taskGraphProfile) &&
+      textdoc.isTextDocTaskGraphValidationReportV1(taskGraphReport) &&
+      taskGraphReport.ok,
+    "textdoc built API should validate task graph profiles through package APIs.",
+  );
 
   const envelope = {
     schemaId: textprotocol.resultEnvelopeSchemaId,

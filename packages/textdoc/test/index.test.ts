@@ -22,18 +22,24 @@ import {
   isTextDocMappingLossReportPayloadV1,
   isTextDocDocumentV1,
   isTextDocSpanInRange,
+  isTextDocTaskGraphProfileV1,
+  isTextDocTaskGraphValidationReportV1,
   packageName,
   queryTextDocAnnotations,
   retractTextDocAnnotationV1,
   supersedeTextDocAnnotationV1,
   TextDocConlluError,
   TextDocRevisionError,
+  textDocTaskGraphProfileSchemaVersion,
+  textDocTaskGraphValidationReportSchemaVersion,
   textDocExtensionIdPattern,
   textDocDocumentPayloadKind,
   toTextDocDocumentV1,
   tokenSentenceAnnotationSchemaVersion,
+  validateTextDocTaskGraphProfile,
   validateTextDocDocumentV1,
   type TextDocDocumentV1,
+  type TextDocTaskGraphProfileV1,
   type TextDocTokenSentenceAnnotationSet,
 } from "../src/index.ts";
 
@@ -473,6 +479,164 @@ if (!isTextDocDocumentV1(graphFixtureDocument)) {
 const graphValidation = validateTextDocDocumentV1(graphFixtureDocument);
 if (!graphValidation.ok || graphValidation.diagnostics.length !== 0) {
   throw new Error("graph fixture should satisfy package-level reference validation");
+}
+
+const graphTaskProfile: TextDocTaskGraphProfileV1 = {
+  schemaVersion: textDocTaskGraphProfileSchemaVersion,
+  profileId: "profile:entity-relation-coreference",
+  task: "entity-relation-coreference-graph",
+  requiredViews: [{ id: "analysis-view", kind: "task" }],
+  requiredLayers: [
+    { id: "tokens", kind: "token", viewId: "analysis-view", minAnnotations: 1 },
+    { id: "entities", kind: "entity", viewId: "analysis-view", minAnnotations: 1 },
+    { id: "relations", kind: "relation", viewId: "analysis-view", minAnnotations: 1 },
+    { id: "coreference-mentions", kind: "coreference-mention", viewId: "analysis-view", minAnnotations: 1 },
+    { id: "coreference-chains", kind: "coreference-chain", viewId: "analysis-view", minAnnotations: 1 },
+    { id: "entity-links", kind: "entity-link", viewId: "analysis-view", minAnnotations: 1 },
+  ],
+  annotationPatterns: [
+    {
+      id: "entity-span-targets",
+      annotationKind: "entity",
+      layerId: "entities",
+      minAnnotations: 1,
+      requiredTargetKinds: ["span"],
+    },
+    {
+      id: "relation-annotation-targets",
+      annotationKind: "relation",
+      layerId: "relations",
+      minAnnotations: 1,
+      requiredTargetAnnotationKinds: ["entity", "token"],
+    },
+    {
+      id: "entity-link-provenance",
+      annotationKind: "entity-link",
+      layerId: "entity-links",
+      minAnnotations: 1,
+      requiredTargetAnnotationKinds: ["entity"],
+      requiredProvenanceReferences: [{ kind: "fixture", id: "graph-runtime" }],
+    },
+  ],
+  relationArgumentRules: [
+    {
+      id: "mention-relation-roles",
+      layerId: "relations",
+      relationType: "mentions",
+      minRelations: 1,
+      requiredRoles: [
+        { role: "entity", targetAnnotationKinds: ["entity"] },
+        { role: "surface", targetAnnotationKinds: ["token"] },
+      ],
+    },
+  ],
+  coverageRules: [
+    {
+      id: "entity-has-link",
+      sourceAnnotationKind: "entity",
+      sourceLayerId: "entities",
+      coveringAnnotationKind: "entity-link",
+      coveringLayerId: "entity-links",
+      mode: "annotation-target",
+    },
+    {
+      id: "entity-has-coreference-mention",
+      sourceAnnotationKind: "entity",
+      sourceLayerId: "entities",
+      coveringAnnotationKind: "coreference-mention",
+      coveringLayerId: "coreference-mentions",
+      mode: "annotation-target",
+    },
+    {
+      id: "token-contained-by-entity-span",
+      sourceAnnotationKind: "token",
+      sourceLayerId: "tokens",
+      coveringAnnotationKind: "entity",
+      coveringLayerId: "entities",
+      mode: "span-contained",
+    },
+  ],
+  evidenceRefs: [{ kind: "fixture", id: "graph-runtime" }],
+  limitations: [
+    "Task graph profiles validate declared structural requirements; they do not evaluate extraction model quality.",
+  ],
+};
+
+if (!isTextDocTaskGraphProfileV1(graphTaskProfile)) {
+  throw new Error("task graph profile guard should accept the graph fixture profile");
+}
+
+const graphTaskReport = validateTextDocTaskGraphProfile(graphFixtureDocument, graphTaskProfile);
+if (
+  !isTextDocTaskGraphValidationReportV1(graphTaskReport) ||
+  graphTaskReport.schemaVersion !== textDocTaskGraphValidationReportSchemaVersion ||
+  !graphTaskReport.ok ||
+  graphTaskReport.summary.passCount !== 14 ||
+  graphTaskReport.summary.diagnosticCount !== 0
+) {
+  throw new Error("task graph profile validation should accept the graph fixture");
+}
+
+const graphTaskMissingLinkDocument = structuredClone(graphFixtureDocument);
+const graphTaskMissingLinkLayer = graphTaskMissingLinkDocument.layers.find((layer) => layer.id === "entity-links");
+if (graphTaskMissingLinkLayer === undefined) {
+  throw new Error("entity-link layer should exist for task graph coverage test");
+}
+(graphTaskMissingLinkLayer as { annotations: typeof graphTaskMissingLinkLayer.annotations }).annotations = [];
+const graphTaskMissingLinkReport = validateTextDocTaskGraphProfile(
+  graphTaskMissingLinkDocument,
+  graphTaskProfile,
+);
+if (
+  graphTaskMissingLinkReport.ok ||
+  !graphTaskMissingLinkReport.diagnostics.some((entry) => entry.code === "textdoc.task-graph.coverage-missing")
+) {
+  throw new Error("task graph profile validation should report missing entity-link coverage");
+}
+
+const graphTaskWrongRelationDocument = structuredClone(graphFixtureDocument);
+const graphTaskWrongRelation = graphTaskWrongRelationDocument.layers
+  .find((layer) => layer.id === "relations")
+  ?.annotations.find((annotation) => annotation.id === "relation-1");
+if (graphTaskWrongRelation?.kind !== "relation") {
+  throw new Error("relation fixture should exist for task graph role test");
+}
+(graphTaskWrongRelation as { arguments: typeof graphTaskWrongRelation.arguments }).arguments = [
+  { role: "entity", annotationId: "entity-1" },
+  { role: "surface", annotationId: "entity-1" },
+];
+const graphTaskWrongRelationReport = validateTextDocTaskGraphProfile(
+  graphTaskWrongRelationDocument,
+  graphTaskProfile,
+);
+if (
+  graphTaskWrongRelationReport.ok ||
+  !graphTaskWrongRelationReport.diagnostics.some(
+    (entry) => entry.code === "textdoc.task-graph.relation-role-target-kind",
+  )
+) {
+  throw new Error("task graph profile validation should report relation role target kind mismatches");
+}
+
+if (isTextDocTaskGraphProfileV1({ ...graphTaskProfile, evidenceRefs: [] })) {
+  throw new Error("task graph profile guard should reject missing evidence references");
+}
+
+let invalidTaskGraphProfileRejected = false;
+try {
+  validateTextDocTaskGraphProfile(graphFixtureDocument, {
+    ...graphTaskProfile,
+    coverageRules: [],
+    annotationPatterns: [],
+    relationArgumentRules: [],
+    requiredLayers: [],
+    requiredViews: [],
+  });
+} catch (error) {
+  invalidTaskGraphProfileRejected = error instanceof TypeError;
+}
+if (!invalidTaskGraphProfileRejected) {
+  throw new Error("task graph validation should reject profiles with no requirements");
 }
 
 const annotationBundlePayload = exportTextDocAnnotationBundlePayloadV1(graphFixtureDocument);

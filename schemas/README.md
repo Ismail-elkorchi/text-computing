@@ -41,6 +41,8 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textdoc-token-sentence-annotation-set-v1.schema.json`](textdoc-token-sentence-annotation-set-v1.schema.json) — textdoc token/sentence annotation set schema.
 - [`textdoc-document-v1.schema.json`](textdoc-document-v1.schema.json) — document annotation model schema for issue `#11`.
 - [`textdoc-dependency-target-v1.schema.json`](textdoc-dependency-target-v1.schema.json) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.
+- [`textdoc-task-graph-profile-v1.schema.json`](textdoc-task-graph-profile-v1.schema.json) — declarative task graph profile schema for textdoc validation.
+- [`textdoc-task-graph-validation-report-v1.schema.json`](textdoc-task-graph-validation-report-v1.schema.json) — task graph validation report schema.
 - [`textpipeline-trace-v1.schema.json`](textpipeline-trace-v1.schema.json) — deterministic processor trace schema.
 - [`textpipeline-batch-run-report-v1.schema.json`](textpipeline-batch-run-report-v1.schema.json) — deterministic textpipeline batch run report schema.
 - [`textpipeline-worker-run-report-v1.schema.json`](textpipeline-worker-run-report-v1.schema.json) — deterministic textpipeline worker run report schema.
