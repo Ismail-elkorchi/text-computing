@@ -278,6 +278,7 @@
         "packages/textrules/package.json",
         "packages/textrules/src/index.ts",
         "packages/textrules/test/index.test.ts",
+        "examples/textrules-corpus-evaluation-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [

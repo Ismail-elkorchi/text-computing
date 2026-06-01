@@ -703,6 +703,7 @@
         "packages/textrules/CHANGELOG.md",
         "packages/textrules/src/index.ts",
         "packages/textrules/test",
+        "examples/textrules-corpus-evaluation-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs",
@@ -711,7 +712,7 @@
       "limitations": [
         "Rule-backed task behavior remains frozen-slice only for POS, NER, dependency parsing, relation extraction, and coreference.",
         "Raw-text tokenization helpers are fixture helpers; the default rule-engine input contract is an existing textdoc token layer.",
-        "Corpus evaluation is incomplete for several implemented task surfaces.",
+        "Corpus evaluation aggregation exists for implemented task conformance reports; broad external corpus/task coverage remains limited.",
         "Public alpha scope is bounded to reusable rules, explicit resources, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
@@ -725,12 +726,13 @@
           ]
         },
         {
-          "blocker": "Corpus evaluation is incomplete for several implemented task surfaces.",
+          "blocker": "Corpus evaluation aggregation exists for implemented task conformance reports; broad external corpus/task coverage remains limited.",
           "maturity": "beta",
-          "decision": "Blocks broader behavior statements; does not authorize new non-product evidence matrices during alpha foundation release.",
+          "decision": "Blocks broader behavior statements; keep task evidence tied to executable product oracles during alpha foundation release.",
           "evidenceRefs": [
-            "fixtures/relation-extraction/slices.json",
-            "fixtures/coreference/slices.json"
+            "packages/textrules/src/index.ts",
+            "packages/textrules/test",
+            "examples/textrules-corpus-evaluation-consumer.mjs"
           ]
         }
       ]

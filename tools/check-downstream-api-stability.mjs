@@ -759,6 +759,37 @@ async function assertBuiltPackageSmoke() {
   const packRuleRun = textrules.runTextPackRulesOverTextDoc({ document, compiled: compiledRules.compiled });
   const packRuleInspection = textlab.inspectPackBackedRuleAnnotations(packRuleRun.document);
   expect(packRuleInspection.ruleAnnotationCount === 1, "textlab should inspect pack-backed textrules annotations through package APIs.");
+  const posRun = textrules.analyzePosMorphLemmaDocument(
+    { document, languageHint: "en" },
+    lexiconResources.resources,
+  );
+  const posEnvelope = textrules.createPosMorphLemmaResultEnvelope(posRun, {
+    producerVersion: "0.1.0",
+    referenceId: "downstream-api-pos",
+  });
+  const posReport = textrules.createPosMorphLemmaConformanceReport(posEnvelope, {
+    expectedArtifactPath: "tools/check-downstream-api-stability.mjs#textrules-corpus-evaluation",
+    matchesExpected: true,
+  });
+  const corpusEvaluation = textrules.createTextRulesCorpusEvaluationReport({
+    evaluationId: "downstream-api:textrules-corpus-evaluation",
+    inputs: [
+      {
+        taskKind: "pos-morph-lemma",
+        sliceId: "downstream-api-pos",
+        role: "evaluation",
+        report: posReport,
+        expectedArtifactPath: "tools/check-downstream-api-stability.mjs#textrules-corpus-evaluation",
+      },
+    ],
+    limitations: ["Downstream API smoke exercises corpus evaluation report aggregation."],
+  });
+  expect(
+    textrules.isTextRulesCorpusEvaluationReportV1(corpusEvaluation) &&
+      corpusEvaluation.passCount === 1,
+    "textrules built API should aggregate corpus evaluation reports through package APIs.",
+    corpusEvaluation,
+  );
 }
 
 const [schema, artifact, releaseGates] = await Promise.all([

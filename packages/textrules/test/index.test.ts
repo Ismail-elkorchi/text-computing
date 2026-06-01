@@ -22,6 +22,7 @@ import {
   analyzeRuleBackedNer,
   analyzePosMorphLemma,
   analyzeDependencyParser,
+  createTextRulesCorpusEvaluationReport,
   createTextPackRulesPipelineProcessor,
   compileTextRulesFromTextPackResources,
   compileTextRulesRuleBundle,
@@ -39,6 +40,8 @@ import {
   createPosMorphLemmaResultEnvelope,
   createTextRulesLexiconResourcesFromLoadedPack,
   createTextRulesLexiconResource,
+  isTextRulesConformanceReportV1,
+  isTextRulesCorpusEvaluationReportV1,
   matchTextDocTokenPattern,
   matchTextRulesTokenPattern,
   matchTextRulesTokenPatterns,
@@ -47,15 +50,29 @@ import {
   rewriteTextRulesTokenTexts,
   runTextPackRulesOverTextDoc,
   runTextRules,
+  textRulesCorpusEvaluationSchemaVersion,
   textRulesTokenSpansFromTextDoc,
   tokenizeTextRulesFixtureText,
   tokenizeTextRulesText,
+  type TextRulesCorpusEvaluationInput,
   type TextRulesEntityResourceData,
   type TextRulesLexiconResourceData,
   validateTextRulesRuleBundle,
 } from "../src/index.ts";
 
 const expectedPackageName: typeof packageName = "@ismail-elkorchi/textrules";
+
+function assertThrows(callback: () => void, messageIncludes: string): void {
+  try {
+    callback();
+  } catch (error) {
+    if (error instanceof Error && error.message.includes(messageIncludes)) {
+      return;
+    }
+    throw new Error(`expected thrown error message to include ${messageIncludes}`);
+  }
+  throw new Error(`expected callback to throw ${messageIncludes}`);
+}
 
 const primitiveTokens = tokenizeTextRulesFixtureText("New York courts sign.");
 if (tokenizeTextRulesText("New York courts sign.").length !== primitiveTokens.length) {
@@ -1389,6 +1406,19 @@ const report = createPosMorphLemmaConformanceReport(envelope, {
 if (!isTextConformanceReportV1(report)) {
   throw new Error("textrules conformance report should satisfy the textconformance contract");
 }
+if (!isTextRulesConformanceReportV1(report)) {
+  throw new Error("textrules conformance report should satisfy the package-local guard");
+}
+
+const corpusEvaluationInputs: TextRulesCorpusEvaluationInput[] = [
+  {
+    taskKind: "pos-morph-lemma",
+    sliceId: "en-unknown-word",
+    role: "evaluation",
+    report,
+    expectedArtifactPath: "fixtures/pos-morph-lemma/expected/en-unknown-word.json",
+  },
+];
 
 void expectedPackageName;
 
@@ -1755,6 +1785,15 @@ for (const slice of nerSlices) {
   if (!isTextConformanceReportV1(nerReport)) {
     throw new Error(`rule-backed NER report for ${slice.id} should satisfy textconformance`);
   }
+  if (slice.id === "org-alias-ibm") {
+    corpusEvaluationInputs.push({
+      taskKind: "rule-backed-ner",
+      sliceId: slice.id,
+      role: "evaluation",
+      report: nerReport,
+      expectedArtifactPath: `fixtures/rule-backed-ner/expected/${slice.id}.json`,
+    });
+  }
 }
 
 const appleResult = analyzeRuleBackedNer(
@@ -1940,6 +1979,23 @@ for (const sliceId of Object.keys(expectedRelationExtraction) as RelationExtract
   if (!isTextConformanceReportV1(relationReport)) {
     throw new Error(`relation extraction report for ${sliceId} should satisfy textconformance`);
   }
+  if (sliceId === "en-no-relation") {
+    corpusEvaluationInputs.push({
+      taskKind: "relation-extraction",
+      sliceId,
+      role: "negative-control",
+      report: relationReport,
+      expectedArtifactPath: `fixtures/relation-extraction/expected/${sliceId}.json`,
+    });
+  } else if (sliceId === "en-employment") {
+    corpusEvaluationInputs.push({
+      taskKind: "relation-extraction",
+      sliceId,
+      role: "evaluation",
+      report: relationReport,
+      expectedArtifactPath: `fixtures/relation-extraction/expected/${sliceId}.json`,
+    });
+  }
 }
 
 const unsupportedRelation = analyzeRelationExtraction({
@@ -2092,6 +2148,15 @@ for (const sliceId of Object.keys(expectedCoreference) as CoreferenceSliceId[]) 
   if (!isTextConformanceReportV1(coreferenceReport)) {
     throw new Error(`coreference report for ${sliceId} should satisfy textconformance`);
   }
+  if (sliceId === "en-ambiguous") {
+    corpusEvaluationInputs.push({
+      taskKind: "coreference",
+      sliceId,
+      role: "holdout",
+      report: coreferenceReport,
+      expectedArtifactPath: `fixtures/coreference/expected/${sliceId}.json`,
+    });
+  }
 }
 
 const unsupportedCoreference = analyzeCoreference({
@@ -2202,6 +2267,15 @@ for (const sliceId of Object.keys(expectedDependencyParser) as DependencyParserS
   if (!isTextConformanceReportV1(parserReport)) {
     throw new Error(`dependency parser report for ${sliceId} should satisfy textconformance`);
   }
+  if (sliceId === "en-basic") {
+    corpusEvaluationInputs.push({
+      taskKind: "dependency-parser",
+      sliceId,
+      role: "evaluation",
+      report: parserReport,
+      expectedArtifactPath: `fixtures/dependency-parser/expected/${sliceId}.json`,
+    });
+  }
 }
 
 const unsupportedDependencyResult = analyzeDependencyParser({
@@ -2218,3 +2292,55 @@ if (
 ) {
   throw new Error("unsupported dependency parser input should emit a diagnostic");
 }
+
+const corpusEvaluationReport = createTextRulesCorpusEvaluationReport({
+  evaluationId: "textrules:unit-corpus-evaluation",
+  generatedAt: "2026-05-31T00:00:00.000Z",
+  inputs: corpusEvaluationInputs,
+  limitations: [
+    "Aggregates committed package task conformance reports; it does not claim external corpus generalization.",
+  ],
+  notes: ["Fixture roles distinguish evaluation, holdout, and negative-control slices."],
+});
+if (!isTextRulesCorpusEvaluationReportV1(corpusEvaluationReport)) {
+  throw new Error("textrules corpus evaluation report should satisfy the package-local guard");
+}
+if (corpusEvaluationReport.schemaVersion !== textRulesCorpusEvaluationSchemaVersion) {
+  throw new Error("textrules corpus evaluation report should expose the current schema version");
+}
+if (
+  corpusEvaluationReport.taskKinds.join(",") !==
+  "coreference,dependency-parser,pos-morph-lemma,relation-extraction,rule-backed-ner"
+) {
+  throw new Error("textrules corpus evaluation report should aggregate every implemented task kind");
+}
+if (
+  corpusEvaluationReport.sliceCount !== 6 ||
+  corpusEvaluationReport.passCount !== 6 ||
+  corpusEvaluationReport.failCount !== 0 ||
+  corpusEvaluationReport.negativeControlCount !== 1 ||
+  corpusEvaluationReport.expectedOutputMatchCount !== 6
+) {
+  throw new Error("textrules corpus evaluation report should compute deterministic totals");
+}
+if (
+  corpusEvaluationReport.rows.map((row) => `${row.taskKind}:${row.sliceId}`).join(",") !==
+  "coreference:en-ambiguous,dependency-parser:en-basic,pos-morph-lemma:en-unknown-word,relation-extraction:en-employment,relation-extraction:en-no-relation,rule-backed-ner:org-alias-ibm"
+) {
+  throw new Error("textrules corpus evaluation rows should sort by task kind and slice id");
+}
+if (
+  corpusEvaluationReport.taskSummaries.find((summary) => summary.taskKind === "relation-extraction")
+    ?.negativeControlCount !== 1
+) {
+  throw new Error("textrules corpus evaluation task summaries should retain negative-control counts");
+}
+assertThrows(
+  () =>
+    createTextRulesCorpusEvaluationReport({
+      evaluationId: "textrules:duplicate",
+      inputs: [corpusEvaluationInputs[0]!, corpusEvaluationInputs[0]!],
+      limitations: ["Duplicate task/slice pairs are invalid."],
+    }),
+  "textrules corpus evaluation inputs must have unique taskKind/sliceId pairs",
+);
