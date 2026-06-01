@@ -321,6 +321,33 @@ export interface LoadTextCorpusRetrievalIndexArtifactOptions {
   readonly readText: TextCorpusRetrievalIndexStoreReadText;
 }
 
+export type TextCorpusRetrievalIndexFileSystemWriteText = (
+  path: string,
+  text: string,
+) => void | Promise<void>;
+
+export type TextCorpusRetrievalIndexFileSystemReadText = (
+  path: string,
+) => string | Promise<string>;
+
+export type TextCorpusRetrievalIndexFileSystemResolvePath = (
+  root: string,
+  key: string,
+) => string;
+
+export interface SaveTextCorpusRetrievalIndexArtifactToFileSystemOptions {
+  readonly root: string;
+  readonly key?: string;
+  readonly writeText: TextCorpusRetrievalIndexFileSystemWriteText;
+  readonly resolvePath?: TextCorpusRetrievalIndexFileSystemResolvePath;
+}
+
+export interface LoadTextCorpusRetrievalIndexArtifactFromFileSystemOptions {
+  readonly root: string;
+  readonly readText: TextCorpusRetrievalIndexFileSystemReadText;
+  readonly resolvePath?: TextCorpusRetrievalIndexFileSystemResolvePath;
+}
+
 export interface TextCorpusRetrievalFieldContribution {
   readonly field: string;
   readonly tf: number;
@@ -3587,6 +3614,52 @@ function createTextCorpusRetrievalIndexStorageRef(
   };
 }
 
+function textCorpusFileSystemSafeSegment(value: string): string {
+  const segment = value
+    .replace(/[^A-Za-z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  return segment.length === 0 || segment === "." || segment === ".." ? "value" : segment;
+}
+
+function canonicalTextCorpusRetrievalIndexFileSystemKey(key: string): string {
+  if (
+    !isNonEmptyString(key) ||
+    key.startsWith("/") ||
+    key.includes("\\") ||
+    key.split("/").some((part) => part.length === 0 || part === "." || part === "..")
+  ) {
+    throw new TypeError("textcorpus retrieval index filesystem key must be a safe relative path");
+  }
+  return key.split("/").join("/");
+}
+
+export function createTextCorpusRetrievalIndexFileSystemKey(
+  artifact: TextCorpusRetrievalIndexArtifactV1,
+): string {
+  if (!isTextCorpusRetrievalIndexArtifactV1(artifact)) {
+    throw new TypeError("textcorpus retrieval index artifact checksum or shape is invalid");
+  }
+  return canonicalTextCorpusRetrievalIndexFileSystemKey([
+    "retrieval-indexes",
+    textCorpusFileSystemSafeSegment(artifact.index.corpusId),
+    textCorpusFileSystemSafeSegment(artifact.index.formula),
+    `${artifact.checksum.value}.json`,
+  ].join("/"));
+}
+
+export function resolveTextCorpusRetrievalIndexFileSystemPath(
+  root: string,
+  key: string,
+): string {
+  if (!isNonEmptyString(root)) {
+    throw new TypeError("textcorpus retrieval index filesystem root must be a non-empty string");
+  }
+  const canonicalKey = canonicalTextCorpusRetrievalIndexFileSystemKey(key);
+  const normalizedRoot = root.endsWith("/") && root.length > 1 ? root.slice(0, -1) : root;
+  return `${normalizedRoot}/${canonicalKey}`;
+}
+
 export function parseTextCorpusRetrievalIndex(serialized: string): TextCorpusRetrievalIndexV1 {
   if (typeof serialized !== "string") {
     throw new TypeError("textcorpus retrieval index JSON must be a string");
@@ -3710,6 +3783,59 @@ export async function loadTextCorpusRetrievalIndexArtifactFromStore(
   const serialized = await options.readText(ref.key);
   if (typeof serialized !== "string") {
     throw new TypeError("textcorpus retrieval index storage readText must return a string");
+  }
+  const artifact = parseTextCorpusRetrievalIndexArtifact(serialized);
+  assertTextCorpusRetrievalIndexStorageRefMatchesArtifact(ref, artifact, serialized);
+  return artifact;
+}
+
+export async function saveTextCorpusRetrievalIndexArtifactToFileSystem(
+  artifact: TextCorpusRetrievalIndexArtifactV1,
+  options: SaveTextCorpusRetrievalIndexArtifactToFileSystemOptions,
+): Promise<TextCorpusRetrievalIndexStorageRefV1> {
+  if (!isTextCorpusRetrievalIndexArtifactV1(artifact)) {
+    throw new TypeError("textcorpus retrieval index artifact checksum or shape is invalid");
+  }
+  if (!isRecord(options) || !isNonEmptyString(options.root)) {
+    throw new TypeError("textcorpus retrieval index filesystem root must be a non-empty string");
+  }
+  if (typeof options.writeText !== "function") {
+    throw new TypeError("textcorpus retrieval index filesystem writeText must be a function");
+  }
+  const key = options.key === undefined
+    ? createTextCorpusRetrievalIndexFileSystemKey(artifact)
+    : canonicalTextCorpusRetrievalIndexFileSystemKey(options.key);
+  const resolvePath = options.resolvePath ?? resolveTextCorpusRetrievalIndexFileSystemPath;
+  const path = resolvePath(options.root, key);
+  if (!isNonEmptyString(path)) {
+    throw new TypeError("textcorpus retrieval index filesystem resolved path must be a non-empty string");
+  }
+  const serialized = stringifyTextCorpusRetrievalIndexArtifact(artifact);
+  await options.writeText(path, serialized);
+  return createTextCorpusRetrievalIndexStorageRef(artifact, key, serialized);
+}
+
+export async function loadTextCorpusRetrievalIndexArtifactFromFileSystem(
+  ref: TextCorpusRetrievalIndexStorageRefV1,
+  options: LoadTextCorpusRetrievalIndexArtifactFromFileSystemOptions,
+): Promise<TextCorpusRetrievalIndexArtifactV1> {
+  if (!isTextCorpusRetrievalIndexStorageRefV1(ref)) {
+    throw new TypeError("textcorpus retrieval index storage ref is invalid");
+  }
+  if (!isRecord(options) || !isNonEmptyString(options.root)) {
+    throw new TypeError("textcorpus retrieval index filesystem root must be a non-empty string");
+  }
+  if (typeof options.readText !== "function") {
+    throw new TypeError("textcorpus retrieval index filesystem readText must be a function");
+  }
+  const resolvePath = options.resolvePath ?? resolveTextCorpusRetrievalIndexFileSystemPath;
+  const path = resolvePath(options.root, canonicalTextCorpusRetrievalIndexFileSystemKey(ref.key));
+  if (!isNonEmptyString(path)) {
+    throw new TypeError("textcorpus retrieval index filesystem resolved path must be a non-empty string");
+  }
+  const serialized = await options.readText(path);
+  if (typeof serialized !== "string") {
+    throw new TypeError("textcorpus retrieval index filesystem readText must return a string");
   }
   const artifact = parseTextCorpusRetrievalIndexArtifact(serialized);
   assertTextCorpusRetrievalIndexStorageRefMatchesArtifact(ref, artifact, serialized);

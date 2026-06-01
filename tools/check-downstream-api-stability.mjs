@@ -601,12 +601,12 @@ async function assertBuiltPackageSmoke() {
   const retrievalIndex = textcorpus.buildTextCorpusRetrievalIndex(collection);
   const retrievalIndexArtifact = textcorpus.createTextCorpusRetrievalIndexArtifact(retrievalIndex);
   const retrievalIndexStore = new Map();
-  const retrievalIndexStorageRef = await textcorpus.saveTextCorpusRetrievalIndexArtifactToStore(
+  const retrievalIndexStorageRef = await textcorpus.saveTextCorpusRetrievalIndexArtifactToFileSystem(
     retrievalIndexArtifact,
     {
-      key: "memory://downstream-api/retrieval-index-artifact.json",
-      writeText(key, text) {
-        retrievalIndexStore.set(key, text);
+      root: "memory://downstream-api",
+      writeText(filePath, text) {
+        retrievalIndexStore.set(filePath, text);
       },
     },
   );
@@ -614,11 +614,20 @@ async function assertBuiltPackageSmoke() {
     textcorpus.isTextCorpusRetrievalIndexStorageRefV1(retrievalIndexStorageRef),
     "textcorpus should create retrieval-index storage refs through package APIs.",
   );
-  const loadedRetrievalIndexArtifact = await textcorpus.loadTextCorpusRetrievalIndexArtifactFromStore(
+  const expectedRetrievalIndexPath = textcorpus.resolveTextCorpusRetrievalIndexFileSystemPath(
+    "memory://downstream-api",
+    textcorpus.createTextCorpusRetrievalIndexFileSystemKey(retrievalIndexArtifact),
+  );
+  expect(
+    retrievalIndexStore.has(expectedRetrievalIndexPath),
+    "textcorpus should persist retrieval-index artifacts through package-owned filesystem keys.",
+  );
+  const loadedRetrievalIndexArtifact = await textcorpus.loadTextCorpusRetrievalIndexArtifactFromFileSystem(
     retrievalIndexStorageRef,
     {
-      readText(key) {
-        return retrievalIndexStore.get(key) ?? "";
+      root: "memory://downstream-api",
+      readText(filePath) {
+        return retrievalIndexStore.get(filePath) ?? "";
       },
     },
   );

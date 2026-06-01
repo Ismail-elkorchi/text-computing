@@ -35,12 +35,16 @@ import {
   isTextCorpusRetrievalResultV1,
   isTextCorpusScoringResultV1,
   iterateTextCorpusRetrievalResults,
+  createTextCorpusRetrievalIndexFileSystemKey,
+  loadTextCorpusRetrievalIndexArtifactFromFileSystem,
   loadTextCorpusRetrievalIndexArtifactFromStore,
   packageName,
   parseTextCorpusArtifact,
   parseTextCorpusQuery,
   parseTextCorpusRetrievalIndexArtifact,
   parseTextCorpusRetrievalIndex,
+  resolveTextCorpusRetrievalIndexFileSystemPath,
+  saveTextCorpusRetrievalIndexArtifactToFileSystem,
   saveTextCorpusRetrievalIndexArtifactToStore,
   searchTextCorpusRetrievalIndex,
   stringifyTextCorpusArtifact,
@@ -1132,6 +1136,73 @@ const loadedArtifact = await loadTextCorpusRetrievalIndexArtifactFromStore(stora
 });
 if (JSON.stringify(loadedArtifact) !== JSON.stringify(artifact)) {
   throw new Error("retrieval index storage adapter should load the stored artifact");
+}
+const fileSystemKey = createTextCorpusRetrievalIndexFileSystemKey(artifact);
+if (
+  fileSystemKey !==
+  `retrieval-indexes/corpus-retrieval-fielded-smoke/${textCorpusBm25fFormula}/${artifact.checksum.value}.json`
+) {
+  throw new Error("retrieval index filesystem key should be deterministic and corpus/formula scoped");
+}
+const resolvedFileSystemPath = resolveTextCorpusRetrievalIndexFileSystemPath("/tmp/textcorpus", fileSystemKey);
+if (resolvedFileSystemPath !== `/tmp/textcorpus/${fileSystemKey}`) {
+  throw new Error("retrieval index filesystem path resolver should combine root and safe relative key");
+}
+const fileSystemWrites = new Map<string, string>();
+const fileSystemStorageRef = await saveTextCorpusRetrievalIndexArtifactToFileSystem(artifact, {
+  root: "/tmp/textcorpus",
+  writeText(path, text) {
+    fileSystemWrites.set(path, text);
+  },
+});
+if (
+  !isTextCorpusRetrievalIndexStorageRefV1(fileSystemStorageRef) ||
+  fileSystemStorageRef.key !== fileSystemKey ||
+  fileSystemWrites.get(resolvedFileSystemPath) !== artifactSerialized
+) {
+  throw new Error("retrieval index filesystem adapter should persist using package-owned keys");
+}
+const loadedFileSystemArtifact = await loadTextCorpusRetrievalIndexArtifactFromFileSystem(fileSystemStorageRef, {
+  root: "/tmp/textcorpus",
+  readText(path) {
+    return fileSystemWrites.get(path) ?? "";
+  },
+});
+if (JSON.stringify(loadedFileSystemArtifact) !== JSON.stringify(artifact)) {
+  throw new Error("retrieval index filesystem adapter should load package-owned persisted artifacts");
+}
+const customFileSystemRef = await saveTextCorpusRetrievalIndexArtifactToFileSystem(artifact, {
+  root: "memory-root",
+  key: "indexes/custom-fielded.json",
+  resolvePath(root, key) {
+    return `${root}::${key}`;
+  },
+  writeText(path, text) {
+    fileSystemWrites.set(path, text);
+  },
+});
+if (
+  customFileSystemRef.key !== "indexes/custom-fielded.json" ||
+  fileSystemWrites.get("memory-root::indexes/custom-fielded.json") !== artifactSerialized
+) {
+  throw new Error("retrieval index filesystem adapter should allow safe caller-selected keys");
+}
+let unsafeFileSystemKeyRejected = false;
+try {
+  await saveTextCorpusRetrievalIndexArtifactToFileSystem(artifact, {
+    root: "/tmp/textcorpus",
+    key: "../escape.json",
+    writeText() {
+      throw new Error("unsafe filesystem key should not be written");
+    },
+  });
+} catch (error) {
+  unsafeFileSystemKeyRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus retrieval index filesystem key must be a safe relative path";
+}
+if (!unsafeFileSystemKeyRejected) {
+  throw new Error("retrieval index filesystem adapter should reject path traversal keys");
 }
 let byteLengthMismatchRejected = false;
 try {
