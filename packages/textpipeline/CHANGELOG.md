@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Add automatic local recovery execution reports for retrying recovery plan items.
 - Add deterministic caller-managed recovery plan reports for partial batch, worker, and worker-pool run reports.
 - Add caller-provided worker-pool execution with deterministic round-robin assignment reports.
 - Add caller-provided worker execution APIs and deterministic worker run reports.

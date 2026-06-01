@@ -740,8 +740,9 @@ async function assertBuiltPackageSmoke() {
       return { document: inputDocument };
     },
   };
+  const recoveryDocuments = [document, { ...document, documentId: "doc:downstream:recovery" }];
   const partialBatch = await textpipeline.runTextPipelineBatchAsyncWithReport(
-    [document, { ...document, documentId: "doc:downstream:recovery" }],
+    recoveryDocuments,
     [failingProcessor, dependentProcessor],
     {},
     { errorPolicy: "continue" },
@@ -757,6 +758,43 @@ async function assertBuiltPackageSmoke() {
       recoveryPlan.items[0]?.skippedProcessorIds.join(",") === "downstream-api-dependent",
     "textpipeline should create caller-managed recovery plans from partial reports through package APIs.",
     recoveryPlan,
+  );
+  const recoveryExecution = await textpipeline.executeTextPipelineRecoveryPlan(
+    recoveryPlan,
+    recoveryDocuments,
+    [
+      {
+        descriptor: {
+          id: "downstream-api-failing",
+          version: "1.0.0",
+          purity: "pure",
+          parallelSafe: true,
+        },
+        run(inputDocument) {
+          return { document: { ...inputDocument, revision: `${inputDocument.revision}>recovered-root` } };
+        },
+      },
+      {
+        descriptor: {
+          id: "downstream-api-dependent",
+          version: "1.0.0",
+          dependsOn: ["downstream-api-failing"],
+          purity: "pure",
+          parallelSafe: true,
+        },
+        run(inputDocument) {
+          return { document: { ...inputDocument, revision: `${inputDocument.revision}>recovered-dependent` } };
+        },
+      },
+    ],
+  );
+  expect(
+    textpipeline.isTextPipelineRecoveryExecutionReportV1(recoveryExecution.report) &&
+      recoveryExecution.report.completeRetryCount === 2 &&
+      recoveryExecution.report.exhaustedRetryCount === 0 &&
+      recoveryExecution.report.attemptCount === 2,
+    "textpipeline should automatically execute local recovery retries through package APIs.",
+    recoveryExecution.report,
   );
   const workerBatch = await textpipeline.runTextPipelineBatchWithWorker(
     [document],

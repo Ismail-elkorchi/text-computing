@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpipeline-recovery-execution-report-v1.schema.json",
+  "title": "Textpipeline recovery execution report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "planId",
+    "sourceKind",
+    "documentCount",
+    "retainedCount",
+    "retryCount",
+    "attemptedRetryCount",
+    "completeRetryCount",
+    "exhaustedRetryCount",
+    "attemptCount",
+    "retryInputIndexes",
+    "items"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "artifactType": { "const": "textpipeline-recovery-execution-report-v1" },
+    "planId": { "type": "string", "minLength": 1 },
+    "sourceKind": {
+      "enum": ["batch-run-report", "worker-run-report", "worker-pool-run-report"]
+    },
+    "documentCount": { "type": "integer", "minimum": 0 },
+    "retainedCount": { "type": "integer", "minimum": 0 },
+    "retryCount": { "type": "integer", "minimum": 0 },
+    "attemptedRetryCount": { "type": "integer", "minimum": 0 },
+    "completeRetryCount": { "type": "integer", "minimum": 0 },
+    "exhaustedRetryCount": { "type": "integer", "minimum": 0 },
+    "attemptCount": { "type": "integer", "minimum": 0 },
+    "retryInputIndexes": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 0 }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/item" }
+    }
+  },
+  "definitions": {
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempt",
+        "runStatus",
+        "finalRevision",
+        "traceEntryCount",
+        "failedProcessorIds",
+        "skippedProcessorIds"
+      ],
+      "properties": {
+        "attempt": { "type": "integer", "minimum": 1 },
+        "runStatus": { "enum": ["complete", "partial"] },
+        "finalRevision": { "type": "string", "minLength": 1 },
+        "traceEntryCount": { "type": "integer", "minimum": 0 },
+        "failedProcessorIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "skippedProcessorIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputIndex",
+        "documentId",
+        "recoveryAction",
+        "executionStatus",
+        "startAttempt",
+        "maxAttempts",
+        "attemptedAttempts",
+        "finalAttempt",
+        "finalRevision",
+        "traceEntryCount",
+        "failedProcessorIds",
+        "skippedProcessorIds",
+        "attempts"
+      ],
+      "properties": {
+        "inputIndex": { "type": "integer", "minimum": 0 },
+        "documentId": { "type": "string", "minLength": 1 },
+        "recoveryAction": { "enum": ["retain", "retry"] },
+        "executionStatus": { "enum": ["retained", "retry-complete", "retry-exhausted"] },
+        "startAttempt": { "type": "integer", "minimum": 0 },
+        "maxAttempts": { "type": "integer", "minimum": 1 },
+        "attemptedAttempts": { "type": "integer", "minimum": 0 },
+        "finalAttempt": { "type": "integer", "minimum": 0 },
+        "finalRevision": { "type": "string", "minLength": 1 },
+        "traceEntryCount": { "type": "integer", "minimum": 0 },
+        "failedProcessorIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "skippedProcessorIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "attempts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/attempt" }
+        },
+        "workerId": { "type": "string", "minLength": 1 },
+        "workerSlot": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
