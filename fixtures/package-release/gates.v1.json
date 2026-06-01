@@ -601,22 +601,24 @@
         "packages/textpipeline/CHANGELOG.md",
         "packages/textpipeline/src/index.ts",
         "packages/textpipeline/test",
+        "examples/textpipeline-cache-snapshot-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Remote orchestration, durable cache storage, distributed scheduling, worker execution, and recovery after a process boundary are not release-ready.",
+        "Snapshot-backed cache import/export exists for caller-managed persistence; remote orchestration, distributed scheduling, worker execution, and automatic recovery coordination are not release-ready.",
         "Public alpha scope is bounded to deterministic local execution, package tests, and Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Remote orchestration, durable cache storage, distributed scheduling, worker execution, and recovery after a process boundary are not release-ready.",
+          "blocker": "Snapshot-backed cache import/export exists for caller-managed persistence; remote orchestration, distributed scheduling, worker execution, and automatic recovery coordination are not release-ready.",
           "maturity": "production-candidate",
-          "decision": "Does not block alpha; it limits production-candidate operational statements beyond deterministic local execution and caller-provided cache semantics.",
+          "decision": "Does not block alpha; it limits production-candidate operational statements beyond deterministic local execution and caller-managed cache snapshot semantics.",
           "evidenceRefs": [
             "packages/textpipeline/src/index.ts",
-            "packages/textpipeline/test"
+            "packages/textpipeline/test",
+            "examples/textpipeline-cache-snapshot-consumer.mjs"
           ]
         }
       ]

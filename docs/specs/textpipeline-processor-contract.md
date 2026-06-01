@@ -83,8 +83,9 @@ The batch report payload is designed to sit inside the result envelope with payl
 
 ## Deliberate v1 exclusions
 
-This contract does not define remote orchestration, distributed scheduling, durable cache storage,
-worker pools, or recovery after a process boundary. Those remain outside the alpha package scope.
+This contract does not define remote orchestration, distributed scheduling, worker pools, or
+automatic recovery coordination. Snapshot-backed cache import/export is caller-managed and remains
+bounded to deterministic local read-through cache entries.
 
 ## Verification
 

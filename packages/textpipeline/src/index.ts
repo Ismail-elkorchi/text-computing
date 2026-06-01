@@ -21,6 +21,7 @@ import {
 export const packageName = "@ismail-elkorchi/textpipeline" as const;
 export const textPipelineTraceSchemaVersion = 1 as const;
 export const textPipelineBatchRunReportSchemaVersion = 1 as const;
+export const textPipelineCacheSnapshotSchemaVersion = 1 as const;
 export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
 export const textPipelineBatchRunReportPayloadKind =
   textProtocolPayloadKindTextpipelineBatchRunReportV1;
@@ -29,6 +30,8 @@ export type PackageName = typeof packageName;
 export type TextPipelineTraceSchemaVersion = typeof textPipelineTraceSchemaVersion;
 export type TextPipelineBatchRunReportSchemaVersion =
   typeof textPipelineBatchRunReportSchemaVersion;
+export type TextPipelineCacheSnapshotSchemaVersion =
+  typeof textPipelineCacheSnapshotSchemaVersion;
 export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
 export type TextPipelineBatchRunReportPayloadKind =
   typeof textPipelineBatchRunReportPayloadKind;
@@ -103,6 +106,28 @@ export interface TextPipelineAsyncProcessor {
 export interface TextPipelineDocumentCache {
   get(key: string): TextDocDocumentV1 | undefined | Promise<TextDocDocumentV1 | undefined>;
   set?(key: string, document: TextDocDocumentV1): void | Promise<void>;
+}
+
+export interface TextPipelineCacheSnapshotEntryV1 {
+  readonly key: string;
+  readonly document: TextDocDocumentV1;
+}
+
+export interface TextPipelineCacheSnapshotV1 {
+  readonly schemaVersion: TextPipelineCacheSnapshotSchemaVersion;
+  readonly artifactType: "textpipeline-cache-snapshot-v1";
+  readonly namespace: string;
+  readonly entryCount: number;
+  readonly entries: readonly TextPipelineCacheSnapshotEntryV1[];
+}
+
+export interface TextPipelineSnapshotBackedDocumentCache extends TextPipelineDocumentCache {
+  readonly namespace: string;
+  snapshot(): TextPipelineCacheSnapshotV1;
+}
+
+export interface TextPipelineSnapshotBackedDocumentCacheOptions {
+  readonly namespace?: string;
 }
 
 export interface TextPipelineRunOptions {
@@ -720,6 +745,128 @@ export function isTextPipelineTraceV1(value: unknown): value is TextPipelineTrac
     Array.isArray(value.entries) &&
     value.entries.every((entry) => isTextPipelineTraceEntry(entry))
   );
+}
+
+export function isTextPipelineCacheSnapshotEntryV1(
+  value: unknown,
+): value is TextPipelineCacheSnapshotEntryV1 {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.key) &&
+    isTextDocDocumentV1(value.document)
+  );
+}
+
+export function isTextPipelineCacheSnapshotV1(
+  value: unknown,
+): value is TextPipelineCacheSnapshotV1 {
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== textPipelineCacheSnapshotSchemaVersion ||
+    value.artifactType !== "textpipeline-cache-snapshot-v1" ||
+    !isNonEmptyString(value.namespace) ||
+    !isNonNegativeInteger(value.entryCount) ||
+    !Array.isArray(value.entries) ||
+    !value.entries.every((entry) => isTextPipelineCacheSnapshotEntryV1(entry))
+  ) {
+    return false;
+  }
+  const keys = value.entries.map((entry) => entry.key);
+  return (
+    value.entryCount === value.entries.length &&
+    sameStringArray(keys, uniqueSortedStrings(keys))
+  );
+}
+
+function createTextPipelineCacheSnapshot(
+  namespace: string,
+  entries: readonly TextPipelineCacheSnapshotEntryV1[],
+): TextPipelineCacheSnapshotV1 {
+  if (!isNonEmptyString(namespace)) {
+    throw new TypeError("textpipeline cache snapshot namespace must be a non-empty string");
+  }
+  if (!entries.every((entry) => isTextPipelineCacheSnapshotEntryV1(entry))) {
+    throw new TypeError("textpipeline cache snapshot entries must contain valid documents");
+  }
+  const sortedEntries = [...entries].sort((left, right) => left.key.localeCompare(right.key));
+  const snapshot = {
+    schemaVersion: textPipelineCacheSnapshotSchemaVersion,
+    artifactType: "textpipeline-cache-snapshot-v1",
+    namespace,
+    entryCount: sortedEntries.length,
+    entries: sortedEntries,
+  } satisfies TextPipelineCacheSnapshotV1;
+  if (!isTextPipelineCacheSnapshotV1(snapshot)) {
+    throw new TypeError("textpipeline cache snapshot is invalid");
+  }
+  return snapshot;
+}
+
+export function createTextPipelineSnapshotBackedDocumentCache(
+  snapshot?: TextPipelineCacheSnapshotV1,
+  options: TextPipelineSnapshotBackedDocumentCacheOptions = {},
+): TextPipelineSnapshotBackedDocumentCache {
+  if (snapshot !== undefined && !isTextPipelineCacheSnapshotV1(snapshot)) {
+    throw new TypeError("textpipeline cache snapshot is invalid");
+  }
+  if (options.namespace !== undefined && !isNonEmptyString(options.namespace)) {
+    throw new TypeError("textpipeline cache snapshot namespace must be a non-empty string");
+  }
+  if (snapshot !== undefined && options.namespace !== undefined && snapshot.namespace !== options.namespace) {
+    throw new Error(`textpipeline cache snapshot namespace mismatch: ${snapshot.namespace} != ${options.namespace}`);
+  }
+  const namespace = snapshot?.namespace ?? options.namespace ?? "default";
+  const documentsByKey = new Map<string, TextDocDocumentV1>(
+    snapshot?.entries.map((entry) => [entry.key, entry.document]) ?? [],
+  );
+  return {
+    namespace,
+    get(key) {
+      if (!isNonEmptyString(key)) {
+        throw new TypeError("textpipeline cache key must be a non-empty string");
+      }
+      return documentsByKey.get(key);
+    },
+    set(key, document) {
+      if (!isNonEmptyString(key)) {
+        throw new TypeError("textpipeline cache key must be a non-empty string");
+      }
+      if (!isTextDocDocumentV1(document)) {
+        throw new TypeError("textpipeline cache document must satisfy TextDocDocumentV1");
+      }
+      documentsByKey.set(key, document);
+    },
+    snapshot() {
+      return createTextPipelineCacheSnapshot(
+        namespace,
+        [...documentsByKey.entries()].map(([key, document]) => ({ key, document })),
+      );
+    },
+  };
+}
+
+export function stringifyTextPipelineCacheSnapshot(snapshot: TextPipelineCacheSnapshotV1): string {
+  if (!isTextPipelineCacheSnapshotV1(snapshot)) {
+    throw new TypeError("textpipeline cache snapshot is invalid");
+  }
+  return `${JSON.stringify(snapshot, null, 2)}\n`;
+}
+
+export function parseTextPipelineCacheSnapshot(serialized: string): TextPipelineCacheSnapshotV1 {
+  if (typeof serialized !== "string") {
+    throw new TypeError("textpipeline cache snapshot JSON must be a string");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(serialized);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new SyntaxError(`textpipeline cache snapshot JSON parse failed: ${message}`);
+  }
+  if (!isTextPipelineCacheSnapshotV1(parsed)) {
+    throw new TypeError("textpipeline cache snapshot JSON must satisfy TextPipelineCacheSnapshotV1");
+  }
+  return parsed;
 }
 
 function isTextPipelineBatchRunItem(value: unknown): value is TextPipelineBatchRunItem {
