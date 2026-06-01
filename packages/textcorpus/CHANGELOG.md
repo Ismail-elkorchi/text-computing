@@ -10,6 +10,7 @@
 - Add package-owned filesystem key/path helpers for retrieval-index artifact storage.
 - Add deterministic BM25F retrieval field-weight profiles for query-time field weighting.
 - Add deterministic retrieval relevance-calibration reports over caller-provided qrels, evaluations, and BM25F field-weight profiles.
+- Add deterministic BM25F field-weight learning over caller-provided qrels and finite search spaces.
 - Add corpus metric payload export for textprotocol corpus-metric envelope exchange.
 
 ## 0.0.0

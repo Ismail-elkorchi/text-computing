@@ -1045,6 +1045,43 @@ async function assertBuiltPackageSmoke() {
       retrievalCalibrationInspection.rowCount === retrievalCalibrationReport.candidates.length,
     "textlab should inspect textcorpus retrieval calibration reports through package APIs.",
   );
+  const retrievalFieldWeightLearningReport = textcorpus.learnTextCorpusRetrievalFieldWeightProfile(
+    fieldedRetrievalIndex,
+    [textcorpus.parseTextCorpusQuery("title:alice", { id: "downstream-api-title" })],
+    {
+      schemaVersion: textcorpus.textCorpusRetrievalQrelsSchemaVersion,
+      taskId: "nlp-retrieval",
+      corpusId: "corpus:downstream-api",
+      judgments: [
+        {
+          queryId: "downstream-api-title",
+          ratings: [{ docId: "doc-a", grade: 2 }],
+        },
+      ],
+    },
+    {
+      reportId: "downstream-api:retrieval-field-weight-learning",
+      profileIdPrefix: "downstream-api:learned",
+      searchSpace: [
+        { field: "title", weights: [0, 2] },
+        { field: "body", weights: [0, 1] },
+      ],
+      includeBaseline: false,
+      optimizeMetric: "ndcgAtK",
+      k: 1,
+      relevantGradeThreshold: 1,
+      tolerance: 1e-12,
+      searchTopK: 1,
+      maxCandidateCount: 4,
+    },
+  );
+  expect(
+    textcorpus.isTextCorpusRetrievalCalibrationReportV1(retrievalFieldWeightLearningReport) &&
+      retrievalFieldWeightLearningReport.selectedCandidateId.startsWith("downstream-api:learned:") &&
+      retrievalFieldWeightLearningReport.candidates.length === 4,
+    "textcorpus should learn deterministic BM25F field-weight profiles over caller-provided qrels.",
+    retrievalFieldWeightLearningReport,
+  );
   const corpusMetricEnvelope = {
     schemaId: textprotocol.textProtocolCorpusMetricEnvelopeSchemaId,
     schemaVersion: textprotocol.textProtocolSchemaVersion,
