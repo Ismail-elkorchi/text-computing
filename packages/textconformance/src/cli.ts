@@ -3,11 +3,14 @@ import { readFile, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
   diffTextConformanceReports,
+  evaluateTextConformanceBenchmarkThresholds,
   isTextConformanceBenchmarkReportV1,
+  isTextConformanceBenchmarkThresholdPolicyV1,
   isTextConformanceCapabilityRegistryV1,
   isTextConformanceReportV1,
   isTextConformanceSuiteV1,
   isTextConformanceSuiteTargetProbeV1,
+  renderTextConformanceBenchmarkThresholdEvaluationMarkdown,
   renderTextConformanceReportMarkdown,
   runTextConformanceBenchmark,
   runTextConformanceSuite,
@@ -239,6 +242,7 @@ function usage(): TextConformanceCliResult {
       "  textconformance validate-suite <suite.json>",
       "  textconformance run-suite <suite.json> [--target-root <repo>] [--target-results <targets.json>]",
       "  textconformance run-benchmark <suite.json> [--target-root <repo>] [--target-results <targets.json>] [--iterations <n>] [--warmup <n>]",
+      "  textconformance evaluate-benchmark <benchmark-report.json> <threshold-policy.json> [--markdown]",
       "  textconformance validate-capability-registry <registry.json>",
       "",
     ].join("\n"),
@@ -347,6 +351,26 @@ export async function runTextConformanceCli(args: readonly string[]): Promise<Te
         return { exitCode: 1, stdout: "", stderr: `Invalid conformance suite: ${parsed.suitePath}\n` };
       }
       return { exitCode: 0, stdout: jsonLine(await runSuiteBenchmark(suite, parsed)), stderr: "" };
+    }
+    if (command === "evaluate-benchmark" && first !== undefined && second !== undefined) {
+      const markdown = args[3] === "--markdown";
+      if (args.length > (markdown ? 4 : 3)) return usage();
+      const report = await readJson(first);
+      if (!isTextConformanceBenchmarkReportV1(report)) {
+        return { exitCode: 1, stdout: "", stderr: `Invalid benchmark report: ${first}\n` };
+      }
+      const policy = await readJson(second);
+      if (!isTextConformanceBenchmarkThresholdPolicyV1(policy)) {
+        return { exitCode: 1, stdout: "", stderr: `Invalid benchmark threshold policy: ${second}\n` };
+      }
+      const evaluation = evaluateTextConformanceBenchmarkThresholds(report, policy);
+      return {
+        exitCode: 0,
+        stdout: markdown
+          ? renderTextConformanceBenchmarkThresholdEvaluationMarkdown(evaluation)
+          : jsonLine(evaluation),
+        stderr: "",
+      };
     }
     if (command === "validate-capability-registry" && first !== undefined && second === undefined) {
       const registry = await readJson(first);

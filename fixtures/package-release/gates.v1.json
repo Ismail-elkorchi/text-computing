@@ -107,6 +107,8 @@
         "packages/textconformance/src/index.ts",
         "schemas/textconformance-suite-v1.schema.json",
         "schemas/textconformance-benchmark-report-v1.schema.json",
+        "schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
+        "schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
         "examples/textconformance-suite-target-consumer.mjs",
         "examples/textconformance-benchmark-runner-consumer.mjs",
         "fixtures/conformance/package-suites.v1.json",
@@ -116,17 +118,19 @@
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Benchmark runner records exist for local suite execution; stable calibrated threshold policy remains outside the alpha scope.",
+        "Benchmark threshold policy evaluation exists for deterministic benchmark reports; broad cross-host benchmark calibration remains outside the alpha scope.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": [
         {
-          "blocker": "Benchmark runner records exist for local suite execution; stable calibrated threshold policy remains outside the alpha scope.",
+          "blocker": "Benchmark threshold policy evaluation exists for deterministic benchmark reports; broad cross-host benchmark calibration remains outside the alpha scope.",
           "maturity": "beta",
-          "decision": "Does not block alpha because alpha requires declared conformance reports, separated benchmark records, and checks, not calibrated benchmark thresholds.",
+          "decision": "Does not block alpha because alpha requires declared conformance reports, separated benchmark records, local threshold evaluation, and package checks, not cross-host calibration.",
           "evidenceRefs": [
             "packages/textconformance/src/index.ts",
             "schemas/textconformance-benchmark-report-v1.schema.json",
+            "schemas/textconformance-benchmark-threshold-policy-v1.schema.json",
+            "schemas/textconformance-benchmark-threshold-evaluation-v1.schema.json",
             "packages/textconformance/test",
             "examples/textconformance-benchmark-runner-consumer.mjs"
           ]

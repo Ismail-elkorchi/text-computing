@@ -443,6 +443,32 @@ async function assertBuiltPackageSmoke() {
     textconformance.isTextConformanceBenchmarkReportV1(benchmarkReport),
     "textconformance built API should execute benchmark reports.",
   );
+  const benchmarkThresholdPolicy = {
+    schemaVersion: textconformance.conformanceBenchmarkThresholdPolicySchemaVersion,
+    policyId: "policy:downstream-api-stability",
+    benchmarkId: benchmarkReport.benchmarkId,
+    subject: benchmarkReport.subject,
+    calibratedAt: "1970-01-01T00:00:00.000Z",
+    thresholds: [
+      {
+        metricId: "downstream-api-smoke.duration-ms.mean",
+        unit: "ms",
+        max: 1,
+        evidenceRefs: [ARTIFACT_PATH],
+      },
+    ],
+    evidenceRefs: [ARTIFACT_PATH],
+    limitations: ["Downstream smoke threshold only; not a cross-host benchmark calibration."],
+  };
+  const benchmarkThresholdEvaluation = textconformance.evaluateTextConformanceBenchmarkThresholds(
+    benchmarkReport,
+    benchmarkThresholdPolicy,
+  );
+  expect(
+    textconformance.isTextConformanceBenchmarkThresholdEvaluationReportV1(benchmarkThresholdEvaluation) &&
+      benchmarkThresholdEvaluation.summary.pass === 1,
+    "textconformance built API should evaluate benchmark threshold policies.",
+  );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(
     benchmarkInspection.metricCount === 4 &&
