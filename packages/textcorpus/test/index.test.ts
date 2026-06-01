@@ -1,5 +1,6 @@
 import type { TextDocDocumentV1, TextDocLayer } from "@ismail-elkorchi/textdoc";
 import {
+  calibrateTextCorpusRetrievalFieldWeightProfiles,
   buildTextCorpusFingerprintIndex,
   buildTextCorpusRetrievalIndex,
   computeTextCorpusCollocates,
@@ -13,6 +14,7 @@ import {
   createTextCorpusCollection,
   createTextCorpusRetrievalFieldWeightProfile,
   createTextCorpusRetrievalIndexArtifact,
+  createTextCorpusRetrievalCalibrationReport,
   evaluateTextCorpusRetrieval,
   exportTextCorpusMetricEnvelopePayloadV1,
   groundTextCorpusQuote,
@@ -28,6 +30,7 @@ import {
   isTextCorpusPairwiseRelationResultV1,
   isTextCorpusParsedQuery,
   isTextCorpusQuoteGroundingResultV1,
+  isTextCorpusRetrievalCalibrationReportV1,
   isTextCorpusRetrievalEvaluationResultV1,
   isTextCorpusRetrievalFieldWeightProfileV1,
   isTextCorpusRetrievalIndexArtifactV1,
@@ -55,6 +58,7 @@ import {
   sliceTextCorpusByMetadata,
   textCorpusBm25fFormula,
   textCorpusCollectionSchemaVersion,
+  textCorpusRetrievalCalibrationSchemaVersion,
   textCorpusRetrievalEvaluationSchemaVersion,
   textCorpusRetrievalQrelsSchemaVersion,
   textCorpusRetrievalSchemaVersion,
@@ -69,6 +73,7 @@ const expectedScoringSchemaVersion: typeof textCorpusScoringSchemaVersion = 1;
 const expectedRetrievalSchemaVersion: typeof textCorpusRetrievalSchemaVersion = 1;
 const expectedRetrievalQrelsSchemaVersion: typeof textCorpusRetrievalQrelsSchemaVersion = 1;
 const expectedRetrievalEvaluationSchemaVersion: typeof textCorpusRetrievalEvaluationSchemaVersion = 1;
+const expectedRetrievalCalibrationSchemaVersion: typeof textCorpusRetrievalCalibrationSchemaVersion = 1;
 
 function createDocument(
   documentId: string,
@@ -1107,6 +1112,103 @@ if (!nonBm25fFieldWeightRejected) {
   throw new Error("retrieval field weights should require BM25F retrieval indexes");
 }
 
+const zeroWeightProfile = createTextCorpusRetrievalFieldWeightProfile({
+  profileId: "profile:zero",
+  fields: {
+    title: 0,
+    body: 0,
+  },
+});
+const calibrationReport = calibrateTextCorpusRetrievalFieldWeightProfiles(
+  fieldedIndex,
+  bm25fResult.results.map((entry) => entry.query),
+  fieldedQrels,
+  [titleBoostProfile, zeroWeightProfile],
+  {
+    reportId: "calibration:fielded-profiles",
+    optimizeMetric: "ndcgAtK",
+    baselineCandidateId: "baseline",
+    k: 3,
+    relevantGradeThreshold: 1,
+    tolerance: 1e-12,
+    searchTopK: 3,
+    snippetWindow: 1,
+  },
+);
+if (calibrationReport.schemaVersion !== textCorpusRetrievalCalibrationSchemaVersion) {
+  throw new Error("retrieval calibration should use the calibration schema version");
+}
+if (
+  !isTextCorpusRetrievalCalibrationReportV1(calibrationReport) ||
+  calibrationReport.selectedCandidateId !== "baseline" ||
+  calibrationReport.candidateOrder.join(",") !== "baseline,profile:title-boost,profile:zero" ||
+  calibrationReport.candidates.length !== 3
+) {
+  throw new Error("retrieval calibration should rank deterministic profile candidates");
+}
+const zeroCalibrationCandidate = calibrationReport.candidates.find((entry) => entry.candidateId === "profile:zero");
+if (
+  !zeroCalibrationCandidate ||
+  zeroCalibrationCandidate.metricScore !== 0 ||
+  zeroCalibrationCandidate.withinToleranceOfSelected ||
+  zeroCalibrationCandidate.deltasFromBaseline.ndcgAtK >= 0
+) {
+  throw new Error("retrieval calibration should expose degraded zero-weight profile metrics");
+}
+const calibrationMetricPayload = exportTextCorpusMetricEnvelopePayloadV1(calibrationReport, {
+  metricSetId: "metrics:fielded-calibration",
+});
+if (
+  !isTextCorpusMetricEnvelopePayloadV1(calibrationMetricPayload) ||
+  calibrationMetricPayload.metrics.find((entry) => entry.metricId === "retrieval-calibration.candidate-count")?.value !==
+    3
+) {
+  throw new Error("retrieval calibration metric payload should expose profile comparison metrics");
+}
+const parsedCalibrationReport = parseTextCorpusArtifact(stringifyTextCorpusArtifact(calibrationReport));
+if (!isTextCorpusRetrievalCalibrationReportV1(parsedCalibrationReport)) {
+  throw new Error("retrieval calibration should round-trip through generic artifact JSON");
+}
+const singleCandidateCalibrationReport = createTextCorpusRetrievalCalibrationReport(
+  [{ candidateId: "only", evaluation: fieldedEvaluation }],
+  { reportId: "calibration:single", baselineCandidateId: "only" },
+);
+if (
+  !isTextCorpusRetrievalCalibrationReportV1(singleCandidateCalibrationReport) ||
+  singleCandidateCalibrationReport.selectedCandidateId !== "only"
+) {
+  throw new Error("retrieval calibration constructor should accept caller-provided evaluation candidates");
+}
+let duplicateCalibrationCandidateRejected = false;
+try {
+  createTextCorpusRetrievalCalibrationReport([
+    { candidateId: "duplicate", evaluation: fieldedEvaluation },
+    { candidateId: "duplicate", evaluation: fieldedEvaluation },
+  ]);
+} catch (error) {
+  duplicateCalibrationCandidateRejected =
+    error instanceof Error && error.message === "duplicate textcorpus retrieval calibration candidate id";
+}
+if (!duplicateCalibrationCandidateRejected) {
+  throw new Error("retrieval calibration should reject duplicate candidate ids");
+}
+let nonBm25fCalibrationRejected = false;
+try {
+  calibrateTextCorpusRetrievalFieldWeightProfiles(
+    retrievalIndex,
+    bm25fResult.results.map((entry) => entry.query),
+    fieldedQrels,
+    [titleBoostProfile],
+  );
+} catch (error) {
+  nonBm25fCalibrationRejected =
+    error instanceof TypeError &&
+    error.message === "textcorpus retrieval field-weight calibration requires a BM25F retrieval index";
+}
+if (!nonBm25fCalibrationRejected) {
+  throw new Error("retrieval calibration should require BM25F indexes for field-weight profiles");
+}
+
 const fieldedDeltaHits =
   bm25fResult.results.find((entry) => entry.query.id === "fielded-delta-note")?.hits ?? [];
 if (fieldedDeltaHits.map((hit) => hit.docId).join(",") !== "doc-c") {
@@ -1381,6 +1483,7 @@ const metricPayloads = [
   artifact,
   retrievalResult,
   fieldedEvaluation,
+  calibrationReport,
   citationWindows,
   groundedQuote,
 ].map((corpusArtifact) => exportTextCorpusMetricEnvelopePayloadV1(corpusArtifact));
@@ -1392,7 +1495,7 @@ if (!metricPayloads.every((payload) => isTextCorpusMetricEnvelopePayloadV1(paylo
 const metricSetIds = metricPayloads.map((payload) => payload.metricSetId).join(",");
 if (
   metricSetIds !==
-  "textcorpus.concordance:corpus:foundation:beta,textcorpus.frequency:corpus:foundation,textcorpus.ngram:corpus:foundation:n-2,textcorpus.cooccurrence:corpus:foundation:w-1,textcorpus.collocate:corpus:foundation:beta:w-1,textcorpus.pairwise:corpus:relations,textcorpus.scoring:corpus-tfidf-bm25-smoke,textcorpus.retrieval-index:corpus-tfidf-bm25-smoke:bm25.okapi.k1-1.5.b-0.75,textcorpus.retrieval-index:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded,textcorpus.retrieval-result:corpus-tfidf-bm25-smoke:bm25.okapi.k1-1.5.b-0.75,textcorpus.retrieval-evaluation:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded:k-3,textcorpus.citation-windows:corpus-retrieval-fielded-smoke,textcorpus.quote-grounding:corpus-retrieval-fielded-smoke:doc-a"
+  "textcorpus.concordance:corpus:foundation:beta,textcorpus.frequency:corpus:foundation,textcorpus.ngram:corpus:foundation:n-2,textcorpus.cooccurrence:corpus:foundation:w-1,textcorpus.collocate:corpus:foundation:beta:w-1,textcorpus.pairwise:corpus:relations,textcorpus.scoring:corpus-tfidf-bm25-smoke,textcorpus.retrieval-index:corpus-tfidf-bm25-smoke:bm25.okapi.k1-1.5.b-0.75,textcorpus.retrieval-index:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded,textcorpus.retrieval-result:corpus-tfidf-bm25-smoke:bm25.okapi.k1-1.5.b-0.75,textcorpus.retrieval-evaluation:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded:k-3,textcorpus.retrieval-calibration:corpus-retrieval-fielded-smoke:bm25f.k1-1.2.b-0.75.fielded:k-3:ndcgAtK,textcorpus.citation-windows:corpus-retrieval-fielded-smoke,textcorpus.quote-grounding:corpus-retrieval-fielded-smoke:doc-a"
 ) {
   throw new Error(`metric payload export should use deterministic default metric set ids: ${metricSetIds}`);
 }
@@ -1497,3 +1600,4 @@ void expectedScoringSchemaVersion;
 void expectedRetrievalSchemaVersion;
 void expectedRetrievalQrelsSchemaVersion;
 void expectedRetrievalEvaluationSchemaVersion;
+void expectedRetrievalCalibrationSchemaVersion;

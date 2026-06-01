@@ -266,10 +266,12 @@
         "packages/textcorpus/test/index.test.ts",
         "examples/textcorpus-retrieval-index-storage-consumer.mjs",
         "examples/textcorpus-field-weighting-consumer.mjs",
+        "examples/textcorpus-relevance-calibration-consumer.mjs",
+        "schemas/retrieval-calibration-report-v1.schema.json",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [
-        "This verifies current built-package API import and smoke usage, including package-owned retrieval-index filesystem key/path helpers and BM25F field-weight profiles; it does not add external relevance datasets, streaming retrieval, or learned relevance-calibrated weighting."
+        "This verifies current built-package API import and smoke usage, including package-owned retrieval-index filesystem key/path helpers, BM25F field-weight profiles, and deterministic relevance-calibration reports over caller-provided qrels/profiles; it does not add broad external relevance datasets, remote retrieval services, or learned relevance-calibrated weighting."
       ]
     },
     {
