@@ -6,6 +6,9 @@ export const textProtocolResultEnvelopeJsonMediaType =
   "application/vnd.ismail-elkorchi.textprotocol.result-envelope.v1+json" as const;
 export const textProtocolSchemaFamilyEnvelopeJsonMediaType =
   "application/vnd.ismail-elkorchi.textprotocol.schema-family-envelope.v1+json" as const;
+export const textProtocolRegistryManifestJsonMediaType =
+  "application/vnd.ismail-elkorchi.textprotocol.registry-manifest.v1+json" as const;
+export const textProtocolRegistryManifestSchemaVersion = 1 as const;
 export const textProtocolPayloadKindTextdocDocumentV1 = "textdoc-document-v1" as const;
 export const textProtocolPayloadKindTextpipelineTraceV1 = "textpipeline-trace-v1" as const;
 export const textProtocolPayloadKindTextpipelineBatchRunReportV1 =
@@ -39,6 +42,10 @@ export type TextProtocolResultEnvelopeJsonMediaType =
   typeof textProtocolResultEnvelopeJsonMediaType;
 export type TextProtocolSchemaFamilyEnvelopeJsonMediaType =
   typeof textProtocolSchemaFamilyEnvelopeJsonMediaType;
+export type TextProtocolRegistryManifestJsonMediaType =
+  typeof textProtocolRegistryManifestJsonMediaType;
+export type TextProtocolRegistryManifestSchemaVersion =
+  typeof textProtocolRegistryManifestSchemaVersion;
 export type TextProtocolPayloadKind =
   | typeof textProtocolPayloadKindTextdocDocumentV1
   | typeof textProtocolPayloadKindTextpipelineTraceV1
@@ -115,6 +122,42 @@ export interface TextProtocolSchemaFamilyDescriptor {
   readonly description: string;
 }
 
+export interface TextProtocolRegistryManifestResultEnvelopeV1 {
+  readonly schemaId: TextProtocolResultEnvelopeSchemaId;
+  readonly supportedVersions: readonly TextProtocolResultEnvelopeSchemaVersion[];
+  readonly jsonMediaType: TextProtocolResultEnvelopeJsonMediaType;
+}
+
+export interface TextProtocolRegistryManifestSchemaFamilyEnvelopeV1 {
+  readonly schemaVersion: TextProtocolSchemaVersion;
+  readonly jsonMediaType: TextProtocolSchemaFamilyEnvelopeJsonMediaType;
+  readonly registeredFamilies: readonly TextProtocolSchemaFamily[];
+}
+
+export interface TextProtocolRegistryManifestSummaryV1 {
+  readonly payloadKindCount: number;
+  readonly schemaFamilyCount: number;
+  readonly protocolOwnedSchemaFamilyCount: number;
+  readonly externallyOwnedSchemaFamilyCount: number;
+  readonly schemaPathCount: number;
+}
+
+export interface TextProtocolRegistryManifestV1 {
+  readonly schemaVersion: TextProtocolRegistryManifestSchemaVersion;
+  readonly producer: TextProtocolProducerRef;
+  readonly resultEnvelope: TextProtocolRegistryManifestResultEnvelopeV1;
+  readonly schemaFamilyEnvelope: TextProtocolRegistryManifestSchemaFamilyEnvelopeV1;
+  readonly payloadKinds: readonly TextProtocolPayloadKindDescriptor[];
+  readonly schemaFamilies: readonly TextProtocolSchemaFamilyDescriptor[];
+  readonly summary: TextProtocolRegistryManifestSummaryV1;
+  readonly limitations: readonly string[];
+}
+
+export interface TextProtocolRegistryManifestOptions {
+  readonly producerVersion?: string;
+  readonly limitations?: readonly string[];
+}
+
 export interface TextProtocolEnvelopeCompatibilityOptions {
   readonly expectedPayloadKind?: TextProtocolPayloadKind;
   readonly expectedProducerPackage?: string;
@@ -163,6 +206,12 @@ export interface TextProtocolSchemaFamilyEnvelopeJsonTransportV1 {
   readonly schemaId: TextProtocolSchemaId;
   readonly schemaVersion: TextProtocolSchemaVersion;
   readonly family: TextProtocolSchemaFamily;
+  readonly body: string;
+}
+
+export interface TextProtocolRegistryManifestJsonTransportV1 {
+  readonly mediaType: TextProtocolRegistryManifestJsonMediaType;
+  readonly schemaVersion: TextProtocolRegistryManifestSchemaVersion;
   readonly body: string;
 }
 
@@ -575,6 +624,202 @@ export function getTextProtocolSchemaFamilyDescriptorBySchemaId(
   schemaId: string,
 ): TextProtocolSchemaFamilyDescriptor | undefined {
   return textProtocolSchemaFamilyRegistry.find((entry) => entry.schemaId === schemaId);
+}
+
+export function isTextProtocolPayloadKindDescriptor(
+  value: unknown,
+): value is TextProtocolPayloadKindDescriptor {
+  return (
+    isRecord(value) &&
+    isTextProtocolPayloadKind(value.payloadKind) &&
+    isNonEmptyString(value.ownerPackage) &&
+    (value.schemaId === undefined || isNonEmptyString(value.schemaId)) &&
+    (value.schemaVersion === undefined ||
+      isNonEmptyString(value.schemaVersion) ||
+      (typeof value.schemaVersion === "number" && Number.isFinite(value.schemaVersion))) &&
+    isNonEmptyString(value.description)
+  );
+}
+
+export function isTextProtocolSchemaFamilyDescriptor(
+  value: unknown,
+): value is TextProtocolSchemaFamilyDescriptor {
+  return (
+    isRecord(value) &&
+    isTextProtocolSchemaFamily(value.family) &&
+    isTextProtocolSchemaId(value.schemaId) &&
+    value.schemaVersion === textProtocolSchemaVersion &&
+    isNonEmptyString(value.ownerPackage) &&
+    isNonEmptyString(value.schemaPath) &&
+    isNonEmptyString(value.description)
+  );
+}
+
+function cloneTextProtocolPayloadKindDescriptor(
+  descriptor: TextProtocolPayloadKindDescriptor,
+): TextProtocolPayloadKindDescriptor {
+  return { ...descriptor };
+}
+
+function cloneTextProtocolSchemaFamilyDescriptor(
+  descriptor: TextProtocolSchemaFamilyDescriptor,
+): TextProtocolSchemaFamilyDescriptor {
+  return { ...descriptor };
+}
+
+export function createTextProtocolRegistryManifestV1(
+  options: TextProtocolRegistryManifestOptions = {},
+): TextProtocolRegistryManifestV1 {
+  const producerVersion = options.producerVersion ?? "0.0.0";
+  if (!isNonEmptyString(producerVersion)) {
+    throw new TypeError("textprotocol registry manifest producerVersion must be a non-empty string");
+  }
+  const limitations = options.limitations ?? [
+    "The registry manifest describes registered package-level descriptors; externally owned schema payloads still require owner validation.",
+  ];
+  if (!isStringArray(limitations) || limitations.length === 0) {
+    throw new TypeError("textprotocol registry manifest limitations must contain non-empty strings");
+  }
+
+  const payloadKinds = [...textProtocolPayloadKindRegistry]
+    .map((entry) => cloneTextProtocolPayloadKindDescriptor(entry))
+    .sort((left, right) => left.payloadKind.localeCompare(right.payloadKind));
+  const schemaFamilies = [...textProtocolSchemaFamilyRegistry]
+    .map((entry) => cloneTextProtocolSchemaFamilyDescriptor(entry))
+    .sort((left, right) => left.family.localeCompare(right.family));
+  const schemaPaths = new Set(schemaFamilies.map((entry) => entry.schemaPath));
+  const protocolOwnedSchemaFamilyCount = schemaFamilies.filter(
+    (entry) => entry.ownerPackage === packageName,
+  ).length;
+
+  const manifest: TextProtocolRegistryManifestV1 = {
+    schemaVersion: textProtocolRegistryManifestSchemaVersion,
+    producer: {
+      package: packageName,
+      version: producerVersion,
+    },
+    resultEnvelope: {
+      schemaId: resultEnvelopeSchemaId,
+      supportedVersions: [...textProtocolSupportedResultEnvelopeSchemaVersions],
+      jsonMediaType: textProtocolResultEnvelopeJsonMediaType,
+    },
+    schemaFamilyEnvelope: {
+      schemaVersion: textProtocolSchemaVersion,
+      jsonMediaType: textProtocolSchemaFamilyEnvelopeJsonMediaType,
+      registeredFamilies: schemaFamilies.map((entry) => entry.family),
+    },
+    payloadKinds,
+    schemaFamilies,
+    summary: {
+      payloadKindCount: payloadKinds.length,
+      schemaFamilyCount: schemaFamilies.length,
+      protocolOwnedSchemaFamilyCount,
+      externallyOwnedSchemaFamilyCount: schemaFamilies.length - protocolOwnedSchemaFamilyCount,
+      schemaPathCount: schemaPaths.size,
+    },
+    limitations: [...limitations],
+  };
+  if (!isTextProtocolRegistryManifestV1(manifest)) {
+    throw new TypeError("textprotocol registry manifest could not be produced");
+  }
+  return manifest;
+}
+
+function isTextProtocolRegistryManifestResultEnvelopeV1(
+  value: unknown,
+): value is TextProtocolRegistryManifestResultEnvelopeV1 {
+  return (
+    isRecord(value) &&
+    value.schemaId === resultEnvelopeSchemaId &&
+    Array.isArray(value.supportedVersions) &&
+    value.supportedVersions.length > 0 &&
+    value.supportedVersions.every((entry) =>
+      textProtocolSupportedResultEnvelopeSchemaVersions.includes(
+        entry as TextProtocolResultEnvelopeSchemaVersion,
+      )
+    ) &&
+    value.jsonMediaType === textProtocolResultEnvelopeJsonMediaType
+  );
+}
+
+function isTextProtocolRegistryManifestSchemaFamilyEnvelopeV1(
+  value: unknown,
+): value is TextProtocolRegistryManifestSchemaFamilyEnvelopeV1 {
+  return (
+    isRecord(value) &&
+    value.schemaVersion === textProtocolSchemaVersion &&
+    value.jsonMediaType === textProtocolSchemaFamilyEnvelopeJsonMediaType &&
+    Array.isArray(value.registeredFamilies) &&
+    value.registeredFamilies.length === textProtocolSchemaFamilyRegistry.length &&
+    value.registeredFamilies.every((entry) => isTextProtocolSchemaFamily(entry))
+  );
+}
+
+function isTextProtocolRegistryManifestSummaryV1(
+  value: unknown,
+): value is TextProtocolRegistryManifestSummaryV1 {
+  return (
+    isRecord(value) &&
+    isNonNegativeInteger(value.payloadKindCount) &&
+    isNonNegativeInteger(value.schemaFamilyCount) &&
+    isNonNegativeInteger(value.protocolOwnedSchemaFamilyCount) &&
+    isNonNegativeInteger(value.externallyOwnedSchemaFamilyCount) &&
+    isNonNegativeInteger(value.schemaPathCount)
+  );
+}
+
+export function isTextProtocolRegistryManifestV1(
+  value: unknown,
+): value is TextProtocolRegistryManifestV1 {
+  if (!isRecord(value)) return false;
+  if (
+    value.schemaVersion !== textProtocolRegistryManifestSchemaVersion ||
+    !isTextProtocolProducerRef(value.producer) ||
+    value.producer.package !== packageName ||
+    !isTextProtocolRegistryManifestResultEnvelopeV1(value.resultEnvelope) ||
+    !isTextProtocolRegistryManifestSchemaFamilyEnvelopeV1(value.schemaFamilyEnvelope) ||
+    !Array.isArray(value.payloadKinds) ||
+    !value.payloadKinds.every((entry) => isTextProtocolPayloadKindDescriptor(entry)) ||
+    !Array.isArray(value.schemaFamilies) ||
+    !value.schemaFamilies.every((entry) => isTextProtocolSchemaFamilyDescriptor(entry)) ||
+    !isTextProtocolRegistryManifestSummaryV1(value.summary) ||
+    !isStringArray(value.limitations) ||
+    value.limitations.length === 0
+  ) {
+    return false;
+  }
+  const payloadKinds = value.payloadKinds as readonly TextProtocolPayloadKindDescriptor[];
+  const schemaFamilies = value.schemaFamilies as readonly TextProtocolSchemaFamilyDescriptor[];
+  const schemaFamilyEnvelope =
+    value.schemaFamilyEnvelope as TextProtocolRegistryManifestSchemaFamilyEnvelopeV1;
+  const summary = value.summary as TextProtocolRegistryManifestSummaryV1;
+  const schemaPaths = new Set(schemaFamilies.map((entry) => entry.schemaPath));
+  const protocolOwnedSchemaFamilyCount = schemaFamilies.filter(
+    (entry) => entry.ownerPackage === packageName,
+  ).length;
+  return (
+    summary.payloadKindCount === payloadKinds.length &&
+    summary.schemaFamilyCount === schemaFamilies.length &&
+    summary.protocolOwnedSchemaFamilyCount === protocolOwnedSchemaFamilyCount &&
+    summary.externallyOwnedSchemaFamilyCount ===
+      schemaFamilies.length - protocolOwnedSchemaFamilyCount &&
+    summary.schemaPathCount === schemaPaths.size &&
+    schemaFamilyEnvelope.registeredFamilies.length === schemaFamilies.length &&
+    schemaFamilyEnvelope.registeredFamilies.every((family) =>
+      schemaFamilies.some((entry) => entry.family === family),
+    )
+  );
+}
+
+export function isTextProtocolRegistryManifestJsonTransportV1(
+  value: unknown,
+): value is TextProtocolRegistryManifestJsonTransportV1 {
+  return (
+    isRecord(value) &&
+    value.mediaType === textProtocolRegistryManifestJsonMediaType &&
+    value.schemaVersion === textProtocolRegistryManifestSchemaVersion &&
+    isNonEmptyString(value.body)
+  );
 }
 
 export function isTextProtocolProducerRef(value: unknown): value is TextProtocolProducerRef {
@@ -1090,6 +1335,37 @@ function stableJsonStringifyValue(value: unknown, seen: WeakSet<object>): string
 
 export function canonicalizeTextProtocolJson(value: unknown): string {
   return stableJsonStringifyValue(value, new WeakSet());
+}
+
+export function serializeTextProtocolRegistryManifestJson(
+  value: TextProtocolRegistryManifestV1 = createTextProtocolRegistryManifestV1(),
+): TextProtocolRegistryManifestJsonTransportV1 {
+  if (!isTextProtocolRegistryManifestV1(value)) {
+    throw new TypeError("Cannot serialize invalid textprotocol registry manifest");
+  }
+  return {
+    mediaType: textProtocolRegistryManifestJsonMediaType,
+    schemaVersion: textProtocolRegistryManifestSchemaVersion,
+    body: canonicalizeTextProtocolJson(value),
+  };
+}
+
+export function parseTextProtocolRegistryManifestJson(
+  transport: TextProtocolRegistryManifestJsonTransportV1,
+): TextProtocolRegistryManifestV1 {
+  if (!isTextProtocolRegistryManifestJsonTransportV1(transport)) {
+    throw new TypeError("textprotocol registry-manifest JSON transport wrapper is invalid");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(transport.body);
+  } catch (error) {
+    throw new TypeError(`textprotocol registry-manifest JSON body is invalid: ${String(error)}`);
+  }
+  if (!isTextProtocolRegistryManifestV1(parsed)) {
+    throw new TypeError("Parsed textprotocol registry manifest is invalid");
+  }
+  return parsed;
 }
 
 export function checkTextProtocolSchemaFamilyEnvelope(

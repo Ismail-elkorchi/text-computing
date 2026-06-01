@@ -164,6 +164,8 @@
         "packages/textprotocol/package.json",
         "packages/textprotocol/src/index.ts",
         "packages/textprotocol/test/index.test.ts",
+        "schemas/textprotocol-registry-manifest-v1.schema.json",
+        "examples/textprotocol-registry-manifest-consumer.mjs",
         "tools/check-downstream-api-stability.mjs"
       ],
       "limitations": [

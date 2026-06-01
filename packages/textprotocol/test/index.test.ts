@@ -4,6 +4,7 @@ import {
   checkTextProtocolResultEnvelopeCompatibility,
   createTextProtocolProtocolErrorEnvelopeFromDiagnostics,
   createTextProtocolProtocolErrorPayloadFromDiagnostics,
+  createTextProtocolRegistryManifestV1,
   getTextProtocolPayloadKindDescriptor,
   getTextProtocolSchemaFamilyDescriptor,
   getTextProtocolSchemaFamilyDescriptorBySchemaId,
@@ -14,20 +15,26 @@ import {
   isTextProtocolEvidenceBundleV1,
   isTextProtocolMappingLossReportV1,
   isTextProtocolPayloadKind,
+  isTextProtocolPayloadKindDescriptor,
   isTextProtocolProcessorTraceV1,
   isTextProtocolProtocolErrorV1,
+  isTextProtocolRegistryManifestJsonTransportV1,
+  isTextProtocolRegistryManifestV1,
   isTextProtocolResultEnvelopeJsonTransportV1,
   isTextProtocolResultEnvelopeV1,
   isTextProtocolResultEnvelopeForPayloadKind,
   isTextProtocolSchemaFamily,
+  isTextProtocolSchemaFamilyDescriptor,
   isTextProtocolSchemaFamilyEnvelopeJsonTransportV1,
   isTextProtocolSchemaId,
   negotiateTextProtocolResultEnvelopeVersion,
   packageName,
+  parseTextProtocolRegistryManifestJson,
   parseTextProtocolSchemaFamilyEnvelopeJson,
   parseTextProtocolResultEnvelopeJson,
   resultEnvelopeSchemaId,
   resultEnvelopeSchemaVersion,
+  serializeTextProtocolRegistryManifestJson,
   serializeTextProtocolSchemaFamilyEnvelopeJson,
   serializeTextProtocolResultEnvelopeJson,
   textProtocolAnnotationBundleSchemaId,
@@ -42,6 +49,8 @@ import {
   textProtocolPayloadKindVerticalSliceResultV1,
   textProtocolProcessorTraceSchemaId,
   textProtocolProtocolErrorSchemaId,
+  textProtocolRegistryManifestJsonMediaType,
+  textProtocolRegistryManifestSchemaVersion,
   textProtocolResultEnvelopeJsonMediaType,
   textProtocolSchemaFamilyEnvelopeJsonMediaType,
   textProtocolSchemaFamilyRegistry,
@@ -105,6 +114,13 @@ if (
 ) {
   throw new Error("payload-kind registry should expose owner package metadata");
 }
+if (
+  !isTextProtocolPayloadKindDescriptor(
+    getTextProtocolPayloadKindDescriptor(textProtocolPayloadKindTextdocDocumentV1),
+  )
+) {
+  throw new Error("payload-kind descriptor guard should accept registered descriptors");
+}
 
 const schemaIds = textProtocolSchemaFamilyRegistry.map((entry) => entry.schemaId);
 if (new Set(schemaIds).size !== schemaIds.length) {
@@ -130,6 +146,50 @@ if (
   "evidence-bundle"
 ) {
   throw new Error("schema-id lookup should expose evidence-bundle metadata");
+}
+if (!isTextProtocolSchemaFamilyDescriptor(getTextProtocolSchemaFamilyDescriptor("document-bundle"))) {
+  throw new Error("schema-family descriptor guard should accept registered descriptors");
+}
+
+const registryManifest = createTextProtocolRegistryManifestV1({
+  producerVersion: "0.1.0",
+  limitations: ["Fixture validates deterministic registry manifest transport."],
+});
+if (
+  !isTextProtocolRegistryManifestV1(registryManifest) ||
+  registryManifest.schemaVersion !== textProtocolRegistryManifestSchemaVersion ||
+  registryManifest.summary.payloadKindCount < 5 ||
+  registryManifest.summary.schemaFamilyCount !== textProtocolSchemaFamilyRegistry.length ||
+  registryManifest.summary.externallyOwnedSchemaFamilyCount !== 1 ||
+  !registryManifest.schemaFamilyEnvelope.registeredFamilies.includes("protocol-error")
+) {
+  throw new Error("registry manifest should summarize payload-kind and schema-family registries");
+}
+const registryManifestTransport = serializeTextProtocolRegistryManifestJson(registryManifest);
+if (
+  !isTextProtocolRegistryManifestJsonTransportV1(registryManifestTransport) ||
+  registryManifestTransport.mediaType !== textProtocolRegistryManifestJsonMediaType
+) {
+  throw new Error("registry manifest transport should expose its media type and guard");
+}
+const parsedRegistryManifest = parseTextProtocolRegistryManifestJson(registryManifestTransport);
+if (
+  !isTextProtocolRegistryManifestV1(parsedRegistryManifest) ||
+  serializeTextProtocolRegistryManifestJson(parsedRegistryManifest).body !== registryManifestTransport.body
+) {
+  throw new Error("registry manifest transport should parse and reserialize deterministically");
+}
+try {
+  createTextProtocolRegistryManifestV1({ producerVersion: "" });
+  throw new Error("registry manifest should reject empty producer versions");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
+}
+try {
+  parseTextProtocolRegistryManifestJson({ ...registryManifestTransport, body: "{}" });
+  throw new Error("registry manifest parser should reject invalid manifest bodies");
+} catch (error) {
+  if (!(error instanceof TypeError)) throw error;
 }
 
 if (

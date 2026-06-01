@@ -57,6 +57,7 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textprotocol-corpus-metric-envelope-v1.schema.json`](textprotocol-corpus-metric-envelope-v1.schema.json) — protocol corpus-metric envelope schema.
 - [`textprotocol-mapping-loss-report-v1.schema.json`](textprotocol-mapping-loss-report-v1.schema.json) — protocol mapping-loss report schema.
 - [`textprotocol-protocol-error-v1.schema.json`](textprotocol-protocol-error-v1.schema.json) — protocol error envelope schema.
+- [`textprotocol-registry-manifest-v1.schema.json`](textprotocol-registry-manifest-v1.schema.json) — protocol payload-kind and schema-family registry manifest schema.
 - [`textconformance-report-v1.schema.json`](textconformance-report-v1.schema.json) — machine-readable conformance report schema.
 - [`textconformance-suite-v1.schema.json`](textconformance-suite-v1.schema.json) — declarative conformance suite schema.
 - [`textconformance-benchmark-report-v1.schema.json`](textconformance-benchmark-report-v1.schema.json) — benchmark report schema separate from conformance reports.

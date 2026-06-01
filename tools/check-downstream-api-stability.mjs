@@ -493,6 +493,19 @@ async function assertBuiltPackageSmoke() {
     protocolErrorInspection.family === "protocol-error" && protocolErrorInspection.compatibilityOk,
     "textlab should inspect protocol-error diagnostic envelopes through package APIs.",
   );
+  const registryManifest = textprotocol.createTextProtocolRegistryManifestV1({
+    producerVersion: "0.1.0",
+    limitations: ["Downstream API stability registry-manifest smoke."],
+  });
+  const registryManifestTransport = textprotocol.serializeTextProtocolRegistryManifestJson(registryManifest);
+  const parsedRegistryManifest = textprotocol.parseTextProtocolRegistryManifestJson(registryManifestTransport);
+  expect(
+    textprotocol.isTextProtocolRegistryManifestV1(parsedRegistryManifest) &&
+      textprotocol.isTextProtocolRegistryManifestJsonTransportV1(registryManifestTransport) &&
+      parsedRegistryManifest.summary.schemaFamilyCount >= 9 &&
+      parsedRegistryManifest.summary.payloadKindCount >= 5,
+    "textprotocol should expose registry manifest transport through package APIs.",
+  );
 
   const conformanceReport = textconformance.runTextConformanceChecks(
     [

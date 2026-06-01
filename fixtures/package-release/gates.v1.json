@@ -664,12 +664,14 @@
         "packages/textprotocol/src/index.ts",
         "packages/textprotocol/README.md",
         "packages/textprotocol/CHANGELOG.md",
+        "schemas/textprotocol-registry-manifest-v1.schema.json",
+        "examples/textprotocol-registry-manifest-consumer.mjs",
         "tools/validate-package-readiness.mjs",
         "tools/check-workspace-pack-dry-run.mjs",
         "tools/smoke-public-vertical-slice.mjs"
       ],
       "limitations": [
-        "Only result-envelope schema version 1 and the package JSON transport wrapper are standardized.",
+        "Registry manifests standardize current payload-kind and schema-family descriptors; externally owned schema payloads still require owner validation.",
         "Public alpha scope is bounded to Public Vertical Slice 0.1 package interop evidence."
       ],
       "blockerClassifications": []
