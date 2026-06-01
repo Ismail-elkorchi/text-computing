@@ -402,9 +402,8 @@ async function assertBuiltPackageSmoke() {
     conformanceSummary.reportId === "downstream-api-stability" && conformanceSummary.pass === 1,
     "textlab should summarize conformance reports through package APIs.",
   );
-  const benchmarkReport = {
-    schemaId: textconformance.conformanceBenchmarkReportSchemaId,
-    schemaVersion: textconformance.conformanceBenchmarkReportSchemaVersion,
+  let benchmarkClock = 0;
+  const benchmarkReport = await textconformance.runTextConformanceBenchmark({
     benchmarkId: "benchmark:downstream-api-stability",
     subject: {
       kind: "package-release-gate",
@@ -412,24 +411,44 @@ async function assertBuiltPackageSmoke() {
       schemaId: "urn:ismail-elkorchi:package-release:downstream-api-stability:v1",
     },
     generatedAt: "1970-01-01T00:00:00.000Z",
-    metrics: [
-      {
-        metricId: "smoke-check-count",
-        value: 1,
-        unit: "checks",
-        higherIsPreferred: true,
-      },
-    ],
+    iterations: 1,
+    clock() {
+      const value = benchmarkClock;
+      benchmarkClock += 1;
+      return value;
+    },
     evidenceRefs: [ARTIFACT_PATH],
     limitations: ["Downstream smoke metric only; benchmark report is not conformance."],
-  };
+    cases: [
+      {
+        caseId: "downstream-api-smoke",
+        run() {
+          textconformance.runTextConformanceChecks(
+            [
+              {
+                checkId: "benchmark-smoke",
+                run: () => "pass",
+              },
+            ],
+            {
+              reportId: "benchmark-smoke",
+              subject: { kind: "package-release-gate", id: "downstream-api-stability" },
+            },
+          );
+        },
+      },
+    ],
+  });
   expect(
     textconformance.isTextConformanceBenchmarkReportV1(benchmarkReport),
-    "textconformance built API should validate benchmark reports.",
+    "textconformance built API should execute benchmark reports.",
   );
   const benchmarkInspection = textlab.inspectTextConformanceBenchmarkReport(benchmarkReport);
   expect(
-    benchmarkInspection.metricCount === 1 && benchmarkInspection.metrics[0]?.preference === "higher",
+    benchmarkInspection.metricCount === 4 &&
+      benchmarkInspection.metrics.some(
+        (metric) => metric.metricId === "downstream-api-smoke.duration-ms.mean" && metric.preference === "lower",
+      ),
     "textlab should inspect textconformance benchmark reports through package APIs.",
   );
 

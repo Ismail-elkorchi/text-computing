@@ -3,11 +3,13 @@ import { readFile, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
   diffTextConformanceReports,
+  isTextConformanceBenchmarkReportV1,
   isTextConformanceCapabilityRegistryV1,
   isTextConformanceReportV1,
   isTextConformanceSuiteV1,
   isTextConformanceSuiteTargetProbeV1,
   renderTextConformanceReportMarkdown,
+  runTextConformanceBenchmark,
   runTextConformanceSuite,
   runTextConformanceSuiteWithTargets,
   validateTextConformanceCapabilityRegistry,
@@ -98,6 +100,21 @@ interface RunSuiteCliOptions {
   readonly targetResultsPath?: string;
 }
 
+interface RunBenchmarkCliOptions extends RunSuiteCliOptions {
+  readonly iterations: number;
+  readonly warmupIterations: number;
+}
+
+function parsePositiveIntegerArg(value: string | undefined): number | undefined {
+  if (value === undefined || !/^[1-9][0-9]*$/u.test(value)) return undefined;
+  return Number(value);
+}
+
+function parseNonNegativeIntegerArg(value: string | undefined): number | undefined {
+  if (value === undefined || !/^(0|[1-9][0-9]*)$/u.test(value)) return undefined;
+  return Number(value);
+}
+
 function parseRunSuiteArgs(args: readonly string[]): RunSuiteCliOptions | undefined {
   let suitePath: string | undefined;
   let targetRoot = process.cwd();
@@ -124,6 +141,92 @@ function parseRunSuiteArgs(args: readonly string[]): RunSuiteCliOptions | undefi
   return { suitePath, targetRoot, ...(targetResultsPath ? { targetResultsPath } : {}) };
 }
 
+function parseRunBenchmarkArgs(args: readonly string[]): RunBenchmarkCliOptions | undefined {
+  let suitePath: string | undefined;
+  let targetRoot = process.cwd();
+  let targetResultsPath: string | undefined;
+  let iterations = 1;
+  let warmupIterations = 0;
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--target-root") {
+      const value = args[index + 1];
+      if (value === undefined) return undefined;
+      targetRoot = value;
+      index += 1;
+    } else if (arg === "--target-results") {
+      const value = args[index + 1];
+      if (value === undefined) return undefined;
+      targetResultsPath = value;
+      index += 1;
+    } else if (arg === "--iterations") {
+      const value = parsePositiveIntegerArg(args[index + 1]);
+      if (value === undefined) return undefined;
+      iterations = value;
+      index += 1;
+    } else if (arg === "--warmup") {
+      const value = parseNonNegativeIntegerArg(args[index + 1]);
+      if (value === undefined) return undefined;
+      warmupIterations = value;
+      index += 1;
+    } else if (suitePath === undefined) {
+      suitePath = arg;
+    } else {
+      return undefined;
+    }
+  }
+  if (suitePath === undefined) return undefined;
+  return {
+    suitePath,
+    targetRoot,
+    iterations,
+    warmupIterations,
+    ...(targetResultsPath ? { targetResultsPath } : {}),
+  };
+}
+
+function suiteEvidenceRefs(suite: TextConformanceSuiteV1, suitePath: string): readonly string[] {
+  return [
+    suitePath,
+    ...suite.fixtures.map((fixture) => fixture.ref),
+    ...suite.oracles.flatMap((oracle) => (oracle.ref === undefined ? [] : [oracle.ref])),
+    ...(suite.targets ?? []).map((target) => target.ref),
+  ].sort();
+}
+
+async function runSuiteBenchmark(
+  suite: TextConformanceSuiteV1,
+  options: RunBenchmarkCliOptions,
+) {
+  const targets =
+    options.targetResultsPath === undefined
+      ? await probeSuiteTargetsFromFilesystem(suite, options.targetRoot)
+      : await readTargetProbes(options.targetResultsPath);
+  const report = await runTextConformanceBenchmark({
+    benchmarkId: `benchmark:${suite.suiteId}`,
+    subject: suite.subject,
+    iterations: options.iterations,
+    warmupIterations: options.warmupIterations,
+    evidenceRefs: suiteEvidenceRefs(suite, options.suitePath),
+    limitations: [
+      "Benchmark metrics measure suite runner execution in the current runtime; they are not pass/fail conformance results.",
+    ],
+    cases: [
+      {
+        caseId: `suite:${suite.suiteId}`,
+        evidenceRefs: targets.flatMap((target) => target.evidenceRefs ?? [target.ref]),
+        run() {
+          runTextConformanceSuiteWithTargets(suite, { targets });
+        },
+      },
+    ],
+  });
+  if (!isTextConformanceBenchmarkReportV1(report)) {
+    throw new TypeError("textconformance benchmark CLI produced an invalid report");
+  }
+  return report;
+}
+
 function usage(): TextConformanceCliResult {
   return {
     exitCode: 1,
@@ -135,6 +238,7 @@ function usage(): TextConformanceCliResult {
       "  textconformance diff-reports <expected-report.json> <actual-report.json>",
       "  textconformance validate-suite <suite.json>",
       "  textconformance run-suite <suite.json> [--target-root <repo>] [--target-results <targets.json>]",
+      "  textconformance run-benchmark <suite.json> [--target-root <repo>] [--target-results <targets.json>] [--iterations <n>] [--warmup <n>]",
       "  textconformance validate-capability-registry <registry.json>",
       "",
     ].join("\n"),
@@ -220,6 +324,29 @@ export async function runTextConformanceCli(args: readonly string[]): Promise<Te
           ? await probeSuiteTargetsFromFilesystem(suite, parsed.targetRoot)
           : await readTargetProbes(parsed.targetResultsPath);
       return { exitCode: 0, stdout: jsonLine(runTextConformanceSuiteWithTargets(suite, { targets })), stderr: "" };
+    }
+    if (command === "run-benchmark") {
+      const parsed = parseRunBenchmarkArgs(args.slice(1));
+      if (parsed === undefined) return usage();
+      const suite = await readJson(parsed.suitePath);
+      if (isSuiteCatalog(suite)) {
+        const reports = [];
+        for (const entry of suite.suites) {
+          if (!isTextConformanceSuiteV1(entry)) {
+            return {
+              exitCode: 1,
+              stdout: "",
+              stderr: `Invalid conformance suite in catalog: ${parsed.suitePath}\n`,
+            };
+          }
+          reports.push(await runSuiteBenchmark(entry, parsed));
+        }
+        return { exitCode: 0, stdout: jsonLine({ ok: true, reportCount: reports.length, reports }), stderr: "" };
+      }
+      if (!isTextConformanceSuiteV1(suite)) {
+        return { exitCode: 1, stdout: "", stderr: `Invalid conformance suite: ${parsed.suitePath}\n` };
+      }
+      return { exitCode: 0, stdout: jsonLine(await runSuiteBenchmark(suite, parsed)), stderr: "" };
     }
     if (command === "validate-capability-registry" && first !== undefined && second === undefined) {
       const registry = await readJson(first);

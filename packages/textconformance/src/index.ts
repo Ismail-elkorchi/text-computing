@@ -206,6 +206,36 @@ export interface TextConformanceBenchmarkReportV1 {
   readonly notes?: readonly string[];
 }
 
+export type TextConformanceBenchmarkPhase = "warmup" | "measurement";
+
+export interface TextConformanceBenchmarkCaseContext {
+  readonly benchmarkId: string;
+  readonly caseId: string;
+  readonly phase: TextConformanceBenchmarkPhase;
+  readonly iteration: number;
+}
+
+export interface TextConformanceBenchmarkCase {
+  readonly caseId: string;
+  readonly iterations?: number;
+  readonly warmupIterations?: number;
+  readonly evidenceRefs?: readonly string[];
+  run(context: TextConformanceBenchmarkCaseContext): void | Promise<void>;
+}
+
+export interface TextConformanceBenchmarkRunnerOptions {
+  readonly benchmarkId: string;
+  readonly subject: TextConformanceReportSubject;
+  readonly generatedAt?: string;
+  readonly cases: readonly TextConformanceBenchmarkCase[];
+  readonly iterations?: number;
+  readonly warmupIterations?: number;
+  readonly clock?: () => number;
+  readonly evidenceRefs: readonly string[];
+  readonly limitations: readonly string[];
+  readonly notes?: readonly string[];
+}
+
 export interface TextConformanceReportDiffEntryV1 {
   readonly checkId: string;
   readonly status: TextConformanceReportDiffStatus;
@@ -286,6 +316,20 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isNonNegativeInteger(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function positiveInteger(value: unknown, label: string): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    throw new TypeError(`${label} must be a positive integer`);
+  }
+  return value;
+}
+
+function nonNegativeInteger(value: unknown, label: string): number {
+  if (!isNonNegativeInteger(value)) {
+    throw new TypeError(`${label} must be a non-negative integer`);
+  }
+  return value;
 }
 
 function isStringArray(value: unknown): value is readonly string[] {
@@ -386,6 +430,17 @@ function sortedDiffChecksForRendering(
   checks: readonly TextConformanceReportDiffEntryV1[],
 ): readonly TextConformanceReportDiffEntryV1[] {
   return [...checks].sort((left, right) => compareCheckIds(left.checkId, right.checkId));
+}
+
+function sortedBenchmarkCases(
+  cases: readonly TextConformanceBenchmarkCase[],
+): readonly TextConformanceBenchmarkCase[] {
+  return [...cases].sort((left, right) => left.caseId.localeCompare(right.caseId));
+}
+
+function defaultBenchmarkClock(): number {
+  const now = globalThis.performance?.now();
+  return typeof now === "number" && Number.isFinite(now) ? now : Date.now();
 }
 
 function mapChecksById(
@@ -690,6 +745,139 @@ export function isTextConformanceBenchmarkReportV1(
     isNonEmptyStringArray(value.limitations) &&
     (value.notes === undefined || isStringArray(value.notes))
   );
+}
+
+function benchmarkDurationMetrics(
+  caseId: string,
+  durations: readonly number[],
+): readonly TextConformanceBenchmarkMetricV1[] {
+  const minimum = Math.min(...durations);
+  const maximum = Math.max(...durations);
+  const mean = durations.reduce((sum, value) => sum + value, 0) / durations.length;
+  return [
+    {
+      metricId: `${caseId}.duration-ms.min`,
+      value: minimum,
+      unit: "ms",
+      higherIsPreferred: false,
+    },
+    {
+      metricId: `${caseId}.duration-ms.mean`,
+      value: mean,
+      unit: "ms",
+      higherIsPreferred: false,
+    },
+    {
+      metricId: `${caseId}.duration-ms.max`,
+      value: maximum,
+      unit: "ms",
+      higherIsPreferred: false,
+    },
+    {
+      metricId: `${caseId}.iterations`,
+      value: durations.length,
+      unit: "count",
+    },
+  ];
+}
+
+export async function runTextConformanceBenchmark(
+  options: TextConformanceBenchmarkRunnerOptions,
+): Promise<TextConformanceBenchmarkReportV1> {
+  if (!isRecord(options)) {
+    throw new TypeError("textconformance benchmark options must be a record");
+  }
+  if (!isNonEmptyString(options.benchmarkId)) {
+    throw new TypeError("textconformance benchmark id must be a non-empty string");
+  }
+  if (!isTextConformanceReportSubject(options.subject)) {
+    throw new TypeError("textconformance benchmark subject is invalid");
+  }
+  if (!Array.isArray(options.cases) || options.cases.length === 0) {
+    throw new TypeError("textconformance benchmark cases must be a non-empty array");
+  }
+  if (!isNonEmptyStringArray(options.evidenceRefs)) {
+    throw new TypeError("textconformance benchmark evidence refs must be a non-empty string array");
+  }
+  if (!isNonEmptyStringArray(options.limitations)) {
+    throw new TypeError("textconformance benchmark limitations must be a non-empty string array");
+  }
+  if (options.notes !== undefined && !isStringArray(options.notes)) {
+    throw new TypeError("textconformance benchmark notes must be strings");
+  }
+  if (options.clock !== undefined && typeof options.clock !== "function") {
+    throw new TypeError("textconformance benchmark clock must be a function");
+  }
+  const defaultIterations = positiveInteger(options.iterations ?? 1, "textconformance benchmark iterations");
+  const defaultWarmupIterations = nonNegativeInteger(
+    options.warmupIterations ?? 0,
+    "textconformance benchmark warmupIterations",
+  );
+  if (!hasUniqueStrings(options.cases.map((entry) => entry.caseId))) {
+    throw new TypeError("textconformance benchmark case ids must be unique");
+  }
+  const clock = options.clock ?? defaultBenchmarkClock;
+  const metrics: TextConformanceBenchmarkMetricV1[] = [];
+  const evidenceRefs = new Set(options.evidenceRefs);
+  for (const benchmarkCase of sortedBenchmarkCases(options.cases)) {
+    if (!isNonEmptyString(benchmarkCase.caseId)) {
+      throw new TypeError("textconformance benchmark case id must be a non-empty string");
+    }
+    if (typeof benchmarkCase.run !== "function") {
+      throw new TypeError(`textconformance benchmark case ${benchmarkCase.caseId} must expose a run function`);
+    }
+    const iterations = positiveInteger(
+      benchmarkCase.iterations ?? defaultIterations,
+      `textconformance benchmark case ${benchmarkCase.caseId} iterations`,
+    );
+    const warmupIterations = nonNegativeInteger(
+      benchmarkCase.warmupIterations ?? defaultWarmupIterations,
+      `textconformance benchmark case ${benchmarkCase.caseId} warmupIterations`,
+    );
+    if (benchmarkCase.evidenceRefs !== undefined && !isStringArray(benchmarkCase.evidenceRefs)) {
+      throw new TypeError(`textconformance benchmark case ${benchmarkCase.caseId} evidenceRefs must be strings`);
+    }
+    for (const ref of benchmarkCase.evidenceRefs ?? []) evidenceRefs.add(ref);
+    for (let iteration = 0; iteration < warmupIterations; iteration += 1) {
+      await benchmarkCase.run({
+        benchmarkId: options.benchmarkId,
+        caseId: benchmarkCase.caseId,
+        phase: "warmup",
+        iteration,
+      });
+    }
+    const durations: number[] = [];
+    for (let iteration = 0; iteration < iterations; iteration += 1) {
+      const startedAt = clock();
+      await benchmarkCase.run({
+        benchmarkId: options.benchmarkId,
+        caseId: benchmarkCase.caseId,
+        phase: "measurement",
+        iteration,
+      });
+      const endedAt = clock();
+      if (!Number.isFinite(startedAt) || !Number.isFinite(endedAt) || endedAt < startedAt) {
+        throw new TypeError(`textconformance benchmark case ${benchmarkCase.caseId} produced an invalid duration`);
+      }
+      durations.push(endedAt - startedAt);
+    }
+    metrics.push(...benchmarkDurationMetrics(benchmarkCase.caseId, durations));
+  }
+  const report: TextConformanceBenchmarkReportV1 = {
+    schemaId: conformanceBenchmarkReportSchemaId,
+    schemaVersion: conformanceBenchmarkReportSchemaVersion,
+    benchmarkId: options.benchmarkId,
+    subject: options.subject,
+    generatedAt: options.generatedAt ?? "1970-01-01T00:00:00.000Z",
+    metrics,
+    evidenceRefs: [...evidenceRefs].sort(),
+    limitations: options.limitations,
+    ...(options.notes ? { notes: options.notes } : {}),
+  };
+  if (!isTextConformanceBenchmarkReportV1(report)) {
+    throw new TypeError("textconformance benchmark runner produced an invalid report");
+  }
+  return report;
 }
 
 export function isTextConformanceSuiteTargetProbeV1(

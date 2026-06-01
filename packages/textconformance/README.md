@@ -6,7 +6,9 @@ The current public surface defines machine-readable conformance report and
 suite shapes for repository-level checks and fixture-derived evidence.
 
 It also exposes a minimal synchronous runner that executes named checks and
-summarizes `pass`, `fail`, and `not-run` outcomes into the same report shape.
+summarizes `pass`, `fail`, and `not-run` outcomes into the same report shape,
+plus a benchmark runner that executes benchmark cases into separate benchmark
+report records.
 
 ## Suite harness and fixture policy
 
@@ -28,8 +30,9 @@ conformance report model; benchmark measurements still belong in benchmark
 reports.
 
 The benchmark report contract is intentionally separate from the conformance
-report contract. Benchmark metrics can be recorded, but benchmark metrics are
-not pass/fail conformance results.
+report contract. Use `runTextConformanceBenchmark()` to execute warmup and
+measurement iterations for caller-provided benchmark cases. Benchmark metrics
+can be recorded, but benchmark metrics are not pass/fail conformance results.
 
 ## CLI
 
@@ -41,7 +44,13 @@ textconformance render-report fixtures/reports/nlp-tokenization-sbd/conformance-
 textconformance diff-reports expected.json actual.json
 textconformance validate-suite fixtures/conformance/package-suites.v1.json
 textconformance run-suite fixtures/conformance/package-suites.v1.json --target-root .
+textconformance run-benchmark fixtures/conformance/package-suites.v1.json --target-root . --iterations 3 --warmup 1
 ```
+
+Runnable repository examples:
+
+- [`../../examples/textconformance-benchmark-runner-consumer.mjs`](../../examples/textconformance-benchmark-runner-consumer.mjs)
+  runs a suite benchmark through package APIs and keeps benchmark output separate from conformance reports.
 
 ## Report diff and capability registry
 
