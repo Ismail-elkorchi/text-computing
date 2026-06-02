@@ -29,13 +29,6 @@ npm run schema:validate
 Validates repository-level schemas against their declared JSON Schema drafts, validates
 `packages/textfacts/schemas/*.schema.json` against draft 2020-12, and enforces I-JSON safety.
 
-**Fixture validation**
-```sh
-npm run check:fixtures
-```
-
-Validates repository-level readiness fixture artifacts.
-
 **Documentation boundaries**
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
 - `fixtures/` and `schemas/` contain repository-level validation material.

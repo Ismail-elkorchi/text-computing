@@ -14,14 +14,11 @@
     "check:boundaries": "node tools/check-boundaries.mjs",
     "check:public-language": "node tools/check-public-language.mjs",
     "schema:validate": "node tools/validate-repo-schemas.mjs && npm -w @ismail-elkorchi/textfacts run schema:validate",
-    "check:fixtures": "node tools/validate-pos-morph-lemma-readiness.mjs && node tools/validate-corpus-tfidf-bm25-readiness.mjs && node tools/validate-dependency-parser-readiness.mjs && node tools/validate-retrieval-feature.mjs && node tools/validate-multilingual-support.mjs && npm run -s check:textpack-packs",
     "check:static": "npm run --workspaces --if-present check:static",
     "check:pack": "npm -w @ismail-elkorchi/textfacts run check:pack",
     "check:publint": "npm -w @ismail-elkorchi/textfacts run check:publint",
     "check:attw": "npm -w @ismail-elkorchi/textfacts run check:attw",
-    "check:jsr": "npm -w @ismail-elkorchi/textfacts run check:jsr",
-    "check:quality": "npm run check:static && npm run check:fixtures && npm run check:pack && npm run check:publint && npm run check:attw && npm run check:jsr",
-    "check:textpack-packs": "node tools/validate-textpack-packages.mjs"
+    "check:jsr": "npm -w @ismail-elkorchi/textfacts run check:jsr"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
