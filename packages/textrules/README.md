@@ -17,14 +17,9 @@ Current public scope:
 - deterministic typed relation extraction for frozen repository-authored slices;
 - deterministic coreference mention and chain output for frozen repository-authored slices;
 - deterministic dependency arcs for the frozen dependency-parser slices;
-- ambiguity-preserving alternatives in `textdoc`;
-- result-envelope serialization through `textprotocol`; and
-- machine-readable conformance reports through `textconformance`;
-- package-local conformance report guards; and
-- deterministic corpus evaluation report aggregation across the implemented task conformance reports.
+- ambiguity-preserving alternatives in `textdoc`.
 
 Current limitations:
 
 - task-specific behavior remains frozen-slice only;
-- raw-text tokenization helpers are fixture helpers, not the default rule-engine input contract;
-- corpus evaluation aggregation covers committed deterministic task reports and does not claim external corpus generalization.
+- raw-text tokenization helpers are fixture helpers, not the default rule-engine input contract.

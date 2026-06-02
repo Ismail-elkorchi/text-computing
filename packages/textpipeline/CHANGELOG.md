@@ -9,10 +9,9 @@
 - Add caller-provided worker execution APIs and deterministic worker run reports.
 - Promote package metadata to public alpha for deterministic local pipeline execution.
 - Add exported graph-plan validation, versioned requirement checks, conservative cache-key creation,
-  partial-run traces, blocked-dependent recovery semantics, and typed trace-envelope helpers.
+  partial-run traces, and blocked-dependent recovery semantics.
 - Add snapshot-backed cache import/export helpers for caller-managed durable cache storage.
-- Add processor-trace schema-family payload and envelope helpers for textprotocol transport.
-- Add batch run report schema, runtime guard, payload kind, and typed result-envelope helpers.
+- Add batch run report schema and runtime guard.
 
 ## 0.0.0
 

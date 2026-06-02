@@ -24,10 +24,7 @@ This package exposes the deterministic Unicode/text-kernel surface through the r
 
 The `all`, `compare`, `pack`, `protocol`, `schema`, and `toolspec` subpaths are removed during alpha boundary cleanup. Use package-owned surfaces instead:
 
-- result envelopes and payload compatibility: `@ismail-elkorchi/textprotocol`;
-- conformance reports and statement checks: `@ismail-elkorchi/textconformance`;
 - resource manifests and lookup: `@ismail-elkorchi/textpack`;
-- inspection behavior: `@ismail-elkorchi/textlab`;
 - corpus and retrieval behavior: `@ismail-elkorchi/textcorpus`.
 
 ## Footprint Policy

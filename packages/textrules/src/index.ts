@@ -1,6 +1,5 @@
 import {
   documentSchemaVersion,
-  textDocDocumentPayloadKind,
   type TextDocAnnotation,
   type TextDocConfidence,
   type TextDocCoreferenceChainAnnotation,
@@ -26,12 +25,6 @@ import {
   type TextDocSpanMapV1,
   type TextDocView,
 } from "@ismail-elkorchi/textdoc";
-import {
-  resultEnvelopeSchemaId,
-  resultEnvelopeSchemaVersion,
-  type TextProtocolDiagnostic,
-  type TextProtocolResultEnvelopeV1,
-} from "@ismail-elkorchi/textprotocol";
 import type { TextPackLoadedResource, TextPackResolvedResource } from "@ismail-elkorchi/textpack";
 
 export const packageName = "@ismail-elkorchi/textrules" as const;
@@ -41,10 +34,6 @@ export const ruleBackedNerRevision = "rule-backed-ner-v1" as const;
 export const dependencyParserRevision = "dependency-parser-v1" as const;
 export const relationExtractionRevision = "relation-extraction-v1" as const;
 export const coreferenceRevision = "coreference-v1" as const;
-const textRulesConformanceReportSchemaId =
-  "urn:ismail-elkorchi:textconformance:report:v1" as const;
-const textRulesConformanceReportSchemaVersion = 1 as const;
-export const textRulesCorpusEvaluationSchemaVersion = 1 as const;
 
 export type PackageName = typeof packageName;
 export type TextRulesPosMorphLemmaRevision = typeof posMorphLemmaRevision;
@@ -56,95 +45,14 @@ export type TextRulesCoreferenceRevision = typeof coreferenceRevision;
 export type TextRulesEntityLabel = "PER" | "ORG" | "LOC";
 export type TextRulesRelationLabel = "employed-by" | "located-in" | "part-of";
 export type TextRulesCoreferenceMentionKind = "proper" | "nominal" | "pronoun" | "singleton";
-export type TextRulesConformanceCheckStatus = "pass" | "fail" | "not-run";
-export type TextRulesCorpusEvaluationTaskKind =
-  | "pos-morph-lemma"
-  | "rule-backed-ner"
-  | "dependency-parser"
-  | "relation-extraction"
-  | "coreference";
-export type TextRulesCorpusEvaluationRole =
-  | "development"
-  | "evaluation"
-  | "holdout"
-  | "negative-control";
+export type TextRulesDiagnosticSeverity = "info" | "warning" | "error";
 
-export interface TextRulesConformanceReportV1 {
-  readonly schemaId: typeof textRulesConformanceReportSchemaId;
-  readonly schemaVersion: typeof textRulesConformanceReportSchemaVersion;
-  readonly reportId: string;
-  readonly subject: {
-    readonly kind: string;
-    readonly id: string;
-    readonly schemaId?: string;
-  };
-  readonly generatedAt: string;
-  readonly summary: {
-    readonly pass: number;
-    readonly fail: number;
-    readonly notRun: number;
-  };
-  readonly checks: readonly {
-    readonly checkId: string;
-    readonly status: TextRulesConformanceCheckStatus;
-    readonly message?: string;
-    readonly evidenceRefs?: readonly string[];
-  }[];
-  readonly notes?: readonly string[];
-}
-
-export interface TextRulesCorpusEvaluationInput {
-  readonly taskKind: TextRulesCorpusEvaluationTaskKind;
-  readonly sliceId: string;
-  readonly role: TextRulesCorpusEvaluationRole;
-  readonly report: TextRulesConformanceReportV1;
-  readonly expectedArtifactPath?: string;
-}
-
-export interface TextRulesCorpusEvaluationRowV1 {
-  readonly taskKind: TextRulesCorpusEvaluationTaskKind;
-  readonly sliceId: string;
-  readonly role: TextRulesCorpusEvaluationRole;
-  readonly reportId: string;
-  readonly status: "pass" | "fail";
-  readonly pass: number;
-  readonly fail: number;
-  readonly notRun: number;
-  readonly expectedOutputMatched: boolean;
-  readonly evidenceRefs: readonly string[];
-}
-
-export interface TextRulesCorpusEvaluationTaskSummaryV1 {
-  readonly taskKind: TextRulesCorpusEvaluationTaskKind;
-  readonly sliceCount: number;
-  readonly passCount: number;
-  readonly failCount: number;
-  readonly negativeControlCount: number;
-  readonly expectedOutputMatchCount: number;
-}
-
-export interface TextRulesCorpusEvaluationReportV1 {
-  readonly schemaVersion: typeof textRulesCorpusEvaluationSchemaVersion;
-  readonly evaluationId: string;
-  readonly generatedAt: string;
-  readonly taskKinds: readonly TextRulesCorpusEvaluationTaskKind[];
-  readonly sliceCount: number;
-  readonly passCount: number;
-  readonly failCount: number;
-  readonly negativeControlCount: number;
-  readonly expectedOutputMatchCount: number;
-  readonly rows: readonly TextRulesCorpusEvaluationRowV1[];
-  readonly taskSummaries: readonly TextRulesCorpusEvaluationTaskSummaryV1[];
-  readonly limitations: readonly string[];
-  readonly notes?: readonly string[];
-}
-
-export interface TextRulesCorpusEvaluationOptions {
-  readonly evaluationId: string;
-  readonly inputs: readonly TextRulesCorpusEvaluationInput[];
-  readonly generatedAt?: string;
-  readonly limitations: readonly string[];
-  readonly notes?: readonly string[];
+export interface TextRulesDiagnostic {
+  readonly code: string;
+  readonly severity: TextRulesDiagnosticSeverity;
+  readonly message?: string;
+  readonly ref?: string;
+  readonly evidenceRefs?: readonly string[];
 }
 
 export type TextRulesPosMorphLemmaPhenomenon =
@@ -274,7 +182,7 @@ export interface TextRulesPosMorphLemmaDocumentInput {
 
 export interface TextRulesPosMorphLemmaResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 }
 
 export interface TextRulesRuleBackedNerInput {
@@ -285,7 +193,7 @@ export interface TextRulesRuleBackedNerInput {
 
 export interface TextRulesRuleBackedNerResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 }
 
 export interface TextRulesDependencyParserInput {
@@ -300,7 +208,7 @@ export interface TextRulesDependencyParserInput {
 
 export interface TextRulesDependencyParserResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 }
 
 export interface TextRulesRelationExtractionInput {
@@ -315,7 +223,7 @@ export interface TextRulesRelationExtractionInput {
 
 export interface TextRulesRelationExtractionResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 }
 
 export interface TextRulesCoreferenceInput {
@@ -330,19 +238,7 @@ export interface TextRulesCoreferenceInput {
 
 export interface TextRulesCoreferenceResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
-}
-
-export interface TextRulesResultEnvelopeOptions {
-  readonly producerVersion: string;
-  readonly referenceId?: string;
-}
-
-export interface TextRulesConformanceReportOptions {
-  readonly expectedArtifactPath: string;
-  readonly matchesExpected: boolean;
-  readonly generatedAt?: string;
-  readonly notes?: readonly string[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 }
 
 export type TextRulesPatternAtom =
@@ -441,7 +337,7 @@ export interface TextRulesRuleEmitV1 {
   readonly data?: Readonly<Record<string, unknown>>;
   readonly notes?: readonly string[];
   readonly diagnosticCode?: string;
-  readonly diagnosticSeverity?: TextProtocolDiagnostic["severity"];
+  readonly diagnosticSeverity?: TextRulesDiagnostic["severity"];
   readonly transducerAnalyses?: readonly TextRulesTransducerAnalysisV1[];
 }
 
@@ -540,7 +436,7 @@ export interface TextRulesRunOptions extends TextRulesTextDocTokenLayerOptions {
 export interface TextRulesRunResult {
   readonly document: TextDocDocumentV1;
   readonly annotations: readonly TextDocExtensionAnnotation[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
   readonly rewrites: readonly TextRulesRewriteArtifact[];
 }
 
@@ -631,7 +527,7 @@ export interface TextRulesTextPackPipelineProcessorDescriptor {
 
 export interface TextRulesTextPackPipelineProcessorRunResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly diagnostics?: readonly TextRulesDiagnostic[];
 }
 
 export interface TextRulesTextPackPipelineProcessor {
@@ -762,7 +658,7 @@ export interface TextRulesCoreferenceChainTemplate {
 export interface TextRulesCoreferenceSpec {
   readonly mentions: readonly TextRulesCoreferenceMentionSpec[];
   readonly chains: readonly TextRulesCoreferenceChainSpec[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 }
 
 export interface TextRulesCoreferenceRule {
@@ -771,7 +667,7 @@ export interface TextRulesCoreferenceRule {
   readonly pattern: TextRulesTokenPattern;
   readonly mentions: readonly TextRulesCoreferenceMentionTemplate[];
   readonly chains: readonly TextRulesCoreferenceChainTemplate[];
-  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly diagnostics?: readonly TextRulesDiagnostic[];
 }
 
 const punctuationCharacters = new Set([".", "!", "?"]);
@@ -1746,9 +1642,9 @@ export function runTextPackRulesOverTextDoc(input: TextRulesTextPackRunInput): T
   };
 }
 
-function textPackRuleCompilationDiagnosticsToProtocol(
+function textPackRuleCompilationDiagnostics(
   diagnostics: readonly TextRulesTextPackRuleDiagnostic[],
-): readonly TextProtocolDiagnostic[] {
+): readonly TextRulesDiagnostic[] {
   return diagnostics.map((diagnostic) => ({
     code: `textrules.textpack.${diagnostic.code}`,
     severity: diagnostic.severity,
@@ -1818,7 +1714,7 @@ export function createTextPackRulesPipelineProcessor(
           revision: `${document.revision}>${id}`,
         },
         diagnostics: [
-          ...textPackRuleCompilationDiagnosticsToProtocol(compilation.diagnostics),
+          ...textPackRuleCompilationDiagnostics(compilation.diagnostics),
           ...result.diagnostics,
         ],
       };
@@ -2051,13 +1947,13 @@ function applyConflictPolicy(
     readonly rule: TextRulesRuleDeclarationV1;
     readonly match: TextRulesPatternMatch;
   }[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 } {
   const ordered = [...candidates].sort(policy === "longest-win" ? compareLongestWinRuleMatches : compareRuleMatches);
   if (policy === "emit-all") return { selected: ordered, diagnostics: [] };
 
   const selected: typeof ordered = [];
-  const diagnostics: TextProtocolDiagnostic[] = [];
+  const diagnostics: TextRulesDiagnostic[] = [];
   for (const candidate of ordered) {
     const overlaps = selected.some(
       (entry) => candidate.match.startCU < entry.match.endCU && entry.match.startCU < candidate.match.endCU,
@@ -2265,7 +2161,7 @@ function transducerAnnotationForMatch(
 function validationDiagnosticForMatch(
   rule: TextRulesRuleDeclarationV1,
   match: TextRulesPatternMatch,
-): TextProtocolDiagnostic {
+): TextRulesDiagnostic {
   return {
     code: rule.emit?.diagnosticCode ?? rule.id,
     severity: rule.emit?.diagnosticSeverity ?? (rule.diagnostic === true ? "warning" : "info"),
@@ -2342,7 +2238,7 @@ export function runTextRules(
   const candidates = ruleCandidates(document, compiled, resources, options);
   const { selected, diagnostics: conflictDiagnostics } = applyConflictPolicy(candidates, compiled.conflictPolicy);
   const annotations: TextDocExtensionAnnotation[] = [];
-  const diagnostics: TextProtocolDiagnostic[] = [...conflictDiagnostics];
+  const diagnostics: TextRulesDiagnostic[] = [...conflictDiagnostics];
 
   for (const [index, entry] of selected.entries()) {
     if (entry.rule.kind === "rewrite") continue;
@@ -2424,7 +2320,7 @@ function segmentSentencesForRules(text: string): readonly TextRulesSentenceSpan[
 
 function createUnknownTokenDiagnostics(token: TextRulesTokenSpan): {
   readonly analyses: readonly TextRulesResolvedAnalysis[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 } {
   return {
     analyses: [],
@@ -2443,7 +2339,7 @@ function resolveAnalyses(
   entriesBySurface: ReadonlyMap<string, readonly TextRulesResolvedAnalysis[]>,
 ): {
   readonly analyses: readonly TextRulesResolvedAnalysis[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 } {
   if (token.text.length === 1 && isBoundaryPunctuation(token.text)) {
     return {
@@ -2491,8 +2387,8 @@ function createPhenomenonDiagnostics(
   token: TextRulesTokenSpan,
   analyses: readonly TextRulesResolvedAnalysis[],
   phenomenaInput: readonly TextRulesPosMorphLemmaPhenomenon[] | undefined,
-): readonly TextProtocolDiagnostic[] {
-  const diagnostics: TextProtocolDiagnostic[] = [];
+): readonly TextRulesDiagnostic[] {
+  const diagnostics: TextRulesDiagnostic[] = [];
   const phenomena = new Set(phenomenaInput ?? []);
 
   if (phenomena.has("unknown-word") && analyses.some((analysis) => analysis.ruleId.startsWith("fallback:"))) {
@@ -2676,7 +2572,7 @@ function analysisDocumentSpanMaps(document: TextDocDocumentV1): readonly TextDoc
   ];
 }
 
-function sortDiagnostics(diagnostics: readonly TextProtocolDiagnostic[]): readonly TextProtocolDiagnostic[] {
+function sortDiagnostics(diagnostics: readonly TextRulesDiagnostic[]): readonly TextRulesDiagnostic[] {
   return [...diagnostics].sort(
     (left, right) =>
       left.code.localeCompare(right.code) ||
@@ -3216,7 +3112,7 @@ function relationSpecsFromDeclarativeRules(
 function relationDiagnosticsFromRules(
   tokens: readonly TextRulesTokenSpan[],
   relationCount: number,
-): readonly TextProtocolDiagnostic[] {
+): readonly TextRulesDiagnostic[] {
   if (relationCount > 0) return [];
   if (matchTextRulesTokenPattern(tokens, negatedEmploymentPattern).length > 0) {
     return [
@@ -3639,12 +3535,12 @@ function filterEntityOverlaps(
   allowSpanOverlap: boolean,
 ): {
   readonly matches: readonly TextRulesEntityMatch[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextRulesDiagnostic[];
 } {
   if (allowSpanOverlap) return { matches, diagnostics: [] };
 
   const accepted: TextRulesEntityMatch[] = [];
-  const diagnostics: TextProtocolDiagnostic[] = [];
+  const diagnostics: TextRulesDiagnostic[] = [];
   for (const match of matches) {
     const overlappingMatch = accepted.find((entry) => entityMatchesOverlap(entry, match));
     if (!overlappingMatch) {
@@ -4056,7 +3952,7 @@ export function analyzePosMorphLemmaDocument(
   const posAnnotations: TextDocPosAnnotation[] = [];
   const lemmaAnnotations: TextDocLemmaAnnotation[] = [];
   const morphologyAnnotations: TextDocMorphologyAnnotation[] = [];
-  const diagnostics: TextProtocolDiagnostic[] = [];
+  const diagnostics: TextRulesDiagnostic[] = [];
 
   if ((input.phenomena ?? []).includes("code-switching")) {
     diagnostics.push({
@@ -4393,7 +4289,7 @@ export function analyzeDependencyParser(
   const sentence = sentences[0];
   const dependencySpecs =
     sentence === undefined ? [] : dependencySpecsFromDeclarativeRules(input, tokens);
-  const diagnostics: TextProtocolDiagnostic[] = [];
+  const diagnostics: TextRulesDiagnostic[] = [];
 
   if (dependencySpecs.length === 0) {
     diagnostics.push({
@@ -4462,641 +4358,5 @@ export function analyzeDependencyParser(
       ],
     },
     diagnostics: sortDiagnostics(diagnostics),
-  };
-}
-
-export function createPosMorphLemmaResultEnvelope(
-  result: TextRulesPosMorphLemmaResult,
-  options: TextRulesResultEnvelopeOptions,
-): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
-  return {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: options.producerVersion,
-    },
-    payloadKind: textDocDocumentPayloadKind,
-    payload: result.document,
-    provenance: {
-      ...(result.document.source ? { source: result.document.source } : {}),
-      references: [
-        {
-          kind: "textdoc-document-v1",
-          id: result.document.documentId,
-        },
-        ...(options.referenceId
-          ? [
-              {
-                kind: "fixture-slice",
-                id: options.referenceId,
-              } as const,
-            ]
-          : []),
-      ],
-    },
-    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
-  };
-}
-
-function conformanceStatus(matchesExpected: boolean): TextRulesConformanceCheckStatus {
-  return matchesExpected ? "pass" : "fail";
-}
-
-export function isTextRulesConformanceReportV1(value: unknown): value is TextRulesConformanceReportV1 {
-  return (
-    isRecord(value) &&
-    value.schemaId === textRulesConformanceReportSchemaId &&
-    value.schemaVersion === textRulesConformanceReportSchemaVersion &&
-    isNonEmptyString(value.reportId) &&
-    isRecord(value.subject) &&
-    isNonEmptyString(value.subject.kind) &&
-    isNonEmptyString(value.subject.id) &&
-    (value.subject.schemaId === undefined || isNonEmptyString(value.subject.schemaId)) &&
-    isNonEmptyString(value.generatedAt) &&
-    isRecord(value.summary) &&
-    isNonNegativeInteger(value.summary.pass) &&
-    isNonNegativeInteger(value.summary.fail) &&
-    isNonNegativeInteger(value.summary.notRun) &&
-    Array.isArray(value.checks) &&
-    value.checks.length > 0 &&
-    value.checks.every(
-      (check) =>
-        isRecord(check) &&
-        isNonEmptyString(check.checkId) &&
-        (check.status === "pass" || check.status === "fail" || check.status === "not-run") &&
-        (check.message === undefined || isNonEmptyString(check.message)) &&
-        (check.evidenceRefs === undefined || isStringArray(check.evidenceRefs)),
-    ) &&
-    value.summary.pass === value.checks.filter((check) => isRecord(check) && check.status === "pass").length &&
-    value.summary.fail === value.checks.filter((check) => isRecord(check) && check.status === "fail").length &&
-    value.summary.notRun === value.checks.filter((check) => isRecord(check) && check.status === "not-run").length &&
-    (value.notes === undefined || isStringArray(value.notes))
-  );
-}
-
-function isTextRulesCorpusEvaluationTaskKind(value: unknown): value is TextRulesCorpusEvaluationTaskKind {
-  return (
-    value === "pos-morph-lemma" ||
-    value === "rule-backed-ner" ||
-    value === "dependency-parser" ||
-    value === "relation-extraction" ||
-    value === "coreference"
-  );
-}
-
-function isTextRulesCorpusEvaluationRole(value: unknown): value is TextRulesCorpusEvaluationRole {
-  return value === "development" || value === "evaluation" || value === "holdout" || value === "negative-control";
-}
-
-function isTextRulesCorpusEvaluationRowV1(value: unknown): value is TextRulesCorpusEvaluationRowV1 {
-  return (
-    isRecord(value) &&
-    isTextRulesCorpusEvaluationTaskKind(value.taskKind) &&
-    isNonEmptyString(value.sliceId) &&
-    isTextRulesCorpusEvaluationRole(value.role) &&
-    isNonEmptyString(value.reportId) &&
-    (value.status === "pass" || value.status === "fail") &&
-    isNonNegativeInteger(value.pass) &&
-    isNonNegativeInteger(value.fail) &&
-    isNonNegativeInteger(value.notRun) &&
-    typeof value.expectedOutputMatched === "boolean" &&
-    isStringArray(value.evidenceRefs)
-  );
-}
-
-function isTextRulesCorpusEvaluationTaskSummaryV1(
-  value: unknown,
-): value is TextRulesCorpusEvaluationTaskSummaryV1 {
-  return (
-    isRecord(value) &&
-    isTextRulesCorpusEvaluationTaskKind(value.taskKind) &&
-    isNonNegativeInteger(value.sliceCount) &&
-    isNonNegativeInteger(value.passCount) &&
-    isNonNegativeInteger(value.failCount) &&
-    isNonNegativeInteger(value.negativeControlCount) &&
-    isNonNegativeInteger(value.expectedOutputMatchCount)
-  );
-}
-
-export function isTextRulesCorpusEvaluationReportV1(
-  value: unknown,
-): value is TextRulesCorpusEvaluationReportV1 {
-  if (
-    !isRecord(value) ||
-    value.schemaVersion !== textRulesCorpusEvaluationSchemaVersion ||
-    !isNonEmptyString(value.evaluationId) ||
-    !isNonEmptyString(value.generatedAt) ||
-    !Array.isArray(value.taskKinds) ||
-    !value.taskKinds.every((entry) => isTextRulesCorpusEvaluationTaskKind(entry)) ||
-    !isNonNegativeInteger(value.sliceCount) ||
-    !isNonNegativeInteger(value.passCount) ||
-    !isNonNegativeInteger(value.failCount) ||
-    !isNonNegativeInteger(value.negativeControlCount) ||
-    !isNonNegativeInteger(value.expectedOutputMatchCount) ||
-    !Array.isArray(value.rows) ||
-    value.rows.length === 0 ||
-    !value.rows.every((entry) => isTextRulesCorpusEvaluationRowV1(entry)) ||
-    !Array.isArray(value.taskSummaries) ||
-    !value.taskSummaries.every((entry) => isTextRulesCorpusEvaluationTaskSummaryV1(entry)) ||
-    !isNonEmptyStringArray(value.limitations) ||
-    (value.notes !== undefined && !isStringArray(value.notes))
-  ) {
-    return false;
-  }
-  const rows = value.rows as readonly TextRulesCorpusEvaluationRowV1[];
-  const taskSummaries = value.taskSummaries as readonly TextRulesCorpusEvaluationTaskSummaryV1[];
-  const taskKinds = uniqueSortedStrings(rows.map((row) => row.taskKind)) as readonly TextRulesCorpusEvaluationTaskKind[];
-  const rowKeys = rows.map((row) => `${row.taskKind}\u0000${row.sliceId}`);
-  const taskSummariesMatch = taskKinds.every((taskKind) => {
-    const actual = taskSummaries.find((entry) => entry.taskKind === taskKind);
-    if (actual === undefined) return false;
-    return JSON.stringify(actual) === JSON.stringify(corpusEvaluationTaskSummary(taskKind, rows));
-  });
-  return (
-    value.sliceCount === rows.length &&
-    value.passCount === rows.filter((row) => row.status === "pass").length &&
-    value.failCount === rows.filter((row) => row.status === "fail").length &&
-    value.negativeControlCount === rows.filter((row) => row.role === "negative-control").length &&
-    value.expectedOutputMatchCount === rows.filter((row) => row.expectedOutputMatched).length &&
-    JSON.stringify(value.taskKinds) === JSON.stringify(taskKinds) &&
-    new Set(rowKeys).size === rowKeys.length &&
-    JSON.stringify(taskSummaries.map((entry) => entry.taskKind)) === JSON.stringify(taskKinds) &&
-    taskSummariesMatch
-  );
-}
-
-function expectedOutputMatched(report: TextRulesConformanceReportV1): boolean {
-  return report.checks.find((check) => check.checkId === "expected-output-match")?.status === "pass";
-}
-
-function reportEvidenceRefs(report: TextRulesConformanceReportV1, expectedArtifactPath: string | undefined): readonly string[] {
-  return uniqueSortedStrings([
-    ...(expectedArtifactPath === undefined ? [] : [expectedArtifactPath]),
-    ...report.checks.flatMap((check) => check.evidenceRefs ?? []),
-  ]);
-}
-
-function corpusEvaluationTaskSummary(
-  taskKind: TextRulesCorpusEvaluationTaskKind,
-  rows: readonly TextRulesCorpusEvaluationRowV1[],
-): TextRulesCorpusEvaluationTaskSummaryV1 {
-  const taskRows = rows.filter((row) => row.taskKind === taskKind);
-  return {
-    taskKind,
-    sliceCount: taskRows.length,
-    passCount: taskRows.filter((row) => row.status === "pass").length,
-    failCount: taskRows.filter((row) => row.status === "fail").length,
-    negativeControlCount: taskRows.filter((row) => row.role === "negative-control").length,
-    expectedOutputMatchCount: taskRows.filter((row) => row.expectedOutputMatched).length,
-  };
-}
-
-export function createTextRulesCorpusEvaluationReport(
-  options: TextRulesCorpusEvaluationOptions,
-): TextRulesCorpusEvaluationReportV1 {
-  if (!isRecord(options)) {
-    throw new TypeError("textrules corpus evaluation options must be a record");
-  }
-  if (!isNonEmptyString(options.evaluationId)) {
-    throw new TypeError("textrules corpus evaluation id must be a non-empty string");
-  }
-  if (!Array.isArray(options.inputs) || options.inputs.length === 0) {
-    throw new TypeError("textrules corpus evaluation inputs must be a non-empty array");
-  }
-  if (!isNonEmptyStringArray(options.limitations)) {
-    throw new TypeError("textrules corpus evaluation limitations must be a non-empty string array");
-  }
-  if (options.notes !== undefined && !isStringArray(options.notes)) {
-    throw new TypeError("textrules corpus evaluation notes must be strings");
-  }
-  const rows = options.inputs
-    .map((input): TextRulesCorpusEvaluationRowV1 => {
-      if (!isRecord(input)) {
-        throw new TypeError("textrules corpus evaluation input must be a record");
-      }
-      if (!isTextRulesCorpusEvaluationTaskKind(input.taskKind)) {
-        throw new TypeError("textrules corpus evaluation taskKind is invalid");
-      }
-      if (!isNonEmptyString(input.sliceId)) {
-        throw new TypeError("textrules corpus evaluation sliceId must be a non-empty string");
-      }
-      if (!isTextRulesCorpusEvaluationRole(input.role)) {
-        throw new TypeError("textrules corpus evaluation role is invalid");
-      }
-      if (!isTextRulesConformanceReportV1(input.report)) {
-        throw new TypeError("textrules corpus evaluation report is invalid");
-      }
-      if (input.expectedArtifactPath !== undefined && !isNonEmptyString(input.expectedArtifactPath)) {
-        throw new TypeError("textrules corpus evaluation expectedArtifactPath must be a non-empty string");
-      }
-      return {
-        taskKind: input.taskKind,
-        sliceId: input.sliceId,
-        role: input.role,
-        reportId: input.report.reportId,
-        status: input.report.summary.fail === 0 ? "pass" : "fail",
-        pass: input.report.summary.pass,
-        fail: input.report.summary.fail,
-        notRun: input.report.summary.notRun,
-        expectedOutputMatched: expectedOutputMatched(input.report),
-        evidenceRefs: reportEvidenceRefs(input.report, input.expectedArtifactPath),
-      };
-    })
-    .sort((left, right) => `${left.taskKind}\u0000${left.sliceId}`.localeCompare(`${right.taskKind}\u0000${right.sliceId}`));
-  const rowKeys = rows.map((row) => `${row.taskKind}\u0000${row.sliceId}`);
-  if (new Set(rowKeys).size !== rowKeys.length) {
-    throw new TypeError("textrules corpus evaluation inputs must have unique taskKind/sliceId pairs");
-  }
-  const taskKinds = uniqueSortedStrings(rows.map((row) => row.taskKind)) as readonly TextRulesCorpusEvaluationTaskKind[];
-  const report = {
-    schemaVersion: textRulesCorpusEvaluationSchemaVersion,
-    evaluationId: options.evaluationId,
-    generatedAt: options.generatedAt ?? "1970-01-01T00:00:00.000Z",
-    taskKinds,
-    sliceCount: rows.length,
-    passCount: rows.filter((row) => row.status === "pass").length,
-    failCount: rows.filter((row) => row.status === "fail").length,
-    negativeControlCount: rows.filter((row) => row.role === "negative-control").length,
-    expectedOutputMatchCount: rows.filter((row) => row.expectedOutputMatched).length,
-    rows,
-    taskSummaries: taskKinds.map((taskKind) => corpusEvaluationTaskSummary(taskKind, rows)),
-    limitations: options.limitations,
-    ...(options.notes ? { notes: options.notes } : {}),
-  } satisfies TextRulesCorpusEvaluationReportV1;
-  if (!isTextRulesCorpusEvaluationReportV1(report)) {
-    throw new TypeError("textrules corpus evaluation report is invalid");
-  }
-  return report;
-}
-
-export function createPosMorphLemmaConformanceReport(
-  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
-  options: TextRulesConformanceReportOptions,
-): TextRulesConformanceReportV1 {
-  const expectedStatus = conformanceStatus(options.matchesExpected);
-
-  return {
-    schemaId: textRulesConformanceReportSchemaId,
-    schemaVersion: textRulesConformanceReportSchemaVersion,
-    reportId: `pos-morph-lemma:${envelope.payload.documentId}`,
-    subject: {
-      kind: "textprotocol-result-envelope",
-      id: envelope.payload.documentId,
-      schemaId: envelope.schemaId,
-    },
-    generatedAt: options.generatedAt ?? "2026-04-21T00:00:00.000Z",
-    summary: {
-      pass: options.matchesExpected ? 3 : 2,
-      fail: options.matchesExpected ? 0 : 1,
-      notRun: 0,
-    },
-    checks: [
-      {
-        checkId: "textdoc-document-shape",
-        status: "pass",
-        message: "POS, lemma, and morphology output is stored as a textdoc document.",
-        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
-      },
-      {
-        checkId: "textprotocol-envelope-shape",
-        status: "pass",
-        message: "textdoc output is wrapped in the public result envelope.",
-        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
-      },
-      {
-        checkId: "expected-output-match",
-        status: expectedStatus,
-        message: options.matchesExpected
-          ? "Generated output matches the recorded expected artifact."
-          : "Generated output diverges from the recorded expected artifact.",
-        evidenceRefs: [options.expectedArtifactPath],
-      },
-    ],
-    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
-  };
-}
-
-export function createRuleBackedNerResultEnvelope(
-  result: TextRulesRuleBackedNerResult,
-  options: TextRulesResultEnvelopeOptions,
-): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
-  return {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: options.producerVersion,
-    },
-    payloadKind: textDocDocumentPayloadKind,
-    payload: result.document,
-    provenance: {
-      ...(result.document.source ? { source: result.document.source } : {}),
-      references: [
-        {
-          kind: "textdoc-document-v1",
-          id: result.document.documentId,
-        },
-        ...(options.referenceId
-          ? [
-              {
-                kind: "fixture-slice",
-                id: options.referenceId,
-              } as const,
-            ]
-          : []),
-      ],
-    },
-    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
-  };
-}
-
-export function createRuleBackedNerConformanceReport(
-  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
-  options: TextRulesConformanceReportOptions,
-): TextRulesConformanceReportV1 {
-  const expectedStatus = conformanceStatus(options.matchesExpected);
-
-  return {
-    schemaId: textRulesConformanceReportSchemaId,
-    schemaVersion: textRulesConformanceReportSchemaVersion,
-    reportId: `rule-backed-ner:${envelope.payload.documentId}`,
-    subject: {
-      kind: "textprotocol-result-envelope",
-      id: envelope.payload.documentId,
-      schemaId: envelope.schemaId,
-    },
-    generatedAt: options.generatedAt ?? "2026-04-23T00:00:00.000Z",
-    summary: {
-      pass: options.matchesExpected ? 3 : 2,
-      fail: options.matchesExpected ? 0 : 1,
-      notRun: 0,
-    },
-    checks: [
-      {
-        checkId: "textdoc-document-shape",
-        status: "pass",
-        message: "Rule-backed NER output is stored as a textdoc entity layer.",
-        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
-      },
-      {
-        checkId: "textprotocol-envelope-shape",
-        status: "pass",
-        message: "Rule-backed NER output is wrapped in the public result envelope.",
-        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
-      },
-      {
-        checkId: "expected-output-match",
-        status: expectedStatus,
-        message: options.matchesExpected
-          ? "Generated entity output matches the recorded expected artifact."
-          : "Generated entity output diverges from the recorded expected artifact.",
-        evidenceRefs: [options.expectedArtifactPath],
-      },
-    ],
-    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
-  };
-}
-
-export function createRelationExtractionResultEnvelope(
-  result: TextRulesRelationExtractionResult,
-  options: TextRulesResultEnvelopeOptions,
-): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
-  return {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: options.producerVersion,
-    },
-    payloadKind: textDocDocumentPayloadKind,
-    payload: result.document,
-    provenance: {
-      ...(result.document.source ? { source: result.document.source } : {}),
-      references: [
-        {
-          kind: "textdoc-document-v1",
-          id: result.document.documentId,
-        },
-        ...(options.referenceId
-          ? [
-              {
-                kind: "fixture-slice",
-                id: options.referenceId,
-              } as const,
-            ]
-          : []),
-      ],
-    },
-    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
-  };
-}
-
-export function createRelationExtractionConformanceReport(
-  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
-  options: TextRulesConformanceReportOptions,
-): TextRulesConformanceReportV1 {
-  const expectedStatus = conformanceStatus(options.matchesExpected);
-
-  return {
-    schemaId: textRulesConformanceReportSchemaId,
-    schemaVersion: textRulesConformanceReportSchemaVersion,
-    reportId: `relation-extraction:${envelope.payload.documentId}`,
-    subject: {
-      kind: "textprotocol-result-envelope",
-      id: envelope.payload.documentId,
-      schemaId: envelope.schemaId,
-    },
-    generatedAt: options.generatedAt ?? "2026-05-16T00:00:00.000Z",
-    summary: {
-      pass: options.matchesExpected ? 3 : 2,
-      fail: options.matchesExpected ? 0 : 1,
-      notRun: 0,
-    },
-    checks: [
-      {
-        checkId: "textdoc-document-shape",
-        status: "pass",
-        message: "Relation extraction output is stored as textdoc relation annotations.",
-        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
-      },
-      {
-        checkId: "textprotocol-envelope-shape",
-        status: "pass",
-        message: "Relation extraction output is wrapped in the public result envelope.",
-        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
-      },
-      {
-        checkId: "expected-output-match",
-        status: expectedStatus,
-        message: options.matchesExpected
-          ? "Generated relation output matches the recorded expected artifact."
-          : "Generated relation output diverges from the recorded expected artifact.",
-        evidenceRefs: [options.expectedArtifactPath],
-      },
-    ],
-    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
-  };
-}
-
-export function createCoreferenceResultEnvelope(
-  result: TextRulesCoreferenceResult,
-  options: TextRulesResultEnvelopeOptions,
-): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
-  return {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: options.producerVersion,
-    },
-    payloadKind: textDocDocumentPayloadKind,
-    payload: result.document,
-    provenance: {
-      ...(result.document.source ? { source: result.document.source } : {}),
-      references: [
-        {
-          kind: "textdoc-document-v1",
-          id: result.document.documentId,
-        },
-        ...(options.referenceId
-          ? [
-              {
-                kind: "fixture-slice",
-                id: options.referenceId,
-              } as const,
-            ]
-          : []),
-      ],
-    },
-    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
-  };
-}
-
-export function createCoreferenceConformanceReport(
-  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
-  options: TextRulesConformanceReportOptions,
-): TextRulesConformanceReportV1 {
-  const expectedStatus = conformanceStatus(options.matchesExpected);
-
-  return {
-    schemaId: textRulesConformanceReportSchemaId,
-    schemaVersion: textRulesConformanceReportSchemaVersion,
-    reportId: `coreference:${envelope.payload.documentId}`,
-    subject: {
-      kind: "textprotocol-result-envelope",
-      id: envelope.payload.documentId,
-      schemaId: envelope.schemaId,
-    },
-    generatedAt: options.generatedAt ?? "2026-05-16T00:00:00.000Z",
-    summary: {
-      pass: options.matchesExpected ? 3 : 2,
-      fail: options.matchesExpected ? 0 : 1,
-      notRun: 0,
-    },
-    checks: [
-      {
-        checkId: "textdoc-document-shape",
-        status: "pass",
-        message: "Coreference output is stored as textdoc mention and chain annotations.",
-        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
-      },
-      {
-        checkId: "textprotocol-envelope-shape",
-        status: "pass",
-        message: "Coreference output is wrapped in the public result envelope.",
-        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
-      },
-      {
-        checkId: "expected-output-match",
-        status: expectedStatus,
-        message: options.matchesExpected
-          ? "Generated coreference output matches the recorded expected artifact."
-          : "Generated coreference output diverges from the recorded expected artifact.",
-        evidenceRefs: [options.expectedArtifactPath],
-      },
-    ],
-    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
-  };
-}
-
-export function createDependencyParserResultEnvelope(
-  result: TextRulesDependencyParserResult,
-  options: TextRulesResultEnvelopeOptions,
-): TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind> {
-  return {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: options.producerVersion,
-    },
-    payloadKind: textDocDocumentPayloadKind,
-    payload: result.document,
-    provenance: {
-      ...(result.document.source ? { source: result.document.source } : {}),
-      references: [
-        {
-          kind: "textdoc-document-v1",
-          id: result.document.documentId,
-        },
-        ...(options.referenceId
-          ? [
-              {
-                kind: "fixture-slice",
-                id: options.referenceId,
-              } as const,
-            ]
-          : []),
-      ],
-    },
-    ...(result.diagnostics.length > 0 ? { diagnostics: result.diagnostics } : {}),
-  };
-}
-
-export function createDependencyParserConformanceReport(
-  envelope: TextProtocolResultEnvelopeV1<TextDocDocumentV1, typeof textDocDocumentPayloadKind>,
-  options: TextRulesConformanceReportOptions,
-): TextRulesConformanceReportV1 {
-  const expectedStatus = conformanceStatus(options.matchesExpected);
-
-  return {
-    schemaId: textRulesConformanceReportSchemaId,
-    schemaVersion: textRulesConformanceReportSchemaVersion,
-    reportId: `dependency-parser:${envelope.payload.documentId}`,
-    subject: {
-      kind: "textprotocol-result-envelope",
-      id: envelope.payload.documentId,
-      schemaId: envelope.schemaId,
-    },
-    generatedAt: options.generatedAt ?? "2026-05-16T00:00:00.000Z",
-    summary: {
-      pass: options.matchesExpected ? 3 : 2,
-      fail: options.matchesExpected ? 0 : 1,
-      notRun: 0,
-    },
-    checks: [
-      {
-        checkId: "textdoc-document-shape",
-        status: "pass",
-        message: "Dependency parser output is stored as textdoc dependency layers.",
-        evidenceRefs: ["schemas/textdoc-document-v1.schema.json"],
-      },
-      {
-        checkId: "textprotocol-envelope-shape",
-        status: "pass",
-        message: "Dependency parser output is wrapped in the public result envelope.",
-        evidenceRefs: ["schemas/textprotocol-result-envelope-v1.schema.json"],
-      },
-      {
-        checkId: "expected-output-match",
-        status: expectedStatus,
-        message: options.matchesExpected
-          ? "Generated dependency arcs match the recorded expected artifact."
-          : "Generated dependency arcs diverge from the recorded expected artifact.",
-        evidenceRefs: [options.expectedArtifactPath],
-      },
-    ],
-    ...(options.notes && options.notes.length > 0 ? { notes: options.notes } : {}),
   };
 }

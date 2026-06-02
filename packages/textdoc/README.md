@@ -33,7 +33,7 @@ for deterministic annotation containers with:
 - provenance links and ordered alternatives.
 
 The package does not perform tokenization, tagging, or entity extraction. It defines the container
-shape that other packages serialize through `@ismail-elkorchi/textprotocol`.
+shape used by package-local document and annotation payload helpers.
 
 Use `validateTextDocDocumentV1()` after runtime shape validation when reference integrity matters.
 The validator checks view parents, span maps, layer references, duplicate ids, span ranges, target
@@ -48,22 +48,19 @@ existing document skeleton and rejects duplicate annotation ids, layer/kind mism
 revision mismatch, and representative-target drift.
 
 `exportTextDocDocumentBundlePayloadV1()` exports one or more validated `TextDocDocumentV1` records
-as the payload shape used by the `textprotocol` document-bundle schema family.
+as a deterministic document-bundle payload.
 `importTextDocDocumentBundlePayloadV1()` imports that payload shape back into validated textdoc
 documents and rejects empty payloads, malformed document entries, invalid documents, and duplicate
-document revisions. The helpers do not add a `textprotocol` dependency to `textdoc`; applications can
-wrap the payload with `textprotocol` transport helpers when exchange envelopes are needed.
+document revisions.
 
 `exportTextDocMappingLossReportPayloadV1()` exports view, span-map, span-map segment, and annotation
-loss markers as the payload shape used by the `textprotocol` mapping-loss-report schema family.
-`isTextDocMappingLossReportPayloadV1()` validates the payload shape without adding a `textprotocol`
-dependency to this package.
+loss markers as a deterministic mapping-loss-report payload.
+`isTextDocMappingLossReportPayloadV1()` validates the payload shape.
 
-`exportTextDocEvidenceBundlePayloadV1()` exports annotation evidence records as the payload shape
-used by the `textprotocol` evidence-bundle schema family. The records preserve annotation targets,
-document and layer provenance, confidence and ambiguity metadata, support references, exactness
-classes, and annotation loss accounting. `isTextDocEvidenceBundlePayloadV1()` validates the payload
-shape without adding a `textprotocol` dependency to this package.
+`exportTextDocEvidenceBundlePayloadV1()` exports annotation evidence records as a deterministic
+evidence-bundle payload. The records preserve annotation targets, document and layer provenance,
+confidence and ambiguity metadata, support references, exactness classes, and annotation loss
+accounting. `isTextDocEvidenceBundlePayloadV1()` validates the payload shape.
 
 ## Task graph profiles
 
@@ -112,21 +109,3 @@ do not implement dependency parsing or broad Universal Dependencies treebank sup
 
 [`toTextDocDocumentV1`](./src/index.ts) converts the earlier token/sentence annotation set into the
 document model without widening `@ismail-elkorchi/textfacts`.
-
-## Runnable examples
-
-- [`../../examples/textdoc-document-bundle-consumer.mjs`](../../examples/textdoc-document-bundle-consumer.mjs)
-  exports textdoc documents as a document-bundle payload, wraps the payload in textprotocol
-  schema-family JSON transport, and imports the payload back through textdoc.
-- [`../../examples/textdoc-annotation-bundle-consumer.mjs`](../../examples/textdoc-annotation-bundle-consumer.mjs)
-  exports textdoc annotations as an annotation-bundle payload, wraps the payload in textprotocol
-  schema-family JSON transport, and applies the parsed payload back onto a document skeleton.
-- [`../../examples/textdoc-mapping-loss-report-consumer.mjs`](../../examples/textdoc-mapping-loss-report-consumer.mjs)
-  exports textdoc loss markers as a mapping-loss-report payload, wraps the payload in textprotocol
-  schema-family JSON transport, and inspects the parsed envelope through textlab.
-- [`../../examples/textdoc-evidence-bundle-consumer.mjs`](../../examples/textdoc-evidence-bundle-consumer.mjs)
-  exports annotation evidence records as an evidence-bundle payload, wraps the payload in
-  textprotocol schema-family JSON transport, and inspects the parsed envelope through textlab.
-- [`../../examples/textdoc-task-graph-profile-consumer.mjs`](../../examples/textdoc-task-graph-profile-consumer.mjs)
-  validates a document against a declarative task graph profile for required layers, relation roles,
-  and annotation coverage.

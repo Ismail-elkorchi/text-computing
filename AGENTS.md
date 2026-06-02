@@ -27,10 +27,6 @@
   - `npm run -s lint`
   - `npm run -s build`
   - `npm run -s schema:validate`
-  - `npm run -s check:fixtures`
-  - `npm run -s test:all`
-- Run repository coherence check:
-  - `npm -w @ismail-elkorchi/textfacts exec -- node tools/repo/audit.mjs --write`
 
 ## Execution Rules
 - Keep edits scoped to library behavior and verification.

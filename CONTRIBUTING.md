@@ -21,16 +21,6 @@ npm run build
 
 Build emits `.d.ts` via TypeScript and ESM JS via esbuild.
 
-**Tests**
-```sh
-npm -w @ismail-elkorchi/textfacts run test:node
-npm -w @ismail-elkorchi/textfacts run test:bun
-npm -w @ismail-elkorchi/textfacts run test:deno
-npm -w @ismail-elkorchi/textfacts run test:browser
-```
-
-All tests run offline. Unicode conformance test files are vendored under `packages/textfacts/testdata/unicode/17.0.0`.
-
 **Schema validation**
 ```sh
 npm run schema:validate
@@ -38,21 +28,6 @@ npm run schema:validate
 
 Validates repository-level schemas against their declared JSON Schema drafts, validates
 `packages/textfacts/schemas/*.schema.json` against draft 2020-12, and enforces I-JSON safety.
-
-**Fixture validation**
-```sh
-npm run check:fixtures
-```
-
-Validates repository-level readiness fixture artifacts.
-
-**Coverage and fuzz signals**
-```sh
-npm run coverage:all
-npm run fuzz:all
-```
-
-Coverage is a V8 signal over the current document, protocol, pack, pipeline, and conformance package surfaces. Fuzzing is deterministic semantic fuzzing over document round-trips, result envelopes, pack lookup, pipeline determinism, and conformance summaries.
 
 **Documentation boundaries**
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
@@ -87,10 +62,6 @@ That script downloads the pinned Unicode data files (17.0.0) and regenerates com
 - Strict TypeScript
 - No Node-only runtime APIs in shipped code
 - Deterministic outputs: always define ordering and tie-breaks
-
-**Tests and conformance**
-The UAX #29 conformance tests are derived from the official Unicode test files and must pass in Node, Bun, and Deno.
-Normalization conformance tests use `NormalizationTest.txt` and must pass 100%.
 
 **Pull request template**
 - Use [`.github/pull_request_template.md`](.github/pull_request_template.md) for PR structure and required fields.

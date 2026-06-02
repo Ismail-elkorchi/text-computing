@@ -54,11 +54,9 @@ This foundation does not yet define:
 
 - TF-IDF or BM25;
 - corpus ranking APIs;
-- corpus-level result envelopes; or
 - multilingual relevance fixtures for retrieval behavior.
 
 ## Verification
 
-`npm run -s test:all` executes runtime checks for duplicate-document rejection, missing view/layer
-rejection, deterministic collection ordering, metadata slicing, and repeated fingerprint-index
-stability.
+Repository verification currently covers this contract through the reduced build, lint, and schema
+validation checks.

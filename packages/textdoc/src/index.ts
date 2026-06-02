@@ -2968,9 +2968,9 @@ function textDocDocumentArtifactRef(document: TextDocDocumentV1): TextDocMapping
 
 function textDocMappingLossReportArtifactRef(mappingId: string): TextDocMappingLossReportArtifactRefV1 {
   return {
-    kind: "textprotocol-mapping-loss-report-v1",
+    kind: "textdoc-mapping-loss-report-v1",
     id: mappingId,
-    schemaId: "urn:ismail-elkorchi:textprotocol:mapping-loss-report:v1",
+    schemaId: "urn:ismail-elkorchi:textdoc:mapping-loss-report:v1",
   };
 }
 

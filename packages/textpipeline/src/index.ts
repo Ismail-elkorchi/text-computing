@@ -1,22 +1,4 @@
 import { isTextDocDocumentV1, type TextDocDocumentV1 } from "@ismail-elkorchi/textdoc";
-import {
-  checkTextProtocolSchemaFamilyEnvelope,
-  checkTextProtocolResultEnvelopeCompatibility,
-  isTextProtocolDiagnostic,
-  isTextProtocolProcessorTraceV1,
-  isTextProtocolResultEnvelopeForPayloadKind,
-  resultEnvelopeSchemaId,
-  resultEnvelopeSchemaVersion,
-  textProtocolPayloadKindTextpipelineBatchRunReportV1,
-  textProtocolPayloadKindTextpipelineTraceV1,
-  textProtocolProcessorTraceSchemaId,
-  textProtocolSchemaVersion,
-  type TextProtocolDiagnostic,
-  type TextProtocolProcessorTracePayloadV1,
-  type TextProtocolProcessorTraceV1,
-  type TextProtocolProvenance,
-  type TextProtocolResultEnvelopeV1,
-} from "@ismail-elkorchi/textprotocol";
 
 export const packageName = "@ismail-elkorchi/textpipeline" as const;
 export const textPipelineTraceSchemaVersion = 1 as const;
@@ -27,9 +9,6 @@ export const textPipelineWorkerPoolRunReportSchemaVersion = 1 as const;
 export const textPipelineRecoveryPlanSchemaVersion = 1 as const;
 export const textPipelineRecoveryExecutionReportSchemaVersion = 1 as const;
 export const textPipelineDistributedScheduleSchemaVersion = 1 as const;
-export const textPipelineTracePayloadKind = textProtocolPayloadKindTextpipelineTraceV1;
-export const textPipelineBatchRunReportPayloadKind =
-  textProtocolPayloadKindTextpipelineBatchRunReportV1;
 
 export type PackageName = typeof packageName;
 export type TextPipelineTraceSchemaVersion = typeof textPipelineTraceSchemaVersion;
@@ -47,9 +26,6 @@ export type TextPipelineRecoveryExecutionReportSchemaVersion =
   typeof textPipelineRecoveryExecutionReportSchemaVersion;
 export type TextPipelineDistributedScheduleSchemaVersion =
   typeof textPipelineDistributedScheduleSchemaVersion;
-export type TextPipelineTracePayloadKind = typeof textPipelineTracePayloadKind;
-export type TextPipelineBatchRunReportPayloadKind =
-  typeof textPipelineBatchRunReportPayloadKind;
 export type TextPipelinePurity = "pure" | "stateful";
 export type TextPipelineTraceStatus = "applied" | "skipped" | "cached" | "failed";
 export type TextPipelineRunStatus = "complete" | "partial";
@@ -68,6 +44,15 @@ export type TextPipelineRecoveryExecutionStatus =
   | "retained"
   | "retry-complete"
   | "retry-exhausted";
+export type TextPipelineDiagnosticSeverity = "info" | "warning" | "error";
+
+export interface TextPipelineDiagnostic {
+  readonly code: string;
+  readonly severity: TextPipelineDiagnosticSeverity;
+  readonly message?: string;
+  readonly ref?: string;
+  readonly evidenceRefs?: readonly string[];
+}
 
 export interface TextPipelineVersionRef {
   readonly id: string;
@@ -111,7 +96,7 @@ export interface TextPipelineContext {
 
 export interface TextPipelineProcessorRunResult {
   readonly document: TextDocDocumentV1;
-  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly diagnostics?: readonly TextPipelineDiagnostic[];
 }
 
 export interface TextPipelineProcessor {
@@ -171,7 +156,7 @@ export interface TextPipelineCacheKeyOptions {
 export interface TextPipelineGraphValidationResult {
   readonly ok: boolean;
   readonly processorOrder: readonly string[];
-  readonly diagnostics: readonly TextProtocolDiagnostic[];
+  readonly diagnostics: readonly TextPipelineDiagnostic[];
 }
 
 export interface TextPipelineExecutionPlan {
@@ -184,7 +169,7 @@ export interface TextPipelineTraceEntry {
   readonly status: TextPipelineTraceStatus;
   readonly emittedViews: readonly string[];
   readonly emittedLayers: readonly string[];
-  readonly diagnostics?: readonly TextProtocolDiagnostic[];
+  readonly diagnostics?: readonly TextPipelineDiagnostic[];
   readonly inputRevision: string;
   readonly outputRevision: string;
   readonly cacheKey?: string;
@@ -467,35 +452,7 @@ export interface TextPipelineRecoveryExecutionResult {
   readonly report: TextPipelineRecoveryExecutionReportV1;
 }
 
-export interface TextPipelineTraceEnvelopeMetadata {
-  readonly provenance?: TextProtocolProvenance;
-  readonly diagnostics?: readonly TextProtocolDiagnostic[];
-  readonly scopeBoundary?: string;
-  readonly limitations?: readonly string[];
-}
-
-export interface TextPipelineProcessorTraceEnvelopeMetadata {
-  readonly provenance?: TextProtocolProvenance;
-  readonly diagnostics?: readonly TextProtocolDiagnostic[];
-  readonly limitations?: readonly string[];
-  readonly extensions?: Readonly<Record<string, unknown>>;
-}
-
 export type TextPipelineExecutableProcessor = TextPipelineProcessor | TextPipelineAsyncProcessor;
-
-export type TextPipelineTraceEnvelopeV1 = TextProtocolResultEnvelopeV1<
-  TextPipelineTraceV1,
-  TextPipelineTracePayloadKind
->;
-
-export type TextPipelineProcessorTracePayloadV1 = TextProtocolProcessorTracePayloadV1;
-
-export type TextPipelineProcessorTraceEnvelopeV1 = TextProtocolProcessorTraceV1;
-
-export type TextPipelineBatchRunReportEnvelopeV1 = TextProtocolResultEnvelopeV1<
-  TextPipelineBatchRunReport,
-  TextPipelineBatchRunReportPayloadKind
->;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -507,6 +464,17 @@ function isNonEmptyString(value: unknown): value is string {
 
 function isStringArray(value: unknown): value is readonly string[] {
   return Array.isArray(value) && value.every((entry) => isNonEmptyString(entry));
+}
+
+export function isTextPipelineDiagnostic(value: unknown): value is TextPipelineDiagnostic {
+  return (
+    isRecord(value) &&
+    isNonEmptyString(value.code) &&
+    (value.severity === "info" || value.severity === "warning" || value.severity === "error") &&
+    (value.message === undefined || typeof value.message === "string") &&
+    (value.ref === undefined || isNonEmptyString(value.ref)) &&
+    (value.evidenceRefs === undefined || isStringArray(value.evidenceRefs))
+  );
 }
 
 function isNonNegativeInteger(value: unknown): value is number {
@@ -618,9 +586,9 @@ export function createTextPipelineContextFingerprint(context: TextPipelineContex
 
 function diagnostic(
   code: string,
-  severity: TextProtocolDiagnostic["severity"],
+  severity: TextPipelineDiagnostic["severity"],
   message: string,
-): TextProtocolDiagnostic {
+): TextPipelineDiagnostic {
   return { code, severity, message };
 }
 
@@ -629,7 +597,7 @@ function formatMissingRequirementMessage(kind: string, values: readonly string[]
 }
 
 function pushMissingIdDiagnostic(
-  diagnostics: TextProtocolDiagnostic[],
+  diagnostics: TextPipelineDiagnostic[],
   code: string,
   kind: string,
   values: readonly string[],
@@ -639,7 +607,7 @@ function pushMissingIdDiagnostic(
 }
 
 function pushVersionDiagnostics(
-  diagnostics: TextProtocolDiagnostic[],
+  diagnostics: TextPipelineDiagnostic[],
   kind: "package" | "pack" | "profile",
   required: readonly TextPipelineVersionRef[] | undefined,
   actual: ReadonlyMap<string, string>,
@@ -670,7 +638,7 @@ function getRequirementDiagnostics(
   descriptor: TextPipelineProcessorDescriptor,
   document: TextDocDocumentV1,
   context: TextPipelineContext,
-): readonly TextProtocolDiagnostic[] {
+): readonly TextPipelineDiagnostic[] {
   const viewIds = new Set(document.views.map((view) => view.id));
   const layerIds = new Set(document.layers.map((layer) => layer.id));
   const packageIds = normalizeIdSet(context.packages, context.packageVersions);
@@ -680,7 +648,7 @@ function getRequirementDiagnostics(
   const packVersions = getVersionMap(context.packVersions);
   const profileVersions = getVersionMap(context.profileVersions);
 
-  const diagnostics: TextProtocolDiagnostic[] = [];
+  const diagnostics: TextPipelineDiagnostic[] = [];
 
   pushMissingIdDiagnostic(
     diagnostics,
@@ -722,10 +690,10 @@ function getRequirementDiagnostics(
 
 function assertValidTraceDiagnostics(
   processorId: string,
-  diagnostics: readonly TextProtocolDiagnostic[] | undefined,
-): readonly TextProtocolDiagnostic[] {
+  diagnostics: readonly TextPipelineDiagnostic[] | undefined,
+): readonly TextPipelineDiagnostic[] {
   if (diagnostics === undefined) return [];
-  if (!Array.isArray(diagnostics) || !diagnostics.every((entry) => isTextProtocolDiagnostic(entry))) {
+  if (!Array.isArray(diagnostics) || !diagnostics.every((entry) => isTextPipelineDiagnostic(entry))) {
     throw new TypeError(`processor ${processorId} returned invalid diagnostics`);
   }
   return diagnostics;
@@ -767,7 +735,7 @@ function assertValidProcessorResult(
   }
 }
 
-function invalidGraphResult(diagnostics: readonly TextProtocolDiagnostic[]): TextPipelineGraphValidationResult {
+function invalidGraphResult(diagnostics: readonly TextPipelineDiagnostic[]): TextPipelineGraphValidationResult {
   return {
     ok: false,
     processorOrder: [],
@@ -778,7 +746,7 @@ function invalidGraphResult(diagnostics: readonly TextProtocolDiagnostic[]): Tex
 export function validateTextPipelineGraph(
   processors: readonly TextPipelineExecutableProcessor[],
 ): TextPipelineGraphValidationResult {
-  const diagnostics: TextProtocolDiagnostic[] = [];
+  const diagnostics: TextPipelineDiagnostic[] = [];
   const byId = new Map<string, TextPipelineExecutableProcessor>();
   const pendingCounts = new Map<string, number>();
   const dependents = new Map<string, string[]>();
@@ -991,7 +959,7 @@ export function isTextPipelineTraceEntry(value: unknown): value is TextPipelineT
     (value.cacheKey === undefined || isNonEmptyString(value.cacheKey)) &&
     (value.diagnostics === undefined ||
       (Array.isArray(value.diagnostics) &&
-        value.diagnostics.every((entry) => isTextProtocolDiagnostic(entry))))
+        value.diagnostics.every((entry) => isTextPipelineDiagnostic(entry))))
   );
 }
 
@@ -1648,7 +1616,7 @@ function cacheKeyOptions(options: TextPipelineRunOptions): TextPipelineCacheKeyO
   return options.cacheNamespace === undefined ? {} : { cacheNamespace: options.cacheNamespace };
 }
 
-function processorErrorDiagnostic(processorId: string, error: unknown): TextProtocolDiagnostic {
+function processorErrorDiagnostic(processorId: string, error: unknown): TextPipelineDiagnostic {
   return {
     code: "textpipeline.processor-error",
     severity: "error",
@@ -1659,7 +1627,7 @@ function processorErrorDiagnostic(processorId: string, error: unknown): TextProt
 function blockedDependencyDiagnostics(
   processor: TextPipelineExecutableProcessor,
   completedProcessorIds: ReadonlySet<string>,
-): readonly TextProtocolDiagnostic[] {
+): readonly TextPipelineDiagnostic[] {
   const blocked = (processor.descriptor.dependsOn ?? []).filter((dependencyId) =>
     !completedProcessorIds.has(dependencyId)
   );
@@ -2892,158 +2860,4 @@ export async function* runTextPipelineStream(
     assertNotAborted(options.signal);
     yield run;
   }
-}
-
-export function createTextPipelineTraceEnvelope(
-  trace: TextPipelineTraceV1,
-  producerVersion: string,
-  metadata: TextPipelineTraceEnvelopeMetadata = {},
-): TextPipelineTraceEnvelopeV1 {
-  if (!isTextPipelineTraceV1(trace)) {
-    throw new TypeError("trace must satisfy TextPipelineTraceV1");
-  }
-  if (!isNonEmptyString(producerVersion)) {
-    throw new TypeError("producerVersion must be a non-empty string");
-  }
-
-  const envelope: TextPipelineTraceEnvelopeV1 = {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: producerVersion,
-    },
-    payloadKind: textPipelineTracePayloadKind,
-    payload: trace,
-    ...(metadata.provenance === undefined ? {} : { provenance: metadata.provenance }),
-    ...(metadata.diagnostics === undefined ? {} : { diagnostics: metadata.diagnostics }),
-    ...(metadata.scopeBoundary === undefined ? {} : { scopeBoundary: metadata.scopeBoundary }),
-    ...(metadata.limitations === undefined ? {} : { limitations: metadata.limitations }),
-  };
-  const compatibility = checkTextProtocolResultEnvelopeCompatibility(envelope, {
-    expectedPayloadKind: textPipelineTracePayloadKind,
-    expectedProducerPackage: packageName,
-  });
-  if (!compatibility.ok) {
-    throw new Error(compatibility.diagnostics.map((entry) => entry.message ?? entry.code).join("; "));
-  }
-  return envelope;
-}
-
-export function isTextPipelineTraceEnvelopeV1(value: unknown): value is TextPipelineTraceEnvelopeV1 {
-  return (
-    isTextProtocolResultEnvelopeForPayloadKind(value, textPipelineTracePayloadKind) &&
-    isTextPipelineTraceV1(value.payload)
-  );
-}
-
-export function exportTextPipelineProcessorTracePayloadV1(
-  trace: TextPipelineTraceV1,
-): TextPipelineProcessorTracePayloadV1 {
-  if (!isTextPipelineTraceV1(trace)) {
-    throw new TypeError("trace must satisfy TextPipelineTraceV1");
-  }
-  return {
-    schemaVersion: textProtocolSchemaVersion,
-    documentId: trace.documentId,
-    finalRevision: trace.finalRevision,
-    executionMode: trace.executionMode,
-    runStatus: trace.runStatus,
-    processorOrder: [...trace.processorOrder],
-    contextFingerprint: trace.contextFingerprint,
-    cachePolicy: trace.cachePolicy,
-    entries: trace.entries.map((entry) => ({
-      processorId: entry.processorId,
-      version: entry.version,
-      status: entry.status,
-      inputRevision: entry.inputRevision,
-      outputRevision: entry.outputRevision,
-      emittedViews: [...entry.emittedViews],
-      emittedLayers: [...entry.emittedLayers],
-      ...(entry.cacheKey === undefined ? {} : { cacheKey: entry.cacheKey }),
-      ...(entry.diagnostics === undefined ? {} : { diagnostics: entry.diagnostics }),
-    })),
-  };
-}
-
-export function createTextPipelineProcessorTraceEnvelopeV1(
-  trace: TextPipelineTraceV1,
-  producerVersion: string,
-  metadata: TextPipelineProcessorTraceEnvelopeMetadata = {},
-): TextPipelineProcessorTraceEnvelopeV1 {
-  if (!isNonEmptyString(producerVersion)) {
-    throw new TypeError("producerVersion must be a non-empty string");
-  }
-  const envelope: TextPipelineProcessorTraceEnvelopeV1 = {
-    schemaId: textProtocolProcessorTraceSchemaId,
-    schemaVersion: textProtocolSchemaVersion,
-    producer: {
-      package: packageName,
-      version: producerVersion,
-    },
-    payload: exportTextPipelineProcessorTracePayloadV1(trace),
-    ...(metadata.provenance === undefined ? {} : { provenance: metadata.provenance }),
-    ...(metadata.diagnostics === undefined ? {} : { diagnostics: metadata.diagnostics }),
-    ...(metadata.limitations === undefined ? {} : { limitations: metadata.limitations }),
-    ...(metadata.extensions === undefined ? {} : { extensions: metadata.extensions }),
-  };
-  const compatibility = checkTextProtocolSchemaFamilyEnvelope(envelope, {
-    expectedFamily: "processor-trace",
-    expectedProducerPackage: packageName,
-  });
-  if (!compatibility.ok) {
-    throw new Error(compatibility.diagnostics.map((entry) => entry.message ?? entry.code).join("; "));
-  }
-  return envelope;
-}
-
-export function isTextPipelineProcessorTraceEnvelopeV1(
-  value: unknown,
-): value is TextPipelineProcessorTraceEnvelopeV1 {
-  return isTextProtocolProcessorTraceV1(value) && value.producer.package === packageName;
-}
-
-export function createTextPipelineBatchRunReportEnvelope(
-  report: TextPipelineBatchRunReport,
-  producerVersion: string,
-  metadata: TextPipelineTraceEnvelopeMetadata = {},
-): TextPipelineBatchRunReportEnvelopeV1 {
-  if (!isTextPipelineBatchRunReportV1(report)) {
-    throw new TypeError("report must satisfy TextPipelineBatchRunReport");
-  }
-  if (!isNonEmptyString(producerVersion)) {
-    throw new TypeError("producerVersion must be a non-empty string");
-  }
-
-  const envelope: TextPipelineBatchRunReportEnvelopeV1 = {
-    schemaId: resultEnvelopeSchemaId,
-    schemaVersion: resultEnvelopeSchemaVersion,
-    producer: {
-      package: packageName,
-      version: producerVersion,
-    },
-    payloadKind: textPipelineBatchRunReportPayloadKind,
-    payload: report,
-    ...(metadata.provenance === undefined ? {} : { provenance: metadata.provenance }),
-    ...(metadata.diagnostics === undefined ? {} : { diagnostics: metadata.diagnostics }),
-    ...(metadata.scopeBoundary === undefined ? {} : { scopeBoundary: metadata.scopeBoundary }),
-    ...(metadata.limitations === undefined ? {} : { limitations: metadata.limitations }),
-  };
-  const compatibility = checkTextProtocolResultEnvelopeCompatibility(envelope, {
-    expectedPayloadKind: textPipelineBatchRunReportPayloadKind,
-    expectedProducerPackage: packageName,
-  });
-  if (!compatibility.ok) {
-    throw new Error(compatibility.diagnostics.map((entry) => entry.message ?? entry.code).join("; "));
-  }
-  return envelope;
-}
-
-export function isTextPipelineBatchRunReportEnvelopeV1(
-  value: unknown,
-): value is TextPipelineBatchRunReportEnvelopeV1 {
-  return (
-    isTextProtocolResultEnvelopeForPayloadKind(value, textPipelineBatchRunReportPayloadKind) &&
-    isTextPipelineBatchRunReportV1(value.payload)
-  );
 }

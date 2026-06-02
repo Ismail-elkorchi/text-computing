@@ -15,15 +15,10 @@
   },
   "dependencies": {
     "@ismail-elkorchi/textdoc": "0.1.0",
-    "@ismail-elkorchi/textpack": "0.1.0",
-    "@ismail-elkorchi/textprotocol": "0.1.0"
-  },
-  "devDependencies": {
-    "@ismail-elkorchi/textconformance": "0.1.0"
+    "@ismail-elkorchi/textpack": "0.1.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "tsc -p tsconfig.json --noEmit && node test/index.test.ts",
     "prepack": "npm run build"
   },
   "license": "MIT",
