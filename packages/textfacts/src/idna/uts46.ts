@@ -1,7 +1,7 @@
-import { createProvenance } from "../core/provenance.ts";
-import type { Provenance } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
-import { scanLoneSurrogates, toWellFormedUnicode } from "../integrity/integrity.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import type { Provenance } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
+import { findLoneSurrogateFindings, toWellFormedUnicode } from "../integrity/integrity.ts";
 import { CCC_RANGES } from "../normalize/generated/ccc.ts";
 import { isNormalized, normalize } from "../normalize/normalize.ts";
 import { BidiClass, bidiClassAt } from "../unicode/bidi.ts";
@@ -203,7 +203,7 @@ function mapDomain(domain: string, options: Required<Uts46MapOptions>): MapResul
   const warnings: IdnaError[] = [];
   let working = domain;
 
-  const loneSurrogates = scanLoneSurrogates(working);
+  const loneSurrogates = findLoneSurrogateFindings(working);
   if (loneSurrogates.length > 0) {
     for (const surrogate of loneSurrogates) {
       pushIssue(errors, "ILL_FORMED_UNICODE", {

@@ -1,17 +1,6 @@
 export type {
   IntegrityFinding,
   IntegrityFindingKind,
-  IntegrityProfile,
-  IntegrityProfileOptions,
-  IntegrityScanOptions,
-  LoneSurrogateFinding,
+  IntegrityOptions,
 } from "./integrity.ts";
-export {
-  allIntegrityFindingKinds,
-  integrityProfile,
-  isWellFormedUnicode,
-  iterIntegrityFindings,
-  scanIntegrityFindings,
-  scanLoneSurrogates,
-  toWellFormedUnicode,
-} from "./integrity.ts";
+export { scanIntegrityFindings } from "./integrity.ts";

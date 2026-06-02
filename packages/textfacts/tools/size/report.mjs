@@ -8,7 +8,7 @@ import esbuild from "esbuild";
 const ROOT = process.cwd();
 const OUT_DIR = path.join(ROOT, "book", "artifacts", "size");
 const REPORT_PATH = path.join(OUT_DIR, "size-report.v1.json");
-const HASH_PATH = path.join(OUT_DIR, "size-report.v1.jcs.sha256.txt");
+const HASH_PATH = path.join(OUT_DIR, "size-report.v1.canonical.sha256.txt");
 const MD_PATH = path.join(OUT_DIR, "size-report.md");
 const BUDGET_PATH = path.join(OUT_DIR, "budgets.v1.json");
 

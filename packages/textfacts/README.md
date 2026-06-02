@@ -1,99 +1,36 @@
-# textfacts
+# @ismail-elkorchi/textfacts
 
-Deterministic, Unicode-pinned “text facts” for large-scale text analysis. No ML, no heuristics, no guesses.
+Unicode-pinned, deterministic facts about one text. No language packs, no corpus logic, no neural or statistical models.
 
-**Facts only**
-“Facts” here means outputs are algorithm-defined properties of the input string under explicitly declared rules. If the rule doesn’t define it, we don’t infer it. No POS tags, no NER, no sentiment, no embeddings, and no probabilistic scoring.
+## Entrypoints
 
-**Determinism & provenance**
-Every result object includes a provenance block that pins the exact Unicode version, algorithm name/version, normalized config hash, and unit definitions. Same input + same options => identical output (including ordering).
-
-**Runtime support**
-- Node.js 24.x (ESM only)
-- Bun 1.3.x
-- Deno 2.6.x (JSR)
-- Modern browsers via native ESM bundlers
-
-**Examples**
-Node (npm):
 ```ts
-import { segmentWordsUAX29 } from "@ismail-elkorchi/textfacts/segment";
-import { wordFrequencies } from "@ismail-elkorchi/textfacts/facts";
-
-const text = "Hello, world!";
-const segments = [...segmentWordsUAX29(text)];
-const freq = wordFrequencies(text);
-
-console.log(segments);
-console.log(freq.provenance);
+import { readText } from "@ismail-elkorchi/textfacts/input";
+import { normalize, normalizationDeltas } from "@ismail-elkorchi/textfacts/normalize";
+import { segmentGraphemes, segmentWords, segmentSentences } from "@ismail-elkorchi/textfacts/segment";
+import { lineBreakOpportunities } from "@ismail-elkorchi/textfacts/linebreak";
+import { scanIntegrityFindings } from "@ismail-elkorchi/textfacts/integrity";
+import { rootCollationKey, compareRootCollation } from "@ismail-elkorchi/textfacts/collation";
+import { surfaceProfile, wordFrequencies, charNgrams, wordNgrams } from "@ismail-elkorchi/textfacts/facts";
+import { stableHash64, stableHash128 } from "@ismail-elkorchi/textfacts/hash";
 ```
 
-Bun (npm):
-```ts
-import { segmentGraphemes } from "@ismail-elkorchi/textfacts/segment";
+The root entrypoint reexports the final public APIs. Required runtime targets are Node.js, Deno, Bun, browsers, and Cloudflare Workers.
 
-for (const span of segmentGraphemes("Cafe\u0301")) {
-  console.log(span);
-}
+## Example
+
+```ts
+import { normalize, segmentWords, surfaceProfile } from "@ismail-elkorchi/textfacts";
+
+const text = normalize("Cafe\u0301 cafe", "NFC");
+const words = [...segmentWords(text)];
+const profile = surfaceProfile(text);
+
+console.log(words.length);
+console.log(profile.counts.graphemes);
 ```
 
-Deno (JSR):
-```ts
-import { segmentSentencesUAX29 } from "jsr:@ismail-elkorchi/textfacts/segment";
+## Boundaries
 
-const text = "One. Two? Three!";
-const spans = [...segmentSentencesUAX29(text)];
-console.log(spans);
-```
+`textfacts` works only on local single-text facts and spec-pinned Unicode algorithms. It does not load resource packs, perform language-specific tokenization, run corpus analysis, or execute pipelines.
 
-Browser (ESM bundler):
-```ts
-import { wordNgrams } from "@ismail-elkorchi/textfacts/facts";
-
-const text = "to be or not to be";
-const result = wordNgrams(text, { n: 2 });
-console.log(result.items);
-```
-
-Normalization (UAX #15):
-```ts
-import { normalize } from "@ismail-elkorchi/textfacts/normalize";
-
-const normalized = normalize("Cafe\u0301", "NFC");
-console.log(normalized); // "Café"
-```
-
-**Provenance fields**
-```ts
-{
-  unicodeVersion: "17.0.0",
-  algorithm: {
-    name: "UAX29.Word",
-    spec: "https://unicode.org/reports/tr29/",
-    revisionOrDate: "Unicode 17.0.0",
-    implementationId: "textfacts@0.1.0"
-  },
-  configHash: "fnv1a32:...",
-  units: {
-    text: "utf16-code-unit",
-    token: "uax29-word",
-    word: "uax29-word"
-  }
-}
-```
-
-**Key guarantees**
-- No runtime ICU dependency: Unicode data tables are embedded and version-pinned.
-- Normalization is implemented in pure TS (no `String.prototype.normalize()` in core).
-- All ordering is stable and explicitly defined.
-- Canonical JSON helpers enable reproducible hashing in agent pipelines.
-- Streaming-friendly iterables for segmentation (no token arrays unless you materialize them).
-
-**Project status**
-v0.1.0 (alpha): UAX #29 segmentation, UAX #15 normalization, deterministic word facts, and
-Unicode integrity/IDNA helpers.
-
-## Docs and Project Records
-- [Documentation index](https://github.com/Ismail-elkorchi/text-computing/blob/main/packages/textfacts/docs/INDEX.md)
-- [Contributing guide](https://github.com/Ismail-elkorchi/text-computing/blob/main/CONTRIBUTING.md)
-- [Security policy](https://github.com/Ismail-elkorchi/text-computing/blob/main/SECURITY.md)

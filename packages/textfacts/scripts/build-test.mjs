@@ -5,11 +5,16 @@ import { build } from "esbuild";
 const workspaceRoot = process.cwd();
 const testRootDir = path.join(workspaceRoot, "test");
 const buildEntryPaths = [
-  path.join(testRootDir, "node.test.ts"),
+  path.join(testRootDir, "runtime", "node.test.ts"),
   path.join(testRootDir, "suite.ts"),
 ];
 
 async function collectTypeScriptEntryPathsRecursive(dirPath) {
+  const exists = await fs
+    .access(dirPath)
+    .then(() => true)
+    .catch(() => false);
+  if (!exists) return;
   const entries = await fs.readdir(dirPath, { withFileTypes: true });
   for (const entry of entries) {
     const entryPath = path.join(dirPath, entry.name);
@@ -22,7 +27,8 @@ async function collectTypeScriptEntryPathsRecursive(dirPath) {
 }
 
 await collectTypeScriptEntryPathsRecursive(path.join(testRootDir, "_support"));
-await collectTypeScriptEntryPathsRecursive(path.join(testRootDir, "metamorphic"));
+await collectTypeScriptEntryPathsRecursive(path.join(testRootDir, "contracts"));
+await collectTypeScriptEntryPathsRecursive(path.join(testRootDir, "runtime"));
 
 await build({
   entryPoints: buildEntryPaths,

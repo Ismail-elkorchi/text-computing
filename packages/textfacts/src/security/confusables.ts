@@ -1,6 +1,6 @@
 import { caseFold } from "../casefold/casefold.ts";
-import { normalizeInput } from "../core/input.ts";
-import type { TextInput } from "../core/types.ts";
+import { normalizeInput } from "../internal/input.ts";
+import type { TextInput } from "../internal/types.ts";
 import { normalize } from "../normalize/normalize.ts";
 import {
   CONFUSABLES_CODEPOINTS,

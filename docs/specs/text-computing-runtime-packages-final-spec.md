@@ -620,6 +620,13 @@ Profile data is provided by `textpack-*` packages and applied by higher packages
 - pack loading
 - pipeline execution
 
+### 6.7 Runtime support
+
+`textfacts` must support Node.js, Deno, Bun, browsers, and Cloudflare Workers.
+
+Shipped source must remain ESM, side-effect-free, and free of Node-only runtime APIs. Release
+verification must include smoke/import checks for all five required targets.
+
 ---
 
 ## 7. `@ismail-elkorchi/textdoc`

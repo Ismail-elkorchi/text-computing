@@ -1,5 +1,5 @@
-import { normalizeInput } from "../core/input.ts";
-import type { TextInput } from "../core/types.ts";
+import { normalizeInput } from "../internal/input.ts";
+import type { TextInput } from "../internal/types.ts";
 import { normalize } from "../normalize/normalize.ts";
 import { CASEFOLD_CODEPOINTS, CASEFOLD_DATA, CASEFOLD_OFFSETS } from "./generated/casefold.ts";
 
@@ -68,6 +68,7 @@ export function caseFold(input: TextInput): string {
  * Units: bytes (UTF-8).
  */
 export function nfkcCaseFold(input: TextInput): string {
-  const normalized = normalize(input, "NFKC");
+  const { text } = normalizeInput(input);
+  const normalized = normalize(text, "NFKC");
   return caseFold(normalized);
 }

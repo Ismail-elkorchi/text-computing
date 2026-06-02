@@ -1,7 +1,7 @@
-import { normalizeInput } from "../core/input.ts";
-import { createProvenance } from "../core/provenance.ts";
-import type { Provenance, Span, TextInput } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
+import { TextfactsError } from "../internal/error.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import type { Provenance, Span } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
 import { lookupProperty } from "../unicode/lookup.ts";
 import { CCC_RANGES } from "./generated/ccc.ts";
 import { COMPOSE_DATA, COMPOSE_INDEX, COMPOSE_STARTERS } from "./generated/composition.ts";
@@ -33,6 +33,15 @@ export interface NormalizationExplanation {
  * NormalizationTransform defines a source/output span mapping for diagnostics.
  */
 export interface NormalizationTransform {
+  sourceSpanCU: Span;
+  outputSpanCU: Span;
+  source: string;
+  output: string;
+  kind: "unchanged" | "normalized" | "inserted" | "deleted";
+  reversible: boolean;
+}
+
+export interface NormalizationDelta {
   sourceSpanCU: Span;
   outputSpanCU: Span;
   source: string;
@@ -353,8 +362,12 @@ function normalizeToCodePoints(text: string, form: NormalizationForm): number[] 
  * Normalize text to NFC/NFD/NFKC/NFKD.
  * Units: bytes (UTF-8).
  */
-export function normalize(input: TextInput, form: NormalizationForm): string {
-  const { text } = normalizeInput(input);
+export function normalize(text: string, form: NormalizationForm): string {
+  if (typeof text !== "string") {
+    throw new TextfactsError("INPUT_INVALID_TYPE", "normalize expects a string input", {
+      received: typeof text,
+    });
+  }
   const codePoints = normalizeToCodePoints(text, form);
   return codePointsToString(codePoints);
 }
@@ -363,72 +376,31 @@ export function normalize(input: TextInput, form: NormalizationForm): string {
  * Check if text is normalized to the requested form.
  * Units: bytes (UTF-8).
  */
-export function isNormalized(input: TextInput, form: NormalizationForm): boolean {
-  const { text } = normalizeInput(input);
+export function isNormalized(text: string, form: NormalizationForm): boolean {
   const normalized = normalize(text, form);
   return normalized === text;
 }
 
-/**
- * Iterate normalization steps for diagnostics.
- * Units: bytes (UTF-8).
- */
-export async function* normalizeIter(
-  chunks: Iterable<TextInput> | AsyncIterable<TextInput>,
-  form: NormalizationForm,
-): AsyncIterable<string> {
-  const decoder = new TextDecoder("utf-8", { fatal: true });
-  let buffer = "";
-  let usedDecoder = false;
-
-  const flushBuffer = (text: string) => {
-    const normalized = normalize(text, form);
-    let lastStarterIndex = -1;
-    for (let i = 0; i < normalized.length; ) {
-      const cp = normalized.codePointAt(i) ?? 0;
-      const ccc = getCombiningClass(cp);
-      if (ccc === 0) lastStarterIndex = i;
-      i += cp > 0xffff ? 2 : 1;
-    }
-    if (lastStarterIndex <= 0) {
-      return { emit: "", carry: normalized };
-    }
-    return {
-      emit: normalized.slice(0, lastStarterIndex),
-      carry: normalized.slice(lastStarterIndex),
-    };
-  };
-
-  for await (const chunk of chunks) {
-    if (typeof chunk === "string") {
-      buffer += chunk;
-    } else {
-      usedDecoder = true;
-      buffer += decoder.decode(chunk, { stream: true });
-    }
-    const { emit, carry } = flushBuffer(buffer);
-    if (emit) yield emit;
-    buffer = carry;
-  }
-
-  if (usedDecoder) {
-    buffer += decoder.decode();
-  }
-
-  if (buffer) {
-    yield normalize(buffer, form);
-  }
+export function normalizationDeltas(text: string, form: NormalizationForm): NormalizationDelta[] {
+  return buildNormalizationExplanation(text, form).transformMap.map((delta) => ({
+    sourceSpanCU: delta.sourceSpanCU,
+    outputSpanCU: delta.outputSpanCU,
+    source: delta.source,
+    output: delta.output,
+    kind: delta.kind,
+    reversible: delta.reversible,
+  }));
 }
 
 /**
  * Explain normalization changes for diagnostics.
  * Units: bytes (UTF-8).
  */
-export function explainNormalization(
-  input: TextInput,
+function buildNormalizationExplanation(
+  input: string,
   form: NormalizationForm,
 ): NormalizationExplanation {
-  const { text } = normalizeInput(input);
+  const text = input;
   const compatibility = form === "NFKC" || form === "NFKD";
   const compose = form === "NFC" || form === "NFKC";
   const decomposed = decomposeText(text, compatibility);

@@ -6,7 +6,7 @@
   },
   "exports": {
     ".": "./mod.ts",
-    "./core": "./src/core/mod.ts",
+    "./input": "./src/input/mod.ts",
     "./segment": "./src/segment/mod.ts",
     "./facts": "./src/facts/mod.ts",
     "./normalize": "./src/normalize/mod.ts",
@@ -14,11 +14,9 @@
     "./linebreak": "./src/linebreak/mod.ts",
     "./bidi": "./src/bidi/mod.ts",
     "./security": "./src/security/mod.ts",
-    "./variants": "./src/variants/mod.ts",
     "./hash": "./src/hash/mod.ts",
     "./collation": "./src/collation/mod.ts",
     "./integrity": "./src/integrity/mod.ts",
-    "./jcs": "./src/jcs/mod.ts",
     "./unicode": "./src/unicode/mod.ts",
     "./idna": "./src/idna/mod.ts"
   }

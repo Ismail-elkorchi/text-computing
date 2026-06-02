@@ -115,9 +115,9 @@ async function main() {
   );
 
   benches.push(
-    measure("segment-uax29-wb", 30, () => {
+    measure("segment-word", 30, () => {
       let count = 0;
-      for (const _ of textfacts.segmentWordsUAX29(baseText)) count += 1;
+      for (const _ of textfacts.segmentWords(baseText)) count += 1;
       return count;
     }),
   );
@@ -125,7 +125,7 @@ async function main() {
   benches.push(
     measure("segment-sentence-boundary", 30, () => {
       let count = 0;
-      for (const _ of textfacts.segmentSentencesUAX29(baseText)) count += 1;
+      for (const _ of textfacts.segmentSentences(baseText)) count += 1;
       return count;
     }),
   );
@@ -136,7 +136,7 @@ async function main() {
 
   benches.push(measure("idna-uts46-to-ascii", 200, () => textfacts.uts46ToAscii("exämple.test")));
 
-  benches.push(measure("collation-sort-key", 100, () => textfacts.ucaSortKeyBytes("café")));
+  benches.push(measure("collation-sort-key", 100, () => textfacts.rootCollationKey("café")));
 
   const report = {
     v: 1,

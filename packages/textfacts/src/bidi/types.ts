@@ -1,4 +1,4 @@
-import type { Provenance, Span } from "../core/types.ts";
+import type { Provenance, Span } from "../internal/types.ts";
 
 /**
  * BidiRun defines an exported structural contract.

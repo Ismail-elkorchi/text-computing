@@ -1,96 +1,88 @@
-import { compareByCodePoint } from "../core/compare.ts";
-import { normalizeInput } from "../core/input.ts";
-import { createProvenance } from "../core/provenance.ts";
-import { sliceBySpan } from "../core/span.ts";
-import type { Provenance, TextInput } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
-import { segmentWordsUAX29 } from "../segment/word.ts";
+import { compareByCodePoint } from "../internal/compare.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import { sliceBySpan } from "../internal/span.ts";
+import type { Provenance, Span } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
+import { segmentGraphemes } from "../segment/grapheme.ts";
+import { segmentSentencesDefault } from "../segment/sentence.ts";
+import { segmentWordsDefault } from "../segment/word.ts";
+import { generalCategoryAt } from "../unicode/general-category.ts";
+import { scriptNameAt } from "../unicode/script.ts";
 import { WordBreakPropertyId, getWordBreakPropertyId } from "../unicode/word.ts";
 
-/**
- * WordTokenFilter defines an exported type contract.
- */
-export type WordTokenFilter = "all" | "word-like";
+export type TokenFilter = "all" | "word-like";
+export type NgramUnit = "scalar" | "grapheme" | "word";
 
-/**
- * WordFrequencyOptions defines an exported structural contract.
- */
+export interface SurfaceProfileOptions {
+  wordFilter?: TokenFilter;
+  ngramSize?: number;
+  maxRepeatedSpans?: number;
+}
+
 export interface WordFrequencyOptions {
-  filter?: WordTokenFilter;
-  algorithmRevision?: string;
+  filter?: TokenFilter;
 }
 
-/**
- * WordFrequencyItem defines an exported structural contract.
- */
-export interface WordFrequencyItem {
-  token: string;
-  count: number;
-}
-
-/**
- * WordFrequencyResult defines an exported structural contract.
- */
-export interface WordFrequencyResult {
-  items: WordFrequencyItem[];
-  totalTokens: number;
-  provenance: Provenance;
-}
-
-/**
- * WordNgramOptions defines an exported structural contract.
- */
-export interface WordNgramOptions {
+export interface NgramOptions {
   n: number;
-  filter?: WordTokenFilter;
-  algorithmRevision?: string;
+  unit?: NgramUnit;
+  filter?: TokenFilter;
 }
 
-/**
- * WordNgramItem defines an exported structural contract.
- */
-export interface WordNgramItem {
-  tokens: string[];
+export interface FrequencyItem {
+  value: string;
   count: number;
 }
 
-/**
- * WordNgramResult defines an exported structural contract.
- */
-export interface WordNgramResult {
-  items: WordNgramItem[];
-  totalNgrams: number;
+export interface FrequencyTable {
+  unit: "scalar" | "word";
+  items: FrequencyItem[];
+  total: number;
   provenance: Provenance;
 }
 
-/**
- * WordCooccurrenceOptions defines an exported structural contract.
- */
-export interface WordCooccurrenceOptions {
-  windowSize: number;
-  filter?: WordTokenFilter;
-  algorithmRevision?: string;
-}
-
-/**
- * WordCooccurrenceItem defines an exported structural contract.
- */
-export interface WordCooccurrenceItem {
-  tokens: [string, string];
+export interface NgramItem {
+  values: string[];
   count: number;
 }
 
-/**
- * WordCooccurrenceResult defines an exported structural contract.
- */
-export interface WordCooccurrenceResult {
-  items: WordCooccurrenceItem[];
-  totalWindows: number;
+export interface NgramTable {
+  unit: NgramUnit;
+  n: number;
+  items: NgramItem[];
+  total: number;
   provenance: Provenance;
 }
 
-const DEFAULT_ALGORITHM_REVISION = "Unicode 17.0.0";
-const UAX29_SPEC = "https://unicode.org/reports/tr29/";
+export interface RepeatedSpan {
+  value: string;
+  count: number;
+  spans: Span[];
+}
+
+export interface SurfaceProfile {
+  counts: {
+    codeUnits: number;
+    scalars: number;
+    graphemes: number;
+    words: number;
+    sentences: number;
+    lines: number;
+    punctuation: number;
+    whitespace: number;
+    symbols: number;
+    digits: number;
+    marks: number;
+  };
+  scripts: FrequencyItem[];
+  characterFrequencies: FrequencyTable;
+  wordFrequencies: FrequencyTable;
+  repeatedSpans: RepeatedSpan[];
+  provenance: Provenance;
+}
+
+const DEFAULT_REVISION = "Unicode 17.0.0";
+const FACTS_SPEC = "textfacts:single-text-facts";
 
 const WORDLIKE_PROPS = new Set<number>([
   WordBreakPropertyId.ALetter,
@@ -100,202 +92,240 @@ const WORDLIKE_PROPS = new Set<number>([
   WordBreakPropertyId.ExtendNumLet,
 ]);
 
+function provenance(name: string, options: unknown, token?: string): Provenance {
+  return createProvenance(
+    {
+      name,
+      spec: FACTS_SPEC,
+      revisionOrDate: DEFAULT_REVISION,
+      implementationId: IMPLEMENTATION_ID,
+    },
+    options,
+    token ? { text: "utf16-code-unit", token } : { text: "utf16-code-unit" },
+  );
+}
+
+function normalizePositiveInteger(value: number, name: string): number {
+  if (!Number.isFinite(value) || value < 1) {
+    throw new RangeError(`${name} must be a positive finite integer`);
+  }
+  return Math.floor(value);
+}
+
+function sortFrequencyItems(items: FrequencyItem[]): FrequencyItem[] {
+  return items.sort((left, right) => {
+    if (left.count !== right.count) return right.count - left.count;
+    return compareByCodePoint(left.value, right.value);
+  });
+}
+
+function sortNgramItems(items: NgramItem[]): NgramItem[] {
+  return items.sort((left, right) => {
+    if (left.count !== right.count) return right.count - left.count;
+    const length = Math.min(left.values.length, right.values.length);
+    for (let index = 0; index < length; index += 1) {
+      const compare = compareByCodePoint(left.values[index] ?? "", right.values[index] ?? "");
+      if (compare !== 0) return compare;
+    }
+    return left.values.length - right.values.length;
+  });
+}
+
 function isWordLikeToken(token: string): boolean {
   for (let codeUnitIndex = 0; codeUnitIndex < token.length; ) {
     const codePoint = token.codePointAt(codeUnitIndex) ?? 0;
-    const wordBreakPropertyId = getWordBreakPropertyId(codePoint);
-    if (WORDLIKE_PROPS.has(wordBreakPropertyId)) return true;
+    if (WORDLIKE_PROPS.has(getWordBreakPropertyId(codePoint))) return true;
     codeUnitIndex += codePoint > 0xffff ? 2 : 1;
   }
   return false;
 }
 
-function compareTokensLex(leftTokens: string[], rightTokens: string[]): number {
-  const tokenCount = Math.min(leftTokens.length, rightTokens.length);
-  for (let index = 0; index < tokenCount; index += 1) {
-    const tokenCompare = compareByCodePoint(leftTokens[index] ?? "", rightTokens[index] ?? "");
-    if (tokenCompare !== 0) return tokenCompare;
+function wordTokens(text: string, filter: TokenFilter): { value: string; span: Span }[] {
+  const tokens: { value: string; span: Span }[] = [];
+  for (const span of segmentWordsDefault(text)) {
+    const value = sliceBySpan(text, span);
+    if (filter === "word-like" && !isWordLikeToken(value)) continue;
+    tokens.push({ value, span });
   }
-  return leftTokens.length - rightTokens.length;
+  return tokens;
 }
 
-function shouldInclude(token: string, filter: WordTokenFilter): boolean {
-  if (filter === "all") return true;
-  return isWordLikeToken(token);
+function scalarTokens(text: string): { value: string; span: Span }[] {
+  const tokens: { value: string; span: Span }[] = [];
+  for (let codeUnitIndex = 0; codeUnitIndex < text.length; ) {
+    const codePoint = text.codePointAt(codeUnitIndex) ?? 0;
+    const endCU = codeUnitIndex + (codePoint > 0xffff ? 2 : 1);
+    tokens.push({
+      value: text.slice(codeUnitIndex, endCU),
+      span: { startCU: codeUnitIndex, endCU },
+    });
+    codeUnitIndex = endCU;
+  }
+  return tokens;
 }
 
-function buildProvenance(name: string, options: unknown): Provenance {
-  return createProvenance(
-    {
-      name,
-      spec: UAX29_SPEC,
-      revisionOrDate:
-        (options as { algorithmRevision?: string })?.algorithmRevision ??
-        DEFAULT_ALGORITHM_REVISION,
-      implementationId: IMPLEMENTATION_ID,
-    },
-    options,
-    {
-      text: "utf16-code-unit",
-      token: "uax29-word",
-      word: "uax29-word",
-    },
-  );
+function graphemeTokens(text: string): { value: string; span: Span }[] {
+  return [...segmentGraphemes(text)].map((span) => ({ value: sliceBySpan(text, span), span }));
 }
 
-/**
- * Word frequency counts using UAX #29 segmentation.
- * Units: bytes (UTF-8).
- */
-export function wordFrequencies(
-  input: TextInput,
-  options: WordFrequencyOptions = {},
-): WordFrequencyResult {
-  const filter = options.filter ?? "all";
+function tokensForUnit(
+  text: string,
+  unit: NgramUnit,
+  filter: TokenFilter,
+): { value: string; span: Span }[] {
+  if (unit === "word") return wordTokens(text, filter);
+  if (unit === "grapheme") return graphemeTokens(text);
+  return scalarTokens(text);
+}
+
+function frequencyTable(
+  unit: "scalar" | "word",
+  items: { value: string }[],
+  options: unknown,
+): FrequencyTable {
   const counts = new Map<string, number>();
-  let totalTokens = 0;
-  const { text } = normalizeInput(input);
-  const segmentOptions = options.algorithmRevision
-    ? { algorithmRevision: options.algorithmRevision }
-    : {};
-  const normalizedOptions = {
-    filter,
-    algorithmRevision: options.algorithmRevision ?? DEFAULT_ALGORITHM_REVISION,
-  };
-
-  for (const span of segmentWordsUAX29(text, segmentOptions)) {
-    const token = sliceBySpan(text, span);
-    if (!shouldInclude(token, filter)) continue;
-    totalTokens += 1;
-    counts.set(token, (counts.get(token) ?? 0) + 1);
+  for (const item of items) {
+    counts.set(item.value, (counts.get(item.value) ?? 0) + 1);
   }
-
-  const items = Array.from(counts.entries()).map(([token, count]) => ({ token, count }));
-  items.sort((a, b) => {
-    if (a.count !== b.count) return b.count - a.count;
-    return compareByCodePoint(a.token, b.token);
-  });
-
   return {
-    items,
-    totalTokens,
-    provenance: buildProvenance("Facts.WordFrequency", normalizedOptions),
+    unit,
+    total: items.length,
+    items: sortFrequencyItems(
+      Array.from(counts.entries()).map(([value, count]) => ({ value, count })),
+    ),
+    provenance: provenance(
+      unit === "word" ? "TextFacts.WordFrequencies" : "TextFacts.CharacterFrequencies",
+      options,
+      unit,
+    ),
   };
 }
 
-/**
- * Word n-gram counts using UAX #29 segmentation.
- * Units: bytes (UTF-8).
- */
-export function wordNgrams(input: TextInput, options: WordNgramOptions): WordNgramResult {
-  const filter = options.filter ?? "all";
-  const ngramSize = Math.max(1, Math.floor(options.n));
-  const counts = new Map<string, { tokens: string[]; count: number }>();
-  const window: string[] = [];
-  let totalNgrams = 0;
-  const { text } = normalizeInput(input);
-  const segmentOptions = options.algorithmRevision
-    ? { algorithmRevision: options.algorithmRevision }
-    : {};
-  const normalizedOptions = {
-    n: ngramSize,
-    filter,
-    algorithmRevision: options.algorithmRevision ?? DEFAULT_ALGORITHM_REVISION,
-  };
+function repeatedSpans(
+  tokens: { value: string; span: Span }[],
+  maxRepeatedSpans: number,
+): RepeatedSpan[] {
+  const groups = new Map<string, Span[]>();
+  for (const token of tokens) {
+    const spans = groups.get(token.value);
+    if (spans) {
+      spans.push(token.span);
+    } else {
+      groups.set(token.value, [token.span]);
+    }
+  }
+  const repeated = Array.from(groups.entries())
+    .filter(([, spans]) => spans.length > 1)
+    .map(([value, spans]) => ({ value, count: spans.length, spans }))
+    .sort((left, right) => {
+      if (left.count !== right.count) return right.count - left.count;
+      return compareByCodePoint(left.value, right.value);
+    });
+  return repeated.slice(0, maxRepeatedSpans);
+}
 
-  for (const span of segmentWordsUAX29(text, segmentOptions)) {
-    const token = sliceBySpan(text, span);
-    if (!shouldInclude(token, filter)) continue;
-    window.push(token);
-    if (window.length < ngramSize) continue;
+export function wordFrequencies(text: string, options: WordFrequencyOptions = {}): FrequencyTable {
+  const filter = options.filter ?? "word-like";
+  return frequencyTable("word", wordTokens(text, filter), { filter });
+}
 
-    const tokens = window.slice(0, ngramSize);
-    const key = JSON.stringify(tokens);
+export function charNgrams(text: string, options: NgramOptions): NgramTable {
+  const n = normalizePositiveInteger(options.n, "n");
+  const unit = options.unit ?? "scalar";
+  const filter = options.filter ?? "word-like";
+  const tokens = tokensForUnit(text, unit, filter).map((token) => token.value);
+  const counts = new Map<string, { values: string[]; count: number }>();
+
+  for (let index = 0; index + n <= tokens.length; index += 1) {
+    const values = tokens.slice(index, index + n);
+    const key = JSON.stringify(values);
     const entry = counts.get(key);
     if (entry) {
       entry.count += 1;
     } else {
-      counts.set(key, { tokens, count: 1 });
+      counts.set(key, { values, count: 1 });
     }
-    totalNgrams += 1;
-    window.shift();
   }
 
-  const items = Array.from(counts.values());
-  items.sort((a, b) => {
-    if (a.count !== b.count) return b.count - a.count;
-    return compareTokensLex(a.tokens, b.tokens);
-  });
-
   return {
-    items,
-    totalNgrams,
-    provenance: buildProvenance("Facts.WordNgrams", normalizedOptions),
+    unit,
+    n,
+    total: Math.max(0, tokens.length - n + 1),
+    items: sortNgramItems(Array.from(counts.values())),
+    provenance: provenance("TextFacts.CharacterNgrams", { n, unit, filter }, unit),
   };
 }
 
-/**
- * Word co-occurrence counts using UAX #29 segmentation.
- * Units: bytes (UTF-8).
- */
-export function wordCooccurrence(
-  input: TextInput,
-  options: WordCooccurrenceOptions,
-): WordCooccurrenceResult {
-  const filter = options.filter ?? "all";
-  const windowSize = Math.max(2, Math.floor(options.windowSize));
-  const counts = new Map<string, { tokens: [string, string]; count: number }>();
-  const window: string[] = [];
-  let totalWindows = 0;
-  const { text } = normalizeInput(input);
-  const segmentOptions = options.algorithmRevision
-    ? { algorithmRevision: options.algorithmRevision }
-    : {};
-  const normalizedOptions = {
-    windowSize,
-    filter,
-    algorithmRevision: options.algorithmRevision ?? DEFAULT_ALGORITHM_REVISION,
-  };
+export function wordNgrams(text: string, options: NgramOptions): NgramTable {
+  const n = normalizePositiveInteger(options.n, "n");
+  const filter = options.filter ?? "word-like";
+  const tokens = wordTokens(text, filter).map((token) => token.value);
+  const counts = new Map<string, { values: string[]; count: number }>();
 
-  for (const span of segmentWordsUAX29(text, segmentOptions)) {
-    const token = sliceBySpan(text, span);
-    if (!shouldInclude(token, filter)) continue;
-    window.push(token);
-    if (window.length < windowSize) continue;
-
-    for (let leftIndex = 0; leftIndex < window.length; leftIndex += 1) {
-      for (let rightIndex = leftIndex + 1; rightIndex < window.length; rightIndex += 1) {
-        const leftToken = window[leftIndex] ?? "";
-        const rightToken = window[rightIndex] ?? "";
-        const orderedPair: [string, string] =
-          compareByCodePoint(leftToken, rightToken) <= 0
-            ? [leftToken, rightToken]
-            : [rightToken, leftToken];
-        const key = JSON.stringify(orderedPair);
-        const entry = counts.get(key);
-        if (entry) {
-          entry.count += 1;
-        } else {
-          counts.set(key, { tokens: orderedPair, count: 1 });
-        }
-      }
+  for (let index = 0; index + n <= tokens.length; index += 1) {
+    const values = tokens.slice(index, index + n);
+    const key = JSON.stringify(values);
+    const entry = counts.get(key);
+    if (entry) {
+      entry.count += 1;
+    } else {
+      counts.set(key, { values, count: 1 });
     }
-
-    totalWindows += 1;
-    window.shift();
   }
 
-  const items = Array.from(counts.values());
-  items.sort((a, b) => {
-    if (a.count !== b.count) return b.count - a.count;
-    const cmp = compareByCodePoint(a.tokens[0], b.tokens[0]);
-    if (cmp !== 0) return cmp;
-    return compareByCodePoint(a.tokens[1], b.tokens[1]);
-  });
+  return {
+    unit: "word",
+    n,
+    total: Math.max(0, tokens.length - n + 1),
+    items: sortNgramItems(Array.from(counts.values())),
+    provenance: provenance("TextFacts.WordNgrams", { n, filter }, "word"),
+  };
+}
+
+export function surfaceProfile(text: string, options: SurfaceProfileOptions = {}): SurfaceProfile {
+  const wordFilter = options.wordFilter ?? "word-like";
+  const maxRepeatedSpans = options.maxRepeatedSpans ?? 20;
+  const scalars = scalarTokens(text);
+  const words = wordTokens(text, wordFilter);
+  const scripts = new Map<string, number>();
+  let punctuation = 0;
+  let whitespace = 0;
+  let symbols = 0;
+  let digits = 0;
+  let marks = 0;
+
+  for (const scalar of scalars) {
+    const codePoint = scalar.value.codePointAt(0) ?? 0;
+    const category = generalCategoryAt(codePoint);
+    const script = scriptNameAt(codePoint);
+    scripts.set(script, (scripts.get(script) ?? 0) + 1);
+    if (category.startsWith("P")) punctuation += 1;
+    if (category.startsWith("Z") || /\s/u.test(scalar.value)) whitespace += 1;
+    if (category.startsWith("S")) symbols += 1;
+    if (category === "Nd") digits += 1;
+    if (category.startsWith("M")) marks += 1;
+  }
 
   return {
-    items,
-    totalWindows,
-    provenance: buildProvenance("Facts.WordCooccurrence", normalizedOptions),
+    counts: {
+      codeUnits: text.length,
+      scalars: scalars.length,
+      graphemes: [...segmentGraphemes(text)].length,
+      words: words.length,
+      sentences: [...segmentSentencesDefault(text)].length,
+      lines: text.length === 0 ? 0 : text.split(/\r\n|\r|\n/u).length,
+      punctuation,
+      whitespace,
+      symbols,
+      digits,
+      marks,
+    },
+    scripts: sortFrequencyItems(
+      Array.from(scripts.entries()).map(([value, count]) => ({ value, count })),
+    ),
+    characterFrequencies: frequencyTable("scalar", scalars, { unit: "scalar" }),
+    wordFrequencies: wordFrequencies(text, { filter: wordFilter }),
+    repeatedSpans: repeatedSpans(words, maxRepeatedSpans),
+    provenance: provenance("TextFacts.SurfaceProfile", { wordFilter, maxRepeatedSpans }, "profile"),
   };
 }
