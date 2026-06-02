@@ -6,5 +6,5 @@ A specification document must state its scope, version, normative language, and 
 
 ## Documents
 
+- [`text-computing-runtime-packages-final-spec.md`](text-computing-runtime-packages-final-spec.md) — final runtime package target for the text-computing ecosystem.
 - [`textcorpus-collection-contract.md`](textcorpus-collection-contract.md) — deterministic corpus collection and explicit-token fingerprint contract.
-- [`textdoc-dependency-target-contract.md`](textdoc-dependency-target-contract.md) — minimal dependency-edge target contract for later CoNLL-U and dependency parsing work.

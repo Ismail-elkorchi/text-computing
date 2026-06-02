@@ -1,6 +1,0 @@
-# sent_id = invalid-multiple-roots
-# text = Two roots.
-1	Two	two	NUM	CD	NumType=Card	0	root	_	_
-2	roots	root	NOUN	NNS	Number=Plur	0	root	_	SpaceAfter=No
-3	.	.	PUNCT	.	_	2	punct	_	_
-

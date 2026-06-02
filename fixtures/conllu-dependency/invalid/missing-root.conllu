@@ -1,6 +1,0 @@
-# sent_id = invalid-missing-root
-# text = Missing root.
-1	Missing	missing	ADJ	JJ	_	2	amod	_	_
-2	root	root	NOUN	NN	Number=Sing	3	obj	_	SpaceAfter=No
-3	.	.	PUNCT	.	_	2	punct	_	_
-

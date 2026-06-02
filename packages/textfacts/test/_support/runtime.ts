@@ -27,7 +27,10 @@ export async function readTextFile(pathOrUrl: string | URL): Promise<string> {
   const runtime = detectRuntime();
   const path = typeof pathOrUrl === "string" ? pathOrUrl : fileUrlToPath(pathOrUrl);
   if (runtime === "deno") {
-    return await Deno.readTextFile(path);
+    const deno = (globalThis as { Deno?: { readTextFile: (path: string) => Promise<string> } })
+      .Deno;
+    if (!deno) throw new Error("Deno runtime not available");
+    return await deno.readTextFile(path);
   }
   if (runtime === "bun") {
     const bun = (
