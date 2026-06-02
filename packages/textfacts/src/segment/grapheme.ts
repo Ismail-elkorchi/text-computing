@@ -1,13 +1,13 @@
-import { iterateCodePoints } from "../core/codepoint.ts";
-import { normalizeInput } from "../core/input.ts";
+import { iterateCodePoints } from "../internal/codepoint.ts";
+import { normalizeInput } from "../internal/input.ts";
 import {
   assertProfileAlgorithmRevision,
   resolveTextfactsProfile,
   type TextfactsProfileInput,
-} from "../core/profile.ts";
-import { createProvenance } from "../core/provenance.ts";
-import type { SegmentIterable, Span, TextInput } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
+} from "../internal/profile.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import type { SegmentIterable, Span, TextInput } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
 import { isExtendedPictographic } from "../unicode/emoji.ts";
 import { GraphemeBreakPropertyId, getGraphemeBreakPropertyId } from "../unicode/grapheme.ts";
 import { IncbPropertyId, getIncbPropertyId } from "../unicode/incb.ts";

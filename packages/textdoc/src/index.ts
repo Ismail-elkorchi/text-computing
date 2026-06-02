@@ -1,5 +1,5 @@
-import { scanLoneSurrogates, sha256Hex } from "@ismail-elkorchi/textfacts";
-import { segmentSentencesUAX29, segmentWordsUAX29 } from "@ismail-elkorchi/textfacts/segment";
+import { scanIntegrityFindings } from "@ismail-elkorchi/textfacts/integrity";
+import { segmentSentences, segmentWords } from "@ismail-elkorchi/textfacts/segment";
 
 export const packageName = "@ismail-elkorchi/textdoc" as const;
 
@@ -3571,13 +3571,20 @@ function validateRawTextDocumentOptions(options: TextDocRawTextDocumentOptions):
 }
 
 function rawTextDiagnostics(text: string): readonly TextDocRawTextDiagnostic[] {
-  return scanLoneSurrogates(text).map((finding) => ({
+  return scanIntegrityFindings(text, { include: ["lone-surrogate"] }).map((finding) => ({
     code: "textdoc.raw-text.lone-surrogate",
     severity: "warning",
-    message: `Input contains a lone ${finding.kind} surrogate at UTF-16 code unit ${finding.span.startCU}.`,
+    message: `Input contains a lone surrogate at UTF-16 code unit ${finding.span.startCU}.`,
     startCU: finding.span.startCU,
     endCU: finding.span.endCU,
   }));
+}
+
+async function sha256Hex(text: string): Promise<string | undefined> {
+  if (!globalThis.crypto?.subtle) return undefined;
+  const data = new TextEncoder().encode(text);
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 function rawTextSourceRef(
@@ -3607,8 +3614,8 @@ function createTextDocDocumentFromTextWithSourceHash(
 ): TextDocRawTextDocumentResult {
   validateRawTextDocumentOptions(options);
 
-  const wordSegments = segmentWordsUAX29(text);
-  const sentenceSegments = segmentSentencesUAX29(text);
+  const wordSegments = segmentWords(text);
+  const sentenceSegments = segmentSentences(text);
   const unicodeVersion = options.unicodeVersion ?? wordSegments.provenance.unicodeVersion;
   const annotationSet: TextDocTokenSentenceAnnotationSet = {
     schemaVersion: tokenSentenceAnnotationSchemaVersion,
@@ -3653,12 +3660,9 @@ async function computeRawTextSourceSha256(
   readonly sourceSha256: string | undefined;
   readonly diagnostics: readonly TextDocRawTextDiagnostic[];
 }> {
-  const digest = await sha256Hex(text);
-  if (digest.startsWith("sha256:")) {
-    const sourceSha256 = digest.slice("sha256:".length);
-    if (isSha256Hex(sourceSha256)) {
-      return { sourceSha256, diagnostics };
-    }
+  const sourceSha256 = await sha256Hex(text);
+  if (sourceSha256 && isSha256Hex(sourceSha256)) {
+    return { sourceSha256, diagnostics };
   }
   return {
     sourceSha256: undefined,

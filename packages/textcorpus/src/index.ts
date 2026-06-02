@@ -1,4 +1,4 @@
-import { formatU64Hex, hash64Text, type Hash64AlgoId } from "@ismail-elkorchi/textfacts/hash";
+import { stableHash64, type StableHash64Algorithm } from "@ismail-elkorchi/textfacts/hash";
 import {
   isTextDocDocumentV1,
   type TextDocDocumentTokenAnnotation,
@@ -107,7 +107,7 @@ export interface TextCorpusSelectionProvenanceV1 {
 export interface TextCorpusFingerprintIndexOptions {
   readonly shingleSize: number;
   readonly windowSize: number;
-  readonly hashAlgorithm?: Hash64AlgoId;
+  readonly hashAlgorithm?: StableHash64Algorithm;
   readonly maxDocs?: number;
   readonly maxFingerprintsPerDoc?: number;
   readonly maxIndexEntries?: number;
@@ -116,7 +116,7 @@ export interface TextCorpusFingerprintIndexOptions {
 export interface TextCorpusFingerprintIndex {
   readonly corpusId: string;
   readonly tokenSource: TextCorpusTokenSource;
-  readonly hashAlgorithm: Hash64AlgoId;
+  readonly hashAlgorithm: StableHash64Algorithm;
   readonly shingleSize: number;
   readonly windowSize: number;
   readonly docFingerprints: Readonly<Record<string, readonly string[]>>;
@@ -747,7 +747,7 @@ export type TextCorpusPairwiseRelationLabel =
 export interface TextCorpusPairwiseRelationOptions extends TextCorpusAnalysisSelectionOptions {
   readonly shingleSize: number;
   readonly windowSize: number;
-  readonly hashAlgorithm?: Hash64AlgoId;
+  readonly hashAlgorithm?: StableHash64Algorithm;
   readonly nearDuplicateThreshold?: number;
 }
 
@@ -769,7 +769,7 @@ export interface TextCorpusPairwiseRelationResultV1 {
   readonly selection: TextCorpusSelectionProvenanceV1;
   readonly shingleSize: number;
   readonly windowSize: number;
-  readonly hashAlgorithm: Hash64AlgoId;
+  readonly hashAlgorithm: StableHash64Algorithm;
   readonly nearDuplicateThreshold: number;
   readonly rows: readonly TextCorpusPairwiseRelationRowV1[];
 }
@@ -854,7 +854,7 @@ function compareEntriesById(left: TextCorpusEntry, right: TextCorpusEntry): numb
   return left.id.localeCompare(right.id);
 }
 
-function rightmostMinimumIndex(values: readonly bigint[], startIndex: number, endIndex: number): number {
+function rightmostMinimumIndex(values: readonly string[], startIndex: number, endIndex: number): number {
   let selectedIndex = startIndex;
   let selectedValue = values[startIndex];
   if (selectedValue === undefined) return startIndex;
@@ -872,7 +872,7 @@ function rightmostMinimumIndex(values: readonly bigint[], startIndex: number, en
 }
 
 function selectFingerprintIndexes(
-  hashes: readonly bigint[],
+  hashes: readonly string[],
   windowSize: number,
   maxFingerprintsPerDoc: number,
 ): readonly number[] {
@@ -2488,11 +2488,11 @@ export function buildTextCorpusFingerprintIndex(
     processedDocs += 1;
 
     const tokenTexts = getEntryTokenTexts(entry);
-    const shingleHashes: bigint[] = [];
+    const shingleHashes: string[] = [];
 
     for (let tokenIndex = 0; tokenIndex <= tokenTexts.length - shingleSize; tokenIndex += 1) {
       const shingleText = tokenTexts.slice(tokenIndex, tokenIndex + shingleSize).join("\u001f");
-      shingleHashes.push(hash64Text(shingleText, { algo: hashAlgorithm }));
+      shingleHashes.push(stableHash64(shingleText, { algorithm: hashAlgorithm }));
     }
 
     const selectedIndexes = selectFingerprintIndexes(
@@ -2505,7 +2505,7 @@ export function buildTextCorpusFingerprintIndex(
     for (const selectedIndex of selectedIndexes) {
       const hashValue = shingleHashes[selectedIndex];
       if (hashValue === undefined) continue;
-      const hashHex = formatU64Hex(hashValue);
+      const hashHex = hashValue;
       hashesForDocument.push(hashHex);
 
       let bucket = index.get(hashHex);
@@ -4223,7 +4223,7 @@ function canonicalJson(value: unknown): string {
 function retrievalIndexChecksum(index: TextCorpusRetrievalIndexV1): TextCorpusRetrievalIndexChecksum {
   return {
     algorithm: "fnv1a64-utf8",
-    value: formatU64Hex(hash64Text(canonicalJson(index), { algo: "fnv1a64-utf8" })),
+    value: stableHash64(canonicalJson(index), { algorithm: "fnv1a64-utf8" }),
   };
 }
 

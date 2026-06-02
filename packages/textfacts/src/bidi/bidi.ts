@@ -1,7 +1,7 @@
-import { normalizeInput } from "../core/input.ts";
-import { createProvenance } from "../core/provenance.ts";
-import type { Span, TextInput } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
+import { normalizeInput } from "../internal/input.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import type { Span, TextInput } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
 import { collectCodePoints } from "../segment/internal.ts";
 import {
   BidiBracketType,

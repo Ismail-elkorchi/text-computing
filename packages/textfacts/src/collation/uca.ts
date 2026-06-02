@@ -1,4 +1,4 @@
-import { TextfactsError } from "../core/error.ts";
+import { TextfactsError } from "../internal/error.ts";
 import { isWellFormedUnicode, toWellFormedUnicode } from "../integrity/integrity.ts";
 import { CCC_RANGES } from "../normalize/generated/ccc.ts";
 import { normalize } from "../normalize/normalize.ts";
@@ -32,18 +32,17 @@ import {
   DUCET_SINGLE_LENGTH,
 } from "./generated/ducet-single.ts";
 import type {
-  UcaAlternate,
-  UcaFoldOptions,
-  UcaIllFormed,
-  UcaNormalization,
-  UcaOptions,
-  UcaStrength,
+  CollationAlternate,
+  CollationIllFormed,
+  CollationNormalization,
+  CollationOptions,
+  CollationStrength,
 } from "./types.ts";
 
-const DEFAULT_STRENGTH: UcaStrength = 3;
-const DEFAULT_ALTERNATE: UcaAlternate = "non-ignorable";
-const DEFAULT_NORMALIZATION: UcaNormalization = "nfd";
-const DEFAULT_ILL_FORMED: UcaIllFormed = "replace";
+const DEFAULT_STRENGTH: CollationStrength = 3;
+const DEFAULT_ALTERNATE: CollationAlternate = "non-ignorable";
+const DEFAULT_NORMALIZATION: CollationNormalization = "nfd";
+const DEFAULT_ILL_FORMED: CollationIllFormed = "replace";
 
 const TERTIARY_FLAG_VARIABLE = 0x8000;
 
@@ -252,8 +251,8 @@ function implicitWeights(cp: number): [number, number] {
 
 function prepareText(
   text: string,
-  normalization: UcaNormalization,
-  illFormed: UcaIllFormed,
+  normalization: CollationNormalization,
+  illFormed: CollationIllFormed,
 ): string {
   if (illFormed === "error" && !isWellFormedUnicode(text)) {
     throw new TextfactsError("COLLATION_ILL_FORMED", "Ill-formed Unicode input");
@@ -271,7 +270,7 @@ function prepareText(
   return normalizedText;
 }
 
-function stringToCodePoints(text: string, illFormed: UcaIllFormed): number[] {
+function stringToCodePoints(text: string, illFormed: CollationIllFormed): number[] {
   const cps: number[] = [];
   for (let i = 0; i < text.length; ) {
     const cu = text.charCodeAt(i);
@@ -312,7 +311,7 @@ function stringToCodePoints(text: string, illFormed: UcaIllFormed): number[] {
   return cps;
 }
 
-function buildWeights(text: string, options: Required<UcaOptions>): CollationWeights {
+function buildWeights(text: string, options: Required<CollationOptions>): CollationWeights {
   const prepared = prepareText(text, options.normalization, options.illFormed);
   const codepoints = stringToCodePoints(prepared, options.illFormed);
   const cccs = codepoints.map((cp) => getCombiningClass(cp));
@@ -393,7 +392,7 @@ function encodeIdentical(codepoints: number[], out: number[]): void {
   out.push(0x00);
 }
 
-function buildSortKey(text: string, options: Required<UcaOptions>): Uint8Array {
+function buildSortKey(text: string, options: Required<CollationOptions>): Uint8Array {
   const weights = buildWeights(text, options);
   const out: number[] = [];
   encodeLevel(weights.primary, out);
@@ -419,10 +418,10 @@ function compareBytes(a: Uint8Array, b: Uint8Array): -1 | 0 | 1 {
   return a.length < b.length ? -1 : 1;
 }
 
-function normalizeOptions(options?: UcaOptions): Required<UcaOptions> {
+function normalizeOptions(options?: CollationOptions): Required<CollationOptions> {
   const strength = options?.strength ?? DEFAULT_STRENGTH;
   return {
-    strength: Math.min(4, Math.max(1, strength)) as UcaStrength,
+    strength: Math.min(4, Math.max(1, strength)) as CollationStrength,
     alternate: options?.alternate ?? DEFAULT_ALTERNATE,
     normalization: options?.normalization ?? DEFAULT_NORMALIZATION,
     illFormed: options?.illFormed ?? DEFAULT_ILL_FORMED,
@@ -434,96 +433,20 @@ function normalizeOptions(options?: UcaOptions): Required<UcaOptions> {
  * Build a UCA sort key as raw bytes.
  * Units: bytes (binary).
  */
-export function ucaSortKeyBytes(text: string, options?: UcaOptions): Uint8Array {
+export function buildRootCollationKey(text: string, options?: CollationOptions): Uint8Array {
   return buildSortKey(text, normalizeOptions(options));
 }
 
 /**
- * ucaSortKeyHex executes a deterministic operation in this module.
+ * compareRootCollationInternal executes a deterministic operation in this module.
  */
-export function ucaSortKeyHex(text: string, options?: UcaOptions): string {
-  const bytes = ucaSortKeyBytes(text, options);
-  let hex = "";
-  for (const byte of bytes) {
-    hex += byte.toString(16).padStart(2, "0");
-  }
-  return hex;
-}
-
-/**
- * ucaCompare executes a deterministic operation in this module.
- */
-export function ucaCompare(a: string, b: string, options?: UcaOptions): -1 | 0 | 1 {
+export function compareRootCollationInternal(
+  a: string,
+  b: string,
+  options?: CollationOptions,
+): -1 | 0 | 1 {
   const opts = normalizeOptions(options);
   const keyA = buildSortKey(a, opts);
   const keyB = buildSortKey(b, opts);
   return compareBytes(keyA, keyB);
-}
-
-/**
- * ucaStableSort executes a deterministic operation in this module.
- */
-export function ucaStableSort(strings: readonly string[], options?: UcaOptions): string[] {
-  const opts = normalizeOptions(options);
-  const entries = strings.map((value, index) => ({
-    value,
-    index,
-    key: buildSortKey(value, opts),
-  }));
-
-  const merge = (left: typeof entries, right: typeof entries) => {
-    const result: typeof entries = [];
-    let i = 0;
-    let j = 0;
-    while (i < left.length && j < right.length) {
-      const leftItem = left[i];
-      const rightItem = right[j];
-      if (!leftItem || !rightItem) break;
-      const cmp = compareBytes(leftItem.key, rightItem.key);
-      if (cmp < 0 || (cmp === 0 && leftItem.index <= rightItem.index)) {
-        result.push(leftItem);
-        i += 1;
-      } else {
-        result.push(rightItem);
-        j += 1;
-      }
-    }
-    while (i < left.length) {
-      const leftItem = left[i];
-      if (!leftItem) break;
-      result.push(leftItem);
-      i += 1;
-    }
-    while (j < right.length) {
-      const rightItem = right[j];
-      if (!rightItem) break;
-      result.push(rightItem);
-      j += 1;
-    }
-    return result;
-  };
-
-  const sort = (arr: typeof entries): typeof entries => {
-    if (arr.length <= 1) return arr;
-    const mid = Math.floor(arr.length / 2);
-    return merge(sort(arr.slice(0, mid)), sort(arr.slice(mid)));
-  };
-
-  return sort(entries).map((entry) => entry.value);
-}
-
-/**
- * Build a folded UCA sort key as raw bytes.
- * Units: bytes (binary).
- */
-export function ucaFoldKey(text: string, options: UcaFoldOptions): Uint8Array {
-  const strength = Math.min(4, Math.max(1, options.strength)) as UcaStrength;
-  const normalized: Required<UcaOptions> = {
-    strength,
-    alternate: options.alternate ?? DEFAULT_ALTERNATE,
-    normalization: options.normalization ?? DEFAULT_NORMALIZATION,
-    illFormed: options.illFormed ?? DEFAULT_ILL_FORMED,
-    includeIdenticalLevel: false,
-  };
-  return buildSortKey(text, normalized);
 }

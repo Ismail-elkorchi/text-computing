@@ -1,7 +1,14 @@
-export type {
-  LineBreakIterable,
-  LineBreakOpportunity,
-  LineBreakOptions,
+import {
+  lineBreakOpportunities as lineBreakOpportunitiesImpl,
+  type LineBreakOptions,
+  type LineBreakOpportunity,
 } from "./linebreak.ts";
-export { lineBreakOpportunities, lineBreakPositions } from "./linebreak.ts";
-export { LineBreakClass, lineBreakClassAt } from "../unicode/linebreak.ts";
+
+export type { LineBreakOpportunity, LineBreakOptions };
+
+export function lineBreakOpportunities(
+  text: string,
+  options: LineBreakOptions = {},
+): Iterable<LineBreakOpportunity> {
+  return lineBreakOpportunitiesImpl(text, options);
+}

@@ -1,12 +1,12 @@
-import { normalizeInput } from "../core/input.ts";
+import { normalizeInput } from "../internal/input.ts";
 import {
   assertProfileAlgorithmRevision,
   resolveTextfactsProfile,
   type TextfactsProfileInput,
-} from "../core/profile.ts";
-import { createProvenance } from "../core/provenance.ts";
-import type { Provenance, TextInput } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
+} from "../internal/profile.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import type { Provenance, TextInput } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
 import { collectCodePoints } from "../segment/internal.ts";
 import { isEastAsianWide } from "../unicode/east-asian.ts";
 import { isExtendedPictographic } from "../unicode/emoji.ts";

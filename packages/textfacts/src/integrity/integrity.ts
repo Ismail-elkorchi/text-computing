@@ -1,4 +1,4 @@
-import type { Span } from "../core/types.ts";
+import type { Span } from "../internal/types.ts";
 import {
   isBidiControl,
   isDefaultIgnorable,
@@ -37,9 +37,9 @@ export interface LoneSurrogateFinding {
 }
 
 /**
- * IntegrityScanOptions defines an exported structural contract.
+ * IntegrityOptions defines an exported structural contract.
  */
-export interface IntegrityScanOptions {
+export interface IntegrityOptions {
   include?: readonly IntegrityFindingKind[];
   maxFindings?: number;
 }
@@ -71,7 +71,7 @@ const ALL_KINDS: readonly IntegrityFindingKind[] = [
 
 const DEFAULT_MAX_SAMPLES = 5;
 
-function normalizeInclude(options?: IntegrityScanOptions) {
+function normalizeInclude(options?: IntegrityOptions) {
   if (!options?.include || options.include.length === 0) {
     return {
       includeAll: true,
@@ -146,11 +146,7 @@ export function toWellFormedUnicode(text: string): string {
   return output;
 }
 
-/**
- * Scan text for lone surrogates.
- * Units: UTF-16 code units.
- */
-export function scanLoneSurrogates(text: string): ReadonlyArray<LoneSurrogateFinding> {
+export function findLoneSurrogateFindings(text: string): ReadonlyArray<LoneSurrogateFinding> {
   const findings: LoneSurrogateFinding[] = [];
   for (let codeUnitIndex = 0; codeUnitIndex < text.length; ) {
     const codeUnit = text.charCodeAt(codeUnitIndex);
@@ -201,7 +197,7 @@ function* pushFinding(
  */
 export function* iterIntegrityFindings(
   text: string,
-  options: IntegrityScanOptions = {},
+  options: IntegrityOptions = {},
 ): Iterable<IntegrityFinding> {
   const include = normalizeInclude(options);
   const state = { count: 0, max: options.maxFindings ?? Number.POSITIVE_INFINITY };
@@ -279,7 +275,7 @@ export function* iterIntegrityFindings(
  */
 export function scanIntegrityFindings(
   text: string,
-  options: IntegrityScanOptions = {},
+  options: IntegrityOptions = {},
 ): ReadonlyArray<IntegrityFinding> {
   const findings: IntegrityFinding[] = [];
   const maxFindings = options.maxFindings ?? Number.POSITIVE_INFINITY;

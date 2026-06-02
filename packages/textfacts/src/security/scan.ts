@@ -1,12 +1,12 @@
 import { hasBidiControls } from "../bidi/bidi.ts";
 import { nfkcCaseFold } from "../casefold/casefold.ts";
-import { TextfactsError } from "../core/error.ts";
-import { normalizeInput } from "../core/input.ts";
-import { sliceBySpan } from "../core/span.ts";
-import type { Span, TextInput } from "../core/types.ts";
+import { TextfactsError } from "../internal/error.ts";
+import { normalizeInput } from "../internal/input.ts";
+import { sliceBySpan } from "../internal/span.ts";
+import type { Span, TextInput } from "../internal/types.ts";
 import { segmentGraphemes } from "../segment/grapheme.ts";
-import { segmentSentencesUAX29 } from "../segment/sentence.ts";
-import { segmentWordsUAX29 } from "../segment/word.ts";
+import { segmentSentencesDefault } from "../segment/sentence.ts";
+import { segmentWordsDefault } from "../segment/word.ts";
 import { SCRIPT_NAMES, Script, scriptExtAt, scriptIdAt } from "../unicode/script.ts";
 import { WordBreakPropertyId, getWordBreakPropertyId } from "../unicode/word.ts";
 import { confusableSkeleton } from "./confusables.ts";
@@ -69,11 +69,11 @@ function isWordLikeToken(token: string): boolean {
 function iterateSpans(text: string, options: TokenScanOptions): Iterable<Span> {
   switch (options.tokenizer) {
     case "uax29-word":
-      return segmentWordsUAX29(text);
+      return segmentWordsDefault(text);
     case "uax29-grapheme":
       return segmentGraphemes(text);
     case "uax29-sentence":
-      return segmentSentencesUAX29(text);
+      return segmentSentencesDefault(text);
     case "codePoint":
       return (function* () {
         let codeUnitIndex = 0;

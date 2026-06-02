@@ -1,12 +1,12 @@
-import { normalizeInput } from "../core/input.ts";
+import { normalizeInput } from "../internal/input.ts";
 import {
   assertProfileAlgorithmRevision,
   resolveTextfactsProfile,
   type TextfactsProfileInput,
-} from "../core/profile.ts";
-import { createProvenance } from "../core/provenance.ts";
-import type { SegmentIterable, Span, TextInput } from "../core/types.ts";
-import { IMPLEMENTATION_ID } from "../core/version.ts";
+} from "../internal/profile.ts";
+import { createProvenance } from "../internal/provenance.ts";
+import type { SegmentIterable, Span, TextInput } from "../internal/types.ts";
+import { IMPLEMENTATION_ID } from "../internal/version.ts";
 import { isExtendedPictographic } from "../unicode/emoji.ts";
 import { WordBreakPropertyId, getWordBreakPropertyId } from "../unicode/word.ts";
 import {
@@ -34,7 +34,7 @@ const UAX29_SPEC = "https://unicode.org/reports/tr29/";
  * Units: bytes (UTF-8).
  * Units: UTF-16 code units.
  */
-export function segmentWordsUAX29(
+export function segmentWordsDefault(
   input: TextInput,
   options: WordSegmentOptions = {},
 ): SegmentIterable {

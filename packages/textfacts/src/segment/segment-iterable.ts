@@ -1,4 +1,4 @@
-import type { Provenance, SegmentIterable, Span } from "../core/types.ts";
+import type { Provenance, SegmentIterable, Span } from "../internal/types.ts";
 
 /**
  * createSegmentIterable executes a deterministic operation in this module.

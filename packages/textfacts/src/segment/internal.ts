@@ -1,5 +1,5 @@
-import { iterateCodePoints } from "../core/codepoint.ts";
-import type { Span } from "../core/types.ts";
+import { iterateCodePoints } from "../internal/codepoint.ts";
+import type { Span } from "../internal/types.ts";
 
 export interface CodePointArray {
   codePoints: number[];

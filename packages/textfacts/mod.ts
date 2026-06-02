@@ -1,4 +1,4 @@
-export * from "./src/core/mod.ts";
+export * from "./src/input/mod.ts";
 export * from "./src/unicode/mod.ts";
 export * from "./src/segment/mod.ts";
 export * from "./src/facts/mod.ts";
@@ -7,9 +7,7 @@ export * from "./src/casefold/mod.ts";
 export * from "./src/linebreak/mod.ts";
 export * from "./src/bidi/mod.ts";
 export * from "./src/security/mod.ts";
-export * from "./src/variants/mod.ts";
 export * from "./src/integrity/mod.ts";
-export * from "./src/jcs/mod.ts";
 export * from "./src/hash/mod.ts";
 export * from "./src/collation/mod.ts";
 export * from "./src/idna/mod.ts";

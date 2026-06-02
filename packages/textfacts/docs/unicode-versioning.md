@@ -12,8 +12,6 @@ textfacts is pinned to a **single Unicode version** to guarantee determinism. Th
   - `specs/unicode/<version>/ucd/ScriptExtensions.txt`
   - `specs/unicode/<version>/ucd/PropertyValueAliases.txt`
   - `specs/unicode/<version>/security/confusables.txt`
-  - `specs/unicode/<version>/security/IdentifierStatus.txt`
-  - `specs/unicode/<version>/security/IdentifierType.txt`
 
 ## Upgrade Philosophy
 - **Single version at a time:** do not support runtime selection.
@@ -31,7 +29,7 @@ textfacts is pinned to a **single Unicode version** to guarantee determinism. Th
    - Keep the folder layout consistent with earlier versions.
 4. **Regenerate tables**
    - Run: `npm run gen:unicode`
-   - This rebuilds segmentation, normalization, scripts, security, and collation tables.
+   - This rebuilds segmentation, normalization, scripts, confusables, and collation tables.
 5. **Run full test matrix**
    - `npm run test:node`
    - `npm run test:bun`

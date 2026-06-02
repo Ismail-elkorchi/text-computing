@@ -1,32 +1,14 @@
-# Repository Tooling
+# Tools
 
-This page lists operational commands that are expected for normal repository use.
+Run package checks from `packages/textfacts` or through npm workspaces from the repository root.
 
-## Build
-- `npm run build` — TypeScript declarations + ESM output.
-- `npm run build:test` — build test bundle used by Node runtime tests.
+```sh
+npm -w @ismail-elkorchi/textfacts run build
+npm -w @ismail-elkorchi/textfacts run check:static
+npm -w @ismail-elkorchi/textfacts run test:all
+```
 
-## Validation
-- `npm run schema:validate` — validate JSON Schema contracts.
-- `npm run lint` — Biome checks.
-- `npm run check:static` — TypeScript static checks (`noUnusedLocals` + `noUnusedParameters`) for shipped source.
-- `npm run format` — Biome formatting.
+Runtime coverage must include Node.js, Deno, Bun, browsers, and Cloudflare Workers.
 
-## Tests
-- `npm run test:node`
-- `npm run test:deno`
-- `npm run test:bun`
-- `npm run test:browser`
-- `npm run test:all`
+Unicode data generation remains under `tools/unicode`, `tools/uca`, and `tools/idna`.
 
-## Data/Table Regeneration
-- `npm run gen:unicode` — regenerate pinned Unicode/DUCET data tables.
-- `specs/unicode/**` — minimal text fixtures used directly by tests (kept intentionally small).
-
-## Reports
-- `npm run size:report` — generate the size report under repository-local verification output.
-
-## Scope Boundary
-- Maintenance tooling lives in `tools/`; verification outputs are local to the command’s workspace.
-- Scheduled/background automation is intentionally excluded from this repository.
-- CodeQL runs security queries; quality checks run in CI lint/static/package gates.

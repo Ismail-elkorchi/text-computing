@@ -1,37 +1,27 @@
 /**
- * UcaStrength defines an exported type contract.
+ * CollationStrength defines an exported type contract.
  */
-export type UcaStrength = 1 | 2 | 3 | 4;
+export type CollationStrength = 1 | 2 | 3 | 4;
 /**
- * UcaAlternate defines an exported type contract.
+ * CollationAlternate defines an exported type contract.
  */
-export type UcaAlternate = "non-ignorable" | "shifted";
+export type CollationAlternate = "non-ignorable" | "shifted";
 /**
- * UcaNormalization defines an exported type contract.
+ * CollationNormalization defines an exported type contract.
  */
-export type UcaNormalization = "nfd" | "none";
+export type CollationNormalization = "nfd" | "none";
 /**
- * UcaIllFormed defines an exported type contract.
+ * CollationIllFormed defines an exported type contract.
  */
-export type UcaIllFormed = "error" | "replace" | "implicit";
+export type CollationIllFormed = "error" | "replace" | "implicit";
 
 /**
- * UcaOptions defines an exported structural contract.
+ * CollationOptions defines an exported structural contract.
  */
-export interface UcaOptions {
-  strength?: UcaStrength;
-  alternate?: UcaAlternate;
-  normalization?: UcaNormalization;
-  illFormed?: UcaIllFormed;
+export interface CollationOptions {
+  strength?: CollationStrength;
+  alternate?: CollationAlternate;
+  normalization?: CollationNormalization;
+  illFormed?: CollationIllFormed;
   includeIdenticalLevel?: boolean;
-}
-
-/**
- * UcaFoldOptions defines an exported structural contract.
- */
-export interface UcaFoldOptions {
-  strength: UcaStrength;
-  alternate?: UcaAlternate;
-  normalization?: UcaNormalization;
-  illFormed?: UcaIllFormed;
 }

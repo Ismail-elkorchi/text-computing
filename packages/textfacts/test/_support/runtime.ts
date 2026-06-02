@@ -2,6 +2,21 @@ import type * as Textfacts from "../../mod.ts";
 
 export type Runtime = "node" | "deno" | "bun";
 export type TextfactsModule = typeof Textfacts;
+export type TextfactsSubpath =
+  | ""
+  | "input"
+  | "unicode"
+  | "normalize"
+  | "casefold"
+  | "segment"
+  | "linebreak"
+  | "bidi"
+  | "security"
+  | "integrity"
+  | "collation"
+  | "facts"
+  | "hash"
+  | "idna";
 
 export function detectRuntime(): Runtime {
   if (typeof (globalThis as { Deno?: unknown }).Deno !== "undefined") return "deno";
@@ -44,9 +59,15 @@ export async function readTextFile(pathOrUrl: string | URL): Promise<string> {
 }
 
 export async function importTextfacts(): Promise<TextfactsModule> {
+  return (await importTextfactsSubpath("")) as TextfactsModule;
+}
+
+export async function importTextfactsSubpath(subpath: TextfactsSubpath): Promise<unknown> {
   const runtime = detectRuntime();
   const rootUrl = getRepoRootUrl();
   const moduleUrl =
-    runtime === "node" ? new URL("dist/mod.js", rootUrl) : new URL("mod.ts", rootUrl);
-  return import(moduleUrl.href) as Promise<TextfactsModule>;
+    runtime === "node"
+      ? new URL(subpath ? `dist/src/${subpath}/mod.js` : "dist/mod.js", rootUrl)
+      : new URL(subpath ? `src/${subpath}/mod.ts` : "mod.ts", rootUrl);
+  return import(moduleUrl.href);
 }
