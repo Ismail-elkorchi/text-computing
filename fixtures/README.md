@@ -7,7 +7,6 @@ validation.
 - `expected/` contains expected outputs.
 - `generated/` contains generated artifacts that are checked in only when a repository command
   requires them.
-- `reports/` contains task conformance report fixtures.
 - `quarantine/` contains inputs withheld from required checks until their expected behavior is
   specified.
 
@@ -23,11 +22,6 @@ validation.
 - [`relation-extraction/`](relation-extraction/) — typed relation fixtures and negative controls.
 - [`coreference/`](coreference/) — frozen mention/chain fixtures, expected outputs, and negative controls.
 - [`multilingual-support/`](multilingual-support/) — coverage matrix and script input fixtures for multilingual fixture control.
-- [`performance/`](performance/) — performance gate requirements for future operational statements.
-- [`package-release/`](package-release/) — package release-track and release-gate requirements.
-- [`textdoc/`](textdoc/) — curated document-model examples and invalid cases used to verify issue
-  `#11`.
+- [`textdoc/`](textdoc/) — curated document-model and invalid cases.
 - [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to verify issue
   `#12`.
-- [`reports/`](reports/) — persisted `TextConformanceReportV1` fixture outputs
-  artifacts for current slice-validated task surfaces.

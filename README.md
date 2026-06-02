@@ -10,9 +10,6 @@
 - `@ismail-elkorchi/textrules` — deterministic rules package.
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
-- `@ismail-elkorchi/textprotocol` — protocol schema and result envelope package.
-- `@ismail-elkorchi/textconformance` — conformance report package.
-- `@ismail-elkorchi/textlab` — inspection command package.
 
 ## Reference packs
 
@@ -29,9 +26,6 @@ npm run -s lint
 npm run -s build
 npm run -s schema:validate
 npm run -s check:fixtures
-npm run -s test:all
-npm run -s coverage:all
-npm run -s fuzz:all
 ```
 
 ## Repository structure

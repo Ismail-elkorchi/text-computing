@@ -10,10 +10,7 @@
       "@ismail-elkorchi/textpack": ["./packages/textpack/src/index.ts"],
       "@ismail-elkorchi/textrules": ["./packages/textrules/src/index.ts"],
       "@ismail-elkorchi/textpipeline": ["./packages/textpipeline/src/index.ts"],
-      "@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"],
-      "@ismail-elkorchi/textprotocol": ["./packages/textprotocol/src/index.ts"],
-      "@ismail-elkorchi/textconformance": ["./packages/textconformance/src/index.ts"],
-      "@ismail-elkorchi/textlab": ["./packages/textlab/src/index.ts"]
+      "@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"]
     },
     "allowImportingTsExtensions": true,
     "lib": ["ES2024", "DOM"],
