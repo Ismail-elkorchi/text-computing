@@ -35,7 +35,10 @@ async function evalAsyncPropertyRuns<T>(
 function compareBytes(leftBytes: Uint8Array, rightBytes: Uint8Array): number {
   const min = Math.min(leftBytes.length, rightBytes.length);
   for (let index = 0; index < min; index += 1) {
-    const diff = leftBytes[index] - rightBytes[index];
+    const leftByte = leftBytes[index];
+    const rightByte = rightBytes[index];
+    if (leftByte === undefined || rightByte === undefined) break;
+    const diff = leftByte - rightByte;
     if (diff !== 0) return diff;
   }
   return leftBytes.length - rightBytes.length;

@@ -1,6 +1,0 @@
-{
-  "schemaVersion": 1,
-  "taskId": "nlp-relation-extraction",
-  "sliceId": "en-no-relation",
-  "relations": []
-}

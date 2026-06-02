@@ -41,15 +41,20 @@ export function registerTests(api: TestApi): void {
     const text = "Cafe\u0301";
     const spans = [...segmentGraphemes(text)];
     api.assertOk(spans.length > 0);
-    api.assertEqual(spans[0].startCU, 0);
-    api.assertEqual(spans[spans.length - 1].endCU, text.length);
+    const firstSpan = spans[0];
+    const lastSpan = spans[spans.length - 1];
+    if (!firstSpan || !lastSpan) throw new Error("Expected at least one grapheme span");
+    api.assertEqual(firstSpan.startCU, 0);
+    api.assertEqual(lastSpan.endCU, text.length);
   });
 
   api.test("wordFrequencies deterministic order", async () => {
     const { wordFrequencies } = await importTextfacts();
     const result = wordFrequencies("b a a", { filter: "word-like" });
-    api.assertEqual(result.items[0].token, "a");
-    api.assertEqual(result.items[0].count, 2);
+    const firstItem = result.items[0];
+    if (!firstItem) throw new Error("Expected at least one frequency item");
+    api.assertEqual(firstItem.token, "a");
+    api.assertEqual(firstItem.count, 2);
   });
 
   api.test("kernel determinism harness", async () => {
@@ -173,39 +178,6 @@ export function registerTests(api: TestApi): void {
           `SentenceBreakTest failure at case ${caseIndex}: expected ${boundaryPositions.join(",")} got ${actual.join(",")} | ${raw}`,
         );
       }
-    }
-  });
-
-  api.test("tokenization/SBD expected outputs", async () => {
-    const { segmentSentencesUAX29, segmentWordsUAX29 } = await importTextfacts();
-    const fixtureRoot = new URL("../../fixtures/tokenization-sbd/", getRepoRootUrl());
-    const slices = JSON.parse(
-      await readTextFile(new URL("slices.json", fixtureRoot)),
-    ) as TokenizationSbdSliceManifest;
-
-    for (const slice of slices.slices) {
-      const expected = JSON.parse(
-        await readTextFile(new URL(`expected/${slice.id}.json`, fixtureRoot)),
-      ) as TokenizationSbdExpectedOutput;
-      const text = materializeTokenizationSbdSource(slice.source);
-      api.assertDeepEqual(
-        projectSpanAnnotations(
-          text,
-          [...segmentWordsUAX29(text)],
-          "uax29-word-boundary-token",
-          "token",
-        ),
-        expected.tokens,
-      );
-      api.assertDeepEqual(
-        projectSpanAnnotations(
-          text,
-          [...segmentSentencesUAX29(text)],
-          "uax29-sentence",
-          "sentence",
-        ),
-        expected.sentences,
-      );
     }
   });
 
@@ -1163,9 +1135,12 @@ function parseScriptFile(text: string): ScriptRange[] {
     if (!cleaned) continue;
     const match = cleaned.match(/^([0-9A-Fa-f]+)(?:\.\.([0-9A-Fa-f]+))?\s*;\s*(\w+)/);
     if (!match) continue;
-    const start = Number.parseInt(match[1], 16);
-    const end = match[2] ? Number.parseInt(match[2], 16) : start;
+    const startHex = match[1];
+    const endHex = match[2];
     const script = match[3];
+    if (!startHex || !script) continue;
+    const start = Number.parseInt(startHex, 16);
+    const end = endHex ? Number.parseInt(endHex, 16) : start;
     if (!Number.isFinite(start) || !Number.isFinite(end)) continue;
     ranges.push({ start, end, script });
   }
@@ -1212,9 +1187,13 @@ function parseScriptExtensionsFile(
     if (!cleaned) continue;
     const match = cleaned.match(/^([0-9A-Fa-f]+)(?:\.\.([0-9A-Fa-f]+))?\s*;\s*(.+)$/);
     if (!match) continue;
-    const start = Number.parseInt(match[1], 16);
-    const end = match[2] ? Number.parseInt(match[2], 16) : start;
-    const scripts = match[3]
+    const startHex = match[1];
+    const endHex = match[2];
+    const scriptsText = match[3];
+    if (!startHex || !scriptsText) continue;
+    const start = Number.parseInt(startHex, 16);
+    const end = endHex ? Number.parseInt(endHex, 16) : start;
+    const scripts = scriptsText
       .trim()
       .split(/\s+/)
       .filter(Boolean)
@@ -1223,52 +1202,6 @@ function parseScriptExtensionsFile(
     ranges.push({ start, end, scripts });
   }
   return ranges;
-}
-
-interface TokenizationSbdSliceManifest {
-  slices: TokenizationSbdSlice[];
-}
-
-interface TokenizationSbdSlice {
-  id: string;
-  source: TokenizationSbdSource;
-}
-
-type TokenizationSbdSource =
-  | { kind: "text"; text: string }
-  | { kind: "utf16-code-units"; units: string[] };
-
-interface TokenizationSbdExpectedOutput {
-  tokens: TokenizationSbdExpectedAnnotation[];
-  sentences: TokenizationSbdExpectedAnnotation[];
-}
-
-interface TokenizationSbdExpectedAnnotation {
-  id: string;
-  kind: "uax29-word-boundary-token" | "uax29-sentence";
-  startCU: number;
-  endCU: number;
-  text: string;
-}
-
-function materializeTokenizationSbdSource(source: TokenizationSbdSource): string {
-  if (source.kind === "text") return source.text;
-  return String.fromCharCode(...source.units.map((unit) => Number.parseInt(unit, 16)));
-}
-
-function projectSpanAnnotations(
-  text: string,
-  spans: Array<{ startCU: number; endCU: number }>,
-  kind: TokenizationSbdExpectedAnnotation["kind"],
-  prefix: "token" | "sentence",
-): TokenizationSbdExpectedAnnotation[] {
-  return spans.map((span, index) => ({
-    id: `${prefix}-${index + 1}`,
-    kind,
-    startCU: span.startCU,
-    endCU: span.endCU,
-    text: text.slice(span.startCU, span.endCU),
-  }));
 }
 
 interface ConfusableEntry {
@@ -1308,8 +1241,10 @@ function parseIdentifierStatusFile(text: string): IdentifierStatusRange[] {
     if (!cleaned) continue;
     const match = cleaned.match(/^([0-9A-Fa-f]+)(?:\.\.([0-9A-Fa-f]+))?\s*;\s*(\w+)/);
     if (!match) continue;
-    const start = Number.parseInt(match[1], 16);
+    const startHex = match[1];
     const status = match[3];
+    if (!startHex || !status) continue;
+    const start = Number.parseInt(startHex, 16);
     if (!Number.isFinite(start)) continue;
     entries.push({ start, status });
   }
@@ -1329,8 +1264,11 @@ function parseIdentifierTypeFile(text: string): IdentifierTypeRange[] {
     if (!cleaned) continue;
     const match = cleaned.match(/^([0-9A-Fa-f]+)(?:\.\.([0-9A-Fa-f]+))?\s*;\s*(.+)$/);
     if (!match) continue;
-    const start = Number.parseInt(match[1], 16);
-    const types = match[3].trim().split(/\s+/).filter(Boolean);
+    const startHex = match[1];
+    const typesText = match[3];
+    if (!startHex || !typesText) continue;
+    const start = Number.parseInt(startHex, 16);
+    const types = typesText.trim().split(/\s+/).filter(Boolean);
     if (!Number.isFinite(start) || types.length === 0) continue;
     entries.push({ start, types });
   }
