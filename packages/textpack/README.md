@@ -97,24 +97,3 @@ inventory and any reviewer, conformance, benchmark, security, or migration evide
 The validator does not read files and does not treat fixture identifiers as resource paths. Pack
 authors remain responsible for supplying package-relative resources, explicit provenance, licenses,
 and tests before a pack is considered releasable.
-
-## Consumer example
-
-[`../../examples/textpack-en-core-consumer.mjs`](../../examples/textpack-en-core-consumer.mjs)
-shows a consumer creating a manifest from `@ismail-elkorchi/textpack-en-core`, validating it,
-loading resources through package APIs, and performing deterministic lookup.
-
-[`../../examples/textpack-authoring-consumer.mjs`](../../examples/textpack-authoring-consumer.mjs)
-shows a consumer creating a local pack, planning add/update resource transactions, auditing the
-filesystem inventory, loading the resulting resources, and performing deterministic lookup.
-
-[`../../examples/textpack-catalog-update-plan-consumer.mjs`](../../examples/textpack-catalog-update-plan-consumer.mjs)
-shows a consumer creating a catalog update plan for a versioned pack resource update.
-
-[`../../examples/textpack-pack-manifest-envelope-consumer.mjs`](../../examples/textpack-pack-manifest-envelope-consumer.mjs)
-shows a consumer validating a textpack manifest with `textpack`, wrapping it in a `textprotocol`
-pack-manifest schema-family JSON transport, parsing it, and revalidating the parsed manifest.
-
-[`../../examples/textpack-review-report-consumer.mjs`](../../examples/textpack-review-report-consumer.mjs)
-shows a consumer creating a textpack review report for an installed reference pack and rendering it
-through `textlab`.

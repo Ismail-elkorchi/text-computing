@@ -21,34 +21,10 @@ Current scope:
 - failed-processor and blocked-dependent trace entries when the caller selects continue-on-error behavior;
 - explicit processor descriptors with dependency metadata;
 - deterministic ready-queue ordering by `processor.id`;
-- machine-readable execution traces, batch run reports, and typed result-envelope helpers.
-- processor-trace schema-family payload and envelope helpers for textprotocol JSON transport.
+- machine-readable execution traces and batch run reports.
 
 This package does not define remote orchestration. Distributed scheduling is a deterministic plan
 artifact over caller-declared nodes and workers; callers provide documents, processors, workers,
 versioned context, cancellation signals, and optional cache objects.
 Cache durability is caller-managed through snapshot JSON helpers, and recovery execution is local to
 the caller-provided documents and processors.
-
-## Runnable examples
-
-- [`../../examples/textpipeline-batch-report-consumer.mjs`](../../examples/textpipeline-batch-report-consumer.mjs)
-  runs complete and partial document batches, then prints deterministic batch reports and typed result
-  envelopes with per-document completion state and trace sizes.
-- [`../../examples/textpipeline-processor-trace-envelope-consumer.mjs`](../../examples/textpipeline-processor-trace-envelope-consumer.mjs)
-  runs a cache-backed processor, wraps the cached execution trace in textprotocol processor-trace
-  schema-family JSON transport, parses it, and inspects the parsed envelope through textlab.
-- [`../../examples/textpipeline-cache-snapshot-consumer.mjs`](../../examples/textpipeline-cache-snapshot-consumer.mjs)
-  persists a snapshot-backed document cache through caller-provided filesystem writes, restores it,
-  and verifies the next pipeline run uses a cached processor result.
-- [`../../examples/textpipeline-worker-batch-consumer.mjs`](../../examples/textpipeline-worker-batch-consumer.mjs)
-  runs a batch through a caller-provided local worker and prints the deterministic worker run report.
-- [`../../examples/textpipeline-worker-pool-consumer.mjs`](../../examples/textpipeline-worker-pool-consumer.mjs)
-  runs a batch through a caller-provided local worker pool and prints deterministic round-robin
-  assignments.
-- [`../../examples/textpipeline-distributed-schedule-consumer.mjs`](../../examples/textpipeline-distributed-schedule-consumer.mjs)
-  creates a deterministic capacity-round-robin schedule plan over caller-declared nodes and workers.
-- [`../../examples/textpipeline-recovery-plan-consumer.mjs`](../../examples/textpipeline-recovery-plan-consumer.mjs)
-  creates a recovery plan from a partial batch report and prints retry input indexes with failed/skipped processor ids.
-- [`../../examples/textpipeline-recovery-execution-consumer.mjs`](../../examples/textpipeline-recovery-execution-consumer.mjs)
-  executes a recovery plan against caller-provided documents and processors, then prints deterministic retry outcomes.

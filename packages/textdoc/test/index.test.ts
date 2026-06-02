@@ -759,7 +759,7 @@ if (!isTextDocMappingLossReportPayloadV1(mappingLossPayload)) {
 if (
   mappingLossPayload.mappingId !== "mapping:graph-runtime-loss" ||
   mappingLossPayload.source.id !== "doc:graph-runtime@2026-05-16" ||
-  mappingLossPayload.target.schemaId !== "urn:ismail-elkorchi:textprotocol:mapping-loss-report:v1"
+  mappingLossPayload.target.schemaId !== "urn:ismail-elkorchi:textdoc:mapping-loss-report:v1"
 ) {
   throw new Error("mapping-loss report should expose deterministic source and target metadata");
 }

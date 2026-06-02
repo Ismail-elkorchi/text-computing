@@ -173,15 +173,6 @@
       ]
     },
     {
-      "path": "examples/README.md",
-      "title": "@ismail-elkorchi/textfacts examples",
-      "kind": "other",
-      "status": "active",
-      "entrypoint": false,
-      "outboundLinks": [],
-      "inboundLinks": []
-    },
-    {
       "path": "README.md",
       "title": "textfacts",
       "kind": "meta",
