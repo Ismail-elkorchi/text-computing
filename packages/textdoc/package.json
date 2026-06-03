@@ -1,30 +1,81 @@
 {
-  "name": "@ismail-elkorchi/textdoc",
-  "version": "0.1.0",
-  "description": "Document annotation container package.",
-  "type": "module",
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "test": "tsc -p tsconfig.json --noEmit && node test/index.test.ts",
-    "prepack": "npm run build"
-  },
-  "license": "MIT",
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@ismail-elkorchi/textfacts": "0.1.0"
-  }
+	"name": "@ismail-elkorchi/textdoc",
+	"version": "0.1.0",
+	"description": "Document annotation container package.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/mod.d.ts",
+			"import": "./dist/mod.js"
+		},
+		"./document": {
+			"types": "./dist/document/mod.d.ts",
+			"import": "./dist/document/mod.js"
+		},
+		"./view": {
+			"types": "./dist/view/mod.d.ts",
+			"import": "./dist/view/mod.js"
+		},
+		"./span": {
+			"types": "./dist/span/mod.d.ts",
+			"import": "./dist/span/mod.js"
+		},
+		"./layer": {
+			"types": "./dist/layer/mod.d.ts",
+			"import": "./dist/layer/mod.js"
+		},
+		"./annotation": {
+			"types": "./dist/annotation/mod.d.ts",
+			"import": "./dist/annotation/mod.js"
+		},
+		"./graph": {
+			"types": "./dist/graph/mod.d.ts",
+			"import": "./dist/graph/mod.js"
+		},
+		"./query": {
+			"types": "./dist/query/mod.d.ts",
+			"import": "./dist/query/mod.js"
+		},
+		"./selection": {
+			"types": "./dist/selection/mod.d.ts",
+			"import": "./dist/selection/mod.js"
+		},
+		"./serialize": {
+			"types": "./dist/serialize/mod.d.ts",
+			"import": "./dist/serialize/mod.js"
+		}
+	},
+	"scripts": {
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json && node scripts/build.mjs && node scripts/rewrite-dist-import-specifiers.mjs",
+		"build:test": "node scripts/clean-build-output.mjs dist-test && node scripts/build-test.mjs && node scripts/rewrite-test-import-specifiers.mjs",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json tsconfig.test.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/pack-audit.mjs",
+		"test:node": "npm run build && npm run build:test && node --test dist-test/test/runtime/node.test.js",
+		"test:deno": "deno test --allow-read test/runtime/deno.test.ts",
+		"test:bun": "if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "node scripts/browser-smoke.mjs",
+		"test:workers": "node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"license": "MIT",
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textfacts": "0.1.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"esbuild": "0.28.0",
+		"typescript": "6.0.3"
+	}
 }

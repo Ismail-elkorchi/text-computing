@@ -12,7 +12,7 @@ retokenizing raw text, and deterministic fingerprint indexing builds on those de
 Each corpus entry records:
 
 - `id`;
-- `document` as a `TextDocDocumentV1`;
+- `document` as a final `TextDocument`;
 - `viewId`;
 - `tokenLayerId`; and
 - optional string metadata.
@@ -20,7 +20,7 @@ Each corpus entry records:
 `createTextCorpusCollection` rejects:
 
 - duplicate entry ids;
-- duplicate `document.documentId` values;
+- duplicate `document.id` values;
 - missing views; and
 - missing token layers for the declared view.
 

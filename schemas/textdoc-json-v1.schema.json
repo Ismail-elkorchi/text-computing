@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textdoc-json-v1.schema.json",
+  "title": "TextDocJson v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "sources", "views", "spanMaps", "layers", "graphs", "metadata"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "sources": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/textSource" }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/textView" }
+    },
+    "spanMaps": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/spanMap" }
+    },
+    "layers": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/annotationLayer" }
+    },
+    "graphs": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/annotationGraph" }
+    },
+    "metadata": { "$ref": "#/$defs/jsonObject" }
+  },
+  "$defs": {
+    "jsonValue": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/jsonValue" }
+        },
+        { "$ref": "#/$defs/jsonObject" }
+      ]
+    },
+    "jsonObject": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+    },
+    "textSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "inputKind", "wellFormed"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string" },
+        "inputKind": { "enum": ["string", "utf8", "utf16le", "bytes"] },
+        "byteLength": { "type": "integer", "minimum": 0 },
+        "wellFormed": { "type": "boolean" },
+        "metadata": { "$ref": "#/$defs/metadata" }
+      }
+    },
+    "transformInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "producer"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "producer": { "type": "string", "minLength": 1 },
+        "algorithm": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "sourceViewId": { "type": "string", "minLength": 1 },
+        "optionsHash": { "type": "string", "minLength": 1 }
+      }
+    },
+    "textView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "text", "transform"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "raw",
+            "decoded",
+            "normalized",
+            "casefolded",
+            "tailored",
+            "tokenized",
+            "morphological",
+            "transliterated",
+            "transcribed",
+            "historical-normalized",
+            "ocr-corrected",
+            "noisy-normalized",
+            "search",
+            "task",
+            "external"
+          ]
+        },
+        "text": { "type": "string" },
+        "sourceViewId": { "type": "string", "minLength": 1 },
+        "spanMapId": { "type": "string", "minLength": 1 },
+        "transform": { "$ref": "#/$defs/transformInfo" }
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "unit"],
+      "properties": {
+        "start": { "type": "number", "minimum": 0 },
+        "end": { "type": "number", "minimum": 0 },
+        "unit": {
+          "enum": [
+            "utf8-byte",
+            "utf16-code-unit",
+            "unicode-scalar",
+            "grapheme",
+            "word",
+            "sentence",
+            "paragraph",
+            "line",
+            "block",
+            "token",
+            "morpheme",
+            "annotation"
+          ]
+        }
+      }
+    },
+    "spanRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["viewId", "span"],
+      "properties": {
+        "viewId": { "type": "string", "minLength": 1 },
+        "span": { "$ref": "#/$defs/span" }
+      }
+    },
+    "spanMapEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target", "relation"],
+      "properties": {
+        "source": { "$ref": "#/$defs/span" },
+        "target": { "$ref": "#/$defs/span" },
+        "relation": {
+          "enum": [
+            "identity",
+            "normalized",
+            "expanded",
+            "contracted",
+            "inserted",
+            "deleted",
+            "reordered",
+            "aligned",
+            "approximate"
+          ]
+        },
+        "cost": { "type": "number" }
+      }
+    },
+    "spanMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceViewId", "targetViewId", "entries"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sourceViewId": { "type": "string", "minLength": 1 },
+        "targetViewId": { "type": "string", "minLength": 1 },
+        "entries": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/spanMapEntry" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "exactness", "producer", "packageName", "packageVersion", "inputViewIds"],
+      "properties": {
+        "mode": {
+          "enum": [
+            "algorithm",
+            "rule",
+            "lexicon",
+            "gazetteer",
+            "fst",
+            "grammar",
+            "statistical",
+            "corpus",
+            "search",
+            "kb",
+            "manual",
+            "composite"
+          ]
+        },
+        "exactness": { "enum": ["E0", "E1", "E2", "E3"] },
+        "producer": { "type": "string", "minLength": 1 },
+        "packageName": { "type": "string", "minLength": 1 },
+        "packageVersion": { "type": "string", "minLength": 1 },
+        "resourceIds": { "type": "array", "items": { "type": "string" } },
+        "ruleIds": { "type": "array", "items": { "type": "string" } },
+        "fstIds": { "type": "array", "items": { "type": "string" } },
+        "grammarIds": { "type": "array", "items": { "type": "string" } },
+        "statisticalModelIds": { "type": "array", "items": { "type": "string" } },
+        "corpusIds": { "type": "array", "items": { "type": "string" } },
+        "kbIds": { "type": "array", "items": { "type": "string" } },
+        "inputViewIds": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "optionsHash": { "type": "string", "minLength": 1 }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {
+          "enum": ["cost", "probability", "logprob", "margin", "rank", "weight", "association"]
+        },
+        "value": { "type": "number" },
+        "scale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "annotationAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence"],
+      "properties": {
+        "value": { "$ref": "#/$defs/jsonValue" },
+        "features": { "$ref": "#/$defs/metadata" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "score": { "$ref": "#/$defs/score" }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "layer", "type", "spans", "evidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "layer": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "spans": { "type": "array", "items": { "$ref": "#/$defs/spanRef" } },
+        "value": { "$ref": "#/$defs/jsonValue" },
+        "features": { "$ref": "#/$defs/metadata" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "alternatives": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/annotationAlternative" }
+        }
+      }
+    },
+    "annotationLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "annotations"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "viewId": { "type": "string", "minLength": 1 },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/annotation" }
+        },
+        "metadata": { "$ref": "#/$defs/metadata" }
+      }
+    },
+    "graphNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "annotationId"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "annotationId": { "type": "string", "minLength": 1 },
+        "layerId": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "metadata": { "$ref": "#/$defs/metadata" }
+      }
+    },
+    "graphEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "target", "relation"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "relation": { "type": "string", "minLength": 1 },
+        "annotationId": { "type": "string", "minLength": 1 },
+        "layerId": { "type": "string", "minLength": 1 },
+        "metadata": { "$ref": "#/$defs/metadata" }
+      }
+    },
+    "annotationGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "nodes", "edges"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "nodes": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/graphNode" }
+        },
+        "edges": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/graphEdge" }
+        },
+        "metadata": { "$ref": "#/$defs/metadata" }
+      }
+    }
+  }
+}
