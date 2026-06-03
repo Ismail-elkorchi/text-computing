@@ -1,24 +1,21 @@
-# @ismail-elkorchi/textpack-fr-core
+# `@ismail-elkorchi/textpack-fr-core`
 
-This package provides the pack:fr-core reference resource pack for `@ismail-elkorchi/textpack` alpha validation.
+French core reference resources for final `@ismail-elkorchi/textpack` workflows.
 
-## Scope
-
-Reference French resources for deterministic pack loading, pack-backed rules, lookup, and package
-validation. It is not comprehensive French language coverage.
+The package exports final `manifest`, `resources`, and default `{ manifest, resources }`.
 
 ## Resources
 
-- `profiles`: `profile-fr-core`
-- `stopwords`: `stopwords-fr-core`
-- `rules`: `abbrev-fr-core`
-- `lexicons`: `lexicon-fr-core`
-- `gazetteers`: `gazetteer-fr-core`
-- `tagsets`: `tagset-fr-ud-lite`
-- `morphology`: `morph-fr-core`
-- `transducers`: `transducer-fr-core`
-- `structures`: `structure-fr-core`
-- `benchmarks`: `benchmark-fr-smoke`
+- `profile-fr-core`: segmentation profile
+- `abbrev-fr-core`: abbreviation table
+- `stoplist-fr-core`: stoplist
+- `lexicon-fr-core`: lexicon with inflected forms
+- `gazetteer-fr-core`: gazetteer
+- `tagset-fr-ud-lite`: dataset
+- `morph-fr-core`: morphology lookup data
+- `fst-fr-core`: finite-state examples
+- `grammar-fr-core`: grammar examples
+- `corpus-fr-smoke`: small smoke corpus
 
 ## Verification
 

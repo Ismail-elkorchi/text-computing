@@ -1,15 +1,21 @@
-import { createTextPackResourceRegistry, queryTextPackResourceRegistry, textPackResourceFamilies } from "@ismail-elkorchi/textpack";
-import { textPackEnCoreManifest } from "@ismail-elkorchi/textpack-en-core";
+import assert from "node:assert/strict";
+import { getResource, listResources, loadPack } from "@ismail-elkorchi/textpack";
+import * as moduleExports from "@ismail-elkorchi/textpack-en-core";
 
-const registry = createTextPackResourceRegistry([textPackEnCoreManifest]);
-if (!registry.languages.includes("en")) throw new Error("manifest language target missing from registry");
-for (const family of textPackResourceFamilies) {
-  if (!registry.families.includes(family)) throw new Error(`core ${family} family missing from registry`);
-}
-for (const [family, ids] of Object.entries(textPackEnCoreManifest.provides)) {
-  for (const id of ids) {
-    const request = { family, resourceId: id, ...(textPackEnCoreManifest.targets.profiles?.[0] ? { profile: textPackEnCoreManifest.targets.profiles[0] } : {}) };
-    const result = queryTextPackResourceRegistry(registry, request);
-    if (result.resources[0]?.resourceId !== id) throw new Error(`resource not queryable: ${id}`);
-  }
-}
+const pack = await loadPack(moduleExports);
+
+assert.deepEqual(
+	listResources(pack, { languages: "en" }).map((resource) => resource.id),
+	moduleExports.manifest.resources.map((resource) => resource.id),
+);
+assert.deepEqual(
+	listResources(pack, { kind: "stoplist" }).map((resource) => resource.id),
+	["stoplist-en-core"],
+);
+assert.deepEqual(
+	listResources(pack, { kind: "morphology" }).map((resource) => resource.id),
+	["morph-en-core"],
+);
+assert.match(getResource(pack, "lexicon-en-core"), /analyses\tlemma=analysis/);
+assert.match(getResource(pack, "gazetteer-en-core"), /Acme Corp\tORG/);
+assert.match(getResource(pack, "corpus-en-smoke"), /Acme Corp in Paris/);

@@ -1,15 +1,21 @@
-import { createTextPackResourceRegistry, queryTextPackResourceRegistry, textPackResourceFamilies } from "@ismail-elkorchi/textpack";
-import { textPackEnLegalManifest } from "@ismail-elkorchi/textpack-en-legal";
+import assert from "node:assert/strict";
+import { getResource, listResources, loadPack } from "@ismail-elkorchi/textpack";
+import * as moduleExports from "@ismail-elkorchi/textpack-en-legal";
 
-const registry = createTextPackResourceRegistry([textPackEnLegalManifest]);
-if (!registry.languages.includes("en")) throw new Error("manifest language target missing from registry");
-for (const family of textPackResourceFamilies) {
-  if (!registry.families.includes(family)) throw new Error(`legal ${family} family missing from registry`);
-}
-for (const [family, ids] of Object.entries(textPackEnLegalManifest.provides)) {
-  for (const id of ids) {
-    const request = { family, resourceId: id, ...(textPackEnLegalManifest.targets.profiles?.[0] ? { profile: textPackEnLegalManifest.targets.profiles[0] } : {}) };
-    const result = queryTextPackResourceRegistry(registry, request);
-    if (result.resources[0]?.resourceId !== id) throw new Error(`resource not queryable: ${id}`);
-  }
-}
+const pack = await loadPack(moduleExports);
+
+assert.deepEqual(
+	listResources(pack, { domains: "legal" }).map((resource) => resource.id),
+	moduleExports.manifest.resources.map((resource) => resource.id),
+);
+assert.deepEqual(
+	listResources(pack, { kind: "termbase" }).map((resource) => resource.id),
+	["termbase-en-legal"],
+);
+assert.deepEqual(
+	listResources(pack, { capability: "extraction" }).map((resource) => resource.id),
+	moduleExports.manifest.resources.map((resource) => resource.id),
+);
+assert.match(getResource(pack, "gazetteer-en-legal"), /Supreme Court\tORG/);
+assert.match(getResource(pack, "rule-en-legal"), /^v\./m);
+assert.match(getResource(pack, "corpus-en-legal-smoke"), /Section 12/);

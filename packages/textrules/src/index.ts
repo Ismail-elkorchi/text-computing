@@ -7,10 +7,7 @@ import type {
 	TextSource,
 	TextView,
 } from "@ismail-elkorchi/textdoc";
-import type {
-	TextPackLoadedResource,
-	TextPackResolvedResource,
-} from "@ismail-elkorchi/textpack";
+import type { ResourceKind } from "@ismail-elkorchi/textpack";
 
 export const packageName = "@ismail-elkorchi/textrules" as const;
 const documentSchemaVersion = 1 as const;
@@ -37,6 +34,40 @@ export type TextRulesCoreferenceMentionKind =
 	| "pronoun"
 	| "singleton";
 export type TextRulesDiagnosticSeverity = "info" | "warning" | "error";
+
+type TextRulesPackResourceKind =
+	| ResourceKind
+	| "stopwords"
+	| "rule"
+	| "tagset"
+	| "transducer"
+	| "structure"
+	| "benchmark";
+
+interface TextRulesPackResourceDescriptor {
+	readonly packId: string;
+	readonly packageName: string;
+	readonly version: string;
+	readonly resourceId: string;
+	readonly kind: TextRulesPackResourceKind;
+	readonly family?: string;
+	readonly lookupKey: string;
+	readonly overlayPrecedence: number;
+	readonly language?: string;
+}
+
+interface TextRulesPackLoadedEntry {
+	readonly line: number;
+	readonly value: string;
+	readonly lookupToken: string;
+	readonly label?: string;
+	readonly attributes: Readonly<Record<string, string>>;
+}
+
+interface TextRulesPackLoadedResource {
+	readonly resource: TextRulesPackResourceDescriptor;
+	readonly entries: readonly TextRulesPackLoadedEntry[];
+}
 
 interface TextRulesFeature {
 	readonly name: string;
@@ -1042,8 +1073,8 @@ export interface TextRulesTextPackCompiledRule {
 	readonly packageName: string;
 	readonly version: string;
 	readonly resourceId: string;
-	readonly resourceKind: TextPackResolvedResource["kind"];
-	readonly resourceFamily: TextPackResolvedResource["family"];
+	readonly resourceKind: TextRulesPackResourceDescriptor["kind"];
+	readonly resourceFamily?: string;
 	readonly lookupKey: string;
 	readonly overlayPrecedence: number;
 	readonly line: number;
@@ -1117,7 +1148,7 @@ export interface TextRulesTextPackPipelineProcessorOptions
 	readonly id?: string;
 	readonly version?: string;
 	readonly dependsOn?: readonly string[];
-	readonly resources: readonly TextPackLoadedResource[];
+	readonly resources: readonly TextRulesPackLoadedResource[];
 	readonly requiredResourceIds?: readonly string[];
 	readonly outputLayerId?: string;
 }
@@ -2013,12 +2044,18 @@ function ruleProvenance(rule: TextRulesRuleDeclarationV1): TextRulesProvenance {
 }
 
 function textPackRuleKindForResource(
-	resource: TextPackResolvedResource,
+	resource: TextRulesPackResourceDescriptor,
 ): TextRulesTextPackRuleKind | undefined {
-	if (resource.kind === "stopwords") return "stopword";
+	if (resource.kind === "stoplist" || resource.kind === "stopwords")
+		return "stopword";
 	if (resource.kind === "lexicon") return "lexicon";
 	if (resource.kind === "gazetteer") return "gazetteer";
-	if (resource.kind === "rule") return "rule-list";
+	if (
+		resource.kind === "rule-set" ||
+		resource.kind === "abbreviation-table" ||
+		resource.kind === "rule"
+	)
+		return "rule-list";
 	return undefined;
 }
 
@@ -2027,7 +2064,7 @@ function textPackRuleResourceKey(rule: TextRulesTextPackCompiledRule): string {
 }
 
 function textPackRuleId(
-	resource: TextPackResolvedResource,
+	resource: TextRulesPackResourceDescriptor,
 	kind: TextRulesTextPackRuleKind,
 	line: number,
 ): string {
@@ -2063,7 +2100,7 @@ function compareTextPackCompiledRules(
 }
 
 export function compileTextRulesFromTextPackResources(
-	resources: readonly TextPackLoadedResource[],
+	resources: readonly TextRulesPackLoadedResource[],
 	options: TextRulesTextPackRuleCompileOptions = {},
 ): TextRulesTextPackRuleCompilationResult {
 	const diagnostics: TextRulesTextPackRuleDiagnostic[] = [];
@@ -2103,7 +2140,9 @@ export function compileTextRulesFromTextPackResources(
 				version: loaded.resource.version,
 				resourceId: loaded.resource.resourceId,
 				resourceKind: loaded.resource.kind,
-				resourceFamily: loaded.resource.family,
+				...(loaded.resource.family === undefined
+					? {}
+					: { resourceFamily: loaded.resource.family }),
 				lookupKey: entry.lookupToken,
 				overlayPrecedence: loaded.resource.overlayPrecedence,
 				line: entry.line,
@@ -2385,7 +2424,7 @@ function textPackRuleCompilationErrorMessage(
 }
 
 function uniqueTextPackResourcePackIds(
-	resources: readonly TextPackLoadedResource[],
+	resources: readonly TextRulesPackLoadedResource[],
 ): readonly string[] {
 	return [
 		...new Set(resources.map((resource) => resource.resource.packId)),
@@ -4836,7 +4875,7 @@ export function isTextRulesEntityResourceData(
 }
 
 export function createTextRulesLexiconResource(
-	resource: TextPackResolvedResource,
+	resource: TextRulesPackResourceDescriptor,
 	data: TextRulesLexiconResourceData,
 ): TextRulesLexiconResource {
 	return {
@@ -4863,7 +4902,7 @@ export function createTextRulesLexiconResource(
 }
 
 export function createTextRulesEntityResource(
-	resource: TextPackResolvedResource,
+	resource: TextRulesPackResourceDescriptor,
 	data: TextRulesEntityResourceData,
 ): TextRulesEntityResource {
 	return {
@@ -4890,7 +4929,7 @@ export function createTextRulesEntityResource(
 
 function textRulesDiagnostic(
 	code: TextRulesResourceDiagnosticCode,
-	resource: TextPackResolvedResource,
+	resource: TextRulesPackResourceDescriptor,
 	message: string,
 	line?: number,
 ): TextRulesResourceDiagnostic {
@@ -4943,7 +4982,7 @@ function textRulesNotesFromAttributes(
 }
 
 export function createTextRulesLexiconResourcesFromLoadedPack(
-	loadedResources: readonly TextPackLoadedResource[],
+	loadedResources: readonly TextRulesPackLoadedResource[],
 ): TextRulesLoadedLexiconResources {
 	const resources: TextRulesLexiconResource[] = [];
 	const diagnostics: TextRulesResourceDiagnostic[] = [];
@@ -5011,7 +5050,7 @@ export function createTextRulesLexiconResourcesFromLoadedPack(
 }
 
 export function createTextRulesEntityResourcesFromLoadedPack(
-	loadedResources: readonly TextPackLoadedResource[],
+	loadedResources: readonly TextRulesPackLoadedResource[],
 ): TextRulesLoadedEntityResources {
 	const resources: TextRulesEntityResource[] = [];
 	const diagnostics: TextRulesResourceDiagnostic[] = [];

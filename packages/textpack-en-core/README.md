@@ -1,23 +1,21 @@
-# @ismail-elkorchi/textpack-en-core
+# `@ismail-elkorchi/textpack-en-core`
 
-This package provides the `pack:en-core` reference resource pack for `@ismail-elkorchi/textpack` workflows.
+English core reference resources for final `@ismail-elkorchi/textpack` workflows.
 
-## Scope
-
-Reference English resources for deterministic pack loading, pack-backed rules, lookup, and package validation. It is not a comprehensive English lexicon or named-entity catalog.
+The package exports final `manifest`, `resources`, and default `{ manifest, resources }`.
 
 ## Resources
 
-- `profiles`: `profile-en-core`
-- `stopwords`: `stopwords-en-core`
-- `rules`: `abbrev-en-core`
-- `lexicons`: `lexicon-en-core`
-- `gazetteers`: `gazetteer-en-core`
-- `tagsets`: `tagset-ud-lite`
-- `morphology`: `morph-en-core`
-- `transducers`: `transducer-en-core`
-- `structures`: `structure-en-core`
-- `benchmarks`: `benchmark-en-smoke`
+- `profile-en-core`: segmentation profile
+- `abbrev-en-core`: abbreviation table
+- `stoplist-en-core`: stoplist
+- `lexicon-en-core`: lexicon
+- `gazetteer-en-core`: gazetteer
+- `tagset-ud-lite`: dataset
+- `morph-en-core`: morphology lookup data
+- `fst-en-core`: finite-state examples
+- `grammar-en-core`: grammar examples
+- `corpus-en-smoke`: small smoke corpus
 
 ## Verification
 

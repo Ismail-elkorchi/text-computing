@@ -1,138 +1,49 @@
 {
-  "manifestVersion": "1.0.0",
   "id": "pack:fr-core",
-  "packageName": "@ismail-elkorchi/textpack-fr-core",
+  "name": "French Core Reference Pack",
   "version": "0.1.0",
+  "packageName": "@ismail-elkorchi/textpack-fr-core",
   "kind": [
-    "language"
+    "segmentation-profile",
+    "abbreviation-table",
+    "stoplist",
+    "lexicon",
+    "gazetteer",
+    "dataset",
+    "morphology",
+    "fst",
+    "grammar",
+    "corpus"
   ],
   "targets": {
-    "languages": [
-      "fr"
-    ],
-    "scripts": [
-      "Latn"
-    ]
+    "languages": ["fr"],
+    "scripts": ["Latn"],
+    "modalities": ["typed"]
   },
   "engines": {
     "@ismail-elkorchi/textpack": "^0.1.0"
   },
-  "externalData": {
-    "unicode": "17.0.0"
-  },
+  "resources": [
+    { "id": "profile-fr-core", "kind": "segmentation-profile", "path": "resources/profile.fr.core.txt", "format": "lines" },
+    { "id": "abbrev-fr-core", "kind": "abbreviation-table", "path": "resources/abbrev.fr.common.txt", "format": "lines" },
+    { "id": "stoplist-fr-core", "kind": "stoplist", "path": "resources/stopwords.fr.basic.txt", "format": "lines" },
+    { "id": "lexicon-fr-core", "kind": "lexicon", "path": "resources/lexicon.fr.simple.tsv", "format": "tsv" },
+    { "id": "gazetteer-fr-core", "kind": "gazetteer", "path": "resources/gazetteer.fr.core.tsv", "format": "tsv" },
+    { "id": "tagset-fr-ud-lite", "kind": "dataset", "path": "resources/tagset.ud-lite.tsv", "format": "tsv", "metadata": { "datasetKind": "pos-tagset" } },
+    { "id": "morph-fr-core", "kind": "morphology", "path": "resources/morph.fr.simple.tsv", "format": "tsv" },
+    { "id": "fst-fr-core", "kind": "fst", "path": "resources/transducer.fr.core.txt", "format": "lines" },
+    { "id": "grammar-fr-core", "kind": "grammar", "path": "resources/structure.fr.core.txt", "format": "lines" },
+    { "id": "corpus-fr-smoke", "kind": "corpus", "path": "resources/benchmark.smoke.txt", "format": "lines" }
+  ],
   "capabilities": {
-    "profiles": true,
-    "rules": true,
-    "stopwords": true,
-    "lexicons": true,
-    "gazetteers": true,
-    "tagsets": true,
-    "morphology": true,
-    "transducers": true,
-    "structures": true,
-    "benchmarks": true
+    "segmentation": "rules",
+    "normalization": "unicode",
+    "morphology": "lookup",
+    "tagging": "rules",
+    "parsing": "rules",
+    "extraction": "gazetteer",
+    "terminology": "lexicon"
   },
-  "resources": {
-    "profiles": [
-      "resources/profile.fr.core.txt"
-    ],
-    "rules": [
-      "resources/abbrev.fr.common.txt"
-    ],
-    "stopwords": [
-      "resources/stopwords.fr.basic.txt"
-    ],
-    "lexicons": [
-      "resources/lexicon.fr.simple.tsv"
-    ],
-    "gazetteers": [
-      "resources/gazetteer.fr.core.tsv"
-    ],
-    "tagsets": [
-      "resources/tagset.ud-lite.tsv"
-    ],
-    "morphology": [
-      "resources/morph.fr.simple.tsv"
-    ],
-    "transducers": [
-      "resources/transducer.fr.core.txt"
-    ],
-    "structures": [
-      "resources/structure.fr.core.txt"
-    ],
-    "benchmarks": [
-      "resources/benchmark.smoke.txt"
-    ]
-  },
-  "provides": {
-    "profiles": [
-      "profile-fr-core"
-    ],
-    "rules": [
-      "abbrev-fr-core"
-    ],
-    "stopwords": [
-      "stopwords-fr-core"
-    ],
-    "lexicons": [
-      "lexicon-fr-core"
-    ],
-    "gazetteers": [
-      "gazetteer-fr-core"
-    ],
-    "tagsets": [
-      "tagset-fr-ud-lite"
-    ],
-    "morphology": [
-      "morph-fr-core"
-    ],
-    "transducers": [
-      "transducer-fr-core"
-    ],
-    "structures": [
-      "structure-fr-core"
-    ],
-    "benchmarks": [
-      "benchmark-fr-smoke"
-    ]
-  },
-  "entrypoints": {
-    "manifest": "./pack.manifest.json",
-    "load": "./dist/index.js"
-  },
-  "licenses": {
-    "code": [
-      "MIT"
-    ],
-    "data": [
-      "CC0-1.0"
-    ]
-  },
-  "provenance": {
-    "sources": [
-      "repo:packages/textpack-fr-core/resources"
-    ],
-    "generated": false,
-    "createdBy": [
-      "text-computing"
-    ]
-  },
-  "tests": {
-    "smoke": [
-      "test/smoke.mjs"
-    ],
-    "negative": [
-      "test/negative.mjs"
-    ],
-    "representative": [
-      "test/representative.mjs"
-    ]
-  },
-  "reviewState": "candidate",
-  "composition": {
-    "overlayPrecedence": 10
-  },
-  "limitations": [
-    "Reference French resource pack with every textpack resource family for deterministic package workflows; it is not comprehensive French language coverage."
-  ]
+  "license": "MIT",
+  "citations": ["repo:packages/textpack-fr-core/resources"]
 }

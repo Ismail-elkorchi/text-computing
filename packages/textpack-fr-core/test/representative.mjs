@@ -1,15 +1,21 @@
-import { createTextPackResourceRegistry, queryTextPackResourceRegistry, textPackResourceFamilies } from "@ismail-elkorchi/textpack";
-import { textPackFrCoreManifest } from "@ismail-elkorchi/textpack-fr-core";
+import assert from "node:assert/strict";
+import { getResource, listResources, loadPack } from "@ismail-elkorchi/textpack";
+import * as moduleExports from "@ismail-elkorchi/textpack-fr-core";
 
-const registry = createTextPackResourceRegistry([textPackFrCoreManifest]);
-if (!registry.languages.includes("fr")) throw new Error("manifest language target missing from registry");
-for (const family of textPackResourceFamilies) {
-  if (!registry.families.includes(family)) throw new Error(`French ${family} family missing from registry`);
-}
-for (const [family, ids] of Object.entries(textPackFrCoreManifest.provides)) {
-  for (const id of ids) {
-    const request = { family, resourceId: id, ...(textPackFrCoreManifest.targets.profiles?.[0] ? { profile: textPackFrCoreManifest.targets.profiles[0] } : {}) };
-    const result = queryTextPackResourceRegistry(registry, request);
-    if (result.resources[0]?.resourceId !== id) throw new Error(`resource not queryable: ${id}`);
-  }
-}
+const pack = await loadPack(moduleExports);
+
+assert.deepEqual(
+	listResources(pack, { languages: "fr" }).map((resource) => resource.id),
+	moduleExports.manifest.resources.map((resource) => resource.id),
+);
+assert.deepEqual(
+	listResources(pack, { kind: "morphology" }).map((resource) => resource.id),
+	["morph-fr-core"],
+);
+assert.deepEqual(
+	listResources(pack, { kind: "fst" }).map((resource) => resource.id),
+	["fst-fr-core"],
+);
+assert.match(getResource(pack, "lexicon-fr-core"), /parlent\tlemma=parler/);
+assert.match(getResource(pack, "gazetteer-fr-core"), /Paris\tLOC/);
+assert.match(getResource(pack, "corpus-fr-smoke"), /maisons parlent/);
