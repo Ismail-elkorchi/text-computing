@@ -1,30 +1,31 @@
 {
-  "name": "@ismail-elkorchi/textrules",
-  "version": "0.1.0",
-  "description": "Deterministic text rules package.",
-  "type": "module",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "dependencies": {
-    "@ismail-elkorchi/textdoc": "0.1.0",
-    "@ismail-elkorchi/textpack": "0.1.0"
-  },
-  "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "prepack": "npm run build"
-  },
-  "license": "MIT",
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
-  ]
+	"name": "@ismail-elkorchi/textrules",
+	"version": "0.1.0",
+	"description": "Deterministic text rules package.",
+	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textpack": "0.1.0"
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textdoc/dist/mod.js ]; then npm -w @ismail-elkorchi/textdoc run build >/dev/null; fi && node test/index.test.ts",
+		"prepack": "npm run build"
+	},
+	"license": "MIT",
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	]
 }
