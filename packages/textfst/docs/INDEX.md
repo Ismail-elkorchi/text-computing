@@ -1,0 +1,16 @@
+# Textfst Docs
+
+- [Imports](imports.md)
+- [Automata](automaton.md)
+- [Transducers](transducer.md)
+- [Regex Compilation](regex.md)
+- [Rewrite Rules](rewrite.md)
+- [Lexc Morphology](lexc.md)
+- [Two-Level Rules](twol.md)
+- [Apply](apply.md)
+- [Weights](weight.md)
+- [Operations](operations.md)
+- [Morphology](morph.md)
+- [Spelling](spell.md)
+- [Resources](resources.md)
+- [Boundaries](boundaries.md)

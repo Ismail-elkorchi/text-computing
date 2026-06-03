@@ -1,0 +1,88 @@
+{
+	"name": "@ismail-elkorchi/textfst",
+	"version": "0.1.0",
+	"description": "Finite-state automata and transducers for deterministic text processing.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./automaton": {
+			"types": "./dist/automaton/mod.d.ts",
+			"import": "./dist/automaton/mod.js"
+		},
+		"./transducer": {
+			"types": "./dist/transducer/mod.d.ts",
+			"import": "./dist/transducer/mod.js"
+		},
+		"./compile": {
+			"types": "./dist/compile/mod.d.ts",
+			"import": "./dist/compile/mod.js"
+		},
+		"./regex": {
+			"types": "./dist/regex/mod.d.ts",
+			"import": "./dist/regex/mod.js"
+		},
+		"./rewrite": {
+			"types": "./dist/rewrite/mod.d.ts",
+			"import": "./dist/rewrite/mod.js"
+		},
+		"./lexc": {
+			"types": "./dist/lexc/mod.d.ts",
+			"import": "./dist/lexc/mod.js"
+		},
+		"./twol": {
+			"types": "./dist/twol/mod.d.ts",
+			"import": "./dist/twol/mod.js"
+		},
+		"./apply": {
+			"types": "./dist/apply/mod.d.ts",
+			"import": "./dist/apply/mod.js"
+		},
+		"./weight": {
+			"types": "./dist/weight/mod.d.ts",
+			"import": "./dist/weight/mod.js"
+		},
+		"./morph": {
+			"types": "./dist/morph/mod.d.ts",
+			"import": "./dist/morph/mod.js"
+		},
+		"./spell": {
+			"types": "./dist/spell/mod.d.ts",
+			"import": "./dist/spell/mod.js"
+		}
+	},
+	"scripts": {
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"license": "MIT",
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textfacts": "0.1.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"esbuild": "0.28.0",
+		"typescript": "6.0.3"
+	}
+}

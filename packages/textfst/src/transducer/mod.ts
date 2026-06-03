@@ -1,0 +1,16 @@
+export {
+	type BuildRelationEntry,
+	buildStringTransducer,
+	buildTransducer,
+	compose,
+	concatenate,
+	enumerateRelations,
+	type Fst,
+	type FstArc,
+	type FstKind,
+	type FstRelation,
+	type FstState,
+	invert,
+	project,
+	union,
+} from "../automaton/mod.js";
