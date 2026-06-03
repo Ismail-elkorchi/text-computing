@@ -1,12 +1,28 @@
-import { lookupTextPackLoadedEntries, loadTextPackResources, textPackDemoTrimLowercaseCanonicalizer } from "@ismail-elkorchi/textpack";
-import { textPackFrCoreManifest } from "@ismail-elkorchi/textpack-fr-core";
+import assert from "node:assert/strict";
+import { createPack, validateManifest } from "@ismail-elkorchi/textpack";
+import { manifest, resources } from "@ismail-elkorchi/textpack-fr-core";
 
-const firstFamily = Object.keys(textPackFrCoreManifest.resources)[0];
-const firstPath = textPackFrCoreManifest.resources[firstFamily][0];
-const contents = { [firstPath]: "Thereof\nthereof\n" };
-const request = { family: firstFamily, ...(textPackFrCoreManifest.targets.profiles?.[0] ? { profile: textPackFrCoreManifest.targets.profiles[0] } : {}) };
-const exact = loadTextPackResources([textPackFrCoreManifest], request, contents);
-if (lookupTextPackLoadedEntries(exact.resources, "thereof").length !== 1) throw new Error("exact lookup should match one exact entry");
-if (lookupTextPackLoadedEntries(exact.resources, "THEREOF").length !== 0) throw new Error("lookup must not use hidden case folding");
-const canonical = loadTextPackResources([textPackFrCoreManifest], request, contents, { canonicalizer: textPackDemoTrimLowercaseCanonicalizer });
-if (!canonical.diagnostics.some((entry) => entry.code === "duplicate-resource-entry")) throw new Error("canonicalized duplicate should be diagnosed");
+assert.throws(
+	() =>
+		validateManifest({
+			manifestVersion: "1.0.0",
+			id: "pack:old",
+			packageName: "@ismail-elkorchi/textpack-old",
+			version: "1.0.0",
+			kind: ["language"],
+			targets: { languages: ["fr"] },
+			engines: {},
+			resources: { stopwords: ["resources/stopwords.txt"] },
+			provides: { stopwords: ["old"] },
+			capabilities: {},
+		}),
+	/manifest\.manifestVersion is not a final textpack field/,
+);
+
+assert.throws(
+	() => createPack(manifest, { ...resources, "undeclared-resource": "bad" }),
+	/undeclared resource/,
+);
+
+const { "corpus-fr-smoke": _removed, ...missing } = resources;
+assert.throws(() => createPack(manifest, missing), /missing declared resource/);

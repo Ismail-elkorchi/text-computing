@@ -1,0 +1,28 @@
+{
+  "name": "@ismail-elkorchi/textpack-ar-core",
+  "version": "0.1.0",
+  "description": "Arabic core reference textpack resources.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./pack.manifest.json": "./pack.manifest.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check:pack": "npm pack --dry-run && node test/pack-audit.mjs",
+    "test": "npm run -s build && node test/smoke.mjs && npm run -s check:pack",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@ismail-elkorchi/textpack": "0.1.0"
+  },
+  "license": "MIT",
+  "files": ["dist", "pack.manifest.json", "resources", "README.md", "CHANGELOG.md"],
+  "publishConfig": {
+    "access": "public"
+  }
+}

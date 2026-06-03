@@ -16,6 +16,13 @@
 - `@ismail-elkorchi/textpack-en-core` — English reference resources for alpha validation.
 - `@ismail-elkorchi/textpack-en-legal` — English legal-domain reference resources for alpha validation.
 - `@ismail-elkorchi/textpack-fr-core` — French reference resources for alpha validation.
+- `@ismail-elkorchi/textpack-tr-morphology` — Turkish morphology resources for agglutinative-language coverage.
+- `@ismail-elkorchi/textpack-ar-core` — Arabic core resources for Semitic/root-pattern and right-to-left script coverage.
+- `@ismail-elkorchi/textpack-ja-segmentation` — Japanese segmentation resources for no-space text coverage.
+- `@ismail-elkorchi/textpack-fr-historical` — French historical spelling and normalization resources.
+- `@ismail-elkorchi/textpack-ocr-latin19c` — Latin nineteenth-century OCR/noisy-text resources.
+- `@ismail-elkorchi/textpack-kb-demo` — Knowledge-base and ontology demo resources.
+- `@ismail-elkorchi/textpack-corpus-demo-en` — Small English corpus and dataset demo resources.
 
 ## Development
 

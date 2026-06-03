@@ -1,0 +1,2 @@
+doc1	Alice audits Acme Corp.
+doc2	Bob indexes corpus records.

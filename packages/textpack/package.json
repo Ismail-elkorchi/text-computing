@@ -1,27 +1,41 @@
 {
-  "name": "@ismail-elkorchi/textpack",
-  "version": "0.1.0",
-  "description": "Text resource package.",
-  "type": "module",
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "test": "tsc -p tsconfig.json --noEmit && node test/index.test.ts",
-    "prepack": "npm run build"
-  },
-  "license": "MIT",
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@ismail-elkorchi/textpack",
+	"version": "0.1.0",
+	"description": "Text resource package.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"license": "MIT",
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"esbuild": "0.28.0",
+		"typescript": "6.0.3"
+	}
 }

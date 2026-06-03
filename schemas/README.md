@@ -14,6 +14,4 @@ Package-local schemas remain inside the package that owns their runtime or docum
 - [`textpipeline-distributed-schedule-plan-v1.schema.json`](textpipeline-distributed-schedule-plan-v1.schema.json) — deterministic textpipeline distributed schedule plan schema for caller-declared nodes and workers.
 - [`textpipeline-recovery-plan-v1.schema.json`](textpipeline-recovery-plan-v1.schema.json) — deterministic caller-managed recovery plan schema for partial textpipeline run reports.
 - [`textpipeline-recovery-execution-report-v1.schema.json`](textpipeline-recovery-execution-report-v1.schema.json) — deterministic automatic recovery execution report schema for retrying partial textpipeline run reports.
-- [`textpack-manifest-v1.schema.json`](textpack-manifest-v1.schema.json) — pack manifest schema for issue `#12`.
-- [`textpack-catalog-v1.schema.json`](textpack-catalog-v1.schema.json) — pack catalog schema for reference-pack evidence.
-- [`textpack-catalog-update-plan-v1.schema.json`](textpack-catalog-update-plan-v1.schema.json) — pack catalog update plan schema.
+- [`textpack-manifest.schema.json`](textpack-manifest.schema.json) — final resource-pack manifest schema.

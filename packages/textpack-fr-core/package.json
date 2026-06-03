@@ -13,7 +13,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "npm run -s build && node test/smoke.mjs && node test/negative.mjs && node test/representative.mjs",
+    "check:pack": "npm pack --dry-run && node test/pack-audit.mjs",
+    "test": "npm run -s build && node test/smoke.mjs && node test/negative.mjs && node test/representative.mjs && npm run -s check:pack",
     "prepack": "npm run build"
   },
   "dependencies": {
@@ -24,7 +25,6 @@
     "dist",
     "pack.manifest.json",
     "resources",
-    "test",
     "README.md",
     "CHANGELOG.md"
   ],

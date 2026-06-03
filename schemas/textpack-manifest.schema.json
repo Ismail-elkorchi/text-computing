@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-manifest.schema.json",
+  "title": "TextPackManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "packageName",
+    "kind",
+    "targets",
+    "engines",
+    "resources",
+    "capabilities"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "packageName": { "type": "string", "minLength": 1 },
+    "kind": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/resourceKind" }
+    },
+    "targets": { "$ref": "#/definitions/targets" },
+    "engines": { "$ref": "#/definitions/stringMap" },
+    "resources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/resource" }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/dependency" }
+    },
+    "capabilities": { "$ref": "#/definitions/capabilities" },
+    "license": { "type": "string", "minLength": 1 },
+    "citations": { "$ref": "#/definitions/nonEmptyStringArray" }
+  },
+  "definitions": {
+    "resourceKind": {
+      "enum": [
+        "unicode-profile",
+        "locale-profile",
+        "segmentation-profile",
+        "normalization-profile",
+        "lexicon",
+        "gazetteer",
+        "termbase",
+        "abbreviation-table",
+        "stoplist",
+        "phrase-list",
+        "fst",
+        "morphology",
+        "grammar",
+        "rule-set",
+        "statistical-model",
+        "corpus",
+        "dataset",
+        "knowledge-base",
+        "ontology",
+        "translation-memory",
+        "alignment-table",
+        "quality-profile",
+        "composite"
+      ]
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "languages": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "scripts": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "regions": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "domains": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "periods": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "orthographies": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "modalities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "typed",
+              "ocr",
+              "atr",
+              "asr",
+              "social",
+              "transliterated",
+              "historical"
+            ]
+          }
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "packageName": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "optional": { "type": "boolean" }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "$ref": "#/definitions/resourceKind" },
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "format": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "targets": { "$ref": "#/definitions/targets" },
+        "license": { "type": "string", "minLength": 1 },
+        "citations": { "$ref": "#/definitions/nonEmptyStringArray" },
+        "dependencies": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/dependency" }
+        },
+        "metadata": { "$ref": "#/definitions/jsonValue" }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "segmentation": {
+          "enum": ["none", "default", "profile", "dictionary", "fst", "rules"]
+        },
+        "normalization": {
+          "enum": ["none", "unicode", "lexicon", "rules", "fst", "statistical"]
+        },
+        "morphology": {
+          "enum": ["none", "lookup", "rules", "fst", "statistical"]
+        },
+        "tagging": { "enum": ["none", "rules", "statistical", "hybrid"] },
+        "parsing": { "enum": ["none", "rules", "statistical", "hybrid"] },
+        "extraction": {
+          "enum": ["none", "gazetteer", "rules", "statistical", "hybrid"]
+        },
+        "search": { "enum": ["none", "analyzer", "index-profile"] },
+        "terminology": { "enum": ["none", "lexicon", "corpus", "kb"] },
+        "historical": { "type": "boolean" },
+        "noisyText": { "type": "boolean" },
+        "parallel": { "type": "boolean" }
+      }
+    },
+    "jsonValue": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/jsonValue" }
+        },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/jsonValue" }
+        }
+      ]
+    }
+  }
+}

@@ -9,11 +9,11 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm -w @ismail-elkorchi/textfacts run -s build && npm -w @ismail-elkorchi/textdoc run -s build && npm -w @ismail-elkorchi/textpack run -s build && npm -w @ismail-elkorchi/textpack-en-core run -s build && npm -w @ismail-elkorchi/textpack-en-legal run -s build && npm -w @ismail-elkorchi/textpack-fr-core run -s build && npm -w @ismail-elkorchi/textpipeline run -s build && npm -w @ismail-elkorchi/textrules run -s build && npm -w @ismail-elkorchi/textcorpus run -s build",
+    "build": "npm -w @ismail-elkorchi/textfacts run -s build && npm -w @ismail-elkorchi/textdoc run -s build && npm -w @ismail-elkorchi/textpack run -s build && npm -w @ismail-elkorchi/textpack-en-core run -s build && npm -w @ismail-elkorchi/textpack-en-legal run -s build && npm -w @ismail-elkorchi/textpack-fr-core run -s build && npm -w @ismail-elkorchi/textpack-tr-morphology run -s build && npm -w @ismail-elkorchi/textpack-ar-core run -s build && npm -w @ismail-elkorchi/textpack-ja-segmentation run -s build && npm -w @ismail-elkorchi/textpack-fr-historical run -s build && npm -w @ismail-elkorchi/textpack-ocr-latin19c run -s build && npm -w @ismail-elkorchi/textpack-kb-demo run -s build && npm -w @ismail-elkorchi/textpack-corpus-demo-en run -s build && npm -w @ismail-elkorchi/textpipeline run -s build && npm -w @ismail-elkorchi/textrules run -s build && npm -w @ismail-elkorchi/textcorpus run -s build",
     "lint": "npm run --workspaces --if-present lint && npm run -s check:boundaries && npm run -s check:public-language",
     "check:boundaries": "node tools/check-boundaries.mjs",
     "check:public-language": "node tools/check-public-language.mjs",
-    "schema:validate": "node tools/validate-repo-schemas.mjs && npm -w @ismail-elkorchi/textfacts run schema:validate",
+    "schema:validate": "node tools/validate-repo-schemas.mjs && node tools/validate-textpack-packages.mjs && npm -w @ismail-elkorchi/textfacts run schema:validate",
     "check:static": "npm run --workspaces --if-present check:static",
     "check:pack": "npm -w @ismail-elkorchi/textfacts run check:pack",
     "check:publint": "npm -w @ismail-elkorchi/textfacts run check:publint",
