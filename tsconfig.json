@@ -9,6 +9,8 @@
       "@ismail-elkorchi/textdoc": ["./packages/textdoc/src/mod.ts"],
       "@ismail-elkorchi/textdoc/*": ["./packages/textdoc/src/*/mod.ts"],
       "@ismail-elkorchi/textpack": ["./packages/textpack/src/index.ts"],
+      "@ismail-elkorchi/textlex": ["./packages/textlex/src/index.ts"],
+      "@ismail-elkorchi/textlex/*": ["./packages/textlex/src/*/mod.ts"],
       "@ismail-elkorchi/textrules": ["./packages/textrules/src/index.ts"],
       "@ismail-elkorchi/textpipeline": ["./packages/textpipeline/src/index.ts"],
       "@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"]

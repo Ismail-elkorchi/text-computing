@@ -7,6 +7,7 @@
 - `@ismail-elkorchi/textfacts` — deterministic, Unicode-pinned text facts.
 - `@ismail-elkorchi/textdoc` — document annotation container package.
 - `@ismail-elkorchi/textpack` — text resource package.
+- `@ismail-elkorchi/textlex` — lexical resources and deterministic lookup engines.
 - `@ismail-elkorchi/textrules` — deterministic rules package.
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
