@@ -1,0 +1,22 @@
+export type {
+	AnalyzeOptions,
+	Analyzer,
+	AnalyzerComponent,
+	AnalyzerOptions,
+	AnalyzerTransformContext,
+	CustomAnalyzerComponent,
+	FstComponent,
+	LexiconComponent,
+	NgramComponent,
+	NormalizerComponent,
+	PayloadComponent,
+	SearchToken,
+	StemmerComponent,
+	StopwordComponent,
+	StructuralTransducer,
+	StructuralWordlist,
+	SynonymComponent,
+	TokenizerComponent,
+	TokenizerMode,
+} from "../internal/core.js";
+export { analyze, createAnalyzer } from "../internal/core.js";
