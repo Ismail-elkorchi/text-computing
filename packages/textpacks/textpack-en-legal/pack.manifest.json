@@ -1,0 +1,48 @@
+{
+  "id": "pack:en-legal",
+  "name": "English Legal Reference Pack",
+  "version": "0.1.0",
+  "packageName": "@ismail-elkorchi/textpack-en-legal",
+  "kind": [
+    "quality-profile",
+    "rule-set",
+    "termbase",
+    "stoplist",
+    "gazetteer",
+    "dataset",
+    "morphology",
+    "fst",
+    "grammar",
+    "corpus"
+  ],
+  "targets": {
+    "languages": ["en"],
+    "scripts": ["Latn"],
+    "domains": ["legal"],
+    "modalities": ["typed"]
+  },
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0"
+  },
+  "resources": [
+    { "id": "profile-en-legal", "kind": "quality-profile", "path": "resources/profile.en.legal.txt", "format": "lines" },
+    { "id": "rule-en-legal", "kind": "rule-set", "path": "resources/rule.en.legal.txt", "format": "lines" },
+    { "id": "termbase-en-legal", "kind": "termbase", "path": "resources/lexicon.en.legal.tsv", "format": "tsv" },
+    { "id": "stoplist-en-legal", "kind": "stoplist", "path": "resources/stopwords.en.legal.txt", "format": "lines" },
+    { "id": "gazetteer-en-legal", "kind": "gazetteer", "path": "resources/gazetteer.en.legal.tsv", "format": "tsv" },
+    { "id": "tagset-en-legal-lite", "kind": "dataset", "path": "resources/tagset.legal-lite.tsv", "format": "tsv", "metadata": { "datasetKind": "pos-tagset" } },
+    { "id": "morph-en-legal", "kind": "morphology", "path": "resources/morph.en.legal.tsv", "format": "tsv" },
+    { "id": "fst-en-legal", "kind": "fst", "path": "resources/transducer.en.legal.txt", "format": "lines" },
+    { "id": "grammar-en-legal", "kind": "grammar", "path": "resources/structure.en.legal.txt", "format": "lines" },
+    { "id": "corpus-en-legal-smoke", "kind": "corpus", "path": "resources/benchmark.legal-smoke.txt", "format": "lines" }
+  ],
+  "capabilities": {
+    "segmentation": "rules",
+    "normalization": "rules",
+    "morphology": "lookup",
+    "extraction": "rules",
+    "terminology": "lexicon"
+  },
+  "license": "MIT",
+  "citations": ["repo:packages/textpacks/textpack-en-legal/resources"]
+}

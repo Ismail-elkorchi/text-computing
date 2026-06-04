@@ -4,7 +4,7 @@ Status: final product implementation target
 Scope: TypeScript/npm runtime libraries for broad text computing and non-neural NLP
 Namespace: `@ismail-elkorchi/*`
 Primary constraint: every package is standalone, installable from npm, and useful by itself.
-Repository constraint: packages may be developed and published from a shared monorepo/workspace; per-package GitHub repositories are optional, not required.
+Repository constraint: packages may be developed and published from a shared monorepo/workspace; per-package GitHub repositories are optional, not required. Runtime package directories live under `packages/<runtime-package>`. Resource pack package directories live under `packages/textpacks/<textpack-package>`, are included by the root `packages/textpacks/*` workspace glob, and must not introduce a second package manager root.
 Neural constraint: neural networks, transformers, neural embeddings, neural generation, neural translation, and neural inference adapters are out of scope.
 
 ---
@@ -80,6 +80,23 @@ All large or language-specific resources are published as independent packages. 
 |---|---|
 | `@ismail-elkorchi/textpack-*` | Language, script, locale, domain, historical, noisy-text, finite-state, grammar, lexicon, KB, corpus, and composite resource packs. |
 | `@ismail-elkorchi/textplugin-*` | Optional standalone processors built on the runtime APIs. |
+
+Repository layout for resource packs:
+
+```text
+packages/textpacks/textpack-en-core/
+packages/textpacks/textpack-en-legal/
+packages/textpacks/textpack-fr-core/
+packages/textpacks/textpack-tr-morphology/
+packages/textpacks/textpack-ar-core/
+packages/textpacks/textpack-ja-segmentation/
+packages/textpacks/textpack-fr-historical/
+packages/textpacks/textpack-ocr-latin19c/
+packages/textpacks/textpack-kb-demo/
+packages/textpacks/textpack-corpus-demo-en/
+```
+
+The package names remain `@ismail-elkorchi/textpack-*`; only their repository location is grouped under `packages/textpacks/`.
 
 Examples:
 
@@ -2000,6 +2017,8 @@ export default { manifest, resources };
 ```
 
 A resource pack may also export convenience functions, but the manifest and resource map are mandatory.
+
+Every resource pack is an npm workspace package located at `packages/textpacks/<textpack-package>/`. The root workspace owns the lockfile and package-manager state; `packages/textpacks/` is a grouping folder, not a nested monorepo.
 
 ### 21.2 Pack kinds
 
