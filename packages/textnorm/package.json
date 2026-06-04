@@ -1,0 +1,72 @@
+{
+	"name": "@ismail-elkorchi/textnorm",
+	"version": "0.1.0",
+	"description": "Resource-backed deterministic text normalization with final textdoc views, span maps, candidates, and variant graphs.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./normalize": {
+			"types": "./dist/normalize/mod.d.ts",
+			"import": "./dist/normalize/mod.js"
+		},
+		"./variant": {
+			"types": "./dist/variant/mod.d.ts",
+			"import": "./dist/variant/mod.js"
+		},
+		"./noisy": {
+			"types": "./dist/noisy/mod.d.ts",
+			"import": "./dist/noisy/mod.js"
+		},
+		"./historical": {
+			"types": "./dist/historical/mod.d.ts",
+			"import": "./dist/historical/mod.js"
+		},
+		"./ocr": {
+			"types": "./dist/ocr/mod.d.ts",
+			"import": "./dist/ocr/mod.js"
+		},
+		"./transliteration": {
+			"types": "./dist/transliteration/mod.d.ts",
+			"import": "./dist/transliteration/mod.js"
+		},
+		"./spell": {
+			"types": "./dist/spell/mod.d.ts",
+			"import": "./dist/spell/mod.js"
+		},
+		"./view": {
+			"types": "./dist/view/mod.d.ts",
+			"import": "./dist/view/mod.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textfst": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0",
+		"@ismail-elkorchi/textrules": "0.1.0"
+	},
+	"license": "MIT"
+}

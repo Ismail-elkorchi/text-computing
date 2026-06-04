@@ -10,6 +10,7 @@
 - `@ismail-elkorchi/textlex` — lexical resources and deterministic lookup engines.
 - `@ismail-elkorchi/textfst` — finite-state automata and transducers for text processing.
 - `@ismail-elkorchi/textrules` — deterministic rules package.
+- `@ismail-elkorchi/textnorm` — resource-backed text normalization with final views and span maps.
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
 
