@@ -6,11 +6,26 @@ export const manifest: TextPackManifest = {
 	version: "0.1.0",
 	packageName: "@ismail-elkorchi/textpack-corpus-demo-en",
 	kind: ["corpus", "dataset"],
-	targets: { languages: ["en"], scripts: ["Latn"], domains: ["demo"], modalities: ["typed"] },
+	targets: {
+		languages: ["en"],
+		scripts: ["Latn"],
+		domains: ["demo"],
+		modalities: ["typed"],
+	},
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [
-		{ id: "corpus-demo-en-lines", kind: "corpus", path: "resources/corpus.demo.en.txt", format: "lines" },
-		{ id: "dataset-demo-en-metadata", kind: "dataset", path: "resources/dataset.demo.en.tsv", format: "tsv" }
+		{
+			id: "corpus-demo-en-lines",
+			kind: "corpus",
+			path: "resources/corpus.demo.en.txt",
+			format: "lines",
+		},
+		{
+			id: "dataset-demo-en-metadata",
+			kind: "dataset",
+			path: "resources/dataset.demo.en.tsv",
+			format: "tsv",
+		},
 	],
 	capabilities: { terminology: "corpus" },
 	license: "MIT",

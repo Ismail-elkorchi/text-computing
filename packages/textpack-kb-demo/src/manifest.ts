@@ -9,9 +9,24 @@ export const manifest: TextPackManifest = {
 	targets: { languages: ["en"], scripts: ["Latn"], modalities: ["typed"] },
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [
-		{ id: "kb-demo-entities", kind: "knowledge-base", path: "resources/kb.demo.entities.tsv", format: "tsv" },
-		{ id: "ontology-demo-relations", kind: "ontology", path: "resources/ontology.demo.relations.tsv", format: "tsv" },
-		{ id: "lexicon-demo-aliases", kind: "lexicon", path: "resources/lexicon.demo.aliases.tsv", format: "tsv" }
+		{
+			id: "kb-demo-entities",
+			kind: "knowledge-base",
+			path: "resources/kb.demo.entities.tsv",
+			format: "tsv",
+		},
+		{
+			id: "ontology-demo-relations",
+			kind: "ontology",
+			path: "resources/ontology.demo.relations.tsv",
+			format: "tsv",
+		},
+		{
+			id: "lexicon-demo-aliases",
+			kind: "lexicon",
+			path: "resources/lexicon.demo.aliases.tsv",
+			format: "tsv",
+		},
 	],
 	capabilities: { terminology: "kb" },
 	license: "MIT",

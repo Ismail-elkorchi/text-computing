@@ -9,9 +9,24 @@ export const manifest: TextPackManifest = {
 	targets: { scripts: ["Latn"], periods: ["19c"], modalities: ["ocr"] },
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [
-		{ id: "profile-ocr-latin19c", kind: "normalization-profile", path: "resources/profile.ocr.latin19c.txt", format: "lines" },
-		{ id: "quality-ocr-latin19c", kind: "quality-profile", path: "resources/quality.ocr.latin19c.txt", format: "lines" },
-		{ id: "fst-ocr-latin19c", kind: "fst", path: "resources/fst.ocr.latin19c.txt", format: "lines" }
+		{
+			id: "profile-ocr-latin19c",
+			kind: "normalization-profile",
+			path: "resources/profile.ocr.latin19c.txt",
+			format: "lines",
+		},
+		{
+			id: "quality-ocr-latin19c",
+			kind: "quality-profile",
+			path: "resources/quality.ocr.latin19c.txt",
+			format: "lines",
+		},
+		{
+			id: "fst-ocr-latin19c",
+			kind: "fst",
+			path: "resources/fst.ocr.latin19c.txt",
+			format: "lines",
+		},
 	],
 	capabilities: { normalization: "fst", noisyText: true },
 	license: "MIT",

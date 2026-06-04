@@ -12,6 +12,8 @@ export const resources: PackResourceMap = {
 	"morph-en-legal":
 		"courts\tlemma=court\tpos=NOUN\tNumber=Plur\tDomain=legal\ncontracts\tlemma=contract\tpos=NOUN\tNumber=Plur\tDomain=legal\n",
 	"fst-en-legal": "section-symbol->section\nv.->versus\n",
-	"grammar-en-legal": "case-caption-party-v-party\nstatutory-reference-title-section\n",
-	"corpus-en-legal-smoke": "The Supreme Court sits in New York.\nThe contract cites Section 12.\n",
+	"grammar-en-legal":
+		"case-caption-party-v-party\nstatutory-reference-title-section\n",
+	"corpus-en-legal-smoke":
+		"The Supreme Court sits in New York.\nThe contract cites Section 12.\n",
 } as const;

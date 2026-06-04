@@ -9,9 +9,24 @@ export const manifest: TextPackManifest = {
 	targets: { languages: ["ja"], scripts: ["Jpan"], modalities: ["typed"] },
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [
-		{ id: "profile-ja-segmentation", kind: "segmentation-profile", path: "resources/profile.ja.segmentation.txt", format: "lines" },
-		{ id: "lexicon-ja-segmentation", kind: "lexicon", path: "resources/lexicon.ja.segmentation.tsv", format: "tsv" },
-		{ id: "rules-ja-segmentation", kind: "rule-set", path: "resources/rules.ja.segmentation.txt", format: "lines" }
+		{
+			id: "profile-ja-segmentation",
+			kind: "segmentation-profile",
+			path: "resources/profile.ja.segmentation.txt",
+			format: "lines",
+		},
+		{
+			id: "lexicon-ja-segmentation",
+			kind: "lexicon",
+			path: "resources/lexicon.ja.segmentation.tsv",
+			format: "tsv",
+		},
+		{
+			id: "rules-ja-segmentation",
+			kind: "rule-set",
+			path: "resources/rules.ja.segmentation.txt",
+			format: "lines",
+		},
 	],
 	capabilities: { segmentation: "dictionary" },
 	license: "MIT",

@@ -15,9 +15,9 @@
 
 ## Reference packs
 
-- `@ismail-elkorchi/textpack-en-core` — English reference resources for alpha validation.
-- `@ismail-elkorchi/textpack-en-legal` — English legal-domain reference resources for alpha validation.
-- `@ismail-elkorchi/textpack-fr-core` — French reference resources for alpha validation.
+- `@ismail-elkorchi/textpack-en-core` — English core resources for Latin-script, space-delimited coverage.
+- `@ismail-elkorchi/textpack-en-legal` — English legal-domain resources.
+- `@ismail-elkorchi/textpack-fr-core` — French core resources for inflection-rich language coverage.
 - `@ismail-elkorchi/textpack-tr-morphology` — Turkish morphology resources for agglutinative-language coverage.
 - `@ismail-elkorchi/textpack-ar-core` — Arabic core resources for Semitic/root-pattern and right-to-left script coverage.
 - `@ismail-elkorchi/textpack-ja-segmentation` — Japanese segmentation resources for no-space text coverage.

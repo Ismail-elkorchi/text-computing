@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { getResource, listResources, loadPack } from "@ismail-elkorchi/textpack";
+import {
+	getResource,
+	listResources,
+	loadPack,
+} from "@ismail-elkorchi/textpack";
 import * as moduleExports from "@ismail-elkorchi/textpack-fr-core";
 
 const pack = await loadPack(moduleExports);

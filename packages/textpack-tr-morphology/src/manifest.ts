@@ -9,9 +9,24 @@ export const manifest: TextPackManifest = {
 	targets: { languages: ["tr"], scripts: ["Latn"], modalities: ["typed"] },
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [
-		{ id: "morph-tr-demo", kind: "morphology", path: "resources/morph.tr.demo.tsv", format: "tsv" },
-		{ id: "fst-tr-demo", kind: "fst", path: "resources/fst.tr.demo.txt", format: "lines" },
-		{ id: "lexicon-tr-demo", kind: "lexicon", path: "resources/lexicon.tr.demo.tsv", format: "tsv" },
+		{
+			id: "morph-tr-demo",
+			kind: "morphology",
+			path: "resources/morph.tr.demo.tsv",
+			format: "tsv",
+		},
+		{
+			id: "fst-tr-demo",
+			kind: "fst",
+			path: "resources/fst.tr.demo.txt",
+			format: "lines",
+		},
+		{
+			id: "lexicon-tr-demo",
+			kind: "lexicon",
+			path: "resources/lexicon.tr.demo.tsv",
+			format: "tsv",
+		},
 	],
 	capabilities: { morphology: "fst", normalization: "rules" },
 	license: "MIT",

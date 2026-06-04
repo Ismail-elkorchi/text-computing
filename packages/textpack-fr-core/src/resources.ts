@@ -8,7 +8,8 @@ export const resources: PackResourceMap = {
 		"maison\tlemma=maison\tpos=NOUN\tNumber=Sing\nmaisons\tlemma=maison\tpos=NOUN\tNumber=Plur\nparle\tlemma=parler\tpos=VERB\tNumber=Sing\tPerson=3\nparlent\tlemma=parler\tpos=VERB\tNumber=Plur\tPerson=3\n",
 	"gazetteer-fr-core":
 		"Paris\tLOC\tid=loc-paris\tnormalized=Paris\nLyon\tLOC\tid=loc-lyon\tnormalized=Lyon\nMarie\tPER\tid=per-marie\tnormalized=Marie\n",
-	"tagset-fr-ud-lite": "NOUN\tdescription=nominal\nVERB\tdescription=verbal\nDET\tdescription=determiner\n",
+	"tagset-fr-ud-lite":
+		"NOUN\tdescription=nominal\nVERB\tdescription=verbal\nDET\tdescription=determiner\n",
 	"morph-fr-core":
 		"maisons\tlemma=maison\tpos=NOUN\tNumber=Plur\nparle\tlemma=parler\tpos=VERB\tNumber=Sing\tPerson=3\nparlent\tlemma=parler\tpos=VERB\tNumber=Plur\tPerson=3\n",
 	"fst-fr-core": "pluriel-s->singulier\nelision-lapostrophe->article\n",
