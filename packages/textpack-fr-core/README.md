@@ -19,4 +19,4 @@ The package exports final `manifest`, `resources`, and default `{ manifest, reso
 
 ## Verification
 
-`npm -w @ismail-elkorchi/textpack-fr-core run -s test`
+`npm -w @ismail-elkorchi/textpack-fr-core run -s test:all`
