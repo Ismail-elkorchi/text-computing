@@ -1,0 +1,49 @@
+{
+  "id": "pack:fr-core",
+  "name": "French Core Reference Pack",
+  "version": "0.1.0",
+  "packageName": "@ismail-elkorchi/textpack-fr-core",
+  "kind": [
+    "segmentation-profile",
+    "abbreviation-table",
+    "stoplist",
+    "lexicon",
+    "gazetteer",
+    "dataset",
+    "morphology",
+    "fst",
+    "grammar",
+    "corpus"
+  ],
+  "targets": {
+    "languages": ["fr"],
+    "scripts": ["Latn"],
+    "modalities": ["typed"]
+  },
+  "engines": {
+    "@ismail-elkorchi/textpack": "^0.1.0"
+  },
+  "resources": [
+    { "id": "profile-fr-core", "kind": "segmentation-profile", "path": "resources/profile.fr.core.txt", "format": "lines" },
+    { "id": "abbrev-fr-core", "kind": "abbreviation-table", "path": "resources/abbrev.fr.common.txt", "format": "lines" },
+    { "id": "stoplist-fr-core", "kind": "stoplist", "path": "resources/stopwords.fr.basic.txt", "format": "lines" },
+    { "id": "lexicon-fr-core", "kind": "lexicon", "path": "resources/lexicon.fr.simple.tsv", "format": "tsv" },
+    { "id": "gazetteer-fr-core", "kind": "gazetteer", "path": "resources/gazetteer.fr.core.tsv", "format": "tsv" },
+    { "id": "tagset-fr-ud-lite", "kind": "dataset", "path": "resources/tagset.ud-lite.tsv", "format": "tsv", "metadata": { "datasetKind": "pos-tagset" } },
+    { "id": "morph-fr-core", "kind": "morphology", "path": "resources/morph.fr.simple.tsv", "format": "tsv" },
+    { "id": "fst-fr-core", "kind": "fst", "path": "resources/transducer.fr.core.txt", "format": "lines" },
+    { "id": "grammar-fr-core", "kind": "grammar", "path": "resources/structure.fr.core.txt", "format": "lines" },
+    { "id": "corpus-fr-smoke", "kind": "corpus", "path": "resources/benchmark.smoke.txt", "format": "lines" }
+  ],
+  "capabilities": {
+    "segmentation": "rules",
+    "normalization": "unicode",
+    "morphology": "lookup",
+    "tagging": "rules",
+    "parsing": "rules",
+    "extraction": "gazetteer",
+    "terminology": "lexicon"
+  },
+  "license": "MIT",
+  "citations": ["repo:packages/textpacks/textpack-fr-core/resources"]
+}

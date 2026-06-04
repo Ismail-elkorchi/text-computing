@@ -2,7 +2,7 @@
 
 Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
 
-Workspace package sources live under `packages/*`.
+Workspace package sources live under `packages/*`, with resource packs under `packages/textpacks/*`.
 
 **Prerequisites**
 - Node.js 24+

@@ -44,3 +44,4 @@ npm run -s schema:validate
 - [`docs/decisions/`](docs/decisions/) — accepted public technical decisions.
 - [`fixtures/`](fixtures/) — repository-level fixture inputs, expected outputs, reports, generated artifacts, and quarantined inputs.
 - [`schemas/`](schemas/) — repository-level JSON Schemas.
+- [`packages/textpacks/`](packages/textpacks/) — reference `textpack-*` resource packages.

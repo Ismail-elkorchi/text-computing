@@ -18,6 +18,11 @@ const CODE_SKIPPED_DIRS = new Set([
   "dist-test",
   "node_modules",
 ]);
+const PACKAGE_DISCOVERY_SKIPPED_DIRS = new Set([
+  "dist",
+  "dist-test",
+  "node_modules",
+]);
 const REMOVED_TEXTFACTS_SOURCE_DIRS = [...LEGACY_TEXTFACTS_SUBPATHS].map((subpath) =>
   path.join("packages", "textfacts", "src", subpath),
 );
@@ -36,6 +41,20 @@ async function collectTypeScriptFiles(dirPath, filePaths) {
     } else if (entry.isFile() && entry.name.endsWith(".ts")) {
       filePaths.push(entryPath);
     }
+  }
+}
+
+async function collectWorkspacePackageDirs(dirPath, packageDirs) {
+  const entries = await readdir(dirPath, { withFileTypes: true });
+  const hasPackageJson = entries.some((entry) => entry.isFile() && entry.name === "package.json");
+  if (hasPackageJson) {
+    packageDirs.push(dirPath);
+    return;
+  }
+
+  for (const entry of entries) {
+    if (!entry.isDirectory() || PACKAGE_DISCOVERY_SKIPPED_DIRS.has(entry.name)) continue;
+    await collectWorkspacePackageDirs(path.join(dirPath, entry.name), packageDirs);
   }
 }
 
@@ -86,13 +105,29 @@ async function assertRemovedTextfactsSourceDirs(errors) {
   }
 }
 
-function collectCrossPackageSourceImports(text, currentPackageName) {
+function isWithinPath(candidatePath, parentPath) {
+  const relativePath = path.relative(parentPath, candidatePath);
+  return (
+    relativePath === "" ||
+    (!relativePath.startsWith("..") && !path.isAbsolute(relativePath))
+  );
+}
+
+function packageDirForPath(filePath, packageDirs) {
+  return packageDirs.find((packageDir) => isWithinPath(filePath, packageDir));
+}
+
+function collectCrossPackageSourceImports(text, filePath, currentPackageDir, packageDirs) {
   const hits = [];
-  const pattern = /from\s+["'](\.\.\/\.\.\/([^/"']+)\/src\/[^"']+)["']/g;
+  const pattern = /(?:from\s+|import\s*\(\s*|import\s+)["']([^"']+)["']/g;
   for (const match of text.matchAll(pattern)) {
-    const siblingPackageName = match[2];
-    if (siblingPackageName === undefined || siblingPackageName === currentPackageName) continue;
-    hits.push(match[1]);
+    const specifier = match[1];
+    if (specifier === undefined || !specifier.startsWith(".")) continue;
+    const resolvedPath = path.resolve(path.dirname(filePath), specifier);
+    const targetPackageDir = packageDirForPath(resolvedPath, packageDirs);
+    if (targetPackageDir === undefined || targetPackageDir === currentPackageDir) continue;
+    if (!isWithinPath(resolvedPath, path.join(targetPackageDir, "src"))) continue;
+    hits.push(specifier);
   }
   return hits;
 }
@@ -127,18 +162,16 @@ async function main() {
   await assertTextfactsExports(errors);
   await assertRemovedTextfactsSourceDirs(errors);
 
-  const packageEntries = await readdir(PACKAGES_DIR, { withFileTypes: true });
-  for (const entry of packageEntries) {
-    if (!entry.isDirectory()) continue;
-    const packageName = entry.name;
-    const packageDir = path.join(PACKAGES_DIR, packageName);
+  const packageDirs = [];
+  await collectWorkspacePackageDirs(PACKAGES_DIR, packageDirs);
+  for (const packageDir of packageDirs) {
     const tsFiles = [];
     await collectTypeScriptFiles(packageDir, tsFiles);
 
     for (const filePath of tsFiles) {
       scannedFiles += 1;
       const text = await readFile(filePath, "utf8");
-      const hits = collectCrossPackageSourceImports(text, packageName);
+      const hits = collectCrossPackageSourceImports(text, filePath, packageDir, packageDirs);
       if (hits.length === 0) continue;
       errors.push(
         `${normalizePath(path.relative(ROOT, filePath))} imports sibling workspace source paths: ${hits.join(", ")}`,

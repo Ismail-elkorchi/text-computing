@@ -5,6 +5,7 @@ import Ajv from "ajv";
 
 const ROOT = process.cwd();
 const PACKAGES_DIR = path.join(ROOT, "packages");
+const TEXTPACKS_DIR = path.join(PACKAGES_DIR, "textpacks");
 const MANIFEST_SCHEMA_PATH = "schemas/textpack-manifest.schema.json";
 
 function fail(message, details) {
@@ -58,7 +59,7 @@ function assertPackScripts(packageJson) {
 	assertRequiredScript(
 		packageJson,
 		"build",
-		"node ../../tools/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"node ../../../tools/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
 	);
 	assertRequiredScript(
 		packageJson,
@@ -97,20 +98,26 @@ function assertDeepEqualJson(actual, expected, label) {
 }
 
 async function maybeImportBuiltPack(packDir) {
-	const builtIndex = `packages/${packDir}/dist/index.js`;
+	const builtIndex = `${packDir}/dist/index.js`;
 	if (!(await fileExists(builtIndex))) return undefined;
 	return import(pathToFileURL(path.join(ROOT, builtIndex)).href);
+}
+
+async function collectTextpackPackageDirs() {
+	const entries = await readdir(TEXTPACKS_DIR, { withFileTypes: true });
+	return entries
+		.filter(
+			(entry) => entry.isDirectory() && entry.name.startsWith("textpack-"),
+		)
+		.map((entry) => `packages/textpacks/${entry.name}`)
+		.sort((left, right) => left.localeCompare(right));
 }
 
 const schema = await readJson(MANIFEST_SCHEMA_PATH);
 const ajv = new Ajv({ allErrors: true, strict: true });
 const validateManifest = ajv.compile(schema);
 
-const packageEntries = await readdir(PACKAGES_DIR, { withFileTypes: true });
-const packDirs = packageEntries
-	.filter((entry) => entry.isDirectory() && entry.name.startsWith("textpack-"))
-	.map((entry) => entry.name)
-	.sort();
+const packDirs = await collectTextpackPackageDirs();
 
 expect(
 	packDirs.length >= 10,
@@ -118,8 +125,8 @@ expect(
 );
 
 for (const packDir of packDirs) {
-	const packageJsonPath = `packages/${packDir}/package.json`;
-	const manifestPath = `packages/${packDir}/pack.manifest.json`;
+	const packageJsonPath = `${packDir}/package.json`;
+	const manifestPath = `${packDir}/pack.manifest.json`;
 	const packageJson = await readJson(packageJsonPath);
 	const manifest = await readJson(manifestPath);
 
@@ -200,7 +207,7 @@ for (const packDir of packDirs) {
 				resource.path,
 				`${manifest.packageName} resource path ${resource.path}`,
 			);
-			const relativePath = `packages/${packDir}/${resource.path}`;
+			const relativePath = `${packDir}/${resource.path}`;
 			expect(
 				await fileExists(relativePath),
 				`${manifest.packageName} missing resource ${resource.path}.`,
