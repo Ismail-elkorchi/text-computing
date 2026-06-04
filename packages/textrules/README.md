@@ -1,25 +1,74 @@
 # `@ismail-elkorchi/textrules`
 
-Deterministic text rules package.
+Deterministic rule-based NLP over final `textdoc` documents.
 
-Current public scope:
+## Imports
 
-- canonical alpha rule declarations, bundle validation, deterministic compilation, and sealed compiled ids;
-- general execution over existing `textdoc` token and annotation layers for span-pattern, annotation-pattern, lexicon, rewrite, validation, and unweighted transducer-style rules;
-- explicit conflict policies: `emit-all`, `first-win`, `longest-win`, and `error`;
-- rewrite outputs that create derived views and span maps rather than mutating existing views;
-- E1 annotations with rule/resource provenance and ambiguity-preserving transducer analyses;
-- pack-backed rule compilation from loaded `textpack` stopwords, lexicons, gazetteers, and rule lists with exact execution over existing `textdoc` token layers;
-- a pack-backed rules processor factory compatible with `textpipeline` deterministic local execution;
-- reusable deterministic lexical token spans, token-pattern matching, captures, and token-text rewrites;
-- deterministic POS, lemma, and morphology output for the frozen issue `#10` slices;
-- deterministic rule-backed `PER` / `ORG` / `LOC` output for the frozen issue `#13` slices;
-- deterministic typed relation extraction for frozen repository-authored slices;
-- deterministic coreference mention and chain output for frozen repository-authored slices;
-- deterministic dependency arcs for the frozen dependency-parser slices;
-- ambiguity-preserving alternatives in `textdoc`.
+```ts
+import {
+	applyRules,
+	compileRuleSet,
+	matchRules,
+	rewriteView,
+	createRuleProcessor,
+} from "@ismail-elkorchi/textrules";
+```
 
-Current limitations:
+Focused entrypoints are available for `pattern`, `compile`, `match`, `cascade`, `rewrite`,
+`grammar`, `extract`, `constraints`, and `processor`.
 
-- task-specific behavior remains frozen-slice only;
-- raw-text tokenization helpers are fixture helpers, not the default rule-engine input contract.
+## Minimal Rule
+
+```ts
+const rules = compileRuleSet({
+	id: "rules:mentions",
+	version: "1.0.0",
+	rules: [
+		{
+			id: "mention:alice",
+			when: { kind: "char", text: "Alice" },
+			action: [
+				{
+					kind: "annotate",
+					layerId: "mentions",
+					layerType: "entity.mention",
+					value: { label: "PER" },
+				},
+			],
+		},
+	],
+});
+
+const matches = matchRules(document, rules);
+const annotated = applyRules(document, rules);
+```
+
+## Rewrites
+
+`rewriteView` creates derived views and span maps. It does not mutate source views.
+
+```ts
+const normalized = rewriteView(document, compileRuleSet({
+	id: "rules:rewrite",
+	version: "1.0.0",
+	rules: [
+		{
+			id: "rewrite:name",
+			when: { kind: "char", text: "Alice" },
+			action: [
+				{
+					kind: "rewrite",
+					targetViewId: "normalized",
+					replacements: { Alice: "Alicia" },
+				},
+			],
+		},
+	],
+}));
+```
+
+## Boundaries
+
+`textrules` does not train statistical models, store corpora, manage search indexes, perform KB
+reasoning, or schedule pipelines. It can emit annotations and features for those packages to
+consume.
