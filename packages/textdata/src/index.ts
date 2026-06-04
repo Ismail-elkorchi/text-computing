@@ -1,0 +1,34 @@
+export type {
+	AlignmentLink,
+	DatasetDiagnostic,
+	DatasetDiagnosticSeverity,
+	DatasetFormat,
+	DatasetInput,
+	DatasetInputRecord,
+	DatasetManifest,
+	DatasetOutput,
+	DatasetReadOptions,
+	DatasetRecord,
+	DatasetSourceDescriptor,
+	DatasetSplits,
+	DatasetWriteFormat,
+	DatasetWriteOptions,
+	LabeledSample,
+	ParallelRecord,
+	SplitOptions,
+	SplitReport,
+	SplitSpec,
+	TextDataset,
+} from "./dataset/mod.js";
+export {
+	createDataset,
+	mergeMetadata,
+	normalizeDatasetManifest,
+	validateDataset,
+} from "./dataset/mod.js";
+export { TextDataError } from "./internal/errors.js";
+export { packageName, packageVersion } from "./internal/ids.js";
+export { readDataset } from "./reader/mod.js";
+export { splitDataset } from "./split/mod.js";
+export { streamRecords } from "./stream/mod.js";
+export { writeDataset } from "./writer/mod.js";

@@ -1,0 +1,15 @@
+# Textdata Docs
+
+- [Imports](./imports.md)
+- [Dataset](./dataset.md)
+- [Reader](./reader.md)
+- [Writer](./writer.md)
+- [Stream](./stream.md)
+- [Split](./split.md)
+- [CoNLL-U](./conllu.md)
+- [IOB](./iob.md)
+- [TEI](./tei.md)
+- [Parallel](./parallel.md)
+- [Formats](./formats.md)
+- [Data packages](./data-packages.md)
+- [Boundaries](./boundaries.md)

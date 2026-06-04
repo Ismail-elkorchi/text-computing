@@ -13,6 +13,7 @@
 - `@ismail-elkorchi/textnorm` — resource-backed text normalization with final views and span maps.
 - `@ismail-elkorchi/textclassical` — deterministic classical statistical NLP package.
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
+- `@ismail-elkorchi/textdata` — deterministic dataset, stream, split, and annotation-format reader/writer package.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
 
 ## Reference packs

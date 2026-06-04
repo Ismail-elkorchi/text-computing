@@ -19,6 +19,8 @@
       "@ismail-elkorchi/textclassical/*": ["./packages/textclassical/src/*/mod.ts"],
       "@ismail-elkorchi/textpipeline": ["./packages/textpipeline/src/index.ts"],
       "@ismail-elkorchi/textpipeline/*": ["./packages/textpipeline/src/*/mod.ts"],
+      "@ismail-elkorchi/textdata": ["./packages/textdata/src/index.ts"],
+      "@ismail-elkorchi/textdata/*": ["./packages/textdata/src/*/mod.ts"],
       "@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"]
     },
     "allowImportingTsExtensions": true,

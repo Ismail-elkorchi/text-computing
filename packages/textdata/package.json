@@ -1,0 +1,73 @@
+{
+	"name": "@ismail-elkorchi/textdata",
+	"version": "0.1.0",
+	"description": "Dataset and annotation-format reader/writer runtime package.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./dataset": {
+			"types": "./dist/dataset/mod.d.ts",
+			"import": "./dist/dataset/mod.js"
+		},
+		"./reader": {
+			"types": "./dist/reader/mod.d.ts",
+			"import": "./dist/reader/mod.js"
+		},
+		"./writer": {
+			"types": "./dist/writer/mod.d.ts",
+			"import": "./dist/writer/mod.js"
+		},
+		"./stream": {
+			"types": "./dist/stream/mod.d.ts",
+			"import": "./dist/stream/mod.js"
+		},
+		"./split": {
+			"types": "./dist/split/mod.d.ts",
+			"import": "./dist/split/mod.js"
+		},
+		"./conllu": {
+			"types": "./dist/conllu/mod.d.ts",
+			"import": "./dist/conllu/mod.js"
+		},
+		"./iob": {
+			"types": "./dist/iob/mod.d.ts",
+			"import": "./dist/iob/mod.js"
+		},
+		"./tei": {
+			"types": "./dist/tei/mod.d.ts",
+			"import": "./dist/tei/mod.js"
+		},
+		"./parallel": {
+			"types": "./dist/parallel/mod.d.ts",
+			"import": "./dist/parallel/mod.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/public-api.test.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0"
+	}
+}
