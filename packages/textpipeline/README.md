@@ -1,30 +1,85 @@
 # `@ismail-elkorchi/textpipeline`
 
-Deterministic text pipeline processor contract package.
+Deterministic processor graph, planning, execution, streaming, cache, and pack-composition runtime for final `TextDocument` values.
 
-Current scope:
+`textpipeline` owns orchestration. Task algorithms live in processors supplied by callers, lower runtime packages, reference packs, or later packages that implement the final `TextProcessor` contract.
 
-- synchronous, in-memory processor execution;
-- asynchronous processor execution;
-- input-order batch and stream runners;
-- caller-provided worker execution with deterministic worker run reports;
-- caller-provided worker-pool execution with deterministic round-robin assignment reports;
-- deterministic distributed schedule plans over caller-declared nodes, workers, and active capacity;
-- caller-managed recovery plan reports for partial batch, worker, and worker-pool run reports;
-- automatic local recovery execution for retrying recovery plan items with deterministic execution reports;
-- cancellation via `AbortSignal`;
-- deterministic dependency graph validation and exported execution plans;
-- requirements over declared views, layers, packages, packs, profiles, and their versions;
-- conservative cache keys for caller-provided document caches;
-- explicit cache-hit trace entries for caller-provided document caches;
-- snapshot-backed cache import/export helpers for caller-managed durable cache storage;
-- failed-processor and blocked-dependent trace entries when the caller selects continue-on-error behavior;
-- explicit processor descriptors with dependency metadata;
-- deterministic ready-queue ordering by `processor.id`;
-- machine-readable execution traces and batch run reports.
+## Install
 
-This package does not define remote orchestration. Distributed scheduling is a deterministic plan
-artifact over caller-declared nodes and workers; callers provide documents, processors, workers,
-versioned context, cancellation signals, and optional cache objects.
-Cache durability is caller-managed through snapshot JSON helpers, and recovery execution is local to
-the caller-provided documents and processors.
+```sh
+npm install @ismail-elkorchi/textpipeline
+```
+
+## Imports
+
+```ts
+import {
+	createPipeline,
+	planPipeline,
+	runPipeline,
+	streamPipeline,
+} from "@ismail-elkorchi/textpipeline";
+
+import type { TextProcessor } from "@ismail-elkorchi/textpipeline/processor";
+import { createMemoryPipelineCache } from "@ismail-elkorchi/textpipeline/cache";
+import { createPipelineResourceRegistry } from "@ismail-elkorchi/textpipeline/pack";
+```
+
+## Processor
+
+```ts
+import type { TextProcessor } from "@ismail-elkorchi/textpipeline";
+
+const processor: TextProcessor = {
+	id: "example.identity",
+	version: "1.0.0",
+	requires: [{ viewKind: "raw" }],
+	provides: [{ viewKind: "raw" }],
+	process(document) {
+		return document;
+	},
+};
+```
+
+## Run
+
+```ts
+import { createDocument } from "@ismail-elkorchi/textdoc";
+import { createPipeline, runPipeline } from "@ismail-elkorchi/textpipeline";
+
+const pipeline = createPipeline([processor]);
+const output = await runPipeline(pipeline, createDocument("hello"));
+```
+
+## Stream
+
+```ts
+for await (const output of streamPipeline(pipeline, documents, {
+	concurrency: 2,
+	preserveOrder: true,
+})) {
+	console.log(output.id);
+}
+```
+
+## Cache
+
+Cache keys include the pipeline fingerprint, processor id/version, declared requirements and outputs, resource fingerprints, run options that affect output, and the full input document content fingerprint. A document revision is never used as the only freshness signal.
+
+```ts
+const cache = createMemoryPipelineCache({ namespace: "example" });
+await runPipeline(pipeline, document, { cache });
+```
+
+## Resource Packs
+
+`textpipeline` does not discover packs at runtime. Load or create final `textpack` values in caller code, then pass a registry into the pipeline.
+
+```ts
+const resources = createPipelineResourceRegistry({ packs: [pack] });
+const pipeline = createPipeline([processor], { resources });
+```
+
+## Runtime Boundary
+
+The package is ESM, side-effect-free, and free of Node-only runtime APIs in shipped source. Node scripts are used only for local verification.

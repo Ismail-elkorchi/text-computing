@@ -11,14 +11,50 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
+		},
+		"./processor": {
+			"types": "./dist/processor/mod.d.ts",
+			"import": "./dist/processor/mod.js"
+		},
+		"./graph": {
+			"types": "./dist/graph/mod.d.ts",
+			"import": "./dist/graph/mod.js"
+		},
+		"./run": {
+			"types": "./dist/run/mod.d.ts",
+			"import": "./dist/run/mod.js"
+		},
+		"./stream": {
+			"types": "./dist/stream/mod.d.ts",
+			"import": "./dist/stream/mod.js"
+		},
+		"./cache": {
+			"types": "./dist/cache/mod.d.ts",
+			"import": "./dist/cache/mod.js"
+		},
+		"./pack": {
+			"types": "./dist/pack/mod.d.ts",
+			"import": "./dist/pack/mod.js"
 		}
 	},
 	"dependencies": {
-		"@ismail-elkorchi/textdoc": "0.1.0"
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textpack": "0.1.0"
 	},
 	"scripts": {
-		"build": "tsc -p tsconfig.build.json",
-		"test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textdoc/dist/mod.js ]; then npm -w @ismail-elkorchi/textdoc run build >/dev/null; fi && node test/index.test.ts",
+		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/processor-families.test.ts test/public-api.test.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
 		"prepack": "npm run build"
 	},
 	"license": "MIT",
