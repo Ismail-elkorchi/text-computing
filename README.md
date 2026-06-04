@@ -15,6 +15,7 @@
 - `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
 - `@ismail-elkorchi/textdata` — deterministic dataset, stream, split, and annotation-format reader/writer package.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
+- `@ismail-elkorchi/textsearch` — search analyzer, index, query, ranking, filter, facet, highlight, and suggestion package.
 
 ## Reference packs
 
