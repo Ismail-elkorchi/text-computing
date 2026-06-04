@@ -1,25 +1,63 @@
 {
 	"name": "@ismail-elkorchi/textrules",
 	"version": "0.1.0",
-	"description": "Deterministic text rules package.",
+	"description": "Deterministic rule-based NLP over final text documents.",
 	"type": "module",
-	"publishConfig": {
-		"access": "public"
-	},
 	"sideEffects": false,
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
+		},
+		"./pattern": {
+			"types": "./dist/pattern/mod.d.ts",
+			"import": "./dist/pattern/mod.js"
+		},
+		"./compile": {
+			"types": "./dist/compile/mod.d.ts",
+			"import": "./dist/compile/mod.js"
+		},
+		"./match": {
+			"types": "./dist/match/mod.d.ts",
+			"import": "./dist/match/mod.js"
+		},
+		"./cascade": {
+			"types": "./dist/cascade/mod.d.ts",
+			"import": "./dist/cascade/mod.js"
+		},
+		"./rewrite": {
+			"types": "./dist/rewrite/mod.d.ts",
+			"import": "./dist/rewrite/mod.js"
+		},
+		"./grammar": {
+			"types": "./dist/grammar/mod.d.ts",
+			"import": "./dist/grammar/mod.js"
+		},
+		"./extract": {
+			"types": "./dist/extract/mod.d.ts",
+			"import": "./dist/extract/mod.js"
+		},
+		"./constraints": {
+			"types": "./dist/constraints/mod.d.ts",
+			"import": "./dist/constraints/mod.js"
+		},
+		"./processor": {
+			"types": "./dist/processor/mod.d.ts",
+			"import": "./dist/processor/mod.js"
 		}
 	},
-	"dependencies": {
-		"@ismail-elkorchi/textdoc": "0.1.0",
-		"@ismail-elkorchi/textpack": "0.1.0"
-	},
 	"scripts": {
-		"build": "tsc -p tsconfig.build.json",
-		"test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textdoc/dist/mod.js ]; then npm -w @ismail-elkorchi/textdoc run build >/dev/null; fi && node test/index.test.ts",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
 		"prepack": "npm run build"
 	},
 	"license": "MIT",
@@ -27,5 +65,27 @@
 		"dist",
 		"README.md",
 		"CHANGELOG.md"
-	]
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfst": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0"
+	},
+	"peerDependencies": {
+		"@ismail-elkorchi/textpack": "0.1.0"
+	},
+	"peerDependenciesMeta": {
+		"@ismail-elkorchi/textpack": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"esbuild": "0.28.0",
+		"typescript": "6.0.3"
+	}
 }
