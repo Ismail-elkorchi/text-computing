@@ -2,20 +2,8 @@
 
 ## 0.1.0
 
-- Promote package metadata to public alpha for the bounded corpus and retrieval fixture scope.
-- Add corpus-analysis APIs for KWIC/concordance, frequency, n-grams, co-occurrence, collocates, and pairwise document relations over explicit token layers.
-- Add E2 corpus selection provenance to corpus-analysis, scoring, retrieval-index, retrieval-result, and retrieval-evaluation outputs.
-- Add deterministic JSON persistence helpers for declared textcorpus artifact families.
-- Add retrieval-index storage-ref save/load helpers for caller-provided durable text stores.
-- Add package-owned filesystem key/path helpers for retrieval-index artifact storage.
-- Add deterministic BM25F retrieval field-weight profiles for query-time field weighting.
-- Add deterministic retrieval relevance-calibration reports over caller-provided qrels, evaluations, and BM25F field-weight profiles.
-- Add deterministic BM25F field-weight learning over caller-provided qrels and finite search spaces.
-
-## 0.0.0
-
-- Add the deterministic corpus collection contract, metadata slicing, and explicit-token fingerprint index.
-- Add deterministic raw TF, smooth TF-IDF, and Okapi BM25 scoring for the frozen issue `#14` corpus.
-- Add deterministic query parsing, inverted-index retrieval, BM25 ranking, snippets, and explain output for the frozen explicit-token retrieval slice.
-- Add required/prohibited query operators, metadata field filters, retrieval-index JSON round-trips, and bounded large-corpus ordering tests.
-- Add deterministic qrels evaluation for precision@k, recall@k, MRR, and nDCG@k over the frozen fielded retrieval slice.
+- Reset the package to the final corpus runtime surface.
+- Add final public subpaths for store, query, concordance, frequency, n-grams, collocations, keyness, dispersion, terms, lexicography, stylometry, reuse, and diachrony.
+- Add structured corpus queries over final `TextDocument` token, lemma, annotation, metadata, partition, and document predicates.
+- Add deterministic corpus statistics, corpus-side lexicographic helpers, stylometry feature profiles, repeated-passage detection, and diachronic trend tables.
+- Add span-unit safety, runtime smoke tests, and publish-tree audits for final artifacts.

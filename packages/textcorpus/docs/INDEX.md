@@ -1,0 +1,17 @@
+# Textcorpus Docs
+
+- [imports](./imports.md)
+- [store](./store.md)
+- [query](./query.md)
+- [concordance](./concordance.md)
+- [frequency](./frequency.md)
+- [ngram](./ngram.md)
+- [collocation](./collocation.md)
+- [keyness](./keyness.md)
+- [dispersion](./dispersion.md)
+- [terms](./terms.md)
+- [lexicography](./lexicography.md)
+- [stylometry](./stylometry.md)
+- [reuse](./reuse.md)
+- [diachronic](./diachronic.md)
+- [boundaries](./boundaries.md)

@@ -1,19 +1,40 @@
 # `@ismail-elkorchi/textcorpus`
 
-Deterministic corpus collection and fingerprint package.
+Final runtime package for corpus stores, structured corpus queries, corpus linguistics, terminology, lexicography, stylometry features, reuse detection, and diachronic trend tables.
 
-Current scope:
+## Install
 
-- explicit final `TextDocument` corpus entries with declared token-view references;
-- deterministic corpus collection validation and entry ordering;
-- metadata-based corpus slicing without hidden tokenization changes;
-- KWIC/concordance, frequency, n-gram, co-occurrence, collocate, and pairwise document-relation APIs over explicit token layers;
-- deterministic token-shingle fingerprint indexing over explicit token layers;
-- deterministic raw TF, smooth TF-IDF, L2-normalized smooth TF-IDF, and Okapi BM25 parameter-variant outputs for the frozen issue `#14` corpora; and
-- deterministic query parsing, required/prohibited term operators, metadata field filters, inverted-index retrieval, BM25 ranking, BM25F field-weight profiles, snippets, explain output, qrels evaluation, relevance-calibration reports over caller-provided evaluations/profiles, field-weight learning over declared BM25F search spaces, deterministic size thresholds, and index JSON round-trips for committed explicit-token retrieval slices;
-- E2 corpus selection provenance for corpus-analysis, scoring, retrieval, and evaluation outputs; and
-- deterministic JSON persistence helpers for declared textcorpus artifact families;
-- caller-provided text-store save/load helpers for retrieval-index artifacts, with storage refs carrying byte length, checksum, corpus, formula, document-count, term-count, and field-count metadata; and
-- package-owned filesystem key/path helpers for retrieval-index artifact save/load over caller-supplied filesystem IO callbacks.
+```sh
+npm install @ismail-elkorchi/textcorpus
+```
 
-This package does not yet define broad external relevance benchmarks. Relevance calibration is deterministic comparison of caller-provided qrels/evaluation results and explicit or generated BM25F field-weight profiles. Field-weight learning is bounded to finite caller-declared search spaces over BM25F query-time weights. Filesystem storage is bounded to local retrieval-index artifact JSON.
+## Imports
+
+```ts
+import { createCorpus, corpusQuery, concordance } from "@ismail-elkorchi/textcorpus";
+import { frequency } from "@ismail-elkorchi/textcorpus/frequency";
+import { collocations } from "@ismail-elkorchi/textcorpus/collocation";
+```
+
+Required subpaths are `/store`, `/query`, `/concordance`, `/frequency`, `/ngram`, `/collocation`, `/keyness`, `/dispersion`, `/terms`, `/lexicography`, `/stylometry`, `/reuse`, and `/diachronic`.
+
+## Scope
+
+`textcorpus` works over final `TextDocument` values with explicit `token.*` layers. It preserves source documents, annotation evidence, alternatives, graphs, metadata, and span references. It rejects unsafe span slicing when token text must be recovered from non-UTF-16 coordinates.
+
+Structured corpus queries match documents by token, lemma, annotation, metadata, partition, document id, and simple boolean combinations. Ranked search engines, query languages, model training, file-format loading, and final authorship decisions belong to other runtime packages.
+
+## Example
+
+```ts
+const corpus = createCorpus(documents, {
+  id: "legal-corpus",
+  partitionKeys: ["year", "domain"],
+});
+
+const hits = corpusQuery(corpus, { kind: "lemma", lemma: "contract" });
+const lines = concordance(corpus, { kind: "lemma", lemma: "contract" });
+const terms = frequency(corpus, { minCount: 2 });
+```
+
+See the `docs/` folder for package-specific usage notes.
