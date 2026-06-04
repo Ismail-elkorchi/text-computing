@@ -1,0 +1,95 @@
+{
+	"name": "@ismail-elkorchi/textclassical",
+	"version": "0.1.0",
+	"description": "Deterministic classical statistical NLP for feature extraction, classifiers, sequence models, language models, topic models, clustering, and non-neural task processors.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./features": {
+			"types": "./dist/features/mod.d.ts",
+			"import": "./dist/features/mod.js"
+		},
+		"./vectorize": {
+			"types": "./dist/vectorize/mod.d.ts",
+			"import": "./dist/vectorize/mod.js"
+		},
+		"./classify": {
+			"types": "./dist/classify/mod.d.ts",
+			"import": "./dist/classify/mod.js"
+		},
+		"./sequence": {
+			"types": "./dist/sequence/mod.d.ts",
+			"import": "./dist/sequence/mod.js"
+		},
+		"./hmm": {
+			"types": "./dist/hmm/mod.d.ts",
+			"import": "./dist/hmm/mod.js"
+		},
+		"./crf": {
+			"types": "./dist/crf/mod.d.ts",
+			"import": "./dist/crf/mod.js"
+		},
+		"./maxent": {
+			"types": "./dist/maxent/mod.d.ts",
+			"import": "./dist/maxent/mod.js"
+		},
+		"./perceptron": {
+			"types": "./dist/perceptron/mod.d.ts",
+			"import": "./dist/perceptron/mod.js"
+		},
+		"./lm": {
+			"types": "./dist/lm/mod.d.ts",
+			"import": "./dist/lm/mod.js"
+		},
+		"./topic": {
+			"types": "./dist/topic/mod.d.ts",
+			"import": "./dist/topic/mod.js"
+		},
+		"./cluster": {
+			"types": "./dist/cluster/mod.d.ts",
+			"import": "./dist/cluster/mod.js"
+		},
+		"./tagger": {
+			"types": "./dist/tagger/mod.d.ts",
+			"import": "./dist/tagger/mod.js"
+		},
+		"./parser": {
+			"types": "./dist/parser/mod.d.ts",
+			"import": "./dist/parser/mod.js"
+		},
+		"./summary": {
+			"types": "./dist/summary/mod.d.ts",
+			"import": "./dist/summary/mod.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textfst": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0"
+	},
+	"license": "MIT"
+}

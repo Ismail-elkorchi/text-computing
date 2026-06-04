@@ -15,6 +15,8 @@
       "@ismail-elkorchi/textfst/*": ["./packages/textfst/src/*/mod.ts"],
       "@ismail-elkorchi/textrules": ["./packages/textrules/src/index.ts"],
       "@ismail-elkorchi/textrules/*": ["./packages/textrules/src/*/mod.ts"],
+      "@ismail-elkorchi/textclassical": ["./packages/textclassical/src/index.ts"],
+      "@ismail-elkorchi/textclassical/*": ["./packages/textclassical/src/*/mod.ts"],
       "@ismail-elkorchi/textpipeline": ["./packages/textpipeline/src/index.ts"],
       "@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"]
     },
