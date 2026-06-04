@@ -1,31 +1,95 @@
 {
-  "name": "@ismail-elkorchi/textcorpus",
-  "version": "0.1.0",
-  "description": "Deterministic corpus collection and fingerprint package.",
-  "type": "module",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "dependencies": {
-    "@ismail-elkorchi/textdoc": "0.1.0",
-    "@ismail-elkorchi/textfacts": "0.1.0"
-  },
-  "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "test": "tsc -p tsconfig.json --noEmit && if [ ! -f ../textfacts/dist/mod.js ]; then npm -w @ismail-elkorchi/textfacts run build >/dev/null; fi && if [ ! -f ../textdoc/dist/mod.js ]; then npm -w @ismail-elkorchi/textdoc run build >/dev/null; fi && node test/index.test.ts",
-    "prepack": "npm run build"
-  },
-  "license": "MIT",
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
-  ]
+	"name": "@ismail-elkorchi/textcorpus",
+	"version": "0.1.0",
+	"description": "Corpus stores, structured corpus queries, and corpus linguistics runtime package.",
+	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./store": {
+			"types": "./dist/store/mod.d.ts",
+			"import": "./dist/store/mod.js"
+		},
+		"./query": {
+			"types": "./dist/query/mod.d.ts",
+			"import": "./dist/query/mod.js"
+		},
+		"./concordance": {
+			"types": "./dist/concordance/mod.d.ts",
+			"import": "./dist/concordance/mod.js"
+		},
+		"./frequency": {
+			"types": "./dist/frequency/mod.d.ts",
+			"import": "./dist/frequency/mod.js"
+		},
+		"./ngram": {
+			"types": "./dist/ngram/mod.d.ts",
+			"import": "./dist/ngram/mod.js"
+		},
+		"./collocation": {
+			"types": "./dist/collocation/mod.d.ts",
+			"import": "./dist/collocation/mod.js"
+		},
+		"./keyness": {
+			"types": "./dist/keyness/mod.d.ts",
+			"import": "./dist/keyness/mod.js"
+		},
+		"./dispersion": {
+			"types": "./dist/dispersion/mod.d.ts",
+			"import": "./dist/dispersion/mod.js"
+		},
+		"./terms": {
+			"types": "./dist/terms/mod.d.ts",
+			"import": "./dist/terms/mod.js"
+		},
+		"./lexicography": {
+			"types": "./dist/lexicography/mod.d.ts",
+			"import": "./dist/lexicography/mod.js"
+		},
+		"./stylometry": {
+			"types": "./dist/stylometry/mod.d.ts",
+			"import": "./dist/stylometry/mod.js"
+		},
+		"./reuse": {
+			"types": "./dist/reuse/mod.d.ts",
+			"import": "./dist/reuse/mod.js"
+		},
+		"./diachronic": {
+			"types": "./dist/diachronic/mod.d.ts",
+			"import": "./dist/diachronic/mod.js"
+		}
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdata": "0.1.0",
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0"
+	},
+	"scripts": {
+		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.test.ts test/public-api.test.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"license": "MIT",
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	]
 }
