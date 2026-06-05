@@ -22,7 +22,7 @@
     "check:jsr": "npm -w @ismail-elkorchi/textfacts run check:jsr"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.18.2",
+    "@arethetypeswrong/cli": "0.18.3",
     "@biomejs/biome": "2.4.15",
     "@types/node": "25.9.1",
     "ajv": "8.20.0",
