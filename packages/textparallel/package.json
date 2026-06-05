@@ -1,0 +1,78 @@
+{
+	"name": "@ismail-elkorchi/textparallel",
+	"version": "0.1.0",
+	"description": "Parallel corpora, alignment, translation memory, bilingual terminology, bilingual lexicon extraction, and rule-based transfer runtime package.",
+	"type": "module",
+	"sideEffects": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./alignment": {
+			"types": "./dist/alignment/mod.d.ts",
+			"import": "./dist/alignment/mod.js"
+		},
+		"./sentence-align": {
+			"types": "./dist/sentence-align/mod.d.ts",
+			"import": "./dist/sentence-align/mod.js"
+		},
+		"./word-align": {
+			"types": "./dist/word-align/mod.d.ts",
+			"import": "./dist/word-align/mod.js"
+		},
+		"./translation-memory": {
+			"types": "./dist/translation-memory/mod.d.ts",
+			"import": "./dist/translation-memory/mod.js"
+		},
+		"./bilingual-lexicon": {
+			"types": "./dist/bilingual-lexicon/mod.d.ts",
+			"import": "./dist/bilingual-lexicon/mod.js"
+		},
+		"./bilingual-terms": {
+			"types": "./dist/bilingual-terms/mod.d.ts",
+			"import": "./dist/bilingual-terms/mod.js"
+		},
+		"./transfer": {
+			"types": "./dist/transfer/mod.d.ts",
+			"import": "./dist/transfer/mod.js"
+		},
+		"./parallel-corpus": {
+			"types": "./dist/parallel-corpus/mod.d.ts",
+			"import": "./dist/parallel-corpus/mod.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/*.test.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textcorpus": "0.1.0",
+		"@ismail-elkorchi/textdata": "0.1.0",
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textfst": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0",
+		"@ismail-elkorchi/textrules": "0.1.0"
+	},
+	"license": "MIT"
+}
