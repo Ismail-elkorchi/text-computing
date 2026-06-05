@@ -1,0 +1,75 @@
+{
+	"name": "@ismail-elkorchi/textquality",
+	"version": "0.1.0",
+	"description": "Text quality, noisy-text quality, OCR/ATR diagnostics, readability, style, corpus quality, annotation quality, and integrity runtime package.",
+	"type": "module",
+	"sideEffects": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./document": {
+			"types": "./dist/document/mod.d.ts",
+			"import": "./dist/document/mod.js"
+		},
+		"./corpus": {
+			"types": "./dist/corpus/mod.d.ts",
+			"import": "./dist/corpus/mod.js"
+		},
+		"./ocr": {
+			"types": "./dist/ocr/mod.d.ts",
+			"import": "./dist/ocr/mod.js"
+		},
+		"./noisy": {
+			"types": "./dist/noisy/mod.d.ts",
+			"import": "./dist/noisy/mod.js"
+		},
+		"./readability": {
+			"types": "./dist/readability/mod.d.ts",
+			"import": "./dist/readability/mod.js"
+		},
+		"./style": {
+			"types": "./dist/style/mod.d.ts",
+			"import": "./dist/style/mod.js"
+		},
+		"./annotation": {
+			"types": "./dist/annotation/mod.d.ts",
+			"import": "./dist/annotation/mod.js"
+		},
+		"./report": {
+			"types": "./dist/report/mod.d.ts",
+			"import": "./dist/report/mod.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/*.test.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0",
+		"@ismail-elkorchi/textnorm": "0.1.0"
+	},
+	"license": "MIT"
+}

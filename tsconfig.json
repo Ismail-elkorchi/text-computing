@@ -26,7 +26,9 @@
       "@ismail-elkorchi/textsearch": ["./packages/textsearch/src/index.ts"],
       "@ismail-elkorchi/textsearch/*": ["./packages/textsearch/src/*/mod.ts"],
       "@ismail-elkorchi/textkb": ["./packages/textkb/src/index.ts"],
-      "@ismail-elkorchi/textkb/*": ["./packages/textkb/src/*/mod.ts"]
+      "@ismail-elkorchi/textkb/*": ["./packages/textkb/src/*/mod.ts"],
+      "@ismail-elkorchi/textquality": ["./packages/textquality/src/index.ts"],
+      "@ismail-elkorchi/textquality/*": ["./packages/textquality/src/*/mod.ts"]
     },
     "allowImportingTsExtensions": true,
     "lib": ["ES2024", "DOM"],
