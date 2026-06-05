@@ -48,6 +48,16 @@ test("creates immutable knowledge bases and validates records", () => {
 			}),
 		/TEXTKB_JSON_VALUE/,
 	);
+	class Metadata {
+		readonly source = "fixture";
+	}
+	assert.throws(
+		() =>
+			createKnowledgeBase({
+				metadata: new Metadata(),
+			}),
+		/TEXTKB_JSON_VALUE/,
+	);
 	assert.throws(
 		() =>
 			createKnowledgeBase({

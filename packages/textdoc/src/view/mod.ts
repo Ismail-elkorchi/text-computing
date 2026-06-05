@@ -1,7 +1,10 @@
 import type { TextDocument } from "../document/mod.ts";
+import { compareSpans } from "../internal/compare.ts";
 import { fail } from "../internal/error.ts";
 import { isNonEmptyString, isRecord } from "../internal/guards.ts";
 import { insertRecordValue } from "../internal/records.ts";
+import type { SpanMap } from "../span/mod.ts";
+import { isSpanMap } from "../span/mod.ts";
 
 export type TextViewKind =
 	| "raw"
@@ -96,6 +99,21 @@ function normalizeView(view: TextView): TextView {
 	return view;
 }
 
+function normalizeSpanMap(spanMap: SpanMap): SpanMap {
+	if (!isSpanMap(spanMap)) {
+		fail(
+			"TEXTDOC_INVALID_SPAN_MAP",
+			"span map must satisfy the final SpanMap contract",
+		);
+	}
+	const entries = [...spanMap.entries].sort(
+		(left, right) =>
+			compareSpans(left.source, right.source) ||
+			compareSpans(left.target, right.target),
+	);
+	return { ...spanMap, entries };
+}
+
 export function addView(doc: TextDocument, view: TextView): TextDocument {
 	const normalized = normalizeView(view);
 	if (
@@ -116,8 +134,80 @@ export function addView(doc: TextDocument, view: TextView): TextDocument {
 			`view span map is missing: ${normalized.spanMapId}`,
 		);
 	}
+	if (normalized.spanMapId !== undefined) {
+		const spanMap = doc.spanMaps[normalized.spanMapId] as SpanMap;
+		if (spanMap.targetViewId !== normalized.id) {
+			fail(
+				"TEXTDOC_VIEW_SPAN_MAP_TARGET_MISMATCH",
+				`view span map target mismatch: ${normalized.id}:${spanMap.targetViewId}`,
+			);
+		}
+		if (
+			normalized.sourceViewId !== undefined &&
+			spanMap.sourceViewId !== normalized.sourceViewId
+		) {
+			fail(
+				"TEXTDOC_VIEW_SPAN_MAP_SOURCE_MISMATCH",
+				`view span map source mismatch: ${normalized.id}:${spanMap.sourceViewId}`,
+			);
+		}
+	}
 	return {
 		...doc,
 		views: insertRecordValue(doc.views, normalized.id, normalized, "view"),
+	};
+}
+
+export function addViewWithSpanMap(
+	doc: TextDocument,
+	view: TextView,
+	spanMap: SpanMap,
+): TextDocument {
+	const normalizedView = normalizeView(view);
+	const normalizedSpanMap = normalizeSpanMap(spanMap);
+	if (normalizedView.sourceViewId === undefined) {
+		fail(
+			"TEXTDOC_VIEW_SOURCE_MISSING",
+			"views added with span maps must declare a source view",
+		);
+	}
+	if (doc.views[normalizedView.sourceViewId] === undefined) {
+		fail(
+			"TEXTDOC_VIEW_SOURCE_MISSING",
+			`source view is missing: ${normalizedView.sourceViewId}`,
+		);
+	}
+	if (normalizedView.spanMapId !== normalizedSpanMap.id) {
+		fail(
+			"TEXTDOC_VIEW_SPAN_MAP_MISMATCH",
+			`view span map id must match span map id: ${normalizedView.id}:${normalizedSpanMap.id}`,
+		);
+	}
+	if (normalizedSpanMap.sourceViewId !== normalizedView.sourceViewId) {
+		fail(
+			"TEXTDOC_VIEW_SPAN_MAP_SOURCE_MISMATCH",
+			`view span map source mismatch: ${normalizedView.id}:${normalizedSpanMap.sourceViewId}`,
+		);
+	}
+	if (normalizedSpanMap.targetViewId !== normalizedView.id) {
+		fail(
+			"TEXTDOC_VIEW_SPAN_MAP_TARGET_MISMATCH",
+			`view span map target mismatch: ${normalizedView.id}:${normalizedSpanMap.targetViewId}`,
+		);
+	}
+	return {
+		...doc,
+		views: insertRecordValue(
+			doc.views,
+			normalizedView.id,
+			normalizedView,
+			"view",
+		),
+		spanMaps: insertRecordValue(
+			doc.spanMaps,
+			normalizedSpanMap.id,
+			normalizedSpanMap,
+			"span map",
+		),
 	};
 }

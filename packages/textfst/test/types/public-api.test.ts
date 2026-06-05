@@ -14,7 +14,10 @@ import { analyzeWord } from "../../dist/morph/mod.js";
 
 const arc: FstArc = { from: 0, to: 1, input: "a", output: "a" };
 const semiring: SemiringName = "boolean";
-const span: SpanRef = { start: 0, end: 1, unit: "utf16-code-unit" };
+const span: SpanRef = {
+	viewId: "input",
+	span: { start: 0, end: 1, unit: "utf16-code-unit" },
+};
 const rule: RewriteRule = { input: "a", output: "b" };
 const fst: Fst = buildFst({
 	kind: "acceptor",
@@ -32,6 +35,6 @@ const result: MorphFstResult | undefined = analyzeWord(morph, "typed")[0];
 assert.equal(packageName, "@ismail-elkorchi/textfst");
 assert.equal(applyDown(compileRegex("a"), "a")[0]?.output, "a");
 assert.equal(applyDown(fst, "a")[0]?.output, "a");
-assert.equal(span.unit, "utf16-code-unit");
+assert.equal(span.span.unit, "utf16-code-unit");
 assert.equal(rule.input, "a");
 assert.equal(result?.lemma, "type");

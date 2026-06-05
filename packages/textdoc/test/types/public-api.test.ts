@@ -3,14 +3,27 @@ import type {
 	AnnotationGraph,
 	AnnotationLayer,
 	Span,
+	SpanMap,
 	TextDocument,
 	TextView,
 } from "../../src/mod.ts";
-import { createDocument } from "../../src/mod.ts";
+import { addViewWithSpanMap, createDocument } from "../../src/mod.ts";
 
 const document: TextDocument = createDocument("type test");
 const span: Span = { start: 0, end: 4, unit: "utf16-code-unit" };
 const view: TextView = document.views.raw as TextView;
+const spanMap: SpanMap = {
+	id: "raw-to-normalized",
+	sourceViewId: "raw",
+	targetViewId: "normalized",
+	entries: [
+		{
+			source: span,
+			target: span,
+			relation: "identity",
+		},
+	],
+};
 const layer: AnnotationLayer = {
 	id: "tokens",
 	type: "token.word",
@@ -38,4 +51,20 @@ const graph: AnnotationGraph = {
 	edges: {},
 };
 
-void [document, span, view, layer, annotation, graph];
+void addViewWithSpanMap(
+	document,
+	{
+		id: "normalized",
+		kind: "normalized",
+		text: view.text,
+		sourceViewId: view.id,
+		spanMapId: spanMap.id,
+		transform: {
+			kind: "normalization",
+			producer: "@ismail-elkorchi/textdoc",
+			sourceViewId: view.id,
+		},
+	},
+	spanMap,
+);
+void [document, span, view, spanMap, layer, annotation, graph];

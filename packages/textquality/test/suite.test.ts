@@ -134,8 +134,15 @@ test("keeps readability and report metrics finite", () => {
 });
 
 test("rejects non-json public values", () => {
+	class Metadata {
+		readonly created = "2020-01-01";
+	}
 	assert.throws(
 		() => assertJsonValue({ created: new Date("2020-01-01T00:00:00Z") }),
+		/TEXTQUALITY_JSON_VALUE/,
+	);
+	assert.throws(
+		() => assertJsonValue({ metadata: new Metadata() }),
 		/TEXTQUALITY_JSON_VALUE/,
 	);
 	assert.throws(

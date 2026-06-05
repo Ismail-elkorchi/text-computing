@@ -44,6 +44,19 @@ test("creates an immutable final corpus with metadata partitions and indexes", (
 	assert.match(corpusFingerprint(corpus), /^[0-9a-f]{8}$/);
 });
 
+test("rejects non-plain metadata objects", () => {
+	class Metadata {
+		readonly language = "en";
+	}
+	assert.throws(
+		() =>
+			createCorpus(fixtureDocuments(), {
+				metadata: new Metadata(),
+			}),
+		/TEXTCORPUS_JSON_VALUE/,
+	);
+});
+
 test("adds documents without mutating the original corpus", () => {
 	const corpus = createCorpus(fixtureDocuments().slice(0, 2), {
 		id: "small",
@@ -217,6 +230,21 @@ test("creates corpora from textdata-compatible dataset values", async () => {
 	});
 	assert.equal(corpus.metadata.datasetId, "dataset");
 	assert.equal(corpus.documents.length, 3);
+	class Metadata {
+		readonly source = "override";
+	}
+	await assert.rejects(
+		() =>
+			createCorpusFromDataset(
+				{
+					id: "dataset",
+					metadata: { source: "fixture" },
+					records: fixtureDocuments(),
+				},
+				{ metadata: new Metadata() },
+			),
+		/TEXTCORPUS_JSON_VALUE/,
+	);
 });
 
 test("supports whitespace fallback only when explicitly requested", () => {

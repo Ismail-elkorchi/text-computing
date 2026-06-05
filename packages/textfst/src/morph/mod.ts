@@ -38,6 +38,7 @@ export function analyzeWord(
 	return applyUp(fst, word, {
 		...options,
 		includeSpans: options.includeSpans,
+		spanViewId: options.spanViewId ?? "surface",
 	}).map((result) => {
 		const parsed = parseAnalysis(result.input);
 		return Object.freeze({
@@ -60,6 +61,7 @@ export function generateWord(
 	return applyDown(fst, analysis, {
 		...options,
 		includeSpans: options.includeSpans,
+		spanViewId: options.spanViewId ?? "analysis",
 	}).map((result) =>
 		Object.freeze({
 			surface: result.output,

@@ -16,6 +16,10 @@ test("adds shallow transfer view and annotation from explicit resources", () => 
 		transferred.views["translation.transfer"]?.text,
 		"Bonjour monde. Bon jour.",
 	);
+	assert.equal(
+		transferred.views["translation.transfer"]?.spanMapId,
+		"translation.transfer.span-map",
+	);
 	assert.ok(transferred.layers["translation.transfer"]);
 	assert.ok(transferred.spanMaps["translation.transfer.span-map"]);
 });

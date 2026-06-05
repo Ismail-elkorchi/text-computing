@@ -312,11 +312,32 @@ test("parses CQL into structured queries and serializes common query forms", () 
 });
 
 test("rejects unsafe JSON metadata and non-UTF-16 spans before slicing", () => {
+	class Metadata {
+		readonly created = "2020-01-01";
+	}
 	assert.throws(
 		() =>
 			createIndex({
 				fields: { body: { source: { kind: "view", viewId: "raw" } } },
 				metadata: { created: new Date() },
+			}),
+		/TEXTSEARCH_JSON_VALUE/,
+	);
+	assert.throws(
+		() =>
+			createIndex(
+				{
+					fields: { body: { source: { kind: "view", viewId: "raw" } } },
+				},
+				{ metadata: new Metadata() },
+			),
+		/TEXTSEARCH_JSON_VALUE/,
+	);
+	assert.throws(
+		() =>
+			createIndex({
+				fields: { body: { source: { kind: "view", viewId: "raw" } } },
+				metadata: new Metadata(),
 			}),
 		/TEXTSEARCH_JSON_VALUE/,
 	);

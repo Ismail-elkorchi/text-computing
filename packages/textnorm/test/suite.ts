@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { createDocument, validateTextDocument } from "@ismail-elkorchi/textdoc";
+import {
+	addViewWithSpanMap,
+	createDocument,
+	validateTextDocument,
+} from "@ismail-elkorchi/textdoc";
 import { buildLexicon } from "@ismail-elkorchi/textlex";
 import {
 	annotateNormalization,
@@ -59,11 +63,11 @@ assert.equal(normalized.view.text, "ye old shop");
 assert.equal(normalized.spanMap.targetViewId, "norm");
 assert.equal(doc.views.norm, undefined);
 
-const materialized = {
-	...doc,
-	views: { ...doc.views, [normalized.view.id]: normalized.view },
-	spanMaps: { ...doc.spanMaps, [normalized.spanMap.id]: normalized.spanMap },
-};
+const materialized = addViewWithSpanMap(
+	doc,
+	normalized.view,
+	normalized.spanMap,
+);
 assert.equal(validateTextDocument(materialized).ok, true);
 
 const annotated = annotateNormalization(materialized, normalized);

@@ -80,6 +80,9 @@ test("runs the final section 20 parallel workflow", () => {
 });
 
 test("keeps corpus construction and metadata JSON-safe", () => {
+	class Metadata {
+		readonly languagePair = "en-fr";
+	}
 	const pair = fixtureParallelDocument();
 	const corpus = fixtureParallelCorpus();
 	assert.equal(pair.metadata.languagePair, "en-fr");
@@ -91,5 +94,12 @@ test("keeps corpus construction and metadata JSON-safe", () => {
 				metadata: { bad: Number.NaN },
 			}),
 		/TEXTPARALLEL_JSON_NUMBER/,
+	);
+	assert.throws(
+		() =>
+			createParallelDocument(sourceDocument(), targetDocument(), {
+				metadata: new Metadata(),
+			}),
+		/TEXTPARALLEL_JSON_VALUE/,
 	);
 });

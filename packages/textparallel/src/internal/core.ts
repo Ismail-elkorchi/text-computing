@@ -5,8 +5,7 @@ import {
 	type AnnotationLayer,
 	addAnnotation,
 	addLayer,
-	addSpanMap,
-	addView,
+	addViewWithSpanMap,
 	createDocument,
 	type Evidence,
 	type EvidenceMode,
@@ -346,11 +345,20 @@ function fail(code: string, message: string): never {
 }
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) {
+		return false;
+	}
+	if (Object.prototype.toString.call(value) !== "[object Object]") {
+		return false;
+	}
+	const prototype = Object.getPrototypeOf(value);
+	if (prototype === null) return true;
+	const objectConstructor = (prototype as { readonly constructor?: unknown })
+		.constructor;
 	return (
-		typeof value === "object" &&
-		value !== null &&
-		!Array.isArray(value) &&
-		Object.prototype.toString.call(value) === "[object Object]"
+		typeof objectConstructor === "function" &&
+		Function.prototype.toString.call(objectConstructor) ===
+			Function.prototype.toString.call(Object)
 	);
 }
 
@@ -1979,26 +1987,31 @@ export function shallowTransfer(
 	const outputMode = options.output ?? "annotation";
 	const targetViewId = options.targetViewId ?? "translation.transfer";
 	if (outputMode === "view" || outputMode === "both") {
-		outputDoc = addView(outputDoc, {
-			id: targetViewId,
-			kind: "task",
-			text: transferred.text,
-			sourceViewId: view.id,
-			transform: {
-				kind: "shallow-transfer",
-				producer: packageName,
-				algorithm: "lexicon-fst-rule-transfer",
-				version: packageVersion,
+		const spanMapId = `${targetViewId}.span-map`;
+		outputDoc = addViewWithSpanMap(
+			outputDoc,
+			{
+				id: targetViewId,
+				kind: "task",
+				text: transferred.text,
 				sourceViewId: view.id,
-				optionsHash: hash,
+				spanMapId,
+				transform: {
+					kind: "shallow-transfer",
+					producer: packageName,
+					algorithm: "lexicon-fst-rule-transfer",
+					version: packageVersion,
+					sourceViewId: view.id,
+					optionsHash: hash,
+				},
 			},
-		});
-		outputDoc = addSpanMap(outputDoc, {
-			id: `${targetViewId}.span-map`,
-			sourceViewId: view.id,
-			targetViewId,
-			entries: transferred.entries,
-		});
+			{
+				id: spanMapId,
+				sourceViewId: view.id,
+				targetViewId,
+				entries: transferred.entries,
+			},
+		);
 	}
 	if (outputMode === "annotation" || outputMode === "both") {
 		const layerId = options.annotationLayerId ?? "translation.transfer";

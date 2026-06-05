@@ -11,6 +11,7 @@ export interface ApplyOptions {
 	readonly maxResults?: number | undefined;
 	readonly allowPartial?: boolean | undefined;
 	readonly includeSpans?: boolean | undefined;
+	readonly spanViewId?: string | undefined;
 }
 
 export interface FstPathArc {
@@ -78,9 +79,12 @@ function compareStableText(left: string, right: string): number {
 	return 0;
 }
 
-function pathSpan(source: string): readonly SpanRef[] {
+function pathSpan(viewId: string, source: string): readonly SpanRef[] {
 	return Object.freeze([
-		{ start: 0, end: source.length, unit: "utf16-code-unit" },
+		{
+			viewId,
+			span: { start: 0, end: source.length, unit: "utf16-code-unit" },
+		},
 	]);
 }
 
@@ -140,7 +144,10 @@ function apply(
 						weight,
 						spans:
 							options.includeSpans === true
-								? pathSpan(source.slice(0, item.sourceIndex))
+								? pathSpan(
+										options.spanViewId ?? "input",
+										source.slice(0, item.sourceIndex),
+									)
 								: undefined,
 					}),
 				);

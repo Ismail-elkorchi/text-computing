@@ -1,20 +1,34 @@
 import { stableHash128 } from "@ismail-elkorchi/textfacts/hash";
+
 import type { SemiringName } from "../weight/mod.js";
 import { assertWeight, combineWeights, compareWeights } from "../weight/mod.js";
 
 export const epsilon = "" as const;
 
 export type FstKind = "acceptor" | "transducer";
-export type TextSpanUnit =
+export type TextUnit =
+	| "utf8-byte"
 	| "utf16-code-unit"
 	| "unicode-scalar"
-	| "grapheme-cluster";
+	| "grapheme"
+	| "word"
+	| "sentence"
+	| "paragraph"
+	| "line"
+	| "block"
+	| "token"
+	| "morpheme"
+	| "annotation";
 
-export interface SpanRef {
-	readonly viewId?: string | undefined;
+export interface Span {
 	readonly start: number;
 	readonly end: number;
-	readonly unit?: TextSpanUnit | undefined;
+	readonly unit: TextUnit;
+}
+
+export interface SpanRef {
+	readonly viewId: string;
+	readonly span: Span;
 }
 
 export interface FstState {
