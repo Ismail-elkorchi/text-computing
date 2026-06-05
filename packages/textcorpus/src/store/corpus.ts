@@ -273,7 +273,7 @@ export async function createCorpusFromDataset(
 		...options,
 		metadata: {
 			...metadataClone(dataset.metadata, "$.dataset.metadata"),
-			...(options.metadata ?? {}),
+			...metadataClone(options.metadata, "$.options.metadata"),
 			datasetId: dataset.id,
 		},
 	});

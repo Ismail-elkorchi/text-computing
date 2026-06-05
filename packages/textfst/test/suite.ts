@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+	analyzeWord,
 	applyDown,
 	applyUp,
 	buildAcceptor,
@@ -34,6 +35,12 @@ assert.deepEqual(
 	applyDown(rewrite, "ph").map((result) => result.output),
 	["f"],
 );
+assert.deepEqual(applyDown(rewrite, "ph", { includeSpans: true })[0]?.spans, [
+	{
+		viewId: "input",
+		span: { start: 0, end: 2, unit: "utf16-code-unit" },
+	},
+]);
 assert.deepEqual(
 	applyUp(rewrite, "f").map((result) => result.input),
 	["ph"],
@@ -46,6 +53,15 @@ const lexicon = compileLexicon({
 assert.deepEqual(
 	generateWord(lexicon, "walk+V+PST").map((result) => result.surface),
 	["walked"],
+);
+assert.equal(
+	analyzeWord(lexicon, "walked", { includeSpans: true })[0]?.spans?.[0]?.viewId,
+	"surface",
+);
+assert.equal(
+	generateWord(lexicon, "walk+V+PST", { includeSpans: true })[0]?.spans?.[0]
+		?.viewId,
+	"analysis",
 );
 assert.deepEqual(
 	applyUp(lexicon, "walked").map((result) => result.input),

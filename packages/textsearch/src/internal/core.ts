@@ -55,11 +55,20 @@ export interface SearchDiagnostic {
 }
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) {
+		return false;
+	}
+	if (Object.prototype.toString.call(value) !== "[object Object]") {
+		return false;
+	}
+	const prototype = Object.getPrototypeOf(value);
+	if (prototype === null) return true;
+	const objectConstructor = (prototype as { readonly constructor?: unknown })
+		.constructor;
 	return (
-		typeof value === "object" &&
-		value !== null &&
-		!Array.isArray(value) &&
-		Object.prototype.toString.call(value) === "[object Object]"
+		typeof objectConstructor === "function" &&
+		Function.prototype.toString.call(objectConstructor) ===
+			Function.prototype.toString.call(Object)
 	);
 }
 
@@ -1420,10 +1429,10 @@ export function createIndex(
 		const analyzer = config.analyzer ?? schemaDefaultAnalyzer;
 		analyzers[publicConfig.analyzerId ?? analyzer.id] = analyzer;
 	}
-	const metadata = jsonObjectClone(
-		{ ...(schema.metadata ?? {}), ...(options.metadata ?? {}) },
-		"$.metadata",
-	);
+	const metadata = stableJsonClone({
+		...jsonObjectClone(schema.metadata, "$.schema.metadata"),
+		...jsonObjectClone(options.metadata, "$.options.metadata"),
+	});
 	const fingerprint = {
 		fields: fields as JsonObject,
 		metadata,

@@ -239,8 +239,14 @@ export function registerTests(api: TestApi): void {
 	api.test(
 		"span maps map identity direct and missing spans deterministically",
 		async () => {
-			const { addSpanMap, addView, createDocument, mapSpan } =
-				await importTextdoc();
+			const {
+				addSpanMap,
+				addView,
+				addViewWithSpanMap,
+				createDocument,
+				mapSpan,
+				validateTextDocument,
+			} = await importTextdoc();
 			const doc = createDocument("Cafe\u0301", { id: "doc:span" });
 			const normalized = addView(doc, {
 				id: "nfc",
@@ -266,6 +272,55 @@ export function registerTests(api: TestApi): void {
 					},
 				],
 			});
+			const atomic = addViewWithSpanMap(
+				doc,
+				{
+					id: "nfc-linked",
+					kind: "normalized",
+					text: "Café",
+					sourceViewId: "raw",
+					spanMapId: "raw-to-nfc-linked",
+					transform: {
+						kind: "normalization",
+						producer: "@ismail-elkorchi/textfacts",
+						algorithm: "NFC",
+						sourceViewId: "raw",
+					},
+				},
+				{
+					id: "raw-to-nfc-linked",
+					sourceViewId: "raw",
+					targetViewId: "nfc-linked",
+					entries: [
+						{
+							source: { start: 0, end: 5, unit: "utf16-code-unit" },
+							target: { start: 0, end: 4, unit: "utf16-code-unit" },
+							relation: "normalized",
+						},
+					],
+				},
+			);
+			api.assertDeepEqual(validateTextDocument(atomic), {
+				ok: true,
+				diagnostics: [],
+			});
+			const linkedSpanMap = atomic.spanMaps["raw-to-nfc-linked"];
+			api.assertOk(linkedSpanMap);
+			api.assertDeepEqual(
+				validateTextDocument({
+					...atomic,
+					spanMaps: {
+						...atomic.spanMaps,
+						"raw-to-nfc-linked": {
+							...linkedSpanMap,
+							targetViewId: "raw",
+						},
+					},
+				}).diagnostics,
+				[
+					"textdoc.view.span-map-target-mismatch:nfc-linked:raw-to-nfc-linked:raw",
+				],
+			);
 			api.assertDeepEqual(
 				mapSpan(
 					mapped,

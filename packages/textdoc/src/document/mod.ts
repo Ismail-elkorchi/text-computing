@@ -145,6 +145,23 @@ export function validateTextDocument(
 				`textdoc.view.span-map-missing:${view.id}:${view.spanMapId}`,
 			);
 		}
+		if (view.spanMapId !== undefined) {
+			const spanMap = value.spanMaps[view.spanMapId];
+			if (spanMap !== undefined && spanMap.targetViewId !== view.id) {
+				diagnostics.push(
+					`textdoc.view.span-map-target-mismatch:${view.id}:${view.spanMapId}:${spanMap.targetViewId}`,
+				);
+			}
+			if (
+				spanMap !== undefined &&
+				view.sourceViewId !== undefined &&
+				spanMap.sourceViewId !== view.sourceViewId
+			) {
+				diagnostics.push(
+					`textdoc.view.span-map-source-mismatch:${view.id}:${view.spanMapId}:${spanMap.sourceViewId}`,
+				);
+			}
+		}
 	}
 	for (const spanMap of Object.values(value.spanMaps)) {
 		if (value.views[spanMap.sourceViewId] === undefined) {
