@@ -16,6 +16,7 @@
 - `@ismail-elkorchi/textdata` — deterministic dataset, stream, split, and annotation-format reader/writer package.
 - `@ismail-elkorchi/textcorpus` — corpus feature package.
 - `@ismail-elkorchi/textsearch` — search analyzer, index, query, ranking, filter, facet, highlight, and suggestion package.
+- `@ismail-elkorchi/textkb` — knowledge resources, entity linking, sense linking, terminology KB lookup, ontology, thesaurus, and semantic relation package.
 
 ## Reference packs
 

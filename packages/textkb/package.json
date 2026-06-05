@@ -1,0 +1,78 @@
+{
+	"name": "@ismail-elkorchi/textkb",
+	"version": "0.1.0",
+	"description": "Knowledge resources, entity linking, sense linking, terminology KB lookup, ontology, thesaurus, and semantic relation runtime package.",
+	"type": "module",
+	"sideEffects": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./kb": {
+			"types": "./dist/kb/mod.d.ts",
+			"import": "./dist/kb/mod.js"
+		},
+		"./entity": {
+			"types": "./dist/entity/mod.d.ts",
+			"import": "./dist/entity/mod.js"
+		},
+		"./sense": {
+			"types": "./dist/sense/mod.d.ts",
+			"import": "./dist/sense/mod.js"
+		},
+		"./term": {
+			"types": "./dist/term/mod.d.ts",
+			"import": "./dist/term/mod.js"
+		},
+		"./ontology": {
+			"types": "./dist/ontology/mod.d.ts",
+			"import": "./dist/ontology/mod.js"
+		},
+		"./thesaurus": {
+			"types": "./dist/thesaurus/mod.d.ts",
+			"import": "./dist/thesaurus/mod.js"
+		},
+		"./link": {
+			"types": "./dist/link/mod.d.ts",
+			"import": "./dist/link/mod.js"
+		},
+		"./disambiguate": {
+			"types": "./dist/disambiguate/mod.d.ts",
+			"import": "./dist/disambiguate/mod.js"
+		},
+		"./semantic-relations": {
+			"types": "./dist/semantic-relations/mod.d.ts",
+			"import": "./dist/semantic-relations/mod.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
+		"test:node": "npm run build && node --test test/suite.test.ts test/public-api.test.ts test/types/public-api.test.ts test/runtime/node.test.ts",
+		"test:deno": "npm run build && deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun": "npm run build && if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser": "npm run build && node scripts/browser-smoke.mjs",
+		"test:workers": "npm run build && node scripts/cloudflare-workers-smoke.mjs",
+		"test:all": "npm run test:node && npm run test:deno && npm run test:bun && npm run test:browser && npm run test:workers && npm run check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textfacts": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0"
+	},
+	"license": "MIT"
+}
