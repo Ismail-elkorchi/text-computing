@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-camel-morphology-resource.schema.json",
+  "title": "TextpackCamelMorphologyResource",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "morphemes"],
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "kind": { "const": "camel-morphology" },
+    "features": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/feature" }
+    },
+    "defaults": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/defaultFeature" }
+    },
+    "tokenizations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/tokenization" }
+    },
+    "morphemes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/morpheme" }
+    },
+    "compatibility": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/compatibility" }
+    }
+  },
+  "definitions": {
+    "feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature", "values"],
+      "properties": {
+        "feature": { "type": "string", "minLength": 1 },
+        "values": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "defaultFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pos", "feature", "value"],
+      "properties": {
+        "pos": { "type": "string", "minLength": 1 },
+        "feature": { "type": "string", "minLength": 1 },
+        "value": { "type": "string" }
+      }
+    },
+    "tokenization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order", "field"],
+      "properties": {
+        "order": { "type": "integer", "minimum": 1 },
+        "field": { "type": "string", "minLength": 1 }
+      }
+    },
+    "morpheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section", "surface", "category", "features"],
+      "properties": {
+        "section": { "enum": ["PREFIXES", "STEMS", "SUFFIXES"] },
+        "surface": { "type": "string" },
+        "category": { "type": "string", "minLength": 1 },
+        "pos": { "type": "string" },
+        "lex": { "type": "string" },
+        "diac": { "type": "string" },
+        "bw": { "type": "string" },
+        "gloss": { "type": "string" },
+        "root": { "type": "string" },
+        "pattern": { "type": "string" },
+        "stem": { "type": "string" },
+        "stemcat": { "type": "string" },
+        "source": { "type": "string" },
+        "d3seg": { "type": "string" },
+        "atbseg": { "type": "string" },
+        "d3tok": { "type": "string" },
+        "atbtok": { "type": "string" },
+        "features": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["table", "leftCategory", "rightCategory"],
+      "properties": {
+        "table": { "enum": ["AB", "AC", "BC"] },
+        "leftCategory": { "type": "string", "minLength": 1 },
+        "rightCategory": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

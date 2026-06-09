@@ -27,8 +27,11 @@ assertKeys("root exports", root, [
 	"packageName",
 	"packageVersion",
 	"readDataset",
+	"readUdAnnotationDatasetFromPack",
 	"splitDataset",
 	"streamRecords",
+	"udAnnotationRecordsFromPack",
+	"udSyntaxResourcesFromPack",
 	"validateDataset",
 	"writeDataset",
 ]);
@@ -77,7 +80,10 @@ assertKeys("conllu exports", conllu, [
 	"conlluSentenceToRecord",
 	"parseConllu",
 	"readConlluDataset",
+	"readUdAnnotationDatasetFromPack",
 	"serializeConllu",
+	"udAnnotationRecordsFromPack",
+	"udSyntaxResourcesFromPack",
 ]);
 
 assertKeys("iob exports", iob, [

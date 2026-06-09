@@ -11,6 +11,7 @@ import * as semanticRelations from "../dist/semantic-relations/mod.js";
 import * as sense from "../dist/sense/mod.js";
 import * as term from "../dist/term/mod.js";
 import * as thesaurus from "../dist/thesaurus/mod.js";
+import * as wordnet from "../dist/wordnet/mod.js";
 
 test("root exports the final textkb API only", () => {
 	assert.deepEqual(
@@ -37,6 +38,7 @@ test("root exports the final textkb API only", () => {
 			"linkEntities",
 			"linkTerms",
 			"ontologyGazetteer",
+			"openEnglishWordNetFromPack",
 			"packageName",
 			"parseAliasRows",
 			"parseEntityRows",
@@ -47,6 +49,7 @@ test("root exports the final textkb API only", () => {
 			"standardSemanticRelationTypes",
 			"thesaurusRelations",
 			"traverseSemanticRelations",
+			"wordNetResourcesFromPack",
 		].sort(),
 	);
 });
@@ -61,4 +64,5 @@ test("required final subpaths are importable", () => {
 	assert.equal(typeof link.linkEntities, "function");
 	assert.equal(typeof disambiguate.scoreDisambiguation, "function");
 	assert.equal(typeof semanticRelations.querySemanticRelations, "function");
+	assert.equal(typeof wordnet.openEnglishWordNetFromPack, "function");
 });

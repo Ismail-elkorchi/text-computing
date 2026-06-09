@@ -47,6 +47,10 @@
 		"./semantic-relations": {
 			"types": "./dist/semantic-relations/mod.d.ts",
 			"import": "./dist/semantic-relations/mod.js"
+		},
+		"./wordnet": {
+			"types": "./dist/wordnet/mod.d.ts",
+			"import": "./dist/wordnet/mod.js"
 		}
 	},
 	"files": [

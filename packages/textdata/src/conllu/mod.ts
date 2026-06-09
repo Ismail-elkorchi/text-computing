@@ -5,6 +5,22 @@ import { conlluSentenceToRecord, parseConllu } from "./parse.js";
 export type { ConlluSentence, ConlluToken } from "./parse.js";
 export { conlluSentenceToRecord, parseConllu } from "./parse.js";
 export { serializeConllu } from "./serialize.js";
+export type {
+	TextPackLike,
+	TextPackResourceLike,
+	UdAnnotationRecord,
+	UdAnnotationToken,
+	UdDependencyProfileRecord,
+	UdFeatureProfileRecord,
+	UdPosProfileRecord,
+	UdSentenceProfileRecord,
+	UdSyntaxPackResources,
+} from "./textpack.js";
+export {
+	readUdAnnotationDatasetFromPack,
+	udAnnotationRecordsFromPack,
+	udSyntaxResourcesFromPack,
+} from "./textpack.js";
 
 export async function readConlluDataset(
 	text: TextPayload,

@@ -1,4 +1,18 @@
 export type {
+	UdAnnotationRecord,
+	UdAnnotationToken,
+	UdDependencyProfileRecord,
+	UdFeatureProfileRecord,
+	UdPosProfileRecord,
+	UdSentenceProfileRecord,
+	UdSyntaxPackResources,
+} from "./conllu/mod.js";
+export {
+	readUdAnnotationDatasetFromPack,
+	udAnnotationRecordsFromPack,
+	udSyntaxResourcesFromPack,
+} from "./conllu/mod.js";
+export type {
 	AlignmentLink,
 	DatasetDiagnostic,
 	DatasetDiagnosticSeverity,
