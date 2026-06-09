@@ -25,6 +25,9 @@
 - `@ismail-elkorchi/textpack-language-registry` — Generated source-backed BCP 47 language registry foundation resources.
 - `@ismail-elkorchi/textpack-unicode-17` — Generated source-backed Unicode 17 foundation resources.
 - `@ismail-elkorchi/textpack-cldr-core` — Generated source-backed CLDR core foundation resources.
+- `@ismail-elkorchi/textpack-ar-msa-morphology` — Generated source-backed Arabic MSA morphology resources from CAMeL Morph.
+- `@ismail-elkorchi/textpack-en-syntax-ud-gumreddit` — Generated source-backed English UD annotation profiles from GUMReddit.
+- `@ismail-elkorchi/textpack-wordnet-en` — Generated source-backed English lexical-semantic resources from Open English WordNet.
 - `@ismail-elkorchi/textpack-foundation` — Generated source-backed foundation composite and language-support API.
 
 Generated textpacks are non-publishable by default. A generated pack becomes an npm-publishable textpack only after the forge publishability gate records production-grade source coverage, audited license evidence, scoped capability claims, conformance/evaluation evidence, and generated reports. Sampled, demo, fixture-backed, and transitional packs are not part of the public package graph.
@@ -47,4 +50,4 @@ npm run -s schema:validate
 - [`docs/decisions/`](docs/decisions/) — accepted public technical decisions.
 - [`fixtures/`](fixtures/) — repository-level fixture inputs, expected outputs, reports, generated artifacts, and quarantined inputs.
 - [`schemas/`](schemas/) — repository-level JSON Schemas.
-- [`packages/textpacks/`](packages/textpacks/) — generated `textpack-*` foundation package outputs.
+- [`packages/textpacks/`](packages/textpacks/) — generated `textpack-*` foundation and task package outputs.

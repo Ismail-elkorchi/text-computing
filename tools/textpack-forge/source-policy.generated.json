@@ -8,14 +8,15 @@
         "source:unicode:cldr-core",
         "source:ud:arabic",
         "source:unimorph:arabic",
-        "source:camel:morph",
+        "source:camel:morph-msa-lrec-coling-2024",
         "source:wordnet:arabic-4",
         "source:wikidata:main"
       ],
       "isolatedSources": [
         "source:quranic-arabic-corpus",
         "source:tashkeela:corpus",
-        "source:arabic:dialect-corpora-unclear"
+        "source:arabic:dialect-corpora-unclear",
+        "source:camel:morph"
       ],
       "languageName": "Arabic",
       "languageTag": "ar",
@@ -56,15 +57,16 @@
         "source:unicode:ucd",
         "source:unicode:cldr-core",
         "source:iana:language-subtag-registry",
-        "source:ud:english",
+        "source:ud:english-gumreddit-r2.18",
         "source:unimorph:english",
-        "source:wordnet:open-english",
+        "source:wordnet:open-english-2025",
         "source:wikidata:main",
         "source:scowl:english-speller"
       ],
       "isolatedSources": [
         "source:wikipedia:raw-text",
         "source:web-corpora:large",
+        "source:ud:english",
         "source:wordnet:princeton"
       ],
       "languageName": "English",
@@ -304,6 +306,29 @@
       "requiredPackageNameSuffixes": [],
       "reviewState": "approved",
       "sourceId": "source:camel:morph"
+    },
+    {
+      "capabilitySlots": [
+        "morphology",
+        "segmentation",
+        "normalization"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "ARRES",
+      "homepageUrl": "https://github.com/CAMeL-Lab/camel_morph",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "CAMeL Morph MSA LREC-COLING 2024 release",
+      "notes": "Audited official CAMeL Morph MSA database release with CC-BY-4.0 data terms.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:camel:morph-msa-lrec-coling-2024"
     },
     {
       "capabilitySlots": [
@@ -1162,6 +1187,29 @@
         "morphology",
         "tagging"
       ],
+      "defaultCompositeAllowed": true,
+      "family": "UD",
+      "homepageUrl": "https://github.com/UniversalDependencies/UD_English-GUMReddit",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "UD English GUMReddit r2.18",
+      "notes": "Audited annotation-only treebank path. The released repository excludes underlying Reddit text; generated packs must not ingest not-to-release material.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:ud:english-gumreddit-r2.18"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
       "defaultCompositeAllowed": false,
       "family": "UD",
       "homepageUrl": "https://universaldependencies.org/fr/",
@@ -1740,9 +1788,9 @@
       "languages": [
         "en"
       ],
-      "licenseExpression": "CC-BY-4.0",
+      "licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
       "name": "Open English WordNet",
-      "notes": "Good default English semantic source once generated reports and evaluation exist.",
+      "notes": "Good default English semantic source once generated reports and evaluation exist; exact released versions need their own source ids.",
       "policyClass": "attribution",
       "priority": "first",
       "publishableByDefault": true,
@@ -1750,6 +1798,28 @@
       "requiredPackageNameSuffixes": [],
       "reviewState": "approved",
       "sourceId": "source:wordnet:open-english"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://en-word.net/",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "name": "Open English WordNet 2025",
+      "notes": "Audited 2025 release with Princeton WordNet lineage attribution and Open English WordNet CC-BY-4.0 attribution.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:open-english-2025"
     },
     {
       "capabilitySlots": [
@@ -1797,9 +1867,9 @@
     }
   ],
   "summaries": {
-    "activeSourceCount": 3,
+    "activeSourceCount": 6,
     "byPolicyClass": {
-      "attribution": 8,
+      "attribution": 11,
       "blocked/review-only": 30,
       "copyleft": 4,
       "default-safe": 5,
@@ -1808,17 +1878,17 @@
       "share-alike": 9
     },
     "byPriority": {
-      "first": 33,
+      "first": 36,
       "isolated": 14,
       "review": 13,
       "second": 6
     },
     "byReviewState": {
-      "approved": 23,
+      "approved": 26,
       "blocked": 3,
       "pending": 40
     },
     "languageCount": 8,
-    "sourceCount": 66
+    "sourceCount": 69
   }
 }

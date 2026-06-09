@@ -1,0 +1,52 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+	"packageName": "@ismail-elkorchi/textpack-wordnet-en",
+	"pipelineId": "open-english-wordnet-lmf",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:wordnet:open-english-2025"
+	],
+	"snapshotIds": [
+		"snapshot:source:wordnet:open-english-2025:2025-edition"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+			"path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/english-wordnet-2025.xml.gz",
+			"checksum": "sha256:9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "wordnet-en-lexical-entries",
+			"path": "resources/wordnet-en.lexical-entries.tsv",
+			"kind": "lexicon",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "wordnet-en-senses",
+			"path": "resources/wordnet-en.senses.tsv",
+			"kind": "knowledge-base",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "wordnet-en-synsets",
+			"path": "resources/wordnet-en.synsets.tsv",
+			"kind": "knowledge-base",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "wordnet-en-relations",
+			"path": "resources/wordnet-en.relations.tsv",
+			"kind": "knowledge-base",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "wordnet-en-quality",
+			"path": "resources/wordnet-en.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

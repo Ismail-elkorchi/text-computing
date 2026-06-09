@@ -1,0 +1,45 @@
+{
+  "forgeVersion": "0.1.0",
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "generatedFiles": [
+    "ATTRIBUTION.generated.md",
+    "CHANGELOG.md",
+    "COVERAGE.generated.json",
+    "NOTICE.generated.md",
+    "pack.manifest.json",
+    "package.json",
+    "QUALITY.generated.json",
+    "README.md",
+    "resources/ud-gumreddit.annotations.tsv",
+    "resources/ud-gumreddit.dependencies.tsv",
+    "resources/ud-gumreddit.features.tsv",
+    "resources/ud-gumreddit.quality.json",
+    "resources/ud-gumreddit.sentence-profile.tsv",
+    "resources/ud-gumreddit.upos.tsv",
+    "SOURCES.generated.json",
+    "src/index.ts",
+    "src/manifest.ts",
+    "src/resources.ts",
+    "test/smoke.mjs",
+    "tsconfig.build.json",
+    "tsconfig.json"
+  ],
+  "generatorCommand": "node tools/textpack-forge/cli.mjs build",
+  "lockfile": "tools/textpack-forge/forge.lock.json",
+  "lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+  "mode": "source-backed",
+  "outputChecksum": "sha256:a966de1a7d14c944b787e57429365c778d599fd1baacf7727cbaf77db12934a9",
+  "packSpecPath": "tools/textpack-forge/packs/foundation-packs.pack.json",
+  "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+  "packageVersion": "0.1.0",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "schemaVersion": "1"
+}

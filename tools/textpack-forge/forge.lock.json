@@ -4,7 +4,10 @@
 	"mode": "source-backed",
 	"generatedAt": "2026-06-08T00:00:00.000Z",
 	"sourcePaths": [
+		"tools/textpack-forge/sources/camel-morph-msa-lrec-coling-2024.source.json",
 		"tools/textpack-forge/sources/iana-language-subtag-registry.source.json",
+		"tools/textpack-forge/sources/open-english-wordnet-2025.source.json",
+		"tools/textpack-forge/sources/ud-english-gumreddit-r2.18.source.json",
 		"tools/textpack-forge/sources/unicode-cldr-core.source.json",
 		"tools/textpack-forge/sources/unicode-ucd.source.json"
 	],
@@ -12,25 +15,44 @@
 		"tools/textpack-forge/source-policies/source-universe.policy.json"
 	],
 	"snapshotPaths": [
+		"tools/textpack-forge/snapshots/camel-morph-msa-lrec-coling-2024.snapshot.json",
 		"tools/textpack-forge/snapshots/iana-language-subtag-registry-2026-05-05.snapshot.json",
+		"tools/textpack-forge/snapshots/open-english-wordnet-2025.snapshot.json",
+		"tools/textpack-forge/snapshots/ud-english-gumreddit-r2.18.snapshot.json",
 		"tools/textpack-forge/snapshots/unicode-cldr-core-48.2.0.snapshot.json",
 		"tools/textpack-forge/snapshots/unicode-ucd-17.0.0.snapshot.json"
 	],
 	"resourceSpecPaths": [
+		"tools/textpack-forge/resources/textpack-ar-msa-morphology.resource.json",
 		"tools/textpack-forge/resources/textpack-cldr-core.resource.json",
+		"tools/textpack-forge/resources/textpack-en-syntax-ud-gumreddit.resource.json",
 		"tools/textpack-forge/resources/textpack-language-registry.resource.json",
-		"tools/textpack-forge/resources/textpack-unicode-17.resource.json"
+		"tools/textpack-forge/resources/textpack-unicode-17.resource.json",
+		"tools/textpack-forge/resources/textpack-wordnet-en.resource.json"
 	],
 	"packSpecPaths": [
-		"tools/textpack-forge/packs/foundation-packs.pack.json"
+		"tools/textpack-forge/packs/foundation-packs.pack.json",
+		"tools/textpack-forge/packs/task-packs.pack.json"
 	],
 	"compositeSpecPaths": [
 		"tools/textpack-forge/composites/textpack-foundation.composite.json"
 	],
 	"snapshotLocks": [
 		{
+			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+			"checksum": "sha256:fef0aad3d875f03f3b9b931a229ffe5d5f6573f86160dbbccc7e4587ddbe955b"
+		},
+		{
 			"snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
 			"checksum": "sha256:da6aafd337212fa24dc9dcbc0fc231aba735ee64ff5acf1d35386b4258fc6c25"
+		},
+		{
+			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+			"checksum": "sha256:2e37bbb0f93dce9ddae3d3ed335e5000b471417946e724d3cff89bdf1903c778"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
+			"checksum": "sha256:f2814065fb07c813ce8ac6318396b42b0d13e1a15bde2b351cfa4f14dbe02c58"
 		},
 		{
 			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",

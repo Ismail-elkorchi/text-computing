@@ -4,6 +4,9 @@
 	"family": "IANA",
 	"name": "IANA Language Subtag Registry",
 	"homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+	"licenseEvidence": [
+		"https://www.iana.org/help/licensing-terms"
+	],
 	"licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
 	"redistributionPolicy": "redistributable-with-attribution",
 	"reviewState": "approved",

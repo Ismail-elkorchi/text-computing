@@ -1,0 +1,131 @@
+{
+  "acceptedRecordCount": 783738,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "kb"
+      },
+      "notes": [
+        "Open English WordNet lexical entries, senses, synsets, and semantic relations are available as generated KB resources."
+      ],
+      "resourceIds": [
+        "wordnet-en-lexical-entries",
+        "wordnet-en-senses",
+        "wordnet-en-synsets",
+        "wordnet-en-relations"
+      ],
+      "slot": "lexical-semantics",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records lexical-entry, sense, synset, and relation counts."
+      ],
+      "resourceIds": [
+        "wordnet-en-quality"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "rejectedRecordCount": 0,
+  "resourceCount": 5,
+  "resourcePaths": [
+    "resources/wordnet-en.lexical-entries.tsv",
+    "resources/wordnet-en.quality.json",
+    "resources/wordnet-en.relations.tsv",
+    "resources/wordnet-en.senses.tsv",
+    "resources/wordnet-en.synsets.tsv"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
+  ],
+  "resources": [
+    {
+      "byteLength": 4202454,
+      "checksum": "sha256:43df93cb052d566573982948efeedcae2ed4e2a18a3d3e16134a37790dfb9426",
+      "id": "wordnet-en-lexical-entries",
+      "kind": "lexicon",
+      "lineCount": 135971,
+      "nonEmptyLineCount": 135970,
+      "path": "resources/wordnet-en.lexical-entries.tsv",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 1401,
+      "checksum": "sha256:c20aa32a35394b476849490164227ba64237489bbc3de36498e50d146095db94",
+      "id": "wordnet-en-quality",
+      "kind": "quality-profile",
+      "lineCount": 54,
+      "nonEmptyLineCount": 53,
+      "path": "resources/wordnet-en.quality.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 19570884,
+      "checksum": "sha256:fcf45d3d2ddeb3350ae18f50087387635369d8807e109bb1b30fa07ab1969ed6",
+      "id": "wordnet-en-relations",
+      "kind": "knowledge-base",
+      "lineCount": 355066,
+      "nonEmptyLineCount": 355065,
+      "path": "resources/wordnet-en.relations.tsv",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 13790166,
+      "checksum": "sha256:8ca27118c686b1aea8a61d75a9bf52262c48b4999e4965b2d52c44031130fced",
+      "id": "wordnet-en-senses",
+      "kind": "knowledge-base",
+      "lineCount": 185131,
+      "nonEmptyLineCount": 185130,
+      "path": "resources/wordnet-en.senses.tsv",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 13924959,
+      "checksum": "sha256:721406f066db96e780b50f31fabd476446a5f7d2e3420690fd479451ed36d255",
+      "id": "wordnet-en-synsets",
+      "kind": "knowledge-base",
+      "lineCount": 107521,
+      "nonEmptyLineCount": 107520,
+      "path": "resources/wordnet-en.synsets.tsv",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "medium"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ]
+}

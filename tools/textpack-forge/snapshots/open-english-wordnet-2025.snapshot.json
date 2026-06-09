@@ -1,0 +1,19 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+	"sourceId": "source:wordnet:open-english-2025",
+	"version": "2025-edition",
+	"retrievedAt": "2026-06-09T00:00:00.000Z",
+	"kind": "archive",
+	"checksum": "sha256:2e37bbb0f93dce9ddae3d3ed335e5000b471417946e724d3cff89bdf1903c778",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/english-wordnet-2025.xml.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 11363503,
+			"checksum": "sha256:9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe",
+			"sourceUrl": "https://en-word.net/static/english-wordnet-2025.xml.gz"
+		}
+	],
+	"notes": "Pinned Open English WordNet 2025 LMF archive."
+}

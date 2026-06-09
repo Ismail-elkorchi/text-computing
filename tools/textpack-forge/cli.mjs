@@ -2,6 +2,7 @@
 
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
+import { gunzipSync, gzipSync } from "node:zlib";
 import {
 	access,
 	mkdir,
@@ -25,6 +26,8 @@ const SIZE_REPORT_PATH = "tools/textpack-forge/reports/size-report.json";
 const SNAPSHOT_DATA_DIR = "tools/textpack-forge/snapshots/data";
 const GENERATED_BY = "tools/textpack-forge";
 const BUILD_COMMAND = "node tools/textpack-forge/cli.mjs build";
+const INLINE_RESOURCE_BYTES_LIMIT = 500 * 1024;
+const GZIP_BASE64_RESOURCE_SUFFIX = ".gz.b64";
 const PACKAGE_REPORT_FILES = [
 	"NOTICE.generated.md",
 	"SOURCES.generated.json",
@@ -400,6 +403,15 @@ function validateSourceCatalog(sources) {
 	const sourceById = new Map();
 	for (const source of sources) {
 		expect(source.schemaVersion === "1", `${source.sourceId} schemaVersion must be 1.`);
+		assertStringArray(source.licenseEvidence, `${source.sourceId} licenseEvidence`, {
+			minItems: 1,
+		});
+		for (const evidenceUrl of source.licenseEvidence) {
+			expect(
+				evidenceUrl.startsWith("https://"),
+				`${source.sourceId} licenseEvidence must use HTTPS URLs.`,
+			);
+		}
 		expect(
 			!sourceById.has(source.sourceId),
 			`Duplicate source id ${source.sourceId}.`,
@@ -1292,6 +1304,571 @@ function transformCldrCoreFoundation(resourceSpec, inputs) {
 	];
 }
 
+function camelSections(text) {
+	const sections = new Map();
+	let current = "";
+	for (const line of text.split(/\r?\n/u)) {
+		const header = line.match(/^###(.+?)###$/u);
+		if (header !== null) {
+			current = header[1].trim();
+			if (!sections.has(current)) sections.set(current, []);
+			continue;
+		}
+		if (current.length === 0 || line.length === 0) continue;
+		sections.get(current)?.push(line);
+	}
+	return sections;
+}
+
+function splitFeatureToken(token) {
+	const index = token.indexOf(":");
+	if (index === -1) return undefined;
+	return [token.slice(0, index), token.slice(index + 1)];
+}
+
+function parseFeatureString(text) {
+	const features = {};
+	for (const token of text.trim().split(/\s+/u)) {
+		if (token.length === 0) continue;
+		const pair = splitFeatureToken(token);
+		if (pair === undefined) continue;
+		features[pair[0]] = pair[1];
+	}
+	return features;
+}
+
+function incrementCount(counts, key, amount = 1) {
+	counts.set(key, (counts.get(key) ?? 0) + amount);
+}
+
+function sortedCountRows(counts) {
+	return [...counts.entries()].sort((left, right) => {
+		const countDelta = right[1] - left[1];
+		if (countDelta !== 0) return countDelta;
+		return left[0].localeCompare(right[0]);
+	});
+}
+
+function transformCamelMorphMsa(resourceSpec, inputs) {
+	const text = requiredInput(inputs, "camel_morph_msa_v1.0.db", resourceSpec);
+	const sections = camelSections(text);
+	const defines = sections.get("DEFINES") ?? [];
+	const defaults = sections.get("DEFAULTS") ?? [];
+	const tokenizations = sections.get("TOKENIZATIONS") ?? [];
+	const morphemeSections = ["PREFIXES", "STEMS", "SUFFIXES"];
+	const compatibilitySections = ["TABLE AB", "TABLE BC", "TABLE AC"];
+	const featureRows = [];
+	for (const line of defines) {
+		const parts = line.split(/\s+/u);
+		if (parts[0] !== "DEFINE" || parts.length < 3) continue;
+		const feature = parts[1];
+		const values = parts.slice(2).map((token) => {
+			const pair = splitFeatureToken(token);
+			return pair === undefined ? token : pair[1];
+		});
+		featureRows.push([feature, values.length, values.join(" ")]);
+	}
+	featureRows.sort((left, right) => left[0].localeCompare(right[0]));
+
+	const defaultRows = [];
+	for (const line of defaults) {
+		const payload = line.replace(/^DEFAULT\s+/u, "");
+		const features = parseFeatureString(payload);
+		const pos = features.pos ?? "";
+		for (const [feature, value] of Object.entries(features).sort((left, right) =>
+			left[0].localeCompare(right[0]),
+		)) {
+			defaultRows.push([pos, feature, value]);
+		}
+	}
+
+	const tokenizationRows = [];
+	for (const line of tokenizations) {
+		const parts = line.split(/\s+/u);
+		if (parts[0] !== "TOKENIZATION") continue;
+		parts.slice(1).forEach((field, index) => {
+			tokenizationRows.push([index + 1, field]);
+		});
+	}
+
+	const morphemeRows = [];
+	const morphemeCountsBySection = new Map();
+	const morphemeCountsByPos = new Map();
+	for (const section of morphemeSections) {
+		const lines = sections.get(section) ?? [];
+		for (const line of lines) {
+			const [surface = "", category = "", ...rest] = line.split("\t");
+			const featureText = rest.join(" ").trim();
+			const features = parseFeatureString(featureText);
+			incrementCount(morphemeCountsBySection, section);
+			incrementCount(morphemeCountsByPos, features.pos ?? "");
+			morphemeRows.push([
+				section,
+				surface,
+				category,
+				features.pos ?? "",
+				features.lex ?? "",
+				features.diac ?? "",
+				features.bw ?? "",
+				features.gloss ?? "",
+				features.root ?? "",
+				features.pattern ?? "",
+				features.stem ?? "",
+				features.stemcat ?? "",
+				features.source ?? "",
+				features.d3seg ?? "",
+				features.atbseg ?? "",
+				features.d3tok ?? "",
+				features.atbtok ?? "",
+				featureText,
+			]);
+		}
+	}
+	morphemeRows.sort((left, right) => {
+		const sectionDelta = left[0].localeCompare(right[0]);
+		if (sectionDelta !== 0) return sectionDelta;
+		const categoryDelta = left[2].localeCompare(right[2]);
+		if (categoryDelta !== 0) return categoryDelta;
+		return left[1].localeCompare(right[1]);
+	});
+
+	const compatibilityRows = [];
+	const compatibilityCounts = new Map();
+	for (const section of compatibilitySections) {
+		for (const line of sections.get(section) ?? []) {
+			const [left = "", right = ""] = line.trim().split(/\s+/u);
+			if (left.length === 0 || right.length === 0) continue;
+			compatibilityRows.push([section.replace("TABLE ", ""), left, right]);
+			incrementCount(compatibilityCounts, section);
+		}
+	}
+	compatibilityRows.sort((left, right) => {
+		const tableDelta = left[0].localeCompare(right[0]);
+		if (tableDelta !== 0) return tableDelta;
+		const leftDelta = left[1].localeCompare(right[1]);
+		if (leftDelta !== 0) return leftDelta;
+		return left[2].localeCompare(right[2]);
+	});
+
+	const summary = {
+		schemaVersion: "1",
+		sourceId: "source:camel:morph-msa-lrec-coling-2024",
+		pipelineId: resourceSpec.pipelineId,
+		pipelineVersion: resourceSpec.pipelineVersion,
+		featureCount: featureRows.length,
+		defaultFeatureCount: defaultRows.length,
+		tokenizationFieldCount: tokenizationRows.length,
+		morphemeCount: morphemeRows.length,
+		compatibilityCount: compatibilityRows.length,
+		morphemeCountsBySection: Object.fromEntries(sortedCountRows(morphemeCountsBySection)),
+		morphemeCountsByPos: Object.fromEntries(sortedCountRows(morphemeCountsByPos)),
+		compatibilityCounts: Object.fromEntries(sortedCountRows(compatibilityCounts)),
+		recordsAccepted:
+			featureRows.length +
+			defaultRows.length +
+			tokenizationRows.length +
+			morphemeRows.length +
+			compatibilityRows.length,
+		recordsRejected: 0,
+		warnings: [],
+	};
+
+	return [
+		outputFor(
+			resourceSpec,
+			"ar-msa-camel-morph-features",
+			tsvFile(["feature", "valueCount", "values"], featureRows),
+		),
+		outputFor(
+			resourceSpec,
+			"ar-msa-camel-morph-defaults",
+			tsvFile(["pos", "feature", "value"], defaultRows),
+		),
+		outputFor(
+			resourceSpec,
+			"ar-msa-camel-morph-tokenizations",
+			tsvFile(["order", "field"], tokenizationRows),
+		),
+		outputFor(
+			resourceSpec,
+			"ar-msa-camel-morph-morphemes",
+			tsvFile(
+				[
+					"section",
+					"surface",
+					"category",
+					"pos",
+					"lex",
+					"diac",
+					"bw",
+					"gloss",
+					"root",
+					"pattern",
+					"stem",
+					"stemcat",
+					"source",
+					"d3seg",
+					"atbseg",
+					"d3tok",
+					"atbtok",
+					"features",
+				],
+				morphemeRows,
+			),
+		),
+		outputFor(
+			resourceSpec,
+			"ar-msa-camel-morph-compatibility",
+			tsvFile(["table", "leftCategory", "rightCategory"], compatibilityRows),
+		),
+		outputFor(
+			resourceSpec,
+			"ar-msa-camel-morph-quality",
+			stableJson(summary),
+		),
+	];
+}
+
+function xmlAttributes(text) {
+	const attributes = {};
+	for (const match of text.matchAll(/([A-Za-z_:][-A-Za-z0-9_:.]*)="([^"]*)"/gu)) {
+		attributes[match[1]] = xmlDecode(match[2]);
+	}
+	return attributes;
+}
+
+function xmlDecode(value) {
+	return value
+		.replace(/&#x([0-9a-f]+);/giu, (_, hex) =>
+			String.fromCodePoint(Number.parseInt(hex, 16)),
+		)
+		.replace(/&#([0-9]+);/gu, (_, code) =>
+			String.fromCodePoint(Number.parseInt(code, 10)),
+		)
+		.replace(/&quot;/gu, '"')
+		.replace(/&apos;/gu, "'")
+		.replace(/&lt;/gu, "<")
+		.replace(/&gt;/gu, ">")
+		.replace(/&amp;/gu, "&");
+}
+
+function firstXmlText(body, tagName) {
+	const pattern = new RegExp(`<${tagName}\\b[^>]*>([\\s\\S]*?)</${tagName}>`, "u");
+	const match = body.match(pattern);
+	if (match === null) return "";
+	return xmlDecode(match[1].replace(/<[^>]+>/gu, " ").replace(/\s+/gu, " ").trim());
+}
+
+function countXmlTags(body, tagName) {
+	const pattern = new RegExp(`<${tagName}\\b`, "gu");
+	return [...body.matchAll(pattern)].length;
+}
+
+function transformOpenEnglishWordnetLmf(resourceSpec, inputs) {
+	const xml = requiredInput(inputs, "english-wordnet-2025.xml.gz", resourceSpec);
+	const lexicalEntryRows = [];
+	const senseRows = [];
+	const relationRows = [];
+	const synsetRows = [];
+	const lexicalPosCounts = new Map();
+	const relationTypeCounts = new Map();
+
+	for (const match of xml.matchAll(/<LexicalEntry\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/LexicalEntry>/gu)) {
+		const entryId = xmlDecode(match[1]);
+		const body = match[2];
+		const lemmaMatch = body.match(/<Lemma\b([^>]*)\/>/u);
+		const lemmaAttrs = lemmaMatch === null ? {} : xmlAttributes(lemmaMatch[1]);
+		const lemma = lemmaAttrs.writtenForm ?? "";
+		const partOfSpeech = lemmaAttrs.partOfSpeech ?? "";
+		lexicalEntryRows.push([entryId, lemma, partOfSpeech]);
+		incrementCount(lexicalPosCounts, partOfSpeech);
+		for (const senseMatch of body.matchAll(/<Sense\b([^>]*?)(?:\/>|>([\s\S]*?)<\/Sense>)/gu)) {
+			const senseAttrs = xmlAttributes(senseMatch[1]);
+			const senseId = senseAttrs.id ?? "";
+			const synsetId = senseAttrs.synset ?? "";
+			senseRows.push([
+				senseId,
+				entryId,
+				lemma,
+				partOfSpeech,
+				synsetId,
+				senseAttrs.subcat ?? "",
+			]);
+			const senseBody = senseMatch[2] ?? "";
+			for (const relationMatch of senseBody.matchAll(/<SenseRelation\b([^>]*)\/>/gu)) {
+				const relationAttrs = xmlAttributes(relationMatch[1]);
+				const relType = relationAttrs.relType ?? "";
+				relationRows.push([
+					"sense",
+					senseId,
+					relType,
+					relationAttrs.target ?? "",
+				]);
+				incrementCount(relationTypeCounts, `sense:${relType}`);
+			}
+		}
+	}
+
+	for (const match of xml.matchAll(/<Synset\b([^>]*)>([\s\S]*?)<\/Synset>/gu)) {
+		const attrs = xmlAttributes(match[1]);
+		const body = match[2];
+		const synsetId = attrs.id ?? "";
+		synsetRows.push([
+			synsetId,
+			attrs.ili ?? "",
+			attrs.partOfSpeech ?? "",
+			attrs.lexfile ?? "",
+			attrs.members ?? "",
+			firstXmlText(body, "Definition"),
+			countXmlTags(body, "Example"),
+		]);
+		for (const relationMatch of body.matchAll(/<SynsetRelation\b([^>]*)\/>/gu)) {
+			const relationAttrs = xmlAttributes(relationMatch[1]);
+			const relType = relationAttrs.relType ?? "";
+			relationRows.push([
+				"synset",
+				synsetId,
+				relType,
+				relationAttrs.target ?? "",
+			]);
+			incrementCount(relationTypeCounts, `synset:${relType}`);
+		}
+	}
+
+	lexicalEntryRows.sort((left, right) => left[0].localeCompare(right[0]));
+	senseRows.sort((left, right) => left[0].localeCompare(right[0]));
+	synsetRows.sort((left, right) => left[0].localeCompare(right[0]));
+	relationRows.sort((left, right) => {
+		const scopeDelta = left[0].localeCompare(right[0]);
+		if (scopeDelta !== 0) return scopeDelta;
+		const sourceDelta = left[1].localeCompare(right[1]);
+		if (sourceDelta !== 0) return sourceDelta;
+		const typeDelta = left[2].localeCompare(right[2]);
+		if (typeDelta !== 0) return typeDelta;
+		return left[3].localeCompare(right[3]);
+	});
+
+	const summary = {
+		schemaVersion: "1",
+		sourceId: "source:wordnet:open-english-2025",
+		pipelineId: resourceSpec.pipelineId,
+		pipelineVersion: resourceSpec.pipelineVersion,
+		lexicalEntryCount: lexicalEntryRows.length,
+		senseCount: senseRows.length,
+		synsetCount: synsetRows.length,
+		relationCount: relationRows.length,
+		lexicalEntriesByPartOfSpeech: Object.fromEntries(sortedCountRows(lexicalPosCounts)),
+		relationsByType: Object.fromEntries(sortedCountRows(relationTypeCounts)),
+		recordsAccepted:
+			lexicalEntryRows.length +
+			senseRows.length +
+			synsetRows.length +
+			relationRows.length,
+		recordsRejected: 0,
+		warnings: [],
+	};
+
+	return [
+		outputFor(
+			resourceSpec,
+			"wordnet-en-lexical-entries",
+			tsvFile(["entryId", "lemma", "partOfSpeech"], lexicalEntryRows),
+		),
+		outputFor(
+			resourceSpec,
+			"wordnet-en-senses",
+			tsvFile(
+				["senseId", "entryId", "lemma", "partOfSpeech", "synsetId", "subcat"],
+				senseRows,
+			),
+		),
+		outputFor(
+			resourceSpec,
+			"wordnet-en-synsets",
+			tsvFile(
+				["synsetId", "ili", "partOfSpeech", "lexfile", "members", "definition", "exampleCount"],
+				synsetRows,
+			),
+		),
+		outputFor(
+			resourceSpec,
+			"wordnet-en-relations",
+			tsvFile(["scope", "sourceId", "relType", "targetId"], relationRows),
+		),
+		outputFor(resourceSpec, "wordnet-en-quality", stableJson(summary)),
+	];
+}
+
+function conlluSplitName(basename) {
+	if (basename.includes("-ud-train.")) return "train";
+	if (basename.includes("-ud-dev.")) return "dev";
+	if (basename.includes("-ud-test.")) return "test";
+	return basename.replace(/\.conllu$/u, "");
+}
+
+function transformUdConlluProfile(resourceSpec, inputs) {
+	const inputNames = resourceSpec.inputFiles
+		.map((inputFile) => path.basename(inputFile.path))
+		.filter((basename) => basename.endsWith(".conllu"))
+		.sort((left, right) => left.localeCompare(right));
+	const uposCounts = new Map();
+	const featureCounts = new Map();
+	const dependencyCounts = new Map();
+	const sentenceStats = new Map();
+	const annotationRows = [];
+	for (const basename of inputNames) {
+		const split = conlluSplitName(basename);
+		const text = requiredInput(inputs, basename, resourceSpec);
+		let sentenceCount = 0;
+		let tokenCount = 0;
+		let maxTokenCount = 0;
+		for (const block of text.split(/\r?\n\r?\n/u)) {
+			if (block.trim().length === 0) continue;
+			let sentenceTokenCount = 0;
+			const blockRows = [];
+			for (const line of block.split(/\r?\n/u)) {
+				if (line.length === 0 || line.startsWith("#")) continue;
+				const columns = line.split("\t");
+				if (columns.length < 10 || !/^[0-9]+$/u.test(columns[0])) continue;
+				const upos = columns[3] ?? "_";
+				const xpos = columns[4] ?? "_";
+				const features = columns[5] ?? "_";
+				const head = columns[6] ?? "_";
+				const deprel = columns[7] ?? "_";
+				incrementCount(uposCounts, `${upos}\t${xpos}`);
+				incrementCount(dependencyCounts, `${split}\t${deprel}`);
+				if (features !== "_") {
+					for (const feature of features.split("|")) {
+						const [name = "", value = ""] = feature.split("=");
+						if (name.length > 0) incrementCount(featureCounts, `${name}\t${value}`);
+					}
+				}
+				sentenceTokenCount += 1;
+				blockRows.push([
+					split,
+					sentenceCount + 1,
+					columns[0],
+					upos,
+					xpos,
+					features,
+					head,
+					deprel,
+					columns[8] ?? "_",
+					columns[9] ?? "_",
+				]);
+			}
+			if (sentenceTokenCount > 0) {
+				sentenceCount += 1;
+				tokenCount += sentenceTokenCount;
+				maxTokenCount = Math.max(maxTokenCount, sentenceTokenCount);
+				annotationRows.push(...blockRows);
+			}
+		}
+		sentenceStats.set(split, {
+			sentenceCount,
+			tokenCount,
+			averageTokenCount:
+				sentenceCount === 0 ? 0 : Number((tokenCount / sentenceCount).toFixed(2)),
+			maxTokenCount,
+		});
+	}
+
+	const uposRows = sortedCountRows(uposCounts).map(([key, count]) => [
+		...key.split("\t"),
+		count,
+	]);
+	const featureRows = sortedCountRows(featureCounts).map(([key, count]) => [
+		...key.split("\t"),
+		count,
+	]);
+	const dependencyRows = sortedCountRows(dependencyCounts).map(([key, count]) => [
+		...key.split("\t"),
+		count,
+	]);
+	const sentenceRows = [...sentenceStats.entries()]
+		.sort((left, right) => left[0].localeCompare(right[0]))
+		.map(([split, stats]) => [
+			split,
+			stats.sentenceCount,
+			stats.tokenCount,
+			stats.averageTokenCount,
+			stats.maxTokenCount,
+		]);
+	const totalSentences = [...sentenceStats.values()].reduce(
+		(total, stats) => total + stats.sentenceCount,
+		0,
+	);
+	const totalTokens = [...sentenceStats.values()].reduce(
+		(total, stats) => total + stats.tokenCount,
+		0,
+	);
+	const summary = {
+		schemaVersion: "1",
+		sourceId: "source:ud:english-gumreddit-r2.18",
+		pipelineId: resourceSpec.pipelineId,
+		pipelineVersion: resourceSpec.pipelineVersion,
+		splits: Object.fromEntries([...sentenceStats.entries()].sort()),
+		totalSentences,
+		totalTokens,
+		annotationRowCount: annotationRows.length,
+		uposPairCount: uposRows.length,
+		featureValueCount: featureRows.length,
+		dependencyLabelBySplitCount: dependencyRows.length,
+		rawTextFieldsEmitted: false,
+		recordsAccepted: totalTokens,
+		recordsRejected: 0,
+		warnings: [
+			"Generated resources intentionally exclude FORM and LEMMA fields because the source treebank is annotation-only."
+		],
+	};
+
+	return [
+		outputFor(
+			resourceSpec,
+			"en-ud-gumreddit-upos",
+			tsvFile(["upos", "xpos", "count"], uposRows),
+		),
+		outputFor(
+			resourceSpec,
+			"en-ud-gumreddit-features",
+			tsvFile(["feature", "value", "count"], featureRows),
+		),
+		outputFor(
+			resourceSpec,
+			"en-ud-gumreddit-dependencies",
+			tsvFile(["split", "deprel", "count"], dependencyRows),
+		),
+		outputFor(
+			resourceSpec,
+			"en-ud-gumreddit-sentence-profile",
+			tsvFile(
+				["split", "sentenceCount", "tokenCount", "averageTokenCount", "maxTokenCount"],
+				sentenceRows,
+			),
+		),
+		outputFor(
+			resourceSpec,
+			"en-ud-gumreddit-annotations",
+			tsvFile(
+				[
+					"split",
+					"sentenceIndex",
+					"tokenId",
+					"upos",
+					"xpos",
+					"features",
+					"head",
+					"deprel",
+					"deps",
+					"misc",
+				],
+				annotationRows,
+			),
+		),
+		outputFor(resourceSpec, "en-ud-gumreddit-quality", stableJson(summary)),
+	];
+}
+
 function requiredInput(inputs, basename, resourceSpec) {
 	const text = inputs.get(basename);
 	expect(
@@ -1302,8 +1879,11 @@ function requiredInput(inputs, basename, resourceSpec) {
 }
 
 const transformRunners = new Map([
+	["camel-morph-msa", transformCamelMorphMsa],
 	["cldr-core-foundation", transformCldrCoreFoundation],
 	["iana-language-registry", transformIanaLanguageRegistry],
+	["open-english-wordnet-lmf", transformOpenEnglishWordnetLmf],
+	["ud-conllu-profile", transformUdConlluProfile],
 	["unicode-17-core", transformUnicode17Core],
 ]);
 
@@ -1317,7 +1897,14 @@ async function collectTransformInputs(resourceSpec) {
 			`${resourceSpec.resourceSpecId} input ${inputFile.path} checksum mismatch.`,
 			`expected ${inputFile.checksum}\nactual   ${actualChecksum}`,
 		);
-		inputs.set(path.basename(inputFile.path), bytes.toString("utf8"));
+		const basename = path.basename(inputFile.path);
+		inputs.set(`${basename}:path`, inputFile.path);
+		inputs.set(
+			basename,
+			inputFile.path.endsWith(".gz")
+				? gunzipSync(bytes).toString("utf8")
+				: bytes.toString("utf8"),
+		);
 	}
 	return inputs;
 }
@@ -1350,12 +1937,16 @@ async function collectResourcePayloads(packSpec, manifest, resourceSpecById) {
 				kind: output.kind,
 				path: output.path,
 				sourcePath: resourceSpec.resourceSpecId,
-				text: output.text,
-				byteLength: Buffer.byteLength(output.text, "utf8"),
+				text: encodedResourceText(output),
+				resourceText: output.text,
+				encoded: output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)
+					? "gzip-base64"
+					: "utf8",
+				byteLength: Buffer.byteLength(encodedResourceText(output), "utf8"),
 				lineCount: output.text.length === 0 ? 0 : lines.length,
 				nonEmptyLineCount,
-				checksum: sha256(output.text),
-				sizeClass: sizeClass(Buffer.byteLength(output.text, "utf8")),
+				checksum: sha256(encodedResourceText(output)),
+				sizeClass: sizeClass(Buffer.byteLength(encodedResourceText(output), "utf8")),
 				pipelineId: resourceSpec.pipelineId,
 				pipelineVersion: resourceSpec.pipelineVersion,
 				resourceSpecId,
@@ -1376,6 +1967,11 @@ async function collectResourcePayloads(packSpec, manifest, resourceSpecById) {
 		payloads.push(payload);
 	}
 	return payloads;
+}
+
+function encodedResourceText(output) {
+	if (!output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)) return output.text;
+	return `${gzipSync(Buffer.from(output.text, "utf8")).toString("base64")}\n`;
 }
 
 function resourceStats(payloads) {
@@ -1445,6 +2041,15 @@ function knownGaps(packSpec, manifest) {
 	) {
 		gaps.push(
 			"source-backed language capability slice; broader resources and evaluation coverage remain follow-up",
+		);
+	} else if (
+		packSpec.generationMode === "source-backed" &&
+		["domain", "historical-noisy", "kb", "license-isolated", "parallel"].includes(
+			packSpec.packClass,
+		)
+	) {
+		gaps.push(
+			"source-backed task capability slice; broader resources and evaluation coverage remain follow-up",
 		);
 	} else if (packSpec.generationMode === "source-backed") {
 		gaps.push(
@@ -1561,7 +2166,7 @@ export default { manifest, resources, ${pack.loader.functionName} };
 `;
 }
 
-function resourcesTs(payloads) {
+function inlineResourcesTs(payloads) {
 	const entries = payloads
 		.map(
 			(payload) =>
@@ -1574,6 +2179,50 @@ function resourcesTs(payloads) {
 // biome-ignore format: generated resource map preserves deterministic payload ordering.
 export const resources: PackResourceMap = {${body}} as const;
 `;
+}
+
+function fileBackedResourcesTs(payloads) {
+	const entries = payloads
+		.map(
+			(payload) =>
+				`\t\t${JSON.stringify(payload.id)}: await readResource(
+\t\t\t${JSON.stringify(payload.path.replace(/^resources\//u, ""))},
+\t\t\t${JSON.stringify(payload.encoded)},
+\t\t),`,
+		)
+		.join("\n");
+	const body = entries.length === 0 ? "" : `\n${entries}\n`;
+	return `${generatedHeader()}import { readFile } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
+import type { PackResourceMap } from "@ismail-elkorchi/textpack";
+
+const resourceRoot = new URL("../resources/", import.meta.url);
+
+async function readResource(
+\tresourcePath: string,
+\tencoding: "gzip-base64" | "utf8",
+): Promise<string> {
+\tconst text = await readFile(new URL(resourcePath, resourceRoot), "utf8");
+\tif (encoding === "utf8") return text;
+\treturn gunzipSync(Buffer.from(text.trim(), "base64")).toString("utf8");
+}
+
+export async function resources(): Promise<PackResourceMap> {
+\t// biome-ignore format: generated resource map preserves deterministic resource ordering.
+\treturn {${body}\t};
+}
+`;
+}
+
+function resourcesTs(payloads) {
+	const totalBytes = payloads.reduce(
+		(total, payload) => total + payload.byteLength,
+		0,
+	);
+	if (totalBytes > INLINE_RESOURCE_BYTES_LIMIT) {
+		return fileBackedResourcesTs(payloads);
+	}
+	return inlineResourcesTs(payloads);
 }
 
 function escapedPayloadString(value) {
@@ -1810,7 +2459,8 @@ function tsconfigJson() {
 	return `{
 \t"extends": "../../../tsconfig.json",
 \t"compilerOptions": {
-\t\t"noEmit": true
+\t\t"noEmit": true,
+\t\t"types": ["node"]
 \t},
 \t"include": ["src/**/*.ts"]
 }
@@ -1925,14 +2575,16 @@ function concreteSmokeTest(pack) {
 import { manifest, resources } from "../dist/index.js";
 
 const packageName = ${JSON.stringify(pack.packageName)};
+const loadedResources =
+\ttypeof resources === "function" ? await resources() : resources;
 
 assert.equal(manifest.packageName, packageName);
-assert.equal(Object.keys(resources).length, manifest.resources.length);
+assert.equal(Object.keys(loadedResources).length, manifest.resources.length);
 assert.ok(manifest.resources.length > 0);
 
 for (const resource of manifest.resources) {
-\tassert.equal(typeof resources[resource.id], "string");
-\tassert.ok(resources[resource.id].length > 0);
+\tassert.equal(typeof loadedResources[resource.id], "string");
+\tassert.ok(loadedResources[resource.id].length > 0);
 }
 `;
 }
@@ -2162,9 +2814,9 @@ assert.ok(english);
 assert.ok(hasLanguageSupport("en", "registered"));
 assert.ok(hasLanguageSupport("en", "unicode-covered"));
 assert.ok(hasLanguageSupport("en", "profiled"));
-assert.equal(hasLanguageSupport("en", "task-supported"), false);
+assert.equal(hasLanguageSupport("en", "task-supported"), true);
 assert.ok(listLanguagesBySupportLevel("registered").length > 1000);
-assert.equal(listLanguagesBySupportLevel("task-supported").length, 0);
+assert.ok(listLanguagesBySupportLevel("task-supported").length >= 2);
 assert.ok(languageSupport.length > 1000);
 `
 			: "";

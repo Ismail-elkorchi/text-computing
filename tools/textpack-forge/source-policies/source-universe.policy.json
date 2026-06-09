@@ -245,6 +245,24 @@
 			"notes": "Metadata-only until each selected English treebank license is audited."
 		},
 		{
+			"sourceId": "source:ud:english-gumreddit-r2.18",
+			"family": "UD",
+			"name": "UD English GUMReddit r2.18",
+			"homepageUrl": "https://github.com/UniversalDependencies/UD_English-GUMReddit",
+			"licenseExpression": "CC-BY-4.0",
+			"policyClass": "attribution",
+			"redistributionPolicy": "redistributable-with-attribution",
+			"reviewState": "approved",
+			"defaultCompositeAllowed": true,
+			"publishableByDefault": true,
+			"requiredPackageNameSuffixes": [],
+			"languages": ["en"],
+			"capabilitySlots": ["syntax", "morphology", "tagging"],
+			"priority": "first",
+			"citation": "Universal Dependencies English GUMReddit r2.18 annotations.",
+			"notes": "Audited annotation-only treebank path. The released repository excludes underlying Reddit text; generated packs must not ingest not-to-release material."
+		},
+		{
 			"sourceId": "source:ud:arabic",
 			"family": "UD",
 			"name": "Universal Dependencies Arabic treebanks",
@@ -504,7 +522,7 @@
 			"family": "WN",
 			"name": "Open English WordNet",
 			"homepageUrl": "https://github.com/globalwordnet/english-wordnet",
-			"licenseExpression": "CC-BY-4.0",
+			"licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"policyClass": "attribution",
 			"redistributionPolicy": "redistributable-with-attribution",
 			"reviewState": "approved",
@@ -514,7 +532,25 @@
 			"languages": ["en"],
 			"capabilitySlots": ["kb", "lexical-semantics"],
 			"priority": "first",
-			"notes": "Good default English semantic source once generated reports and evaluation exist."
+			"notes": "Good default English semantic source once generated reports and evaluation exist; exact released versions need their own source ids."
+		},
+		{
+			"sourceId": "source:wordnet:open-english-2025",
+			"family": "WN",
+			"name": "Open English WordNet 2025",
+			"homepageUrl": "https://en-word.net/",
+			"licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"policyClass": "attribution",
+			"redistributionPolicy": "redistributable-with-attribution",
+			"reviewState": "approved",
+			"defaultCompositeAllowed": true,
+			"publishableByDefault": true,
+			"requiredPackageNameSuffixes": [],
+			"languages": ["en"],
+			"capabilitySlots": ["kb", "lexical-semantics"],
+			"priority": "first",
+			"citation": "Open English WordNet 2025.",
+			"notes": "Audited 2025 release with Princeton WordNet lineage attribution and Open English WordNet CC-BY-4.0 attribution."
 		},
 		{
 			"sourceId": "source:wordnet:princeton",
@@ -566,6 +602,24 @@
 			"capabilitySlots": ["morphology", "segmentation", "normalization"],
 			"priority": "first",
 			"notes": "Primary Arabic morphology/segmentation candidate once transforms and evaluation are added."
+		},
+		{
+			"sourceId": "source:camel:morph-msa-lrec-coling-2024",
+			"family": "ARRES",
+			"name": "CAMeL Morph MSA LREC-COLING 2024 release",
+			"homepageUrl": "https://github.com/CAMeL-Lab/camel_morph",
+			"licenseExpression": "CC-BY-4.0",
+			"policyClass": "attribution",
+			"redistributionPolicy": "redistributable-with-attribution",
+			"reviewState": "approved",
+			"defaultCompositeAllowed": true,
+			"publishableByDefault": true,
+			"requiredPackageNameSuffixes": [],
+			"languages": ["ar"],
+			"capabilitySlots": ["morphology", "segmentation", "normalization"],
+			"priority": "first",
+			"citation": "CAMeL Morph MSA LREC-COLING 2024 release.",
+			"notes": "Audited official CAMeL Morph MSA database release with CC-BY-4.0 data terms."
 		},
 		{
 			"sourceId": "source:wordnet:arabic-4",
@@ -1184,16 +1238,16 @@
 		{
 			"languageTag": "en",
 			"languageName": "English",
-			"firstSources": ["source:unicode:ucd", "source:unicode:cldr-core", "source:iana:language-subtag-registry", "source:ud:english", "source:unimorph:english", "source:wordnet:open-english", "source:wikidata:main", "source:scowl:english-speller"],
+			"firstSources": ["source:unicode:ucd", "source:unicode:cldr-core", "source:iana:language-subtag-registry", "source:ud:english-gumreddit-r2.18", "source:unimorph:english", "source:wordnet:open-english-2025", "source:wikidata:main", "source:scowl:english-speller"],
 			"secondWaveSources": ["source:wiktionary:all", "source:dbnary:all", "source:tatoeba:sentences", "source:opus:collection"],
-			"isolatedSources": ["source:wikipedia:raw-text", "source:web-corpora:large", "source:wordnet:princeton"]
+			"isolatedSources": ["source:wikipedia:raw-text", "source:web-corpora:large", "source:ud:english", "source:wordnet:princeton"]
 		},
 		{
 			"languageTag": "ar",
 			"languageName": "Arabic",
-			"firstSources": ["source:unicode:ucd", "source:unicode:cldr-core", "source:ud:arabic", "source:unimorph:arabic", "source:camel:morph", "source:wordnet:arabic-4", "source:wikidata:main"],
+			"firstSources": ["source:unicode:ucd", "source:unicode:cldr-core", "source:ud:arabic", "source:unimorph:arabic", "source:camel:morph-msa-lrec-coling-2024", "source:wordnet:arabic-4", "source:wikidata:main"],
 			"secondWaveSources": ["source:wiktionary:all", "source:dbnary:all", "source:tatoeba:sentences", "source:opus:collection"],
-			"isolatedSources": ["source:quranic-arabic-corpus", "source:tashkeela:corpus", "source:arabic:dialect-corpora-unclear"]
+			"isolatedSources": ["source:quranic-arabic-corpus", "source:tashkeela:corpus", "source:arabic:dialect-corpora-unclear", "source:camel:morph"]
 		},
 		{
 			"languageTag": "fr",

@@ -1,0 +1,19 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+	"sourceId": "source:camel:morph-msa-lrec-coling-2024",
+	"version": "lrec-coling2024@5a202cf48f5e96e47a28c1e7dcbd1660520a00cf",
+	"retrievedAt": "2026-06-09T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:fef0aad3d875f03f3b9b931a229ffe5d5f6573f86160dbbccc7e4587ddbe955b",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/camel_morph_msa_v1.0.db",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 84959404,
+			"checksum": "sha256:110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60",
+			"sourceUrl": "https://raw.githubusercontent.com/CAMeL-Lab/camel_morph/5a202cf48f5e96e47a28c1e7dcbd1660520a00cf/official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db"
+		}
+	],
+	"notes": "Pinned official CAMeL Morph MSA release database."
+}

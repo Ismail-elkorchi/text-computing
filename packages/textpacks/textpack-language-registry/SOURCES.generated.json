@@ -95,6 +95,9 @@
       "citation": "IANA Language Subtag Registry, File-Date 2026-05-05.",
       "family": "IANA",
       "homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+      "licenseEvidence": [
+        "https://www.iana.org/help/licensing-terms"
+      ],
       "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
       "name": "IANA Language Subtag Registry",
       "notes": "BCP 47 language, script, region, variant, grandfathered, and redundant tag registry data.",

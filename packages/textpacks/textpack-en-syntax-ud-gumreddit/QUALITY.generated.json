@@ -1,0 +1,159 @@
+{
+  "acceptedRecordCount": 16667,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "Generated quality profile records annotation counts and confirms no raw text fields are emitted."
+      ],
+      "resourceIds": [
+        "en-ud-gumreddit-quality"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "capabilities": {
+        "parsing": "statistical"
+      },
+      "notes": [
+        "Annotation-derived dependency and sentence profiles are available without redistributing Reddit text."
+      ],
+      "resourceIds": [
+        "en-ud-gumreddit-dependencies",
+        "en-ud-gumreddit-sentence-profile",
+        "en-ud-gumreddit-annotations"
+      ],
+      "slot": "syntax",
+      "status": "task-supported"
+    },
+    {
+      "capabilities": {
+        "morphology": "statistical",
+        "tagging": "statistical"
+      },
+      "notes": [
+        "Annotation-derived UPOS, XPOS, and morphological feature profiles are available without redistributing Reddit text."
+      ],
+      "resourceIds": [
+        "en-ud-gumreddit-upos",
+        "en-ud-gumreddit-features",
+        "en-ud-gumreddit-annotations"
+      ],
+      "slot": "tagging",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "rejectedRecordCount": 0,
+  "resourceCount": 6,
+  "resourcePaths": [
+    "resources/ud-gumreddit.annotations.tsv",
+    "resources/ud-gumreddit.dependencies.tsv",
+    "resources/ud-gumreddit.features.tsv",
+    "resources/ud-gumreddit.quality.json",
+    "resources/ud-gumreddit.sentence-profile.tsv",
+    "resources/ud-gumreddit.upos.tsv"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
+  ],
+  "resources": [
+    {
+      "byteLength": 1678076,
+      "checksum": "sha256:490dfb61690af9f9d2c14a0b78576935518e36957d1be650916ef187dca7740f",
+      "id": "en-ud-gumreddit-annotations",
+      "kind": "dataset",
+      "lineCount": 16366,
+      "nonEmptyLineCount": 16365,
+      "path": "resources/ud-gumreddit.annotations.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 2081,
+      "checksum": "sha256:0b3114df9d760fdd1fca89176c3a09969776c32c6c11b2210d7e121bb08e0fc3",
+      "id": "en-ud-gumreddit-dependencies",
+      "kind": "grammar",
+      "lineCount": 136,
+      "nonEmptyLineCount": 135,
+      "path": "resources/ud-gumreddit.dependencies.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 852,
+      "checksum": "sha256:d76d1aae120352ab5cb75f5e5ef64853a4dbbdd0567b646b237986322202d53b",
+      "id": "en-ud-gumreddit-features",
+      "kind": "morphology",
+      "lineCount": 57,
+      "nonEmptyLineCount": 56,
+      "path": "resources/ud-gumreddit.features.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 961,
+      "checksum": "sha256:014fe6479a0e7303dc2490c225a20ee8105f862d1e028e1cb0bb5a8b189201d2",
+      "id": "en-ud-gumreddit-quality",
+      "kind": "quality-profile",
+      "lineCount": 39,
+      "nonEmptyLineCount": 38,
+      "path": "resources/ud-gumreddit.quality.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 133,
+      "checksum": "sha256:5aedb284f73960c0dd7ab49e434d068dd2b372ad2818bc46471757476bc5b7c0",
+      "id": "en-ud-gumreddit-sentence-profile",
+      "kind": "statistical-model",
+      "lineCount": 5,
+      "nonEmptyLineCount": 4,
+      "path": "resources/ud-gumreddit.sentence-profile.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 789,
+      "checksum": "sha256:d912a7810541f1063a5db1a5a6e654981c8a4ddb71dde80f0ff1453e201ff199",
+      "id": "en-ud-gumreddit-upos",
+      "kind": "grammar",
+      "lineCount": 70,
+      "nonEmptyLineCount": 69,
+      "path": "resources/ud-gumreddit.upos.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "sizeClass": "tiny"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ]
+}

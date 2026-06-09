@@ -1,0 +1,68 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+	"packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+	"pipelineId": "ud-conllu-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:ud:english-gumreddit-r2.18"
+	],
+	"snapshotIds": [
+		"snapshot:source:ud:english-gumreddit:r2.18"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
+			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-dev.conllu",
+			"checksum": "sha256:f8bbf1b235557513f606cf147c43d8e70c663db26e929a77eedbe8aa62184625"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
+			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-test.conllu",
+			"checksum": "sha256:9afecc3c76deea4540a5f1fe6b2c851857ce5d272f78b476949a90352ea4f381"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
+			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-train.conllu",
+			"checksum": "sha256:6c360c457d58e1fdcb8eba07ee1f6b352eb7c40f74b00af0872d87cb9388118e"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-ud-gumreddit-upos",
+			"path": "resources/ud-gumreddit.upos.tsv",
+			"kind": "grammar",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-features",
+			"path": "resources/ud-gumreddit.features.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-dependencies",
+			"path": "resources/ud-gumreddit.dependencies.tsv",
+			"kind": "grammar",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-sentence-profile",
+			"path": "resources/ud-gumreddit.sentence-profile.tsv",
+			"kind": "statistical-model",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-annotations",
+			"path": "resources/ud-gumreddit.annotations.tsv",
+			"kind": "dataset",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-quality",
+			"path": "resources/ud-gumreddit.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

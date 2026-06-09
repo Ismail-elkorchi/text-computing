@@ -20,8 +20,11 @@
 		"packageName": { "type": "string", "minLength": 1 },
 		"pipelineId": {
 			"enum": [
+				"camel-morph-msa",
 				"cldr-core-foundation",
 				"iana-language-registry",
+				"open-english-wordnet-lmf",
+				"ud-conllu-profile",
 				"unicode-17-core"
 			]
 		},

@@ -1,0 +1,45 @@
+{
+  "forgeVersion": "0.1.0",
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "generatedFiles": [
+    "ATTRIBUTION.generated.md",
+    "CHANGELOG.md",
+    "COVERAGE.generated.json",
+    "NOTICE.generated.md",
+    "pack.manifest.json",
+    "package.json",
+    "QUALITY.generated.json",
+    "README.md",
+    "resources/camel-morph-msa.compatibility.tsv",
+    "resources/camel-morph-msa.defaults.tsv",
+    "resources/camel-morph-msa.features.tsv",
+    "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+    "resources/camel-morph-msa.quality.json",
+    "resources/camel-morph-msa.tokenizations.tsv",
+    "SOURCES.generated.json",
+    "src/index.ts",
+    "src/manifest.ts",
+    "src/resources.ts",
+    "test/smoke.mjs",
+    "tsconfig.build.json",
+    "tsconfig.json"
+  ],
+  "generatorCommand": "node tools/textpack-forge/cli.mjs build",
+  "lockfile": "tools/textpack-forge/forge.lock.json",
+  "lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+  "mode": "source-backed",
+  "outputChecksum": "sha256:e4ea3836a301220b97f68929b06fb61c2ef699f96048410e66b01527272f56d2",
+  "packSpecPath": "tools/textpack-forge/packs/foundation-packs.pack.json",
+  "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+  "packageVersion": "0.1.0",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "schemaVersion": "1"
+}

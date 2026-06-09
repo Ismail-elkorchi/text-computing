@@ -219,6 +219,9 @@
       "citation": "IANA Language Subtag Registry, File-Date 2026-05-05.",
       "family": "IANA",
       "homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+      "licenseEvidence": [
+        "https://www.iana.org/help/licensing-terms"
+      ],
       "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
       "name": "IANA Language Subtag Registry",
       "notes": "BCP 47 language, script, region, variant, grandfathered, and redundant tag registry data.",
@@ -231,6 +234,10 @@
       "citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
       "family": "CLDR",
       "homepageUrl": "https://cldr.unicode.org/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
       "licenseExpression": "Unicode-3.0",
       "name": "Unicode CLDR Core",
       "notes": "Selected CLDR supplemental JSON files used for locale likely-subtag and alias foundation resources.",
@@ -243,6 +250,10 @@
       "citation": "Unicode Character Database 17.0.0.",
       "family": "UCD",
       "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
       "licenseExpression": "Unicode-3.0",
       "name": "Unicode Character Database",
       "notes": "Selected Unicode 17.0.0 UCD files used for script, block, and property alias foundation resources.",

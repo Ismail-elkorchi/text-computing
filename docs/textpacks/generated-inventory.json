@@ -8,6 +8,107 @@
       "artifactProfiles": [],
       "capabilitySlots": [
         {
+          "capabilities": {
+            "morphology": "lookup"
+          },
+          "notes": [
+            "CAMeL Morph MSA morpheme inventory, feature inventory, defaults, and compatibility tables are available as generated lookup resources."
+          ],
+          "resourceIds": [
+            "ar-msa-camel-morph-features",
+            "ar-msa-camel-morph-defaults",
+            "ar-msa-camel-morph-morphemes",
+            "ar-msa-camel-morph-compatibility"
+          ],
+          "slot": "morphology",
+          "status": "task-supported"
+        },
+        {
+          "notes": [
+            "Generated quality profile records source counts, accepted records, and transform warnings."
+          ],
+          "resourceIds": [
+            "ar-msa-camel-morph-quality"
+          ],
+          "slot": "quality",
+          "status": "task-supported"
+        },
+        {
+          "capabilities": {
+            "segmentation": "dictionary"
+          },
+          "notes": [
+            "CAMeL Morph tokenization schemes are available for Arabic MSA segmentation consumers."
+          ],
+          "resourceIds": [
+            "ar-msa-camel-morph-tokenizations"
+          ],
+          "slot": "segmentation",
+          "status": "task-supported"
+        }
+      ],
+      "components": [],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "resources/camel-morph-msa.compatibility.tsv",
+        "resources/camel-morph-msa.defaults.tsv",
+        "resources/camel-morph-msa.features.tsv",
+        "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+        "resources/camel-morph-msa.quality.json",
+        "resources/camel-morph-msa.tokenizations.tsv",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "npmShippedSizeBytes": 15379882,
+      "outputChecksum": "sha256:e4ea3836a301220b97f68929b06fb61c2ef699f96048410e66b01527272f56d2",
+      "packClass": "language-concrete",
+      "packageId": "textpack-ar-msa-morphology",
+      "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ],
+      "supportLevel": "task-supported",
+      "version": "0.1.0"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
           "notes": [
             "CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
           ],
@@ -48,7 +149,7 @@
       ],
       "licenseExpression": "Unicode-3.0",
       "npmShippedSizeBytes": 163413,
-      "outputChecksum": "sha256:81bc84fb21d2c29c2c0721c3f1a852ed279e421049a49ba7ccf9ae81cca48feb",
+      "outputChecksum": "sha256:68c94406bfb51ed3449403a585fc4b4e0f4d5ee84041457aa2c255d0da29d4b3",
       "packClass": "foundation",
       "packageId": "textpack-cldr-core",
       "packageName": "@ismail-elkorchi/textpack-cldr-core",
@@ -74,6 +175,109 @@
         "source:unicode:cldr-core"
       ],
       "supportLevel": "profiled",
+      "version": "0.1.0"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
+          "notes": [
+            "Generated quality profile records annotation counts and confirms no raw text fields are emitted."
+          ],
+          "resourceIds": [
+            "en-ud-gumreddit-quality"
+          ],
+          "slot": "quality",
+          "status": "task-supported"
+        },
+        {
+          "capabilities": {
+            "parsing": "statistical"
+          },
+          "notes": [
+            "Annotation-derived dependency and sentence profiles are available without redistributing Reddit text."
+          ],
+          "resourceIds": [
+            "en-ud-gumreddit-dependencies",
+            "en-ud-gumreddit-sentence-profile",
+            "en-ud-gumreddit-annotations"
+          ],
+          "slot": "syntax",
+          "status": "task-supported"
+        },
+        {
+          "capabilities": {
+            "morphology": "statistical",
+            "tagging": "statistical"
+          },
+          "notes": [
+            "Annotation-derived UPOS, XPOS, and morphological feature profiles are available without redistributing Reddit text."
+          ],
+          "resourceIds": [
+            "en-ud-gumreddit-upos",
+            "en-ud-gumreddit-features",
+            "en-ud-gumreddit-annotations"
+          ],
+          "slot": "tagging",
+          "status": "task-supported"
+        }
+      ],
+      "components": [],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "resources/ud-gumreddit.annotations.tsv",
+        "resources/ud-gumreddit.dependencies.tsv",
+        "resources/ud-gumreddit.features.tsv",
+        "resources/ud-gumreddit.quality.json",
+        "resources/ud-gumreddit.sentence-profile.tsv",
+        "resources/ud-gumreddit.upos.tsv",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "npmShippedSizeBytes": 1682892,
+      "outputChecksum": "sha256:a966de1a7d14c944b787e57429365c778d599fd1baacf7727cbaf77db12934a9",
+      "packClass": "language-concrete",
+      "packageId": "textpack-en-syntax-ud-gumreddit",
+      "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:ud:english-gumreddit:r2.18"
+      ],
+      "sourceIds": [
+        "source:ud:english-gumreddit-r2.18"
+      ],
+      "supportLevel": "task-supported",
       "version": "0.1.0"
     },
     {
@@ -155,7 +359,7 @@
       ],
       "licenseExpression": "MIT",
       "npmShippedSizeBytes": 412089,
-      "outputChecksum": "sha256:40bddb1b9dbf29763fb773a8e52fd273d353b8e9a8f4b7821411163e3f67b4bd",
+      "outputChecksum": "sha256:546fe3e395db5641ce16cdbc7e3cf0c4f5e741ef8a0d412ec2f6b146850e3a98",
       "packClass": "foundation-composite",
       "packageId": "textpack-foundation",
       "packageName": "@ismail-elkorchi/textpack-foundation",
@@ -228,7 +432,7 @@
       ],
       "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
       "npmShippedSizeBytes": 409021,
-      "outputChecksum": "sha256:ad347be5cfe96498aa157a742fc126c55339369262b763c396e50189f5d99c90",
+      "outputChecksum": "sha256:1c3ccadbb77ce8ddbf459276c20b9ed79358db6e53d026b8176a3f5388e0d01a",
       "packClass": "foundation",
       "packageId": "textpack-language-registry",
       "packageName": "@ismail-elkorchi/textpack-language-registry",
@@ -301,7 +505,7 @@
       ],
       "licenseExpression": "Unicode-3.0",
       "npmShippedSizeBytes": 200479,
-      "outputChecksum": "sha256:c1d8a45e8f3bfa25a9de96173682f2ba41b9d4cd33b73e4ec721f702a4cfd1ba",
+      "outputChecksum": "sha256:049119c49e5b6a6514bc93b42bfa35bca61ab66d9cb162e7a0965d969628695a",
       "packClass": "foundation",
       "packageId": "textpack-unicode-17",
       "packageName": "@ismail-elkorchi/textpack-unicode-17",
@@ -327,6 +531,94 @@
         "source:unicode:ucd"
       ],
       "supportLevel": "unicode-covered",
+      "version": "0.1.0"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
+          "capabilities": {
+            "extraction": "gazetteer",
+            "terminology": "kb"
+          },
+          "notes": [
+            "Open English WordNet lexical entries, senses, synsets, and semantic relations are available as generated KB resources."
+          ],
+          "resourceIds": [
+            "wordnet-en-lexical-entries",
+            "wordnet-en-senses",
+            "wordnet-en-synsets",
+            "wordnet-en-relations"
+          ],
+          "slot": "lexical-semantics",
+          "status": "task-supported"
+        },
+        {
+          "notes": [
+            "Generated quality profile records lexical-entry, sense, synset, and relation counts."
+          ],
+          "resourceIds": [
+            "wordnet-en-quality"
+          ],
+          "slot": "quality",
+          "status": "task-supported"
+        }
+      ],
+      "components": [],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "resources/wordnet-en.lexical-entries.tsv",
+        "resources/wordnet-en.quality.json",
+        "resources/wordnet-en.relations.tsv",
+        "resources/wordnet-en.senses.tsv",
+        "resources/wordnet-en.synsets.tsv",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+      ],
+      "licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "npmShippedSizeBytes": 51489864,
+      "outputChecksum": "sha256:644cbfec1f0201de45a339933a8630cac2f471db86e567788492ed7360408093",
+      "packClass": "kb",
+      "packageId": "textpack-wordnet-en",
+      "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wordnet:open-english-2025:2025-edition"
+      ],
+      "sourceIds": [
+        "source:wordnet:open-english-2025"
+      ],
+      "supportLevel": "task-supported",
       "version": "0.1.0"
     }
   ],

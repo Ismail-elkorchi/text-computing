@@ -16,10 +16,13 @@ const GENERATED_PACKAGE_FILES = [
 	"QUALITY.generated.json",
 ];
 const EXPECTED_TEXTPACK_DIRS = [
+	"packages/textpacks/textpack-ar-msa-morphology",
 	"packages/textpacks/textpack-cldr-core",
+	"packages/textpacks/textpack-en-syntax-ud-gumreddit",
 	"packages/textpacks/textpack-foundation",
 	"packages/textpacks/textpack-language-registry",
 	"packages/textpacks/textpack-unicode-17",
+	"packages/textpacks/textpack-wordnet-en",
 ];
 
 function fail(message, details) {
@@ -307,7 +310,11 @@ for (const packDir of packDirs) {
 			manifest,
 			`${packageJson.name} built manifest`,
 		);
-		const resourceKeys = Object.keys(builtPack.resources);
+		const builtResources =
+			typeof builtPack.resources === "function"
+				? await builtPack.resources()
+				: builtPack.resources;
+		const resourceKeys = Object.keys(builtResources);
 		expect(
 			JSON.stringify(sorted(resourceKeys)) ===
 				JSON.stringify(sorted(resourceIds)),
@@ -315,7 +322,7 @@ for (const packDir of packDirs) {
 		);
 		for (const resourceId of resourceIds) {
 			expect(
-				builtPack.resources[resourceId] !== undefined,
+				builtResources[resourceId] !== undefined,
 				`${packageJson.name} built resources must include ${resourceId}.`,
 			);
 		}

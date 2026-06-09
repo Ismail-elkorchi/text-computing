@@ -1,0 +1,58 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+	"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+	"pipelineId": "camel-morph-msa",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:camel:morph-msa-lrec-coling-2024"
+	],
+	"snapshotIds": [
+		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/camel_morph_msa_v1.0.db",
+			"checksum": "sha256:110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-msa-camel-morph-features",
+			"path": "resources/camel-morph-msa.features.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-msa-camel-morph-defaults",
+			"path": "resources/camel-morph-msa.defaults.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-msa-camel-morph-tokenizations",
+			"path": "resources/camel-morph-msa.tokenizations.tsv",
+			"kind": "segmentation-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-msa-camel-morph-morphemes",
+			"path": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+			"kind": "morphology",
+			"format": "tsv+gzip+base64"
+		},
+		{
+			"resourceId": "ar-msa-camel-morph-compatibility",
+			"path": "resources/camel-morph-msa.compatibility.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-msa-camel-morph-quality",
+			"path": "resources/camel-morph-msa.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

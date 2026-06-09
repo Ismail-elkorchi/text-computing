@@ -132,6 +132,10 @@
       "citation": "Unicode Character Database 17.0.0.",
       "family": "UCD",
       "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
       "licenseExpression": "Unicode-3.0",
       "name": "Unicode Character Database",
       "notes": "Selected Unicode 17.0.0 UCD files used for script, block, and property alias foundation resources.",
