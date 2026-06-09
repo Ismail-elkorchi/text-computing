@@ -7,6 +7,20 @@ const ROOT = process.cwd();
 const PACKAGES_DIR = path.join(ROOT, "packages");
 const TEXTPACKS_DIR = path.join(PACKAGES_DIR, "textpacks");
 const MANIFEST_SCHEMA_PATH = "schemas/textpack-manifest.schema.json";
+const GENERATED_PACKAGE_FILES = [
+	".textpack-generated.json",
+	"NOTICE.generated.md",
+	"SOURCES.generated.json",
+	"ATTRIBUTION.generated.md",
+	"COVERAGE.generated.json",
+	"QUALITY.generated.json",
+];
+const EXPECTED_TEXTPACK_DIRS = [
+	"packages/textpacks/textpack-cldr-core",
+	"packages/textpacks/textpack-foundation",
+	"packages/textpacks/textpack-language-registry",
+	"packages/textpacks/textpack-unicode-17",
+];
 
 function fail(message, details) {
 	console.error(message);
@@ -120,15 +134,19 @@ const validateManifest = ajv.compile(schema);
 const packDirs = await collectTextpackPackageDirs();
 
 expect(
-	packDirs.length >= 10,
-	"Final textpack reference package coverage is incomplete.",
+	JSON.stringify(packDirs) === JSON.stringify(EXPECTED_TEXTPACK_DIRS),
+	"Generated textpack package graph does not match the active foundation graph.",
+	{ expected: EXPECTED_TEXTPACK_DIRS, actual: packDirs },
 );
+
+let publishableCount = 0;
 
 for (const packDir of packDirs) {
 	const packageJsonPath = `${packDir}/package.json`;
 	const manifestPath = `${packDir}/pack.manifest.json`;
 	const packageJson = await readJson(packageJsonPath);
 	const manifest = await readJson(manifestPath);
+	const generatedMarker = await readJson(`${packDir}/.textpack-generated.json`);
 
 	expect(
 		packageJson.name === manifest.packageName,
@@ -139,9 +157,34 @@ for (const packDir of packDirs) {
 		`${manifestPath} version must match package.json.`,
 	);
 	expect(
-		packageJson.private !== true,
-		`${packageJson.name} must be a public package candidate.`,
+		generatedMarker.packageName === packageJson.name,
+		`${packageJson.name} generated marker packageName must match package.json.`,
 	);
+	expect(
+		generatedMarker.publishable === true ||
+			generatedMarker.publishable === false,
+		`${packageJson.name} generated marker must declare publishable.`,
+	);
+	if (generatedMarker.publishable === true) {
+		publishableCount += 1;
+		expect(
+			packageJson.private !== true,
+			`${packageJson.name} publishable package must not be private.`,
+		);
+		expect(
+			packageJson.publishConfig?.access === "public",
+			`${packageJson.name} publishable package must declare public publishConfig access.`,
+		);
+	} else {
+		expect(
+			packageJson.private === true,
+			`${packageJson.name} non-publishable generated package must be private.`,
+		);
+		expect(
+			packageJson.publishConfig === undefined,
+			`${packageJson.name} non-publishable generated package must not declare publishConfig.`,
+		);
+	}
 	expect(
 		Array.isArray(packageJson.files),
 		`${packageJson.name} must declare publish files.`,
@@ -155,9 +198,19 @@ for (const packDir of packDirs) {
 		`${packageJson.name} files must include pack.manifest.json.`,
 	);
 	expect(
-		packageJson.files.includes("resources"),
-		`${packageJson.name} files must include resources.`,
+		manifest.resources.length === 0 || packageJson.files.includes("resources"),
+		`${packageJson.name} files must include resources when resources are declared.`,
 	);
+	for (const generatedFile of GENERATED_PACKAGE_FILES) {
+		expect(
+			packageJson.files.includes(generatedFile),
+			`${packageJson.name} files must include ${generatedFile}.`,
+		);
+		expect(
+			await fileExists(`${packDir}/${generatedFile}`),
+			`${packageJson.name} missing generated package file ${generatedFile}.`,
+		);
+	}
 	expect(
 		!packageJson.files.includes("test"),
 		`${packageJson.name} files must not publish test.`,
@@ -185,16 +238,6 @@ for (const packDir of packDirs) {
 		`${manifestPath} failed ${MANIFEST_SCHEMA_PATH}.`,
 		validateManifest.errors,
 	);
-	const declaredKinds = new Set(manifest.kind);
-	const actualKinds = new Set(
-		manifest.resources.map((resource) => resource.kind),
-	);
-	expect(
-		JSON.stringify(sorted(declaredKinds)) ===
-			JSON.stringify(sorted(actualKinds)),
-		`${manifestPath} kind must exactly match resource descriptor kinds.`,
-	);
-
 	const resourceIds = new Set();
 	for (const resource of manifest.resources) {
 		expect(
@@ -220,6 +263,23 @@ for (const packDir of packDirs) {
 			expect(
 				nonEmptyLineCount > 0,
 				`${manifest.packageName} resource ${resource.path} must not be empty.`,
+			);
+		}
+	}
+	const artifactIds = new Set(
+		(manifest.artifacts ?? []).map((artifact) => artifact.artifactId),
+	);
+	for (const slot of manifest.capabilitySlots) {
+		for (const resourceId of slot.resourceIds ?? []) {
+			expect(
+				resourceIds.has(resourceId),
+				`${manifestPath} capability slot ${slot.slot} references unknown resource ${resourceId}.`,
+			);
+		}
+		for (const artifactId of slot.artifactIds ?? []) {
+			expect(
+				artifactIds.has(artifactId),
+				`${manifestPath} capability slot ${slot.slot} references unknown artifact ${artifactId}.`,
 			);
 		}
 	}
@@ -262,4 +322,6 @@ for (const packDir of packDirs) {
 	}
 }
 
-console.log(`Textpack package manifests OK (packages=${packDirs.length}).`);
+console.log(
+	`Textpack package manifests OK (packages=${packDirs.length}, publishable=${publishableCount}).`,
+);

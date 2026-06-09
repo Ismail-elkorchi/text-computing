@@ -1,0 +1,67 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "TextpackForgeLock",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"forgeVersion",
+		"mode",
+		"generatedAt",
+		"sourcePaths",
+		"sourcePolicyPaths",
+		"snapshotPaths",
+		"resourceSpecPaths",
+		"packSpecPaths",
+		"compositeSpecPaths",
+		"outputPaths",
+		"markerPattern"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"forgeVersion": { "type": "string", "minLength": 1 },
+		"mode": { "const": "source-backed" },
+		"generatedAt": { "type": "string", "minLength": 1 },
+		"sourcePaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"sourcePolicyPaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"snapshotPaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"resourceSpecPaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"packSpecPaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"compositeSpecPaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"snapshotLocks": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["snapshotId", "checksum"],
+				"properties": {
+					"snapshotId": { "type": "string", "minLength": 1 },
+					"checksum": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"outputPaths": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"markerPattern": { "type": "string", "minLength": 1 }
+	}
+}

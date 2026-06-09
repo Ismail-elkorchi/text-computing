@@ -6,8 +6,8 @@
   runtime pack-loading APIs.
 - Add pure final `validateManifest`, `createPack`, `loadPack`, `composePacks`, `listResources`,
   `getResource`, and `capabilities` APIs.
-- Remove V1 manifest, resource-family, registry, catalog, review, authoring, filesystem-loader,
-  parser, and demo canonicalizer APIs from the runtime package.
+- Keep the runtime package focused on manifest validation, pack loading, pack composition, resource
+  querying, and capability summaries.
 - Add final package docs, runtime smoke checks, and publish-tree audits.
 
 ## 0.0.0

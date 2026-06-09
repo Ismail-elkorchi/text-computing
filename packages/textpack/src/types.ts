@@ -1,8 +1,10 @@
 export const resourceKinds = [
 	"unicode-profile",
+	"language-registry",
 	"locale-profile",
 	"segmentation-profile",
 	"normalization-profile",
+	"search-profile",
 	"lexicon",
 	"gazetteer",
 	"termbase",
@@ -102,19 +104,138 @@ export interface TextPackCapabilities {
 
 export type TextPackCapabilityName = keyof TextPackCapabilities;
 
+export type TextPackManifestSchemaVersion = "1";
+
+export type TextPackComponentRole = "required" | "optional" | "excluded";
+
+export type TextPackComponentLicensePolicy =
+	| "default"
+	| "allow-attribution"
+	| "allow-share-alike"
+	| "allow-copyleft"
+	| "local-only";
+
+export type TextPackComponentCapabilityPolicy =
+	| "contributes-default"
+	| "available-optional"
+	| "documentation-only";
+
+export type TextPackArtifactPolicy = "none" | "locked" | "fetch-explicit";
+
+export type TextPackArtifactProfile = "research" | "full" | "local";
+export type TextPackCompositeProfile =
+	| "default"
+	| "research"
+	| "full"
+	| "local";
+
+export type TextPackArtifactRedistributionPolicy =
+	| "redistributable"
+	| "redistributable-with-attribution"
+	| "derived-only"
+	| "local-only"
+	| "blocked";
+
+export type TextPackArtifactRetrievalKind =
+	| "https"
+	| "s3"
+	| "huggingface"
+	| "local"
+	| "manual";
+
+export type TextPackCapabilitySlotStatus =
+	| "unsupported"
+	| "planned"
+	| "profiled"
+	| "sampled"
+	| "artifact-backed"
+	| "task-supported"
+	| "feature-complete"
+	| "not-applicable";
+
+export interface TextPackComponent {
+	readonly packageName: string;
+	readonly versionRange: string;
+	readonly role: TextPackComponentRole;
+	readonly reason?: string;
+	readonly licensePolicy: TextPackComponentLicensePolicy;
+	readonly capabilityPolicy: TextPackComponentCapabilityPolicy;
+	readonly artifactPolicy?: TextPackArtifactPolicy;
+}
+
+export interface TextPackArtifactChecksum {
+	readonly algorithm: "sha256" | "sha512";
+	readonly value: string;
+}
+
+export interface TextPackArtifactRetrieval {
+	readonly kind: TextPackArtifactRetrievalKind;
+	readonly uri?: string;
+	readonly instructions?: string;
+}
+
+export interface TextPackArtifactExpectedFile {
+	readonly path: string;
+	readonly sizeBytes?: number;
+	readonly checksum?: string;
+}
+
+export interface TextPackArtifactDescriptor {
+	readonly artifactId: string;
+	readonly sourceIds: readonly string[];
+	readonly version: string;
+	readonly profile: TextPackArtifactProfile;
+	readonly sizeBytes: number;
+	readonly mediaType: string;
+	readonly compression?: "gzip" | "zstd" | "zip" | "tar";
+	readonly checksum: TextPackArtifactChecksum;
+	readonly licenseExpression: string;
+	readonly redistributionPolicy: TextPackArtifactRedistributionPolicy;
+	readonly retrieval: TextPackArtifactRetrieval;
+	readonly cacheKey: string;
+	readonly expectedFiles: readonly TextPackArtifactExpectedFile[];
+}
+
+export interface TextPackCapabilitySlot {
+	readonly slot: string;
+	readonly status: TextPackCapabilitySlotStatus;
+	readonly resourceIds?: readonly string[];
+	readonly artifactIds?: readonly string[];
+	readonly notes?: readonly string[];
+	readonly capabilities?: TextPackCapabilities;
+}
+
+export interface TextPackGapNote {
+	readonly id: string;
+	readonly slot?: string;
+	readonly runtimeSurface?: string;
+	readonly status: "unsupported" | "planned" | "not-applicable";
+	readonly message: string;
+}
+
+export interface TextPackGeneratedInfo {
+	readonly forgeVersion: string;
+	readonly lockfileChecksum: string;
+	readonly generatedAt: string;
+	readonly generatorCommand: string;
+}
+
 export interface TextPackManifest {
+	readonly schemaVersion: TextPackManifestSchemaVersion;
 	readonly id: string;
 	readonly name: string;
 	readonly version: string;
 	readonly packageName: string;
-	readonly kind: readonly ResourceKind[];
 	readonly targets: TextPackTargets;
 	readonly engines: Readonly<Record<string, string>>;
 	readonly resources: readonly TextPackResource[];
-	readonly dependencies?: readonly TextPackDependency[];
-	readonly capabilities: TextPackCapabilities;
+	readonly components?: readonly TextPackComponent[];
+	readonly artifacts?: readonly TextPackArtifactDescriptor[];
+	readonly capabilitySlots: readonly TextPackCapabilitySlot[];
+	readonly gapNotes?: readonly TextPackGapNote[];
 	readonly license?: string;
 	readonly citations?: readonly string[];
+	readonly generated?: TextPackGeneratedInfo;
 }
 
 export type PackResourceMap = Readonly<Record<string, unknown>>;
@@ -133,6 +254,21 @@ export interface PackComposeOptions {
 	readonly conflictPolicy?: "error" | "first" | "last";
 	readonly license?: string;
 	readonly citations?: readonly string[];
+}
+
+export type TextPackComponentResolver = (
+	component: TextPackComponent,
+) => unknown | Promise<unknown>;
+
+export interface ResolveTextPackComponentsOptions {
+	readonly profile?: TextPackCompositeProfile;
+	readonly include?: readonly string[];
+	readonly exclude?: readonly string[];
+	readonly licensePolicy?: TextPackComponentLicensePolicy;
+	readonly artifactPolicy?: TextPackArtifactPolicy;
+	readonly conflictPolicy?: PackComposeOptions["conflictPolicy"];
+	readonly strict?: boolean;
+	readonly resolveComponent?: TextPackComponentResolver;
 }
 
 type QueryText = string | readonly string[];

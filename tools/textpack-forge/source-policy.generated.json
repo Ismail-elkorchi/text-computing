@@ -1,0 +1,1824 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "languages": [
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:ud:arabic",
+        "source:unimorph:arabic",
+        "source:camel:morph",
+        "source:wordnet:arabic-4",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:quranic-arabic-corpus",
+        "source:tashkeela:corpus",
+        "source:arabic:dialect-corpora-unclear"
+      ],
+      "languageName": "Arabic",
+      "languageTag": "ar",
+      "secondWaveSources": [
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:tatoeba:sentences",
+        "source:opus:collection"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:ud:german",
+        "source:unimorph:german",
+        "source:wordnet:odenet",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:german:germanet",
+        "source:german:leipzig-corpora",
+        "source:german:smor"
+      ],
+      "languageName": "German",
+      "languageTag": "de",
+      "secondWaveSources": [
+        "source:freeling:german-morphy",
+        "source:german:german-commons",
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:tatoeba:sentences",
+        "source:opus:collection"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:iana:language-subtag-registry",
+        "source:ud:english",
+        "source:unimorph:english",
+        "source:wordnet:open-english",
+        "source:wikidata:main",
+        "source:scowl:english-speller"
+      ],
+      "isolatedSources": [
+        "source:wikipedia:raw-text",
+        "source:web-corpora:large",
+        "source:wordnet:princeton"
+      ],
+      "languageName": "English",
+      "languageTag": "en",
+      "secondWaveSources": [
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:tatoeba:sentences",
+        "source:opus:collection"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:ud:spanish",
+        "source:unimorph:spanish",
+        "source:wordnet:mcr-spanish",
+        "source:freeling:spanish-srg",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:spanish:billion-word-corpus"
+      ],
+      "languageName": "Spanish",
+      "languageTag": "es",
+      "secondWaveSources": [
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:tatoeba:sentences",
+        "source:opus:collection"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:ud:french",
+        "source:unimorph:french",
+        "source:fr:morphalou",
+        "source:fr:lefff",
+        "source:fr:lexique",
+        "source:wordnet:wolf",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:wikipedia:raw-text"
+      ],
+      "languageName": "French",
+      "languageTag": "fr",
+      "secondWaveSources": [
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:tatoeba:sentences",
+        "source:opus:collection"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:iana:language-subtag-registry",
+        "source:glottolog:cldf",
+        "source:opengreekandlatin:corpus",
+        "source:treebank:agldt",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:ud:ancient-greek-proiel",
+        "source:greek:lsj-perseus"
+      ],
+      "languageName": "Ancient Greek",
+      "languageTag": "grc",
+      "secondWaveSources": [
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:wordnet:ancient-greek"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:ud:italian",
+        "source:unimorph:italian",
+        "source:it:morph-it",
+        "source:wordnet:multiwordnet-italian",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:it:italwordnet",
+        "source:ud:italian-isdt"
+      ],
+      "languageName": "Italian",
+      "languageTag": "it",
+      "secondWaveSources": [
+        "source:freeling:italian-morph-it",
+        "source:wiktionary:all",
+        "source:dbnary:all",
+        "source:tatoeba:sentences",
+        "source:opus:collection"
+      ]
+    },
+    {
+      "firstSources": [
+        "source:unicode:ucd",
+        "source:iana:language-subtag-registry",
+        "source:glottolog:cldf",
+        "source:latin:lila-lemma-bank",
+        "source:opengreekandlatin:corpus",
+        "source:treebank:agldt",
+        "source:wikidata:main"
+      ],
+      "isolatedSources": [
+        "source:latin:lasla",
+        "source:ud:latin-proiel",
+        "source:latin:index-thomisticus"
+      ],
+      "languageName": "Latin",
+      "languageTag": "la",
+      "secondWaveSources": [
+        "source:wiktionary:all",
+        "source:latin:lewis-short"
+      ]
+    }
+  ],
+  "licenseClasses": [
+    {
+      "class": "default-safe",
+      "defaultCompositeAllowed": true,
+      "description": "Sources whose current audited license posture can be used in default generated composites when scope and evidence are also valid.",
+      "packageNameSuffixes": [],
+      "publishableByDefault": true
+    },
+    {
+      "class": "attribution",
+      "defaultCompositeAllowed": true,
+      "description": "Sources that require attribution or citation but can be redistributed when attribution is complete.",
+      "packageNameSuffixes": [],
+      "publishableByDefault": true
+    },
+    {
+      "class": "share-alike",
+      "defaultCompositeAllowed": false,
+      "description": "Sources that must be isolated from permissive defaults because share-alike or GFDL-style obligations may attach to derivatives.",
+      "packageNameSuffixes": [
+        "-sa",
+        "-wiktionary",
+        "-wikipedia"
+      ],
+      "publishableByDefault": false
+    },
+    {
+      "class": "copyleft",
+      "defaultCompositeAllowed": false,
+      "description": "Sources that require GPL/LGPL-family isolation or equivalent package-level copyleft handling.",
+      "packageNameSuffixes": [
+        "-gpl",
+        "-lgpl"
+      ],
+      "publishableByDefault": false
+    },
+    {
+      "class": "noncommercial/research",
+      "defaultCompositeAllowed": false,
+      "description": "Sources that cannot enter unrestricted public packages because their terms are noncommercial, academic, or research-only.",
+      "packageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "publishableByDefault": false
+    },
+    {
+      "class": "local-only",
+      "defaultCompositeAllowed": false,
+      "description": "Sources that may be used only through local acquisition, private licenses, access-controlled workflows, or derived outputs after separate review.",
+      "packageNameSuffixes": [
+        "-local"
+      ],
+      "publishableByDefault": false
+    },
+    {
+      "class": "blocked/review-only",
+      "defaultCompositeAllowed": false,
+      "description": "Sources that are known incomplete, mixed, unclear, or not yet audited enough to generate a package.",
+      "packageNameSuffixes": [],
+      "publishableByDefault": false
+    }
+  ],
+  "mode": "source-backed",
+  "policyIds": [
+    "source-policy:textpack-forge:source-universe"
+  ],
+  "schemaVersion": "1",
+  "sources": [
+    {
+      "capabilitySlots": [
+        "corpus",
+        "morphology",
+        "segmentation"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ARRES",
+      "homepageUrl": "https://universaldependencies.org/ar/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "LicenseRef-Unclear-Mixed-Arabic-Dialect-Corpora",
+      "name": "Arabic dialect corpora with unclear licenses",
+      "notes": "Placeholder policy boundary for dialect corpora until specific source entries replace it.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:arabic:dialect-corpora-unclear"
+    },
+    {
+      "capabilitySlots": [
+        "morphology",
+        "segmentation",
+        "normalization"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "ARRES",
+      "homepageUrl": "https://github.com/CAMeL-Lab/camel_morph",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "CAMeL Morph",
+      "notes": "Primary Arabic morphology/segmentation candidate once transforms and evaluation are added.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:camel:morph"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "translations"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WIKT",
+      "homepageUrl": "https://kaiko.getalp.org/about-dbnary/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "DBnary",
+      "notes": "Wiktionary-derived source; keep isolated from permissive default packages.",
+      "policyClass": "share-alike",
+      "priority": "second",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:dbnary:all"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "FRLEX",
+      "homepageUrl": "https://www.labri.fr/perso/clement/lefff/",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "LGPLLR",
+      "name": "Lefff",
+      "notes": "Core French resource but must be generated only into an explicitly isolated package.",
+      "policyClass": "copyleft",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "copyleft-isolated",
+      "requiredPackageNameSuffixes": [
+        "-lgpl"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:fr:lefff"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology",
+        "frequency"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "FRLEX",
+      "homepageUrl": "https://www.lexique.org/",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "LicenseRef-Lexique-Versioned",
+      "name": "Lexique",
+      "notes": "Exact version and license must be pinned before generation.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:fr:lexique"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "FRLEX",
+      "homepageUrl": "https://openlexicon.fr/datasets-info/Morphalou/README-Morphalou.html",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "LicenseRef-Morphalou-Versioned",
+      "name": "Morphalou",
+      "notes": "Exact version and license must be pinned before generation.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:fr:morphalou"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "DELEX",
+      "homepageUrl": "https://github.com/TALP-UPC/FreeLing/blob/master/COPYING",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "FreeLing German / Morphy dictionary",
+      "notes": "Optional German morphology source with share-alike isolation.",
+      "policyClass": "share-alike",
+      "priority": "second",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:freeling:german-morphy"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ITLEX",
+      "homepageUrl": "https://github.com/TALP-UPC/FreeLing/blob/master/COPYING",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "FreeLing Italian dictionary",
+      "notes": "Optional Italian morphology source with share-alike isolation.",
+      "policyClass": "share-alike",
+      "priority": "second",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:freeling:italian-morph-it"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ESLEX",
+      "homepageUrl": "https://github.com/TALP-UPC/FreeLing/blob/master/COPYING",
+      "languages": [
+        "es"
+      ],
+      "licenseExpression": "LGPLLR",
+      "name": "FreeLing Spanish dictionary / Spanish Resource Grammar",
+      "notes": "Useful Spanish lexicon/morphology source but not allowed in default composites.",
+      "policyClass": "copyleft",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "copyleft-isolated",
+      "requiredPackageNameSuffixes": [
+        "-lgpl"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:freeling:spanish-srg"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "frequency"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CORPUS",
+      "homepageUrl": "https://arxiv.org/abs/2510.13996",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "LicenseRef-German-Commons-Per-Source",
+      "name": "German Commons",
+      "notes": "Use source-level licenses and derived statistics only after review.",
+      "policyClass": "share-alike",
+      "priority": "second",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:german:german-commons"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WN",
+      "homepageUrl": "https://uni-tuebingen.de/en/faculties/faculty-of-humanities/departments/modern-languages/department-of-linguistics/chairs/general-and-computational-linguistics/ressources/lexica/germanet/",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "LicenseRef-GermaNet",
+      "name": "GermaNet",
+      "notes": "Requires separate license terms and cannot be public by default.",
+      "policyClass": "local-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "local-only",
+      "requiredPackageNameSuffixes": [
+        "-local"
+      ],
+      "reviewState": "blocked",
+      "sourceId": "source:german:germanet"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "frequency"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CORPUS",
+      "homepageUrl": "https://sprogteknologi.dk/dataset/leipzig-corpora-collection",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "LicenseRef-Leipzig-Corpora",
+      "name": "Leipzig Corpora Collection",
+      "notes": "Treat as access-controlled unless redistribution is explicitly allowed.",
+      "policyClass": "local-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "local-only",
+      "requiredPackageNameSuffixes": [
+        "-local"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:german:leipzig-corpora"
+    },
+    {
+      "capabilitySlots": [
+        "morphology",
+        "fst"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "DELEX",
+      "homepageUrl": "https://www.ims.uni-stuttgart.de/en/research/resources/tools/smor/",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "LicenseRef-SMOR-GPL-Review",
+      "name": "SMOR",
+      "notes": "Needs deliberate copyleft isolation and stem lexicon review.",
+      "policyClass": "copyleft",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "copyleft-isolated",
+      "requiredPackageNameSuffixes": [
+        "-gpl"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:german:smor"
+    },
+    {
+      "capabilitySlots": [
+        "language-registry",
+        "language-reference"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "GLOTTO",
+      "homepageUrl": "https://github.com/glottolog/glottolog-cldf",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "Glottolog CLDF",
+      "notes": "Metadata-only until a snapshot and transform are declared.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:glottolog:cldf"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "GREEK",
+      "homepageUrl": "https://nlp.ilsp.gr/gdt/",
+      "languages": [
+        "el"
+      ],
+      "licenseExpression": "LicenseRef-Greek-Dependency-Treebank",
+      "name": "Greek Dependency Treebank",
+      "notes": "Exact release/license metadata required.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:greek:dependency-treebank"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "GREEK",
+      "homepageUrl": "https://universaldependencies.org/el/",
+      "languages": [
+        "el"
+      ],
+      "licenseExpression": "LicenseRef-UD-Greek-Per-Treebank",
+      "name": "UD Greek GDT / GUD",
+      "notes": "GDT is listed as CC-BY-NC-SA; do not use in unrestricted defaults.",
+      "policyClass": "noncommercial/research",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "research-only",
+      "requiredPackageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:greek:gdt-gud"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "frequency"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CORPUS",
+      "homepageUrl": "https://hnc.ilsp.gr/",
+      "languages": [
+        "el"
+      ],
+      "licenseExpression": "LicenseRef-Hellenic-National-Corpus",
+      "name": "Hellenic National Corpus",
+      "notes": "Use as access/query source unless redistribution is explicitly allowed.",
+      "policyClass": "local-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "local-only",
+      "requiredPackageNameSuffixes": [
+        "-local"
+      ],
+      "reviewState": "blocked",
+      "sourceId": "source:greek:hellenic-national-corpus"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "definitions"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "GREEK",
+      "homepageUrl": "https://latin-dict.github.io/dictionaries/LiddellScott1940.html",
+      "languages": [
+        "grc"
+      ],
+      "licenseExpression": "LicenseRef-LSJ-Review",
+      "name": "LSJ / Perseus lexical data",
+      "notes": "Exact edition/license capture required before use.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:greek:lsj-perseus"
+    },
+    {
+      "capabilitySlots": [
+        "language-registry"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "IANA",
+      "homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
+      "name": "IANA Language Subtag Registry",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:iana:language-subtag-registry"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WN",
+      "homepageUrl": "https://catalogue.elra.info/en-us/repository/browse/ELRA-M0042/",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "LicenseRef-ELRA-ItalWordNet",
+      "name": "ItalWordNet",
+      "notes": "Licensed distribution; not a default public source.",
+      "policyClass": "local-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "local-only",
+      "requiredPackageNameSuffixes": [
+        "-local"
+      ],
+      "reviewState": "blocked",
+      "sourceId": "source:it:italwordnet"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ITLEX",
+      "homepageUrl": "https://docs.sslmit.unibo.it/doku.php?id=resources%3Amorph-it",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "LicenseRef-Morph-it-Versioned",
+      "name": "Morph-it!",
+      "notes": "License metadata differs by version/distribution notes; pin before use.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:it:morph-it"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "syntax",
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "LATIN",
+      "homepageUrl": "https://uni-tuebingen.de/en/faculties/faculty-of-humanities/departments/modern-languages/department-of-linguistics/chairs/general-and-computational-linguistics/ressources/corpora/index-thomisticus-treebank/",
+      "languages": [
+        "la"
+      ],
+      "licenseExpression": "CC-BY-NC-SA-3.0",
+      "name": "Index Thomisticus Treebank",
+      "notes": "Research-only Latin treebank source.",
+      "policyClass": "noncommercial/research",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "research-only",
+      "requiredPackageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:latin:index-thomisticus"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "morphology",
+        "syntax"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "LATIN",
+      "homepageUrl": "https://ancientworldonline.blogspot.com/2023/10/the-lasla-latin-corpus-has-been.html",
+      "languages": [
+        "la"
+      ],
+      "licenseExpression": "CC-BY-NC-SA-4.0",
+      "name": "LASLA Latin Corpus",
+      "notes": "Research-only Latin source.",
+      "policyClass": "noncommercial/research",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "research-only",
+      "requiredPackageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:latin:lasla"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "definitions"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "LATIN",
+      "homepageUrl": "https://github.com/josephholsten/plaintext-lewis-short",
+      "languages": [
+        "la"
+      ],
+      "licenseExpression": "LicenseRef-Lewis-Short-Review",
+      "name": "Lewis & Short / Perseus lexical data",
+      "notes": "Exact edition/license capture required before use.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:latin:lewis-short"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexicon"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "LILA",
+      "homepageUrl": "https://cordis.europa.eu/project/id/769994",
+      "languages": [
+        "la"
+      ],
+      "licenseExpression": "LicenseRef-LiLa-KB",
+      "name": "LiLa Knowledge Base",
+      "notes": "Exact license and version must be pinned before generation.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:latin:lila-kb"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology",
+        "kb"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "LILA",
+      "homepageUrl": "https://openhumanitiesdata.metajnl.com/articles/10.5334/johd.145",
+      "languages": [
+        "la"
+      ],
+      "licenseExpression": "LicenseRef-LiLa-Lemma-Bank",
+      "name": "LiLa Lemma Bank",
+      "notes": "Core Latin candidate; exact license and version must be pinned before generation.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:latin:lila-lemma-bank"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://omwn.org/",
+      "languages": [
+        "en",
+        "fr",
+        "es",
+        "it",
+        "el"
+      ],
+      "licenseExpression": "LicenseRef-OMW-Per-Component",
+      "name": "Open Multilingual Wordnet",
+      "notes": "Use component-level license capture before generating language-specific wordnet packs.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:omw:core"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "lexicon",
+        "historical"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CLASSICAL",
+      "homepageUrl": "https://www.opengreekandlatin.org/",
+      "languages": [
+        "la",
+        "grc"
+      ],
+      "licenseExpression": "LicenseRef-Edition-Specific",
+      "name": "Open Greek & Latin / Perseus",
+      "notes": "Edition and CTS metadata must be reviewed per corpus slice.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:opengreekandlatin:corpus"
+    },
+    {
+      "capabilitySlots": [
+        "parallel",
+        "corpus"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "OPUS",
+      "homepageUrl": "https://github.com/Helsinki-NLP/OPUS",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "LicenseRef-Mixed-Per-Subcorpus",
+      "name": "OPUS collection",
+      "notes": "The collection is not a redistributable source by itself; every subcorpus needs its own policy entry.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:opus:collection"
+    },
+    {
+      "capabilitySlots": [
+        "morphology",
+        "syntax",
+        "corpus"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ARRES",
+      "homepageUrl": "https://corpus.quran.com/download",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "LicenseRef-Quranic-Arabic-Corpus-GPL-Family",
+      "name": "Quranic Arabic Corpus",
+      "notes": "Specialized Classical Arabic source; not allowed in default permissive composites.",
+      "policyClass": "copyleft",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "copyleft-isolated",
+      "requiredPackageNameSuffixes": [
+        "-gpl"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:quranic-arabic-corpus"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "spelling",
+        "search"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-SCOWL-Variant-Set",
+      "name": "SCOWL / English Speller Database",
+      "notes": "Exact variant set and license need audit before generation.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:scowl:english-speller"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "frequency"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CORPUS",
+      "homepageUrl": "https://crscardellino.net/SBWCE",
+      "languages": [
+        "es"
+      ],
+      "licenseExpression": "CC-BY-SA-4.0",
+      "name": "Spanish Billion Word Corpus",
+      "notes": "Use only with explicit share-alike separation.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:spanish:billion-word-corpus"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "diacritization",
+        "quality"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "ARRES",
+      "homepageUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5310197/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "LicenseRef-Tashkeela-Unreviewed",
+      "name": "Tashkeela",
+      "notes": "Exact versioned license must be reviewed before any redistribution.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:tashkeela:corpus"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "parallel",
+        "examples"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "TATOEBA",
+      "homepageUrl": "https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba sentences",
+      "notes": "Attribution must preserve sentence-level author/source requirements.",
+      "policyClass": "attribution",
+      "priority": "second",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:tatoeba:sentences"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "corpus"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CLASSICAL",
+      "homepageUrl": "https://perseusdl.github.io/treebank_data/",
+      "languages": [
+        "la",
+        "grc"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "Ancient Greek and Latin Dependency Treebank",
+      "notes": "Classical treebank source with explicit share-alike isolation.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:treebank:agldt"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/treebanks/grc_proiel/index.html",
+      "languages": [
+        "grc"
+      ],
+      "licenseExpression": "CC-BY-NC-SA-3.0",
+      "name": "UD Ancient Greek PROIEL",
+      "notes": "Not suitable for unrestricted public packages.",
+      "policyClass": "noncommercial/research",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "research-only",
+      "requiredPackageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:ud:ancient-greek-proiel"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/ar/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies Arabic treebanks",
+      "notes": "Metadata-only until each selected Arabic treebank license is audited.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:arabic"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/en/",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies English treebanks",
+      "notes": "Metadata-only until each selected English treebank license is audited.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:english"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/fr/",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies French treebanks",
+      "notes": "Metadata-only until each selected French treebank license is audited.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:french"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/de/",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies German treebanks",
+      "notes": "Metadata-only until each selected German treebank license is audited.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:german"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/el/",
+      "languages": [
+        "el"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies Greek treebanks",
+      "notes": "Metadata-only until each selected Modern Greek treebank license is audited.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:greek"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/it/",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies Italian treebanks",
+      "notes": "Metadata-only until selected Italian treebanks are audited independently of Italian-ISDT.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:italian"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/treebanks/it_isdt/index.html",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "CC-BY-NC-SA-3.0",
+      "name": "UD Italian-ISDT",
+      "notes": "Not suitable for unrestricted public packages.",
+      "policyClass": "noncommercial/research",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "research-only",
+      "requiredPackageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:ud:italian-isdt"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://github.com/UniversalDependencies/UD_Latin-PROIEL",
+      "languages": [
+        "la"
+      ],
+      "licenseExpression": "CC-BY-NC-SA-3.0",
+      "name": "UD Latin PROIEL",
+      "notes": "Not suitable for unrestricted public packages.",
+      "policyClass": "noncommercial/research",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "research-only",
+      "requiredPackageNameSuffixes": [
+        "-research",
+        "-nc"
+      ],
+      "reviewState": "pending",
+      "sourceId": "source:ud:latin-proiel"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://universaldependencies.org/es/",
+      "languages": [
+        "es"
+      ],
+      "licenseExpression": "LicenseRef-UD-Per-Treebank",
+      "name": "Universal Dependencies Spanish treebanks",
+      "notes": "Metadata-only until each selected Spanish treebank license is audited.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:ud:spanish"
+    },
+    {
+      "capabilitySlots": [
+        "locale-profile",
+        "script-profile",
+        "search"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "CLDR",
+      "homepageUrl": "https://cldr.unicode.org/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode CLDR Core",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:unicode:cldr-core"
+    },
+    {
+      "capabilitySlots": [
+        "unicode-profile",
+        "normalization",
+        "script-profile",
+        "quality"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "UCD",
+      "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode Character Database",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:unicode:ucd"
+    },
+    {
+      "capabilitySlots": [
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UNIMORPH",
+      "homepageUrl": "https://unimorph.github.io/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "LicenseRef-UniMorph-Per-Language",
+      "name": "UniMorph Arabic",
+      "notes": "Metadata-only until per-language UniMorph license is pinned.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:unimorph:arabic"
+    },
+    {
+      "capabilitySlots": [
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UNIMORPH",
+      "homepageUrl": "https://unimorph.github.io/",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-UniMorph-Per-Language",
+      "name": "UniMorph English",
+      "notes": "Metadata-only until per-language UniMorph license is pinned.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:unimorph:english"
+    },
+    {
+      "capabilitySlots": [
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UNIMORPH",
+      "homepageUrl": "https://unimorph.github.io/",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "LicenseRef-UniMorph-Per-Language",
+      "name": "UniMorph French",
+      "notes": "Metadata-only until per-language UniMorph license is pinned.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:unimorph:french"
+    },
+    {
+      "capabilitySlots": [
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UNIMORPH",
+      "homepageUrl": "https://unimorph.github.io/",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "LicenseRef-UniMorph-Per-Language",
+      "name": "UniMorph German",
+      "notes": "Metadata-only until per-language UniMorph license is pinned.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:unimorph:german"
+    },
+    {
+      "capabilitySlots": [
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UNIMORPH",
+      "homepageUrl": "https://unimorph.github.io/",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "LicenseRef-UniMorph-Per-Language",
+      "name": "UniMorph Italian",
+      "notes": "Metadata-only until per-language UniMorph license is pinned.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:unimorph:italian"
+    },
+    {
+      "capabilitySlots": [
+        "morphology"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "UNIMORPH",
+      "homepageUrl": "https://unimorph.github.io/",
+      "languages": [
+        "es"
+      ],
+      "licenseExpression": "LicenseRef-UniMorph-Per-Language",
+      "name": "UniMorph Spanish",
+      "notes": "Metadata-only until per-language UniMorph license is pinned.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:unimorph:spanish"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "frequency",
+        "quality"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "CORPUS",
+      "homepageUrl": "https://commoncrawl.org/terms-of-use",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "LicenseRef-Mixed-Web-Corpus",
+      "name": "Large web corpora",
+      "notes": "Do not redistribute raw web text without source-specific legal basis.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:web-corpora:large"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "entity-linking",
+        "lexicon"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WD",
+      "homepageUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC0-1.0",
+      "name": "Wikidata main structured data",
+      "notes": "Only main structured namespaces are in this policy; non-main namespaces need separate entries.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wikidata:main"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "kb",
+        "frequency"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WIKI",
+      "homepageUrl": "https://en.wikipedia.org/wiki/Wikipedia:Database_download",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC-BY-SA-4.0 AND GFDL-1.3-or-later",
+      "name": "Wikipedia / Wikisource raw text",
+      "notes": "Raw wiki text must not enter permissive default packages.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa",
+        "-wikipedia"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:wikipedia:raw-text"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology",
+        "definitions",
+        "translations"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WIKT",
+      "homepageUrl": "https://en.wiktionary.org/wiki/Wiktionary:Copyrights",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0 AND GFDL-1.3-or-later",
+      "name": "Wiktionary dumps",
+      "notes": "Must remain outside default composites unless the component explicitly allows share-alike data.",
+      "policyClass": "share-alike",
+      "priority": "second",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa",
+        "-wiktionary"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:wiktionary:all"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WN",
+      "homepageUrl": "https://greekwordnet.chs.harvard.edu/",
+      "languages": [
+        "grc"
+      ],
+      "licenseExpression": "LicenseRef-Ancient-Greek-WordNet",
+      "name": "Ancient Greek WordNet",
+      "notes": "Exact release/license verification required.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:wordnet:ancient-greek"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "ARRES",
+      "homepageUrl": "https://linguistlist.org/issues/37/321/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "Arabic WordNet 4.0",
+      "notes": "Arabic semantic source candidate.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:arabic-4"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://omwn.org/omw1.html",
+      "languages": [
+        "el"
+      ],
+      "licenseExpression": "Apache-2.0",
+      "name": "Greek WordNet via OMW",
+      "notes": "Modern Greek semantic source candidate.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:greek-omw"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://adimen.ehu.eus/web/MCR",
+      "languages": [
+        "es"
+      ],
+      "licenseExpression": "CC-BY-3.0",
+      "name": "Multilingual Central Repository Spanish WordNet",
+      "notes": "Candidate Spanish semantic source.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:mcr-spanish"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://omwn.org/omw1.html",
+      "languages": [
+        "it"
+      ],
+      "licenseExpression": "CC-BY-3.0",
+      "name": "MultiWordNet Italian via OMW",
+      "notes": "Italian semantic source candidate.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:multiwordnet-italian"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WN",
+      "homepageUrl": "https://github.com/hdaSprachtechnologie/odenet",
+      "languages": [
+        "de"
+      ],
+      "licenseExpression": "CC-BY-SA-4.0",
+      "name": "OdeNet / Open German WordNet",
+      "notes": "Core German semantic candidate, but the share-alike boundary must be explicit.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:odenet"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://github.com/globalwordnet/english-wordnet",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "Open English WordNet",
+      "notes": "Good default English semantic source once generated reports and evaluation exist.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:open-english"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WN",
+      "homepageUrl": "https://wordnet.princeton.edu/license-and-commercial-use",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-Princeton-WordNet",
+      "name": "Princeton WordNet",
+      "notes": "Reference lineage source; exact version and license file must be pinned before use.",
+      "policyClass": "blocked/review-only",
+      "priority": "review",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:wordnet:princeton"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "WN",
+      "homepageUrl": "https://omwn.org/omw1.html",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "LicenseRef-OMW-WOLF-CeCILL-C",
+      "name": "WOLF via OMW",
+      "notes": "Review CeCILL-C obligations before generating package policy.",
+      "policyClass": "blocked/review-only",
+      "priority": "first",
+      "publishableByDefault": false,
+      "redistributionPolicy": "blocked",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "pending",
+      "sourceId": "source:wordnet:wolf"
+    }
+  ],
+  "summaries": {
+    "activeSourceCount": 3,
+    "byPolicyClass": {
+      "attribution": 8,
+      "blocked/review-only": 30,
+      "copyleft": 4,
+      "default-safe": 5,
+      "local-only": 4,
+      "noncommercial/research": 6,
+      "share-alike": 9
+    },
+    "byPriority": {
+      "first": 33,
+      "isolated": 14,
+      "review": 13,
+      "second": 6
+    },
+    "byReviewState": {
+      "approved": 23,
+      "blocked": 3,
+      "pending": 40
+    },
+    "languageCount": 8,
+    "sourceCount": 66
+  }
+}

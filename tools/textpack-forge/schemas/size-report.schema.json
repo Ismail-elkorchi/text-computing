@@ -1,0 +1,13 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "TextpackForgeSizeReport",
+	"type": "object",
+	"additionalProperties": true,
+	"required": ["schemaVersion", "generatedAt", "mode", "packages"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"generatedAt": { "type": "string", "minLength": 1 },
+		"mode": { "const": "source-backed" },
+		"packages": { "type": "array" }
+	}
+}

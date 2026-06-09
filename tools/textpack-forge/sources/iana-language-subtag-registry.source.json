@@ -1,0 +1,12 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:iana:language-subtag-registry",
+	"family": "IANA",
+	"name": "IANA Language Subtag Registry",
+	"homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+	"licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "IANA Language Subtag Registry, File-Date 2026-05-05.",
+	"notes": "BCP 47 language, script, region, variant, grandfathered, and redundant tag registry data."
+}

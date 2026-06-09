@@ -1,0 +1,157 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "TextpackForgeSourcePolicy",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"policyId",
+		"generatedFrom",
+		"licenseClasses",
+		"sources",
+		"languages"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"policyId": { "type": "string", "minLength": 1 },
+		"generatedFrom": { "type": "string", "minLength": 1 },
+		"licenseClasses": {
+			"type": "array",
+			"minItems": 7,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": [
+					"class",
+					"description",
+					"defaultCompositeAllowed",
+					"publishableByDefault",
+					"packageNameSuffixes"
+				],
+				"properties": {
+					"class": {
+						"enum": [
+							"default-safe",
+							"attribution",
+							"share-alike",
+							"copyleft",
+							"noncommercial/research",
+							"local-only",
+							"blocked/review-only"
+						]
+					},
+					"description": { "type": "string", "minLength": 1 },
+					"defaultCompositeAllowed": { "type": "boolean" },
+					"publishableByDefault": { "type": "boolean" },
+					"packageNameSuffixes": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					}
+				}
+			}
+		},
+		"sources": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": [
+					"sourceId",
+					"family",
+					"name",
+					"homepageUrl",
+					"licenseExpression",
+					"policyClass",
+					"redistributionPolicy",
+					"reviewState",
+					"defaultCompositeAllowed",
+					"publishableByDefault",
+					"requiredPackageNameSuffixes",
+					"languages",
+					"capabilitySlots",
+					"priority",
+					"notes"
+				],
+				"properties": {
+					"sourceId": { "type": "string", "minLength": 1 },
+					"family": { "type": "string", "minLength": 1 },
+					"name": { "type": "string", "minLength": 1 },
+					"homepageUrl": { "type": "string", "minLength": 1 },
+					"licenseExpression": { "type": "string", "minLength": 1 },
+					"policyClass": {
+						"enum": [
+							"default-safe",
+							"attribution",
+							"share-alike",
+							"copyleft",
+							"noncommercial/research",
+							"local-only",
+							"blocked/review-only"
+						]
+					},
+					"redistributionPolicy": {
+						"enum": [
+							"redistributable",
+							"redistributable-with-attribution",
+							"share-alike-isolated",
+							"copyleft-isolated",
+							"research-only",
+							"local-only",
+							"blocked"
+						]
+					},
+					"reviewState": { "enum": ["approved", "pending", "blocked"] },
+					"defaultCompositeAllowed": { "type": "boolean" },
+					"publishableByDefault": { "type": "boolean" },
+					"requiredPackageNameSuffixes": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"languages": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"capabilitySlots": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"priority": { "enum": ["first", "second", "isolated", "review"] },
+					"citation": { "type": "string", "minLength": 1 },
+					"notes": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"languages": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": [
+					"languageTag",
+					"languageName",
+					"firstSources",
+					"secondWaveSources",
+					"isolatedSources"
+				],
+				"properties": {
+					"languageTag": { "type": "string", "minLength": 1 },
+					"languageName": { "type": "string", "minLength": 1 },
+					"firstSources": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"secondWaveSources": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"isolatedSources": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					}
+				}
+			}
+		}
+	}
+}

@@ -16,7 +16,11 @@ const capabilityOrder = {
 } as const;
 
 export function capabilities(pack: TextPack): TextPackCapabilities {
-	return pack.manifest.capabilities;
+	return mergeCapabilities(
+		pack.manifest.capabilitySlots.flatMap((slot) =>
+			slot.capabilities === undefined ? [] : [slot.capabilities],
+		),
+	);
 }
 
 function strongerLevel(

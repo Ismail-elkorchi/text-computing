@@ -20,18 +20,14 @@
 - `@ismail-elkorchi/textquality` — text quality, noisy-text quality, OCR/ATR diagnostics, readability, style, corpus quality, annotation quality, and integrity package.
 - `@ismail-elkorchi/textparallel` — parallel corpus, alignment, translation memory, bilingual terminology, bilingual lexicon, and rule-based transfer package.
 
-## Reference packs
+## Generated textpacks
 
-- `@ismail-elkorchi/textpack-en-core` — English core resources for Latin-script, space-delimited coverage.
-- `@ismail-elkorchi/textpack-en-legal` — English legal-domain resources.
-- `@ismail-elkorchi/textpack-fr-core` — French core resources for inflection-rich language coverage.
-- `@ismail-elkorchi/textpack-tr-morphology` — Turkish morphology resources for agglutinative-language coverage.
-- `@ismail-elkorchi/textpack-ar-core` — Arabic core resources for Semitic/root-pattern and right-to-left script coverage.
-- `@ismail-elkorchi/textpack-ja-segmentation` — Japanese segmentation resources for no-space text coverage.
-- `@ismail-elkorchi/textpack-fr-historical` — French historical spelling and normalization resources.
-- `@ismail-elkorchi/textpack-ocr-latin19c` — Latin nineteenth-century OCR/noisy-text resources.
-- `@ismail-elkorchi/textpack-kb-demo` — Knowledge-base and ontology demo resources.
-- `@ismail-elkorchi/textpack-corpus-demo-en` — Small English corpus and dataset demo resources.
+- `@ismail-elkorchi/textpack-language-registry` — Generated source-backed BCP 47 language registry foundation resources.
+- `@ismail-elkorchi/textpack-unicode-17` — Generated source-backed Unicode 17 foundation resources.
+- `@ismail-elkorchi/textpack-cldr-core` — Generated source-backed CLDR core foundation resources.
+- `@ismail-elkorchi/textpack-foundation` — Generated source-backed foundation composite and language-support API.
+
+Generated textpacks are non-publishable by default. A generated pack becomes an npm-publishable textpack only after the forge publishability gate records production-grade source coverage, audited license evidence, scoped capability claims, conformance/evaluation evidence, and generated reports. Sampled, demo, fixture-backed, and transitional packs are not part of the public package graph.
 
 ## Development
 
@@ -51,4 +47,4 @@ npm run -s schema:validate
 - [`docs/decisions/`](docs/decisions/) — accepted public technical decisions.
 - [`fixtures/`](fixtures/) — repository-level fixture inputs, expected outputs, reports, generated artifacts, and quarantined inputs.
 - [`schemas/`](schemas/) — repository-level JSON Schemas.
-- [`packages/textpacks/`](packages/textpacks/) — reference `textpack-*` resource packages.
+- [`packages/textpacks/`](packages/textpacks/) — generated `textpack-*` foundation package outputs.

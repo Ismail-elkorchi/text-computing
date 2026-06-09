@@ -1,0 +1,12 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:unicode:ucd",
+	"family": "UCD",
+	"name": "Unicode Character Database",
+	"homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+	"licenseExpression": "Unicode-3.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "Unicode Character Database 17.0.0.",
+	"notes": "Selected Unicode 17.0.0 UCD files used for script, block, and property alias foundation resources."
+}

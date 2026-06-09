@@ -1,0 +1,334 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packages": [
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
+          "notes": [
+            "CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
+          ],
+          "resourceIds": [
+            "cldr-48-likely-subtags",
+            "cldr-48-locale-aliases",
+            "cldr-48-script-data",
+            "cldr-48-core-summary"
+          ],
+          "slot": "locale-profile",
+          "status": "task-supported"
+        }
+      ],
+      "components": [],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "resources/cldr-48.core.summary.json",
+        "resources/cldr-48.likely-subtags.tsv",
+        "resources/cldr-48.locale-aliases.tsv",
+        "resources/cldr-48.script-data.tsv",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed foundation slice; downstream engine integration is follow-up"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "npmShippedSizeBytes": 163413,
+      "outputChecksum": "sha256:81bc84fb21d2c29c2c0721c3f1a852ed279e421049a49ba7ccf9ae81cca48feb",
+      "packClass": "foundation",
+      "packageId": "textpack-cldr-core",
+      "packageName": "@ismail-elkorchi/textpack-cldr-core",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ],
+      "supportLevel": "profiled",
+      "version": "0.1.0"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
+          "notes": [
+            "BCP 47 language, script, region, variant, grandfathered, and redundant tag registry resources are available through the generated foundation graph."
+          ],
+          "slot": "language-registry",
+          "status": "task-supported"
+        },
+        {
+          "notes": [
+            "CLDR likely-subtag, alias, and script variant resources are available through the generated foundation graph."
+          ],
+          "slot": "locale-profile",
+          "status": "task-supported"
+        },
+        {
+          "notes": [
+            "Unicode 17 script, block, and property alias resources are available through the generated foundation graph."
+          ],
+          "slot": "unicode-profile",
+          "status": "task-supported"
+        }
+      ],
+      "components": [
+        {
+          "artifactPolicy": "none",
+          "capabilityPolicy": "contributes-default",
+          "licensePolicy": "default",
+          "packageName": "@ismail-elkorchi/textpack-language-registry",
+          "reason": "Default BCP 47 language/script/region registry foundation resources.",
+          "role": "required",
+          "versionRange": "0.1.0"
+        },
+        {
+          "artifactPolicy": "none",
+          "capabilityPolicy": "contributes-default",
+          "licensePolicy": "default",
+          "packageName": "@ismail-elkorchi/textpack-unicode-17",
+          "reason": "Default Unicode 17 script, block, and property alias foundation resources.",
+          "role": "required",
+          "versionRange": "0.1.0"
+        },
+        {
+          "artifactPolicy": "none",
+          "capabilityPolicy": "contributes-default",
+          "licensePolicy": "default",
+          "packageName": "@ismail-elkorchi/textpack-cldr-core",
+          "reason": "Default CLDR likely-subtag, alias, and script-variant foundation resources.",
+          "role": "required",
+          "versionRange": "0.1.0"
+        }
+      ],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/language-support.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/negative.mjs",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed foundation composite; downstream engine integration is follow-up"
+      ],
+      "licenseExpression": "MIT",
+      "npmShippedSizeBytes": 412089,
+      "outputChecksum": "sha256:40bddb1b9dbf29763fb773a8e52fd273d353b8e9a8f4b7821411163e3f67b4bd",
+      "packClass": "foundation-composite",
+      "packageId": "textpack-foundation",
+      "packageName": "@ismail-elkorchi/textpack-foundation",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:unicode:ucd:17.0.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:cldr-core",
+        "source:unicode:ucd"
+      ],
+      "supportLevel": "profiled",
+      "version": "0.1.0"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
+          "notes": [
+            "BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
+          ],
+          "resourceIds": [
+            "bcp47-language-subtags",
+            "bcp47-language-registry-summary"
+          ],
+          "slot": "language-registry",
+          "status": "task-supported"
+        }
+      ],
+      "components": [],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "resources/bcp47.language-registry.summary.json",
+        "resources/bcp47.language-subtags.tsv",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed foundation slice; downstream engine integration is follow-up"
+      ],
+      "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
+      "npmShippedSizeBytes": 409021,
+      "outputChecksum": "sha256:ad347be5cfe96498aa157a742fc126c55339369262b763c396e50189f5d99c90",
+      "packClass": "foundation",
+      "packageId": "textpack-language-registry",
+      "packageName": "@ismail-elkorchi/textpack-language-registry",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry"
+      ],
+      "supportLevel": "registered",
+      "version": "0.1.0"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "artifactProfiles": [],
+      "capabilitySlots": [
+        {
+          "notes": [
+            "Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
+          ],
+          "resourceIds": [
+            "unicode-17-blocks",
+            "unicode-17-property-value-aliases",
+            "unicode-17-scripts",
+            "unicode-17-core-summary"
+          ],
+          "slot": "unicode-profile",
+          "status": "task-supported"
+        }
+      ],
+      "components": [],
+      "generatedFiles": [
+        "ATTRIBUTION.generated.md",
+        "CHANGELOG.md",
+        "COVERAGE.generated.json",
+        "NOTICE.generated.md",
+        "pack.manifest.json",
+        "package.json",
+        "QUALITY.generated.json",
+        "README.md",
+        "resources/unicode-17.blocks.tsv",
+        "resources/unicode-17.core.summary.json",
+        "resources/unicode-17.property-value-aliases.tsv",
+        "resources/unicode-17.scripts.tsv",
+        "SOURCES.generated.json",
+        "src/index.ts",
+        "src/manifest.ts",
+        "src/resources.ts",
+        "test/smoke.mjs",
+        "tsconfig.build.json",
+        "tsconfig.json"
+      ],
+      "knownGaps": [
+        "source-backed foundation slice; downstream engine integration is follow-up"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "npmShippedSizeBytes": 200479,
+      "outputChecksum": "sha256:c1d8a45e8f3bfa25a9de96173682f2ba41b9d4cd33b73e4ec721f702a4cfd1ba",
+      "packClass": "foundation",
+      "packageId": "textpack-unicode-17",
+      "packageName": "@ismail-elkorchi/textpack-unicode-17",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "reports": [
+        "NOTICE.generated.md",
+        "SOURCES.generated.json",
+        "ATTRIBUTION.generated.md",
+        "COVERAGE.generated.json",
+        "QUALITY.generated.json"
+      ],
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd"
+      ],
+      "supportLevel": "unicode-covered",
+      "version": "0.1.0"
+    }
+  ],
+  "schemaVersion": "1"
+}

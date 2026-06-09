@@ -1,2 +1,0 @@
-plural-s->singular
-past-ed->lemma

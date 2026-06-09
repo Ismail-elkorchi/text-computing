@@ -1,0 +1,216 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "limits": {
+    "compositePackedBytes": 512000,
+    "hugeUnpackedBytes": 524288000,
+    "mediumUnpackedBytes": 52428800,
+    "smallUnpackedBytes": 5242880,
+    "tinyUnpackedBytes": 512000
+  },
+  "mode": "source-backed",
+  "packages": [
+    {
+      "artifactBackedSizeBytes": 0,
+      "npmShippedSizeBytes": 163413,
+      "outputChecksum": "sha256:81bc84fb21d2c29c2c0721c3f1a852ed279e421049a49ba7ccf9ae81cca48feb",
+      "packageDir": "packages/textpacks/textpack-cldr-core",
+      "packageName": "@ismail-elkorchi/textpack-cldr-core",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "resources": [
+        {
+          "byteLength": 192,
+          "checksum": "sha256:274ed6518c70f5ea0f92990b53b3d64ff1834af03b2c655b33a7992bde5d0ff7",
+          "id": "cldr-48-core-summary",
+          "kind": "locale-profile",
+          "lineCount": 10,
+          "nonEmptyLineCount": 9,
+          "path": "resources/cldr-48.core.summary.json",
+          "pipelineId": "cldr-core-foundation",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 126509,
+          "checksum": "sha256:8babca7d23a8e0e784f0fc609a8719e6424fa0804e87444f764740aca2b10fac",
+          "id": "cldr-48-likely-subtags",
+          "kind": "locale-profile",
+          "lineCount": 7790,
+          "nonEmptyLineCount": 7789,
+          "path": "resources/cldr-48.likely-subtags.tsv",
+          "pipelineId": "cldr-core-foundation",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 36386,
+          "checksum": "sha256:9c4e018288bde0698003a52fcba6dad6b907f65ba4585bb142db8cc1c9733419",
+          "id": "cldr-48-locale-aliases",
+          "kind": "locale-profile",
+          "lineCount": 1308,
+          "nonEmptyLineCount": 1307,
+          "path": "resources/cldr-48.locale-aliases.tsv",
+          "pipelineId": "cldr-core-foundation",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 326,
+          "checksum": "sha256:e48aef1d01403e80be986717f4dcccda20064d7cf46a15436f1d921b617f4ab0",
+          "id": "cldr-48-script-data",
+          "kind": "locale-profile",
+          "lineCount": 17,
+          "nonEmptyLineCount": 16,
+          "path": "resources/cldr-48.script-data.tsv",
+          "pipelineId": "cldr-core-foundation",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "sizeClass": "tiny"
+        }
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "npmShippedSizeBytes": 412089,
+      "outputChecksum": "sha256:40bddb1b9dbf29763fb773a8e52fd273d353b8e9a8f4b7821411163e3f67b4bd",
+      "packageDir": "packages/textpacks/textpack-foundation",
+      "packageName": "@ismail-elkorchi/textpack-foundation",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "resources": [],
+      "sizeClass": "tiny"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "npmShippedSizeBytes": 409021,
+      "outputChecksum": "sha256:ad347be5cfe96498aa157a742fc126c55339369262b763c396e50189f5d99c90",
+      "packageDir": "packages/textpacks/textpack-language-registry",
+      "packageName": "@ismail-elkorchi/textpack-language-registry",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "resources": [
+        {
+          "byteLength": 325,
+          "checksum": "sha256:14cb57e1bccb04a5fe9f2a7dec407044348b2887cdd0bc9f48dfd59e70c0667d",
+          "id": "bcp47-language-registry-summary",
+          "kind": "language-registry",
+          "lineCount": 17,
+          "nonEmptyLineCount": 16,
+          "path": "resources/bcp47.language-registry.summary.json",
+          "pipelineId": "iana-language-registry",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 408696,
+          "checksum": "sha256:809f37eab10fcb63c513505fc9e21039739dda829b8612e7e9c6b84350722df7",
+          "id": "bcp47-language-subtags",
+          "kind": "language-registry",
+          "lineCount": 9297,
+          "nonEmptyLineCount": 9296,
+          "path": "resources/bcp47.language-subtags.tsv",
+          "pipelineId": "iana-language-registry",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+          "sizeClass": "tiny"
+        }
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "artifactBackedSizeBytes": 0,
+      "npmShippedSizeBytes": 200479,
+      "outputChecksum": "sha256:c1d8a45e8f3bfa25a9de96173682f2ba41b9d4cd33b73e4ec721f702a4cfd1ba",
+      "packageDir": "packages/textpacks/textpack-unicode-17",
+      "packageName": "@ismail-elkorchi/textpack-unicode-17",
+      "publishability": {
+        "publishable": false,
+        "reasons": [
+          "generated packs are non-publishable by default"
+        ],
+        "status": "blocked"
+      },
+      "publishable": false,
+      "resources": [
+        {
+          "byteLength": 10002,
+          "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
+          "id": "unicode-17-blocks",
+          "kind": "unicode-profile",
+          "lineCount": 348,
+          "nonEmptyLineCount": 347,
+          "path": "resources/unicode-17.blocks.tsv",
+          "pipelineId": "unicode-17-core",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 181,
+          "checksum": "sha256:d0ad3bd0f0d98f21c8d8d1350d4c3e78186e9a0812f63fd49c37e5aa810fb213",
+          "id": "unicode-17-core-summary",
+          "kind": "unicode-profile",
+          "lineCount": 9,
+          "nonEmptyLineCount": 8,
+          "path": "resources/unicode-17.core.summary.json",
+          "pipelineId": "unicode-17-core",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 28940,
+          "checksum": "sha256:02d11d047c9f3a334821a6ebd6f629937a4779826dbc11e26c13b6b52849e254",
+          "id": "unicode-17-property-value-aliases",
+          "kind": "unicode-profile",
+          "lineCount": 1196,
+          "nonEmptyLineCount": 1195,
+          "path": "resources/unicode-17.property-value-aliases.tsv",
+          "pipelineId": "unicode-17-core",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 161356,
+          "checksum": "sha256:2de81d752de3ff8605bb6cd02cb57d41eade60b5d165ff0374033103b8757abf",
+          "id": "unicode-17-scripts",
+          "kind": "unicode-profile",
+          "lineCount": 2289,
+          "nonEmptyLineCount": 2288,
+          "path": "resources/unicode-17.scripts.tsv",
+          "pipelineId": "unicode-17-core",
+          "pipelineVersion": "0.1.0",
+          "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "sizeClass": "tiny"
+        }
+      ],
+      "sizeClass": "tiny"
+    }
+  ],
+  "schemaVersion": "1"
+}

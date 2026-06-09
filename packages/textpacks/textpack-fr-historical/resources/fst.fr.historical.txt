@@ -1,2 +1,0 @@
-long-s->s
-obsolete-oi->ai

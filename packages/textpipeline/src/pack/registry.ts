@@ -5,7 +5,10 @@ import type {
 	TextPackCapabilityName,
 	TextPackResource,
 } from "@ismail-elkorchi/textpack";
-import { resourceKinds } from "@ismail-elkorchi/textpack";
+import {
+	resourceKinds,
+	capabilities as summarizeTextPackCapabilities,
+} from "@ismail-elkorchi/textpack";
 import { compareText, uniqueSorted } from "../internal/compare.js";
 import { fail } from "../internal/errors.js";
 import type { JsonValue } from "../internal/json.js";
@@ -48,9 +51,9 @@ function isNonEmptyString(value: unknown): value is string {
 
 function activeCapabilities(pack: TextPack): readonly string[] {
 	const values: string[] = [];
-	for (const [name, value] of Object.entries(pack.manifest.capabilities).sort(
-		([left], [right]) => compareText(left, right),
-	)) {
+	for (const [name, value] of Object.entries(
+		summarizeTextPackCapabilities(pack),
+	).sort(([left], [right]) => compareText(left, right))) {
 		if (value === false || value === "none" || value === undefined) continue;
 		values.push(name);
 		if (value === true) values.push(`${name}:true`);

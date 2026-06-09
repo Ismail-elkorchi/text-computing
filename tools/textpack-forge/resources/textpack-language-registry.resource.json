@@ -1,0 +1,34 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+	"packageName": "@ismail-elkorchi/textpack-language-registry",
+	"pipelineId": "iana-language-registry",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:iana:language-subtag-registry"
+	],
+	"snapshotIds": [
+		"snapshot:source:iana:language-subtag-registry:2026-05-05"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
+			"path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt",
+			"checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "bcp47-language-subtags",
+			"path": "resources/bcp47.language-subtags.tsv",
+			"kind": "language-registry",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "bcp47-language-registry-summary",
+			"path": "resources/bcp47.language-registry.summary.json",
+			"kind": "language-registry",
+			"format": "json"
+		}
+	]
+}
