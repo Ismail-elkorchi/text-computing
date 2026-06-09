@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:unimorph:english-master-66e0e9e",
+	"family": "UNIMORPH",
+	"name": "UniMorph English master 66e0e9e",
+	"homepageUrl": "https://github.com/unimorph/eng/tree/66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b",
+	"licenseEvidence": [
+		"https://github.com/unimorph/eng/blob/66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b/README.md",
+		"https://creativecommons.org/licenses/by-sa/3.0/"
+	],
+	"licenseExpression": "CC-BY-SA-3.0",
+	"redistributionPolicy": "share-alike-isolated",
+	"reviewState": "approved",
+	"citation": "UniMorph English repository, commit 66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b.",
+	"notes": "Exact UniMorph English source audit. The upstream README declares Wikipedia as source and CC-BY-SA 3.0 as license, so this source is isolated from default composites."
+}

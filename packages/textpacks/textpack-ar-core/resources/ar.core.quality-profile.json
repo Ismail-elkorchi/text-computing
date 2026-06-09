@@ -1,0 +1,45 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "ar-core-source-scope",
+      "message": "Arabic core resources are generated from IANA, Unicode, and CLDR snapshots with scope-limited core profile claims.",
+      "metadata": {
+        "likelySubtag": "ar-Arab-EG",
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "severity": "info",
+      "task": "core.profile"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "ar",
+  "metrics": [
+    {
+      "metricId": "arabic-script-range-count",
+      "name": "arabicScriptRangeCount",
+      "unit": "ranges",
+      "value": 95
+    },
+    {
+      "metricId": "punctuation-range-count",
+      "name": "punctuationRangeCount",
+      "unit": "ranges",
+      "value": 396
+    },
+    {
+      "metricId": "records-rejected",
+      "name": "recordsRejected",
+      "unit": "records",
+      "value": 0
+    }
+  ],
+  "profileId": "ar-core-quality",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "thresholds": []
+}

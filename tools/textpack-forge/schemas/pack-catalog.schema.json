@@ -1,0 +1,129 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "TextpackForgePackCatalog",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "mode", "sourceIds", "snapshotIds", "packs"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"mode": { "const": "source-backed" },
+		"sourceIds": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"snapshotIds": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"packs": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": [
+					"packageName",
+					"packageDir",
+					"packClass",
+					"supportLevel",
+					"generatedSourceFiles",
+					"manifest"
+				],
+				"properties": {
+					"packageName": { "type": "string", "minLength": 1 },
+					"packageDir": { "type": "string", "minLength": 1 },
+					"packClass": {
+						"enum": [
+							"foundation",
+							"language-concrete",
+							"domain",
+							"historical-noisy",
+							"kb",
+							"parallel",
+							"artifact-backed",
+							"license-isolated"
+						]
+					},
+					"description": { "type": "string", "minLength": 1 },
+					"publishable": { "type": "boolean" },
+					"publishabilityEvidence": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"productionGradeSourceCoverage": {
+								"type": "string",
+								"minLength": 1
+							},
+							"auditedLicense": { "type": "string", "minLength": 1 },
+							"declaredScope": { "type": "string", "minLength": 1 },
+							"conformanceEvidence": {
+								"type": "array",
+								"minItems": 1,
+								"items": { "type": "string", "minLength": 1 }
+							},
+							"generatedReports": {
+								"type": "array",
+								"minItems": 1,
+								"items": { "type": "string", "minLength": 1 }
+							}
+						}
+					},
+					"supportLevel": {
+						"enum": [
+							"registered",
+							"unicode-covered",
+							"profiled",
+							"artifact-backed",
+							"task-supported",
+							"feature-complete"
+						]
+					},
+					"sourceIds": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"snapshotIds": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"resourceSpecIds": {
+						"type": "array",
+						"items": { "type": "string", "minLength": 1 }
+					},
+					"generatedPackageFiles": { "type": "boolean" },
+					"generatedSourceFiles": {
+						"type": "array",
+						"minItems": 1,
+						"uniqueItems": true,
+						"items": {
+							"enum": ["src/index.ts", "src/manifest.ts", "src/resources.ts"]
+						}
+					},
+					"manifest": {
+						"type": "object",
+						"additionalProperties": true,
+						"required": [
+							"schemaVersion",
+							"id",
+							"name",
+							"version",
+							"packageName",
+							"targets",
+							"engines",
+							"resources",
+							"capabilitySlots"
+						],
+						"properties": {
+							"schemaVersion": { "const": "1" },
+							"resources": { "type": "array", "minItems": 1 },
+							"generated": false,
+							"gapNotes": false
+						}
+					}
+				}
+			}
+		}
+	}
+}

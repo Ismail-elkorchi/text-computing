@@ -1,0 +1,31 @@
+{
+  "coreResources": {
+    "basicSegmentationResourceId": "ar-core-basic-segmentation",
+    "orthographyResourceId": "ar-core-orthography",
+    "punctuationResourceId": "ar-core-punctuation"
+  },
+  "defaultRegion": "EG",
+  "iana": {
+    "added": "2005-10-16",
+    "fileDate": "2026-05-05",
+    "scope": "macrolanguage",
+    "suppressScript": "Arab"
+  },
+  "kind": "language-core-profile",
+  "languageName": "Arabic",
+  "languageTag": "ar",
+  "likelySubtag": "ar-Arab-EG",
+  "orthography": {
+    "arabicScriptRangeCount": 95,
+    "defaultScript": "Arab",
+    "scriptVariants": []
+  },
+  "profileId": "ar-modern-typed-core",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "sourceIds": [
+    "source:iana:language-subtag-registry",
+    "source:unicode:ucd",
+    "source:unicode:cldr-core"
+  ]
+}

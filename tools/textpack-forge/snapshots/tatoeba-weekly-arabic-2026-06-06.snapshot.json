@@ -1,0 +1,19 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+	"sourceId": "source:tatoeba:weekly-arabic-2026-06-06",
+	"version": "2026-06-06",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "external",
+	"checksum": "sha256:8caefc61478d6bd0e7f4ea46e36a75ed1db1160993d47100d946a474522b6f8c",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
+			"mediaType": "application/json",
+			"byteLength": 3390,
+			"checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/"
+		}
+	],
+	"notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository."
+}

@@ -1,0 +1,50 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "fr-normalization-scope",
+      "message": "Unicode/CLDR-backed profile for modern typed French; spelling correction and noisy-text normalization are out of scope.",
+      "metadata": {
+        "likelySubtag": "fr-Latn-FR",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "severity": "info",
+      "task": "normalization.profile"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "fr",
+  "metrics": [
+    {
+      "metricId": "rule-count",
+      "name": "ruleCount",
+      "unit": "rules",
+      "value": 3
+    },
+    {
+      "metricId": "nfc-quick-check-value-count",
+      "name": "nfcQuickCheckValueCount",
+      "unit": "aliases",
+      "value": 3
+    },
+    {
+      "metricId": "case-alias-row-count",
+      "name": "caseAliasRowCount",
+      "unit": "aliases",
+      "value": 10
+    },
+    {
+      "metricId": "records-rejected",
+      "name": "recordsRejected",
+      "unit": "records",
+      "value": 0
+    }
+  ],
+  "profileId": "fr-normalization-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

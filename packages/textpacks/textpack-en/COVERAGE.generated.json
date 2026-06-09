@@ -1,0 +1,367 @@
+{
+  "capabilities": {},
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "core",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "artifact-descriptor",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "corpus",
+      "status": "artifact-backed"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "foundation",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "artifact-descriptor",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "kb",
+      "status": "artifact-backed"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "lexicon",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "morphology",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "normalization",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "artifact-descriptor",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "parallel",
+      "status": "artifact-backed"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "artifact-descriptor",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "quality",
+      "status": "artifact-backed"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "search",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "segmentation",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "syntax",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "The required component graph provides the English core language profile."
+      ],
+      "slot": "core",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides artifact-backed Tatoeba English corpus artifact descriptors with explicit fetch policy.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "slot": "corpus",
+      "status": "artifact-backed"
+    },
+    {
+      "notes": [
+        "The required component graph provides Unicode, CLDR, and BCP 47 foundation resources."
+      ],
+      "slot": "foundation",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides Open English WordNet resources and Wikidata artifact descriptors.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "slot": "kb",
+      "status": "artifact-backed"
+    },
+    {
+      "notes": [
+        "The required component graph provides English spelling, inflection-inventory, and lexical-semantic lexicon resources."
+      ],
+      "slot": "lexicon",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides English SCOWLv2 lookup morphology resources; isolated UniMorph paradigm tables are not included."
+      ],
+      "slot": "morphology",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides English normalization resources."
+      ],
+      "slot": "normalization",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides artifact-backed Tatoeba English-linked parallel artifact descriptors with explicit fetch policy.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "slot": "parallel",
+      "status": "artifact-backed"
+    },
+    {
+      "notes": [
+        "The required component graph provides generated English quality evidence and coverage reports over first-wave resources plus artifact-backed corpus/parallel artifact descriptors.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "slot": "quality",
+      "status": "artifact-backed"
+    },
+    {
+      "notes": [
+        "The required component graph provides English search analyzer resources."
+      ],
+      "slot": "search",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides English segmentation resources."
+      ],
+      "slot": "segmentation",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides English UD-derived syntax and tagging resources."
+      ],
+      "slot": "syntax",
+      "status": "task-supported"
+    }
+  ],
+  "components": [
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "default",
+      "packageName": "@ismail-elkorchi/textpack-foundation",
+      "reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "reason": "English core language profile resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-normalization",
+      "reason": "English normalization policy and quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-segmentation",
+      "reason": "English segmentation profiles.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-lexicon",
+      "reason": "English spelling, inflection-inventory, and lexical-semantic lexicon resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-morphology",
+      "reason": "English lookup morphology resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-syntax",
+      "reason": "English UD-derived syntax and tagging resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-kb",
+      "reason": "English WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-search",
+      "reason": "English search analyzer profile resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-corpus",
+      "reason": "English artifact-backed Tatoeba corpus descriptors and quality evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-parallel",
+      "reason": "English-linked artifact-backed Tatoeba parallel descriptors and quality evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-quality",
+      "reason": "English generated quality evidence over the required default component graph.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "coverageStatus": "declared-only",
+  "evaluationRecordIds": [],
+  "gapNotes": [
+    {
+      "id": "gap:pack:en:kb",
+      "message": "kb is artifact-backed in this source-backed recipe composite pack.",
+      "slot": "kb",
+      "status": "artifact-backed"
+    },
+    {
+      "id": "gap:pack:en:corpus",
+      "message": "corpus is artifact-backed in this source-backed recipe composite pack.",
+      "slot": "corpus",
+      "status": "artifact-backed"
+    },
+    {
+      "id": "gap:pack:en:parallel",
+      "message": "parallel is artifact-backed in this source-backed recipe composite pack.",
+      "slot": "parallel",
+      "status": "artifact-backed"
+    },
+    {
+      "id": "gap:pack:en:quality",
+      "message": "quality is artifact-backed in this source-backed recipe composite pack.",
+      "slot": "quality",
+      "status": "artifact-backed"
+    }
+  ],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "corpus is artifact-backed in this source-backed recipe composite pack.",
+    "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations",
+    "kb is artifact-backed in this source-backed recipe composite pack.",
+    "parallel is artifact-backed in this source-backed recipe composite pack.",
+    "quality is artifact-backed in this source-backed recipe composite pack."
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "artifact-backed descriptors require local materialized payloads before publishability",
+      "capability slot corpus is artifact-backed without local task-usable payloads",
+      "capability slot kb is artifact-backed without local task-usable payloads",
+      "capability slot parallel is artifact-backed without local task-usable payloads",
+      "capability slot quality is artifact-backed without local task-usable payloads",
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "resourceCoverage": [],
+  "resourceKinds": [],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "en"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  }
+}

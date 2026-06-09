@@ -1,0 +1,56 @@
+{
+  "dictionaryRefs": [
+    "ar-msa-camel-morph-morphemes"
+  ],
+  "granularity": "morpheme",
+  "kind": "segmentation-profile",
+  "languageTag": "ar",
+  "profileId": "ar-msa-camel-segmentation",
+  "rules": [],
+  "schemaVersion": "1",
+  "schemes": [
+    {
+      "description": "CAMeL Morph MSA tokenization fields.",
+      "fields": [
+        {
+          "name": "d1seg",
+          "order": 1
+        },
+        {
+          "name": "d2seg",
+          "order": 2
+        },
+        {
+          "name": "d3seg",
+          "order": 3
+        },
+        {
+          "name": "atbseg",
+          "order": 4
+        },
+        {
+          "name": "d1tok",
+          "order": 5
+        },
+        {
+          "name": "d2tok",
+          "order": 6
+        },
+        {
+          "name": "d3tok",
+          "order": 7
+        },
+        {
+          "name": "atbtok",
+          "order": 8
+        },
+        {
+          "name": "bwtok",
+          "order": 9
+        }
+      ],
+      "schemeId": "camel-morph-tokenizations"
+    }
+  ],
+  "script": "Arab"
+}

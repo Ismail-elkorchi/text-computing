@@ -1,0 +1,58 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+	"packageName": "@ismail-elkorchi/textpack-ar-parallel",
+	"pipelineId": "tatoeba-arabic-parallel-artifact",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:tatoeba:weekly-arabic-2026-06-06"
+	],
+	"snapshotIds": [
+		"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
+			"checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-tatoeba-parallel-eng",
+			"path": "resources/tatoeba-ar.parallel-eng.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-parallel-fra",
+			"path": "resources/tatoeba-ar.parallel-fra.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-parallel-spa",
+			"path": "resources/tatoeba-ar.parallel-spa.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-parallel-deu",
+			"path": "resources/tatoeba-ar.parallel-deu.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-parallel-quality",
+			"path": "resources/tatoeba-ar.parallel-quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-parallel-quality-profile",
+			"path": "resources/tatoeba-ar.parallel-quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

@@ -1,0 +1,212 @@
+{
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-fr-syntax-ud-gsd-sa",
+  "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+  ],
+  "resources": [
+    {
+      "byteLength": 25796644,
+      "checksum": "sha256:1024b7ee512bb7b5e669931fda2914f88f7a82d452290d2ca0080abeb67142bc",
+      "id": "fr-ud-gsd-annotations",
+      "kind": "dataset",
+      "path": "resources/ud-gsd.annotations.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 2781,
+      "checksum": "sha256:88ac7480f6493c22225cde293b4f8cdc86d2d6005725c21dca49d759798e7e18",
+      "id": "fr-ud-gsd-dependencies",
+      "kind": "grammar",
+      "path": "resources/ud-gsd.dependencies.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 979,
+      "checksum": "sha256:4f8434ac18d7dcc5519bd1f8a8e297182e19401d37a779ef2a483e9449af46f9",
+      "id": "fr-ud-gsd-features",
+      "kind": "morphology",
+      "path": "resources/ud-gsd.features.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 3274,
+      "checksum": "sha256:f1ee619d4dd09609d4fefc3b205b7114ceb45135333b783161719237f9a6301f",
+      "id": "fr-ud-gsd-morphology-canonical",
+      "kind": "morphology",
+      "path": "resources/ud-gsd.morphology.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 1011,
+      "checksum": "sha256:18ab4dd5a7a755825b063dc53814584ae603e635dee246510c4fa90546b2c2af",
+      "id": "fr-ud-gsd-quality",
+      "kind": "quality-profile",
+      "path": "resources/ud-gsd.quality.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 922,
+      "checksum": "sha256:bd6953a7b90ebe283d7a9d23e0b58098f32e6b9983676609d08f217e69dd7530",
+      "id": "fr-ud-gsd-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/ud-gsd.quality-profile.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 140,
+      "checksum": "sha256:de675ebdcbf4643146338b7b4a29fefa0c50015438d6e044204f3d75338e2e57",
+      "id": "fr-ud-gsd-sentence-profile",
+      "kind": "statistical-model",
+      "path": "resources/ud-gsd.sentence-profile.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 21286,
+      "checksum": "sha256:d78fa813f096faa29a53b7c76016bcd4a0d193d444605ff0543c1d92a3440ae8",
+      "id": "fr-ud-gsd-syntax-canonical",
+      "kind": "grammar",
+      "path": "resources/ud-gsd.syntax.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    },
+    {
+      "byteLength": 211,
+      "checksum": "sha256:b30d9b5935c188f22c78963d7bad7511d2c2ded496acfa7958fbc431ae77a26d",
+      "id": "fr-ud-gsd-upos",
+      "kind": "grammar",
+      "path": "resources/ud-gsd.upos.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+    }
+  ],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:ud:french-gsd:r2.18"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:083b0e45634b74c075f94ef85057210ecd46836167ede71bc131555d1987d6f4",
+      "files": [
+        {
+          "byteLength": 2573677,
+          "checksum": "sha256:9221e5084cc6a1b1540671cfbd2fc0456efc223b2fe8dd2146c2bad921be02d4",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/fr_gsd-ud-dev.conllu",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_French-GSD/15958a5df1d09e2a360784caaed07b9a3fcbf7a8/fr_gsd-ud-dev.conllu"
+        },
+        {
+          "byteLength": 724095,
+          "checksum": "sha256:eee5a599b429658b6ee8582fae9993eb07161247fc64bad57d16b2050ed4eb1a",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/fr_gsd-ud-test.conllu",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_French-GSD/15958a5df1d09e2a360784caaed07b9a3fcbf7a8/fr_gsd-ud-test.conllu"
+        },
+        {
+          "byteLength": 25555018,
+          "checksum": "sha256:4b9a87b1b7e6e7003219df1d3ccca87ffaca0f00a6055b12b1857df5373589d2",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/fr_gsd-ud-train.conllu",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_French-GSD/15958a5df1d09e2a360784caaed07b9a3fcbf7a8/fr_gsd-ud-train.conllu"
+        },
+        {
+          "byteLength": 202,
+          "checksum": "sha256:899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/LICENSE.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_French-GSD/15958a5df1d09e2a360784caaed07b9a3fcbf7a8/LICENSE.txt"
+        },
+        {
+          "byteLength": 8040,
+          "checksum": "sha256:d1a541bb6790fc3d02ed70a281bd4320593b98b8b06ed71371004c98bd74e37d",
+          "mediaType": "text/markdown; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/README.md",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_French-GSD/15958a5df1d09e2a360784caaed07b9a3fcbf7a8/README.md"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned UD French GSD r2.18 files. Generated packages must remain share-alike isolated.",
+      "retrievedAt": "2026-06-12T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:ud:french-gsd:r2.18",
+      "sourceId": "source:ud:french-gsd-r2.18",
+      "version": "r2.18@15958a5df1d09e2a360784caaed07b9a3fcbf7a8"
+    }
+  ],
+  "sourceIds": [
+    "source:ud:french-gsd-r2.18"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "citation": "Universal Dependencies French GSD r2.18 annotations.",
+      "defaultCompositeAllowed": false,
+      "family": "UD",
+      "homepageUrl": "https://github.com/UniversalDependencies/UD_French-GSD",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "CC-BY-SA-4.0",
+      "name": "UD French GSD r2.18",
+      "notes": "Pinned audit found GSD r2.18 is CC-BY-SA-4.0. It must remain outside default French composites.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:ud:french-gsd-r2.18"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "Universal Dependencies French GSD r2.18 annotations.",
+      "family": "UD",
+      "homepageUrl": "https://github.com/UniversalDependencies/UD_French-GSD",
+      "licenseEvidence": [
+        "https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/LICENSE.txt",
+        "https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/README.md"
+      ],
+      "licenseExpression": "CC-BY-SA-4.0",
+      "name": "UD French GSD r2.18",
+      "notes": "Pinned UD French GSD release. The upstream license is CC-BY-SA-4.0, so generated packages must use the share-alike isolated -sa surface and remain outside default French composites.",
+      "redistributionPolicy": "share-alike-isolated",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:ud:french-gsd-r2.18"
+    }
+  ]
+}

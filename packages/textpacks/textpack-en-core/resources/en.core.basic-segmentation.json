@@ -1,0 +1,60 @@
+{
+  "dictionaryRefs": [],
+  "granularity": "word",
+  "kind": "segmentation-profile",
+  "languageTag": "en",
+  "profileId": "en-core-uax29-basic-segmentation",
+  "rules": [
+    {
+      "conditions": {
+        "graphemeRangeCount": 1429,
+        "likelySubtag": "en-Latn-US",
+        "sentenceRangeCount": 2930,
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ],
+        "wordRangeCount": 1432
+      },
+      "label": "basic-boundary-profile",
+      "operation": "label",
+      "pattern": "UAX29:grapheme-word-sentence",
+      "priority": 10,
+      "ruleId": "en-core-uax29-baseline"
+    }
+  ],
+  "schemaVersion": "1",
+  "schemes": [
+    {
+      "description": "Unicode UAX #29 grapheme break property baseline.",
+      "fields": [
+        {
+          "name": "unicodeBreakProperty",
+          "order": 1
+        }
+      ],
+      "schemeId": "uax29-grapheme"
+    },
+    {
+      "description": "Unicode UAX #29 word break property baseline.",
+      "fields": [
+        {
+          "name": "unicodeBreakProperty",
+          "order": 1
+        }
+      ],
+      "schemeId": "uax29-word"
+    },
+    {
+      "description": "Unicode UAX #29 sentence break property baseline.",
+      "fields": [
+        {
+          "name": "unicodeBreakProperty",
+          "order": 1
+        }
+      ],
+      "schemeId": "uax29-sentence"
+    }
+  ],
+  "script": "Latn"
+}

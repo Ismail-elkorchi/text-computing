@@ -1,0 +1,36 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
+	"packageName": "@ismail-elkorchi/textpack-en-corpus",
+	"pipelineId": "tatoeba-english-corpus-artifact",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
+	"snapshotIds": ["snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json",
+			"checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-tatoeba-corpus-artifact",
+			"path": "resources/tatoeba-en.corpus-artifact.json",
+			"kind": "corpus",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-corpus-quality",
+			"path": "resources/tatoeba-en.corpus-quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-corpus-quality-profile",
+			"path": "resources/tatoeba-en.corpus-quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

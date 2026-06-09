@@ -4,8 +4,11 @@ import test from "node:test";
 import { parseConllu } from "../dist/conllu/mod.js";
 import {
 	readDataset,
+	readUdAnnotationDatasetFromPack,
 	splitDataset,
 	streamRecords,
+	udAnnotationRecordsFromPack,
+	udSyntaxResourcesFromPack,
 	writeDataset,
 } from "../dist/index.js";
 import { parseSequenceLabel } from "../dist/iob/mod.js";
@@ -67,6 +70,46 @@ test("CoNLL-U creates token layers and dependency graphs", async () => {
 		3,
 	);
 	assert.equal(record?.document?.graphs.dependency?.kind, "dependency");
+});
+
+test("UD annotation textpack resources become annotation-only datasets", async () => {
+	const pack = {
+		manifest: {
+			resources: [
+				{ id: "en-ud-gumreddit-annotations", kind: "dataset" as const },
+			],
+		},
+		resources: {
+			"en-ud-gumreddit-upos": "upos\txpos\tcount\nNOUN\tNN\t1\n",
+			"en-ud-gumreddit-features": "feature\tvalue\tcount\nNumber\tSing\t1\n",
+			"en-ud-gumreddit-dependencies": "split\tdeprel\tcount\ntrain\troot\t1\n",
+			"en-ud-gumreddit-sentence-profile":
+				"split\tsentenceCount\ttokenCount\taverageTokenCount\tmaxTokenCount\ntrain\t1\t2\t2\t2\n",
+			"en-ud-gumreddit-annotations": [
+				"split\tsentenceIndex\ttokenId\tupos\txpos\tfeatures\thead\tdeprel\tdeps\tmisc",
+				"train\t1\t1\tNOUN\tNN\tNumber=Sing\t0\troot\t0:root\t_",
+				"train\t1\t2\tPUNCT\t.\t_\t1\tpunct\t1:punct\t_",
+			].join("\n"),
+			"en-ud-gumreddit-quality": '{"rawTextIncluded":false}',
+		},
+	};
+	const resources = udSyntaxResourcesFromPack(pack);
+	assert.equal(resources.upos[0]?.upos, "NOUN");
+	assert.equal(resources.features[0]?.feature, "Number");
+	assert.equal(resources.dependencies[0]?.deprel, "root");
+	assert.equal(resources.sentenceProfiles[0]?.tokenCount, 2);
+	assert.equal(resources.quality.rawTextIncluded, false);
+	const annotations = udAnnotationRecordsFromPack(pack);
+	assert.equal(annotations.length, 2);
+	assert.equal(annotations[0]?.upos, "NOUN");
+	const dataset = readUdAnnotationDatasetFromPack(pack, { id: "ud-fixture" });
+	const [record] = await collect(streamRecords(dataset));
+	assert.equal(record?.id, "ud:train:1");
+	assert.equal(record?.document, undefined);
+	assert.equal(record?.text, undefined);
+	assert.equal(record?.metadata?.rawTextIncluded, false);
+	const tokens = record?.fields?.tokens as readonly unknown[] | undefined;
+	assert.equal(tokens?.length, 2);
 });
 
 test("IOB/BIO/BILOU validates transitions and creates entities", async () => {

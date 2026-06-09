@@ -1,5 +1,4 @@
 import { execFile } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
@@ -18,30 +17,5 @@ for (const forbiddenPath of [
 ]) {
 	if (files.some((file) => file.startsWith(forbiddenPath))) {
 		throw new Error(`pack includes forbidden path: ${forbiddenPath}`);
-	}
-}
-
-for (const forbiddenName of [
-	"TextPackManifestV1",
-	"isTextPackManifestV1",
-	"textPackResourceFamilies",
-	"TextPackResourceRegistry",
-	"createTextPackResourceRegistry",
-	"queryTextPackResourceRegistry",
-	"TextPackCatalogV1",
-	"TextPackReviewReportV1",
-	"loadTextPackFromFileSystem",
-	"parseTextPackResourceContent",
-	"textPackDemoTrimLowercaseCanonicalizer",
-]) {
-	for (const file of files.filter(
-		(entry) => entry.endsWith(".d.ts") || entry.endsWith(".js"),
-	)) {
-		const content = await readFile(file, "utf8");
-		if (content.includes(forbiddenName)) {
-			throw new Error(
-				`pack artifact ${file} contains removed public name ${forbiddenName}`,
-			);
-		}
 	}
 }

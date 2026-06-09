@@ -1,8 +1,9 @@
 # Manifest
 
-`TextPackManifest` declares a pack id, display name, version, npm package name, final resource
-kinds, targets, engine compatibility, resource descriptors, dependencies, capabilities, and optional
-license/citation data.
+`TextPackManifest` declares a schema version, pack id, display name, package version, npm package
+name, targets, engine compatibility, resource descriptors, optional component packs, optional
+artifact descriptors, capability slots, generated gap notes, and optional license/citation data.
 
-Validation rejects old V1 manifest fields, non-final resource kinds, unknown capability keys, bad
-target modalities, duplicate resource ids, and non-JSON metadata.
+Validation rejects unknown manifest fields, non-final resource kinds, unknown capability keys inside
+capability slots, bad target modalities, duplicate resource ids, dangling slot references, and
+non-JSON metadata.

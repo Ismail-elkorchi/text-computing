@@ -1,0 +1,17 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:wikidata:main",
+	"family": "WD",
+	"name": "Wikidata Main Structured Data",
+	"homepageUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+	"licenseEvidence": [
+		"https://www.wikidata.org/wiki/Wikidata:Licensing",
+		"https://www.wikidata.org/wiki/Wikidata:Database_download",
+		"https://dumps.wikimedia.org/wikidatawiki/entities/20260608/"
+	],
+	"licenseExpression": "CC0-1.0",
+	"redistributionPolicy": "redistributable",
+	"reviewState": "approved",
+	"citation": "Wikidata main structured data dump, 2026-06-08.",
+	"notes": "Pinned versioned Wikidata entity dump metadata. Generated packages use explicit artifact descriptors for the full dump instead of vendoring the large raw dump into npm."
+}

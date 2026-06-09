@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:camel:morph-msa-lrec-coling-2024",
+	"family": "ARRES",
+	"name": "CAMeL Morph MSA LREC-COLING 2024 release",
+	"homepageUrl": "https://github.com/CAMeL-Lab/camel_morph",
+	"licenseEvidence": [
+		"https://github.com/CAMeL-Lab/camel_morph/blob/5a202cf48f5e96e47a28c1e7dcbd1660520a00cf/README.md",
+		"https://github.com/CAMeL-Lab/camel_morph/blob/5a202cf48f5e96e47a28c1e7dcbd1660520a00cf/LICENSE"
+	],
+	"licenseExpression": "CC-BY-4.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "CAMeL Morph MSA LREC-COLING 2024 release.",
+	"notes": "Pinned official CAMeL Morph MSA database from the LREC-COLING 2024 release."
+}

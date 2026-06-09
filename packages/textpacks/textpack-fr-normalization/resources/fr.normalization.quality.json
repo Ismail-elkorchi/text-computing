@@ -1,0 +1,30 @@
+{
+  "aliasKindCount": 6,
+  "aliasKinds": [
+    "languageAlias",
+    "scriptAlias",
+    "subdivisionAlias",
+    "territoryAlias",
+    "variantAlias",
+    "zoneAlias"
+  ],
+  "caseAliasRowCount": 10,
+  "languageTag": "fr",
+  "likelySubtag": "fr-Latn-FR",
+  "nfcQuickCheckValueCount": 3,
+  "pipelineId": "french-normalization-profile",
+  "pipelineVersion": "0.1.0",
+  "recordsAccepted": 3,
+  "recordsRejected": 0,
+  "ruleCount": 3,
+  "schemaVersion": "1",
+  "script": "Latn",
+  "sourceIds": [
+    "source:unicode:ucd",
+    "source:unicode:cldr-core"
+  ],
+  "warnings": [
+    "This profile declares Unicode/CLDR-backed normalization policy for modern typed French text.",
+    "It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, or corpus-derived normalization."
+  ]
+}

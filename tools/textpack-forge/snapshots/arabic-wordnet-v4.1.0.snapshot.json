@@ -1,0 +1,54 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
+	"sourceId": "source:wordnet:arabic-v4.1.0",
+	"version": "v4.1.0@3d244b30a0e4a8807bc7509cac32342ad5a4e86d",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:7f0ebc98bd657e43a50ae881ad357773e89c213adbf7ff50f3048145efc90094",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/awn4.xml.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 11846394,
+			"checksum": "sha256:bd24bee99026ecc773cf51f3dc58979d8424092a49dc80f90b938fb44d32a085",
+			"sourceUrl": "https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/output/awn4.xml.gz"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/CITATION.bib",
+			"mediaType": "text/x-bibtex",
+			"byteLength": 400,
+			"checksum": "sha256:4cf0b06b7708a6792b88ababc6b453dd75a90861a0850be5f52ae15e291a59e0",
+			"sourceUrl": "https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/CITATION.bib"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/LICENSE",
+			"mediaType": "text/plain",
+			"byteLength": 808,
+			"checksum": "sha256:fe1695068028d7c608422e5193b4946216fc74892b20e8f79ed85353225199fc",
+			"sourceUrl": "https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/LICENSE"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/NOTICE",
+			"mediaType": "text/plain",
+			"byteLength": 989,
+			"checksum": "sha256:4bc7afa9ff87b30383336a1d8963bd845f0be7588c04f37cb1e7d2020cf87fb8",
+			"sourceUrl": "https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/NOTICE"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/README.md",
+			"mediaType": "text/markdown",
+			"byteLength": 7154,
+			"checksum": "sha256:0a67921323787f88aa19fb8f845bb643377950d9440ee494c5b00ec9e9585541",
+			"sourceUrl": "https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/README.md"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/validation_report.txt",
+			"mediaType": "text/plain",
+			"byteLength": 3222,
+			"checksum": "sha256:25e6f098cd22870f6e73fa37675731dad56197397f584df06fb54add9a338c37",
+			"sourceUrl": "https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/output/validation_report.txt"
+		}
+	],
+	"notes": "Pinned Arabic WordNet v4.1.0 WN-LMF XML release with license, notice, citation, README, and upstream validation report."
+}

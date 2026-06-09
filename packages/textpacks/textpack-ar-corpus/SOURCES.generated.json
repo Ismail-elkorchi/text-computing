@@ -1,0 +1,127 @@
+{
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-ar-corpus",
+  "packageName": "@ismail-elkorchi/textpack-ar-corpus",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "artifact-backed descriptors require local materialized payloads before publishability",
+      "capability slot corpus is artifact-backed without local task-usable payloads",
+      "capability slot quality is artifact-backed without local task-usable payloads",
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "resourceSpecIds": [
+    "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
+  ],
+  "resources": [
+    {
+      "byteLength": 2279,
+      "checksum": "sha256:c9715324c81bdccef2e6ecacd088cb9e4e05b2f827d176ae0333d49b94c46b2c",
+      "id": "ar-tatoeba-corpus-artifact",
+      "kind": "corpus",
+      "path": "resources/tatoeba-ar.corpus-artifact.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
+    },
+    {
+      "byteLength": 827,
+      "checksum": "sha256:75242aaa9a796c6119e6fc15f5f0cca1feab6943c583e2348db0438a1a7f8a9e",
+      "id": "ar-tatoeba-corpus-quality",
+      "kind": "quality-profile",
+      "path": "resources/tatoeba-ar.corpus-quality.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
+    },
+    {
+      "byteLength": 1300,
+      "checksum": "sha256:4a5773ba10ed740fac82e395aa3aca9bf775354325e488bb86891a3930ea64a6",
+      "id": "ar-tatoeba-corpus-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/tatoeba-ar.corpus-quality-profile.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
+    }
+  ],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:8caefc61478d6bd0e7f4ea46e36a75ed1db1160993d47100d946a474522b6f8c",
+      "files": [
+        {
+          "byteLength": 3390,
+          "checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/"
+        }
+      ],
+      "kind": "external",
+      "notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository.",
+      "retrievedAt": "2026-06-11T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+      "sourceId": "source:tatoeba:weekly-arabic-2026-06-06",
+      "version": "2026-06-06"
+    }
+  ],
+  "sourceIds": [
+    "source:tatoeba:weekly-arabic-2026-06-06"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "corpus",
+        "parallel",
+        "examples"
+      ],
+      "citation": "Tatoeba weekly Arabic exports, 2026-06-06.",
+      "defaultCompositeAllowed": true,
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly Arabic exports 2026-06-06",
+      "notes": "Exact Tatoeba weekly Arabic sentence and Arabic-linked parallel artifact metadata. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave Arabic source, not a first-wave morphology, syntax, lexicon, or KB source. Second-wave exact snapshot: may document corpus/parallel artifact-backed package slots after checksum, attribution, and descriptor evidence are generated, but it does not provide task support until local rows or indexes are materialized.",
+      "policyClass": "attribution",
+      "priority": "second",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:tatoeba:weekly-arabic-2026-06-06"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "Tatoeba weekly Arabic exports, 2026-06-06.",
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "licenseEvidence": [
+        "https://tatoeba.org/en/downloads",
+        "https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly Arabic exports 2026-06-06",
+      "notes": "Pinned Tatoeba Arabic sentence and Arabic-linked parallel export artifact metadata. Generated packages use explicit artifact descriptors instead of vendoring the raw corpus into npm.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:tatoeba:weekly-arabic-2026-06-06"
+    }
+  ]
+}

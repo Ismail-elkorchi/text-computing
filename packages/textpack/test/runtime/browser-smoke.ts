@@ -5,15 +5,17 @@ import {
 } from "../../dist/index.js";
 
 const manifest: TextPackManifest = {
+	schemaVersion: "1",
 	id: "pack:runtime-browser",
 	name: "Runtime Browser Pack",
 	version: "1.0.0",
 	packageName: "@ismail-elkorchi/textpack-runtime-browser",
-	kind: ["dataset"],
 	targets: { languages: ["en"] },
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [{ id: "dataset-browser", kind: "dataset" }],
-	capabilities: {},
+	capabilitySlots: [
+		{ slot: "corpus", status: "sampled", resourceIds: ["dataset-browser"] },
+	],
 };
 
 const pack = createPack(manifest, { "dataset-browser": "browser runtime" });

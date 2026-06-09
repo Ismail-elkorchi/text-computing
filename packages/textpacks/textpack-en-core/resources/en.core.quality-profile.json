@@ -1,0 +1,59 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "en-core-source-scope",
+      "message": "English core resources are generated from IANA, Unicode, CLDR, ESDB, and SCOWLv2 snapshots with scope-limited core profile claims.",
+      "metadata": {
+        "likelySubtag": "en-Latn-US",
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "severity": "info",
+      "task": "core.profile"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "en",
+  "metrics": [
+    {
+      "metricId": "latin-script-range-count",
+      "name": "latinScriptRangeCount",
+      "unit": "ranges",
+      "value": 61
+    },
+    {
+      "metricId": "punctuation-range-count",
+      "name": "punctuationRangeCount",
+      "unit": "ranges",
+      "value": 396
+    },
+    {
+      "metricId": "abbreviation-count",
+      "name": "abbreviationCount",
+      "unit": "rows",
+      "value": 2807
+    },
+    {
+      "metricId": "function-word-count",
+      "name": "functionWordCount",
+      "unit": "rows",
+      "value": 326
+    },
+    {
+      "metricId": "records-rejected",
+      "name": "recordsRejected",
+      "unit": "records",
+      "value": 0
+    }
+  ],
+  "profileId": "en-core-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

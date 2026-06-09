@@ -1,15 +1,26 @@
-# `@ismail-elkorchi/textpack-ar-core`
+# @ismail-elkorchi/textpack-ar-core
 
-Small Arabic reference pack for Semitic/root-pattern and right-to-left script coverage.
+Generated language-concrete textpack.
 
-The package exports final `manifest`, `resources`, and default `{ manifest, resources }`.
+This package is generated from pinned source snapshots by `tools/textpack-forge`.
+
+```ts
+import { manifest, resources } from "@ismail-elkorchi/textpack-ar-core";
+```
 
 ## Resources
 
-- `morph-ar-root-demo`: Semitic root-pattern morphology examples
-- `lexicon-ar-demo`: Arabic lemma and part-of-speech examples
-- `profile-ar-core`: right-to-left segmentation profile
+- `ar-core-language-profile` (locale-profile, json)
+- `ar-core-orthography` (locale-profile, tsv)
+- `ar-core-punctuation` (locale-profile, tsv)
+- `ar-core-basic-segmentation` (segmentation-profile, json)
+- `ar-core-quality` (quality-profile, json)
+- `ar-core-quality-profile` (quality-profile, json)
 
-## Verification
+## Publishability
 
-`npm -w @ismail-elkorchi/textpack-ar-core run -s test:all`
+Publishable: `true`
+Status: `publishable`
+
+- None
+

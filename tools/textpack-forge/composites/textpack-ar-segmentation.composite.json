@@ -1,0 +1,71 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-ar-segmentation",
+	"packageDir": "packages/textpacks/textpack-ar-segmentation",
+	"name": "Arabic Segmentation Composite Textpack",
+	"description": "Generated source-backed Arabic segmentation recipe composite for CAMeL Morph MSA tokenization resources.",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over the publishable CAMeL Morph MSA component, which provides tokenization scheme resources and canonical segmentation metadata for MSA.",
+		"auditedLicense": "The exact CAMeL Morph MSA LREC-COLING 2024 source row is approved; the required component package carries package-local license evidence copied from the pinned source snapshot.",
+		"declaredScope": "Arabic MSA tokenization-scheme and segmentation-profile component composite backed by CAMeL Morph MSA resources. It does not claim dialectal clitic segmentation, Classical Arabic segmentation, statistical tokenization, syntax, KB/entity linking, corpus, parallel, or full language-composite coverage.",
+		"conformanceEvidence": [
+			"eval:textpack-ar-segmentation:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "task-supported",
+	"loader": {
+		"functionName": "loadArabicSegmentation",
+		"languageName": "ArabicSegmentation"
+	},
+	"targets": {
+		"languages": ["ar"],
+		"scripts": ["Arab"],
+		"modalities": ["typed"]
+	},
+	"sourceIds": ["source:camel:morph-msa-lrec-coling-2024"],
+	"snapshotIds": [
+		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic MSA CAMeL Morph tokenization scheme and canonical segmentation resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides CAMeL Morph MSA tokenization fields and canonical segmentation resources."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required segmentation component."
+			]
+		}
+	],
+	"license": "CC-BY-4.0",
+	"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."]
+}

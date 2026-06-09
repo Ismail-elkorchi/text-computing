@@ -78,3 +78,14 @@ export {
 	thesaurusRelations,
 	traverseSemanticRelations,
 } from "./internal/core.js";
+export type {
+	WordNetLexicalEntryRecord,
+	WordNetPackResources,
+	WordNetRelationRecord,
+	WordNetSenseRecord,
+	WordNetSynsetRecord,
+} from "./wordnet/mod.js";
+export {
+	openEnglishWordNetFromPack,
+	wordNetResourcesFromPack,
+} from "./wordnet/mod.js";

@@ -1,0 +1,11 @@
+ruleId	operation	priority	input	output	pattern	note
+unicode-nfc-compose	compose	10				Use Unicode NFC canonical composition for stored and comparable Arabic MSA text.
+unicode-casefold-for-lookup	casefold	20				Use Unicode casefolding for lookup/search normalization while preserving source text elsewhere.
+cldr-arab-likely-subtag	map	30	ar	ar-Arab-EG		Use CLDR likely-subtag context for the default Arabic script profile.
+arabic-delete-tatweel-for-lookup	delete	40	ـ			Delete tatweel for lookup normalization.
+arabic-strip-harakat-for-lookup	delete	50			[ً-ٰٟ]	Strip Arabic vowel marks and Quranic superscript alef for unvocalized lookup normalization.
+arabic-alef-variants-u+0622	map	60	آ	ا		Map arabic-alef-variants member U+0622 to U+0627 for lookup normalization.
+arabic-alef-variants-u+0623	map	60	أ	ا		Map arabic-alef-variants member U+0623 to U+0627 for lookup normalization.
+arabic-alef-variants-u+0625	map	60	إ	ا		Map arabic-alef-variants member U+0625 to U+0627 for lookup normalization.
+arabic-alef-variants-u+0671	map	60	ٱ	ا		Map arabic-alef-variants member U+0671 to U+0627 for lookup normalization.
+arabic-ya-variants-u+0649	map	60	ى	ي		Map arabic-ya-variants member U+0649 to U+064A for lookup normalization.

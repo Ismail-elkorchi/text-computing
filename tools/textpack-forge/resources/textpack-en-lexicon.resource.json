@@ -1,0 +1,42 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-lexicon:open-english-wordnet-lexicon",
+	"packageName": "@ismail-elkorchi/textpack-en-lexicon",
+	"pipelineId": "open-english-wordnet-lexicon",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:wordnet:open-english-2025"],
+	"snapshotIds": ["snapshot:source:wordnet:open-english-2025:2025-edition"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+			"path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/english-wordnet-2025.xml.gz",
+			"checksum": "sha256:9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-wordnet-lexical-entries",
+			"path": "resources/en-wordnet.lexical-entries.tsv",
+			"kind": "lexicon",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-wordnet-lexicon-canonical",
+			"path": "resources/en-wordnet.lexicon.json",
+			"kind": "lexicon",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-wordnet-lexicon-quality",
+			"path": "resources/en-wordnet.lexicon-quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-wordnet-quality-profile",
+			"path": "resources/en-wordnet.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

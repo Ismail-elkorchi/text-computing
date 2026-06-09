@@ -3,9 +3,19 @@ import { assertJsonValue, isPlainRecord } from "./internal/json.js";
 import {
 	type ResourceKind,
 	resourceKinds,
+	type TextPackArtifactChecksum,
+	type TextPackArtifactDescriptor,
+	type TextPackArtifactExpectedFile,
+	type TextPackArtifactPolicy,
+	type TextPackArtifactRetrieval,
 	type TextPackCapabilities,
 	type TextPackCapabilityName,
+	type TextPackCapabilitySlot,
+	type TextPackCapabilitySlotStatus,
+	type TextPackComponent,
 	type TextPackDependency,
+	type TextPackGapNote,
+	type TextPackGeneratedInfo,
 	type TextPackManifest,
 	type TextPackModality,
 	type TextPackResource,
@@ -28,7 +38,14 @@ const targetKeys = [
 const capabilityLevels = {
 	segmentation: ["none", "default", "profile", "dictionary", "fst", "rules"],
 	normalization: ["none", "unicode", "lexicon", "rules", "fst", "statistical"],
-	morphology: ["none", "lookup", "rules", "fst", "statistical"],
+	morphology: [
+		"none",
+		"lookup",
+		"paradigm-table",
+		"rules",
+		"fst",
+		"statistical",
+	],
 	tagging: ["none", "rules", "statistical", "hybrid"],
 	parsing: ["none", "rules", "statistical", "hybrid"],
 	extraction: ["none", "gazetteer", "rules", "statistical", "hybrid"],
@@ -40,6 +57,52 @@ const capabilityLevels = {
 >;
 
 const booleanCapabilityKeys = new Set(["historical", "noisyText", "parallel"]);
+const componentRoles = new Set(["required", "optional", "excluded"]);
+const componentLicensePolicies = new Set([
+	"default",
+	"allow-attribution",
+	"allow-share-alike",
+	"allow-copyleft",
+	"local-only",
+]);
+const componentCapabilityPolicies = new Set([
+	"contributes-default",
+	"available-optional",
+	"documentation-only",
+]);
+const artifactPolicies = new Set(["none", "locked", "fetch-explicit"]);
+const artifactProfiles = new Set(["research", "full", "local"]);
+const artifactChecksumAlgorithms = new Set(["sha1", "sha256", "sha512"]);
+const artifactRedistributionPolicies = new Set([
+	"redistributable",
+	"redistributable-with-attribution",
+	"derived-only",
+	"local-only",
+	"blocked",
+]);
+const artifactRetrievalKinds = new Set([
+	"https",
+	"s3",
+	"huggingface",
+	"local",
+	"manual",
+]);
+const capabilitySlotStatuses = new Set([
+	"unsupported",
+	"planned",
+	"profiled",
+	"sampled",
+	"artifact-backed",
+	"task-supported",
+	"feature-complete",
+	"not-applicable",
+]);
+const gapNoteStatuses = new Set([
+	"unsupported",
+	"planned",
+	"artifact-backed",
+	"not-applicable",
+]);
 
 function rejectUnknownKeys(
 	record: Readonly<Record<string, unknown>>,
@@ -84,8 +147,47 @@ function readOptionalString(
 	return value;
 }
 
-function dedupe(values: readonly string[]): readonly string[] {
-	return [...new Set(values)];
+function readRequiredNumber(
+	record: Readonly<Record<string, unknown>>,
+	key: string,
+	path: string,
+): number {
+	const value = record[key];
+	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+		throw new TypeError(`${path}.${key} must be a non-negative integer.`);
+	}
+	return value;
+}
+
+function readEnum<T extends string>(
+	record: Readonly<Record<string, unknown>>,
+	key: string,
+	path: string,
+	allowed: ReadonlySet<string>,
+): T {
+	const value = record[key];
+	if (typeof value !== "string" || !allowed.has(value)) {
+		throw new TypeError(
+			`${path}.${key} must be one of ${[...allowed].join(", ")}.`,
+		);
+	}
+	return value as T;
+}
+
+function readOptionalEnum<T extends string>(
+	record: Readonly<Record<string, unknown>>,
+	key: string,
+	path: string,
+	allowed: ReadonlySet<string>,
+): T | undefined {
+	const value = record[key];
+	if (value === undefined) return undefined;
+	if (typeof value !== "string" || !allowed.has(value)) {
+		throw new TypeError(
+			`${path}.${key} must be one of ${[...allowed].join(", ")}.`,
+		);
+	}
+	return value as T;
 }
 
 function readStringArray(
@@ -94,13 +196,21 @@ function readStringArray(
 ): readonly string[] | undefined {
 	if (value === undefined) return undefined;
 	if (!Array.isArray(value)) throw new TypeError(`${path} must be an array.`);
+	if (value.length === 0) {
+		throw new TypeError(`${path} must contain at least one item.`);
+	}
+	const seen = new Set<string>();
 	const strings = value.map((entry, index) => {
 		if (typeof entry !== "string" || entry.trim().length === 0) {
 			throw new TypeError(`${path}[${index}] must be a non-empty string.`);
 		}
+		if (seen.has(entry)) {
+			throw new TypeError(`${path}[${index}] duplicates value ${entry}.`);
+		}
+		seen.add(entry);
 		return entry;
 	});
-	return Object.freeze(dedupe(strings));
+	return Object.freeze(strings);
 }
 
 function readModalities(
@@ -160,22 +270,6 @@ function validateResourceKind(value: unknown, path: string): ResourceKind {
 		throw new TypeError(`${path} must be a final ResourceKind.`);
 	}
 	return value as ResourceKind;
-}
-
-function validateResourceKinds(
-	value: unknown,
-	path: string,
-): readonly ResourceKind[] {
-	if (!Array.isArray(value) || value.length === 0) {
-		throw new TypeError(`${path} must be a non-empty ResourceKind array.`);
-	}
-	return Object.freeze(
-		dedupe(
-			value.map((entry, index) =>
-				validateResourceKind(entry, `${path}[${index}]`),
-			),
-		),
-	) as readonly ResourceKind[];
 }
 
 function validateStringRecord(
@@ -301,10 +395,8 @@ function validateResources(
 	value: unknown,
 	path: string,
 ): readonly TextPackResource[] {
-	if (!Array.isArray(value) || value.length === 0) {
-		throw new TypeError(
-			`${path} must be a non-empty resource descriptor array.`,
-		);
+	if (!Array.isArray(value)) {
+		throw new TypeError(`${path} must be a resource descriptor array.`);
 	}
 	const ids = new Set<string>();
 	const resources = value.map((entry, index) => {
@@ -318,6 +410,352 @@ function validateResources(
 		return resource;
 	});
 	return Object.freeze(resources);
+}
+
+function validateComponents(
+	value: unknown,
+	path: string,
+): readonly TextPackComponent[] | undefined {
+	if (value === undefined) return undefined;
+	if (!Array.isArray(value)) throw new TypeError(`${path} must be an array.`);
+	return Object.freeze(
+		value.map((entry, index) => {
+			const itemPath = `${path}[${index}]`;
+			const record = requireRecord(entry, itemPath);
+			rejectUnknownKeys(
+				record,
+				new Set([
+					"packageName",
+					"versionRange",
+					"role",
+					"reason",
+					"licensePolicy",
+					"capabilityPolicy",
+					"artifactPolicy",
+				]),
+				itemPath,
+			);
+			const reason = readOptionalString(record, "reason", itemPath);
+			const artifactPolicy = readOptionalEnum<TextPackArtifactPolicy>(
+				record,
+				"artifactPolicy",
+				itemPath,
+				artifactPolicies,
+			);
+			const component = {
+				packageName: readRequiredString(record, "packageName", itemPath),
+				versionRange: readRequiredString(record, "versionRange", itemPath),
+				role: readEnum<TextPackComponent["role"]>(
+					record,
+					"role",
+					itemPath,
+					componentRoles,
+				),
+				licensePolicy: readEnum<TextPackComponent["licensePolicy"]>(
+					record,
+					"licensePolicy",
+					itemPath,
+					componentLicensePolicies,
+				),
+				capabilityPolicy: readEnum<TextPackComponent["capabilityPolicy"]>(
+					record,
+					"capabilityPolicy",
+					itemPath,
+					componentCapabilityPolicies,
+				),
+				...(reason === undefined ? {} : { reason }),
+				...(artifactPolicy === undefined ? {} : { artifactPolicy }),
+			} satisfies TextPackComponent;
+			return Object.freeze(component);
+		}),
+	);
+}
+
+function validateArtifactChecksum(
+	value: unknown,
+	path: string,
+): TextPackArtifactChecksum {
+	const record = requireRecord(value, path);
+	rejectUnknownKeys(record, new Set(["algorithm", "value"]), path);
+	return Object.freeze({
+		algorithm: readEnum<TextPackArtifactChecksum["algorithm"]>(
+			record,
+			"algorithm",
+			path,
+			artifactChecksumAlgorithms,
+		),
+		value: readRequiredString(record, "value", path),
+	});
+}
+
+function validateArtifactRetrieval(
+	value: unknown,
+	path: string,
+): TextPackArtifactRetrieval {
+	const record = requireRecord(value, path);
+	rejectUnknownKeys(record, new Set(["kind", "uri", "instructions"]), path);
+	const retrieval: {
+		kind: TextPackArtifactRetrieval["kind"];
+		uri?: string;
+		instructions?: string;
+	} = {
+		kind: readEnum(record, "kind", path, artifactRetrievalKinds),
+	};
+	const uri = readOptionalString(record, "uri", path);
+	const instructions = readOptionalString(record, "instructions", path);
+	if (uri !== undefined) retrieval.uri = uri;
+	if (instructions !== undefined) retrieval.instructions = instructions;
+	return Object.freeze(retrieval);
+}
+
+function validateArtifactExpectedFile(
+	value: unknown,
+	path: string,
+): TextPackArtifactExpectedFile {
+	const record = requireRecord(value, path);
+	rejectUnknownKeys(record, new Set(["path", "sizeBytes", "checksum"]), path);
+	const expected: {
+		path: string;
+		sizeBytes?: number;
+		checksum?: string;
+	} = {
+		path: readRequiredString(record, "path", path),
+	};
+	if (record.sizeBytes !== undefined) {
+		expected.sizeBytes = readRequiredNumber(record, "sizeBytes", path);
+	}
+	const checksum = readOptionalString(record, "checksum", path);
+	if (checksum !== undefined) expected.checksum = checksum;
+	return Object.freeze(expected);
+}
+
+function validateArtifacts(
+	value: unknown,
+	path: string,
+): readonly TextPackArtifactDescriptor[] | undefined {
+	if (value === undefined) return undefined;
+	if (!Array.isArray(value)) throw new TypeError(`${path} must be an array.`);
+	return Object.freeze(
+		value.map((entry, index) => {
+			const itemPath = `${path}[${index}]`;
+			const record = requireRecord(entry, itemPath);
+			rejectUnknownKeys(
+				record,
+				new Set([
+					"artifactId",
+					"sourceIds",
+					"version",
+					"profile",
+					"sizeBytes",
+					"mediaType",
+					"compression",
+					"checksum",
+					"licenseExpression",
+					"redistributionPolicy",
+					"retrieval",
+					"cacheKey",
+					"expectedFiles",
+				]),
+				itemPath,
+			);
+			const compression = readOptionalEnum<
+				NonNullable<TextPackArtifactDescriptor["compression"]>
+			>(
+				record,
+				"compression",
+				itemPath,
+				new Set(["gzip", "bzip2", "zstd", "zip", "tar"]),
+			);
+			const artifact: {
+				artifactId: string;
+				sourceIds: readonly string[];
+				version: string;
+				profile: TextPackArtifactDescriptor["profile"];
+				sizeBytes: number;
+				mediaType: string;
+				compression?: NonNullable<TextPackArtifactDescriptor["compression"]>;
+				checksum: TextPackArtifactChecksum;
+				licenseExpression: string;
+				redistributionPolicy: TextPackArtifactDescriptor["redistributionPolicy"];
+				retrieval: TextPackArtifactRetrieval;
+				cacheKey: string;
+				expectedFiles: readonly TextPackArtifactExpectedFile[];
+			} = {
+				artifactId: readRequiredString(record, "artifactId", itemPath),
+				sourceIds: (() => {
+					const sourceIds = readStringArray(
+						record.sourceIds,
+						`${itemPath}.sourceIds`,
+					);
+					if (sourceIds === undefined) {
+						throw new TypeError(`${itemPath}.sourceIds must be an array.`);
+					}
+					return sourceIds;
+				})(),
+				version: readRequiredString(record, "version", itemPath),
+				profile: readEnum(record, "profile", itemPath, artifactProfiles),
+				sizeBytes: readRequiredNumber(record, "sizeBytes", itemPath),
+				mediaType: readRequiredString(record, "mediaType", itemPath),
+				checksum: validateArtifactChecksum(
+					record.checksum,
+					`${itemPath}.checksum`,
+				),
+				licenseExpression: readRequiredString(
+					record,
+					"licenseExpression",
+					itemPath,
+				),
+				redistributionPolicy: readEnum(
+					record,
+					"redistributionPolicy",
+					itemPath,
+					artifactRedistributionPolicies,
+				),
+				retrieval: validateArtifactRetrieval(
+					record.retrieval,
+					`${itemPath}.retrieval`,
+				),
+				cacheKey: readRequiredString(record, "cacheKey", itemPath),
+				expectedFiles: Array.isArray(record.expectedFiles)
+					? Object.freeze(
+							record.expectedFiles.map((file, fileIndex) =>
+								validateArtifactExpectedFile(
+									file,
+									`${itemPath}.expectedFiles[${fileIndex}]`,
+								),
+							),
+						)
+					: (() => {
+							throw new TypeError(
+								`${itemPath}.expectedFiles must be an array.`,
+							);
+						})(),
+			};
+			if (compression !== undefined) artifact.compression = compression;
+			return deepFreezeJson(artifact);
+		}),
+	);
+}
+
+function validateCapabilitySlots(
+	value: unknown,
+	path: string,
+): readonly TextPackCapabilitySlot[] {
+	if (!Array.isArray(value)) throw new TypeError(`${path} must be an array.`);
+	const ids = new Set<string>();
+	const slots = value.map((entry, index) => {
+		const itemPath = `${path}[${index}]`;
+		const record = requireRecord(entry, itemPath);
+		rejectUnknownKeys(
+			record,
+			new Set([
+				"slot",
+				"status",
+				"resourceIds",
+				"artifactIds",
+				"notes",
+				"capabilities",
+			]),
+			itemPath,
+		);
+		const slot: {
+			slot: string;
+			status: TextPackCapabilitySlotStatus;
+			resourceIds?: readonly string[];
+			artifactIds?: readonly string[];
+			notes?: readonly string[];
+			capabilities?: TextPackCapabilities;
+		} = {
+			slot: readRequiredString(record, "slot", itemPath),
+			status: readEnum(record, "status", itemPath, capabilitySlotStatuses),
+		};
+		if (ids.has(slot.slot)) {
+			throw new TypeError(`${itemPath}.slot duplicates slot ${slot.slot}.`);
+		}
+		ids.add(slot.slot);
+		const resourceIds = readStringArray(
+			record.resourceIds,
+			`${itemPath}.resourceIds`,
+		);
+		const artifactIds = readStringArray(
+			record.artifactIds,
+			`${itemPath}.artifactIds`,
+		);
+		const notes = readStringArray(record.notes, `${itemPath}.notes`);
+		const capabilities =
+			record.capabilities === undefined
+				? undefined
+				: validateCapabilities(record.capabilities, `${itemPath}.capabilities`);
+		if (resourceIds !== undefined) slot.resourceIds = resourceIds;
+		if (artifactIds !== undefined) slot.artifactIds = artifactIds;
+		if (notes !== undefined) slot.notes = notes;
+		if (capabilities !== undefined) slot.capabilities = capabilities;
+		return Object.freeze(slot);
+	});
+	return Object.freeze(slots);
+}
+
+function validateGapNotes(
+	value: unknown,
+	path: string,
+): readonly TextPackGapNote[] | undefined {
+	if (value === undefined) return undefined;
+	if (!Array.isArray(value)) throw new TypeError(`${path} must be an array.`);
+	return Object.freeze(
+		value.map((entry, index) => {
+			const itemPath = `${path}[${index}]`;
+			const record = requireRecord(entry, itemPath);
+			rejectUnknownKeys(
+				record,
+				new Set(["id", "slot", "runtimeSurface", "status", "message"]),
+				itemPath,
+			);
+			const note: {
+				id: string;
+				slot?: string;
+				runtimeSurface?: string;
+				status: TextPackGapNote["status"];
+				message: string;
+			} = {
+				id: readRequiredString(record, "id", itemPath),
+				status: readEnum(record, "status", itemPath, gapNoteStatuses),
+				message: readRequiredString(record, "message", itemPath),
+			};
+			const slot = readOptionalString(record, "slot", itemPath);
+			const runtimeSurface = readOptionalString(
+				record,
+				"runtimeSurface",
+				itemPath,
+			);
+			if (slot !== undefined) note.slot = slot;
+			if (runtimeSurface !== undefined) note.runtimeSurface = runtimeSurface;
+			return Object.freeze(note);
+		}),
+	);
+}
+
+function validateGeneratedInfo(
+	value: unknown,
+	path: string,
+): TextPackGeneratedInfo | undefined {
+	if (value === undefined) return undefined;
+	const record = requireRecord(value, path);
+	rejectUnknownKeys(
+		record,
+		new Set([
+			"forgeVersion",
+			"lockfileChecksum",
+			"generatedAt",
+			"generatorCommand",
+		]),
+		path,
+	);
+	return Object.freeze({
+		forgeVersion: readRequiredString(record, "forgeVersion", path),
+		lockfileChecksum: readRequiredString(record, "lockfileChecksum", path),
+		generatedAt: readRequiredString(record, "generatedAt", path),
+		generatorCommand: readRequiredString(record, "generatorCommand", path),
+	});
 }
 
 function validateCapabilities(
@@ -360,82 +798,121 @@ function validateOptionalCitations(
 	return readStringArray(value, path);
 }
 
+function validateManifestReferences(
+	resources: readonly TextPackResource[],
+	artifacts: readonly TextPackArtifactDescriptor[] | undefined,
+	capabilitySlots: readonly TextPackCapabilitySlot[],
+	gapNotes: readonly TextPackGapNote[] | undefined,
+): void {
+	const resourceIds = new Set(resources.map((resource) => resource.id));
+	const artifactIds = new Set(
+		(artifacts ?? []).map((artifact) => artifact.artifactId),
+	);
+	const slotIds = new Set(capabilitySlots.map((slot) => slot.slot));
+	for (const slot of capabilitySlots) {
+		for (const resourceId of slot.resourceIds ?? []) {
+			if (!resourceIds.has(resourceId)) {
+				throw new TypeError(
+					`manifest.capabilitySlots.${slot.slot} references unknown resource ${resourceId}.`,
+				);
+			}
+		}
+		for (const artifactId of slot.artifactIds ?? []) {
+			if (!artifactIds.has(artifactId)) {
+				throw new TypeError(
+					`manifest.capabilitySlots.${slot.slot} references unknown artifact ${artifactId}.`,
+				);
+			}
+		}
+	}
+	for (const note of gapNotes ?? []) {
+		if (note.slot !== undefined && !slotIds.has(note.slot)) {
+			throw new TypeError(
+				`manifest.gapNotes.${note.id} references unknown slot ${note.slot}.`,
+			);
+		}
+	}
+}
+
 export function validateManifest(manifest: unknown): TextPackManifest {
 	const record = requireRecord(manifest, "manifest");
 	rejectUnknownKeys(
 		record,
 		new Set([
+			"schemaVersion",
 			"id",
 			"name",
 			"version",
 			"packageName",
-			"kind",
 			"targets",
 			"engines",
 			"resources",
-			"dependencies",
-			"capabilities",
+			"components",
+			"artifacts",
+			"capabilitySlots",
+			"gapNotes",
 			"license",
 			"citations",
+			"generated",
 		]),
 		"manifest",
 	);
-	const kind = validateResourceKinds(record.kind, "manifest.kind");
+	if (record.schemaVersion !== "1") {
+		throw new TypeError("manifest.schemaVersion must be 1.");
+	}
 	const resources = validateResources(record.resources, "manifest.resources");
-	const declaredKinds = new Set(kind);
-	const actualKinds = new Set(resources.map((resource) => resource.kind));
-	for (const resource of resources) {
-		if (!declaredKinds.has(resource.kind)) {
-			throw new TypeError(
-				`manifest.kind must include resource kind ${resource.kind} declared by ${resource.id}.`,
-			);
-		}
-	}
-	for (const declaredKind of declaredKinds) {
-		if (!actualKinds.has(declaredKind)) {
-			throw new TypeError(
-				`manifest.kind includes ${declaredKind} but no resource declares that kind.`,
-			);
-		}
-	}
-	const dependencies = validateDependencies(
-		record.dependencies,
-		"manifest.dependencies",
+	const components = validateComponents(
+		record.components,
+		"manifest.components",
 	);
+	const artifacts = validateArtifacts(record.artifacts, "manifest.artifacts");
+	const gapNotes = validateGapNotes(record.gapNotes, "manifest.gapNotes");
 	const citations = validateOptionalCitations(
 		record.citations,
 		"manifest.citations",
 	);
+	const generated = validateGeneratedInfo(
+		record.generated,
+		"manifest.generated",
+	);
+	const capabilitySlots = validateCapabilitySlots(
+		record.capabilitySlots,
+		"manifest.capabilitySlots",
+	);
+	validateManifestReferences(resources, artifacts, capabilitySlots, gapNotes);
 	const output: {
+		schemaVersion: "1";
 		id: string;
 		name: string;
 		version: string;
 		packageName: string;
-		kind: readonly ResourceKind[];
 		targets: TextPackTargets;
 		engines: Readonly<Record<string, string>>;
 		resources: readonly TextPackResource[];
-		dependencies?: readonly TextPackDependency[];
-		capabilities: TextPackCapabilities;
+		components?: readonly TextPackComponent[];
+		artifacts?: readonly TextPackArtifactDescriptor[];
+		capabilitySlots: readonly TextPackCapabilitySlot[];
+		gapNotes?: readonly TextPackGapNote[];
 		license?: string;
 		citations?: readonly string[];
+		generated?: TextPackGeneratedInfo;
 	} = {
+		schemaVersion: "1",
 		id: readRequiredString(record, "id", "manifest"),
 		name: readRequiredString(record, "name", "manifest"),
 		version: readRequiredString(record, "version", "manifest"),
 		packageName: readRequiredString(record, "packageName", "manifest"),
-		kind,
 		targets: validateTargets(record.targets, "manifest.targets"),
 		engines: validateStringRecord(record.engines, "manifest.engines"),
 		resources,
-		capabilities: validateCapabilities(
-			record.capabilities,
-			"manifest.capabilities",
-		),
+		capabilitySlots,
 	};
 	const license = readOptionalString(record, "license", "manifest");
-	if (dependencies !== undefined) output.dependencies = dependencies;
+	if (components !== undefined) output.components = components;
+	if (artifacts !== undefined) output.artifacts = artifacts;
+	if (gapNotes !== undefined) output.gapNotes = gapNotes;
 	if (license !== undefined) output.license = license;
 	if (citations !== undefined) output.citations = citations;
+	if (generated !== undefined) output.generated = generated;
 	return deepFreezeJson(output);
 }

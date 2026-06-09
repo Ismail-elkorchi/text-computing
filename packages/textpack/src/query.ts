@@ -1,3 +1,4 @@
+import { capabilities } from "./capabilities.js";
 import { jsonEquals } from "./internal/json.js";
 import type {
 	ResourceKind,
@@ -51,9 +52,9 @@ function targetsForResource(
 
 function capabilityPresent(
 	pack: TextPack,
-	name: keyof TextPack["manifest"]["capabilities"],
+	name: NonNullable<ResourceQuery["capability"]>,
 ): boolean {
-	const value = pack.manifest.capabilities[name];
+	const value = capabilities(pack)[name];
 	return value !== undefined && value !== false && value !== "none";
 }
 

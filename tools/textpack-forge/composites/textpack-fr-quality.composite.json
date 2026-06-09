@@ -1,0 +1,102 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-fr-quality",
+	"packageDir": "packages/textpacks/textpack-fr-quality",
+	"name": "French Quality Policy-Expanded Wrapper Textpack",
+	"description": "Generated policy-expanded French quality recipe wrapper over the full share-alike French quality component graph.",
+	"policySurface": "policy-expanded-wrapper",
+	"publishable": false,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated wrapper over the currently generated French quality component graph, including foundation, core, normalization, segmentation, share-alike lexicon, share-alike morphology, share-alike syntax, KB, share-alike search, corpus artifact, and parallel artifact quality evidence.",
+		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. Lexique 3.83, UniMorph French, and UD French GSD remain in isolated -sa components and this wrapper exposes the full license expression and component policy.",
+		"declaredScope": "French resource-quality wrapper for the currently generated French component graph. It does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, corpus-scale quality baselines beyond explicit Tatoeba artifact evidence, OCR/noisy-text diagnostics, raw web corpora, or hidden network access.",
+		"conformanceEvidence": [
+			"eval:textpack-fr-quality:required-component-graph",
+			"eval:textpack-fr-quality-sa:required-component-graph",
+			"eval:textpack-fr-lexicon:required-component-graph",
+			"eval:textpack-fr-morphology:required-component-graph",
+			"eval:textpack-fr-syntax:required-component-graph",
+			"eval:textpack-fr-search:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "artifact-backed",
+	"loader": {
+		"functionName": "loadFrenchQuality",
+		"languageName": "FrenchQuality"
+	},
+	"targets": {
+		"languages": [
+			"fr"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"sourceIds": [
+		"source:iana:language-subtag-registry",
+		"source:unicode:ucd",
+		"source:unicode:cldr-core",
+		"source:wikidata:main",
+		"source:tatoeba:weekly-french-2026-06-06",
+		"source:fr:lexique-383",
+		"source:unimorph:french-master-f672f8c",
+		"source:ud:french-gsd-r2.18"
+	],
+	"snapshotIds": [
+		"snapshot:source:iana:language-subtag-registry:2026-05-05",
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:wikidata:main:20260608",
+		"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+		"snapshot:source:fr:lexique-383:2019-06-04",
+		"snapshot:source:unimorph:french-master-f672f8c",
+		"snapshot:source:ud:french-gsd:r2.18"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated French quality component graph with full generated evaluation evidence.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "quality",
+			"status": "artifact-backed",
+			"notes": [
+				"The required component graph provides French quality-profile resources, generated quality reports, coverage reports, and evaluation records through an explicit share-alike policy wrapper.",
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		}
+	],
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly French exports, 2026-06-06.",
+		"Lexique 3.83, 2019-06-04.",
+		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.",
+		"Universal Dependencies French GSD r2.18 annotations."
+	]
+}

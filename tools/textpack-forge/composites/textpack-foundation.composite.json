@@ -1,0 +1,103 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-foundation",
+	"packageDir": "packages/textpacks/textpack-foundation",
+	"name": "Foundation Composite Textpack",
+	"description": "Generated source-backed foundation recipe composite for Unicode, CLDR, and BCP 47 registry resources.",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over the publishable language-registry, Unicode 17, and CLDR core foundation component graph, plus generated language-support index derived from those snapshots.",
+		"auditedLicense": "Composite source rows are approved; package-local LICENSE.generated.md includes local IANA licensing terms when LicenseRef evidence is required.",
+		"declaredScope": "Foundation composite for language registry, Unicode profile, locale profile, and language-support queries; does not claim feature-complete language NLP resources.",
+		"conformanceEvidence": [
+			"eval:textpack-foundation:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "foundation-composite",
+	"supportLevel": "profiled",
+	"loader": {
+		"functionName": "loadFoundation",
+		"languageName": "Foundation"
+	},
+	"languageSupport": true,
+	"targets": {
+		"modalities": ["typed"]
+	},
+	"sourceIds": [
+		"source:iana:language-subtag-registry",
+		"source:unicode:cldr-core",
+		"source:unicode:ucd"
+	],
+	"snapshotIds": [
+		"snapshot:source:iana:language-subtag-registry:2026-05-05",
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:unicode:ucd:17.0.0"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-language-registry",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default BCP 47 language/script/region registry foundation resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-unicode-17",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default Unicode 17 script, block, and property alias foundation resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-cldr-core",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default CLDR likely-subtag, alias, and script-variant foundation resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "language-registry",
+			"status": "task-supported",
+			"notes": [
+				"BCP 47 language, script, region, variant, grandfathered, and redundant tag registry resources are available through the generated foundation graph."
+			]
+		},
+		{
+			"slot": "unicode-profile",
+			"status": "task-supported",
+			"notes": [
+				"Unicode 17 script, block, and property alias resources are available through the generated foundation graph."
+			]
+		},
+		{
+			"slot": "locale-profile",
+			"status": "task-supported",
+			"notes": [
+				"CLDR likely-subtag, alias, and script variant resources are available through the generated foundation graph."
+			]
+		}
+	],
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0",
+	"citations": [
+		"repo:tools/textpack-forge/composites/textpack-foundation.composite.json"
+	]
+}

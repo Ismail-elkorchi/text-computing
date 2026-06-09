@@ -1,0 +1,81 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-fr-morphology",
+	"packageDir": "packages/textpacks/textpack-fr-morphology",
+	"name": "French Morphology Policy-Expanded Wrapper Textpack",
+	"description": "Generated policy-expanded French morphology recipe wrapper over the share-alike isolated Lexique 3.83 and UniMorph French components.",
+	"policySurface": "policy-expanded-wrapper",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated wrapper over publishable share-alike Lexique 3.83 and UniMorph French components, which provide French POS inventory, lemma/form metadata, canonical morphology resources, lookup analyzer/generator tables, paradigm rows, and generated quality/evaluation evidence.",
+		"auditedLicense": "The exact Lexique 3.83 and UniMorph French source rows are approved as share-alike isolated; resource payloads stay in required -sa components while this wrapper exposes the full license expression and component policy.",
+		"declaredScope": "French morphology wrapper for Lexique 3.83 lemma/form and POS inventory resources plus UniMorph French paradigm and lookup analyzer/generator resources. It does not claim permissive default-package compatibility, context-disambiguating morphology, FST morphology, UD syntax, corpus, parallel, or non-share-alike redistribution.",
+		"conformanceEvidence": [
+			"eval:textpack-fr-morphology:required-component-graph",
+			"eval:textpack-fr-morphology-sa:required-component-graph",
+			"eval:fr-unimorph:entry-volume"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "task-supported",
+	"loader": {
+		"functionName": "loadFrenchMorphology",
+		"languageName": "FrenchMorphology"
+	},
+	"targets": {
+		"languages": ["fr"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
+	},
+	"sourceIds": [
+		"source:fr:lexique-383",
+		"source:unimorph:french-master-f672f8c"
+	],
+	"snapshotIds": [
+		"snapshot:source:fr:lexique-383:2019-06-04",
+		"snapshot:source:unimorph:french-master-f672f8c"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-morphology-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated French morphology composite over Lexique 3.83 and UniMorph French resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides Lexique 3.83 lemma/form metadata and POS inventory plus UniMorph French paradigm rows, feature bundles, lookup analyzer rows, and lookup generator rows through an explicit share-alike policy wrapper."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required share-alike morphology component."
+			]
+		}
+	],
+	"license": "CC-BY-SA-4.0 AND CC-BY-SA-3.0",
+	"citations": [
+		"Lexique 3.83, 2019-06-04.",
+		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+	]
+}

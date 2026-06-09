@@ -1,0 +1,83 @@
+{
+  "analyzers": [
+    {
+      "analyzerId": "fr-unimorph-f672f8c-lookup-analyzer",
+      "coverage": {
+        "entryCount": 367732,
+        "featureValueCount": 19,
+        "uniqueFormCount": 274192,
+        "uniqueLemmaCount": 7535
+      },
+      "resourceIds": [
+        "fr-unimorph-paradigms",
+        "fr-unimorph-lookup-analyzer",
+        "fr-unimorph-lookup-generator",
+        "fr-unimorph-feature-inventory"
+      ],
+      "type": "paradigm-table"
+    }
+  ],
+  "featureInventory": [
+    {
+      "count": 19,
+      "feature": "unimorphFeature",
+      "values": [
+        "V",
+        "IND",
+        "PL",
+        "SG",
+        "PST",
+        "2",
+        "1",
+        "3",
+        "PRS",
+        "SBJV",
+        "COND",
+        "FUT",
+        "IPFV",
+        "PFV",
+        "IMP",
+        "POS",
+        "V.PTCP",
+        "NFIN",
+        "V.CVB"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "partOfSpeech",
+      "values": [
+        "V",
+        "V.PTCP",
+        "V.CVB"
+      ]
+    }
+  ],
+  "kind": "morphology",
+  "languageTag": "fr",
+  "morphologyId": "fr-unimorph-f672f8c",
+  "resourceRefs": [
+    {
+      "recordCount": 367732,
+      "resourceId": "fr-unimorph-paradigms",
+      "role": "paradigm-table"
+    },
+    {
+      "recordCount": 367732,
+      "resourceId": "fr-unimorph-lookup-analyzer",
+      "role": "analyzer"
+    },
+    {
+      "recordCount": 367732,
+      "resourceId": "fr-unimorph-lookup-generator",
+      "role": "generator"
+    },
+    {
+      "recordCount": 19,
+      "resourceId": "fr-unimorph-feature-inventory",
+      "role": "feature-inventory"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn"
+}

@@ -1,0 +1,41 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+	"packageName": "@ismail-elkorchi/textpack-wikidata-en",
+	"pipelineId": "wikidata-main-artifact",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:wikidata:main"],
+	"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
+			"checksum": "sha256:a4b7efee9997d592e5abdd3e232ad7a66d19847343ac640adc1e9b12fe51b440"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
+			"checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "wikidata-en-kb-artifact",
+			"path": "resources/wikidata-en.kb-artifact.json",
+			"kind": "knowledge-base",
+			"format": "json"
+		},
+		{
+			"resourceId": "wikidata-en-quality",
+			"path": "resources/wikidata-en.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "wikidata-en-quality-profile",
+			"path": "resources/wikidata-en.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

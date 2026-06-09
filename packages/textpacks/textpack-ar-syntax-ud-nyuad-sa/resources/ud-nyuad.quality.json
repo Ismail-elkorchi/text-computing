@@ -1,0 +1,39 @@
+{
+  "annotationRowCount": 738889,
+  "dependencyLabelBySplitCount": 76,
+  "featureValueCount": 28,
+  "pipelineId": "ud-conllu-profile",
+  "pipelineVersion": "0.1.0",
+  "rawTextFieldsEmitted": false,
+  "recordsAccepted": 738889,
+  "recordsRejected": 0,
+  "schemaVersion": "1",
+  "sourceId": "source:ud:arabic-nyuad-r2.18",
+  "splits": {
+    "dev": {
+      "averageTokenCount": 37.23,
+      "maxTokenCount": 495,
+      "sentenceCount": 1986,
+      "tokenCount": 73945
+    },
+    "test": {
+      "averageTokenCount": 37.76,
+      "maxTokenCount": 290,
+      "sentenceCount": 1963,
+      "tokenCount": 74125
+    },
+    "train": {
+      "averageTokenCount": 37.42,
+      "maxTokenCount": 609,
+      "sentenceCount": 15789,
+      "tokenCount": 590819
+    }
+  },
+  "totalSentences": 19738,
+  "totalTokens": 738889,
+  "uposPairCount": 1377,
+  "warnings": [
+    "Generated resources intentionally exclude FORM and LEMMA fields because the source treebank is annotation-only.",
+    "UD Arabic NYUAD is share-alike isolated and cannot enter the default Arabic composite."
+  ]
+}

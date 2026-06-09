@@ -1,0 +1,66 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+	"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+	"pipelineId": "french-lexique-383",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:fr:lexique-383"],
+	"snapshotIds": ["snapshot:source:fr:lexique-383:2019-06-04"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:fr:lexique-383:2019-06-04",
+			"path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.tsv",
+			"checksum": "sha256:637ba37a767a66679c48371d673ece50cbf541b49a4e40e598963d4f3fbce52b"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "fr-lexique-entries",
+			"path": "resources/lexique-383.entries.tsv.gz.b64",
+			"kind": "lexicon",
+			"format": "tsv+gzip+base64"
+		},
+		{
+			"resourceId": "fr-lexique-lemmas",
+			"path": "resources/lexique-383.lemmas.tsv.gz.b64",
+			"kind": "lexicon",
+			"format": "tsv+gzip+base64"
+		},
+		{
+			"resourceId": "fr-lexique-pos-inventory",
+			"path": "resources/lexique-383.pos.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-lexique-lexicon-canonical",
+			"path": "resources/lexique-383.lexicon.json",
+			"kind": "lexicon",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-lexique-morphology-canonical",
+			"path": "resources/lexique-383.morphology.json",
+			"kind": "morphology",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-lexique-search-profile",
+			"path": "resources/lexique-383.search-profile.json",
+			"kind": "search-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-lexique-quality",
+			"path": "resources/lexique-383.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-lexique-quality-profile",
+			"path": "resources/lexique-383.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

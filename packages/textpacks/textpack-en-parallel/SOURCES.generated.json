@@ -1,0 +1,197 @@
+{
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-en-parallel",
+  "packageName": "@ismail-elkorchi/textpack-en-parallel",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "artifact-backed descriptors require local materialized payloads before publishability",
+      "capability slot parallel is artifact-backed without local task-usable payloads",
+      "capability slot quality is artifact-backed without local task-usable payloads",
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "resourceSpecIds": [
+    "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+  ],
+  "resources": [
+    {
+      "byteLength": 2090,
+      "checksum": "sha256:6240ecad3bc808f3198c8ba1ed79554eaabeae4d711ff579e79754205bc92a09",
+      "id": "en-tatoeba-parallel-ara",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-ara.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2094,
+      "checksum": "sha256:2709793b1e938f4e59caf791ec66d0d05b5c5baa3336278198c57a57588f1f38",
+      "id": "en-tatoeba-parallel-deu",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-deu.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2090,
+      "checksum": "sha256:980f572353a3611f03ae47b3c6ebde4739e8163bd7a0ca1af5c87d4944dda914",
+      "id": "en-tatoeba-parallel-ell",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-ell.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2094,
+      "checksum": "sha256:ff831cf74d1b895625b6a58daa98180e6e366a3e4f80dea4c2c06c9132e1a80e",
+      "id": "en-tatoeba-parallel-fra",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-fra.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2086,
+      "checksum": "sha256:a97220dd7de09ef75d9e813054e00b3bd5876dbc9bbaeff50aa8c2e0cbfa46b3",
+      "id": "en-tatoeba-parallel-grc",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-grc.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2094,
+      "checksum": "sha256:fe0e1286ce39d4309c06bd596d40b513d2e24a6812ab2d68afb8a6beb5c3f63e",
+      "id": "en-tatoeba-parallel-ita",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-ita.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2090,
+      "checksum": "sha256:f2e01f5c40edb85a1de6886a6224feb590a31f9ebb53cf9abf1ebc005f8b0f54",
+      "id": "en-tatoeba-parallel-lat",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-lat.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 3770,
+      "checksum": "sha256:1fcba5920a564137139de0fbcf66c4fde665508cc8d1437f56ccd665512664f7",
+      "id": "en-tatoeba-parallel-quality",
+      "kind": "quality-profile",
+      "path": "resources/tatoeba-en.parallel-quality.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 1703,
+      "checksum": "sha256:456fa77d7661643602946889df38d87d04550e11194ee07e6e00534eecc0d1d3",
+      "id": "en-tatoeba-parallel-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/tatoeba-en.parallel-quality-profile.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    },
+    {
+      "byteLength": 2094,
+      "checksum": "sha256:a3c4f8aaa70095a509a51cc009a07032777e88daadf8b1ef8fd92191a039a3c7",
+      "id": "en-tatoeba-parallel-spa",
+      "kind": "alignment-table",
+      "path": "resources/tatoeba-en.parallel-spa.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+    }
+  ],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:e230bd416f72b2385368b9d4e8604215d559f25d41a19d6acc49deec23c7bf09",
+      "files": [
+        {
+          "byteLength": 6001,
+          "checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/"
+        }
+      ],
+      "kind": "external",
+      "notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 English sentence and English-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository.",
+      "retrievedAt": "2026-06-11T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+      "sourceId": "source:tatoeba:weekly-2026-06-06",
+      "version": "2026-06-06"
+    }
+  ],
+  "sourceIds": [
+    "source:tatoeba:weekly-2026-06-06"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "corpus",
+        "parallel",
+        "examples"
+      ],
+      "citation": "Tatoeba weekly exports, 2026-06-06.",
+      "defaultCompositeAllowed": true,
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly English exports 2026-06-06",
+      "notes": "Exact Tatoeba weekly English sentence and English-linked parallel artifact metadata. Attribution is preserved through detailed sentence artifacts and package reports. Second-wave exact snapshot: may document corpus/parallel artifact-backed package slots after checksum, attribution, and descriptor evidence are generated, but it does not provide task support until local rows or indexes are materialized.",
+      "policyClass": "attribution",
+      "priority": "second",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:tatoeba:weekly-2026-06-06"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "Tatoeba weekly exports, 2026-06-06.",
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "licenseEvidence": [
+        "https://tatoeba.org/en/downloads",
+        "https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly English exports 2026-06-06",
+      "notes": "Pinned Tatoeba English sentence and English-linked parallel export artifact metadata. Generated packages use explicit artifact descriptors instead of vendoring the raw corpus into npm.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:tatoeba:weekly-2026-06-06"
+    }
+  ]
+}

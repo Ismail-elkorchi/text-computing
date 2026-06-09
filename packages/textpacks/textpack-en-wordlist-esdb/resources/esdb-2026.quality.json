@@ -1,0 +1,25 @@
+{
+  "duplicateWithinProfileCount": 0,
+  "pipelineId": "esdb-wordlist-diff",
+  "pipelineVersion": "0.1.0",
+  "profileCount": 5,
+  "recordsAccepted": 548642,
+  "recordsRejected": 0,
+  "release": "rel-2026.02.25",
+  "schemaVersion": "1",
+  "sharedWordCount": 106330,
+  "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25",
+  "totalWordRows": 548642,
+  "uniqueWordCount": 113681,
+  "warnings": [
+    "Generated wordlist outputs are spell-checker dictionaries, not a complete English lexical database.",
+    "ESDB database internals are intentionally not used because the upstream schema is still unstable."
+  ],
+  "wordCountsByProfile": {
+    "en_AU": 110082,
+    "en_CA": 109544,
+    "en_GB_ise": 109550,
+    "en_GB_ize": 109564,
+    "en_US": 109902
+  }
+}

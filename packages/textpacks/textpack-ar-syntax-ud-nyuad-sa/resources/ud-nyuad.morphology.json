@@ -1,0 +1,135 @@
+{
+  "analyzers": [
+    {
+      "analyzerId": "ar-ud-nyuad-feature-profile",
+      "coverage": {
+        "featureValueCount": 28,
+        "tokenCount": 738889
+      },
+      "resourceIds": [
+        "ar-ud-nyuad-features",
+        "ar-ud-nyuad-annotations"
+      ],
+      "type": "statistical"
+    }
+  ],
+  "featureInventory": [
+    {
+      "count": 1,
+      "feature": "AdpType",
+      "values": [
+        "Prep"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "Aspect",
+      "values": [
+        "Imp",
+        "Perf"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "Case",
+      "values": [
+        "Acc",
+        "Gen",
+        "Nom"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "Definite",
+      "values": [
+        "Com",
+        "Def",
+        "Ind"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "Gender",
+      "values": [
+        "Fem",
+        "Masc"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "Mood",
+      "values": [
+        "Ind",
+        "Jus",
+        "Sub"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "Number",
+      "values": [
+        "Dual",
+        "Plur",
+        "Sing"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "NumForm",
+      "values": [
+        "Digit",
+        "Word"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "Person",
+      "values": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "Polarity",
+      "values": [
+        "Neg"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "PronType",
+      "values": [
+        "Dem",
+        "Prs",
+        "Rel"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "Voice",
+      "values": [
+        "Act",
+        "Pass"
+      ]
+    }
+  ],
+  "kind": "morphology",
+  "languageTag": "ar",
+  "morphologyId": "ar-ud-nyuad-morphosyntax",
+  "resourceRefs": [
+    {
+      "recordCount": 28,
+      "resourceId": "ar-ud-nyuad-features",
+      "role": "feature-inventory"
+    },
+    {
+      "recordCount": 738889,
+      "resourceId": "ar-ud-nyuad-annotations",
+      "role": "analyzer"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Arab"
+}

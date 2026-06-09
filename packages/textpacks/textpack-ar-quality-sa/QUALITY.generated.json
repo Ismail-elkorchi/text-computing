@@ -1,0 +1,132 @@
+{
+  "acceptedRecordCount": 0,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "The required component graph provides Arabic MSA core, normalization, segmentation, lexicon, morphology, share-alike syntax, search, KB, corpus artifact, and parallel artifact quality-profile resources, generated reports, coverage reports, and evaluation records.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "slot": "quality",
+      "status": "artifact-backed"
+    }
+  ],
+  "components": [
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "default",
+      "packageName": "@ismail-elkorchi/textpack-ar-core",
+      "reason": "Arabic core language profile quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-normalization",
+      "reason": "Arabic MSA normalization quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-segmentation",
+      "reason": "Arabic MSA segmentation quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-lexicon",
+      "reason": "Arabic MSA lexicon component quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-morphology",
+      "reason": "Arabic MSA morphology quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-share-alike",
+      "packageName": "@ismail-elkorchi/textpack-ar-syntax-sa",
+      "reason": "Share-alike isolated Arabic syntax quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-search",
+      "reason": "Arabic MSA search analyzer quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-kb",
+      "reason": "Arabic KB component quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-corpus",
+      "reason": "Arabic Tatoeba corpus artifact quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-parallel",
+      "reason": "Arabic Tatoeba parallel artifact quality resources and evaluation evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "artifact-backed descriptors require local materialized payloads before publishability",
+      "capability slot quality is artifact-backed without local task-usable payloads",
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "rejectedRecordCount": 0,
+  "resourceCount": 0,
+  "resourcePaths": [],
+  "resourceSpecIds": [],
+  "resources": [],
+  "schemaVersion": "1",
+  "supportLevel": "artifact-backed",
+  "warnings": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up",
+    "quality is artifact-backed in this source-backed recipe composite pack."
+  ]
+}

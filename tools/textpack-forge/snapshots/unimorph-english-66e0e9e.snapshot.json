@@ -1,0 +1,26 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:unimorph:english-master-66e0e9e",
+	"sourceId": "source:unimorph:english-master-66e0e9e",
+	"version": "66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "repository",
+	"checksum": "sha256:b26efe3d50b54c854d060d6511c2b88f5c75fb0786ca25e81a469ac945a8887b",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/unimorph-eng-66e0e9e/eng",
+			"mediaType": "text/tab-separated-values",
+			"byteLength": 18022905,
+			"checksum": "sha256:20a191cefdc7cad6fa74b00f49d6f658684f17b14541aae372e5a3d5a8c15c67",
+			"sourceUrl": "https://raw.githubusercontent.com/unimorph/eng/66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b/eng"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unimorph-eng-66e0e9e/README.md",
+			"mediaType": "text/markdown",
+			"byteLength": 96,
+			"checksum": "sha256:e0fc60fc99bda429e3d366af1f993d649dfc5fea2ed0510740f607e67c26354d",
+			"sourceUrl": "https://raw.githubusercontent.com/unimorph/eng/66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b/README.md"
+		}
+	],
+	"notes": "Pinned UniMorph English README license evidence and inflection table from commit 66e0e9e8e2dcd196da081a25a48e5c1fe3d8b49b."
+}

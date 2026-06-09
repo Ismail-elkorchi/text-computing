@@ -1,0 +1,665 @@
+{
+  "analyzers": [
+    {
+      "analyzerId": "ar-msa-camel-lookup",
+      "coverage": {
+        "compatibilityCount": 14823,
+        "morphemeCount": 203740
+      },
+      "resourceIds": [
+        "ar-msa-camel-morph-features",
+        "ar-msa-camel-morph-defaults",
+        "ar-msa-camel-morph-morphemes",
+        "ar-msa-camel-morph-compatibility"
+      ],
+      "type": "lookup"
+    }
+  ],
+  "compatibilityTables": [
+    {
+      "count": 9059,
+      "tableId": "TABLE BC"
+    },
+    {
+      "count": 4332,
+      "tableId": "TABLE AB"
+    },
+    {
+      "count": 1432,
+      "tableId": "TABLE AC"
+    }
+  ],
+  "featureInventory": [
+    {
+      "count": 4,
+      "feature": "asp",
+      "values": [
+        "p",
+        "na",
+        "c",
+        "i"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "atbseg",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "atbtok",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "bw",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "bwtok",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "caphi",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 5,
+      "feature": "cas",
+      "values": [
+        "u",
+        "n",
+        "na",
+        "a",
+        "g"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "catib6",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "cm_buffer",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "cm_pref_ids",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "cm_stem",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "cm_stem_ids",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "cm_suff_ids",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "correctness",
+      "values": [
+        "y",
+        "n"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "d1seg",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "d1tok",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "d2seg",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "d2tok",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "d3seg",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "d3tok",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "diac",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 52,
+      "feature": "enc0",
+      "values": [
+        "2p_dobj",
+        "3p_dobj",
+        "3p_poss",
+        "3mp_poss",
+        "3d_dobj",
+        "2p_poss",
+        "2mp_poss",
+        "3d_pron",
+        "3ms_pron",
+        "3ms_poss",
+        "man_interrog",
+        "3mp_pron",
+        "2d_pron",
+        "3mp_dobj",
+        "2fp_pron",
+        "lA_neg",
+        "man_rel",
+        "1s_dobj",
+        "2ms_pron",
+        "2mp_pron",
+        "ma_interrog",
+        "na",
+        "3fs_dobj",
+        "mA_rel",
+        "0",
+        "2fs_pron",
+        "2fp_poss",
+        "1s_poss",
+        "Ah_voc",
+        "2d_dobj",
+        "2mp_dobj",
+        "3fp_pron",
+        "1p_poss",
+        "ma_rel",
+        "2fs_poss",
+        "3ms_dobj",
+        "mA_interrog",
+        "3d_poss",
+        "3fp_poss",
+        "ma_sub",
+        "2fp_dobj",
+        "2d_poss",
+        "1s_pron",
+        "3fs_pron",
+        "3fs_poss",
+        "3fp_dobj",
+        "1p_pron",
+        "2fs_dobj",
+        "2ms_poss",
+        "1p_dobj",
+        "2ms_dobj",
+        "mA_sub"
+      ]
+    },
+    {
+      "count": 22,
+      "feature": "enc1",
+      "values": [
+        "0",
+        "1s_dobj",
+        "1p_dobj",
+        "2mp_dobj",
+        "2fs_dobj",
+        "2d_dobj",
+        "2ms_dobj",
+        "2fp_dobj",
+        "3ms_dobj",
+        "3fs_dobj",
+        "3d_dobj",
+        "3mp_dobj",
+        "3fp_dobj",
+        "1s_iobj",
+        "1p_iobj",
+        "2ms_iobj",
+        "2fs_iobj",
+        "2p_iobj",
+        "3ms_iobj",
+        "3fs_iobj",
+        "3p_iobj",
+        "part_neg"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "enc2",
+      "values": [
+        "0",
+        "na",
+        "part_neg"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "form_gen",
+      "values": [
+        "na",
+        "m",
+        "f"
+      ]
+    },
+    {
+      "count": 5,
+      "feature": "form_num",
+      "values": [
+        "s",
+        "na",
+        "d",
+        "u",
+        "p"
+      ]
+    },
+    {
+      "count": 5,
+      "feature": "gen",
+      "values": [
+        "na",
+        "m",
+        "f",
+        "b",
+        "u"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "gloss",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "lex",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "lex_logprob",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 4,
+      "feature": "mid_root_diac",
+      "values": [
+        "u",
+        "i",
+        "a",
+        "na"
+      ]
+    },
+    {
+      "count": 7,
+      "feature": "mod",
+      "values": [
+        "s",
+        "i",
+        "na",
+        "u",
+        "j",
+        "e",
+        "x"
+      ]
+    },
+    {
+      "count": 6,
+      "feature": "num",
+      "values": [
+        "s",
+        "na",
+        "d",
+        "u",
+        "p",
+        "b"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "pattern",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "pattern_abstract",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 4,
+      "feature": "per",
+      "values": [
+        "na",
+        "3",
+        "2",
+        "1"
+      ]
+    },
+    {
+      "count": 36,
+      "feature": "pos",
+      "values": [
+        "noun",
+        "part_neg",
+        "pron_rel",
+        "noun_num",
+        "adv_interrog",
+        "part_voc",
+        "adj_comp",
+        "punc",
+        "conj_sub",
+        "part_fut",
+        "pron_exclam",
+        "part",
+        "part_verb",
+        "verb",
+        "digit",
+        "conj",
+        "pron_interrog",
+        "pron",
+        "abbrev",
+        "part_det",
+        "interj",
+        "adj_num",
+        "adv",
+        "part_restrict",
+        "adv_rel",
+        "adj",
+        "prep",
+        "part_interrog",
+        "verb_pseudo",
+        "verb_nom",
+        "noun_prop",
+        "part_focus",
+        "noun_quant",
+        "latin",
+        "pron_dem",
+        "part_connect"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "pos_lex_logprob",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "pos_logprob",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 11,
+      "feature": "prc0",
+      "values": [
+        "0",
+        "mA_part",
+        "ma_neg",
+        "Al_det",
+        "AlmA_detneg",
+        "mA_rel",
+        "na",
+        "Aa_prondem",
+        "hAl_det",
+        "lA_neg",
+        "mA_neg"
+      ]
+    },
+    {
+      "count": 30,
+      "feature": "prc1",
+      "values": [
+        "0",
+        "laHa_rcfut",
+        "laHa_emphfut",
+        "li_jus",
+        "<i$_interrog",
+        "li_prep",
+        "Ea_prep",
+        "bi_prep",
+        "bi_part",
+        "Ha_fut",
+        "ha_fut",
+        "yA_voc",
+        "la_prep",
+        "na",
+        "li_sub",
+        "hA_dem",
+        "ka_prep",
+        "sa_fut",
+        "wa_prep",
+        "min_prep",
+        "wA_voc",
+        "bi_prog",
+        "la_emph",
+        "fiy_prep",
+        "ta_prep",
+        "la_rc",
+        "libi_prep",
+        "EalaY_prep",
+        "$_interrog",
+        "m_prep"
+      ]
+    },
+    {
+      "count": 5,
+      "feature": "prc1.5",
+      "values": [
+        "prc1.5",
+        "mA_neg",
+        "0",
+        "lA_neg",
+        "na"
+      ]
+    },
+    {
+      "count": 9,
+      "feature": "prc2",
+      "values": [
+        "fa_conn",
+        "fa_rc",
+        "0",
+        "na",
+        "wa_part",
+        "wa_sub",
+        "fa_sub",
+        "wa_conj",
+        "fa_conj"
+      ]
+    },
+    {
+      "count": 3,
+      "feature": "prc3",
+      "values": [
+        "0",
+        "na",
+        ">a_ques"
+      ]
+    },
+    {
+      "count": 7,
+      "feature": "rat",
+      "values": [
+        "n",
+        "na",
+        "y",
+        "i",
+        "r",
+        "b",
+        "u"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "root",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 7,
+      "feature": "source",
+      "values": [
+        "lex",
+        "punct",
+        "foreign",
+        "spvar",
+        "digit",
+        "backoff",
+        "wiki"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "stem",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "stemcat",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "stemgloss",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 5,
+      "feature": "stt",
+      "values": [
+        "u",
+        "i",
+        "na",
+        "c",
+        "d"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "ud",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 4,
+      "feature": "vox",
+      "values": [
+        "p",
+        "na",
+        "u",
+        "a"
+      ]
+    }
+  ],
+  "kind": "morphology",
+  "languageTag": "ar",
+  "morphemeSets": [
+    {
+      "count": 175972,
+      "section": "STEMS",
+      "setId": "section:STEMS"
+    },
+    {
+      "count": 15044,
+      "section": "SUFFIXES",
+      "setId": "section:SUFFIXES"
+    },
+    {
+      "count": 12724,
+      "section": "PREFIXES",
+      "setId": "section:PREFIXES"
+    }
+  ],
+  "morphologyId": "ar-msa-camel-morphology",
+  "resourceRefs": [
+    {
+      "recordCount": 53,
+      "resourceId": "ar-msa-camel-morph-features",
+      "role": "feature-inventory"
+    },
+    {
+      "recordCount": 1961,
+      "resourceId": "ar-msa-camel-morph-defaults",
+      "role": "defaults"
+    },
+    {
+      "recordCount": 203740,
+      "resourceId": "ar-msa-camel-morph-morphemes",
+      "role": "morpheme-inventory"
+    },
+    {
+      "recordCount": 14823,
+      "resourceId": "ar-msa-camel-morph-compatibility",
+      "role": "compatibility-table"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Arab"
+}

@@ -1,0 +1,15 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:scowl:v2-rel-2026-02-25",
+	"family": "ENLEX",
+	"name": "SCOWLv2 rich text export 2026.02.25",
+	"homepageUrl": "https://github.com/en-wl/wordlist/tree/rel-2026.02.25",
+	"licenseEvidence": [
+		"https://github.com/en-wl/wordlist-diff/blob/rel-2026.02.25/Copyright"
+	],
+	"licenseExpression": "LicenseRef-ESDB-MIT-Like",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "SCOWLv2 rich text export, rel-2026.02.25.",
+	"notes": "Pinned SCOWLv2 scowl.txt export for English POS and inflection inventory resources; this does not use the SQLite database directly."
+}

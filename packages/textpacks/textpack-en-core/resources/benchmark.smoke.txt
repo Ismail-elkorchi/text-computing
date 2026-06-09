@@ -1,4 +1,0 @@
-Alice hosts corpora.
-Alice audits Acme Corp in Paris.
-Dr. Bob validates the corpus index.
-The pipeline loads documents and annotations.

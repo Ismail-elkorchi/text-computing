@@ -1,0 +1,71 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-fst-resource.schema.json",
+	"title": "TextpackFstResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"kind",
+		"fstId",
+		"startState",
+		"states",
+		"transitions"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "fst" },
+		"fstId": { "type": "string", "minLength": 1 },
+		"semiring": {
+			"enum": ["boolean", "tropical", "log", "probability"]
+		},
+		"inputAlphabet": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string" }
+		},
+		"outputAlphabet": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string" }
+		},
+		"startState": { "type": "string", "minLength": 1 },
+		"states": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/state" }
+		},
+		"transitions": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/transition" }
+		}
+	},
+	"definitions": {
+		"state": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["stateId"],
+			"properties": {
+				"stateId": { "type": "string", "minLength": 1 },
+				"finalWeight": { "type": "number" },
+				"tags": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"transition": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["from", "to", "input"],
+			"properties": {
+				"from": { "type": "string", "minLength": 1 },
+				"to": { "type": "string", "minLength": 1 },
+				"input": { "type": "string" },
+				"output": { "type": "string" },
+				"weight": { "type": "number" },
+				"label": { "type": "string", "minLength": 1 }
+			}
+		}
+	}
+}

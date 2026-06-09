@@ -1,0 +1,46 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "tatoeba-ar-explicit-parallel-artifact-fetch",
+      "message": "Tatoeba Arabic parallel alignments are exposed as explicit artifact descriptors; local alignment rows have not been materialized yet.",
+      "metadata": {
+        "artifactIds": [
+          "artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06",
+          "artifact:textpack-ar-parallel:full:tatoeba-ara-eng-links:2026-06-06",
+          "artifact:textpack-ar-parallel:full:tatoeba-ara-fra-links:2026-06-06",
+          "artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06"
+        ],
+        "artifactPolicy": "fetch-explicit"
+      },
+      "severity": "info",
+      "task": "parallel.artifact"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "ar",
+  "metrics": [
+    {
+      "metricId": "language-pair-count",
+      "name": "languagePairCount",
+      "unit": "pairs",
+      "value": 4
+    },
+    {
+      "metricId": "parallel-link-row-count",
+      "name": "parallelLinkRowCount",
+      "unit": "rows",
+      "value": 57902
+    },
+    {
+      "metricId": "artifact-size-bytes",
+      "name": "artifactSizeBytes",
+      "unit": "bytes",
+      "value": 356887
+    }
+  ],
+  "profileId": "tatoeba-ar-parallel-artifact-quality",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "thresholds": []
+}

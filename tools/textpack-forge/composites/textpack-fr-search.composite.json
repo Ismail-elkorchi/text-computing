@@ -1,0 +1,72 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-fr-search",
+	"packageDir": "packages/textpacks/textpack-fr-search",
+	"name": "French Search Policy-Expanded Wrapper Textpack",
+	"description": "Generated policy-expanded French search recipe wrapper over the share-alike isolated Lexique 3.83 search component.",
+	"policySurface": "policy-expanded-wrapper",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated wrapper over the publishable share-alike Lexique 3.83 search component, which provides a French lexical search analyzer profile, lexical frequency fields, canonical search resources, and generated quality/evaluation evidence.",
+		"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated; resource payloads stay in the required -sa component while this wrapper exposes the full license expression and component policy.",
+		"declaredScope": "French search wrapper for Lexique 3.83 lexical analyzer-profile resources. It does not claim permissive default-package compatibility, persistent indexes, ranking models, corpus-derived retrieval statistics, UD syntax, KB, parallel, or non-share-alike redistribution.",
+		"conformanceEvidence": [
+			"eval:textpack-fr-search:required-component-graph",
+			"eval:textpack-fr-search-sa:required-component-graph",
+			"eval:fr-lexique:search-profile"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "task-supported",
+	"loader": {
+		"functionName": "loadFrenchSearch",
+		"languageName": "FrenchSearch"
+	},
+	"targets": {
+		"languages": ["fr"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
+	},
+	"sourceIds": ["source:fr:lexique-383"],
+	"snapshotIds": ["snapshot:source:fr:lexique-383:2019-06-04"],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-search-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated French search composite over Lexique 3.83 resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides Lexique 3.83 lexical analyzer-profile resources through an explicit share-alike policy wrapper."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required share-alike search component."
+			]
+		}
+	],
+	"license": "CC-BY-SA-4.0",
+	"citations": ["Lexique 3.83, 2019-06-04."]
+}

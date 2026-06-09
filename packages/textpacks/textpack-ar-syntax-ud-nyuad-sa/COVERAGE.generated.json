@@ -1,0 +1,250 @@
+{
+  "capabilities": {
+    "morphology": "statistical",
+    "tagging": "statistical"
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:ar-ud-nyuad:no-raw-text-fields"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "FORM and LEMMA are intentionally excluded; this pack evaluates annotation-derived syntax resources only."
+      ],
+      "resourceIds": [
+        "ar-ud-nyuad-quality",
+        "ar-ud-nyuad-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:ar-ud-nyuad:dependency-label-coverage",
+        "eval:ar-ud-nyuad:head-reference-coverage"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [],
+      "resourceIds": [
+        "ar-ud-nyuad-dependencies",
+        "ar-ud-nyuad-sentence-profile",
+        "ar-ud-nyuad-annotations",
+        "ar-ud-nyuad-syntax-canonical"
+      ],
+      "slot": "syntax",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:ar-ud-nyuad:annotation-volume"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [],
+      "resourceIds": [
+        "ar-ud-nyuad-upos",
+        "ar-ud-nyuad-features",
+        "ar-ud-nyuad-annotations",
+        "ar-ud-nyuad-morphology-canonical"
+      ],
+      "slot": "tagging",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "Generated quality profile records annotation counts and confirms no raw text fields are emitted."
+      ],
+      "resourceIds": [
+        "ar-ud-nyuad-quality",
+        "ar-ud-nyuad-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Annotation-derived dependency and sentence profiles are available without redistributing LDC text.",
+        "This package is share-alike isolated and is not eligible for the default Arabic composite."
+      ],
+      "resourceIds": [
+        "ar-ud-nyuad-dependencies",
+        "ar-ud-nyuad-sentence-profile",
+        "ar-ud-nyuad-annotations",
+        "ar-ud-nyuad-syntax-canonical"
+      ],
+      "slot": "syntax",
+      "status": "task-supported"
+    },
+    {
+      "capabilities": {
+        "morphology": "statistical",
+        "tagging": "statistical"
+      },
+      "notes": [
+        "Annotation-derived UPOS, XPOS, and morphological feature profiles are available without redistributing LDC text.",
+        "This package is share-alike isolated and is not eligible for the default Arabic composite."
+      ],
+      "resourceIds": [
+        "ar-ud-nyuad-upos",
+        "ar-ud-nyuad-features",
+        "ar-ud-nyuad-annotations",
+        "ar-ud-nyuad-morphology-canonical"
+      ],
+      "slot": "tagging",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:ar-ud-nyuad:annotation-volume",
+    "eval:ar-ud-nyuad:dependency-label-coverage",
+    "eval:ar-ud-nyuad:head-reference-coverage",
+    "eval:ar-ud-nyuad:no-raw-text-fields"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 59041977,
+      "checksum": "sha256:e90c72c7bb9aa9cb5667a6e6b4ced59abe2f1bc98a7cf63be3fd2c414d5cf774",
+      "kind": "dataset",
+      "nonEmptyLineCount": 738890,
+      "path": "resources/ud-nyuad.annotations.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-annotations",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "large"
+    },
+    {
+      "byteLength": 1176,
+      "checksum": "sha256:762087457e838a9b29477d1ade830a7d01654cc1980549841078d268e8b3a558",
+      "kind": "grammar",
+      "nonEmptyLineCount": 77,
+      "path": "resources/ud-nyuad.dependencies.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-dependencies",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 495,
+      "checksum": "sha256:6c94897f1024eba539363416b8644e729e620ba2269a20ba220d79b1638cb593",
+      "kind": "morphology",
+      "nonEmptyLineCount": 29,
+      "path": "resources/ud-nyuad.features.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-features",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2147,
+      "checksum": "sha256:b02cf6237a33fcab766c8bbcee12e703e47f41e6c29d696129b9fd427a652862",
+      "kind": "morphology",
+      "nonEmptyLineCount": 135,
+      "path": "resources/ud-nyuad.morphology.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-morphology-canonical",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1066,
+      "checksum": "sha256:c858445393c6b017aab3128e043bde6e74225ee7d2b075376daa1f58b8b7a053",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 39,
+      "path": "resources/ud-nyuad.quality.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-quality",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 925,
+      "checksum": "sha256:636213b26ac55c5e312a473b6981265480a081a3dc3ac6aafdb5f72bdfc50639",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 40,
+      "path": "resources/ud-nyuad.quality-profile.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 143,
+      "checksum": "sha256:6b342fc2f96e2da2858b6c77ed231cbe858a22604b60099776ebd9f23ab13dac",
+      "kind": "statistical-model",
+      "nonEmptyLineCount": 4,
+      "path": "resources/ud-nyuad.sentence-profile.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-sentence-profile",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 172617,
+      "checksum": "sha256:a99ba8765205902901e2052297f9ded56375cf318ebe4dda638d140b2cf6a6ae",
+      "kind": "grammar",
+      "nonEmptyLineCount": 7477,
+      "path": "resources/ud-nyuad.syntax.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-syntax-canonical",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 40222,
+      "checksum": "sha256:413084a984b08297efb8f408ddee4f981a87adbd9d9ee13a2a2c28670fe924f9",
+      "kind": "grammar",
+      "nonEmptyLineCount": 1378,
+      "path": "resources/ud-nyuad.upos.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-ud-nyuad-upos",
+      "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "dataset",
+    "grammar",
+    "morphology",
+    "quality-profile",
+    "statistical-model"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "ar"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Arab"
+    ]
+  }
+}

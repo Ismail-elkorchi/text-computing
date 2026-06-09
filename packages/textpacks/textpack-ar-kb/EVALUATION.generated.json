@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up",
+    "kb is artifact-backed in this source-backed recipe composite pack.",
+    "quality is artifact-backed in this source-backed recipe composite pack."
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-kb",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "artifact-backed descriptors require local materialized payloads before publishability",
+      "capability slot kb is artifact-backed without local task-usable payloads",
+      "capability slot quality is artifact-backed without local task-usable payloads",
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "records": [
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wordnet:arabic-v4.1.0",
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "capabilitySlots": [
+            "kb",
+            "quality"
+          ],
+          "requiredComponents": [
+            "@ismail-elkorchi/textpack-wordnet-ar",
+            "@ismail-elkorchi/textpack-wikidata-ar"
+          ]
+        },
+        "resourceIds": []
+      },
+      "limitations": [],
+      "metric": {
+        "name": "requiredComponentCount",
+        "operator": "eq",
+        "threshold": 2,
+        "unit": "components",
+        "value": 2
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-kb",
+      "pipelineId": "component-composite",
+      "recordId": "eval:textpack-ar-kb:required-component-graph",
+      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar-kb.composite.json",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "composite.required-component-graph"
+    }
+  ],
+  "resourceSpecIds": [],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 1,
+    "recordCount": 1,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

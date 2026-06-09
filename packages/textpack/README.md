@@ -12,6 +12,8 @@ import {
   createPack,
   getResource,
   listResources,
+  loadMorphology,
+  loadSyntaxResources,
   loadPack,
   validateManifest,
 } from "@ismail-elkorchi/textpack";
@@ -40,6 +42,21 @@ const data = getResource<string>(pack, stoplists[0].id);
 
 Resource ids are exact. `getResource(pack, "x")` only returns the resource whose descriptor id is
 `"x"`.
+
+## Resource Family Adapters
+
+`textpack` provides lightweight adapters that select resources by capability slot and resource kind,
+then parse declared payload formats into resource handles:
+
+```ts
+const pack = await loadPack(await import("@ismail-elkorchi/textpack-en-syntax-ud-gumreddit"));
+const syntax = loadSyntaxResources(pack);
+const morphology = loadMorphology(pack);
+```
+
+The adapters cover the shared textpack resource families: lexicon, segmentation, normalization,
+morphology, syntax, search, knowledge base, corpus, parallel, and quality. They parse TSV resources
+as `{ columns, rows }`, JSON resources as JSON values, and leave unknown formats as raw payloads.
 
 ## Composition
 

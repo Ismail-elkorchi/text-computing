@@ -1,0 +1,72 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+	"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+	"pipelineId": "french-segmentation-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:unicode:ucd", "source:unicode:cldr-core"],
+	"snapshotIds": [
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/GraphemeBreakProperty.txt",
+			"checksum": "sha256:d6b51d1d2ae5c33b451b7ed994b48f1f4dc62b2272a5831e7fd418514a6bae89"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/WordBreakProperty.txt",
+			"checksum": "sha256:72274cac1e6b919507db35655c3e175aa27274668a1ece95c28d2069f2ad9852"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/SentenceBreakProperty.txt",
+			"checksum": "sha256:871c0c985ad95125e25b302414065a10839d068970bceb383ecec138f22a0a18"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "fr-segmentation-boundary-properties",
+			"path": "resources/fr.segmentation-boundary-properties.tsv",
+			"kind": "segmentation-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-grapheme-segmentation-profile",
+			"path": "resources/fr.segmentation.grapheme.json",
+			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-word-segmentation-profile",
+			"path": "resources/fr.segmentation.word.json",
+			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-sentence-segmentation-profile",
+			"path": "resources/fr.segmentation.sentence.json",
+			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-segmentation-quality",
+			"path": "resources/fr.segmentation.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-segmentation-quality-profile",
+			"path": "resources/fr.segmentation.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

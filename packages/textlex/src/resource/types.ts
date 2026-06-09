@@ -3,6 +3,7 @@ export type TextPackResourceKindLike =
 	| "locale-profile"
 	| "segmentation-profile"
 	| "normalization-profile"
+	| "search-profile"
 	| "lexicon"
 	| "gazetteer"
 	| "termbase"

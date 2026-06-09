@@ -1,0 +1,149 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:ar-quality-sa",
+	"name": "Arabic Quality Share-Alike Composite Textpack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
+	"targets": {
+		"languages": [
+			"ar"
+		],
+		"scripts": [
+			"Arab"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-core",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic core language profile quality resources and evaluation evidence.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-normalization",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic MSA normalization quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-segmentation",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic MSA segmentation quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-lexicon",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic MSA lexicon component quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-morphology",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic MSA morphology quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-syntax-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated Arabic syntax quality resources and evaluation evidence.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-search",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic MSA search analyzer quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-kb",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic KB component quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic Tatoeba corpus artifact quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Arabic Tatoeba parallel artifact quality resources and evaluation evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "quality",
+			"status": "artifact-backed",
+			"notes": [
+				"The required component graph provides Arabic MSA core, normalization, segmentation, lexicon, morphology, share-alike syntax, search, KB, corpus artifact, and parallel artifact quality-profile resources, generated reports, coverage reports, and evaluation records.",
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		}
+	],
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"CAMeL Morph MSA LREC-COLING 2024 release.",
+		"Arabic WordNet 4.1.0.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly Arabic exports, 2026-06-06.",
+		"Universal Dependencies Arabic NYUAD r2.18 annotations."
+	],
+	"gapNotes": [
+		{
+			"id": "gap:pack:ar-quality-sa:quality",
+			"slot": "quality",
+			"status": "artifact-backed",
+			"message": "quality is artifact-backed in this source-backed recipe composite pack."
+		}
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

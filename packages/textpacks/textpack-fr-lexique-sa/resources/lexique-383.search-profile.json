@@ -1,0 +1,65 @@
+{
+  "analyzerId": "fr-lexique-383-analyzer",
+  "charFilters": [
+    {
+      "componentId": "french-apostrophe-policy",
+      "mode": "preserve-elision-apostrophes",
+      "options": {
+        "characters": [
+          "'",
+          "’"
+        ]
+      },
+      "type": "character-policy"
+    }
+  ],
+  "fields": [
+    {
+      "analyzerRole": "index",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "query",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "suggest",
+      "fieldName": "text"
+    }
+  ],
+  "kind": "search-profile",
+  "languageTag": "fr",
+  "resources": [
+    {
+      "resourceId": "fr-lexique-entries",
+      "role": "lexicon"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn",
+  "tokenFilters": [
+    {
+      "componentId": "unicode-simple-casefold",
+      "mode": "unicode-simple",
+      "type": "casefold"
+    },
+    {
+      "componentId": "lexique-form-lemma-lookup",
+      "mode": "form-to-lemma",
+      "options": {
+        "entryResourceId": "fr-lexique-entries",
+        "frequencyFields": [
+          "freqfilms2",
+          "freqlivres"
+        ],
+        "lemmaResourceId": "fr-lexique-lemmas"
+      },
+      "type": "lexicon-lookup"
+    }
+  ],
+  "tokenizer": {
+    "componentId": "unicode-word",
+    "mode": "default",
+    "type": "unicode-word-boundary"
+  }
+}

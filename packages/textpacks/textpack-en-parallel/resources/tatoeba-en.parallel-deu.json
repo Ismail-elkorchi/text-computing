@@ -1,0 +1,56 @@
+{
+  "kind": "alignment-table",
+  "languagePair": {
+    "sourceLanguage": "en",
+    "sourceScript": "Latn",
+    "targetLanguage": "de",
+    "targetScript": "Latn"
+  },
+  "parallelId": "tatoeba-en-de-2026-06-06",
+  "schemaVersion": "1",
+  "units": [
+    {
+      "metadata": {
+        "artifactDescriptor": {
+          "artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
+          "cacheKey": "tatoeba-eng-deu-links-tsv-bz2-2026-06-06",
+          "checksum": {
+            "algorithm": "sha256",
+            "value": "7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e"
+          },
+          "compression": "bzip2",
+          "expectedFiles": [
+            {
+              "checksum": "sha256:7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e",
+              "path": "eng-deu_links.tsv.bz2",
+              "sizeBytes": 3515460
+            }
+          ],
+          "licenseExpression": "CC-BY-2.0-FR",
+          "mediaType": "text/tab-separated-values",
+          "profile": "full",
+          "redistributionPolicy": "redistributable-with-attribution",
+          "retrieval": {
+            "instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing.",
+            "kind": "https",
+            "uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-deu_links.tsv.bz2"
+          },
+          "sizeBytes": 3515460,
+          "sourceIds": [
+            "source:tatoeba:weekly-2026-06-06"
+          ],
+          "version": "2026-06-06"
+        },
+        "artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
+        "checksum": "sha256:7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e",
+        "etag": "\"6a23c014-35a444\"",
+        "lastModified": "Sat, 06 Jun 2026 06:37:08 GMT",
+        "licenseExpression": "CC-BY-2.0-FR",
+        "path": "eng-deu_links.tsv.bz2",
+        "rowCount": 580202,
+        "sourceId": "source:tatoeba:weekly-2026-06-06"
+      },
+      "unitId": "eng-deu-links-2026-06-06"
+    }
+  ]
+}

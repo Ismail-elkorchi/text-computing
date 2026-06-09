@@ -6,15 +6,17 @@ import {
 } from "../../dist/index.js";
 
 const manifest: TextPackManifest = {
+	schemaVersion: "1",
 	id: "pack:runtime-node",
 	name: "Runtime Node Pack",
 	version: "1.0.0",
 	packageName: "@ismail-elkorchi/textpack-runtime-node",
-	kind: ["dataset"],
 	targets: { languages: ["en"] },
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [{ id: "dataset-node", kind: "dataset" }],
-	capabilities: {},
+	capabilitySlots: [
+		{ slot: "corpus", status: "sampled", resourceIds: ["dataset-node"] },
+	],
 };
 
 const pack = createPack(manifest, { "dataset-node": "node runtime" });

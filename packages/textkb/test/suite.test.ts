@@ -13,6 +13,7 @@ import {
 	linkEntities,
 	linkTerms,
 	ontologyGazetteer,
+	openEnglishWordNetFromPack,
 	parseAliasRows,
 	parseEntityRows,
 	parseRelationRows,
@@ -20,6 +21,7 @@ import {
 	scoreDisambiguation,
 	thesaurusRelations,
 	traverseSemanticRelations,
+	wordNetResourcesFromPack,
 } from "../dist/index.js";
 import { badSpanDocument, fixtureDocument } from "./fixtures/documents.ts";
 import { fixtureKb } from "./fixtures/kb.ts";
@@ -118,6 +120,48 @@ test("generates deterministic entity concept and sense candidates", () => {
 		}),
 		1.175,
 	);
+});
+
+test("Open English WordNet textpack resources become a runtime knowledge base", () => {
+	const pack = {
+		manifest: {
+			resources: [
+				{ id: "wordnet-en-lexical-entries", kind: "lexicon" as const },
+				{ id: "wordnet-en-senses", kind: "knowledge-base" as const },
+				{ id: "wordnet-en-synsets", kind: "knowledge-base" as const },
+				{ id: "wordnet-en-relations", kind: "knowledge-base" as const },
+				{ id: "wordnet-en-quality", kind: "quality-profile" as const },
+			],
+		},
+		resources: {
+			"wordnet-en-lexical-entries": [
+				"entryId\tlemma\tpartOfSpeech",
+				"oewn-contract-n\tcontract\tn",
+				"oewn-agreement-n\tagreement\tn",
+			].join("\n"),
+			"wordnet-en-senses": [
+				"senseId\tentryId\tlemma\tpartOfSpeech\tsynsetId\tsubcat",
+				"oewn-contract__1\toewn-contract-n\tcontract\tn\toewn-synset-contract\t",
+				"oewn-agreement__1\toewn-agreement-n\tagreement\tn\toewn-synset-agreement\t",
+			].join("\n"),
+			"wordnet-en-synsets": [
+				"synsetId\tili\tpartOfSpeech\tlexfile\tmembers\tdefinition\texampleCount",
+				"oewn-synset-contract\ti1\tn\tnoun.communication\toewn-contract-n\ta binding agreement\t0",
+				"oewn-synset-agreement\ti2\tn\tnoun.communication\toewn-agreement-n\ta negotiated arrangement\t0",
+			].join("\n"),
+			"wordnet-en-relations": [
+				"scope\tsourceId\trelType\ttargetId",
+				"synset\toewn-synset-contract\thypernymy\toewn-synset-agreement",
+			].join("\n"),
+			"wordnet-en-quality": '{"acceptedRecords":6}',
+		},
+	};
+	const resources = wordNetResourcesFromPack(pack);
+	assert.equal(resources.synsets.length, 2);
+	const kb = openEnglishWordNetFromPack(pack);
+	assert.equal(kb.concepts.size, 2);
+	assert.equal(candidateSenses(kb, "contract")[0]?.senseId, "oewn-contract__1");
+	assert.equal(querySemanticRelations(kb, { type: "hypernymy" }).length, 1);
 });
 
 test("links entities terms and senses while preserving source annotations", () => {

@@ -1,0 +1,72 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-fr-lexicon",
+	"packageDir": "packages/textpacks/textpack-fr-lexicon",
+	"name": "French Lexicon Policy-Expanded Wrapper Textpack",
+	"description": "Generated policy-expanded French lexicon recipe wrapper over the share-alike isolated Lexique 3.83 component.",
+	"policySurface": "policy-expanded-wrapper",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated wrapper over the publishable share-alike Lexique 3.83 component, which provides French lexical entries, lemmas, frequency fields, canonical lexicon resources, and generated quality/evaluation evidence.",
+		"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated; resource payloads stay in the required -sa component while this wrapper exposes the full license expression and component policy.",
+		"declaredScope": "French lexicon wrapper for Lexique 3.83 lexical entries, lemmas, and frequency metadata. It does not claim permissive default-package compatibility, WOLF/OMW lexical-semantics, syntax, corpus, parallel, or non-share-alike redistribution.",
+		"conformanceEvidence": [
+			"eval:textpack-fr-lexicon:required-component-graph",
+			"eval:textpack-fr-lexicon-sa:required-component-graph",
+			"eval:fr-lexique:lexical-entry-volume"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "task-supported",
+	"loader": {
+		"functionName": "loadFrenchLexicon",
+		"languageName": "FrenchLexicon"
+	},
+	"targets": {
+		"languages": ["fr"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
+	},
+	"sourceIds": ["source:fr:lexique-383"],
+	"snapshotIds": ["snapshot:source:fr:lexique-383:2019-06-04"],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-lexicon-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated French lexicon composite over Lexique 3.83 resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides Lexique 3.83 lexical entries, lemmas, frequency fields, and canonical lexicon resources through an explicit share-alike policy wrapper."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required share-alike lexicon component."
+			]
+		}
+	],
+	"license": "CC-BY-SA-4.0",
+	"citations": ["Lexique 3.83, 2019-06-04."]
+}

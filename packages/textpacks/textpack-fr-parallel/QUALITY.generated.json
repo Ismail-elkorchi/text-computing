@@ -1,0 +1,158 @@
+{
+  "acceptedRecordCount": 330,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06"
+      ],
+      "capabilities": {
+        "parallel": true
+      },
+      "notes": [
+        "Tatoeba French-linked alignment tables are available through explicit artifact descriptors for English, Arabic, Spanish, and German.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-parallel-eng",
+        "fr-tatoeba-parallel-ara",
+        "fr-tatoeba-parallel-spa",
+        "fr-tatoeba-parallel-deu"
+      ],
+      "slot": "parallel",
+      "status": "artifact-backed"
+    },
+    {
+      "notes": [
+        "Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and local materialization limitations.",
+        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-parallel-quality",
+        "fr-tatoeba-parallel-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "artifact-backed"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-fr-parallel",
+  "publishability": {
+    "publishable": false,
+    "reasons": [
+      "artifact-backed descriptors require local materialized payloads before publishability",
+      "capability slot parallel is artifact-backed without local task-usable payloads",
+      "capability slot quality is artifact-backed without local task-usable payloads",
+      "generated packs are non-publishable by default"
+    ],
+    "status": "blocked"
+  },
+  "publishable": false,
+  "rejectedRecordCount": 0,
+  "resourceCount": 6,
+  "resourcePaths": [
+    "resources/tatoeba-fr.parallel-ara.json",
+    "resources/tatoeba-fr.parallel-deu.json",
+    "resources/tatoeba-fr.parallel-eng.json",
+    "resources/tatoeba-fr.parallel-quality.json",
+    "resources/tatoeba-fr.parallel-quality-profile.json",
+    "resources/tatoeba-fr.parallel-spa.json"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
+  ],
+  "resources": [
+    {
+      "byteLength": 2100,
+      "checksum": "sha256:5f02b8c8c23cd2bc852fa008fca147152864b59a45d2f95b03367bf79ca3ce4e",
+      "id": "fr-tatoeba-parallel-ara",
+      "kind": "alignment-table",
+      "lineCount": 57,
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-ara.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2105,
+      "checksum": "sha256:b496142a402b7d74c328af23a86824c5aa2f92a41432e6eba0305bef98138019",
+      "id": "fr-tatoeba-parallel-deu",
+      "kind": "alignment-table",
+      "lineCount": 57,
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-deu.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2108,
+      "checksum": "sha256:011af05baec636c9532e2b0e7f1b0a3fe47acad13d18380ef11f13aa37c3657c",
+      "id": "fr-tatoeba-parallel-eng",
+      "kind": "alignment-table",
+      "lineCount": 57,
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-eng.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2216,
+      "checksum": "sha256:845561c4c24fba6dec0508d29139cc7114d568dac796f8d3cb1afd53a24d2033",
+      "id": "fr-tatoeba-parallel-quality",
+      "kind": "quality-profile",
+      "lineCount": 61,
+      "nonEmptyLineCount": 60,
+      "path": "resources/tatoeba-fr.parallel-quality.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1376,
+      "checksum": "sha256:a7dedc71f41fa946e87765d07a4bce5803c1d97cfc0841a35b7aac90d614c984",
+      "id": "fr-tatoeba-parallel-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 47,
+      "nonEmptyLineCount": 46,
+      "path": "resources/tatoeba-fr.parallel-quality-profile.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2104,
+      "checksum": "sha256:dfe0ca976b91b2c9f53309e73a37ccc2145acf4660e7c72541ed20bf7fce97a5",
+      "id": "fr-tatoeba-parallel-spa",
+      "kind": "alignment-table",
+      "lineCount": 57,
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-spa.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "artifact-backed",
+  "warnings": [
+    "parallel is artifact-backed in this source-backed concrete pack.",
+    "quality is artifact-backed in this source-backed concrete pack.",
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ]
+}

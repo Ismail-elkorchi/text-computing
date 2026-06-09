@@ -1,0 +1,40 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+	"packageName": "@ismail-elkorchi/textpack-ar-corpus",
+	"pipelineId": "tatoeba-arabic-corpus-artifact",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:tatoeba:weekly-arabic-2026-06-06"
+	],
+	"snapshotIds": [
+		"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
+			"checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-tatoeba-corpus-artifact",
+			"path": "resources/tatoeba-ar.corpus-artifact.json",
+			"kind": "corpus",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-corpus-quality",
+			"path": "resources/tatoeba-ar.corpus-quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-tatoeba-corpus-quality-profile",
+			"path": "resources/tatoeba-ar.corpus-quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

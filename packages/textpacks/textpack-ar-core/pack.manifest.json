@@ -1,17 +1,141 @@
 {
-  "id": "pack:ar-core",
-  "name": "Arabic Core Reference Pack",
-  "version": "0.1.0",
-  "packageName": "@ismail-elkorchi/textpack-ar-core",
-  "kind": ["morphology", "lexicon", "segmentation-profile"],
-  "targets": { "languages": ["ar"], "scripts": ["Arab"], "modalities": ["typed"] },
-  "engines": { "@ismail-elkorchi/textpack": "^0.1.0" },
-  "resources": [
-    { "id": "morph-ar-root-demo", "kind": "morphology", "path": "resources/morph.ar.root.tsv", "format": "tsv" },
-    { "id": "lexicon-ar-demo", "kind": "lexicon", "path": "resources/lexicon.ar.demo.tsv", "format": "tsv" },
-    { "id": "profile-ar-core", "kind": "segmentation-profile", "path": "resources/profile.ar.core.txt", "format": "lines" }
-  ],
-  "capabilities": { "segmentation": "profile", "morphology": "rules" },
-  "license": "MIT",
-  "citations": ["repo:packages/textpacks/textpack-ar-core/resources"]
+	"schemaVersion": "1",
+	"id": "pack:ar-core",
+	"name": "Arabic Core Pack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-ar-core",
+	"targets": {
+		"languages": [
+			"ar"
+		],
+		"scripts": [
+			"Arab"
+		],
+		"regions": [
+			"EG"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [
+		{
+			"id": "ar-core-language-profile",
+			"kind": "locale-profile",
+			"path": "resources/ar.core.language-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			]
+		},
+		{
+			"id": "ar-core-orthography",
+			"kind": "locale-profile",
+			"path": "resources/ar.core.orthography.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			]
+		},
+		{
+			"id": "ar-core-punctuation",
+			"kind": "locale-profile",
+			"path": "resources/ar.core.punctuation.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			]
+		},
+		{
+			"id": "ar-core-basic-segmentation",
+			"kind": "segmentation-profile",
+			"path": "resources/ar.core.basic-segmentation.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-segmentation-resource.schema.json"
+			}
+		},
+		{
+			"id": "ar-core-quality",
+			"kind": "quality-profile",
+			"path": "resources/ar.core.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			]
+		},
+		{
+			"id": "ar-core-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/ar.core.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+			}
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "core",
+			"status": "task-supported",
+			"resourceIds": [
+				"ar-core-language-profile",
+				"ar-core-orthography",
+				"ar-core-punctuation",
+				"ar-core-basic-segmentation"
+			],
+			"capabilities": {
+				"segmentation": "profile",
+				"normalization": "unicode"
+			},
+			"notes": [
+				"Core profile resources cover modern typed Arabic identity, Arabic-script orthography, Unicode punctuation, and a basic UAX #29 segmentation baseline."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"resourceIds": [
+				"ar-core-quality",
+				"ar-core-quality-profile"
+			],
+			"notes": [
+				"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
+			]
+		}
+	],
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
 }

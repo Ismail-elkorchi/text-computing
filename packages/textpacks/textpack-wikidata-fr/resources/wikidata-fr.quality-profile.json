@@ -1,0 +1,45 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "wikidata-fr-explicit-artifact-fetch",
+      "message": "Wikidata main entity data for French KB consumers is exposed as an explicit artifact descriptor; local KB lookup requires a generated language-specific extract.",
+      "metadata": {
+        "artifactId": "artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608",
+        "artifactPolicy": "fetch-explicit"
+      },
+      "severity": "info",
+      "task": "kb.artifact"
+    },
+    {
+      "diagnosticId": "wikidata-fr-upstream-checksum-strength",
+      "message": "The upstream checksum sidecar for the pinned Wikidata artifact is SHA-1, not SHA-256.",
+      "metadata": {
+        "md5Checksum": "md5:8918b16c41f4678ac147fc95bafa2de6",
+        "sha1Checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+      },
+      "severity": "warning",
+      "task": "kb.artifact"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "fr",
+  "metrics": [
+    {
+      "metricId": "artifact-size-bytes",
+      "name": "artifactSizeBytes",
+      "unit": "bytes",
+      "value": 142291512349
+    },
+    {
+      "metricId": "upstream-sha1-sidecar-present",
+      "name": "upstreamSha1SidecarPresent",
+      "unit": "boolean",
+      "value": true
+    }
+  ],
+  "profileId": "wikidata-fr-artifact-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

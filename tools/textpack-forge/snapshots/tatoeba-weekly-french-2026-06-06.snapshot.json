@@ -1,0 +1,19 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+	"sourceId": "source:tatoeba:weekly-french-2026-06-06",
+	"version": "2026-06-06",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "external",
+	"checksum": "sha256:347d4ca4aff5e9acaf0f5d0e4a81d620fd8e34403ae90d79f22ed0d3ced6df74",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/tatoeba-fr-artifacts.json",
+			"mediaType": "application/json",
+			"byteLength": 3402,
+			"checksum": "sha256:850382d60a9aa1b200d294eabf8dbe6c38a29902af8d2a2e02cc53369c6a693a",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/"
+		}
+	],
+	"notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository."
+}

@@ -1,0 +1,50 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "fr-segmentation-scope",
+      "message": "Unicode/CLDR-backed boundary profile for modern typed French; dictionary tokenization and sentence-abbreviation tailoring are out of scope.",
+      "metadata": {
+        "likelySubtag": "fr-Latn-FR",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "severity": "info",
+      "task": "segmentation.profile"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "fr",
+  "metrics": [
+    {
+      "metricId": "grapheme-range-count",
+      "name": "graphemeRangeCount",
+      "unit": "ranges",
+      "value": 1429
+    },
+    {
+      "metricId": "word-range-count",
+      "name": "wordRangeCount",
+      "unit": "ranges",
+      "value": 1432
+    },
+    {
+      "metricId": "sentence-range-count",
+      "name": "sentenceRangeCount",
+      "unit": "ranges",
+      "value": 2930
+    },
+    {
+      "metricId": "records-rejected",
+      "name": "recordsRejected",
+      "unit": "records",
+      "value": 0
+    }
+  ],
+  "profileId": "fr-segmentation-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

@@ -1,0 +1,253 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-fr",
+	"packageDir": "packages/textpacks/textpack-fr",
+	"name": "French Private Artifact-Backed Composite Textpack",
+	"description": "Generated private artifact-backed French policy-expanded recipe composite over the current audited French component graph.",
+	"policySurface": "policy-expanded-wrapper",
+	"publishable": false,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated French foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and artifact-backed Tatoeba resources remain explicit artifact descriptors rather than local task payloads.",
+		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. Lexique 3.83, UniMorph French, and UD French GSD remain isolated behind -sa components and this wrapper exposes the full license expression and component policy.",
+		"declaredScope": "Policy-expanded French private artifact-backed textpack for the currently generated French resource graph. It includes share-alike Lexique, UniMorph French, and UD French GSD components explicitly and does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, local Wikidata/Tatoeba payloads until materialized extracts or rows are generated, neural models, statistical parsers, raw web corpora, or hidden network access.",
+		"conformanceEvidence": [
+			"eval:textpack-fr:required-component-graph",
+			"eval:textpack-fr-quality:required-component-graph",
+			"eval:textpack-fr-lexicon:required-component-graph",
+			"eval:textpack-fr-morphology:required-component-graph",
+			"eval:textpack-fr-syntax:required-component-graph",
+			"eval:textpack-fr-search:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-composite",
+	"supportLevel": "artifact-backed",
+	"loader": {
+		"functionName": "loadFrench",
+		"languageName": "French"
+	},
+	"targets": {
+		"languages": [
+			"fr"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"sourceIds": [
+		"source:iana:language-subtag-registry",
+		"source:unicode:ucd",
+		"source:unicode:cldr-core",
+		"source:wikidata:main",
+		"source:tatoeba:weekly-french-2026-06-06",
+		"source:fr:lexique-383",
+		"source:unimorph:french-master-f672f8c",
+		"source:ud:french-gsd-r2.18"
+	],
+	"snapshotIds": [
+		"snapshot:source:iana:language-subtag-registry:2026-05-05",
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:wikidata:main:20260608",
+		"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+		"snapshot:source:fr:lexique-383:2019-06-04",
+		"snapshot:source:unimorph:french-master-f672f8c",
+		"snapshot:source:ud:french-gsd:r2.18"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-foundation",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-core",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French core language profile resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French normalization policy and quality resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French segmentation profiles.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-lexicon",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Explicit wrapper over share-alike isolated French lexicon resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-morphology",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Explicit wrapper over share-alike isolated French morphology resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-syntax",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Explicit wrapper over share-alike isolated French UD-derived syntax and tagging resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-kb",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French Wikidata entity artifact descriptors.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-search",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Explicit wrapper over share-alike isolated French search analyzer profile resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-quality",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "French generated quality evidence over the required policy-expanded component graph.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "foundation",
+			"status": "task-supported"
+		},
+		{
+			"slot": "core",
+			"status": "task-supported"
+		},
+		{
+			"slot": "normalization",
+			"status": "task-supported"
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported"
+		},
+		{
+			"slot": "lexicon",
+			"status": "task-supported"
+		},
+		{
+			"slot": "morphology",
+			"status": "task-supported"
+		},
+		{
+			"slot": "syntax",
+			"status": "task-supported"
+		},
+		{
+			"slot": "kb",
+			"status": "artifact-backed",
+			"notes": [
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported"
+		},
+		{
+			"slot": "corpus",
+			"status": "artifact-backed",
+			"notes": [
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		},
+		{
+			"slot": "parallel",
+			"status": "artifact-backed",
+			"notes": [
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "artifact-backed",
+			"notes": [
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		}
+	],
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly French exports, 2026-06-06.",
+		"Lexique 3.83, 2019-06-04.",
+		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.",
+		"Universal Dependencies French GSD r2.18 annotations."
+	]
+}

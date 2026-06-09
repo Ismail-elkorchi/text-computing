@@ -7,7 +7,9 @@ import {
 	type KnowledgeBase,
 	linkEntities,
 	linkTerms,
+	openEnglishWordNetFromPack,
 	type SemanticRelation,
+	type WordNetPackResources,
 } from "../../dist/index.js";
 import { fixtureDocument } from "../fixtures/documents.ts";
 
@@ -31,6 +33,15 @@ const doc: TextDocument = fixtureDocument();
 const linkedEntities: TextDocument = linkEntities(doc, kb);
 const linkedTerms: TextDocument = linkTerms(linkedEntities, kb);
 const linkedSenses: TextDocument = disambiguateSense(linkedTerms, kb);
+const wordNetResources: WordNetPackResources = {
+	lexicalEntries: [],
+	senses: [],
+	synsets: [],
+	relations: [],
+	quality: {},
+};
 
 void candidates;
 void linkedSenses;
+void openEnglishWordNetFromPack;
+void wordNetResources;

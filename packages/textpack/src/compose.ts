@@ -1,15 +1,15 @@
 import { mergeCapabilities } from "./capabilities.js";
 import { createPack } from "./pack.js";
-import {
-	type PackComposeOptions,
-	type PackResourceMap,
-	type ResourceKind,
-	resourceKinds,
-	type TextPack,
-	type TextPackDependency,
-	type TextPackManifest,
-	type TextPackResource,
-	type TextPackTargets,
+import type {
+	PackComposeOptions,
+	PackResourceMap,
+	TextPack,
+	TextPackArtifactDescriptor,
+	TextPackCapabilitySlot,
+	TextPackComponent,
+	TextPackManifest,
+	TextPackResource,
+	TextPackTargets,
 } from "./types.js";
 
 function stableHash(value: string): string {
@@ -66,29 +66,6 @@ function mergeEngines(
 	return Object.freeze(output);
 }
 
-function mergeDependencies(
-	packs: readonly TextPack[],
-): readonly TextPackDependency[] | undefined {
-	const map = new Map<string, TextPackDependency>();
-	for (const pack of packs) {
-		for (const dependency of pack.manifest.dependencies ?? []) {
-			const key = dependency.packageName ?? dependency.id;
-			const existing = map.get(key);
-			if (existing !== undefined && existing.version !== dependency.version) {
-				throw new TypeError(`Cannot compose incompatible dependency ${key}.`);
-			}
-			map.set(key, {
-				...dependency,
-				optional: Boolean(existing?.optional) && Boolean(dependency.optional),
-			});
-		}
-	}
-	const values = [...map.values()].sort((left, right) =>
-		left.id.localeCompare(right.id),
-	);
-	return values.length === 0 ? undefined : Object.freeze(values);
-}
-
 function orderPacks(
 	packs: readonly TextPack[],
 	precedence: readonly string[] | undefined,
@@ -130,13 +107,6 @@ function mergeResources(
 	};
 }
 
-function descriptorKinds(
-	resources: readonly TextPackResource[],
-): readonly ResourceKind[] {
-	const found = new Set(resources.map((resource) => resource.kind));
-	return resourceKinds.filter((kind) => found.has(kind));
-}
-
 function mergePackageLicense(packs: readonly TextPack[]): string | undefined {
 	const licenses = unique(
 		packs.flatMap((pack) =>
@@ -162,6 +132,125 @@ function mergeCitations(
 	return citations.length === 0 ? undefined : Object.freeze(citations);
 }
 
+function mergeComponents(
+	packs: readonly TextPack[],
+): readonly TextPackComponent[] {
+	const components = new Map<string, TextPackComponent>();
+	for (const pack of packs) {
+		components.set(pack.manifest.packageName, {
+			packageName: pack.manifest.packageName,
+			versionRange: pack.manifest.version,
+			role: "required",
+			licensePolicy: "default",
+			capabilityPolicy: "contributes-default",
+			artifactPolicy: "none",
+		});
+		for (const component of pack.manifest.components ?? []) {
+			const existing = components.get(component.packageName);
+			if (
+				existing !== undefined &&
+				existing.versionRange !== component.versionRange
+			) {
+				throw new TypeError(
+					`Cannot compose incompatible component ${component.packageName}.`,
+				);
+			}
+			components.set(component.packageName, component);
+		}
+	}
+	return Object.freeze(
+		[...components.values()].sort((left, right) =>
+			left.packageName.localeCompare(right.packageName),
+		),
+	);
+}
+
+function mergeArtifacts(
+	packs: readonly TextPack[],
+): readonly TextPackArtifactDescriptor[] | undefined {
+	const artifacts = new Map<string, TextPackArtifactDescriptor>();
+	for (const pack of packs) {
+		for (const artifact of pack.manifest.artifacts ?? []) {
+			const existing = artifacts.get(artifact.artifactId);
+			if (
+				existing !== undefined &&
+				(existing.version !== artifact.version ||
+					existing.checksum.value !== artifact.checksum.value)
+			) {
+				throw new TypeError(
+					`Cannot compose incompatible artifact ${artifact.artifactId}.`,
+				);
+			}
+			artifacts.set(artifact.artifactId, artifact);
+		}
+	}
+	const values = [...artifacts.values()].sort((left, right) =>
+		left.artifactId.localeCompare(right.artifactId),
+	);
+	return values.length === 0 ? undefined : Object.freeze(values);
+}
+
+function mergeCapabilitySlots(
+	packs: readonly TextPack[],
+): readonly TextPackCapabilitySlot[] {
+	const statusOrder = [
+		"unsupported",
+		"planned",
+		"profiled",
+		"sampled",
+		"artifact-backed",
+		"task-supported",
+		"feature-complete",
+		"not-applicable",
+	] as const;
+	const statusRank = new Map(
+		statusOrder.map((status, index) => [status, index]),
+	);
+	const slots = new Map<string, TextPackCapabilitySlot>();
+	for (const pack of packs) {
+		for (const slot of pack.manifest.capabilitySlots) {
+			const existing = slots.get(slot.slot);
+			if (existing === undefined) {
+				slots.set(slot.slot, slot);
+				continue;
+			}
+			const resourceIds = unique([
+				...(existing.resourceIds ?? []),
+				...(slot.resourceIds ?? []),
+			]);
+			const artifactIds = unique([
+				...(existing.artifactIds ?? []),
+				...(slot.artifactIds ?? []),
+			]);
+			const notes = unique([...(existing.notes ?? []), ...(slot.notes ?? [])]);
+			const capabilities = mergeCapabilities([
+				...(existing.capabilities === undefined ? [] : [existing.capabilities]),
+				...(slot.capabilities === undefined ? [] : [slot.capabilities]),
+			]);
+			const existingRank = statusRank.get(existing.status) ?? 0;
+			const nextRank = statusRank.get(slot.status) ?? 0;
+			slots.set(slot.slot, {
+				slot: slot.slot,
+				status: nextRank > existingRank ? slot.status : existing.status,
+				...(resourceIds.length === 0 ? {} : { resourceIds }),
+				...(artifactIds.length === 0 ? {} : { artifactIds }),
+				...(notes.length === 0 ? {} : { notes }),
+				...(Object.keys(capabilities).length === 0 ? {} : { capabilities }),
+			});
+		}
+	}
+	return Object.freeze(
+		[...slots.values()].sort((left, right) =>
+			left.slot.localeCompare(right.slot),
+		),
+	);
+}
+
+function mergeGapNotes(packs: readonly TextPack[]) {
+	const notes = packs.flatMap((pack) => [...(pack.manifest.gapNotes ?? [])]);
+	return notes.length === 0 ? undefined : Object.freeze(notes);
+}
+
 export function composePacks(
 	packs: readonly TextPack[],
 	options: PackComposeOptions = {},
@@ -175,22 +264,23 @@ export function composePacks(
 		options.conflictPolicy ?? "error",
 	);
 	const packIds = orderedPacks.map((pack) => pack.manifest.id).join(",");
-	const dependencies = mergeDependencies(orderedPacks);
 	const citations = mergeCitations(orderedPacks, options);
 	const license = options.license ?? mergePackageLicense(orderedPacks);
+	const artifacts = mergeArtifacts(orderedPacks);
+	const gapNotes = mergeGapNotes(orderedPacks);
 	const manifest: TextPackManifest = {
+		schemaVersion: "1",
 		id: options.id ?? `composite:${stableHash(packIds)}`,
 		name: options.name ?? `Composite textpack ${packIds}`,
 		version: options.version ?? "0.0.0",
 		packageName: options.packageName ?? "@ismail-elkorchi/textpack-composite",
-		kind: descriptorKinds(merged.descriptors),
 		targets: unionTargets(orderedPacks),
 		engines: mergeEngines(orderedPacks),
 		resources: merged.descriptors,
-		...(dependencies === undefined ? {} : { dependencies }),
-		capabilities: mergeCapabilities(
-			orderedPacks.map((pack) => pack.manifest.capabilities),
-		),
+		components: mergeComponents(orderedPacks),
+		...(artifacts === undefined ? {} : { artifacts }),
+		capabilitySlots: mergeCapabilitySlots(orderedPacks),
+		...(gapNotes === undefined ? {} : { gapNotes }),
 		...(license === undefined ? {} : { license }),
 		...(citations === undefined ? {} : { citations }),
 	};

@@ -1,0 +1,66 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+	"packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
+	"pipelineId": "french-unimorph",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:unimorph:french-master-f672f8c"],
+	"snapshotIds": ["snapshot:source:unimorph:french-master-f672f8c"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unimorph:french-master-f672f8c",
+			"path": "tools/textpack-forge/snapshots/data/unimorph-fra-f672f8c/fra",
+			"checksum": "sha256:4760fc36435a9ffba9b4de6f0787d8eca5b15022e6b141e3b242b129f0d88dcb"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "fr-unimorph-paradigms",
+			"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
+			"kind": "morphology",
+			"format": "tsv+gzip+base64"
+		},
+		{
+			"resourceId": "fr-unimorph-lookup-analyzer",
+			"path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
+			"kind": "morphology",
+			"format": "tsv+gzip+base64"
+		},
+		{
+			"resourceId": "fr-unimorph-lookup-generator",
+			"path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
+			"kind": "morphology",
+			"format": "tsv+gzip+base64"
+		},
+		{
+			"resourceId": "fr-unimorph-feature-inventory",
+			"path": "resources/unimorph-fra.features.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-unimorph-pos-inventory",
+			"path": "resources/unimorph-fra.pos.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-unimorph-morphology-canonical",
+			"path": "resources/unimorph-fra.morphology.json",
+			"kind": "morphology",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-unimorph-quality",
+			"path": "resources/unimorph-fra.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-unimorph-quality-profile",
+			"path": "resources/unimorph-fra.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

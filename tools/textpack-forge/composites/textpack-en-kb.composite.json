@@ -1,0 +1,97 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-en-kb",
+	"packageDir": "packages/textpacks/textpack-en-kb",
+	"name": "English Knowledge Base Composite Textpack",
+	"description": "Generated source-backed English KB recipe composite for WordNet lexical-semantic resources and Wikidata entity artifacts.",
+	"publishable": false,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over Open English WordNet and artifact-backed Wikidata components. Open English WordNet provides lexical-semantic KB resources; Wikidata provides a explicit artifact descriptor for entity labels, aliases, relations, and ontology data.",
+		"auditedLicense": "The Open English WordNet and Wikidata main structured source rows are approved; required component packages carry package-local license evidence for Open English WordNet, Princeton WordNet lineage, and Wikidata CC0 structured data.",
+		"declaredScope": "English KB component composite backed by Open English WordNet lexical semantics and a Wikidata main entity artifact descriptor. It does not claim local Wikidata entity lookup until a materialized entity extract is generated, corpus coverage, morphology, syntax, parallel, or full language-composite coverage.",
+		"conformanceEvidence": [
+			"eval:textpack-en-kb:required-component-graph",
+			"eval:wikidata-en:artifact-descriptor",
+			"eval:wikidata-en:checksum-sidecar"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "artifact-backed",
+	"loader": {
+		"functionName": "loadEnglishKnowledgeBase",
+		"languageName": "EnglishKnowledgeBase"
+	},
+	"targets": {
+		"languages": [
+			"en"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"sourceIds": [
+		"source:wordnet:open-english-2025",
+		"source:wikidata:main"
+	],
+	"snapshotIds": [
+		"snapshot:source:wordnet:open-english-2025:2025-edition",
+		"snapshot:source:wikidata:main:20260608"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-wordnet-en",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default English lexical-semantic WordNet KB resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wikidata-en",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default English Wikidata entity labels, aliases, relations, and ontology artifact descriptor.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "kb",
+			"status": "artifact-backed",
+			"notes": [
+				"The required component graph provides English WordNet synsets, senses, lexical entries, semantic relations, and Wikidata entity artifact descriptors.",
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "artifact-backed",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required KB component.",
+				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+			]
+		}
+	],
+	"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
+	"citations": [
+		"Open English WordNet 2025.",
+		"Wikidata main structured data dump, 2026-06-08."
+	]
+}

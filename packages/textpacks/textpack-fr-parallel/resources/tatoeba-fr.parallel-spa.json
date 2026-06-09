@@ -1,0 +1,56 @@
+{
+  "kind": "alignment-table",
+  "languagePair": {
+    "sourceLanguage": "fr",
+    "sourceScript": "Latn",
+    "targetLanguage": "es",
+    "targetScript": "Latn"
+  },
+  "parallelId": "tatoeba-fr-es-2026-06-06",
+  "schemaVersion": "1",
+  "units": [
+    {
+      "metadata": {
+        "artifactDescriptor": {
+          "artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
+          "cacheKey": "tatoeba-fra-spa-links-tsv-bz2-2026-06-06",
+          "checksum": {
+            "algorithm": "sha256",
+            "value": "c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8"
+          },
+          "compression": "bzip2",
+          "expectedFiles": [
+            {
+              "checksum": "sha256:c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8",
+              "path": "fra-spa_links.tsv.bz2",
+              "sizeBytes": 390399
+            }
+          ],
+          "licenseExpression": "CC-BY-2.0-FR",
+          "mediaType": "text/tab-separated-values",
+          "profile": "full",
+          "redistributionPolicy": "redistributable-with-attribution",
+          "retrieval": {
+            "instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing.",
+            "kind": "https",
+            "uri": "https://downloads.tatoeba.org/exports/per_language/fra/fra-spa_links.tsv.bz2"
+          },
+          "sizeBytes": 390399,
+          "sourceIds": [
+            "source:tatoeba:weekly-french-2026-06-06"
+          ],
+          "version": "2026-06-06"
+        },
+        "artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
+        "checksum": "sha256:c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8",
+        "etag": "\"6a23c014-5f4ff\"",
+        "lastModified": "Sat, 06 Jun 2026 06:37:08 GMT",
+        "licenseExpression": "CC-BY-2.0-FR",
+        "path": "fra-spa_links.tsv.bz2",
+        "rowCount": 61528,
+        "sourceId": "source:tatoeba:weekly-french-2026-06-06"
+      },
+      "unitId": "fra-spa-links-2026-06-06"
+    }
+  ]
+}

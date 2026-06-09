@@ -1,0 +1,52 @@
+{
+  "casePolicy": "casefold",
+  "kind": "normalization-profile",
+  "languageTag": "fr",
+  "profileId": "fr-modern-typed-unicode-normalization",
+  "rules": [
+    {
+      "conditions": {
+        "note": "Use Unicode NFC canonical composition for stored and comparable modern typed French text.",
+        "scope": "modern typed French normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "operation": "compose",
+      "priority": 10,
+      "ruleId": "unicode-nfc-compose"
+    },
+    {
+      "conditions": {
+        "note": "Use Unicode casefolding for lookup/search normalization while preserving source text elsewhere.",
+        "scope": "modern typed French normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "operation": "casefold",
+      "priority": 20,
+      "ruleId": "unicode-casefold-for-lookup"
+    },
+    {
+      "conditions": {
+        "note": "Use CLDR likely-subtag context for the default modern French Latin-script profile.",
+        "scope": "modern typed French normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "input": "fr",
+      "operation": "map",
+      "output": "fr-Latn-FR",
+      "priority": 30,
+      "ruleId": "cldr-french-latn-likely-subtag"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn",
+  "unicodeNormalization": "NFC"
+}

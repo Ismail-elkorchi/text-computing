@@ -5,6 +5,7 @@ Scope: TypeScript/npm runtime libraries for broad text computing and non-neural 
 Namespace: `@ismail-elkorchi/*`
 Primary constraint: every package is standalone, installable from npm, and useful by itself.
 Repository constraint: packages may be developed and published from a shared monorepo/workspace; per-package GitHub repositories are optional, not required. Runtime package directories live under `packages/<runtime-package>`. Resource pack package directories live under `packages/textpacks/<textpack-package>`, are included by the root `packages/textpacks/*` workspace glob, and must not introduce a second package manager root.
+Resource-pack constraint: production `textpack-*` packages are generated artifacts. Language composites provide the normal developer surface, while large corpora, indexes, snapshots, and heavy archives use explicit artifact fetch commands. See [`textpack-generation-and-distribution-spec.md`](textpack-generation-and-distribution-spec.md).
 Neural constraint: neural networks, transformers, neural embeddings, neural generation, neural translation, and neural inference adapters are out of scope.
 
 ---
@@ -74,46 +75,45 @@ The ecosystem is not one monolithic library. It is a set of runtime packages wit
 
 ### 1.5 Resource package families
 
-All large or language-specific resources are published as independent packages. They are not bundled into engines.
+All language-specific, domain-specific, corpus, KB, historical, noisy-text, finite-state, grammar, and statistical resources are outside the runtime engines. Generated `textpack-*` package outputs are non-publishable by default and become public npm packages only after the publishability gate in the textpack generation and distribution specification passes. During alpha, generated packs may stay large and local in the monorepo while task support is being made real. Artifact descriptors record source identity and checksums, but descriptor-only packs are `artifact-backed`, not `task-supported`.
 
 | Family | Purpose |
 |---|---|
-| `@ismail-elkorchi/textpack-*` | Language, script, locale, domain, historical, noisy-text, finite-state, grammar, lexicon, KB, corpus, and composite resource packs. |
+| `@ismail-elkorchi/textpack-*` | Generated language, script, locale, domain, historical, noisy-text, finite-state, grammar, lexicon, KB, corpus, parallel, artifact-backed, and composite resource packs. |
 | `@ismail-elkorchi/textplugin-*` | Optional standalone processors built on the runtime APIs. |
 
-Repository layout for resource packs:
+Repository layout for generated resource packs:
 
 ```text
-packages/textpacks/textpack-en-core/
-packages/textpacks/textpack-en-legal/
-packages/textpacks/textpack-fr-core/
-packages/textpacks/textpack-tr-morphology/
-packages/textpacks/textpack-ar-core/
-packages/textpacks/textpack-ja-segmentation/
-packages/textpacks/textpack-fr-historical/
-packages/textpacks/textpack-ocr-latin19c/
-packages/textpacks/textpack-kb-demo/
-packages/textpacks/textpack-corpus-demo-en/
+packages/textpacks/textpack-language-registry/
+packages/textpacks/textpack-unicode-17/
+packages/textpacks/textpack-cldr-core/
+packages/textpacks/textpack-foundation/
 ```
 
-The package names remain `@ismail-elkorchi/textpack-*`; only their repository location is grouped under `packages/textpacks/`.
+The package names remain `@ismail-elkorchi/textpack-*`; only their repository location is grouped under `packages/textpacks/`. Composite packs such as `@ismail-elkorchi/textpack-fr` are generated packs too. They normally declare a recipe graph rather than bundling all resources.
 
-Examples:
+Examples after the publishability gate passes for the declared scope:
 
 ```text
-@ismail-elkorchi/textpack-unicode-profiles
-@ismail-elkorchi/textpack-cldr-fr
-@ismail-elkorchi/textpack-ar-core
-@ismail-elkorchi/textpack-ja-segmentation
-@ismail-elkorchi/textpack-tr-morphology
-@ismail-elkorchi/textpack-fr-historical
-@ismail-elkorchi/textpack-ocr-latin19c
-@ismail-elkorchi/textpack-biomed-terms
-@ismail-elkorchi/textpack-legal-citations
-@ismail-elkorchi/textpack-wordnet-en
-@ismail-elkorchi/textpack-wikidata-snapshot
-@ismail-elkorchi/textpack-corpus-demo-en
+@ismail-elkorchi/textpack-foundation
+@ismail-elkorchi/textpack-language-registry
+@ismail-elkorchi/textpack-script-profiles
+@ismail-elkorchi/textpack-en
+@ismail-elkorchi/textpack-fr
+@ismail-elkorchi/textpack-ar
+@ismail-elkorchi/textpack-fr-morphology
+@ismail-elkorchi/textpack-la-historical
+@ismail-elkorchi/textpack-grc-syntax
+@ismail-elkorchi/textpack-en-legal
+@ismail-elkorchi/textpack-de-news
+@ismail-elkorchi/textpack-wordnet-omw
+@ismail-elkorchi/textpack-kb-wikidata-core
+@ismail-elkorchi/textpack-parallel-en-fr
+@ismail-elkorchi/textpack-corpus-fr-artifacts
 ```
+
+Small KB and corpus examples belong in fixtures. Demo-named npm packages are not part of the final production package inventory.
 
 ---
 
@@ -240,7 +240,7 @@ This is the implementation order for a complete ecosystem.
 4. `textlex`
 5. `textfst`
 6. `textrules`
-7. first reference `textpack-*` packages
+7. first generated `textpack-*` reference packages
 8. `textnorm`
 9. `textclassical`
 10. `textpipeline`
@@ -250,9 +250,9 @@ This is the implementation order for a complete ecosystem.
 14. `textkb`
 15. `textquality`
 16. `textparallel`
-17. broad `textpack-*` and `textplugin-*` expansion
+17. generated production `textpack-*`, artifact, and `textplugin-*` expansion
 
-The first reference packs must exercise different language realities:
+The first generated reference packs must exercise different language realities:
 
 - a Latin-script space-delimited language pack
 - an inflection-rich language pack
@@ -264,7 +264,7 @@ The first reference packs must exercise different language realities:
 - an OCR/noisy text pack
 - a domain terminology pack
 - a knowledge-base pack
-- a small corpus pack
+- a corpus or artifact-descriptor pack
 
 ---
 
@@ -776,6 +776,7 @@ export type ResourceKind =
   | "locale-profile"
   | "segmentation-profile"
   | "normalization-profile"
+  | "search-profile"
   | "lexicon"
   | "gazetteer"
   | "termbase"
@@ -801,11 +802,11 @@ export type ResourceKind =
 
 ```ts
 export interface TextPackManifest {
+  schemaVersion: "1";
   id: string;
   name: string;
   version: string;
   packageName: string;
-  kind: ResourceKind[];
   targets: {
     languages?: string[];
     scripts?: string[];
@@ -817,10 +818,64 @@ export interface TextPackManifest {
   };
   engines: Record<string, string>;
   resources: TextPackResource[];
-  dependencies?: TextPackDependency[];
-  capabilities: TextPackCapabilities;
+  components?: TextPackComponent[];
+  artifacts?: TextPackArtifactDescriptor[];
+  capabilitySlots: TextPackCapabilitySlot[];
+  gapNotes?: TextPackGapNote[];
   license?: string;
   citations?: string[];
+  generated?: TextPackGeneratedInfo;
+}
+
+export interface TextPackComponent {
+  packageName: string;
+  versionRange: string;
+  role: "required" | "optional" | "excluded";
+  reason?: string;
+  licensePolicy:
+    | "default"
+    | "allow-attribution"
+    | "allow-share-alike"
+    | "allow-copyleft"
+    | "local-only";
+  capabilityPolicy: "contributes-default" | "available-optional" | "documentation-only";
+  artifactPolicy?: "none" | "locked" | "fetch-explicit";
+}
+
+export interface TextPackArtifactDescriptor {
+  artifactId: string;
+  sourceIds: string[];
+  version: string;
+  profile: "research" | "full" | "local";
+  sizeBytes: number;
+  mediaType: string;
+  compression?: "gzip" | "zstd" | "zip" | "tar";
+  checksum: { algorithm: "sha1" | "sha256" | "sha512"; value: string };
+  licenseExpression: string;
+  redistributionPolicy:
+    | "redistributable"
+    | "redistributable-with-attribution"
+    | "derived-only"
+    | "local-only"
+    | "blocked";
+  retrieval: { kind: "https" | "s3" | "huggingface" | "local" | "manual"; uri?: string; instructions?: string };
+  cacheKey: string;
+  expectedFiles: Array<{ path: string; sizeBytes?: number; checksum?: string }>;
+}
+
+export interface TextPackGapNote {
+  id: string;
+  slot?: string;
+  runtimeSurface?: string;
+  status: "unsupported" | "planned" | "not-applicable";
+  message: string;
+}
+
+export interface TextPackGeneratedInfo {
+  forgeVersion: string;
+  lockfileChecksum: string;
+  generatedAt: string;
+  generatorCommand: string;
 }
 ```
 
@@ -836,9 +891,30 @@ export function getResource<T>(pack: TextPack, id: string): T;
 export function capabilities(pack: TextPack): TextPackCapabilities;
 ```
 
-### 8.5 Capability levels
+### 8.5 Capability slots
 
-A pack never claims generic language support. It declares explicit capabilities:
+A pack never claims generic language support. It declares explicit capability slots. Runtime
+capability summaries are derived from slot-level capability contributions:
+
+```ts
+export interface TextPackCapabilitySlot {
+  slot: string;
+  status:
+    | "unsupported"
+    | "planned"
+    | "profiled"
+    | "artifact-backed"
+    | "task-supported"
+    | "feature-complete"
+    | "not-applicable";
+  resourceIds?: string[];
+  artifactIds?: string[];
+  notes?: string[];
+  capabilities?: TextPackCapabilities;
+}
+```
+
+Slot-level capability contribution values are:
 
 ```ts
 export interface TextPackCapabilities {
@@ -2008,7 +2084,7 @@ export function shallowTransfer(doc: TextDocument, resources: TransferResources,
 
 ### 21.1 Pack package shape
 
-Every `textpack-*` package exports:
+Every production `textpack-*` package is generated. A generated concrete pack exports:
 
 ```ts
 export const manifest: TextPackManifest;
@@ -2016,41 +2092,70 @@ export const resources: PackResourceMap;
 export default { manifest, resources };
 ```
 
-A resource pack may also export convenience functions, but the manifest and resource map are mandatory.
+A generated composite pack exports at least its manifest and default pack object, and SHOULD export language-specific loader helpers such as `loadFrench` or `loadArabic`. A resource pack may also export convenience functions, but the manifest is mandatory.
 
 Every resource pack is an npm workspace package located at `packages/textpacks/<textpack-package>/`. The root workspace owns the lockfile and package-manager state; `packages/textpacks/` is a grouping folder, not a nested monorepo.
 
-### 21.2 Pack kinds
+The source of truth for production packs is the generated-pack input graph defined in [`textpack-generation-and-distribution-spec.md`](textpack-generation-and-distribution-spec.md), not hand-maintained package folders.
 
-Recommended pack categories:
+### 21.2 Pack classes
+
+Recommended generated pack classes:
 
 ```text
-textpack-lang-<tag>
-textpack-script-<script>
-textpack-cldr-<locale>
-textpack-domain-<domain>
-textpack-historical-<period-or-corpus>
-textpack-noisy-<source-type>
-textpack-ocr-<script-period>
-textpack-fst-<language-or-task>
-textpack-grammar-<language-or-domain>
-textpack-lexicon-<language-or-domain>
-textpack-kb-<source>
-textpack-corpus-<name>
-textpack-parallel-<language-pair>
-textpack-composite-<purpose>
+foundation
+foundation-composite
+language-composite
+language-component-composite
+language-concrete
+domain
+historical-noisy
+kb
+parallel
+artifact-backed
+license-isolated
 ```
 
-### 21.3 Pack contents by task
+Composite packs are the intended developer surface after their required component graph is
+production-grade:
 
-A language pack may contain:
+```text
+@ismail-elkorchi/textpack-en
+@ismail-elkorchi/textpack-ar
+@ismail-elkorchi/textpack-fr
+@ismail-elkorchi/textpack-grc
+@ismail-elkorchi/textpack-la
+@ismail-elkorchi/textpack-es
+@ismail-elkorchi/textpack-it
+@ismail-elkorchi/textpack-de
+```
+
+They are generated packs too. They normally declare required and optional component packs, artifact profiles, license policy, and capability policy instead of bundling every resource.
+
+The canonical root schema registry defines the family contracts future production packs must target: lexicon, segmentation, normalization, morphology, FST, syntax/treebank, search analyzer, KB/entity/sense, corpus, parallel/alignment, quality profile, evaluation-record, and coverage-report resources. Source-specific projections such as UD syntax, CAMeL morphology, or WordNet resources MAY specialize those family contracts, but they do not replace the canonical family contracts. A generated resource declaring `metadata.canonicalSchema` MUST validate against the named canonical schema.
+
+`@ismail-elkorchi/textpack-foundation` is the generated source-backed foundation composite. It composes `textpack-language-registry`, `textpack-unicode-17`, and `textpack-cldr-core`, and exposes a generated language-support index/API so runtime code can ask whether a language is `registered`, `unicode-covered`, `profiled`, or `task-supported` before concrete language ingestion is complete.
+
+Sampled language-core slices, search profiles, normalization profiles, quality profiles, UD task samples, demo packs, fixture-backed references, and descriptor-only artifact packs are not public task-supported textpacks. Language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be generated as public packages until their required component graph is production-grade for the declared scope and passes the publishability gate.
+
+When a developer-facing language composite needs approved share-alike sources, the share-alike resources MUST remain in isolated suffixed components such as `*-sa`. An unsuffixed developer-facing package MAY be publishable only as a generated policy-expanded wrapper: it contains no direct resource payloads, declares the full license expression, requires the isolated components explicitly, records the wrapper policy surface in generated reports, and uses loader defaults that allow the required component policy. Copyleft, noncommercial/research, local-only, blocked, aggregate, and review-only sources MUST NOT enter these wrappers.
+
+The forge MUST NOT synthesize missing language data. KB, corpus, parallel, broad evaluation coverage, production morphology analyzers, production syntax models, and production Arabic clitic segmentation remain gaps until backed by real sources, local materialized payloads, runtime adapters, and evaluation.
+
+### 21.3 Capability slots
+
+A fully supported language must cover the Text Computing feature surface through generated local task packs, materialized local artifact outputs, or explicit known gaps. Capability slots are not fixed package names; each language may split or combine concrete packs according to its writing system, morphology, source availability, and task needs.
+
+Language capability slots:
 
 - segmentation profile
+- normalization profile
 - abbreviation table
 - stoplist
 - function-word list
 - tokenizer rules
 - sentence rules
+- spelling, orthography, transliteration, or script-variant resources
 - morphology FST
 - lemma dictionary
 - POS tag dictionary
@@ -2061,10 +2166,13 @@ A language pack may contain:
 - named-entity gazetteers
 - entity-linking aliases
 - termbase
+- non-neural statistical resources
+- local corpora, samples, evaluation records, or generated local corpus indexes
 - quality profile
 - search analyzer profile
+- local parallel or alignment resources when relevant
 
-A domain pack may contain:
+Domain packs use concrete domain names and may contain:
 
 - domain termbase
 - domain gazetteers
@@ -2075,7 +2183,7 @@ A domain pack may contain:
 - corpus reference profile
 - quality profile
 
-A historical/noisy pack may contain:
+Historical/noisy packs may contain:
 
 - historical spelling maps
 - abbreviation expansion tables
@@ -2086,7 +2194,7 @@ A historical/noisy pack may contain:
 - editorial convention profiles
 - search-normalization profiles
 
-A parallel pack may contain:
+Parallel packs may contain:
 
 - bilingual dictionary
 - transfer rules
@@ -2094,6 +2202,12 @@ A parallel pack may contain:
 - translation memory
 - bilingual termbase
 - bilingual phrase table
+
+### 21.4 Distribution and artifacts
+
+npm packages carry manifests, resources approved for public distribution, loader helpers, descriptors, checksums, license files, attribution, reports, and composite recipes.
+
+The ecosystem must not use postinstall downloads or implicit network access. During alpha, large generated resources may be local monorepo outputs. Public distribution optimization happens later, and large corpora, large indexes, large snapshots, and heavy model/resource archives are fetched only by explicit artifact commands and recorded in an artifact lockfile.
 
 ---
 
@@ -2154,7 +2268,7 @@ The intended final shape is:
 
 - `textfacts` is the minimal Unicode kernel.
 - `textdoc` is the annotation substrate.
-- `textpack-*` packages carry all language, domain, historical, noisy, KB, and corpus resources.
+- Generated `textpack-*` packages carry all language, domain, historical, noisy, KB, corpus, parallel, and artifact-backed resources.
 - `textlex`, `textfst`, and `textrules` are the symbolic engine core.
 - `textclassical` supplies trainable non-neural NLP.
 - `textpipeline` composes processors.

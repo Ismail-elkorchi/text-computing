@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:wordnet:arabic-v4.1.0",
+	"family": "ARRES",
+	"name": "Arabic WordNet 4.1.0",
+	"homepageUrl": "https://github.com/Salah-Sal/arabic-wordnet-v4",
+	"licenseEvidence": [
+		"https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/LICENSE",
+		"https://raw.githubusercontent.com/Salah-Sal/arabic-wordnet-v4/v4.1.0/NOTICE"
+	],
+	"licenseExpression": "CC-BY-4.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "Arabic WordNet 4.1.0, https://doi.org/10.5281/zenodo.18759165.",
+	"notes": "Pinned Arabic WordNet v4.1.0 release from Salah-Sal/arabic-wordnet-v4, tag v4.1.0, peeled commit 3d244b30a0e4a8807bc7509cac32342ad5a4e86d. The release is WN-LMF 1.4 XML for Modern Standard Arabic (arb), derived from Open English WordNet 2024 and Princeton WordNet lineage, and includes upstream AI-assisted translation disclosure in NOTICE."
+}
