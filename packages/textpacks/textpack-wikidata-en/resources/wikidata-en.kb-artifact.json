@@ -1,0 +1,30 @@
+{
+  "kbId": "wikidata-en-entity-kb",
+  "kind": "knowledge-base",
+  "languageTags": [
+    "en"
+  ],
+  "resourceRefs": [
+    {
+      "resourceId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+      "role": "entities"
+    },
+    {
+      "resourceId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+      "role": "labels"
+    },
+    {
+      "resourceId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+      "role": "aliases"
+    },
+    {
+      "resourceId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+      "role": "relations"
+    },
+    {
+      "resourceId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+      "role": "ontology"
+    }
+  ],
+  "schemaVersion": "1"
+}

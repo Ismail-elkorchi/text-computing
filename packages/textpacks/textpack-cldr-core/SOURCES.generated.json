@@ -5,14 +5,13 @@
   "mode": "source-backed",
   "packageId": "textpack-cldr-core",
   "packageName": "@ismail-elkorchi/textpack-cldr-core",
+  "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [
     "resource-spec:textpack-cldr-core:cldr-core"
   ],
@@ -105,7 +104,8 @@
       "capabilitySlots": [
         "locale-profile",
         "script-profile",
-        "search"
+        "search",
+        "core"
       ],
       "citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
       "defaultCompositeAllowed": true,

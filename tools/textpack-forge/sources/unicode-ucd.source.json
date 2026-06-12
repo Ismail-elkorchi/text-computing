@@ -12,5 +12,5 @@
 	"redistributionPolicy": "redistributable-with-attribution",
 	"reviewState": "approved",
 	"citation": "Unicode Character Database 17.0.0.",
-	"notes": "Selected Unicode 17.0.0 UCD files used for script, block, and property alias foundation resources."
+	"notes": "Selected Unicode 17.0.0 UCD files used for script, block, property alias, general category, and auxiliary segmentation property resources."
 }

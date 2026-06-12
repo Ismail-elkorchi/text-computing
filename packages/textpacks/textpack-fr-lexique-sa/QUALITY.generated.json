@@ -1,0 +1,190 @@
+{
+  "acceptedRecordCount": 194068,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "Lexique 3.83 provides French forms, lemmas, POS, gender/number fields, phonology, and source frequency fields.",
+        "This package is share-alike isolated and is not eligible for the default French composite."
+      ],
+      "resourceIds": [
+        "fr-lexique-entries",
+        "fr-lexique-lemmas",
+        "fr-lexique-lexicon-canonical"
+      ],
+      "slot": "lexicon",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Lexique 3.83 provides lookup morphology evidence; it is not a context-disambiguating analyzer."
+      ],
+      "resourceIds": [
+        "fr-lexique-entries",
+        "fr-lexique-pos-inventory",
+        "fr-lexique-morphology-canonical"
+      ],
+      "slot": "morphology",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
+      ],
+      "resourceIds": [
+        "fr-lexique-quality",
+        "fr-lexique-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
+      ],
+      "resourceIds": [
+        "fr-lexique-search-profile"
+      ],
+      "slot": "search",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 8,
+  "resourcePaths": [
+    "resources/lexique-383.entries.tsv.gz.b64",
+    "resources/lexique-383.lemmas.tsv.gz.b64",
+    "resources/lexique-383.lexicon.json",
+    "resources/lexique-383.morphology.json",
+    "resources/lexique-383.pos.tsv",
+    "resources/lexique-383.quality.json",
+    "resources/lexique-383.quality-profile.json",
+    "resources/lexique-383.search-profile.json"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-lexique-sa:lexique-383"
+  ],
+  "resources": [
+    {
+      "byteLength": 3070817,
+      "checksum": "sha256:79b437163923a9ad3a1ef2c7b1ff8a16bf62684591d131699b593c9eec03ae67",
+      "id": "fr-lexique-entries",
+      "kind": "lexicon",
+      "lineCount": 142688,
+      "nonEmptyLineCount": 142687,
+      "path": "resources/lexique-383.entries.tsv.gz.b64",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 710541,
+      "checksum": "sha256:665528b251f09f40d6c5a2d1bf214d83bad5806e7426bdb553b5fdb35a0b85e5",
+      "id": "fr-lexique-lemmas",
+      "kind": "lexicon",
+      "lineCount": 51120,
+      "nonEmptyLineCount": 51119,
+      "path": "resources/lexique-383.lemmas.tsv.gz.b64",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 385,
+      "checksum": "sha256:7c45f6d2724e08458c22e049bfe23afedd97d75d75b6ed9954dc6f91b1f43a97",
+      "id": "fr-lexique-lexicon-canonical",
+      "kind": "lexicon",
+      "lineCount": 21,
+      "nonEmptyLineCount": 20,
+      "path": "resources/lexique-383.lexicon.json",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1432,
+      "checksum": "sha256:a821fbfd3738201b23b8225a6712bf66dc721efa2861a2a2a489f389e8b261d9",
+      "id": "fr-lexique-morphology-canonical",
+      "kind": "morphology",
+      "lineCount": 81,
+      "nonEmptyLineCount": 80,
+      "path": "resources/lexique-383.morphology.json",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 237,
+      "checksum": "sha256:d99579c679266655bc6c799b90bb6a88525c2bbdc08ea1fe2382593bd1f4ae42",
+      "id": "fr-lexique-pos-inventory",
+      "kind": "morphology",
+      "lineCount": 24,
+      "nonEmptyLineCount": 23,
+      "path": "resources/lexique-383.pos.tsv",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 703,
+      "checksum": "sha256:831284c9f01b16eab4186154a9bee518bb7f1260109307f7b5386bb6947da50a",
+      "id": "fr-lexique-quality",
+      "kind": "quality-profile",
+      "lineCount": 28,
+      "nonEmptyLineCount": 27,
+      "path": "resources/lexique-383.quality.json",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1076,
+      "checksum": "sha256:95b1f61f2a513a815a1df2d638d05378afa28b70e23f4c93f17bdbe73abca88b",
+      "id": "fr-lexique-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 48,
+      "nonEmptyLineCount": 47,
+      "path": "resources/lexique-383.quality-profile.json",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1322,
+      "checksum": "sha256:801c5676c5459bbdfc2bf911428c67023c4952cbacbbb338a26ddbd17e4a7797",
+      "id": "fr-lexique-search-profile",
+      "kind": "search-profile",
+      "lineCount": 66,
+      "nonEmptyLineCount": 65,
+      "path": "resources/lexique-383.search-profile.json",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ]
+}

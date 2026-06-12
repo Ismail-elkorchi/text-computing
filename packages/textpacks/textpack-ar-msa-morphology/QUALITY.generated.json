@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 220649,
+  "acceptedRecordCount": 221410,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -13,7 +13,8 @@
         "ar-msa-camel-morph-features",
         "ar-msa-camel-morph-defaults",
         "ar-msa-camel-morph-morphemes",
-        "ar-msa-camel-morph-compatibility"
+        "ar-msa-camel-morph-compatibility",
+        "ar-msa-camel-morphology-canonical"
       ],
       "slot": "morphology",
       "status": "task-supported"
@@ -23,7 +24,8 @@
         "Generated quality profile records source counts, accepted records, and transform warnings."
       ],
       "resourceIds": [
-        "ar-msa-camel-morph-quality"
+        "ar-msa-camel-morph-quality",
+        "ar-msa-camel-quality-profile"
       ],
       "slot": "quality",
       "status": "task-supported"
@@ -36,7 +38,8 @@
         "CAMeL Morph tokenization schemes are available for Arabic MSA segmentation consumers."
       ],
       "resourceIds": [
-        "ar-msa-camel-morph-tokenizations"
+        "ar-msa-camel-morph-tokenizations",
+        "ar-msa-camel-segmentation-canonical"
       ],
       "slot": "segmentation",
       "status": "task-supported"
@@ -49,22 +52,23 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 6,
+  "resourceCount": 9,
   "resourcePaths": [
     "resources/camel-morph-msa.compatibility.tsv",
     "resources/camel-morph-msa.defaults.tsv",
     "resources/camel-morph-msa.features.tsv",
     "resources/camel-morph-msa.morphemes.tsv.gz.b64",
     "resources/camel-morph-msa.quality.json",
-    "resources/camel-morph-msa.tokenizations.tsv"
+    "resources/camel-morph-msa.tokenizations.tsv",
+    "resources/camel-morph-msa.morphology.json",
+    "resources/camel-morph-msa.quality-profile.json",
+    "resources/camel-morph-msa.segmentation.json"
   ],
   "resourceSpecIds": [
     "resource-spec:textpack-ar-msa-morphology:camel-morph-msa"
@@ -143,6 +147,45 @@
       "lineCount": 11,
       "nonEmptyLineCount": 10,
       "path": "resources/camel-morph-msa.tokenizations.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 10720,
+      "checksum": "sha256:32f97d2a46615ef1b028883b4ae94a4f92acea4cf4679e28d4e741f601c62c83",
+      "id": "ar-msa-camel-morphology-canonical",
+      "kind": "morphology",
+      "lineCount": 666,
+      "nonEmptyLineCount": 665,
+      "path": "resources/camel-morph-msa.morphology.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 899,
+      "checksum": "sha256:8137ea877e03d9e445930c6640d754634bf76071fb2b1d9fabc8df3b7afb00e9",
+      "id": "ar-msa-camel-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 41,
+      "nonEmptyLineCount": 40,
+      "path": "resources/camel-morph-msa.quality-profile.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1042,
+      "checksum": "sha256:f62251cc6c8c7660186bec417dae39446a6f5a4ec7ef74f4a9017acf4038e9c1",
+      "id": "ar-msa-camel-segmentation-canonical",
+      "kind": "segmentation-profile",
+      "lineCount": 57,
+      "nonEmptyLineCount": 56,
+      "path": "resources/camel-morph-msa.segmentation.json",
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",

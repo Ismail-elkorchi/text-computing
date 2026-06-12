@@ -18,6 +18,7 @@ const pack = await loadFoundation();
 
 - None
 
+
 ## Language Support API
 
 ```ts
@@ -26,8 +27,8 @@ import { getLanguageSupport, hasLanguageSupport } from "@ismail-elkorchi/textpac
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- generated packs are non-publishable by default
+- None
 

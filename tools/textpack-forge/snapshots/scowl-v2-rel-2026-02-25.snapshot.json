@@ -1,0 +1,33 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:scowl:v2-rel-2026.02.25",
+	"sourceId": "source:scowl:v2-rel-2026-02-25",
+	"version": "rel-2026.02.25",
+	"retrievedAt": "2026-06-09T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:04ba3b9121982264b6aefc8fee26eb9f5b29d17c6bdd5d08aa85e1d9bfcf838d",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/Copyright",
+			"mediaType": "text/plain",
+			"byteLength": 4863,
+			"checksum": "sha256:090575a131b4260926c7a6b30a90aca0f5db5fbb5c46778e0c5855227bf6ebc3",
+			"sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/Copyright"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/README.md",
+			"mediaType": "text/markdown",
+			"byteLength": 36473,
+			"checksum": "sha256:b89a20a59590402e0753f07626e3b862fef3cdb80e2e95c26a25c00f962ed83a",
+			"sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist/rel-2026.02.25/README.md"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/scowl.txt",
+			"mediaType": "text/plain",
+			"byteLength": 8420269,
+			"checksum": "sha256:3da811b80d7163069e9676537845c49161a33505f24ad6bfcead92fe2cf10e41",
+			"sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/scowl.txt"
+		}
+	],
+	"notes": "Pinned SCOWLv2 rich text export and scope documentation from rel-2026.02.25 with local copyright evidence."
+}

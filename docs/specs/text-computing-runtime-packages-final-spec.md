@@ -850,7 +850,7 @@ export interface TextPackArtifactDescriptor {
   sizeBytes: number;
   mediaType: string;
   compression?: "gzip" | "zstd" | "zip" | "tar";
-  checksum: { algorithm: "sha256" | "sha512"; value: string };
+  checksum: { algorithm: "sha1" | "sha256" | "sha512"; value: string };
   licenseExpression: string;
   redistributionPolicy:
     | "redistributable"
@@ -2106,6 +2106,7 @@ Recommended generated pack classes:
 foundation
 foundation-composite
 language-composite
+language-component-composite
 language-concrete
 domain
 historical-noisy
@@ -2130,9 +2131,13 @@ Composite packs are the normal developer surface:
 
 They are generated packs too. They normally declare required and optional component packs, artifact profiles, license policy, and capability policy instead of bundling every resource.
 
+The canonical root schema registry defines the family contracts future production packs must target: lexicon, segmentation, normalization, morphology, FST, syntax/treebank, search analyzer, KB/entity/sense, corpus, parallel/alignment, quality profile, evaluation-record, and coverage-report resources. Source-specific projections such as UD syntax, CAMeL morphology, or WordNet resources MAY specialize those family contracts, but they do not replace the canonical family contracts. A generated resource declaring `metadata.canonicalSchema` MUST validate against the named canonical schema.
+
 `@ismail-elkorchi/textpack-foundation` is the generated source-backed foundation composite. It composes `textpack-language-registry`, `textpack-unicode-17`, and `textpack-cldr-core`, and exposes a generated language-support index/API so runtime code can ask whether a language is `registered`, `unicode-covered`, `profiled`, or `task-supported` before concrete language ingestion is complete.
 
 Sampled language-core slices, search profiles, normalization profiles, quality profiles, UD task samples, demo packs, and fixture-backed references are not public textpacks. Language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be generated as public packages until their required component graph is production-grade for the declared scope and passes the publishability gate.
+
+When a developer-facing language composite needs approved share-alike sources, the share-alike resources MUST remain in isolated suffixed components such as `*-sa`. An unsuffixed developer-facing package MAY be publishable only as a generated policy-expanded wrapper: it contains no direct resource payloads, declares the full license expression, requires the isolated components explicitly, records the wrapper policy surface in generated reports, and uses loader defaults that allow the required component policy. Copyleft, noncommercial/research, local-only, blocked, aggregate, and review-only sources MUST NOT enter these wrappers.
 
 The forge MUST NOT synthesize missing language data. KB, parallel, broad evaluation coverage, production morphology analyzers, production syntax models, and production Arabic clitic segmentation remain gaps until backed by real sources and evaluation.
 

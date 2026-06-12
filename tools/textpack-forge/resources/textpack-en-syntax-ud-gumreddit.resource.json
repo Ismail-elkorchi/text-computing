@@ -4,12 +4,8 @@
 	"packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
 	"pipelineId": "ud-conllu-profile",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": [
-		"source:ud:english-gumreddit-r2.18"
-	],
-	"snapshotIds": [
-		"snapshot:source:ud:english-gumreddit:r2.18"
-	],
+	"sourceIds": ["source:ud:english-gumreddit-r2.18"],
+	"snapshotIds": ["snapshot:source:ud:english-gumreddit:r2.18"],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
@@ -61,6 +57,24 @@
 		{
 			"resourceId": "en-ud-gumreddit-quality",
 			"path": "resources/ud-gumreddit.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-syntax-canonical",
+			"path": "resources/ud-gumreddit.syntax.json",
+			"kind": "grammar",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-morphology-canonical",
+			"path": "resources/ud-gumreddit.morphology.json",
+			"kind": "morphology",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-ud-gumreddit-quality-profile",
+			"path": "resources/ud-gumreddit.quality-profile.json",
 			"kind": "quality-profile",
 			"format": "json"
 		}

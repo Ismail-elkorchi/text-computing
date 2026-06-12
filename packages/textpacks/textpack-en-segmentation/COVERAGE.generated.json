@@ -1,0 +1,184 @@
+{
+  "capabilities": {
+    "segmentation": "profile"
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:en-segmentation:transform-rejections"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [],
+      "resourceIds": [
+        "en-segmentation-quality",
+        "en-segmentation-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:en-segmentation:cldr-likely-subtag",
+        "eval:en-segmentation:grapheme-boundary-properties",
+        "eval:en-segmentation:sentence-boundary-properties",
+        "eval:en-segmentation:word-boundary-properties"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "This verifies Unicode grapheme break property coverage, not language-specific dictionary tokenization.",
+        "This verifies Unicode sentence break property coverage; English abbreviation tailoring is out of scope for this component.",
+        "This verifies Unicode word break property coverage, not a trained tokenizer or abbreviation model."
+      ],
+      "resourceIds": [
+        "en-segmentation-boundary-properties",
+        "en-grapheme-segmentation-profile",
+        "en-word-segmentation-profile",
+        "en-sentence-segmentation-profile"
+      ],
+      "slot": "segmentation",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations."
+      ],
+      "resourceIds": [
+        "en-segmentation-quality",
+        "en-segmentation-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "capabilities": {
+        "segmentation": "profile"
+      },
+      "notes": [
+        "Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed English text."
+      ],
+      "resourceIds": [
+        "en-segmentation-boundary-properties",
+        "en-grapheme-segmentation-profile",
+        "en-word-segmentation-profile",
+        "en-sentence-segmentation-profile"
+      ],
+      "slot": "segmentation",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:en-segmentation:cldr-likely-subtag",
+    "eval:en-segmentation:grapheme-boundary-properties",
+    "eval:en-segmentation:sentence-boundary-properties",
+    "eval:en-segmentation:transform-rejections",
+    "eval:en-segmentation:word-boundary-properties"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en-segmentation",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 1380,
+      "checksum": "sha256:294f8a5e1dc96d9cb25b16b9b14f39048db8d6c92aeea6b65234d27aba14245a",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 58,
+      "path": "resources/en.segmentation.grapheme.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-grapheme-segmentation-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1322,
+      "checksum": "sha256:18de26411aa8666b2abade4388fcb70ece9ba2bceef7f501f34f8db26af9fb1a",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 46,
+      "path": "resources/en.segmentation-boundary-properties.tsv",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-segmentation-boundary-properties",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1759,
+      "checksum": "sha256:f209d08c6362bc6630209d38de5c89805b99058bf4bdd4d20652e38fe92d52c8",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 75,
+      "path": "resources/en.segmentation.quality.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-segmentation-quality",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1208,
+      "checksum": "sha256:962c565b63056abe5e15ffb899bd872028e2e5d36b6b679bcf98397cf18a1a74",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 50,
+      "path": "resources/en.segmentation.quality-profile.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-segmentation-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1389,
+      "checksum": "sha256:ea955841783eb674d2183b135898d30e0da48cd38f72270adbd3c45972a0daac",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 59,
+      "path": "resources/en.segmentation.sentence.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-sentence-segmentation-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1503,
+      "checksum": "sha256:126c2433c32d6a6691c769b9f004e928d3cdb11a49a0d0037c154fc6fed3dca8",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 63,
+      "path": "resources/en.segmentation.word.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-word-segmentation-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "quality-profile",
+    "segmentation-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "en"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  }
+}

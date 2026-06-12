@@ -1,0 +1,71 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-ar-syntax",
+	"packageDir": "packages/textpacks/textpack-ar-syntax",
+	"name": "Arabic Syntax Policy-Expanded Wrapper Textpack",
+	"description": "Generated policy-expanded Arabic syntax recipe wrapper over the share-alike isolated UD Arabic NYUAD component.",
+	"policySurface": "policy-expanded-wrapper",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated wrapper over the publishable share-alike Arabic UD NYUAD syntax component, which provides annotation-derived syntax and tagging resources without raw text fields.",
+		"auditedLicense": "The exact UD Arabic NYUAD r2.18 source row is approved as share-alike isolated; resource payloads stay in the required -sa component while this wrapper exposes the full license expression and component policy.",
+		"declaredScope": "Arabic MSA syntax wrapper for the current share-alike UD Arabic NYUAD syntax component. It does not claim permissive default-package compatibility, dialectal syntax coverage, Classical/Quranic syntax coverage, parser runtime behavior, or non-share-alike redistribution.",
+		"conformanceEvidence": [
+			"eval:textpack-ar-syntax:required-component-graph",
+			"eval:textpack-ar-syntax-sa:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "task-supported",
+	"loader": {
+		"functionName": "loadArabicSyntax",
+		"languageName": "ArabicSyntax"
+	},
+	"targets": {
+		"languages": ["ar"],
+		"scripts": ["Arab"],
+		"modalities": ["typed"]
+	},
+	"sourceIds": ["source:ud:arabic-nyuad-r2.18"],
+	"snapshotIds": ["snapshot:source:ud:arabic-nyuad:r2.18"],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-syntax-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated UD Arabic NYUAD annotation-derived syntax and tagging resources.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "syntax",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides UD Arabic NYUAD dependency-label, dependency-integrity, sentence-profile, and token/part-of-speech tagging signals through an explicit share-alike policy wrapper."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required share-alike syntax component."
+			]
+		}
+	],
+	"license": "CC-BY-SA-4.0",
+	"citations": ["Universal Dependencies Arabic NYUAD r2.18 annotations."]
+}

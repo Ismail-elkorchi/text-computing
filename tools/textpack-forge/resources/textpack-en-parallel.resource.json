@@ -1,0 +1,78 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+	"packageName": "@ismail-elkorchi/textpack-en-parallel",
+	"pipelineId": "tatoeba-english-parallel-artifact",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
+	"snapshotIds": ["snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json",
+			"checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-tatoeba-parallel-ara",
+			"path": "resources/tatoeba-en.parallel-ara.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-deu",
+			"path": "resources/tatoeba-en.parallel-deu.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-fra",
+			"path": "resources/tatoeba-en.parallel-fra.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-spa",
+			"path": "resources/tatoeba-en.parallel-spa.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-ita",
+			"path": "resources/tatoeba-en.parallel-ita.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-ell",
+			"path": "resources/tatoeba-en.parallel-ell.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-grc",
+			"path": "resources/tatoeba-en.parallel-grc.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-lat",
+			"path": "resources/tatoeba-en.parallel-lat.json",
+			"kind": "alignment-table",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-quality",
+			"path": "resources/tatoeba-en.parallel-quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-quality-profile",
+			"path": "resources/tatoeba-en.parallel-quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

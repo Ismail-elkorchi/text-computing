@@ -1,0 +1,47 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
+	"sourceId": "source:ud:arabic-nyuad-r2.18",
+	"version": "r2.18@815cf25fb7c87bd98c15e8c99a3ea1daa64288b6",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:79a36bf67b81b68e52068e22a9661396d588cd44eb007e610f73ab418788d19d",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-dev.conllu",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 5846069,
+			"checksum": "sha256:ac49fac056085ffbc29248d8cf3e30b8a504b5dedf27b09f33fb0cb4faa1ee3f",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/ar_nyuad-ud-dev.conllu"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-test.conllu",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 5856617,
+			"checksum": "sha256:bc4670763e0e3f282ef079b55af0c58d73ac541aafc421161eb4d904bbaca52b",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/ar_nyuad-ud-test.conllu"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-train.conllu",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 46880990,
+			"checksum": "sha256:2172eb1780eb1a0cb0276b84ba97cdb8d63065588d144ecfd7cee7a249e35167",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/ar_nyuad-ud-train.conllu"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/LICENSE.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 202,
+			"checksum": "sha256:899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/LICENSE.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/README.md",
+			"mediaType": "text/markdown; charset=utf-8",
+			"byteLength": 2995,
+			"checksum": "sha256:8a99b4a445ed16e1c634336bd62269e4f4d8d268cfcc0d788c823f5ee6bca102",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/README.md"
+		}
+	],
+	"notes": "Pinned UD Arabic NYUAD r2.18 annotation-only files; LDC source text is intentionally absent."
+}

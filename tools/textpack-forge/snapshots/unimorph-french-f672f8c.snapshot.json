@@ -1,0 +1,26 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:unimorph:french-master-f672f8c",
+	"sourceId": "source:unimorph:french-master-f672f8c",
+	"version": "f672f8cceb2d5f5a1e2241b5622c8845f8274635",
+	"retrievedAt": "2026-06-12T00:00:00.000Z",
+	"kind": "repository",
+	"checksum": "sha256:b5ab9265e95ccd336c2dc26985d10508271140ab7146c71fab6c4f980dfb4199",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/unimorph-fra-f672f8c/fra",
+			"mediaType": "text/tab-separated-values",
+			"byteLength": 13405679,
+			"checksum": "sha256:4760fc36435a9ffba9b4de6f0787d8eca5b15022e6b141e3b242b129f0d88dcb",
+			"sourceUrl": "https://raw.githubusercontent.com/unimorph/fra/f672f8cceb2d5f5a1e2241b5622c8845f8274635/fra"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unimorph-fra-f672f8c/README.md",
+			"mediaType": "text/markdown",
+			"byteLength": 94,
+			"checksum": "sha256:94a3807882c7b5b119909d7137e7fa7f279ac5e9c8de6ac02004ca3c2b575edf",
+			"sourceUrl": "https://raw.githubusercontent.com/unimorph/fra/f672f8cceb2d5f5a1e2241b5622c8845f8274635/README.md"
+		}
+	],
+	"notes": "Pinned UniMorph French README license evidence and inflection table from commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+}

@@ -1,0 +1,55 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+	"packageName": "@ismail-elkorchi/textpack-en-normalization",
+	"pipelineId": "english-normalization-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:unicode:ucd", "source:unicode:cldr-core"],
+	"snapshotIds": [
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/PropertyValueAliases.txt",
+			"checksum": "sha256:64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/aliases.json",
+			"checksum": "sha256:b7011c866f27502ed6f160ca83f2a83fa42bce9fdc2176e60e2c6630961d877c"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-normalization-rules",
+			"path": "resources/en.normalization-rules.tsv",
+			"kind": "normalization-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-normalization-profile",
+			"path": "resources/en.normalization.json",
+			"kind": "normalization-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-normalization-quality",
+			"path": "resources/en.normalization.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-normalization-quality-profile",
+			"path": "resources/en.normalization.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

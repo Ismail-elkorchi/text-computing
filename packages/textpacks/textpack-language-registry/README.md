@@ -15,8 +15,8 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-language-registry
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- generated packs are non-publishable by default
+- None
 

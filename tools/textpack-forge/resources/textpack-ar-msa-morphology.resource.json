@@ -4,12 +4,8 @@
 	"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
 	"pipelineId": "camel-morph-msa",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": [
-		"source:camel:morph-msa-lrec-coling-2024"
-	],
-	"snapshotIds": [
-		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
-	],
+	"sourceIds": ["source:camel:morph-msa-lrec-coling-2024"],
+	"snapshotIds": ["snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
@@ -51,6 +47,24 @@
 		{
 			"resourceId": "ar-msa-camel-morph-quality",
 			"path": "resources/camel-morph-msa.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-msa-camel-morphology-canonical",
+			"path": "resources/camel-morph-msa.morphology.json",
+			"kind": "morphology",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-msa-camel-segmentation-canonical",
+			"path": "resources/camel-morph-msa.segmentation.json",
+			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-msa-camel-quality-profile",
+			"path": "resources/camel-morph-msa.quality-profile.json",
 			"kind": "quality-profile",
 			"format": "json"
 		}

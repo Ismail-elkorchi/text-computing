@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:unimorph:french-master-f672f8c",
+	"family": "UNIMORPH",
+	"name": "UniMorph French master f672f8c",
+	"homepageUrl": "https://github.com/unimorph/fra/tree/f672f8cceb2d5f5a1e2241b5622c8845f8274635",
+	"licenseEvidence": [
+		"https://github.com/unimorph/fra/blob/f672f8cceb2d5f5a1e2241b5622c8845f8274635/README.md",
+		"https://creativecommons.org/licenses/by-sa/3.0/"
+	],
+	"licenseExpression": "CC-BY-SA-3.0",
+	"redistributionPolicy": "share-alike-isolated",
+	"reviewState": "approved",
+	"citation": "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.",
+	"notes": "Exact UniMorph French source audit. The upstream README declares Wikipedia as source and CC-BY-SA 3.0 as license, so this source is isolated from default composites."
+}

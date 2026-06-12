@@ -1,0 +1,66 @@
+{
+  "analyzerId": "en-esdb-default-wordlist-analyzer",
+  "charFilters": [
+    {
+      "componentId": "apostrophe-preserve",
+      "mode": "preserve-apostrophes",
+      "options": {
+        "characters": [
+          "'",
+          "’"
+        ]
+      },
+      "type": "character-policy"
+    }
+  ],
+  "fields": [
+    {
+      "analyzerRole": "index",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "query",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "suggest",
+      "fieldName": "text"
+    }
+  ],
+  "kind": "search-profile",
+  "languageTag": "en",
+  "resources": [
+    {
+      "resourceId": "en-esdb-default-wordlists",
+      "role": "lexicon"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn",
+  "tokenFilters": [
+    {
+      "componentId": "unicode-simple-casefold",
+      "mode": "unicode-simple",
+      "type": "casefold"
+    },
+    {
+      "componentId": "esdb-default-wordlist-filter",
+      "mode": "regional-default",
+      "options": {
+        "profiles": [
+          "en_AU",
+          "en_CA",
+          "en_GB_ise",
+          "en_GB_ize",
+          "en_US"
+        ]
+      },
+      "type": "wordlist-membership"
+    }
+  ],
+  "tokenizer": {
+    "componentId": "unicode-word",
+    "mode": "default",
+    "type": "unicode-word-boundary"
+  }
+}

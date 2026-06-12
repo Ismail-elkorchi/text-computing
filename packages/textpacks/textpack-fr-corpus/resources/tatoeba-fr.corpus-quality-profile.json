@@ -1,0 +1,44 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "tatoeba-fr-explicit-corpus-artifact-fetch",
+      "message": "Tatoeba French sentence data is exposed as an explicit full artifact descriptor, not as npm-shipped raw corpus text.",
+      "metadata": {
+        "artifactId": "artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06",
+        "artifactPolicy": "fetch-explicit"
+      },
+      "severity": "info",
+      "task": "corpus.artifact"
+    },
+    {
+      "diagnosticId": "tatoeba-fr-attribution-corpus-fields",
+      "message": "The pinned detailed sentence export preserves owner and timestamp fields for attribution-aware downstream use.",
+      "metadata": {
+        "licenseExpression": "CC-BY-2.0-FR"
+      },
+      "severity": "info",
+      "task": "corpus.license"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "fr",
+  "metrics": [
+    {
+      "metricId": "sentence-row-count",
+      "name": "sentenceRowCount",
+      "unit": "rows",
+      "value": 718596
+    },
+    {
+      "metricId": "artifact-size-bytes",
+      "name": "artifactSizeBytes",
+      "unit": "bytes",
+      "value": 14624789
+    }
+  ],
+  "profileId": "tatoeba-fr-corpus-artifact-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

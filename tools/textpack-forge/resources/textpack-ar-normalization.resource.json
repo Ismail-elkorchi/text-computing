@@ -1,0 +1,66 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+	"packageName": "@ismail-elkorchi/textpack-ar-normalization",
+	"pipelineId": "arabic-normalization-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:unicode:ucd",
+		"source:unicode:cldr-core",
+		"source:camel:morph-msa-lrec-coling-2024"
+	],
+	"snapshotIds": [
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/PropertyValueAliases.txt",
+			"checksum": "sha256:64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		},
+		{
+			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/camel_morph_msa_v1.0.db",
+			"checksum": "sha256:110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-normalization-rules",
+			"path": "resources/ar.normalization-rules.tsv",
+			"kind": "normalization-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-normalization-observed-codepoints",
+			"path": "resources/ar.normalization-observed-codepoints.tsv",
+			"kind": "normalization-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-normalization-profile",
+			"path": "resources/ar.normalization.json",
+			"kind": "normalization-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-normalization-quality",
+			"path": "resources/ar.normalization.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-normalization-quality-profile",
+			"path": "resources/ar.normalization.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

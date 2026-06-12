@@ -1,0 +1,28 @@
+{
+  "arabicScriptRangeCount": 95,
+  "graphemeRangeCount": 1429,
+  "ianaFileDate": "2026-05-05",
+  "ianaSuppressScript": "Arab",
+  "languageTag": "ar",
+  "likelySubtag": "ar-Arab-EG",
+  "pipelineId": "arabic-core-profile",
+  "pipelineVersion": "0.1.0",
+  "punctuationRangeCount": 396,
+  "recordsAccepted": 491,
+  "recordsRejected": 0,
+  "schemaVersion": "1",
+  "script": "Arab",
+  "scriptVariantCount": 0,
+  "sentenceRangeCount": 2930,
+  "sourceIds": [
+    "source:iana:language-subtag-registry",
+    "source:unicode:ucd",
+    "source:unicode:cldr-core"
+  ],
+  "warnings": [
+    "Arabic core currently uses only IANA, Unicode, and CLDR source-backed resources.",
+    "Arabic lexicon, morphology, clitic segmentation, syntax, KB, search, corpus, and parallel resources remain out of scope until exact source activation.",
+    "Basic segmentation is a Unicode UAX #29 baseline; richer Arabic MSA tokenization resources remain in textpack-ar-segmentation."
+  ],
+  "wordRangeCount": 1432
+}

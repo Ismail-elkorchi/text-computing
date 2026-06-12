@@ -1,0 +1,92 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-search-analyzer-resource.schema.json",
+	"title": "TextpackSearchAnalyzerResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "analyzerId", "tokenizer"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "search-profile" },
+		"analyzerId": { "type": "string", "minLength": 1 },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"tokenizer": { "$ref": "#/definitions/component" },
+		"charFilters": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/component" }
+		},
+		"tokenFilters": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/component" }
+		},
+		"resources": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/resourceRef" }
+		},
+		"fields": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/field" }
+		}
+	},
+	"definitions": {
+		"component": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["componentId", "type"],
+			"properties": {
+				"componentId": { "type": "string", "minLength": 1 },
+				"type": { "type": "string", "minLength": 1 },
+				"mode": { "type": "string", "minLength": 1 },
+				"options": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"resourceRef": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["resourceId", "role"],
+			"properties": {
+				"resourceId": { "type": "string", "minLength": 1 },
+				"role": {
+					"enum": [
+						"stoplist",
+						"synonyms",
+						"stemmer",
+						"normalizer",
+						"lexicon",
+						"fst",
+						"quality"
+					]
+				}
+			}
+		},
+		"field": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["fieldName", "analyzerRole"],
+			"properties": {
+				"fieldName": { "type": "string", "minLength": 1 },
+				"analyzerRole": {
+					"enum": ["index", "query", "highlight", "suggest"]
+				}
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

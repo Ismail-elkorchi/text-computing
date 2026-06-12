@@ -38,5 +38,17 @@ export async function resources(): Promise<PackResourceMap> {
 			"wordnet-en.quality.json",
 			"utf8",
 		),
+		"wordnet-en-lexicon-canonical": await readResource(
+			"wordnet-en.lexicon.json",
+			"utf8",
+		),
+		"wordnet-en-kb-canonical": await readResource(
+			"wordnet-en.kb.json",
+			"utf8",
+		),
+		"wordnet-en-quality-profile": await readResource(
+			"wordnet-en.quality-profile.json",
+			"utf8",
+		),
 	};
 }

@@ -17,8 +17,8 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-unicode-17";
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- generated packs are non-publishable by default
+- None
 

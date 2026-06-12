@@ -1,0 +1,26 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:wikidata:main:20260608",
+	"sourceId": "source:wikidata:main",
+	"version": "20260608",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "external",
+	"checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
+			"mediaType": "text/plain",
+			"byteLength": 129,
+			"checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd",
+			"sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-md5sums.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
+			"mediaType": "text/plain",
+			"byteLength": 145,
+			"checksum": "sha256:a4b7efee9997d592e5abdd3e232ad7a66d19847343ac640adc1e9b12fe51b440",
+			"sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
+		}
+	],
+	"notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump. The raw dump is artifact-backed and not stored in the repository."
+}

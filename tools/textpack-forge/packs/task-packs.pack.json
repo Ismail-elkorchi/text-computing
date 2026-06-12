@@ -3,19 +3,413 @@
 	"mode": "source-backed",
 	"sourceIds": [
 		"source:camel:morph-msa-lrec-coling-2024",
+		"source:esdb:wordlist-diff-en-default-2026-02-25",
+		"source:fr:lexique-383",
+		"source:iana:language-subtag-registry",
+		"source:scowl:v2-rel-2026-02-25",
+		"source:tatoeba:weekly-2026-06-06",
+		"source:tatoeba:weekly-arabic-2026-06-06",
+		"source:tatoeba:weekly-french-2026-06-06",
+		"source:ud:arabic-nyuad-r2.18",
 		"source:ud:english-gumreddit-r2.18",
+		"source:ud:french-gsd-r2.18",
+		"source:unicode:cldr-core",
+		"source:unicode:ucd",
+		"source:unimorph:french-master-f672f8c",
+		"source:wikidata:main",
+		"source:wordnet:arabic-v4.1.0",
 		"source:wordnet:open-english-2025"
 	],
 	"snapshotIds": [
 		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+		"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+		"snapshot:source:fr:lexique-383:2019-06-04",
+		"snapshot:source:iana:language-subtag-registry:2026-05-05",
+		"snapshot:source:scowl:v2-rel-2026.02.25",
+		"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+		"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+		"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+		"snapshot:source:ud:arabic-nyuad:r2.18",
 		"snapshot:source:ud:english-gumreddit:r2.18",
+		"snapshot:source:ud:french-gsd:r2.18",
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unimorph:french-master-f672f8c",
+		"snapshot:source:wikidata:main:20260608",
+		"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
 		"snapshot:source:wordnet:open-english-2025:2025-edition"
 	],
 	"packs": [
 		{
+			"packageName": "@ismail-elkorchi/textpack-ar-core",
+			"packageDir": "packages/textpacks/textpack-ar-core",
+			"description": "Source-backed Arabic core language profile generated from IANA, Unicode, and CLDR.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned IANA Language Subtag Registry, Unicode 17 UCD Scripts/General_Category/UAX #29 property files, and CLDR 48.2 likely-subtag/script data transformed into a modern typed-Arabic language profile, Arabic-script orthography ranges, Unicode punctuation ranges, basic segmentation baseline, and quality-profile resources.",
+				"auditedLicense": "IANA, Unicode UCD, and CLDR source rows are approved; package-local LICENSE.generated.md includes local IANA license evidence copied from the pinned snapshot.",
+				"declaredScope": "Modern typed Arabic core language profile: BCP 47 identity, Arabic-script orthography ranges, Unicode punctuation ranges, and Unicode UAX #29 basic segmentation baseline. It does not claim Arabic lexicon, morphology, clitic tokenization, dialectal coverage, Classical/Quranic coverage, syntax parsing, KB/entity linking, search, corpus, parallel, quality diagnostics beyond source transform evidence, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:ar-core:iana-language-profile",
+					"eval:ar-core:arabic-orthography-ranges",
+					"eval:ar-core:unicode-punctuation-ranges",
+					"eval:ar-core:basic-segmentation-baseline",
+					"eval:ar-core:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:iana:language-subtag-registry",
+				"source:unicode:ucd",
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:iana:language-subtag-registry:2026-05-05",
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-ar-core:arabic-core-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ar-core",
+				"name": "Arabic Core Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ar-core",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"regions": [
+						"EG"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "ar-core-language-profile",
+						"kind": "locale-profile",
+						"path": "resources/ar.core.language-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "ar-core-orthography",
+						"kind": "locale-profile",
+						"path": "resources/ar.core.orthography.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						]
+					},
+					{
+						"id": "ar-core-punctuation",
+						"kind": "locale-profile",
+						"path": "resources/ar.core.punctuation.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						]
+					},
+					{
+						"id": "ar-core-basic-segmentation",
+						"kind": "segmentation-profile",
+						"path": "resources/ar.core.basic-segmentation.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-core-quality",
+						"kind": "quality-profile",
+						"path": "resources/ar.core.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "ar-core-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ar.core.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "core",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-core-language-profile",
+							"ar-core-orthography",
+							"ar-core-punctuation",
+							"ar-core-basic-segmentation"
+						],
+						"capabilities": {
+							"segmentation": "profile",
+							"normalization": "unicode"
+						},
+						"notes": [
+							"Core profile resources cover modern typed Arabic identity, Arabic-script orthography, Unicode punctuation, and a basic UAX #29 segmentation baseline."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-core-quality",
+							"ar-core-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+				"citations": [
+					"IANA Language Subtag Registry, File-Date 2026-05-05.",
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
+			"packageDir": "packages/textpacks/textpack-ar-corpus",
+			"description": "Second-wave promoted source-backed Arabic corpus artifact descriptors generated from Tatoeba weekly Arabic exports.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Second-wave promoted pinned Tatoeba 2026-06-06 Arabic detailed sentence export transformed into a canonical corpus artifact profile with row count, checksum, attribution-preserving detailed fields, quality profile, and explicit fetch descriptor. The raw corpus is intentionally artifact-backed instead of shipped through npm.",
+				"auditedLicense": "The second-wave promoted exact Tatoeba weekly Arabic export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
+				"declaredScope": "Arabic Tatoeba corpus artifact descriptor for the 2026-06-06 detailed Arabic sentence export. It does not claim in-package raw corpus text, corpus-frequency statistics, benchmark splits, OPUS coverage, parallel links, dialectal Arabic corpus coverage, Classical/Quranic Arabic coverage, or full Arabic language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:tatoeba-ar-corpus:artifact-descriptor",
+					"eval:tatoeba-ar-corpus:checksum"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "artifact-backed",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:tatoeba:weekly-arabic-2026-06-06"
+			],
+			"snapshotIds": [
+				"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ar-corpus",
+				"name": "Arabic Tatoeba Corpus Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ar-corpus",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "ar-tatoeba-corpus-artifact",
+						"kind": "corpus",
+						"path": "resources/tatoeba-ar.corpus-artifact.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-corpus-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-tatoeba-corpus-quality",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-ar.corpus-quality.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "ar-tatoeba-corpus-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-ar.corpus-quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-arabic-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 1198138,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-ara-sentences-detailed-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "ara_sentences_detailed.tsv.bz2",
+								"sizeBytes": 1198138,
+								"checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "corpus",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-tatoeba-corpus-artifact"
+						],
+						"artifactIds": [
+							"artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06"
+						],
+						"notes": [
+							"Tatoeba Arabic detailed sentence export is available through an explicit full artifact descriptor."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-tatoeba-corpus-quality",
+							"ar-tatoeba-corpus-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records row count, artifact size, checksum evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC-BY-2.0-FR",
+				"citations": [
+					"Tatoeba weekly Arabic exports, 2026-06-06."
+				]
+			}
+		},
+		{
 			"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
 			"packageDir": "packages/textpacks/textpack-ar-msa-morphology",
 			"description": "Source-backed Arabic MSA morphology resources generated from CAMeL Morph.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Exact CAMeL Morph MSA LREC-COLING 2024 release database transformed into feature inventory, defaults, morpheme inventory, compatibility tables, tokenization profile, canonical morphology, canonical segmentation, and quality resources. The medium npm resource is the compressed morpheme inventory required for this source-specific scope.",
+				"auditedLicense": "The CAMeL Morph MSA LREC-COLING 2024 source row is approved; the snapshot pins repository LICENSE and README evidence, and package-local LICENSE.generated.md includes the pinned repository LICENSE file.",
+				"declaredScope": "Arabic MSA CAMeL Morph morphology and tokenization-scheme component; does not claim full Arabic language support, dialectal Arabic coverage, Classical Arabic coverage, syntax, KB, search, corpus, parallel, or language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:ar-msa-camel-morph:morpheme-inventory",
+					"eval:ar-msa-camel-morph:compatibility-tables",
+					"eval:ar-msa-camel-morph:tokenization-fields",
+					"eval:ar-msa-camel-morph:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
 			"sourceIds": [
@@ -113,6 +507,45 @@
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
 						]
+					},
+					{
+						"id": "ar-msa-camel-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/camel-morph-msa.morphology.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-msa-camel-segmentation-canonical",
+						"kind": "segmentation-profile",
+						"path": "resources/camel-morph-msa.segmentation.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-msa-camel-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/camel-morph-msa.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
 					}
 				],
 				"capabilitySlots": [
@@ -123,7 +556,8 @@
 							"ar-msa-camel-morph-features",
 							"ar-msa-camel-morph-defaults",
 							"ar-msa-camel-morph-morphemes",
-							"ar-msa-camel-morph-compatibility"
+							"ar-msa-camel-morph-compatibility",
+							"ar-msa-camel-morphology-canonical"
 						],
 						"capabilities": {
 							"morphology": "lookup"
@@ -136,7 +570,8 @@
 						"slot": "segmentation",
 						"status": "task-supported",
 						"resourceIds": [
-							"ar-msa-camel-morph-tokenizations"
+							"ar-msa-camel-morph-tokenizations",
+							"ar-msa-camel-segmentation-canonical"
 						],
 						"capabilities": {
 							"segmentation": "dictionary"
@@ -149,7 +584,8 @@
 						"slot": "quality",
 						"status": "task-supported",
 						"resourceIds": [
-							"ar-msa-camel-morph-quality"
+							"ar-msa-camel-morph-quality",
+							"ar-msa-camel-quality-profile"
 						],
 						"notes": [
 							"Generated quality profile records source counts, accepted records, and transform warnings."
@@ -163,9 +599,2302 @@
 			}
 		},
 		{
+			"packageName": "@ismail-elkorchi/textpack-ar-normalization",
+			"packageDir": "packages/textpacks/textpack-ar-normalization",
+			"description": "Source-backed Arabic MSA normalization profile generated from Unicode, CLDR, and CAMeL Morph.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Unicode 17 PropertyValueAliases, CLDR 48.2 likelySubtags, and the exact CAMeL Morph MSA LREC-COLING 2024 release transformed into Arabic MSA lookup normalization rules, observed normalization codepoint evidence, canonical normalization resources, and quality-profile resources.",
+				"auditedLicense": "Unicode UCD, CLDR, and the exact CAMeL Morph MSA LREC-COLING 2024 source rows are approved; the CAMeL snapshot pins repository LICENSE and README evidence, and package-local LICENSE.generated.md includes the pinned repository LICENSE file.",
+				"declaredScope": "Arabic MSA lookup normalization profile: Unicode NFC, lookup casefolding, CLDR Arabic likely-subtag context, tatweel/harakat lookup deletion, and CAMeL-observed alef/ya variant mapping. It does not claim dialectal Arabic normalization, Quranic/Classical Arabic policy, transliteration, spelling correction, OCR cleanup, corpus-derived noisy-text normalization, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:ar-normalization:profile-rules",
+					"eval:ar-normalization:unicode-nfc-evidence",
+					"eval:ar-normalization:cldr-likely-subtag",
+					"eval:ar-normalization:camel-evidence-codepoints",
+					"eval:ar-normalization:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unicode:ucd",
+				"source:unicode:cldr-core",
+				"source:camel:morph-msa-lrec-coling-2024"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0",
+				"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-ar-normalization:arabic-normalization-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ar-normalization",
+				"name": "Arabic MSA Normalization Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ar-normalization",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "ar-normalization-rules",
+						"kind": "normalization-profile",
+						"path": "resources/ar.normalization-rules.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						]
+					},
+					{
+						"id": "ar-normalization-observed-codepoints",
+						"kind": "normalization-profile",
+						"path": "resources/ar.normalization-observed-codepoints.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						]
+					},
+					{
+						"id": "ar-normalization-profile",
+						"kind": "normalization-profile",
+						"path": "resources/ar.normalization.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-normalization-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-normalization-quality",
+						"kind": "quality-profile",
+						"path": "resources/ar.normalization.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						]
+					},
+					{
+						"id": "ar-normalization-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ar.normalization.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "normalization",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-normalization-rules",
+							"ar-normalization-observed-codepoints",
+							"ar-normalization-profile"
+						],
+						"capabilities": {
+							"normalization": "rules"
+						},
+						"notes": [
+							"Arabic MSA lookup normalization is generated from Unicode/CLDR policy plus CAMeL Morph MSA observed character evidence."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-normalization-quality",
+							"ar-normalization-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, rule counts, observed codepoint evidence, accepted records, rejected records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND CC-BY-4.0",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+					"CAMeL Morph MSA LREC-COLING 2024 release."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
+			"packageDir": "packages/textpacks/textpack-ar-parallel",
+			"description": "Second-wave promoted source-backed Arabic parallel artifact descriptors generated from Tatoeba weekly Arabic exports.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Second-wave promoted pinned Tatoeba 2026-06-06 Arabic-linked parallel exports transformed into canonical alignment-table artifact profiles for English, French, Spanish, and German links, with checksums, row counts, quality profile, and explicit fetch descriptors.",
+				"auditedLicense": "The second-wave promoted exact Tatoeba weekly Arabic export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
+				"declaredScope": "Arabic Tatoeba parallel link artifact descriptors for English, French, Spanish, and German target languages. It does not claim in-package raw parallel text, sentence-text resolution without compatible sentence artifacts, OPUS coverage, trained aligners, translation-memory ranking, dialectal Arabic parallel coverage, Classical/Quranic Arabic coverage, or full multilingual parallel coverage.",
+				"conformanceEvidence": [
+					"eval:tatoeba-ar-parallel:language-pair-coverage",
+					"eval:tatoeba-ar-parallel:link-row-volume",
+					"eval:tatoeba-ar-parallel:checksum"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "parallel",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:tatoeba:weekly-arabic-2026-06-06"
+			],
+			"snapshotIds": [
+				"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ar-parallel",
+				"name": "Arabic Tatoeba Parallel Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ar-parallel",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "ar-tatoeba-parallel-eng",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-ar.parallel-eng.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-tatoeba-parallel-fra",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-ar.parallel-fra.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-tatoeba-parallel-spa",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-ar.parallel-spa.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-tatoeba-parallel-deu",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-ar.parallel-deu.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-tatoeba-parallel-quality",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-ar.parallel-quality.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "ar-tatoeba-parallel-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-ar.parallel-quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-eng-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-arabic-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 297959,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/ara/ara-eng_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-ara-eng-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "ara-eng_links.tsv.bz2",
+								"sizeBytes": 297959,
+								"checksum": "sha256:e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-fra-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-arabic-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 19407,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/ara/ara-fra_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-ara-fra-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "ara-fra_links.tsv.bz2",
+								"sizeBytes": 19407,
+								"checksum": "sha256:1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-arabic-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 21075,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/ara/ara-spa_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-ara-spa-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "ara-spa_links.tsv.bz2",
+								"sizeBytes": 21075,
+								"checksum": "sha256:45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-arabic-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 18446,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/ara/ara-deu_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-ara-deu-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "ara-deu_links.tsv.bz2",
+								"sizeBytes": 18446,
+								"checksum": "sha256:63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "parallel",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-tatoeba-parallel-eng",
+							"ar-tatoeba-parallel-fra",
+							"ar-tatoeba-parallel-spa",
+							"ar-tatoeba-parallel-deu"
+						],
+						"artifactIds": [
+							"artifact:textpack-ar-parallel:full:tatoeba-ara-eng-links:2026-06-06",
+							"artifact:textpack-ar-parallel:full:tatoeba-ara-fra-links:2026-06-06",
+							"artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06",
+							"artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06"
+						],
+						"capabilities": {
+							"parallel": true
+						},
+						"notes": [
+							"Tatoeba Arabic-linked alignment tables are available through explicit full artifact descriptors for English, French, Spanish, and German."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-tatoeba-parallel-quality",
+							"ar-tatoeba-parallel-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC-BY-2.0-FR",
+				"citations": [
+					"Tatoeba weekly Arabic exports, 2026-06-06."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-search",
+			"packageDir": "packages/textpacks/textpack-ar-search",
+			"description": "Source-backed Arabic MSA lookup/search analyzer profile generated from CLDR, CAMeL Morph, and Arabic WordNet.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned CLDR 48.2 likelySubtags, the exact CAMeL Morph MSA LREC-COLING 2024 release, and Arabic WordNet 4.1.0 transformed into Arabic MSA search analyzer policy, tokenization hooks, morphology hooks, WordNet synonym expansion hooks, canonical search-profile resources, and quality-profile resources.",
+				"auditedLicense": "CLDR, CAMeL Morph MSA, and Arabic WordNet exact source rows are approved; required snapshots pin package-local license and attribution evidence.",
+				"declaredScope": "Arabic MSA lookup/search analyzer profile: Unicode/CLDR context, CAMeL Morph MSA tokenization and morphology hooks, and Arabic WordNet synonym expansion hooks. It does not claim a persistent search index, corpus-derived ranking model, semantic search ranking, dialectal Arabic search, Classical/Quranic Arabic search, syntax, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:ar-search:analyzer-profile",
+					"eval:ar-search:wordnet-synonym-volume",
+					"eval:ar-search:camel-morphology-hooks",
+					"eval:ar-search:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unicode:cldr-core",
+				"source:camel:morph-msa-lrec-coling-2024",
+				"source:wordnet:arabic-v4.1.0"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:cldr-core:48.2.0",
+				"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+				"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-ar-search:arabic-search-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ar-search",
+				"name": "Arabic MSA Search Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ar-search",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "ar-search-normalization-policy",
+						"kind": "normalization-profile",
+						"path": "resources/ar.search.normalization-policy.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						]
+					},
+					{
+						"id": "ar-search-tokenization-hooks",
+						"kind": "segmentation-profile",
+						"path": "resources/ar.search.tokenization-hooks.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						]
+					},
+					{
+						"id": "ar-search-morphology-hooks",
+						"kind": "morphology",
+						"path": "resources/ar.search.morphology-hooks.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"CAMeL Morph MSA LREC-COLING 2024 release."
+						]
+					},
+					{
+						"id": "ar-search-wordnet-synonyms",
+						"kind": "lexicon",
+						"path": "resources/ar.search.wordnet-synonyms.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "ar-search-profile",
+						"kind": "search-profile",
+						"path": "resources/ar.search.profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release.",
+							"Arabic WordNet 4.1.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-search-quality",
+						"kind": "quality-profile",
+						"path": "resources/ar.search.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release.",
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "ar-search-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ar.search.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"citations": [
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"CAMeL Morph MSA LREC-COLING 2024 release.",
+							"Arabic WordNet 4.1.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "search",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-search-normalization-policy",
+							"ar-search-tokenization-hooks",
+							"ar-search-morphology-hooks",
+							"ar-search-wordnet-synonyms",
+							"ar-search-profile"
+						],
+						"capabilities": {
+							"search": "analyzer"
+						},
+						"notes": [
+							"Arabic MSA lookup/search analyzer resources are generated from CLDR context, CAMeL Morph MSA tokenization and morphology hooks, and Arabic WordNet synonym hooks."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-search-quality",
+							"ar-search-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, synonym and morphology hook counts, accepted records, rejected records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND CC-BY-4.0",
+				"citations": [
+					"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+					"CAMeL Morph MSA LREC-COLING 2024 release.",
+					"Arabic WordNet 4.1.0."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+			"packageDir": "packages/textpacks/textpack-ar-syntax-ud-nyuad-sa",
+			"description": "Source-backed isolated Arabic UD NYUAD annotation-derived syntax and tagging profiles.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Exact UD Arabic NYUAD r2.18 annotation-only release transformed into UPOS, morphological feature, dependency-label, sentence-profile, canonical syntax, canonical morphology, and quality-profile resources. The emitted resources intentionally exclude FORM and LEMMA text fields from the underlying LDC material.",
+				"auditedLicense": "The UD Arabic NYUAD r2.18 source row is approved as CC-BY-SA-4.0 and share-alike isolated; the package name carries the required -sa suffix, and package-local LICENSE.generated.md includes the pinned repository LICENSE file.",
+				"declaredScope": "Arabic UD NYUAD annotation-derived syntax and tagging profile component; share-alike isolated. It does not claim default Arabic composite eligibility, full Arabic syntax parsing, full Arabic morphology, raw LDC text redistribution, broad treebank coverage, corpus coverage, parallel coverage, or language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:ar-ud-nyuad:annotation-volume",
+					"eval:ar-ud-nyuad:dependency-label-coverage",
+					"eval:ar-ud-nyuad:head-reference-coverage",
+					"eval:ar-ud-nyuad:no-raw-text-fields"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:ud:arabic-nyuad-r2.18"
+			],
+			"snapshotIds": [
+				"snapshot:source:ud:arabic-nyuad:r2.18"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ar-syntax-ud-nyuad-sa",
+				"name": "Arabic UD NYUAD Syntax Share-Alike Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "ar-ud-nyuad-upos",
+						"kind": "grammar",
+						"path": "resources/ud-nyuad.upos.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						]
+					},
+					{
+						"id": "ar-ud-nyuad-features",
+						"kind": "morphology",
+						"path": "resources/ud-nyuad.features.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						]
+					},
+					{
+						"id": "ar-ud-nyuad-dependencies",
+						"kind": "grammar",
+						"path": "resources/ud-nyuad.dependencies.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						]
+					},
+					{
+						"id": "ar-ud-nyuad-sentence-profile",
+						"kind": "statistical-model",
+						"path": "resources/ud-nyuad.sentence-profile.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						]
+					},
+					{
+						"id": "ar-ud-nyuad-annotations",
+						"kind": "dataset",
+						"path": "resources/ud-nyuad.annotations.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						]
+					},
+					{
+						"id": "ar-ud-nyuad-quality",
+						"kind": "quality-profile",
+						"path": "resources/ud-nyuad.quality.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						]
+					},
+					{
+						"id": "ar-ud-nyuad-syntax-canonical",
+						"kind": "grammar",
+						"path": "resources/ud-nyuad.syntax.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-syntax-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-ud-nyuad-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/ud-nyuad.morphology.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "ar-ud-nyuad-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ud-nyuad.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies Arabic NYUAD r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "tagging",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-ud-nyuad-upos",
+							"ar-ud-nyuad-features",
+							"ar-ud-nyuad-annotations",
+							"ar-ud-nyuad-morphology-canonical"
+						],
+						"capabilities": {
+							"tagging": "statistical",
+							"morphology": "statistical"
+						},
+						"notes": [
+							"Annotation-derived UPOS, XPOS, and morphological feature profiles are available without redistributing LDC text.",
+							"This package is share-alike isolated and is not eligible for the default Arabic composite."
+						]
+					},
+					{
+						"slot": "syntax",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-ud-nyuad-dependencies",
+							"ar-ud-nyuad-sentence-profile",
+							"ar-ud-nyuad-annotations",
+							"ar-ud-nyuad-syntax-canonical"
+						],
+						"notes": [
+							"Annotation-derived dependency and sentence profiles are available without redistributing LDC text.",
+							"This package is share-alike isolated and is not eligible for the default Arabic composite."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"ar-ud-nyuad-quality",
+							"ar-ud-nyuad-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records annotation counts and confirms no raw text fields are emitted."
+						]
+					}
+				],
+				"license": "CC-BY-SA-4.0",
+				"citations": [
+					"Universal Dependencies Arabic NYUAD r2.18 annotations."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-core",
+			"packageDir": "packages/textpacks/textpack-en-core",
+			"description": "Source-backed English core language profile generated from IANA, Unicode, CLDR, ESDB, and SCOWLv2.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned IANA Language Subtag Registry, Unicode 17 UCD Scripts/General_Category/UAX #29 property files, CLDR 48.2 likely-subtag/script data, ESDB en_US generated wordlist, and SCOWLv2 POS export transformed into English language profile, orthography, punctuation, abbreviation, function-word, basic segmentation, and quality resources.",
+				"auditedLicense": "IANA, Unicode UCD, CLDR, ESDB wordlist-diff, and SCOWLv2 source rows are approved; package-local LICENSE.generated.md includes local IANA and ESDB/SCOWLv2 license evidence copied from pinned snapshots.",
+				"declaredScope": "Modern typed English core language profile: BCP 47 identity, Latin-script orthography ranges, Unicode punctuation ranges, SCOWLv2 abbreviation rows, SCOWLv2 POS-derived function-word stoplist candidates, and Unicode UAX #29 basic segmentation baseline. It does not claim corpus-frequency stopword weights, sentence-boundary disambiguation, morphology analysis, syntax parsing, KB/entity linking, corpus, parallel, quality diagnostics beyond source transform evidence, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:en-core:iana-language-profile",
+					"eval:en-core:latin-orthography-ranges",
+					"eval:en-core:unicode-punctuation-ranges",
+					"eval:en-core:scowl-abbreviation-rows",
+					"eval:en-core:scowl-function-word-rows",
+					"eval:en-core:basic-segmentation-baseline",
+					"eval:en-core:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:iana:language-subtag-registry",
+				"source:unicode:ucd",
+				"source:unicode:cldr-core",
+				"source:esdb:wordlist-diff-en-default-2026-02-25",
+				"source:scowl:v2-rel-2026-02-25"
+			],
+			"snapshotIds": [
+				"snapshot:source:iana:language-subtag-registry:2026-05-05",
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0",
+				"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+				"snapshot:source:scowl:v2-rel-2026.02.25"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-core:english-core-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-core",
+				"name": "English Core Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-core",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"regions": [
+						"US"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-core-language-profile",
+						"kind": "locale-profile",
+						"path": "resources/en.core.language-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-core-orthography",
+						"kind": "locale-profile",
+						"path": "resources/en.core.orthography.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						]
+					},
+					{
+						"id": "en-core-punctuation",
+						"kind": "locale-profile",
+						"path": "resources/en.core.punctuation.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						]
+					},
+					{
+						"id": "en-core-abbreviations",
+						"kind": "abbreviation-table",
+						"path": "resources/en.core.abbreviations.tsv",
+						"format": "tsv",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-core-function-words",
+						"kind": "stoplist",
+						"path": "resources/en.core.function-words.tsv",
+						"format": "tsv",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-core-basic-segmentation",
+						"kind": "segmentation-profile",
+						"path": "resources/en.core.basic-segmentation.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-core-quality",
+						"kind": "quality-profile",
+						"path": "resources/en.core.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-core-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/en.core.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "core",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-core-language-profile",
+							"en-core-orthography",
+							"en-core-punctuation",
+							"en-core-abbreviations",
+							"en-core-function-words",
+							"en-core-basic-segmentation"
+						],
+						"capabilities": {
+							"segmentation": "profile",
+							"normalization": "unicode"
+						},
+						"notes": [
+							"Core profile resources cover modern typed English identity, Latin-script orthography, Unicode punctuation, SCOWLv2 abbreviation rows, SCOWLv2 POS-derived function-word stoplist candidates, and a basic UAX #29 segmentation baseline."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-core-quality",
+							"en-core-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+				"citations": [
+					"IANA Language Subtag Registry, File-Date 2026-05-05.",
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+					"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+					"SCOWLv2 rich text export, rel-2026.02.25."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-corpus",
+			"packageDir": "packages/textpacks/textpack-en-corpus",
+			"description": "Second-wave promoted source-backed English corpus artifact descriptors generated from Tatoeba weekly exports.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Second-wave promoted pinned Tatoeba 2026-06-06 English detailed sentence export transformed into a canonical corpus artifact profile with row count, checksum, attribution-preserving detailed fields, quality profile, and explicit fetch descriptor. The raw corpus is intentionally artifact-backed instead of shipped through npm.",
+				"auditedLicense": "The second-wave promoted exact Tatoeba weekly English export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
+				"declaredScope": "English Tatoeba corpus artifact descriptor for the 2026-06-06 detailed English sentence export. It does not claim in-package raw corpus text, corpus-frequency statistics, benchmark splits, full OPUS coverage, parallel links, or non-English corpus coverage.",
+				"conformanceEvidence": [
+					"eval:tatoeba-en-corpus:artifact-descriptor",
+					"eval:tatoeba-en-corpus:checksum"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "artifact-backed",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:tatoeba:weekly-2026-06-06"
+			],
+			"snapshotIds": [
+				"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-corpus:tatoeba-english-artifacts"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-corpus",
+				"name": "English Tatoeba Corpus Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-corpus",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-tatoeba-corpus-artifact",
+						"kind": "corpus",
+						"path": "resources/tatoeba-en.corpus-artifact.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-corpus-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-corpus-quality",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-en.corpus-quality.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "en-tatoeba-corpus-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-en.corpus-quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 34699431,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "401a4ff01d6749cb44fc2eccad4f2699ebe775096b5cba7441e00f0a76c91579"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-sentences-detailed-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng_sentences_detailed.tsv.bz2",
+								"sizeBytes": 34699431,
+								"checksum": "sha256:401a4ff01d6749cb44fc2eccad4f2699ebe775096b5cba7441e00f0a76c91579"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "corpus",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-tatoeba-corpus-artifact"
+						],
+						"artifactIds": [
+							"artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06"
+						],
+						"notes": [
+							"Tatoeba English detailed sentence export is available through an explicit full artifact descriptor."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-tatoeba-corpus-quality",
+							"en-tatoeba-corpus-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records row count, artifact size, checksum evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC-BY-2.0-FR",
+				"citations": [
+					"Tatoeba weekly exports, 2026-06-06."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+			"packageDir": "packages/textpacks/textpack-en-inflection-scowl",
+			"description": "Source-backed English lookup morphology generated from SCOWLv2.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Exact SCOWLv2 scowl.txt rich text export from rel-2026.02.25 transformed into POS inventory, inflection table, compressed form-to-lemma lookup analyzer, compressed lemma-to-form lookup generator, canonical lexicon, canonical morphology, and quality resources. The medium npm resources are the compressed lookup tables required for this source-specific scope.",
+				"auditedLicense": "The SCOWLv2 source row is approved; package-local LICENSE.generated.md includes the pinned Copyright evidence file.",
+				"declaredScope": "English SCOWLv2 lookup morphology component: form-to-lemma analysis, lemma-to-form generation candidates, POS inventory, and inflection inventory over the pinned SCOWLv2 release. It does not claim finite-state analysis, context disambiguation, corpus-frequency morphology, syntax, corpus, parallel, or language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:en-scowl-inflection:lemma-volume",
+					"eval:en-scowl-inflection:derived-form-volume",
+					"eval:en-scowl-inflection:lookup-analyzer-volume",
+					"eval:en-scowl-inflection:lookup-generator-volume",
+					"eval:en-scowl-inflection:pos-inventory",
+					"eval:en-scowl-inflection:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:scowl:v2-rel-2026-02-25"
+			],
+			"snapshotIds": [
+				"snapshot:source:scowl:v2-rel-2026.02.25"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-inflection-scowl",
+				"name": "English SCOWLv2 Inflection Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-scowl-inflection-entries",
+						"kind": "morphology",
+						"path": "resources/scowl-v2.inflections.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-scowl-pos-inventory",
+						"kind": "morphology",
+						"path": "resources/scowl-v2.pos.tsv",
+						"format": "tsv",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-scowl-lookup-analyzer",
+						"kind": "morphology",
+						"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-scowl-lookup-generator",
+						"kind": "morphology",
+						"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-scowl-inflection-lexicon-canonical",
+						"kind": "lexicon",
+						"path": "resources/scowl-v2.lexicon.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-lexicon-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-scowl-inflection-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/scowl-v2.morphology.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-scowl-inflection-quality",
+						"kind": "quality-profile",
+						"path": "resources/scowl-v2.quality.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-scowl-inflection-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/scowl-v2.quality-profile.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"SCOWLv2 rich text export, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "morphology",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-scowl-inflection-entries",
+							"en-scowl-lookup-analyzer",
+							"en-scowl-lookup-generator",
+							"en-scowl-pos-inventory",
+							"en-scowl-inflection-morphology-canonical"
+						],
+						"capabilities": {
+							"morphology": "lookup"
+						},
+						"notes": [
+							"SCOWLv2 form-to-lemma lookup analysis and lemma-to-form lookup generation candidates are available as generated compressed table resources."
+						]
+					},
+					{
+						"slot": "lexicon",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-scowl-inflection-lexicon-canonical"
+						],
+						"capabilities": {
+							"terminology": "lexicon"
+						},
+						"notes": [
+							"Generated canonical lexicon resource references SCOWLv2 lemma and form inventory coverage for lookup consumers."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-scowl-inflection-quality",
+							"en-scowl-inflection-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records lemma, form, POS, and transform-integrity counts."
+						]
+					}
+				],
+				"license": "LicenseRef-ESDB-MIT-Like",
+				"citations": [
+					"SCOWLv2 rich text export, rel-2026.02.25."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-normalization",
+			"packageDir": "packages/textpacks/textpack-en-normalization",
+			"description": "Source-backed English normalization profile generated from Unicode and CLDR.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Unicode 17 PropertyValueAliases and CLDR 48.2 likely-subtag/alias snapshots transformed into a modern typed-English Unicode normalization profile, rule table, canonical normalization resource, and quality-profile resources.",
+				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
+				"declaredScope": "Modern typed English Unicode normalization and lookup casefold profile. It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, OCR cleanup, corpus-derived normalization, segmentation, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:en-normalization:profile-rules",
+					"eval:en-normalization:unicode-nfc-evidence",
+					"eval:en-normalization:cldr-likely-subtag",
+					"eval:en-normalization:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unicode:ucd",
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-normalization:english-normalization-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-normalization",
+				"name": "English Normalization Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-normalization",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-normalization-rules",
+						"kind": "normalization-profile",
+						"path": "resources/en.normalization-rules.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "en-normalization-profile",
+						"kind": "normalization-profile",
+						"path": "resources/en.normalization.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-normalization-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-normalization-quality",
+						"kind": "quality-profile",
+						"path": "resources/en.normalization.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "en-normalization-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/en.normalization.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "normalization",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-normalization-rules",
+							"en-normalization-profile"
+						],
+						"capabilities": {
+							"normalization": "unicode"
+						},
+						"notes": [
+							"Unicode/CLDR-backed NFC and lookup casefold policy for modern typed English text."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-normalization-quality",
+							"en-normalization-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-parallel",
+			"packageDir": "packages/textpacks/textpack-en-parallel",
+			"description": "Second-wave promoted source-backed English parallel artifact descriptors generated from Tatoeba weekly exports.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Second-wave promoted pinned Tatoeba 2026-06-06 English-linked parallel exports transformed into canonical alignment-table artifact profiles for Arabic, French, Spanish, Italian, German, Modern Greek, Ancient Greek, and Latin links, with checksums, row counts, quality profile, and explicit fetch descriptors.",
+				"auditedLicense": "The second-wave promoted exact Tatoeba weekly English export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
+				"declaredScope": "English Tatoeba parallel link artifact descriptors for selected target languages. It does not claim in-package raw parallel text, sentence-text resolution without compatible sentence artifacts, OPUS coverage, trained aligners, translation-memory ranking, or full multilingual parallel coverage.",
+				"conformanceEvidence": [
+					"eval:tatoeba-en-parallel:language-pair-coverage",
+					"eval:tatoeba-en-parallel:link-row-volume",
+					"eval:tatoeba-en-parallel:checksum"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "parallel",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:tatoeba:weekly-2026-06-06"
+			],
+			"snapshotIds": [
+				"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-parallel",
+				"name": "English Tatoeba Parallel Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-parallel",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-tatoeba-parallel-ara",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-ara.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-deu",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-deu.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-fra",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-fra.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-spa",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-spa.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-ita",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-ita.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-ell",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-ell.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-grc",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-grc.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-lat",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-en.parallel-lat.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-tatoeba-parallel-quality",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-en.parallel-quality.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "en-tatoeba-parallel-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-en.parallel-quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-ara-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 298001,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "c48698582a583ea1e259dceacdc4ed663c3f615d846ca7c1fc449397a1d8d3c1"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ara_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-ara-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-ara_links.tsv.bz2",
+								"sizeBytes": 298001,
+								"checksum": "sha256:c48698582a583ea1e259dceacdc4ed663c3f615d846ca7c1fc449397a1d8d3c1"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 3515460,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-deu_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-deu-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-deu_links.tsv.bz2",
+								"sizeBytes": 3515460,
+								"checksum": "sha256:7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-fra-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 2631564,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "b3e2018d6afa03ca9efb11e907674dde519fcb288707ac130d5a1ca61989c23d"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-fra_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-fra-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-fra_links.tsv.bz2",
+								"sizeBytes": 2631564,
+								"checksum": "sha256:b3e2018d6afa03ca9efb11e907674dde519fcb288707ac130d5a1ca61989c23d"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-spa-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 1750446,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "976715308d3d034a1487f056cb95ad6dc9cb67c6a5410bb5c60170366d4c024e"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-spa_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-spa-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-spa_links.tsv.bz2",
+								"sizeBytes": 1750446,
+								"checksum": "sha256:976715308d3d034a1487f056cb95ad6dc9cb67c6a5410bb5c60170366d4c024e"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-ita-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 3721027,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "47187cc3ddc4be8e0083a6a60f683c06e2341d1f459ce067f7dace9dd469ef4f"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ita_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-ita-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-ita_links.tsv.bz2",
+								"sizeBytes": 3721027,
+								"checksum": "sha256:47187cc3ddc4be8e0083a6a60f683c06e2341d1f459ce067f7dace9dd469ef4f"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-ell-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 191418,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "a711268471634a2b169c824a2fcdab336555d3a2d83a812bf8796ae3fcd8df08"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ell_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-ell-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-ell_links.tsv.bz2",
+								"sizeBytes": 191418,
+								"checksum": "sha256:a711268471634a2b169c824a2fcdab336555d3a2d83a812bf8796ae3fcd8df08"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-grc-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 9451,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "b9659a219c5d8742257e60ca3876b2ad3869984f4437931f31419456126bada2"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-grc_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-grc-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-grc_links.tsv.bz2",
+								"sizeBytes": 9451,
+								"checksum": "sha256:b9659a219c5d8742257e60ca3876b2ad3869984f4437931f31419456126bada2"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-lat-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 279658,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "83ffb4716016e7b8889b562c3ced046d0b168a8b81954f9994d88bfd83a8e2df"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/eng/eng-lat_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-eng-lat-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "eng-lat_links.tsv.bz2",
+								"sizeBytes": 279658,
+								"checksum": "sha256:83ffb4716016e7b8889b562c3ced046d0b168a8b81954f9994d88bfd83a8e2df"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "parallel",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-tatoeba-parallel-ara",
+							"en-tatoeba-parallel-deu",
+							"en-tatoeba-parallel-ell",
+							"en-tatoeba-parallel-fra",
+							"en-tatoeba-parallel-grc",
+							"en-tatoeba-parallel-ita",
+							"en-tatoeba-parallel-lat",
+							"en-tatoeba-parallel-spa"
+						],
+						"artifactIds": [
+							"artifact:textpack-en-parallel:full:tatoeba-eng-ara-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-ell-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-fra-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-grc-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-ita-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-lat-links:2026-06-06",
+							"artifact:textpack-en-parallel:full:tatoeba-eng-spa-links:2026-06-06"
+						],
+						"capabilities": {
+							"parallel": true
+						},
+						"notes": [
+							"Tatoeba English-linked alignment tables are available through explicit full artifact descriptors for selected target languages."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-tatoeba-parallel-quality",
+							"en-tatoeba-parallel-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC-BY-2.0-FR",
+				"citations": [
+					"Tatoeba weekly exports, 2026-06-06."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-segmentation",
+			"packageDir": "packages/textpacks/textpack-en-segmentation",
+			"description": "Source-backed English segmentation profiles generated from Unicode UAX #29 break properties and CLDR.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots plus CLDR 48.2 English likely-subtag context transformed into modern typed-English Unicode segmentation profiles, property tables, canonical segmentation resources, and quality-profile resources.",
+				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
+				"declaredScope": "Modern typed English Unicode grapheme, word, and sentence boundary profile. It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:en-segmentation:grapheme-boundary-properties",
+					"eval:en-segmentation:word-boundary-properties",
+					"eval:en-segmentation:sentence-boundary-properties",
+					"eval:en-segmentation:cldr-likely-subtag",
+					"eval:en-segmentation:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unicode:ucd",
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-segmentation:english-segmentation-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-segmentation",
+				"name": "English Segmentation Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-segmentation",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-segmentation-boundary-properties",
+						"kind": "segmentation-profile",
+						"path": "resources/en.segmentation-boundary-properties.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "en-grapheme-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/en.segmentation.grapheme.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-word-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/en.segmentation.word.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-sentence-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/en.segmentation.sentence.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-segmentation-quality",
+						"kind": "quality-profile",
+						"path": "resources/en.segmentation.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "en-segmentation-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/en.segmentation.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "segmentation",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-segmentation-boundary-properties",
+							"en-grapheme-segmentation-profile",
+							"en-word-segmentation-profile",
+							"en-sentence-segmentation-profile"
+						],
+						"capabilities": {
+							"segmentation": "profile"
+						},
+						"notes": [
+							"Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed English text."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-segmentation-quality",
+							"en-segmentation-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
+			}
+		},
+		{
 			"packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
 			"packageDir": "packages/textpacks/textpack-en-syntax-ud-gumreddit",
-			"description": "Source-backed English UD syntax and tagging profiles generated from GUMReddit annotations.",
+			"description": "Source-backed English UD GUMReddit annotation-derived syntax and tagging profiles.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Exact UD English GUMReddit r2.18 annotation-only release transformed into UPOS, morphological feature, dependency-label, sentence-profile, canonical syntax, canonical morphology, and quality-profile resources. The emitted resources intentionally exclude FORM and LEMMA text fields from the underlying Reddit material.",
+				"auditedLicense": "The UD English GUMReddit r2.18 source row is approved; the snapshot pins the repository LICENSE.txt and README evidence, and package-local LICENSE.generated.md includes the pinned repository LICENSE.txt file.",
+				"declaredScope": "English UD GUMReddit annotation-derived syntax and tagging profile component; does not claim full English syntax parsing, full English morphology, raw text redistribution, broad treebank coverage, corpus coverage, or language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:en-ud-gumreddit:annotation-volume",
+					"eval:en-ud-gumreddit:dependency-label-coverage",
+					"eval:en-ud-gumreddit:head-reference-coverage",
+					"eval:en-ud-gumreddit:no-raw-text-fields"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
 			"sourceIds": [
@@ -264,6 +2993,45 @@
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
 						]
+					},
+					{
+						"id": "en-ud-gumreddit-syntax-canonical",
+						"kind": "grammar",
+						"path": "resources/ud-gumreddit.syntax.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Universal Dependencies English GUMReddit r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-syntax-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-ud-gumreddit-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/ud-gumreddit.morphology.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Universal Dependencies English GUMReddit r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-ud-gumreddit-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ud-gumreddit.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Universal Dependencies English GUMReddit r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
 					}
 				],
 				"capabilitySlots": [
@@ -273,7 +3041,8 @@
 						"resourceIds": [
 							"en-ud-gumreddit-upos",
 							"en-ud-gumreddit-features",
-							"en-ud-gumreddit-annotations"
+							"en-ud-gumreddit-annotations",
+							"en-ud-gumreddit-morphology-canonical"
 						],
 						"capabilities": {
 							"tagging": "statistical",
@@ -289,11 +3058,9 @@
 						"resourceIds": [
 							"en-ud-gumreddit-dependencies",
 							"en-ud-gumreddit-sentence-profile",
-							"en-ud-gumreddit-annotations"
+							"en-ud-gumreddit-annotations",
+							"en-ud-gumreddit-syntax-canonical"
 						],
-						"capabilities": {
-							"parsing": "statistical"
-						},
 						"notes": [
 							"Annotation-derived dependency and sentence profiles are available without redistributing Reddit text."
 						]
@@ -302,7 +3069,8 @@
 						"slot": "quality",
 						"status": "task-supported",
 						"resourceIds": [
-							"en-ud-gumreddit-quality"
+							"en-ud-gumreddit-quality",
+							"en-ud-gumreddit-quality-profile"
 						],
 						"notes": [
 							"Generated quality profile records annotation counts and confirms no raw text fields are emitted."
@@ -316,9 +3084,2493 @@
 			}
 		},
 		{
+			"packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+			"packageDir": "packages/textpacks/textpack-en-wordlist-esdb",
+			"description": "Source-backed English spelling wordlist resources generated from ESDB wordlist-diff default regional outputs.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Exact wordlist-diff rel-2026.02.25 default generated English regional wordlists for en_US, en_GB-ise, en_GB-ize, en_CA, and en_AU transformed into spelling-form, profile, search-analyzer, canonical lexicon, and quality resources.",
+				"auditedLicense": "The ESDB wordlist-diff source row is approved; package-local LICENSE.generated.md includes the pinned Copyright evidence file.",
+				"declaredScope": "English spelling wordlist and analyzer-profile component from ESDB generated default regional outputs; does not claim full English lexicon, inflectional morphology, frequency coverage, corpus coverage, or language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:en-esdb-wordlist:default-profile-count",
+					"eval:en-esdb-wordlist:word-volume",
+					"eval:en-esdb-wordlist:search-profile",
+					"eval:en-esdb-wordlist:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:esdb:wordlist-diff-en-default-2026-02-25"
+			],
+			"snapshotIds": [
+				"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:en-wordlist-esdb",
+				"name": "English ESDB Wordlist Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"regions": [
+						"AU",
+						"CA",
+						"GB",
+						"US"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "en-esdb-default-wordlists",
+						"kind": "lexicon",
+						"path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"English Speller Database generated wordlist outputs, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-esdb-default-profiles",
+						"kind": "lexicon",
+						"path": "resources/esdb-2026.default-profiles.tsv",
+						"format": "tsv",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"English Speller Database generated wordlist outputs, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-esdb-wordlist-lexicon-canonical",
+						"kind": "lexicon",
+						"path": "resources/esdb-2026.lexicon.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"English Speller Database generated wordlist outputs, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-lexicon-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-esdb-wordlist-search-profile",
+						"kind": "search-profile",
+						"path": "resources/esdb-2026.search-profile.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"English Speller Database generated wordlist outputs, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
+						}
+					},
+					{
+						"id": "en-esdb-wordlist-quality",
+						"kind": "quality-profile",
+						"path": "resources/esdb-2026.quality.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"English Speller Database generated wordlist outputs, rel-2026.02.25."
+						]
+					},
+					{
+						"id": "en-esdb-wordlist-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/esdb-2026.quality-profile.json",
+						"format": "json",
+						"license": "LicenseRef-ESDB-MIT-Like",
+						"citations": [
+							"English Speller Database generated wordlist outputs, rel-2026.02.25."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "lexicon",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-esdb-default-wordlists",
+							"en-esdb-default-profiles",
+							"en-esdb-wordlist-lexicon-canonical"
+						],
+						"capabilities": {
+							"terminology": "lexicon"
+						},
+						"notes": [
+							"ESDB default regional spell-checker wordlists are available as generated English spelling-form resources. This pack does not claim full lexical semantics or morphology coverage."
+						]
+					},
+					{
+						"slot": "search",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-esdb-wordlist-search-profile"
+						],
+						"capabilities": {
+							"search": "analyzer"
+						},
+						"notes": [
+							"Generated analyzer profile references the ESDB wordlist resource for spelling-aware search and suggestion consumers."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"en-esdb-wordlist-quality",
+							"en-esdb-wordlist-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records profile counts, word counts, and transform integrity."
+						]
+					}
+				],
+				"license": "LicenseRef-ESDB-MIT-Like",
+				"citations": [
+					"English Speller Database generated wordlist outputs, rel-2026.02.25."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-core",
+			"packageDir": "packages/textpacks/textpack-fr-core",
+			"description": "Source-backed French core language profile generated from IANA, Unicode, and CLDR.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned IANA Language Subtag Registry, Unicode 17 UCD Scripts/General_Category/UAX #29 property files, and CLDR 48.2 likely-subtag/script data transformed into a modern typed-French language profile, Latin-script orthography ranges, Unicode punctuation ranges, basic segmentation baseline, and quality-profile resources.",
+				"auditedLicense": "IANA, Unicode UCD, and CLDR source rows are approved; package-local LICENSE.generated.md includes local IANA license evidence copied from the pinned snapshot.",
+				"declaredScope": "Modern typed French core language profile: BCP 47 identity, Latin-script orthography ranges, Unicode punctuation ranges, and Unicode UAX #29 basic segmentation baseline. It does not claim French abbreviations, stoplists, lexical entries, morphology, elision/contraction handling, syntax parsing, KB/entity linking, corpus, parallel, search, quality diagnostics beyond source transform evidence, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:fr-core:iana-language-profile",
+					"eval:fr-core:latin-orthography-ranges",
+					"eval:fr-core:unicode-punctuation-ranges",
+					"eval:fr-core:basic-segmentation-baseline",
+					"eval:fr-core:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:iana:language-subtag-registry",
+				"source:unicode:ucd",
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:iana:language-subtag-registry:2026-05-05",
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-core:french-core-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-core",
+				"name": "French Core Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-core",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"regions": [
+						"FR"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-core-language-profile",
+						"kind": "locale-profile",
+						"path": "resources/fr.core.language-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "fr-core-orthography",
+						"kind": "locale-profile",
+						"path": "resources/fr.core.orthography.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						]
+					},
+					{
+						"id": "fr-core-punctuation",
+						"kind": "locale-profile",
+						"path": "resources/fr.core.punctuation.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						]
+					},
+					{
+						"id": "fr-core-basic-segmentation",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.core.basic-segmentation.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-core-quality",
+						"kind": "quality-profile",
+						"path": "resources/fr.core.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "fr-core-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/fr.core.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+						"citations": [
+							"IANA Language Subtag Registry, File-Date 2026-05-05.",
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "core",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-core-language-profile",
+							"fr-core-orthography",
+							"fr-core-punctuation",
+							"fr-core-basic-segmentation"
+						],
+						"capabilities": {
+							"segmentation": "profile",
+							"normalization": "unicode"
+						},
+						"notes": [
+							"Core profile resources cover modern typed French identity, Latin-script orthography, Unicode punctuation, and a basic UAX #29 segmentation baseline."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-core-quality",
+							"fr-core-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+				"citations": [
+					"IANA Language Subtag Registry, File-Date 2026-05-05.",
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
+			"packageDir": "packages/textpacks/textpack-fr-corpus",
+			"description": "Second-wave promoted source-backed French corpus artifact descriptors generated from Tatoeba weekly French exports.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Second-wave promoted pinned Tatoeba 2026-06-06 French detailed sentence export transformed into a canonical corpus artifact profile with row count, checksum, attribution-preserving detailed fields, quality profile, and explicit fetch descriptor. The raw corpus is intentionally artifact-backed instead of shipped through npm.",
+				"auditedLicense": "The second-wave promoted exact Tatoeba weekly French export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
+				"declaredScope": "French Tatoeba corpus artifact descriptor for the 2026-06-06 detailed French sentence export. It does not claim in-package raw corpus text, corpus-frequency statistics, benchmark splits, OPUS coverage, parallel links, French lexicon, French morphology, French syntax, French search, French KB, or full French language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:tatoeba-fr-corpus:artifact-descriptor",
+					"eval:tatoeba-fr-corpus:checksum"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "artifact-backed",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:tatoeba:weekly-french-2026-06-06"
+			],
+			"snapshotIds": [
+				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-corpus",
+				"name": "French Tatoeba Corpus Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-corpus",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-tatoeba-corpus-artifact",
+						"kind": "corpus",
+						"path": "resources/tatoeba-fr.corpus-artifact.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-corpus-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-tatoeba-corpus-quality",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-fr.corpus-quality.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "fr-tatoeba-corpus-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-fr.corpus-quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-french-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 14624789,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-fra-sentences-detailed-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "fra_sentences_detailed.tsv.bz2",
+								"sizeBytes": 14624789,
+								"checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "corpus",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-tatoeba-corpus-artifact"
+						],
+						"artifactIds": [
+							"artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06"
+						],
+						"notes": [
+							"Tatoeba French detailed sentence export is available through an explicit full artifact descriptor."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-tatoeba-corpus-quality",
+							"fr-tatoeba-corpus-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records row count, artifact size, checksum evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC-BY-2.0-FR",
+				"citations": [
+					"Tatoeba weekly French exports, 2026-06-06."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+			"packageDir": "packages/textpacks/textpack-fr-lexique-sa",
+			"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, morphology, frequency, search, and quality resources.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Lexique 3.83 TSV transformed into compressed form entries, lemma inventory, POS inventory, canonical lexicon, canonical lookup morphology, a Lexique-backed search profile, quality profile, coverage report, and evaluation records.",
+				"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated; this package uses the required -sa suffix and package reports cite the Lexique page plus CC-BY-SA-4.0 evidence.",
+				"declaredScope": "French Lexique 3.83 share-alike isolated component: lexical form inventory, lemma inventory, POS/gender/number inventory, source frequency fields, lookup morphology metadata, and a source-backed search analyzer profile. It does not claim default-composite eligibility, WOLF/OMW KB coverage, French syntax, corpus packaging, parallel data, or full French language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:fr-lexique:entry-volume",
+					"eval:fr-lexique:lemma-volume",
+					"eval:fr-lexique:pos-inventory",
+					"eval:fr-lexique:search-profile",
+					"eval:fr-lexique:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:fr:lexique-383"
+			],
+			"snapshotIds": [
+				"snapshot:source:fr:lexique-383:2019-06-04"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-lexique-sa:lexique-383"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-lexique-sa",
+				"name": "French Lexique 3.83 Share-Alike Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-lexique-entries",
+						"kind": "lexicon",
+						"path": "resources/lexique-383.entries.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						]
+					},
+					{
+						"id": "fr-lexique-lemmas",
+						"kind": "lexicon",
+						"path": "resources/lexique-383.lemmas.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						]
+					},
+					{
+						"id": "fr-lexique-pos-inventory",
+						"kind": "morphology",
+						"path": "resources/lexique-383.pos.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						]
+					},
+					{
+						"id": "fr-lexique-lexicon-canonical",
+						"kind": "lexicon",
+						"path": "resources/lexique-383.lexicon.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-lexicon-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-lexique-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/lexique-383.morphology.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-lexique-search-profile",
+						"kind": "search-profile",
+						"path": "resources/lexique-383.search-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-lexique-quality",
+						"kind": "quality-profile",
+						"path": "resources/lexique-383.quality.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						]
+					},
+					{
+						"id": "fr-lexique-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/lexique-383.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Lexique 3.83, 2019-06-04."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "lexicon",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-lexique-entries",
+							"fr-lexique-lemmas",
+							"fr-lexique-lexicon-canonical"
+						],
+						"notes": [
+							"Lexique 3.83 provides French forms, lemmas, POS, gender/number fields, phonology, and source frequency fields.",
+							"This package is share-alike isolated and is not eligible for the default French composite."
+						]
+					},
+					{
+						"slot": "morphology",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-lexique-entries",
+							"fr-lexique-pos-inventory",
+							"fr-lexique-morphology-canonical"
+						],
+						"notes": [
+							"Lexique 3.83 provides lookup morphology evidence; it is not a context-disambiguating analyzer."
+						]
+					},
+					{
+						"slot": "search",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-lexique-search-profile"
+						],
+						"notes": [
+							"Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-lexique-quality",
+							"fr-lexique-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
+						]
+					}
+				],
+				"license": "CC-BY-SA-4.0",
+				"citations": [
+					"Lexique 3.83, 2019-06-04."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
+			"packageDir": "packages/textpacks/textpack-fr-normalization",
+			"description": "Source-backed French normalization profile generated from Unicode and CLDR.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Unicode 17 PropertyValueAliases and CLDR 48.2 likely-subtag/alias snapshots transformed into a modern typed-French Unicode normalization profile, rule table, canonical normalization resource, and quality-profile resources.",
+				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
+				"declaredScope": "Modern typed French Unicode normalization and lookup casefold profile. It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, accent-folding search policy, elision/contraction handling, transliteration, OCR cleanup, corpus-derived normalization, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:fr-normalization:profile-rules",
+					"eval:fr-normalization:unicode-nfc-evidence",
+					"eval:fr-normalization:cldr-likely-subtag",
+					"eval:fr-normalization:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unicode:ucd",
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-normalization:french-normalization-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-normalization",
+				"name": "French Normalization Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-normalization",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-normalization-rules",
+						"kind": "normalization-profile",
+						"path": "resources/fr.normalization-rules.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "fr-normalization-profile",
+						"kind": "normalization-profile",
+						"path": "resources/fr.normalization.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-normalization-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-normalization-quality",
+						"kind": "quality-profile",
+						"path": "resources/fr.normalization.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "fr-normalization-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/fr.normalization.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "normalization",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-normalization-rules",
+							"fr-normalization-profile"
+						],
+						"capabilities": {
+							"normalization": "unicode"
+						},
+						"notes": [
+							"Unicode/CLDR-backed NFC and lookup casefold policy for modern typed French text."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-normalization-quality",
+							"fr-normalization-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
+			"packageDir": "packages/textpacks/textpack-fr-parallel",
+			"description": "Second-wave promoted source-backed French parallel artifact descriptors generated from Tatoeba weekly French exports.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Second-wave promoted pinned Tatoeba 2026-06-06 French-linked parallel exports transformed into canonical alignment-table artifact profiles for English, Arabic, Spanish, and German links, with checksums, row counts, quality profile, and explicit fetch descriptors.",
+				"auditedLicense": "The second-wave promoted exact Tatoeba weekly French export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
+				"declaredScope": "French Tatoeba parallel link artifact descriptors for English, Arabic, Spanish, and German target languages. It does not claim in-package raw parallel text, sentence-text resolution without compatible sentence artifacts, OPUS coverage, trained aligners, translation-memory ranking, French lexicon, French morphology, French syntax, French search, French KB, or full multilingual parallel coverage.",
+				"conformanceEvidence": [
+					"eval:tatoeba-fr-parallel:language-pair-coverage",
+					"eval:tatoeba-fr-parallel:link-row-volume",
+					"eval:tatoeba-fr-parallel:checksum"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "parallel",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:tatoeba:weekly-french-2026-06-06"
+			],
+			"snapshotIds": [
+				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-parallel",
+				"name": "French Tatoeba Parallel Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-parallel",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-tatoeba-parallel-eng",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-fr.parallel-eng.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-tatoeba-parallel-ara",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-fr.parallel-ara.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-tatoeba-parallel-spa",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-fr.parallel-spa.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-tatoeba-parallel-deu",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-fr.parallel-deu.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-parallel-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-tatoeba-parallel-quality",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-fr.parallel-quality.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "fr-tatoeba-parallel-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/tatoeba-fr.parallel-quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-french-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 2630353,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "26cd42e6b219ecd016d6b5c38ace5a0b7285bf93da3a2cfa933f691341034689"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/fra/fra-eng_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-fra-eng-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "fra-eng_links.tsv.bz2",
+								"sizeBytes": 2630353,
+								"checksum": "sha256:26cd42e6b219ecd016d6b5c38ace5a0b7285bf93da3a2cfa933f691341034689"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-french-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 19399,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "43d9b95ed2b74940e3767915ae8ada2b6e5e83e83f5c96f589e4fb83f6492b30"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/fra/fra-ara_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-fra-ara-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "fra-ara_links.tsv.bz2",
+								"sizeBytes": 19399,
+								"checksum": "sha256:43d9b95ed2b74940e3767915ae8ada2b6e5e83e83f5c96f589e4fb83f6492b30"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-french-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 390399,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/fra/fra-spa_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-fra-spa-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "fra-spa_links.tsv.bz2",
+								"sizeBytes": 390399,
+								"checksum": "sha256:c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8"
+							}
+						]
+					},
+					{
+						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06",
+						"sourceIds": [
+							"source:tatoeba:weekly-french-2026-06-06"
+						],
+						"version": "2026-06-06",
+						"profile": "full",
+						"sizeBytes": 986191,
+						"mediaType": "text/tab-separated-values",
+						"compression": "bzip2",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "0d719d633ce64b094686e98bf56cd753d02a040d0db1096a9165edcc918f84f2"
+						},
+						"licenseExpression": "CC-BY-2.0-FR",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://downloads.tatoeba.org/exports/per_language/fra/fra-deu_links.tsv.bz2",
+							"instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing."
+						},
+						"cacheKey": "tatoeba-fra-deu-links-tsv-bz2-2026-06-06",
+						"expectedFiles": [
+							{
+								"path": "fra-deu_links.tsv.bz2",
+								"sizeBytes": 986191,
+								"checksum": "sha256:0d719d633ce64b094686e98bf56cd753d02a040d0db1096a9165edcc918f84f2"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "parallel",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-tatoeba-parallel-eng",
+							"fr-tatoeba-parallel-ara",
+							"fr-tatoeba-parallel-spa",
+							"fr-tatoeba-parallel-deu"
+						],
+						"artifactIds": [
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06"
+						],
+						"capabilities": {
+							"parallel": true
+						},
+						"notes": [
+							"Tatoeba French-linked alignment tables are available through explicit full artifact descriptors for English, Arabic, Spanish, and German."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-tatoeba-parallel-quality",
+							"fr-tatoeba-parallel-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC-BY-2.0-FR",
+				"citations": [
+					"Tatoeba weekly French exports, 2026-06-06."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+			"packageDir": "packages/textpacks/textpack-fr-segmentation",
+			"description": "Source-backed French segmentation profiles generated from Unicode UAX #29 break properties and CLDR.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots plus CLDR 48.2 French likely-subtag context transformed into modern typed-French Unicode segmentation profiles, property tables, canonical segmentation resources, and quality-profile resources.",
+				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
+				"declaredScope": "Modern typed French Unicode grapheme, word, and sentence boundary profile. It does not claim dictionary tokenization, elision/contraction tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:fr-segmentation:grapheme-boundary-properties",
+					"eval:fr-segmentation:word-boundary-properties",
+					"eval:fr-segmentation:sentence-boundary-properties",
+					"eval:fr-segmentation:cldr-likely-subtag",
+					"eval:fr-segmentation:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unicode:ucd",
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:ucd:17.0.0",
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-segmentation",
+				"name": "French Segmentation Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-segmentation-boundary-properties",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation-boundary-properties.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "fr-grapheme-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation.grapheme.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-word-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation.word.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-sentence-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation.sentence.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-segmentation-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-segmentation-quality",
+						"kind": "quality-profile",
+						"path": "resources/fr.segmentation.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						]
+					},
+					{
+						"id": "fr-segmentation-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/fr.segmentation.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "segmentation",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-segmentation-boundary-properties",
+							"fr-grapheme-segmentation-profile",
+							"fr-word-segmentation-profile",
+							"fr-sentence-segmentation-profile"
+						],
+						"capabilities": {
+							"segmentation": "profile"
+						},
+						"notes": [
+							"Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed French text."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-segmentation-quality",
+							"fr-segmentation-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations."
+						]
+					}
+				],
+				"license": "Unicode-3.0",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
+			"packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
+			"description": "Source-backed isolated French UD GSD annotation-derived syntax and tagging profiles.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Exact UD French GSD r2.18 release transformed into UPOS, morphological feature, dependency-label, sentence-profile, canonical syntax, canonical morphology, and quality-profile resources. The emitted resources intentionally exclude FORM and LEMMA text fields.",
+				"auditedLicense": "The UD French GSD r2.18 source row is approved as CC-BY-SA-4.0 and share-alike isolated; the package name carries the required -sa suffix, and package-local LICENSE.generated.md includes the pinned repository LICENSE file.",
+				"declaredScope": "French UD GSD annotation-derived syntax and tagging profile component; share-alike isolated. It does not claim default French composite eligibility, full French syntax parsing, full French morphology, broad treebank coverage, corpus coverage, parallel coverage, or language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:fr-ud-gsd:annotation-volume",
+					"eval:fr-ud-gsd:dependency-label-coverage",
+					"eval:fr-ud-gsd:head-reference-coverage",
+					"eval:fr-ud-gsd:no-raw-text-fields"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:ud:french-gsd-r2.18"
+			],
+			"snapshotIds": [
+				"snapshot:source:ud:french-gsd:r2.18"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-syntax-ud-gsd-sa",
+				"name": "French UD GSD Syntax Share-Alike Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-ud-gsd-upos",
+						"kind": "grammar",
+						"path": "resources/ud-gsd.upos.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						]
+					},
+					{
+						"id": "fr-ud-gsd-features",
+						"kind": "morphology",
+						"path": "resources/ud-gsd.features.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						]
+					},
+					{
+						"id": "fr-ud-gsd-dependencies",
+						"kind": "grammar",
+						"path": "resources/ud-gsd.dependencies.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						]
+					},
+					{
+						"id": "fr-ud-gsd-sentence-profile",
+						"kind": "statistical-model",
+						"path": "resources/ud-gsd.sentence-profile.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						]
+					},
+					{
+						"id": "fr-ud-gsd-annotations",
+						"kind": "dataset",
+						"path": "resources/ud-gsd.annotations.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						]
+					},
+					{
+						"id": "fr-ud-gsd-quality",
+						"kind": "quality-profile",
+						"path": "resources/ud-gsd.quality.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						]
+					},
+					{
+						"id": "fr-ud-gsd-syntax-canonical",
+						"kind": "grammar",
+						"path": "resources/ud-gsd.syntax.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-syntax-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-ud-gsd-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/ud-gsd.morphology.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-ud-gsd-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ud-gsd.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0",
+						"citations": [
+							"Universal Dependencies French GSD r2.18 annotations."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "tagging",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-ud-gsd-upos",
+							"fr-ud-gsd-features",
+							"fr-ud-gsd-annotations",
+							"fr-ud-gsd-morphology-canonical"
+						],
+						"capabilities": {
+							"tagging": "statistical",
+							"morphology": "statistical"
+						},
+						"notes": [
+							"UD French GSD part-of-speech and morphosyntactic feature profiles are available under the share-alike policy surface."
+						]
+					},
+					{
+						"slot": "syntax",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-ud-gsd-dependencies",
+							"fr-ud-gsd-sentence-profile",
+							"fr-ud-gsd-annotations",
+							"fr-ud-gsd-syntax-canonical"
+						],
+						"notes": [
+							"UD French GSD annotation-derived UPOS, feature, dependency-label, sentence-profile, and syntax resources are available under the share-alike policy surface."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-ud-gsd-quality",
+							"fr-ud-gsd-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, rejected records, and raw-text exclusion evidence."
+						]
+					}
+				],
+				"license": "CC-BY-SA-4.0",
+				"citations": [
+					"Universal Dependencies French GSD r2.18 annotations."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
+			"packageDir": "packages/textpacks/textpack-fr-unimorph-sa",
+			"description": "Source-backed share-alike isolated French UniMorph inflection and paradigm resources.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned UniMorph French repository commit f672f8cceb2d5f5a1e2241b5622c8845f8274635 transformed into compressed paradigm rows, lookup analyzer/generator tables, feature inventory, canonical morphology resources, quality profile, coverage report, and evaluation records.",
+				"auditedLicense": "The exact UniMorph French source row is approved as share-alike isolated; this package uses the required -sa suffix and package reports cite the upstream README plus CC-BY-SA-3.0 evidence.",
+				"declaredScope": "French UniMorph share-alike isolated component: lemma/form paradigm rows, source UniMorph feature bundles, lookup analyzer/generator tables, canonical morphology metadata, and quality evidence. It does not claim default-composite eligibility, context-disambiguating morphology, finite-state morphology, syntax parsing, corpus coverage, parallel data, or full French language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:fr-unimorph:entry-volume",
+					"eval:fr-unimorph:lookup-analyzer-volume",
+					"eval:fr-unimorph:lookup-generator-volume",
+					"eval:fr-unimorph:feature-inventory",
+					"eval:fr-unimorph:transform-rejections"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "language-concrete",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:unimorph:french-master-f672f8c"
+			],
+			"snapshotIds": [
+				"snapshot:source:unimorph:french-master-f672f8c"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-fr-unimorph-sa:french-unimorph"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:fr-unimorph-sa",
+				"name": "French UniMorph Share-Alike Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "fr-unimorph-paradigms",
+						"kind": "morphology",
+						"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						]
+					},
+					{
+						"id": "fr-unimorph-lookup-analyzer",
+						"kind": "morphology",
+						"path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						]
+					},
+					{
+						"id": "fr-unimorph-lookup-generator",
+						"kind": "morphology",
+						"path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
+						"format": "tsv+gzip+base64",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						]
+					},
+					{
+						"id": "fr-unimorph-feature-inventory",
+						"kind": "morphology",
+						"path": "resources/unimorph-fra.features.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						]
+					},
+					{
+						"id": "fr-unimorph-pos-inventory",
+						"kind": "morphology",
+						"path": "resources/unimorph-fra.pos.tsv",
+						"format": "tsv",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						]
+					},
+					{
+						"id": "fr-unimorph-morphology-canonical",
+						"kind": "morphology",
+						"path": "resources/unimorph-fra.morphology.json",
+						"format": "json",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-morphology-resource.schema.json"
+						}
+					},
+					{
+						"id": "fr-unimorph-quality",
+						"kind": "quality-profile",
+						"path": "resources/unimorph-fra.quality.json",
+						"format": "json",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						]
+					},
+					{
+						"id": "fr-unimorph-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/unimorph-fra.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-3.0",
+						"citations": [
+							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "morphology",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-unimorph-paradigms",
+							"fr-unimorph-lookup-analyzer",
+							"fr-unimorph-lookup-generator",
+							"fr-unimorph-feature-inventory",
+							"fr-unimorph-pos-inventory",
+							"fr-unimorph-morphology-canonical"
+						],
+						"capabilities": {
+							"morphology": "paradigm-table"
+						},
+						"notes": [
+							"UniMorph French lemma/form paradigms, feature bundles, lookup analyzer rows, and lookup generator rows are available under the share-alike policy surface."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"fr-unimorph-quality",
+							"fr-unimorph-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, rejected records, and share-alike isolation evidence."
+						]
+					}
+				],
+				"license": "CC-BY-SA-3.0",
+				"citations": [
+					"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+			"packageDir": "packages/textpacks/textpack-wikidata-ar",
+			"description": "Source-backed Arabic Wikidata entity artifact descriptor generated from the versioned Wikidata main dump.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 dump sidecars transformed into a canonical Arabic KB artifact profile for entity labels, aliases, relations, and ontology consumers. The full raw dump is intentionally artifact-backed and fetched explicitly instead of shipped through npm.",
+				"auditedLicense": "The Wikidata main structured source row is approved as CC0-1.0; package-local reports cite the Wikidata licensing and database download pages plus the pinned Wikimedia dump directory.",
+				"declaredScope": "Arabic Wikidata entity KB artifact descriptor for the full Wikidata main JSON dump. It does not claim an npm-shipped entity index, in-package entity lookup without artifact fetch, Arabic WordNet lexical semantics, morphology, syntax, corpus, parallel, dialectal Arabic, Classical/Quranic Arabic, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:wikidata-ar:artifact-descriptor",
+					"eval:wikidata-ar:checksum-sidecar"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "kb",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"snapshotIds": [
+				"snapshot:source:wikidata:main:20260608"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:wikidata-ar",
+				"name": "Wikidata Arabic Entity Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "wikidata-ar-kb-artifact",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-ar.kb-artifact.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-kb-resource.schema.json"
+						}
+					},
+					{
+						"id": "wikidata-ar-quality",
+						"kind": "quality-profile",
+						"path": "resources/wikidata-ar.quality.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-ar-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/wikidata-ar.quality-profile.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608",
+						"sourceIds": [
+							"source:wikidata:main"
+						],
+						"version": "20260608",
+						"profile": "full",
+						"sizeBytes": 142291512349,
+						"mediaType": "application/json",
+						"compression": "gzip",
+						"checksum": {
+							"algorithm": "sha1",
+							"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+						},
+						"licenseExpression": "CC0-1.0",
+						"redistributionPolicy": "redistributable",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+							"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+						},
+						"cacheKey": "wikidata-main-20260608-all-json-gzip",
+						"expectedFiles": [
+							{
+								"path": "wikidata-20260608-all.json.gz",
+								"sizeBytes": 142291512349,
+								"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "kb",
+						"status": "task-supported",
+						"resourceIds": [
+							"wikidata-ar-kb-artifact"
+						],
+						"artifactIds": [
+							"artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608"
+						],
+						"capabilities": {
+							"terminology": "kb",
+							"extraction": "gazetteer"
+						},
+						"notes": [
+							"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit full artifact descriptor for Arabic KB consumers."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"wikidata-ar-quality",
+							"wikidata-ar-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records artifact size, upstream checksum sidecar evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC0-1.0",
+				"citations": [
+					"Wikidata main structured data dump, 2026-06-08."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wikidata-en",
+			"packageDir": "packages/textpacks/textpack-wikidata-en",
+			"description": "Source-backed English Wikidata entity artifact descriptor generated from the versioned Wikidata main dump.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 dump sidecars transformed into a canonical English KB artifact profile for entity labels, aliases, relations, and ontology consumers. The full raw dump is intentionally artifact-backed and fetched explicitly instead of shipped through npm.",
+				"auditedLicense": "The Wikidata main structured source row is approved as CC0-1.0; package-local reports cite the Wikidata licensing and database download pages plus the pinned Wikimedia dump directory.",
+				"declaredScope": "English Wikidata entity KB artifact descriptor for the full Wikidata main JSON dump. It does not claim an npm-shipped entity index, in-package entity lookup without artifact fetch, WordNet lexical semantics, morphology, syntax, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:wikidata-en:artifact-descriptor",
+					"eval:wikidata-en:checksum-sidecar"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "kb",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"snapshotIds": [
+				"snapshot:source:wikidata:main:20260608"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-wikidata-en:wikidata-main-artifact"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:wikidata-en",
+				"name": "Wikidata English Entity Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-wikidata-en",
+				"targets": {
+					"languages": [
+						"en"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "wikidata-en-kb-artifact",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-en.kb-artifact.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-kb-resource.schema.json"
+						}
+					},
+					{
+						"id": "wikidata-en-quality",
+						"kind": "quality-profile",
+						"path": "resources/wikidata-en.quality.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-en-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/wikidata-en.quality-profile.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+						"sourceIds": [
+							"source:wikidata:main"
+						],
+						"version": "20260608",
+						"profile": "full",
+						"sizeBytes": 142291512349,
+						"mediaType": "application/json",
+						"compression": "gzip",
+						"checksum": {
+							"algorithm": "sha1",
+							"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+						},
+						"licenseExpression": "CC0-1.0",
+						"redistributionPolicy": "redistributable",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+							"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+						},
+						"cacheKey": "wikidata-main-20260608-all-json-gzip",
+						"expectedFiles": [
+							{
+								"path": "wikidata-20260608-all.json.gz",
+								"sizeBytes": 142291512349,
+								"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "kb",
+						"status": "task-supported",
+						"resourceIds": [
+							"wikidata-en-kb-artifact"
+						],
+						"artifactIds": [
+							"artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
+						],
+						"capabilities": {
+							"terminology": "kb",
+							"extraction": "gazetteer"
+						},
+						"notes": [
+							"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit full artifact descriptor."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"wikidata-en-quality",
+							"wikidata-en-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records artifact size, upstream checksum sidecar evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC0-1.0",
+				"citations": [
+					"Wikidata main structured data dump, 2026-06-08."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+			"packageDir": "packages/textpacks/textpack-wikidata-fr",
+			"description": "Source-backed French Wikidata entity artifact descriptor generated from the versioned Wikidata main dump.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 dump sidecars transformed into a canonical French KB artifact profile for entity labels, aliases, relations, and ontology consumers. The full raw dump is intentionally artifact-backed and fetched explicitly instead of shipped through npm.",
+				"auditedLicense": "The Wikidata main structured source row is approved as CC0-1.0; package-local reports cite the Wikidata licensing and database download pages plus the pinned Wikimedia dump directory.",
+				"declaredScope": "French Wikidata entity KB artifact descriptor for the full Wikidata main JSON dump. It does not claim an npm-shipped entity index, in-package entity lookup without artifact fetch, French wordnet lexical semantics, morphology, syntax, corpus, parallel, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:wikidata-fr:artifact-descriptor",
+					"eval:wikidata-fr:checksum-sidecar"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "kb",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"snapshotIds": [
+				"snapshot:source:wikidata:main:20260608"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-wikidata-fr:wikidata-main-artifact"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:wikidata-fr",
+				"name": "Wikidata French Entity Artifact Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+				"targets": {
+					"languages": [
+						"fr"
+					],
+					"scripts": [
+						"Latn"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "wikidata-fr-kb-artifact",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-fr.kb-artifact.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-kb-resource.schema.json"
+						}
+					},
+					{
+						"id": "wikidata-fr-quality",
+						"kind": "quality-profile",
+						"path": "resources/wikidata-fr.quality.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-fr-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/wikidata-fr.quality-profile.json",
+						"format": "json",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608",
+						"sourceIds": [
+							"source:wikidata:main"
+						],
+						"version": "20260608",
+						"profile": "full",
+						"sizeBytes": 142291512349,
+						"mediaType": "application/json",
+						"compression": "gzip",
+						"checksum": {
+							"algorithm": "sha1",
+							"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+						},
+						"licenseExpression": "CC0-1.0",
+						"redistributionPolicy": "redistributable",
+						"retrieval": {
+							"kind": "https",
+							"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+							"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+						},
+						"cacheKey": "wikidata-main-20260608-all-json-gzip",
+						"expectedFiles": [
+							{
+								"path": "wikidata-20260608-all.json.gz",
+								"sizeBytes": 142291512349,
+								"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "kb",
+						"status": "task-supported",
+						"resourceIds": [
+							"wikidata-fr-kb-artifact"
+						],
+						"artifactIds": [
+							"artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608"
+						],
+						"capabilities": {
+							"terminology": "kb",
+							"extraction": "gazetteer"
+						},
+						"notes": [
+							"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit full artifact descriptor for French KB consumers."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"wikidata-fr-quality",
+							"wikidata-fr-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records artifact size, upstream checksum sidecar evidence, and explicit fetch limitations."
+						]
+					}
+				],
+				"license": "CC0-1.0",
+				"citations": [
+					"Wikidata main structured data dump, 2026-06-08."
+				]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wordnet-ar",
+			"packageDir": "packages/textpacks/textpack-wordnet-ar",
+			"description": "Source-backed Arabic lexical-semantic resources generated from Arabic WordNet 4.1.0.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Full Arabic WordNet 4.1.0 WN-LMF snapshot transformed into lexical-entry, sense, synset, semantic-relation, canonical lexicon, canonical KB, and quality-profile resources.",
+				"auditedLicense": "Arabic WordNet 4.1.0 source row is approved; package-local LICENSE.generated.md includes CC-BY-4.0 license and NOTICE evidence copied from the pinned snapshot.",
+				"declaredScope": "Arabic lexical-semantic WordNet resource pack for Modern Standard Arabic synsets, senses, lemmas, and semantic relations. It does not claim general Arabic lexicon completeness, morphology, syntax, entity linking, corpus, parallel, dialectal coverage, Classical/Quranic coverage, search, or full language-composite coverage.",
+				"conformanceEvidence": [
+					"eval:wordnet-ar:lexical-entry-volume",
+					"eval:wordnet-ar:sense-entry-links",
+					"eval:wordnet-ar:sense-synset-links",
+					"eval:wordnet-ar:relation-endpoints"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "kb",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:wordnet:arabic-v4.1.0"
+			],
+			"snapshotIds": [
+				"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf"
+			],
+			"generatedPackageFiles": true,
+			"generatedSourceFiles": [
+				"src/index.ts",
+				"src/manifest.ts",
+				"src/resources.ts"
+			],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:wordnet-ar",
+				"name": "Arabic WordNet Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-wordnet-ar",
+				"targets": {
+					"languages": [
+						"ar"
+					],
+					"scripts": [
+						"Arab"
+					],
+					"modalities": [
+						"typed"
+					]
+				},
+				"engines": {
+					"@ismail-elkorchi/textpack": "^0.1.0"
+				},
+				"resources": [
+					{
+						"id": "wordnet-ar-lexical-entries",
+						"kind": "lexicon",
+						"path": "resources/wordnet-ar.lexical-entries.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "wordnet-ar-senses",
+						"kind": "knowledge-base",
+						"path": "resources/wordnet-ar.senses.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "wordnet-ar-synsets",
+						"kind": "knowledge-base",
+						"path": "resources/wordnet-ar.synsets.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "wordnet-ar-relations",
+						"kind": "knowledge-base",
+						"path": "resources/wordnet-ar.relations.tsv",
+						"format": "tsv",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "wordnet-ar-quality",
+						"kind": "quality-profile",
+						"path": "resources/wordnet-ar.quality.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						]
+					},
+					{
+						"id": "wordnet-ar-lexicon-canonical",
+						"kind": "lexicon",
+						"path": "resources/wordnet-ar.lexicon.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-lexicon-resource.schema.json"
+						}
+					},
+					{
+						"id": "wordnet-ar-kb-canonical",
+						"kind": "knowledge-base",
+						"path": "resources/wordnet-ar.kb.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-kb-resource.schema.json"
+						}
+					},
+					{
+						"id": "wordnet-ar-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/wordnet-ar.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-4.0",
+						"citations": [
+							"Arabic WordNet 4.1.0."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "lexical-semantics",
+						"status": "task-supported",
+						"resourceIds": [
+							"wordnet-ar-lexical-entries",
+							"wordnet-ar-senses",
+							"wordnet-ar-synsets",
+							"wordnet-ar-relations",
+							"wordnet-ar-lexicon-canonical",
+							"wordnet-ar-kb-canonical"
+						],
+						"capabilities": {
+							"terminology": "kb",
+							"extraction": "gazetteer"
+						},
+						"notes": [
+							"Arabic WordNet lexical entries, senses, synsets, and semantic relations are available as generated KB resources."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"resourceIds": [
+							"wordnet-ar-quality",
+							"wordnet-ar-quality-profile"
+						],
+						"notes": [
+							"Generated quality profile records lexical-entry, sense, synset, and relation counts."
+						]
+					}
+				],
+				"license": "CC-BY-4.0",
+				"citations": [
+					"Arabic WordNet 4.1.0."
+				]
+			}
+		},
+		{
 			"packageName": "@ismail-elkorchi/textpack-wordnet-en",
 			"packageDir": "packages/textpacks/textpack-wordnet-en",
 			"description": "Source-backed English lexical-semantic resources generated from Open English WordNet.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Full Open English WordNet 2025 LMF snapshot transformed into lexical-entry, sense, synset, semantic-relation, canonical lexicon, canonical KB, and quality-profile resources.",
+				"auditedLicense": "Open English WordNet 2025 source row is approved; package-local LICENSE.generated.md includes CC-BY-4.0 and WNDB license evidence copied from the pinned snapshot.",
+				"declaredScope": "English lexical-semantic WordNet resource pack; does not claim general English lexicon, Wikidata entity, corpus, morphology, syntax, search, or composite language coverage.",
+				"conformanceEvidence": [
+					"eval:wordnet-en:lexical-entry-volume",
+					"eval:wordnet-en:sense-entry-links",
+					"eval:wordnet-en:sense-synset-links",
+					"eval:wordnet-en:relation-endpoints"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
 			"packClass": "kb",
 			"supportLevel": "task-supported",
 			"sourceIds": [
@@ -406,6 +5658,45 @@
 						"citations": [
 							"Open English WordNet 2025."
 						]
+					},
+					{
+						"id": "wordnet-en-lexicon-canonical",
+						"kind": "lexicon",
+						"path": "resources/wordnet-en.lexicon.json",
+						"format": "json",
+						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+						"citations": [
+							"Open English WordNet 2025."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-lexicon-resource.schema.json"
+						}
+					},
+					{
+						"id": "wordnet-en-kb-canonical",
+						"kind": "knowledge-base",
+						"path": "resources/wordnet-en.kb.json",
+						"format": "json",
+						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+						"citations": [
+							"Open English WordNet 2025."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-kb-resource.schema.json"
+						}
+					},
+					{
+						"id": "wordnet-en-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/wordnet-en.quality-profile.json",
+						"format": "json",
+						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+						"citations": [
+							"Open English WordNet 2025."
+						],
+						"metadata": {
+							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+						}
 					}
 				],
 				"capabilitySlots": [
@@ -416,7 +5707,9 @@
 							"wordnet-en-lexical-entries",
 							"wordnet-en-senses",
 							"wordnet-en-synsets",
-							"wordnet-en-relations"
+							"wordnet-en-relations",
+							"wordnet-en-lexicon-canonical",
+							"wordnet-en-kb-canonical"
 						],
 						"capabilities": {
 							"terminology": "kb",
@@ -430,7 +5723,8 @@
 						"slot": "quality",
 						"status": "task-supported",
 						"resourceIds": [
-							"wordnet-en-quality"
+							"wordnet-en-quality",
+							"wordnet-en-quality-profile"
 						],
 						"notes": [
 							"Generated quality profile records lexical-entry, sense, synset, and relation counts."

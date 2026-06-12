@@ -1,0 +1,45 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "ar-search-scope",
+      "message": "Arabic MSA lookup/search profile; corpus ranking, dialectal search, and Classical/Quranic search are out of scope.",
+      "metadata": {
+        "likelySubtag": "ar-Arab-EG",
+        "sourceIds": [
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024",
+          "source:wordnet:arabic-v4.1.0"
+        ]
+      },
+      "severity": "info",
+      "task": "search.profile"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "ar",
+  "metrics": [
+    {
+      "metricId": "synonym-pair-count",
+      "name": "synonymPairCount",
+      "unit": "pairs",
+      "value": 139452
+    },
+    {
+      "metricId": "morphology-hook-count",
+      "name": "morphologyHookCount",
+      "unit": "hooks",
+      "value": 8
+    },
+    {
+      "metricId": "records-rejected",
+      "name": "recordsRejected",
+      "unit": "records",
+      "value": 0
+    }
+  ],
+  "profileId": "ar-search-quality",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "thresholds": []
+}

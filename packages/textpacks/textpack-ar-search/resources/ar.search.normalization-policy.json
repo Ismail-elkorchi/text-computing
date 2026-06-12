@@ -1,0 +1,14 @@
+{
+  "languageTag": "ar",
+  "likelySubtag": "ar-Arab-EG",
+  "normalizationRuleIds": [
+    "unicode-nfc-compose",
+    "unicode-casefold-for-lookup",
+    "arabic-delete-tatweel-for-lookup",
+    "arabic-strip-harakat-for-lookup",
+    "arabic-alef-variants",
+    "arabic-ya-variants"
+  ],
+  "schemaVersion": "1",
+  "script": "Arab"
+}

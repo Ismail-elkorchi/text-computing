@@ -29,13 +29,17 @@
 		"pack.manifest.json",
 		"resources",
 		".textpack-generated.json",
+		"LICENSE.generated.md",
 		"NOTICE.generated.md",
 		"SOURCES.generated.json",
 		"ATTRIBUTION.generated.md",
 		"COVERAGE.generated.json",
+		"EVALUATION.generated.json",
 		"QUALITY.generated.json",
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

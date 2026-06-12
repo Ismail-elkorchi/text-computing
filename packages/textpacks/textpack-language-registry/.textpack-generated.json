@@ -6,6 +6,9 @@
     "ATTRIBUTION.generated.md",
     "CHANGELOG.md",
     "COVERAGE.generated.json",
+    "EVALUATION.generated.json",
+    "LICENSE.generated.md",
+    "licenses/source-iana-language-subtag-registry/LICENSE.html",
     "NOTICE.generated.md",
     "pack.manifest.json",
     "package.json",
@@ -23,19 +26,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
   "mode": "source-backed",
-  "outputChecksum": "sha256:1c3ccadbb77ce8ddbf459276c20b9ed79358db6e53d026b8176a3f5388e0d01a",
+  "outputChecksum": "sha256:05bffc29fd5d9e092f077408a73edb32cfbdf7f0cd0159bb73a6df9f7f0e1e66",
   "packSpecPath": "tools/textpack-forge/packs/foundation-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-language-registry",
   "packageVersion": "0.1.0",
+  "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

@@ -1,0 +1,141 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:en-quality",
+	"name": "English Quality Composite Textpack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-en-quality",
+	"targets": {
+		"languages": [
+			"en"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-core",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English core profile quality resources and transform-integrity evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-normalization",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English normalization quality profile and transform-integrity evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-segmentation",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English segmentation quality profile and transform-integrity evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English spelling wordlist and search-profile quality resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English POS and inflection inventory quality resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English UD GUMReddit annotation-profile quality resources and redistribution-integrity evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wordnet-en",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Open English WordNet lexical-semantic quality resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-wikidata-en",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English Wikidata entity artifact descriptor quality resources and checksum evidence.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-corpus",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English promoted Tatoeba corpus artifact quality resources and checksum evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-parallel",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English-linked promoted Tatoeba parallel artifact quality resources and checksum evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English quality-profile resources, generated quality reports, coverage reports, and evaluation records for the audited default English component graph."
+			]
+		}
+	],
+	"license": "LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND CC-BY-4.0 AND LicenseRef-Princeton-WordNet AND CC0-1.0 AND CC-BY-2.0-FR",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+		"SCOWLv2 rich text export, rel-2026.02.25.",
+		"Universal Dependencies English GUMReddit r2.18 annotations.",
+		"Open English WordNet 2025.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly exports, 2026-06-06."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

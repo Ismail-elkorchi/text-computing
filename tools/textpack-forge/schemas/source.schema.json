@@ -29,6 +29,7 @@
 			"enum": [
 				"redistributable",
 				"redistributable-with-attribution",
+				"share-alike-isolated",
 				"derived-only",
 				"local-only",
 				"blocked"

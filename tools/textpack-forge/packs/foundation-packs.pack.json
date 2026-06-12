@@ -16,17 +16,31 @@
 			"packageName": "@ismail-elkorchi/textpack-cldr-core",
 			"packageDir": "packages/textpacks/textpack-cldr-core",
 			"description": "Source-backed CLDR core foundation textpack resources.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned CLDR core 48.2.0 supplemental snapshots transformed into likely-subtag, locale-alias, script-variant, and summary foundation resources.",
+				"auditedLicense": "Unicode CLDR core source row is approved with Unicode-3.0 license evidence.",
+				"declaredScope": "CLDR core locale-profile foundation resources; does not claim full CLDR locale display data, collation, plural rules, or language-specific NLP coverage.",
+				"conformanceEvidence": [
+					"eval:cldr-core:likely-subtag-coverage",
+					"eval:cldr-core:locale-alias-coverage",
+					"eval:cldr-core:script-variant-coverage"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
 			"packClass": "foundation",
 			"supportLevel": "profiled",
-			"sourceIds": [
-				"source:unicode:cldr-core"
-			],
-			"snapshotIds": [
-				"snapshot:source:unicode:cldr-core:48.2.0"
-			],
-			"resourceSpecIds": [
-				"resource-spec:textpack-cldr-core:cldr-core"
-			],
+			"sourceIds": ["source:unicode:cldr-core"],
+			"snapshotIds": ["snapshot:source:unicode:cldr-core:48.2.0"],
+			"resourceSpecIds": ["resource-spec:textpack-cldr-core:cldr-core"],
 			"generatedPackageFiles": true,
 			"generatedSourceFiles": [
 				"src/index.ts",
@@ -40,9 +54,7 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-cldr-core",
 				"targets": {
-					"modalities": [
-						"typed"
-					]
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -105,20 +117,35 @@
 					}
 				],
 				"license": "Unicode-3.0",
-				"citations": [
-					"Unicode CLDR core data, cldr-core npm package 48.2.0."
-				]
+				"citations": ["Unicode CLDR core data, cldr-core npm package 48.2.0."]
 			}
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-language-registry",
 			"packageDir": "packages/textpacks/textpack-language-registry",
 			"description": "Source-backed BCP 47 language registry foundation textpack resources.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned IANA Language Subtag Registry snapshot transformed into BCP 47 subtag and registry summary resources.",
+				"auditedLicense": "IANA Language Subtag Registry source row is approved; package-local LICENSE.generated.md includes local IANA licensing terms copied from the pinned snapshot.",
+				"declaredScope": "BCP 47 language, script, region, variant, grandfathered, redundant, and extlang registry resources; does not claim language-specific NLP capability coverage.",
+				"conformanceEvidence": [
+					"eval:language-registry:bcp47-record-volume",
+					"eval:language-registry:bcp47-type-coverage"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
 			"packClass": "foundation",
 			"supportLevel": "registered",
-			"sourceIds": [
-				"source:iana:language-subtag-registry"
-			],
+			"sourceIds": ["source:iana:language-subtag-registry"],
 			"snapshotIds": [
 				"snapshot:source:iana:language-subtag-registry:2026-05-05"
 			],
@@ -138,9 +165,7 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-language-registry",
 				"targets": {
-					"modalities": [
-						"typed"
-					]
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -181,26 +206,38 @@
 					}
 				],
 				"license": "LicenseRef-IANA-Language-Subtag-Registry",
-				"citations": [
-					"IANA Language Subtag Registry, File-Date 2026-05-05."
-				]
+				"citations": ["IANA Language Subtag Registry, File-Date 2026-05-05."]
 			}
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-unicode-17",
 			"packageDir": "packages/textpacks/textpack-unicode-17",
 			"description": "Source-backed Unicode 17 foundation textpack resources.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned Unicode 17.0.0 UCD snapshots transformed into block, script, property-value-alias, and summary foundation resources.",
+				"auditedLicense": "Unicode Character Database source row is approved with Unicode-3.0 license evidence.",
+				"declaredScope": "Selected Unicode 17 foundation profile resources; does not claim full UCD, normalization data, collation, emoji, security, or language-specific NLP coverage.",
+				"conformanceEvidence": [
+					"eval:unicode-17:block-range-coverage",
+					"eval:unicode-17:script-range-coverage",
+					"eval:unicode-17:property-alias-coverage"
+				],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
 			"packClass": "foundation",
 			"supportLevel": "unicode-covered",
-			"sourceIds": [
-				"source:unicode:ucd"
-			],
-			"snapshotIds": [
-				"snapshot:source:unicode:ucd:17.0.0"
-			],
-			"resourceSpecIds": [
-				"resource-spec:textpack-unicode-17:ucd-core"
-			],
+			"sourceIds": ["source:unicode:ucd"],
+			"snapshotIds": ["snapshot:source:unicode:ucd:17.0.0"],
+			"resourceSpecIds": ["resource-spec:textpack-unicode-17:ucd-core"],
 			"generatedPackageFiles": true,
 			"generatedSourceFiles": [
 				"src/index.ts",
@@ -214,9 +251,7 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-unicode-17",
 				"targets": {
-					"modalities": [
-						"typed"
-					]
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -228,9 +263,7 @@
 						"path": "resources/unicode-17.blocks.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						]
+						"citations": ["Unicode Character Database 17.0.0."]
 					},
 					{
 						"id": "unicode-17-property-value-aliases",
@@ -238,9 +271,7 @@
 						"path": "resources/unicode-17.property-value-aliases.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						]
+						"citations": ["Unicode Character Database 17.0.0."]
 					},
 					{
 						"id": "unicode-17-scripts",
@@ -248,9 +279,7 @@
 						"path": "resources/unicode-17.scripts.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						]
+						"citations": ["Unicode Character Database 17.0.0."]
 					},
 					{
 						"id": "unicode-17-core-summary",
@@ -258,9 +287,7 @@
 						"path": "resources/unicode-17.core.summary.json",
 						"format": "json",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						]
+						"citations": ["Unicode Character Database 17.0.0."]
 					}
 				],
 				"capabilitySlots": [
@@ -279,9 +306,7 @@
 					}
 				],
 				"license": "Unicode-3.0",
-				"citations": [
-					"Unicode Character Database 17.0.0."
-				]
+				"citations": ["Unicode Character Database 17.0.0."]
 			}
 		}
 	]

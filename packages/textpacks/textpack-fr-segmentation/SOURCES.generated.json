@@ -1,0 +1,273 @@
+{
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-fr-segmentation",
+  "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+  ],
+  "resources": [
+    {
+      "byteLength": 1379,
+      "checksum": "sha256:d8e018675f14899163c5689ebf23353de13d678cf9f0b1ad3f49dee07fd3d9cf",
+      "id": "fr-grapheme-segmentation-profile",
+      "kind": "segmentation-profile",
+      "path": "resources/fr.segmentation.grapheme.json",
+      "pipelineId": "french-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+    },
+    {
+      "byteLength": 1322,
+      "checksum": "sha256:af1c0760b3008d90568de141bf24b21601c4383aa511b5211128fba10c2b2866",
+      "id": "fr-segmentation-boundary-properties",
+      "kind": "segmentation-profile",
+      "path": "resources/fr.segmentation-boundary-properties.tsv",
+      "pipelineId": "french-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+    },
+    {
+      "byteLength": 1757,
+      "checksum": "sha256:c898e064643f1a3d528be4ec50eba8416a6d53cd30c8232c026b236e2d76f3b3",
+      "id": "fr-segmentation-quality",
+      "kind": "quality-profile",
+      "path": "resources/fr.segmentation.quality.json",
+      "pipelineId": "french-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+    },
+    {
+      "byteLength": 1207,
+      "checksum": "sha256:e63c53be1681ea625c9c22c694158e2deb19ec298a6d7a1ce7f7767f311d7cbc",
+      "id": "fr-segmentation-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/fr.segmentation.quality-profile.json",
+      "pipelineId": "french-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+    },
+    {
+      "byteLength": 1388,
+      "checksum": "sha256:7b306192f4d066bc2e95b5ac2f2bc79e843f8882857f134360f74ab733cc9fbb",
+      "id": "fr-sentence-segmentation-profile",
+      "kind": "segmentation-profile",
+      "path": "resources/fr.segmentation.sentence.json",
+      "pipelineId": "french-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+    },
+    {
+      "byteLength": 1502,
+      "checksum": "sha256:f870a11123bba1887215b9b522815b6b9c67a9a92428357179f2b08e26e90c77",
+      "id": "fr-word-segmentation-profile",
+      "kind": "segmentation-profile",
+      "path": "resources/fr.segmentation.word.json",
+      "pipelineId": "french-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+    }
+  ],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:unicode:ucd:17.0.0",
+    "snapshot:source:unicode:cldr-core:48.2.0"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:6c59bfb7ea97c24f50ca48eeb0ac7dcb599d5f88c9788e70ae0a78ef6f87370e",
+      "files": [
+        {
+          "byteLength": 11663,
+          "checksum": "sha256:c0edefaf1a19771e830a82735472716af6bf3c3975f6c2a23ffbe2580fbbcb15",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/Blocks.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/Blocks.txt"
+        },
+        {
+          "byteLength": 277514,
+          "checksum": "sha256:d62e5bab70ca74f099343f71224fa051cb1fdd61a1ab45c0488c44cfc0b6102e",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/DerivedGeneralCategory.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/extracted/DerivedGeneralCategory.txt"
+        },
+        {
+          "byteLength": 99377,
+          "checksum": "sha256:d6b51d1d2ae5c33b451b7ed994b48f1f4dc62b2272a5831e7fd418514a6bae89",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/GraphemeBreakProperty.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/GraphemeBreakProperty.txt"
+        },
+        {
+          "byteLength": 81858,
+          "checksum": "sha256:64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/PropertyValueAliases.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/PropertyValueAliases.txt"
+        },
+        {
+          "byteLength": 192460,
+          "checksum": "sha256:9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/Scripts.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/Scripts.txt"
+        },
+        {
+          "byteLength": 221233,
+          "checksum": "sha256:871c0c985ad95125e25b302414065a10839d068970bceb383ecec138f22a0a18",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/SentenceBreakProperty.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/SentenceBreakProperty.txt"
+        },
+        {
+          "byteLength": 114445,
+          "checksum": "sha256:72274cac1e6b919507db35655c3e175aa27274668a1ece95c28d2069f2ad9852",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/WordBreakProperty.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/WordBreakProperty.txt"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned local snapshot of selected Unicode 17.0.0 UCD files, including auxiliary segmentation and general category property files.",
+      "retrievedAt": "2026-06-08T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+      "sourceId": "source:unicode:ucd",
+      "version": "17.0.0"
+    },
+    {
+      "checksum": "sha256:83b04279e29beb9f0533bf13a5f5d20e6807f8e69fead74516ff9f4c9ea39083",
+      "files": [
+        {
+          "byteLength": 137469,
+          "checksum": "sha256:b7011c866f27502ed6f160ca83f2a83fa42bce9fdc2176e60e2c6630961d877c",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/aliases.json",
+          "sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/aliases.json"
+        },
+        {
+          "byteLength": 220093,
+          "checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+          "sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/likelySubtags.json"
+        },
+        {
+          "byteLength": 1762,
+          "checksum": "sha256:47c8d71bbe0aa22ff742f329a88a6c40b69e6220cdc29fc466a260d5238c7ec0",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/scriptData.json",
+          "sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/scriptData.json"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned local snapshot of selected cldr-core supplemental JSON files.",
+      "retrievedAt": "2026-06-08T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+      "sourceId": "source:unicode:cldr-core",
+      "version": "48.2.0"
+    }
+  ],
+  "sourceIds": [
+    "source:unicode:ucd",
+    "source:unicode:cldr-core"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "unicode-profile",
+        "normalization",
+        "script-profile",
+        "segmentation",
+        "core",
+        "quality"
+      ],
+      "citation": "Unicode Character Database 17.0.0.",
+      "defaultCompositeAllowed": true,
+      "family": "UCD",
+      "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode Character Database",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:unicode:ucd"
+    },
+    {
+      "capabilitySlots": [
+        "locale-profile",
+        "script-profile",
+        "search",
+        "core"
+      ],
+      "citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+      "defaultCompositeAllowed": true,
+      "family": "CLDR",
+      "homepageUrl": "https://cldr.unicode.org/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode CLDR Core",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:unicode:cldr-core"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "Unicode Character Database 17.0.0.",
+      "family": "UCD",
+      "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode Character Database",
+      "notes": "Selected Unicode 17.0.0 UCD files used for script, block, property alias, general category, and auxiliary segmentation property resources.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:unicode:ucd"
+    },
+    {
+      "citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+      "family": "CLDR",
+      "homepageUrl": "https://cldr.unicode.org/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode CLDR Core",
+      "notes": "Selected CLDR supplemental JSON files used for locale likely-subtag and alias foundation resources.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:unicode:cldr-core"
+    }
+  ]
+}

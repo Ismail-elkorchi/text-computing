@@ -1,0 +1,97 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+	"packageName": "@ismail-elkorchi/textpack-ar-core",
+	"pipelineId": "arabic-core-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:iana:language-subtag-registry",
+		"source:unicode:ucd",
+		"source:unicode:cldr-core"
+	],
+	"snapshotIds": [
+		"snapshot:source:iana:language-subtag-registry:2026-05-05",
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
+			"path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt",
+			"checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/DerivedGeneralCategory.txt",
+			"checksum": "sha256:d62e5bab70ca74f099343f71224fa051cb1fdd61a1ab45c0488c44cfc0b6102e"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/Scripts.txt",
+			"checksum": "sha256:9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/GraphemeBreakProperty.txt",
+			"checksum": "sha256:d6b51d1d2ae5c33b451b7ed994b48f1f4dc62b2272a5831e7fd418514a6bae89"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/WordBreakProperty.txt",
+			"checksum": "sha256:72274cac1e6b919507db35655c3e175aa27274668a1ece95c28d2069f2ad9852"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/SentenceBreakProperty.txt",
+			"checksum": "sha256:871c0c985ad95125e25b302414065a10839d068970bceb383ecec138f22a0a18"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/scriptData.json",
+			"checksum": "sha256:47c8d71bbe0aa22ff742f329a88a6c40b69e6220cdc29fc466a260d5238c7ec0"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-core-language-profile",
+			"path": "resources/ar.core.language-profile.json",
+			"kind": "locale-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-core-orthography",
+			"path": "resources/ar.core.orthography.tsv",
+			"kind": "locale-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-core-punctuation",
+			"path": "resources/ar.core.punctuation.tsv",
+			"kind": "locale-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-core-basic-segmentation",
+			"path": "resources/ar.core.basic-segmentation.json",
+			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-core-quality",
+			"path": "resources/ar.core.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-core-quality-profile",
+			"path": "resources/ar.core.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

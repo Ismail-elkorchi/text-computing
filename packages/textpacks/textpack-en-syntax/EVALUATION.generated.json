@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en-syntax",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "syntax",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:ud:english-gumreddit:r2.18"
+        ],
+        "sourceIds": [
+          "source:ud:english-gumreddit-r2.18"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "capabilitySlots": [
+            "quality",
+            "syntax"
+          ],
+          "requiredComponents": [
+            "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit"
+          ]
+        },
+        "resourceIds": []
+      },
+      "limitations": [],
+      "metric": {
+        "name": "requiredComponentCount",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "components",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-syntax",
+      "pipelineId": "component-composite",
+      "recordId": "eval:textpack-en-syntax:required-component-graph",
+      "resourceSpecId": "tools/textpack-forge/composites/textpack-en-syntax.composite.json",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "composite.required-component-graph"
+    }
+  ],
+  "resourceSpecIds": [],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 1,
+    "recordCount": 1,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

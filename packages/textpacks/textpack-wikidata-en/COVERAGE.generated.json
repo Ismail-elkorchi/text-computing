@@ -1,0 +1,139 @@
+{
+  "capabilities": {
+    "extraction": "gazetteer",
+    "terminology": "kb"
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:wikidata-en:artifact-descriptor",
+        "eval:wikidata-en:checksum-sidecar"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "The full Wikidata entity dump for English KB consumers is artifact-backed and is not available to runtime lookup until explicitly fetched.",
+        "Wikimedia publishes SHA-1 and MD5 sidecars for this dump; no upstream SHA-256 sidecar was available for this pinned artifact."
+      ],
+      "resourceIds": [
+        "wikidata-en-kb-artifact"
+      ],
+      "slot": "kb",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "resource-inventory",
+      "limitations": [],
+      "resourceIds": [
+        "wikidata-en-quality",
+        "wikidata-en-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
+      ],
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "kb"
+      },
+      "notes": [
+        "Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit full artifact descriptor."
+      ],
+      "resourceIds": [
+        "wikidata-en-kb-artifact"
+      ],
+      "slot": "kb",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records artifact size, upstream checksum sidecar evidence, and explicit fetch limitations."
+      ],
+      "resourceIds": [
+        "wikidata-en-quality",
+        "wikidata-en-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:wikidata-en:artifact-descriptor",
+    "eval:wikidata-en:checksum-sidecar"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 786,
+      "checksum": "sha256:a1f617f757aa66fbdee91d53e48aa91b295e1dbebeab8ada0a6c5e05f85d4fab",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 30,
+      "path": "resources/wikidata-en.kb-artifact.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-kb-artifact",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 827,
+      "checksum": "sha256:d8e61201ee176d17ac2d89bf5b963e3db2c9707aa2037eb5a59d7c93b136639c",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 18,
+      "path": "resources/wikidata-en.quality.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-quality",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1381,
+      "checksum": "sha256:10f482012374798917ba29d4de8d7034b978d46896c3dd0fca48695ac7e579a7",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 45,
+      "path": "resources/wikidata-en.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "knowledge-base",
+    "quality-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "en"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  }
+}

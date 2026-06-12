@@ -8,20 +8,6 @@
 	"checksum": "sha256:f2814065fb07c813ce8ac6318396b42b0d13e1a15bde2b351cfa4f14dbe02c58",
 	"files": [
 		{
-			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/LICENSE.txt",
-			"mediaType": "text/plain; charset=utf-8",
-			"byteLength": 313,
-			"checksum": "sha256:95e9985fb081b6c17bc4422f649bbe0d9555a7d597fcd32a6c4b04bcda4e734c",
-			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/LICENSE.txt"
-		},
-		{
-			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/README.md",
-			"mediaType": "text/markdown; charset=utf-8",
-			"byteLength": 39109,
-			"checksum": "sha256:c11626bcf5dd967bfefd08132a44bf3e717a1beb84ca58bdbe51a96268742eb9",
-			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/README.md"
-		},
-		{
 			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-dev.conllu",
 			"mediaType": "text/plain; charset=utf-8",
 			"byteLength": 209343,
@@ -41,6 +27,20 @@
 			"byteLength": 1428562,
 			"checksum": "sha256:6c360c457d58e1fdcb8eba07ee1f6b352eb7c40f74b00af0872d87cb9388118e",
 			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/en_gumreddit-ud-train.conllu"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/LICENSE.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 313,
+			"checksum": "sha256:95e9985fb081b6c17bc4422f649bbe0d9555a7d597fcd32a6c4b04bcda4e734c",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/LICENSE.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/README.md",
+			"mediaType": "text/markdown; charset=utf-8",
+			"byteLength": 39109,
+			"checksum": "sha256:c11626bcf5dd967bfefd08132a44bf3e717a1beb84ca58bdbe51a96268742eb9",
+			"sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/README.md"
 		}
 	],
 	"notes": "Pinned UD English GUMReddit r2.18 annotation-only files; not-to-release material is intentionally absent."

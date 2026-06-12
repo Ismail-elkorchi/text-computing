@@ -1,6 +1,29 @@
 export const packageName = "@ismail-elkorchi/textpack" as const;
 export type PackageName = typeof packageName;
 
+export type {
+	TextPackJsonPayload,
+	TextPackLoadedResource,
+	TextPackRawPayload,
+	TextPackResourceFamily,
+	TextPackResourceFamilyLoadOptions,
+	TextPackResourceFamilyName,
+	TextPackResourcePayload,
+	TextPackTablePayload,
+	TextPackTableRow,
+} from "./adapters.js";
+export {
+	loadCorpus,
+	loadKnowledgeBase,
+	loadLexicon,
+	loadMorphology,
+	loadNormalizer,
+	loadParallelResources,
+	loadQualityProfile,
+	loadSearchAnalyzer,
+	loadSegmenter,
+	loadSyntaxResources,
+} from "./adapters.js";
 export { capabilities } from "./capabilities.js";
 export { composePacks } from "./compose.js";
 export { validateManifest } from "./manifest.js";

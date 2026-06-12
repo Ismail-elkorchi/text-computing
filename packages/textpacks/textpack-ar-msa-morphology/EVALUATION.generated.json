@@ -1,0 +1,207 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "compatibilityCounts": {
+            "TABLE AB": 4332,
+            "TABLE AC": 1432,
+            "TABLE BC": 9059
+          }
+        },
+        "resourceIds": [
+          "ar-msa-camel-morph-compatibility"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "compatibilityCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "records",
+        "value": 14823
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:compatibility-tables",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.compatibility"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "defaultFeatureCount": 1961,
+          "featureCount": 53
+        },
+        "resourceIds": [
+          "ar-msa-camel-morph-morphemes",
+          "ar-msa-camel-morph-features"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "morphemeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "records",
+        "value": 203740
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:morpheme-inventory",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.lookup"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "resourceIds": [
+          "ar-msa-camel-morph-tokenizations"
+        ]
+      },
+      "limitations": [
+        "This verifies CAMeL Morph tokenization scheme coverage, not end-to-end clitic segmentation accuracy."
+      ],
+      "metric": {
+        "name": "tokenizationFieldCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "fields",
+        "value": 9
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:tokenization-fields",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.dictionary-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "ar-msa-camel-morph-quality"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:transform-rejections",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-ar-msa-morphology:camel-morph-msa"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 4,
+    "recordCount": 4,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

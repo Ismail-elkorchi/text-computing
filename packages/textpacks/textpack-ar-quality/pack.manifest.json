@@ -1,0 +1,59 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:ar-quality",
+	"name": "Arabic Quality Policy-Expanded Wrapper Textpack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-ar-quality",
+	"targets": {
+		"languages": [
+			"ar"
+		],
+		"scripts": [
+			"Arab"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Share-alike isolated Arabic quality component graph with full generated evaluation evidence.",
+			"licensePolicy": "allow-share-alike",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides Arabic MSA quality-profile resources, generated quality reports, coverage reports, and evaluation records through an explicit share-alike policy wrapper."
+			]
+		}
+	],
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"CAMeL Morph MSA LREC-COLING 2024 release.",
+		"Arabic WordNet 4.1.0.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly Arabic exports, 2026-06-06.",
+		"Universal Dependencies Arabic NYUAD r2.18 annotations."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

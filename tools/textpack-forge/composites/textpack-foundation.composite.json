@@ -5,6 +5,24 @@
 	"packageDir": "packages/textpacks/textpack-foundation",
 	"name": "Foundation Composite Textpack",
 	"description": "Generated source-backed foundation recipe composite for Unicode, CLDR, and BCP 47 registry resources.",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over the publishable language-registry, Unicode 17, and CLDR core foundation component graph, plus generated language-support index derived from those snapshots.",
+		"auditedLicense": "Composite source rows are approved; package-local LICENSE.generated.md includes local IANA licensing terms when LicenseRef evidence is required.",
+		"declaredScope": "Foundation composite for language registry, Unicode profile, locale profile, and language-support queries; does not claim feature-complete language NLP resources.",
+		"conformanceEvidence": [
+			"eval:textpack-foundation:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
 	"version": "0.1.0",
 	"packClass": "foundation-composite",
 	"supportLevel": "profiled",
@@ -78,6 +96,8 @@
 			]
 		}
 	],
-	"license": "MIT",
-	"citations": ["repo:tools/textpack-forge/composites/textpack-foundation.composite.json"]
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0",
+	"citations": [
+		"repo:tools/textpack-forge/composites/textpack-foundation.composite.json"
+	]
 }

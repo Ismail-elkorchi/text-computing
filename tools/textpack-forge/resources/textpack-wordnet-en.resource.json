@@ -4,12 +4,8 @@
 	"packageName": "@ismail-elkorchi/textpack-wordnet-en",
 	"pipelineId": "open-english-wordnet-lmf",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": [
-		"source:wordnet:open-english-2025"
-	],
-	"snapshotIds": [
-		"snapshot:source:wordnet:open-english-2025:2025-edition"
-	],
+	"sourceIds": ["source:wordnet:open-english-2025"],
+	"snapshotIds": ["snapshot:source:wordnet:open-english-2025:2025-edition"],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
@@ -45,6 +41,24 @@
 		{
 			"resourceId": "wordnet-en-quality",
 			"path": "resources/wordnet-en.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "wordnet-en-lexicon-canonical",
+			"path": "resources/wordnet-en.lexicon.json",
+			"kind": "lexicon",
+			"format": "json"
+		},
+		{
+			"resourceId": "wordnet-en-kb-canonical",
+			"path": "resources/wordnet-en.kb.json",
+			"kind": "knowledge-base",
+			"format": "json"
+		},
+		{
+			"resourceId": "wordnet-en-quality-profile",
+			"path": "resources/wordnet-en.quality-profile.json",
 			"kind": "quality-profile",
 			"format": "json"
 		}

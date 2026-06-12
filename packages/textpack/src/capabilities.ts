@@ -7,7 +7,14 @@ import type {
 const capabilityOrder = {
 	segmentation: ["none", "default", "profile", "dictionary", "fst", "rules"],
 	normalization: ["none", "unicode", "lexicon", "rules", "fst", "statistical"],
-	morphology: ["none", "lookup", "rules", "fst", "statistical"],
+	morphology: [
+		"none",
+		"lookup",
+		"paradigm-table",
+		"rules",
+		"fst",
+		"statistical",
+	],
 	tagging: ["none", "rules", "statistical", "hybrid"],
 	parsing: ["none", "rules", "statistical", "hybrid"],
 	extraction: ["none", "gazetteer", "rules", "statistical", "hybrid"],

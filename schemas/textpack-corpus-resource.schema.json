@@ -1,0 +1,79 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-corpus-resource.schema.json",
+	"title": "TextpackCorpusResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "corpusId", "documents"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "corpus" },
+		"corpusId": { "type": "string", "minLength": 1 },
+		"languageTags": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"splits": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"documents": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/document" }
+		}
+	},
+	"definitions": {
+		"document": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["documentId"],
+			"properties": {
+				"documentId": { "type": "string", "minLength": 1 },
+				"languageTag": { "type": "string", "minLength": 1 },
+				"script": { "type": "string", "minLength": 1 },
+				"split": { "type": "string", "minLength": 1 },
+				"title": { "type": "string", "minLength": 1 },
+				"text": { "type": "string" },
+				"artifactId": { "type": "string", "minLength": 1 },
+				"path": { "type": "string", "minLength": 1 },
+				"checksum": { "type": "string", "minLength": 1 },
+				"metadata": { "$ref": "#/definitions/jsonObject" },
+				"annotations": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/annotation" }
+				}
+			}
+		},
+		"annotation": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["annotationId", "type"],
+			"properties": {
+				"annotationId": { "type": "string", "minLength": 1 },
+				"type": { "type": "string", "minLength": 1 },
+				"start": { "type": "integer", "minimum": 0 },
+				"end": { "type": "integer", "minimum": 0 },
+				"value": { "$ref": "#/definitions/jsonValue" }
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

@@ -1,0 +1,106 @@
+{
+  "components": [
+    {
+      "artifactPolicy": "fetch-explicit",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "default",
+      "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+      "reason": "Default French Wikidata entity labels, aliases, relations, and ontology artifact descriptor.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-fr-kb",
+  "packageName": "@ismail-elkorchi/textpack-fr-kb",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceSpecIds": [],
+  "resources": [],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:wikidata:main:20260608"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197",
+      "files": [
+        {
+          "byteLength": 129,
+          "checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
+          "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-md5sums.txt"
+        },
+        {
+          "byteLength": 145,
+          "checksum": "sha256:a4b7efee9997d592e5abdd3e232ad7a66d19847343ac640adc1e9b12fe51b440",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
+          "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
+        }
+      ],
+      "kind": "external",
+      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump. The raw dump is artifact-backed and not stored in the repository.",
+      "retrievedAt": "2026-06-11T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:wikidata:main:20260608",
+      "sourceId": "source:wikidata:main",
+      "version": "20260608"
+    }
+  ],
+  "sourceIds": [
+    "source:wikidata:main"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "kb",
+        "entity-linking",
+        "lexicon"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WD",
+      "homepageUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC0-1.0",
+      "name": "Wikidata main structured data",
+      "notes": "Only main structured namespaces are in this policy; non-main namespaces need separate entries.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wikidata:main"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "Wikidata main structured data dump, 2026-06-08.",
+      "family": "WD",
+      "homepageUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "licenseEvidence": [
+        "https://www.wikidata.org/wiki/Wikidata:Licensing",
+        "https://www.wikidata.org/wiki/Wikidata:Database_download",
+        "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/"
+      ],
+      "licenseExpression": "CC0-1.0",
+      "name": "Wikidata Main Structured Data",
+      "notes": "Pinned versioned Wikidata entity dump metadata. Generated packages use explicit artifact descriptors for the full dump instead of vendoring the large raw dump into npm.",
+      "redistributionPolicy": "redistributable",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:wikidata:main"
+    }
+  ]
+}

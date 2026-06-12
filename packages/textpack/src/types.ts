@@ -86,7 +86,13 @@ export interface TextPackCapabilities {
 		| "rules"
 		| "fst"
 		| "statistical";
-	readonly morphology?: "none" | "lookup" | "rules" | "fst" | "statistical";
+	readonly morphology?:
+		| "none"
+		| "lookup"
+		| "paradigm-table"
+		| "rules"
+		| "fst"
+		| "statistical";
 	readonly tagging?: "none" | "rules" | "statistical" | "hybrid";
 	readonly parsing?: "none" | "rules" | "statistical" | "hybrid";
 	readonly extraction?:
@@ -164,7 +170,7 @@ export interface TextPackComponent {
 }
 
 export interface TextPackArtifactChecksum {
-	readonly algorithm: "sha256" | "sha512";
+	readonly algorithm: "sha1" | "sha256" | "sha512";
 	readonly value: string;
 }
 
@@ -187,7 +193,7 @@ export interface TextPackArtifactDescriptor {
 	readonly profile: TextPackArtifactProfile;
 	readonly sizeBytes: number;
 	readonly mediaType: string;
-	readonly compression?: "gzip" | "zstd" | "zip" | "tar";
+	readonly compression?: "gzip" | "bzip2" | "zstd" | "zip" | "tar";
 	readonly checksum: TextPackArtifactChecksum;
 	readonly licenseExpression: string;
 	readonly redistributionPolicy: TextPackArtifactRedistributionPolicy;

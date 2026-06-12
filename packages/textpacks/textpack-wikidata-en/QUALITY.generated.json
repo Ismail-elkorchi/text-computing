@@ -1,0 +1,102 @@
+{
+  "acceptedRecordCount": 93,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
+      ],
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "kb"
+      },
+      "notes": [
+        "Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit full artifact descriptor."
+      ],
+      "resourceIds": [
+        "wikidata-en-kb-artifact"
+      ],
+      "slot": "kb",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records artifact size, upstream checksum sidecar evidence, and explicit fetch limitations."
+      ],
+      "resourceIds": [
+        "wikidata-en-quality",
+        "wikidata-en-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 3,
+  "resourcePaths": [
+    "resources/wikidata-en.kb-artifact.json",
+    "resources/wikidata-en.quality.json",
+    "resources/wikidata-en.quality-profile.json"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-wikidata-en:wikidata-main-artifact"
+  ],
+  "resources": [
+    {
+      "byteLength": 786,
+      "checksum": "sha256:a1f617f757aa66fbdee91d53e48aa91b295e1dbebeab8ada0a6c5e05f85d4fab",
+      "id": "wikidata-en-kb-artifact",
+      "kind": "knowledge-base",
+      "lineCount": 31,
+      "nonEmptyLineCount": 30,
+      "path": "resources/wikidata-en.kb-artifact.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 827,
+      "checksum": "sha256:d8e61201ee176d17ac2d89bf5b963e3db2c9707aa2037eb5a59d7c93b136639c",
+      "id": "wikidata-en-quality",
+      "kind": "quality-profile",
+      "lineCount": 19,
+      "nonEmptyLineCount": 18,
+      "path": "resources/wikidata-en.quality.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1381,
+      "checksum": "sha256:10f482012374798917ba29d4de8d7034b978d46896c3dd0fca48695ac7e579a7",
+      "id": "wikidata-en-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 46,
+      "nonEmptyLineCount": 45,
+      "path": "resources/wikidata-en.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ]
+}

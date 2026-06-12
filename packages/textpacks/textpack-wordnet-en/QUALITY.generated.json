@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 783738,
+  "acceptedRecordCount": 783820,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -14,7 +14,9 @@
         "wordnet-en-lexical-entries",
         "wordnet-en-senses",
         "wordnet-en-synsets",
-        "wordnet-en-relations"
+        "wordnet-en-relations",
+        "wordnet-en-lexicon-canonical",
+        "wordnet-en-kb-canonical"
       ],
       "slot": "lexical-semantics",
       "status": "task-supported"
@@ -24,7 +26,8 @@
         "Generated quality profile records lexical-entry, sense, synset, and relation counts."
       ],
       "resourceIds": [
-        "wordnet-en-quality"
+        "wordnet-en-quality",
+        "wordnet-en-quality-profile"
       ],
       "slot": "quality",
       "status": "task-supported"
@@ -37,18 +40,19 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-wordnet-en",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 5,
+  "resourceCount": 8,
   "resourcePaths": [
+    "resources/wordnet-en.kb.json",
     "resources/wordnet-en.lexical-entries.tsv",
+    "resources/wordnet-en.lexicon.json",
     "resources/wordnet-en.quality.json",
+    "resources/wordnet-en.quality-profile.json",
     "resources/wordnet-en.relations.tsv",
     "resources/wordnet-en.senses.tsv",
     "resources/wordnet-en.synsets.tsv"
@@ -57,6 +61,19 @@
     "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
   ],
   "resources": [
+    {
+      "byteLength": 518,
+      "checksum": "sha256:4d2e5c099d1a5959f45818e4c315afba95d1719bb2396833377d5dc1905f0ba8",
+      "id": "wordnet-en-kb-canonical",
+      "kind": "knowledge-base",
+      "lineCount": 28,
+      "nonEmptyLineCount": 27,
+      "path": "resources/wordnet-en.kb.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
     {
       "byteLength": 4202454,
       "checksum": "sha256:43df93cb052d566573982948efeedcae2ed4e2a18a3d3e16134a37790dfb9426",
@@ -71,6 +88,19 @@
       "sizeClass": "small"
     },
     {
+      "byteLength": 292,
+      "checksum": "sha256:938ab3964d5732e9517cb77d63372be6c91423343bcf417ebb980485743543e4",
+      "id": "wordnet-en-lexicon-canonical",
+      "kind": "lexicon",
+      "lineCount": 16,
+      "nonEmptyLineCount": 15,
+      "path": "resources/wordnet-en.lexicon.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
       "byteLength": 1401,
       "checksum": "sha256:c20aa32a35394b476849490164227ba64237489bbc3de36498e50d146095db94",
       "id": "wordnet-en-quality",
@@ -78,6 +108,19 @@
       "lineCount": 54,
       "nonEmptyLineCount": 53,
       "path": "resources/wordnet-en.quality.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 876,
+      "checksum": "sha256:681ae437d9d4b42caa837baedd35a08c5930d45b99ecc4059a75ba3b636ac6a8",
+      "id": "wordnet-en-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 41,
+      "nonEmptyLineCount": 40,
+      "path": "resources/wordnet-en.quality-profile.json",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",

@@ -1,0 +1,69 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-en-morphology",
+	"packageDir": "packages/textpacks/textpack-en-morphology",
+	"name": "English Morphology Composite Textpack",
+	"description": "Generated source-backed English morphology recipe composite for SCOWLv2 lookup analyzer and generator resources.",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over the publishable SCOWLv2 lookup morphology component, which provides form-to-lemma lookup analysis, lemma-to-form generation candidates, morphology tables, POS inventory, canonical morphology metadata, and generated evaluation records.",
+		"auditedLicense": "The SCOWLv2 source row is approved; the required component package carries package-local copyright evidence.",
+		"declaredScope": "English lookup morphology component composite backed by SCOWLv2 POS and inflection resources. It claims deterministic form-to-lemma lookup analysis and lemma-to-form generation candidates over the pinned SCOWLv2 release. It does not claim finite-state analysis, context disambiguation, syntax parsing, corpus-frequency morphology, UniMorph coverage, corpus coverage, parallel coverage, or full language-composite coverage.",
+		"conformanceEvidence": [
+			"eval:textpack-en-morphology:required-component-graph"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-component-composite",
+	"supportLevel": "task-supported",
+	"loader": {
+		"functionName": "loadEnglishMorphology",
+		"languageName": "EnglishMorphology"
+	},
+	"targets": {
+		"languages": ["en"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
+	},
+	"sourceIds": ["source:scowl:v2-rel-2026-02-25"],
+	"snapshotIds": ["snapshot:source:scowl:v2-rel-2026.02.25"],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default English SCOWLv2 lookup analyzer, lookup generator, POS, and inflection resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides SCOWLv2 English form-to-lemma lookup analysis, lemma-to-form generation candidates, POS inventory, and inflection-table resources."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required morphology component."
+			]
+		}
+	],
+	"license": "LicenseRef-ESDB-MIT-Like",
+	"citations": ["SCOWLv2 rich text export, rel-2026.02.25."]
+}

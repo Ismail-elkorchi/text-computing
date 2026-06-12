@@ -6,6 +6,8 @@
     "ATTRIBUTION.generated.md",
     "CHANGELOG.md",
     "COVERAGE.generated.json",
+    "EVALUATION.generated.json",
+    "LICENSE.generated.md",
     "NOTICE.generated.md",
     "pack.manifest.json",
     "package.json",
@@ -25,19 +27,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
   "mode": "source-backed",
-  "outputChecksum": "sha256:68c94406bfb51ed3449403a585fc4b4e0f4d5ee84041457aa2c255d0da29d4b3",
+  "outputChecksum": "sha256:4d91977b94b3e6cce9633828a81dbed2d38b7037ca7912f25b1c365af5442bf5",
   "packSpecPath": "tools/textpack-forge/packs/foundation-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-cldr-core",
   "packageVersion": "0.1.0",
+  "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

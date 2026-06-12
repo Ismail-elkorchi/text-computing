@@ -1,0 +1,132 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-evaluation-record.schema.json",
+	"title": "TextpackEvaluationRecord",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"recordId",
+		"packageName",
+		"resourceSpecId",
+		"pipelineId",
+		"capabilitySlot",
+		"taskType",
+		"evaluationKind",
+		"result",
+		"metric",
+		"dataset",
+		"evidence",
+		"limitations"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"recordId": { "type": "string", "minLength": 1 },
+		"packageName": { "type": "string", "minLength": 1 },
+		"resourceSpecId": { "type": "string", "minLength": 1 },
+		"pipelineId": { "type": "string", "minLength": 1 },
+		"capabilitySlot": { "type": "string", "minLength": 1 },
+		"taskType": { "type": "string", "minLength": 1 },
+		"evaluationKind": {
+			"enum": [
+				"artifact-validation",
+				"coverage",
+				"gold-evaluation",
+				"integrity",
+				"resource-conformance",
+				"runtime-smoke"
+			]
+		},
+		"result": {
+			"enum": ["fail", "not-applicable", "pass", "warning"]
+		},
+		"metric": { "$ref": "#/definitions/metric" },
+		"dataset": { "$ref": "#/definitions/dataset" },
+		"evidence": { "$ref": "#/definitions/evidence" },
+		"limitations": {
+			"type": "array",
+			"items": { "type": "string" }
+		}
+	},
+	"definitions": {
+		"metricValue": {
+			"anyOf": [
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" }
+			]
+		},
+		"metric": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["name", "value", "unit"],
+			"properties": {
+				"name": { "type": "string", "minLength": 1 },
+				"value": { "$ref": "#/definitions/metricValue" },
+				"unit": { "type": "string", "minLength": 1 },
+				"operator": {
+					"enum": ["eq", "exists", "gt", "gte", "lt", "lte"]
+				},
+				"threshold": { "$ref": "#/definitions/metricValue" }
+			}
+		},
+		"dataset": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["sourceIds", "snapshotIds"],
+			"properties": {
+				"sourceIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"snapshotIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"languages": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"scripts": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"modalities": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"split": { "type": "string", "minLength": 1 }
+			}
+		},
+		"evidence": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["resourceIds"],
+			"properties": {
+				"resourceIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"sampleSize": { "type": "number", "minimum": 0 },
+				"observations": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

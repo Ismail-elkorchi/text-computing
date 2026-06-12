@@ -5,18 +5,27 @@
   "mode": "source-backed",
   "packageId": "textpack-wordnet-en",
   "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+  "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [
     "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
   ],
   "resources": [
+    {
+      "byteLength": 518,
+      "checksum": "sha256:4d2e5c099d1a5959f45818e4c315afba95d1719bb2396833377d5dc1905f0ba8",
+      "id": "wordnet-en-kb-canonical",
+      "kind": "knowledge-base",
+      "path": "resources/wordnet-en.kb.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
+    },
     {
       "byteLength": 4202454,
       "checksum": "sha256:43df93cb052d566573982948efeedcae2ed4e2a18a3d3e16134a37790dfb9426",
@@ -28,11 +37,31 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
     },
     {
+      "byteLength": 292,
+      "checksum": "sha256:938ab3964d5732e9517cb77d63372be6c91423343bcf417ebb980485743543e4",
+      "id": "wordnet-en-lexicon-canonical",
+      "kind": "lexicon",
+      "path": "resources/wordnet-en.lexicon.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
+    },
+    {
       "byteLength": 1401,
       "checksum": "sha256:c20aa32a35394b476849490164227ba64237489bbc3de36498e50d146095db94",
       "id": "wordnet-en-quality",
       "kind": "quality-profile",
       "path": "resources/wordnet-en.quality.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
+    },
+    {
+      "byteLength": 876,
+      "checksum": "sha256:681ae437d9d4b42caa837baedd35a08c5930d45b99ecc4059a75ba3b636ac6a8",
+      "id": "wordnet-en-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/wordnet-en.quality-profile.json",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
@@ -74,7 +103,7 @@
   ],
   "snapshots": [
     {
-      "checksum": "sha256:2e37bbb0f93dce9ddae3d3ed335e5000b471417946e724d3cff89bdf1903c778",
+      "checksum": "sha256:8b23c165e1c21ed3b266a527e5eb4b9ae2ae621019a40a60fe525b0c83d4aa23",
       "files": [
         {
           "byteLength": 11363503,
@@ -82,10 +111,24 @@
           "mediaType": "application/gzip",
           "path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/english-wordnet-2025.xml.gz",
           "sourceUrl": "https://en-word.net/static/english-wordnet-2025.xml.gz"
+        },
+        {
+          "byteLength": 19863,
+          "checksum": "sha256:672cc8b5663e8dc74c4b07a9dcf477193853575b119908fd3dc0aeeb60a9dbbb",
+          "mediaType": "text/markdown",
+          "path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/LICENSE.md",
+          "sourceUrl": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/2025-edition/LICENSE.md"
+        },
+        {
+          "byteLength": 1740,
+          "checksum": "sha256:df30ec18fbabcdaf031b79ea026d3e6b959010cffe6dd7be9ac137822175b904",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/WNDB_License.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/2025-edition/WNDB_License.txt"
         }
       ],
       "kind": "archive",
-      "notes": "Pinned Open English WordNet 2025 LMF archive.",
+      "notes": "Pinned Open English WordNet 2025 LMF archive with local license evidence files.",
       "retrievedAt": "2026-06-09T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",

@@ -92,25 +92,226 @@ no sampled, fixture-backed, demo, or transitional status
 The forge MUST fail a publishable request when any gate requirement is missing. The standard generated reports are:
 
 ```text
+LICENSE.generated.md
 NOTICE.generated.md
 SOURCES.generated.json
 ATTRIBUTION.generated.md
 COVERAGE.generated.json
+EVALUATION.generated.json
 QUALITY.generated.json
 ```
 
 Sampled, fixture-backed, demo, smoke-corpus, and transitional outputs MUST NOT be npm-publishable textpacks. A tiny morphology sample, syntax sample, search placeholder, quality placeholder, corpus smoke sample, KB demo, or fixture-backed reference is not a production textpack for that declared scope.
 
-The current active generated graph contains only the foundation package outputs:
+The current active generated graph contains foundation outputs, audited source-backed task slices,
+component recipe composites, the default developer-facing English recipe composite, and
+policy-expanded share-alike Arabic/French developer recipe composites:
 
 ```text
 @ismail-elkorchi/textpack-language-registry
 @ismail-elkorchi/textpack-unicode-17
 @ismail-elkorchi/textpack-cldr-core
 @ismail-elkorchi/textpack-foundation
+@ismail-elkorchi/textpack-ar
+@ismail-elkorchi/textpack-ar-core
+@ismail-elkorchi/textpack-ar-corpus
+@ismail-elkorchi/textpack-ar-kb
+@ismail-elkorchi/textpack-ar-lexicon
+@ismail-elkorchi/textpack-ar-morphology
+@ismail-elkorchi/textpack-ar-msa-morphology
+@ismail-elkorchi/textpack-ar-normalization
+@ismail-elkorchi/textpack-ar-parallel
+@ismail-elkorchi/textpack-ar-quality
+@ismail-elkorchi/textpack-ar-quality-sa
+@ismail-elkorchi/textpack-ar-sa
+@ismail-elkorchi/textpack-ar-search
+@ismail-elkorchi/textpack-ar-segmentation
+@ismail-elkorchi/textpack-ar-syntax
+@ismail-elkorchi/textpack-ar-syntax-sa
+@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa
+@ismail-elkorchi/textpack-en
+@ismail-elkorchi/textpack-en-core
+@ismail-elkorchi/textpack-en-corpus
+@ismail-elkorchi/textpack-en-inflection-scowl
+@ismail-elkorchi/textpack-en-kb
+@ismail-elkorchi/textpack-en-lexicon
+@ismail-elkorchi/textpack-en-morphology
+@ismail-elkorchi/textpack-en-normalization
+@ismail-elkorchi/textpack-en-parallel
+@ismail-elkorchi/textpack-en-quality
+@ismail-elkorchi/textpack-en-segmentation
+@ismail-elkorchi/textpack-en-search
+@ismail-elkorchi/textpack-en-syntax
+@ismail-elkorchi/textpack-en-syntax-ud-gumreddit
+@ismail-elkorchi/textpack-en-wordlist-esdb
+@ismail-elkorchi/textpack-fr
+@ismail-elkorchi/textpack-fr-corpus
+@ismail-elkorchi/textpack-fr-core
+@ismail-elkorchi/textpack-fr-kb
+@ismail-elkorchi/textpack-fr-lexicon
+@ismail-elkorchi/textpack-fr-lexicon-sa
+@ismail-elkorchi/textpack-fr-lexique-sa
+@ismail-elkorchi/textpack-fr-morphology
+@ismail-elkorchi/textpack-fr-morphology-sa
+@ismail-elkorchi/textpack-fr-normalization
+@ismail-elkorchi/textpack-fr-parallel
+@ismail-elkorchi/textpack-fr-quality
+@ismail-elkorchi/textpack-fr-quality-sa
+@ismail-elkorchi/textpack-fr-sa
+@ismail-elkorchi/textpack-fr-search
+@ismail-elkorchi/textpack-fr-search-sa
+@ismail-elkorchi/textpack-fr-segmentation
+@ismail-elkorchi/textpack-fr-syntax
+@ismail-elkorchi/textpack-fr-syntax-sa
+@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa
+@ismail-elkorchi/textpack-fr-unimorph-sa
+@ismail-elkorchi/textpack-wikidata-ar
+@ismail-elkorchi/textpack-wikidata-en
+@ismail-elkorchi/textpack-wikidata-fr
+@ismail-elkorchi/textpack-wordnet-ar
+@ismail-elkorchi/textpack-wordnet-en
 ```
 
-These packages are still non-publishable until they explicitly pass the gate.
+These packages are non-publishable by default at the rule level. Each active package above is
+publishable only because its source or composite spec explicitly opts in and the forge gate records
+the required evidence. Empty-resource packages in this list are recipe composites; they are valid
+only when they declare required components, publish no `resources` directory, and do not claim direct
+resource payloads.
+
+The foundation graph (`textpack-language-registry`, `textpack-unicode-17`, `textpack-cldr-core`, and
+`textpack-foundation`) is publishable after passing the gate. `@ismail-elkorchi/textpack-wordnet-en`
+is publishable because its declared scope is limited to source-backed Open English WordNet
+lexical-semantic resources and its publishability gate evidence is present.
+`@ismail-elkorchi/textpack-ar-msa-morphology` is publishable because its declared scope is limited
+to source-backed CAMeL Morph MSA morphology and tokenization-scheme resources.
+`@ismail-elkorchi/textpack-wordnet-ar`, `@ismail-elkorchi/textpack-wikidata-ar`, and
+`@ismail-elkorchi/textpack-ar-kb` are publishable because their declared scope is limited to
+source-backed Arabic WordNet lexical-semantic KB resources plus an explicit Wikidata entity artifact
+descriptor. They do not claim in-package Wikidata entity lookup before explicit artifact fetch or
+full Arabic language-composite coverage.
+`@ismail-elkorchi/textpack-ar-lexicon` is publishable because it is a generated component composite
+over the publishable Arabic WordNet lexical-semantic resources and CAMeL Morph MSA morphology
+component. It does not claim dialectal Arabic lexicon coverage, Classical/Quranic Arabic coverage,
+Wiktionary/DBnary definitions, corpus-frequency coverage, syntax, search, corpus, parallel, or full
+Arabic language-composite coverage.
+`@ismail-elkorchi/textpack-ar-search` is publishable because its declared scope is limited to a
+source-backed Arabic MSA lookup/search analyzer profile from CLDR, CAMeL Morph MSA tokenization and
+morphology hooks, and Arabic WordNet synonym hooks. It does not claim a persistent search index,
+corpus-derived ranking model, semantic ranking, dialectal Arabic search, Classical/Quranic Arabic
+search, syntax, corpus, parallel, or full Arabic language-composite coverage.
+`@ismail-elkorchi/textpack-ar-corpus` and `@ismail-elkorchi/textpack-ar-parallel` are publishable
+only as second-wave Tatoeba Arabic artifact-descriptor packs: they preserve attribution and
+checksums, publish compact descriptors and quality evidence, and do not vendor raw corpus or
+parallel payloads. They do not claim OPUS coverage, dialectal Arabic coverage, Classical/Quranic
+Arabic coverage, syntax, or full Arabic language-composite coverage.
+`@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa` and
+`@ismail-elkorchi/textpack-ar-syntax-sa` are publishable only as share-alike isolated syntax
+surfaces. They expose audited UD Arabic NYUAD syntax/tagging evidence through package names that
+declare the required `-sa` policy suffix. `@ismail-elkorchi/textpack-ar-syntax` is the unsuffixed
+policy-expanded wrapper over that isolated syntax graph.
+`@ismail-elkorchi/textpack-ar-quality-sa`, `@ismail-elkorchi/textpack-ar-quality`,
+`@ismail-elkorchi/textpack-ar-sa`, and `@ismail-elkorchi/textpack-ar` are publishable only as
+policy-expanded share-alike composites. They assemble the complete currently generated Arabic MSA
+component graph, including the UD Arabic NYUAD syntax path, through isolated components,
+`allow-share-alike` component policies, generated reports, full license expressions, and loader
+defaults that allow share-alike resolution. They do not claim permissive default-package
+compatibility, dialectal Arabic, Classical/Quranic coverage, OPUS coverage, or hidden network
+access.
+`@ismail-elkorchi/textpack-wikidata-fr` is publishable because its declared scope is limited to an
+explicit Wikidata entity artifact descriptor for French KB composition.
+`@ismail-elkorchi/textpack-fr-kb` is publishable because it is a generated component composite over
+the publishable Wikidata French artifact-descriptor component. Its declared scope is limited to
+French entity labels, aliases, relations, and ontology artifact descriptors; it does not ship the
+Wikidata dump, does not claim in-package entity lookup before explicit artifact fetch/indexing, and
+does not claim WOLF/OMW lexical-semantic wordnet coverage.
+`@ismail-elkorchi/textpack-ar-core`, `@ismail-elkorchi/textpack-ar-normalization`,
+`@ismail-elkorchi/textpack-ar-segmentation`, and `@ismail-elkorchi/textpack-ar-morphology` are
+publishable only for their current Arabic MSA component scope.
+`@ismail-elkorchi/textpack-fr-core`, `@ismail-elkorchi/textpack-fr-normalization`, and
+`@ismail-elkorchi/textpack-fr-segmentation` are publishable only for their current Unicode/CLDR
+French component scope.
+`@ismail-elkorchi/textpack-fr-lexique-sa`, `@ismail-elkorchi/textpack-fr-lexicon-sa`,
+`@ismail-elkorchi/textpack-fr-morphology-sa`, `@ismail-elkorchi/textpack-fr-search-sa`, and
+`@ismail-elkorchi/textpack-fr-syntax-sa` are publishable only as share-alike isolated French
+surfaces over Lexique 3.83, UniMorph French, and UD French GSD resources.
+`@ismail-elkorchi/textpack-fr-lexicon`, `@ismail-elkorchi/textpack-fr-morphology`,
+`@ismail-elkorchi/textpack-fr-search`, and `@ismail-elkorchi/textpack-fr-syntax` are unsuffixed
+policy-expanded wrappers over those isolated components; they contain no direct resource payloads
+and preserve the full share-alike license expression and component policy.
+`@ismail-elkorchi/textpack-fr-unimorph-sa` is publishable only as a share-alike isolated UniMorph
+French morphology surface with paradigm, lookup analyzer, lookup generator, feature-inventory, and
+quality-profile resources.
+`@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa` and
+`@ismail-elkorchi/textpack-fr-syntax-sa` are publishable only as share-alike isolated UD French GSD
+syntax surfaces. They expose audited UD French GSD syntax/tagging evidence through package names
+that declare the required `-sa` policy suffix.
+`@ismail-elkorchi/textpack-fr-corpus` and `@ismail-elkorchi/textpack-fr-parallel` are publishable
+only as second-wave Tatoeba French artifact-descriptor packs.
+`@ismail-elkorchi/textpack-fr-quality-sa`, `@ismail-elkorchi/textpack-fr-quality`,
+`@ismail-elkorchi/textpack-fr-sa`, and `@ismail-elkorchi/textpack-fr` are publishable only as
+policy-expanded share-alike composites. They assemble the complete currently generated French
+component graph, including Lexique 3.83, UniMorph French, and UD French GSD paths, through isolated
+components, `allow-share-alike` component policies, generated reports, full license expressions, and
+loader defaults that allow share-alike resolution. They do not claim permissive default-package
+compatibility, WOLF/OMW wordnet coverage, OPUS coverage, or hidden network access.
+`@ismail-elkorchi/textpack-en-core` is publishable because its declared scope is limited to
+source-backed modern typed English core profile resources from IANA, Unicode, CLDR, ESDB, and
+SCOWLv2: BCP 47 identity, Latin orthography ranges, Unicode punctuation ranges, SCOWLv2 abbreviation
+rows, SCOWLv2 POS-derived function-word stoplist candidates, and a basic UAX #29 segmentation
+baseline. It does not claim corpus-frequency stopword weights, sentence-boundary disambiguation,
+morphology analysis, syntax parsing, KB/entity linking, corpus, parallel, or full language-composite
+coverage.
+`@ismail-elkorchi/textpack-en-wordlist-esdb` is publishable because its declared scope is limited to
+source-backed ESDB generated default regional spelling wordlists and analyzer-profile resources.
+`@ismail-elkorchi/textpack-en-inflection-scowl` is publishable because its declared scope is limited
+to source-backed SCOWLv2 POS and inflection inventory resources.
+`@ismail-elkorchi/textpack-en-kb` is publishable because it is a generated component composite over
+the publishable Open English WordNet lexical-semantic KB component and the publishable Wikidata
+English artifact-descriptor component. It does not ship the Wikidata dump and does not claim runtime
+entity lookup before explicit artifact fetch and indexing.
+`@ismail-elkorchi/textpack-en-lexicon` is publishable because it is a generated component composite
+over the publishable ESDB wordlist, SCOWLv2 inflection inventory, and Open English WordNet
+lexical-semantic components, with no original resource payloads of its own.
+`@ismail-elkorchi/textpack-en-morphology` is publishable because it is a generated component
+composite over the publishable SCOWLv2 POS and inflection inventory component, with no original
+resource payloads of its own and no analyzer, generator, FST, corpus, UniMorph, or full
+language-composite claim.
+`@ismail-elkorchi/textpack-en-normalization` is publishable because its declared scope is limited to
+source-backed Unicode/CLDR NFC, lookup casefold, and CLDR English likely-subtag normalization policy
+for modern typed English, with no spelling-correction, historical, noisy-text, OCR, transliteration,
+or corpus-derived normalization claim.
+`@ismail-elkorchi/textpack-en-quality` is publishable because it is a generated component composite
+over publishable English components that provide quality-profile resources, generated quality
+reports, coverage reports, and evaluation records. It does not claim corpus-scale quality baselines,
+readability scoring, style diagnostics, OCR/noisy-text diagnostics, annotation adjudication, or full
+language-composite coverage.
+`@ismail-elkorchi/textpack-en-segmentation` is publishable because its declared scope is limited to
+source-backed Unicode UAX #29 grapheme, word, and sentence boundary profiles plus CLDR English
+likely-subtag context for modern typed English, with no dictionary tokenization, sentence
+abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, corpus,
+or full language-composite claim.
+`@ismail-elkorchi/textpack-en-search` is publishable because it is a generated component composite
+over the publishable ESDB wordlist/search-profile component, with no persistent index, ranking model,
+or corpus claim.
+`@ismail-elkorchi/textpack-en-syntax` is publishable because it is a generated component composite
+over the publishable UD GUMReddit syntax/tagging-profile component, with no parser, corpus, or broad
+English syntax claim.
+`@ismail-elkorchi/textpack-en-syntax-ud-gumreddit` is publishable because its declared scope is
+limited to source-backed UD GUMReddit annotation-derived syntax and tagging profiles without raw
+text redistribution or broad English syntax claims. `@ismail-elkorchi/textpack-en-corpus`,
+`@ismail-elkorchi/textpack-en-parallel`, `@ismail-elkorchi/textpack-ar-corpus`, and
+`@ismail-elkorchi/textpack-ar-parallel` are publishable as second-wave Tatoeba artifact-descriptor
+packs only: they preserve attribution and checksums, publish compact descriptors and quality
+evidence, and do not vendor raw corpus or parallel payloads.
+
+`@ismail-elkorchi/textpack-en` is publishable because its exact required component graph has reached
+12/12 readiness with audited first-source and explicitly approved second-wave artifact-descriptor
+components. `@ismail-elkorchi/textpack-ar` and `@ismail-elkorchi/textpack-fr` are publishable
+because their exact required component graphs have reached 12/12 readiness as policy-expanded
+wrappers: approved share-alike source payloads remain in isolated suffixed components, while the
+developer-facing packages expose the full license expression, component policies, reports, and
+loader defaults. French WOLF/OMW lexical-semantic wordnet coverage remains an isolated follow-up
+because the audited WOLF/OMW row is not default-compatible.
 
 ## 3. Forge Input Graph
 
@@ -159,6 +360,48 @@ tools/textpack-forge/source-policy.generated.json
 docs/textpacks/source-readiness.generated.md
 ```
 
+The generated language-composite readiness outputs are:
+
+```text
+docs/textpacks/language-composite-readiness.generated.json
+docs/textpacks/language-composite-readiness.generated.md
+```
+
+These reports MUST be derived from the active forge graph. They MUST treat candidate component packs
+as informational only: a candidate pack does not satisfy a developer-facing language slot until the
+exact required slot package is generated, source-audited, schema-valid, runtime-adapter-valid,
+evaluated, publishable, and declares production coverage for that slot.
+
+The forge MUST fail any publishable developer-facing language composite request for
+`textpack-en`, `textpack-ar`, or `textpack-fr` unless the generated language-composite readiness
+report marks that language `compositeReady: true`. This check is source-boundary enforcement, not
+documentation: isolated share-alike, copyleft, noncommercial, local-only, blocked, or review-only
+candidate packs MUST NOT make a default language composite publishable.
+
+The canonical resource schema registry is rooted in `schemas/`. Generated component packs MUST target
+the relevant schema before they can pass a production-grade publishability review:
+
+| Resource family | Canonical schema |
+| --- | --- |
+| Lexicon, gazetteer, termbase-style lookup data | `schemas/textpack-lexicon-resource.schema.json` |
+| Segmentation and tokenization profiles | `schemas/textpack-segmentation-resource.schema.json` |
+| Normalization, orthography, casing, diacritic, and transliteration profiles | `schemas/textpack-normalization-resource.schema.json` |
+| Morphology inventories, analyzers, generators, paradigms, and feature inventories | `schemas/textpack-morphology-resource.schema.json` |
+| Finite-state analyzers, generators, and transducers | `schemas/textpack-fst-resource.schema.json` |
+| Syntax, tagsets, dependency labels, treebank profiles, and grammar resources | `schemas/textpack-syntax-resource.schema.json` |
+| Search analyzer profiles | `schemas/textpack-search-analyzer-resource.schema.json` |
+| Entity, sense, ontology, thesaurus, and semantic relation resources | `schemas/textpack-kb-resource.schema.json` |
+| Corpus manifests, documents, annotation references, and artifact-backed corpora | `schemas/textpack-corpus-resource.schema.json` |
+| Translation memories, bilingual lexicons, and alignment tables | `schemas/textpack-parallel-resource.schema.json` |
+| Quality diagnostics, metrics, thresholds, and evaluation links | `schemas/textpack-quality-profile-resource.schema.json` |
+| Task evidence records | `schemas/textpack-evaluation-record.schema.json` |
+| Generated coverage reports | `schemas/textpack-coverage-report.schema.json` |
+
+Source-specific resource schemas, such as UD syntax, CAMeL morphology, and WordNet projections, MAY
+exist beside the canonical schemas. They do not replace the canonical family contracts; they
+specialize them for a source family or task pipeline. A generated resource that declares
+`metadata.canonicalSchema` in its manifest MUST validate against the named canonical schema.
+
 The source policy classes are:
 
 ```text
@@ -192,6 +435,8 @@ npm run -s forge:license-audit
 Resource specs MUST fail validation when they reference undeclared sources, undeclared snapshots, snapshot files not present in their snapshot descriptor, or input checksums that disagree with the snapshot descriptor.
 
 `forge:license-audit` MUST fail when an active generated source lacks a source-policy record, conflicts with that record, is `blocked/review-only`, is published through a package name that omits its required policy suffix, is included as a required default composite component against policy, or is referenced by a composite component whose license policy is too narrow for the audited source class.
+
+For language-targeted packs, the forge MUST also fail when a declared source is not listed in that language's source priority record as a first source, second-wave source, or isolated/review source. This keeps `en`, `ar`, and `fr` generation aligned with the source universe instead of letting ad hoc sources enter generated packages.
 
 The forge MUST maintain per-language source priority records for the first production languages and planned expansion languages:
 
@@ -309,13 +554,35 @@ and later:
 
 `@ismail-elkorchi/textpack-foundation` is the generated source-backed foundation composite. It MUST compose the generated language registry, Unicode, and CLDR foundation packs. Default language composites MUST require it so every language loader has the same language registry, Unicode coverage, and locale profile base.
 
-The previously generated English/French/Arabic core slices, search profiles, normalization profiles, quality profiles, UD task samples, demo packs, and fixture-backed references are removed from the active public package graph. They were validation material, not production-grade language support.
+Sampled search profiles, sampled quality profiles, UD task samples, demo packs, smoke corpora, and
+fixture-backed references are removed from the active public package graph. They were validation
+material, not production-grade language support.
 
-Language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be generated as public packages until their required component graph is production-grade for the declared scope. The next language-ingestion work MUST produce real resources with provenance, license audit, and conformance/evaluation evidence before reintroducing language composites.
+Language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be generated as
+public packages until their required component graph is production-grade for the declared scope.
+The current generated graph promotes `textpack-en` as a default-compatible developer-facing
+composite, and promotes `textpack-ar` and `textpack-fr` only as explicit policy-expanded wrappers
+over isolated share-alike components. Those wrappers carry no direct resource payloads and preserve
+the required isolated component names, license policies, generated reports, and full license
+expressions.
 
 The forge MUST NOT synthesize missing language data. Capability slots without an upstream-backed resource, such as KB, parallel, broad evaluation coverage, production morphology analyzers, production syntax models, and production Arabic clitic segmentation, MUST remain generated gaps until real sources are added.
 
 Each composite MUST be generated. A composite SHOULD be a recipe package by default: it declares required and optional component packs, capability policy, license policy, artifact policy, and loader helpers. It MUST NOT claim capabilities not supported by its component graph.
+
+The forge MUST maintain generated readiness gates for the first developer-facing language composites:
+
+```text
+textpack-en
+textpack-ar
+textpack-fr
+```
+
+For each language, the readiness report MUST require `textpack-foundation` plus exact generated slot
+packages for `core`, `normalization`, `segmentation`, `lexicon`, `morphology`, `syntax`, `kb`,
+`search`, `corpus`, `parallel`, and `quality`. Narrower source-backed packs MAY appear as candidates,
+but they MUST NOT make the developer-facing composite publishable until promoted into the exact
+required slot package or composed by one.
 
 Composite packages SHOULD expose language loaders:
 
@@ -343,12 +610,18 @@ The default loader options MUST use:
 
 ```text
 profile: default
-licensePolicy: default
-artifactPolicy: none
 strict: true
 ```
 
-Therefore `await loadFrench()` MUST be offline, deterministic, and limited to the default composite graph.
+The generated loader MAY derive its default `licensePolicy` and `artifactPolicy` from the required
+default component graph so that `await loadEnglish()` can resolve attribution-licensed default
+components and explicit artifact-descriptor components. It MUST NOT derive defaults wider than the
+required default graph, and it MUST NOT default to share-alike, copyleft, noncommercial,
+licensed-only, local-only, or blocked sources.
+
+Therefore `await loadFrench()` or `await loadEnglish()` MUST be offline, deterministic, and limited
+to the default composite graph. Resolving an artifact-descriptor component is allowed only when it
+does not download, unpack, or index external artifact bytes.
 
 If requested optional packs or artifacts are missing, loaders MUST:
 
@@ -424,7 +697,9 @@ Composite packages MUST NOT use `optionalDependencies` for license-isolated, hea
 
 Optional components MUST be declared in the composite manifest and resolved at runtime only when the user explicitly requests them.
 
-Default language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT include share-alike, copyleft, non-commercial, restricted, blocked, or local-only resources.
+Default-policy language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT
+include share-alike, copyleft, non-commercial, restricted, blocked, or local-only resources as direct
+resource payloads or undifferentiated bundled data.
 
 Policy-expanded composites MUST use explicit names such as:
 
@@ -436,7 +711,17 @@ textpack-la-research
 textpack-en-legal-research
 ```
 
-A package name without a policy suffix is the default policy surface.
+A package name without a policy suffix is the default policy surface unless the generated composite
+spec explicitly declares `policySurface: "policy-expanded-wrapper"`. That wrapper surface is
+allowed only for packages with no direct resource payloads, explicit isolated component
+dependencies, generated license/report evidence, and loader defaults that permit the required
+component policy.
+
+The forge MAY allow a policy-expanded composite to directly declare isolated source IDs only when
+the composite package name carries the required source-policy suffix, or when the package is a
+no-payload policy-expanded wrapper and every required component declares a wide enough
+`licensePolicy`. This allowance MUST NOT apply to copyleft, noncommercial/research, local-only,
+blocked, aggregate, or review-only sources.
 
 ## 10. Capability Slots
 
@@ -490,6 +775,7 @@ The generated graph MAY include these package classes:
 | --- | --- |
 | `foundation` | shared language registry, script profiles, locale data, tagsets, and cross-language profiles |
 | `language-composite` | developer-facing generated recipe for one language |
+| `language-component-composite` | generated recipe for a required language capability component, such as a broad lexicon component assembled from narrower audited packs |
 | `language-concrete` | language-specific concrete resource pack for one or more capability slots |
 | `domain` | domain pack such as legal, biomedical, news, classics, religious, or finance |
 | `historical-noisy` | historical, OCR/ATR, manuscript, dialectal, social-text, or transliteration overlays |
@@ -590,6 +876,7 @@ resource descriptors
 checksums
 license and attribution files
 quality and coverage reports
+evaluation records
 artifact descriptors
 composite recipes
 ```
@@ -642,9 +929,9 @@ interface TextPackArtifactDescriptor {
   profile: "research" | "full" | "local";
   sizeBytes: number;
   mediaType: string;
-  compression?: "gzip" | "zstd" | "zip" | "tar";
+  compression?: "gzip" | "bzip2" | "zstd" | "zip" | "tar";
   checksum: {
-    algorithm: "sha256" | "sha512";
+    algorithm: "sha1" | "sha256" | "sha512";
     value: string;
   };
   licenseExpression: string;
@@ -668,7 +955,9 @@ interface TextPackArtifactDescriptor {
 }
 ```
 
-Artifact descriptors SHOULD be content-addressed where possible.
+Artifact descriptors SHOULD be content-addressed where possible. `sha256` or `sha512` is preferred.
+`sha1` is allowed only when it is the strongest checksum published by the upstream artifact source
+and the generated artifact descriptor records that limitation.
 
 Artifact verification MUST occur before unpacking and after unpacking. Artifact unpacking MUST protect against path traversal, absolute paths, symlinks escaping the artifact root, and unexpected executable files.
 
@@ -707,6 +996,19 @@ review note
 redistribution policy
 ```
 
+Generated `package.json` files MUST NOT expose `LicenseRef-*` expressions directly through the npm
+`license` field. When the manifest license expression contains a local license reference, the
+package `license` field MUST be:
+
+```text
+SEE LICENSE IN LICENSE.generated.md
+```
+
+`LICENSE.generated.md` MUST include the exact manifest license expression, source license
+expressions, source evidence URLs, and any package-local license evidence files. A publishable
+package with a `LicenseRef-*` expression MUST include local license evidence copied from the pinned
+snapshot under `licenses/`.
+
 License evaluation is per source and per emitted resource. It is never per broad source family.
 
 Default composites MUST NOT include share-alike, copyleft, non-commercial, restricted, blocked, or local-only resources.
@@ -714,7 +1016,7 @@ Default composites MUST NOT include share-alike, copyleft, non-commercial, restr
 Each generated package MUST include:
 
 ```text
-LICENSE
+LICENSE.generated.md
 NOTICE.generated.md
 SOURCES.generated.json
 ATTRIBUTION.generated.md
@@ -760,11 +1062,13 @@ Concrete generated packs SHOULD use:
 packages/textpacks/<pack>/
   package.json
   README.md
-  LICENSE
+  LICENSE.generated.md
+  licenses/              # when local license evidence files exist
   NOTICE.generated.md
   SOURCES.generated.json
   ATTRIBUTION.generated.md
   COVERAGE.generated.json
+  EVALUATION.generated.json
   QUALITY.generated.json
   pack.manifest.json
   src/index.ts
@@ -780,7 +1084,8 @@ Composite generated packs SHOULD use:
 packages/textpacks/<composite>/
   package.json
   README.md
-  LICENSE
+  LICENSE.generated.md
+  licenses/              # when local license evidence files exist
   NOTICE.generated.md
   COMPONENTS.generated.json
   CAPABILITIES.generated.json

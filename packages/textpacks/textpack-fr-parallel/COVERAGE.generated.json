@@ -1,0 +1,183 @@
+{
+  "capabilities": {
+    "parallel": true
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:tatoeba-fr-parallel:checksum",
+        "eval:tatoeba-fr-parallel:language-pair-coverage",
+        "eval:tatoeba-fr-parallel:link-row-volume"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Tatoeba link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-parallel-eng",
+        "fr-tatoeba-parallel-ara",
+        "fr-tatoeba-parallel-spa",
+        "fr-tatoeba-parallel-deu"
+      ],
+      "slot": "parallel",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "resource-inventory",
+      "limitations": [],
+      "resourceIds": [
+        "fr-tatoeba-parallel-quality",
+        "fr-tatoeba-parallel-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06"
+      ],
+      "capabilities": {
+        "parallel": true
+      },
+      "notes": [
+        "Tatoeba French-linked alignment tables are available through explicit full artifact descriptors for English, Arabic, Spanish, and German."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-parallel-eng",
+        "fr-tatoeba-parallel-ara",
+        "fr-tatoeba-parallel-spa",
+        "fr-tatoeba-parallel-deu"
+      ],
+      "slot": "parallel",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and explicit fetch limitations."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-parallel-quality",
+        "fr-tatoeba-parallel-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:tatoeba-fr-parallel:checksum",
+    "eval:tatoeba-fr-parallel:language-pair-coverage",
+    "eval:tatoeba-fr-parallel:link-row-volume"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-fr-parallel",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 2100,
+      "checksum": "sha256:5f02b8c8c23cd2bc852fa008fca147152864b59a45d2f95b03367bf79ca3ce4e",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-ara.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-tatoeba-parallel-ara",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2105,
+      "checksum": "sha256:b496142a402b7d74c328af23a86824c5aa2f92a41432e6eba0305bef98138019",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-deu.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-tatoeba-parallel-deu",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2108,
+      "checksum": "sha256:011af05baec636c9532e2b0e7f1b0a3fe47acad13d18380ef11f13aa37c3657c",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-eng.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-tatoeba-parallel-eng",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2216,
+      "checksum": "sha256:845561c4c24fba6dec0508d29139cc7114d568dac796f8d3cb1afd53a24d2033",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 60,
+      "path": "resources/tatoeba-fr.parallel-quality.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-tatoeba-parallel-quality",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1366,
+      "checksum": "sha256:a3e1910be7b2c439f10279f334077448a3560bb74f70a3bd3f219ff58342b1b3",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 46,
+      "path": "resources/tatoeba-fr.parallel-quality-profile.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-tatoeba-parallel-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2104,
+      "checksum": "sha256:dfe0ca976b91b2c9f53309e73a37ccc2145acf4660e7c72541ed20bf7fce97a5",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 56,
+      "path": "resources/tatoeba-fr.parallel-spa.json",
+      "pipelineId": "tatoeba-french-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-tatoeba-parallel-spa",
+      "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "alignment-table",
+    "quality-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "fr"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  }
+}

@@ -35,11 +35,11 @@ async function resolveGeneratedComponent(
 	void options;
 	switch (component.packageName) {
 		case "@ismail-elkorchi/textpack-language-registry":
-			return import("@ismail-elkorchi/textpack-language-registry");
+			return import(component.packageName);
 		case "@ismail-elkorchi/textpack-unicode-17":
-			return import("@ismail-elkorchi/textpack-unicode-17");
+			return import(component.packageName);
 		case "@ismail-elkorchi/textpack-cldr-core":
-			return import("@ismail-elkorchi/textpack-cldr-core");
+			return import(component.packageName);
 		default:
 			throw new TypeError(
 				`No generated resolver entry for ${component.packageName}.`,
@@ -50,6 +50,9 @@ async function resolveGeneratedComponent(
 export async function loadFoundation(options: LoadFoundationOptions = {}) {
 	return resolvePackComponents(await loadPack({ manifest, resources }), {
 		...options,
+		licensePolicy: options.licensePolicy ?? "default",
+		artifactPolicy: options.artifactPolicy ?? "none",
+		conflictPolicy: options.conflictPolicy ?? "first",
 		resolveComponent:
 			options.resolveComponent ??
 			((component) => resolveGeneratedComponent(component, options)),

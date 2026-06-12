@@ -5,7 +5,12 @@ import {
 	createPack,
 	getResource,
 	listResources,
+	loadLexicon,
+	loadNormalizer,
 	loadPack,
+	loadQualityProfile,
+	loadSegmenter,
+	loadSyntaxResources,
 	type PackResourceMap,
 	resolvePackComponents,
 	resourceKinds,
@@ -57,6 +62,11 @@ const manifest: TextPackManifest = {
 			id: "rules-en-test",
 			kind: "rule-set",
 		},
+		{
+			id: "quality-en-test",
+			kind: "quality-profile",
+			format: "json",
+		},
 	],
 	capabilitySlots: [
 		{
@@ -81,6 +91,11 @@ const manifest: TextPackManifest = {
 			status: "sampled",
 			resourceIds: ["rules-en-test"],
 		},
+		{
+			slot: "quality",
+			status: "sampled",
+			resourceIds: ["quality-en-test"],
+		},
 	],
 	license: "MIT",
 	citations: ["test citation"],
@@ -88,7 +103,8 @@ const manifest: TextPackManifest = {
 
 const resources: PackResourceMap = {
 	"gazetteer-en-test": "Acme Corp\tORG\n",
-	"lexicon-en-test": "analyses\tlemma=analysis\tpos=NOUN\n",
+	"lexicon-en-test": "surface\tlemma\tpos\nanalyses\tanalysis\tNOUN\n",
+	"quality-en-test": JSON.stringify({ recordCount: 1 }),
 	"rules-en-test": "abbrev:Dr.\n",
 	"stoplist-en-test": "a\nan\nthe\n",
 };
@@ -302,6 +318,42 @@ assert.deepEqual(capabilities(pack), {
 	extraction: "gazetteer",
 	terminology: "lexicon",
 });
+const lexiconFamily = loadLexicon(pack);
+assert.deepEqual(
+	lexiconFamily.resources.map((resource) => resource.id),
+	["stoplist-en-test", "lexicon-en-test", "gazetteer-en-test"],
+);
+const lexiconTable = lexiconFamily.resources[1]?.payload;
+assert.equal(lexiconTable?.type, "table");
+if (lexiconTable?.type !== "table") {
+	throw new Error("lexicon payload must parse as a table");
+}
+assert.deepEqual(lexiconTable.columns, ["surface", "lemma", "pos"]);
+assert.deepEqual(lexiconTable.rows[0], {
+	surface: "analyses",
+	lemma: "analysis",
+	pos: "NOUN",
+});
+assert.deepEqual(
+	loadSegmenter(pack).resources.map((resource) => resource.id),
+	["rules-en-test"],
+);
+assert.deepEqual(
+	loadSyntaxResources(pack).resources.map((resource) => resource.id),
+	["rules-en-test"],
+);
+assert.deepEqual(
+	loadSyntaxResources(pack, { slots: [] }).resources.map(
+		(resource) => resource.id,
+	),
+	["rules-en-test"],
+);
+const qualityPayload = loadQualityProfile(pack).resources[0]?.payload;
+assert.equal(qualityPayload?.type, "json");
+if (qualityPayload?.type !== "json") {
+	throw new Error("quality payload must parse as JSON");
+}
+assert.deepEqual(qualityPayload.value, { recordCount: 1 });
 
 const loadedFromNamed = await loadPack({ manifest, resources });
 assert.equal(
@@ -461,6 +513,10 @@ const resolvedFrenchFull = await resolvePackComponents(frComposite, {
 assert.equal(
 	getResource<string>(resolvedFrenchFull, "normalization-fr-historical"),
 	"estoit=>etait\n",
+);
+assert.deepEqual(
+	loadNormalizer(resolvedFrenchFull).resources.map((resource) => resource.id),
+	["normalization-fr-historical"],
 );
 await assert.rejects(
 	() =>

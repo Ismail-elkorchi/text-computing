@@ -16,11 +16,14 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-ar-msa-morphology
 - `ar-msa-camel-morph-morphemes` (morphology, tsv+gzip+base64)
 - `ar-msa-camel-morph-compatibility` (morphology, tsv)
 - `ar-msa-camel-morph-quality` (quality-profile, json)
+- `ar-msa-camel-morphology-canonical` (morphology, json)
+- `ar-msa-camel-segmentation-canonical` (segmentation-profile, json)
+- `ar-msa-camel-quality-profile` (quality-profile, json)
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- generated packs are non-publishable by default
+- None
 

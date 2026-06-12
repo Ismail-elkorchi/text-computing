@@ -1,0 +1,186 @@
+{
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-en-wordlist-esdb",
+  "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceSpecIds": [
+    "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+  ],
+  "resources": [
+    {
+      "byteLength": 290,
+      "checksum": "sha256:c4530d89003dc9e1a6f46f0f76bf0f3c986a3f267c52a59cdddeb5cdb2c3ef37",
+      "id": "en-esdb-default-profiles",
+      "kind": "lexicon",
+      "path": "resources/esdb-2026.default-profiles.tsv",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+    },
+    {
+      "byteLength": 2460241,
+      "checksum": "sha256:098eed6a0af63b5144589cdce3e713828d65b092a07af318605e4603f05ab31b",
+      "id": "en-esdb-default-wordlists",
+      "kind": "lexicon",
+      "path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+    },
+    {
+      "byteLength": 405,
+      "checksum": "sha256:fc73c734e691507ea87c8ec4e799a28721280b397ba66408cd3ad272a9236b5c",
+      "id": "en-esdb-wordlist-lexicon-canonical",
+      "kind": "lexicon",
+      "path": "resources/esdb-2026.lexicon.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+    },
+    {
+      "byteLength": 762,
+      "checksum": "sha256:0f49483f8a028dbc0affdf576177ba21557830e4919af9a0114b59c3beb5230d",
+      "id": "en-esdb-wordlist-quality",
+      "kind": "quality-profile",
+      "path": "resources/esdb-2026.quality.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+    },
+    {
+      "byteLength": 1075,
+      "checksum": "sha256:f42bc78ac8245b6d7cb0b781ebf55f0d7913714af5d1bf962c4c2528b0c369f3",
+      "id": "en-esdb-wordlist-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/esdb-2026.quality-profile.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+    },
+    {
+      "byteLength": 1288,
+      "checksum": "sha256:a151b04d76c92e2fa2ccd7ed5a0057d948226c279ad2f8f1a37995e7a9b612ba",
+      "id": "en-esdb-wordlist-search-profile",
+      "kind": "search-profile",
+      "path": "resources/esdb-2026.search-profile.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
+    }
+  ],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:7833f814b9cf9cb58d83b30b530618793a065b34207cfdbca791447e4a8e0969",
+      "files": [
+        {
+          "byteLength": 4863,
+          "checksum": "sha256:090575a131b4260926c7a6b30a90aca0f5db5fbb5c46778e0c5855227bf6ebc3",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/Copyright",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/Copyright"
+        },
+        {
+          "byteLength": 1035341,
+          "checksum": "sha256:d115ebf51c6dcd819c8624019b762c59e185a5c875b97247e5ad2d3d8efe6c1d",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_AU.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_AU.txt"
+        },
+        {
+          "byteLength": 1030554,
+          "checksum": "sha256:905b1b6b0a98fcb3701c9c59290a090a4d6ab9127809017fefacbe9c2c6f15a4",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_CA.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_CA.txt"
+        },
+        {
+          "byteLength": 1030707,
+          "checksum": "sha256:82b22843c9958a1efac291e0ea7dbef22ce227dd4e5ca0fd84043cbc62e0a4f1",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_GB-ise.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_GB-ise.txt"
+        },
+        {
+          "byteLength": 1030897,
+          "checksum": "sha256:3ba9391531797b64bf48864f0921de2277596aee06c81e0c44118890338218f7",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_GB-ize.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_GB-ize.txt"
+        },
+        {
+          "byteLength": 1033485,
+          "checksum": "sha256:4ff7e0b6d86763e1e042ffd746e94cdf4432618702deac303a1669e2a838db04",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_US.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_US.txt"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned generated default regional English wordlist outputs from wordlist-diff rel-2026.02.25 with local copyright evidence.",
+      "retrievedAt": "2026-06-09T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+      "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25",
+      "version": "rel-2026.02.25"
+    }
+  ],
+  "sourceIds": [
+    "source:esdb:wordlist-diff-en-default-2026-02-25"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "spelling",
+        "search"
+      ],
+      "citation": "English Speller Database generated wordlist outputs, rel-2026.02.25.",
+      "defaultCompositeAllowed": true,
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist-diff/tree/rel-2026.02.25",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-ESDB-MIT-Like",
+      "name": "English Speller Database default English wordlist outputs 2026.02.25",
+      "notes": "Exact generated default regional wordlist outputs from wordlist-diff rel-2026.02.25; database internals remain review-only.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "English Speller Database generated wordlist outputs, rel-2026.02.25.",
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist-diff/tree/rel-2026.02.25",
+      "licenseEvidence": [
+        "https://github.com/en-wl/wordlist-diff/blob/rel-2026.02.25/Copyright"
+      ],
+      "licenseExpression": "LicenseRef-ESDB-MIT-Like",
+      "name": "English Speller Database default English wordlist outputs 2026.02.25",
+      "notes": "Pinned wordlist-diff generated outputs for default English regional spell-checker wordlists; this does not use unstable ESDB database internals.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25"
+    }
+  ]
+}

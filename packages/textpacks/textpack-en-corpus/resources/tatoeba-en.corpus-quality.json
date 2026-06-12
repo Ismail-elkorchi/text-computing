@@ -1,0 +1,18 @@
+{
+  "artifactId": "artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06",
+  "pipelineId": "tatoeba-english-corpus-artifact",
+  "pipelineVersion": "0.1.0",
+  "recordsAccepted": 1,
+  "recordsRejected": 0,
+  "rowCount": 2028855,
+  "schemaVersion": "1",
+  "sha256Checksum": "sha256:401a4ff01d6749cb44fc2eccad4f2699ebe775096b5cba7441e00f0a76c91579",
+  "sizeBytes": 34699431,
+  "sourceId": "source:tatoeba:weekly-2026-06-06",
+  "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2",
+  "version": "2026-06-06",
+  "warnings": [
+    "The Tatoeba English corpus is artifact-backed and must be fetched explicitly; it is not vendored in the npm package.",
+    "The detailed export includes contributor fields needed for attribution-aware downstream processing."
+  ]
+}

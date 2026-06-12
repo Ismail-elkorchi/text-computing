@@ -4,30 +4,80 @@
 	"mode": "source-backed",
 	"generatedAt": "2026-06-08T00:00:00.000Z",
 	"sourcePaths": [
+		"tools/textpack-forge/sources/arabic-wordnet-v4.1.0.source.json",
 		"tools/textpack-forge/sources/camel-morph-msa-lrec-coling-2024.source.json",
+		"tools/textpack-forge/sources/esdb-wordlist-diff-en-default-2026-02-25.source.json",
 		"tools/textpack-forge/sources/iana-language-subtag-registry.source.json",
+		"tools/textpack-forge/sources/lexique-383.source.json",
 		"tools/textpack-forge/sources/open-english-wordnet-2025.source.json",
+		"tools/textpack-forge/sources/scowl-v2-rel-2026-02-25.source.json",
+		"tools/textpack-forge/sources/tatoeba-weekly-2026-06-06.source.json",
+		"tools/textpack-forge/sources/tatoeba-weekly-arabic-2026-06-06.source.json",
+		"tools/textpack-forge/sources/tatoeba-weekly-french-2026-06-06.source.json",
+		"tools/textpack-forge/sources/ud-arabic-nyuad-r2.18.source.json",
 		"tools/textpack-forge/sources/ud-english-gumreddit-r2.18.source.json",
+		"tools/textpack-forge/sources/ud-french-gsd-r2.18.source.json",
 		"tools/textpack-forge/sources/unicode-cldr-core.source.json",
-		"tools/textpack-forge/sources/unicode-ucd.source.json"
+		"tools/textpack-forge/sources/unicode-ucd.source.json",
+		"tools/textpack-forge/sources/unimorph-english-66e0e9e.source.json",
+		"tools/textpack-forge/sources/unimorph-french-f672f8c.source.json",
+		"tools/textpack-forge/sources/wikidata-main.source.json"
 	],
 	"sourcePolicyPaths": [
 		"tools/textpack-forge/source-policies/source-universe.policy.json"
 	],
 	"snapshotPaths": [
+		"tools/textpack-forge/snapshots/arabic-wordnet-v4.1.0.snapshot.json",
 		"tools/textpack-forge/snapshots/camel-morph-msa-lrec-coling-2024.snapshot.json",
+		"tools/textpack-forge/snapshots/esdb-wordlist-diff-en-default-2026-02-25.snapshot.json",
 		"tools/textpack-forge/snapshots/iana-language-subtag-registry-2026-05-05.snapshot.json",
+		"tools/textpack-forge/snapshots/lexique-383.snapshot.json",
 		"tools/textpack-forge/snapshots/open-english-wordnet-2025.snapshot.json",
+		"tools/textpack-forge/snapshots/scowl-v2-rel-2026-02-25.snapshot.json",
+		"tools/textpack-forge/snapshots/tatoeba-weekly-2026-06-06.snapshot.json",
+		"tools/textpack-forge/snapshots/tatoeba-weekly-arabic-2026-06-06.snapshot.json",
+		"tools/textpack-forge/snapshots/tatoeba-weekly-french-2026-06-06.snapshot.json",
+		"tools/textpack-forge/snapshots/ud-arabic-nyuad-r2.18.snapshot.json",
 		"tools/textpack-forge/snapshots/ud-english-gumreddit-r2.18.snapshot.json",
+		"tools/textpack-forge/snapshots/ud-french-gsd-r2.18.snapshot.json",
 		"tools/textpack-forge/snapshots/unicode-cldr-core-48.2.0.snapshot.json",
-		"tools/textpack-forge/snapshots/unicode-ucd-17.0.0.snapshot.json"
+		"tools/textpack-forge/snapshots/unicode-ucd-17.0.0.snapshot.json",
+		"tools/textpack-forge/snapshots/unimorph-english-66e0e9e.snapshot.json",
+		"tools/textpack-forge/snapshots/unimorph-french-f672f8c.snapshot.json",
+		"tools/textpack-forge/snapshots/wikidata-main-20260608.snapshot.json"
 	],
 	"resourceSpecPaths": [
+		"tools/textpack-forge/resources/textpack-ar-core.resource.json",
+		"tools/textpack-forge/resources/textpack-ar-corpus.resource.json",
 		"tools/textpack-forge/resources/textpack-ar-msa-morphology.resource.json",
+		"tools/textpack-forge/resources/textpack-ar-normalization.resource.json",
+		"tools/textpack-forge/resources/textpack-ar-parallel.resource.json",
+		"tools/textpack-forge/resources/textpack-ar-search.resource.json",
+		"tools/textpack-forge/resources/textpack-ar-syntax-ud-nyuad-sa.resource.json",
 		"tools/textpack-forge/resources/textpack-cldr-core.resource.json",
+		"tools/textpack-forge/resources/textpack-en-core.resource.json",
+		"tools/textpack-forge/resources/textpack-en-corpus.resource.json",
+		"tools/textpack-forge/resources/textpack-en-inflection-scowl.resource.json",
+		"tools/textpack-forge/resources/textpack-en-lexicon.resource.json",
+		"tools/textpack-forge/resources/textpack-en-normalization.resource.json",
+		"tools/textpack-forge/resources/textpack-en-parallel.resource.json",
+		"tools/textpack-forge/resources/textpack-en-segmentation.resource.json",
 		"tools/textpack-forge/resources/textpack-en-syntax-ud-gumreddit.resource.json",
+		"tools/textpack-forge/resources/textpack-en-wordlist-esdb.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-core.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-corpus.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-lexique-sa.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-normalization.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-parallel.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-segmentation.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-syntax-ud-gsd-sa.resource.json",
+		"tools/textpack-forge/resources/textpack-fr-unimorph-sa.resource.json",
 		"tools/textpack-forge/resources/textpack-language-registry.resource.json",
 		"tools/textpack-forge/resources/textpack-unicode-17.resource.json",
+		"tools/textpack-forge/resources/textpack-wikidata-ar.resource.json",
+		"tools/textpack-forge/resources/textpack-wikidata-en.resource.json",
+		"tools/textpack-forge/resources/textpack-wikidata-fr.resource.json",
+		"tools/textpack-forge/resources/textpack-wordnet-ar.resource.json",
 		"tools/textpack-forge/resources/textpack-wordnet-en.resource.json"
 	],
 	"packSpecPaths": [
@@ -35,24 +85,82 @@
 		"tools/textpack-forge/packs/task-packs.pack.json"
 	],
 	"compositeSpecPaths": [
-		"tools/textpack-forge/composites/textpack-foundation.composite.json"
+		"tools/textpack-forge/composites/textpack-ar.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-kb.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-lexicon.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-morphology.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-quality.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-quality-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-segmentation.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-syntax.composite.json",
+		"tools/textpack-forge/composites/textpack-ar-syntax-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-en-kb.composite.json",
+		"tools/textpack-forge/composites/textpack-en-lexicon.composite.json",
+		"tools/textpack-forge/composites/textpack-en-morphology.composite.json",
+		"tools/textpack-forge/composites/textpack-en-quality.composite.json",
+		"tools/textpack-forge/composites/textpack-en-search.composite.json",
+		"tools/textpack-forge/composites/textpack-en-syntax.composite.json",
+		"tools/textpack-forge/composites/textpack-en.composite.json",
+		"tools/textpack-forge/composites/textpack-foundation.composite.json",
+		"tools/textpack-forge/composites/textpack-fr.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-kb.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-lexicon.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-lexicon-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-morphology.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-morphology-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-quality.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-quality-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-search.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-search-sa.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-syntax.composite.json",
+		"tools/textpack-forge/composites/textpack-fr-syntax-sa.composite.json"
 	],
 	"snapshotLocks": [
 		{
 			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-			"checksum": "sha256:fef0aad3d875f03f3b9b931a229ffe5d5f6573f86160dbbccc7e4587ddbe955b"
+			"checksum": "sha256:af17d9994d96c4978b59690dcf8eb8b6e92a85396e93359a8a828ff35bebc179"
+		},
+		{
+			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+			"checksum": "sha256:7833f814b9cf9cb58d83b30b530618793a065b34207cfdbca791447e4a8e0969"
+		},
+		{
+			"snapshotId": "snapshot:source:fr:lexique-383:2019-06-04",
+			"checksum": "sha256:decd9eac1556a68f6ed6e27c4dcdb3c4673349223c400388b0be6bc23dcedf76"
 		},
 		{
 			"snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
-			"checksum": "sha256:da6aafd337212fa24dc9dcbc0fc231aba735ee64ff5acf1d35386b4258fc6c25"
+			"checksum": "sha256:0316fc3584010643f9b1c3638d1ff8266960f9d8d71a1988b38392148eed16ca"
 		},
 		{
-			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
-			"checksum": "sha256:2e37bbb0f93dce9ddae3d3ed335e5000b471417946e724d3cff89bdf1903c778"
+			"snapshotId": "snapshot:source:scowl:v2-rel-2026.02.25",
+			"checksum": "sha256:04ba3b9121982264b6aefc8fee26eb9f5b29d17c6bdd5d08aa85e1d9bfcf838d"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"checksum": "sha256:e230bd416f72b2385368b9d4e8604215d559f25d41a19d6acc49deec23c7bf09"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"checksum": "sha256:8caefc61478d6bd0e7f4ea46e36a75ed1db1160993d47100d946a474522b6f8c"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+			"checksum": "sha256:347d4ca4aff5e9acaf0f5d0e4a81d620fd8e34403ae90d79f22ed0d3ced6df74"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
+			"checksum": "sha256:79a36bf67b81b68e52068e22a9661396d588cd44eb007e610f73ab418788d19d"
 		},
 		{
 			"snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
 			"checksum": "sha256:f2814065fb07c813ce8ac6318396b42b0d13e1a15bde2b351cfa4f14dbe02c58"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:french-gsd:r2.18",
+			"checksum": "sha256:083b0e45634b74c075f94ef85057210ecd46836167ede71bc131555d1987d6f4"
 		},
 		{
 			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
@@ -60,13 +168,35 @@
 		},
 		{
 			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
-			"checksum": "sha256:8a048541787b0edfd500233091fa37c45524ef06e9bb16de3918e61bcaa50fff"
+			"checksum": "sha256:6c59bfb7ea97c24f50ca48eeb0ac7dcb599d5f88c9788e70ae0a78ef6f87370e"
+		},
+		{
+			"snapshotId": "snapshot:source:unimorph:english-master-66e0e9e",
+			"checksum": "sha256:b26efe3d50b54c854d060d6511c2b88f5c75fb0786ca25e81a469ac945a8887b"
+		},
+		{
+			"snapshotId": "snapshot:source:unimorph:french-master-f672f8c",
+			"checksum": "sha256:b5ab9265e95ccd336c2dc26985d10508271140ab7146c71fab6c4f980dfb4199"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197"
+		},
+		{
+			"snapshotId": "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
+			"checksum": "sha256:7f0ebc98bd657e43a50ae881ad357773e89c213adbf7ff50f3048145efc90094"
+		},
+		{
+			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+			"checksum": "sha256:8b23c165e1c21ed3b266a527e5eb4b9ae2ae621019a40a60fe525b0c83d4aa23"
 		}
 	],
 	"outputPaths": [
 		"docs/textpacks/generated-inventory.json",
 		"docs/textpacks/generated-inventory.md",
 		"docs/textpacks/source-readiness.generated.md",
+		"docs/textpacks/language-composite-readiness.generated.json",
+		"docs/textpacks/language-composite-readiness.generated.md",
 		"tools/textpack-forge/source-policy.generated.json",
 		"tools/textpack-forge/reports/size-report.json",
 		"packages/textpacks/*/pack.manifest.json",
@@ -78,6 +208,7 @@
 		"packages/textpacks/*/SOURCES.generated.json",
 		"packages/textpacks/*/ATTRIBUTION.generated.md",
 		"packages/textpacks/*/COVERAGE.generated.json",
+		"packages/textpacks/*/EVALUATION.generated.json",
 		"packages/textpacks/*/QUALITY.generated.json"
 	],
 	"markerPattern": "packages/textpacks/*/.textpack-generated.json"

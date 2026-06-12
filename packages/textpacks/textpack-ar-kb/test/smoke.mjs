@@ -1,0 +1,12 @@
+import assert from "node:assert/strict";
+import { loadArabicKnowledgeBase, manifest } from "../dist/index.js";
+
+const resolved = await loadArabicKnowledgeBase();
+
+assert.equal(resolved.manifest.packageName, manifest.packageName);
+assert.ok(Object.keys(resolved.resources).length > 0);
+assert.ok(
+	resolved.manifest.components?.some(
+		(component) => component.role === "required",
+	),
+);

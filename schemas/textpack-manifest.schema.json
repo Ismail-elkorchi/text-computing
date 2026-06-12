@@ -205,7 +205,7 @@
 				"profile": { "enum": ["research", "full", "local"] },
 				"sizeBytes": { "type": "integer", "minimum": 0 },
 				"mediaType": { "type": "string", "minLength": 1 },
-				"compression": { "enum": ["gzip", "zstd", "zip", "tar"] },
+				"compression": { "enum": ["gzip", "bzip2", "zstd", "zip", "tar"] },
 				"checksum": { "$ref": "#/definitions/checksum" },
 				"licenseExpression": { "type": "string", "minLength": 1 },
 				"redistributionPolicy": {
@@ -230,7 +230,7 @@
 			"additionalProperties": false,
 			"required": ["algorithm", "value"],
 			"properties": {
-				"algorithm": { "enum": ["sha256", "sha512"] },
+				"algorithm": { "enum": ["sha1", "sha256", "sha512"] },
 				"value": { "type": "string", "minLength": 1 }
 			}
 		},
@@ -289,7 +289,14 @@
 					"enum": ["none", "unicode", "lexicon", "rules", "fst", "statistical"]
 				},
 				"morphology": {
-					"enum": ["none", "lookup", "rules", "fst", "statistical"]
+					"enum": [
+						"none",
+						"lookup",
+						"paradigm-table",
+						"rules",
+						"fst",
+						"statistical"
+					]
 				},
 				"tagging": { "enum": ["none", "rules", "statistical", "hybrid"] },
 				"parsing": { "enum": ["none", "rules", "statistical", "hybrid"] },

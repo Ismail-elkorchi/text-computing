@@ -16,11 +16,14 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-en-syntax-ud-gumr
 - `en-ud-gumreddit-sentence-profile` (statistical-model, tsv)
 - `en-ud-gumreddit-annotations` (dataset, tsv)
 - `en-ud-gumreddit-quality` (quality-profile, json)
+- `en-ud-gumreddit-syntax-canonical` (grammar, json)
+- `en-ud-gumreddit-morphology-canonical` (morphology, json)
+- `en-ud-gumreddit-quality-profile` (quality-profile, json)
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- generated packs are non-publishable by default
+- None
 

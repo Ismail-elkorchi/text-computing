@@ -6,6 +6,9 @@
     "ATTRIBUTION.generated.md",
     "CHANGELOG.md",
     "COVERAGE.generated.json",
+    "EVALUATION.generated.json",
+    "LICENSE.generated.md",
+    "licenses/source-ud-english-gumreddit-r2.18/LICENSE.txt",
     "NOTICE.generated.md",
     "pack.manifest.json",
     "package.json",
@@ -14,8 +17,11 @@
     "resources/ud-gumreddit.annotations.tsv",
     "resources/ud-gumreddit.dependencies.tsv",
     "resources/ud-gumreddit.features.tsv",
+    "resources/ud-gumreddit.morphology.json",
+    "resources/ud-gumreddit.quality-profile.json",
     "resources/ud-gumreddit.quality.json",
     "resources/ud-gumreddit.sentence-profile.tsv",
+    "resources/ud-gumreddit.syntax.json",
     "resources/ud-gumreddit.upos.tsv",
     "SOURCES.generated.json",
     "src/index.ts",
@@ -27,19 +33,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
   "mode": "source-backed",
-  "outputChecksum": "sha256:a966de1a7d14c944b787e57429365c778d599fd1baacf7727cbaf77db12934a9",
-  "packSpecPath": "tools/textpack-forge/packs/foundation-packs.pack.json",
+  "outputChecksum": "sha256:3aaa934dafad3281dcc1a9d359900d3cbaf63dc6e245ea44045b33e01acf2b26",
+  "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
   "packageVersion": "0.1.0",
+  "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

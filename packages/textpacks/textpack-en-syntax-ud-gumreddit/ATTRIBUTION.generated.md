@@ -9,6 +9,17 @@ License expression: `CC-BY-4.0`
 
 - `source:ud:english-gumreddit-r2.18`
 
+## License Evidence
+
+Source evidence:
+
+- https://github.com/UniversalDependencies/UD_English-GUMReddit/blob/r2.18/LICENSE.txt
+- https://github.com/UniversalDependencies/UD_English-GUMReddit/blob/r2.18/README.md
+
+Local snapshot evidence:
+
+- `licenses/source-ud-english-gumreddit-r2.18/LICENSE.txt` from `tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/LICENSE.txt` (sha256:95e9985fb081b6c17bc4422f649bbe0d9555a7d597fcd32a6c4b04bcda4e734c)
+
 ## Citations
 
 - Universal Dependencies English GUMReddit r2.18 annotations.

@@ -1,0 +1,40 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "wordnet-ar-transform-warnings",
+      "message": "Arabic WordNet 4.1.0 transform completed without rejected records.",
+      "metadata": {
+        "warningCount": 0
+      },
+      "severity": "info",
+      "task": "kb.transform"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "ar",
+  "metrics": [
+    {
+      "metricId": "lexical-entry-count",
+      "name": "lexicalEntryCount",
+      "unit": "records",
+      "value": 136041
+    },
+    {
+      "metricId": "sense-count",
+      "name": "senseCount",
+      "unit": "records",
+      "value": 184238
+    },
+    {
+      "metricId": "relation-count",
+      "name": "relationCount",
+      "unit": "records",
+      "value": 297150
+    }
+  ],
+  "profileId": "wordnet-ar-quality",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "thresholds": []
+}

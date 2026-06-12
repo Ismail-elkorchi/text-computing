@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "artifactId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+          "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+          "version": "20260608"
+        },
+        "resourceIds": [
+          "wikidata-en-kb-artifact"
+        ]
+      },
+      "limitations": [
+        "The full Wikidata entity dump for English KB consumers is artifact-backed and is not available to runtime lookup until explicitly fetched."
+      ],
+      "metric": {
+        "name": "artifactSizeBytes",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "bytes",
+        "value": 142291512349
+      },
+      "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-en:artifact-descriptor",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-artifact"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "md5Checksum": "md5:8918b16c41f4678ac147fc95bafa2de6",
+          "sha1Checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+        },
+        "resourceIds": [
+          "wikidata-en-quality"
+        ]
+      },
+      "limitations": [
+        "Wikimedia publishes SHA-1 and MD5 sidecars for this dump; no upstream SHA-256 sidecar was available for this pinned artifact."
+      ],
+      "metric": {
+        "name": "upstreamSha1ChecksumPresent",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "boolean",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-en:checksum-sidecar",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.artifact-checksum"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-wikidata-en:wikidata-main-artifact"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 2,
+    "recordCount": 2,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

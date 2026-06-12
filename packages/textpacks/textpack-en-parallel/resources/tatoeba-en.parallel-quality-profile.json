@@ -1,0 +1,50 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "tatoeba-en-explicit-parallel-artifact-fetch",
+      "message": "Tatoeba English parallel alignments are exposed as explicit full artifact descriptors, not as npm-shipped raw parallel text.",
+      "metadata": {
+        "artifactIds": [
+          "artifact:textpack-en-parallel:full:tatoeba-eng-ara-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-ell-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-fra-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-grc-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-ita-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-lat-links:2026-06-06",
+          "artifact:textpack-en-parallel:full:tatoeba-eng-spa-links:2026-06-06"
+        ],
+        "artifactPolicy": "fetch-explicit"
+      },
+      "severity": "info",
+      "task": "parallel.artifact"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "en",
+  "metrics": [
+    {
+      "metricId": "language-pair-count",
+      "name": "languagePairCount",
+      "unit": "pairs",
+      "value": 8
+    },
+    {
+      "metricId": "parallel-link-row-count",
+      "name": "parallelLinkRowCount",
+      "unit": "rows",
+      "value": 2134955
+    },
+    {
+      "metricId": "artifact-size-bytes",
+      "name": "artifactSizeBytes",
+      "unit": "bytes",
+      "value": 12397025
+    }
+  ],
+  "profileId": "tatoeba-en-parallel-artifact-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

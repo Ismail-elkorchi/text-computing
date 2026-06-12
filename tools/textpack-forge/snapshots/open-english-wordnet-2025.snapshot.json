@@ -5,7 +5,7 @@
 	"version": "2025-edition",
 	"retrievedAt": "2026-06-09T00:00:00.000Z",
 	"kind": "archive",
-	"checksum": "sha256:2e37bbb0f93dce9ddae3d3ed335e5000b471417946e724d3cff89bdf1903c778",
+	"checksum": "sha256:8b23c165e1c21ed3b266a527e5eb4b9ae2ae621019a40a60fe525b0c83d4aa23",
 	"files": [
 		{
 			"path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/english-wordnet-2025.xml.gz",
@@ -13,7 +13,21 @@
 			"byteLength": 11363503,
 			"checksum": "sha256:9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe",
 			"sourceUrl": "https://en-word.net/static/english-wordnet-2025.xml.gz"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/LICENSE.md",
+			"mediaType": "text/markdown",
+			"byteLength": 19863,
+			"checksum": "sha256:672cc8b5663e8dc74c4b07a9dcf477193853575b119908fd3dc0aeeb60a9dbbb",
+			"sourceUrl": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/2025-edition/LICENSE.md"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/WNDB_License.txt",
+			"mediaType": "text/plain",
+			"byteLength": 1740,
+			"checksum": "sha256:df30ec18fbabcdaf031b79ea026d3e6b959010cffe6dd7be9ac137822175b904",
+			"sourceUrl": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/2025-edition/WNDB_License.txt"
 		}
 	],
-	"notes": "Pinned Open English WordNet 2025 LMF archive."
+	"notes": "Pinned Open English WordNet 2025 LMF archive with local license evidence files."
 }

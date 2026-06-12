@@ -23,13 +23,11 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-cldr-core",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
   "resourceCount": 4,
   "resourcePaths": [

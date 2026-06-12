@@ -1,0 +1,275 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-en",
+	"packageDir": "packages/textpacks/textpack-en",
+	"name": "English Developer Composite Textpack",
+	"description": "Generated source-backed English developer-facing recipe composite over the production-grade default English component graph, including promoted second-wave corpus and parallel artifact descriptors.",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Generated recipe composite over the publishable English foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and promoted Tatoeba resources remain explicit artifact descriptors rather than hidden npm payloads.",
+		"auditedLicense": "Required component source rows are approved and default-composite compatible: IANA, Unicode, CLDR, ESDB, SCOWLv2, UD English GUMReddit, Open English WordNet, Wikidata main structured data, and second-wave promoted Tatoeba weekly English artifact metadata. Share-alike UniMorph English, Wiktionary, DBnary, Wikipedia-derived raw text, OPUS, and blocked aggregate sources are excluded from this default composite.",
+		"declaredScope": "Default English developer-facing textpack for the currently generated English resource graph: core profile, normalization, segmentation, spelling/lexicon, lookup morphology, syntax annotation profiles, lexical-semantic KB resources, Wikidata artifact descriptors, search analyzer profile, promoted Tatoeba corpus artifact descriptors, promoted Tatoeba parallel artifact descriptors, and generated quality evidence. It does not claim UniMorph paradigm-table coverage, Wiktionary/DBnary-derived lexical coverage, OPUS coverage, in-package Wikidata/Tatoeba payloads before explicit artifact fetch, neural models, statistical parsers, raw web corpora, or hidden network access.",
+		"conformanceEvidence": [
+			"eval:textpack-en:required-component-graph",
+			"docs:textpacks/language-composite-readiness.generated.md#english-en"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-composite",
+	"supportLevel": "feature-complete",
+	"loader": {
+		"functionName": "loadEnglish",
+		"languageName": "English"
+	},
+	"targets": {
+		"languages": [
+			"en"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"sourceIds": [
+		"source:iana:language-subtag-registry",
+		"source:unicode:ucd",
+		"source:unicode:cldr-core",
+		"source:esdb:wordlist-diff-en-default-2026-02-25",
+		"source:scowl:v2-rel-2026-02-25",
+		"source:ud:english-gumreddit-r2.18",
+		"source:wordnet:open-english-2025",
+		"source:wikidata:main",
+		"source:tatoeba:weekly-2026-06-06"
+	],
+	"snapshotIds": [
+		"snapshot:source:iana:language-subtag-registry:2026-05-05",
+		"snapshot:source:unicode:ucd:17.0.0",
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+		"snapshot:source:scowl:v2-rel-2026.02.25",
+		"snapshot:source:ud:english-gumreddit:r2.18",
+		"snapshot:source:wordnet:open-english-2025:2025-edition",
+		"snapshot:source:wikidata:main:20260608",
+		"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
+	],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-foundation",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
+			"licensePolicy": "default",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-core",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English core language profile resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-normalization",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English normalization policy and quality resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-segmentation",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English segmentation profiles.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-lexicon",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English spelling, inflection-inventory, and lexical-semantic lexicon resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-morphology",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English lookup morphology resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-syntax",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English UD-derived syntax and tagging resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-kb",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-search",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English search analyzer profile resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-corpus",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English promoted Tatoeba corpus artifact descriptors and quality evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-parallel",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English-linked promoted Tatoeba parallel artifact descriptors and quality evidence.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "fetch-explicit"
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-quality",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "English generated quality evidence over the required default component graph.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "foundation",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides Unicode, CLDR, and BCP 47 foundation resources."
+			]
+		},
+		{
+			"slot": "core",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides the English core language profile."
+			]
+		},
+		{
+			"slot": "normalization",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English normalization resources."
+			]
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English segmentation resources."
+			]
+		},
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English spelling, inflection-inventory, and lexical-semantic lexicon resources."
+			]
+		},
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English SCOWLv2 lookup morphology resources; isolated UniMorph paradigm tables are not included."
+			]
+		},
+		{
+			"slot": "syntax",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English UD-derived syntax and tagging resources."
+			]
+		},
+		{
+			"slot": "kb",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides Open English WordNet resources and Wikidata artifact descriptors."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides English search analyzer resources."
+			]
+		},
+		{
+			"slot": "corpus",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides promoted Tatoeba English corpus artifact descriptors with explicit fetch policy."
+			]
+		},
+		{
+			"slot": "parallel",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides promoted Tatoeba English-linked parallel artifact descriptors with explicit fetch policy."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides generated English quality evidence and coverage reports over first-wave resources plus promoted second-wave corpus/parallel artifact descriptors."
+			]
+		}
+	],
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND CC-BY-4.0 AND LicenseRef-Princeton-WordNet AND CC0-1.0 AND CC-BY-2.0-FR",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+		"SCOWLv2 rich text export, rel-2026.02.25.",
+		"Universal Dependencies English GUMReddit r2.18 annotations.",
+		"Open English WordNet 2025.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly exports, 2026-06-06."
+	]
+}

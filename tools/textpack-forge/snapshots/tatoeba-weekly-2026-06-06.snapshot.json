@@ -1,0 +1,19 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+	"sourceId": "source:tatoeba:weekly-2026-06-06",
+	"version": "2026-06-06",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "external",
+	"checksum": "sha256:e230bd416f72b2385368b9d4e8604215d559f25d41a19d6acc49deec23c7bf09",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json",
+			"mediaType": "application/json",
+			"byteLength": 6001,
+			"checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/"
+		}
+	],
+	"notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 English sentence and English-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository."
+}

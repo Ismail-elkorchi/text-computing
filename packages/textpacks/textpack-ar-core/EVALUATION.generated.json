@@ -1,0 +1,264 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-core",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "ar-core-orthography"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "arabicScriptRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 95
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-core",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:arabic-orthography-ranges",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.orthography"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "graphemeRangeCount": 1429,
+          "sentenceRangeCount": 2930
+        },
+        "resourceIds": [
+          "ar-core-basic-segmentation"
+        ]
+      },
+      "limitations": [
+        "This verifies a basic Unicode UAX #29 segmentation baseline; richer Arabic MSA tokenization resources are provided by textpack-ar-segmentation."
+      ],
+      "metric": {
+        "name": "wordRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 1432
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-core",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:basic-segmentation-baseline",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.basic-segmentation"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "ianaFileDate": "2026-05-05",
+          "ianaSuppressScript": "Arab"
+        },
+        "resourceIds": [
+          "ar-core-language-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "likelySubtag",
+        "operator": "eq",
+        "threshold": "ar-Arab-EG",
+        "unit": "tag",
+        "value": "ar-Arab-EG"
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-core",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:iana-language-profile",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.language-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "ar-core-quality"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-core",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:transform-rejections",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "ar-core-punctuation"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "punctuationRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 396
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-core",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:unicode-punctuation-ranges",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.punctuation"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-ar-core:arabic-core-profile"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 5,
+    "recordCount": 5,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

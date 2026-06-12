@@ -84,6 +84,45 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
 			]
+		},
+		{
+			"id": "en-ud-gumreddit-syntax-canonical",
+			"kind": "grammar",
+			"path": "resources/ud-gumreddit.syntax.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Universal Dependencies English GUMReddit r2.18 annotations."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-syntax-resource.schema.json"
+			}
+		},
+		{
+			"id": "en-ud-gumreddit-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/ud-gumreddit.morphology.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Universal Dependencies English GUMReddit r2.18 annotations."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-morphology-resource.schema.json"
+			}
+		},
+		{
+			"id": "en-ud-gumreddit-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/ud-gumreddit.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Universal Dependencies English GUMReddit r2.18 annotations."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+			}
 		}
 	],
 	"capabilitySlots": [
@@ -93,7 +132,8 @@ export const manifest: TextPackManifest = {
 			"resourceIds": [
 				"en-ud-gumreddit-upos",
 				"en-ud-gumreddit-features",
-				"en-ud-gumreddit-annotations"
+				"en-ud-gumreddit-annotations",
+				"en-ud-gumreddit-morphology-canonical"
 			],
 			"capabilities": {
 				"tagging": "statistical",
@@ -109,11 +149,9 @@ export const manifest: TextPackManifest = {
 			"resourceIds": [
 				"en-ud-gumreddit-dependencies",
 				"en-ud-gumreddit-sentence-profile",
-				"en-ud-gumreddit-annotations"
+				"en-ud-gumreddit-annotations",
+				"en-ud-gumreddit-syntax-canonical"
 			],
-			"capabilities": {
-				"parsing": "statistical"
-			},
 			"notes": [
 				"Annotation-derived dependency and sentence profiles are available without redistributing Reddit text."
 			]
@@ -122,7 +160,8 @@ export const manifest: TextPackManifest = {
 			"slot": "quality",
 			"status": "task-supported",
 			"resourceIds": [
-				"en-ud-gumreddit-quality"
+				"en-ud-gumreddit-quality",
+				"en-ud-gumreddit-quality-profile"
 			],
 			"notes": [
 				"Generated quality profile records annotation counts and confirms no raw text fields are emitted."
@@ -135,7 +174,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

@@ -73,6 +73,45 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Open English WordNet 2025."
 			]
+		},
+		{
+			"id": "wordnet-en-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/wordnet-en.lexicon.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-lexicon-resource.schema.json"
+			}
+		},
+		{
+			"id": "wordnet-en-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-en.kb.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-kb-resource.schema.json"
+			}
+		},
+		{
+			"id": "wordnet-en-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-en.quality-profile.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+			}
 		}
 	],
 	"capabilitySlots": [
@@ -83,7 +122,9 @@ export const manifest: TextPackManifest = {
 				"wordnet-en-lexical-entries",
 				"wordnet-en-senses",
 				"wordnet-en-synsets",
-				"wordnet-en-relations"
+				"wordnet-en-relations",
+				"wordnet-en-lexicon-canonical",
+				"wordnet-en-kb-canonical"
 			],
 			"capabilities": {
 				"terminology": "kb",
@@ -97,7 +138,8 @@ export const manifest: TextPackManifest = {
 			"slot": "quality",
 			"status": "task-supported",
 			"resourceIds": [
-				"wordnet-en-quality"
+				"wordnet-en-quality",
+				"wordnet-en-quality-profile"
 			],
 			"notes": [
 				"Generated quality profile records lexical-entry, sense, synset, and relation counts."
@@ -110,7 +152,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

@@ -15,11 +15,14 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-wordnet-en";
 - `wordnet-en-synsets` (knowledge-base, tsv)
 - `wordnet-en-relations` (knowledge-base, tsv)
 - `wordnet-en-quality` (quality-profile, json)
+- `wordnet-en-lexicon-canonical` (lexicon, json)
+- `wordnet-en-kb-canonical` (knowledge-base, json)
+- `wordnet-en-quality-profile` (quality-profile, json)
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- generated packs are non-publishable by default
+- None
 

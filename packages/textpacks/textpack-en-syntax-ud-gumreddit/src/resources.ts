@@ -42,5 +42,17 @@ export async function resources(): Promise<PackResourceMap> {
 			"ud-gumreddit.quality.json",
 			"utf8",
 		),
+		"en-ud-gumreddit-syntax-canonical": await readResource(
+			"ud-gumreddit.syntax.json",
+			"utf8",
+		),
+		"en-ud-gumreddit-morphology-canonical": await readResource(
+			"ud-gumreddit.morphology.json",
+			"utf8",
+		),
+		"en-ud-gumreddit-quality-profile": await readResource(
+			"ud-gumreddit.quality-profile.json",
+			"utf8",
+		),
 	};
 }

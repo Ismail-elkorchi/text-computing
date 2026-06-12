@@ -38,7 +38,14 @@ const targetKeys = [
 const capabilityLevels = {
 	segmentation: ["none", "default", "profile", "dictionary", "fst", "rules"],
 	normalization: ["none", "unicode", "lexicon", "rules", "fst", "statistical"],
-	morphology: ["none", "lookup", "rules", "fst", "statistical"],
+	morphology: [
+		"none",
+		"lookup",
+		"paradigm-table",
+		"rules",
+		"fst",
+		"statistical",
+	],
 	tagging: ["none", "rules", "statistical", "hybrid"],
 	parsing: ["none", "rules", "statistical", "hybrid"],
 	extraction: ["none", "gazetteer", "rules", "statistical", "hybrid"],
@@ -65,7 +72,7 @@ const componentCapabilityPolicies = new Set([
 ]);
 const artifactPolicies = new Set(["none", "locked", "fetch-explicit"]);
 const artifactProfiles = new Set(["research", "full", "local"]);
-const artifactChecksumAlgorithms = new Set(["sha256", "sha512"]);
+const artifactChecksumAlgorithms = new Set(["sha1", "sha256", "sha512"]);
 const artifactRedistributionPolicies = new Set([
 	"redistributable",
 	"redistributable-with-attribution",
@@ -552,7 +559,7 @@ function validateArtifacts(
 				record,
 				"compression",
 				itemPath,
-				new Set(["gzip", "zstd", "zip", "tar"]),
+				new Set(["gzip", "bzip2", "zstd", "zip", "tar"]),
 			);
 			const artifact: {
 				artifactId: string;

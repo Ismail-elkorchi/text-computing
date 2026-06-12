@@ -1,0 +1,61 @@
+{
+  "corpusId": "tatoeba-ar-2026-06-06",
+  "documents": [
+    {
+      "artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
+      "checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77",
+      "documentId": "tatoeba-ara-sentences-detailed-2026-06-06",
+      "languageTag": "ar",
+      "metadata": {
+        "artifactDescriptor": {
+          "artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
+          "cacheKey": "tatoeba-ara-sentences-detailed-tsv-bz2-2026-06-06",
+          "checksum": {
+            "algorithm": "sha256",
+            "value": "a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77"
+          },
+          "compression": "bzip2",
+          "expectedFiles": [
+            {
+              "checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77",
+              "path": "ara_sentences_detailed.tsv.bz2",
+              "sizeBytes": 1198138
+            }
+          ],
+          "licenseExpression": "CC-BY-2.0-FR",
+          "mediaType": "text/tab-separated-values",
+          "profile": "full",
+          "redistributionPolicy": "redistributable-with-attribution",
+          "retrieval": {
+            "instructions": "Fetch explicitly from Tatoeba weekly exports and verify the SHA-256 checksum before unpacking or indexing.",
+            "kind": "https",
+            "uri": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2"
+          },
+          "sizeBytes": 1198138,
+          "sourceIds": [
+            "source:tatoeba:weekly-arabic-2026-06-06"
+          ],
+          "version": "2026-06-06"
+        },
+        "etag": "\"6a23bdb9-12483a\"",
+        "lastModified": "Sat, 06 Jun 2026 06:27:05 GMT",
+        "licenseExpression": "CC-BY-2.0-FR",
+        "rowCount": 67974,
+        "sourceId": "source:tatoeba:weekly-arabic-2026-06-06",
+        "tatoebaLanguageCode": "ara"
+      },
+      "path": "ara_sentences_detailed.tsv.bz2",
+      "script": "Arab",
+      "split": "full",
+      "title": "Tatoeba Arabic detailed sentences weekly export 2026-06-06"
+    }
+  ],
+  "kind": "corpus",
+  "languageTags": [
+    "ar"
+  ],
+  "schemaVersion": "1",
+  "splits": [
+    "full"
+  ]
+}

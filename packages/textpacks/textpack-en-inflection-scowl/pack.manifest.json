@@ -1,0 +1,165 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:en-inflection-scowl",
+	"name": "English SCOWLv2 Inflection Pack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+	"targets": {
+		"languages": [
+			"en"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [
+		{
+			"id": "en-scowl-inflection-entries",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.inflections.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			]
+		},
+		{
+			"id": "en-scowl-pos-inventory",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.pos.tsv",
+			"format": "tsv",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			]
+		},
+		{
+			"id": "en-scowl-lookup-analyzer",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			]
+		},
+		{
+			"id": "en-scowl-lookup-generator",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			]
+		},
+		{
+			"id": "en-scowl-inflection-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/scowl-v2.lexicon.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-lexicon-resource.schema.json"
+			}
+		},
+		{
+			"id": "en-scowl-inflection-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.morphology.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-morphology-resource.schema.json"
+			}
+		},
+		{
+			"id": "en-scowl-inflection-quality",
+			"kind": "quality-profile",
+			"path": "resources/scowl-v2.quality.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			]
+		},
+		{
+			"id": "en-scowl-inflection-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/scowl-v2.quality-profile.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+			}
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-scowl-inflection-entries",
+				"en-scowl-lookup-analyzer",
+				"en-scowl-lookup-generator",
+				"en-scowl-pos-inventory",
+				"en-scowl-inflection-morphology-canonical"
+			],
+			"capabilities": {
+				"morphology": "lookup"
+			},
+			"notes": [
+				"SCOWLv2 form-to-lemma lookup analysis and lemma-to-form lookup generation candidates are available as generated compressed table resources."
+			]
+		},
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-scowl-inflection-lexicon-canonical"
+			],
+			"capabilities": {
+				"terminology": "lexicon"
+			},
+			"notes": [
+				"Generated canonical lexicon resource references SCOWLv2 lemma and form inventory coverage for lookup consumers."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-scowl-inflection-quality",
+				"en-scowl-inflection-quality-profile"
+			],
+			"notes": [
+				"Generated quality profile records lemma, form, POS, and transform-integrity counts."
+			]
+		}
+	],
+	"license": "LicenseRef-ESDB-MIT-Like",
+	"citations": [
+		"SCOWLv2 rich text export, rel-2026.02.25."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

@@ -83,6 +83,45 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			]
+		},
+		{
+			"id": "ar-msa-camel-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/camel-morph-msa.morphology.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-morphology-resource.schema.json"
+			}
+		},
+		{
+			"id": "ar-msa-camel-segmentation-canonical",
+			"kind": "segmentation-profile",
+			"path": "resources/camel-morph-msa.segmentation.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-segmentation-resource.schema.json"
+			}
+		},
+		{
+			"id": "ar-msa-camel-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/camel-morph-msa.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+			}
 		}
 	],
 	"capabilitySlots": [
@@ -93,7 +132,8 @@ export const manifest: TextPackManifest = {
 				"ar-msa-camel-morph-features",
 				"ar-msa-camel-morph-defaults",
 				"ar-msa-camel-morph-morphemes",
-				"ar-msa-camel-morph-compatibility"
+				"ar-msa-camel-morph-compatibility",
+				"ar-msa-camel-morphology-canonical"
 			],
 			"capabilities": {
 				"morphology": "lookup"
@@ -106,7 +146,8 @@ export const manifest: TextPackManifest = {
 			"slot": "segmentation",
 			"status": "task-supported",
 			"resourceIds": [
-				"ar-msa-camel-morph-tokenizations"
+				"ar-msa-camel-morph-tokenizations",
+				"ar-msa-camel-segmentation-canonical"
 			],
 			"capabilities": {
 				"segmentation": "dictionary"
@@ -119,7 +160,8 @@ export const manifest: TextPackManifest = {
 			"slot": "quality",
 			"status": "task-supported",
 			"resourceIds": [
-				"ar-msa-camel-morph-quality"
+				"ar-msa-camel-morph-quality",
+				"ar-msa-camel-quality-profile"
 			],
 			"notes": [
 				"Generated quality profile records source counts, accepted records, and transform warnings."
@@ -132,7 +174,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

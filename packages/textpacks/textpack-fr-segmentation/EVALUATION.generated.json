@@ -1,0 +1,253 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-word-segmentation-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "likelySubtag",
+        "operator": "eq",
+        "threshold": "fr-Latn-FR",
+        "unit": "tag",
+        "value": "fr-Latn-FR"
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:cldr-likely-subtag",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.locale-context"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-boundary-properties",
+          "fr-grapheme-segmentation-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies Unicode grapheme break property coverage, not language-specific dictionary tokenization."
+      ],
+      "metric": {
+        "name": "graphemeRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 1429
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:grapheme-boundary-properties",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.grapheme-profile"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-boundary-properties",
+          "fr-sentence-segmentation-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies Unicode sentence break property coverage; English abbreviation tailoring is out of scope for this component."
+      ],
+      "metric": {
+        "name": "sentenceRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 2930
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:sentence-boundary-properties",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.sentence-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-quality"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:transform-rejections",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-boundary-properties",
+          "fr-word-segmentation-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies Unicode word break property coverage, not a trained tokenizer or abbreviation model."
+      ],
+      "metric": {
+        "name": "wordRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 1432
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:word-boundary-properties",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.word-profile"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-segmentation:french-segmentation-profile"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 5,
+    "recordCount": 5,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

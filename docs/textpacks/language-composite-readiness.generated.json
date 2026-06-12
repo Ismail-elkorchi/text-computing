@@ -1,0 +1,2521 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "languages": [
+    {
+      "compositePackageName": "@ismail-elkorchi/textpack-en",
+      "compositeReady": true,
+      "languageName": "English",
+      "languageTag": "en",
+      "requiredSlots": [
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "language-registry",
+            "locale-profile",
+            "unicode-profile"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "language-registry",
+              "status": "task-supported"
+            },
+            {
+              "slot": "locale-profile",
+              "status": "task-supported"
+            },
+            {
+              "slot": "unicode-profile",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-foundation",
+          "slot": "foundation",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:cldr-core",
+            "source:unicode:ucd"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "core",
+            "language-core"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "core",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-core",
+          "slot": "core",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:ucd",
+            "source:unicode:cldr-core",
+            "source:esdb:wordlist-diff-en-default-2026-02-25",
+            "source:scowl:v2-rel-2026-02-25"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "normalization"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "normalization",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-normalization",
+          "slot": "normalization",
+          "sourceIds": [
+            "source:unicode:ucd",
+            "source:unicode:cldr-core"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "segmentation"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "segmentation",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-segmentation",
+          "slot": "segmentation",
+          "sourceIds": [
+            "source:unicode:ucd",
+            "source:unicode:cldr-core"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexical-semantics",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "lexicon",
+            "lexical-semantics"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "lexicon",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-lexicon",
+          "slot": "lexicon",
+          "sourceIds": [
+            "source:esdb:wordlist-diff-en-default-2026-02-25",
+            "source:scowl:v2-rel-2026-02-25",
+            "source:wordnet:open-english-2025"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:esdb:wordlist-diff-en-default-2026-02-25"
+              ],
+              "label": "ESDB exact audited English wordlist source"
+            },
+            {
+              "anySourceIds": [
+                "source:scowl:v2-rel-2026-02-25"
+              ],
+              "label": "SCOWLv2 exact audited English inflection inventory source"
+            },
+            {
+              "anySourceIds": [
+                "source:wordnet:open-english-2025"
+              ],
+              "label": "Open English WordNet lexical-semantic source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "morphology",
+            "tagging"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "morphology",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-morphology",
+          "slot": "morphology",
+          "sourceIds": [
+            "source:scowl:v2-rel-2026-02-25"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:scowl:v2-rel-2026-02-25"
+              ],
+              "label": "SCOWLv2 exact audited default-safe English lookup morphology source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "syntax",
+            "tagging"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "syntax",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-syntax",
+          "slot": "syntax",
+          "sourceIds": [
+            "source:ud:english-gumreddit-r2.18"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:ud:english-gumreddit-r2.18"
+              ],
+              "label": "audited exact UD English treebank source boundary"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexical-semantics",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "kb",
+            "lexical-semantics",
+            "entity-linking"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "kb",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-kb",
+          "slot": "kb",
+          "sourceIds": [
+            "source:wordnet:open-english-2025",
+            "source:wikidata:main"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:wordnet:open-english-2025"
+              ],
+              "label": "Open English WordNet lexical-semantic source"
+            },
+            {
+              "anySourceIds": [
+                "source:wikidata:main"
+              ],
+              "label": "Wikidata main structured data for entity labels, aliases, and KB links"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "search"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "search",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-search",
+          "slot": "search",
+          "sourceIds": [
+            "source:esdb:wordlist-diff-en-default-2026-02-25"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:esdb:wordlist-diff-en-default-2026-02-25"
+              ],
+              "label": "ESDB exact audited English search-profile source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "corpus"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "corpus",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-corpus",
+          "slot": "corpus",
+          "sourceIds": [
+            "source:tatoeba:weekly-2026-06-06"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:tatoeba:weekly-2026-06-06"
+              ],
+              "label": "Tatoeba exact audited English corpus artifact source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "parallel"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "parallel",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-parallel",
+          "slot": "parallel",
+          "sourceIds": [
+            "source:tatoeba:weekly-2026-06-06"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:tatoeba:weekly-2026-06-06"
+              ],
+              "label": "Tatoeba exact audited English parallel artifact source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "core",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-core",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "corpus",
+                "quality"
+              ],
+              "packClass": "artifact-backed",
+              "packageName": "@ismail-elkorchi/textpack-en-corpus",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-en-kb",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-en-lexicon",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-en-morphology",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "normalization",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-normalization",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "parallel",
+                "quality"
+              ],
+              "packClass": "parallel",
+              "packageName": "@ismail-elkorchi/textpack-en-parallel",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "search"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-en-search",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "segmentation"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-segmentation",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-en-syntax",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexical-semantics",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "quality"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-en-quality",
+          "slot": "quality",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:ucd",
+            "source:unicode:cldr-core",
+            "source:esdb:wordlist-diff-en-default-2026-02-25",
+            "source:scowl:v2-rel-2026-02-25",
+            "source:ud:english-gumreddit-r2.18",
+            "source:wordnet:open-english-2025",
+            "source:wikidata:main",
+            "source:tatoeba:weekly-2026-06-06"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:esdb:wordlist-diff-en-default-2026-02-25"
+              ],
+              "label": "English quality evidence must cover the audited lexicon/search source"
+            },
+            {
+              "anySourceIds": [
+                "source:scowl:v2-rel-2026-02-25"
+              ],
+              "label": "English quality evidence must cover the audited morphology source"
+            },
+            {
+              "anySourceIds": [
+                "source:ud:english-gumreddit-r2.18"
+              ],
+              "label": "English quality evidence must cover the audited syntax source"
+            },
+            {
+              "anySourceIds": [
+                "source:wordnet:open-english-2025"
+              ],
+              "label": "English quality evidence must cover the audited KB source"
+            },
+            {
+              "anySourceIds": [
+                "source:wikidata:main"
+              ],
+              "label": "English quality evidence must cover the audited entity source"
+            },
+            {
+              "anySourceIds": [
+                "source:tatoeba:weekly-2026-06-06"
+              ],
+              "label": "English quality evidence must cover the audited corpus and parallel source"
+            }
+          ],
+          "stage": "composite-ready"
+        }
+      ],
+      "summary": {
+        "blockedSlotCount": 0,
+        "blockedSlots": [],
+        "readySlotCount": 12,
+        "readySlots": [
+          "foundation",
+          "core",
+          "normalization",
+          "segmentation",
+          "lexicon",
+          "morphology",
+          "syntax",
+          "kb",
+          "search",
+          "corpus",
+          "parallel",
+          "quality"
+        ],
+        "requiredSlotCount": 12
+      }
+    },
+    {
+      "compositePackageName": "@ismail-elkorchi/textpack-ar",
+      "compositeReady": true,
+      "languageName": "Arabic",
+      "languageTag": "ar",
+      "requiredSlots": [
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "language-registry",
+            "locale-profile",
+            "unicode-profile"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "language-registry",
+              "status": "task-supported"
+            },
+            {
+              "slot": "locale-profile",
+              "status": "task-supported"
+            },
+            {
+              "slot": "unicode-profile",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-foundation",
+          "slot": "foundation",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:cldr-core",
+            "source:unicode:ucd"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "core",
+            "language-core"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "core",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-core",
+          "slot": "core",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:ucd",
+            "source:unicode:cldr-core"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "normalization"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "normalization",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-normalization",
+          "slot": "normalization",
+          "sourceIds": [
+            "source:unicode:ucd",
+            "source:unicode:cldr-core",
+            "source:camel:morph-msa-lrec-coling-2024"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality",
+                "segmentation"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "segmentation"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "segmentation",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-segmentation",
+          "slot": "segmentation",
+          "sourceIds": [
+            "source:camel:morph-msa-lrec-coling-2024"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:camel:morph-msa-lrec-coling-2024"
+              ],
+              "label": "CAMeL Morph exact audited Arabic segmentation source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexical-semantics",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wordnet-ar",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "lexicon",
+            "lexical-semantics"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "lexicon",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-lexicon",
+          "slot": "lexicon",
+          "sourceIds": [
+            "source:wordnet:arabic-v4.1.0",
+            "source:camel:morph-msa-lrec-coling-2024"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:wordnet:arabic-v4.1.0"
+              ],
+              "label": "Arabic WordNet exact audited lexical-semantic source"
+            },
+            {
+              "anySourceIds": [
+                "source:camel:morph-msa-lrec-coling-2024"
+              ],
+              "label": "CAMeL Morph exact audited Arabic MSA lexicon inventory source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality",
+                "segmentation"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "morphology",
+            "tagging"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "morphology",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-morphology",
+          "slot": "morphology",
+          "sourceIds": [
+            "source:camel:morph-msa-lrec-coling-2024"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:camel:morph-msa-lrec-coling-2024"
+              ],
+              "label": "CAMeL Morph exact audited Arabic morphology source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-syntax-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "syntax",
+            "tagging"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "syntax",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-syntax",
+          "slot": "syntax",
+          "sourceIds": [
+            "source:ud:arabic-nyuad-r2.18"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:ud:arabic-padt-r2.18",
+                "source:ud:arabic-pud-r2.18",
+                "source:ud:arabic-nyuad-r2.18"
+              ],
+              "label": "audited exact UD Arabic treebank source boundary; audited PADT, PUD, and NYUAD rows are isolated or blocked and do not unlock default Arabic syntax"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexical-semantics",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wordnet-ar",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "kb",
+            "lexical-semantics",
+            "entity-linking"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "kb",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-kb",
+          "slot": "kb",
+          "sourceIds": [
+            "source:wordnet:arabic-v4.1.0",
+            "source:wikidata:main"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:wordnet:arabic-v4.1.0"
+              ],
+              "label": "Arabic WordNet exact audited lexical-semantic source"
+            },
+            {
+              "anySourceIds": [
+                "source:wikidata:main"
+              ],
+              "label": "Wikidata main structured data for Arabic entity labels, aliases, and KB links"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "search"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "search",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-search",
+          "slot": "search",
+          "sourceIds": [
+            "source:unicode:cldr-core",
+            "source:camel:morph-msa-lrec-coling-2024",
+            "source:wordnet:arabic-v4.1.0"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:camel:morph-msa-lrec-coling-2024"
+              ],
+              "label": "CAMeL Morph exact audited Arabic MSA analyzer source"
+            },
+            {
+              "anySourceIds": [
+                "source:wordnet:arabic-v4.1.0"
+              ],
+              "label": "Arabic WordNet exact audited search expansion source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "corpus"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "corpus",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-corpus",
+          "slot": "corpus",
+          "sourceIds": [
+            "source:tatoeba:weekly-arabic-2026-06-06"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:tatoeba:weekly-arabic-2026-06-06"
+              ],
+              "label": "Tatoeba exact audited Arabic corpus artifact source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "parallel"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "parallel",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-parallel",
+          "slot": "parallel",
+          "sourceIds": [
+            "source:tatoeba:weekly-arabic-2026-06-06"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:tatoeba:weekly-arabic-2026-06-06"
+              ],
+              "label": "Tatoeba exact audited Arabic parallel artifact source"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "core",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-core",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "corpus",
+                "quality"
+              ],
+              "packClass": "artifact-backed",
+              "packageName": "@ismail-elkorchi/textpack-ar-corpus",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-kb",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-lexicon",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-morphology",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality",
+                "segmentation"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "normalization",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-normalization",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "parallel",
+                "quality"
+              ],
+              "packClass": "parallel",
+              "packageName": "@ismail-elkorchi/textpack-ar-parallel",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-search",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "segmentation"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-segmentation",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-syntax",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-syntax-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexical-semantics",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wordnet-ar",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "quality"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-ar-quality",
+          "slot": "quality",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:ucd",
+            "source:unicode:cldr-core",
+            "source:camel:morph-msa-lrec-coling-2024",
+            "source:wordnet:arabic-v4.1.0",
+            "source:wikidata:main",
+            "source:tatoeba:weekly-arabic-2026-06-06",
+            "source:ud:arabic-nyuad-r2.18"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:ud:arabic-padt-r2.18",
+                "source:ud:arabic-pud-r2.18",
+                "source:ud:arabic-nyuad-r2.18"
+              ],
+              "label": "Arabic quality evidence must wait for an audited exact Arabic syntax source boundary"
+            }
+          ],
+          "stage": "composite-ready"
+        }
+      ],
+      "summary": {
+        "blockedSlotCount": 0,
+        "blockedSlots": [],
+        "readySlotCount": 12,
+        "readySlots": [
+          "foundation",
+          "core",
+          "normalization",
+          "segmentation",
+          "lexicon",
+          "morphology",
+          "syntax",
+          "kb",
+          "search",
+          "corpus",
+          "parallel",
+          "quality"
+        ],
+        "requiredSlotCount": 12
+      }
+    },
+    {
+      "compositePackageName": "@ismail-elkorchi/textpack-fr",
+      "compositeReady": true,
+      "languageName": "French",
+      "languageTag": "fr",
+      "requiredSlots": [
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "language-registry",
+            "locale-profile",
+            "unicode-profile"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "language-registry",
+              "status": "task-supported"
+            },
+            {
+              "slot": "locale-profile",
+              "status": "task-supported"
+            },
+            {
+              "slot": "unicode-profile",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-foundation",
+          "slot": "foundation",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:cldr-core",
+            "source:unicode:ucd"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "core",
+            "language-core"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "core",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-core",
+          "slot": "core",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:ucd",
+            "source:unicode:cldr-core"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "normalization"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "normalization",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-normalization",
+          "slot": "normalization",
+          "sourceIds": [
+            "source:unicode:ucd",
+            "source:unicode:cldr-core"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "segmentation"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "segmentation",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-segmentation",
+          "slot": "segmentation",
+          "sourceIds": [
+            "source:unicode:ucd",
+            "source:unicode:cldr-core"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexicon-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "lexicon",
+            "lexical-semantics"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "lexicon",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-lexicon",
+          "slot": "lexicon",
+          "sourceIds": [
+            "source:fr:lexique-383"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:fr:morphalou",
+                "source:fr:lefff",
+                "source:fr:lexique-383",
+                "source:fr:lexique"
+              ],
+              "label": "audited exact French lexical source boundary; Morphalou and Lefff are isolated copyleft sources, and Lexique 3.83 is share-alike isolated"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-morphology-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "morphology",
+            "tagging"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "morphology",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-morphology",
+          "slot": "morphology",
+          "sourceIds": [
+            "source:fr:lexique-383",
+            "source:unimorph:french-master-f672f8c"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:unimorph:french-master-f672f8c",
+                "source:fr:morphalou",
+                "source:fr:lefff",
+                "source:fr:lexique-383",
+                "source:fr:lexique"
+              ],
+              "label": "audited exact French morphology source boundary; UniMorph French and Lexique 3.83 are share-alike isolated, while Morphalou and Lefff are copyleft isolated"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-syntax-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "syntax",
+            "tagging"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "syntax",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-syntax",
+          "slot": "syntax",
+          "sourceIds": [
+            "source:ud:french-gsd-r2.18"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:ud:french-alts-r2.18",
+                "source:ud:french-fqb-r2.18",
+                "source:ud:french-gsd-r2.18",
+                "source:ud:french-sequoia-r2.18",
+                "source:ud:french-parisstories-r2.18",
+                "source:ud:french-rhapsodie-r2.18",
+                "source:ud:french-spoken-r2.18",
+                "source:ud:french-partut-r2.18",
+                "source:ud:french-poitevindivital-r2.18",
+                "source:ud:french-pud-r2.18"
+              ],
+              "label": "audited exact UD French treebank source boundary; audited ALTS, FQB, GSD, ParisStories, PoitevinDIVITAL, Rhapsodie, Spoken, PUD, Sequoia, and ParTUT rows are isolated or blocked and do not unlock default French syntax"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "kb",
+            "lexical-semantics",
+            "entity-linking"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "kb",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-kb",
+          "slot": "kb",
+          "sourceIds": [
+            "source:wikidata:main"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:wikidata:main"
+              ],
+              "label": "Wikidata main structured data for French entity labels, aliases, and KB links"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "search"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-search-sa",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "search"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            },
+            {
+              "slot": "search",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-search",
+          "slot": "search",
+          "sourceIds": [
+            "source:fr:lexique-383"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:fr:lexique-383",
+                "source:fr:lexique",
+                "source:fr:morphalou",
+                "source:fr:lefff",
+                "source:unimorph:french-master-f672f8c"
+              ],
+              "label": "audited exact French search source boundary; Unicode/CLDR alone is not enough for full French search readiness"
+            }
+          ],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "corpus"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "corpus",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-corpus",
+          "slot": "corpus",
+          "sourceIds": [
+            "source:tatoeba:weekly-french-2026-06-06"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [],
+          "capabilityAliases": [
+            "parallel"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "parallel",
+              "status": "task-supported"
+            },
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-parallel",
+          "slot": "parallel",
+          "sourceIds": [
+            "source:tatoeba:weekly-french-2026-06-06"
+          ],
+          "sourceRequirements": [],
+          "stage": "composite-ready"
+        },
+        {
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "core",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-core",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "corpus",
+                "quality"
+              ],
+              "packClass": "artifact-backed",
+              "packageName": "@ismail-elkorchi/textpack-fr-corpus",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-kb",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexicon",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexicon-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "lexicon",
+                "morphology",
+                "quality",
+                "search"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-morphology",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-morphology-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "normalization",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "parallel",
+                "quality"
+              ],
+              "packClass": "parallel",
+              "packageName": "@ismail-elkorchi/textpack-fr-parallel",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "search"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-search",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "search"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-search-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "segmentation"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-syntax",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-syntax-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality",
+                "syntax",
+                "tagging"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "morphology",
+                "quality"
+              ],
+              "packClass": "language-concrete",
+              "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+              "publishable": true
+            }
+          ],
+          "capabilityAliases": [
+            "quality"
+          ],
+          "capabilitySlots": [
+            {
+              "slot": "quality",
+              "status": "task-supported"
+            }
+          ],
+          "checks": {
+            "adapterValid": true,
+            "compositeReady": true,
+            "evaluated": true,
+            "generated": true,
+            "packagePresent": true,
+            "publishable": true,
+            "schemaValid": true,
+            "slotCapabilitySatisfied": true,
+            "sourceAudited": true,
+            "sourceRequirementsSatisfied": true,
+            "standardReports": true
+          },
+          "requiredPackageName": "@ismail-elkorchi/textpack-fr-quality",
+          "slot": "quality",
+          "sourceIds": [
+            "source:iana:language-subtag-registry",
+            "source:unicode:ucd",
+            "source:unicode:cldr-core",
+            "source:wikidata:main",
+            "source:tatoeba:weekly-french-2026-06-06",
+            "source:fr:lexique-383",
+            "source:unimorph:french-master-f672f8c",
+            "source:ud:french-gsd-r2.18"
+          ],
+          "sourceRequirements": [
+            {
+              "anySourceIds": [
+                "source:fr:morphalou",
+                "source:fr:lefff",
+                "source:fr:lexique-383",
+                "source:fr:lexique"
+              ],
+              "label": "French quality evidence must wait for audited French lexicon source coverage"
+            },
+            {
+              "anySourceIds": [
+                "source:unimorph:french-master-f672f8c",
+                "source:fr:morphalou",
+                "source:fr:lefff",
+                "source:fr:lexique-383",
+                "source:fr:lexique"
+              ],
+              "label": "French quality evidence must wait for audited French morphology source coverage"
+            },
+            {
+              "anySourceIds": [
+                "source:ud:french-alts-r2.18",
+                "source:ud:french-fqb-r2.18",
+                "source:ud:french-gsd-r2.18",
+                "source:ud:french-sequoia-r2.18",
+                "source:ud:french-parisstories-r2.18",
+                "source:ud:french-rhapsodie-r2.18",
+                "source:ud:french-spoken-r2.18",
+                "source:ud:french-partut-r2.18",
+                "source:ud:french-poitevindivital-r2.18",
+                "source:ud:french-pud-r2.18"
+              ],
+              "label": "French quality evidence must wait for audited French syntax source coverage"
+            }
+          ],
+          "stage": "composite-ready"
+        }
+      ],
+      "summary": {
+        "blockedSlotCount": 0,
+        "blockedSlots": [],
+        "readySlotCount": 12,
+        "readySlots": [
+          "foundation",
+          "core",
+          "normalization",
+          "segmentation",
+          "lexicon",
+          "morphology",
+          "syntax",
+          "kb",
+          "search",
+          "corpus",
+          "parallel",
+          "quality"
+        ],
+        "requiredSlotCount": 12
+      }
+    }
+  ],
+  "mode": "source-backed",
+  "schemaVersion": "1"
+}

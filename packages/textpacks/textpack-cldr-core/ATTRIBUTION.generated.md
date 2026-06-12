@@ -9,6 +9,17 @@ License expression: `Unicode-3.0`
 
 - `source:unicode:cldr-core`
 
+## License Evidence
+
+Source evidence:
+
+- https://www.unicode.org/license.txt
+- https://www.unicode.org/terms_of_use.html
+
+Local snapshot evidence:
+
+- No local snapshot license files declared.
+
 ## Citations
 
 - Unicode CLDR core data, cldr-core npm package 48.2.0.

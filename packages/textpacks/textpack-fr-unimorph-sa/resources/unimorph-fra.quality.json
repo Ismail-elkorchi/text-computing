@@ -1,0 +1,20 @@
+{
+  "commit": "f672f8cceb2d5f5a1e2241b5622c8845f8274635",
+  "entryCount": 367732,
+  "featureValueCount": 19,
+  "lookupAnalyzerRowCount": 367732,
+  "lookupGeneratorRowCount": 367732,
+  "partOfSpeechCount": 3,
+  "pipelineId": "french-unimorph",
+  "pipelineVersion": "0.1.0",
+  "recordsAccepted": 367732,
+  "recordsRejected": 0,
+  "schemaVersion": "1",
+  "sourceId": "source:unimorph:french-master-f672f8c",
+  "uniqueFormCount": 274192,
+  "uniqueLemmaCount": 7535,
+  "warnings": [
+    "UniMorph French is CC-BY-SA-3.0 and this generated package is share-alike isolated.",
+    "UniMorph feature bundles are emitted as source feature tags; this package does not claim context-disambiguating morphology."
+  ]
+}

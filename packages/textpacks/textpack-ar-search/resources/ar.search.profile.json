@@ -1,0 +1,97 @@
+{
+  "analyzerId": "ar-msa-lookup-search-analyzer",
+  "charFilters": [
+    {
+      "componentId": "unicode-nfc",
+      "mode": "NFC",
+      "type": "unicode-normalization"
+    },
+    {
+      "componentId": "arabic-lookup-normalization",
+      "mode": "msa-lookup",
+      "options": {
+        "likelySubtag": "ar-Arab-EG",
+        "ruleResourceId": "ar-search-normalization-policy"
+      },
+      "type": "normalization-profile"
+    }
+  ],
+  "fields": [
+    {
+      "analyzerRole": "index",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "query",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "highlight",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "suggest",
+      "fieldName": "text"
+    }
+  ],
+  "kind": "search-profile",
+  "languageTag": "ar",
+  "resources": [
+    {
+      "resourceId": "ar-search-normalization-policy",
+      "role": "normalizer"
+    },
+    {
+      "resourceId": "ar-search-morphology-hooks",
+      "role": "stemmer"
+    },
+    {
+      "resourceId": "ar-search-wordnet-synonyms",
+      "role": "synonyms"
+    },
+    {
+      "resourceId": "ar-search-quality-profile",
+      "role": "quality"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Arab",
+  "tokenFilters": [
+    {
+      "componentId": "arabic-strip-tatweel-and-harakat",
+      "mode": "lookup-delete",
+      "options": {
+        "deleteHarakat": true,
+        "deleteTatweel": true
+      },
+      "type": "arabic-mark-policy"
+    },
+    {
+      "componentId": "camel-morph-msa-morphology-hooks",
+      "mode": "candidate-expansion",
+      "options": {
+        "hookResourceId": "ar-search-morphology-hooks",
+        "source": "CAMeL Morph MSA"
+      },
+      "type": "morphology-lookup"
+    },
+    {
+      "componentId": "arabic-wordnet-synonym-expansion",
+      "mode": "query-time-optional",
+      "options": {
+        "source": "Arabic WordNet 4.1.0",
+        "synonymResourceId": "ar-search-wordnet-synonyms"
+      },
+      "type": "synonym-expansion"
+    }
+  ],
+  "tokenizer": {
+    "componentId": "camel-morph-tokenization",
+    "mode": "msa-tokenization-fields",
+    "options": {
+      "fallback": "unicode-word-boundary",
+      "tokenizationResourceId": "ar-search-tokenization-hooks"
+    },
+    "type": "dictionary-tokenization"
+  }
+}

@@ -20,12 +20,32 @@
 		"packageName": { "type": "string", "minLength": 1 },
 		"pipelineId": {
 			"enum": [
+				"arabic-core-profile",
+				"arabic-normalization-profile",
+				"arabic-search-profile",
+				"arabic-wordnet-lmf",
 				"camel-morph-msa",
 				"cldr-core-foundation",
+				"english-core-profile",
+				"english-normalization-profile",
+				"english-segmentation-profile",
+				"esdb-wordlist-diff",
+				"french-core-profile",
+				"french-lexique-383",
+				"french-normalization-profile",
+				"french-segmentation-profile",
 				"iana-language-registry",
 				"open-english-wordnet-lmf",
+				"scowl-v2-inflection",
+				"tatoeba-arabic-corpus-artifact",
+				"tatoeba-arabic-parallel-artifact",
+				"tatoeba-english-corpus-artifact",
+				"tatoeba-english-parallel-artifact",
+				"tatoeba-french-corpus-artifact",
+				"tatoeba-french-parallel-artifact",
 				"ud-conllu-profile",
-				"unicode-17-core"
+				"unicode-17-core",
+				"wikidata-main-artifact"
 			]
 		},
 		"pipelineVersion": { "type": "string", "minLength": 1 },

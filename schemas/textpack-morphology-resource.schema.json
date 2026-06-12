@@ -1,0 +1,139 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-morphology-resource.schema.json",
+	"title": "TextpackMorphologyResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "morphologyId"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "morphology" },
+		"morphologyId": { "type": "string", "minLength": 1 },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"resourceRefs": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/resourceRef" }
+		},
+		"analyzers": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/analyzer" }
+		},
+		"featureInventory": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/feature" }
+		},
+		"morphemeSets": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/morphemeSet" }
+		},
+		"compatibilityTables": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/compatibilityTable" }
+		},
+		"entries": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/entry" }
+		}
+	},
+	"definitions": {
+		"resourceRef": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["resourceId", "role"],
+			"properties": {
+				"resourceId": { "type": "string", "minLength": 1 },
+				"role": {
+					"enum": [
+						"feature-inventory",
+						"defaults",
+						"morpheme-inventory",
+						"compatibility-table",
+						"paradigm-table",
+						"analyzer",
+						"generator"
+					]
+				},
+				"recordCount": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"analyzer": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["analyzerId", "type"],
+			"properties": {
+				"analyzerId": { "type": "string", "minLength": 1 },
+				"type": {
+					"enum": ["lookup", "fst", "rules", "paradigm-table", "statistical"]
+				},
+				"resourceIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"coverage": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"feature": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["feature", "values"],
+			"properties": {
+				"feature": { "type": "string", "minLength": 1 },
+				"values": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"morphemeSet": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["setId", "count"],
+			"properties": {
+				"setId": { "type": "string", "minLength": 1 },
+				"partOfSpeech": { "type": "string" },
+				"section": { "type": "string", "minLength": 1 },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"compatibilityTable": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["tableId", "count"],
+			"properties": {
+				"tableId": { "type": "string", "minLength": 1 },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"entry": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["entryId", "form"],
+			"properties": {
+				"entryId": { "type": "string", "minLength": 1 },
+				"form": { "type": "string", "minLength": 1 },
+				"lemma": { "type": "string", "minLength": 1 },
+				"partOfSpeech": { "type": "string", "minLength": 1 },
+				"features": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

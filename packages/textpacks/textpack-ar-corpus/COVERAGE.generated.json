@@ -1,0 +1,131 @@
+{
+  "capabilities": {},
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:tatoeba-ar-corpus:artifact-descriptor",
+        "eval:tatoeba-ar-corpus:checksum"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "The Tatoeba Arabic corpus is artifact-backed and is not available as raw text until explicitly fetched."
+      ],
+      "resourceIds": [
+        "ar-tatoeba-corpus-artifact"
+      ],
+      "slot": "corpus",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "resource-inventory",
+      "limitations": [],
+      "resourceIds": [
+        "ar-tatoeba-corpus-quality",
+        "ar-tatoeba-corpus-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06"
+      ],
+      "notes": [
+        "Tatoeba Arabic detailed sentence export is available through an explicit full artifact descriptor."
+      ],
+      "resourceIds": [
+        "ar-tatoeba-corpus-artifact"
+      ],
+      "slot": "corpus",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records row count, artifact size, checksum evidence, and explicit fetch limitations."
+      ],
+      "resourceIds": [
+        "ar-tatoeba-corpus-quality",
+        "ar-tatoeba-corpus-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:tatoeba-ar-corpus:artifact-descriptor",
+    "eval:tatoeba-ar-corpus:checksum"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed foundation slice; downstream engine integration is follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-corpus",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 2279,
+      "checksum": "sha256:c9715324c81bdccef2e6ecacd088cb9e4e05b2f827d176ae0333d49b94c46b2c",
+      "kind": "corpus",
+      "nonEmptyLineCount": 61,
+      "path": "resources/tatoeba-ar.corpus-artifact.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-tatoeba-corpus-artifact",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 827,
+      "checksum": "sha256:75242aaa9a796c6119e6fc15f5f0cca1feab6943c583e2348db0438a1a7f8a9e",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 18,
+      "path": "resources/tatoeba-ar.corpus-quality.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-tatoeba-corpus-quality",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1291,
+      "checksum": "sha256:c6d0fb666e02f3ac7049ac6150b8f14525403b1e669625e505b6a6539ea3fddb",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 44,
+      "path": "resources/tatoeba-ar.corpus-quality-profile.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-tatoeba-corpus-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "corpus",
+    "quality-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "ar"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Arab"
+    ]
+  }
+}

@@ -5,14 +5,13 @@
   "mode": "source-backed",
   "packageId": "textpack-en-syntax-ud-gumreddit",
   "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+  "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [
     "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
   ],
@@ -48,6 +47,16 @@
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
     },
     {
+      "byteLength": 3245,
+      "checksum": "sha256:9709b9573be9dea59fe920e3fbe5ce0af4fb0debe05a5392b740005761cf9e5b",
+      "id": "en-ud-gumreddit-morphology-canonical",
+      "kind": "morphology",
+      "path": "resources/ud-gumreddit.morphology.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
+    },
+    {
       "byteLength": 961,
       "checksum": "sha256:014fe6479a0e7303dc2490c225a20ee8105f862d1e028e1cb0bb5a8b189201d2",
       "id": "en-ud-gumreddit-quality",
@@ -58,11 +67,31 @@
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
     },
     {
+      "byteLength": 932,
+      "checksum": "sha256:f1b6220500c62dd212053da7181597af2a76d6091dad5bbb17093e875e0f5034",
+      "id": "en-ud-gumreddit-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/ud-gumreddit.quality-profile.json",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
+    },
+    {
       "byteLength": 133,
       "checksum": "sha256:5aedb284f73960c0dd7ab49e434d068dd2b372ad2818bc46471757476bc5b7c0",
       "id": "en-ud-gumreddit-sentence-profile",
       "kind": "statistical-model",
       "path": "resources/ud-gumreddit.sentence-profile.tsv",
+      "pipelineId": "ud-conllu-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
+    },
+    {
+      "byteLength": 23466,
+      "checksum": "sha256:6344de276f9b76a4b323a6645d32816e7ac44304828c62358b206ba90905328d",
+      "id": "en-ud-gumreddit-syntax-canonical",
+      "kind": "grammar",
+      "path": "resources/ud-gumreddit.syntax.json",
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
@@ -87,20 +116,6 @@
       "checksum": "sha256:f2814065fb07c813ce8ac6318396b42b0d13e1a15bde2b351cfa4f14dbe02c58",
       "files": [
         {
-          "byteLength": 313,
-          "checksum": "sha256:95e9985fb081b6c17bc4422f649bbe0d9555a7d597fcd32a6c4b04bcda4e734c",
-          "mediaType": "text/plain; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/LICENSE.txt",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/LICENSE.txt"
-        },
-        {
-          "byteLength": 39109,
-          "checksum": "sha256:c11626bcf5dd967bfefd08132a44bf3e717a1beb84ca58bdbe51a96268742eb9",
-          "mediaType": "text/markdown; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/README.md",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/README.md"
-        },
-        {
           "byteLength": 209343,
           "checksum": "sha256:f8bbf1b235557513f606cf147c43d8e70c663db26e929a77eedbe8aa62184625",
           "mediaType": "text/plain; charset=utf-8",
@@ -120,6 +135,20 @@
           "mediaType": "text/plain; charset=utf-8",
           "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-train.conllu",
           "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/en_gumreddit-ud-train.conllu"
+        },
+        {
+          "byteLength": 313,
+          "checksum": "sha256:95e9985fb081b6c17bc4422f649bbe0d9555a7d597fcd32a6c4b04bcda4e734c",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/LICENSE.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/LICENSE.txt"
+        },
+        {
+          "byteLength": 39109,
+          "checksum": "sha256:c11626bcf5dd967bfefd08132a44bf3e717a1beb84ca58bdbe51a96268742eb9",
+          "mediaType": "text/markdown; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/README.md",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/README.md"
         }
       ],
       "kind": "file-set",

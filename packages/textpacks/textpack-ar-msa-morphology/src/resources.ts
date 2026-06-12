@@ -42,5 +42,17 @@ export async function resources(): Promise<PackResourceMap> {
 			"camel-morph-msa.quality.json",
 			"utf8",
 		),
+		"ar-msa-camel-morphology-canonical": await readResource(
+			"camel-morph-msa.morphology.json",
+			"utf8",
+		),
+		"ar-msa-camel-segmentation-canonical": await readResource(
+			"camel-morph-msa.segmentation.json",
+			"utf8",
+		),
+		"ar-msa-camel-quality-profile": await readResource(
+			"camel-morph-msa.quality-profile.json",
+			"utf8",
+		),
 	};
 }

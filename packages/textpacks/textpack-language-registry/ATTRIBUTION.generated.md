@@ -9,6 +9,16 @@ License expression: `LicenseRef-IANA-Language-Subtag-Registry`
 
 - `source:iana:language-subtag-registry`
 
+## License Evidence
+
+Source evidence:
+
+- https://www.iana.org/help/licensing-terms
+
+Local snapshot evidence:
+
+- `licenses/source-iana-language-subtag-registry/LICENSE.html` from `tools/textpack-forge/snapshots/data/iana/LICENSE.html` (sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113)
+
 ## Citations
 
 - IANA Language Subtag Registry, File-Date 2026-05-05.

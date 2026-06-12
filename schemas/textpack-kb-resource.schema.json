@@ -1,0 +1,129 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-kb-resource.schema.json",
+	"title": "TextpackKnowledgeBaseResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind"],
+	"anyOf": [
+		{ "required": ["entities", "relations"] },
+		{ "required": ["resourceRefs"] }
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "knowledge-base" },
+		"kbId": { "type": "string", "minLength": 1 },
+		"entityCount": { "type": "integer", "minimum": 0 },
+		"relationCount": { "type": "integer", "minimum": 0 },
+		"languageTags": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"resourceRefs": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/resourceRef" }
+		},
+		"entities": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/entity" }
+		},
+		"relations": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/relation" }
+		}
+	},
+	"definitions": {
+		"resourceRef": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["resourceId", "role"],
+			"properties": {
+				"resourceId": { "type": "string", "minLength": 1 },
+				"role": {
+					"enum": [
+						"entities",
+						"labels",
+						"aliases",
+						"senses",
+						"synsets",
+						"relations",
+						"ontology"
+					]
+				},
+				"recordCount": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"label": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["languageTag", "value"],
+			"properties": {
+				"languageTag": { "type": "string", "minLength": 1 },
+				"value": { "type": "string", "minLength": 1 },
+				"script": { "type": "string", "minLength": 1 }
+			}
+		},
+		"entity": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["entityId", "labels"],
+			"properties": {
+				"entityId": { "type": "string", "minLength": 1 },
+				"typeIds": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"labels": {
+					"type": "array",
+					"minItems": 1,
+					"items": { "$ref": "#/definitions/label" }
+				},
+				"aliases": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/label" }
+				},
+				"descriptions": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/label" }
+				},
+				"externalIds": { "$ref": "#/definitions/stringMap" },
+				"metadata": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"relation": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["sourceId", "predicateId", "targetId"],
+			"properties": {
+				"sourceId": { "type": "string", "minLength": 1 },
+				"predicateId": { "type": "string", "minLength": 1 },
+				"targetId": { "type": "string", "minLength": 1 },
+				"confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+				"metadata": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"stringMap": {
+			"type": "object",
+			"additionalProperties": { "type": "string", "minLength": 1 }
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

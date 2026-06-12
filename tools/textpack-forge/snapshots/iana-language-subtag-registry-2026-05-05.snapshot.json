@@ -5,7 +5,7 @@
 	"version": "2026-05-05",
 	"retrievedAt": "2026-06-08T00:00:00.000Z",
 	"kind": "file-set",
-	"checksum": "sha256:da6aafd337212fa24dc9dcbc0fc231aba735ee64ff5acf1d35386b4258fc6c25",
+	"checksum": "sha256:0316fc3584010643f9b1c3638d1ff8266960f9d8d71a1988b38392148eed16ca",
 	"files": [
 		{
 			"path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt",
@@ -13,7 +13,14 @@
 			"byteLength": 731465,
 			"checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6",
 			"sourceUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/iana/LICENSE.html",
+			"mediaType": "text/html; charset=utf-8",
+			"byteLength": 6480,
+			"checksum": "sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113",
+			"sourceUrl": "https://www.iana.org/help/licensing-terms"
 		}
 	],
-	"notes": "Pinned local snapshot of the IANA Language Subtag Registry."
+	"notes": "Pinned local snapshot of the IANA Language Subtag Registry with local license evidence."
 }

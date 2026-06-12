@@ -70,13 +70,13 @@ export const manifest: TextPackManifest = {
 			]
 		}
 	],
-	"license": "MIT",
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0",
 	"citations": [
 		"repo:tools/textpack-forge/composites/textpack-foundation.composite.json"
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:12e98edb0c3ebf9a839773b624b51a935a7dc8d57894c7dd29bc64944572dd19",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

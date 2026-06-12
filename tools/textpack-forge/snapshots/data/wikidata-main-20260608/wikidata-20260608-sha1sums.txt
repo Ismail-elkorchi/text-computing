@@ -1,0 +1,2 @@
+7a1165f121e50eca8f2e11674971d7f2d3c47b98  wikidata-20260608-all.json.gz
+ed7dfa5ad60ab5db14c91938804c708431fc3faa  wikidata-20260608-all.json.bz2

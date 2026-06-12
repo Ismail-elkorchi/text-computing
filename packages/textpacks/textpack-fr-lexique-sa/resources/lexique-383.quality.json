@@ -1,0 +1,27 @@
+{
+  "entryCount": 142686,
+  "genderCounts": {
+    "f": 35672,
+    "m": 46610
+  },
+  "inflectedVerbRowCount": 65017,
+  "lemmaCount": 51118,
+  "numberCounts": {
+    "p": 34820,
+    "s": 52139
+  },
+  "pipelineId": "french-lexique-383",
+  "pipelineVersion": "0.1.0",
+  "posInventoryCount": 22,
+  "recordsAccepted": 142686,
+  "recordsRejected": 8,
+  "release": "3.83",
+  "schemaVersion": "1",
+  "sourceId": "source:fr:lexique-383",
+  "uniqueFormCount": 125653,
+  "uniqueLemmaCount": 46941,
+  "warnings": [
+    "Lexique 3.83 is CC-BY-SA-4.0 and this generated package is share-alike isolated.",
+    "Lexique frequency fields are source corpus statistics, not a full contemporary French corpus package."
+  ]
+}

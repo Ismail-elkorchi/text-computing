@@ -1,0 +1,97 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
+          "snapshot:source:wikidata:main:20260608",
+          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+          "snapshot:source:ud:arabic-nyuad:r2.18"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024",
+          "source:wordnet:arabic-v4.1.0",
+          "source:wikidata:main",
+          "source:tatoeba:weekly-arabic-2026-06-06",
+          "source:ud:arabic-nyuad-r2.18"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "capabilitySlots": [
+            "quality"
+          ],
+          "requiredComponents": [
+            "@ismail-elkorchi/textpack-ar-core",
+            "@ismail-elkorchi/textpack-ar-normalization",
+            "@ismail-elkorchi/textpack-ar-segmentation",
+            "@ismail-elkorchi/textpack-ar-lexicon",
+            "@ismail-elkorchi/textpack-ar-morphology",
+            "@ismail-elkorchi/textpack-ar-syntax-sa",
+            "@ismail-elkorchi/textpack-ar-search",
+            "@ismail-elkorchi/textpack-ar-kb",
+            "@ismail-elkorchi/textpack-ar-corpus",
+            "@ismail-elkorchi/textpack-ar-parallel"
+          ]
+        },
+        "resourceIds": []
+      },
+      "limitations": [],
+      "metric": {
+        "name": "requiredComponentCount",
+        "operator": "eq",
+        "threshold": 10,
+        "unit": "components",
+        "value": 10
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
+      "pipelineId": "component-composite",
+      "recordId": "eval:textpack-ar-quality-sa:required-component-graph",
+      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar-quality-sa.composite.json",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "composite.required-component-graph"
+    }
+  ],
+  "resourceSpecIds": [],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 1,
+    "recordCount": 1,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

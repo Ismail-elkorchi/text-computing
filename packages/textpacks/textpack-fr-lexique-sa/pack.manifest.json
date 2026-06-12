@@ -1,0 +1,173 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:fr-lexique-sa",
+	"name": "French Lexique 3.83 Share-Alike Pack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+	"targets": {
+		"languages": [
+			"fr"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [
+		{
+			"id": "fr-lexique-entries",
+			"kind": "lexicon",
+			"path": "resources/lexique-383.entries.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			]
+		},
+		{
+			"id": "fr-lexique-lemmas",
+			"kind": "lexicon",
+			"path": "resources/lexique-383.lemmas.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			]
+		},
+		{
+			"id": "fr-lexique-pos-inventory",
+			"kind": "morphology",
+			"path": "resources/lexique-383.pos.tsv",
+			"format": "tsv",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			]
+		},
+		{
+			"id": "fr-lexique-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/lexique-383.lexicon.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-lexicon-resource.schema.json"
+			}
+		},
+		{
+			"id": "fr-lexique-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/lexique-383.morphology.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-morphology-resource.schema.json"
+			}
+		},
+		{
+			"id": "fr-lexique-search-profile",
+			"kind": "search-profile",
+			"path": "resources/lexique-383.search-profile.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
+			}
+		},
+		{
+			"id": "fr-lexique-quality",
+			"kind": "quality-profile",
+			"path": "resources/lexique-383.quality.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			]
+		},
+		{
+			"id": "fr-lexique-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/lexique-383.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
+			}
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-entries",
+				"fr-lexique-lemmas",
+				"fr-lexique-lexicon-canonical"
+			],
+			"notes": [
+				"Lexique 3.83 provides French forms, lemmas, POS, gender/number fields, phonology, and source frequency fields.",
+				"This package is share-alike isolated and is not eligible for the default French composite."
+			]
+		},
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-entries",
+				"fr-lexique-pos-inventory",
+				"fr-lexique-morphology-canonical"
+			],
+			"notes": [
+				"Lexique 3.83 provides lookup morphology evidence; it is not a context-disambiguating analyzer."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-search-profile"
+			],
+			"notes": [
+				"Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-quality",
+				"fr-lexique-quality-profile"
+			],
+			"notes": [
+				"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
+			]
+		}
+	],
+	"license": "CC-BY-SA-4.0",
+	"citations": [
+		"Lexique 3.83, 2019-06-04."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}
