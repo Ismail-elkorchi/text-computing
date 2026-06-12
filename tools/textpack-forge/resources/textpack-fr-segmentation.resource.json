@@ -4,10 +4,15 @@
 	"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
 	"pipelineId": "french-segmentation-profile",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": ["source:unicode:ucd", "source:unicode:cldr-core"],
+	"sourceIds": [
+		"source:unicode:ucd",
+		"source:unicode:cldr-core",
+		"source:tatoeba:weekly-french-2026-06-06"
+	],
 	"snapshotIds": [
 		"snapshot:source:unicode:ucd:17.0.0",
-		"snapshot:source:unicode:cldr-core:48.2.0"
+		"snapshot:source:unicode:cldr-core:48.2.0",
+		"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
 	],
 	"inputFiles": [
 		{
@@ -29,6 +34,11 @@
 			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
 			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
 			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra_sentences_detailed.tsv.bz2",
+			"checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1"
 		}
 	],
 	"outputs": [
@@ -54,6 +64,36 @@
 			"resourceId": "fr-sentence-segmentation-profile",
 			"path": "resources/fr.segmentation.sentence.json",
 			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-token-segmentation-profile",
+			"path": "resources/fr.segmentation.token.json",
+			"kind": "segmentation-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-segmentation-elision-prefixes",
+			"path": "resources/fr.segmentation-elision-prefixes.tsv",
+			"kind": "segmentation-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-segmentation-contraction-forms",
+			"path": "resources/fr.segmentation-contraction-forms.tsv",
+			"kind": "segmentation-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-segmentation-abbreviations",
+			"path": "resources/fr.segmentation-abbreviations.tsv",
+			"kind": "segmentation-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-segmentation-gold-cases",
+			"path": "resources/fr.segmentation-gold-cases.json",
+			"kind": "quality-profile",
 			"format": "json"
 		},
 		{

@@ -215,7 +215,5 @@
   "resources": [],
   "schemaVersion": "1",
   "supportLevel": "feature-complete",
-  "warnings": [
-    "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-  ]
+  "warnings": []
 }

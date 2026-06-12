@@ -4,13 +4,24 @@
 	"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
 	"pipelineId": "french-lexique-383",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": ["source:fr:lexique-383"],
-	"snapshotIds": ["snapshot:source:fr:lexique-383:2019-06-04"],
+	"sourceIds": [
+		"source:fr:lexique-383",
+		"source:tatoeba:weekly-french-2026-06-06"
+	],
+	"snapshotIds": [
+		"snapshot:source:fr:lexique-383:2019-06-04",
+		"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+	],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:fr:lexique-383:2019-06-04",
 			"path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.tsv",
 			"checksum": "sha256:637ba37a767a66679c48371d673ece50cbf541b49a4e40e598963d4f3fbce52b"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra_sentences_detailed.tsv.bz2",
+			"checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1"
 		}
 	],
 	"outputs": [
@@ -48,6 +59,24 @@
 			"resourceId": "fr-lexique-search-profile",
 			"path": "resources/lexique-383.search-profile.json",
 			"kind": "search-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "fr-lexique-search-elision-prefixes",
+			"path": "resources/lexique-383.search-elision-prefixes.tsv",
+			"kind": "search-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-lexique-search-contraction-forms",
+			"path": "resources/lexique-383.search-contraction-forms.tsv",
+			"kind": "search-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "fr-lexique-search-gold-cases",
+			"path": "resources/lexique-383.search-gold-cases.json",
+			"kind": "quality-profile",
 			"format": "json"
 		},
 		{

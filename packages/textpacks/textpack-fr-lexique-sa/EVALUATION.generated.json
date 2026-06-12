@@ -26,10 +26,12 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:fr:lexique-383:2019-06-04"
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:fr:lexique-383"
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "coverage",
@@ -74,10 +76,12 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:fr:lexique-383:2019-06-04"
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:fr:lexique-383"
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "coverage",
@@ -116,10 +120,12 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:fr:lexique-383:2019-06-04"
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:fr:lexique-383"
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "resource-conformance",
@@ -169,10 +175,149 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:fr:lexique-383:2019-06-04"
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:fr:lexique-383"
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-lexique-search-profile",
+          "fr-lexique-search-contraction-forms"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "searchContractionFormCount",
+        "operator": "eq",
+        "threshold": 4,
+        "unit": "forms",
+        "value": 4
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:search-contraction-forms",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "search.contraction-surface-policy"
+    },
+    {
+      "capabilitySlot": "search",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "tatoebaSentenceRowCount": 718596
+        },
+        "resourceIds": [
+          "fr-lexique-search-profile",
+          "fr-lexique-search-elision-prefixes"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "searchElisionPrefixCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "prefixes",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:search-elision-prefixes",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "search.elision-apostrophe-policy"
+    },
+    {
+      "capabilitySlot": "search",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "gold-evaluation",
+      "evidence": {
+        "resourceIds": [
+          "fr-lexique-search-profile",
+          "fr-lexique-search-gold-cases"
+        ]
+      },
+      "limitations": [
+        "Gold cases verify analyzer policy coverage for observed Tatoeba surface forms; ranked retrieval evaluation belongs in corpus/search benchmark packs."
+      ],
+      "metric": {
+        "name": "searchGoldCaseCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "cases",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:search-gold-cases",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "search.gold-cases"
+    },
+    {
+      "capabilitySlot": "search",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "resource-conformance",
@@ -212,10 +357,12 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:fr:lexique-383:2019-06-04"
+          "snapshot:source:fr:lexique-383:2019-06-04",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:fr:lexique-383"
+          "source:fr:lexique-383",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "integrity",
@@ -248,8 +395,8 @@
   "summary": {
     "failCount": 1,
     "notApplicableCount": 0,
-    "passCount": 4,
-    "recordCount": 5,
+    "passCount": 7,
+    "recordCount": 8,
     "status": "failed",
     "warningCount": 0
   }

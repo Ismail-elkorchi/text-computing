@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-fr-lexique-sa",
 	"version": "0.1.0",
-	"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, morphology, frequency, search, and quality resources.",
+	"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, morphology, frequency, search, and quality resources with Tatoeba-observed French surface search evidence.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -23,7 +23,7 @@
 	"dependencies": {
 		"@ismail-elkorchi/textpack": "0.1.0"
 	},
-	"license": "CC-BY-SA-4.0",
+	"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
 	"files": [
 		"dist",
 		"pack.manifest.json",

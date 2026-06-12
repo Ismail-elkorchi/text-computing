@@ -78,14 +78,70 @@ export const manifest: TextPackManifest = {
 			}
 		},
 		{
+			"id": "fr-token-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation.token.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"metadata": {
+				"canonicalSchema": "textpack-segmentation-resource.schema.json"
+			}
+		},
+		{
+			"id": "fr-segmentation-elision-prefixes",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-elision-prefixes.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-segmentation-contraction-forms",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-contraction-forms.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-segmentation-abbreviations",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-abbreviations.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-segmentation-gold-cases",
+			"kind": "quality-profile",
+			"path": "resources/fr.segmentation-gold-cases.json",
+			"format": "json",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
 			"id": "fr-segmentation-quality",
 			"kind": "quality-profile",
 			"path": "resources/fr.segmentation.quality.json",
 			"format": "json",
-			"license": "Unicode-3.0",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 			"citations": [
 				"Unicode Character Database 17.0.0.",
-				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			]
 		},
 		{
@@ -93,10 +149,11 @@ export const manifest: TextPackManifest = {
 			"kind": "quality-profile",
 			"path": "resources/fr.segmentation.quality-profile.json",
 			"format": "json",
-			"license": "Unicode-3.0",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 			"citations": [
 				"Unicode Character Database 17.0.0.",
-				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
@@ -111,13 +168,18 @@ export const manifest: TextPackManifest = {
 				"fr-segmentation-boundary-properties",
 				"fr-grapheme-segmentation-profile",
 				"fr-word-segmentation-profile",
-				"fr-sentence-segmentation-profile"
+				"fr-sentence-segmentation-profile",
+				"fr-token-segmentation-profile",
+				"fr-segmentation-elision-prefixes",
+				"fr-segmentation-contraction-forms",
+				"fr-segmentation-abbreviations",
+				"fr-segmentation-gold-cases"
 			],
 			"capabilities": {
 				"segmentation": "profile"
 			},
 			"notes": [
-				"Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed French text."
+				"Unicode UAX #29 grapheme, word, and sentence boundary profiles plus Tatoeba-observed elision-prefix, contraction-surface, abbreviation-period, and token gold-case resources are available for modern typed French text."
 			]
 		},
 		{
@@ -125,17 +187,19 @@ export const manifest: TextPackManifest = {
 			"status": "task-supported",
 			"resourceIds": [
 				"fr-segmentation-quality",
-				"fr-segmentation-quality-profile"
+				"fr-segmentation-quality-profile",
+				"fr-segmentation-gold-cases"
 			],
 			"notes": [
-				"Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations."
+				"Generated quality profile records boundary-property coverage, French surface-policy counts, accepted records, and gold-case coverage."
 			]
 		}
 	],
-	"license": "Unicode-3.0",
+	"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 	"citations": [
 		"Unicode Character Database 17.0.0.",
-		"Unicode CLDR core data, cldr-core npm package 48.2.0."
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"Tatoeba weekly French exports, 2026-06-06."
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",

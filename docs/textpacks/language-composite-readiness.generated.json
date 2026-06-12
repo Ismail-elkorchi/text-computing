@@ -1796,7 +1796,8 @@
           "slot": "normalization",
           "sourceIds": [
             "source:unicode:ucd",
-            "source:unicode:cldr-core"
+            "source:unicode:cldr-core",
+            "source:tatoeba:weekly-french-2026-06-06"
           ],
           "sourceRequirements": [],
           "stage": "composite-ready"
@@ -1835,7 +1836,8 @@
           "slot": "segmentation",
           "sourceIds": [
             "source:unicode:ucd",
-            "source:unicode:cldr-core"
+            "source:unicode:cldr-core",
+            "source:tatoeba:weekly-french-2026-06-06"
           ],
           "sourceRequirements": [],
           "stage": "composite-ready"

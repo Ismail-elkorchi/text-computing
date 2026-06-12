@@ -28,7 +28,8 @@
         "scope": "modern typed French Unicode segmentation profile",
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "label": "sentence-boundary",

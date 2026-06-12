@@ -21,7 +21,7 @@
     {
       "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
+      "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "reason": "French normalization policy and quality resources.",
       "role": "required",
@@ -30,7 +30,7 @@
     {
       "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
+      "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
       "reason": "French segmentation profiles.",
       "role": "required",

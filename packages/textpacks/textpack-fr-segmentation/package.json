@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-fr-segmentation",
 	"version": "0.1.0",
-	"description": "Source-backed French segmentation profiles generated from Unicode UAX #29 break properties and CLDR.",
+	"description": "Source-backed French segmentation profiles generated from Unicode UAX #29, CLDR, and Tatoeba-observed French surface evidence.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -23,7 +23,7 @@
 	"dependencies": {
 		"@ismail-elkorchi/textpack": "0.1.0"
 	},
-	"license": "Unicode-3.0",
+	"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 	"files": [
 		"dist",
 		"pack.manifest.json",

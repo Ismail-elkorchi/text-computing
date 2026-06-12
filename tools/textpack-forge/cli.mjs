@@ -2738,6 +2738,229 @@ const unicodeCldrLatinProfiles = {
 	},
 };
 
+const frenchSurfaceContractionForms = ["au", "aux", "des", "du"];
+const frenchSurfaceEvidenceMinimumCount = 25;
+const frenchSurfaceGoldCaseLimit = 24;
+
+function normalizeFrenchApostrophes(value) {
+	return value.normalize("NFC").replaceAll("’", "'");
+}
+
+function frenchLookupFold(value) {
+	return normalizeFrenchApostrophes(value)
+		.toLocaleLowerCase("fr")
+		.normalize("NFD")
+		.replace(/\p{Mark}+/gu, "")
+		.normalize("NFC");
+}
+
+function frenchSurfaceTokens(text, elisionPrefixes = new Set()) {
+	const tokens = [];
+	for (const match of text.matchAll(
+		/[\p{Letter}\p{Mark}]+(?:['’][\p{Letter}\p{Mark}]+)?|\p{Number}+|[^\s]/gu,
+	)) {
+		const token = match[0];
+		const apostropheIndex = token.search(/['’]/u);
+		if (apostropheIndex > 0) {
+			const prefix = token.slice(0, apostropheIndex).toLocaleLowerCase("fr");
+			if (elisionPrefixes.has(prefix)) {
+				tokens.push(token.slice(0, apostropheIndex + 1));
+				tokens.push(token.slice(apostropheIndex + 1));
+				continue;
+			}
+		}
+		tokens.push(token);
+	}
+	return tokens;
+}
+
+function frenchAbbreviationCandidate(value) {
+	if (!/^[\p{Letter}]{1,5}\.$/u.test(value)) return false;
+	const stem = value.slice(0, -1);
+	return stem === stem.toLocaleUpperCase("fr") || stem.length <= 3;
+}
+
+function deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs) {
+	const text = readBzip2Input(
+		inputs,
+		"fra_sentences_detailed.tsv.bz2",
+		resourceSpec,
+	);
+	const apostropheCounts = new Map();
+	const prefixCounts = new Map();
+	const prefixApostropheCounts = new Map();
+	const contractionCounts = new Map(
+		frenchSurfaceContractionForms.map((form) => [form, 0]),
+	);
+	const abbreviationCounts = new Map();
+	const prefixExamples = new Map();
+	const contractionExamples = new Map();
+	const abbreviationExamples = new Map();
+	let sentenceRowCount = 0;
+	let elisionObservationCount = 0;
+	let contractionObservationCount = 0;
+	let abbreviationObservationCount = 0;
+
+	for (const line of text.split("\n")) {
+		if (line.length === 0) continue;
+		const cells = line.split("\t");
+		if (cells.length < 3 || cells[1] !== "fra") continue;
+		const sentenceId = cells[0];
+		const sentenceText = cells[2];
+		if (sentenceId === undefined || sentenceText === undefined) continue;
+		sentenceRowCount += 1;
+		for (const match of sentenceText.matchAll(
+			/\b([\p{Letter}\p{Mark}]+)(['’])(?=[\p{Letter}\p{Mark}])/gu,
+		)) {
+			const prefix = match[1].toLocaleLowerCase("fr");
+			const apostrophe = match[2];
+			incrementCount(prefixCounts, prefix);
+			incrementCount(apostropheCounts, apostrophe);
+			incrementCount(
+				prefixApostropheCounts,
+				`${prefix}\u0000${apostrophe}`,
+			);
+			elisionObservationCount += 1;
+			if (!prefixExamples.has(prefix)) {
+				prefixExamples.set(prefix, { sentenceId, text: sentenceText });
+			}
+		}
+		for (const match of sentenceText.matchAll(/\b[\p{Letter}\p{Mark}.]+\b\.?/gu)) {
+			const token = match[0];
+			const folded = token.toLocaleLowerCase("fr").replace(/\.$/u, "");
+			if (frenchSurfaceContractionForms.includes(folded)) {
+				incrementCount(contractionCounts, folded);
+				contractionObservationCount += 1;
+				if (!contractionExamples.has(folded)) {
+					contractionExamples.set(folded, { sentenceId, text: sentenceText });
+				}
+			}
+			if (frenchAbbreviationCandidate(token)) {
+				incrementCount(abbreviationCounts, token);
+				abbreviationObservationCount += 1;
+				if (!abbreviationExamples.has(token)) {
+					abbreviationExamples.set(token, { sentenceId, text: sentenceText });
+				}
+			}
+		}
+	}
+
+	const observedElisionRows = sortedCountRows(prefixCounts)
+		.filter(([, count]) => count >= frenchSurfaceEvidenceMinimumCount)
+		.map(([prefix, count]) => {
+			const apostropheRows = [...prefixApostropheCounts.entries()]
+				.filter(([key]) => key.startsWith(`${prefix}\u0000`))
+				.map(([key, apostropheCount]) => [
+					key.slice(key.indexOf("\u0000") + 1),
+					apostropheCount,
+				])
+				.sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+			const example = prefixExamples.get(prefix);
+			return {
+				prefix,
+				count,
+				apostrophes: apostropheRows
+					.map(([apostrophe, apostropheCount]) => `${apostrophe}:${apostropheCount}`)
+					.join(" "),
+				exampleSentenceId: example?.sentenceId ?? "",
+			};
+		});
+	const observedContractionRows = sortedCountRows(contractionCounts)
+		.filter(([, count]) => count > 0)
+		.map(([form, count]) => {
+			const example = contractionExamples.get(form);
+			return {
+				form,
+				count,
+				exampleSentenceId: example?.sentenceId ?? "",
+			};
+		});
+	const observedAbbreviationRows = sortedCountRows(abbreviationCounts)
+		.filter(([, count]) => count >= frenchSurfaceEvidenceMinimumCount)
+		.map(([form, count]) => {
+			const example = abbreviationExamples.get(form);
+			return {
+				form,
+				count,
+				exampleSentenceId: example?.sentenceId ?? "",
+			};
+		});
+	const elisionPrefixSet = new Set(
+		observedElisionRows.map((row) => row.prefix),
+	);
+	const normalizationGoldCases = [
+		...observedElisionRows.slice(0, frenchSurfaceGoldCaseLimit / 2).map((row) => {
+			const example = prefixExamples.get(row.prefix);
+			const input = example?.text ?? "";
+			return {
+				caseId: `fr-normalization-elision-${row.prefix}`,
+				source: "source:tatoeba:weekly-french-2026-06-06",
+				sourceSentenceId: example?.sentenceId ?? "",
+				category: "elision-apostrophe",
+				input,
+				expectedNfcCasefoldApostrophe: normalizeFrenchApostrophes(
+					input,
+				).toLocaleLowerCase("fr"),
+				expectedLookupFold: frenchLookupFold(input),
+			};
+		}),
+		...observedContractionRows.slice(0, frenchSurfaceGoldCaseLimit / 2).map((row) => {
+			const example = contractionExamples.get(row.form);
+			const input = example?.text ?? "";
+			return {
+				caseId: `fr-normalization-contraction-${row.form}`,
+				source: "source:tatoeba:weekly-french-2026-06-06",
+				sourceSentenceId: example?.sentenceId ?? "",
+				category: "contraction-surface-form",
+				input,
+				expectedNfcCasefoldApostrophe: normalizeFrenchApostrophes(
+					input,
+				).toLocaleLowerCase("fr"),
+				expectedLookupFold: frenchLookupFold(input),
+				recognizedSurfaceForm: row.form,
+			};
+		}),
+	].slice(0, frenchSurfaceGoldCaseLimit);
+	const segmentationGoldCases = [
+		...observedElisionRows.slice(0, frenchSurfaceGoldCaseLimit / 2).map((row) => {
+			const example = prefixExamples.get(row.prefix);
+			const input = example?.text ?? "";
+			return {
+				caseId: `fr-segmentation-elision-${row.prefix}`,
+				source: "source:tatoeba:weekly-french-2026-06-06",
+				sourceSentenceId: example?.sentenceId ?? "",
+				category: "elision-apostrophe",
+				input,
+				expectedTokens: frenchSurfaceTokens(input, elisionPrefixSet),
+			};
+		}),
+		...observedAbbreviationRows.slice(0, frenchSurfaceGoldCaseLimit / 4).map((row) => {
+			const example = abbreviationExamples.get(row.form);
+			const input = example?.text ?? "";
+			return {
+				caseId: `fr-segmentation-abbreviation-${row.form.replace(/\.$/u, "")}`,
+				source: "source:tatoeba:weekly-french-2026-06-06",
+				sourceSentenceId: example?.sentenceId ?? "",
+				category: "abbreviation-period",
+				input,
+				expectedTokens: frenchSurfaceTokens(input, elisionPrefixSet),
+			};
+		}),
+	].slice(0, frenchSurfaceGoldCaseLimit);
+	return {
+		sentenceRowCount,
+		apostropheCounts: Object.fromEntries(sortedCountRows(apostropheCounts)),
+		elisionObservationCount,
+		contractionObservationCount,
+		abbreviationObservationCount,
+		elisionPrefixRows: observedElisionRows,
+		contractionRows: observedContractionRows,
+		abbreviationRows: observedAbbreviationRows,
+		normalizationGoldCases,
+		segmentationGoldCases,
+	};
+}
+
 function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) {
 	const aliasesText = inputs.get("aliases.json");
 	const likelySubtagsText = inputs.get("likelySubtags.json");
@@ -2793,6 +3016,47 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 			note: `Use CLDR likely-subtag context for the default ${config.defaultProfileLabel} profile.`,
 		},
 	];
+	const frenchSurfaceEvidence =
+		config.languageTag === "fr"
+			? deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs)
+			: undefined;
+	if (frenchSurfaceEvidence !== undefined) {
+		rules.push(
+			{
+				ruleId: "french-apostrophe-normalize-for-lookup",
+				operation: "replace",
+				priority: 40,
+				input: "’",
+				output: "'",
+				note: "Normalize French straight and typographic apostrophes for lookup while preserving source text in document storage.",
+				evidenceResourceId: "fr-normalization-elision-prefixes",
+			},
+			{
+				ruleId: "french-observed-elision-boundary-policy",
+				operation: "map",
+				priority: 50,
+				pattern: "\\b(prefix)['’](letter)",
+				note: "Recognize observed French elision prefixes from the pinned Tatoeba French sentence snapshot for lookup and token-boundary policy.",
+				evidenceResourceId: "fr-normalization-elision-prefixes",
+			},
+			{
+				ruleId: "french-observed-contraction-surface-policy",
+				operation: "map",
+				priority: 60,
+				pattern: "\\b(au|aux|des|du)\\b",
+				note: "Recognize observed French contraction surface forms from the pinned Tatoeba French sentence snapshot.",
+				evidenceResourceId: "fr-normalization-contraction-forms",
+			},
+			{
+				ruleId: "french-accent-fold-for-search-lookup",
+				operation: "strip-diacritic",
+				priority: 70,
+				pattern: "NFD:Mark+",
+				note: "Expose a lookup-only accent-folding policy for French search analyzers; source text normalization remains NFC.",
+				evidenceResourceId: "fr-normalization-gold-cases",
+			},
+		);
+	}
 	const canonicalNormalization = {
 		schemaVersion: "1",
 		kind: "normalization-profile",
@@ -2804,16 +3068,20 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 		rules: rules.map((rule) => ({
 			ruleId: rule.ruleId,
 			operation: rule.operation,
-			priority: rule.priority,
-			...(rule.input === undefined ? {} : { input: rule.input }),
-			...(rule.output === undefined ? {} : { output: rule.output }),
-			conditions: {
-				scope: `${config.scopeLabel} normalization profile`,
-				sourceIds: resourceSpec.sourceIds,
-				note: rule.note,
-			},
-		})),
-	};
+				priority: rule.priority,
+				...(rule.input === undefined ? {} : { input: rule.input }),
+				...(rule.output === undefined ? {} : { output: rule.output }),
+				...(rule.pattern === undefined ? {} : { pattern: rule.pattern }),
+				conditions: {
+					scope: `${config.scopeLabel} normalization profile`,
+					sourceIds: resourceSpec.sourceIds,
+					note: rule.note,
+					...(rule.evidenceResourceId === undefined
+						? {}
+						: { evidenceResourceId: rule.evidenceResourceId }),
+				},
+			})),
+		};
 	const summary = {
 		schemaVersion: "1",
 		sourceIds: resourceSpec.sourceIds,
@@ -2822,18 +3090,37 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 		languageTag: config.languageTag,
 		script: config.script,
 		likelySubtag,
-		ruleCount: rules.length,
-		nfcQuickCheckValueCount: nfcQuickCheckAliases.length,
-		caseAliasRowCount: caseAliasRows.length,
-		aliasKindCount: aliasKinds.length,
-		aliasKinds,
-		recordsAccepted: rules.length,
-		recordsRejected: 0,
-		warnings: [
-			`This profile declares Unicode/CLDR-backed normalization policy for ${config.scopeLabel} text.`,
-			"It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, or corpus-derived normalization.",
-		],
-	};
+			ruleCount: rules.length,
+			nfcQuickCheckValueCount: nfcQuickCheckAliases.length,
+			caseAliasRowCount: caseAliasRows.length,
+			aliasKindCount: aliasKinds.length,
+			aliasKinds,
+			...(frenchSurfaceEvidence === undefined
+				? {}
+				: {
+						tatoebaSentenceRowCount:
+							frenchSurfaceEvidence.sentenceRowCount,
+						apostropheCounts: frenchSurfaceEvidence.apostropheCounts,
+						elisionPrefixCount:
+							frenchSurfaceEvidence.elisionPrefixRows.length,
+						elisionObservationCount:
+							frenchSurfaceEvidence.elisionObservationCount,
+						contractionFormCount:
+							frenchSurfaceEvidence.contractionRows.length,
+						contractionObservationCount:
+							frenchSurfaceEvidence.contractionObservationCount,
+						normalizationGoldCaseCount:
+							frenchSurfaceEvidence.normalizationGoldCases.length,
+					}),
+			recordsAccepted: rules.length,
+			recordsRejected: 0,
+			warnings: [
+				`This profile declares Unicode/CLDR-backed normalization policy for ${config.scopeLabel} text.`,
+				frenchSurfaceEvidence === undefined
+					? "It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, or corpus-derived normalization."
+					: "It adds Tatoeba-observed French apostrophe, elision-prefix, contraction-surface, and lookup accent-fold evidence; spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, and OCR cleanup remain outside this component.",
+			],
+		};
 	const canonicalQuality = {
 		schemaVersion: "1",
 		kind: "quality-profile",
@@ -2844,14 +3131,24 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 			{
 				diagnosticId: `${config.languageTag}-normalization-scope`,
 				task: "normalization.profile",
-				severity: "info",
-				message: `Unicode/CLDR-backed profile for ${config.scopeLabel}; spelling correction and noisy-text normalization are out of scope.`,
-				metadata: {
-					likelySubtag,
-					sourceIds: resourceSpec.sourceIds,
+					severity: "info",
+					message: `Unicode/CLDR-backed profile for ${config.scopeLabel}; spelling correction and noisy-text normalization are out of scope.`,
+					metadata: {
+						likelySubtag,
+						sourceIds: resourceSpec.sourceIds,
+						...(frenchSurfaceEvidence === undefined
+							? {}
+							: {
+									elisionPrefixCount:
+										frenchSurfaceEvidence.elisionPrefixRows.length,
+									contractionFormCount:
+										frenchSurfaceEvidence.contractionRows.length,
+									normalizationGoldCaseCount:
+										frenchSurfaceEvidence.normalizationGoldCases.length,
+								}),
+					},
 				},
-			},
-		],
+			],
 		metrics: [
 			{
 				metricId: "rule-count",
@@ -2871,35 +3168,102 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 				value: summary.caseAliasRowCount,
 				unit: "aliases",
 			},
-			{
-				metricId: "records-rejected",
-				name: "recordsRejected",
-				value: summary.recordsRejected,
-				unit: "records",
-			},
-		],
-		thresholds: [],
-		evaluationRecordIds: [],
+				{
+					metricId: "records-rejected",
+					name: "recordsRejected",
+					value: summary.recordsRejected,
+					unit: "records",
+				},
+				...(frenchSurfaceEvidence === undefined
+					? []
+					: [
+							{
+								metricId: "french-elision-prefix-count",
+								name: "elisionPrefixCount",
+								value: summary.elisionPrefixCount,
+								unit: "prefixes",
+							},
+							{
+								metricId: "french-contraction-form-count",
+								name: "contractionFormCount",
+								value: summary.contractionFormCount,
+								unit: "forms",
+							},
+							{
+								metricId: "french-normalization-gold-case-count",
+								name: "normalizationGoldCaseCount",
+								value: summary.normalizationGoldCaseCount,
+								unit: "cases",
+							},
+						]),
+			],
+			thresholds: [],
+			evaluationRecordIds: [],
 	};
 	return [
 		outputFor(
 			resourceSpec,
 			config.normalizationOutputIds.rules,
 			tsvFile(
-				["ruleId", "operation", "priority", "input", "output", "note"],
-				rules.map((rule) => [
-					rule.ruleId,
-					rule.operation,
-					rule.priority,
+					["ruleId", "operation", "priority", "input", "output", "note"],
+					rules.map((rule) => [
+						rule.ruleId,
+						rule.operation,
+						rule.priority,
 					rule.input ?? "",
 					rule.output ?? "",
-					rule.note,
-				]),
+						rule.note,
+					]),
+				),
 			),
-		),
-		outputFor(
-			resourceSpec,
-			config.normalizationOutputIds.profile,
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						outputFor(
+							resourceSpec,
+							"fr-normalization-elision-prefixes",
+							tsvFile(
+								[
+									"prefix",
+									"observedCount",
+									"apostropheCounts",
+									"exampleSentenceId",
+								],
+								frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
+									row.prefix,
+									row.count,
+									row.apostrophes,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-normalization-contraction-forms",
+							tsvFile(
+								["form", "observedCount", "exampleSentenceId"],
+								frenchSurfaceEvidence.contractionRows.map((row) => [
+									row.form,
+									row.count,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-normalization-gold-cases",
+							stableJson({
+								schemaVersion: "1",
+								kind: "normalization-gold-cases",
+								languageTag: "fr",
+								sourceIds: resourceSpec.sourceIds,
+								cases: frenchSurfaceEvidence.normalizationGoldCases,
+							}),
+						),
+					]),
+			outputFor(
+				resourceSpec,
+				config.normalizationOutputIds.profile,
 			stableJson(canonicalNormalization),
 		),
 		outputFor(
@@ -3045,8 +3409,12 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 			profileId: config.segmentationProfileIds.sentence,
 			schemeId: "unicode-uax29-sentence",
 			description: "Unicode UAX #29 sentence boundary profile.",
-		},
-	];
+			},
+		];
+	const frenchSurfaceEvidence =
+		config.languageTag === "fr"
+			? deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs)
+			: undefined;
 	const propertyRows = [];
 	for (const summary of summaries) {
 		for (const [property, rangeCount] of Object.entries(summary.counts)) {
@@ -3074,37 +3442,140 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 		graphemeRangeCount: graphemeRows.length,
 		wordRangeCount: wordRows.length,
 		sentenceRangeCount: sentenceRows.length,
-		propertyRows: propertyRows.length,
-		propertyCountsByGranularity: Object.fromEntries(
-			summaries.map((summary) => [summary.granularity, summary.counts]),
-		),
-		recordsAccepted:
-			graphemeRows.length + wordRows.length + sentenceRows.length,
-		recordsRejected: 0,
-		warnings: [
-			`This profile declares Unicode UAX #29-backed grapheme, word, and sentence boundary resources for ${config.scopeLabel} text.`,
-			"It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, or language-composite coverage.",
-		],
-	};
-	const canonicalQuality = {
-		schemaVersion: "1",
-		kind: "quality-profile",
-		profileId: `${config.languageTag}-segmentation-quality`,
-		languageTag: config.languageTag,
-		script: config.script,
-		diagnostics: [
-			{
-				diagnosticId: `${config.languageTag}-segmentation-scope`,
-				task: "segmentation.profile",
-				severity: "info",
-				message: `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}; dictionary tokenization and sentence-abbreviation tailoring are out of scope.`,
-				metadata: {
-					likelySubtag,
-					sourceIds: resourceSpec.sourceIds,
+			propertyRows: propertyRows.length,
+			propertyCountsByGranularity: Object.fromEntries(
+				summaries.map((summary) => [summary.granularity, summary.counts]),
+			),
+			...(frenchSurfaceEvidence === undefined
+				? {}
+				: {
+						tatoebaSentenceRowCount:
+							frenchSurfaceEvidence.sentenceRowCount,
+						elisionPrefixCount:
+							frenchSurfaceEvidence.elisionPrefixRows.length,
+						elisionObservationCount:
+							frenchSurfaceEvidence.elisionObservationCount,
+						contractionFormCount:
+							frenchSurfaceEvidence.contractionRows.length,
+						contractionObservationCount:
+							frenchSurfaceEvidence.contractionObservationCount,
+						abbreviationCandidateCount:
+							frenchSurfaceEvidence.abbreviationRows.length,
+						abbreviationObservationCount:
+							frenchSurfaceEvidence.abbreviationObservationCount,
+						segmentationGoldCaseCount:
+							frenchSurfaceEvidence.segmentationGoldCases.length,
+					}),
+			recordsAccepted:
+				graphemeRows.length + wordRows.length + sentenceRows.length,
+			recordsRejected: 0,
+			warnings: [
+				`This profile declares Unicode UAX #29-backed grapheme, word, and sentence boundary resources for ${config.scopeLabel} text.`,
+				frenchSurfaceEvidence === undefined
+					? "It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, or language-composite coverage."
+					: "It adds Tatoeba-observed French elision-prefix, contraction-surface, abbreviation-candidate, and token gold-case resources; social-text tokenization, historical segmentation, and OCR segmentation remain outside this component.",
+			],
+		};
+		const frenchTokenProfile =
+			frenchSurfaceEvidence === undefined
+				? undefined
+				: {
+					schemaVersion: "1",
+					kind: "segmentation-profile",
+					profileId: "fr-modern-typed-french-token-segmentation",
+					languageTag: "fr",
+					script: "Latn",
+					granularity: "token",
+					schemes: [
+						{
+							schemeId: "french-observed-surface-token-policy",
+							description:
+								"French token policy backed by observed Tatoeba apostrophe, contraction, and abbreviation surface evidence plus Unicode UAX #29 boundaries.",
+							fields: [
+								{ order: 1, name: "unicodeBreakProperty" },
+								{ order: 2, name: "observedSurfaceClass" },
+								{ order: 3, name: "sourceCount" },
+							],
+						},
+					],
+					rules: [
+						{
+							ruleId: "fr-token-split-after-observed-elision-apostrophe",
+							operation: "split",
+							priority: 40,
+							pattern: "\\b(prefix)['’](letter)",
+							label: "elision-prefix-token",
+							conditions: {
+								sourceIds: resourceSpec.sourceIds,
+								evidenceResourceId: "fr-segmentation-elision-prefixes",
+								elisionPrefixCount:
+									frenchSurfaceEvidence.elisionPrefixRows.length,
+							},
+						},
+						{
+							ruleId: "fr-token-label-observed-contraction-surface-form",
+							operation: "label",
+							priority: 50,
+							pattern: "\\b(au|aux|des|du)\\b",
+							label: "contraction-surface-form",
+							conditions: {
+								sourceIds: resourceSpec.sourceIds,
+								evidenceResourceId: "fr-segmentation-contraction-forms",
+								contractionFormCount:
+									frenchSurfaceEvidence.contractionRows.length,
+							},
+						},
+						{
+							ruleId: "fr-token-no-boundary-inside-observed-abbreviation",
+							operation: "no-boundary",
+							priority: 60,
+							pattern: "abbreviation-period",
+							label: "abbreviation-period",
+							conditions: {
+								sourceIds: resourceSpec.sourceIds,
+								evidenceResourceId: "fr-segmentation-abbreviations",
+								abbreviationCandidateCount:
+									frenchSurfaceEvidence.abbreviationRows.length,
+							},
+							},
+						],
+						dictionaryRefs: [],
+					};
+		const segmentationScopeMessage =
+			frenchSurfaceEvidence === undefined
+				? `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}.`
+				: `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}, with source-derived French elision, contraction, abbreviation, and gold-case evidence.`;
+		const canonicalQuality = {
+			schemaVersion: "1",
+			kind: "quality-profile",
+			profileId: `${config.languageTag}-segmentation-quality`,
+			languageTag: config.languageTag,
+			script: config.script,
+			diagnostics: [
+				{
+					diagnosticId: `${config.languageTag}-segmentation-scope`,
+					task: "segmentation.profile",
+					severity: "info",
+					message: segmentationScopeMessage,
+					metadata: {
+						likelySubtag,
+						sourceIds: resourceSpec.sourceIds,
+						...(frenchSurfaceEvidence === undefined
+							? {}
+							: {
+									elisionPrefixCount:
+										frenchSurfaceEvidence.elisionPrefixRows.length,
+									contractionFormCount:
+										frenchSurfaceEvidence.contractionRows.length,
+									abbreviationCandidateCount:
+										frenchSurfaceEvidence.abbreviationRows.length,
+									segmentationGoldCaseCount:
+										frenchSurfaceEvidence.segmentationGoldCases.length,
+								}),
+					},
 				},
-			},
-		],
-		metrics: [
+			],
+			metrics: [
 			{
 				metricId: "grapheme-range-count",
 				name: "graphemeRangeCount",
@@ -3123,16 +3594,44 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 				value: quality.sentenceRangeCount,
 				unit: "ranges",
 			},
-			{
-				metricId: "records-rejected",
-				name: "recordsRejected",
-				value: quality.recordsRejected,
-				unit: "records",
-			},
-		],
-		thresholds: [],
-		evaluationRecordIds: [],
-	};
+				{
+					metricId: "records-rejected",
+					name: "recordsRejected",
+					value: quality.recordsRejected,
+					unit: "records",
+				},
+				...(frenchSurfaceEvidence === undefined
+					? []
+					: [
+							{
+								metricId: "french-elision-prefix-count",
+								name: "elisionPrefixCount",
+								value: quality.elisionPrefixCount,
+								unit: "prefixes",
+							},
+							{
+								metricId: "french-contraction-form-count",
+								name: "contractionFormCount",
+								value: quality.contractionFormCount,
+								unit: "forms",
+							},
+							{
+								metricId: "french-abbreviation-candidate-count",
+								name: "abbreviationCandidateCount",
+								value: quality.abbreviationCandidateCount,
+								unit: "forms",
+							},
+							{
+								metricId: "french-segmentation-gold-case-count",
+								name: "segmentationGoldCaseCount",
+								value: quality.segmentationGoldCaseCount,
+								unit: "cases",
+							},
+						]),
+			],
+			thresholds: [],
+			evaluationRecordIds: [],
+		};
 	return [
 		outputFor(
 			resourceSpec,
@@ -3161,11 +3660,73 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 						scopeLabel: config.scopeLabel,
 					}),
 				),
+				),
 			),
-		),
-		outputFor(
-			resourceSpec,
-			config.segmentationOutputIds.quality,
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						outputFor(
+							resourceSpec,
+							"fr-token-segmentation-profile",
+							stableJson(frenchTokenProfile),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-segmentation-elision-prefixes",
+							tsvFile(
+								[
+									"prefix",
+									"observedCount",
+									"apostropheCounts",
+									"exampleSentenceId",
+								],
+								frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
+									row.prefix,
+									row.count,
+									row.apostrophes,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-segmentation-contraction-forms",
+							tsvFile(
+								["form", "observedCount", "exampleSentenceId"],
+								frenchSurfaceEvidence.contractionRows.map((row) => [
+									row.form,
+									row.count,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-segmentation-abbreviations",
+							tsvFile(
+								["form", "observedCount", "exampleSentenceId"],
+								frenchSurfaceEvidence.abbreviationRows.map((row) => [
+									row.form,
+									row.count,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-segmentation-gold-cases",
+							stableJson({
+								schemaVersion: "1",
+								kind: "segmentation-gold-cases",
+								languageTag: "fr",
+								sourceIds: resourceSpec.sourceIds,
+								cases: frenchSurfaceEvidence.segmentationGoldCases,
+							}),
+						),
+					]),
+			outputFor(
+				resourceSpec,
+				config.segmentationOutputIds.quality,
 			stableJson(quality),
 		),
 		outputFor(
@@ -6780,9 +7341,15 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			return lemmaDelta !== 0 ? lemmaDelta : left[1].localeCompare(right[1]);
 		});
 	const posRows = sortedCountRows(posCounts);
+	const frenchSurfaceEvidence = hasInputPath(
+		inputs,
+		"fra_sentences_detailed.tsv.bz2",
+	)
+		? deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs)
+		: undefined;
 	const quality = {
 		schemaVersion: "1",
-		sourceId: "source:fr:lexique-383",
+		sourceIds: resourceSpec.sourceIds,
 		pipelineId: resourceSpec.pipelineId,
 		pipelineVersion: resourceSpec.pipelineVersion,
 		release: "3.83",
@@ -6794,11 +7361,28 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 		genderCounts: Object.fromEntries(sortedCountRows(genderCounts)),
 		numberCounts: Object.fromEntries(sortedCountRows(numberCounts)),
 		inflectedVerbRowCount,
+		...(frenchSurfaceEvidence === undefined
+			? {}
+			: {
+					tatoebaSentenceRowCount:
+						frenchSurfaceEvidence.sentenceRowCount,
+					searchElisionPrefixCount:
+						frenchSurfaceEvidence.elisionPrefixRows.length,
+					searchContractionFormCount:
+						frenchSurfaceEvidence.contractionRows.length,
+					searchGoldCaseCount:
+						frenchSurfaceEvidence.normalizationGoldCases.length,
+				}),
 		recordsAccepted: entryRows.length,
 		recordsRejected,
 		warnings: [
 			"Lexique 3.83 is CC-BY-SA-4.0 and this generated package is share-alike isolated.",
 			"Lexique frequency fields are source corpus statistics, not a full contemporary French corpus package.",
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						"Tatoeba French sentence evidence is used only for observed French apostrophe, elision-prefix, and contraction-surface search policy.",
+					]),
 		],
 	};
 	const canonicalLexicon = {
@@ -6880,25 +7464,62 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			type: "unicode-word-boundary",
 			mode: "default",
 		},
-		charFilters: [
-			{
-				componentId: "french-apostrophe-policy",
-				type: "character-policy",
-				mode: "preserve-elision-apostrophes",
-				options: {
-					characters: ["'", "’"],
+			charFilters: [
+				{
+					componentId: "french-apostrophe-normalizer",
+					type: "character-policy",
+					mode: "normalize-typographic-and-straight-apostrophes",
+					options: {
+						characters: ["'", "’"],
+						evidenceResourceId:
+							frenchSurfaceEvidence === undefined
+								? undefined
+								: "fr-lexique-search-elision-prefixes",
+					},
 				},
-			},
-		],
+			],
 		tokenFilters: [
 			{
 				componentId: "unicode-simple-casefold",
 				type: "casefold",
-				mode: "unicode-simple",
-			},
-			{
-				componentId: "lexique-form-lemma-lookup",
-				type: "lexicon-lookup",
+					mode: "unicode-simple",
+				},
+				{
+					componentId: "french-accent-fold",
+					type: "diacritic-fold",
+					mode: "lookup-only",
+					options: {
+						normalization: "NFD",
+						removeUnicodeMarks: true,
+					},
+				},
+				...(frenchSurfaceEvidence === undefined
+					? []
+					: [
+							{
+								componentId: "french-observed-elision-prefixes",
+								type: "elision-policy",
+								mode: "prefix-apostrophe-boundary",
+								options: {
+									evidenceResourceId:
+										"fr-lexique-search-elision-prefixes",
+									minimumObservedCount:
+										frenchSurfaceEvidenceMinimumCount,
+								},
+							},
+							{
+								componentId: "french-observed-contraction-surfaces",
+								type: "contraction-policy",
+								mode: "surface-form-recognition",
+								options: {
+									evidenceResourceId:
+										"fr-lexique-search-contraction-forms",
+								},
+							},
+						]),
+				{
+					componentId: "lexique-form-lemma-lookup",
+					type: "lexicon-lookup",
 				mode: "form-to-lemma",
 				options: {
 					entryResourceId: "fr-lexique-entries",
@@ -6908,11 +7529,27 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			},
 		],
 		resources: [
-			{
-				resourceId: "fr-lexique-entries",
-				role: "lexicon",
-			},
-		],
+				{
+					resourceId: "fr-lexique-entries",
+					role: "lexicon",
+				},
+				...(frenchSurfaceEvidence === undefined
+					? []
+					: [
+							{
+								resourceId: "fr-lexique-search-elision-prefixes",
+								role: "normalizer",
+							},
+							{
+								resourceId: "fr-lexique-search-contraction-forms",
+								role: "normalizer",
+							},
+							{
+								resourceId: "fr-lexique-search-gold-cases",
+								role: "quality",
+							},
+						]),
+			],
 		fields: [
 			{
 				fieldName: "text",
@@ -6939,13 +7576,13 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 				diagnosticId: "fr-lexique-383-share-alike-isolation",
 				task: "license.boundary",
 				severity: "info",
-				message:
-					"Lexique 3.83 resources are generated only in an explicit share-alike isolated package.",
-				metadata: {
-					sourceId: quality.sourceId,
-					license: "CC-BY-SA-4.0",
+					message:
+						"Lexique 3.83 resources are generated only in an explicit share-alike isolated package.",
+					metadata: {
+						sourceIds: quality.sourceIds,
+						license: "CC-BY-SA-4.0",
+					},
 				},
-			},
 		],
 		metrics: [
 			{
@@ -6966,15 +7603,37 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 				value: quality.uniqueFormCount,
 				unit: "forms",
 			},
-			{
-				metricId: "records-rejected",
-				name: "recordsRejected",
-				value: quality.recordsRejected,
-				unit: "records",
-			},
-		],
-		thresholds: [],
-		evaluationRecordIds: [],
+				{
+					metricId: "records-rejected",
+					name: "recordsRejected",
+					value: quality.recordsRejected,
+					unit: "records",
+				},
+				...(frenchSurfaceEvidence === undefined
+					? []
+					: [
+							{
+								metricId: "search-elision-prefix-count",
+								name: "searchElisionPrefixCount",
+								value: quality.searchElisionPrefixCount,
+								unit: "prefixes",
+							},
+							{
+								metricId: "search-contraction-form-count",
+								name: "searchContractionFormCount",
+								value: quality.searchContractionFormCount,
+								unit: "forms",
+							},
+							{
+								metricId: "search-gold-case-count",
+								name: "searchGoldCaseCount",
+								value: quality.searchGoldCaseCount,
+								unit: "cases",
+							},
+						]),
+			],
+			thresholds: [],
+			evaluationRecordIds: [],
 	};
 
 	return [
@@ -7020,12 +7679,76 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			"fr-lexique-morphology-canonical",
 			stableJson(canonicalMorphology),
 		),
-		outputFor(
-			resourceSpec,
-			"fr-lexique-search-profile",
-			stableJson(canonicalSearchProfile),
-		),
-		outputFor(resourceSpec, "fr-lexique-quality", stableJson(quality)),
+			outputFor(
+				resourceSpec,
+				"fr-lexique-search-profile",
+				stableJson(canonicalSearchProfile),
+			),
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						outputFor(
+							resourceSpec,
+							"fr-lexique-search-elision-prefixes",
+							tsvFile(
+								[
+									"prefix",
+									"observedCount",
+									"apostropheCounts",
+									"exampleSentenceId",
+								],
+								frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
+									row.prefix,
+									row.count,
+									row.apostrophes,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-lexique-search-contraction-forms",
+							tsvFile(
+								["form", "observedCount", "exampleSentenceId"],
+								frenchSurfaceEvidence.contractionRows.map((row) => [
+									row.form,
+									row.count,
+									row.exampleSentenceId,
+								]),
+							),
+						),
+						outputFor(
+							resourceSpec,
+							"fr-lexique-search-gold-cases",
+							stableJson({
+								schemaVersion: "1",
+								kind: "search-gold-cases",
+								languageTag: "fr",
+								sourceIds: resourceSpec.sourceIds,
+								cases: frenchSurfaceEvidence.normalizationGoldCases.map(
+									(testCase) => ({
+										caseId: testCase.caseId.replace(
+											"fr-normalization",
+											"fr-search",
+										),
+										source: testCase.source,
+										sourceSentenceId: testCase.sourceSentenceId,
+										category: testCase.category,
+										input: testCase.input,
+										expectedAnalyzerTokens: frenchSurfaceTokens(
+											testCase.input,
+											new Set(
+												frenchSurfaceEvidence.elisionPrefixRows.map(
+													(row) => row.prefix,
+												),
+											),
+										).map((token) => frenchLookupFold(token)),
+									}),
+								),
+							}),
+						),
+					]),
+			outputFor(resourceSpec, "fr-lexique-quality", stableJson(quality)),
 		outputFor(
 			resourceSpec,
 			"fr-lexique-quality-profile",
@@ -7654,9 +8377,17 @@ function capabilities(manifest) {
 function knownGaps(packSpec, manifest) {
 	const gaps = [];
 	if (packSpec.packClass === "language-composite") {
-		gaps.push(
-			"generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations",
+		const hasRequiredLanguageSlots = languageCompositeRequiredSlots.every((slot) =>
+			manifest.capabilitySlots.some(
+				(candidate) =>
+					candidate.slot === slot && candidate.status === "task-supported",
+			),
 		);
+		if (packSpec.supportLevel !== "feature-complete" || !hasRequiredLanguageSlots) {
+			gaps.push(
+				"generated language recipe composite has incomplete required task-supported slot coverage",
+			);
+		}
 	} else if (packSpec.packClass === "language-component-composite") {
 		gaps.push(
 			"generated language component recipe composite; broader language composite coverage remains follow-up",
@@ -8629,12 +9360,15 @@ function languageCompositeSmokeAssertions(pack) {
 		],
 		[
 			"@ismail-elkorchi/textpack-fr",
-			[
-				"fr-tatoeba-corpus-sentences",
-				"fr-tatoeba-parallel-eng",
-				"wikidata-fr-entities",
-				"wikidata-fr-aliases",
-				"wikidata-fr-relations",
+				[
+					"fr-tatoeba-corpus-sentences",
+					"fr-tatoeba-parallel-eng",
+					"fr-normalization-elision-prefixes",
+					"fr-segmentation-gold-cases",
+					"fr-lexique-search-gold-cases",
+					"wikidata-fr-entities",
+					"wikidata-fr-aliases",
+					"wikidata-fr-relations",
 			],
 		],
 	]);
@@ -9301,6 +10035,38 @@ function componentCompositeEvaluationRecords(pack) {
 			},
 		}),
 	];
+}
+
+function languageCompositeEvaluationRecords(pack) {
+	const requiredComponents = (pack.components ?? []).filter(
+		(component) => component.role === "required",
+	);
+	return (pack.capabilitySlots ?? []).map((slot) =>
+		evaluationRecord(pack, {
+			recordId: `eval:${pack.packageId}:${slot.slot}-component-evidence`,
+			resourceSpecId: pack.specPath ?? resourceSpecIdFor(pack),
+			pipelineId: "language-composite",
+			capabilitySlot: slot.slot,
+			taskType: `composite.${slot.slot}.component-evidence`,
+			evaluationKind: "resource-conformance",
+			resourceIds: [],
+			metricName: `${slot.slot}RequiredComponentGraphPresent`,
+			value: Number(slot.status === "task-supported"),
+			unit: "boolean",
+			operator: "eq",
+			threshold: 1,
+			observations: {
+				requiredComponents: requiredComponents.map(
+					(component) => component.packageName,
+				),
+				slotNotes: slot.notes ?? [],
+				policySurface: pack.policySurface ?? "default",
+			},
+			limitations: [
+				"Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs.",
+			],
+		}),
+	);
 }
 
 function camelMorphEvaluationRecords(pack) {
@@ -10011,10 +10777,80 @@ function englishNormalizationEvaluationRecords(pack) {
 }
 
 function frenchNormalizationEvaluationRecords(pack) {
-	return unicodeCldrNormalizationEvaluationRecords(
-		pack,
-		unicodeCldrLatinProfiles.fr,
-	);
+	const quality = payloadJson(pack, "fr-normalization-quality");
+	const resourceSpecId = resourceSpecIdFor(pack);
+	const pipelineId = taskPipelineId(pack);
+	return [
+		...unicodeCldrNormalizationEvaluationRecords(
+			pack,
+			unicodeCldrLatinProfiles.fr,
+		),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-normalization:observed-elision-prefixes",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "normalization",
+			taskType: "normalization.elision-apostrophe-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-normalization-elision-prefixes",
+				"fr-normalization-profile",
+			],
+			metricName: "elisionPrefixCount",
+			value: quality.elisionPrefixCount,
+			unit: "prefixes",
+			operator: "gte",
+			threshold: 10,
+			observations: {
+				elisionObservationCount: quality.elisionObservationCount,
+				apostropheCounts: quality.apostropheCounts,
+				tatoebaSentenceRowCount: quality.tatoebaSentenceRowCount,
+			},
+			limitations: [
+				"This verifies observed modern French apostrophe/elision surface policy from Tatoeba; it is not historical or OCR normalization.",
+			],
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-normalization:observed-contraction-forms",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "normalization",
+			taskType: "normalization.contraction-surface-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-normalization-contraction-forms",
+				"fr-normalization-profile",
+			],
+			metricName: "contractionFormCount",
+			value: quality.contractionFormCount,
+			unit: "forms",
+			operator: "eq",
+			threshold: 4,
+			observations: {
+				contractionObservationCount: quality.contractionObservationCount,
+			},
+			limitations: [
+				"This records French contraction surface forms observed in the pinned Tatoeba corpus; syntactic expansion lives in syntax/treebank resources.",
+			],
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-normalization:gold-cases",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "normalization",
+			taskType: "normalization.gold-cases",
+			evaluationKind: "gold-evaluation",
+			resourceIds: [
+				"fr-normalization-gold-cases",
+				"fr-normalization-profile",
+			],
+			metricName: "normalizationGoldCaseCount",
+			value: quality.normalizationGoldCaseCount,
+			unit: "cases",
+			operator: "gte",
+			threshold: 10,
+		}),
+	];
 }
 
 function arabicNormalizationEvaluationRecords(pack) {
@@ -10209,10 +11045,90 @@ function englishSegmentationEvaluationRecords(pack) {
 }
 
 function frenchSegmentationEvaluationRecords(pack) {
-	return unicodeCldrSegmentationEvaluationRecords(
-		pack,
-		unicodeCldrLatinProfiles.fr,
-	);
+	const quality = payloadJson(pack, "fr-segmentation-quality");
+	const resourceSpecId = resourceSpecIdFor(pack);
+	const pipelineId = taskPipelineId(pack);
+	return [
+		...unicodeCldrSegmentationEvaluationRecords(
+			pack,
+			unicodeCldrLatinProfiles.fr,
+		),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-segmentation:observed-elision-token-policy",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "segmentation",
+			taskType: "segmentation.elision-token-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-token-segmentation-profile",
+				"fr-segmentation-elision-prefixes",
+			],
+			metricName: "elisionPrefixCount",
+			value: quality.elisionPrefixCount,
+			unit: "prefixes",
+			operator: "gte",
+			threshold: 10,
+			observations: {
+				elisionObservationCount: quality.elisionObservationCount,
+				tatoebaSentenceRowCount: quality.tatoebaSentenceRowCount,
+			},
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-segmentation:observed-contraction-token-policy",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "segmentation",
+			taskType: "segmentation.contraction-surface-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-token-segmentation-profile",
+				"fr-segmentation-contraction-forms",
+			],
+			metricName: "contractionFormCount",
+			value: quality.contractionFormCount,
+			unit: "forms",
+			operator: "eq",
+			threshold: 4,
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-segmentation:observed-abbreviation-policy",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "segmentation",
+			taskType: "segmentation.abbreviation-period-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-token-segmentation-profile",
+				"fr-segmentation-abbreviations",
+			],
+			metricName: "abbreviationCandidateCount",
+			value: quality.abbreviationCandidateCount,
+			unit: "forms",
+			operator: "gte",
+			threshold: 1,
+			limitations: [
+				"Abbreviation rows are high-frequency period-bearing candidates observed in Tatoeba; domain-specific abbreviations belong in domain packs.",
+			],
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-segmentation:gold-cases",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "segmentation",
+			taskType: "segmentation.gold-cases",
+			evaluationKind: "gold-evaluation",
+			resourceIds: [
+				"fr-token-segmentation-profile",
+				"fr-segmentation-gold-cases",
+			],
+			metricName: "segmentationGoldCaseCount",
+			value: quality.segmentationGoldCaseCount,
+			unit: "cases",
+			operator: "gte",
+			threshold: 10,
+		}),
+	];
 }
 
 function scowlInflectionEvaluationRecords(pack) {
@@ -10410,10 +11326,10 @@ function lexiqueEvaluationRecords(pack) {
 				numberCounts: quality.numberCounts,
 			},
 		}),
-		evaluationRecord(pack, {
-			recordId: "eval:fr-lexique:search-profile",
-			resourceSpecId,
-			pipelineId,
+			evaluationRecord(pack, {
+				recordId: "eval:fr-lexique:search-profile",
+				resourceSpecId,
+				pipelineId,
 			capabilitySlot: "search",
 			taskType: "search.analyzer-profile",
 			evaluationKind: "resource-conformance",
@@ -10425,11 +11341,68 @@ function lexiqueEvaluationRecords(pack) {
 			threshold: 1,
 			limitations: [
 				"The search profile is source-backed by Lexique form/lemma data; it is not a corpus-trained French ranking profile.",
-			],
-		}),
-		evaluationRecord(pack, {
-			recordId: "eval:fr-lexique:transform-rejections",
-			resourceSpecId,
+				],
+			}),
+			evaluationRecord(pack, {
+				recordId: "eval:fr-lexique:search-elision-prefixes",
+				resourceSpecId,
+				pipelineId,
+				capabilitySlot: "search",
+				taskType: "search.elision-apostrophe-policy",
+				evaluationKind: "coverage",
+				resourceIds: [
+					"fr-lexique-search-profile",
+					"fr-lexique-search-elision-prefixes",
+				],
+				metricName: "searchElisionPrefixCount",
+				value: quality.searchElisionPrefixCount,
+				unit: "prefixes",
+				operator: "gte",
+				threshold: 10,
+				observations: {
+					tatoebaSentenceRowCount: quality.tatoebaSentenceRowCount,
+				},
+			}),
+			evaluationRecord(pack, {
+				recordId: "eval:fr-lexique:search-contraction-forms",
+				resourceSpecId,
+				pipelineId,
+				capabilitySlot: "search",
+				taskType: "search.contraction-surface-policy",
+				evaluationKind: "coverage",
+				resourceIds: [
+					"fr-lexique-search-profile",
+					"fr-lexique-search-contraction-forms",
+				],
+				metricName: "searchContractionFormCount",
+				value: quality.searchContractionFormCount,
+				unit: "forms",
+				operator: "eq",
+				threshold: 4,
+			}),
+			evaluationRecord(pack, {
+				recordId: "eval:fr-lexique:search-gold-cases",
+				resourceSpecId,
+				pipelineId,
+				capabilitySlot: "search",
+				taskType: "search.gold-cases",
+				evaluationKind: "gold-evaluation",
+				resourceIds: [
+					"fr-lexique-search-profile",
+					"fr-lexique-search-gold-cases",
+				],
+				metricName: "searchGoldCaseCount",
+				value: quality.searchGoldCaseCount,
+				unit: "cases",
+				operator: "gte",
+				threshold: 10,
+				limitations: [
+					"Gold cases verify analyzer policy coverage for observed Tatoeba surface forms; ranked retrieval evaluation belongs in corpus/search benchmark packs.",
+				],
+			}),
+			evaluationRecord(pack, {
+				recordId: "eval:fr-lexique:transform-rejections",
+				resourceSpecId,
 			pipelineId,
 			capabilitySlot: "quality",
 			taskType: "quality.transform-integrity",
@@ -11129,6 +12102,9 @@ function evaluationRecordsForPack(pack) {
 	if (pack.packageName === "@ismail-elkorchi/textpack-foundation") {
 		return foundationCompositeEvaluationRecords(pack);
 	}
+	if (pack.packClass === "language-composite") {
+		return languageCompositeEvaluationRecords(pack);
+	}
 	if (pack.packClass === "language-component-composite") {
 		return componentCompositeEvaluationRecords(pack);
 	}
@@ -11391,9 +12367,34 @@ function coverageReportFor(pack, context, evaluationRecords) {
 	};
 }
 
+function assertFeatureCompleteLanguageCompositeEvidence(pack, evaluationRecords) {
+	if (
+		pack.packClass !== "language-composite" ||
+		pack.supportLevel !== "feature-complete"
+	) {
+		return;
+	}
+	const evaluatedSlots = new Set(
+		evaluationRecords
+			.filter((record) => record.result === "pass")
+			.map((record) => record.capabilitySlot),
+	);
+	for (const slot of languageCompositeRequiredSlots) {
+		const declaredSlot = pack.capabilitySlots.find(
+			(candidate) => candidate.slot === slot,
+		);
+		expect(
+			declaredSlot?.status === "task-supported" &&
+				evaluatedSlots.has(slot),
+			`${pack.packageName} is feature-complete but slot ${slot} lacks passing generated evaluation evidence.`,
+		);
+	}
+}
+
 async function packageOutputsFor(pack, context) {
 	const outputs = new Map();
 	const evaluationReport = evaluationReportFor(pack, context);
+	assertFeatureCompleteLanguageCompositeEvidence(pack, evaluationReport.records);
 	if (isCompositePack(pack)) {
 		outputs.set(`${pack.packageDir}/package.json`, compositePackageJson(pack));
 		outputs.set(`${pack.packageDir}/README.md`, compositeReadme(pack));

@@ -32,7 +32,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:33d4529ee4b78c6478a5794db93355b662241d7c9664288c035e73119c7860dc",
+  "outputChecksum": "sha256:55e2fb2d26faf0a61e01da71afc958a7574b23d3d0584e385b10c0b08ca8925f",
   "packSpecPath": "tools/textpack-forge/composites/textpack-en.composite.json",
   "packageName": "@ismail-elkorchi/textpack-en",
   "packageVersion": "0.1.0",

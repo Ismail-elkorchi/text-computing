@@ -27,11 +27,13 @@
         ],
         "snapshotIds": [
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0"
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "coverage",
@@ -70,11 +72,166 @@
         ],
         "snapshotIds": [
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0"
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "gold-evaluation",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-gold-cases",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "normalizationGoldCaseCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "cases",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:gold-cases",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.gold-cases"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "contractionObservationCount": 93425
+        },
+        "resourceIds": [
+          "fr-normalization-contraction-forms",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This records French contraction surface forms observed in the pinned Tatoeba corpus; syntactic expansion lives in syntax/treebank resources."
+      ],
+      "metric": {
+        "name": "contractionFormCount",
+        "operator": "eq",
+        "threshold": 4,
+        "unit": "forms",
+        "value": 4
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:observed-contraction-forms",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.contraction-surface-policy"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "apostropheCounts": {
+            "'": 345202,
+            "’": 28765
+          },
+          "elisionObservationCount": 373967,
+          "tatoebaSentenceRowCount": 718596
+        },
+        "resourceIds": [
+          "fr-normalization-elision-prefixes",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies observed modern French apostrophe/elision surface policy from Tatoeba; it is not historical or OCR normalization."
+      ],
+      "metric": {
+        "name": "elisionPrefixCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "prefixes",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:observed-elision-prefixes",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.elision-apostrophe-policy"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "resource-conformance",
@@ -92,7 +249,7 @@
         "operator": "gte",
         "threshold": 3,
         "unit": "rules",
-        "value": 3
+        "value": 7
       },
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "pipelineId": "french-normalization-profile",
@@ -116,11 +273,13 @@
         ],
         "snapshotIds": [
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0"
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "integrity",
@@ -159,11 +318,13 @@
         ],
         "snapshotIds": [
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0"
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "evaluationKind": "coverage",
@@ -196,8 +357,8 @@
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 4,
-    "recordCount": 4,
+    "passCount": 7,
+    "recordCount": 7,
     "status": "passed",
     "warningCount": 0
   }

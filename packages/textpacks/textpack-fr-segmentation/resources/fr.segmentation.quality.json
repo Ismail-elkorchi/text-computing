@@ -1,4 +1,10 @@
 {
+  "abbreviationCandidateCount": 149,
+  "abbreviationObservationCount": 65284,
+  "contractionFormCount": 4,
+  "contractionObservationCount": 93425,
+  "elisionObservationCount": 373967,
+  "elisionPrefixCount": 16,
   "graphemeRangeCount": 1429,
   "languageTag": "fr",
   "likelySubtag": "fr-Latn-FR",
@@ -62,14 +68,17 @@
   "recordsRejected": 0,
   "schemaVersion": "1",
   "script": "Latn",
+  "segmentationGoldCaseCount": 18,
   "sentenceRangeCount": 2930,
   "sourceIds": [
     "source:unicode:ucd",
-    "source:unicode:cldr-core"
+    "source:unicode:cldr-core",
+    "source:tatoeba:weekly-french-2026-06-06"
   ],
+  "tatoebaSentenceRowCount": 718596,
   "warnings": [
     "This profile declares Unicode UAX #29-backed grapheme, word, and sentence boundary resources for modern typed French text.",
-    "It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, or language-composite coverage."
+    "It adds Tatoeba-observed French elision-prefix, contraction-surface, abbreviation-candidate, and token gold-case resources; social-text tokenization, historical segmentation, and OCR segmentation remain outside this component."
   ],
   "wordRangeCount": 1432
 }

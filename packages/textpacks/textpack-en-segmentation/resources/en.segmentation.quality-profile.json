@@ -2,7 +2,7 @@
   "diagnostics": [
     {
       "diagnosticId": "en-segmentation-scope",
-      "message": "Unicode/CLDR-backed boundary profile for modern typed English; dictionary tokenization and sentence-abbreviation tailoring are out of scope.",
+      "message": "Unicode/CLDR-backed boundary profile for modern typed English.",
       "metadata": {
         "likelySubtag": "en-Latn-US",
         "sourceIds": [

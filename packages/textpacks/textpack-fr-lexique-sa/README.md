@@ -16,6 +16,9 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-fr-lexique-sa";
 - `fr-lexique-lexicon-canonical` (lexicon, json)
 - `fr-lexique-morphology-canonical` (morphology, json)
 - `fr-lexique-search-profile` (search-profile, json)
+- `fr-lexique-search-elision-prefixes` (search-profile, tsv)
+- `fr-lexique-search-contraction-forms` (search-profile, tsv)
+- `fr-lexique-search-gold-cases` (quality-profile, json)
 - `fr-lexique-quality` (quality-profile, json)
 - `fr-lexique-quality-profile` (quality-profile, json)
 

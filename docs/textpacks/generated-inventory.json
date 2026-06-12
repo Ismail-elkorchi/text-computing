@@ -203,12 +203,10 @@
         "tsconfig.build.json",
         "tsconfig.json"
       ],
-      "knownGaps": [
-        "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-      ],
+      "knownGaps": [],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0",
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:a2f2ee03ffb73a22a716ad053bd8535a3d528a10f7b1e94bc493db00370baf4b",
+      "outputChecksum": "sha256:05911a5f536bc9ed8b63e595ef0bc55c73f59409662e5d1c2f582f1b19f2d656",
       "packClass": "language-composite",
       "packageId": "textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
@@ -1496,12 +1494,10 @@
         "tsconfig.build.json",
         "tsconfig.json"
       ],
-      "knownGaps": [
-        "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-      ],
+      "knownGaps": [],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0",
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:e385e3510d23674da32f91144465866325370cfaa0b077d5f83d7561b7ffbed4",
+      "outputChecksum": "sha256:d903bc64a9d72d5a98f395a7dc84114ad208f3ea8952455adf0d0295aedfcbc3",
       "packClass": "language-composite",
       "packageId": "textpack-ar-sa",
       "packageName": "@ismail-elkorchi/textpack-ar-sa",
@@ -2313,12 +2309,10 @@
         "tsconfig.build.json",
         "tsconfig.json"
       ],
-      "knownGaps": [
-        "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-      ],
+      "knownGaps": [],
       "licenseExpression": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND CC-BY-4.0 AND LicenseRef-Princeton-WordNet AND CC0-1.0 AND CC-BY-2.0-FR",
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:33d4529ee4b78c6478a5794db93355b662241d7c9664288c035e73119c7860dc",
+      "outputChecksum": "sha256:55e2fb2d26faf0a61e01da71afc958a7574b23d3d0584e385b10c0b08ca8925f",
       "packClass": "language-composite",
       "packageId": "textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
@@ -3489,8 +3483,8 @@
         "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
       ],
       "licenseExpression": "Unicode-3.0",
-      "npmShippedSizeBytes": 8561,
-      "outputChecksum": "sha256:49854393f7c7de51ad549732eb18b0a1cfd955deddac1a2c50ba1c044607f2cc",
+      "npmShippedSizeBytes": 8483,
+      "outputChecksum": "sha256:13f559840a274c9a571154fb10aee81643ab798a113617d04f5633471093ee49",
       "packClass": "language-concrete",
       "packageId": "textpack-en-segmentation",
       "packageName": "@ismail-elkorchi/textpack-en-segmentation",
@@ -4023,7 +4017,7 @@
         {
           "artifactPolicy": "none",
           "capabilityPolicy": "contributes-default",
-          "licensePolicy": "default",
+          "licensePolicy": "allow-attribution",
           "packageName": "@ismail-elkorchi/textpack-fr-normalization",
           "reason": "French normalization policy and quality resources.",
           "role": "required",
@@ -4032,7 +4026,7 @@
         {
           "artifactPolicy": "none",
           "capabilityPolicy": "contributes-default",
-          "licensePolicy": "default",
+          "licensePolicy": "allow-attribution",
           "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
           "reason": "French segmentation profiles.",
           "role": "required",
@@ -4133,12 +4127,10 @@
         "tsconfig.build.json",
         "tsconfig.json"
       ],
-      "knownGaps": [
-        "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-      ],
+      "knownGaps": [],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:e1504ae373078a8645f5d8c61abc005d430f4afb4f1743000f9d46fca1113a64",
+      "outputChecksum": "sha256:79f2f32adf70dbc1f45234fb20fa2ee482c3c3c869e080ea6f8e172899ef2406",
       "packClass": "language-composite",
       "packageId": "textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",
@@ -4651,21 +4643,25 @@
         },
         {
           "notes": [
-            "Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
+            "Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
           ],
           "resourceIds": [
             "fr-lexique-quality",
-            "fr-lexique-quality-profile"
+            "fr-lexique-quality-profile",
+            "fr-lexique-search-gold-cases"
           ],
           "slot": "quality",
           "status": "task-supported"
         },
         {
           "notes": [
-            "Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
+            "Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
           ],
           "resourceIds": [
-            "fr-lexique-search-profile"
+            "fr-lexique-search-profile",
+            "fr-lexique-search-elision-prefixes",
+            "fr-lexique-search-contraction-forms",
+            "fr-lexique-search-gold-cases"
           ],
           "slot": "search",
           "status": "task-supported"
@@ -4690,6 +4686,9 @@
         "resources/lexique-383.pos.tsv",
         "resources/lexique-383.quality-profile.json",
         "resources/lexique-383.quality.json",
+        "resources/lexique-383.search-contraction-forms.tsv",
+        "resources/lexique-383.search-elision-prefixes.tsv",
+        "resources/lexique-383.search-gold-cases.json",
         "resources/lexique-383.search-profile.json",
         "SOURCES.generated.json",
         "src/index.ts",
@@ -4702,9 +4701,9 @@
       "knownGaps": [
         "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
       ],
-      "licenseExpression": "CC-BY-SA-4.0",
-      "npmShippedSizeBytes": 3786513,
-      "outputChecksum": "sha256:bb5a1910ed652f3fbd9e9559c09cf4f9b13baafccde410bd4cb303dfd79ebbc4",
+      "licenseExpression": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+      "npmShippedSizeBytes": 3796958,
+      "outputChecksum": "sha256:53d099d93ebcfda6c6eac66d52025b2f46e325975bf24af0d0174e5d837b1505",
       "packClass": "language-concrete",
       "packageId": "textpack-fr-lexique-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
@@ -4725,10 +4724,12 @@
         "QUALITY.generated.json"
       ],
       "snapshotIds": [
-        "snapshot:source:fr:lexique-383:2019-06-04"
+        "snapshot:source:fr:lexique-383:2019-06-04",
+        "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
       ],
       "sourceIds": [
-        "source:fr:lexique-383"
+        "source:fr:lexique-383",
+        "source:tatoeba:weekly-french-2026-06-06"
       ],
       "supportLevel": "task-supported",
       "version": "0.1.0"
@@ -4920,25 +4921,29 @@
       "capabilitySlots": [
         {
           "capabilities": {
-            "normalization": "unicode"
+            "normalization": "rules"
           },
           "notes": [
-            "Unicode/CLDR-backed NFC and lookup casefold policy for modern typed French text."
+            "Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
           ],
           "resourceIds": [
             "fr-normalization-rules",
-            "fr-normalization-profile"
+            "fr-normalization-profile",
+            "fr-normalization-elision-prefixes",
+            "fr-normalization-contraction-forms",
+            "fr-normalization-gold-cases"
           ],
           "slot": "normalization",
           "status": "task-supported"
         },
         {
           "notes": [
-            "Generated quality profile records source coverage, accepted records, and scope limitations."
+            "Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage."
           ],
           "resourceIds": [
             "fr-normalization-quality",
-            "fr-normalization-quality-profile"
+            "fr-normalization-quality-profile",
+            "fr-normalization-gold-cases"
           ],
           "slot": "quality",
           "status": "task-supported"
@@ -4956,6 +4961,9 @@
         "package.json",
         "QUALITY.generated.json",
         "README.md",
+        "resources/fr.normalization-contraction-forms.tsv",
+        "resources/fr.normalization-elision-prefixes.tsv",
+        "resources/fr.normalization-gold-cases.json",
         "resources/fr.normalization-rules.tsv",
         "resources/fr.normalization.json",
         "resources/fr.normalization.quality-profile.json",
@@ -4971,9 +4979,9 @@
       "knownGaps": [
         "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
       ],
-      "licenseExpression": "Unicode-3.0",
-      "npmShippedSizeBytes": 3972,
-      "outputChecksum": "sha256:9499a07185460d21828ece1705447cd5babd32e8c9f853c54a1380715ddd2d4b",
+      "licenseExpression": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "npmShippedSizeBytes": 16358,
+      "outputChecksum": "sha256:4e193278448f458553a7631a69889b6ed9a0f50a0e53d1c41d90560ac59f2057",
       "packClass": "language-concrete",
       "packageId": "textpack-fr-normalization",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
@@ -4995,11 +5003,13 @@
       ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
-        "snapshot:source:unicode:cldr-core:48.2.0"
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
       ],
       "sourceIds": [
         "source:unicode:ucd",
-        "source:unicode:cldr-core"
+        "source:unicode:cldr-core",
+        "source:tatoeba:weekly-french-2026-06-06"
       ],
       "supportLevel": "task-supported",
       "version": "0.1.0"
@@ -5221,7 +5231,7 @@
         {
           "artifactPolicy": "none",
           "capabilityPolicy": "contributes-default",
-          "licensePolicy": "default",
+          "licensePolicy": "allow-attribution",
           "packageName": "@ismail-elkorchi/textpack-fr-normalization",
           "reason": "French normalization quality resources and evaluation evidence.",
           "role": "required",
@@ -5230,7 +5240,7 @@
         {
           "artifactPolicy": "none",
           "capabilityPolicy": "contributes-default",
-          "licensePolicy": "default",
+          "licensePolicy": "allow-attribution",
           "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
           "reason": "French segmentation quality resources and evaluation evidence.",
           "role": "required",
@@ -5327,7 +5337,7 @@
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:7fdae79116e08601a49d34fc31cec46ac0a1d7223da102e0933316513dd86927",
+      "outputChecksum": "sha256:f905d5d87b6203a1e0a7b64bfdb0a5fa3c31807fc7ee69260c01727197b8c9d7",
       "packClass": "language-component-composite",
       "packageId": "textpack-fr-quality-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
@@ -5457,7 +5467,7 @@
         {
           "artifactPolicy": "none",
           "capabilityPolicy": "contributes-default",
-          "licensePolicy": "default",
+          "licensePolicy": "allow-attribution",
           "packageName": "@ismail-elkorchi/textpack-fr-normalization",
           "reason": "French normalization policy and quality resources.",
           "role": "required",
@@ -5466,7 +5476,7 @@
         {
           "artifactPolicy": "none",
           "capabilityPolicy": "contributes-default",
-          "licensePolicy": "default",
+          "licensePolicy": "allow-attribution",
           "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
           "reason": "French segmentation profiles.",
           "role": "required",
@@ -5567,12 +5577,10 @@
         "tsconfig.build.json",
         "tsconfig.json"
       ],
-      "knownGaps": [
-        "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-      ],
+      "knownGaps": [],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:230734a08dac3602708ef06022e5bcb280a940b877a5b07c13a7aaec4318351e",
+      "outputChecksum": "sha256:42154159d5e5d4f690cbd68df1f77789223d371c670202e402f12fe99b2565e8",
       "packClass": "language-composite",
       "packageId": "textpack-fr-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-sa",
@@ -5789,11 +5797,12 @@
       "capabilitySlots": [
         {
           "notes": [
-            "Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations."
+            "Generated quality profile records boundary-property coverage, French surface-policy counts, accepted records, and gold-case coverage."
           ],
           "resourceIds": [
             "fr-segmentation-quality",
-            "fr-segmentation-quality-profile"
+            "fr-segmentation-quality-profile",
+            "fr-segmentation-gold-cases"
           ],
           "slot": "quality",
           "status": "task-supported"
@@ -5803,13 +5812,18 @@
             "segmentation": "profile"
           },
           "notes": [
-            "Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed French text."
+            "Unicode UAX #29 grapheme, word, and sentence boundary profiles plus Tatoeba-observed elision-prefix, contraction-surface, abbreviation-period, and token gold-case resources are available for modern typed French text."
           ],
           "resourceIds": [
             "fr-segmentation-boundary-properties",
             "fr-grapheme-segmentation-profile",
             "fr-word-segmentation-profile",
-            "fr-sentence-segmentation-profile"
+            "fr-sentence-segmentation-profile",
+            "fr-token-segmentation-profile",
+            "fr-segmentation-elision-prefixes",
+            "fr-segmentation-contraction-forms",
+            "fr-segmentation-abbreviations",
+            "fr-segmentation-gold-cases"
           ],
           "slot": "segmentation",
           "status": "task-supported"
@@ -5827,11 +5841,16 @@
         "package.json",
         "QUALITY.generated.json",
         "README.md",
+        "resources/fr.segmentation-abbreviations.tsv",
         "resources/fr.segmentation-boundary-properties.tsv",
+        "resources/fr.segmentation-contraction-forms.tsv",
+        "resources/fr.segmentation-elision-prefixes.tsv",
+        "resources/fr.segmentation-gold-cases.json",
         "resources/fr.segmentation.grapheme.json",
         "resources/fr.segmentation.quality-profile.json",
         "resources/fr.segmentation.quality.json",
         "resources/fr.segmentation.sentence.json",
+        "resources/fr.segmentation.token.json",
         "resources/fr.segmentation.word.json",
         "SOURCES.generated.json",
         "src/index.ts",
@@ -5844,9 +5863,9 @@
       "knownGaps": [
         "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
       ],
-      "licenseExpression": "Unicode-3.0",
-      "npmShippedSizeBytes": 8555,
-      "outputChecksum": "sha256:b943362132f31cd92cca59fdef1d6dd8f4d916e62ab7fc03eb1d5c7628a4eef6",
+      "licenseExpression": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "npmShippedSizeBytes": 23409,
+      "outputChecksum": "sha256:e637a3269d91313d214227263ab3d2805d3c121784bb93edf289dd55c6387224",
       "packClass": "language-concrete",
       "packageId": "textpack-fr-segmentation",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
@@ -5868,11 +5887,13 @@
       ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
-        "snapshot:source:unicode:cldr-core:48.2.0"
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
       ],
       "sourceIds": [
         "source:unicode:ucd",
-        "source:unicode:cldr-core"
+        "source:unicode:cldr-core",
+        "source:tatoeba:weekly-french-2026-06-06"
       ],
       "supportLevel": "task-supported",
       "version": "0.1.0"

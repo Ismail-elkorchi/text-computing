@@ -3619,17 +3619,20 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
 			"packageDir": "packages/textpacks/textpack-fr-lexique-sa",
-			"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, morphology, frequency, search, and quality resources.",
+			"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, morphology, frequency, search, and quality resources with Tatoeba-observed French surface search evidence.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Lexique 3.83 TSV transformed into compressed form entries, lemma inventory, POS inventory, canonical lexicon, canonical lookup morphology, a Lexique-backed search profile, quality profile, coverage report, and evaluation records.",
-				"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated; this package uses the required -sa suffix and package reports cite the Lexique page plus CC-BY-SA-4.0 evidence.",
-				"declaredScope": "French Lexique 3.83 share-alike isolated component: lexical form inventory, lemma inventory, POS/gender/number inventory, source frequency fields, lookup morphology metadata, and a source-backed search analyzer profile. It does not claim default-composite eligibility, WOLF/OMW KB coverage, French syntax, corpus packaging, parallel data, or full French language-composite coverage.",
+				"productionGradeSourceCoverage": "Pinned Lexique 3.83 TSV transformed into compressed form entries, lemma inventory, POS inventory, canonical lexicon, canonical lookup morphology, a Lexique-backed search profile, quality profile, coverage report, and evaluation records. The pinned Tatoeba French sentence snapshot contributes observed apostrophe/elision/contraction surface evidence and search gold cases.",
+				"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated and the exact Tatoeba French source row is approved as attribution-required; this package uses the required -sa suffix and package reports cite Lexique, CC-BY-SA-4.0, Tatoeba, and CC-BY-2.0-FR evidence.",
+				"declaredScope": "French Lexique 3.83 share-alike isolated component: lexical form inventory, lemma inventory, POS/gender/number inventory, source frequency fields, lookup morphology metadata, and a source-backed search analyzer profile with observed French apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence. It does not claim default-composite eligibility, WOLF/OMW KB coverage, French syntax, corpus packaging, parallel data, or full French language-composite coverage.",
 				"conformanceEvidence": [
 					"eval:fr-lexique:entry-volume",
 					"eval:fr-lexique:lemma-volume",
 					"eval:fr-lexique:pos-inventory",
 					"eval:fr-lexique:search-profile",
+					"eval:fr-lexique:search-elision-prefixes",
+					"eval:fr-lexique:search-contraction-forms",
+					"eval:fr-lexique:search-gold-cases",
 					"eval:fr-lexique:transform-rejections"
 				],
 				"generatedReports": [
@@ -3645,10 +3648,12 @@
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
 			"sourceIds": [
-				"source:fr:lexique-383"
+				"source:fr:lexique-383",
+				"source:tatoeba:weekly-french-2026-06-06"
 			],
 			"snapshotIds": [
-				"snapshot:source:fr:lexique-383:2019-06-04"
+				"snapshot:source:fr:lexique-383:2019-06-04",
+				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-lexique-sa:lexique-383"
@@ -3739,35 +3744,68 @@
 					{
 						"id": "fr-lexique-search-profile",
 						"kind": "search-profile",
-						"path": "resources/lexique-383.search-profile.json",
-						"format": "json",
-						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-						}
-					},
-					{
-						"id": "fr-lexique-quality",
-						"kind": "quality-profile",
-						"path": "resources/lexique-383.quality.json",
-						"format": "json",
-						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						]
-					},
-					{
+							"path": "resources/lexique-383.search-profile.json",
+							"format": "json",
+							"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Lexique 3.83, 2019-06-04.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							],
+							"metadata": {
+								"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
+							}
+						},
+						{
+							"id": "fr-lexique-search-elision-prefixes",
+							"kind": "search-profile",
+							"path": "resources/lexique-383.search-elision-prefixes.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-lexique-search-contraction-forms",
+							"kind": "search-profile",
+							"path": "resources/lexique-383.search-contraction-forms.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-lexique-search-gold-cases",
+							"kind": "quality-profile",
+							"path": "resources/lexique-383.search-gold-cases.json",
+							"format": "json",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-lexique-quality",
+							"kind": "quality-profile",
+							"path": "resources/lexique-383.quality.json",
+							"format": "json",
+							"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Lexique 3.83, 2019-06-04.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
 						"id": "fr-lexique-quality-profile",
 						"kind": "quality-profile",
-						"path": "resources/lexique-383.quality-profile.json",
-						"format": "json",
-						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+							"path": "resources/lexique-383.quality-profile.json",
+							"format": "json",
+							"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Lexique 3.83, 2019-06-04.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							],
 						"metadata": {
 							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
 						}
@@ -3802,44 +3840,52 @@
 					{
 						"slot": "search",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-lexique-search-profile"
-						],
-						"notes": [
-							"Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
-						]
-					},
+							"resourceIds": [
+								"fr-lexique-search-profile",
+								"fr-lexique-search-elision-prefixes",
+								"fr-lexique-search-contraction-forms",
+								"fr-lexique-search-gold-cases"
+							],
+							"notes": [
+								"Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
+							]
+						},
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-lexique-quality",
-							"fr-lexique-quality-profile"
-						],
-						"notes": [
-							"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
-						]
-					}
-				],
-				"license": "CC-BY-SA-4.0",
-				"citations": [
-					"Lexique 3.83, 2019-06-04."
-				]
-			}
-		},
+							"resourceIds": [
+								"fr-lexique-quality",
+								"fr-lexique-quality-profile",
+								"fr-lexique-search-gold-cases"
+							],
+							"notes": [
+								"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
+							]
+						}
+					],
+					"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+					"citations": [
+						"Lexique 3.83, 2019-06-04.",
+						"Tatoeba weekly French exports, 2026-06-06."
+					]
+				}
+			},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
 			"packageDir": "packages/textpacks/textpack-fr-normalization",
-			"description": "Source-backed French normalization profile generated from Unicode and CLDR.",
+			"description": "Source-backed French normalization profile generated from Unicode, CLDR, and Tatoeba-observed French surface evidence.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Unicode 17 PropertyValueAliases and CLDR 48.2 likely-subtag/alias snapshots transformed into a modern typed-French Unicode normalization profile, rule table, canonical normalization resource, and quality-profile resources.",
-				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
-				"declaredScope": "Modern typed French Unicode normalization and lookup casefold profile. It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, accent-folding search policy, elision/contraction handling, transliteration, OCR cleanup, corpus-derived normalization, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"productionGradeSourceCoverage": "Pinned Unicode 17 PropertyValueAliases, CLDR 48.2 likely-subtag/alias snapshots, and the pinned Tatoeba French sentence snapshot transformed into a modern typed-French Unicode normalization profile, observed apostrophe/elision/contraction surface evidence, lookup accent-fold policy, rule table, canonical normalization resource, quality profile, and gold-case resources.",
+				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence; the exact Tatoeba French source row is approved as CC-BY-2.0-FR with attribution evidence.",
+				"declaredScope": "Modern typed French Unicode normalization, lookup casefold, apostrophe normalization, observed elision-prefix policy, observed contraction-surface policy, and lookup-only accent folding. It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, OCR cleanup, morphology, syntax, KB, corpus packaging, parallel packaging, or full language-composite coverage.",
 				"conformanceEvidence": [
 					"eval:fr-normalization:profile-rules",
 					"eval:fr-normalization:unicode-nfc-evidence",
 					"eval:fr-normalization:cldr-likely-subtag",
+					"eval:fr-normalization:observed-elision-prefixes",
+					"eval:fr-normalization:observed-contraction-forms",
+					"eval:fr-normalization:gold-cases",
 					"eval:fr-normalization:transform-rejections"
 				],
 				"generatedReports": [
@@ -3856,11 +3902,13 @@
 			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:unicode:ucd",
-				"source:unicode:cldr-core"
+				"source:unicode:cldr-core",
+				"source:tatoeba:weekly-french-2026-06-06"
 			],
 			"snapshotIds": [
 				"snapshot:source:unicode:ucd:17.0.0",
-				"snapshot:source:unicode:cldr-core:48.2.0"
+				"snapshot:source:unicode:cldr-core:48.2.0",
+				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-normalization:french-normalization-profile"
@@ -3895,49 +3943,83 @@
 					{
 						"id": "fr-normalization-rules",
 						"kind": "normalization-profile",
-						"path": "resources/fr.normalization-rules.tsv",
-						"format": "tsv",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
-					},
+							"path": "resources/fr.normalization-rules.tsv",
+							"format": "tsv",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
 					{
 						"id": "fr-normalization-profile",
 						"kind": "normalization-profile",
-						"path": "resources/fr.normalization.json",
-						"format": "json",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						],
+							"path": "resources/fr.normalization.json",
+							"format": "json",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							],
 						"metadata": {
 							"canonicalSchema": "textpack-normalization-resource.schema.json"
 						}
-					},
-					{
-						"id": "fr-normalization-quality",
-						"kind": "quality-profile",
-						"path": "resources/fr.normalization.quality.json",
-						"format": "json",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
-					},
+						},
+						{
+							"id": "fr-normalization-elision-prefixes",
+							"kind": "normalization-profile",
+							"path": "resources/fr.normalization-elision-prefixes.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-normalization-contraction-forms",
+							"kind": "normalization-profile",
+							"path": "resources/fr.normalization-contraction-forms.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-normalization-gold-cases",
+							"kind": "quality-profile",
+							"path": "resources/fr.normalization-gold-cases.json",
+							"format": "json",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-normalization-quality",
+							"kind": "quality-profile",
+							"path": "resources/fr.normalization.quality.json",
+							"format": "json",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
 					{
 						"id": "fr-normalization-quality-profile",
 						"kind": "quality-profile",
-						"path": "resources/fr.normalization.quality-profile.json",
-						"format": "json",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						],
+							"path": "resources/fr.normalization.quality-profile.json",
+							"format": "json",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							],
 						"metadata": {
 							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
 						}
@@ -3947,36 +4029,41 @@
 					{
 						"slot": "normalization",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-normalization-rules",
-							"fr-normalization-profile"
-						],
-						"capabilities": {
-							"normalization": "unicode"
+							"resourceIds": [
+								"fr-normalization-rules",
+								"fr-normalization-profile",
+								"fr-normalization-elision-prefixes",
+								"fr-normalization-contraction-forms",
+								"fr-normalization-gold-cases"
+								],
+								"capabilities": {
+									"normalization": "rules"
+								},
+							"notes": [
+								"Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
+							]
 						},
-						"notes": [
-							"Unicode/CLDR-backed NFC and lookup casefold policy for modern typed French text."
-						]
-					},
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-normalization-quality",
-							"fr-normalization-quality-profile"
-						],
-						"notes": [
-							"Generated quality profile records source coverage, accepted records, and scope limitations."
-						]
-					}
-				],
-				"license": "Unicode-3.0",
-				"citations": [
-					"Unicode Character Database 17.0.0.",
-					"Unicode CLDR core data, cldr-core npm package 48.2.0."
-				]
-			}
-		},
+							"resourceIds": [
+								"fr-normalization-quality",
+								"fr-normalization-quality-profile",
+								"fr-normalization-gold-cases"
+							],
+							"notes": [
+								"Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage."
+							]
+						}
+					],
+					"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+					"citations": [
+						"Unicode Character Database 17.0.0.",
+						"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+						"Tatoeba weekly French exports, 2026-06-06."
+					]
+				}
+			},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 			"packageDir": "packages/textpacks/textpack-fr-parallel",
@@ -4270,17 +4357,21 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
 			"packageDir": "packages/textpacks/textpack-fr-segmentation",
-			"description": "Source-backed French segmentation profiles generated from Unicode UAX #29 break properties and CLDR.",
+			"description": "Source-backed French segmentation profiles generated from Unicode UAX #29, CLDR, and Tatoeba-observed French surface evidence.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots plus CLDR 48.2 French likely-subtag context transformed into modern typed-French Unicode segmentation profiles, property tables, canonical segmentation resources, and quality-profile resources.",
-				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
-				"declaredScope": "Modern typed French Unicode grapheme, word, and sentence boundary profile. It does not claim dictionary tokenization, elision/contraction tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots, CLDR 48.2 French likely-subtag context, and the pinned Tatoeba French sentence snapshot transformed into modern typed-French Unicode segmentation profiles, a French token profile, observed elision/contraction/abbreviation evidence tables, canonical segmentation resources, quality-profile resources, and gold cases.",
+				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence; the exact Tatoeba French source row is approved as CC-BY-2.0-FR with attribution evidence.",
+				"declaredScope": "Modern typed French Unicode grapheme, word, sentence, and token segmentation profile with observed apostrophe elision-prefix handling, contraction-surface recognition, abbreviation-period candidates, and gold cases. It does not claim social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus packaging, parallel packaging, or full language-composite coverage.",
 				"conformanceEvidence": [
 					"eval:fr-segmentation:grapheme-boundary-properties",
 					"eval:fr-segmentation:word-boundary-properties",
 					"eval:fr-segmentation:sentence-boundary-properties",
 					"eval:fr-segmentation:cldr-likely-subtag",
+					"eval:fr-segmentation:observed-elision-token-policy",
+					"eval:fr-segmentation:observed-contraction-token-policy",
+					"eval:fr-segmentation:observed-abbreviation-policy",
+					"eval:fr-segmentation:gold-cases",
 					"eval:fr-segmentation:transform-rejections"
 				],
 				"generatedReports": [
@@ -4297,11 +4388,13 @@
 			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:unicode:ucd",
-				"source:unicode:cldr-core"
+				"source:unicode:cldr-core",
+				"source:tatoeba:weekly-french-2026-06-06"
 			],
 			"snapshotIds": [
 				"snapshot:source:unicode:ucd:17.0.0",
-				"snapshot:source:unicode:cldr-core:48.2.0"
+				"snapshot:source:unicode:cldr-core:48.2.0",
+				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-segmentation:french-segmentation-profile"
@@ -4336,12 +4429,12 @@
 					{
 						"id": "fr-segmentation-boundary-properties",
 						"kind": "segmentation-profile",
-						"path": "resources/fr.segmentation-boundary-properties.tsv",
-						"format": "tsv",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+							"path": "resources/fr.segmentation-boundary-properties.tsv",
+							"format": "tsv",
+							"license": "Unicode-3.0",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						]
 					},
 					{
@@ -4385,28 +4478,85 @@
 						"metadata": {
 							"canonicalSchema": "textpack-segmentation-resource.schema.json"
 						}
-					},
-					{
-						"id": "fr-segmentation-quality",
-						"kind": "quality-profile",
-						"path": "resources/fr.segmentation.quality.json",
-						"format": "json",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
-					},
+						},
+						{
+							"id": "fr-token-segmentation-profile",
+							"kind": "segmentation-profile",
+							"path": "resources/fr.segmentation.token.json",
+							"format": "json",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							],
+							"metadata": {
+								"canonicalSchema": "textpack-segmentation-resource.schema.json"
+							}
+						},
+						{
+							"id": "fr-segmentation-elision-prefixes",
+							"kind": "segmentation-profile",
+							"path": "resources/fr.segmentation-elision-prefixes.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-segmentation-contraction-forms",
+							"kind": "segmentation-profile",
+							"path": "resources/fr.segmentation-contraction-forms.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-segmentation-abbreviations",
+							"kind": "segmentation-profile",
+							"path": "resources/fr.segmentation-abbreviations.tsv",
+							"format": "tsv",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-segmentation-gold-cases",
+							"kind": "quality-profile",
+							"path": "resources/fr.segmentation-gold-cases.json",
+							"format": "json",
+							"license": "CC-BY-2.0-FR",
+							"citations": [
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
+						{
+							"id": "fr-segmentation-quality",
+							"kind": "quality-profile",
+							"path": "resources/fr.segmentation.quality.json",
+							"format": "json",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							]
+						},
 					{
 						"id": "fr-segmentation-quality-profile",
 						"kind": "quality-profile",
-						"path": "resources/fr.segmentation.quality-profile.json",
-						"format": "json",
-						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0.",
-							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						],
+							"path": "resources/fr.segmentation.quality-profile.json",
+							"format": "json",
+							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+							"citations": [
+								"Unicode Character Database 17.0.0.",
+								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+								"Tatoeba weekly French exports, 2026-06-06."
+							],
 						"metadata": {
 							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
 						}
@@ -4417,37 +4567,44 @@
 						"slot": "segmentation",
 						"status": "task-supported",
 						"resourceIds": [
-							"fr-segmentation-boundary-properties",
-							"fr-grapheme-segmentation-profile",
-							"fr-word-segmentation-profile",
-							"fr-sentence-segmentation-profile"
-						],
-						"capabilities": {
-							"segmentation": "profile"
+								"fr-segmentation-boundary-properties",
+								"fr-grapheme-segmentation-profile",
+								"fr-word-segmentation-profile",
+								"fr-sentence-segmentation-profile",
+								"fr-token-segmentation-profile",
+								"fr-segmentation-elision-prefixes",
+								"fr-segmentation-contraction-forms",
+								"fr-segmentation-abbreviations",
+								"fr-segmentation-gold-cases"
+								],
+								"capabilities": {
+									"segmentation": "profile"
+								},
+							"notes": [
+								"Unicode UAX #29 grapheme, word, and sentence boundary profiles plus Tatoeba-observed elision-prefix, contraction-surface, abbreviation-period, and token gold-case resources are available for modern typed French text."
+							]
 						},
-						"notes": [
-							"Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed French text."
-						]
-					},
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-segmentation-quality",
-							"fr-segmentation-quality-profile"
-						],
-						"notes": [
-							"Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations."
-						]
-					}
-				],
-				"license": "Unicode-3.0",
-				"citations": [
-					"Unicode Character Database 17.0.0.",
-					"Unicode CLDR core data, cldr-core npm package 48.2.0."
-				]
-			}
-		},
+							"resourceIds": [
+								"fr-segmentation-quality",
+								"fr-segmentation-quality-profile",
+								"fr-segmentation-gold-cases"
+							],
+							"notes": [
+								"Generated quality profile records boundary-property coverage, French surface-policy counts, accepted records, and gold-case coverage."
+							]
+						}
+					],
+					"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+					"citations": [
+						"Unicode Character Database 17.0.0.",
+						"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+						"Tatoeba weekly French exports, 2026-06-06."
+					]
+				}
+			},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
 			"packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",

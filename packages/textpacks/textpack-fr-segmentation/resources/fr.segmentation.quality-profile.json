@@ -2,12 +2,17 @@
   "diagnostics": [
     {
       "diagnosticId": "fr-segmentation-scope",
-      "message": "Unicode/CLDR-backed boundary profile for modern typed French; dictionary tokenization and sentence-abbreviation tailoring are out of scope.",
+      "message": "Unicode/CLDR-backed boundary profile for modern typed French, with source-derived French elision, contraction, abbreviation, and gold-case evidence.",
       "metadata": {
+        "abbreviationCandidateCount": 149,
+        "contractionFormCount": 4,
+        "elisionPrefixCount": 16,
         "likelySubtag": "fr-Latn-FR",
+        "segmentationGoldCaseCount": 18,
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "severity": "info",
@@ -41,6 +46,30 @@
       "name": "recordsRejected",
       "unit": "records",
       "value": 0
+    },
+    {
+      "metricId": "french-elision-prefix-count",
+      "name": "elisionPrefixCount",
+      "unit": "prefixes",
+      "value": 16
+    },
+    {
+      "metricId": "french-contraction-form-count",
+      "name": "contractionFormCount",
+      "unit": "forms",
+      "value": 4
+    },
+    {
+      "metricId": "french-abbreviation-candidate-count",
+      "name": "abbreviationCandidateCount",
+      "unit": "forms",
+      "value": 149
+    },
+    {
+      "metricId": "french-segmentation-gold-case-count",
+      "name": "segmentationGoldCaseCount",
+      "unit": "cases",
+      "value": 18
     }
   ],
   "profileId": "fr-segmentation-quality",

@@ -48,7 +48,7 @@ export const manifest: TextPackManifest = {
 			"versionRange": "0.1.0",
 			"role": "required",
 			"reason": "French normalization policy and quality resources.",
-			"licensePolicy": "default",
+			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
 			"artifactPolicy": "none"
 		},
@@ -57,7 +57,7 @@ export const manifest: TextPackManifest = {
 			"versionRange": "0.1.0",
 			"role": "required",
 			"reason": "French segmentation profiles.",
-			"licensePolicy": "default",
+			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
 			"artifactPolicy": "none"
 		},

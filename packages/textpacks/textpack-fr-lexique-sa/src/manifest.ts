@@ -85,22 +85,54 @@ export const manifest: TextPackManifest = {
 			"kind": "search-profile",
 			"path": "resources/lexique-383.search-profile.json",
 			"format": "json",
-			"license": "CC-BY-SA-4.0",
+			"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
 			"citations": [
-				"Lexique 3.83, 2019-06-04."
+				"Lexique 3.83, 2019-06-04.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
 			}
 		},
 		{
+			"id": "fr-lexique-search-elision-prefixes",
+			"kind": "search-profile",
+			"path": "resources/lexique-383.search-elision-prefixes.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-lexique-search-contraction-forms",
+			"kind": "search-profile",
+			"path": "resources/lexique-383.search-contraction-forms.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-lexique-search-gold-cases",
+			"kind": "quality-profile",
+			"path": "resources/lexique-383.search-gold-cases.json",
+			"format": "json",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
 			"id": "fr-lexique-quality",
 			"kind": "quality-profile",
 			"path": "resources/lexique-383.quality.json",
 			"format": "json",
-			"license": "CC-BY-SA-4.0",
+			"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
 			"citations": [
-				"Lexique 3.83, 2019-06-04."
+				"Lexique 3.83, 2019-06-04.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			]
 		},
 		{
@@ -108,9 +140,10 @@ export const manifest: TextPackManifest = {
 			"kind": "quality-profile",
 			"path": "resources/lexique-383.quality-profile.json",
 			"format": "json",
-			"license": "CC-BY-SA-4.0",
+			"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
 			"citations": [
-				"Lexique 3.83, 2019-06-04."
+				"Lexique 3.83, 2019-06-04.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
@@ -147,10 +180,13 @@ export const manifest: TextPackManifest = {
 			"slot": "search",
 			"status": "task-supported",
 			"resourceIds": [
-				"fr-lexique-search-profile"
+				"fr-lexique-search-profile",
+				"fr-lexique-search-elision-prefixes",
+				"fr-lexique-search-contraction-forms",
+				"fr-lexique-search-gold-cases"
 			],
 			"notes": [
-				"Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
+				"Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
 			]
 		},
 		{
@@ -158,16 +194,18 @@ export const manifest: TextPackManifest = {
 			"status": "task-supported",
 			"resourceIds": [
 				"fr-lexique-quality",
-				"fr-lexique-quality-profile"
+				"fr-lexique-quality-profile",
+				"fr-lexique-search-gold-cases"
 			],
 			"notes": [
-				"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
+				"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
 			]
 		}
 	],
-	"license": "CC-BY-SA-4.0",
+	"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
 	"citations": [
-		"Lexique 3.83, 2019-06-04."
+		"Lexique 3.83, 2019-06-04.",
+		"Tatoeba weekly French exports, 2026-06-06."
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",

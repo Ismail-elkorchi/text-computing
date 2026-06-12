@@ -2,97 +2,145 @@
   "capabilities": {},
   "capabilityEvidence": [
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:core-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "core",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:corpus-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "corpus",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:foundation-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "foundation",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:kb-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "kb",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:lexicon-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "lexicon",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:morphology-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "morphology",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:normalization-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "normalization",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:parallel-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "parallel",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:quality-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "quality",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:search-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "search",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:segmentation-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "segmentation",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [],
-      "evidenceLevel": "none",
-      "limitations": [],
+      "evaluationRecordIds": [
+        "eval:textpack-ar-sa:syntax-component-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+      ],
       "resourceIds": [],
       "slot": "syntax",
       "status": "task-supported"
@@ -270,14 +318,25 @@
       "versionRange": "0.1.0"
     }
   ],
-  "coverageStatus": "declared-only",
-  "evaluationRecordIds": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:textpack-ar-sa:core-component-evidence",
+    "eval:textpack-ar-sa:corpus-component-evidence",
+    "eval:textpack-ar-sa:foundation-component-evidence",
+    "eval:textpack-ar-sa:kb-component-evidence",
+    "eval:textpack-ar-sa:lexicon-component-evidence",
+    "eval:textpack-ar-sa:morphology-component-evidence",
+    "eval:textpack-ar-sa:normalization-component-evidence",
+    "eval:textpack-ar-sa:parallel-component-evidence",
+    "eval:textpack-ar-sa:quality-component-evidence",
+    "eval:textpack-ar-sa:search-component-evidence",
+    "eval:textpack-ar-sa:segmentation-component-evidence",
+    "eval:textpack-ar-sa:syntax-component-evidence"
+  ],
   "gapNotes": [],
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
-  "knownGaps": [
-    "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-  ],
+  "knownGaps": [],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar-sa",
   "publishability": {

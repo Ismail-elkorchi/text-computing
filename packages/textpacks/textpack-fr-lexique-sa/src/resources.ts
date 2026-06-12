@@ -42,6 +42,18 @@ export async function resources(): Promise<PackResourceMap> {
 			"lexique-383.search-profile.json",
 			"utf8",
 		),
+		"fr-lexique-search-elision-prefixes": await readResource(
+			"lexique-383.search-elision-prefixes.tsv",
+			"utf8",
+		),
+		"fr-lexique-search-contraction-forms": await readResource(
+			"lexique-383.search-contraction-forms.tsv",
+			"utf8",
+		),
+		"fr-lexique-search-gold-cases": await readResource(
+			"lexique-383.search-gold-cases.json",
+			"utf8",
+		),
 		"fr-lexique-quality": await readResource(
 			"lexique-383.quality.json",
 			"utf8",

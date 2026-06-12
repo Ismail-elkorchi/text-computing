@@ -129,8 +129,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1208,
-      "checksum": "sha256:962c565b63056abe5e15ffb899bd872028e2e5d36b6b679bcf98397cf18a1a74",
+      "byteLength": 1130,
+      "checksum": "sha256:7e876f3a2211f0ef66802155b5c27b1a3b6152339028fa911e9b4f2ee1b45719",
       "kind": "quality-profile",
       "nonEmptyLineCount": 50,
       "path": "resources/en.segmentation.quality-profile.json",

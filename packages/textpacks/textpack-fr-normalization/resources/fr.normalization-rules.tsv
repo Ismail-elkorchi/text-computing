@@ -2,3 +2,7 @@ ruleId	operation	priority	input	output	note
 unicode-nfc-compose	compose	10			Use Unicode NFC canonical composition for stored and comparable modern typed French text.
 unicode-casefold-for-lookup	casefold	20			Use Unicode casefolding for lookup/search normalization while preserving source text elsewhere.
 cldr-french-latn-likely-subtag	map	30	fr	fr-Latn-FR	Use CLDR likely-subtag context for the default modern French Latin-script profile.
+french-apostrophe-normalize-for-lookup	replace	40	’	'	Normalize French straight and typographic apostrophes for lookup while preserving source text in document storage.
+french-observed-elision-boundary-policy	map	50			Recognize observed French elision prefixes from the pinned Tatoeba French sentence snapshot for lookup and token-boundary policy.
+french-observed-contraction-surface-policy	map	60			Recognize observed French contraction surface forms from the pinned Tatoeba French sentence snapshot.
+french-accent-fold-for-search-lookup	strip-diacritic	70			Expose a lookup-only accent-folding policy for French search analyzers; source text normalization remains NFC.

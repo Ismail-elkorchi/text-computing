@@ -29,10 +29,11 @@ export const manifest: TextPackManifest = {
 			"kind": "normalization-profile",
 			"path": "resources/fr.normalization-rules.tsv",
 			"format": "tsv",
-			"license": "Unicode-3.0",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 			"citations": [
 				"Unicode Character Database 17.0.0.",
-				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			]
 		},
 		{
@@ -40,24 +41,56 @@ export const manifest: TextPackManifest = {
 			"kind": "normalization-profile",
 			"path": "resources/fr.normalization.json",
 			"format": "json",
-			"license": "Unicode-3.0",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 			"citations": [
 				"Unicode Character Database 17.0.0.",
-				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-normalization-resource.schema.json"
 			}
 		},
 		{
+			"id": "fr-normalization-elision-prefixes",
+			"kind": "normalization-profile",
+			"path": "resources/fr.normalization-elision-prefixes.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-normalization-contraction-forms",
+			"kind": "normalization-profile",
+			"path": "resources/fr.normalization-contraction-forms.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-normalization-gold-cases",
+			"kind": "quality-profile",
+			"path": "resources/fr.normalization-gold-cases.json",
+			"format": "json",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
 			"id": "fr-normalization-quality",
 			"kind": "quality-profile",
 			"path": "resources/fr.normalization.quality.json",
 			"format": "json",
-			"license": "Unicode-3.0",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 			"citations": [
 				"Unicode Character Database 17.0.0.",
-				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			]
 		},
 		{
@@ -65,10 +98,11 @@ export const manifest: TextPackManifest = {
 			"kind": "quality-profile",
 			"path": "resources/fr.normalization.quality-profile.json",
 			"format": "json",
-			"license": "Unicode-3.0",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 			"citations": [
 				"Unicode Character Database 17.0.0.",
-				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
@@ -81,13 +115,16 @@ export const manifest: TextPackManifest = {
 			"status": "task-supported",
 			"resourceIds": [
 				"fr-normalization-rules",
-				"fr-normalization-profile"
+				"fr-normalization-profile",
+				"fr-normalization-elision-prefixes",
+				"fr-normalization-contraction-forms",
+				"fr-normalization-gold-cases"
 			],
 			"capabilities": {
-				"normalization": "unicode"
+				"normalization": "rules"
 			},
 			"notes": [
-				"Unicode/CLDR-backed NFC and lookup casefold policy for modern typed French text."
+				"Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
 			]
 		},
 		{
@@ -95,17 +132,19 @@ export const manifest: TextPackManifest = {
 			"status": "task-supported",
 			"resourceIds": [
 				"fr-normalization-quality",
-				"fr-normalization-quality-profile"
+				"fr-normalization-quality-profile",
+				"fr-normalization-gold-cases"
 			],
 			"notes": [
-				"Generated quality profile records source coverage, accepted records, and scope limitations."
+				"Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage."
 			]
 		}
 	],
-	"license": "Unicode-3.0",
+	"license": "Unicode-3.0 AND CC-BY-2.0-FR",
 	"citations": [
 		"Unicode Character Database 17.0.0.",
-		"Unicode CLDR core data, cldr-core npm package 48.2.0."
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"Tatoeba weekly French exports, 2026-06-06."
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",

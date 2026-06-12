@@ -1,28 +1,32 @@
 {
-  "acceptedRecordCount": 136,
+  "acceptedRecordCount": 423,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
       "capabilities": {
-        "normalization": "unicode"
+        "normalization": "rules"
       },
       "notes": [
-        "Unicode/CLDR-backed NFC and lookup casefold policy for modern typed French text."
+        "Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
       ],
       "resourceIds": [
         "fr-normalization-rules",
-        "fr-normalization-profile"
+        "fr-normalization-profile",
+        "fr-normalization-elision-prefixes",
+        "fr-normalization-contraction-forms",
+        "fr-normalization-gold-cases"
       ],
       "slot": "normalization",
       "status": "task-supported"
     },
     {
       "notes": [
-        "Generated quality profile records source coverage, accepted records, and scope limitations."
+        "Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage."
       ],
       "resourceIds": [
         "fr-normalization-quality",
-        "fr-normalization-quality-profile"
+        "fr-normalization-quality-profile",
+        "fr-normalization-gold-cases"
       ],
       "slot": "quality",
       "status": "task-supported"
@@ -41,8 +45,11 @@
   },
   "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 4,
+  "resourceCount": 7,
   "resourcePaths": [
+    "resources/fr.normalization-contraction-forms.tsv",
+    "resources/fr.normalization-elision-prefixes.tsv",
+    "resources/fr.normalization-gold-cases.json",
     "resources/fr.normalization.json",
     "resources/fr.normalization.quality.json",
     "resources/fr.normalization.quality-profile.json",
@@ -53,12 +60,51 @@
   ],
   "resources": [
     {
-      "byteLength": 1526,
-      "checksum": "sha256:598b69ce8a36e3c362e86acfc7cfcbb27854c7a0fdda2e8238dcd010628c0844",
+      "byteLength": 94,
+      "checksum": "sha256:3dcfff5a68add51db802f2f534ab6fe4147868744435d5eea280b7488e7779ce",
+      "id": "fr-normalization-contraction-forms",
+      "kind": "normalization-profile",
+      "lineCount": 6,
+      "nonEmptyLineCount": 5,
+      "path": "resources/fr.normalization-contraction-forms.tsv",
+      "pipelineId": "french-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 531,
+      "checksum": "sha256:2c573b2376c35c3202098c373880269cabdc88047171ea1d13bfab418a644531",
+      "id": "fr-normalization-elision-prefixes",
+      "kind": "normalization-profile",
+      "lineCount": 18,
+      "nonEmptyLineCount": 17,
+      "path": "resources/fr.normalization-elision-prefixes.tsv",
+      "pipelineId": "french-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 7457,
+      "checksum": "sha256:46c192b37920abc0d206a212f11dd92ec339a6d8d521b0cd6ddd3e1db9ad7241",
+      "id": "fr-normalization-gold-cases",
+      "kind": "quality-profile",
+      "lineCount": 161,
+      "nonEmptyLineCount": 160,
+      "path": "resources/fr.normalization-gold-cases.json",
+      "pipelineId": "french-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 4126,
+      "checksum": "sha256:7d371be007bacfe3058c943e680e170bedc91d9c849dcc68ce47e83696f177dd",
       "id": "fr-normalization-profile",
       "kind": "normalization-profile",
-      "lineCount": 53,
-      "nonEmptyLineCount": 52,
+      "lineCount": 121,
+      "nonEmptyLineCount": 120,
       "path": "resources/fr.normalization.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
@@ -66,12 +112,12 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 823,
-      "checksum": "sha256:0f64626492f9f0c00de0db9a8d010a5f16ebc2aa7ba2e49be8025ccae5495f60",
+      "byteLength": 1250,
+      "checksum": "sha256:5502ea0f27983aac17099bbed94e2af69881ca40fdff926417336d5de588b145",
       "id": "fr-normalization-quality",
       "kind": "quality-profile",
-      "lineCount": 31,
-      "nonEmptyLineCount": 30,
+      "lineCount": 42,
+      "nonEmptyLineCount": 41,
       "path": "resources/fr.normalization.quality.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
@@ -79,12 +125,12 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1183,
-      "checksum": "sha256:8b8b2aafcc609eafe2067f93ea997a4696de4cc36154ac8e4bf5a7a6cdbfe078",
+      "byteLength": 1787,
+      "checksum": "sha256:fcf9b4f450e97138f462d424a8151be4b21d7c8a58ed843e092f2342e65e17d0",
       "id": "fr-normalization-quality-profile",
       "kind": "quality-profile",
-      "lineCount": 51,
-      "nonEmptyLineCount": 50,
+      "lineCount": 73,
+      "nonEmptyLineCount": 72,
       "path": "resources/fr.normalization.quality-profile.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
@@ -92,12 +138,12 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 440,
-      "checksum": "sha256:a83544929a6696c4d5bf99539e85272fa23166ab373da451e401ce3adfbe5144",
+      "byteLength": 1113,
+      "checksum": "sha256:d41a514d356bb9649b661b549c8cb6bca191aa61d671f1efb70338fd3aa3f092",
       "id": "fr-normalization-rules",
       "kind": "normalization-profile",
-      "lineCount": 5,
-      "nonEmptyLineCount": 4,
+      "lineCount": 9,
+      "nonEmptyLineCount": 8,
       "path": "resources/fr.normalization-rules.tsv",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",

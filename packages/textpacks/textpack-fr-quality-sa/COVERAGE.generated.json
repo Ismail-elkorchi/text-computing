@@ -34,7 +34,7 @@
     {
       "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
+      "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "reason": "French normalization quality resources and evaluation evidence.",
       "role": "required",
@@ -43,7 +43,7 @@
     {
       "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
+      "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
       "reason": "French segmentation quality resources and evaluation evidence.",
       "role": "required",

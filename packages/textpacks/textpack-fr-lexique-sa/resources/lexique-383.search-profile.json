@@ -2,13 +2,14 @@
   "analyzerId": "fr-lexique-383-analyzer",
   "charFilters": [
     {
-      "componentId": "french-apostrophe-policy",
-      "mode": "preserve-elision-apostrophes",
+      "componentId": "french-apostrophe-normalizer",
+      "mode": "normalize-typographic-and-straight-apostrophes",
       "options": {
         "characters": [
           "'",
           "’"
-        ]
+        ],
+        "evidenceResourceId": "fr-lexique-search-elision-prefixes"
       },
       "type": "character-policy"
     }
@@ -33,6 +34,18 @@
     {
       "resourceId": "fr-lexique-entries",
       "role": "lexicon"
+    },
+    {
+      "resourceId": "fr-lexique-search-elision-prefixes",
+      "role": "normalizer"
+    },
+    {
+      "resourceId": "fr-lexique-search-contraction-forms",
+      "role": "normalizer"
+    },
+    {
+      "resourceId": "fr-lexique-search-gold-cases",
+      "role": "quality"
     }
   ],
   "schemaVersion": "1",
@@ -42,6 +55,32 @@
       "componentId": "unicode-simple-casefold",
       "mode": "unicode-simple",
       "type": "casefold"
+    },
+    {
+      "componentId": "french-accent-fold",
+      "mode": "lookup-only",
+      "options": {
+        "normalization": "NFD",
+        "removeUnicodeMarks": true
+      },
+      "type": "diacritic-fold"
+    },
+    {
+      "componentId": "french-observed-elision-prefixes",
+      "mode": "prefix-apostrophe-boundary",
+      "options": {
+        "evidenceResourceId": "fr-lexique-search-elision-prefixes",
+        "minimumObservedCount": 25
+      },
+      "type": "elision-policy"
+    },
+    {
+      "componentId": "french-observed-contraction-surfaces",
+      "mode": "surface-form-recognition",
+      "options": {
+        "evidenceResourceId": "fr-lexique-search-contraction-forms"
+      },
+      "type": "contraction-policy"
     },
     {
       "componentId": "lexique-form-lemma-lookup",

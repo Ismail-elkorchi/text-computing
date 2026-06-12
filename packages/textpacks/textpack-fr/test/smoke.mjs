@@ -42,6 +42,9 @@ for (const slot of requiredSlots) {
 for (const resourceKey of [
 	"fr-tatoeba-corpus-sentences",
 	"fr-tatoeba-parallel-eng",
+	"fr-normalization-elision-prefixes",
+	"fr-segmentation-gold-cases",
+	"fr-lexique-search-gold-cases",
 	"wikidata-fr-entities",
 	"wikidata-fr-aliases",
 	"wikidata-fr-relations",

@@ -40,21 +40,29 @@
       "limitations": [],
       "resourceIds": [
         "fr-lexique-quality",
-        "fr-lexique-quality-profile"
+        "fr-lexique-quality-profile",
+        "fr-lexique-search-gold-cases"
       ],
       "slot": "quality",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
+        "eval:fr-lexique:search-contraction-forms",
+        "eval:fr-lexique:search-elision-prefixes",
+        "eval:fr-lexique:search-gold-cases",
         "eval:fr-lexique:search-profile"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
+        "Gold cases verify analyzer policy coverage for observed Tatoeba surface forms; ranked retrieval evaluation belongs in corpus/search benchmark packs.",
         "The search profile is source-backed by Lexique form/lemma data; it is not a corpus-trained French ranking profile."
       ],
       "resourceIds": [
-        "fr-lexique-search-profile"
+        "fr-lexique-search-profile",
+        "fr-lexique-search-elision-prefixes",
+        "fr-lexique-search-contraction-forms",
+        "fr-lexique-search-gold-cases"
       ],
       "slot": "search",
       "status": "task-supported"
@@ -88,21 +96,25 @@
     },
     {
       "notes": [
-        "Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
+        "Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
       ],
       "resourceIds": [
         "fr-lexique-quality",
-        "fr-lexique-quality-profile"
+        "fr-lexique-quality-profile",
+        "fr-lexique-search-gold-cases"
       ],
       "slot": "quality",
       "status": "task-supported"
     },
     {
       "notes": [
-        "Lexique form/lemma/frequency fields back a French analyzer profile for isolated share-alike use."
+        "Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
       ],
       "resourceIds": [
-        "fr-lexique-search-profile"
+        "fr-lexique-search-profile",
+        "fr-lexique-search-elision-prefixes",
+        "fr-lexique-search-contraction-forms",
+        "fr-lexique-search-gold-cases"
       ],
       "slot": "search",
       "status": "task-supported"
@@ -114,6 +126,9 @@
     "eval:fr-lexique:entry-volume",
     "eval:fr-lexique:lemma-volume",
     "eval:fr-lexique:pos-inventory",
+    "eval:fr-lexique:search-contraction-forms",
+    "eval:fr-lexique:search-elision-prefixes",
+    "eval:fr-lexique:search-gold-cases",
     "eval:fr-lexique:search-profile",
     "eval:fr-lexique:transform-rejections"
   ],
@@ -193,10 +208,10 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 703,
-      "checksum": "sha256:831284c9f01b16eab4186154a9bee518bb7f1260109307f7b5386bb6947da50a",
+      "byteLength": 1036,
+      "checksum": "sha256:0cdd5ec597ea4fc9c6fe22a6de408f9bd3c44ce9fde3ee0c67d3031f343392e2",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 27,
+      "nonEmptyLineCount": 35,
       "path": "resources/lexique-383.quality.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
@@ -205,10 +220,10 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1076,
-      "checksum": "sha256:95b1f61f2a513a815a1df2d638d05378afa28b70e23f4c93f17bdbe73abca88b",
+      "byteLength": 1583,
+      "checksum": "sha256:0ed3f57b141cf08e378df5b573b88fd705d031fe04ea9c8275cd9061c0ad1142",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 47,
+      "nonEmptyLineCount": 68,
       "path": "resources/lexique-383.quality-profile.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
@@ -217,10 +232,46 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1322,
-      "checksum": "sha256:801c5676c5459bbdfc2bf911428c67023c4952cbacbbb338a26ddbd17e4a7797",
+      "byteLength": 94,
+      "checksum": "sha256:3dcfff5a68add51db802f2f534ab6fe4147868744435d5eea280b7488e7779ce",
       "kind": "search-profile",
-      "nonEmptyLineCount": 65,
+      "nonEmptyLineCount": 5,
+      "path": "resources/lexique-383.search-contraction-forms.tsv",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-lexique-search-contraction-forms",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 531,
+      "checksum": "sha256:2c573b2376c35c3202098c373880269cabdc88047171ea1d13bfab418a644531",
+      "kind": "search-profile",
+      "nonEmptyLineCount": 17,
+      "path": "resources/lexique-383.search-elision-prefixes.tsv",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-lexique-search-elision-prefixes",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 7870,
+      "checksum": "sha256:f1b5d77855ce389fdcfb90d0d4d5980334072e93c3355afc6d255fff8e934bf1",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 338,
+      "path": "resources/lexique-383.search-gold-cases.json",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "fr-lexique-search-gold-cases",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2432,
+      "checksum": "sha256:4663512b4990135e3d8414425fe4284d02b0f14dd847b2bc9c2eb7060e18b14d",
+      "kind": "search-profile",
+      "nonEmptyLineCount": 104,
       "path": "resources/lexique-383.search-profile.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",

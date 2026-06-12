@@ -85,7 +85,7 @@
     {
       "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
+      "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "reason": "French normalization policy and quality resources.",
       "role": "required",
@@ -94,7 +94,7 @@
     {
       "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
+      "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
       "reason": "French segmentation profiles.",
       "role": "required",
@@ -191,7 +191,5 @@
   "resources": [],
   "schemaVersion": "1",
   "supportLevel": "feature-complete",
-  "warnings": [
-    "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
-  ]
+  "warnings": []
 }

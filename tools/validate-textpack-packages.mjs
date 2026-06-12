@@ -65,6 +65,20 @@ const GENERATED_PACKAGE_FILES = [
 	"EVALUATION.generated.json",
 	"QUALITY.generated.json",
 ];
+const EXPECTED_LANGUAGE_COMPOSITE_SLOTS = [
+	"foundation",
+	"core",
+	"normalization",
+	"segmentation",
+	"lexicon",
+	"morphology",
+	"syntax",
+	"kb",
+	"search",
+	"corpus",
+	"parallel",
+	"quality",
+];
 const policyExpandedWrapperSourcePolicyClasses = new Set([
 	"default-safe",
 	"attribution",
@@ -257,6 +271,20 @@ function assertDeepEqualJson(actual, expected, label) {
 		actualJson === expectedJson,
 		`${label} must match pack.manifest.json.`,
 	);
+}
+
+function isFeatureLanguageComposite(manifest) {
+	const requiredComponents = (manifest.components ?? []).filter(
+		(component) => component.role === "required",
+	);
+	if (manifest.resources.length !== 0) return false;
+	if (requiredComponents.length < EXPECTED_LANGUAGE_COMPOSITE_SLOTS.length) {
+		return false;
+	}
+	const slotNames = new Set(
+		(manifest.capabilitySlots ?? []).map((slot) => slot.slot),
+	);
+	return EXPECTED_LANGUAGE_COMPOSITE_SLOTS.every((slot) => slotNames.has(slot));
 }
 
 async function maybeImportBuiltPack(packDir) {
@@ -1283,9 +1311,9 @@ for (const packDir of packDirs) {
 		}
 	}
 	const evaluationRecordIds = new Set();
-	for (const record of evaluationReport.records) {
-		expect(
-			validateEvaluationRecord(record),
+		for (const record of evaluationReport.records) {
+			expect(
+				validateEvaluationRecord(record),
 			`${packageJson.name} evaluation record failed ${EVALUATION_RECORD_SCHEMA_PATH}.`,
 			validateEvaluationRecord.errors,
 		);
@@ -1303,11 +1331,24 @@ for (const packDir of packDirs) {
 				resourceIds.has(resourceId),
 				`${packageJson.name} evaluation record ${record.recordId} references unknown resource ${resourceId}.`,
 			);
+			}
 		}
-	}
-	expect(
-		JSON.stringify(sorted([...evaluationRecordIds])) ===
-			JSON.stringify(sorted(coverageReport.evaluationRecordIds)),
+		if (isFeatureLanguageComposite(manifest)) {
+			const passingSlots = new Set(
+				evaluationReport.records
+					.filter((record) => record.result === "pass")
+					.map((record) => record.capabilitySlot),
+			);
+			for (const slot of EXPECTED_LANGUAGE_COMPOSITE_SLOTS) {
+				expect(
+					passingSlots.has(slot),
+					`${packageJson.name} feature language composite slot ${slot} must have passing generated evaluation evidence.`,
+				);
+			}
+		}
+		expect(
+			JSON.stringify(sorted([...evaluationRecordIds])) ===
+				JSON.stringify(sorted(coverageReport.evaluationRecordIds)),
 		`${packageJson.name} coverage evaluationRecordIds must match EVALUATION.generated.json.`,
 	);
 	if (evaluationRecordIds.size === 0) {

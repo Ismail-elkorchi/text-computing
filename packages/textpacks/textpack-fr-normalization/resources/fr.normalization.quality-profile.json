@@ -4,10 +4,14 @@
       "diagnosticId": "fr-normalization-scope",
       "message": "Unicode/CLDR-backed profile for modern typed French; spelling correction and noisy-text normalization are out of scope.",
       "metadata": {
+        "contractionFormCount": 4,
+        "elisionPrefixCount": 16,
         "likelySubtag": "fr-Latn-FR",
+        "normalizationGoldCaseCount": 16,
         "sourceIds": [
           "source:unicode:ucd",
-          "source:unicode:cldr-core"
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
       "severity": "info",
@@ -22,7 +26,7 @@
       "metricId": "rule-count",
       "name": "ruleCount",
       "unit": "rules",
-      "value": 3
+      "value": 7
     },
     {
       "metricId": "nfc-quick-check-value-count",
@@ -41,6 +45,24 @@
       "name": "recordsRejected",
       "unit": "records",
       "value": 0
+    },
+    {
+      "metricId": "french-elision-prefix-count",
+      "name": "elisionPrefixCount",
+      "unit": "prefixes",
+      "value": 16
+    },
+    {
+      "metricId": "french-contraction-form-count",
+      "name": "contractionFormCount",
+      "unit": "forms",
+      "value": 4
+    },
+    {
+      "metricId": "french-normalization-gold-case-count",
+      "name": "normalizationGoldCaseCount",
+      "unit": "cases",
+      "value": 16
     }
   ],
   "profileId": "fr-normalization-quality",

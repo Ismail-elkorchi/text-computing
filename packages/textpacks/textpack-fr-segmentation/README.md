@@ -14,6 +14,11 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-fr-segmentation";
 - `fr-grapheme-segmentation-profile` (segmentation-profile, json)
 - `fr-word-segmentation-profile` (segmentation-profile, json)
 - `fr-sentence-segmentation-profile` (segmentation-profile, json)
+- `fr-token-segmentation-profile` (segmentation-profile, json)
+- `fr-segmentation-elision-prefixes` (segmentation-profile, tsv)
+- `fr-segmentation-contraction-forms` (segmentation-profile, tsv)
+- `fr-segmentation-abbreviations` (segmentation-profile, tsv)
+- `fr-segmentation-gold-cases` (quality-profile, json)
 - `fr-segmentation-quality` (quality-profile, json)
 - `fr-segmentation-quality-profile` (quality-profile, json)
 

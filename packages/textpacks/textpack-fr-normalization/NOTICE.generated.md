@@ -11,14 +11,16 @@ Publishability status: `publishable`
 
 This package is source-backed. Its resource payloads are deterministic transform outputs from pinned local source snapshots. The normal forge build is offline and verifies input checksums before emitting package files.
 
-License expression: `Unicode-3.0`
-Source ids: `source:unicode:ucd`, `source:unicode:cldr-core`
-Snapshot ids: `snapshot:source:unicode:ucd:17.0.0`, `snapshot:source:unicode:cldr-core:48.2.0`
+License expression: `Unicode-3.0 AND CC-BY-2.0-FR`
+Source ids: `source:unicode:ucd`, `source:unicode:cldr-core`, `source:tatoeba:weekly-french-2026-06-06`
+Snapshot ids: `snapshot:source:unicode:ucd:17.0.0`, `snapshot:source:unicode:cldr-core:48.2.0`, `snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06`
 
 ## License Evidence
 
 Source evidence:
 
+- https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus
+- https://tatoeba.org/en/downloads
 - https://www.unicode.org/license.txt
 - https://www.unicode.org/terms_of_use.html
 
