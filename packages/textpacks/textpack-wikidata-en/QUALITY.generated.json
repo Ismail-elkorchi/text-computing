@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 93,
+  "acceptedRecordCount": 43174,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -11,26 +11,28 @@
         "terminology": "kb"
       },
       "notes": [
-        "Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit artifact descriptor.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Wikidata English core entity rows, aliases, and P31 relations are materialized locally for the declared class-and-sitelink-threshold extract scope.",
+        "The pack does not claim complete Wikidata dump coverage."
       ],
       "resourceIds": [
-        "wikidata-en-kb-artifact"
+        "wikidata-en-entities",
+        "wikidata-en-aliases",
+        "wikidata-en-relations",
+        "wikidata-en-kb-canonical"
       ],
       "slot": "kb",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Generated quality profile records artifact size, upstream checksum sidecar evidence, and local materialization limitations.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Generated quality profile records local entity, alias, relation, scope, and checksum evidence."
       ],
       "resourceIds": [
         "wikidata-en-quality",
         "wikidata-en-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [],
@@ -40,47 +42,71 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-wikidata-en",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 3,
+  "resourceCount": 6,
   "resourcePaths": [
-    "resources/wikidata-en.kb-artifact.json",
+    "resources/wikidata-en.aliases.tsv.gz.b64",
+    "resources/wikidata-en.entities.tsv.gz.b64",
+    "resources/wikidata-en.kb.json",
     "resources/wikidata-en.quality.json",
-    "resources/wikidata-en.quality-profile.json"
+    "resources/wikidata-en.quality-profile.json",
+    "resources/wikidata-en.relations.tsv.gz.b64"
   ],
   "resourceSpecIds": [
     "resource-spec:textpack-wikidata-en:wikidata-main-artifact"
   ],
   "resources": [
     {
-      "byteLength": 786,
-      "checksum": "sha256:a1f617f757aa66fbdee91d53e48aa91b295e1dbebeab8ada0a6c5e05f85d4fab",
-      "id": "wikidata-en-kb-artifact",
+      "byteLength": 204893,
+      "checksum": "sha256:7604d6fcac1965ec5828b0e699905e6492d878965cb4097be263dc4e1c55307b",
+      "id": "wikidata-en-aliases",
       "kind": "knowledge-base",
-      "lineCount": 31,
-      "nonEmptyLineCount": 30,
-      "path": "resources/wikidata-en.kb-artifact.json",
+      "lineCount": 19783,
+      "nonEmptyLineCount": 19782,
+      "path": "resources/wikidata-en.aliases.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 821,
-      "checksum": "sha256:b46d56bb56fff0c0eee98c3437bbb235738039850ee4754a9304fff8a2eeef88",
+      "byteLength": 359241,
+      "checksum": "sha256:3cb863cf304d512296628efe5f0260aea643187d8de239f4430ecaeef39f9217",
+      "id": "wikidata-en-entities",
+      "kind": "knowledge-base",
+      "lineCount": 11620,
+      "nonEmptyLineCount": 11619,
+      "path": "resources/wikidata-en.entities.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 528,
+      "checksum": "sha256:18480b9acd2b25de4e4d90c711218044de6177529085446262d08ede54fe73aa",
+      "id": "wikidata-en-kb-canonical",
+      "kind": "knowledge-base",
+      "lineCount": 28,
+      "nonEmptyLineCount": 27,
+      "path": "resources/wikidata-en.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 972,
+      "checksum": "sha256:799f427bf95894042df2a54225fefc958a095b9eed84220ae07737b499a94627",
       "id": "wikidata-en-quality",
       "kind": "quality-profile",
-      "lineCount": 19,
-      "nonEmptyLineCount": 18,
+      "lineCount": 27,
+      "nonEmptyLineCount": 26,
       "path": "resources/wikidata-en.quality.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
@@ -88,13 +114,26 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1408,
-      "checksum": "sha256:f461cf9a4cd1cfbd29f2d6f27a1119a114d0ebfc43961551f8a9c343a9cf2375",
+      "byteLength": 2794,
+      "checksum": "sha256:db2113a597d624eb16cddc83ae055068554a845e24ee8738464e356df91db72e",
       "id": "wikidata-en-quality-profile",
       "kind": "quality-profile",
-      "lineCount": 46,
-      "nonEmptyLineCount": 45,
+      "lineCount": 102,
+      "nonEmptyLineCount": 101,
       "path": "resources/wikidata-en.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 60585,
+      "checksum": "sha256:fb6d1e09d6aeaf9973c743da7af57987db1cb4cc836f97f82fba653252cdf3a4",
+      "id": "wikidata-en-relations",
+      "kind": "knowledge-base",
+      "lineCount": 11620,
+      "nonEmptyLineCount": 11619,
+      "path": "resources/wikidata-en.relations.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -102,10 +141,8 @@
     }
   ],
   "schemaVersion": "1",
-  "supportLevel": "artifact-backed",
+  "supportLevel": "task-supported",
   "warnings": [
-    "kb is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
   ]
 }

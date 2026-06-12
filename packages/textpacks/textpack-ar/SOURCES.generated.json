@@ -64,11 +64,11 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-ar-kb",
-      "reason": "Arabic WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+      "reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
       "role": "required",
       "versionRange": "0.1.0"
     },
@@ -82,25 +82,25 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-ar-corpus",
-      "reason": "Arabic artifact-backed Tatoeba corpus descriptors and quality evidence.",
+      "reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
       "role": "required",
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-ar-parallel",
-      "reason": "Arabic artifact-backed Tatoeba parallel descriptors and quality evidence.",
+      "reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
       "role": "required",
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-share-alike",
       "packageName": "@ismail-elkorchi/textpack-ar-quality",
@@ -116,18 +116,11 @@
   "packageName": "@ismail-elkorchi/textpack-ar",
   "policySurface": "policy-expanded-wrapper",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot corpus is artifact-backed without local task-usable payloads",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [],
   "resources": [],
   "schemaVersion": "1",
@@ -350,7 +343,7 @@
       "version": "v4.1.0@3d244b30a0e4a8807bc7509cac32342ad5a4e86d"
     },
     {
-      "checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197",
+      "checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c",
       "files": [
         {
           "byteLength": 129,
@@ -365,10 +358,82 @@
           "mediaType": "text/plain",
           "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
           "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
+        },
+        {
+          "byteLength": 176372,
+          "checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv"
+        },
+        {
+          "byteLength": 601528,
+          "checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv"
+        },
+        {
+          "byteLength": 9171,
+          "checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 181451,
+          "checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv"
+        },
+        {
+          "byteLength": 507718,
+          "checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1207332,
+          "checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv"
+        },
+        {
+          "byteLength": 9237,
+          "checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 364007,
+          "checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv"
+        },
+        {
+          "byteLength": 339445,
+          "checksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1164023,
+          "checksum": "sha256:b4dda64824d9b904703eac084931be6dad3c47a9d770673b29aed7cc731f9f85",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv"
+        },
+        {
+          "byteLength": 9173,
+          "checksum": "sha256:7d46ecdcaad81c6ef85139decbac517ee64c715e6a8069d6352d4d4b2725ca27",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 581521,
+          "checksum": "sha256:0a549fbec2daeb2243e8352977852c3476f7e35a6ef4eb10141df0babc0df276",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv"
         }
       ],
       "kind": "external",
-      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump. The raw dump is artifact-backed and not stored in the repository.",
+      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:wikidata:main:20260608",
@@ -376,8 +441,43 @@
       "version": "20260608"
     },
     {
-      "checksum": "sha256:8caefc61478d6bd0e7f4ea46e36a75ed1db1160993d47100d946a474522b6f8c",
+      "checksum": "sha256:b3ff1462e8003c18c897b893c12c363b2e6aaf68ded2fb62e77295ef167b71dd",
       "files": [
+        {
+          "byteLength": 1198138,
+          "checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara_sentences_detailed.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2"
+        },
+        {
+          "byteLength": 18446,
+          "checksum": "sha256:63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-deu_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-deu_links.tsv.bz2"
+        },
+        {
+          "byteLength": 297959,
+          "checksum": "sha256:e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-eng_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-eng_links.tsv.bz2"
+        },
+        {
+          "byteLength": 19407,
+          "checksum": "sha256:1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-fra_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-fra_links.tsv.bz2"
+        },
+        {
+          "byteLength": 21075,
+          "checksum": "sha256:45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-spa_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-spa_links.tsv.bz2"
+        },
         {
           "byteLength": 3390,
           "checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262",
@@ -387,7 +487,7 @@
         }
       ],
       "kind": "external",
-      "notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository.",
+      "notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts used to generate task-supported corpus and parallel textpacks.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
@@ -615,7 +715,7 @@
       ],
       "licenseExpression": "CC-BY-2.0-FR",
       "name": "Tatoeba weekly Arabic exports 2026-06-06",
-      "notes": "Exact Tatoeba weekly Arabic sentence and Arabic-linked parallel artifact metadata. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave Arabic source, not a first-wave morphology, syntax, lexicon, or KB source. Second-wave exact snapshot: may document corpus/parallel artifact-backed package slots after checksum, attribution, and descriptor evidence are generated, but it does not provide task support until local rows or indexes are materialized.",
+      "notes": "Exact Tatoeba weekly Arabic sentence and Arabic-linked parallel exports. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave Arabic source, not a first-wave morphology, syntax, lexicon, or KB source. It can provide task support only when transformed into local sentence rows, alignment/link rows, or an equivalent local index; the active Arabic corpus and parallel packs materialize those local rows.",
       "policyClass": "attribution",
       "priority": "second",
       "publishableByDefault": true,

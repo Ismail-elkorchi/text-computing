@@ -4,19 +4,20 @@
 	"packageName": "@ismail-elkorchi/textpack-fr-sa",
 	"packageDir": "packages/textpacks/textpack-fr-sa",
 	"name": "French Share-Alike Developer Composite Textpack",
-	"description": "Generated private artifact-backed French policy-expanded recipe composite over the policy-expanded French component graph.",
-	"publishable": false,
+	"description": "Generated French recipe composite over the current component graph with local KB, corpus, and parallel payloads.",
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated share-alike recipe composite over the currently generated French foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and artifact-backed Tatoeba resources remain explicit artifact descriptors rather than local task payloads.",
+		"productionGradeSourceCoverage": "Generated share-alike recipe composite over the currently generated French foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and Tatoeba sources are materialized as local scoped payloads: French entity/alias/relation rows, Tatoeba sentence rows, and Tatoeba parallel link rows. Quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
 		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. Lexique 3.83, UniMorph French, and UD French GSD remain isolated behind the package name's required -sa policy suffix.",
-		"declaredScope": "Policy-expanded French private artifact-backed textpack for the currently generated French resource graph. It includes share-alike Lexique, UniMorph French, and UD French GSD components explicitly and does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, local Wikidata/Tatoeba payloads until materialized extracts or rows are generated, neural models, statistical parsers, raw web corpora, or hidden network access.",
+		"declaredScope": "Policy-expanded French share-alike developer textpack for the currently generated French resource graph. It includes share-alike Lexique, UniMorph French, and UD French GSD components explicitly and does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, complete Wikidata dump coverage, neural models, statistical parsers, raw web corpora, or hidden network access.",
 		"conformanceEvidence": [
 			"eval:textpack-fr-sa:required-component-graph",
 			"eval:textpack-fr-quality-sa:required-component-graph",
 			"eval:textpack-fr-lexicon-sa:required-component-graph",
 			"eval:textpack-fr-morphology-sa:required-component-graph",
 			"eval:textpack-fr-syntax-sa:required-component-graph",
-			"eval:textpack-fr-search-sa:required-component-graph"
+			"eval:textpack-fr-search-sa:required-component-graph",
+			"docs:textpacks/language-composite-readiness.generated.md#french-fr"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -30,7 +31,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "feature-complete",
 	"loader": {
 		"functionName": "loadFrenchShareAlike",
 		"languageName": "FrenchShareAlike"
@@ -134,10 +135,10 @@
 			"packageName": "@ismail-elkorchi/textpack-fr-kb",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "French Wikidata entity artifact descriptors.",
+			"reason": "Local Wikidata French core entity extract.",
 			"licensePolicy": "default",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-search-sa",
@@ -152,19 +153,19 @@
 			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "French artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"reason": "French local Tatoeba corpus sentence rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "French artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"reason": "French local Tatoeba parallel link rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
@@ -207,9 +208,9 @@
 		},
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Wikidata French core entity rows."
 			]
 		},
 		{
@@ -218,23 +219,23 @@
 		},
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba French sentence rows and canonical corpus metadata."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba French-linked sentence-id alignment rows for selected target languages."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides generated French quality evidence and coverage reports over the required local component graph."
 			]
 		}
 	],

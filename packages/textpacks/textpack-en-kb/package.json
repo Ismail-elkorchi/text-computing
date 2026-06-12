@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-en-kb",
 	"version": "0.1.0",
-	"description": "Generated source-backed English KB recipe composite for WordNet lexical-semantic resources and Wikidata entity artifacts.",
+	"description": "Generated source-backed English KB recipe composite for WordNet lexical-semantic resources and a local Wikidata English core entity extract.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -41,5 +41,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

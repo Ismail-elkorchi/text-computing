@@ -4,16 +4,17 @@
 	"packageName": "@ismail-elkorchi/textpack-fr-kb",
 	"packageDir": "packages/textpacks/textpack-fr-kb",
 	"name": "French Knowledge Base Composite Textpack",
-	"description": "Generated source-backed French KB recipe composite for Wikidata entity and ontology artifacts.",
-	"publishable": false,
+	"description": "Generated source-backed French KB recipe composite for local Wikidata entity extracts.",
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over the artifact-backed French Wikidata component. Wikidata provides a explicit artifact descriptor for French entity labels, aliases, relations, and ontology data.",
+		"productionGradeSourceCoverage": "Generated recipe composite over task-supported local French KB resources. Wikidata provides local entity, alias, relation, canonical KB, quality, and evaluation resources for its declared extract scope.",
 		"auditedLicense": "The exact Wikidata main structured source row is approved; the required component package carries package-local license evidence for Wikidata CC0 structured data.",
-		"declaredScope": "French KB component composite backed by a Wikidata main entity and ontology artifact descriptor. It does not claim local Wikidata entity lookup until a materialized entity extract is generated, WOLF/OMW lexical-semantic wordnet coverage, word-sense inventory coverage, morphology, syntax, search, corpus, parallel, or full language-composite coverage.",
+		"declaredScope": "French KB component composite backed by local Wikidata core entity rows. It does not claim full Wikidata dump coverage, full named-entity-linking coverage, morphology, syntax, corpus, parallel, or full language-composite coverage.",
 		"conformanceEvidence": [
 			"eval:textpack-fr-kb:required-component-graph",
-			"eval:wikidata-fr:artifact-descriptor",
-			"eval:wikidata-fr:checksum-sidecar"
+			"eval:wikidata-fr:entity-extract",
+			"eval:wikidata-fr:alias-coverage",
+			"eval:wikidata-fr:relation-coverage"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -27,7 +28,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "task-supported",
 	"loader": {
 		"functionName": "loadFrenchKnowledgeBase",
 		"languageName": "FrenchKnowledgeBase"
@@ -57,25 +58,22 @@
 			"reason": "Default French Wikidata entity labels, aliases, relations, and ontology artifact descriptor.",
 			"licensePolicy": "default",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides French Wikidata entity labels, aliases, relations, and ontology artifact descriptors.",
-				"WOLF/OMW French wordnet resources are CeCILL-C isolated and are not part of this default KB component.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Wikidata French core entity rows, aliases, and relations."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Generated component reports and evaluation records are available for the required KB component.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated component reports and evaluation records are available for the required KB component graph."
 			]
 		}
 	],

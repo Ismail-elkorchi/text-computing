@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-fr-kb",
 	"version": "0.1.0",
-	"description": "Generated source-backed French KB recipe composite for Wikidata entity and ontology artifacts.",
+	"description": "Generated source-backed French KB recipe composite for local Wikidata entity extracts.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -39,5 +39,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

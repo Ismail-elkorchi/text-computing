@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-ar-kb",
 	"version": "0.1.0",
-	"description": "Generated source-backed Arabic KB recipe composite for Arabic WordNet lexical-semantic resources and Wikidata entity artifacts.",
+	"description": "Generated source-backed Arabic KB recipe composite for local Wikidata entity extracts and Arabic WordNet lexical-semantic resources.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -41,5 +41,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

@@ -260,7 +260,9 @@ function resourcePayload(
 	value: unknown,
 ): TextPackResourcePayload {
 	const format = resource.format ?? "";
-	if (format.includes("tsv")) return parseTablePayload(resource, value);
+	if (format.includes("tsv") || format.includes("tab-separated-values")) {
+		return parseTablePayload(resource, value);
+	}
 	if (format === "json" || format.endsWith("+json")) {
 		return parseJsonPayload(value);
 	}

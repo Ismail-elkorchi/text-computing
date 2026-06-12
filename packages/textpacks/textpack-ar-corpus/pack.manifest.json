@@ -1,7 +1,7 @@
 {
 	"schemaVersion": "1",
 	"id": "pack:ar-corpus",
-	"name": "Arabic Tatoeba Corpus Artifact Pack",
+	"name": "Arabic Tatoeba Corpus Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-ar-corpus",
 	"targets": {
@@ -20,9 +20,19 @@
 	},
 	"resources": [
 		{
-			"id": "ar-tatoeba-corpus-artifact",
+			"id": "ar-tatoeba-corpus-sentences",
 			"kind": "corpus",
-			"path": "resources/tatoeba-ar.corpus-artifact.json",
+			"path": "resources/tatoeba-ar.sentences.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly Arabic exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "ar-tatoeba-corpus-canonical",
+			"kind": "corpus",
+			"path": "resources/tatoeba-ar.corpus.json",
 			"format": "json",
 			"license": "CC-BY-2.0-FR",
 			"citations": [
@@ -91,28 +101,28 @@
 	"capabilitySlots": [
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
-				"ar-tatoeba-corpus-artifact"
+				"ar-tatoeba-corpus-sentences",
+				"ar-tatoeba-corpus-canonical"
 			],
 			"artifactIds": [
 				"artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06"
 			],
 			"notes": [
-				"Tatoeba Arabic detailed sentence export is available through an explicit artifact descriptor.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Tatoeba Arabic detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+				"The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
 				"ar-tatoeba-corpus-quality",
 				"ar-tatoeba-corpus-quality-profile"
 			],
 			"notes": [
-				"Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
 			]
 		}
 	],
@@ -120,23 +130,9 @@
 	"citations": [
 		"Tatoeba weekly Arabic exports, 2026-06-06."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:ar-corpus:corpus",
-			"slot": "corpus",
-			"status": "artifact-backed",
-			"message": "corpus is artifact-backed in this source-backed concrete pack."
-		},
-		{
-			"id": "gap:pack:ar-corpus:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed concrete pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

@@ -6,18 +6,21 @@
 	"name": "French Quality Policy-Expanded Wrapper Textpack",
 	"description": "Generated policy-expanded French quality recipe wrapper over the full share-alike French quality component graph.",
 	"policySurface": "policy-expanded-wrapper",
-	"publishable": false,
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated wrapper over the currently generated French quality component graph, including foundation, core, normalization, segmentation, share-alike lexicon, share-alike morphology, share-alike syntax, KB, share-alike search, corpus artifact, and parallel artifact quality evidence.",
+		"productionGradeSourceCoverage": "Generated wrapper over the currently generated French quality component graph, including foundation, core, normalization, segmentation, share-alike lexicon, share-alike morphology, share-alike syntax, KB, share-alike search, corpus artifact, and parallel artifact quality evidence. Required KB, corpus, and parallel components provide local task-usable payloads for their declared scopes, and quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
 		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. Lexique 3.83, UniMorph French, and UD French GSD remain in isolated -sa components and this wrapper exposes the full license expression and component policy.",
-		"declaredScope": "French resource-quality wrapper for the currently generated French component graph. It does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, corpus-scale quality baselines beyond explicit Tatoeba artifact evidence, OCR/noisy-text diagnostics, raw web corpora, or hidden network access.",
+		"declaredScope": "French resource-quality wrapper for the currently generated French component graph. It does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, corpus-scale quality baselines beyond the local Tatoeba materialized evidence, OCR/noisy-text diagnostics, raw web corpora, or hidden network access.",
 		"conformanceEvidence": [
 			"eval:textpack-fr-quality:required-component-graph",
 			"eval:textpack-fr-quality-sa:required-component-graph",
 			"eval:textpack-fr-lexicon:required-component-graph",
 			"eval:textpack-fr-morphology:required-component-graph",
 			"eval:textpack-fr-syntax:required-component-graph",
-			"eval:textpack-fr-search:required-component-graph"
+			"eval:textpack-fr-search:required-component-graph",
+			"eval:tatoeba-fr-corpus:materialized-rows",
+			"eval:tatoeba-fr-parallel:language-pair-coverage",
+			"eval:wikidata-fr:entity-extract"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -31,7 +34,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "task-supported",
 	"loader": {
 		"functionName": "loadFrenchQuality",
 		"languageName": "FrenchQuality"
@@ -75,16 +78,15 @@
 			"reason": "Share-alike isolated French quality component graph with full generated evaluation evidence.",
 			"licensePolicy": "allow-share-alike",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides French quality-profile resources, generated quality reports, coverage reports, and evaluation records through an explicit share-alike policy wrapper.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides French quality-profile resources, generated reports, coverage reports, and evaluation records over local KB, corpus, and parallel payloads."
 			]
 		}
 	],

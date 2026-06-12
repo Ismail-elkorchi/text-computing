@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:en-corpus",
-	"name": "English Tatoeba Corpus Artifact Pack",
+	"name": "English Tatoeba Corpus Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-en-corpus",
 	"targets": {
@@ -25,9 +25,19 @@ export const manifest: TextPackManifest = {
 	},
 	"resources": [
 		{
-			"id": "en-tatoeba-corpus-artifact",
+			"id": "en-tatoeba-corpus-sentences",
 			"kind": "corpus",
-			"path": "resources/tatoeba-en.corpus-artifact.json",
+			"path": "resources/tatoeba-en.sentences.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "en-tatoeba-corpus-canonical",
+			"kind": "corpus",
+			"path": "resources/tatoeba-en.corpus.json",
 			"format": "json",
 			"license": "CC-BY-2.0-FR",
 			"citations": [
@@ -96,28 +106,28 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
-				"en-tatoeba-corpus-artifact"
+				"en-tatoeba-corpus-sentences",
+				"en-tatoeba-corpus-canonical"
 			],
 			"artifactIds": [
 				"artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06"
 			],
 			"notes": [
-				"Tatoeba English detailed sentence export is available through an explicit artifact descriptor.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Tatoeba English detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+				"The pack scope is the Tatoeba English sentence export; it does not claim balanced reference-corpus coverage."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
 				"en-tatoeba-corpus-quality",
 				"en-tatoeba-corpus-quality-profile"
 			],
 			"notes": [
-				"Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
 			]
 		}
 	],
@@ -125,23 +135,9 @@ export const manifest: TextPackManifest = {
 	"citations": [
 		"Tatoeba weekly exports, 2026-06-06."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:en-corpus:corpus",
-			"slot": "corpus",
-			"status": "artifact-backed",
-			"message": "corpus is artifact-backed in this source-backed concrete pack."
-		},
-		{
-			"id": "gap:pack:en-corpus:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed concrete pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

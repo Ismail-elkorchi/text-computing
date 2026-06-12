@@ -1,14 +1,15 @@
 {
   "diagnostics": [
     {
-      "diagnosticId": "tatoeba-fr-explicit-corpus-artifact-fetch",
-      "message": "Tatoeba French sentence data is exposed as an explicit artifact descriptor; local corpus rows have not been materialized yet.",
+      "diagnosticId": "tatoeba-fr-local-corpus-rows",
+      "message": "Tatoeba French sentence data is materialized as local canonical TSV rows.",
       "metadata": {
         "artifactId": "artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06",
-        "artifactPolicy": "fetch-explicit"
+        "resourceId": "fr-tatoeba-corpus-sentences",
+        "rowChecksum": "sha256:682bcded361d9094e084ea9c566f8676d8b8174bb9290cb6bd3d4f35a518ffe1"
       },
       "severity": "info",
-      "task": "corpus.artifact"
+      "task": "corpus.materialization"
     },
     {
       "diagnosticId": "tatoeba-fr-attribution-corpus-fields",
@@ -31,13 +32,13 @@
       "value": 718596
     },
     {
-      "metricId": "artifact-size-bytes",
-      "name": "artifactSizeBytes",
-      "unit": "bytes",
-      "value": 14624789
+      "metricId": "rejected-row-count",
+      "name": "rejectedRowCount",
+      "unit": "rows",
+      "value": 0
     }
   ],
-  "profileId": "tatoeba-fr-corpus-artifact-quality",
+  "profileId": "tatoeba-fr-corpus-materialized-quality",
   "schemaVersion": "1",
   "script": "Latn",
   "thresholds": []

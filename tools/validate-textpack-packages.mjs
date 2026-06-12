@@ -582,7 +582,7 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const quality = runtime.loadQualityProfile(runtimePack);
 		assertFamilyCount(packageName, corpus, 1, "corpus");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, corpus, "json", "corpus");
+		assertFirstPayload(packageName, corpus, "table", "corpus");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		assertArtifactDescriptors(packageName, runtimePack, 1);
 		return;
@@ -592,7 +592,7 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const quality = runtime.loadQualityProfile(runtimePack);
 		assertFamilyCount(packageName, parallel, 8, "parallel");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, parallel, "json", "parallel");
+		assertFirstPayload(packageName, parallel, "table", "parallel");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		assertArtifactDescriptors(packageName, runtimePack, 8);
 		return;
@@ -602,7 +602,7 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const quality = runtime.loadQualityProfile(runtimePack);
 		assertFamilyCount(packageName, corpus, 1, "corpus");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, corpus, "json", "corpus");
+		assertFirstPayload(packageName, corpus, "table", "corpus");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		assertArtifactDescriptors(packageName, runtimePack, 1);
 		return;
@@ -612,7 +612,7 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const quality = runtime.loadQualityProfile(runtimePack);
 		assertFamilyCount(packageName, parallel, 4, "parallel");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, parallel, "json", "parallel");
+		assertFirstPayload(packageName, parallel, "table", "parallel");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		assertArtifactDescriptors(packageName, runtimePack, 4);
 		return;
@@ -624,9 +624,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 	) {
 		const knowledge = runtime.loadKnowledgeBase(runtimePack);
 		const quality = runtime.loadQualityProfile(runtimePack);
-		assertFamilyCount(packageName, knowledge, 1, "knowledge-base");
+		assertFamilyCount(packageName, knowledge, 4, "knowledge-base");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, knowledge, "json", "knowledge-base");
+		assertFirstPayload(packageName, knowledge, "table", "knowledge-base");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		expect(
 			runtimePack.manifest.artifacts?.length === 1,
@@ -727,7 +727,7 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const quality = runtime.loadQualityProfile(runtimePack);
 		assertFamilyCount(packageName, corpus, 1, "corpus");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, corpus, "json", "corpus");
+		assertFirstPayload(packageName, corpus, "table", "corpus");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		assertArtifactDescriptors(packageName, runtimePack, 1);
 		return;
@@ -737,7 +737,7 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const quality = runtime.loadQualityProfile(runtimePack);
 		assertFamilyCount(packageName, parallel, 4, "parallel");
 		assertFamilyCount(packageName, quality, 2, "quality");
-		assertFirstPayload(packageName, parallel, "json", "parallel");
+		assertFirstPayload(packageName, parallel, "table", "parallel");
 		assertFirstPayload(packageName, quality, "json", "quality");
 		assertArtifactDescriptors(packageName, runtimePack, 4);
 		return;

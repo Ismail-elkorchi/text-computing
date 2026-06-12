@@ -13,12 +13,12 @@
     "package.json",
     "QUALITY.generated.json",
     "README.md",
-    "resources/tatoeba-ar.parallel-deu.json",
-    "resources/tatoeba-ar.parallel-eng.json",
-    "resources/tatoeba-ar.parallel-fra.json",
+    "resources/tatoeba-ar.parallel-deu.tsv.gz.b64",
+    "resources/tatoeba-ar.parallel-eng.tsv.gz.b64",
+    "resources/tatoeba-ar.parallel-fra.tsv.gz.b64",
     "resources/tatoeba-ar.parallel-quality-profile.json",
     "resources/tatoeba-ar.parallel-quality.json",
-    "resources/tatoeba-ar.parallel-spa.json",
+    "resources/tatoeba-ar.parallel-spa.tsv.gz.b64",
     "SOURCES.generated.json",
     "src/index.ts",
     "src/manifest.ts",
@@ -29,23 +29,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+  "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:dc83f25042d1b7e0d52ab163b30411673549e1f3364cc8317576953f2aed3321",
+  "outputChecksum": "sha256:3ec8eba93a82a20fb98f67d5ada54029964ac4cd0985f0099429156d402ea119",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-ar-parallel",
   "packageVersion": "0.1.0",
   "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

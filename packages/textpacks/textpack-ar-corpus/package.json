@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-ar-corpus",
 	"version": "0.1.0",
-	"description": "Artifact-backed descriptor-only source-backed Arabic corpus artifact descriptors generated from Tatoeba weekly Arabic exports.",
+	"description": "Source-backed Arabic Tatoeba corpus pack with local generated sentence rows.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -39,5 +39,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

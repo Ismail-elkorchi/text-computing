@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:fr-corpus",
-	"name": "French Tatoeba Corpus Artifact Pack",
+	"name": "French Tatoeba Corpus Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-fr-corpus",
 	"targets": {
@@ -25,9 +25,19 @@ export const manifest: TextPackManifest = {
 	},
 	"resources": [
 		{
-			"id": "fr-tatoeba-corpus-artifact",
+			"id": "fr-tatoeba-corpus-sentences",
 			"kind": "corpus",
-			"path": "resources/tatoeba-fr.corpus-artifact.json",
+			"path": "resources/tatoeba-fr.sentences.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			]
+		},
+		{
+			"id": "fr-tatoeba-corpus-canonical",
+			"kind": "corpus",
+			"path": "resources/tatoeba-fr.corpus.json",
 			"format": "json",
 			"license": "CC-BY-2.0-FR",
 			"citations": [
@@ -96,28 +106,28 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
-				"fr-tatoeba-corpus-artifact"
+				"fr-tatoeba-corpus-sentences",
+				"fr-tatoeba-corpus-canonical"
 			],
 			"artifactIds": [
 				"artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06"
 			],
 			"notes": [
-				"Tatoeba French detailed sentence export is available through an explicit artifact descriptor.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Tatoeba French detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+				"The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
 				"fr-tatoeba-corpus-quality",
 				"fr-tatoeba-corpus-quality-profile"
 			],
 			"notes": [
-				"Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
 			]
 		}
 	],
@@ -125,23 +135,9 @@ export const manifest: TextPackManifest = {
 	"citations": [
 		"Tatoeba weekly French exports, 2026-06-06."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:fr-corpus:corpus",
-			"slot": "corpus",
-			"status": "artifact-backed",
-			"message": "corpus is artifact-backed in this source-backed concrete pack."
-		},
-		{
-			"id": "gap:pack:fr-corpus:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed concrete pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

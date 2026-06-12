@@ -95,7 +95,7 @@ export const manifest: TextPackManifest = {
 			"reason": "Arabic KB component quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
@@ -104,7 +104,7 @@ export const manifest: TextPackManifest = {
 			"reason": "Arabic Tatoeba corpus artifact quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
@@ -113,16 +113,15 @@ export const manifest: TextPackManifest = {
 			"reason": "Arabic Tatoeba parallel artifact quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Arabic MSA core, normalization, segmentation, lexicon, morphology, share-alike syntax, search, KB, corpus artifact, and parallel artifact quality-profile resources, generated reports, coverage reports, and evaluation records.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides Arabic quality-profile resources, generated reports, coverage reports, and evaluation records over local KB, corpus, and parallel payloads."
 			]
 		}
 	],
@@ -137,17 +136,9 @@ export const manifest: TextPackManifest = {
 		"Tatoeba weekly Arabic exports, 2026-06-06.",
 		"Universal Dependencies Arabic NYUAD r2.18 annotations."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:ar-quality-sa:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed recipe composite pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

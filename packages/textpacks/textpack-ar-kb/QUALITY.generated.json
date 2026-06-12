@@ -4,19 +4,17 @@
   "capabilitySlots": [
     {
       "notes": [
-        "The required component graph provides Arabic WordNet synsets, senses, lexical entries, semantic relations, and Wikidata entity artifact descriptors.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "The required component graph provides local Wikidata Arabic core entity rows, aliases, and relations, plus Arabic WordNet lexical-semantic resources."
       ],
       "slot": "kb",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Generated component reports and evaluation records are available for the required KB component.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Generated component reports and evaluation records are available for the required KB component graph."
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [
@@ -30,7 +28,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "default",
       "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
@@ -45,26 +43,19 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar-kb",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
   "resourceCount": 0,
   "resourcePaths": [],
   "resourceSpecIds": [],
   "resources": [],
   "schemaVersion": "1",
-  "supportLevel": "artifact-backed",
+  "supportLevel": "task-supported",
   "warnings": [
-    "generated language component recipe composite; broader language composite coverage remains follow-up",
-    "kb is artifact-backed in this source-backed recipe composite pack.",
-    "quality is artifact-backed in this source-backed recipe composite pack."
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
   ]
 }

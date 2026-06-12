@@ -10,17 +10,17 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-wikidata-ar";
 
 ## Resources
 
-- `wikidata-ar-kb-artifact` (knowledge-base, json)
+- `wikidata-ar-entities` (knowledge-base, text/tab-separated-values)
+- `wikidata-ar-aliases` (knowledge-base, text/tab-separated-values)
+- `wikidata-ar-relations` (knowledge-base, text/tab-separated-values)
+- `wikidata-ar-kb-canonical` (knowledge-base, json)
 - `wikidata-ar-quality` (quality-profile, json)
 - `wikidata-ar-quality-profile` (quality-profile, json)
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- artifact-backed descriptors require local materialized payloads before publishability
-- capability slot kb is artifact-backed without local task-usable payloads
-- capability slot quality is artifact-backed without local task-usable payloads
-- generated packs are non-publishable by default
+- None
 

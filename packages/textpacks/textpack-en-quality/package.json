@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-en-quality",
 	"version": "0.1.0",
-	"description": "Generated source-backed English quality recipe composite for audited component quality profiles, including artifact-backed corpus and parallel artifact evidence.",
+	"description": "Generated source-backed English quality recipe composite for audited component quality profiles and local task evidence.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -49,5 +49,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

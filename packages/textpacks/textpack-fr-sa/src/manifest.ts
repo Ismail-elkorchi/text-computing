@@ -92,10 +92,10 @@ export const manifest: TextPackManifest = {
 			"packageName": "@ismail-elkorchi/textpack-fr-kb",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "French Wikidata entity artifact descriptors.",
+			"reason": "Local Wikidata French core entity extract.",
 			"licensePolicy": "default",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-search-sa",
@@ -110,19 +110,19 @@ export const manifest: TextPackManifest = {
 			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "French artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"reason": "French local Tatoeba corpus sentence rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "French artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"reason": "French local Tatoeba parallel link rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
@@ -165,9 +165,9 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Wikidata French core entity rows."
 			]
 		},
 		{
@@ -176,23 +176,23 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba French sentence rows and canonical corpus metadata."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba French-linked sentence-id alignment rows for selected target languages."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides generated French quality evidence and coverage reports over the required local component graph."
 			]
 		}
 	],
@@ -207,35 +207,9 @@ export const manifest: TextPackManifest = {
 		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.",
 		"Universal Dependencies French GSD r2.18 annotations."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:fr-sa:kb",
-			"slot": "kb",
-			"status": "artifact-backed",
-			"message": "kb is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:fr-sa:corpus",
-			"slot": "corpus",
-			"status": "artifact-backed",
-			"message": "corpus is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:fr-sa:parallel",
-			"slot": "parallel",
-			"status": "artifact-backed",
-			"message": "parallel is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:fr-sa:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed recipe composite pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

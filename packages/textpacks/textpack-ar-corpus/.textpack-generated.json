@@ -13,9 +13,10 @@
     "package.json",
     "QUALITY.generated.json",
     "README.md",
-    "resources/tatoeba-ar.corpus-artifact.json",
     "resources/tatoeba-ar.corpus-quality-profile.json",
     "resources/tatoeba-ar.corpus-quality.json",
+    "resources/tatoeba-ar.corpus.json",
+    "resources/tatoeba-ar.sentences.tsv.gz.b64",
     "SOURCES.generated.json",
     "src/index.ts",
     "src/manifest.ts",
@@ -26,23 +27,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+  "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:e6e2b029f3427643845304aad45d3a60d0d2bdf2088c13fc0a9397feb17e2ef8",
+  "outputChecksum": "sha256:07814a7b5e9bb6a46384dc4bc2d7f3385fa10508f85244be6e4c84c288b1f4ec",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-ar-corpus",
   "packageVersion": "0.1.0",
   "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot corpus is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

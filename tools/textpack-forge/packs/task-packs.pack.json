@@ -226,14 +226,14 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
 			"packageDir": "packages/textpacks/textpack-ar-corpus",
-			"description": "Artifact-backed descriptor-only source-backed Arabic corpus artifact descriptors generated from Tatoeba weekly Arabic exports.",
-			"publishable": false,
+			"description": "Source-backed Arabic Tatoeba corpus pack with local generated sentence rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 Arabic detailed sentence export transformed into a canonical corpus artifact profile with row count, checksum, attribution-preserving detailed fields, quality profile, and explicit artifact descriptor. The raw corpus is not materialized locally yet; this descriptor is artifact-backed.",
+				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 Arabic detailed sentence export transformed into local canonical TSV sentence rows, canonical corpus metadata, quality profile, checksum evidence, attribution fields, and evaluation records for the declared Tatoeba scope.",
 				"auditedLicense": "The audited exact Tatoeba weekly Arabic export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
-				"declaredScope": "Arabic Tatoeba corpus artifact descriptor for the 2026-06-06 detailed Arabic sentence export. It does not claim local corpus rows, corpus-frequency statistics, benchmark splits, OPUS coverage, parallel links, dialectal Arabic corpus coverage, Classical/Quranic Arabic coverage, or full Arabic language-composite coverage.",
+				"declaredScope": "Arabic Tatoeba corpus rows for the 2026-06-06 detailed sentence export. It does not claim balanced reference-corpus coverage, OPUS coverage, web-corpus coverage, or full language-composite coverage beyond this declared corpus source.",
 				"conformanceEvidence": [
-					"eval:tatoeba-ar-corpus:artifact-descriptor",
+					"eval:tatoeba-ar-corpus:materialized-rows",
 					"eval:tatoeba-ar-corpus:checksum"
 				],
 				"generatedReports": [
@@ -246,8 +246,8 @@
 					"QUALITY.generated.json"
 				]
 			},
-			"packClass": "artifact-backed",
-			"supportLevel": "artifact-backed",
+			"packClass": "corpus",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:tatoeba:weekly-arabic-2026-06-06"
 			],
@@ -266,7 +266,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:ar-corpus",
-				"name": "Arabic Tatoeba Corpus Artifact Pack",
+				"name": "Arabic Tatoeba Corpus Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-corpus",
 				"targets": {
@@ -285,9 +285,19 @@
 				},
 				"resources": [
 					{
-						"id": "ar-tatoeba-corpus-artifact",
+						"id": "ar-tatoeba-corpus-sentences",
 						"kind": "corpus",
-						"path": "resources/tatoeba-ar.corpus-artifact.json",
+						"path": "resources/tatoeba-ar.sentences.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "ar-tatoeba-corpus-canonical",
+						"kind": "corpus",
+						"path": "resources/tatoeba-ar.corpus.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
@@ -356,28 +366,28 @@
 				"capabilitySlots": [
 					{
 						"slot": "corpus",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"ar-tatoeba-corpus-artifact"
+							"ar-tatoeba-corpus-sentences",
+							"ar-tatoeba-corpus-canonical"
 						],
 						"artifactIds": [
 							"artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06"
 						],
 						"notes": [
-							"Tatoeba Arabic detailed sentence export is available through an explicit artifact descriptor.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Tatoeba Arabic detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+							"The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"ar-tatoeba-corpus-quality",
 							"ar-tatoeba-corpus-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
 						]
 					}
 				],
@@ -774,12 +784,12 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
 			"packageDir": "packages/textpacks/textpack-ar-parallel",
-			"description": "Artifact-backed descriptor-only source-backed Arabic parallel artifact descriptors generated from Tatoeba weekly Arabic exports.",
-			"publishable": false,
+			"description": "Source-backed Arabic Tatoeba parallel pack with local generated alignment rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 Arabic-linked parallel exports transformed into canonical alignment-table artifact profiles for English, French, Spanish, and German links, with checksums, row counts, quality profile, and explicit artifact descriptors.",
+				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 Arabic-linked parallel exports transformed into local canonical TSV sentence-id alignment rows, quality profile, checksum evidence, and evaluation records for the declared language pairs.",
 				"auditedLicense": "The audited exact Tatoeba weekly Arabic export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
-				"declaredScope": "Arabic Tatoeba parallel link artifact descriptors for English, French, Spanish, and German target languages. It does not claim local parallel rows, sentence-text resolution without compatible sentence artifacts, OPUS coverage, trained aligners, translation-memory ranking, dialectal Arabic parallel coverage, Classical/Quranic Arabic coverage, or full multilingual parallel coverage.",
+				"declaredScope": "Arabic Tatoeba parallel link rows for English, French, Spanish, and German. It does not claim sentence-text resolution without compatible sentence resources, OPUS coverage, trained aligners, translation-memory ranking, or full multilingual parallel coverage.",
 				"conformanceEvidence": [
 					"eval:tatoeba-ar-parallel:language-pair-coverage",
 					"eval:tatoeba-ar-parallel:link-row-volume",
@@ -796,7 +806,7 @@
 				]
 			},
 			"packClass": "parallel",
-			"supportLevel": "artifact-backed",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:tatoeba:weekly-arabic-2026-06-06"
 			],
@@ -815,7 +825,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:ar-parallel",
-				"name": "Arabic Tatoeba Parallel Artifact Pack",
+				"name": "Arabic Tatoeba Parallel Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-parallel",
 				"targets": {
@@ -834,56 +844,44 @@
 				},
 				"resources": [
 					{
-						"id": "ar-tatoeba-parallel-eng",
+						"id": "ar-tatoeba-parallel-deu",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-ar.parallel-eng.json",
-						"format": "json",
+						"path": "resources/tatoeba-ar.parallel-deu.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
+					},
+					{
+						"id": "ar-tatoeba-parallel-eng",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-ar.parallel-eng.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly Arabic exports, 2026-06-06."
+						]
 					},
 					{
 						"id": "ar-tatoeba-parallel-fra",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-ar.parallel-fra.json",
-						"format": "json",
+						"path": "resources/tatoeba-ar.parallel-fra.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "ar-tatoeba-parallel-spa",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-ar.parallel-spa.json",
-						"format": "json",
+						"path": "resources/tatoeba-ar.parallel-spa.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
-					},
-					{
-						"id": "ar-tatoeba-parallel-deu",
-						"kind": "alignment-table",
-						"path": "resources/tatoeba-ar.parallel-deu.json",
-						"format": "json",
-						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "ar-tatoeba-parallel-quality",
@@ -1034,37 +1032,36 @@
 				"capabilitySlots": [
 					{
 						"slot": "parallel",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
+							"ar-tatoeba-parallel-deu",
 							"ar-tatoeba-parallel-eng",
 							"ar-tatoeba-parallel-fra",
-							"ar-tatoeba-parallel-spa",
-							"ar-tatoeba-parallel-deu"
+							"ar-tatoeba-parallel-spa"
 						],
 						"artifactIds": [
+							"artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06",
 							"artifact:textpack-ar-parallel:full:tatoeba-ara-eng-links:2026-06-06",
 							"artifact:textpack-ar-parallel:full:tatoeba-ara-fra-links:2026-06-06",
-							"artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06",
-							"artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06"
+							"artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06"
 						],
 						"capabilities": {
 							"parallel": true
 						},
 						"notes": [
-							"Tatoeba Arabic-linked alignment tables are available through explicit artifact descriptors for English, French, Spanish, and German.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Tatoeba Arabic-linked alignment rows are materialized locally as canonical TSV from verified 2026-06-06 source artifacts.",
+							"The pack scope is sentence-id link rows; sentence text is resolved from compatible Tatoeba sentence resources."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"ar-tatoeba-parallel-quality",
 							"ar-tatoeba-parallel-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records language-pair count, link row count, source checksum evidence, and local materialization."
 						]
 					}
 				],
@@ -1699,14 +1696,14 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-corpus",
 			"packageDir": "packages/textpacks/textpack-en-corpus",
-			"description": "Artifact-backed descriptor-only source-backed English corpus artifact descriptors generated from Tatoeba weekly exports.",
-			"publishable": false,
+			"description": "Source-backed English Tatoeba corpus pack with local generated sentence rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 English detailed sentence export transformed into a canonical corpus artifact profile with row count, checksum, attribution-preserving detailed fields, quality profile, and explicit artifact descriptor. The raw corpus is not materialized locally yet; this descriptor is artifact-backed.",
+				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 English detailed sentence export transformed from a verified local bzip2 snapshot into canonical local TSV sentence rows, a canonical corpus descriptor, quality profile, checksum evidence, attribution-preserving fields, and evaluation records.",
 				"auditedLicense": "The audited exact Tatoeba weekly English export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
-				"declaredScope": "English Tatoeba corpus artifact descriptor for the 2026-06-06 detailed English sentence export. It does not claim local corpus rows, corpus-frequency statistics, benchmark splits, full OPUS coverage, parallel links, or non-English corpus coverage.",
+				"declaredScope": "English Tatoeba detailed sentence corpus for the 2026-06-06 English export. It provides local sentence rows and corpus metadata for this source-specific scope; it does not claim balanced corpus representativeness, OPUS coverage, web-corpus coverage, trained language models, or non-English corpus coverage.",
 				"conformanceEvidence": [
-					"eval:tatoeba-en-corpus:artifact-descriptor",
+					"eval:tatoeba-en-corpus:materialized-rows",
 					"eval:tatoeba-en-corpus:checksum"
 				],
 				"generatedReports": [
@@ -1719,8 +1716,8 @@
 					"QUALITY.generated.json"
 				]
 			},
-			"packClass": "artifact-backed",
-			"supportLevel": "artifact-backed",
+			"packClass": "corpus",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:tatoeba:weekly-2026-06-06"
 			],
@@ -1739,7 +1736,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:en-corpus",
-				"name": "English Tatoeba Corpus Artifact Pack",
+				"name": "English Tatoeba Corpus Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-corpus",
 				"targets": {
@@ -1758,9 +1755,19 @@
 				},
 				"resources": [
 					{
-						"id": "en-tatoeba-corpus-artifact",
+						"id": "en-tatoeba-corpus-sentences",
 						"kind": "corpus",
-						"path": "resources/tatoeba-en.corpus-artifact.json",
+						"path": "resources/tatoeba-en.sentences.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "en-tatoeba-corpus-canonical",
+						"kind": "corpus",
+						"path": "resources/tatoeba-en.corpus.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
@@ -1829,28 +1836,28 @@
 				"capabilitySlots": [
 					{
 						"slot": "corpus",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"en-tatoeba-corpus-artifact"
+							"en-tatoeba-corpus-sentences",
+							"en-tatoeba-corpus-canonical"
 						],
 						"artifactIds": [
 							"artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06"
 						],
 						"notes": [
-							"Tatoeba English detailed sentence export is available through an explicit artifact descriptor.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Tatoeba English detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+							"The pack scope is the Tatoeba English sentence export; it does not claim balanced reference-corpus coverage."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"en-tatoeba-corpus-quality",
 							"en-tatoeba-corpus-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
 						]
 					}
 				],
@@ -2217,12 +2224,12 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-parallel",
 			"packageDir": "packages/textpacks/textpack-en-parallel",
-			"description": "Artifact-backed descriptor-only source-backed English parallel artifact descriptors generated from Tatoeba weekly exports.",
-			"publishable": false,
+			"description": "Source-backed English Tatoeba parallel pack with local generated alignment rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 English-linked parallel exports transformed into canonical alignment-table artifact profiles for Arabic, French, Spanish, Italian, German, Modern Greek, Ancient Greek, and Latin links, with checksums, row counts, quality profile, and explicit artifact descriptors.",
+				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 English-linked parallel exports transformed from verified local bzip2 snapshots into canonical local TSV alignment rows for Arabic, French, Spanish, Italian, German, Modern Greek, Ancient Greek, and Latin, with checksums, row counts, quality profile, and evaluation records.",
 				"auditedLicense": "The audited exact Tatoeba weekly English export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
-				"declaredScope": "English Tatoeba parallel link artifact descriptors for selected target languages. It does not claim local parallel rows, sentence-text resolution without compatible sentence artifacts, OPUS coverage, trained aligners, translation-memory ranking, or full multilingual parallel coverage.",
+				"declaredScope": "English-linked Tatoeba sentence-id alignment tables for selected target languages. It provides local alignment rows for this source-specific scope; it does not claim sentence-text resolution without compatible sentence packs, OPUS coverage, trained aligners, translation-memory ranking, or full multilingual parallel coverage.",
 				"conformanceEvidence": [
 					"eval:tatoeba-en-parallel:language-pair-coverage",
 					"eval:tatoeba-en-parallel:link-row-volume",
@@ -2239,7 +2246,7 @@
 				]
 			},
 			"packClass": "parallel",
-			"supportLevel": "artifact-backed",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:tatoeba:weekly-2026-06-06"
 			],
@@ -2258,7 +2265,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:en-parallel",
-				"name": "English Tatoeba Parallel Artifact Pack",
+				"name": "English Tatoeba Parallel Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-parallel",
 				"targets": {
@@ -2279,106 +2286,82 @@
 					{
 						"id": "en-tatoeba-parallel-ara",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-ara.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-ara.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-deu",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-deu.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-deu.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-fra",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-fra.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-fra.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-spa",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-spa.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-spa.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-ita",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-ita.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-ita.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-ell",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-ell.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-ell.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-grc",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-grc.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-grc.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-lat",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-en.parallel-lat.json",
-						"format": "json",
+						"path": "resources/tatoeba-en.parallel-lat.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "en-tatoeba-parallel-quality",
@@ -2649,7 +2632,7 @@
 				"capabilitySlots": [
 					{
 						"slot": "parallel",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"en-tatoeba-parallel-ara",
 							"en-tatoeba-parallel-deu",
@@ -2674,20 +2657,19 @@
 							"parallel": true
 						},
 						"notes": [
-							"Tatoeba English-linked alignment tables are available through explicit artifact descriptors for selected target languages.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Tatoeba English-linked sentence-id alignment rows are materialized locally as canonical TSV from verified 2026-06-06 source artifacts.",
+							"Sentence text must be resolved from compatible Tatoeba sentence resources when a caller needs bilingual text pairs rather than ID alignments."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"en-tatoeba-parallel-quality",
 							"en-tatoeba-parallel-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local link row counts, source checksum evidence, transform acceptance, and language-pair coverage."
 						]
 					}
 				],
@@ -3463,14 +3445,14 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
 			"packageDir": "packages/textpacks/textpack-fr-corpus",
-			"description": "Artifact-backed descriptor-only source-backed French corpus artifact descriptors generated from Tatoeba weekly French exports.",
-			"publishable": false,
+			"description": "Source-backed French Tatoeba corpus pack with local generated sentence rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 French detailed sentence export transformed into a canonical corpus artifact profile with row count, checksum, attribution-preserving detailed fields, quality profile, and explicit artifact descriptor. The raw corpus is not materialized locally yet; this descriptor is artifact-backed.",
+				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 French detailed sentence export transformed into local canonical TSV sentence rows, canonical corpus metadata, quality profile, checksum evidence, attribution fields, and evaluation records for the declared Tatoeba scope.",
 				"auditedLicense": "The audited exact Tatoeba weekly French export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
-				"declaredScope": "French Tatoeba corpus artifact descriptor for the 2026-06-06 detailed French sentence export. It does not claim local corpus rows, corpus-frequency statistics, benchmark splits, OPUS coverage, parallel links, French lexicon, French morphology, French syntax, French search, French KB, or full French language-composite coverage.",
+				"declaredScope": "French Tatoeba corpus rows for the 2026-06-06 detailed sentence export. It does not claim balanced reference-corpus coverage, OPUS coverage, web-corpus coverage, or full language-composite coverage beyond this declared corpus source.",
 				"conformanceEvidence": [
-					"eval:tatoeba-fr-corpus:artifact-descriptor",
+					"eval:tatoeba-fr-corpus:materialized-rows",
 					"eval:tatoeba-fr-corpus:checksum"
 				],
 				"generatedReports": [
@@ -3483,8 +3465,8 @@
 					"QUALITY.generated.json"
 				]
 			},
-			"packClass": "artifact-backed",
-			"supportLevel": "artifact-backed",
+			"packClass": "corpus",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:tatoeba:weekly-french-2026-06-06"
 			],
@@ -3503,7 +3485,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:fr-corpus",
-				"name": "French Tatoeba Corpus Artifact Pack",
+				"name": "French Tatoeba Corpus Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-corpus",
 				"targets": {
@@ -3522,9 +3504,19 @@
 				},
 				"resources": [
 					{
-						"id": "fr-tatoeba-corpus-artifact",
+						"id": "fr-tatoeba-corpus-sentences",
 						"kind": "corpus",
-						"path": "resources/tatoeba-fr.corpus-artifact.json",
+						"path": "resources/tatoeba-fr.sentences.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "fr-tatoeba-corpus-canonical",
+						"kind": "corpus",
+						"path": "resources/tatoeba-fr.corpus.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
@@ -3593,28 +3585,28 @@
 				"capabilitySlots": [
 					{
 						"slot": "corpus",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"fr-tatoeba-corpus-artifact"
+							"fr-tatoeba-corpus-sentences",
+							"fr-tatoeba-corpus-canonical"
 						],
 						"artifactIds": [
 							"artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06"
 						],
 						"notes": [
-							"Tatoeba French detailed sentence export is available through an explicit artifact descriptor.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Tatoeba French detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+							"The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"fr-tatoeba-corpus-quality",
 							"fr-tatoeba-corpus-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
 						]
 					}
 				],
@@ -3988,12 +3980,12 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 			"packageDir": "packages/textpacks/textpack-fr-parallel",
-			"description": "Artifact-backed descriptor-only source-backed French parallel artifact descriptors generated from Tatoeba weekly French exports.",
-			"publishable": false,
+			"description": "Source-backed French Tatoeba parallel pack with local generated alignment rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 French-linked parallel exports transformed into canonical alignment-table artifact profiles for English, Arabic, Spanish, and German links, with checksums, row counts, quality profile, and explicit artifact descriptors.",
+				"productionGradeSourceCoverage": "Pinned Tatoeba 2026-06-06 French-linked parallel exports transformed into local canonical TSV sentence-id alignment rows, quality profile, checksum evidence, and evaluation records for the declared language pairs.",
 				"auditedLicense": "The audited exact Tatoeba weekly French export source row is approved as CC-BY-2.0-FR; package-local reports cite the Tatoeba downloads page and corpus usage/license documentation.",
-				"declaredScope": "French Tatoeba parallel link artifact descriptors for English, Arabic, Spanish, and German target languages. It does not claim local parallel rows, sentence-text resolution without compatible sentence artifacts, OPUS coverage, trained aligners, translation-memory ranking, French lexicon, French morphology, French syntax, French search, French KB, or full multilingual parallel coverage.",
+				"declaredScope": "French Tatoeba parallel link rows for Arabic, German, English, and Spanish. It does not claim sentence-text resolution without compatible sentence resources, OPUS coverage, trained aligners, translation-memory ranking, or full multilingual parallel coverage.",
 				"conformanceEvidence": [
 					"eval:tatoeba-fr-parallel:language-pair-coverage",
 					"eval:tatoeba-fr-parallel:link-row-volume",
@@ -4010,7 +4002,7 @@
 				]
 			},
 			"packClass": "parallel",
-			"supportLevel": "artifact-backed",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:tatoeba:weekly-french-2026-06-06"
 			],
@@ -4029,7 +4021,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:fr-parallel",
-				"name": "French Tatoeba Parallel Artifact Pack",
+				"name": "French Tatoeba Parallel Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 				"targets": {
@@ -4048,56 +4040,44 @@
 				},
 				"resources": [
 					{
-						"id": "fr-tatoeba-parallel-eng",
-						"kind": "alignment-table",
-						"path": "resources/tatoeba-fr.parallel-eng.json",
-						"format": "json",
-						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
-					},
-					{
 						"id": "fr-tatoeba-parallel-ara",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-fr.parallel-ara.json",
-						"format": "json",
+						"path": "resources/tatoeba-fr.parallel-ara.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
-					},
-					{
-						"id": "fr-tatoeba-parallel-spa",
-						"kind": "alignment-table",
-						"path": "resources/tatoeba-fr.parallel-spa.json",
-						"format": "json",
-						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
 					},
 					{
 						"id": "fr-tatoeba-parallel-deu",
 						"kind": "alignment-table",
-						"path": "resources/tatoeba-fr.parallel-deu.json",
-						"format": "json",
+						"path": "resources/tatoeba-fr.parallel-deu.tsv.gz.b64",
+						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"metadata": {
-							"canonicalSchema": "textpack-parallel-resource.schema.json"
-						}
+						]
+					},
+					{
+						"id": "fr-tatoeba-parallel-eng",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-fr.parallel-eng.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						]
+					},
+					{
+						"id": "fr-tatoeba-parallel-spa",
+						"kind": "alignment-table",
+						"path": "resources/tatoeba-fr.parallel-spa.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						]
 					},
 					{
 						"id": "fr-tatoeba-parallel-quality",
@@ -4248,37 +4228,36 @@
 				"capabilitySlots": [
 					{
 						"slot": "parallel",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"fr-tatoeba-parallel-eng",
 							"fr-tatoeba-parallel-ara",
-							"fr-tatoeba-parallel-spa",
-							"fr-tatoeba-parallel-deu"
+							"fr-tatoeba-parallel-deu",
+							"fr-tatoeba-parallel-eng",
+							"fr-tatoeba-parallel-spa"
 						],
 						"artifactIds": [
-							"artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
 							"artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
-							"artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
-							"artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06"
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06",
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
+							"artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06"
 						],
 						"capabilities": {
 							"parallel": true
 						},
 						"notes": [
-							"Tatoeba French-linked alignment tables are available through explicit artifact descriptors for English, Arabic, Spanish, and German.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Tatoeba French-linked alignment rows are materialized locally as canonical TSV from verified 2026-06-06 source artifacts.",
+							"The pack scope is sentence-id link rows; sentence text is resolved from compatible Tatoeba sentence resources."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"fr-tatoeba-parallel-quality",
 							"fr-tatoeba-parallel-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records language-pair count, link row count, source checksum evidence, and local materialization."
 						]
 					}
 				],
@@ -4872,15 +4851,16 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
 			"packageDir": "packages/textpacks/textpack-wikidata-ar",
-			"description": "Artifact-backed descriptor-only Arabic Wikidata entity metadata generated from the versioned Wikidata main dump.",
-			"publishable": false,
+			"description": "Source-backed Arabic Wikidata core entity extract pack with local generated KB rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 dump sidecars transformed into a canonical Arabic KB artifact profile for entity labels, aliases, relations, and ontology consumers. The full raw dump is not materialized locally; a language-specific extract is required for task-supported KB lookup.",
+				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 source evidence plus local Arabic core entity, alias, relation, canonical KB, quality, and evaluation resources for the declared extract scope.",
 				"auditedLicense": "The Wikidata main structured source row is approved as CC0-1.0; package-local reports cite the Wikidata licensing and database download pages plus the pinned Wikimedia dump directory.",
-				"declaredScope": "Arabic Wikidata entity KB artifact descriptor for the full Wikidata main JSON dump. It does not claim a local entity index, local entity lookup, Arabic WordNet lexical semantics, morphology, syntax, corpus, parallel, dialectal Arabic, Classical/Quranic Arabic, or full language-composite coverage.",
+				"declaredScope": "Arabic Wikidata core entity extract for scoped classes and sitelink thresholds. It does not claim full Wikidata dump coverage, full named-entity-linking coverage, corpus coverage, parallel coverage, or full language-composite coverage by itself.",
 				"conformanceEvidence": [
-					"eval:wikidata-ar:artifact-descriptor",
-					"eval:wikidata-ar:checksum-sidecar"
+					"eval:wikidata-ar:entity-extract",
+					"eval:wikidata-ar:alias-coverage",
+					"eval:wikidata-ar:relation-coverage"
 				],
 				"generatedReports": [
 					"LICENSE.generated.md",
@@ -4893,7 +4873,7 @@
 				]
 			},
 			"packClass": "kb",
-			"supportLevel": "artifact-backed",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:wikidata:main"
 			],
@@ -4912,7 +4892,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:wikidata-ar",
-				"name": "Wikidata Arabic Entity Artifact Pack",
+				"name": "Wikidata Arabic Entity Extract Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
 				"targets": {
@@ -4931,9 +4911,39 @@
 				},
 				"resources": [
 					{
-						"id": "wikidata-ar-kb-artifact",
+						"id": "wikidata-ar-entities",
 						"kind": "knowledge-base",
-						"path": "resources/wikidata-ar.kb-artifact.json",
+						"path": "resources/wikidata-ar.entities.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-ar-aliases",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-ar.aliases.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-ar-relations",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-ar.relations.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-ar-kb-canonical",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-ar.kb.json",
 						"format": "json",
 						"license": "CC0-1.0",
 						"citations": [
@@ -5002,9 +5012,12 @@
 				"capabilitySlots": [
 					{
 						"slot": "kb",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"wikidata-ar-kb-artifact"
+							"wikidata-ar-entities",
+							"wikidata-ar-aliases",
+							"wikidata-ar-relations",
+							"wikidata-ar-kb-canonical"
 						],
 						"artifactIds": [
 							"artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608"
@@ -5014,20 +5027,19 @@
 							"extraction": "gazetteer"
 						},
 						"notes": [
-							"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit artifact descriptor for Arabic KB consumers.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Wikidata Arabic entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+							"The local extract is scoped and does not claim complete Wikidata dump coverage."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"wikidata-ar-quality",
 							"wikidata-ar-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records artifact size, upstream checksum sidecar evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations."
 						]
 					}
 				],
@@ -5040,15 +5052,16 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-en",
 			"packageDir": "packages/textpacks/textpack-wikidata-en",
-			"description": "Artifact-backed descriptor-only English Wikidata entity metadata generated from the versioned Wikidata main dump.",
-			"publishable": false,
+			"description": "Source-backed English Wikidata core entity extract with local generated KB rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 dump sidecars transformed into a canonical English KB artifact profile for entity labels, aliases, relations, and ontology consumers. The full raw dump is not materialized locally; a language-specific extract is required for task-supported KB lookup.",
+				"productionGradeSourceCoverage": "Pinned Wikidata 2026-06-08 sidecar evidence plus a local English core entity extract generated from saved Wikidata Query Service result snapshots. The extract contains local entity, alias, relation, canonical KB, quality, checksum, and evaluation resources for the declared class-and-sitelink-threshold scope.",
 				"auditedLicense": "The Wikidata main structured source row is approved as CC0-1.0; package-local reports cite the Wikidata licensing and database download pages plus the pinned Wikimedia dump directory.",
-				"declaredScope": "English Wikidata entity KB artifact descriptor for the full Wikidata main JSON dump. It does not claim a local entity index, local entity lookup, WordNet lexical semantics, morphology, syntax, corpus, parallel, or full language-composite coverage.",
+				"declaredScope": "English Wikidata core entity extract for countries, languages, writing systems, plus sitelink-thresholded cities, organizations, universities, films, books, albums, and programming languages. It does not claim full Wikidata coverage, full named-entity-linking coverage, all Wikidata aliases, all classes, or the complete 2026-06-08 dump payload.",
 				"conformanceEvidence": [
-					"eval:wikidata-en:artifact-descriptor",
-					"eval:wikidata-en:checksum-sidecar"
+					"eval:wikidata-en:entity-extract",
+					"eval:wikidata-en:alias-coverage",
+					"eval:wikidata-en:relation-coverage"
 				],
 				"generatedReports": [
 					"LICENSE.generated.md",
@@ -5061,7 +5074,7 @@
 				]
 			},
 			"packClass": "kb",
-			"supportLevel": "artifact-backed",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:wikidata:main"
 			],
@@ -5080,7 +5093,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:wikidata-en",
-				"name": "Wikidata English Entity Artifact Pack",
+				"name": "Wikidata English Core Entity Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wikidata-en",
 				"targets": {
@@ -5099,13 +5112,47 @@
 				},
 				"resources": [
 					{
-						"id": "wikidata-en-kb-artifact",
+						"id": "wikidata-en-entities",
 						"kind": "knowledge-base",
-						"path": "resources/wikidata-en.kb-artifact.json",
+						"path": "resources/wikidata-en.entities.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08.",
+							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+						]
+					},
+					{
+						"id": "wikidata-en-aliases",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-en.aliases.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08.",
+							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+						]
+					},
+					{
+						"id": "wikidata-en-relations",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-en.relations.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08.",
+							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+						]
+					},
+					{
+						"id": "wikidata-en-kb-canonical",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-en.kb.json",
 						"format": "json",
 						"license": "CC0-1.0",
 						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
+							"Wikidata main structured data dump, 2026-06-08.",
+							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 						],
 						"metadata": {
 							"canonicalSchema": "textpack-kb-resource.schema.json"
@@ -5118,7 +5165,8 @@
 						"format": "json",
 						"license": "CC0-1.0",
 						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
+							"Wikidata main structured data dump, 2026-06-08.",
+							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 						]
 					},
 					{
@@ -5128,7 +5176,8 @@
 						"format": "json",
 						"license": "CC0-1.0",
 						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
+							"Wikidata main structured data dump, 2026-06-08.",
+							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 						],
 						"metadata": {
 							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
@@ -5170,9 +5219,12 @@
 				"capabilitySlots": [
 					{
 						"slot": "kb",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"wikidata-en-kb-artifact"
+							"wikidata-en-entities",
+							"wikidata-en-aliases",
+							"wikidata-en-relations",
+							"wikidata-en-kb-canonical"
 						],
 						"artifactIds": [
 							"artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
@@ -5182,20 +5234,19 @@
 							"extraction": "gazetteer"
 						},
 						"notes": [
-							"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit artifact descriptor.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Wikidata English core entity rows, aliases, and P31 relations are materialized locally for the declared class-and-sitelink-threshold extract scope.",
+							"The pack does not claim complete Wikidata dump coverage."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"wikidata-en-quality",
 							"wikidata-en-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records artifact size, upstream checksum sidecar evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local entity, alias, relation, scope, and checksum evidence."
 						]
 					}
 				],
@@ -5208,15 +5259,16 @@
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
 			"packageDir": "packages/textpacks/textpack-wikidata-fr",
-			"description": "Artifact-backed descriptor-only French Wikidata entity metadata generated from the versioned Wikidata main dump.",
-			"publishable": false,
+			"description": "Source-backed French Wikidata core entity extract pack with local generated KB rows.",
+			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 dump sidecars transformed into a canonical French KB artifact profile for entity labels, aliases, relations, and ontology consumers. The full raw dump is not materialized locally; a language-specific extract is required for task-supported KB lookup.",
+				"productionGradeSourceCoverage": "Pinned Wikidata main structured data 2026-06-08 source evidence plus local French core entity, alias, relation, canonical KB, quality, and evaluation resources for the declared extract scope.",
 				"auditedLicense": "The Wikidata main structured source row is approved as CC0-1.0; package-local reports cite the Wikidata licensing and database download pages plus the pinned Wikimedia dump directory.",
-				"declaredScope": "French Wikidata entity KB artifact descriptor for the full Wikidata main JSON dump. It does not claim a local entity index, local entity lookup, French wordnet lexical semantics, morphology, syntax, corpus, parallel, or full language-composite coverage.",
+				"declaredScope": "French Wikidata core entity extract for scoped classes and sitelink thresholds. It does not claim full Wikidata dump coverage, full named-entity-linking coverage, corpus coverage, parallel coverage, or full language-composite coverage by itself.",
 				"conformanceEvidence": [
-					"eval:wikidata-fr:artifact-descriptor",
-					"eval:wikidata-fr:checksum-sidecar"
+					"eval:wikidata-fr:entity-extract",
+					"eval:wikidata-fr:alias-coverage",
+					"eval:wikidata-fr:relation-coverage"
 				],
 				"generatedReports": [
 					"LICENSE.generated.md",
@@ -5229,7 +5281,7 @@
 				]
 			},
 			"packClass": "kb",
-			"supportLevel": "artifact-backed",
+			"supportLevel": "task-supported",
 			"sourceIds": [
 				"source:wikidata:main"
 			],
@@ -5248,7 +5300,7 @@
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:wikidata-fr",
-				"name": "Wikidata French Entity Artifact Pack",
+				"name": "Wikidata French Entity Extract Textpack",
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
 				"targets": {
@@ -5267,9 +5319,39 @@
 				},
 				"resources": [
 					{
-						"id": "wikidata-fr-kb-artifact",
+						"id": "wikidata-fr-entities",
 						"kind": "knowledge-base",
-						"path": "resources/wikidata-fr.kb-artifact.json",
+						"path": "resources/wikidata-fr.entities.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-fr-aliases",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-fr.aliases.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-fr-relations",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-fr.relations.tsv.gz.b64",
+						"format": "text/tab-separated-values",
+						"license": "CC0-1.0",
+						"citations": [
+							"Wikidata main structured data dump, 2026-06-08."
+						]
+					},
+					{
+						"id": "wikidata-fr-kb-canonical",
+						"kind": "knowledge-base",
+						"path": "resources/wikidata-fr.kb.json",
 						"format": "json",
 						"license": "CC0-1.0",
 						"citations": [
@@ -5338,9 +5420,12 @@
 				"capabilitySlots": [
 					{
 						"slot": "kb",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
-							"wikidata-fr-kb-artifact"
+							"wikidata-fr-entities",
+							"wikidata-fr-aliases",
+							"wikidata-fr-relations",
+							"wikidata-fr-kb-canonical"
 						],
 						"artifactIds": [
 							"artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608"
@@ -5350,20 +5435,19 @@
 							"extraction": "gazetteer"
 						},
 						"notes": [
-							"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit artifact descriptor for French KB consumers.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Wikidata French entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+							"The local extract is scoped and does not claim complete Wikidata dump coverage."
 						]
 					},
 					{
 						"slot": "quality",
-						"status": "artifact-backed",
+						"status": "task-supported",
 						"resourceIds": [
 							"wikidata-fr-quality",
 							"wikidata-fr-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records artifact size, upstream checksum sidecar evidence, and local materialization limitations.",
-							"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+							"Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations."
 						]
 					}
 				],

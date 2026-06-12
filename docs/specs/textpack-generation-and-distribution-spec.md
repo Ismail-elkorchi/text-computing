@@ -104,7 +104,9 @@ QUALITY.generated.json
 Sampled, fixture-backed, demo, smoke-corpus, and transitional outputs MUST NOT be npm-publishable textpacks. A tiny morphology sample, syntax sample, search placeholder, quality placeholder, corpus smoke sample, KB demo, or fixture-backed reference is not a production textpack for that declared scope.
 
 The current active generated graph contains foundation outputs, audited source-backed local task
-slices, component recipe composites, and private artifact-backed language composites:
+slices, component recipe composites, and developer-facing English, Arabic, and French language
+composites whose required KB, corpus, parallel, and quality slots are backed by local generated
+payloads:
 
 ```text
 @ismail-elkorchi/textpack-language-registry
@@ -185,19 +187,21 @@ wordlist resources, selected UD annotation-profile resources, Lexique/UniMorph/U
 share-alike isolated components, and generated component wrappers that expose those local resources
 without adding new claims.
 
-Descriptor-only packages are not publishable and do not satisfy task support. This includes
-`textpack-en-corpus`, `textpack-ar-corpus`, `textpack-fr-corpus`, `textpack-en-parallel`,
-`textpack-ar-parallel`, `textpack-fr-parallel`, `textpack-wikidata-en`, `textpack-wikidata-ar`, and
-`textpack-wikidata-fr`. Their descriptors preserve source identity, checksums, license evidence, and
-artifact metadata, but they are `artifact-backed` until local generated sentence rows, alignment
-rows, entity extracts, indexes, databases, or equivalent task-usable payloads are materialized.
+Descriptor-only packages are not publishable and do not satisfy task support. Descriptors preserve
+source identity, checksums, license evidence, and artifact metadata, but they are `artifact-backed`
+until local generated sentence rows, alignment rows, entity extracts, indexes, databases, or
+equivalent task-usable payloads are materialized. The active English, Arabic, and French Tatoeba and
+Wikidata packs have moved past descriptor-only status for their declared scopes: they contain local
+Tatoeba sentence/link rows or local Wikidata entity/alias/relation extracts, generated quality
+evidence, and runtime-readable resources.
 
 Any composite whose required graph includes descriptor-only corpus, parallel, KB, or quality slots is
 also non-publishable. The current `textpack-en`, `textpack-ar`, and `textpack-fr` composites are
-generated private artifact-backed packages with 8/12 composite-ready slots. Their blocked slots are
-`kb`, `corpus`, `parallel`, and `quality`. They MUST NOT be presented as developer-facing language
-packages until those slots have local task-usable payloads, runtime adapters, conformance/evaluation
-evidence, and publishability approval.
+publishable developer-facing packages for their declared generated scopes because their required
+component graphs have 12/12 composite-ready slots, local task-usable KB/corpus/parallel payloads,
+runtime adapters, conformance/evaluation evidence, and publishability approval. They still MUST NOT
+claim OPUS coverage, full Wikidata dump coverage, parser models, neural models, raw web corpora, or
+language coverage outside the declared component graph.
 
 ## 3. Forge Input Graph
 
@@ -449,11 +453,11 @@ material, not production-grade language support.
 
 Language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be generated as
 public packages until their required component graph is production-grade for the declared scope. The
-current generated graph keeps `textpack-en`, `textpack-ar`, and `textpack-fr` private and
-artifact-backed because their KB, corpus, parallel, and quality slots still depend on descriptor-only
-packages. Those composites carry no direct resource payloads and preserve component names, license
-policies, generated reports, and full license expressions while remaining blocked from developer
-use.
+current generated graph makes `textpack-en`, `textpack-ar`, and `textpack-fr` developer-facing only
+after their KB, corpus, parallel, and quality slots are materialized locally, evaluated, and marked
+composite-ready. Those composites remain recipe packages: they carry no original direct resource
+payloads and preserve component names, license policies, generated reports, and full license
+expressions while resolving task-usable component packs.
 
 The forge MUST NOT synthesize missing language data. Capability slots without an upstream-backed resource, such as KB, parallel, broad evaluation coverage, production morphology analyzers, production syntax models, and production Arabic clitic segmentation, MUST remain generated gaps until real sources are added.
 

@@ -28,10 +28,8 @@ const pack = await loadFrenchQualityShareAlike();
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- artifact-backed descriptors require local materialized payloads before publishability
-- capability slot quality is artifact-backed without local task-usable payloads
-- generated packs are non-publishable by default
+- None
 

@@ -119,6 +119,10 @@
 	],
 	"snapshotLocks": [
 		{
+			"snapshotId": "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
+			"checksum": "sha256:7f0ebc98bd657e43a50ae881ad357773e89c213adbf7ff50f3048145efc90094"
+		},
+		{
 			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
 			"checksum": "sha256:af17d9994d96c4978b59690dcf8eb8b6e92a85396e93359a8a828ff35bebc179"
 		},
@@ -127,12 +131,16 @@
 			"checksum": "sha256:7833f814b9cf9cb58d83b30b530618793a065b34207cfdbca791447e4a8e0969"
 		},
 		{
+			"snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
+			"checksum": "sha256:0316fc3584010643f9b1c3638d1ff8266960f9d8d71a1988b38392148eed16ca"
+		},
+		{
 			"snapshotId": "snapshot:source:fr:lexique-383:2019-06-04",
 			"checksum": "sha256:decd9eac1556a68f6ed6e27c4dcdb3c4673349223c400388b0be6bc23dcedf76"
 		},
 		{
-			"snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
-			"checksum": "sha256:0316fc3584010643f9b1c3638d1ff8266960f9d8d71a1988b38392148eed16ca"
+			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+			"checksum": "sha256:8b23c165e1c21ed3b266a527e5eb4b9ae2ae621019a40a60fe525b0c83d4aa23"
 		},
 		{
 			"snapshotId": "snapshot:source:scowl:v2-rel-2026.02.25",
@@ -140,15 +148,15 @@
 		},
 		{
 			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
-			"checksum": "sha256:e230bd416f72b2385368b9d4e8604215d559f25d41a19d6acc49deec23c7bf09"
+			"checksum": "sha256:3070f313a1e9094acc43f04f58c4f62756c5ed51efa17b271913e912acb6d1ab"
 		},
 		{
 			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-			"checksum": "sha256:8caefc61478d6bd0e7f4ea46e36a75ed1db1160993d47100d946a474522b6f8c"
+			"checksum": "sha256:b3ff1462e8003c18c897b893c12c363b2e6aaf68ded2fb62e77295ef167b71dd"
 		},
 		{
 			"snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-			"checksum": "sha256:347d4ca4aff5e9acaf0f5d0e4a81d620fd8e34403ae90d79f22ed0d3ced6df74"
+			"checksum": "sha256:0b8ceb53a848692890f7c5f4c56321f1f84a3eb90ab37a5fc19830229952176f"
 		},
 		{
 			"snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
@@ -180,15 +188,7 @@
 		},
 		{
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
-			"checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197"
-		},
-		{
-			"snapshotId": "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-			"checksum": "sha256:7f0ebc98bd657e43a50ae881ad357773e89c213adbf7ff50f3048145efc90094"
-		},
-		{
-			"snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
-			"checksum": "sha256:8b23c165e1c21ed3b266a527e5eb4b9ae2ae621019a40a60fe525b0c83d4aa23"
+			"checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c"
 		}
 	],
 	"outputPaths": [

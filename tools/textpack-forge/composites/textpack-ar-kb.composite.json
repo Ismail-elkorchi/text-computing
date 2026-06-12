@@ -4,20 +4,17 @@
 	"packageName": "@ismail-elkorchi/textpack-ar-kb",
 	"packageDir": "packages/textpacks/textpack-ar-kb",
 	"name": "Arabic Knowledge Base Composite Textpack",
-	"description": "Generated source-backed Arabic KB recipe composite for Arabic WordNet lexical-semantic resources and Wikidata entity artifacts.",
-	"publishable": false,
+	"description": "Generated source-backed Arabic KB recipe composite for local Wikidata entity extracts and Arabic WordNet lexical-semantic resources.",
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over Arabic WordNet and artifact-backed Wikidata components. Arabic WordNet provides lexical-semantic KB resources; Wikidata provides a explicit artifact descriptor for entity labels, aliases, relations, and ontology data.",
+		"productionGradeSourceCoverage": "Generated recipe composite over task-supported local Arabic KB resources. Arabic WordNet provides lexical-semantic KB resources; Wikidata provides local entity, alias, relation, canonical KB, quality, and evaluation resources for its declared extract scope.",
 		"auditedLicense": "The exact Arabic WordNet v4.1.0 and Wikidata main structured source rows are approved; required component packages carry package-local license evidence for Arabic WordNet CC-BY-4.0 and Wikidata CC0 structured data.",
-		"declaredScope": "Arabic KB component composite backed by Arabic WordNet lexical semantics and a Wikidata main entity artifact descriptor. It does not claim local Wikidata entity lookup until a materialized entity extract is generated, morphology, syntax, search, corpus, parallel, dialectal Arabic, Classical/Quranic Arabic, or full language-composite coverage.",
+		"declaredScope": "Arabic KB component composite backed by local Wikidata core entity rows and Arabic WordNet lexical semantics. It does not claim full Wikidata dump coverage, full named-entity-linking coverage, morphology, syntax, corpus, parallel, or full language-composite coverage.",
 		"conformanceEvidence": [
 			"eval:textpack-ar-kb:required-component-graph",
-			"eval:wordnet-ar:lexical-entry-volume",
-			"eval:wordnet-ar:sense-entry-links",
-			"eval:wordnet-ar:sense-synset-links",
-			"eval:wordnet-ar:relation-endpoints",
-			"eval:wikidata-ar:artifact-descriptor",
-			"eval:wikidata-ar:checksum-sidecar"
+			"eval:wikidata-ar:entity-extract",
+			"eval:wikidata-ar:alias-coverage",
+			"eval:wikidata-ar:relation-coverage"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -31,7 +28,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "task-supported",
 	"loader": {
 		"functionName": "loadArabicKnowledgeBase",
 		"languageName": "ArabicKnowledgeBase"
@@ -72,24 +69,22 @@
 			"reason": "Default Arabic Wikidata entity labels, aliases, relations, and ontology artifact descriptor.",
 			"licensePolicy": "default",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Arabic WordNet synsets, senses, lexical entries, semantic relations, and Wikidata entity artifact descriptors.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Wikidata Arabic core entity rows, aliases, and relations, plus Arabic WordNet lexical-semantic resources."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Generated component reports and evaluation records are available for the required KB component.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated component reports and evaluation records are available for the required KB component graph."
 			]
 		}
 	],

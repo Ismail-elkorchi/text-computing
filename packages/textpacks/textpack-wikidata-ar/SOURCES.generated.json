@@ -7,33 +7,48 @@
   "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
   "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [
     "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
   ],
   "resources": [
     {
-      "byteLength": 786,
-      "checksum": "sha256:10e82abc99cfc8a1e4c11107657b34493342d298d60661a47dd0b6e1d333d927",
-      "id": "wikidata-ar-kb-artifact",
+      "byteLength": 35629,
+      "checksum": "sha256:ddf27c30b153ee9e4941a438ec96cce399f7f335ed270442090b10bdb1b365c8",
+      "id": "wikidata-ar-aliases",
       "kind": "knowledge-base",
-      "path": "resources/wikidata-ar.kb-artifact.json",
+      "path": "resources/wikidata-ar.aliases.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
     },
     {
-      "byteLength": 821,
-      "checksum": "sha256:206dabd801f00d0c40733b4f0169c38b568fc8a161b4e1bfdddf581b915a4af5",
+      "byteLength": 134633,
+      "checksum": "sha256:bfde77b44f2a2180da72bb9bc8874fb85262a69f25275b218fd71937a101181f",
+      "id": "wikidata-ar-entities",
+      "kind": "knowledge-base",
+      "path": "resources/wikidata-ar.entities.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
+    },
+    {
+      "byteLength": 523,
+      "checksum": "sha256:bb58bdd4440a0884b24b4f0189a8e4f31a01d36c235ed253536e0341a905335b",
+      "id": "wikidata-ar-kb-canonical",
+      "kind": "knowledge-base",
+      "path": "resources/wikidata-ar.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
+    },
+    {
+      "byteLength": 968,
+      "checksum": "sha256:6b18694e3b24875a4b6268fbeb71ed978d17327b455e38d443124d801219dd40",
       "id": "wikidata-ar-quality",
       "kind": "quality-profile",
       "path": "resources/wikidata-ar.quality.json",
@@ -42,11 +57,21 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
     },
     {
-      "byteLength": 1407,
-      "checksum": "sha256:e9ff2c71ac910c04f3424e245f64625a226a1338d3576e5520b66caabdd044cd",
+      "byteLength": 2789,
+      "checksum": "sha256:688883a208a912f996fef965c46d04720e4494295003542ed1cbc48d3601050d",
       "id": "wikidata-ar-quality-profile",
       "kind": "quality-profile",
       "path": "resources/wikidata-ar.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
+    },
+    {
+      "byteLength": 16457,
+      "checksum": "sha256:e9b2117bec25186e241f1b68347caf2b2fce8d7ed95e6c4e9344adaf04bd7d9a",
+      "id": "wikidata-ar-relations",
+      "kind": "knowledge-base",
+      "path": "resources/wikidata-ar.relations.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
@@ -58,7 +83,7 @@
   ],
   "snapshots": [
     {
-      "checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197",
+      "checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c",
       "files": [
         {
           "byteLength": 129,
@@ -73,10 +98,82 @@
           "mediaType": "text/plain",
           "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
           "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
+        },
+        {
+          "byteLength": 176372,
+          "checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv"
+        },
+        {
+          "byteLength": 601528,
+          "checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv"
+        },
+        {
+          "byteLength": 9171,
+          "checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 181451,
+          "checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv"
+        },
+        {
+          "byteLength": 507718,
+          "checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1207332,
+          "checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv"
+        },
+        {
+          "byteLength": 9237,
+          "checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 364007,
+          "checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv"
+        },
+        {
+          "byteLength": 339445,
+          "checksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1164023,
+          "checksum": "sha256:b4dda64824d9b904703eac084931be6dad3c47a9d770673b29aed7cc731f9f85",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv"
+        },
+        {
+          "byteLength": 9173,
+          "checksum": "sha256:7d46ecdcaad81c6ef85139decbac517ee64c715e6a8069d6352d4d4b2725ca27",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 581521,
+          "checksum": "sha256:0a549fbec2daeb2243e8352977852c3476f7e35a6ef4eb10141df0babc0df276",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv"
         }
       ],
       "kind": "external",
-      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump. The raw dump is artifact-backed and not stored in the repository.",
+      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:wikidata:main:20260608",

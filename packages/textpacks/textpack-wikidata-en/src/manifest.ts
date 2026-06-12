@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:wikidata-en",
-	"name": "Wikidata English Entity Artifact Pack",
+	"name": "Wikidata English Core Entity Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-wikidata-en",
 	"targets": {
@@ -25,13 +25,47 @@ export const manifest: TextPackManifest = {
 	},
 	"resources": [
 		{
-			"id": "wikidata-en-kb-artifact",
+			"id": "wikidata-en-entities",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-en.kb-artifact.json",
+			"path": "resources/wikidata-en.entities.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			]
+		},
+		{
+			"id": "wikidata-en-aliases",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.aliases.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			]
+		},
+		{
+			"id": "wikidata-en-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.relations.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			]
+		},
+		{
+			"id": "wikidata-en-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.kb.json",
 			"format": "json",
 			"license": "CC0-1.0",
 			"citations": [
-				"Wikidata main structured data dump, 2026-06-08."
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-kb-resource.schema.json"
@@ -44,7 +78,8 @@ export const manifest: TextPackManifest = {
 			"format": "json",
 			"license": "CC0-1.0",
 			"citations": [
-				"Wikidata main structured data dump, 2026-06-08."
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			]
 		},
 		{
@@ -54,7 +89,8 @@ export const manifest: TextPackManifest = {
 			"format": "json",
 			"license": "CC0-1.0",
 			"citations": [
-				"Wikidata main structured data dump, 2026-06-08."
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
 			"metadata": {
 				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
@@ -96,9 +132,12 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
-				"wikidata-en-kb-artifact"
+				"wikidata-en-entities",
+				"wikidata-en-aliases",
+				"wikidata-en-relations",
+				"wikidata-en-kb-canonical"
 			],
 			"artifactIds": [
 				"artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
@@ -108,20 +147,19 @@ export const manifest: TextPackManifest = {
 				"extraction": "gazetteer"
 			},
 			"notes": [
-				"Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit artifact descriptor.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Wikidata English core entity rows, aliases, and P31 relations are materialized locally for the declared class-and-sitelink-threshold extract scope.",
+				"The pack does not claim complete Wikidata dump coverage."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
 				"wikidata-en-quality",
 				"wikidata-en-quality-profile"
 			],
 			"notes": [
-				"Generated quality profile records artifact size, upstream checksum sidecar evidence, and local materialization limitations.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated quality profile records local entity, alias, relation, scope, and checksum evidence."
 			]
 		}
 	],
@@ -129,23 +167,9 @@ export const manifest: TextPackManifest = {
 	"citations": [
 		"Wikidata main structured data dump, 2026-06-08."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:wikidata-en:kb",
-			"slot": "kb",
-			"status": "artifact-backed",
-			"message": "kb is artifact-backed in this source-backed concrete pack."
-		},
-		{
-			"id": "gap:pack:wikidata-en:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed concrete pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

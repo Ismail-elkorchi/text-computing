@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-en-corpus",
 	"version": "0.1.0",
-	"description": "Artifact-backed descriptor-only source-backed English corpus artifact descriptors generated from Tatoeba weekly exports.",
+	"description": "Source-backed English Tatoeba corpus pack with local generated sentence rows.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -39,5 +39,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

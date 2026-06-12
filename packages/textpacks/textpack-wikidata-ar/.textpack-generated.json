@@ -13,9 +13,12 @@
     "package.json",
     "QUALITY.generated.json",
     "README.md",
-    "resources/wikidata-ar.kb-artifact.json",
+    "resources/wikidata-ar.aliases.tsv.gz.b64",
+    "resources/wikidata-ar.entities.tsv.gz.b64",
+    "resources/wikidata-ar.kb.json",
     "resources/wikidata-ar.quality-profile.json",
     "resources/wikidata-ar.quality.json",
+    "resources/wikidata-ar.relations.tsv.gz.b64",
     "SOURCES.generated.json",
     "src/index.ts",
     "src/manifest.ts",
@@ -26,23 +29,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+  "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:aa1b343e7bc6bb88736f526129088cc5da082eaff67f2bfd43ded632b97eb11c",
+  "outputChecksum": "sha256:941beca63213aa35bb232fb5516704ef8da09ad737af72c7bea807025e8d50a4",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
   "packageVersion": "0.1.0",
   "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

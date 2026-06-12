@@ -4,7 +4,7 @@
   "languages": [
     {
       "compositePackageName": "@ismail-elkorchi/textpack-en",
-      "compositeReady": false,
+      "compositeReady": true,
       "languageName": "English",
       "languageTag": "en",
       "requiredSlots": [
@@ -390,12 +390,17 @@
           "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-en-kb does not declare production coverage for the kb slot."
-          ],
+          "blockers": [],
           "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+              "publishable": true
+            },
             {
               "capabilitySlots": [
                 "lexical-semantics",
@@ -414,23 +419,23 @@
           "capabilitySlots": [
             {
               "slot": "kb",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -455,7 +460,7 @@
               "label": "Wikidata main structured data for entity labels, aliases, and KB links"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
           "blockers": [],
@@ -514,11 +519,7 @@
           "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-en-corpus does not declare production coverage for the corpus slot."
-          ],
+          "blockers": [],
           "candidatePacks": [],
           "capabilityAliases": [
             "corpus"
@@ -526,23 +527,23 @@
           "capabilitySlots": [
             {
               "slot": "corpus",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -560,14 +561,10 @@
               "label": "Tatoeba exact audited English corpus artifact source"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-en-parallel does not declare production coverage for the parallel slot."
-          ],
+          "blockers": [],
           "candidatePacks": [],
           "capabilityAliases": [
             "parallel"
@@ -575,23 +572,23 @@
           "capabilitySlots": [
             {
               "slot": "parallel",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -609,14 +606,10 @@
               "label": "Tatoeba exact audited English parallel artifact source"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-en-quality does not declare production coverage for the quality slot."
-          ],
+          "blockers": [],
           "candidatePacks": [
             {
               "capabilitySlots": [
@@ -629,12 +622,30 @@
             },
             {
               "capabilitySlots": [
+                "corpus",
+                "quality"
+              ],
+              "packClass": "corpus",
+              "packageName": "@ismail-elkorchi/textpack-en-corpus",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
                 "lexicon",
                 "morphology",
                 "quality"
               ],
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-en-kb",
               "publishable": true
             },
             {
@@ -662,6 +673,15 @@
               ],
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-en-normalization",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "parallel",
+                "quality"
+              ],
+              "packClass": "parallel",
+              "packageName": "@ismail-elkorchi/textpack-en-parallel",
               "publishable": true
             },
             {
@@ -713,6 +733,15 @@
             },
             {
               "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
                 "lexical-semantics",
                 "quality"
               ],
@@ -727,19 +756,19 @@
           "capabilitySlots": [
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -795,18 +824,13 @@
               "label": "English quality evidence must cover the audited corpus and parallel source"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         }
       ],
       "summary": {
-        "blockedSlotCount": 4,
-        "blockedSlots": [
-          "kb",
-          "corpus",
-          "parallel",
-          "quality"
-        ],
-        "readySlotCount": 8,
+        "blockedSlotCount": 0,
+        "blockedSlots": [],
+        "readySlotCount": 12,
         "readySlots": [
           "foundation",
           "core",
@@ -815,14 +839,18 @@
           "lexicon",
           "morphology",
           "syntax",
-          "search"
+          "kb",
+          "search",
+          "corpus",
+          "parallel",
+          "quality"
         ],
         "requiredSlotCount": 12
       }
     },
     {
       "compositePackageName": "@ismail-elkorchi/textpack-ar",
-      "compositeReady": false,
+      "compositeReady": true,
       "languageName": "Arabic",
       "languageTag": "ar",
       "requiredSlots": [
@@ -1208,12 +1236,17 @@
           "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-ar-kb does not declare production coverage for the kb slot."
-          ],
+          "blockers": [],
           "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+              "publishable": true
+            },
             {
               "capabilitySlots": [
                 "lexical-semantics",
@@ -1232,23 +1265,23 @@
           "capabilitySlots": [
             {
               "slot": "kb",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -1273,7 +1306,7 @@
               "label": "Wikidata main structured data for Arabic entity labels, aliases, and KB links"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
           "blockers": [],
@@ -1329,11 +1362,7 @@
           "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-ar-corpus does not declare production coverage for the corpus slot."
-          ],
+          "blockers": [],
           "candidatePacks": [],
           "capabilityAliases": [
             "corpus"
@@ -1341,23 +1370,23 @@
           "capabilitySlots": [
             {
               "slot": "corpus",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -1375,14 +1404,10 @@
               "label": "Tatoeba exact audited Arabic corpus artifact source"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-ar-parallel does not declare production coverage for the parallel slot."
-          ],
+          "blockers": [],
           "candidatePacks": [],
           "capabilityAliases": [
             "parallel"
@@ -1390,23 +1415,23 @@
           "capabilitySlots": [
             {
               "slot": "parallel",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -1424,14 +1449,10 @@
               "label": "Tatoeba exact audited Arabic parallel artifact source"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-ar-quality does not declare production coverage for the quality slot."
-          ],
+          "blockers": [],
           "candidatePacks": [
             {
               "capabilitySlots": [
@@ -1440,6 +1461,24 @@
               ],
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-ar-core",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "corpus",
+                "quality"
+              ],
+              "packClass": "corpus",
+              "packageName": "@ismail-elkorchi/textpack-ar-corpus",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-kb",
               "publishable": true
             },
             {
@@ -1477,6 +1516,23 @@
               ],
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-ar-normalization",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "parallel",
+                "quality"
+              ],
+              "packClass": "parallel",
+              "packageName": "@ismail-elkorchi/textpack-ar-parallel",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-ar-quality-sa",
               "publishable": true
             },
             {
@@ -1527,6 +1583,15 @@
             },
             {
               "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
                 "lexical-semantics",
                 "quality"
               ],
@@ -1541,19 +1606,19 @@
           "capabilitySlots": [
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -1580,18 +1645,13 @@
               "label": "Arabic quality evidence must wait for an audited exact Arabic syntax source boundary"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         }
       ],
       "summary": {
-        "blockedSlotCount": 4,
-        "blockedSlots": [
-          "kb",
-          "corpus",
-          "parallel",
-          "quality"
-        ],
-        "readySlotCount": 8,
+        "blockedSlotCount": 0,
+        "blockedSlots": [],
+        "readySlotCount": 12,
         "readySlots": [
           "foundation",
           "core",
@@ -1600,14 +1660,18 @@
           "lexicon",
           "morphology",
           "syntax",
-          "search"
+          "kb",
+          "search",
+          "corpus",
+          "parallel",
+          "quality"
         ],
         "requiredSlotCount": 12
       }
     },
     {
       "compositePackageName": "@ismail-elkorchi/textpack-fr",
-      "compositeReady": false,
+      "compositeReady": true,
       "languageName": "French",
       "languageTag": "fr",
       "requiredSlots": [
@@ -2013,12 +2077,18 @@
           "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-fr-kb does not declare production coverage for the kb slot."
+          "blockers": [],
+          "candidatePacks": [
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+              "publishable": true
+            }
           ],
-          "candidatePacks": [],
           "capabilityAliases": [
             "kb",
             "lexical-semantics",
@@ -2027,23 +2097,23 @@
           "capabilitySlots": [
             {
               "slot": "kb",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -2061,7 +2131,7 @@
               "label": "Wikidata main structured data for French entity labels, aliases, and KB links"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
           "blockers": [],
@@ -2134,11 +2204,7 @@
           "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-fr-corpus does not declare production coverage for the corpus slot."
-          ],
+          "blockers": [],
           "candidatePacks": [],
           "capabilityAliases": [
             "corpus"
@@ -2146,23 +2212,23 @@
           "capabilitySlots": [
             {
               "slot": "corpus",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -2173,14 +2239,10 @@
             "source:tatoeba:weekly-french-2026-06-06"
           ],
           "sourceRequirements": [],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-fr-parallel does not declare production coverage for the parallel slot."
-          ],
+          "blockers": [],
           "candidatePacks": [],
           "capabilityAliases": [
             "parallel"
@@ -2188,23 +2250,23 @@
           "capabilitySlots": [
             {
               "slot": "parallel",
-              "status": "artifact-backed"
+              "status": "task-supported"
             },
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -2215,14 +2277,10 @@
             "source:tatoeba:weekly-french-2026-06-06"
           ],
           "sourceRequirements": [],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         },
         {
-          "blockers": [
-            "slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
-            "package has not passed the publishability gate.",
-            "@ismail-elkorchi/textpack-fr-quality does not declare production coverage for the quality slot."
-          ],
+          "blockers": [],
           "candidatePacks": [
             {
               "capabilitySlots": [
@@ -2231,6 +2289,24 @@
               ],
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-fr-core",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "corpus",
+                "quality"
+              ],
+              "packClass": "corpus",
+              "packageName": "@ismail-elkorchi/textpack-fr-corpus",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-kb",
               "publishable": true
             },
             {
@@ -2287,6 +2363,23 @@
               ],
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "parallel",
+                "quality"
+              ],
+              "packClass": "parallel",
+              "packageName": "@ismail-elkorchi/textpack-fr-parallel",
+              "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "quality"
+              ],
+              "packClass": "language-component-composite",
+              "packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
               "publishable": true
             },
             {
@@ -2352,6 +2445,15 @@
               "packClass": "language-concrete",
               "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
               "publishable": true
+            },
+            {
+              "capabilitySlots": [
+                "kb",
+                "quality"
+              ],
+              "packClass": "kb",
+              "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+              "publishable": true
             }
           ],
           "capabilityAliases": [
@@ -2360,19 +2462,19 @@
           "capabilitySlots": [
             {
               "slot": "quality",
-              "status": "artifact-backed"
+              "status": "task-supported"
             }
           ],
           "checks": {
             "adapterValid": true,
-            "artifactBacked": true,
-            "compositeReady": false,
+            "artifactBacked": false,
+            "compositeReady": true,
             "evaluated": true,
             "generated": true,
             "packagePresent": true,
-            "publishable": false,
+            "publishable": true,
             "schemaValid": true,
-            "slotCapabilitySatisfied": false,
+            "slotCapabilitySatisfied": true,
             "sourceAudited": true,
             "sourceRequirementsSatisfied": true,
             "standardReports": true
@@ -2425,18 +2527,13 @@
               "label": "French quality evidence must wait for audited French syntax source coverage"
             }
           ],
-          "stage": "artifact-backed"
+          "stage": "composite-ready"
         }
       ],
       "summary": {
-        "blockedSlotCount": 4,
-        "blockedSlots": [
-          "kb",
-          "corpus",
-          "parallel",
-          "quality"
-        ],
-        "readySlotCount": 8,
+        "blockedSlotCount": 0,
+        "blockedSlots": [],
+        "readySlotCount": 12,
         "readySlots": [
           "foundation",
           "core",
@@ -2445,7 +2542,11 @@
           "lexicon",
           "morphology",
           "syntax",
-          "search"
+          "kb",
+          "search",
+          "corpus",
+          "parallel",
+          "quality"
         ],
         "requiredSlotCount": 12
       }

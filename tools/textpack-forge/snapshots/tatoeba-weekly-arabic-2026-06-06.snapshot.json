@@ -5,8 +5,43 @@
 	"version": "2026-06-06",
 	"retrievedAt": "2026-06-11T00:00:00.000Z",
 	"kind": "external",
-	"checksum": "sha256:8caefc61478d6bd0e7f4ea46e36a75ed1db1160993d47100d946a474522b6f8c",
+	"checksum": "sha256:b3ff1462e8003c18c897b893c12c363b2e6aaf68ded2fb62e77295ef167b71dd",
 	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara_sentences_detailed.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 1198138,
+			"checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-deu_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 18446,
+			"checksum": "sha256:63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-deu_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-eng_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 297959,
+			"checksum": "sha256:e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-eng_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-fra_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 19407,
+			"checksum": "sha256:1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-fra_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-spa_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 21075,
+			"checksum": "sha256:45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-spa_links.tsv.bz2"
+		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
 			"mediaType": "application/json",
@@ -15,5 +50,5 @@
 			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/"
 		}
 	],
-	"notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository."
+	"notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts used to generate task-supported corpus and parallel textpacks."
 }

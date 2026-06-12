@@ -26,22 +26,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+  "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:598ec2087dd9bfe27f640806a76325025b18d63bf9dcacbca5b9112e35a260e8",
+  "outputChecksum": "sha256:a79c9820a8a8c2b021281e8a2fbc323b0bf648471200fe1024375759f2374719",
   "packSpecPath": "tools/textpack-forge/composites/textpack-fr-quality.composite.json",
   "packageName": "@ismail-elkorchi/textpack-fr-quality",
   "packageVersion": "0.1.0",
   "policySurface": "policy-expanded-wrapper",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

@@ -33,18 +33,18 @@
       "checksum": "sha256:decd9eac1556a68f6ed6e27c4dcdb3c4673349223c400388b0be6bc23dcedf76",
       "files": [
         {
-          "byteLength": 27243156,
-          "checksum": "sha256:e181d132b3b0d3d87efc98d376968441b517353933011cebea5366321a6024e6",
-          "mediaType": "application/zip",
-          "path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.zip",
-          "sourceUrl": "http://www.lexique.org/databases/Lexique383/Lexique383.zip"
-        },
-        {
           "byteLength": 25850780,
           "checksum": "sha256:637ba37a767a66679c48371d673ece50cbf541b49a4e40e598963d4f3fbce52b",
           "mediaType": "text/tab-separated-values; charset=utf-8",
           "path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.tsv",
           "sourceUrl": "http://www.lexique.org/databases/Lexique383/Lexique383.zip#Lexique383.tsv"
+        },
+        {
+          "byteLength": 27243156,
+          "checksum": "sha256:e181d132b3b0d3d87efc98d376968441b517353933011cebea5366321a6024e6",
+          "mediaType": "application/zip",
+          "path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.zip",
+          "sourceUrl": "http://www.lexique.org/databases/Lexique383/Lexique383.zip"
         },
         {
           "byteLength": 2135,

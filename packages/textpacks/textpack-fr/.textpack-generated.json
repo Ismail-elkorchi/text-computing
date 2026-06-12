@@ -26,25 +26,18 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+  "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:30521b93b4f9124fce45e6149ddfe8a785b72406ce16f07a145a6568f2052299",
+  "outputChecksum": "sha256:e1504ae373078a8645f5d8c61abc005d430f4afb4f1743000f9d46fca1113a64",
   "packSpecPath": "tools/textpack-forge/composites/textpack-fr.composite.json",
   "packageName": "@ismail-elkorchi/textpack-fr",
   "packageVersion": "0.1.0",
   "policySurface": "policy-expanded-wrapper",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot corpus is artifact-backed without local task-usable payloads",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "schemaVersion": "1"
 }

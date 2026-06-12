@@ -1,14 +1,15 @@
 {
   "diagnostics": [
     {
-      "diagnosticId": "tatoeba-ar-explicit-corpus-artifact-fetch",
-      "message": "Tatoeba Arabic sentence data is exposed as an explicit artifact descriptor; local corpus rows have not been materialized yet.",
+      "diagnosticId": "tatoeba-ar-local-corpus-rows",
+      "message": "Tatoeba Arabic sentence data is materialized as local canonical TSV rows.",
       "metadata": {
         "artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
-        "artifactPolicy": "fetch-explicit"
+        "resourceId": "ar-tatoeba-corpus-sentences",
+        "rowChecksum": "sha256:33aa70eab906f119b5b5b8a0accf1a771e8d7ef8dc3d3e60e6b0690e74bf0ae1"
       },
       "severity": "info",
-      "task": "corpus.artifact"
+      "task": "corpus.materialization"
     },
     {
       "diagnosticId": "tatoeba-ar-attribution-corpus-fields",
@@ -31,13 +32,13 @@
       "value": 67974
     },
     {
-      "metricId": "artifact-size-bytes",
-      "name": "artifactSizeBytes",
-      "unit": "bytes",
-      "value": 1198138
+      "metricId": "rejected-row-count",
+      "name": "rejectedRowCount",
+      "unit": "rows",
+      "value": 0
     }
   ],
-  "profileId": "tatoeba-ar-corpus-artifact-quality",
+  "profileId": "tatoeba-ar-corpus-materialized-quality",
   "schemaVersion": "1",
   "script": "Arab",
   "thresholds": []

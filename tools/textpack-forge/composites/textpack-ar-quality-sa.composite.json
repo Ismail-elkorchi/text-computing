@@ -5,14 +5,17 @@
 	"packageDir": "packages/textpacks/textpack-ar-quality-sa",
 	"name": "Arabic Quality Share-Alike Composite Textpack",
 	"description": "Generated source-backed Arabic quality recipe composite over the policy-expanded Arabic MSA component graph, including share-alike isolated syntax evidence.",
-	"publishable": false,
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated share-alike recipe composite over publishable Arabic core, normalization, segmentation, lexicon, morphology, syntax, search, KB, corpus, and parallel components, with required component reports and evaluation evidence for the full policy-expanded Arabic MSA graph.",
+		"productionGradeSourceCoverage": "Generated share-alike recipe composite over publishable Arabic core, normalization, segmentation, lexicon, morphology, syntax, search, KB, corpus, and parallel components, with required component reports and evaluation evidence for the full policy-expanded Arabic MSA graph. Required KB, corpus, and parallel components provide local task-usable payloads for their declared scopes, and quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
 		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. The UD Arabic NYUAD component remains isolated behind the required -sa package policy surface.",
 		"declaredScope": "Arabic MSA share-alike resource-quality component composite for the generated policy-expanded Arabic graph. It does not claim dialect quality diagnostics, Classical/Quranic coverage, OPUS coverage, corpus-scale quality baselines, readability scoring, OCR/noisy-text diagnostics, annotation adjudication, or permissive default-package compatibility.",
 		"conformanceEvidence": [
 			"eval:textpack-ar-quality-sa:required-component-graph",
-			"eval:textpack-ar-syntax-sa:required-component-graph"
+			"eval:textpack-ar-syntax-sa:required-component-graph",
+			"eval:tatoeba-ar-corpus:materialized-rows",
+			"eval:tatoeba-ar-parallel:language-pair-coverage",
+			"eval:wikidata-ar:entity-extract"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -26,7 +29,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "task-supported",
 	"loader": {
 		"functionName": "loadArabicQualityShareAlike",
 		"languageName": "ArabicQualityShareAlike"
@@ -133,7 +136,7 @@
 			"reason": "Arabic KB component quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
@@ -142,7 +145,7 @@
 			"reason": "Arabic Tatoeba corpus artifact quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
@@ -151,16 +154,15 @@
 			"reason": "Arabic Tatoeba parallel artifact quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Arabic MSA core, normalization, segmentation, lexicon, morphology, share-alike syntax, search, KB, corpus artifact, and parallel artifact quality-profile resources, generated reports, coverage reports, and evaluation records.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides Arabic quality-profile resources, generated reports, coverage reports, and evaluation records over local KB, corpus, and parallel payloads."
 			]
 		}
 	],

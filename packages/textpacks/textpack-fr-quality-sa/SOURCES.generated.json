@@ -64,7 +64,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "default",
       "packageName": "@ismail-elkorchi/textpack-fr-kb",
@@ -73,7 +73,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-corpus",
@@ -82,7 +82,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-parallel",
@@ -98,15 +98,11 @@
   "packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
   "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [],
   "resources": [],
   "schemaVersion": "1",
@@ -242,7 +238,7 @@
       "version": "48.2.0"
     },
     {
-      "checksum": "sha256:342707a6e92c283ca98fe9528cf8b2eacf5c01f9365edb54ef983edcc612c197",
+      "checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c",
       "files": [
         {
           "byteLength": 129,
@@ -257,10 +253,82 @@
           "mediaType": "text/plain",
           "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
           "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
+        },
+        {
+          "byteLength": 176372,
+          "checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv"
+        },
+        {
+          "byteLength": 601528,
+          "checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv"
+        },
+        {
+          "byteLength": 9171,
+          "checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 181451,
+          "checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv"
+        },
+        {
+          "byteLength": 507718,
+          "checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1207332,
+          "checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv"
+        },
+        {
+          "byteLength": 9237,
+          "checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 364007,
+          "checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv"
+        },
+        {
+          "byteLength": 339445,
+          "checksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1164023,
+          "checksum": "sha256:b4dda64824d9b904703eac084931be6dad3c47a9d770673b29aed7cc731f9f85",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv"
+        },
+        {
+          "byteLength": 9173,
+          "checksum": "sha256:7d46ecdcaad81c6ef85139decbac517ee64c715e6a8069d6352d4d4b2725ca27",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 581521,
+          "checksum": "sha256:0a549fbec2daeb2243e8352977852c3476f7e35a6ef4eb10141df0babc0df276",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv"
         }
       ],
       "kind": "external",
-      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump. The raw dump is artifact-backed and not stored in the repository.",
+      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:wikidata:main:20260608",
@@ -268,8 +336,43 @@
       "version": "20260608"
     },
     {
-      "checksum": "sha256:347d4ca4aff5e9acaf0f5d0e4a81d620fd8e34403ae90d79f22ed0d3ced6df74",
+      "checksum": "sha256:0b8ceb53a848692890f7c5f4c56321f1f84a3eb90ab37a5fc19830229952176f",
       "files": [
+        {
+          "byteLength": 14624789,
+          "checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra_sentences_detailed.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2"
+        },
+        {
+          "byteLength": 19399,
+          "checksum": "sha256:43d9b95ed2b74940e3767915ae8ada2b6e5e83e83f5c96f589e4fb83f6492b30",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-ara_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-ara_links.tsv.bz2"
+        },
+        {
+          "byteLength": 986191,
+          "checksum": "sha256:0d719d633ce64b094686e98bf56cd753d02a040d0db1096a9165edcc918f84f2",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-deu_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-deu_links.tsv.bz2"
+        },
+        {
+          "byteLength": 2630353,
+          "checksum": "sha256:26cd42e6b219ecd016d6b5c38ace5a0b7285bf93da3a2cfa933f691341034689",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-eng_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-eng_links.tsv.bz2"
+        },
+        {
+          "byteLength": 390399,
+          "checksum": "sha256:c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-spa_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-spa_links.tsv.bz2"
+        },
         {
           "byteLength": 3402,
           "checksum": "sha256:850382d60a9aa1b200d294eabf8dbe6c38a29902af8d2a2e02cc53369c6a693a",
@@ -279,7 +382,7 @@
         }
       ],
       "kind": "external",
-      "notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository.",
+      "notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts used to generate task-supported corpus and parallel textpacks.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
@@ -290,18 +393,18 @@
       "checksum": "sha256:decd9eac1556a68f6ed6e27c4dcdb3c4673349223c400388b0be6bc23dcedf76",
       "files": [
         {
-          "byteLength": 27243156,
-          "checksum": "sha256:e181d132b3b0d3d87efc98d376968441b517353933011cebea5366321a6024e6",
-          "mediaType": "application/zip",
-          "path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.zip",
-          "sourceUrl": "http://www.lexique.org/databases/Lexique383/Lexique383.zip"
-        },
-        {
           "byteLength": 25850780,
           "checksum": "sha256:637ba37a767a66679c48371d673ece50cbf541b49a4e40e598963d4f3fbce52b",
           "mediaType": "text/tab-separated-values; charset=utf-8",
           "path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.tsv",
           "sourceUrl": "http://www.lexique.org/databases/Lexique383/Lexique383.zip#Lexique383.tsv"
+        },
+        {
+          "byteLength": 27243156,
+          "checksum": "sha256:e181d132b3b0d3d87efc98d376968441b517353933011cebea5366321a6024e6",
+          "mediaType": "application/zip",
+          "path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.zip",
+          "sourceUrl": "http://www.lexique.org/databases/Lexique383/Lexique383.zip"
         },
         {
           "byteLength": 2135,
@@ -524,7 +627,7 @@
       ],
       "licenseExpression": "CC-BY-2.0-FR",
       "name": "Tatoeba weekly French exports 2026-06-06",
-      "notes": "Exact Tatoeba weekly French sentence and French-linked parallel artifact metadata. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave French source, not a first-wave lexicon, morphology, syntax, search, or KB source. Second-wave exact snapshot: may document corpus/parallel artifact-backed package slots after checksum, attribution, and descriptor evidence are generated, but it does not provide task support until local rows or indexes are materialized.",
+      "notes": "Exact Tatoeba weekly French sentence and French-linked parallel exports. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave French source, not a first-wave lexicon, morphology, syntax, search, or KB source. It can provide task support only when transformed into local sentence rows, alignment/link rows, or an equivalent local index; the active French corpus and parallel packs materialize those local rows.",
       "policyClass": "attribution",
       "priority": "second",
       "publishableByDefault": true,

@@ -11,11 +11,11 @@
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "none",
       "limitations": [],
       "resourceIds": [],
       "slot": "corpus",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
@@ -27,11 +27,11 @@
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "none",
       "limitations": [],
       "resourceIds": [],
       "slot": "kb",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
@@ -59,19 +59,19 @@
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "none",
       "limitations": [],
       "resourceIds": [],
       "slot": "parallel",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "none",
       "limitations": [],
       "resourceIds": [],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
@@ -105,10 +105,10 @@
     },
     {
       "notes": [
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "The required component graph provides local Tatoeba Arabic sentence rows and canonical corpus metadata."
       ],
       "slot": "corpus",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "slot": "foundation",
@@ -116,10 +116,10 @@
     },
     {
       "notes": [
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "The required component graph provides local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
       ],
       "slot": "kb",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "slot": "lexicon",
@@ -135,17 +135,17 @@
     },
     {
       "notes": [
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "The required component graph provides local Tatoeba Arabic-linked sentence-id alignment rows for selected target languages."
       ],
       "slot": "parallel",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "The required component graph provides generated Arabic quality evidence and coverage reports over the required local component graph."
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "slot": "search",
@@ -225,11 +225,11 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-ar-kb",
-      "reason": "Arabic WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+      "reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
       "role": "required",
       "versionRange": "0.1.0"
     },
@@ -243,20 +243,20 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-ar-corpus",
-      "reason": "Arabic artifact-backed Tatoeba corpus descriptors and quality evidence.",
+      "reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
       "role": "required",
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-ar-parallel",
-      "reason": "Arabic artifact-backed Tatoeba parallel descriptors and quality evidence.",
+      "reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
       "role": "required",
       "versionRange": "0.1.0"
     },
@@ -272,56 +272,20 @@
   ],
   "coverageStatus": "declared-only",
   "evaluationRecordIds": [],
-  "gapNotes": [
-    {
-      "id": "gap:pack:ar-sa:kb",
-      "message": "kb is artifact-backed in this source-backed recipe composite pack.",
-      "slot": "kb",
-      "status": "artifact-backed"
-    },
-    {
-      "id": "gap:pack:ar-sa:corpus",
-      "message": "corpus is artifact-backed in this source-backed recipe composite pack.",
-      "slot": "corpus",
-      "status": "artifact-backed"
-    },
-    {
-      "id": "gap:pack:ar-sa:parallel",
-      "message": "parallel is artifact-backed in this source-backed recipe composite pack.",
-      "slot": "parallel",
-      "status": "artifact-backed"
-    },
-    {
-      "id": "gap:pack:ar-sa:quality",
-      "message": "quality is artifact-backed in this source-backed recipe composite pack.",
-      "slot": "quality",
-      "status": "artifact-backed"
-    }
-  ],
+  "gapNotes": [],
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
-    "corpus is artifact-backed in this source-backed recipe composite pack.",
-    "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations",
-    "kb is artifact-backed in this source-backed recipe composite pack.",
-    "parallel is artifact-backed in this source-backed recipe composite pack.",
-    "quality is artifact-backed in this source-backed recipe composite pack."
+    "generated language recipe composite; see declared scope for excluded isolated sources and explicit artifact-fetch limitations"
   ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar-sa",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot corpus is artifact-backed without local task-usable payloads",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceCoverage": [],
   "resourceKinds": [],
   "schemaVersion": "1",

@@ -7,53 +7,48 @@
   "packageName": "@ismail-elkorchi/textpack-fr-parallel",
   "policySurface": "default",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceSpecIds": [
     "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
   ],
   "resources": [
     {
-      "byteLength": 2100,
-      "checksum": "sha256:5f02b8c8c23cd2bc852fa008fca147152864b59a45d2f95b03367bf79ca3ce4e",
+      "byteLength": 29529,
+      "checksum": "sha256:6484eb9b74990c7193bc0f3dee92ab5efc7afeae358dca48e503fb800def06fc",
       "id": "fr-tatoeba-parallel-ara",
       "kind": "alignment-table",
-      "path": "resources/tatoeba-fr.parallel-ara.json",
+      "path": "resources/tatoeba-fr.parallel-ara.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
     },
     {
-      "byteLength": 2105,
-      "checksum": "sha256:b496142a402b7d74c328af23a86824c5aa2f92a41432e6eba0305bef98138019",
+      "byteLength": 1346821,
+      "checksum": "sha256:b7cd90508c660024f5744801abfcaf4beb77dbc708fa56662e9dbf02be1ca32f",
       "id": "fr-tatoeba-parallel-deu",
       "kind": "alignment-table",
-      "path": "resources/tatoeba-fr.parallel-deu.json",
+      "path": "resources/tatoeba-fr.parallel-deu.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
     },
     {
-      "byteLength": 2108,
-      "checksum": "sha256:011af05baec636c9532e2b0e7f1b0a3fe47acad13d18380ef11f13aa37c3657c",
+      "byteLength": 3574573,
+      "checksum": "sha256:93baab8ce4ec479a0715bbf8d089118baea9371395ee698a421bbf35059127a9",
       "id": "fr-tatoeba-parallel-eng",
       "kind": "alignment-table",
-      "path": "resources/tatoeba-fr.parallel-eng.json",
+      "path": "resources/tatoeba-fr.parallel-eng.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
     },
     {
-      "byteLength": 2216,
-      "checksum": "sha256:845561c4c24fba6dec0508d29139cc7114d568dac796f8d3cb1afd53a24d2033",
+      "byteLength": 2298,
+      "checksum": "sha256:c3a02d6e9f32fe4d95aaaa77469238cfb9857a1956d4f1fe692b4e33c3f61898",
       "id": "fr-tatoeba-parallel-quality",
       "kind": "quality-profile",
       "path": "resources/tatoeba-fr.parallel-quality.json",
@@ -62,8 +57,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
     },
     {
-      "byteLength": 1376,
-      "checksum": "sha256:a7dedc71f41fa946e87765d07a4bce5803c1d97cfc0841a35b7aac90d614c984",
+      "byteLength": 1460,
+      "checksum": "sha256:bfef00931809bce862ed19d983e800c3de60a863608fb8c79602215bb9a196c4",
       "id": "fr-tatoeba-parallel-quality-profile",
       "kind": "quality-profile",
       "path": "resources/tatoeba-fr.parallel-quality-profile.json",
@@ -72,11 +67,11 @@
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
     },
     {
-      "byteLength": 2104,
-      "checksum": "sha256:dfe0ca976b91b2c9f53309e73a37ccc2145acf4660e7c72541ed20bf7fce97a5",
+      "byteLength": 561857,
+      "checksum": "sha256:b33c51d5f5cb24cd2b45ea6f3ab1ee6d5617a4943fb1c1c2701d4ea742013bca",
       "id": "fr-tatoeba-parallel-spa",
       "kind": "alignment-table",
-      "path": "resources/tatoeba-fr.parallel-spa.json",
+      "path": "resources/tatoeba-fr.parallel-spa.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
@@ -88,8 +83,43 @@
   ],
   "snapshots": [
     {
-      "checksum": "sha256:347d4ca4aff5e9acaf0f5d0e4a81d620fd8e34403ae90d79f22ed0d3ced6df74",
+      "checksum": "sha256:0b8ceb53a848692890f7c5f4c56321f1f84a3eb90ab37a5fc19830229952176f",
       "files": [
+        {
+          "byteLength": 14624789,
+          "checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra_sentences_detailed.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2"
+        },
+        {
+          "byteLength": 19399,
+          "checksum": "sha256:43d9b95ed2b74940e3767915ae8ada2b6e5e83e83f5c96f589e4fb83f6492b30",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-ara_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-ara_links.tsv.bz2"
+        },
+        {
+          "byteLength": 986191,
+          "checksum": "sha256:0d719d633ce64b094686e98bf56cd753d02a040d0db1096a9165edcc918f84f2",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-deu_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-deu_links.tsv.bz2"
+        },
+        {
+          "byteLength": 2630353,
+          "checksum": "sha256:26cd42e6b219ecd016d6b5c38ace5a0b7285bf93da3a2cfa933f691341034689",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-eng_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-eng_links.tsv.bz2"
+        },
+        {
+          "byteLength": 390399,
+          "checksum": "sha256:c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-spa_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-spa_links.tsv.bz2"
+        },
         {
           "byteLength": 3402,
           "checksum": "sha256:850382d60a9aa1b200d294eabf8dbe6c38a29902af8d2a2e02cc53369c6a693a",
@@ -99,7 +129,7 @@
         }
       ],
       "kind": "external",
-      "notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository.",
+      "notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts used to generate task-supported corpus and parallel textpacks.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
@@ -126,7 +156,7 @@
       ],
       "licenseExpression": "CC-BY-2.0-FR",
       "name": "Tatoeba weekly French exports 2026-06-06",
-      "notes": "Exact Tatoeba weekly French sentence and French-linked parallel artifact metadata. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave French source, not a first-wave lexicon, morphology, syntax, search, or KB source. Second-wave exact snapshot: may document corpus/parallel artifact-backed package slots after checksum, attribution, and descriptor evidence are generated, but it does not provide task support until local rows or indexes are materialized.",
+      "notes": "Exact Tatoeba weekly French sentence and French-linked parallel exports. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave French source, not a first-wave lexicon, morphology, syntax, search, or KB source. It can provide task support only when transformed into local sentence rows, alignment/link rows, or an equivalent local index; the active French corpus and parallel packs materialize those local rows.",
       "policyClass": "attribution",
       "priority": "second",
       "publishableByDefault": true,

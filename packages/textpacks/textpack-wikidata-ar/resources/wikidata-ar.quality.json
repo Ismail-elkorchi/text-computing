@@ -1,18 +1,26 @@
 {
-  "artifactId": "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608",
+  "aliasRowCount": 2776,
+  "endpoint": "https://query.wikidata.org/sparql",
+  "entityRowCount": 3009,
+  "extractId": "wikidata-ar-core-entity-extract-20260612",
+  "localResourceIds": [
+    "wikidata-ar-entities",
+    "wikidata-ar-aliases",
+    "wikidata-ar-relations",
+    "wikidata-ar-kb-canonical"
+  ],
   "md5Checksum": "md5:8918b16c41f4678ac147fc95bafa2de6",
   "pipelineId": "wikidata-main-artifact",
   "pipelineVersion": "0.1.0",
-  "recordsAccepted": 2,
+  "recordsAccepted": 8794,
   "recordsRejected": 0,
+  "relationRowCount": 3009,
   "schemaVersion": "1",
   "sha1Checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98",
-  "sizeBytes": 142291512349,
   "sourceId": "source:wikidata:main",
-  "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
   "version": "20260608",
   "warnings": [
-    "Wikimedia publishes SHA-1 and MD5 sidecars for this dump; no upstream SHA-256 sidecar is available for the pinned artifact.",
-    "The full Wikidata dump is artifact-backed; local KB lookup requires a generated language-specific extract."
+    "Wikimedia publishes SHA-1 and MD5 sidecars for the full dump; the local extract files are pinned by SHA-256 in the forge snapshot.",
+    "The local Wikidata extract is scoped to declared core entity classes and sitelink thresholds; it is not a full Wikidata entity dump."
   ]
 }

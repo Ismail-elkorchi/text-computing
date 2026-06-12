@@ -1,8 +1,8 @@
 {
   "diagnostics": [
     {
-      "diagnosticId": "tatoeba-fr-explicit-parallel-artifact-fetch",
-      "message": "Tatoeba French parallel alignments are exposed as explicit artifact descriptors; local alignment rows have not been materialized yet.",
+      "diagnosticId": "tatoeba-fr-local-parallel-rows",
+      "message": "Tatoeba French parallel alignments are materialized as local canonical TSV rows.",
       "metadata": {
         "artifactIds": [
           "artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
@@ -10,10 +10,15 @@
           "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
           "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06"
         ],
-        "artifactPolicy": "fetch-explicit"
+        "resourceIds": [
+          "fr-tatoeba-parallel-ara",
+          "fr-tatoeba-parallel-deu",
+          "fr-tatoeba-parallel-eng",
+          "fr-tatoeba-parallel-spa"
+        ]
       },
       "severity": "info",
-      "task": "parallel.artifact"
+      "task": "parallel.materialization"
     }
   ],
   "evaluationRecordIds": [],
@@ -39,7 +44,7 @@
       "value": 4026342
     }
   ],
-  "profileId": "tatoeba-fr-parallel-artifact-quality",
+  "profileId": "tatoeba-fr-parallel-materialized-quality",
   "schemaVersion": "1",
   "script": "Latn",
   "thresholds": []

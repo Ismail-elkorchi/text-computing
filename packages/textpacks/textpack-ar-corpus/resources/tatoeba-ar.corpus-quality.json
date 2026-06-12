@@ -1,8 +1,11 @@
 {
   "artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
+  "localResourceChecksum": "sha256:33aa70eab906f119b5b5b8a0accf1a771e8d7ef8dc3d3e60e6b0690e74bf0ae1",
+  "localResourceId": "ar-tatoeba-corpus-sentences",
+  "materializedRowCount": 67974,
   "pipelineId": "tatoeba-arabic-corpus-artifact",
   "pipelineVersion": "0.1.0",
-  "recordsAccepted": 1,
+  "recordsAccepted": 67974,
   "recordsRejected": 0,
   "rowCount": 67974,
   "schemaVersion": "1",
@@ -12,7 +15,6 @@
   "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2",
   "version": "2026-06-06",
   "warnings": [
-    "The Tatoeba Arabic corpus is artifact-backed and must be fetched explicitly; it is not vendored in the npm package.",
     "The detailed export includes contributor fields needed for attribution-aware downstream processing."
   ]
 }

@@ -2,23 +2,16 @@
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
-    "parallel is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
   ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar-parallel",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "records": [
     {
       "capabilitySlot": "parallel",
@@ -62,7 +55,7 @@
       "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "parallel.artifact-checksum"
+      "taskType": "parallel.source-artifact-checksum"
     },
     {
       "capabilitySlot": "parallel",
@@ -94,6 +87,7 @@
           ],
           "languagePairs": [
             {
+              "localResourceId": "ar-tatoeba-parallel-deu",
               "rowCount": 2923,
               "sha256Checksum": "sha256:63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124",
               "sizeBytes": 18446,
@@ -103,6 +97,7 @@
               "targetTatoebaLanguageCode": "deu"
             },
             {
+              "localResourceId": "ar-tatoeba-parallel-eng",
               "rowCount": 48604,
               "sha256Checksum": "sha256:e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83",
               "sizeBytes": 297959,
@@ -112,6 +107,7 @@
               "targetTatoebaLanguageCode": "eng"
             },
             {
+              "localResourceId": "ar-tatoeba-parallel-fra",
               "rowCount": 3015,
               "sha256Checksum": "sha256:1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947",
               "sizeBytes": 19407,
@@ -121,6 +117,7 @@
               "targetTatoebaLanguageCode": "fra"
             },
             {
+              "localResourceId": "ar-tatoeba-parallel-spa",
               "rowCount": 3360,
               "sha256Checksum": "sha256:45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc",
               "sizeBytes": 21075,
@@ -139,7 +136,7 @@
         ]
       },
       "limitations": [
-        "Tatoeba link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports."
+        "Tatoeba local link tables provide sentence-id alignments; sentence text is resolved from compatible Tatoeba sentence resources."
       ],
       "metric": {
         "name": "languagePairCount",
@@ -154,7 +151,7 @@
       "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "parallel.artifact"
+      "taskType": "parallel.materialized-links"
     },
     {
       "capabilitySlot": "parallel",

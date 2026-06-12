@@ -4,8 +4,12 @@
 	"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
 	"pipelineId": "wikidata-main-artifact",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": ["source:wikidata:main"],
-	"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
+	"sourceIds": [
+		"source:wikidata:main"
+	],
+	"snapshotIds": [
+		"snapshot:source:wikidata:main:20260608"
+	],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
@@ -16,12 +20,50 @@
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
 			"checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv",
+			"checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv",
+			"checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv",
+			"checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json",
+			"checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1"
 		}
 	],
 	"outputs": [
 		{
-			"resourceId": "wikidata-ar-kb-artifact",
-			"path": "resources/wikidata-ar.kb-artifact.json",
+			"resourceId": "wikidata-ar-entities",
+			"path": "resources/wikidata-ar.entities.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "wikidata-ar-aliases",
+			"path": "resources/wikidata-ar.aliases.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "wikidata-ar-relations",
+			"path": "resources/wikidata-ar.relations.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "wikidata-ar-kb-canonical",
+			"path": "resources/wikidata-ar.kb.json",
 			"kind": "knowledge-base",
 			"format": "json"
 		},

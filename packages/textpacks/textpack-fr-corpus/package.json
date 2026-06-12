@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-fr-corpus",
 	"version": "0.1.0",
-	"description": "Artifact-backed descriptor-only source-backed French corpus artifact descriptors generated from Tatoeba weekly French exports.",
+	"description": "Source-backed French Tatoeba corpus pack with local generated sentence rows.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -39,5 +39,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

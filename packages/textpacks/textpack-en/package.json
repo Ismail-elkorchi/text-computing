@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-en",
 	"version": "0.1.0",
-	"description": "Generated private artifact-backed English recipe composite over the current English component graph, including artifact-backed corpus and parallel artifact descriptors.",
+	"description": "Generated English developer recipe composite over the current English component graph with local KB, corpus, and parallel payloads.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -51,5 +51,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

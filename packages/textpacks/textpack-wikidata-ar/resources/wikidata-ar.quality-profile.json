@@ -1,24 +1,74 @@
 {
   "diagnostics": [
     {
-      "diagnosticId": "wikidata-ar-explicit-artifact-fetch",
-      "message": "Wikidata main entity data for Arabic KB consumers is exposed as an explicit artifact descriptor; local KB lookup requires a generated language-specific extract.",
+      "diagnosticId": "wikidata-ar-local-core-extract",
+      "message": "Wikidata Arabic core entity data is materialized as local canonical TSV resources for the declared extract scope.",
       "metadata": {
-        "artifactId": "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608",
-        "artifactPolicy": "fetch-explicit"
+        "extractId": "wikidata-ar-core-entity-extract-20260612",
+        "scope": "Arabic labels, descriptions, aliases, arwiki sitelinks, and P31 type relations for countries, languages, writing systems, plus sitelink-thresholded cities, organizations, universities, films, books, albums, and programming languages."
       },
       "severity": "info",
-      "task": "kb.artifact"
+      "task": "kb.materialization"
     },
     {
-      "diagnosticId": "wikidata-ar-upstream-checksum-strength",
-      "message": "The upstream checksum sidecar for the pinned Wikidata artifact is SHA-1, not SHA-256.",
+      "diagnosticId": "wikidata-ar-extract-scope",
+      "message": "The extract scope is declared by class ids and sitelink thresholds; it does not claim complete Wikidata coverage.",
       "metadata": {
-        "md5Checksum": "md5:8918b16c41f4678ac147fc95bafa2de6",
-        "sha1Checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+        "classes": [
+          {
+            "minSitelinks": 0,
+            "typeId": "Q6256",
+            "typeLabel": "country"
+          },
+          {
+            "minSitelinks": 50,
+            "typeId": "Q515",
+            "typeLabel": "city"
+          },
+          {
+            "minSitelinks": 80,
+            "typeId": "Q43229",
+            "typeLabel": "organization"
+          },
+          {
+            "minSitelinks": 20,
+            "typeId": "Q3918",
+            "typeLabel": "university"
+          },
+          {
+            "minSitelinks": 40,
+            "typeId": "Q482994",
+            "typeLabel": "album"
+          },
+          {
+            "minSitelinks": 40,
+            "typeId": "Q571",
+            "typeLabel": "book"
+          },
+          {
+            "minSitelinks": 80,
+            "typeId": "Q11424",
+            "typeLabel": "film"
+          },
+          {
+            "minSitelinks": 0,
+            "typeId": "Q34770",
+            "typeLabel": "language"
+          },
+          {
+            "minSitelinks": 0,
+            "typeId": "Q34740",
+            "typeLabel": "writing system"
+          },
+          {
+            "minSitelinks": 10,
+            "typeId": "Q9143",
+            "typeLabel": "programming language"
+          }
+        ]
       },
-      "severity": "warning",
-      "task": "kb.artifact"
+      "severity": "info",
+      "task": "kb.coverage"
     }
   ],
   "evaluationRecordIds": [],
@@ -26,19 +76,25 @@
   "languageTag": "ar",
   "metrics": [
     {
-      "metricId": "artifact-size-bytes",
-      "name": "artifactSizeBytes",
-      "unit": "bytes",
-      "value": 142291512349
+      "metricId": "entity-row-count",
+      "name": "entityRowCount",
+      "unit": "rows",
+      "value": 3009
     },
     {
-      "metricId": "upstream-sha1-sidecar-present",
-      "name": "upstreamSha1SidecarPresent",
-      "unit": "boolean",
-      "value": true
+      "metricId": "alias-row-count",
+      "name": "aliasRowCount",
+      "unit": "rows",
+      "value": 2776
+    },
+    {
+      "metricId": "relation-row-count",
+      "name": "relationRowCount",
+      "unit": "rows",
+      "value": 3009
     }
   ],
-  "profileId": "wikidata-ar-artifact-quality",
+  "profileId": "wikidata-ar-core-extract-quality",
   "schemaVersion": "1",
   "script": "Arab",
   "thresholds": []

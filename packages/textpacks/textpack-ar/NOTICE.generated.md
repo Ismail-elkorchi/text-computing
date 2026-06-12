@@ -6,8 +6,8 @@ Package: `@ismail-elkorchi/textpack-ar`
 Mode: `source-backed`
 Policy surface: `policy-expanded-wrapper`
 Generated at: `2026-06-08T00:00:00.000Z`
-Publishable: `false`
-Publishability status: `blocked`
+Publishable: `true`
+Publishability status: `publishable`
 
 This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through generated loader helpers.
 
@@ -44,9 +44,4 @@ Local snapshot evidence:
 
 ## Publishability Gate
 
-- artifact-backed descriptors require local materialized payloads before publishability
-- capability slot corpus is artifact-backed without local task-usable payloads
-- capability slot kb is artifact-backed without local task-usable payloads
-- capability slot parallel is artifact-backed without local task-usable payloads
-- capability slot quality is artifact-backed without local task-usable payloads
-- generated packs are non-publishable by default
+- No blocking reasons.

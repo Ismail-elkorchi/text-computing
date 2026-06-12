@@ -3,18 +3,19 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"packageDir": "packages/textpacks/textpack-ar",
-	"name": "Arabic Private Artifact-Backed Composite Textpack",
-	"description": "Generated private artifact-backed Arabic policy-expanded recipe composite over the current audited Arabic MSA component graph.",
+	"name": "Arabic Developer Composite Textpack",
+	"description": "Generated Arabic recipe composite over the current component graph with local KB, corpus, and parallel payloads.",
 	"policySurface": "policy-expanded-wrapper",
-	"publishable": false,
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated Arabic foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and artifact-backed Tatoeba resources remain explicit artifact descriptors rather than local task payloads.",
+		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated Arabic foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and Tatoeba sources are materialized as local scoped payloads: Arabic entity/alias/relation rows, Tatoeba sentence rows, and Tatoeba parallel link rows. Quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
 		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. The UD Arabic NYUAD syntax path remains isolated behind -sa components and this wrapper exposes the full license expression and component policy.",
-		"declaredScope": "Policy-expanded Arabic MSA private artifact-backed textpack for the currently generated Arabic resource graph. It includes the share-alike UD Arabic NYUAD syntax component explicitly and does not claim permissive default-package compatibility, dialectal Arabic, Classical/Quranic coverage, OPUS coverage, local Wikidata/Tatoeba payloads until materialized extracts or rows are generated, neural models, statistical parsers, raw web corpora, or hidden network access.",
+		"declaredScope": "Policy-expanded Arabic MSA developer textpack for the currently generated Arabic resource graph. It includes the share-alike UD Arabic NYUAD syntax component explicitly and does not claim permissive default-package compatibility, dialectal Arabic, Classical/Quranic coverage, OPUS coverage, complete Wikidata dump coverage, neural models, statistical parsers, raw web corpora, or hidden network access.",
 		"conformanceEvidence": [
 			"eval:textpack-ar:required-component-graph",
 			"eval:textpack-ar-quality:required-component-graph",
-			"eval:textpack-ar-syntax:required-component-graph"
+			"eval:textpack-ar-syntax:required-component-graph",
+			"docs:textpacks/language-composite-readiness.generated.md#arabic-ar"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -28,7 +29,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "feature-complete",
 	"loader": {
 		"functionName": "loadArabic",
 		"languageName": "Arabic"
@@ -132,10 +133,10 @@
 			"packageName": "@ismail-elkorchi/textpack-ar-kb",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "Arabic WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+			"reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-search",
@@ -150,19 +151,19 @@
 			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "Arabic artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "Arabic artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-quality",
@@ -171,7 +172,7 @@
 			"reason": "Arabic generated quality evidence over the required policy-expanded component graph.",
 			"licensePolicy": "allow-share-alike",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
@@ -205,9 +206,9 @@
 		},
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
 			]
 		},
 		{
@@ -216,23 +217,23 @@
 		},
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba Arabic sentence rows and canonical corpus metadata."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba Arabic-linked sentence-id alignment rows for selected target languages."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides generated Arabic quality evidence and coverage reports over the required local component graph."
 			]
 		}
 	],

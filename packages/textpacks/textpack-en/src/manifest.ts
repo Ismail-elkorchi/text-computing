@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:en",
-	"name": "English Private Artifact-Backed Composite Textpack",
+	"name": "English Developer Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-en",
 	"targets": {
@@ -92,10 +92,10 @@ export const manifest: TextPackManifest = {
 			"packageName": "@ismail-elkorchi/textpack-en-kb",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "English WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+			"reason": "English WordNet lexical-semantic resources and local Wikidata core entity extract.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-search",
@@ -110,19 +110,19 @@ export const manifest: TextPackManifest = {
 			"packageName": "@ismail-elkorchi/textpack-en-corpus",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "English artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"reason": "English local Tatoeba corpus rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-parallel",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "English-linked artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"reason": "English-linked local Tatoeba parallel alignment rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-quality",
@@ -186,10 +186,9 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Open English WordNet resources and Wikidata artifact descriptors.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides Open English WordNet resources and a local Wikidata English core entity extract."
 			]
 		},
 		{
@@ -201,26 +200,23 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides artifact-backed Tatoeba English corpus artifact descriptors with explicit fetch policy.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba English sentence rows and canonical corpus metadata."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides artifact-backed Tatoeba English-linked parallel artifact descriptors with explicit fetch policy.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba English-linked sentence-id alignment rows for selected target languages."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides generated English quality evidence and coverage reports over first-wave resources plus artifact-backed corpus/parallel artifact descriptors.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides generated English quality evidence and coverage reports over the required local component graph."
 			]
 		}
 	],
@@ -236,35 +232,9 @@ export const manifest: TextPackManifest = {
 		"Wikidata main structured data dump, 2026-06-08.",
 		"Tatoeba weekly exports, 2026-06-06."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:en:kb",
-			"slot": "kb",
-			"status": "artifact-backed",
-			"message": "kb is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:en:corpus",
-			"slot": "corpus",
-			"status": "artifact-backed",
-			"message": "corpus is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:en:parallel",
-			"slot": "parallel",
-			"status": "artifact-backed",
-			"message": "parallel is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:en:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed recipe composite pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-ar-sa",
 	"version": "0.1.0",
-	"description": "Generated private artifact-backed Arabic policy-expanded recipe composite over the policy-expanded Arabic MSA component graph.",
+	"description": "Generated Arabic recipe composite over the current component graph with local KB, corpus, and parallel payloads.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -51,5 +51,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

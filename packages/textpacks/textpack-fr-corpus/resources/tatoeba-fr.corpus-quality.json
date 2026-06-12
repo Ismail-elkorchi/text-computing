@@ -1,8 +1,11 @@
 {
   "artifactId": "artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06",
+  "localResourceChecksum": "sha256:682bcded361d9094e084ea9c566f8676d8b8174bb9290cb6bd3d4f35a518ffe1",
+  "localResourceId": "fr-tatoeba-corpus-sentences",
+  "materializedRowCount": 718596,
   "pipelineId": "tatoeba-french-corpus-artifact",
   "pipelineVersion": "0.1.0",
-  "recordsAccepted": 1,
+  "recordsAccepted": 718596,
   "recordsRejected": 0,
   "rowCount": 718596,
   "schemaVersion": "1",
@@ -12,7 +15,6 @@
   "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2",
   "version": "2026-06-06",
   "warnings": [
-    "The Tatoeba French corpus is artifact-backed and must be fetched explicitly; it is not vendored in the npm package.",
     "The detailed export includes contributor fields needed for attribution-aware downstream processing."
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "entityCount": 9377,
+  "kbId": "wikidata-fr-entity-kb",
+  "kind": "knowledge-base",
+  "languageTags": [
+    "fr"
+  ],
+  "relationCount": 9377,
+  "resourceRefs": [
+    {
+      "recordCount": 9377,
+      "resourceId": "wikidata-fr-entities",
+      "role": "entities"
+    },
+    {
+      "recordCount": 6101,
+      "resourceId": "wikidata-fr-aliases",
+      "role": "aliases"
+    },
+    {
+      "recordCount": 9377,
+      "resourceId": "wikidata-fr-relations",
+      "role": "relations"
+    }
+  ],
+  "schemaVersion": "1"
+}

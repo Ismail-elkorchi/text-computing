@@ -1,0 +1,33 @@
+{
+  "corpusId": "tatoeba-en-2026-06-06",
+  "documents": [
+    {
+      "artifactId": "artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06",
+      "checksum": "sha256:76c777fb2688d5cef626f780c45625c72b01e040cf5de62789f426fc31fcc6e4",
+      "documentId": "tatoeba-eng-sentences-detailed-2026-06-06",
+      "languageTag": "en",
+      "metadata": {
+        "etag": "\"6a23bdb9-21178a7\"",
+        "lastModified": "Sat, 06 Jun 2026 06:27:05 GMT",
+        "licenseExpression": "CC-BY-2.0-FR",
+        "localResourceId": "en-tatoeba-corpus-sentences",
+        "rowCount": 2028855,
+        "sourceId": "source:tatoeba:weekly-2026-06-06",
+        "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2",
+        "tatoebaLanguageCode": "eng"
+      },
+      "path": "resources/tatoeba-en.sentences.tsv.gz.b64",
+      "script": "Latn",
+      "split": "full",
+      "title": "Tatoeba English detailed sentences weekly export 2026-06-06"
+    }
+  ],
+  "kind": "corpus",
+  "languageTags": [
+    "en"
+  ],
+  "schemaVersion": "1",
+  "splits": [
+    "full"
+  ]
+}

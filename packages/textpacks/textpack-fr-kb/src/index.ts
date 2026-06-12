@@ -38,7 +38,7 @@ export async function loadFrenchKnowledgeBase(
 	return resolvePackComponents(await loadPack({ manifest, resources }), {
 		...options,
 		licensePolicy: options.licensePolicy ?? "default",
-		artifactPolicy: options.artifactPolicy ?? "fetch-explicit",
+		artifactPolicy: options.artifactPolicy ?? "none",
 		conflictPolicy: options.conflictPolicy ?? "first",
 		resolveComponent:
 			options.resolveComponent ??

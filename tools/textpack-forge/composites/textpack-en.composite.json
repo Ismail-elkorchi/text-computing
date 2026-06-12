@@ -3,13 +3,13 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-en",
 	"packageDir": "packages/textpacks/textpack-en",
-	"name": "English Private Artifact-Backed Composite Textpack",
-	"description": "Generated private artifact-backed English recipe composite over the current English component graph, including artifact-backed corpus and parallel artifact descriptors.",
-	"publishable": false,
+	"name": "English Developer Textpack",
+	"description": "Generated English developer recipe composite over the current English component graph with local KB, corpus, and parallel payloads.",
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated English foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and artifact-backed Tatoeba resources remain explicit artifact descriptors rather than local task payloads.",
-		"auditedLicense": "Required component source rows are approved and default-composite compatible: IANA, Unicode, CLDR, ESDB, SCOWLv2, UD English GUMReddit, Open English WordNet, Wikidata main structured data, and artifact-backed Tatoeba weekly English artifact metadata. Share-alike UniMorph English, Wiktionary, DBnary, Wikipedia-derived raw text, OPUS, and blocked aggregate sources are excluded from this default composite.",
-		"declaredScope": "Default English private artifact-backed textpack for the currently generated English resource graph: core profile, normalization, segmentation, spelling/lexicon, lookup morphology, syntax annotation profiles, lexical-semantic KB resources, Wikidata artifact descriptors, search analyzer profile, artifact-backed Tatoeba corpus descriptors, artifact-backed Tatoeba parallel descriptors, and generated quality evidence. It does not claim UniMorph paradigm-table coverage, Wiktionary/DBnary-derived lexical coverage, OPUS coverage, local Wikidata/Tatoeba payloads until materialized extracts or rows are generated, neural models, statistical parsers, raw web corpora, or hidden network access.",
+		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated English foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Required KB, corpus, and parallel components now provide local task-usable payloads for their declared scopes.",
+		"auditedLicense": "Required component source rows are approved and default-composite compatible: IANA, Unicode, CLDR, ESDB, SCOWLv2, UD English GUMReddit, Open English WordNet, Wikidata main structured data, and local Tatoeba weekly English sentence/link exports. Share-alike UniMorph English, Wiktionary, DBnary, Wikipedia-derived raw text, OPUS, and blocked aggregate sources are excluded from this default composite.",
+		"declaredScope": "Default English developer textpack for the currently generated English resource graph: core profile, normalization, segmentation, spelling/lexicon, lookup morphology, syntax annotation profiles, lexical-semantic WordNet KB resources, local Wikidata English core entity extract, search analyzer profile, local Tatoeba corpus rows, local Tatoeba parallel link rows, and generated quality evidence. It does not claim UniMorph paradigm-table coverage, Wiktionary/DBnary-derived lexical coverage, OPUS coverage, complete Wikidata dump coverage, parser models, neural models, raw web corpora, or hidden network access.",
 		"conformanceEvidence": [
 			"eval:textpack-en:required-component-graph",
 			"docs:textpacks/language-composite-readiness.generated.md#english-en"
@@ -26,7 +26,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "feature-complete",
 	"loader": {
 		"functionName": "loadEnglish",
 		"languageName": "English"
@@ -132,10 +132,10 @@
 			"packageName": "@ismail-elkorchi/textpack-en-kb",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "English WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+			"reason": "English WordNet lexical-semantic resources and local Wikidata core entity extract.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-search",
@@ -150,19 +150,19 @@
 			"packageName": "@ismail-elkorchi/textpack-en-corpus",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "English artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"reason": "English local Tatoeba corpus rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-parallel",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "English-linked artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"reason": "English-linked local Tatoeba parallel alignment rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-quality",
@@ -226,10 +226,9 @@
 		},
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Open English WordNet resources and Wikidata artifact descriptors.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides Open English WordNet resources and a local Wikidata English core entity extract."
 			]
 		},
 		{
@@ -241,26 +240,23 @@
 		},
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides artifact-backed Tatoeba English corpus artifact descriptors with explicit fetch policy.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba English sentence rows and canonical corpus metadata."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides artifact-backed Tatoeba English-linked parallel artifact descriptors with explicit fetch policy.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba English-linked sentence-id alignment rows for selected target languages."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides generated English quality evidence and coverage reports over first-wave resources plus artifact-backed corpus/parallel artifact descriptors.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides generated English quality evidence and coverage reports over the required local component graph."
 			]
 		}
 	],

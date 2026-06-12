@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
 	access,
@@ -4583,6 +4583,149 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 		WIKIDATA_20260608_GZIP.fileName,
 		"md5",
 	);
+	const extractBasename = `wikidata-${config.languageTag}-core`;
+	if (hasInputPath(inputs, `${extractBasename}-entities.tsv`)) {
+		const entities = requiredInput(
+			inputs,
+			`${extractBasename}-entities.tsv`,
+			resourceSpec,
+		);
+		const aliases = requiredInput(
+			inputs,
+			`${extractBasename}-aliases.tsv`,
+			resourceSpec,
+		);
+		const relations = requiredInput(
+			inputs,
+			`${extractBasename}-relations.tsv`,
+			resourceSpec,
+		);
+		const extractMetadata = JSON.parse(
+			requiredInput(
+				inputs,
+				`${extractBasename}-extract-metadata.json`,
+				resourceSpec,
+			),
+		);
+		const entityRowCount = extractMetadata.entityRowCount;
+		const aliasRowCount = extractMetadata.aliasRowCount;
+		const relationRowCount = extractMetadata.relationRowCount;
+		const ids = {
+			entities: `${config.resourcePrefix}-entities`,
+			aliases: `${config.resourcePrefix}-aliases`,
+			relations: `${config.resourcePrefix}-relations`,
+			kb: `${config.resourcePrefix}-kb-canonical`,
+		};
+		const kbResource = {
+			schemaVersion: "1",
+		kind: "knowledge-base",
+		kbId: config.kbId,
+		languageTags: [config.languageTag],
+		entityCount: entityRowCount,
+		relationCount: relationRowCount,
+		resourceRefs: [
+			{
+				resourceId: ids.entities,
+				role: "entities",
+				recordCount: entityRowCount,
+			},
+			{
+				resourceId: ids.aliases,
+				role: "aliases",
+				recordCount: aliasRowCount,
+			},
+			{
+				resourceId: ids.relations,
+				role: "relations",
+				recordCount: relationRowCount,
+			},
+		],
+	};
+		const summary = {
+			schemaVersion: "1",
+			sourceId: "source:wikidata:main",
+			pipelineId: resourceSpec.pipelineId,
+			pipelineVersion: resourceSpec.pipelineVersion,
+			version: WIKIDATA_ARTIFACT_VERSION,
+			extractId: extractMetadata.extractId,
+			endpoint: extractMetadata.endpoint,
+			entityRowCount,
+			aliasRowCount,
+			relationRowCount,
+			recordsAccepted: entityRowCount + aliasRowCount + relationRowCount,
+			recordsRejected: 0,
+			sha1Checksum,
+			md5Checksum,
+			localResourceIds: [ids.entities, ids.aliases, ids.relations, ids.kb],
+			warnings: [
+				"Wikimedia publishes SHA-1 and MD5 sidecars for the full dump; the local extract files are pinned by SHA-256 in the forge snapshot.",
+				"The local Wikidata extract is scoped to declared core entity classes and sitelink thresholds; it is not a full Wikidata entity dump.",
+			],
+		};
+		const canonicalQuality = {
+			schemaVersion: "1",
+			kind: "quality-profile",
+			profileId: `${config.resourcePrefix}-core-extract-quality`,
+			languageTag: config.languageTag,
+			script: config.script,
+			diagnostics: [
+				{
+					diagnosticId: `${config.resourcePrefix}-local-core-extract`,
+					task: "kb.materialization",
+					severity: "info",
+					message: `Wikidata ${config.languageName} core entity data is materialized as local canonical TSV resources for the declared extract scope.`,
+					metadata: {
+						extractId: extractMetadata.extractId,
+						scope: extractMetadata.scope,
+					},
+				},
+				{
+					diagnosticId: `${config.resourcePrefix}-extract-scope`,
+					task: "kb.coverage",
+					severity: "info",
+					message:
+						"The extract scope is declared by class ids and sitelink thresholds; it does not claim complete Wikidata coverage.",
+					metadata: {
+						classes: extractMetadata.classes,
+					},
+				},
+			],
+			metrics: [
+				{
+					metricId: "entity-row-count",
+					name: "entityRowCount",
+					value: entityRowCount,
+					unit: "rows",
+				},
+				{
+					metricId: "alias-row-count",
+					name: "aliasRowCount",
+					value: aliasRowCount,
+					unit: "rows",
+				},
+				{
+					metricId: "relation-row-count",
+					name: "relationRowCount",
+					value: relationRowCount,
+					unit: "rows",
+				},
+			],
+			thresholds: [],
+			evaluationRecordIds: [],
+		};
+		return [
+			outputFor(resourceSpec, ids.entities, entities),
+			outputFor(resourceSpec, ids.aliases, aliases),
+			outputFor(resourceSpec, ids.relations, relations),
+			outputFor(resourceSpec, ids.kb, stableJson(kbResource)),
+			outputFor(resourceSpec, config.qualityResourceId, stableJson(summary)),
+			outputFor(
+				resourceSpec,
+				config.qualityProfileResourceId,
+				stableJson(canonicalQuality),
+			),
+		];
+	}
 	const kbResource = {
 		schemaVersion: "1",
 		kind: "knowledge-base",
@@ -4697,6 +4840,124 @@ function tatoebaMetadata(resourceSpec, inputs, fileName) {
 	return metadata;
 }
 
+function requiredInputPath(inputs, basename, resourceSpec) {
+	const relative = inputs.get(`${basename}:path`);
+	expect(
+		relative !== undefined,
+		`${resourceSpec.resourceSpecId} missing ${basename} path.`,
+	);
+	return relative;
+}
+
+function hasInputPath(inputs, basename) {
+	return inputs.has(`${basename}:path`);
+}
+
+function readBzip2Input(inputs, basename, resourceSpec) {
+	const relative = requiredInputPath(inputs, basename, resourceSpec);
+	const absolute = path.join(ROOT, relative);
+	const child = spawnSync("bunzip2", ["-c", absolute], {
+		encoding: "utf8",
+		maxBuffer: 768 * 1024 * 1024,
+	});
+	expect(
+		child.status === 0,
+		`${resourceSpec.resourceSpecId} failed to decompress ${basename}.`,
+		child.stderr?.toString("utf8").trim() ?? "",
+	);
+	return child.stdout.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n");
+}
+
+function canonicalTatoebaCorpusTsv(text, artifact, config) {
+	const rows = [
+		[
+			"sentenceId",
+			"languageTag",
+			"tatoebaLanguageCode",
+			"text",
+			"owner",
+			"createdAt",
+			"modifiedAt",
+		],
+	];
+	let accepted = 0;
+	let rejected = 0;
+	for (const line of text.split("\n")) {
+		if (line.length === 0) continue;
+		const cells = line.split("\t");
+		if (cells.length < 6) {
+			rejected += 1;
+			continue;
+		}
+		const [sentenceId, tatoebaLanguageCode, sentenceText, owner, createdAt, modifiedAt] = cells;
+		if (
+			sentenceId === undefined ||
+			tatoebaLanguageCode !== artifact.tatoebaLanguageCode ||
+			sentenceText === undefined
+		) {
+			rejected += 1;
+			continue;
+		}
+		rows.push([
+			sentenceId,
+			config.languageTag,
+			tatoebaLanguageCode,
+			sentenceText,
+			owner ?? "",
+			createdAt ?? "",
+			modifiedAt ?? "",
+		]);
+		accepted += 1;
+	}
+	return {
+		text: tsvFile(rows[0], rows.slice(1)),
+		accepted,
+		rejected,
+	};
+}
+
+function canonicalTatoebaParallelTsv(text, artifact, config) {
+	const rows = [
+		[
+			"sourceSentenceId",
+			"targetSentenceId",
+			"sourceLanguageTag",
+			"targetLanguageTag",
+			"sourceTatoebaLanguageCode",
+			"targetTatoebaLanguageCode",
+		],
+	];
+	let accepted = 0;
+	let rejected = 0;
+	for (const line of text.split("\n")) {
+		if (line.length === 0) continue;
+		const cells = line.split("\t");
+		if (cells.length < 2) {
+			rejected += 1;
+			continue;
+		}
+		const [sourceSentenceId, targetSentenceId] = cells;
+		if (sourceSentenceId === undefined || targetSentenceId === undefined) {
+			rejected += 1;
+			continue;
+		}
+		rows.push([
+			sourceSentenceId,
+			targetSentenceId,
+			config.languageTag,
+			artifact.targetLanguageTag,
+			artifact.sourceTatoebaLanguageCode,
+			artifact.targetTatoebaLanguageCode,
+		]);
+		accepted += 1;
+	}
+	return {
+		text: tsvFile(rows[0], rows.slice(1)),
+		accepted,
+		rejected,
+	};
+}
+
 function checksumValue(artifact) {
 	return `sha256:${artifact.sha256}`;
 }
@@ -4748,6 +5009,138 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 		corpusArtifact !== undefined,
 		`${resourceSpec.resourceSpecId} missing Tatoeba ${config.languageName} corpus artifact metadata.`,
 	);
+	if (!hasInputPath(inputs, corpusArtifact.fileName)) {
+		const corpusResource = {
+			schemaVersion: "1",
+			kind: "corpus",
+			corpusId: config.corpusId,
+			languageTags: [config.languageTag],
+			splits: ["full"],
+			documents: [
+				{
+					documentId: config.documentId,
+					languageTag: config.languageTag,
+					script: config.script,
+					split: "full",
+					title: `Tatoeba ${config.languageName} detailed sentences weekly export 2026-06-06`,
+					artifactId: corpusArtifact.artifactId,
+					path: corpusArtifact.expectedPath,
+					checksum: checksumValue(corpusArtifact),
+					metadata: {
+						sourceId: metadata.sourceId,
+						tatoebaLanguageCode: corpusArtifact.tatoebaLanguageCode,
+						rowCount: corpusArtifact.rowCount,
+						lastModified: corpusArtifact.lastModified,
+						etag: corpusArtifact.etag,
+						licenseExpression: metadata.licenseExpression,
+						artifactDescriptor: tatoebaArtifactDescriptor(
+							corpusArtifact,
+							resourceSpec.sourceIds,
+						),
+					},
+				},
+			],
+		};
+		const summary = {
+			schemaVersion: "1",
+			sourceId: metadata.sourceId,
+			pipelineId: resourceSpec.pipelineId,
+			pipelineVersion: resourceSpec.pipelineVersion,
+			artifactId: corpusArtifact.artifactId,
+			version: metadata.version,
+			sourceUrl: corpusArtifact.uri,
+			sizeBytes: corpusArtifact.sizeBytes,
+			rowCount: corpusArtifact.rowCount,
+			sha256Checksum: checksumValue(corpusArtifact),
+			recordsAccepted: 1,
+			recordsRejected: 0,
+			warnings: [
+				`The Tatoeba ${config.languageName} corpus is artifact-backed and must be fetched explicitly; it is not vendored in the npm package.`,
+				"The detailed export includes contributor fields needed for attribution-aware downstream processing.",
+			],
+		};
+		const qualityProfile = {
+			schemaVersion: "1",
+			kind: "quality-profile",
+			profileId: `tatoeba-${config.resourcePrefix}-corpus-artifact-quality`,
+			languageTag: config.languageTag,
+			script: config.script,
+			diagnostics: [
+				{
+					diagnosticId: `tatoeba-${config.resourcePrefix}-explicit-corpus-artifact-fetch`,
+					task: "corpus.artifact",
+					severity: "info",
+					message:
+						`Tatoeba ${config.languageName} sentence data is exposed as an explicit artifact descriptor; local corpus rows have not been materialized yet.`,
+					metadata: {
+						artifactId: corpusArtifact.artifactId,
+						artifactPolicy: "fetch-explicit",
+					},
+				},
+				{
+					diagnosticId: `tatoeba-${config.resourcePrefix}-attribution-corpus-fields`,
+					task: "corpus.license",
+					severity: "info",
+					message:
+						"The pinned detailed sentence export preserves owner and timestamp fields for attribution-aware downstream use.",
+					metadata: {
+						licenseExpression: metadata.licenseExpression,
+					},
+				},
+			],
+			metrics: [
+				{
+					metricId: "sentence-row-count",
+					name: "sentenceRowCount",
+					value: corpusArtifact.rowCount,
+					unit: "rows",
+				},
+				{
+					metricId: "artifact-size-bytes",
+					name: "artifactSizeBytes",
+					value: corpusArtifact.sizeBytes,
+					unit: "bytes",
+				},
+			],
+			thresholds: [],
+			evaluationRecordIds: [],
+		};
+		return [
+			outputFor(
+				resourceSpec,
+				`${config.resourcePrefix}-tatoeba-corpus-artifact`,
+				stableJson(corpusResource),
+			),
+			outputFor(
+				resourceSpec,
+				`${config.resourcePrefix}-tatoeba-corpus-quality`,
+				stableJson(summary),
+			),
+			outputFor(
+				resourceSpec,
+				`${config.resourcePrefix}-tatoeba-corpus-quality-profile`,
+				stableJson(qualityProfile),
+			),
+		];
+	}
+	const materialized = canonicalTatoebaCorpusTsv(
+		readBzip2Input(inputs, corpusArtifact.fileName, resourceSpec),
+		corpusArtifact,
+		config,
+	);
+	expect(
+		materialized.accepted === corpusArtifact.rowCount,
+		`${resourceSpec.resourceSpecId} materialized ${materialized.accepted} ${config.languageName} Tatoeba corpus rows, expected ${corpusArtifact.rowCount}.`,
+	);
+	const rowChecksum = sha256(materialized.text);
+	const sentenceResourceId = `${config.resourcePrefix}-tatoeba-corpus-sentences`;
+	const sentenceOutput = resourceSpec.outputs.find(
+		(output) => output.resourceId === sentenceResourceId,
+	);
+	expect(
+		sentenceOutput !== undefined,
+		`${resourceSpec.resourceSpecId} does not declare output ${sentenceResourceId}.`,
+	);
 	const corpusResource = {
 		schemaVersion: "1",
 		kind: "corpus",
@@ -4762,19 +5155,17 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 				split: "full",
 				title: `Tatoeba ${config.languageName} detailed sentences weekly export 2026-06-06`,
 				artifactId: corpusArtifact.artifactId,
-				path: corpusArtifact.expectedPath,
-				checksum: checksumValue(corpusArtifact),
+				path: sentenceOutput.path,
+				checksum: rowChecksum,
 				metadata: {
 					sourceId: metadata.sourceId,
+					sourceUrl: corpusArtifact.uri,
 					tatoebaLanguageCode: corpusArtifact.tatoebaLanguageCode,
-					rowCount: corpusArtifact.rowCount,
+					rowCount: materialized.accepted,
 					lastModified: corpusArtifact.lastModified,
 					etag: corpusArtifact.etag,
 					licenseExpression: metadata.licenseExpression,
-					artifactDescriptor: tatoebaArtifactDescriptor(
-						corpusArtifact,
-						resourceSpec.sourceIds,
-					),
+					localResourceId: sentenceResourceId,
 				},
 			},
 		],
@@ -4789,30 +5180,33 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 		sourceUrl: corpusArtifact.uri,
 		sizeBytes: corpusArtifact.sizeBytes,
 		rowCount: corpusArtifact.rowCount,
+		materializedRowCount: materialized.accepted,
+		localResourceId: sentenceResourceId,
+		localResourceChecksum: rowChecksum,
 		sha256Checksum: checksumValue(corpusArtifact),
-		recordsAccepted: 1,
-		recordsRejected: 0,
+		recordsAccepted: materialized.accepted,
+		recordsRejected: materialized.rejected,
 		warnings: [
-			`The Tatoeba ${config.languageName} corpus is artifact-backed and must be fetched explicitly; it is not vendored in the npm package.`,
 			"The detailed export includes contributor fields needed for attribution-aware downstream processing.",
 		],
 	};
 	const qualityProfile = {
 		schemaVersion: "1",
 		kind: "quality-profile",
-		profileId: `tatoeba-${config.resourcePrefix}-corpus-artifact-quality`,
+		profileId: `tatoeba-${config.resourcePrefix}-corpus-materialized-quality`,
 		languageTag: config.languageTag,
 		script: config.script,
 		diagnostics: [
 			{
-				diagnosticId: `tatoeba-${config.resourcePrefix}-explicit-corpus-artifact-fetch`,
-				task: "corpus.artifact",
+				diagnosticId: `tatoeba-${config.resourcePrefix}-local-corpus-rows`,
+				task: "corpus.materialization",
 				severity: "info",
 				message:
-					`Tatoeba ${config.languageName} sentence data is exposed as an explicit artifact descriptor; local corpus rows have not been materialized yet.`,
+					`Tatoeba ${config.languageName} sentence data is materialized as local canonical TSV rows.`,
 				metadata: {
 					artifactId: corpusArtifact.artifactId,
-					artifactPolicy: "fetch-explicit",
+					resourceId: `${config.resourcePrefix}-tatoeba-corpus-sentences`,
+					rowChecksum,
 				},
 			},
 			{
@@ -4830,14 +5224,14 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 			{
 				metricId: "sentence-row-count",
 				name: "sentenceRowCount",
-				value: corpusArtifact.rowCount,
+				value: materialized.accepted,
 				unit: "rows",
 			},
 			{
-				metricId: "artifact-size-bytes",
-				name: "artifactSizeBytes",
-				value: corpusArtifact.sizeBytes,
-				unit: "bytes",
+				metricId: "rejected-row-count",
+				name: "rejectedRowCount",
+				value: materialized.rejected,
+				unit: "rows",
 			},
 		],
 		thresholds: [],
@@ -4846,7 +5240,12 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 	return [
 		outputFor(
 			resourceSpec,
-			`${config.resourcePrefix}-tatoeba-corpus-artifact`,
+			sentenceResourceId,
+			materialized.text,
+		),
+		outputFor(
+			resourceSpec,
+			`${config.resourcePrefix}-tatoeba-corpus-canonical`,
 			stableJson(corpusResource),
 		),
 		outputFor(
@@ -4915,42 +5314,67 @@ function transformTatoebaParallelArtifact(resourceSpec, inputs, config) {
 		linkArtifacts.length > 0,
 		`${resourceSpec.resourceSpecId} missing Tatoeba ${config.languageName} parallel link metadata.`,
 	);
+	const allLinksMaterialized = linkArtifacts.every((artifact) =>
+		hasInputPath(inputs, artifact.fileName),
+	);
 	const outputs = linkArtifacts.map((artifact) => {
-		const descriptor = tatoebaArtifactDescriptor(artifact, resourceSpec.sourceIds);
-		const resource = {
-			schemaVersion: "1",
-			kind: "alignment-table",
-			parallelId: `tatoeba-${config.resourcePrefix}-${artifact.targetLanguageTag}-2026-06-06`,
-			languagePair: {
-				sourceLanguage: config.languageTag,
-				targetLanguage: artifact.targetLanguageTag,
-				sourceScript: config.script,
-				targetScript: scriptForLanguageTag(artifact.targetLanguageTag),
-			},
-			units: [
-				{
-					unitId: `${artifact.sourceTatoebaLanguageCode}-${artifact.targetTatoebaLanguageCode}-links-2026-06-06`,
-					metadata: {
-						sourceId: metadata.sourceId,
-						artifactId: artifact.artifactId,
-						path: artifact.expectedPath,
-						checksum: checksumValue(artifact),
-						rowCount: artifact.rowCount,
-						lastModified: artifact.lastModified,
-						etag: artifact.etag,
-						licenseExpression: metadata.licenseExpression,
-						artifactDescriptor: descriptor,
-					},
+		if (!hasInputPath(inputs, artifact.fileName)) {
+			const descriptor = tatoebaArtifactDescriptor(
+				artifact,
+				resourceSpec.sourceIds,
+			);
+			const resource = {
+				schemaVersion: "1",
+				kind: "alignment-table",
+				parallelId: `tatoeba-${config.resourcePrefix}-${artifact.targetLanguageTag}-2026-06-06`,
+				languagePair: {
+					sourceLanguage: config.languageTag,
+					targetLanguage: artifact.targetLanguageTag,
+					sourceScript: config.script,
+					targetScript: scriptForLanguageTag(artifact.targetLanguageTag),
 				},
-			],
-		};
+				units: [
+					{
+						unitId: `${artifact.sourceTatoebaLanguageCode}-${artifact.targetTatoebaLanguageCode}-links-2026-06-06`,
+						metadata: {
+							sourceId: metadata.sourceId,
+							artifactId: artifact.artifactId,
+							path: artifact.expectedPath,
+							checksum: checksumValue(artifact),
+							rowCount: artifact.rowCount,
+							lastModified: artifact.lastModified,
+							etag: artifact.etag,
+							licenseExpression: metadata.licenseExpression,
+							artifactDescriptor: descriptor,
+						},
+					},
+				],
+			};
+			return outputFor(
+				resourceSpec,
+				parallelResourceIdForTatoebaTarget(
+					config.resourcePrefix,
+					artifact.targetTatoebaLanguageCode,
+				),
+				stableJson(resource),
+			);
+		}
+		const materialized = canonicalTatoebaParallelTsv(
+			readBzip2Input(inputs, artifact.fileName, resourceSpec),
+			artifact,
+			config,
+		);
+		expect(
+			materialized.accepted === artifact.rowCount,
+			`${resourceSpec.resourceSpecId} materialized ${materialized.accepted} ${config.languageName}-${artifact.targetLanguageTag} Tatoeba parallel rows, expected ${artifact.rowCount}.`,
+		);
 		return outputFor(
 			resourceSpec,
 			parallelResourceIdForTatoebaTarget(
 				config.resourcePrefix,
 				artifact.targetTatoebaLanguageCode,
 			),
-			stableJson(resource),
+			materialized.text,
 		);
 	});
 	const totalRowCount = linkArtifacts.reduce(
@@ -4979,30 +5403,58 @@ function transformTatoebaParallelArtifact(resourceSpec, inputs, config) {
 			rowCount: artifact.rowCount,
 			sizeBytes: artifact.sizeBytes,
 			sha256Checksum: checksumValue(artifact),
+			...(allLinksMaterialized
+				? {
+						localResourceId: parallelResourceIdForTatoebaTarget(
+							config.resourcePrefix,
+							artifact.targetTatoebaLanguageCode,
+						),
+					}
+				: {}),
 		})),
-		recordsAccepted: linkArtifacts.length,
+		recordsAccepted: allLinksMaterialized ? totalRowCount : linkArtifacts.length,
 		recordsRejected: 0,
-		warnings: [
-			`Tatoeba ${config.languageName} parallel links are artifact-backed and must be fetched explicitly; they are not vendored in the npm package.`,
-			"Link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports.",
-		],
+		warnings: allLinksMaterialized
+			? [
+					"Link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports.",
+				]
+			: [
+					`Tatoeba ${config.languageName} parallel links are artifact-backed and must be fetched explicitly; they are not vendored in the npm package.`,
+					"Link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports.",
+				],
 	};
 	const qualityProfile = {
 		schemaVersion: "1",
 		kind: "quality-profile",
-		profileId: `tatoeba-${config.resourcePrefix}-parallel-artifact-quality`,
+		profileId: allLinksMaterialized
+			? `tatoeba-${config.resourcePrefix}-parallel-materialized-quality`
+			: `tatoeba-${config.resourcePrefix}-parallel-artifact-quality`,
 		languageTag: config.languageTag,
 		script: config.script,
 		diagnostics: [
 			{
-				diagnosticId: `tatoeba-${config.resourcePrefix}-explicit-parallel-artifact-fetch`,
-				task: "parallel.artifact",
+				diagnosticId: allLinksMaterialized
+					? `tatoeba-${config.resourcePrefix}-local-parallel-rows`
+					: `tatoeba-${config.resourcePrefix}-explicit-parallel-artifact-fetch`,
+				task: allLinksMaterialized
+					? "parallel.materialization"
+					: "parallel.artifact",
 				severity: "info",
-				message:
-					`Tatoeba ${config.languageName} parallel alignments are exposed as explicit artifact descriptors; local alignment rows have not been materialized yet.`,
+				message: allLinksMaterialized
+					? `Tatoeba ${config.languageName} parallel alignments are materialized as local canonical TSV rows.`
+					: `Tatoeba ${config.languageName} parallel alignments are exposed as explicit artifact descriptors; local alignment rows have not been materialized yet.`,
 				metadata: {
-					artifactPolicy: "fetch-explicit",
 					artifactIds: linkArtifacts.map((artifact) => artifact.artifactId),
+					...(allLinksMaterialized
+						? {
+								resourceIds: linkArtifacts.map((artifact) =>
+									parallelResourceIdForTatoebaTarget(
+										config.resourcePrefix,
+										artifact.targetTatoebaLanguageCode,
+									),
+								),
+							}
+						: { artifactPolicy: "fetch-explicit" }),
 				},
 			},
 		],
@@ -8153,6 +8605,84 @@ export function listLanguagesBySupportLevel(
 `;
 }
 
+function languageCompositeSmokeAssertions(pack) {
+	const expectedResourceKeysByPackageName = new Map([
+		[
+			"@ismail-elkorchi/textpack-en",
+			[
+				"en-tatoeba-corpus-sentences",
+				"en-tatoeba-parallel-fra",
+				"wikidata-en-entities",
+				"wikidata-en-aliases",
+				"wikidata-en-relations",
+			],
+		],
+		[
+			"@ismail-elkorchi/textpack-ar",
+			[
+				"ar-tatoeba-corpus-sentences",
+				"ar-tatoeba-parallel-eng",
+				"wikidata-ar-entities",
+				"wikidata-ar-aliases",
+				"wikidata-ar-relations",
+			],
+		],
+		[
+			"@ismail-elkorchi/textpack-fr",
+			[
+				"fr-tatoeba-corpus-sentences",
+				"fr-tatoeba-parallel-eng",
+				"wikidata-fr-entities",
+				"wikidata-fr-aliases",
+				"wikidata-fr-relations",
+			],
+		],
+	]);
+	const expectedResourceKeys = expectedResourceKeysByPackageName.get(
+		pack.packageName,
+	);
+	if (expectedResourceKeys === undefined) return "";
+	const serializedResourceKeys = `[\n${expectedResourceKeys
+		.map((resourceKey) => `\t${JSON.stringify(resourceKey)},`)
+		.join("\n")}\n]`;
+	return `
+const requiredSlots = [
+\t"foundation",
+\t"core",
+\t"normalization",
+\t"segmentation",
+\t"lexicon",
+\t"morphology",
+\t"syntax",
+\t"kb",
+\t"search",
+\t"corpus",
+\t"parallel",
+\t"quality",
+];
+const slotStatuses = new Map(
+\tresolved.manifest.capabilitySlots?.map((slot) => [slot.slot, slot.status]) ??
+\t\t[],
+);
+
+assert.equal(
+\tresolved.manifest.components?.filter(
+\t\t(component) => component.role === "required",
+\t).length,
+\t12,
+);
+for (const slot of requiredSlots) {
+\tassert.equal(slotStatuses.get(slot), "task-supported");
+}
+for (const resourceKey of ${serializedResourceKeys}) {
+\tassert.ok(
+\t\tObject.hasOwn(resolved.resources, resourceKey),
+\t\t\`Expected generated resource \${resourceKey} to be loaded.\`,
+\t);
+}
+`;
+}
+
 function compositeSmokeTest(pack) {
 	const importedNames =
 		pack.languageSupport === true
@@ -8186,6 +8716,15 @@ assert.ok(listLanguagesBySupportLevel("task-supported").length >= 2);
 assert.ok(languageSupport.length > 1000);
 `
 			: "";
+	const optionalAssertions = [
+		languageCompositeSmokeAssertions(pack),
+		languageSupportAssertions,
+	]
+		.filter((assertion) => assertion !== "")
+		.map((assertion) => assertion.trim())
+		.join("\n\n");
+	const optionalAssertionBlock =
+		optionalAssertions === "" ? "" : `\n\n${optionalAssertions}`;
 	return `import assert from "node:assert/strict";
 ${importStatement}
 
@@ -8197,8 +8736,8 @@ assert.ok(
 \tresolved.manifest.components?.some(
 \t\t(component) => component.role === "required",
 \t),
-);
-${languageSupportAssertions}`;
+);${optionalAssertionBlock}
+`;
 }
 
 function compositeNegativeTest(pack) {
@@ -10245,6 +10784,71 @@ function wikidataArtifactEvaluationRecords(pack, config) {
 	const quality = payloadJson(pack, `${config.resourcePrefix}-quality`);
 	const resourceSpecId = resourceSpecIdFor(pack);
 	const pipelineId = taskPipelineId(pack);
+	const materialized = typeof quality.entityRowCount === "number";
+	if (materialized) {
+		return [
+			evaluationRecord(pack, {
+				recordId: `eval:${config.resourcePrefix}:entity-extract`,
+				resourceSpecId,
+				pipelineId,
+				capabilitySlot: "kb",
+				taskType: "kb.entity-extract",
+				evaluationKind: "resource-conformance",
+				resourceIds: [
+					`${config.resourcePrefix}-entities`,
+					`${config.resourcePrefix}-kb-canonical`,
+				],
+				metricName: "entityRowCount",
+				value: quality.entityRowCount,
+				unit: "rows",
+				operator: "gte",
+				threshold: 1000,
+				observations: {
+					extractId: quality.extractId,
+					endpoint: quality.endpoint,
+					version: quality.version,
+				},
+				limitations: [
+					`The Wikidata ${config.languageName} extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump.`,
+				],
+			}),
+			evaluationRecord(pack, {
+				recordId: `eval:${config.resourcePrefix}:alias-coverage`,
+				resourceSpecId,
+				pipelineId,
+				capabilitySlot: "kb",
+				taskType: "kb.entity-aliases",
+				evaluationKind: "coverage",
+				resourceIds: [`${config.resourcePrefix}-aliases`],
+				metricName: "aliasRowCount",
+				value: quality.aliasRowCount,
+				unit: "rows",
+				operator: "gte",
+				threshold: 1000,
+				observations: {
+					entityRowCount: quality.entityRowCount,
+					aliasRowCount: quality.aliasRowCount,
+				},
+			}),
+			evaluationRecord(pack, {
+				recordId: `eval:${config.resourcePrefix}:relation-coverage`,
+				resourceSpecId,
+				pipelineId,
+				capabilitySlot: "kb",
+				taskType: "kb.entity-relations",
+				evaluationKind: "coverage",
+				resourceIds: [`${config.resourcePrefix}-relations`],
+				metricName: "relationRowCount",
+				value: quality.relationRowCount,
+				unit: "rows",
+				operator: "gte",
+				threshold: 1000,
+				observations: {
+					relationRowCount: quality.relationRowCount,
+				},
+			}),
+		];
+	}
 	return [
 		evaluationRecord(pack, {
 			recordId: `eval:${config.resourcePrefix}:artifact-descriptor`,
@@ -10302,35 +10906,56 @@ function tatoebaCorpusEvaluationRecords(pack, config) {
 	);
 	const resourceSpecId = resourceSpecIdFor(pack);
 	const pipelineId = taskPipelineId(pack);
+	const materialized = typeof quality.materializedRowCount === "number";
 	return [
 		evaluationRecord(pack, {
-			recordId: `eval:${config.evaluationPrefix}-corpus:artifact-descriptor`,
+			recordId: materialized
+				? `eval:${config.evaluationPrefix}-corpus:materialized-rows`
+				: `eval:${config.evaluationPrefix}-corpus:artifact-descriptor`,
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "corpus",
-			taskType: "corpus.artifact",
+			taskType: materialized
+				? "corpus.materialized-rows"
+				: "corpus.artifact",
 			evaluationKind: "resource-conformance",
-			resourceIds: [`${config.resourcePrefix}-tatoeba-corpus-artifact`],
+			resourceIds: [
+				materialized
+					? `${config.resourcePrefix}-tatoeba-corpus-sentences`
+					: `${config.resourcePrefix}-tatoeba-corpus-artifact`,
+			],
 			metricName: "sentenceRowCount",
-			value: quality.rowCount,
+			value: materialized ? quality.materializedRowCount : quality.rowCount,
 			unit: "rows",
 			operator: "gte",
 			threshold: config.rowCountThreshold,
-			observations: {
-				artifactId: quality.artifactId,
-				sourceUrl: quality.sourceUrl,
-				sha256Checksum: quality.sha256Checksum,
-			},
-			limitations: [
-				`The Tatoeba ${config.languageName} corpus is artifact-backed and is not available as raw text until explicitly fetched.`,
-			],
+			observations: materialized
+				? {
+						artifactId: quality.artifactId,
+						localResourceId: quality.localResourceId,
+						localResourceChecksum: quality.localResourceChecksum,
+						sourceUrl: quality.sourceUrl,
+						sha256Checksum: quality.sha256Checksum,
+					}
+				: {
+						artifactId: quality.artifactId,
+						sourceUrl: quality.sourceUrl,
+						sha256Checksum: quality.sha256Checksum,
+					},
+			limitations: materialized
+				? [
+						`The Tatoeba ${config.languageName} corpus rows are local sentence rows from the detailed export; they are example sentences, not a balanced reference corpus.`,
+					]
+				: [
+						`The Tatoeba ${config.languageName} corpus is artifact-backed and is not available as raw text until explicitly fetched.`,
+					],
 		}),
 		evaluationRecord(pack, {
 			recordId: `eval:${config.evaluationPrefix}-corpus:checksum`,
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "corpus",
-			taskType: "corpus.artifact-checksum",
+			taskType: "corpus.source-artifact-checksum",
 			evaluationKind: "integrity",
 			resourceIds: [`${config.resourcePrefix}-tatoeba-corpus-quality`],
 			metricName: "sha256ChecksumPresent",
@@ -10382,6 +11007,9 @@ function tatoebaParallelEvaluationRecords(pack, config) {
 	);
 	const resourceSpecId = resourceSpecIdFor(pack);
 	const pipelineId = taskPipelineId(pack);
+	const materialized = quality.languagePairs.every(
+		(pair) => typeof pair.localResourceId === "string",
+	);
 	const parallelResourceIds = pack.resourceStats
 		.map((resource) => resource.id)
 		.filter((resourceId) =>
@@ -10395,7 +11023,9 @@ function tatoebaParallelEvaluationRecords(pack, config) {
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "parallel",
-			taskType: "parallel.artifact",
+			taskType: materialized
+				? "parallel.materialized-links"
+				: "parallel.artifact",
 			evaluationKind: "coverage",
 			resourceIds: parallelResourceIds,
 			metricName: "languagePairCount",
@@ -10407,9 +11037,13 @@ function tatoebaParallelEvaluationRecords(pack, config) {
 				languagePairs: quality.languagePairs,
 				artifactIds: quality.artifactIds,
 			},
-			limitations: [
-				"Tatoeba link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports.",
-			],
+			limitations: materialized
+				? [
+						"Tatoeba local link tables provide sentence-id alignments; sentence text is resolved from compatible Tatoeba sentence resources.",
+					]
+				: [
+						"Tatoeba link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports.",
+					],
 		}),
 		evaluationRecord(pack, {
 			recordId: `eval:${config.evaluationPrefix}-parallel:link-row-volume`,
@@ -10434,7 +11068,9 @@ function tatoebaParallelEvaluationRecords(pack, config) {
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "parallel",
-			taskType: "parallel.artifact-checksum",
+			taskType: materialized
+				? "parallel.source-artifact-checksum"
+				: "parallel.artifact-checksum",
 			evaluationKind: "integrity",
 			resourceIds: [`${config.resourcePrefix}-tatoeba-parallel-quality`],
 			metricName: "sha256ChecksumCoverageRatio",

@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-fr-parallel",
 	"version": "0.1.0",
-	"description": "Artifact-backed descriptor-only source-backed French parallel artifact descriptors generated from Tatoeba weekly French exports.",
+	"description": "Source-backed French Tatoeba parallel pack with local generated alignment rows.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -39,5 +39,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

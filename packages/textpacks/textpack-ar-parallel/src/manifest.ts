@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:ar-parallel",
-	"name": "Arabic Tatoeba Parallel Artifact Pack",
+	"name": "Arabic Tatoeba Parallel Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-ar-parallel",
 	"targets": {
@@ -25,56 +25,44 @@ export const manifest: TextPackManifest = {
 	},
 	"resources": [
 		{
-			"id": "ar-tatoeba-parallel-eng",
+			"id": "ar-tatoeba-parallel-deu",
 			"kind": "alignment-table",
-			"path": "resources/tatoeba-ar.parallel-eng.json",
-			"format": "json",
+			"path": "resources/tatoeba-ar.parallel-deu.tsv.gz.b64",
+			"format": "text/tab-separated-values",
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			],
-			"metadata": {
-				"canonicalSchema": "textpack-parallel-resource.schema.json"
-			}
+			]
+		},
+		{
+			"id": "ar-tatoeba-parallel-eng",
+			"kind": "alignment-table",
+			"path": "resources/tatoeba-ar.parallel-eng.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly Arabic exports, 2026-06-06."
+			]
 		},
 		{
 			"id": "ar-tatoeba-parallel-fra",
 			"kind": "alignment-table",
-			"path": "resources/tatoeba-ar.parallel-fra.json",
-			"format": "json",
+			"path": "resources/tatoeba-ar.parallel-fra.tsv.gz.b64",
+			"format": "text/tab-separated-values",
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			],
-			"metadata": {
-				"canonicalSchema": "textpack-parallel-resource.schema.json"
-			}
+			]
 		},
 		{
 			"id": "ar-tatoeba-parallel-spa",
 			"kind": "alignment-table",
-			"path": "resources/tatoeba-ar.parallel-spa.json",
-			"format": "json",
+			"path": "resources/tatoeba-ar.parallel-spa.tsv.gz.b64",
+			"format": "text/tab-separated-values",
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			],
-			"metadata": {
-				"canonicalSchema": "textpack-parallel-resource.schema.json"
-			}
-		},
-		{
-			"id": "ar-tatoeba-parallel-deu",
-			"kind": "alignment-table",
-			"path": "resources/tatoeba-ar.parallel-deu.json",
-			"format": "json",
-			"license": "CC-BY-2.0-FR",
-			"citations": [
-				"Tatoeba weekly Arabic exports, 2026-06-06."
-			],
-			"metadata": {
-				"canonicalSchema": "textpack-parallel-resource.schema.json"
-			}
+			]
 		},
 		{
 			"id": "ar-tatoeba-parallel-quality",
@@ -225,37 +213,36 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
+				"ar-tatoeba-parallel-deu",
 				"ar-tatoeba-parallel-eng",
 				"ar-tatoeba-parallel-fra",
-				"ar-tatoeba-parallel-spa",
-				"ar-tatoeba-parallel-deu"
+				"ar-tatoeba-parallel-spa"
 			],
 			"artifactIds": [
+				"artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06",
 				"artifact:textpack-ar-parallel:full:tatoeba-ara-eng-links:2026-06-06",
 				"artifact:textpack-ar-parallel:full:tatoeba-ara-fra-links:2026-06-06",
-				"artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06",
-				"artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06"
+				"artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06"
 			],
 			"capabilities": {
 				"parallel": true
 			},
 			"notes": [
-				"Tatoeba Arabic-linked alignment tables are available through explicit artifact descriptors for English, French, Spanish, and German.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Tatoeba Arabic-linked alignment rows are materialized locally as canonical TSV from verified 2026-06-06 source artifacts.",
+				"The pack scope is sentence-id link rows; sentence text is resolved from compatible Tatoeba sentence resources."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"resourceIds": [
 				"ar-tatoeba-parallel-quality",
 				"ar-tatoeba-parallel-quality-profile"
 			],
 			"notes": [
-				"Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and local materialization limitations.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"Generated quality profile records language-pair count, link row count, source checksum evidence, and local materialization."
 			]
 		}
 	],
@@ -263,23 +250,9 @@ export const manifest: TextPackManifest = {
 	"citations": [
 		"Tatoeba weekly Arabic exports, 2026-06-06."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:ar-parallel:parallel",
-			"slot": "parallel",
-			"status": "artifact-backed",
-			"message": "parallel is artifact-backed in this source-backed concrete pack."
-		},
-		{
-			"id": "gap:pack:ar-parallel:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed concrete pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

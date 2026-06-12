@@ -5,15 +5,77 @@
 	"version": "2026-06-06",
 	"retrievedAt": "2026-06-11T00:00:00.000Z",
 	"kind": "external",
-	"checksum": "sha256:e230bd416f72b2385368b9d4e8604215d559f25d41a19d6acc49deec23c7bf09",
+	"checksum": "sha256:3070f313a1e9094acc43f04f58c4f62756c5ed51efa17b271913e912acb6d1ab",
 	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng_sentences_detailed.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 34699431,
+			"checksum": "sha256:401a4ff01d6749cb44fc2eccad4f2699ebe775096b5cba7441e00f0a76c91579",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ara_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 298001,
+			"checksum": "sha256:c48698582a583ea1e259dceacdc4ed663c3f615d846ca7c1fc449397a1d8d3c1",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ara_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-deu_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 3515460,
+			"checksum": "sha256:7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-deu_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ell_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 191418,
+			"checksum": "sha256:a711268471634a2b169c824a2fcdab336555d3a2d83a812bf8796ae3fcd8df08",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ell_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-fra_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 2631564,
+			"checksum": "sha256:b3e2018d6afa03ca9efb11e907674dde519fcb288707ac130d5a1ca61989c23d",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-fra_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-grc_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 9451,
+			"checksum": "sha256:b9659a219c5d8742257e60ca3876b2ad3869984f4437931f31419456126bada2",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-grc_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ita_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 3721027,
+			"checksum": "sha256:47187cc3ddc4be8e0083a6a60f683c06e2341d1f459ce067f7dace9dd469ef4f",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ita_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-lat_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 279658,
+			"checksum": "sha256:83ffb4716016e7b8889b562c3ced046d0b168a8b81954f9994d88bfd83a8e2df",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-lat_links.tsv.bz2"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-spa_links.tsv.bz2",
+			"mediaType": "application/x-bzip2",
+			"byteLength": 1750446,
+			"checksum": "sha256:976715308d3d034a1487f056cb95ad6dc9cb67c6a5410bb5c60170366d4c024e",
+			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-spa_links.tsv.bz2"
+		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json",
 			"mediaType": "application/json",
 			"byteLength": 6001,
-			"checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe",
-			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/"
+			"checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe"
 		}
 	],
-	"notes": "Pinned metadata, checksums, sizes, timestamps, and row counts for Tatoeba 2026-06-06 English sentence and English-linked parallel artifacts. Raw corpus artifacts are fetched explicitly and are not stored in the repository."
+	"notes": "Pinned metadata and local raw Tatoeba 2026-06-06 English sentence and English-linked parallel artifacts. The raw bzip2 source artifacts are stored as local snapshots and transformed into generated package resources."
 }

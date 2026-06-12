@@ -2,23 +2,16 @@
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
-    "kb is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
   ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "records": [
     {
       "capabilitySlot": "kb",
@@ -39,34 +32,31 @@
           "source:wikidata:main"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "coverage",
       "evidence": {
         "observations": {
-          "artifactId": "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608",
-          "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
-          "version": "20260608"
+          "aliasRowCount": 2776,
+          "entityRowCount": 3009
         },
         "resourceIds": [
-          "wikidata-ar-kb-artifact"
+          "wikidata-ar-aliases"
         ]
       },
-      "limitations": [
-        "The full Wikidata entity dump for Arabic KB consumers is artifact-backed and is not available to runtime lookup until explicitly fetched."
-      ],
+      "limitations": [],
       "metric": {
-        "name": "artifactSizeBytes",
+        "name": "aliasRowCount",
         "operator": "gte",
-        "threshold": 1,
-        "unit": "bytes",
-        "value": 142291512349
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 2776
       },
       "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
       "pipelineId": "wikidata-main-artifact",
-      "recordId": "eval:wikidata-ar:artifact-descriptor",
+      "recordId": "eval:wikidata-ar:alias-coverage",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-artifact"
+      "taskType": "kb.entity-aliases"
     },
     {
       "capabilitySlot": "kb",
@@ -90,30 +80,76 @@
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "md5Checksum": "md5:8918b16c41f4678ac147fc95bafa2de6",
-          "sha1Checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+          "endpoint": "https://query.wikidata.org/sparql",
+          "extractId": "wikidata-ar-core-entity-extract-20260612",
+          "version": "20260608"
         },
         "resourceIds": [
-          "wikidata-ar-quality"
+          "wikidata-ar-entities",
+          "wikidata-ar-kb-canonical"
         ]
       },
       "limitations": [
-        "Wikimedia publishes SHA-1 and MD5 sidecars for this dump; no upstream SHA-256 sidecar was available for this pinned artifact."
+        "The Wikidata Arabic extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump."
       ],
       "metric": {
-        "name": "upstreamSha1ChecksumPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "name": "entityRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 3009
       },
       "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
       "pipelineId": "wikidata-main-artifact",
-      "recordId": "eval:wikidata-ar:checksum-sidecar",
+      "recordId": "eval:wikidata-ar:entity-extract",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.artifact-checksum"
+      "taskType": "kb.entity-extract"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "relationRowCount": 3009
+        },
+        "resourceIds": [
+          "wikidata-ar-relations"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "relationRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 3009
+      },
+      "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-ar:relation-coverage",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-relations"
     }
   ],
   "resourceSpecIds": [
@@ -123,8 +159,8 @@
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 2,
-    "recordCount": 2,
+    "passCount": 3,
+    "recordCount": 3,
     "status": "passed",
     "warningCount": 0
   }

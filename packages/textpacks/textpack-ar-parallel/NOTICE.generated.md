@@ -6,8 +6,8 @@ Package: `@ismail-elkorchi/textpack-ar-parallel`
 Mode: `source-backed`
 Policy surface: `default`
 Generated at: `2026-06-08T00:00:00.000Z`
-Publishable: `false`
-Publishability status: `blocked`
+Publishable: `true`
+Publishability status: `publishable`
 
 This package is source-backed. Its resource payloads are deterministic transform outputs from pinned local source snapshots. The normal forge build is offline and verifies input checksums before emitting package files.
 
@@ -28,7 +28,4 @@ Local snapshot evidence:
 
 ## Publishability Gate
 
-- artifact-backed descriptors require local materialized payloads before publishability
-- capability slot parallel is artifact-backed without local task-usable payloads
-- capability slot quality is artifact-backed without local task-usable payloads
-- generated packs are non-publishable by default
+- No blocking reasons.

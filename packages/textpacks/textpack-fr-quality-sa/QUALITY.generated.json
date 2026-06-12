@@ -4,11 +4,10 @@
   "capabilitySlots": [
     {
       "notes": [
-        "The required component graph provides French core, normalization, segmentation, share-alike lexicon, share-alike morphology, share-alike syntax, share-alike search, KB, corpus artifact, and parallel artifact quality-profile resources, generated reports, coverage reports, and evaluation records.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "The required component graph provides French quality-profile resources, generated reports, coverage reports, and evaluation records over local KB, corpus, and parallel payloads."
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [
@@ -76,7 +75,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "default",
       "packageName": "@ismail-elkorchi/textpack-fr-kb",
@@ -85,7 +84,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-corpus",
@@ -94,7 +93,7 @@
       "versionRange": "0.1.0"
     },
     {
-      "artifactPolicy": "fetch-explicit",
+      "artifactPolicy": "none",
       "capabilityPolicy": "contributes-default",
       "licensePolicy": "allow-attribution",
       "packageName": "@ismail-elkorchi/textpack-fr-parallel",
@@ -109,24 +108,19 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-fr-quality-sa",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
   "resourceCount": 0,
   "resourcePaths": [],
   "resourceSpecIds": [],
   "resources": [],
   "schemaVersion": "1",
-  "supportLevel": "artifact-backed",
+  "supportLevel": "task-supported",
   "warnings": [
-    "generated language component recipe composite; broader language composite coverage remains follow-up",
-    "quality is artifact-backed in this source-backed recipe composite pack."
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
   ]
 }

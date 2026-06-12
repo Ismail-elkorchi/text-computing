@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-wikidata-ar",
 	"version": "0.1.0",
-	"description": "Artifact-backed descriptor-only Arabic Wikidata entity metadata generated from the versioned Wikidata main dump.",
+	"description": "Source-backed Arabic Wikidata core entity extract pack with local generated KB rows.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -39,5 +39,7 @@
 		"README.md",
 		"CHANGELOG.md"
 	],
-	"private": true
+	"publishConfig": {
+		"access": "public"
+	}
 }

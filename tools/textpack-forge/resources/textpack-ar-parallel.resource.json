@@ -15,32 +15,52 @@
 			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
 			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
 			"checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-eng_links.tsv.bz2",
+			"checksum": "sha256:e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-fra_links.tsv.bz2",
+			"checksum": "sha256:1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-spa_links.tsv.bz2",
+			"checksum": "sha256:45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-deu_links.tsv.bz2",
+			"checksum": "sha256:63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124"
 		}
 	],
 	"outputs": [
 		{
-			"resourceId": "ar-tatoeba-parallel-eng",
-			"path": "resources/tatoeba-ar.parallel-eng.json",
+			"resourceId": "ar-tatoeba-parallel-deu",
+			"path": "resources/tatoeba-ar.parallel-deu.tsv.gz.b64",
 			"kind": "alignment-table",
-			"format": "json"
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "ar-tatoeba-parallel-eng",
+			"path": "resources/tatoeba-ar.parallel-eng.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
 		},
 		{
 			"resourceId": "ar-tatoeba-parallel-fra",
-			"path": "resources/tatoeba-ar.parallel-fra.json",
+			"path": "resources/tatoeba-ar.parallel-fra.tsv.gz.b64",
 			"kind": "alignment-table",
-			"format": "json"
+			"format": "text/tab-separated-values"
 		},
 		{
 			"resourceId": "ar-tatoeba-parallel-spa",
-			"path": "resources/tatoeba-ar.parallel-spa.json",
+			"path": "resources/tatoeba-ar.parallel-spa.tsv.gz.b64",
 			"kind": "alignment-table",
-			"format": "json"
-		},
-		{
-			"resourceId": "ar-tatoeba-parallel-deu",
-			"path": "resources/tatoeba-ar.parallel-deu.json",
-			"kind": "alignment-table",
-			"format": "json"
+			"format": "text/tab-separated-values"
 		},
 		{
 			"resourceId": "ar-tatoeba-parallel-quality",

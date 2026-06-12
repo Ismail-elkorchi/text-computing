@@ -46,7 +46,7 @@ export async function loadFrenchQuality(
 	return resolvePackComponents(await loadPack({ manifest, resources }), {
 		...options,
 		licensePolicy: options.licensePolicy ?? "allow-share-alike",
-		artifactPolicy: options.artifactPolicy ?? "fetch-explicit",
+		artifactPolicy: options.artifactPolicy ?? "none",
 		conflictPolicy: options.conflictPolicy ?? "first",
 		resolveComponent:
 			options.resolveComponent ??

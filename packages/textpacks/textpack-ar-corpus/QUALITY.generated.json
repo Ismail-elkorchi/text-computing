@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 123,
+  "acceptedRecordCount": 68073,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -7,26 +7,26 @@
         "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06"
       ],
       "notes": [
-        "Tatoeba Arabic detailed sentence export is available through an explicit artifact descriptor.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Tatoeba Arabic detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+        "The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
       ],
       "resourceIds": [
-        "ar-tatoeba-corpus-artifact"
+        "ar-tatoeba-corpus-sentences",
+        "ar-tatoeba-corpus-canonical"
       ],
       "slot": "corpus",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
       ],
       "resourceIds": [
         "ar-tatoeba-corpus-quality",
         "ar-tatoeba-corpus-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [],
@@ -36,47 +36,43 @@
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar-corpus",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot corpus is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 3,
+  "resourceCount": 4,
   "resourcePaths": [
-    "resources/tatoeba-ar.corpus-artifact.json",
+    "resources/tatoeba-ar.corpus.json",
     "resources/tatoeba-ar.corpus-quality.json",
-    "resources/tatoeba-ar.corpus-quality-profile.json"
+    "resources/tatoeba-ar.corpus-quality-profile.json",
+    "resources/tatoeba-ar.sentences.tsv.gz.b64"
   ],
   "resourceSpecIds": [
     "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
   ],
   "resources": [
     {
-      "byteLength": 2279,
-      "checksum": "sha256:c9715324c81bdccef2e6ecacd088cb9e4e05b2f827d176ae0333d49b94c46b2c",
-      "id": "ar-tatoeba-corpus-artifact",
+      "byteLength": 1114,
+      "checksum": "sha256:ee7122e25157b3610c12f94ae539a124ba31133bb94cfbd64c1cf9126bd9252d",
+      "id": "ar-tatoeba-corpus-canonical",
       "kind": "corpus",
-      "lineCount": 62,
-      "nonEmptyLineCount": 61,
-      "path": "resources/tatoeba-ar.corpus-artifact.json",
+      "lineCount": 34,
+      "nonEmptyLineCount": 33,
+      "path": "resources/tatoeba-ar.corpus.json",
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 827,
-      "checksum": "sha256:75242aaa9a796c6119e6fc15f5f0cca1feab6943c583e2348db0438a1a7f8a9e",
+      "byteLength": 895,
+      "checksum": "sha256:4ed720b4e8d06a9c3eb4da1342e0549c5cec19283f44ded459f44ca31a6d5b44",
       "id": "ar-tatoeba-corpus-quality",
       "kind": "quality-profile",
-      "lineCount": 19,
-      "nonEmptyLineCount": 18,
+      "lineCount": 21,
+      "nonEmptyLineCount": 20,
       "path": "resources/tatoeba-ar.corpus-quality.json",
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
@@ -84,24 +80,35 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1300,
-      "checksum": "sha256:4a5773ba10ed740fac82e395aa3aca9bf775354325e488bb86891a3930ea64a6",
+      "byteLength": 1344,
+      "checksum": "sha256:fd8a5aa6b8b4f90c6a5ffa2ea0d18740f778d405f23466c0746a789d3b8a652d",
       "id": "ar-tatoeba-corpus-quality-profile",
       "kind": "quality-profile",
-      "lineCount": 45,
-      "nonEmptyLineCount": 44,
+      "lineCount": 46,
+      "nonEmptyLineCount": 45,
       "path": "resources/tatoeba-ar.corpus-quality-profile.json",
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
       "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2210785,
+      "checksum": "sha256:25934fc4d63b72bcfac67c1f83d3617da81f7c0d520af4f9b35063666d82f6bc",
+      "id": "ar-tatoeba-corpus-sentences",
+      "kind": "corpus",
+      "lineCount": 67976,
+      "nonEmptyLineCount": 67975,
+      "path": "resources/tatoeba-ar.sentences.tsv.gz.b64",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "sizeClass": "small"
     }
   ],
   "schemaVersion": "1",
-  "supportLevel": "artifact-backed",
+  "supportLevel": "task-supported",
   "warnings": [
-    "corpus is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed foundation slice; downstream engine integration is follow-up"
   ]
 }

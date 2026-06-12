@@ -3,29 +3,30 @@
   "capabilityEvidence": [
     {
       "evaluationRecordIds": [
-        "eval:tatoeba-en-corpus:artifact-descriptor",
-        "eval:tatoeba-en-corpus:checksum"
+        "eval:tatoeba-en-corpus:checksum",
+        "eval:tatoeba-en-corpus:materialized-rows"
       ],
-      "evidenceLevel": "artifact-evaluated",
+      "evidenceLevel": "task-evaluated",
       "limitations": [
-        "The Tatoeba English corpus is artifact-backed and is not available as raw text until explicitly fetched."
+        "The Tatoeba English corpus rows are local sentence rows from the detailed export; they are example sentences, not a balanced reference corpus."
       ],
       "resourceIds": [
-        "en-tatoeba-corpus-artifact"
+        "en-tatoeba-corpus-sentences",
+        "en-tatoeba-corpus-canonical"
       ],
       "slot": "corpus",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "resource-inventory",
       "limitations": [],
       "resourceIds": [
         "en-tatoeba-corpus-quality",
         "en-tatoeba-corpus-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "capabilitySlots": [
@@ -34,86 +35,66 @@
         "artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06"
       ],
       "notes": [
-        "Tatoeba English detailed sentence export is available through an explicit artifact descriptor.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Tatoeba English detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+        "The pack scope is the Tatoeba English sentence export; it does not claim balanced reference-corpus coverage."
       ],
       "resourceIds": [
-        "en-tatoeba-corpus-artifact"
+        "en-tatoeba-corpus-sentences",
+        "en-tatoeba-corpus-canonical"
       ],
       "slot": "corpus",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Generated quality profile records row count, artifact size, checksum evidence, and local materialization limitations.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
       ],
       "resourceIds": [
         "en-tatoeba-corpus-quality",
         "en-tatoeba-corpus-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [],
   "coverageStatus": "evaluated",
   "evaluationRecordIds": [
-    "eval:tatoeba-en-corpus:artifact-descriptor",
-    "eval:tatoeba-en-corpus:checksum"
+    "eval:tatoeba-en-corpus:checksum",
+    "eval:tatoeba-en-corpus:materialized-rows"
   ],
-  "gapNotes": [
-    {
-      "id": "gap:pack:en-corpus:corpus",
-      "message": "corpus is artifact-backed in this source-backed concrete pack.",
-      "slot": "corpus",
-      "status": "artifact-backed"
-    },
-    {
-      "id": "gap:pack:en-corpus:quality",
-      "message": "quality is artifact-backed in this source-backed concrete pack.",
-      "slot": "quality",
-      "status": "artifact-backed"
-    }
-  ],
+  "gapNotes": [],
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
-    "corpus is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed foundation slice; downstream engine integration is follow-up"
   ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-en-corpus",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot corpus is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceCoverage": [
     {
-      "byteLength": 2271,
-      "checksum": "sha256:03032d9d63fe6f050a8b50e5c8f4111a7ea1b2a1c3caa6c873e70c843860431c",
+      "byteLength": 1111,
+      "checksum": "sha256:4d40aeee3ad15448b80c68182eddbd4f8ebaacd9b5bbe6e36cb11db527548c07",
       "kind": "corpus",
-      "nonEmptyLineCount": 61,
-      "path": "resources/tatoeba-en.corpus-artifact.json",
+      "nonEmptyLineCount": 33,
+      "path": "resources/tatoeba-en.corpus.json",
       "pipelineId": "tatoeba-english-corpus-artifact",
       "pipelineVersion": "0.1.0",
-      "resourceId": "en-tatoeba-corpus-artifact",
+      "resourceId": "en-tatoeba-corpus-canonical",
       "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 825,
-      "checksum": "sha256:b23b26246720465946202758746f24dcd555183c1d9d5de2791e1c81238bc5fa",
+      "byteLength": 896,
+      "checksum": "sha256:4d9416ec737ac55c72af18b3d0218001328284f31d76d32ad128565db8d1c1eb",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 18,
+      "nonEmptyLineCount": 20,
       "path": "resources/tatoeba-en.corpus-quality.json",
       "pipelineId": "tatoeba-english-corpus-artifact",
       "pipelineVersion": "0.1.0",
@@ -122,16 +103,28 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1304,
-      "checksum": "sha256:064eb10e2f43caafb970d0082e0d381a38f21e230aa7cb1562eb9029281b74ca",
+      "byteLength": 1347,
+      "checksum": "sha256:673c4873ff7eea8142d4712b3c34f8d97e69fc8f356935f04378c2e80956b85b",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 44,
+      "nonEmptyLineCount": 45,
       "path": "resources/tatoeba-en.corpus-quality-profile.json",
       "pipelineId": "tatoeba-english-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceId": "en-tatoeba-corpus-quality-profile",
       "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
       "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 64521961,
+      "checksum": "sha256:0128b2b5da9034e745a093c886f393fa6d17402f0d768b80b57ff2d89da5a350",
+      "kind": "corpus",
+      "nonEmptyLineCount": 2028856,
+      "path": "resources/tatoeba-en.sentences.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-corpus-sentences",
+      "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
+      "sizeClass": "large"
     }
   ],
   "resourceKinds": [

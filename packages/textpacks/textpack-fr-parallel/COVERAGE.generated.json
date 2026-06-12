@@ -9,66 +9,65 @@
         "eval:tatoeba-fr-parallel:language-pair-coverage",
         "eval:tatoeba-fr-parallel:link-row-volume"
       ],
-      "evidenceLevel": "artifact-evaluated",
+      "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Tatoeba link artifacts provide sentence-id alignment tables; sentence text must be resolved from compatible Tatoeba sentence exports."
+        "Tatoeba local link tables provide sentence-id alignments; sentence text is resolved from compatible Tatoeba sentence resources."
       ],
       "resourceIds": [
-        "fr-tatoeba-parallel-eng",
         "fr-tatoeba-parallel-ara",
-        "fr-tatoeba-parallel-spa",
-        "fr-tatoeba-parallel-deu"
+        "fr-tatoeba-parallel-deu",
+        "fr-tatoeba-parallel-eng",
+        "fr-tatoeba-parallel-spa"
       ],
       "slot": "parallel",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "resource-inventory",
       "limitations": [],
       "resourceIds": [
         "fr-tatoeba-parallel-quality",
         "fr-tatoeba-parallel-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "capabilitySlots": [
     {
       "artifactIds": [
-        "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
         "artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
-        "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
-        "artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06"
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
+        "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06"
       ],
       "capabilities": {
         "parallel": true
       },
       "notes": [
-        "Tatoeba French-linked alignment tables are available through explicit artifact descriptors for English, Arabic, Spanish, and German.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Tatoeba French-linked alignment rows are materialized locally as canonical TSV from verified 2026-06-06 source artifacts.",
+        "The pack scope is sentence-id link rows; sentence text is resolved from compatible Tatoeba sentence resources."
       ],
       "resourceIds": [
-        "fr-tatoeba-parallel-eng",
         "fr-tatoeba-parallel-ara",
-        "fr-tatoeba-parallel-spa",
-        "fr-tatoeba-parallel-deu"
+        "fr-tatoeba-parallel-deu",
+        "fr-tatoeba-parallel-eng",
+        "fr-tatoeba-parallel-spa"
       ],
       "slot": "parallel",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Generated quality profile records language-pair count, link row count, artifact sizes, checksum evidence, and local materialization limitations.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Generated quality profile records language-pair count, link row count, source checksum evidence, and local materialization."
       ],
       "resourceIds": [
         "fr-tatoeba-parallel-quality",
         "fr-tatoeba-parallel-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [],
@@ -78,47 +77,27 @@
     "eval:tatoeba-fr-parallel:language-pair-coverage",
     "eval:tatoeba-fr-parallel:link-row-volume"
   ],
-  "gapNotes": [
-    {
-      "id": "gap:pack:fr-parallel:parallel",
-      "message": "parallel is artifact-backed in this source-backed concrete pack.",
-      "slot": "parallel",
-      "status": "artifact-backed"
-    },
-    {
-      "id": "gap:pack:fr-parallel:quality",
-      "message": "quality is artifact-backed in this source-backed concrete pack.",
-      "slot": "quality",
-      "status": "artifact-backed"
-    }
-  ],
+  "gapNotes": [],
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
-    "parallel is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
   ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-fr-parallel",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot parallel is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceCoverage": [
     {
-      "byteLength": 2100,
-      "checksum": "sha256:5f02b8c8c23cd2bc852fa008fca147152864b59a45d2f95b03367bf79ca3ce4e",
+      "byteLength": 29529,
+      "checksum": "sha256:6484eb9b74990c7193bc0f3dee92ab5efc7afeae358dca48e503fb800def06fc",
       "kind": "alignment-table",
-      "nonEmptyLineCount": 56,
-      "path": "resources/tatoeba-fr.parallel-ara.json",
+      "nonEmptyLineCount": 3016,
+      "path": "resources/tatoeba-fr.parallel-ara.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceId": "fr-tatoeba-parallel-ara",
@@ -126,34 +105,34 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 2105,
-      "checksum": "sha256:b496142a402b7d74c328af23a86824c5aa2f92a41432e6eba0305bef98138019",
+      "byteLength": 1346821,
+      "checksum": "sha256:b7cd90508c660024f5744801abfcaf4beb77dbc708fa56662e9dbf02be1ca32f",
       "kind": "alignment-table",
-      "nonEmptyLineCount": 56,
-      "path": "resources/tatoeba-fr.parallel-deu.json",
+      "nonEmptyLineCount": 154904,
+      "path": "resources/tatoeba-fr.parallel-deu.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceId": "fr-tatoeba-parallel-deu",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
-      "sizeClass": "tiny"
+      "sizeClass": "small"
     },
     {
-      "byteLength": 2108,
-      "checksum": "sha256:011af05baec636c9532e2b0e7f1b0a3fe47acad13d18380ef11f13aa37c3657c",
+      "byteLength": 3574573,
+      "checksum": "sha256:93baab8ce4ec479a0715bbf8d089118baea9371395ee698a421bbf35059127a9",
       "kind": "alignment-table",
-      "nonEmptyLineCount": 56,
-      "path": "resources/tatoeba-fr.parallel-eng.json",
+      "nonEmptyLineCount": 435805,
+      "path": "resources/tatoeba-fr.parallel-eng.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceId": "fr-tatoeba-parallel-eng",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
-      "sizeClass": "tiny"
+      "sizeClass": "small"
     },
     {
-      "byteLength": 2216,
-      "checksum": "sha256:845561c4c24fba6dec0508d29139cc7114d568dac796f8d3cb1afd53a24d2033",
+      "byteLength": 2298,
+      "checksum": "sha256:c3a02d6e9f32fe4d95aaaa77469238cfb9857a1956d4f1fe692b4e33c3f61898",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 60,
+      "nonEmptyLineCount": 63,
       "path": "resources/tatoeba-fr.parallel-quality.json",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
@@ -162,10 +141,10 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1376,
-      "checksum": "sha256:a7dedc71f41fa946e87765d07a4bce5803c1d97cfc0841a35b7aac90d614c984",
+      "byteLength": 1460,
+      "checksum": "sha256:bfef00931809bce862ed19d983e800c3de60a863608fb8c79602215bb9a196c4",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 46,
+      "nonEmptyLineCount": 51,
       "path": "resources/tatoeba-fr.parallel-quality-profile.json",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
@@ -174,16 +153,16 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 2104,
-      "checksum": "sha256:dfe0ca976b91b2c9f53309e73a37ccc2145acf4660e7c72541ed20bf7fce97a5",
+      "byteLength": 561857,
+      "checksum": "sha256:b33c51d5f5cb24cd2b45ea6f3ab1ee6d5617a4943fb1c1c2701d4ea742013bca",
       "kind": "alignment-table",
-      "nonEmptyLineCount": 56,
-      "path": "resources/tatoeba-fr.parallel-spa.json",
+      "nonEmptyLineCount": 61529,
+      "path": "resources/tatoeba-fr.parallel-spa.tsv.gz.b64",
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceId": "fr-tatoeba-parallel-spa",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
-      "sizeClass": "tiny"
+      "sizeClass": "small"
     }
   ],
   "resourceKinds": [

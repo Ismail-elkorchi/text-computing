@@ -16,12 +16,50 @@
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
 			"checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv",
+			"checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv",
+			"checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv",
+			"checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json",
+			"checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2"
 		}
 	],
 	"outputs": [
 		{
-			"resourceId": "wikidata-en-kb-artifact",
-			"path": "resources/wikidata-en.kb-artifact.json",
+			"resourceId": "wikidata-en-entities",
+			"path": "resources/wikidata-en.entities.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "wikidata-en-aliases",
+			"path": "resources/wikidata-en.aliases.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "wikidata-en-relations",
+			"path": "resources/wikidata-en.relations.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "wikidata-en-kb-canonical",
+			"path": "resources/wikidata-en.kb.json",
 			"kind": "knowledge-base",
 			"format": "json"
 		},

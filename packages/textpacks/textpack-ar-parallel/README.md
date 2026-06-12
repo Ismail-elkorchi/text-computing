@@ -10,20 +10,17 @@ import { manifest, resources } from "@ismail-elkorchi/textpack-ar-parallel";
 
 ## Resources
 
-- `ar-tatoeba-parallel-eng` (alignment-table, json)
-- `ar-tatoeba-parallel-fra` (alignment-table, json)
-- `ar-tatoeba-parallel-spa` (alignment-table, json)
-- `ar-tatoeba-parallel-deu` (alignment-table, json)
+- `ar-tatoeba-parallel-deu` (alignment-table, text/tab-separated-values)
+- `ar-tatoeba-parallel-eng` (alignment-table, text/tab-separated-values)
+- `ar-tatoeba-parallel-fra` (alignment-table, text/tab-separated-values)
+- `ar-tatoeba-parallel-spa` (alignment-table, text/tab-separated-values)
 - `ar-tatoeba-parallel-quality` (quality-profile, json)
 - `ar-tatoeba-parallel-quality-profile` (quality-profile, json)
 
 ## Publishability
 
-Publishable: `false`
-Status: `blocked`
+Publishable: `true`
+Status: `publishable`
 
-- artifact-backed descriptors require local materialized payloads before publishability
-- capability slot parallel is artifact-backed without local task-usable payloads
-- capability slot quality is artifact-backed without local task-usable payloads
-- generated packs are non-publishable by default
+- None
 

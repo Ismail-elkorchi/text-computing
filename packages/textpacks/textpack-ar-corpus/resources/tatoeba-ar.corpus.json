@@ -1,0 +1,33 @@
+{
+  "corpusId": "tatoeba-ar-2026-06-06",
+  "documents": [
+    {
+      "artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
+      "checksum": "sha256:33aa70eab906f119b5b5b8a0accf1a771e8d7ef8dc3d3e60e6b0690e74bf0ae1",
+      "documentId": "tatoeba-ara-sentences-detailed-2026-06-06",
+      "languageTag": "ar",
+      "metadata": {
+        "etag": "\"6a23bdb9-12483a\"",
+        "lastModified": "Sat, 06 Jun 2026 06:27:05 GMT",
+        "licenseExpression": "CC-BY-2.0-FR",
+        "localResourceId": "ar-tatoeba-corpus-sentences",
+        "rowCount": 67974,
+        "sourceId": "source:tatoeba:weekly-arabic-2026-06-06",
+        "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2",
+        "tatoebaLanguageCode": "ara"
+      },
+      "path": "resources/tatoeba-ar.sentences.tsv.gz.b64",
+      "script": "Arab",
+      "split": "full",
+      "title": "Tatoeba Arabic detailed sentences weekly export 2026-06-06"
+    }
+  ],
+  "kind": "corpus",
+  "languageTags": [
+    "ar"
+  ],
+  "schemaVersion": "1",
+  "splits": [
+    "full"
+  ]
+}

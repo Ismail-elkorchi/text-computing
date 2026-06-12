@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:ar",
-	"name": "Arabic Private Artifact-Backed Composite Textpack",
+	"name": "Arabic Developer Composite Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"targets": {
@@ -92,10 +92,10 @@ export const manifest: TextPackManifest = {
 			"packageName": "@ismail-elkorchi/textpack-ar-kb",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "Arabic WordNet lexical-semantic resources and Wikidata entity artifact descriptors.",
+			"reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-search",
@@ -110,19 +110,19 @@ export const manifest: TextPackManifest = {
 			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "Arabic artifact-backed Tatoeba corpus descriptors and quality evidence.",
+			"reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
 			"versionRange": "0.1.0",
 			"role": "required",
-			"reason": "Arabic artifact-backed Tatoeba parallel descriptors and quality evidence.",
+			"reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-quality",
@@ -131,7 +131,7 @@ export const manifest: TextPackManifest = {
 			"reason": "Arabic generated quality evidence over the required policy-expanded component graph.",
 			"licensePolicy": "allow-share-alike",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
@@ -165,9 +165,9 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "kb",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
 			]
 		},
 		{
@@ -176,23 +176,23 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "corpus",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba Arabic sentence rows and canonical corpus metadata."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides local Tatoeba Arabic-linked sentence-id alignment rows for selected target languages."
 			]
 		},
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides generated Arabic quality evidence and coverage reports over the required local component graph."
 			]
 		}
 	],
@@ -207,35 +207,9 @@ export const manifest: TextPackManifest = {
 		"Tatoeba weekly Arabic exports, 2026-06-06.",
 		"Universal Dependencies Arabic NYUAD r2.18 annotations."
 	],
-	"gapNotes": [
-		{
-			"id": "gap:pack:ar:kb",
-			"slot": "kb",
-			"status": "artifact-backed",
-			"message": "kb is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:ar:corpus",
-			"slot": "corpus",
-			"status": "artifact-backed",
-			"message": "corpus is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:ar:parallel",
-			"slot": "parallel",
-			"status": "artifact-backed",
-			"message": "parallel is artifact-backed in this source-backed recipe composite pack."
-		},
-		{
-			"id": "gap:pack:ar:quality",
-			"slot": "quality",
-			"status": "artifact-backed",
-			"message": "quality is artifact-backed in this source-backed recipe composite pack."
-		}
-	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bfb26766d581816c40cb7a51c8de8a8ee3b5d902bfec74d803466a791a1e72c8",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	}

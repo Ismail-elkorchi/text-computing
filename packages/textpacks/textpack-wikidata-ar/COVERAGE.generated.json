@@ -6,30 +6,33 @@
   "capabilityEvidence": [
     {
       "evaluationRecordIds": [
-        "eval:wikidata-ar:artifact-descriptor",
-        "eval:wikidata-ar:checksum-sidecar"
+        "eval:wikidata-ar:alias-coverage",
+        "eval:wikidata-ar:entity-extract",
+        "eval:wikidata-ar:relation-coverage"
       ],
-      "evidenceLevel": "artifact-evaluated",
+      "evidenceLevel": "task-evaluated",
       "limitations": [
-        "The full Wikidata entity dump for Arabic KB consumers is artifact-backed and is not available to runtime lookup until explicitly fetched.",
-        "Wikimedia publishes SHA-1 and MD5 sidecars for this dump; no upstream SHA-256 sidecar was available for this pinned artifact."
+        "The Wikidata Arabic extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump."
       ],
       "resourceIds": [
-        "wikidata-ar-kb-artifact"
+        "wikidata-ar-entities",
+        "wikidata-ar-aliases",
+        "wikidata-ar-relations",
+        "wikidata-ar-kb-canonical"
       ],
       "slot": "kb",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "evaluationRecordIds": [],
-      "evidenceLevel": "artifact-descriptor",
+      "evidenceLevel": "resource-inventory",
       "limitations": [],
       "resourceIds": [
         "wikidata-ar-quality",
         "wikidata-ar-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "capabilitySlots": [
@@ -42,86 +45,93 @@
         "terminology": "kb"
       },
       "notes": [
-        "Wikidata main entity labels, aliases, relations, and ontology data are available through an explicit artifact descriptor for Arabic KB consumers.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Wikidata Arabic entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+        "The local extract is scoped and does not claim complete Wikidata dump coverage."
       ],
       "resourceIds": [
-        "wikidata-ar-kb-artifact"
+        "wikidata-ar-entities",
+        "wikidata-ar-aliases",
+        "wikidata-ar-relations",
+        "wikidata-ar-kb-canonical"
       ],
       "slot": "kb",
-      "status": "artifact-backed"
+      "status": "task-supported"
     },
     {
       "notes": [
-        "Generated quality profile records artifact size, upstream checksum sidecar evidence, and local materialization limitations.",
-        "Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+        "Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations."
       ],
       "resourceIds": [
         "wikidata-ar-quality",
         "wikidata-ar-quality-profile"
       ],
       "slot": "quality",
-      "status": "artifact-backed"
+      "status": "task-supported"
     }
   ],
   "components": [],
   "coverageStatus": "evaluated",
   "evaluationRecordIds": [
-    "eval:wikidata-ar:artifact-descriptor",
-    "eval:wikidata-ar:checksum-sidecar"
+    "eval:wikidata-ar:alias-coverage",
+    "eval:wikidata-ar:entity-extract",
+    "eval:wikidata-ar:relation-coverage"
   ],
-  "gapNotes": [
-    {
-      "id": "gap:pack:wikidata-ar:kb",
-      "message": "kb is artifact-backed in this source-backed concrete pack.",
-      "slot": "kb",
-      "status": "artifact-backed"
-    },
-    {
-      "id": "gap:pack:wikidata-ar:quality",
-      "message": "quality is artifact-backed in this source-backed concrete pack.",
-      "slot": "quality",
-      "status": "artifact-backed"
-    }
-  ],
+  "gapNotes": [],
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
-    "kb is artifact-backed in this source-backed concrete pack.",
-    "quality is artifact-backed in this source-backed concrete pack.",
     "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
   ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
   "publishability": {
-    "publishable": false,
-    "reasons": [
-      "artifact-backed descriptors require local materialized payloads before publishability",
-      "capability slot kb is artifact-backed without local task-usable payloads",
-      "capability slot quality is artifact-backed without local task-usable payloads",
-      "generated packs are non-publishable by default"
-    ],
-    "status": "blocked"
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
   },
-  "publishable": false,
+  "publishable": true,
   "resourceCoverage": [
     {
-      "byteLength": 786,
-      "checksum": "sha256:10e82abc99cfc8a1e4c11107657b34493342d298d60661a47dd0b6e1d333d927",
+      "byteLength": 35629,
+      "checksum": "sha256:ddf27c30b153ee9e4941a438ec96cce399f7f335ed270442090b10bdb1b365c8",
       "kind": "knowledge-base",
-      "nonEmptyLineCount": 30,
-      "path": "resources/wikidata-ar.kb-artifact.json",
+      "nonEmptyLineCount": 2777,
+      "path": "resources/wikidata-ar.aliases.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
-      "resourceId": "wikidata-ar-kb-artifact",
+      "resourceId": "wikidata-ar-aliases",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 821,
-      "checksum": "sha256:206dabd801f00d0c40733b4f0169c38b568fc8a161b4e1bfdddf581b915a4af5",
+      "byteLength": 134633,
+      "checksum": "sha256:bfde77b44f2a2180da72bb9bc8874fb85262a69f25275b218fd71937a101181f",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 3010,
+      "path": "resources/wikidata-ar.entities.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-ar-entities",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 523,
+      "checksum": "sha256:bb58bdd4440a0884b24b4f0189a8e4f31a01d36c235ed253536e0341a905335b",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 27,
+      "path": "resources/wikidata-ar.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-ar-kb-canonical",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 968,
+      "checksum": "sha256:6b18694e3b24875a4b6268fbeb71ed978d17327b455e38d443124d801219dd40",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 18,
+      "nonEmptyLineCount": 26,
       "path": "resources/wikidata-ar.quality.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
@@ -130,14 +140,26 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1407,
-      "checksum": "sha256:e9ff2c71ac910c04f3424e245f64625a226a1338d3576e5520b66caabdd044cd",
+      "byteLength": 2789,
+      "checksum": "sha256:688883a208a912f996fef965c46d04720e4494295003542ed1cbc48d3601050d",
       "kind": "quality-profile",
-      "nonEmptyLineCount": 45,
+      "nonEmptyLineCount": 101,
       "path": "resources/wikidata-ar.quality-profile.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceId": "wikidata-ar-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 16457,
+      "checksum": "sha256:e9b2117bec25186e241f1b68347caf2b2fce8d7ed95e6c4e9344adaf04bd7d9a",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 3010,
+      "path": "resources/wikidata-ar.relations.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-ar-relations",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "sizeClass": "tiny"
     }

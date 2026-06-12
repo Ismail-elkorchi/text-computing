@@ -5,9 +5,9 @@
 	"packageDir": "packages/textpacks/textpack-fr-quality-sa",
 	"name": "French Quality Share-Alike Composite Textpack",
 	"description": "Generated source-backed French quality recipe composite over the policy-expanded French component graph, including share-alike isolated lexical, morphology, syntax, and search evidence.",
-	"publishable": false,
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated share-alike recipe composite over publishable French core, normalization, segmentation, lexicon, morphology, syntax, search, KB, corpus, and parallel components, with required component reports and evaluation evidence for the full policy-expanded French graph.",
+		"productionGradeSourceCoverage": "Generated share-alike recipe composite over publishable French core, normalization, segmentation, lexicon, morphology, syntax, search, KB, corpus, and parallel components, with required component reports and evaluation evidence for the full policy-expanded French graph. Required KB, corpus, and parallel components provide local task-usable payloads for their declared scopes, and quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
 		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. Lexique 3.83, UniMorph French, and UD French GSD remain isolated behind the required -sa package policy surface.",
 		"declaredScope": "French share-alike resource-quality component composite for the generated policy-expanded French graph. It does not claim permissive default-package compatibility, WOLF/OMW wordnet coverage, OPUS coverage, corpus-scale French quality baselines, readability scoring, OCR/noisy-text diagnostics, annotation adjudication, or non-share-alike redistribution.",
 		"conformanceEvidence": [
@@ -15,7 +15,10 @@
 			"eval:textpack-fr-lexicon-sa:required-component-graph",
 			"eval:textpack-fr-morphology-sa:required-component-graph",
 			"eval:textpack-fr-syntax-sa:required-component-graph",
-			"eval:textpack-fr-search-sa:required-component-graph"
+			"eval:textpack-fr-search-sa:required-component-graph",
+			"eval:tatoeba-fr-corpus:materialized-rows",
+			"eval:tatoeba-fr-parallel:language-pair-coverage",
+			"eval:wikidata-fr:entity-extract"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -29,7 +32,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "task-supported",
 	"loader": {
 		"functionName": "loadFrenchQualityShareAlike",
 		"languageName": "FrenchQualityShareAlike"
@@ -136,7 +139,7 @@
 			"reason": "French KB component quality resources and evaluation evidence.",
 			"licensePolicy": "default",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
@@ -145,7 +148,7 @@
 			"reason": "French Tatoeba corpus artifact quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
@@ -154,16 +157,15 @@
 			"reason": "French Tatoeba parallel artifact quality resources and evaluation evidence.",
 			"licensePolicy": "allow-attribution",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides French core, normalization, segmentation, share-alike lexicon, share-alike morphology, share-alike syntax, share-alike search, KB, corpus artifact, and parallel artifact quality-profile resources, generated reports, coverage reports, and evaluation records.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides French quality-profile resources, generated reports, coverage reports, and evaluation records over local KB, corpus, and parallel payloads."
 			]
 		}
 	],

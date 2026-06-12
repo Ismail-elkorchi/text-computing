@@ -6,15 +6,18 @@
 	"name": "Arabic Quality Policy-Expanded Wrapper Textpack",
 	"description": "Generated policy-expanded Arabic quality recipe wrapper over the full share-alike Arabic quality component graph.",
 	"policySurface": "policy-expanded-wrapper",
-	"publishable": false,
+	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated wrapper over the currently generated Arabic quality component graph, including foundation, MSA core, normalization, segmentation, lexicon, morphology, share-alike syntax, search, KB, corpus artifact, and parallel artifact quality evidence.",
+		"productionGradeSourceCoverage": "Generated wrapper over the currently generated Arabic quality component graph, including foundation, MSA core, normalization, segmentation, lexicon, morphology, share-alike syntax, search, KB, corpus artifact, and parallel artifact quality evidence. Required KB, corpus, and parallel components provide local task-usable payloads for their declared scopes, and quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
 		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. The UD Arabic NYUAD syntax path remains in isolated -sa components and this wrapper exposes the full license expression and component policy.",
-		"declaredScope": "Arabic MSA resource-quality wrapper for the currently generated Arabic component graph. It does not claim permissive default-package compatibility, dialectal Arabic, Classical/Quranic coverage, OPUS coverage, corpus-scale quality baselines beyond explicit Tatoeba artifact evidence, OCR/noisy-text diagnostics, raw web corpora, or hidden network access.",
+		"declaredScope": "Arabic MSA resource-quality wrapper for the currently generated Arabic component graph. It does not claim permissive default-package compatibility, dialectal Arabic, Classical/Quranic coverage, OPUS coverage, corpus-scale quality baselines beyond the local Tatoeba materialized evidence, OCR/noisy-text diagnostics, raw web corpora, or hidden network access.",
 		"conformanceEvidence": [
 			"eval:textpack-ar-quality:required-component-graph",
 			"eval:textpack-ar-quality-sa:required-component-graph",
-			"eval:textpack-ar-syntax:required-component-graph"
+			"eval:textpack-ar-syntax:required-component-graph",
+			"eval:tatoeba-ar-corpus:materialized-rows",
+			"eval:tatoeba-ar-parallel:language-pair-coverage",
+			"eval:wikidata-ar:entity-extract"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -28,7 +31,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
-	"supportLevel": "artifact-backed",
+	"supportLevel": "task-supported",
 	"loader": {
 		"functionName": "loadArabicQuality",
 		"languageName": "ArabicQuality"
@@ -72,16 +75,15 @@
 			"reason": "Share-alike isolated Arabic quality component graph with full generated evaluation evidence.",
 			"licensePolicy": "allow-share-alike",
 			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "fetch-explicit"
+			"artifactPolicy": "none"
 		}
 	],
 	"capabilitySlots": [
 		{
 			"slot": "quality",
-			"status": "artifact-backed",
+			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Arabic MSA quality-profile resources, generated quality reports, coverage reports, and evaluation records through an explicit share-alike policy wrapper.",
-				"Descriptor-only artifact metadata does not satisfy task-supported readiness until local generated rows, extracts, indexes, or databases are materialized."
+				"The required component graph provides Arabic quality-profile resources, generated reports, coverage reports, and evaluation records over local KB, corpus, and parallel payloads."
 			]
 		}
 	],
