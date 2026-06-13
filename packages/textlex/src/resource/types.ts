@@ -1,5 +1,6 @@
 export type TextPackResourceKindLike =
 	| "unicode-profile"
+	| "language-registry"
 	| "locale-profile"
 	| "segmentation-profile"
 	| "normalization-profile"

@@ -54,6 +54,197 @@ function errorMessage(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
 }
 
+interface VersionCore {
+	readonly major: number;
+	readonly minor: number;
+	readonly patch: number;
+	readonly prerelease: readonly string[];
+}
+
+function parseVersion(value: string): VersionCore | undefined {
+	const match =
+		/^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/u.exec(
+			value.trim(),
+		);
+	if (match === null) return undefined;
+	return {
+		major: Number(match[1]),
+		minor: Number(match[2]),
+		patch: Number(match[3]),
+		prerelease:
+			match[4] === undefined
+				? Object.freeze([])
+				: Object.freeze(match[4].split(".")),
+	};
+}
+
+function numericPrereleaseIdentifier(value: string): number | undefined {
+	if (!/^(0|[1-9]\d*)$/u.test(value)) return undefined;
+	return Number(value);
+}
+
+function comparePrereleaseIdentifiers(left: string, right: string): number {
+	const leftNumber = numericPrereleaseIdentifier(left);
+	const rightNumber = numericPrereleaseIdentifier(right);
+	if (leftNumber !== undefined && rightNumber !== undefined) {
+		return leftNumber - rightNumber;
+	}
+	if (leftNumber !== undefined) return -1;
+	if (rightNumber !== undefined) return 1;
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
+}
+
+function comparePrerelease(
+	left: readonly string[],
+	right: readonly string[],
+): number {
+	if (left.length === 0 && right.length === 0) return 0;
+	if (left.length === 0) return 1;
+	if (right.length === 0) return -1;
+	const length = Math.max(left.length, right.length);
+	for (let index = 0; index < length; index += 1) {
+		const leftIdentifier = left[index];
+		const rightIdentifier = right[index];
+		if (leftIdentifier === undefined) return -1;
+		if (rightIdentifier === undefined) return 1;
+		const comparison = comparePrereleaseIdentifiers(
+			leftIdentifier,
+			rightIdentifier,
+		);
+		if (comparison !== 0) return comparison;
+	}
+	return 0;
+}
+
+function compareVersions(left: VersionCore, right: VersionCore): number {
+	return (
+		left.major - right.major ||
+		left.minor - right.minor ||
+		left.patch - right.patch ||
+		comparePrerelease(left.prerelease, right.prerelease)
+	);
+}
+
+function caretUpperBound(version: VersionCore): VersionCore {
+	if (version.major > 0) {
+		return { major: version.major + 1, minor: 0, patch: 0, prerelease: [] };
+	}
+	if (version.minor > 0) {
+		return {
+			major: 0,
+			minor: version.minor + 1,
+			patch: 0,
+			prerelease: [],
+		};
+	}
+	return {
+		major: 0,
+		minor: 0,
+		patch: version.patch + 1,
+		prerelease: [],
+	};
+}
+
+function tildeUpperBound(version: VersionCore): VersionCore {
+	return {
+		major: version.major,
+		minor: version.minor + 1,
+		patch: 0,
+		prerelease: [],
+	};
+}
+
+function sameVersionCore(left: VersionCore, right: VersionCore): boolean {
+	return (
+		left.major === right.major &&
+		left.minor === right.minor &&
+		left.patch === right.patch
+	);
+}
+
+function comparatorVersion(comparator: string): VersionCore | undefined {
+	const trimmed = comparator.trim();
+	if (trimmed === "" || trimmed === "*" || trimmed.toLowerCase() === "x") {
+		return undefined;
+	}
+	return parseVersion(trimmed.replace(/^(?:>=|>|<=|<|=|\^|~)/u, ""));
+}
+
+function alternativeAllowsPrerelease(
+	version: VersionCore,
+	comparators: readonly string[],
+): boolean {
+	if (version.prerelease.length === 0) return true;
+	return comparators.some((comparator) => {
+		const expected = comparatorVersion(comparator);
+		return (
+			expected !== undefined &&
+			expected.prerelease.length > 0 &&
+			sameVersionCore(version, expected)
+		);
+	});
+}
+
+function satisfiesComparator(
+	version: VersionCore,
+	comparator: string,
+): boolean {
+	const trimmed = comparator.trim();
+	if (trimmed === "" || trimmed === "*" || trimmed.toLowerCase() === "x") {
+		return true;
+	}
+	if (trimmed.startsWith("^")) {
+		const minimum = parseVersion(trimmed.slice(1));
+		if (minimum === undefined) return false;
+		return (
+			compareVersions(version, minimum) >= 0 &&
+			compareVersions(version, caretUpperBound(minimum)) < 0
+		);
+	}
+	if (trimmed.startsWith("~")) {
+		const minimum = parseVersion(trimmed.slice(1));
+		if (minimum === undefined) return false;
+		return (
+			compareVersions(version, minimum) >= 0 &&
+			compareVersions(version, tildeUpperBound(minimum)) < 0
+		);
+	}
+	const match = /^(>=|>|<=|<|=)?(.+)$/u.exec(trimmed);
+	if (match === null) return false;
+	const expected = parseVersion(match[2] ?? "");
+	if (expected === undefined) return false;
+	const comparison = compareVersions(version, expected);
+	switch (match[1] ?? "=") {
+		case ">":
+			return comparison > 0;
+		case ">=":
+			return comparison >= 0;
+		case "<":
+			return comparison < 0;
+		case "<=":
+			return comparison <= 0;
+		case "=":
+			return comparison === 0;
+		default:
+			return false;
+	}
+}
+
+function satisfiesVersionRange(version: string, range: string): boolean {
+	const parsed = parseVersion(version);
+	if (parsed === undefined) return false;
+	const normalizedRange = range.trim().replace(/^workspace:/u, "");
+	return normalizedRange.split(/\s*\|\|\s*/u).some((alternative) => {
+		const comparators = alternative.trim().split(/\s+/u);
+		return (
+			alternativeAllowsPrerelease(parsed, comparators) &&
+			comparators.every((comparator) => satisfiesComparator(parsed, comparator))
+		);
+	});
+}
+
 function gapNote(
 	manifest: TextPackManifest,
 	component: TextPackComponent,
@@ -145,6 +336,11 @@ async function loadComponent(
 	if (pack.manifest.packageName !== component.packageName) {
 		throw new TypeError(
 			`Resolved ${component.packageName} to ${pack.manifest.packageName}.`,
+		);
+	}
+	if (!satisfiesVersionRange(pack.manifest.version, component.versionRange)) {
+		throw new TypeError(
+			`Resolved ${component.packageName}@${pack.manifest.version} does not satisfy declared range ${component.versionRange}.`,
 		);
 	}
 	return pack;

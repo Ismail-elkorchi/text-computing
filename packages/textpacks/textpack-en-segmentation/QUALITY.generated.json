@@ -67,6 +67,7 @@
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "resourceTextByteLength": 1380,
       "sizeClass": "tiny"
     },
     {
@@ -80,6 +81,7 @@
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "resourceTextByteLength": 1322,
       "sizeClass": "tiny"
     },
     {
@@ -93,6 +95,7 @@
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "resourceTextByteLength": 1759,
       "sizeClass": "tiny"
     },
     {
@@ -106,6 +109,7 @@
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "resourceTextByteLength": 1130,
       "sizeClass": "tiny"
     },
     {
@@ -119,6 +123,7 @@
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "resourceTextByteLength": 1389,
       "sizeClass": "tiny"
     },
     {
@@ -132,6 +137,7 @@
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "resourceTextByteLength": 1503,
       "sizeClass": "tiny"
     }
   ],

@@ -65,6 +65,7 @@
       "pipelineId": "arabic-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 162,
       "sizeClass": "tiny"
     },
     {
@@ -78,6 +79,7 @@
       "pipelineId": "arabic-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 5772,
       "sizeClass": "tiny"
     },
     {
@@ -91,6 +93,7 @@
       "pipelineId": "arabic-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 811,
       "sizeClass": "tiny"
     },
     {
@@ -104,6 +107,7 @@
       "pipelineId": "arabic-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 1163,
       "sizeClass": "tiny"
     },
     {
@@ -117,6 +121,7 @@
       "pipelineId": "arabic-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 1238,
       "sizeClass": "tiny"
     }
   ],

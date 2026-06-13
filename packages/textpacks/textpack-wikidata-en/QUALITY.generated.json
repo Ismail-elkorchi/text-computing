@@ -72,6 +72,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "resourceTextByteLength": 507718,
       "sizeClass": "tiny"
     },
     {
@@ -85,6 +86,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "resourceTextByteLength": 1207332,
       "sizeClass": "tiny"
     },
     {
@@ -98,6 +100,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "resourceTextByteLength": 528,
       "sizeClass": "tiny"
     },
     {
@@ -111,6 +114,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "resourceTextByteLength": 972,
       "sizeClass": "tiny"
     },
     {
@@ -124,6 +128,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "resourceTextByteLength": 2794,
       "sizeClass": "tiny"
     },
     {
@@ -137,6 +142,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "resourceTextByteLength": 364007,
       "sizeClass": "tiny"
     }
   ],

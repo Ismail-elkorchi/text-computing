@@ -32,7 +32,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:4e193278448f458553a7631a69889b6ed9a0f50a0e53d1c41d90560ac59f2057",
+  "outputChecksum": "sha256:65ab9ee8ebef3c13a0558189320a97da6392be842048a4fbb5fa4110ae6f2547",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-fr-normalization",
   "packageVersion": "0.1.0",

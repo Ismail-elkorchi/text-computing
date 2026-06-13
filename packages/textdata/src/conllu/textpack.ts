@@ -71,13 +71,26 @@ export interface UdSyntaxPackResources {
 	readonly quality: Readonly<Record<string, unknown>>;
 }
 
-const RESOURCE_IDS = {
-	upos: "en-ud-gumreddit-upos",
-	features: "en-ud-gumreddit-features",
-	dependencies: "en-ud-gumreddit-dependencies",
-	sentenceProfile: "en-ud-gumreddit-sentence-profile",
-	annotations: "en-ud-gumreddit-annotations",
-	quality: "en-ud-gumreddit-quality",
+export interface UdSyntaxResourceIds {
+	readonly upos: string;
+	readonly features: string;
+	readonly dependencies: string;
+	readonly sentenceProfile: string;
+	readonly annotations: string;
+	readonly quality: string;
+}
+
+export interface UdSyntaxPackOptions {
+	readonly resourceIds?: Partial<UdSyntaxResourceIds>;
+}
+
+const RESOURCE_SUFFIXES = {
+	upos: "-upos",
+	features: "-features",
+	dependencies: "-dependencies",
+	sentenceProfile: "-sentence-profile",
+	annotations: "-annotations",
+	quality: "-quality",
 } as const;
 
 function resourceText(pack: TextPackLike, resourceId: string): string {
@@ -100,6 +113,139 @@ function numberCell(value: string | undefined): number {
 	return Number(value ?? "0");
 }
 
+function resourceIds(pack: TextPackLike): readonly string[] {
+	return Object.freeze(
+		[
+			...new Set([
+				...pack.manifest.resources.map((resource) => resource.id),
+				...Object.keys(pack.resources),
+			]),
+		].sort((left, right) => left.localeCompare(right)),
+	);
+}
+
+function requiredResourceId(
+	pack: TextPackLike,
+	suffix: string,
+	explicit: string | undefined,
+): string {
+	if (explicit !== undefined) return explicit;
+	const matches = resourceIds(pack).filter((id) => id.endsWith(suffix));
+	if (matches.length === 1) return matches[0] ?? "";
+	if (matches.length === 0)
+		throw new TypeError(`textpack UD resource is missing: *${suffix}`);
+	throw new TypeError(
+		`textpack UD resource suffix *${suffix} is ambiguous: ${matches.join(", ")}`,
+	);
+}
+
+function inferResourcePrefix(
+	resourceIds: Partial<UdSyntaxResourceIds>,
+): string | undefined {
+	for (const [key, suffix] of Object.entries(RESOURCE_SUFFIXES) as readonly [
+		keyof UdSyntaxResourceIds,
+		string,
+	][]) {
+		const id = resourceIds[key];
+		if (id?.endsWith(suffix)) {
+			return id.slice(0, -suffix.length);
+		}
+	}
+	return undefined;
+}
+
+function resolveUdSyntaxResourceIds(
+	pack: TextPackLike,
+	overrides: Partial<UdSyntaxResourceIds> = {},
+): UdSyntaxResourceIds {
+	const prefix = inferResourcePrefix(overrides);
+	if (prefix !== undefined) {
+		return Object.freeze({
+			upos: overrides.upos ?? `${prefix}${RESOURCE_SUFFIXES.upos}`,
+			features: overrides.features ?? `${prefix}${RESOURCE_SUFFIXES.features}`,
+			dependencies:
+				overrides.dependencies ?? `${prefix}${RESOURCE_SUFFIXES.dependencies}`,
+			sentenceProfile:
+				overrides.sentenceProfile ??
+				`${prefix}${RESOURCE_SUFFIXES.sentenceProfile}`,
+			annotations:
+				overrides.annotations ?? `${prefix}${RESOURCE_SUFFIXES.annotations}`,
+			quality: overrides.quality ?? `${prefix}${RESOURCE_SUFFIXES.quality}`,
+		});
+	}
+	return Object.freeze({
+		upos: requiredResourceId(pack, RESOURCE_SUFFIXES.upos, overrides.upos),
+		features: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.features,
+			overrides.features,
+		),
+		dependencies: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.dependencies,
+			overrides.dependencies,
+		),
+		sentenceProfile: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.sentenceProfile,
+			overrides.sentenceProfile,
+		),
+		annotations: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.annotations,
+			overrides.annotations,
+		),
+		quality: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.quality,
+			overrides.quality,
+		),
+	});
+}
+
+function conlluTokenIdParts(tokenId: string): {
+	readonly primary: number;
+	readonly secondary: number;
+	readonly rank: number;
+} {
+	const rangeMatch = /^(\d+)-(\d+)$/u.exec(tokenId);
+	if (rangeMatch !== null) {
+		return {
+			primary: Number(rangeMatch[1]),
+			secondary: Number(rangeMatch[2]),
+			rank: -1,
+		};
+	}
+	const emptyNodeMatch = /^(\d+)\.(\d+)$/u.exec(tokenId);
+	if (emptyNodeMatch !== null) {
+		return {
+			primary: Number(emptyNodeMatch[1]),
+			secondary: Number(emptyNodeMatch[2]),
+			rank: 1,
+		};
+	}
+	const integerMatch = /^(\d+)$/u.exec(tokenId);
+	if (integerMatch !== null) {
+		return {
+			primary: Number(integerMatch[1]),
+			secondary: 0,
+			rank: 0,
+		};
+	}
+	return { primary: Number.POSITIVE_INFINITY, secondary: 0, rank: 0 };
+}
+
+function compareConlluTokenIds(left: string, right: string): number {
+	const leftParts = conlluTokenIdParts(left);
+	const rightParts = conlluTokenIdParts(right);
+	return (
+		leftParts.primary - rightParts.primary ||
+		leftParts.rank - rightParts.rank ||
+		leftParts.secondary - rightParts.secondary ||
+		left.localeCompare(right)
+	);
+}
+
 function compareUdRows(
 	left: UdAnnotationRecord,
 	right: UdAnnotationRecord,
@@ -107,7 +253,7 @@ function compareUdRows(
 	return (
 		left.split.localeCompare(right.split) ||
 		left.sentenceIndex - right.sentenceIndex ||
-		left.tokenId.localeCompare(right.tokenId)
+		compareConlluTokenIds(left.tokenId, right.tokenId)
 	);
 }
 
@@ -126,7 +272,11 @@ function tokenFromRecord(record: UdAnnotationRecord): UdAnnotationToken {
 
 export function udAnnotationRecordsFromPack(
 	pack: TextPackLike,
-	resourceId: string = RESOURCE_IDS.annotations,
+	resourceId: string = requiredResourceId(
+		pack,
+		RESOURCE_SUFFIXES.annotations,
+		undefined,
+	),
 ): readonly UdAnnotationRecord[] {
 	return Object.freeze(
 		nonEmptyRows(resourceText(pack, resourceId))
@@ -162,22 +312,23 @@ export function udAnnotationRecordsFromPack(
 
 export function udSyntaxResourcesFromPack(
 	pack: TextPackLike,
+	options: UdSyntaxPackOptions = {},
 ): UdSyntaxPackResources {
-	const upos = nonEmptyRows(resourceText(pack, RESOURCE_IDS.upos)).map(
+	const ids = resolveUdSyntaxResourceIds(pack, options.resourceIds);
+	const upos = nonEmptyRows(resourceText(pack, ids.upos)).map(
 		([upos = "", xpos = "", count = "0"]) =>
 			Object.freeze({ upos, xpos, count: numberCell(count) }),
 	);
-	const features = nonEmptyRows(resourceText(pack, RESOURCE_IDS.features)).map(
+	const features = nonEmptyRows(resourceText(pack, ids.features)).map(
 		([feature = "", value = "", count = "0"]) =>
 			Object.freeze({ feature, value, count: numberCell(count) }),
 	);
-	const dependencies = nonEmptyRows(
-		resourceText(pack, RESOURCE_IDS.dependencies),
-	).map(([split = "", deprel = "", count = "0"]) =>
-		Object.freeze({ split, deprel, count: numberCell(count) }),
+	const dependencies = nonEmptyRows(resourceText(pack, ids.dependencies)).map(
+		([split = "", deprel = "", count = "0"]) =>
+			Object.freeze({ split, deprel, count: numberCell(count) }),
 	);
 	const sentenceProfiles = nonEmptyRows(
-		resourceText(pack, RESOURCE_IDS.sentenceProfile),
+		resourceText(pack, ids.sentenceProfile),
 	).map(
 		([
 			split = "",
@@ -199,12 +350,9 @@ export function udSyntaxResourcesFromPack(
 		features: Object.freeze(features),
 		dependencies: Object.freeze(dependencies),
 		sentenceProfiles: Object.freeze(sentenceProfiles),
-		annotations: udAnnotationRecordsFromPack(pack, RESOURCE_IDS.annotations),
+		annotations: udAnnotationRecordsFromPack(pack, ids.annotations),
 		quality: Object.freeze(
-			JSON.parse(resourceText(pack, RESOURCE_IDS.quality)) as Record<
-				string,
-				unknown
-			>,
+			JSON.parse(resourceText(pack, ids.quality)) as Record<string, unknown>,
 		),
 	});
 }
@@ -213,7 +361,9 @@ export function readUdAnnotationDatasetFromPack(
 	pack: TextPackLike,
 	options: DatasetReadOptions & { readonly resourceId?: string } = {},
 ) {
-	const resourceId = options.resourceId ?? RESOURCE_IDS.annotations;
+	const resourceId =
+		options.resourceId ??
+		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
 	const grouped = new Map<string, UdAnnotationRecord[]>();
 	for (const record of udAnnotationRecordsFromPack(pack, resourceId)) {
 		const key = `${record.split}\t${record.sentenceIndex}`;
@@ -225,7 +375,15 @@ export function readUdAnnotationDatasetFromPack(
 		existing.push(record);
 	}
 	const records = [...grouped.entries()]
-		.sort(([left], [right]) => left.localeCompare(right))
+		.sort(([, leftRows], [, rightRows]) => {
+			const left = leftRows[0];
+			const right = rightRows[0];
+			if (left === undefined || right === undefined) return 0;
+			return (
+				left.split.localeCompare(right.split) ||
+				left.sentenceIndex - right.sentenceIndex
+			);
+		})
 		.map(([key, rows]) => {
 			const [split = "", sentenceIndex = "0"] = key.split("\t");
 			return Object.freeze({

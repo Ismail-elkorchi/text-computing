@@ -28,7 +28,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 32083,
-      "outputChecksum": "sha256:0dd7008f8995020e9d69b1b3341a55835d762c4d32e809af2bc0f0cbac19379c",
+      "outputChecksum": "sha256:e8893897ecf21571e618d76ba15b96ad605cebb852bcdcc96784bbc3c5f2df7d",
       "packageDir": "packages/textpacks/textpack-ar-core",
       "packageName": "@ismail-elkorchi/textpack-ar-core",
       "publishability": {
@@ -49,6 +49,7 @@
           "pipelineId": "arabic-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+          "resourceTextByteLength": 1397,
           "sizeClass": "tiny"
         },
         {
@@ -62,6 +63,7 @@
           "pipelineId": "arabic-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+          "resourceTextByteLength": 791,
           "sizeClass": "tiny"
         },
         {
@@ -75,6 +77,7 @@
           "pipelineId": "arabic-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+          "resourceTextByteLength": 7774,
           "sizeClass": "tiny"
         },
         {
@@ -88,6 +91,7 @@
           "pipelineId": "arabic-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+          "resourceTextByteLength": 20036,
           "sizeClass": "tiny"
         },
         {
@@ -101,6 +105,7 @@
           "pipelineId": "arabic-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+          "resourceTextByteLength": 985,
           "sizeClass": "tiny"
         },
         {
@@ -114,6 +119,7 @@
           "pipelineId": "arabic-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+          "resourceTextByteLength": 1100,
           "sizeClass": "tiny"
         }
       ],
@@ -122,7 +128,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 2214138,
-      "outputChecksum": "sha256:07814a7b5e9bb6a46384dc4bc2d7f3385fa10508f85244be6e4c84c288b1f4ec",
+      "outputChecksum": "sha256:e8a58b9032af9c20dd4e9384cf5f52474f5fde3337dabe52c8964e96444d6c68",
       "packageDir": "packages/textpacks/textpack-ar-corpus",
       "packageName": "@ismail-elkorchi/textpack-ar-corpus",
       "publishability": {
@@ -143,6 +149,7 @@
           "pipelineId": "tatoeba-arabic-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+          "resourceTextByteLength": 1114,
           "sizeClass": "tiny"
         },
         {
@@ -156,6 +163,7 @@
           "pipelineId": "tatoeba-arabic-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+          "resourceTextByteLength": 895,
           "sizeClass": "tiny"
         },
         {
@@ -169,6 +177,7 @@
           "pipelineId": "tatoeba-arabic-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+          "resourceTextByteLength": 1344,
           "sizeClass": "tiny"
         },
         {
@@ -182,6 +191,7 @@
           "pipelineId": "tatoeba-arabic-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+          "resourceTextByteLength": 7313057,
           "sizeClass": "small"
         }
       ],
@@ -235,7 +245,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 15392543,
-      "outputChecksum": "sha256:1c34c257279682cd7754d0c4a44e4c2c76336a7863f6086e35b57029d1e43b94",
+      "outputChecksum": "sha256:20a1335f038a45097c17edf62671cd87913e6991048b9cada6f281cab9e643ec",
       "packageDir": "packages/textpacks/textpack-ar-msa-morphology",
       "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
       "publishability": {
@@ -256,6 +266,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 252024,
           "sizeClass": "tiny"
         },
         {
@@ -269,6 +280,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 34751,
           "sizeClass": "tiny"
         },
         {
@@ -282,6 +294,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 2252,
           "sizeClass": "tiny"
         },
         {
@@ -295,6 +308,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 109168048,
           "sizeClass": "medium"
         },
         {
@@ -308,6 +322,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 1216,
           "sizeClass": "tiny"
         },
         {
@@ -321,6 +336,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 86,
           "sizeClass": "tiny"
         },
         {
@@ -334,6 +350,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 10720,
           "sizeClass": "tiny"
         },
         {
@@ -347,6 +364,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 899,
           "sizeClass": "tiny"
         },
         {
@@ -360,6 +378,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+          "resourceTextByteLength": 1042,
           "sizeClass": "tiny"
         }
       ],
@@ -368,7 +387,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 9146,
-      "outputChecksum": "sha256:cec04000e4f3a30208bdce4a3105aac9cf19dbe00a978d786bcbb08162578c05",
+      "outputChecksum": "sha256:9641cecfac285de809ab0abe31e3a811e4e01f064b2358eafbce6d2dae70637a",
       "packageDir": "packages/textpacks/textpack-ar-normalization",
       "packageName": "@ismail-elkorchi/textpack-ar-normalization",
       "publishability": {
@@ -389,6 +408,7 @@
           "pipelineId": "arabic-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+          "resourceTextByteLength": 162,
           "sizeClass": "tiny"
         },
         {
@@ -402,6 +422,7 @@
           "pipelineId": "arabic-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+          "resourceTextByteLength": 5772,
           "sizeClass": "tiny"
         },
         {
@@ -415,6 +436,7 @@
           "pipelineId": "arabic-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+          "resourceTextByteLength": 811,
           "sizeClass": "tiny"
         },
         {
@@ -428,6 +450,7 @@
           "pipelineId": "arabic-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+          "resourceTextByteLength": 1163,
           "sizeClass": "tiny"
         },
         {
@@ -441,6 +464,7 @@
           "pipelineId": "arabic-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+          "resourceTextByteLength": 1238,
           "sizeClass": "tiny"
         }
       ],
@@ -449,7 +473,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 507902,
-      "outputChecksum": "sha256:3ec8eba93a82a20fb98f67d5ada54029964ac4cd0985f0099429156d402ea119",
+      "outputChecksum": "sha256:f6a4ff49f153ba65e3d984d9a55e1f3ec594600031e8e1cb696c1d64dd6e60e0",
       "packageDir": "packages/textpacks/textpack-ar-parallel",
       "packageName": "@ismail-elkorchi/textpack-ar-parallel",
       "publishability": {
@@ -470,6 +494,7 @@
           "pipelineId": "tatoeba-arabic-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+          "resourceTextByteLength": 86699,
           "sizeClass": "tiny"
         },
         {
@@ -483,6 +508,7 @@
           "pipelineId": "tatoeba-arabic-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+          "resourceTextByteLength": 1460440,
           "sizeClass": "tiny"
         },
         {
@@ -496,6 +522,7 @@
           "pipelineId": "tatoeba-arabic-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+          "resourceTextByteLength": 91016,
           "sizeClass": "tiny"
         },
         {
@@ -509,6 +536,7 @@
           "pipelineId": "tatoeba-arabic-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+          "resourceTextByteLength": 2288,
           "sizeClass": "tiny"
         },
         {
@@ -522,6 +550,7 @@
           "pipelineId": "tatoeba-arabic-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+          "resourceTextByteLength": 1458,
           "sizeClass": "tiny"
         },
         {
@@ -535,6 +564,7 @@
           "pipelineId": "tatoeba-arabic-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts",
+          "resourceTextByteLength": 98576,
           "sizeClass": "tiny"
         }
       ],
@@ -588,7 +618,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 12060880,
-      "outputChecksum": "sha256:988960be2342598f5d7ba259f34121bc79ba33adc65cde3786a2b5b6dfb75efa",
+      "outputChecksum": "sha256:c921018779fd3b9fa437ce22cdeb88dae328366a3551c3f0a3ebb1d75c1985e0",
       "packageDir": "packages/textpacks/textpack-ar-search",
       "packageName": "@ismail-elkorchi/textpack-ar-search",
       "publishability": {
@@ -609,6 +639,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 125,
           "sizeClass": "tiny"
         },
         {
@@ -622,6 +653,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 329,
           "sizeClass": "tiny"
         },
         {
@@ -635,6 +667,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 2269,
           "sizeClass": "tiny"
         },
         {
@@ -648,6 +681,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 860,
           "sizeClass": "tiny"
         },
         {
@@ -661,6 +695,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 1095,
           "sizeClass": "tiny"
         },
         {
@@ -674,6 +709,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 86,
           "sizeClass": "tiny"
         },
         {
@@ -687,6 +723,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+          "resourceTextByteLength": 12056116,
           "sizeClass": "medium"
         }
       ],
@@ -740,7 +777,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 59260768,
-      "outputChecksum": "sha256:437b87464efe53946cffd6905f99cbdd19fc79dd3b6743d2ffe8ba87cae3f8f7",
+      "outputChecksum": "sha256:29a72b1ad49e9bf9e4538bb1d0d1992548f0042f05b728f9cee2eb48c8a3dc30",
       "packageDir": "packages/textpacks/textpack-ar-syntax-ud-nyuad-sa",
       "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
       "publishability": {
@@ -761,6 +798,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 59041977,
           "sizeClass": "large"
         },
         {
@@ -774,6 +812,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 1176,
           "sizeClass": "tiny"
         },
         {
@@ -787,6 +826,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 495,
           "sizeClass": "tiny"
         },
         {
@@ -800,6 +840,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 2147,
           "sizeClass": "tiny"
         },
         {
@@ -813,6 +854,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 1066,
           "sizeClass": "tiny"
         },
         {
@@ -826,6 +868,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 925,
           "sizeClass": "tiny"
         },
         {
@@ -839,6 +882,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 143,
           "sizeClass": "tiny"
         },
         {
@@ -852,6 +896,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 172617,
           "sizeClass": "tiny"
         },
         {
@@ -865,6 +910,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+          "resourceTextByteLength": 40222,
           "sizeClass": "tiny"
         }
       ],
@@ -873,7 +919,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 163413,
-      "outputChecksum": "sha256:a3430b395a9b62e6b30c5839f0c92c508916fd4ed6dfeb0a1d90f0b675a2fbe9",
+      "outputChecksum": "sha256:797e92fcc7fd3ec5107d45325d74481c98db1514a4e1eec3ed2e6b0d93a32d90",
       "packageDir": "packages/textpacks/textpack-cldr-core",
       "packageName": "@ismail-elkorchi/textpack-cldr-core",
       "publishability": {
@@ -894,6 +940,7 @@
           "pipelineId": "cldr-core-foundation",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "resourceTextByteLength": 192,
           "sizeClass": "tiny"
         },
         {
@@ -907,6 +954,7 @@
           "pipelineId": "cldr-core-foundation",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "resourceTextByteLength": 126509,
           "sizeClass": "tiny"
         },
         {
@@ -920,6 +968,7 @@
           "pipelineId": "cldr-core-foundation",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "resourceTextByteLength": 36386,
           "sizeClass": "tiny"
         },
         {
@@ -933,6 +982,7 @@
           "pipelineId": "cldr-core-foundation",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+          "resourceTextByteLength": 326,
           "sizeClass": "tiny"
         }
       ],
@@ -956,7 +1006,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 136084,
-      "outputChecksum": "sha256:441e5ea5c41a7ff54048640594755f780478f5f824b33cfaca6a23989a4bbc08",
+      "outputChecksum": "sha256:80d62245af9343c25fd57430537e012b201ded6e25fd28b17d47fad4e5d3ca75",
       "packageDir": "packages/textpacks/textpack-en-core",
       "packageName": "@ismail-elkorchi/textpack-en-core",
       "publishability": {
@@ -977,6 +1027,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 97551,
           "sizeClass": "tiny"
         },
         {
@@ -990,6 +1041,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 1397,
           "sizeClass": "tiny"
         },
         {
@@ -1003,6 +1055,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 8294,
           "sizeClass": "tiny"
         },
         {
@@ -1016,6 +1069,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 1069,
           "sizeClass": "tiny"
         },
         {
@@ -1029,6 +1083,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 5095,
           "sizeClass": "tiny"
         },
         {
@@ -1042,6 +1097,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 20036,
           "sizeClass": "tiny"
         },
         {
@@ -1055,6 +1111,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 1163,
           "sizeClass": "tiny"
         },
         {
@@ -1068,6 +1125,7 @@
           "pipelineId": "english-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+          "resourceTextByteLength": 1479,
           "sizeClass": "tiny"
         }
       ],
@@ -1076,7 +1134,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 64525315,
-      "outputChecksum": "sha256:0afe79e9f02a8fc1939e0886d03cdc805e3c61f52eeb32e90eafb7134cda4baf",
+      "outputChecksum": "sha256:0aebdc52a21ae5d0b1fc3f55154d69525e2cb01aaeb25d90048c8620aa5d2ed9",
       "packageDir": "packages/textpacks/textpack-en-corpus",
       "packageName": "@ismail-elkorchi/textpack-en-corpus",
       "publishability": {
@@ -1097,6 +1155,7 @@
           "pipelineId": "tatoeba-english-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
+          "resourceTextByteLength": 1111,
           "sizeClass": "tiny"
         },
         {
@@ -1110,6 +1169,7 @@
           "pipelineId": "tatoeba-english-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
+          "resourceTextByteLength": 896,
           "sizeClass": "tiny"
         },
         {
@@ -1123,6 +1183,7 @@
           "pipelineId": "tatoeba-english-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
+          "resourceTextByteLength": 1347,
           "sizeClass": "tiny"
         },
         {
@@ -1136,6 +1197,7 @@
           "pipelineId": "tatoeba-english-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-corpus:tatoeba-english-artifacts",
+          "resourceTextByteLength": 203768554,
           "sizeClass": "large"
         }
       ],
@@ -1144,7 +1206,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 17283249,
-      "outputChecksum": "sha256:642dbd4cc7300f38dc01ded684e7e9a9ce455b256fec9343f6eb317663503d6c",
+      "outputChecksum": "sha256:5b0ce993d241b52636eb6a7826d4c46cf840fe93fce4d64016329a717ac2d550",
       "packageDir": "packages/textpacks/textpack-en-inflection-scowl",
       "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
       "publishability": {
@@ -1165,6 +1227,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 33487594,
           "sizeClass": "medium"
         },
         {
@@ -1178,6 +1241,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 412,
           "sizeClass": "tiny"
         },
         {
@@ -1191,6 +1255,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 1856,
           "sizeClass": "tiny"
         },
         {
@@ -1204,6 +1269,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 842,
           "sizeClass": "tiny"
         },
         {
@@ -1217,6 +1283,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 1079,
           "sizeClass": "tiny"
         },
         {
@@ -1230,6 +1297,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 22622235,
           "sizeClass": "small"
         },
         {
@@ -1243,6 +1311,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 22622235,
           "sizeClass": "small"
         },
         {
@@ -1256,6 +1325,7 @@
           "pipelineId": "scowl-v2-inflection",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+          "resourceTextByteLength": 1953,
           "sizeClass": "tiny"
         }
       ],
@@ -1309,7 +1379,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 3984,
-      "outputChecksum": "sha256:0cfa5c7225b7286cb0b4fa33bf8acdc8a23a00a3d8e46ad0ed590cde050fee1f",
+      "outputChecksum": "sha256:104f1f2cf9a8da0c519a449a64a38f50d0b5743d5d1e9dcaf83360077aa43109",
       "packageDir": "packages/textpacks/textpack-en-normalization",
       "packageName": "@ismail-elkorchi/textpack-en-normalization",
       "publishability": {
@@ -1330,6 +1400,7 @@
           "pipelineId": "english-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+          "resourceTextByteLength": 1532,
           "sizeClass": "tiny"
         },
         {
@@ -1343,6 +1414,7 @@
           "pipelineId": "english-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+          "resourceTextByteLength": 825,
           "sizeClass": "tiny"
         },
         {
@@ -1356,6 +1428,7 @@
           "pipelineId": "english-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+          "resourceTextByteLength": 1184,
           "sizeClass": "tiny"
         },
         {
@@ -1369,6 +1442,7 @@
           "pipelineId": "english-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+          "resourceTextByteLength": 443,
           "sizeClass": "tiny"
         }
       ],
@@ -1377,7 +1451,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 17038763,
-      "outputChecksum": "sha256:3866910e84fb931faecc1de521d690649ea5abaa6e3e8a586921d7ef34876d3b",
+      "outputChecksum": "sha256:f1b6cb18c26fc76914fff4086f908170c670c6e902f44a845b55c3ba67ff7f35",
       "packageDir": "packages/textpacks/textpack-en-parallel",
       "packageName": "@ismail-elkorchi/textpack-en-parallel",
       "publishability": {
@@ -1398,6 +1472,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 1460440,
           "sizeClass": "tiny"
         },
         {
@@ -1411,6 +1486,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 17460576,
           "sizeClass": "small"
         },
         {
@@ -1424,6 +1500,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 968909,
           "sizeClass": "tiny"
         },
         {
@@ -1437,6 +1514,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 12965451,
           "sizeClass": "small"
         },
         {
@@ -1450,6 +1528,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 51327,
           "sizeClass": "tiny"
         },
         {
@@ -1463,6 +1542,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 21339856,
           "sizeClass": "small"
         },
         {
@@ -1476,6 +1556,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 1321630,
           "sizeClass": "tiny"
         },
         {
@@ -1489,6 +1570,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 4060,
           "sizeClass": "tiny"
         },
         {
@@ -1502,6 +1584,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 1935,
           "sizeClass": "tiny"
         },
         {
@@ -1515,6 +1598,7 @@
           "pipelineId": "tatoeba-english-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+          "resourceTextByteLength": 8367603,
           "sizeClass": "small"
         }
       ],
@@ -1553,7 +1637,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 8483,
-      "outputChecksum": "sha256:13f559840a274c9a571154fb10aee81643ab798a113617d04f5633471093ee49",
+      "outputChecksum": "sha256:bdfa7f93bed6acb46ae2b75d84fe543330f0046c495f5c62393aee0412231316",
       "packageDir": "packages/textpacks/textpack-en-segmentation",
       "packageName": "@ismail-elkorchi/textpack-en-segmentation",
       "publishability": {
@@ -1574,6 +1658,7 @@
           "pipelineId": "english-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+          "resourceTextByteLength": 1380,
           "sizeClass": "tiny"
         },
         {
@@ -1587,6 +1672,7 @@
           "pipelineId": "english-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+          "resourceTextByteLength": 1322,
           "sizeClass": "tiny"
         },
         {
@@ -1600,6 +1686,7 @@
           "pipelineId": "english-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+          "resourceTextByteLength": 1759,
           "sizeClass": "tiny"
         },
         {
@@ -1613,6 +1700,7 @@
           "pipelineId": "english-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+          "resourceTextByteLength": 1130,
           "sizeClass": "tiny"
         },
         {
@@ -1626,6 +1714,7 @@
           "pipelineId": "english-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+          "resourceTextByteLength": 1389,
           "sizeClass": "tiny"
         },
         {
@@ -1639,6 +1728,7 @@
           "pipelineId": "english-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+          "resourceTextByteLength": 1503,
           "sizeClass": "tiny"
         }
       ],
@@ -1662,7 +1752,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 1710535,
-      "outputChecksum": "sha256:e8a22e90f1ad136a5a77b851569823b65de7f7e4cb1dfba206413dc96f27e7f2",
+      "outputChecksum": "sha256:5776825e38c1f44de81b8a676e238b24b926708d31a0f80b97be9fcdb854c954",
       "packageDir": "packages/textpacks/textpack-en-syntax-ud-gumreddit",
       "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
       "publishability": {
@@ -1683,6 +1773,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 1678076,
           "sizeClass": "small"
         },
         {
@@ -1696,6 +1787,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 2081,
           "sizeClass": "tiny"
         },
         {
@@ -1709,6 +1801,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 852,
           "sizeClass": "tiny"
         },
         {
@@ -1722,6 +1815,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 3245,
           "sizeClass": "tiny"
         },
         {
@@ -1735,6 +1829,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 961,
           "sizeClass": "tiny"
         },
         {
@@ -1748,6 +1843,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 932,
           "sizeClass": "tiny"
         },
         {
@@ -1761,6 +1857,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 133,
           "sizeClass": "tiny"
         },
         {
@@ -1774,6 +1871,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 23466,
           "sizeClass": "tiny"
         },
         {
@@ -1787,6 +1885,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+          "resourceTextByteLength": 789,
           "sizeClass": "tiny"
         }
       ],
@@ -1795,7 +1894,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 2464061,
-      "outputChecksum": "sha256:58ccf334ef897ba576380af1ad51dfa09dbf888b700ca78ed51310bdaa51e2cf",
+      "outputChecksum": "sha256:7b39bab70210546fc9f9d98004809b583687f90349636ece0a0907eec1ddb530",
       "packageDir": "packages/textpacks/textpack-en-wordlist-esdb",
       "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
       "publishability": {
@@ -1816,6 +1915,7 @@
           "pipelineId": "esdb-wordlist-diff",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+          "resourceTextByteLength": 290,
           "sizeClass": "tiny"
         },
         {
@@ -1829,6 +1929,7 @@
           "pipelineId": "esdb-wordlist-diff",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+          "resourceTextByteLength": 20301511,
           "sizeClass": "small"
         },
         {
@@ -1842,6 +1943,7 @@
           "pipelineId": "esdb-wordlist-diff",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+          "resourceTextByteLength": 405,
           "sizeClass": "tiny"
         },
         {
@@ -1855,6 +1957,7 @@
           "pipelineId": "esdb-wordlist-diff",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+          "resourceTextByteLength": 762,
           "sizeClass": "tiny"
         },
         {
@@ -1868,6 +1971,7 @@
           "pipelineId": "esdb-wordlist-diff",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+          "resourceTextByteLength": 1075,
           "sizeClass": "tiny"
         },
         {
@@ -1881,6 +1985,7 @@
           "pipelineId": "esdb-wordlist-diff",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+          "resourceTextByteLength": 1288,
           "sizeClass": "tiny"
         }
       ],
@@ -1919,7 +2024,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 29406,
-      "outputChecksum": "sha256:11e8381604d12b8b25671aef98bf8f4908db1139869f2cc3f0f961f180935dd2",
+      "outputChecksum": "sha256:3bad857778e5be4bf5eaa8d66e8af228aa0f673ff6e9d5f3bc7c548ce856b783",
       "packageDir": "packages/textpacks/textpack-fr-core",
       "packageName": "@ismail-elkorchi/textpack-fr-core",
       "publishability": {
@@ -1940,6 +2045,7 @@
           "pipelineId": "french-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+          "resourceTextByteLength": 1397,
           "sizeClass": "tiny"
         },
         {
@@ -1953,6 +2059,7 @@
           "pipelineId": "french-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+          "resourceTextByteLength": 777,
           "sizeClass": "tiny"
         },
         {
@@ -1966,6 +2073,7 @@
           "pipelineId": "french-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+          "resourceTextByteLength": 5095,
           "sizeClass": "tiny"
         },
         {
@@ -1979,6 +2087,7 @@
           "pipelineId": "french-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+          "resourceTextByteLength": 20036,
           "sizeClass": "tiny"
         },
         {
@@ -1992,6 +2101,7 @@
           "pipelineId": "french-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+          "resourceTextByteLength": 1003,
           "sizeClass": "tiny"
         },
         {
@@ -2005,6 +2115,7 @@
           "pipelineId": "french-core-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+          "resourceTextByteLength": 1098,
           "sizeClass": "tiny"
         }
       ],
@@ -2013,7 +2124,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 26675304,
-      "outputChecksum": "sha256:86829fd4c3c211af0c0dbe2808cb07d9e8d203f518c07856b83cbb7435cde3cc",
+      "outputChecksum": "sha256:60bb729b19d0550d64651801a12688790b19846401d9818ff129dce4916e86ef",
       "packageDir": "packages/textpacks/textpack-fr-corpus",
       "packageName": "@ismail-elkorchi/textpack-fr-corpus",
       "publishability": {
@@ -2034,6 +2145,7 @@
           "pipelineId": "tatoeba-french-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+          "resourceTextByteLength": 1115,
           "sizeClass": "tiny"
         },
         {
@@ -2047,6 +2159,7 @@
           "pipelineId": "tatoeba-french-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+          "resourceTextByteLength": 899,
           "sizeClass": "tiny"
         },
         {
@@ -2060,6 +2173,7 @@
           "pipelineId": "tatoeba-french-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+          "resourceTextByteLength": 1345,
           "sizeClass": "tiny"
         },
         {
@@ -2073,6 +2187,7 @@
           "pipelineId": "tatoeba-french-corpus-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+          "resourceTextByteLength": 77091245,
           "sizeClass": "medium"
         }
       ],
@@ -2126,7 +2241,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 3796958,
-      "outputChecksum": "sha256:53d099d93ebcfda6c6eac66d52025b2f46e325975bf24af0d0174e5d837b1505",
+      "outputChecksum": "sha256:538d8dcf237b76e64b0191443404989c16f33dc9c24fba27d7f07629915ff351",
       "packageDir": "packages/textpacks/textpack-fr-lexique-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
       "publishability": {
@@ -2147,6 +2262,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 11807486,
           "sizeClass": "small"
         },
         {
@@ -2160,6 +2276,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 2291820,
           "sizeClass": "small"
         },
         {
@@ -2173,6 +2290,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 385,
           "sizeClass": "tiny"
         },
         {
@@ -2186,6 +2304,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 1432,
           "sizeClass": "tiny"
         },
         {
@@ -2199,6 +2318,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 237,
           "sizeClass": "tiny"
         },
         {
@@ -2212,6 +2332,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 1036,
           "sizeClass": "tiny"
         },
         {
@@ -2225,6 +2346,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 1583,
           "sizeClass": "tiny"
         },
         {
@@ -2238,6 +2360,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 94,
           "sizeClass": "tiny"
         },
         {
@@ -2251,6 +2374,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 531,
           "sizeClass": "tiny"
         },
         {
@@ -2264,6 +2388,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 7870,
           "sizeClass": "tiny"
         },
         {
@@ -2277,6 +2402,7 @@
           "pipelineId": "french-lexique-383",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+          "resourceTextByteLength": 2432,
           "sizeClass": "tiny"
         }
       ],
@@ -2315,7 +2441,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 16358,
-      "outputChecksum": "sha256:4e193278448f458553a7631a69889b6ed9a0f50a0e53d1c41d90560ac59f2057",
+      "outputChecksum": "sha256:65ab9ee8ebef3c13a0558189320a97da6392be842048a4fbb5fa4110ae6f2547",
       "packageDir": "packages/textpacks/textpack-fr-normalization",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "publishability": {
@@ -2336,6 +2462,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 94,
           "sizeClass": "tiny"
         },
         {
@@ -2349,6 +2476,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 531,
           "sizeClass": "tiny"
         },
         {
@@ -2362,6 +2490,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 7457,
           "sizeClass": "tiny"
         },
         {
@@ -2375,6 +2504,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 4126,
           "sizeClass": "tiny"
         },
         {
@@ -2388,6 +2518,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 1250,
           "sizeClass": "tiny"
         },
         {
@@ -2401,6 +2532,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 1787,
           "sizeClass": "tiny"
         },
         {
@@ -2414,6 +2546,7 @@
           "pipelineId": "french-normalization-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+          "resourceTextByteLength": 1113,
           "sizeClass": "tiny"
         }
       ],
@@ -2422,7 +2555,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 5516538,
-      "outputChecksum": "sha256:441612e437f695aa80ecd88917b31be82593a85987c2f50f1da6611c4e25a6b6",
+      "outputChecksum": "sha256:e3f2fdc44d097ed9f696341f607cd25cc9058a7d45af85f5b6efe1f0c97de645",
       "packageDir": "packages/textpacks/textpack-fr-parallel",
       "packageName": "@ismail-elkorchi/textpack-fr-parallel",
       "publishability": {
@@ -2443,6 +2576,7 @@
           "pipelineId": "tatoeba-french-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+          "resourceTextByteLength": 91016,
           "sizeClass": "tiny"
         },
         {
@@ -2456,6 +2590,7 @@
           "pipelineId": "tatoeba-french-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+          "resourceTextByteLength": 4600938,
           "sizeClass": "small"
         },
         {
@@ -2469,6 +2604,7 @@
           "pipelineId": "tatoeba-french-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+          "resourceTextByteLength": 12965451,
           "sizeClass": "small"
         },
         {
@@ -2482,6 +2618,7 @@
           "pipelineId": "tatoeba-french-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+          "resourceTextByteLength": 2298,
           "sizeClass": "tiny"
         },
         {
@@ -2495,6 +2632,7 @@
           "pipelineId": "tatoeba-french-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+          "resourceTextByteLength": 1460,
           "sizeClass": "tiny"
         },
         {
@@ -2508,6 +2646,7 @@
           "pipelineId": "tatoeba-french-parallel-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+          "resourceTextByteLength": 1804543,
           "sizeClass": "small"
         }
       ],
@@ -2591,7 +2730,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 23409,
-      "outputChecksum": "sha256:e637a3269d91313d214227263ab3d2805d3c121784bb93edf289dd55c6387224",
+      "outputChecksum": "sha256:9703c939250e39125327c12c177d335b3395c41cf028bd63b87df18cafd98756",
       "packageDir": "packages/textpacks/textpack-fr-segmentation",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
       "publishability": {
@@ -2612,6 +2751,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 1432,
           "sizeClass": "tiny"
         },
         {
@@ -2625,6 +2765,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 2136,
           "sizeClass": "tiny"
         },
         {
@@ -2638,6 +2779,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 1322,
           "sizeClass": "tiny"
         },
         {
@@ -2651,6 +2793,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 94,
           "sizeClass": "tiny"
         },
         {
@@ -2664,6 +2807,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 531,
           "sizeClass": "tiny"
         },
         {
@@ -2677,6 +2821,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 8481,
           "sizeClass": "tiny"
         },
         {
@@ -2690,6 +2835,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 2138,
           "sizeClass": "tiny"
         },
         {
@@ -2703,6 +2849,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 2016,
           "sizeClass": "tiny"
         },
         {
@@ -2716,6 +2863,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 1441,
           "sizeClass": "tiny"
         },
         {
@@ -2729,6 +2877,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 2263,
           "sizeClass": "tiny"
         },
         {
@@ -2742,6 +2891,7 @@
           "pipelineId": "french-segmentation-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+          "resourceTextByteLength": 1555,
           "sizeClass": "tiny"
         }
       ],
@@ -2780,7 +2930,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 25827248,
-      "outputChecksum": "sha256:f8200c5f232c2ae04304179b05e738b58801fc4093053da249824fc517c15f57",
+      "outputChecksum": "sha256:2d411aea39d3a5fd6a74f32c153db9b64bfe1980045594914b6b38ec998055ee",
       "packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
       "publishability": {
@@ -2801,6 +2951,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 25796644,
           "sizeClass": "medium"
         },
         {
@@ -2814,6 +2965,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 2781,
           "sizeClass": "tiny"
         },
         {
@@ -2827,6 +2979,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 979,
           "sizeClass": "tiny"
         },
         {
@@ -2840,6 +2993,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 3274,
           "sizeClass": "tiny"
         },
         {
@@ -2853,6 +3007,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 1011,
           "sizeClass": "tiny"
         },
         {
@@ -2866,6 +3021,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 922,
           "sizeClass": "tiny"
         },
         {
@@ -2879,6 +3035,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 140,
           "sizeClass": "tiny"
         },
         {
@@ -2892,6 +3049,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 21286,
           "sizeClass": "tiny"
         },
         {
@@ -2905,6 +3063,7 @@
           "pipelineId": "ud-conllu-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile",
+          "resourceTextByteLength": 211,
           "sizeClass": "tiny"
         }
       ],
@@ -2913,7 +3072,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 11141522,
-      "outputChecksum": "sha256:d2ccb4a1bc3119d3624229a1717fdd0a8a54ec857859b0150bb1dddb35069954",
+      "outputChecksum": "sha256:d7a58d9d31e79fe1e4970365d8af0e8274b6a3b5e0404c104a0bcac0087230ab",
       "packageDir": "packages/textpacks/textpack-fr-unimorph-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
       "publishability": {
@@ -2934,6 +3093,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 210,
           "sizeClass": "tiny"
         },
         {
@@ -2947,6 +3107,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 21969003,
           "sizeClass": "small"
         },
         {
@@ -2960,6 +3121,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 21969003,
           "sizeClass": "small"
         },
         {
@@ -2973,6 +3135,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 1650,
           "sizeClass": "tiny"
         },
         {
@@ -2986,6 +3149,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 25167521,
           "sizeClass": "small"
         },
         {
@@ -2999,6 +3163,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 52,
           "sizeClass": "tiny"
         },
         {
@@ -3012,6 +3177,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 705,
           "sizeClass": "tiny"
         },
         {
@@ -3025,6 +3191,7 @@
           "pipelineId": "french-unimorph",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+          "resourceTextByteLength": 1242,
           "sizeClass": "tiny"
         }
       ],
@@ -3033,7 +3200,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 409021,
-      "outputChecksum": "sha256:970b24cb591f0f0145cfbfc18a552e4235dc3f4b0c289059853bc5dfcf2db8db",
+      "outputChecksum": "sha256:d7e3894f7691fa1f609bba2d7a1e2546414ec3aeeb2412e07cb171b3986de9d9",
       "packageDir": "packages/textpacks/textpack-language-registry",
       "packageName": "@ismail-elkorchi/textpack-language-registry",
       "publishability": {
@@ -3054,6 +3221,7 @@
           "pipelineId": "iana-language-registry",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+          "resourceTextByteLength": 325,
           "sizeClass": "tiny"
         },
         {
@@ -3067,6 +3235,7 @@
           "pipelineId": "iana-language-registry",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+          "resourceTextByteLength": 408696,
           "sizeClass": "tiny"
         }
       ],
@@ -3075,7 +3244,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 200479,
-      "outputChecksum": "sha256:2a93c22789dea1d1ffba6e84913eb602097351c05da989952781c51dc05f6f59",
+      "outputChecksum": "sha256:7655a980467c044965eff4338ef30e32cd03c97859bbc8562351b0ee3204fe8e",
       "packageDir": "packages/textpacks/textpack-unicode-17",
       "packageName": "@ismail-elkorchi/textpack-unicode-17",
       "publishability": {
@@ -3096,6 +3265,7 @@
           "pipelineId": "unicode-17-core",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "resourceTextByteLength": 10002,
           "sizeClass": "tiny"
         },
         {
@@ -3109,6 +3279,7 @@
           "pipelineId": "unicode-17-core",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "resourceTextByteLength": 181,
           "sizeClass": "tiny"
         },
         {
@@ -3122,6 +3293,7 @@
           "pipelineId": "unicode-17-core",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "resourceTextByteLength": 28940,
           "sizeClass": "tiny"
         },
         {
@@ -3135,6 +3307,7 @@
           "pipelineId": "unicode-17-core",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+          "resourceTextByteLength": 161356,
           "sizeClass": "tiny"
         }
       ],
@@ -3143,7 +3316,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 190999,
-      "outputChecksum": "sha256:941beca63213aa35bb232fb5516704ef8da09ad737af72c7bea807025e8d50a4",
+      "outputChecksum": "sha256:bbe7da60e524e8f6cc49bc602a86df9b703ea61683491a534a0971c816d21e38",
       "packageDir": "packages/textpacks/textpack-wikidata-ar",
       "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
       "publishability": {
@@ -3164,6 +3337,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+          "resourceTextByteLength": 176372,
           "sizeClass": "tiny"
         },
         {
@@ -3177,6 +3351,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+          "resourceTextByteLength": 601528,
           "sizeClass": "tiny"
         },
         {
@@ -3190,6 +3365,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+          "resourceTextByteLength": 523,
           "sizeClass": "tiny"
         },
         {
@@ -3203,6 +3379,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+          "resourceTextByteLength": 968,
           "sizeClass": "tiny"
         },
         {
@@ -3216,6 +3393,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+          "resourceTextByteLength": 2789,
           "sizeClass": "tiny"
         },
         {
@@ -3229,6 +3407,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+          "resourceTextByteLength": 181451,
           "sizeClass": "tiny"
         }
       ],
@@ -3237,7 +3416,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 629013,
-      "outputChecksum": "sha256:0ca20346f0f7494b775c794eb20f0f69b597250d4c5986c47f6e1a57c4770f59",
+      "outputChecksum": "sha256:419c7bc5357575b407bd942e8e677c118c9e5b9fdc4e12d9edf995ae83278da3",
       "packageDir": "packages/textpacks/textpack-wikidata-en",
       "packageName": "@ismail-elkorchi/textpack-wikidata-en",
       "publishability": {
@@ -3258,6 +3437,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+          "resourceTextByteLength": 507718,
           "sizeClass": "tiny"
         },
         {
@@ -3271,6 +3451,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+          "resourceTextByteLength": 1207332,
           "sizeClass": "tiny"
         },
         {
@@ -3284,6 +3465,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+          "resourceTextByteLength": 528,
           "sizeClass": "tiny"
         },
         {
@@ -3297,6 +3479,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+          "resourceTextByteLength": 972,
           "sizeClass": "tiny"
         },
         {
@@ -3310,6 +3493,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+          "resourceTextByteLength": 2794,
           "sizeClass": "tiny"
         },
         {
@@ -3323,6 +3507,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+          "resourceTextByteLength": 364007,
           "sizeClass": "tiny"
         }
       ],
@@ -3331,7 +3516,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 430652,
-      "outputChecksum": "sha256:6d0dbe533e9664f9cda25aaba6d2be1de5ea3f072a25e0051f24ce68fac08efa",
+      "outputChecksum": "sha256:327aa7d080f4acc921735ca59e69554347ac1d1a6b1789c5a8b2ef12c65af1a0",
       "packageDir": "packages/textpacks/textpack-wikidata-fr",
       "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
       "publishability": {
@@ -3352,6 +3537,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+          "resourceTextByteLength": 339445,
           "sizeClass": "tiny"
         },
         {
@@ -3365,6 +3551,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+          "resourceTextByteLength": 1164023,
           "sizeClass": "tiny"
         },
         {
@@ -3378,6 +3565,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+          "resourceTextByteLength": 523,
           "sizeClass": "tiny"
         },
         {
@@ -3391,6 +3579,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+          "resourceTextByteLength": 969,
           "sizeClass": "tiny"
         },
         {
@@ -3404,6 +3593,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+          "resourceTextByteLength": 2789,
           "sizeClass": "tiny"
         },
         {
@@ -3417,6 +3607,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+          "resourceTextByteLength": 581521,
           "sizeClass": "tiny"
         }
       ],
@@ -3425,7 +3616,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 48460654,
-      "outputChecksum": "sha256:ec3f77a6a62944e498a7fd6c681437c28b7a3fd539196ae7627c220ab28dd5ed",
+      "outputChecksum": "sha256:71b9b7812f0d671db30de09c4b54d79e6bd15d3d52cd7e1f0d699df14a87dd4d",
       "packageDir": "packages/textpacks/textpack-wordnet-ar",
       "packageName": "@ismail-elkorchi/textpack-wordnet-ar",
       "publishability": {
@@ -3446,6 +3637,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 518,
           "sizeClass": "tiny"
         },
         {
@@ -3459,6 +3651,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 5814865,
           "sizeClass": "medium"
         },
         {
@@ -3472,6 +3665,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 292,
           "sizeClass": "tiny"
         },
         {
@@ -3485,6 +3679,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 1207,
           "sizeClass": "tiny"
         },
         {
@@ -3498,6 +3693,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 876,
           "sizeClass": "tiny"
         },
         {
@@ -3511,6 +3707,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 14510261,
           "sizeClass": "medium"
         },
         {
@@ -3524,6 +3721,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 14091110,
           "sizeClass": "medium"
         },
         {
@@ -3537,6 +3735,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+          "resourceTextByteLength": 14041525,
           "sizeClass": "medium"
         }
       ],
@@ -3545,7 +3744,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 51491550,
-      "outputChecksum": "sha256:f459353d832d64b3e86e85fae65b593f506ef7400a99545c78c98ba4df994629",
+      "outputChecksum": "sha256:c7c9561473e9be98bd0cc8777846ec466fff1e078bff727fc807dad9bdb47453",
       "packageDir": "packages/textpacks/textpack-wordnet-en",
       "packageName": "@ismail-elkorchi/textpack-wordnet-en",
       "publishability": {
@@ -3566,6 +3765,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 518,
           "sizeClass": "tiny"
         },
         {
@@ -3579,6 +3779,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 4202454,
           "sizeClass": "small"
         },
         {
@@ -3592,6 +3793,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 292,
           "sizeClass": "tiny"
         },
         {
@@ -3605,6 +3807,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 1401,
           "sizeClass": "tiny"
         },
         {
@@ -3618,6 +3821,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 876,
           "sizeClass": "tiny"
         },
         {
@@ -3631,6 +3835,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 19570884,
           "sizeClass": "medium"
         },
         {
@@ -3644,6 +3849,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 13790166,
           "sizeClass": "medium"
         },
         {
@@ -3657,6 +3863,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+          "resourceTextByteLength": 13924959,
           "sizeClass": "medium"
         }
       ],

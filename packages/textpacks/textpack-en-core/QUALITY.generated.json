@@ -72,6 +72,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 97551,
       "sizeClass": "tiny"
     },
     {
@@ -85,6 +86,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 1397,
       "sizeClass": "tiny"
     },
     {
@@ -98,6 +100,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 8294,
       "sizeClass": "tiny"
     },
     {
@@ -111,6 +114,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 1069,
       "sizeClass": "tiny"
     },
     {
@@ -124,6 +128,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 5095,
       "sizeClass": "tiny"
     },
     {
@@ -137,6 +142,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 20036,
       "sizeClass": "tiny"
     },
     {
@@ -150,6 +156,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 1163,
       "sizeClass": "tiny"
     },
     {
@@ -163,6 +170,7 @@
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "resourceTextByteLength": 1479,
       "sizeClass": "tiny"
     }
   ],

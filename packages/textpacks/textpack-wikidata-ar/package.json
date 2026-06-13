@@ -27,7 +27,12 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/wikidata-ar.entities.tsv.gz.b64",
+		"resources/wikidata-ar.aliases.tsv.gz.b64",
+		"resources/wikidata-ar.relations.tsv.gz.b64",
+		"resources/wikidata-ar.kb.json",
+		"resources/wikidata-ar.quality.json",
+		"resources/wikidata-ar.quality-profile.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

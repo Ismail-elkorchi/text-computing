@@ -84,6 +84,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 1678076,
       "sizeClass": "small"
     },
     {
@@ -97,6 +98,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 2081,
       "sizeClass": "tiny"
     },
     {
@@ -110,6 +112,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 852,
       "sizeClass": "tiny"
     },
     {
@@ -123,6 +126,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 3245,
       "sizeClass": "tiny"
     },
     {
@@ -136,6 +140,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 961,
       "sizeClass": "tiny"
     },
     {
@@ -149,6 +154,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 932,
       "sizeClass": "tiny"
     },
     {
@@ -162,6 +168,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 133,
       "sizeClass": "tiny"
     },
     {
@@ -175,6 +182,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 23466,
       "sizeClass": "tiny"
     },
     {
@@ -188,6 +196,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile",
+      "resourceTextByteLength": 789,
       "sizeClass": "tiny"
     }
   ],

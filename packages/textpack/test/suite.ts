@@ -363,12 +363,22 @@ assert.equal(
 const loadedFromDefault = await loadPack({
 	default: {
 		manifest,
-		resources: async () => resources,
+		resources,
 	},
 });
 assert.equal(
 	getResource<string>(loadedFromDefault, "lexicon-en-test"),
 	resources["lexicon-en-test"],
+);
+await assert.rejects(
+	() =>
+		loadPack({
+			default: {
+				manifest,
+				resources: async () => resources,
+			},
+		}),
+	/resources must be a plain object/,
 );
 await assert.rejects(() => loadPack({}), /manifest and resources/);
 
@@ -376,6 +386,7 @@ const frCoreManifest: TextPackManifest = {
 	...manifest,
 	id: "pack:fr-core",
 	name: "French Core",
+	version: "0.1.0",
 	packageName: "@ismail-elkorchi/textpack-fr-core",
 	targets: {
 		languages: ["fr"],
@@ -403,6 +414,7 @@ const frHistoricalManifest: TextPackManifest = {
 	...manifest,
 	id: "pack:fr-historical",
 	name: "French Historical",
+	version: "0.1.0",
 	packageName: "@ismail-elkorchi/textpack-fr-historical",
 	targets: {
 		languages: ["fr"],
@@ -526,6 +538,30 @@ await assert.rejects(
 			},
 		}),
 	/Required textpack component @ismail-elkorchi\/textpack-fr-core could not be resolved: missing fixture/,
+);
+await assert.rejects(
+	() =>
+		resolvePackComponents(frComposite, {
+			resolveComponent: async () => ({
+				manifest: { ...frCoreManifest, version: "0.2.0" },
+				resources: {
+					"lexicon-fr-core": "texte\tlemma=texte\tpos=NOUN\n",
+				},
+			}),
+		}),
+	/does not satisfy declared range 0\.1\.0/,
+);
+await assert.rejects(
+	() =>
+		resolvePackComponents(frComposite, {
+			resolveComponent: async () => ({
+				manifest: { ...frCoreManifest, version: "0.1.0-beta.1" },
+				resources: {
+					"lexicon-fr-core": "texte\tlemma=texte\tpos=NOUN\n",
+				},
+			}),
+		}),
+	/does not satisfy declared range 0\.1\.0/,
 );
 
 const overlayManifest: TextPackManifest = {

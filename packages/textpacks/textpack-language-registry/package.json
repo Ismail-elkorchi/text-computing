@@ -27,7 +27,8 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/bcp47.language-subtags.tsv",
+		"resources/bcp47.language-registry.summary.json",
 		".textpack-generated.json",
 		"licenses",
 		"LICENSE.generated.md",

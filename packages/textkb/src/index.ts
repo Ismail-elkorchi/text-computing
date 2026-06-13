@@ -80,8 +80,10 @@ export {
 } from "./internal/core.js";
 export type {
 	WordNetLexicalEntryRecord,
+	WordNetPackOptions,
 	WordNetPackResources,
 	WordNetRelationRecord,
+	WordNetResourceIds,
 	WordNetSenseRecord,
 	WordNetSynsetRecord,
 } from "./wordnet/mod.js";

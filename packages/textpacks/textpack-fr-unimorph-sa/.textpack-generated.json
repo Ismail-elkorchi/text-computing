@@ -33,7 +33,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:d2ccb4a1bc3119d3624229a1717fdd0a8a54ec857859b0150bb1dddb35069954",
+  "outputChecksum": "sha256:d7a58d9d31e79fe1e4970365d8af0e8274b6a3b5e0404c104a0bcac0087230ab",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
   "packageVersion": "0.1.0",

@@ -193,6 +193,15 @@ function isRecord(value) {
 	return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+function isFileBackedResourceValue(value) {
+	return (
+		isRecord(value) &&
+		value.kind === "file-backed-resource" &&
+		typeof value.path === "string" &&
+		typeof value.checksum === "string"
+	);
+}
+
 function sourceIdFromReportEntry(entry) {
 	if (typeof entry === "string") return entry;
 	if (!isRecord(entry)) return undefined;
@@ -319,6 +328,9 @@ function assertFamilyCount(packageName, family, minimumCount, label) {
 
 function assertFirstPayload(packageName, family, payloadType, label) {
 	const payload = family.resources[0]?.payload;
+	if (payload?.type === "raw" && isFileBackedResourceValue(payload.value)) {
+		return;
+	}
 	expect(
 		payload?.type === payloadType,
 		`${packageName} ${label} adapter must parse ${payloadType} payloads.`,
@@ -1204,9 +1216,18 @@ for (const packDir of packDirs) {
 		}
 	} else {
 		expect(
-			packageJson.files.includes("resources"),
-			`${packageJson.name} files must include resources when resources are declared.`,
+			!packageJson.files.includes("resources"),
+			`${packageJson.name} must list exact file-backed resources instead of publishing the whole resources directory.`,
 		);
+		for (const resourceFile of packageJson.files.filter((entry) =>
+			entry.startsWith("resources/"),
+		)) {
+			assertPackageRelativePath(resourceFile, `${packageJson.name} files entry`);
+			expect(
+				await fileExists(`${packDir}/${resourceFile}`),
+				`${packageJson.name} files entry ${resourceFile} must exist.`,
+			);
+		}
 	}
 	for (const generatedFile of GENERATED_PACKAGE_FILES) {
 		expect(
@@ -1271,6 +1292,10 @@ for (const packDir of packDirs) {
 			);
 			const relativePath = `${packDir}/${resource.path}`;
 			expect(
+				packageJson.files.includes(resource.path),
+				`${manifest.packageName} package files must include manifest resource ${resource.path}.`,
+			);
+			expect(
 				await fileExists(relativePath),
 				`${manifest.packageName} missing resource ${resource.path}.`,
 			);
@@ -1311,9 +1336,9 @@ for (const packDir of packDirs) {
 		}
 	}
 	const evaluationRecordIds = new Set();
-		for (const record of evaluationReport.records) {
-			expect(
-				validateEvaluationRecord(record),
+	for (const record of evaluationReport.records) {
+		expect(
+			validateEvaluationRecord(record),
 			`${packageJson.name} evaluation record failed ${EVALUATION_RECORD_SCHEMA_PATH}.`,
 			validateEvaluationRecord.errors,
 		);
@@ -1331,24 +1356,24 @@ for (const packDir of packDirs) {
 				resourceIds.has(resourceId),
 				`${packageJson.name} evaluation record ${record.recordId} references unknown resource ${resourceId}.`,
 			);
-			}
 		}
-		if (isFeatureLanguageComposite(manifest)) {
-			const passingSlots = new Set(
-				evaluationReport.records
-					.filter((record) => record.result === "pass")
-					.map((record) => record.capabilitySlot),
+	}
+	if (isFeatureLanguageComposite(manifest)) {
+		const passingSlots = new Set(
+			evaluationReport.records
+				.filter((record) => record.result === "pass")
+				.map((record) => record.capabilitySlot),
+		);
+		for (const slot of EXPECTED_LANGUAGE_COMPOSITE_SLOTS) {
+			expect(
+				passingSlots.has(slot),
+				`${packageJson.name} feature language composite slot ${slot} must have passing generated evaluation evidence.`,
 			);
-			for (const slot of EXPECTED_LANGUAGE_COMPOSITE_SLOTS) {
-				expect(
-					passingSlots.has(slot),
-					`${packageJson.name} feature language composite slot ${slot} must have passing generated evaluation evidence.`,
-				);
-			}
 		}
-		expect(
-			JSON.stringify(sorted([...evaluationRecordIds])) ===
-				JSON.stringify(sorted(coverageReport.evaluationRecordIds)),
+	}
+	expect(
+		JSON.stringify(sorted([...evaluationRecordIds])) ===
+			JSON.stringify(sorted(coverageReport.evaluationRecordIds)),
 		`${packageJson.name} coverage evaluationRecordIds must match EVALUATION.generated.json.`,
 	);
 	if (evaluationRecordIds.size === 0) {
@@ -1553,10 +1578,11 @@ for (const packDir of packDirs) {
 				`${packageJson.name} must export loadFrenchShareAlike.`,
 			);
 		}
-		const builtResources =
-			typeof builtPack.resources === "function"
-				? await builtPack.resources()
-				: builtPack.resources;
+		const builtResources = builtPack.resources;
+		expect(
+			isRecord(builtResources),
+			`${packageJson.name} resources export must be a plain resource map.`,
+		);
 		const resourceKeys = Object.keys(builtResources);
 		expect(
 			JSON.stringify(sorted(resourceKeys)) ===
@@ -1564,9 +1590,23 @@ for (const packDir of packDirs) {
 			`${packageJson.name} built resource map keys must match manifest resource ids.`,
 		);
 		for (const resourceId of resourceIds) {
+			const resource = manifest.resources.find(
+				(candidate) => candidate.id === resourceId,
+			);
 			expect(
 				builtResources[resourceId] !== undefined,
 				`${packageJson.name} built resources must include ${resourceId}.`,
+			);
+			const resourceValue = builtResources[resourceId];
+			expect(
+				isFileBackedResourceValue(resourceValue),
+				`${packageJson.name} built resource ${resourceId} must be file-backed.`,
+				resourceValue,
+			);
+			expect(
+				resourceValue.path === resource?.path,
+				`${packageJson.name} built resource ${resourceId} path must match manifest.`,
+				{ actual: resourceValue.path, expected: resource?.path },
 			);
 		}
 		if (textpackRuntime !== undefined) {

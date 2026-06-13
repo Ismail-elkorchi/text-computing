@@ -164,6 +164,45 @@ test("Open English WordNet textpack resources become a runtime knowledge base", 
 	assert.equal(querySemanticRelations(kb, { type: "hypernymy" }).length, 1);
 });
 
+test("WordNet textpack adapter discovers non-English resource families", () => {
+	const pack = {
+		manifest: {
+			resources: [
+				{ id: "wordnet-ar-lexical-entries", kind: "lexicon" as const },
+				{ id: "wordnet-ar-senses", kind: "knowledge-base" as const },
+				{ id: "wordnet-ar-synsets", kind: "knowledge-base" as const },
+				{ id: "wordnet-ar-relations", kind: "knowledge-base" as const },
+				{ id: "wordnet-ar-quality", kind: "quality-profile" as const },
+			],
+		},
+		resources: {
+			"wordnet-ar-lexical-entries": [
+				"entryId\tlemma\tpartOfSpeech",
+				"awn-kitab-n\tkitab\tn",
+			].join("\n"),
+			"wordnet-ar-senses": [
+				"senseId\tentryId\tlemma\tpartOfSpeech\tsynsetId\tsubcat",
+				"awn-kitab__1\tawn-kitab-n\tkitab\tn\tawn-synset-kitab\t",
+			].join("\n"),
+			"wordnet-ar-synsets": [
+				"synsetId\tili\tpartOfSpeech\tlexfile\tmembers\tdefinition\texampleCount",
+				"awn-synset-kitab\ti1\tn\tnoun.communication\tawn-kitab-n\tbook\t0",
+			].join("\n"),
+			"wordnet-ar-relations": [
+				"scope\tsourceId\trelType\ttargetId",
+				"synset\tawn-synset-kitab\thypernymy\tawn-synset-object",
+			].join("\n"),
+			"wordnet-ar-quality": '{"acceptedRecords":4}',
+		},
+	};
+	const resources = wordNetResourcesFromPack(pack);
+	assert.equal(resources.lexicalEntries[0]?.entryId, "awn-kitab-n");
+	assert.equal(resources.senses[0]?.synsetId, "awn-synset-kitab");
+	assert.equal(resources.synsets[0]?.members[0], "awn-kitab-n");
+	assert.equal(resources.relations[0]?.targetId, "awn-synset-object");
+	assert.equal(resources.quality.acceptedRecords, 4);
+});
+
 test("links entities terms and senses while preserving source annotations", () => {
 	const kb = fixtureKb();
 	const doc = fixtureDocument();

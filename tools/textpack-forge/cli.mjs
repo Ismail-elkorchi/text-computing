@@ -31,7 +31,6 @@ const SIZE_REPORT_PATH = "tools/textpack-forge/reports/size-report.json";
 const SNAPSHOT_DATA_DIR = "tools/textpack-forge/snapshots/data";
 const GENERATED_BY = "tools/textpack-forge";
 const BUILD_COMMAND = "node tools/textpack-forge/cli.mjs build";
-const INLINE_RESOURCE_BYTES_LIMIT = 500 * 1024;
 const GZIP_BASE64_RESOURCE_SUFFIX = ".gz.b64";
 const PACKAGE_REPORT_FILES = [
 	"LICENSE.generated.md",
@@ -8286,6 +8285,7 @@ async function collectResourcePayloads(packSpec, manifest, resourceSpecById) {
 				sourcePath: resourceSpec.resourceSpecId,
 				text: encodedResourceText(output),
 				resourceText: output.text,
+				resourceTextByteLength: Buffer.byteLength(output.text, "utf8"),
 				encoded: output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)
 					? "gzip-base64"
 					: "utf8",
@@ -8330,6 +8330,7 @@ function resourceStats(payloads) {
 			kind: payload.kind,
 			path: payload.path,
 			byteLength: payload.byteLength,
+			resourceTextByteLength: payload.resourceTextByteLength,
 			lineCount: payload.lineCount,
 			nonEmptyLineCount: payload.nonEmptyLineCount,
 			checksum: payload.checksum,
@@ -8589,12 +8590,9 @@ export default { manifest, resources, ${pack.loader.functionName} };
 `;
 }
 
-function inlineResourcesTs(payloads) {
+function resourcesTs(payloads) {
 	const entries = payloads
-		.map(
-			(payload) =>
-				`\t${JSON.stringify(payload.id)}: ${escapedPayloadString(payload.text)},`,
-		)
+		.map((payload) => `\t${JSON.stringify(payload.id)}: ${resourceMapValueTs(payload)},`)
 		.join("\n");
 	const body = entries.length === 0 ? "" : `\n${entries}\n`;
 	return `${generatedHeader()}import type { PackResourceMap } from "@ismail-elkorchi/textpack";
@@ -8604,77 +8602,19 @@ export const resources: PackResourceMap = {${body}} as const;
 `;
 }
 
-function fileBackedResourcesTs(payloads) {
-	const entries = payloads
-		.map(
-			(payload) =>
-				`\t\t${JSON.stringify(payload.id)}: await readResource(
-\t\t\t${JSON.stringify(payload.path.replace(/^resources\//u, ""))},
-\t\t\t${JSON.stringify(payload.encoded)},
-\t\t),`,
-		)
-		.join("\n");
-	const body = entries.length === 0 ? "" : `\n${entries}\n`;
-	return `${generatedHeader()}import { readFile } from "node:fs/promises";
-import { gunzipSync } from "node:zlib";
-import type { PackResourceMap } from "@ismail-elkorchi/textpack";
-
-const resourceRoot = new URL("../resources/", import.meta.url);
-
-async function readResource(
-\tresourcePath: string,
-\tencoding: "gzip-base64" | "utf8",
-): Promise<string> {
-\tconst text = await readFile(new URL(resourcePath, resourceRoot), "utf8");
-\tif (encoding === "utf8") return text;
-\treturn gunzipSync(Buffer.from(text.trim(), "base64")).toString("utf8");
-}
-
-export async function resources(): Promise<PackResourceMap> {
-\t// biome-ignore format: generated resource map preserves deterministic resource ordering.
-\treturn {${body}\t};
-}
-`;
-}
-
-function resourcesTs(payloads) {
-	const totalBytes = payloads.reduce(
-		(total, payload) => total + payload.byteLength,
-		0,
+function resourceMapValueTs(payload) {
+	return JSON.stringify(
+		sortJson({
+			kind: "file-backed-resource",
+			path: payload.path,
+			encoding: payload.encoded,
+			checksum: payload.checksum,
+			byteLength: payload.byteLength,
+			resourceTextByteLength: payload.resourceTextByteLength,
+			lineCount: payload.lineCount,
+			nonEmptyLineCount: payload.nonEmptyLineCount,
+		}),
 	);
-	if (totalBytes > INLINE_RESOURCE_BYTES_LIMIT) {
-		return fileBackedResourcesTs(payloads);
-	}
-	return inlineResourcesTs(payloads);
-}
-
-function escapedPayloadString(value) {
-	let literal = JSON.stringify(value);
-	for (const term of PAYLOAD_ESCAPE_TERMS) {
-		literal = literal.replace(term.pattern, (match) =>
-			[...match].map((character) => unicodeEscape(character)).join(""),
-		);
-	}
-	return literal;
-}
-
-const PAYLOAD_ESCAPE_TERMS = [
-	["b", "est"].join(""),
-	["b", "etter"].join(""),
-	["sup", "erior"].join(""),
-	["world", "-", "class"].join(""),
-	["world", " ", "class"].join(""),
-	["state", "-", "of", "-", "the", "-", "art"].join(""),
-	["state", " ", "of", " ", "the", " ", "art"].join(""),
-	["sur", "pass"].join(""),
-].map((term) => ({
-	pattern: new RegExp(term.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&"), "giu"),
-	term,
-}));
-
-function unicodeEscape(character) {
-	const hex = character.codePointAt(0)?.toString(16).padStart(4, "0");
-	return `\\u${hex}`;
 }
 
 function packageId(packageName) {
@@ -8977,7 +8917,7 @@ function concretePackageJson(pack) {
 		files: [
 			"dist",
 			"pack.manifest.json",
-			...(pack.manifest.resources.length === 0 ? [] : ["resources"]),
+			...pack.payloads.map((payload) => payload.path),
 			".textpack-generated.json",
 			...(pack.licenseEvidenceFiles.length === 0 ? [] : ["licenses"]),
 			"LICENSE.generated.md",
@@ -9124,16 +9064,21 @@ function concreteSmokeTest(pack) {
 import { manifest, resources } from "../dist/index.js";
 
 const packageName = ${JSON.stringify(pack.packageName)};
-const loadedResources =
-\ttypeof resources === "function" ? await resources() : resources;
 
 assert.equal(manifest.packageName, packageName);
-assert.equal(Object.keys(loadedResources).length, manifest.resources.length);
+assert.equal(typeof resources, "object");
+assert.equal(Object.keys(resources).length, manifest.resources.length);
 assert.ok(manifest.resources.length > 0);
 
 for (const resource of manifest.resources) {
-\tassert.equal(typeof loadedResources[resource.id], "string");
-\tassert.ok(loadedResources[resource.id].length > 0);
+\tconst value = resources[resource.id];
+\tassert.equal(typeof value, "object");
+\tassert.equal(value?.kind, "file-backed-resource");
+\tassert.equal(value?.path, resource.path);
+\tassert.equal(typeof value?.checksum, "string");
+\tassert.equal(typeof value?.byteLength, "number");
+\tassert.equal(typeof value?.encoding, "string");
+\tassert.equal(typeof value?.lineCount, "number");
 }
 `;
 }

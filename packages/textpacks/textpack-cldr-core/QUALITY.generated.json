@@ -51,6 +51,7 @@
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 192,
       "sizeClass": "tiny"
     },
     {
@@ -64,6 +65,7 @@
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 126509,
       "sizeClass": "tiny"
     },
     {
@@ -77,6 +79,7 @@
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 36386,
       "sizeClass": "tiny"
     },
     {
@@ -90,6 +93,7 @@
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 326,
       "sizeClass": "tiny"
     }
   ],

@@ -74,6 +74,7 @@
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "resourceTextByteLength": 91016,
       "sizeClass": "tiny"
     },
     {
@@ -87,6 +88,7 @@
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "resourceTextByteLength": 4600938,
       "sizeClass": "small"
     },
     {
@@ -100,6 +102,7 @@
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "resourceTextByteLength": 12965451,
       "sizeClass": "small"
     },
     {
@@ -113,6 +116,7 @@
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "resourceTextByteLength": 2298,
       "sizeClass": "tiny"
     },
     {
@@ -126,6 +130,7 @@
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "resourceTextByteLength": 1460,
       "sizeClass": "tiny"
     },
     {
@@ -139,6 +144,7 @@
       "pipelineId": "tatoeba-french-parallel-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts",
+      "resourceTextByteLength": 1804543,
       "sizeClass": "small"
     }
   ],

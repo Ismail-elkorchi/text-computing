@@ -71,6 +71,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 210,
       "sizeClass": "tiny"
     },
     {
@@ -84,6 +85,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 21969003,
       "sizeClass": "small"
     },
     {
@@ -97,6 +99,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 21969003,
       "sizeClass": "small"
     },
     {
@@ -110,6 +113,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 1650,
       "sizeClass": "tiny"
     },
     {
@@ -123,6 +127,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 25167521,
       "sizeClass": "small"
     },
     {
@@ -136,6 +141,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 52,
       "sizeClass": "tiny"
     },
     {
@@ -149,6 +155,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 705,
       "sizeClass": "tiny"
     },
     {
@@ -162,6 +169,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 1242,
       "sizeClass": "tiny"
     }
   ],

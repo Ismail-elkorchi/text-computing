@@ -64,6 +64,7 @@
       "pipelineId": "tatoeba-french-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 1115,
       "sizeClass": "tiny"
     },
     {
@@ -77,6 +78,7 @@
       "pipelineId": "tatoeba-french-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 899,
       "sizeClass": "tiny"
     },
     {
@@ -90,6 +92,7 @@
       "pipelineId": "tatoeba-french-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 1345,
       "sizeClass": "tiny"
     },
     {
@@ -103,6 +106,7 @@
       "pipelineId": "tatoeba-french-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 77091245,
       "sizeClass": "medium"
     }
   ],

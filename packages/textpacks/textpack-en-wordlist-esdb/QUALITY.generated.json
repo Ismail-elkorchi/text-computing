@@ -79,6 +79,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "resourceTextByteLength": 290,
       "sizeClass": "tiny"
     },
     {
@@ -92,6 +93,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "resourceTextByteLength": 20301511,
       "sizeClass": "small"
     },
     {
@@ -105,6 +107,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "resourceTextByteLength": 405,
       "sizeClass": "tiny"
     },
     {
@@ -118,6 +121,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "resourceTextByteLength": 762,
       "sizeClass": "tiny"
     },
     {
@@ -131,6 +135,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "resourceTextByteLength": 1075,
       "sizeClass": "tiny"
     },
     {
@@ -144,6 +149,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "resourceTextByteLength": 1288,
       "sizeClass": "tiny"
     }
   ],

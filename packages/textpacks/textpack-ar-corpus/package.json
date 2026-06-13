@@ -27,7 +27,10 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/tatoeba-ar.sentences.tsv.gz.b64",
+		"resources/tatoeba-ar.corpus.json",
+		"resources/tatoeba-ar.corpus-quality.json",
+		"resources/tatoeba-ar.corpus-quality-profile.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

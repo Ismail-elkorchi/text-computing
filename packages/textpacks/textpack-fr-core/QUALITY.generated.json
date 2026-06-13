@@ -68,6 +68,7 @@
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "resourceTextByteLength": 1397,
       "sizeClass": "tiny"
     },
     {
@@ -81,6 +82,7 @@
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "resourceTextByteLength": 777,
       "sizeClass": "tiny"
     },
     {
@@ -94,6 +96,7 @@
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "resourceTextByteLength": 5095,
       "sizeClass": "tiny"
     },
     {
@@ -107,6 +110,7 @@
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "resourceTextByteLength": 20036,
       "sizeClass": "tiny"
     },
     {
@@ -120,6 +124,7 @@
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "resourceTextByteLength": 1003,
       "sizeClass": "tiny"
     },
     {
@@ -133,6 +138,7 @@
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "resourceTextByteLength": 1098,
       "sizeClass": "tiny"
     }
   ],

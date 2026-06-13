@@ -35,7 +35,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:f459353d832d64b3e86e85fae65b593f506ef7400a99545c78c98ba4df994629",
+  "outputChecksum": "sha256:c7c9561473e9be98bd0cc8777846ec466fff1e078bff727fc807dad9bdb47453",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-wordnet-en",
   "packageVersion": "0.1.0",

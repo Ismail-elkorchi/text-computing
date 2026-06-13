@@ -27,7 +27,12 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/en.segmentation-boundary-properties.tsv",
+		"resources/en.segmentation.grapheme.json",
+		"resources/en.segmentation.word.json",
+		"resources/en.segmentation.sentence.json",
+		"resources/en.segmentation.quality.json",
+		"resources/en.segmentation.quality-profile.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

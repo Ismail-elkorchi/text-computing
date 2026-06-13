@@ -60,12 +60,24 @@ export interface WordNetPackResources {
 	readonly quality: Readonly<Record<string, unknown>>;
 }
 
-const RESOURCE_IDS = {
-	lexicalEntries: "wordnet-en-lexical-entries",
-	senses: "wordnet-en-senses",
-	synsets: "wordnet-en-synsets",
-	relations: "wordnet-en-relations",
-	quality: "wordnet-en-quality",
+export interface WordNetResourceIds {
+	readonly lexicalEntries: string;
+	readonly senses: string;
+	readonly synsets: string;
+	readonly relations: string;
+	readonly quality: string;
+}
+
+export interface WordNetPackOptions {
+	readonly resourceIds?: Partial<WordNetResourceIds>;
+}
+
+const RESOURCE_SUFFIXES = {
+	lexicalEntries: "-lexical-entries",
+	senses: "-senses",
+	synsets: "-synsets",
+	relations: "-relations",
+	quality: "-quality",
 } as const;
 
 function resourceText(pack: TextPackLike, resourceId: string): string {
@@ -84,6 +96,93 @@ function rows(text: string): readonly string[][] {
 	return body;
 }
 
+function resourceIds(pack: TextPackLike): readonly string[] {
+	return Object.freeze(
+		[
+			...new Set([
+				...pack.manifest.resources.map((resource) => resource.id),
+				...Object.keys(pack.resources),
+			]),
+		].sort((left, right) => left.localeCompare(right)),
+	);
+}
+
+function requiredResourceId(
+	pack: TextPackLike,
+	suffix: string,
+	explicit: string | undefined,
+): string {
+	if (explicit !== undefined) return explicit;
+	const matches = resourceIds(pack).filter((id) => id.endsWith(suffix));
+	if (matches.length === 1) return matches[0] ?? "";
+	if (matches.length === 0)
+		throw new TypeError(`textpack WordNet resource is missing: *${suffix}`);
+	throw new TypeError(
+		`textpack WordNet resource suffix *${suffix} is ambiguous: ${matches.join(", ")}`,
+	);
+}
+
+function inferResourcePrefix(
+	resourceIds: Partial<WordNetResourceIds>,
+): string | undefined {
+	for (const [key, suffix] of Object.entries(RESOURCE_SUFFIXES) as readonly [
+		keyof WordNetResourceIds,
+		string,
+	][]) {
+		const id = resourceIds[key];
+		if (id?.endsWith(suffix)) {
+			return id.slice(0, -suffix.length);
+		}
+	}
+	return undefined;
+}
+
+function resolveWordNetResourceIds(
+	pack: TextPackLike,
+	overrides: Partial<WordNetResourceIds> = {},
+): WordNetResourceIds {
+	const prefix = inferResourcePrefix(overrides);
+	if (prefix !== undefined) {
+		return Object.freeze({
+			lexicalEntries:
+				overrides.lexicalEntries ??
+				`${prefix}${RESOURCE_SUFFIXES.lexicalEntries}`,
+			senses: overrides.senses ?? `${prefix}${RESOURCE_SUFFIXES.senses}`,
+			synsets: overrides.synsets ?? `${prefix}${RESOURCE_SUFFIXES.synsets}`,
+			relations:
+				overrides.relations ?? `${prefix}${RESOURCE_SUFFIXES.relations}`,
+			quality: overrides.quality ?? `${prefix}${RESOURCE_SUFFIXES.quality}`,
+		});
+	}
+	return Object.freeze({
+		lexicalEntries: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.lexicalEntries,
+			overrides.lexicalEntries,
+		),
+		senses: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.senses,
+			overrides.senses,
+		),
+		synsets: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.synsets,
+			overrides.synsets,
+		),
+		relations: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.relations,
+			overrides.relations,
+		),
+		quality: requiredResourceId(
+			pack,
+			RESOURCE_SUFFIXES.quality,
+			overrides.quality,
+		),
+	});
+}
+
 function optional(value: string | undefined): string | undefined {
 	if (value === undefined || value.length === 0) return undefined;
 	return value;
@@ -97,13 +196,14 @@ function metadata(record: Readonly<Record<string, unknown>>): JsonObject {
 
 export function wordNetResourcesFromPack(
 	pack: TextPackLike,
+	options: WordNetPackOptions = {},
 ): WordNetPackResources {
-	const lexicalEntries = rows(
-		resourceText(pack, RESOURCE_IDS.lexicalEntries),
-	).map(([entryId = "", lemma = "", partOfSpeech = ""]) =>
-		Object.freeze({ entryId, lemma, partOfSpeech }),
+	const ids = resolveWordNetResourceIds(pack, options.resourceIds);
+	const lexicalEntries = rows(resourceText(pack, ids.lexicalEntries)).map(
+		([entryId = "", lemma = "", partOfSpeech = ""]) =>
+			Object.freeze({ entryId, lemma, partOfSpeech }),
 	);
-	const senses = rows(resourceText(pack, RESOURCE_IDS.senses)).map(
+	const senses = rows(resourceText(pack, ids.senses)).map(
 		([
 			senseId = "",
 			entryId = "",
@@ -121,7 +221,7 @@ export function wordNetResourcesFromPack(
 				...(optional(subcat) === undefined ? {} : { subcat }),
 			}),
 	);
-	const synsets = rows(resourceText(pack, RESOURCE_IDS.synsets)).map(
+	const synsets = rows(resourceText(pack, ids.synsets)).map(
 		([
 			synsetId = "",
 			ili = "",
@@ -143,7 +243,7 @@ export function wordNetResourcesFromPack(
 				exampleCount: Number(exampleCount),
 			}),
 	);
-	const relations = rows(resourceText(pack, RESOURCE_IDS.relations)).map(
+	const relations = rows(resourceText(pack, ids.relations)).map(
 		([scope = "synset", sourceId = "", relType = "", targetId = ""]) =>
 			Object.freeze({
 				scope: scope as WordNetRelationRecord["scope"],
@@ -158,10 +258,7 @@ export function wordNetResourcesFromPack(
 		synsets: Object.freeze(synsets),
 		relations: Object.freeze(relations),
 		quality: Object.freeze(
-			JSON.parse(resourceText(pack, RESOURCE_IDS.quality)) as Record<
-				string,
-				unknown
-			>,
+			JSON.parse(resourceText(pack, ids.quality)) as Record<string, unknown>,
 		),
 	});
 }

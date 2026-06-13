@@ -27,7 +27,12 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/fr.core.language-profile.json",
+		"resources/fr.core.orthography.tsv",
+		"resources/fr.core.punctuation.tsv",
+		"resources/fr.core.basic-segmentation.json",
+		"resources/fr.core.quality.json",
+		"resources/fr.core.quality-profile.json",
 		".textpack-generated.json",
 		"licenses",
 		"LICENSE.generated.md",

@@ -27,7 +27,10 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/cldr-48.likely-subtags.tsv",
+		"resources/cldr-48.locale-aliases.tsv",
+		"resources/cldr-48.script-data.tsv",
+		"resources/cldr-48.core.summary.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

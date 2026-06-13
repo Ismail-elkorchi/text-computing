@@ -47,6 +47,7 @@
       "pipelineId": "iana-language-registry",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "resourceTextByteLength": 325,
       "sizeClass": "tiny"
     },
     {
@@ -60,6 +61,7 @@
       "pipelineId": "iana-language-registry",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "resourceTextByteLength": 408696,
       "sizeClass": "tiny"
     }
   ],

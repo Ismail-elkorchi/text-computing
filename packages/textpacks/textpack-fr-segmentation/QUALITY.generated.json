@@ -78,6 +78,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 1432,
       "sizeClass": "tiny"
     },
     {
@@ -91,6 +92,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 2136,
       "sizeClass": "tiny"
     },
     {
@@ -104,6 +106,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 1322,
       "sizeClass": "tiny"
     },
     {
@@ -117,6 +120,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 94,
       "sizeClass": "tiny"
     },
     {
@@ -130,6 +134,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 531,
       "sizeClass": "tiny"
     },
     {
@@ -143,6 +148,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 8481,
       "sizeClass": "tiny"
     },
     {
@@ -156,6 +162,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 2138,
       "sizeClass": "tiny"
     },
     {
@@ -169,6 +176,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 2016,
       "sizeClass": "tiny"
     },
     {
@@ -182,6 +190,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 1441,
       "sizeClass": "tiny"
     },
     {
@@ -195,6 +204,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 2263,
       "sizeClass": "tiny"
     },
     {
@@ -208,6 +218,7 @@
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "resourceTextByteLength": 1555,
       "sizeClass": "tiny"
     }
   ],

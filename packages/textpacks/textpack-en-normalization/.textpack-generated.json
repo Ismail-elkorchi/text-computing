@@ -29,7 +29,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:0cfa5c7225b7286cb0b4fa33bf8acdc8a23a00a3d8e46ad0ed590cde050fee1f",
+  "outputChecksum": "sha256:104f1f2cf9a8da0c519a449a64a38f50d0b5743d5d1e9dcaf83360077aa43109",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-en-normalization",
   "packageVersion": "0.1.0",

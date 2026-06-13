@@ -27,7 +27,12 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/tatoeba-fr.parallel-ara.tsv.gz.b64",
+		"resources/tatoeba-fr.parallel-deu.tsv.gz.b64",
+		"resources/tatoeba-fr.parallel-eng.tsv.gz.b64",
+		"resources/tatoeba-fr.parallel-spa.tsv.gz.b64",
+		"resources/tatoeba-fr.parallel-quality.json",
+		"resources/tatoeba-fr.parallel-quality-profile.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

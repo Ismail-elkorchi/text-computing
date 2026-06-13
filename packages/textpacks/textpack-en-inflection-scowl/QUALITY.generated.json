@@ -83,6 +83,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 33487594,
       "sizeClass": "medium"
     },
     {
@@ -96,6 +97,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 412,
       "sizeClass": "tiny"
     },
     {
@@ -109,6 +111,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 1856,
       "sizeClass": "tiny"
     },
     {
@@ -122,6 +125,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 842,
       "sizeClass": "tiny"
     },
     {
@@ -135,6 +139,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 1079,
       "sizeClass": "tiny"
     },
     {
@@ -148,6 +153,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 22622235,
       "sizeClass": "small"
     },
     {
@@ -161,6 +167,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 22622235,
       "sizeClass": "small"
     },
     {
@@ -174,6 +181,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 1953,
       "sizeClass": "tiny"
     }
   ],

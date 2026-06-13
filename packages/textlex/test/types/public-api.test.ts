@@ -4,6 +4,7 @@ import type {
 	GazetteerEntry,
 	LexicalEntry,
 	PronunciationEntry,
+	TextPackLike,
 	TokenValue,
 } from "../../dist/index.js";
 import { buildLexicon } from "../../dist/index.js";
@@ -26,8 +27,18 @@ const pronunciation: PronunciationEntry = {
 	pronunciations: ["taɪpt"],
 	notation: "ipa",
 };
+const packLikeWithLanguageRegistry: TextPackLike = {
+	manifest: {
+		resources: [{ id: "bcp47-language-registry", kind: "language-registry" }],
+	},
+	resources: {},
+};
 
 assert.equal(buildLexicon([entry, gazetteer]).entries.length, 2);
 assert.equal(typeof token, "object");
 assert.equal(affix.kind, "suffix");
 assert.equal(pronunciation.notation, "ipa");
+assert.equal(
+	packLikeWithLanguageRegistry.manifest.resources[0]?.kind,
+	"language-registry",
+);

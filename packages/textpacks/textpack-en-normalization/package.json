@@ -27,7 +27,10 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/en.normalization-rules.tsv",
+		"resources/en.normalization.json",
+		"resources/en.normalization.quality.json",
+		"resources/en.normalization.quality-profile.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

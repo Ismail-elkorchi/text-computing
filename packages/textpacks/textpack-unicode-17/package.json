@@ -27,7 +27,10 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/unicode-17.blocks.tsv",
+		"resources/unicode-17.property-value-aliases.tsv",
+		"resources/unicode-17.scripts.tsv",
+		"resources/unicode-17.core.summary.json",
 		".textpack-generated.json",
 		"LICENSE.generated.md",
 		"NOTICE.generated.md",

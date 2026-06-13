@@ -83,13 +83,9 @@ function readModuleCandidate(module: unknown): PackModule {
 
 export async function loadPack(module: unknown): Promise<TextPack> {
 	const candidate = readModuleCandidate(module);
-	const resourceValue =
-		typeof candidate.resources === "function"
-			? await (candidate.resources as () => unknown | Promise<unknown>)()
-			: await candidate.resources;
 	return createPack(
 		validateManifest(candidate.manifest),
-		resourceValue as PackResourceMap,
+		candidate.resources as PackResourceMap,
 	);
 }
 

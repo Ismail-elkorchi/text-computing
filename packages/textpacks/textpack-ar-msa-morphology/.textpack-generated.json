@@ -35,7 +35,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:1c34c257279682cd7754d0c4a44e4c2c76336a7863f6086e35b57029d1e43b94",
+  "outputChecksum": "sha256:20a1335f038a45097c17edf62671cd87913e6991048b9cada6f281cab9e643ec",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
   "packageVersion": "0.1.0",

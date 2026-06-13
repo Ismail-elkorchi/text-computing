@@ -72,6 +72,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 518,
       "sizeClass": "tiny"
     },
     {
@@ -85,6 +86,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 5814865,
       "sizeClass": "medium"
     },
     {
@@ -98,6 +100,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 292,
       "sizeClass": "tiny"
     },
     {
@@ -111,6 +114,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 1207,
       "sizeClass": "tiny"
     },
     {
@@ -124,6 +128,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 876,
       "sizeClass": "tiny"
     },
     {
@@ -137,6 +142,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 14510261,
       "sizeClass": "medium"
     },
     {
@@ -150,6 +156,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 14091110,
       "sizeClass": "medium"
     },
     {
@@ -163,6 +170,7 @@
       "pipelineId": "arabic-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 14041525,
       "sizeClass": "medium"
     }
   ],

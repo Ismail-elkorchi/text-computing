@@ -68,6 +68,7 @@
       "pipelineId": "arabic-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 1397,
       "sizeClass": "tiny"
     },
     {
@@ -81,6 +82,7 @@
       "pipelineId": "arabic-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 791,
       "sizeClass": "tiny"
     },
     {
@@ -94,6 +96,7 @@
       "pipelineId": "arabic-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 7774,
       "sizeClass": "tiny"
     },
     {
@@ -107,6 +110,7 @@
       "pipelineId": "arabic-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 20036,
       "sizeClass": "tiny"
     },
     {
@@ -120,6 +124,7 @@
       "pipelineId": "arabic-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 985,
       "sizeClass": "tiny"
     },
     {
@@ -133,6 +138,7 @@
       "pipelineId": "arabic-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 1100,
       "sizeClass": "tiny"
     }
   ],

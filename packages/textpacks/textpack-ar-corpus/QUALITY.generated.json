@@ -64,6 +64,7 @@
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 1114,
       "sizeClass": "tiny"
     },
     {
@@ -77,6 +78,7 @@
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 895,
       "sizeClass": "tiny"
     },
     {
@@ -90,6 +92,7 @@
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 1344,
       "sizeClass": "tiny"
     },
     {
@@ -103,6 +106,7 @@
       "pipelineId": "tatoeba-arabic-corpus-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 7313057,
       "sizeClass": "small"
     }
   ],

@@ -51,6 +51,7 @@
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 10002,
       "sizeClass": "tiny"
     },
     {
@@ -64,6 +65,7 @@
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 181,
       "sizeClass": "tiny"
     },
     {
@@ -77,6 +79,7 @@
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 28940,
       "sizeClass": "tiny"
     },
     {
@@ -90,6 +93,7 @@
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 161356,
       "sizeClass": "tiny"
     }
   ],

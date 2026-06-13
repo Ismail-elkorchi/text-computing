@@ -63,6 +63,7 @@
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "resourceTextByteLength": 1532,
       "sizeClass": "tiny"
     },
     {
@@ -76,6 +77,7 @@
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "resourceTextByteLength": 825,
       "sizeClass": "tiny"
     },
     {
@@ -89,6 +91,7 @@
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "resourceTextByteLength": 1184,
       "sizeClass": "tiny"
     },
     {
@@ -102,6 +105,7 @@
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "resourceTextByteLength": 443,
       "sizeClass": "tiny"
     }
   ],

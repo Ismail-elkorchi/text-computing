@@ -85,6 +85,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 252024,
       "sizeClass": "tiny"
     },
     {
@@ -98,6 +99,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 34751,
       "sizeClass": "tiny"
     },
     {
@@ -111,6 +113,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 2252,
       "sizeClass": "tiny"
     },
     {
@@ -124,6 +127,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 109168048,
       "sizeClass": "medium"
     },
     {
@@ -137,6 +141,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 1216,
       "sizeClass": "tiny"
     },
     {
@@ -150,6 +155,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 86,
       "sizeClass": "tiny"
     },
     {
@@ -163,6 +169,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 10720,
       "sizeClass": "tiny"
     },
     {
@@ -176,6 +183,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 899,
       "sizeClass": "tiny"
     },
     {
@@ -189,6 +197,7 @@
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 1042,
       "sizeClass": "tiny"
     }
   ],

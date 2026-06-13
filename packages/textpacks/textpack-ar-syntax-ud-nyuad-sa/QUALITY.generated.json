@@ -86,6 +86,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 59041977,
       "sizeClass": "large"
     },
     {
@@ -99,6 +100,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 1176,
       "sizeClass": "tiny"
     },
     {
@@ -112,6 +114,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 495,
       "sizeClass": "tiny"
     },
     {
@@ -125,6 +128,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 2147,
       "sizeClass": "tiny"
     },
     {
@@ -138,6 +142,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 1066,
       "sizeClass": "tiny"
     },
     {
@@ -151,6 +156,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 925,
       "sizeClass": "tiny"
     },
     {
@@ -164,6 +170,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 143,
       "sizeClass": "tiny"
     },
     {
@@ -177,6 +184,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 172617,
       "sizeClass": "tiny"
     },
     {
@@ -190,6 +198,7 @@
       "pipelineId": "ud-conllu-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+      "resourceTextByteLength": 40222,
       "sizeClass": "tiny"
     }
   ],

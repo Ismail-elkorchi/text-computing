@@ -27,7 +27,12 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/esdb-2026.default-wordlists.tsv.gz.b64",
+		"resources/esdb-2026.default-profiles.tsv",
+		"resources/esdb-2026.lexicon.json",
+		"resources/esdb-2026.search-profile.json",
+		"resources/esdb-2026.quality.json",
+		"resources/esdb-2026.quality-profile.json",
 		".textpack-generated.json",
 		"licenses",
 		"LICENSE.generated.md",

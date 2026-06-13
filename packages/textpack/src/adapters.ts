@@ -255,10 +255,26 @@ function parseJsonPayload(value: unknown): TextPackJsonPayload {
 	});
 }
 
+function isFileBackedResource(value: unknown): boolean {
+	return (
+		value !== null &&
+		typeof value === "object" &&
+		!Array.isArray(value) &&
+		"kind" in value &&
+		value.kind === "file-backed-resource"
+	);
+}
+
 function resourcePayload(
 	resource: TextPackResource,
 	value: unknown,
 ): TextPackResourcePayload {
+	if (isFileBackedResource(value)) {
+		return Object.freeze({
+			type: "raw",
+			value,
+		});
+	}
 	const format = resource.format ?? "";
 	if (format.includes("tsv") || format.includes("tab-separated-values")) {
 		return parseTablePayload(resource, value);

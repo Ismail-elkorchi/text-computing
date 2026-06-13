@@ -27,7 +27,11 @@
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources",
+		"resources/ar.normalization-rules.tsv",
+		"resources/ar.normalization-observed-codepoints.tsv",
+		"resources/ar.normalization.json",
+		"resources/ar.normalization.quality.json",
+		"resources/ar.normalization.quality-profile.json",
 		".textpack-generated.json",
 		"licenses",
 		"LICENSE.generated.md",

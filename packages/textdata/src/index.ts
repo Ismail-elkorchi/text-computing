@@ -5,7 +5,9 @@ export type {
 	UdFeatureProfileRecord,
 	UdPosProfileRecord,
 	UdSentenceProfileRecord,
+	UdSyntaxPackOptions,
 	UdSyntaxPackResources,
+	UdSyntaxResourceIds,
 } from "./conllu/mod.js";
 export {
 	readUdAnnotationDatasetFromPack,

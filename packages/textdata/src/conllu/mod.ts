@@ -14,7 +14,9 @@ export type {
 	UdFeatureProfileRecord,
 	UdPosProfileRecord,
 	UdSentenceProfileRecord,
+	UdSyntaxPackOptions,
 	UdSyntaxPackResources,
+	UdSyntaxResourceIds,
 } from "./textpack.js";
 export {
 	readUdAnnotationDatasetFromPack,
