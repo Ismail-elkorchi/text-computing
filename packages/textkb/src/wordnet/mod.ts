@@ -1,4 +1,9 @@
 import {
+	isFileBackedResource,
+	openResourceText,
+	type TextPackResourceReader,
+} from "@ismail-elkorchi/textpack";
+import {
 	type AliasEntryInput,
 	type ConceptRecord,
 	createKnowledgeBase,
@@ -70,6 +75,7 @@ export interface WordNetResourceIds {
 
 export interface WordNetPackOptions {
 	readonly resourceIds?: Partial<WordNetResourceIds>;
+	readonly reader?: TextPackResourceReader;
 }
 
 const RESOURCE_SUFFIXES = {
@@ -86,6 +92,19 @@ function resourceText(pack: TextPackLike, resourceId: string): string {
 		throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
 	}
 	return value;
+}
+
+async function materializedResourceText(
+	pack: TextPackLike,
+	resourceId: string,
+	reader: TextPackResourceReader | undefined,
+): Promise<string> {
+	const value = pack.resources[resourceId];
+	if (typeof value === "string") return value;
+	if (isFileBackedResource(value)) {
+		return openResourceText(pack as never, resourceId, reader);
+	}
+	throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
 }
 
 function rows(text: string): readonly string[][] {
@@ -199,11 +218,27 @@ export function wordNetResourcesFromPack(
 	options: WordNetPackOptions = {},
 ): WordNetPackResources {
 	const ids = resolveWordNetResourceIds(pack, options.resourceIds);
-	const lexicalEntries = rows(resourceText(pack, ids.lexicalEntries)).map(
+	return wordNetResourcesFromTexts({
+		lexicalEntries: resourceText(pack, ids.lexicalEntries),
+		senses: resourceText(pack, ids.senses),
+		synsets: resourceText(pack, ids.synsets),
+		relations: resourceText(pack, ids.relations),
+		quality: resourceText(pack, ids.quality),
+	});
+}
+
+function wordNetResourcesFromTexts(texts: {
+	readonly lexicalEntries: string;
+	readonly senses: string;
+	readonly synsets: string;
+	readonly relations: string;
+	readonly quality: string;
+}): WordNetPackResources {
+	const lexicalEntries = rows(texts.lexicalEntries).map(
 		([entryId = "", lemma = "", partOfSpeech = ""]) =>
 			Object.freeze({ entryId, lemma, partOfSpeech }),
 	);
-	const senses = rows(resourceText(pack, ids.senses)).map(
+	const senses = rows(texts.senses).map(
 		([
 			senseId = "",
 			entryId = "",
@@ -221,7 +256,7 @@ export function wordNetResourcesFromPack(
 				...(optional(subcat) === undefined ? {} : { subcat }),
 			}),
 	);
-	const synsets = rows(resourceText(pack, ids.synsets)).map(
+	const synsets = rows(texts.synsets).map(
 		([
 			synsetId = "",
 			ili = "",
@@ -243,7 +278,7 @@ export function wordNetResourcesFromPack(
 				exampleCount: Number(exampleCount),
 			}),
 	);
-	const relations = rows(resourceText(pack, ids.relations)).map(
+	const relations = rows(texts.relations).map(
 		([scope = "synset", sourceId = "", relType = "", targetId = ""]) =>
 			Object.freeze({
 				scope: scope as WordNetRelationRecord["scope"],
@@ -258,13 +293,34 @@ export function wordNetResourcesFromPack(
 		synsets: Object.freeze(synsets),
 		relations: Object.freeze(relations),
 		quality: Object.freeze(
-			JSON.parse(resourceText(pack, ids.quality)) as Record<string, unknown>,
+			JSON.parse(texts.quality) as Record<string, unknown>,
 		),
 	});
 }
 
-export function openEnglishWordNetFromPack(pack: TextPackLike): KnowledgeBase {
-	const resources = wordNetResourcesFromPack(pack);
+export async function wordNetResourcesFromPackAsync(
+	pack: TextPackLike,
+	options: WordNetPackOptions = {},
+): Promise<WordNetPackResources> {
+	const ids = resolveWordNetResourceIds(pack, options.resourceIds);
+	const [lexicalEntries, senses, synsets, relations, quality] =
+		await Promise.all([
+			materializedResourceText(pack, ids.lexicalEntries, options.reader),
+			materializedResourceText(pack, ids.senses, options.reader),
+			materializedResourceText(pack, ids.synsets, options.reader),
+			materializedResourceText(pack, ids.relations, options.reader),
+			materializedResourceText(pack, ids.quality, options.reader),
+		]);
+	return wordNetResourcesFromTexts({
+		lexicalEntries,
+		senses,
+		synsets,
+		relations,
+		quality,
+	});
+}
+
+function openEnglishWordNet(resources: WordNetPackResources): KnowledgeBase {
 	const entryById = new Map(
 		resources.lexicalEntries.map((entry) => [entry.entryId, entry]),
 	);
@@ -328,4 +384,15 @@ export function openEnglishWordNetFromPack(pack: TextPackLike): KnowledgeBase {
 		},
 		allowExternalRelationEndpoints: true,
 	});
+}
+
+export function openEnglishWordNetFromPack(pack: TextPackLike): KnowledgeBase {
+	return openEnglishWordNet(wordNetResourcesFromPack(pack));
+}
+
+export async function openEnglishWordNetFromPackAsync(
+	pack: TextPackLike,
+	options: WordNetPackOptions = {},
+): Promise<KnowledgeBase> {
+	return openEnglishWordNet(await wordNetResourcesFromPackAsync(pack, options));
 }

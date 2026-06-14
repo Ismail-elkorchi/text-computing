@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { gzipSync } from "node:zlib";
 import {
 	capabilities,
 	composePacks,
@@ -11,6 +12,9 @@ import {
 	loadQualityProfile,
 	loadSegmenter,
 	loadSyntaxResources,
+	openResourceJson,
+	openResourceTable,
+	openResourceText,
 	type PackResourceMap,
 	resolvePackComponents,
 	resourceKinds,
@@ -18,6 +22,18 @@ import {
 	textPackModalities,
 	validateManifest,
 } from "../dist/index.js";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+function utf8ByteLength(text: string): number {
+	return new TextEncoder().encode(text).byteLength;
+}
 
 const manifest: TextPackManifest = {
 	schemaVersion: "1",
@@ -381,6 +397,120 @@ await assert.rejects(
 	/resources must be a plain object/,
 );
 await assert.rejects(() => loadPack({}), /manifest and resources/);
+
+const materializedTableText = "name\tvalue\nhello\tworld\n";
+const materializedJsonText = '{"ok":true}';
+const compressedTableText = "name\tvalue\nbonjour\tmonde\n";
+const compressedTableEncoded = `${gzipSync(
+	Buffer.from(compressedTableText, "utf8"),
+).toString("base64")}\n`;
+const materializedManifest: TextPackManifest = {
+	...manifest,
+	id: "pack:materialized",
+	name: "Materialized Pack",
+	packageName: "@ismail-elkorchi/textpack-materialized",
+	resources: [
+		{ id: "table-materialized", kind: "dataset", format: "tsv" },
+		{ id: "json-materialized", kind: "quality-profile", format: "json" },
+		{
+			id: "table-materialized-gzip",
+			kind: "dataset",
+			format: "tsv+gzip+base64",
+		},
+	],
+	capabilitySlots: [
+		{
+			slot: "corpus",
+			status: "task-supported",
+			resourceIds: ["table-materialized", "table-materialized-gzip"],
+		},
+		{
+			slot: "quality",
+			status: "task-supported",
+			resourceIds: ["json-materialized"],
+		},
+	],
+};
+const materializedPack = createPack(materializedManifest, {
+	"json-materialized": {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-materialized",
+		packageRoot: "file:///fixture/",
+		path: "resources/quality.json",
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(materializedJsonText)}`,
+		byteLength: utf8ByteLength(materializedJsonText),
+	},
+	"table-materialized": {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-materialized",
+		packageRoot: "file:///fixture/",
+		path: "resources/table.tsv",
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(materializedTableText)}`,
+		byteLength: utf8ByteLength(materializedTableText),
+		lineCount: 3,
+		nonEmptyLineCount: 2,
+	},
+	"table-materialized-gzip": {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-materialized",
+		packageRoot: "file:///fixture/",
+		path: "resources/table.tsv.gz.b64",
+		encoding: "gzip-base64",
+		checksum: `sha256:${await sha256(compressedTableEncoded)}`,
+		byteLength: utf8ByteLength(compressedTableEncoded),
+		resourceTextByteLength: utf8ByteLength(compressedTableText),
+	},
+});
+const materializedReader = {
+	readText({
+		descriptor,
+	}: {
+		readonly descriptor: { readonly path: string };
+	}): string {
+		if (descriptor.path === "resources/table.tsv") return materializedTableText;
+		if (descriptor.path === "resources/quality.json")
+			return materializedJsonText;
+		if (descriptor.path === "resources/table.tsv.gz.b64") {
+			return compressedTableEncoded;
+		}
+		throw new Error(`unexpected resource path ${descriptor.path}`);
+	},
+};
+assert.equal(
+	await openResourceText(
+		materializedPack,
+		"table-materialized",
+		materializedReader,
+	),
+	materializedTableText,
+);
+assert.deepEqual(
+	await openResourceJson(
+		materializedPack,
+		"json-materialized",
+		materializedReader,
+	),
+	{ ok: true },
+);
+assert.deepEqual(
+	(
+		await openResourceTable(
+			materializedPack,
+			"table-materialized-gzip",
+			materializedReader,
+		)
+	).rows[0],
+	{ name: "bonjour", value: "monde" },
+);
+await assert.rejects(
+	() =>
+		openResourceText(materializedPack, "table-materialized", {
+			readText: () => "name\tvalue\ncorrupt\trow\n",
+		}),
+	/byte length mismatch|checksum mismatch/,
+);
 
 const frCoreManifest: TextPackManifest = {
 	...manifest,

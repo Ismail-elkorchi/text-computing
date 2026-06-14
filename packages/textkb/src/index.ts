@@ -79,6 +79,15 @@ export {
 	traverseSemanticRelations,
 } from "./internal/core.js";
 export type {
+	WikidataAliasRecord,
+	WikidataEntityRecord,
+	WikidataPackOptions,
+	WikidataPackResources,
+	WikidataRelationRecord,
+	WikidataResourceIds,
+} from "./wikidata/mod.js";
+export { wikidataResourcesFromPack } from "./wikidata/mod.js";
+export type {
 	WordNetLexicalEntryRecord,
 	WordNetPackOptions,
 	WordNetPackResources,
@@ -89,5 +98,7 @@ export type {
 } from "./wordnet/mod.js";
 export {
 	openEnglishWordNetFromPack,
+	openEnglishWordNetFromPackAsync,
 	wordNetResourcesFromPack,
+	wordNetResourcesFromPackAsync,
 } from "./wordnet/mod.js";

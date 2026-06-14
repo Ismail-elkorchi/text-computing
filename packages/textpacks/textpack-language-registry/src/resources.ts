@@ -4,6 +4,6 @@ import type { PackResourceMap } from "@ismail-elkorchi/textpack";
 
 // biome-ignore format: generated resource map preserves deterministic payload ordering.
 export const resources: PackResourceMap = {
-	"bcp47-language-subtags": {"byteLength":408696,"checksum":"sha256:809f37eab10fcb63c513505fc9e21039739dda829b8612e7e9c6b84350722df7","encoding":"utf8","kind":"file-backed-resource","lineCount":9297,"nonEmptyLineCount":9296,"path":"resources/bcp47.language-subtags.tsv","resourceTextByteLength":408696},
-	"bcp47-language-registry-summary": {"byteLength":325,"checksum":"sha256:14cb57e1bccb04a5fe9f2a7dec407044348b2887cdd0bc9f48dfd59e70c0667d","encoding":"utf8","kind":"file-backed-resource","lineCount":17,"nonEmptyLineCount":16,"path":"resources/bcp47.language-registry.summary.json","resourceTextByteLength":325},
+	"bcp47-language-subtags": {"byteLength": 408696,"checksum": "sha256:809f37eab10fcb63c513505fc9e21039739dda829b8612e7e9c6b84350722df7","encoding": "utf8","kind": "file-backed-resource","lineCount": 9297,"nonEmptyLineCount": 9296,"packageName": "@ismail-elkorchi/textpack-language-registry","packageRoot": new URL("../", import.meta.url).href,"path": "resources/bcp47.language-subtags.tsv","resourceTextByteLength": 408696},
+	"bcp47-language-registry-summary": {"byteLength": 325,"checksum": "sha256:14cb57e1bccb04a5fe9f2a7dec407044348b2887cdd0bc9f48dfd59e70c0667d","encoding": "utf8","kind": "file-backed-resource","lineCount": 17,"nonEmptyLineCount": 16,"packageName": "@ismail-elkorchi/textpack-language-registry","packageRoot": new URL("../", import.meta.url).href,"path": "resources/bcp47.language-registry.summary.json","resourceTextByteLength": 325},
 } as const;

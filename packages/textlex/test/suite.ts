@@ -29,6 +29,7 @@ import {
 	hasTrieKey,
 	hasWord,
 	lexiconFromPack,
+	lexiconFromPackAsync,
 	lookup,
 	lookupAbbreviation,
 	lookupAffixes,
@@ -40,6 +41,42 @@ import {
 	parsePronunciationLexiconResource,
 	phraseLookup,
 } from "../dist/index.js";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-lex-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
+}
 
 const baseEntries = [
 	{
@@ -258,6 +295,32 @@ assert.equal(lexiconFromPack(pack, "lexicon-en").entries[0]?.id, "id:hello");
 assert.equal(
 	lexiconFromPack(pack, { kind: "stoplist" }).entries[0]?.forms[0],
 	"a",
+);
+
+const asyncLexiconText = "bonjour\tid:bonjour\nsalut\tid:salut\n";
+const asyncLexiconPack = {
+	manifest: {
+		resources: [{ id: "lexicon-fr", kind: "lexicon" as const }],
+	},
+	resources: {
+		"lexicon-fr": await fileBackedTextResource(
+			"resources/lexicon-fr.tsv",
+			asyncLexiconText,
+		),
+	},
+};
+const asyncLexicon = await lexiconFromPackAsync(
+	asyncLexiconPack,
+	"lexicon-fr",
+	{
+		reader: textResourceReader({
+			"resources/lexicon-fr.tsv": asyncLexiconText,
+		}),
+	},
+);
+assert.deepEqual(
+	asyncLexicon.entries.map((entry) => entry.id),
+	["id:bonjour", "id:salut"],
 );
 
 const camelPack = {

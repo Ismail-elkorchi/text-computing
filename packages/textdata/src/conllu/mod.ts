@@ -20,8 +20,11 @@ export type {
 } from "./textpack.js";
 export {
 	readUdAnnotationDatasetFromPack,
+	readUdAnnotationDatasetFromPackAsync,
 	udAnnotationRecordsFromPack,
+	udAnnotationRecordsFromPackAsync,
 	udSyntaxResourcesFromPack,
+	udSyntaxResourcesFromPackAsync,
 } from "./textpack.js";
 
 export async function readConlluDataset(

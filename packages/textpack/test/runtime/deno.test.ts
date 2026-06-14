@@ -1,6 +1,7 @@
 /// <reference lib="deno.ns" />
 
 import { createPack, getResource } from "../../dist/index.js";
+import { runFileBackedMaterializationSmoke } from "./file-backed-smoke.ts";
 
 Deno.test("textpack final API works in Deno", () => {
 	const manifest = {
@@ -22,4 +23,8 @@ Deno.test("textpack final API works in Deno", () => {
 	if (getResource(pack, "dataset-deno") !== "deno runtime") {
 		throw new Error("deno runtime smoke failed");
 	}
+});
+
+Deno.test("file-backed gzip textpack resources materialize in Deno", async () => {
+	await runFileBackedMaterializationSmoke("deno");
 });

@@ -35,7 +35,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:2d411aea39d3a5fd6a74f32c153db9b64bfe1980045594914b6b38ec998055ee",
+  "outputChecksum": "sha256:3939475538d0b8f4d12e28ee4095e86b4b286a4ca081d6503f7dc13788681348",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
   "packageVersion": "0.1.0",

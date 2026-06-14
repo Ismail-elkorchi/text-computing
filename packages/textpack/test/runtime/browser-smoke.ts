@@ -3,6 +3,7 @@ import {
 	getResource,
 	type TextPackManifest,
 } from "../../dist/index.js";
+import { runFileBackedMaterializationSmoke } from "./file-backed-smoke.ts";
 
 const manifest: TextPackManifest = {
 	schemaVersion: "1",
@@ -22,3 +23,5 @@ const pack = createPack(manifest, { "dataset-browser": "browser runtime" });
 if (getResource(pack, "dataset-browser") !== "browser runtime") {
 	throw new Error("browser runtime smoke failed");
 }
+
+await runFileBackedMaterializationSmoke("browser");

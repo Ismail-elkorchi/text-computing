@@ -1,4 +1,9 @@
-import type { TextPackLike } from "./types.js";
+import {
+	isFileBackedResource,
+	openResourceText,
+	type TextPackResourceReader,
+} from "@ismail-elkorchi/textpack";
+import type { ResourceMaterializationOptions, TextPackLike } from "./types.js";
 
 export interface CamelMorphFeature {
 	readonly feature: string;
@@ -72,6 +77,19 @@ function resourceText(pack: TextPackLike, resourceId: string): string {
 	return value;
 }
 
+async function materializedResourceText(
+	pack: TextPackLike,
+	resourceId: string,
+	reader: TextPackResourceReader | undefined,
+): Promise<string> {
+	const value = pack.resources[resourceId];
+	if (typeof value === "string") return value;
+	if (isFileBackedResource(value)) {
+		return openResourceText(pack as never, resourceId, reader);
+	}
+	throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
+}
+
 function nonEmptyRows(text: string): readonly string[][] {
 	const [header, ...rows] = text
 		.split(/\r?\n/u)
@@ -118,8 +136,15 @@ function freezeIndex<K extends string>(
 	return output;
 }
 
-export function camelMorphologyFromPack(pack: TextPackLike): CamelMorphology {
-	const features = nonEmptyRows(resourceText(pack, RESOURCE_IDS.features)).map(
+function camelMorphologyFromTexts(texts: {
+	readonly features: string;
+	readonly defaults: string;
+	readonly tokenizations: string;
+	readonly morphemes: string;
+	readonly compatibility: string;
+	readonly quality: string;
+}): CamelMorphology {
+	const features = nonEmptyRows(texts.features).map(
 		([feature = "", , values = ""]) =>
 			Object.freeze({
 				feature,
@@ -128,20 +153,17 @@ export function camelMorphologyFromPack(pack: TextPackLike): CamelMorphology {
 				),
 			}),
 	);
-	const defaults = nonEmptyRows(resourceText(pack, RESOURCE_IDS.defaults)).map(
+	const defaults = nonEmptyRows(texts.defaults).map(
 		([pos = "", feature = "", value = ""]) =>
 			Object.freeze({ pos, feature, value }),
 	);
-	const tokenizations = nonEmptyRows(
-		resourceText(pack, RESOURCE_IDS.tokenizations),
-	).map(([order = "0", field = ""]) =>
-		Object.freeze({ order: Number(order), field }),
+	const tokenizations = nonEmptyRows(texts.tokenizations).map(
+		([order = "0", field = ""]) =>
+			Object.freeze({ order: Number(order), field }),
 	);
 	const bySurface = new Map<string, CamelMorphMorpheme[]>();
 	const byCategory = new Map<string, CamelMorphMorpheme[]>();
-	const morphemes = nonEmptyRows(
-		resourceText(pack, RESOURCE_IDS.morphemes),
-	).map((row) => {
+	const morphemes = nonEmptyRows(texts.morphemes).map((row) => {
 		const pos = optional(row[3]);
 		const lex = optional(row[4]);
 		const diac = optional(row[5]);
@@ -180,18 +202,15 @@ export function camelMorphologyFromPack(pack: TextPackLike): CamelMorphology {
 		appendIndex(byCategory, morpheme.category, morpheme);
 		return morpheme;
 	});
-	const compatibility = nonEmptyRows(
-		resourceText(pack, RESOURCE_IDS.compatibility),
-	).map(([table = "AB", leftCategory = "", rightCategory = ""]) =>
-		Object.freeze({
-			table: table as CamelMorphCompatibility["table"],
-			leftCategory,
-			rightCategory,
-		}),
+	const compatibility = nonEmptyRows(texts.compatibility).map(
+		([table = "AB", leftCategory = "", rightCategory = ""]) =>
+			Object.freeze({
+				table: table as CamelMorphCompatibility["table"],
+				leftCategory,
+				rightCategory,
+			}),
 	);
-	const quality = JSON.parse(
-		resourceText(pack, RESOURCE_IDS.quality),
-	) as Record<string, unknown>;
+	const quality = JSON.parse(texts.quality) as Record<string, unknown>;
 	const surfaceIndex = freezeIndex(bySurface);
 	const categoryIndex = freezeIndex(byCategory);
 	return Object.freeze({
@@ -208,5 +227,47 @@ export function camelMorphologyFromPack(pack: TextPackLike): CamelMorphology {
 		lookupCategory(category: string) {
 			return categoryIndex.get(category) ?? [];
 		},
+	});
+}
+
+export function camelMorphologyFromPack(pack: TextPackLike): CamelMorphology {
+	return camelMorphologyFromTexts({
+		features: resourceText(pack, RESOURCE_IDS.features),
+		defaults: resourceText(pack, RESOURCE_IDS.defaults),
+		tokenizations: resourceText(pack, RESOURCE_IDS.tokenizations),
+		morphemes: resourceText(pack, RESOURCE_IDS.morphemes),
+		compatibility: resourceText(pack, RESOURCE_IDS.compatibility),
+		quality: resourceText(pack, RESOURCE_IDS.quality),
+	});
+}
+
+export async function camelMorphologyFromPackAsync(
+	pack: TextPackLike,
+	options: ResourceMaterializationOptions = {},
+): Promise<CamelMorphology> {
+	const [features, defaults, tokenizations, morphemes, compatibility, quality] =
+		await Promise.all([
+			materializedResourceText(pack, RESOURCE_IDS.features, options.reader),
+			materializedResourceText(pack, RESOURCE_IDS.defaults, options.reader),
+			materializedResourceText(
+				pack,
+				RESOURCE_IDS.tokenizations,
+				options.reader,
+			),
+			materializedResourceText(pack, RESOURCE_IDS.morphemes, options.reader),
+			materializedResourceText(
+				pack,
+				RESOURCE_IDS.compatibility,
+				options.reader,
+			),
+			materializedResourceText(pack, RESOURCE_IDS.quality, options.reader),
+		]);
+	return camelMorphologyFromTexts({
+		features,
+		defaults,
+		tokenizations,
+		morphemes,
+		compatibility,
+		quality,
 	});
 }

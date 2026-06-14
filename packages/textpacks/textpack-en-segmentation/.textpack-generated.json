@@ -31,7 +31,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:bdfa7f93bed6acb46ae2b75d84fe543330f0046c495f5c62393aee0412231316",
+  "outputChecksum": "sha256:08842c829ac0817a2630cfb8606c89794843f2ea0cc39159c908fba19b5399e8",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-en-segmentation",
   "packageVersion": "0.1.0",

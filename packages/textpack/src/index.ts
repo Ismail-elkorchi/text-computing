@@ -27,6 +27,21 @@ export {
 export { capabilities } from "./capabilities.js";
 export { composePacks } from "./compose.js";
 export { validateManifest } from "./manifest.js";
+export type {
+	TextPackFileBackedResource,
+	TextPackMaterializedTable,
+	TextPackMaterializedTableRow,
+	TextPackResourceEncoding,
+	TextPackResourceReadContext,
+	TextPackResourceReader,
+} from "./materialize.js";
+export {
+	isFileBackedResource,
+	openResourceJson,
+	openResourceTable,
+	openResourceText,
+	parseResourceTable,
+} from "./materialize.js";
 export { createPack, getResource, loadPack } from "./pack.js";
 export { listResources } from "./query.js";
 export { resolvePackComponents } from "./resolve.js";

@@ -11,8 +11,11 @@ export type {
 } from "./conllu/mod.js";
 export {
 	readUdAnnotationDatasetFromPack,
+	readUdAnnotationDatasetFromPackAsync,
 	udAnnotationRecordsFromPack,
+	udAnnotationRecordsFromPackAsync,
 	udSyntaxResourcesFromPack,
+	udSyntaxResourcesFromPackAsync,
 } from "./conllu/mod.js";
 export type {
 	AlignmentLink,
@@ -47,4 +50,9 @@ export { packageName, packageVersion } from "./internal/ids.js";
 export { readDataset } from "./reader/mod.js";
 export { splitDataset } from "./split/mod.js";
 export { streamRecords } from "./stream/mod.js";
+export type {
+	TextDataRowsFromPackOptions,
+	TextDataTableResource,
+} from "./textpack.js";
+export { corpusRowsFromPack, parallelRowsFromPack } from "./textpack.js";
 export { writeDataset } from "./writer/mod.js";

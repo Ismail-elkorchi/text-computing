@@ -69,7 +69,8 @@
 		"@ismail-elkorchi/textdoc": "0.1.0",
 		"@ismail-elkorchi/textfacts": "0.1.0",
 		"@ismail-elkorchi/textlex": "0.1.0",
-		"@ismail-elkorchi/textnorm": "0.1.0"
+		"@ismail-elkorchi/textnorm": "0.1.0",
+		"@ismail-elkorchi/textpack": "0.1.0"
 	},
 	"license": "MIT"
 }

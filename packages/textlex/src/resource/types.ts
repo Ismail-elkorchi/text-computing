@@ -1,3 +1,5 @@
+import type { TextPackResourceReader } from "@ismail-elkorchi/textpack";
+
 export type TextPackResourceKindLike =
 	| "unicode-profile"
 	| "language-registry"
@@ -52,4 +54,8 @@ export interface ResourceParseOptions {
 	readonly language?: string;
 	readonly script?: string;
 	readonly source?: string;
+}
+
+export interface ResourceMaterializationOptions {
+	readonly reader?: TextPackResourceReader;
 }

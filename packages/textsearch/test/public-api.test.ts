@@ -54,6 +54,7 @@ test("root exports the final textsearch API only", () => {
 			"scoreLanguageModel",
 			"scoreTfIdf",
 			"search",
+			"searchAnalyzerResourcesFromPack",
 			"serializeCql",
 			"suffixQuery",
 			"suggest",

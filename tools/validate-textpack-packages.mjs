@@ -197,6 +197,8 @@ function isFileBackedResourceValue(value) {
 	return (
 		isRecord(value) &&
 		value.kind === "file-backed-resource" &&
+		typeof value.packageName === "string" &&
+		typeof value.packageRoot === "string" &&
 		typeof value.path === "string" &&
 		typeof value.checksum === "string"
 	);
@@ -1607,6 +1609,11 @@ for (const packDir of packDirs) {
 				resourceValue.path === resource?.path,
 				`${packageJson.name} built resource ${resourceId} path must match manifest.`,
 				{ actual: resourceValue.path, expected: resource?.path },
+			);
+			expect(
+				resourceValue.packageName === packageJson.name,
+				`${packageJson.name} built resource ${resourceId} packageName must match package.json.`,
+				{ actual: resourceValue.packageName, expected: packageJson.name },
 			);
 		}
 		if (textpackRuntime !== undefined) {

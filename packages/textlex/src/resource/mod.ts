@@ -9,6 +9,8 @@ export type {
 export {
 	camelMorphologyFromPack,
 	camelMorphologyFromPack as camelMorphologyResourceFromPack,
+	camelMorphologyFromPackAsync,
+	camelMorphologyFromPackAsync as camelMorphologyResourceFromPackAsync,
 } from "./camel-morph.js";
 export {
 	parseAbbreviationResource,
@@ -24,12 +26,17 @@ export {
 } from "./parse.js";
 export {
 	affixTableFromPack,
+	affixTableFromPackAsync,
 	lexiconFromPack,
+	lexiconFromPackAsync,
 	pronunciationLexiconFromPack,
+	pronunciationLexiconFromPackAsync,
 	wordlistFromPack,
+	wordlistFromPackAsync,
 } from "./textpack.js";
 export type {
 	PackResourceQueryLike,
+	ResourceMaterializationOptions,
 	ResourceParseOptions,
 	TextPackLike,
 	TextPackResourceLike,

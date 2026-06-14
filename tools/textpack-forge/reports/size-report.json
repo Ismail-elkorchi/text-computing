@@ -28,7 +28,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 32083,
-      "outputChecksum": "sha256:e8893897ecf21571e618d76ba15b96ad605cebb852bcdcc96784bbc3c5f2df7d",
+      "outputChecksum": "sha256:1f3909337e1eb02a3de371ad2e86b2fef9b85943df01504c28ec7a04144948da",
       "packageDir": "packages/textpacks/textpack-ar-core",
       "packageName": "@ismail-elkorchi/textpack-ar-core",
       "publishability": {
@@ -128,7 +128,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 2214138,
-      "outputChecksum": "sha256:e8a58b9032af9c20dd4e9384cf5f52474f5fde3337dabe52c8964e96444d6c68",
+      "outputChecksum": "sha256:5e97e1a78db51950f9b0faaa4ca4ba5ee04fed035099dc96499bc5c36d8f7c5f",
       "packageDir": "packages/textpacks/textpack-ar-corpus",
       "packageName": "@ismail-elkorchi/textpack-ar-corpus",
       "publishability": {
@@ -245,7 +245,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 15392543,
-      "outputChecksum": "sha256:20a1335f038a45097c17edf62671cd87913e6991048b9cada6f281cab9e643ec",
+      "outputChecksum": "sha256:4c14673f8d2dd587c8b5383dba7f3f0dd4e5b9e8719ca0e7fe3c9bfc282123e1",
       "packageDir": "packages/textpacks/textpack-ar-msa-morphology",
       "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
       "publishability": {
@@ -387,7 +387,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 9146,
-      "outputChecksum": "sha256:9641cecfac285de809ab0abe31e3a811e4e01f064b2358eafbce6d2dae70637a",
+      "outputChecksum": "sha256:d3a7eb5ed9648c93644a601c7b738db5a94c4960869f7a9b250f37044890cc1b",
       "packageDir": "packages/textpacks/textpack-ar-normalization",
       "packageName": "@ismail-elkorchi/textpack-ar-normalization",
       "publishability": {
@@ -473,7 +473,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 507902,
-      "outputChecksum": "sha256:f6a4ff49f153ba65e3d984d9a55e1f3ec594600031e8e1cb696c1d64dd6e60e0",
+      "outputChecksum": "sha256:538782d39d1e3489b6138e26af3c5ead4b7f823fccab66f4ba14d508ffe48118",
       "packageDir": "packages/textpacks/textpack-ar-parallel",
       "packageName": "@ismail-elkorchi/textpack-ar-parallel",
       "publishability": {
@@ -618,7 +618,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 12060880,
-      "outputChecksum": "sha256:c921018779fd3b9fa437ce22cdeb88dae328366a3551c3f0a3ebb1d75c1985e0",
+      "outputChecksum": "sha256:4a0f0e19ef6ab90dca58d87e8c98609c20060054ab59a53c01db8872e12e59f4",
       "packageDir": "packages/textpacks/textpack-ar-search",
       "packageName": "@ismail-elkorchi/textpack-ar-search",
       "publishability": {
@@ -777,7 +777,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 59260768,
-      "outputChecksum": "sha256:29a72b1ad49e9bf9e4538bb1d0d1992548f0042f05b728f9cee2eb48c8a3dc30",
+      "outputChecksum": "sha256:76f6aa54fe803d367d696d532a465f60d9c5aca4d11e3a22602cffa8e07c38a6",
       "packageDir": "packages/textpacks/textpack-ar-syntax-ud-nyuad-sa",
       "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
       "publishability": {
@@ -919,7 +919,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 163413,
-      "outputChecksum": "sha256:797e92fcc7fd3ec5107d45325d74481c98db1514a4e1eec3ed2e6b0d93a32d90",
+      "outputChecksum": "sha256:f2e4ee94e9c1e5bce9927eec662ecca87371ff8f99e0a8e9cf4631ca6337c28f",
       "packageDir": "packages/textpacks/textpack-cldr-core",
       "packageName": "@ismail-elkorchi/textpack-cldr-core",
       "publishability": {
@@ -1006,7 +1006,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 136084,
-      "outputChecksum": "sha256:80d62245af9343c25fd57430537e012b201ded6e25fd28b17d47fad4e5d3ca75",
+      "outputChecksum": "sha256:9009f32022fc334718f5a787bfa27bae8bb72ab3cc89a69efd3ee108321dd3d1",
       "packageDir": "packages/textpacks/textpack-en-core",
       "packageName": "@ismail-elkorchi/textpack-en-core",
       "publishability": {
@@ -1134,7 +1134,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 64525315,
-      "outputChecksum": "sha256:0aebdc52a21ae5d0b1fc3f55154d69525e2cb01aaeb25d90048c8620aa5d2ed9",
+      "outputChecksum": "sha256:b51b44a896f27841f0fb12dd5c4c598c7dcc11908a5d198c83525be60bf8e495",
       "packageDir": "packages/textpacks/textpack-en-corpus",
       "packageName": "@ismail-elkorchi/textpack-en-corpus",
       "publishability": {
@@ -1206,7 +1206,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 17283249,
-      "outputChecksum": "sha256:5b0ce993d241b52636eb6a7826d4c46cf840fe93fce4d64016329a717ac2d550",
+      "outputChecksum": "sha256:5c82c3ad89789764d2c0818c219b7f027808a37517423b8b09d8a04c429e1431",
       "packageDir": "packages/textpacks/textpack-en-inflection-scowl",
       "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
       "publishability": {
@@ -1379,7 +1379,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 3984,
-      "outputChecksum": "sha256:104f1f2cf9a8da0c519a449a64a38f50d0b5743d5d1e9dcaf83360077aa43109",
+      "outputChecksum": "sha256:c12b74cf2c8abee0c87d6d7fdbc3cfbfbde9cbb9642dbac9296fe51ebc07be19",
       "packageDir": "packages/textpacks/textpack-en-normalization",
       "packageName": "@ismail-elkorchi/textpack-en-normalization",
       "publishability": {
@@ -1451,7 +1451,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 17038763,
-      "outputChecksum": "sha256:f1b6cb18c26fc76914fff4086f908170c670c6e902f44a845b55c3ba67ff7f35",
+      "outputChecksum": "sha256:3893dae0300c22303ed171fa856e313148289b79fbd71b31af4199b9c4a786b2",
       "packageDir": "packages/textpacks/textpack-en-parallel",
       "packageName": "@ismail-elkorchi/textpack-en-parallel",
       "publishability": {
@@ -1637,7 +1637,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 8483,
-      "outputChecksum": "sha256:bdfa7f93bed6acb46ae2b75d84fe543330f0046c495f5c62393aee0412231316",
+      "outputChecksum": "sha256:08842c829ac0817a2630cfb8606c89794843f2ea0cc39159c908fba19b5399e8",
       "packageDir": "packages/textpacks/textpack-en-segmentation",
       "packageName": "@ismail-elkorchi/textpack-en-segmentation",
       "publishability": {
@@ -1752,7 +1752,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 1710535,
-      "outputChecksum": "sha256:5776825e38c1f44de81b8a676e238b24b926708d31a0f80b97be9fcdb854c954",
+      "outputChecksum": "sha256:65a4607e47477bc4228caa91ccbc0588f7741a363cacc20a9ca578df44114050",
       "packageDir": "packages/textpacks/textpack-en-syntax-ud-gumreddit",
       "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
       "publishability": {
@@ -1894,7 +1894,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 2464061,
-      "outputChecksum": "sha256:7b39bab70210546fc9f9d98004809b583687f90349636ece0a0907eec1ddb530",
+      "outputChecksum": "sha256:5329ec5f6f0e9fae63cb5d0ad4ea139e31a1bf973205a2f531c4c3f867428315",
       "packageDir": "packages/textpacks/textpack-en-wordlist-esdb",
       "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
       "publishability": {
@@ -2024,7 +2024,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 29406,
-      "outputChecksum": "sha256:3bad857778e5be4bf5eaa8d66e8af228aa0f673ff6e9d5f3bc7c548ce856b783",
+      "outputChecksum": "sha256:d884003ddfb9f067dc7800b76749a13f1a81992fd5eb8d25828bc2879002a3ee",
       "packageDir": "packages/textpacks/textpack-fr-core",
       "packageName": "@ismail-elkorchi/textpack-fr-core",
       "publishability": {
@@ -2124,7 +2124,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 26675304,
-      "outputChecksum": "sha256:60bb729b19d0550d64651801a12688790b19846401d9818ff129dce4916e86ef",
+      "outputChecksum": "sha256:c203f10c59515231b38fc012aabab43f599d682032d8c5969d8d5dd23dcc9995",
       "packageDir": "packages/textpacks/textpack-fr-corpus",
       "packageName": "@ismail-elkorchi/textpack-fr-corpus",
       "publishability": {
@@ -2241,7 +2241,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 3796958,
-      "outputChecksum": "sha256:538d8dcf237b76e64b0191443404989c16f33dc9c24fba27d7f07629915ff351",
+      "outputChecksum": "sha256:c8d79c77982bf232337760ca201bdd267f443a7fd1867e7722cef3c245fea81d",
       "packageDir": "packages/textpacks/textpack-fr-lexique-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
       "publishability": {
@@ -2441,7 +2441,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 16358,
-      "outputChecksum": "sha256:65ab9ee8ebef3c13a0558189320a97da6392be842048a4fbb5fa4110ae6f2547",
+      "outputChecksum": "sha256:4b3628f60460e8ee070cfee556e6ea9bfe428d061f9dbcb2328b558152ca0ab8",
       "packageDir": "packages/textpacks/textpack-fr-normalization",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "publishability": {
@@ -2555,7 +2555,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 5516538,
-      "outputChecksum": "sha256:e3f2fdc44d097ed9f696341f607cd25cc9058a7d45af85f5b6efe1f0c97de645",
+      "outputChecksum": "sha256:978cf7c67bf1af99ea596a67942a01c4919aaf1d2ada5ac59a703544849be7cc",
       "packageDir": "packages/textpacks/textpack-fr-parallel",
       "packageName": "@ismail-elkorchi/textpack-fr-parallel",
       "publishability": {
@@ -2730,7 +2730,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 23409,
-      "outputChecksum": "sha256:9703c939250e39125327c12c177d335b3395c41cf028bd63b87df18cafd98756",
+      "outputChecksum": "sha256:613bd1affaeb120d25bedb8b48401c7e9459c69263b7223fa49328996915cd57",
       "packageDir": "packages/textpacks/textpack-fr-segmentation",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
       "publishability": {
@@ -2930,7 +2930,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 25827248,
-      "outputChecksum": "sha256:2d411aea39d3a5fd6a74f32c153db9b64bfe1980045594914b6b38ec998055ee",
+      "outputChecksum": "sha256:3939475538d0b8f4d12e28ee4095e86b4b286a4ca081d6503f7dc13788681348",
       "packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
       "publishability": {
@@ -3072,7 +3072,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 11141522,
-      "outputChecksum": "sha256:d7a58d9d31e79fe1e4970365d8af0e8274b6a3b5e0404c104a0bcac0087230ab",
+      "outputChecksum": "sha256:f80dac63e70bdbdde92f05fd7b73ac530702e1ba8bb6b68e96e622858ab7c7a8",
       "packageDir": "packages/textpacks/textpack-fr-unimorph-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
       "publishability": {
@@ -3200,7 +3200,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 409021,
-      "outputChecksum": "sha256:d7e3894f7691fa1f609bba2d7a1e2546414ec3aeeb2412e07cb171b3986de9d9",
+      "outputChecksum": "sha256:3401c8e08fbb7d328c69ca9b3ebccb5208db97ac83fdd8390460c89bbb7f9d57",
       "packageDir": "packages/textpacks/textpack-language-registry",
       "packageName": "@ismail-elkorchi/textpack-language-registry",
       "publishability": {
@@ -3244,7 +3244,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 200479,
-      "outputChecksum": "sha256:7655a980467c044965eff4338ef30e32cd03c97859bbc8562351b0ee3204fe8e",
+      "outputChecksum": "sha256:fa14106c8129dc3739bb86513d9fac128b97c59e3a3a631866bf318749c1a2e7",
       "packageDir": "packages/textpacks/textpack-unicode-17",
       "packageName": "@ismail-elkorchi/textpack-unicode-17",
       "publishability": {
@@ -3316,7 +3316,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 190999,
-      "outputChecksum": "sha256:bbe7da60e524e8f6cc49bc602a86df9b703ea61683491a534a0971c816d21e38",
+      "outputChecksum": "sha256:37c141f9ff11944a880802ad77102840ad0f1a474e3ae84b31de850a18f4c22b",
       "packageDir": "packages/textpacks/textpack-wikidata-ar",
       "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
       "publishability": {
@@ -3416,7 +3416,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 629013,
-      "outputChecksum": "sha256:419c7bc5357575b407bd942e8e677c118c9e5b9fdc4e12d9edf995ae83278da3",
+      "outputChecksum": "sha256:406432607dac1742a85879b08fd7d8af031eb88ee12cbde4316be5bbe290c02b",
       "packageDir": "packages/textpacks/textpack-wikidata-en",
       "packageName": "@ismail-elkorchi/textpack-wikidata-en",
       "publishability": {
@@ -3516,7 +3516,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 430652,
-      "outputChecksum": "sha256:327aa7d080f4acc921735ca59e69554347ac1d1a6b1789c5a8b2ef12c65af1a0",
+      "outputChecksum": "sha256:06c8eac994b78a24930aeb43c423462e53caaf635908fa8c091e87618e618371",
       "packageDir": "packages/textpacks/textpack-wikidata-fr",
       "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
       "publishability": {
@@ -3616,7 +3616,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 48460654,
-      "outputChecksum": "sha256:71b9b7812f0d671db30de09c4b54d79e6bd15d3d52cd7e1f0d699df14a87dd4d",
+      "outputChecksum": "sha256:e7e21a09e05c9b3cd2fc1177625687e2683336f8037f2abde2eec8fd8e743c10",
       "packageDir": "packages/textpacks/textpack-wordnet-ar",
       "packageName": "@ismail-elkorchi/textpack-wordnet-ar",
       "publishability": {
@@ -3744,7 +3744,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 51491550,
-      "outputChecksum": "sha256:c7c9561473e9be98bd0cc8777846ec466fff1e078bff727fc807dad9bdb47453",
+      "outputChecksum": "sha256:18bb473b5c398b9625b0910790c104ead30b48ed96c23a4a77f8d598ac61c1e4",
       "packageDir": "packages/textpacks/textpack-wordnet-en",
       "packageName": "@ismail-elkorchi/textpack-wordnet-en",
       "publishability": {

@@ -18,6 +18,7 @@ import {
 	createHistoricalView,
 	createNormalizedView,
 	historicalTargetViewKind,
+	normalizationResourcesFromPack,
 	normalizeDocument,
 	spanMapFromEditScript,
 	transliterationScriptPair,
@@ -34,6 +35,42 @@ import {
 	spellingMap,
 	transliterationMap,
 } from "./fixtures/resources.ts";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-norm-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
+}
 
 await import("../dist/normalize/mod.js");
 await import("../dist/variant/mod.js");
@@ -260,3 +297,41 @@ const kindSet = new Set(
 );
 for (const kind of allCandidateKinds)
 	assert.equal(kindSet.has(kind), true, kind);
+
+const normalizationText =
+	"kind\tsource\ttarget\nelision\tl'\tle\naccent\te\te\n";
+const normalizationPack = {
+	manifest: {
+		targets: { languages: ["fr"] },
+		resources: [
+			{
+				id: "normalization-fr-profile",
+				kind: "normalization-profile" as const,
+				format: "tsv",
+			},
+		],
+	},
+	resources: {
+		"normalization-fr-profile": await fileBackedTextResource(
+			"resources/normalization-fr.tsv",
+			normalizationText,
+		),
+	},
+};
+const normalizationResources = await normalizationResourcesFromPack(
+	normalizationPack,
+	{
+		reader: textResourceReader({
+			"resources/normalization-fr.tsv": normalizationText,
+		}),
+	},
+);
+const normalizationPayload = normalizationResources[0]?.payload;
+if (normalizationPayload?.type !== "table") {
+	throw new Error("normalization resource should materialize as a table");
+}
+assert.deepEqual(normalizationPayload.value.rows[0], {
+	kind: "elision",
+	source: "l'",
+	target: "le",
+});

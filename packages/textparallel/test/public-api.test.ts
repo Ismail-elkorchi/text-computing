@@ -33,6 +33,7 @@ test("root exports the final textparallel API", () => {
 			"packageVersion",
 			"parallelDocumentsFromRecords",
 			"parallelEvidence",
+			"parallelTablesFromPack",
 			"searchTranslationMemory",
 			"shallowTransfer",
 			"trainSentenceAligner",

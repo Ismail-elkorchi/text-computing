@@ -14,6 +14,7 @@ import {
 	linkTerms,
 	ontologyGazetteer,
 	openEnglishWordNetFromPack,
+	openEnglishWordNetFromPackAsync,
 	parseAliasRows,
 	parseEntityRows,
 	parseRelationRows,
@@ -21,10 +22,48 @@ import {
 	scoreDisambiguation,
 	thesaurusRelations,
 	traverseSemanticRelations,
+	wikidataResourcesFromPack,
 	wordNetResourcesFromPack,
+	wordNetResourcesFromPackAsync,
 } from "../dist/index.js";
 import { badSpanDocument, fixtureDocument } from "./fixtures/documents.ts";
 import { fixtureKb } from "./fixtures/kb.ts";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-kb-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
+}
 
 test("creates immutable knowledge bases and validates records", () => {
 	const kb = fixtureKb();
@@ -201,6 +240,122 @@ test("WordNet textpack adapter discovers non-English resource families", () => {
 	assert.equal(resources.synsets[0]?.members[0], "awn-kitab-n");
 	assert.equal(resources.relations[0]?.targetId, "awn-synset-object");
 	assert.equal(resources.quality.acceptedRecords, 4);
+});
+
+test("WordNet textpack async adapter materializes file-backed resources", async () => {
+	const resourceTexts = {
+		"resources/wordnet-en-lexical-entries.tsv": [
+			"entryId\tlemma\tpartOfSpeech",
+			"oewn-contract-n\tcontract\tn",
+		].join("\n"),
+		"resources/wordnet-en-senses.tsv": [
+			"senseId\tentryId\tlemma\tpartOfSpeech\tsynsetId\tsubcat",
+			"oewn-contract__1\toewn-contract-n\tcontract\tn\toewn-synset-contract\t",
+		].join("\n"),
+		"resources/wordnet-en-synsets.tsv": [
+			"synsetId\tili\tpartOfSpeech\tlexfile\tmembers\tdefinition\texampleCount",
+			"oewn-synset-contract\ti1\tn\tnoun.communication\toewn-contract-n\ta binding agreement\t0",
+		].join("\n"),
+		"resources/wordnet-en-relations.tsv": [
+			"scope\tsourceId\trelType\ttargetId",
+			"synset\toewn-synset-contract\thypernymy\toewn-synset-agreement",
+		].join("\n"),
+		"resources/wordnet-en-quality.json": '{"acceptedRecords":4}',
+	};
+	const pack = {
+		manifest: {
+			resources: [
+				{ id: "wordnet-en-lexical-entries", kind: "lexicon" as const },
+				{ id: "wordnet-en-senses", kind: "knowledge-base" as const },
+				{ id: "wordnet-en-synsets", kind: "knowledge-base" as const },
+				{ id: "wordnet-en-relations", kind: "knowledge-base" as const },
+				{ id: "wordnet-en-quality", kind: "quality-profile" as const },
+			],
+		},
+		resources: {
+			"wordnet-en-lexical-entries": await fileBackedTextResource(
+				"resources/wordnet-en-lexical-entries.tsv",
+				resourceTexts["resources/wordnet-en-lexical-entries.tsv"],
+			),
+			"wordnet-en-senses": await fileBackedTextResource(
+				"resources/wordnet-en-senses.tsv",
+				resourceTexts["resources/wordnet-en-senses.tsv"],
+			),
+			"wordnet-en-synsets": await fileBackedTextResource(
+				"resources/wordnet-en-synsets.tsv",
+				resourceTexts["resources/wordnet-en-synsets.tsv"],
+			),
+			"wordnet-en-relations": await fileBackedTextResource(
+				"resources/wordnet-en-relations.tsv",
+				resourceTexts["resources/wordnet-en-relations.tsv"],
+			),
+			"wordnet-en-quality": await fileBackedTextResource(
+				"resources/wordnet-en-quality.json",
+				resourceTexts["resources/wordnet-en-quality.json"],
+			),
+		},
+	};
+	const reader = textResourceReader(resourceTexts);
+	const resources = await wordNetResourcesFromPackAsync(pack, { reader });
+	assert.equal(resources.lexicalEntries[0]?.lemma, "contract");
+	const kb = await openEnglishWordNetFromPackAsync(pack, { reader });
+	assert.equal(candidateSenses(kb, "contract")[0]?.senseId, "oewn-contract__1");
+});
+
+test("Wikidata textpack adapter materializes entity extracts", async () => {
+	const resourceTexts = {
+		"resources/wikidata-fr-entities.tsv": [
+			"entityId\tlanguageTag\tlabel\tdescription\ttypeId\ttypeLabel\tsitelinks\tfrwikiUrl",
+			"Q90\tfr\tParis\tcapitale de la France\tQ515\tville\t120\thttps://fr.wikipedia.org/wiki/Paris",
+		].join("\n"),
+		"resources/wikidata-fr-aliases.tsv":
+			"entityId\tlanguageTag\talias\nQ90\tfr\tVille de Paris\n",
+		"resources/wikidata-fr-relations.tsv":
+			"sourceEntityId\tpropertyId\ttargetEntityId\trelationLabel\nQ90\tP31\tQ515\tinstance de\n",
+		"resources/wikidata-fr-kb-canonical.json": '{"languageTag":"fr"}',
+		"resources/wikidata-fr-quality.json": '{"acceptedEntities":1}',
+	};
+	const pack = {
+		manifest: {
+			resources: [
+				{ id: "wikidata-fr-entities", kind: "knowledge-base" as const },
+				{ id: "wikidata-fr-aliases", kind: "knowledge-base" as const },
+				{ id: "wikidata-fr-relations", kind: "knowledge-base" as const },
+				{ id: "wikidata-fr-kb-canonical", kind: "knowledge-base" as const },
+				{ id: "wikidata-fr-quality", kind: "quality-profile" as const },
+			],
+		},
+		resources: {
+			"wikidata-fr-aliases": await fileBackedTextResource(
+				"resources/wikidata-fr-aliases.tsv",
+				resourceTexts["resources/wikidata-fr-aliases.tsv"],
+			),
+			"wikidata-fr-entities": await fileBackedTextResource(
+				"resources/wikidata-fr-entities.tsv",
+				resourceTexts["resources/wikidata-fr-entities.tsv"],
+			),
+			"wikidata-fr-kb-canonical": await fileBackedTextResource(
+				"resources/wikidata-fr-kb-canonical.json",
+				resourceTexts["resources/wikidata-fr-kb-canonical.json"],
+			),
+			"wikidata-fr-quality": await fileBackedTextResource(
+				"resources/wikidata-fr-quality.json",
+				resourceTexts["resources/wikidata-fr-quality.json"],
+			),
+			"wikidata-fr-relations": await fileBackedTextResource(
+				"resources/wikidata-fr-relations.tsv",
+				resourceTexts["resources/wikidata-fr-relations.tsv"],
+			),
+		},
+	};
+	const resources = await wikidataResourcesFromPack(pack, {
+		reader: textResourceReader(resourceTexts),
+	});
+	assert.equal(resources.entities[0]?.label, "Paris");
+	assert.equal(resources.aliases[0]?.alias, "Ville de Paris");
+	assert.equal(resources.relations[0]?.propertyId, "P31");
+	assert.deepEqual(resources.kb, { languageTag: "fr" });
+	assert.deepEqual(resources.quality, { acceptedEntities: 1 });
 });
 
 test("links entities terms and senses while preserving source annotations", () => {

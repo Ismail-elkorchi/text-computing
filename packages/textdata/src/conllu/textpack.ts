@@ -1,3 +1,8 @@
+import {
+	isFileBackedResource,
+	openResourceText,
+	type TextPackResourceReader,
+} from "@ismail-elkorchi/textpack";
 import { createDataset, type DatasetReadOptions } from "../dataset/mod.js";
 
 export interface TextPackResourceLike {
@@ -82,6 +87,7 @@ export interface UdSyntaxResourceIds {
 
 export interface UdSyntaxPackOptions {
 	readonly resourceIds?: Partial<UdSyntaxResourceIds>;
+	readonly reader?: TextPackResourceReader;
 }
 
 const RESOURCE_SUFFIXES = {
@@ -99,6 +105,19 @@ function resourceText(pack: TextPackLike, resourceId: string): string {
 		throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
 	}
 	return value;
+}
+
+async function materializedResourceText(
+	pack: TextPackLike,
+	resourceId: string,
+	reader: TextPackResourceReader | undefined,
+): Promise<string> {
+	const value = pack.resources[resourceId];
+	if (typeof value === "string") return value;
+	if (isFileBackedResource(value)) {
+		return openResourceText(pack as never, resourceId, reader);
+	}
+	throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
 }
 
 function nonEmptyRows(text: string): readonly string[][] {
@@ -310,6 +329,54 @@ export function udAnnotationRecordsFromPack(
 	);
 }
 
+function parseUdAnnotationRecords(text: string): readonly UdAnnotationRecord[] {
+	return Object.freeze(
+		nonEmptyRows(text)
+			.map(
+				([
+					split = "",
+					sentenceIndex = "0",
+					tokenId = "",
+					upos = "",
+					xpos = "",
+					features = "",
+					head = "",
+					deprel = "",
+					deps = "",
+					misc = "",
+				]) =>
+					Object.freeze({
+						split,
+						sentenceIndex: Number(sentenceIndex),
+						tokenId,
+						upos,
+						xpos,
+						features,
+						head,
+						deprel,
+						deps,
+						misc,
+					}),
+			)
+			.sort(compareUdRows),
+	);
+}
+
+export async function udAnnotationRecordsFromPackAsync(
+	pack: TextPackLike,
+	options: {
+		readonly resourceId?: string;
+		readonly reader?: TextPackResourceReader;
+	} = {},
+): Promise<readonly UdAnnotationRecord[]> {
+	const resourceId =
+		options.resourceId ??
+		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
+	return parseUdAnnotationRecords(
+		await materializedResourceText(pack, resourceId, options.reader),
+	);
+}
+
 export function udSyntaxResourcesFromPack(
 	pack: TextPackLike,
 	options: UdSyntaxPackOptions = {},
@@ -357,6 +424,69 @@ export function udSyntaxResourcesFromPack(
 	});
 }
 
+export async function udSyntaxResourcesFromPackAsync(
+	pack: TextPackLike,
+	options: UdSyntaxPackOptions = {},
+): Promise<UdSyntaxPackResources> {
+	const ids = resolveUdSyntaxResourceIds(pack, options.resourceIds);
+	const [
+		uposText,
+		featuresText,
+		dependenciesText,
+		sentenceProfileText,
+		annotations,
+		qualityText,
+	] = await Promise.all([
+		materializedResourceText(pack, ids.upos, options.reader),
+		materializedResourceText(pack, ids.features, options.reader),
+		materializedResourceText(pack, ids.dependencies, options.reader),
+		materializedResourceText(pack, ids.sentenceProfile, options.reader),
+		udAnnotationRecordsFromPackAsync(
+			pack,
+			options.reader === undefined
+				? { resourceId: ids.annotations }
+				: { resourceId: ids.annotations, reader: options.reader },
+		),
+		materializedResourceText(pack, ids.quality, options.reader),
+	]);
+	const upos = nonEmptyRows(uposText).map(
+		([upos = "", xpos = "", count = "0"]) =>
+			Object.freeze({ upos, xpos, count: numberCell(count) }),
+	);
+	const features = nonEmptyRows(featuresText).map(
+		([feature = "", value = "", count = "0"]) =>
+			Object.freeze({ feature, value, count: numberCell(count) }),
+	);
+	const dependencies = nonEmptyRows(dependenciesText).map(
+		([split = "", deprel = "", count = "0"]) =>
+			Object.freeze({ split, deprel, count: numberCell(count) }),
+	);
+	const sentenceProfiles = nonEmptyRows(sentenceProfileText).map(
+		([
+			split = "",
+			sentenceCount = "0",
+			tokenCount = "0",
+			averageTokenCount = "0",
+			maxTokenCount = "0",
+		]) =>
+			Object.freeze({
+				split,
+				sentenceCount: numberCell(sentenceCount),
+				tokenCount: numberCell(tokenCount),
+				averageTokenCount: numberCell(averageTokenCount),
+				maxTokenCount: numberCell(maxTokenCount),
+			}),
+	);
+	return Object.freeze({
+		upos: Object.freeze(upos),
+		features: Object.freeze(features),
+		dependencies: Object.freeze(dependencies),
+		sentenceProfiles: Object.freeze(sentenceProfiles),
+		annotations,
+		quality: Object.freeze(JSON.parse(qualityText) as Record<string, unknown>),
+	});
+}
+
 export function readUdAnnotationDatasetFromPack(
 	pack: TextPackLike,
 	options: DatasetReadOptions & { readonly resourceId?: string } = {},
@@ -366,6 +496,68 @@ export function readUdAnnotationDatasetFromPack(
 		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
 	const grouped = new Map<string, UdAnnotationRecord[]>();
 	for (const record of udAnnotationRecordsFromPack(pack, resourceId)) {
+		const key = `${record.split}\t${record.sentenceIndex}`;
+		const existing = grouped.get(key);
+		if (existing === undefined) {
+			grouped.set(key, [record]);
+			continue;
+		}
+		existing.push(record);
+	}
+	const records = [...grouped.entries()]
+		.sort(([, leftRows], [, rightRows]) => {
+			const left = leftRows[0];
+			const right = rightRows[0];
+			if (left === undefined || right === undefined) return 0;
+			return (
+				left.split.localeCompare(right.split) ||
+				left.sentenceIndex - right.sentenceIndex
+			);
+		})
+		.map(([key, rows]) => {
+			const [split = "", sentenceIndex = "0"] = key.split("\t");
+			return Object.freeze({
+				id: `ud:${split}:${sentenceIndex}`,
+				split,
+				fields: {
+					format: "ud-annotation-table",
+					tokens: Object.freeze(rows.map(tokenFromRecord)),
+				},
+				metadata: {
+					sourceResourceId: resourceId,
+					annotationOnly: true,
+					rawTextIncluded: false,
+				},
+			});
+		});
+	return createDataset(records, {
+		id: options.id ?? "ud-annotation-table",
+		metadata: {
+			...options.metadata,
+			format: "ud-annotation-table",
+			resourceId,
+			rawTextIncluded: false,
+		},
+	});
+}
+
+export async function readUdAnnotationDatasetFromPackAsync(
+	pack: TextPackLike,
+	options: DatasetReadOptions & {
+		readonly resourceId?: string;
+		readonly reader?: TextPackResourceReader;
+	} = {},
+) {
+	const resourceId =
+		options.resourceId ??
+		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
+	const grouped = new Map<string, UdAnnotationRecord[]>();
+	for (const record of await udAnnotationRecordsFromPackAsync(
+		pack,
+		options.reader === undefined
+			? { resourceId }
+			: { resourceId, reader: options.reader },
+	)) {
 		const key = `${record.split}\t${record.sentenceIndex}`;
 		const existing = grouped.get(key);
 		if (existing === undefined) {

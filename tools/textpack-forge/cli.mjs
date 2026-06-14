@@ -8590,9 +8590,12 @@ export default { manifest, resources, ${pack.loader.functionName} };
 `;
 }
 
-function resourcesTs(payloads) {
-	const entries = payloads
-		.map((payload) => `\t${JSON.stringify(payload.id)}: ${resourceMapValueTs(payload)},`)
+function resourcesTs(pack) {
+	const entries = pack.payloads
+		.map(
+			(payload) =>
+				`\t${JSON.stringify(payload.id)}: ${resourceMapValueTs(pack, payload)},`,
+		)
 		.join("\n");
 	const body = entries.length === 0 ? "" : `\n${entries}\n`;
 	return `${generatedHeader()}import type { PackResourceMap } from "@ismail-elkorchi/textpack";
@@ -8602,19 +8605,26 @@ export const resources: PackResourceMap = {${body}} as const;
 `;
 }
 
-function resourceMapValueTs(payload) {
-	return JSON.stringify(
-		sortJson({
-			kind: "file-backed-resource",
-			path: payload.path,
-			encoding: payload.encoded,
-			checksum: payload.checksum,
-			byteLength: payload.byteLength,
-			resourceTextByteLength: payload.resourceTextByteLength,
-			lineCount: payload.lineCount,
-			nonEmptyLineCount: payload.nonEmptyLineCount,
-		}),
-	);
+function resourceMapValueTs(pack, payload) {
+	const descriptor = sortJson({
+		kind: "file-backed-resource",
+		packageName: pack.packageName,
+		packageRoot: "__TEXTPACK_PACKAGE_ROOT__",
+		path: payload.path,
+		encoding: payload.encoded,
+		checksum: payload.checksum,
+		byteLength: payload.byteLength,
+		resourceTextByteLength: payload.resourceTextByteLength,
+		lineCount: payload.lineCount,
+		nonEmptyLineCount: payload.nonEmptyLineCount,
+	});
+	const properties = Object.entries(descriptor).map(([key, value]) => {
+		if (key === "packageRoot") {
+			return `${JSON.stringify(key)}: new URL("../", import.meta.url).href`;
+		}
+		return `${JSON.stringify(key)}: ${JSON.stringify(value)}`;
+	});
+	return `{${properties.join(",")}}`;
 }
 
 function packageId(packageName) {
@@ -12381,7 +12391,7 @@ async function packageOutputsFor(pack, context) {
 	if (pack.generatedSourceFiles.includes("src/resources.ts")) {
 		outputs.set(
 			`${pack.packageDir}/src/resources.ts`,
-			resourcesTs(pack.payloads),
+			resourcesTs(pack),
 		);
 	}
 	for (const payload of pack.payloads) {

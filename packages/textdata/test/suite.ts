@@ -3,12 +3,17 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { parseConllu } from "../dist/conllu/mod.js";
 import {
+	corpusRowsFromPack,
+	parallelRowsFromPack,
 	readDataset,
 	readUdAnnotationDatasetFromPack,
+	readUdAnnotationDatasetFromPackAsync,
 	splitDataset,
 	streamRecords,
 	udAnnotationRecordsFromPack,
+	udAnnotationRecordsFromPackAsync,
 	udSyntaxResourcesFromPack,
+	udSyntaxResourcesFromPackAsync,
 	writeDataset,
 } from "../dist/index.js";
 import { parseSequenceLabel } from "../dist/iob/mod.js";
@@ -17,6 +22,42 @@ async function collect<T>(records: AsyncIterable<T>): Promise<T[]> {
 	const output: T[] = [];
 	for await (const record of records) output.push(record);
 	return output;
+}
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-data-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
 }
 
 test("plain text, JSONL, CSV, and writers work", async () => {
@@ -130,6 +171,63 @@ test("UD annotation textpack resources become annotation-only datasets", async (
 		tokens?.map((token) => (token as { tokenId?: string }).tokenId),
 		["1", "2", "10"],
 	);
+	const asyncResources = await udSyntaxResourcesFromPackAsync(pack);
+	assert.equal(asyncResources.quality.rawTextIncluded, false);
+	const asyncAnnotations = await udAnnotationRecordsFromPackAsync(pack);
+	assert.equal(asyncAnnotations.length, 4);
+	const asyncDataset = await readUdAnnotationDatasetFromPackAsync(pack, {
+		id: "ud-fixture-async",
+	});
+	const [asyncRecord] = await collect(streamRecords(asyncDataset));
+	assert.deepEqual(
+		(asyncRecord?.fields?.tokens as readonly { tokenId?: string }[]).map(
+			(token) => token.tokenId,
+		),
+		["1", "2", "10"],
+	);
+});
+
+test("textpack table adapters materialize corpus and parallel resources", async () => {
+	const corpusText = "id\ttext\tlanguage\nc1\tHello world\ten\n";
+	const parallelText =
+		"id\tsourceText\ttargetText\tsourceLanguage\ttargetLanguage\np1\tHello\tBonjour\ten\tfr\n";
+	const pack = {
+		manifest: {
+			targets: { languages: ["en"] },
+			resources: [
+				{ id: "corpus-en", kind: "corpus" as const },
+				{ id: "parallel-en-fr", kind: "alignment-table" as const },
+			],
+		},
+		resources: {
+			"corpus-en": await fileBackedTextResource(
+				"resources/corpus.tsv",
+				corpusText,
+			),
+			"parallel-en-fr": await fileBackedTextResource(
+				"resources/parallel.tsv",
+				parallelText,
+			),
+		},
+	};
+	const reader = textResourceReader({
+		"resources/corpus.tsv": corpusText,
+		"resources/parallel.tsv": parallelText,
+	});
+	const corpusTables = await corpusRowsFromPack(pack, { reader });
+	const parallelTables = await parallelRowsFromPack(pack, { reader });
+	assert.deepEqual(corpusTables[0]?.rows[0], {
+		id: "c1",
+		language: "en",
+		text: "Hello world",
+	});
+	assert.deepEqual(parallelTables[0]?.rows[0], {
+		id: "p1",
+		sourceLanguage: "en",
+		sourceText: "Hello",
+		targetLanguage: "fr",
+		targetText: "Bonjour",
+	});
 });
 
 test("IOB/BIO/BILOU validates transitions and creates entities", async () => {
@@ -287,5 +385,6 @@ test("package source avoids forbidden sibling dependencies", async () => {
 	assert.deepEqual(Object.keys(packageJson.dependencies).sort(), [
 		"@ismail-elkorchi/textdoc",
 		"@ismail-elkorchi/textfacts",
+		"@ismail-elkorchi/textpack",
 	]);
 });

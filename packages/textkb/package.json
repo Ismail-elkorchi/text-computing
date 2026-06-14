@@ -51,6 +51,10 @@
 		"./wordnet": {
 			"types": "./dist/wordnet/mod.d.ts",
 			"import": "./dist/wordnet/mod.js"
+		},
+		"./wikidata": {
+			"types": "./dist/wikidata/mod.d.ts",
+			"import": "./dist/wikidata/mod.js"
 		}
 	},
 	"files": [
@@ -76,7 +80,8 @@
 	"dependencies": {
 		"@ismail-elkorchi/textdoc": "0.1.0",
 		"@ismail-elkorchi/textfacts": "0.1.0",
-		"@ismail-elkorchi/textlex": "0.1.0"
+		"@ismail-elkorchi/textlex": "0.1.0",
+		"@ismail-elkorchi/textpack": "0.1.0"
 	},
 	"license": "MIT"
 }

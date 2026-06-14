@@ -1,3 +1,8 @@
+import {
+	isFileBackedResource,
+	openResourceText,
+	type TextPackResourceReader,
+} from "@ismail-elkorchi/textpack";
 import { buildAbbreviationTable } from "../abbreviation/build.js";
 import { buildAffixTable } from "../affix/build.js";
 import { buildGazetteer } from "../gazetteer/build.js";
@@ -23,6 +28,7 @@ import {
 } from "./parse.js";
 import type {
 	PackResourceQueryLike,
+	ResourceMaterializationOptions,
 	TextPackLike,
 	TextPackResourceLike,
 } from "./types.js";
@@ -72,6 +78,18 @@ function resourceValue(
 	return pack.resources[descriptor.id];
 }
 
+async function materializedResourceValue(
+	pack: TextPackLike,
+	descriptor: TextPackResourceLike,
+	reader: TextPackResourceReader | undefined,
+): Promise<unknown> {
+	const value = resourceValue(pack, descriptor);
+	if (isFileBackedResource(value)) {
+		return openResourceText(pack as never, descriptor.id, reader);
+	}
+	return value;
+}
+
 export function lexiconFromPack(
 	pack: TextPackLike,
 	queryOrResourceId: string | PackResourceQueryLike,
@@ -79,6 +97,71 @@ export function lexiconFromPack(
 ): Lexicon {
 	const descriptor = findResource(pack, queryOrResourceId);
 	const value = resourceValue(pack, descriptor);
+	if (descriptor.kind === "gazetteer") {
+		return buildGazetteer(
+			parseGazetteerResource(value, { source: descriptor.id }),
+			options,
+		);
+	}
+	if (descriptor.kind === "termbase") {
+		return buildTermbase(
+			parseTermbaseResource(value, { source: descriptor.id }),
+			options,
+		);
+	}
+	if (descriptor.kind === "phrase-list") {
+		return buildLexicon(
+			parsePhraseListResource(value, { source: descriptor.id }),
+			options,
+		);
+	}
+	if (descriptor.kind === "stoplist") {
+		const stoplist = buildStoplist(
+			parseStoplistResource(value, { source: descriptor.id }),
+		);
+		const entries: LexicalEntry[] = stoplist.forms.map((form) => ({
+			id: `stop:${form}`,
+			forms: [form],
+			source: descriptor.id,
+		}));
+		return buildLexicon(entries, options);
+	}
+	if (descriptor.kind === "abbreviation-table") {
+		const table = buildAbbreviationTable(
+			parseAbbreviationResource(value, { source: descriptor.id }),
+		);
+		const entries: LexicalEntry[] = table.entries.map((entry) => ({
+			id: `abbr:${entry.form}`,
+			forms: [entry.form],
+			source: descriptor.id,
+			...(entry.expansions[0] !== undefined
+				? { canonical: entry.expansions[0] }
+				: {}),
+		}));
+		return buildLexicon(entries, options);
+	}
+	if (descriptor.kind !== "lexicon") {
+		throw new TypeError(
+			`resource kind ${descriptor.kind} cannot be loaded as a lexicon.`,
+		);
+	}
+	return buildLexicon(
+		parseLexiconResource(value, { source: descriptor.id }),
+		options,
+	);
+}
+
+export async function lexiconFromPackAsync(
+	pack: TextPackLike,
+	queryOrResourceId: string | PackResourceQueryLike,
+	options: LexiconOptions & ResourceMaterializationOptions = {},
+): Promise<Lexicon> {
+	const descriptor = findResource(pack, queryOrResourceId);
+	const value = await materializedResourceValue(
+		pack,
+		descriptor,
+		options.reader,
+	);
 	if (descriptor.kind === "gazetteer") {
 		return buildGazetteer(
 			parseGazetteerResource(value, { source: descriptor.id }),
@@ -146,6 +229,24 @@ export function wordlistFromPack(
 	return buildWordlist(parseWordlistResource(value, { source: descriptor.id }));
 }
 
+export async function wordlistFromPackAsync(
+	pack: TextPackLike,
+	queryOrResourceId: string | PackResourceQueryLike,
+	options: ResourceMaterializationOptions = {},
+) {
+	const descriptor = findResource(pack, queryOrResourceId);
+	const value = await materializedResourceValue(
+		pack,
+		descriptor,
+		options.reader,
+	);
+	if (descriptor.kind === "stoplist")
+		return buildStoplist(
+			parseStoplistResource(value, { source: descriptor.id }),
+		);
+	return buildWordlist(parseWordlistResource(value, { source: descriptor.id }));
+}
+
 export function affixTableFromPack(
 	pack: TextPackLike,
 	queryOrResourceId: string | PackResourceQueryLike,
@@ -158,6 +259,22 @@ export function affixTableFromPack(
 	);
 }
 
+export async function affixTableFromPackAsync(
+	pack: TextPackLike,
+	queryOrResourceId: string | PackResourceQueryLike,
+	options: ResourceMaterializationOptions = {},
+) {
+	const descriptor = findResource(pack, queryOrResourceId);
+	return buildAffixTable(
+		parseAffixTableResource(
+			await materializedResourceValue(pack, descriptor, options.reader),
+			{
+				source: descriptor.id,
+			},
+		),
+	);
+}
+
 export function pronunciationLexiconFromPack(
 	pack: TextPackLike,
 	queryOrResourceId: string | PackResourceQueryLike,
@@ -167,5 +284,21 @@ export function pronunciationLexiconFromPack(
 		parsePronunciationResource(resourceValue(pack, descriptor), {
 			source: descriptor.id,
 		}),
+	);
+}
+
+export async function pronunciationLexiconFromPackAsync(
+	pack: TextPackLike,
+	queryOrResourceId: string | PackResourceQueryLike,
+	options: ResourceMaterializationOptions = {},
+) {
+	const descriptor = findResource(pack, queryOrResourceId);
+	return buildPronunciationLexicon(
+		parsePronunciationResource(
+			await materializedResourceValue(pack, descriptor, options.reader),
+			{
+				source: descriptor.id,
+			},
+		),
 	);
 }

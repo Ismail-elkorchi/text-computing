@@ -10,11 +10,48 @@ import {
 	facet,
 	parseCql,
 	search,
+	searchAnalyzerResourcesFromPack,
 	serializeCql,
 	suggest,
 	termVector,
 } from "../dist/index.js";
 import { badSpanDocument, fixtureDocuments } from "./fixtures/documents.ts";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-search-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
+}
 
 function fixtureAnalyzer() {
 	return createAnalyzer(
@@ -122,6 +159,39 @@ test("analyzes strings and TextDocument inputs with deterministic components", (
 		analyze(resourceAnalyzer, "Contract").map((token) => token.term),
 		["agreement", "contract"],
 	);
+});
+
+test("search profile textpack resources materialize through the adapter", async () => {
+	const profileText =
+		'{"analyzerId":"fr-basic","components":[{"kind":"tokenizer","mode":"unicode-word"}]}';
+	const pack = {
+		manifest: {
+			targets: { languages: ["fr"] },
+			resources: [
+				{
+					id: "search-fr-profile",
+					kind: "search-profile" as const,
+					format: "json",
+				},
+			],
+		},
+		resources: {
+			"search-fr-profile": await fileBackedTextResource(
+				"resources/search-fr.json",
+				profileText,
+			),
+		},
+	};
+	const resources = await searchAnalyzerResourcesFromPack(pack, {
+		reader: textResourceReader({ "resources/search-fr.json": profileText }),
+	});
+	assert.deepEqual(resources[0]?.payload, {
+		type: "json",
+		value: {
+			analyzerId: "fr-basic",
+			components: [{ kind: "tokenizer", mode: "unicode-word" }],
+		},
+	});
 });
 
 test("builds fielded positional indexes without mutating source documents", () => {

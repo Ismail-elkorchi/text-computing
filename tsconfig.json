@@ -1,46 +1,54 @@
 {
-  "compilerOptions": {
-    "target": "ES2024",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "paths": {
-      "@ismail-elkorchi/textfacts": ["./packages/textfacts/mod.ts"],
-      "@ismail-elkorchi/textfacts/*": ["./packages/textfacts/src/*/mod.ts"],
-      "@ismail-elkorchi/textdoc": ["./packages/textdoc/src/mod.ts"],
-      "@ismail-elkorchi/textdoc/*": ["./packages/textdoc/src/*/mod.ts"],
-      "@ismail-elkorchi/textpack": ["./packages/textpack/src/index.ts"],
-      "@ismail-elkorchi/textlex": ["./packages/textlex/src/index.ts"],
-      "@ismail-elkorchi/textlex/*": ["./packages/textlex/src/*/mod.ts"],
-      "@ismail-elkorchi/textfst": ["./packages/textfst/src/index.ts"],
-      "@ismail-elkorchi/textfst/*": ["./packages/textfst/src/*/mod.ts"],
-      "@ismail-elkorchi/textrules": ["./packages/textrules/src/index.ts"],
-      "@ismail-elkorchi/textrules/*": ["./packages/textrules/src/*/mod.ts"],
-      "@ismail-elkorchi/textclassical": ["./packages/textclassical/src/index.ts"],
-      "@ismail-elkorchi/textclassical/*": ["./packages/textclassical/src/*/mod.ts"],
-      "@ismail-elkorchi/textpipeline": ["./packages/textpipeline/src/index.ts"],
-      "@ismail-elkorchi/textpipeline/*": ["./packages/textpipeline/src/*/mod.ts"],
-      "@ismail-elkorchi/textdata": ["./packages/textdata/src/index.ts"],
-      "@ismail-elkorchi/textdata/*": ["./packages/textdata/src/*/mod.ts"],
-      "@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"],
-      "@ismail-elkorchi/textcorpus/*": ["./packages/textcorpus/src/*/mod.ts"],
-      "@ismail-elkorchi/textsearch": ["./packages/textsearch/src/index.ts"],
-      "@ismail-elkorchi/textsearch/*": ["./packages/textsearch/src/*/mod.ts"],
-      "@ismail-elkorchi/textkb": ["./packages/textkb/src/index.ts"],
-      "@ismail-elkorchi/textkb/*": ["./packages/textkb/src/*/mod.ts"],
-      "@ismail-elkorchi/textquality": ["./packages/textquality/src/index.ts"],
-      "@ismail-elkorchi/textquality/*": ["./packages/textquality/src/*/mod.ts"],
-      "@ismail-elkorchi/textparallel": ["./packages/textparallel/src/index.ts"],
-      "@ismail-elkorchi/textparallel/*": ["./packages/textparallel/src/*/mod.ts"]
-    },
-    "allowImportingTsExtensions": true,
-    "lib": ["ES2024", "DOM"],
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "skipLibCheck": true,
-    "verbatimModuleSyntax": true,
-    "useDefineForClassFields": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": []
-  }
+	"compilerOptions": {
+		"target": "ES2024",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"paths": {
+			"@ismail-elkorchi/textfacts": ["./packages/textfacts/mod.ts"],
+			"@ismail-elkorchi/textfacts/*": ["./packages/textfacts/src/*/mod.ts"],
+			"@ismail-elkorchi/textdoc": ["./packages/textdoc/src/mod.ts"],
+			"@ismail-elkorchi/textdoc/*": ["./packages/textdoc/src/*/mod.ts"],
+			"@ismail-elkorchi/textpack": ["./packages/textpack/src/index.ts"],
+			"@ismail-elkorchi/textlex": ["./packages/textlex/src/index.ts"],
+			"@ismail-elkorchi/textlex/*": ["./packages/textlex/src/*/mod.ts"],
+			"@ismail-elkorchi/textfst": ["./packages/textfst/src/index.ts"],
+			"@ismail-elkorchi/textfst/*": ["./packages/textfst/src/*/mod.ts"],
+			"@ismail-elkorchi/textrules": ["./packages/textrules/src/index.ts"],
+			"@ismail-elkorchi/textrules/*": ["./packages/textrules/src/*/mod.ts"],
+			"@ismail-elkorchi/textclassical": [
+				"./packages/textclassical/src/index.ts"
+			],
+			"@ismail-elkorchi/textclassical/*": [
+				"./packages/textclassical/src/*/mod.ts"
+			],
+			"@ismail-elkorchi/textpipeline": ["./packages/textpipeline/src/index.ts"],
+			"@ismail-elkorchi/textpipeline/*": [
+				"./packages/textpipeline/src/*/mod.ts"
+			],
+			"@ismail-elkorchi/textdata": ["./packages/textdata/src/index.ts"],
+			"@ismail-elkorchi/textdata/*": ["./packages/textdata/src/*/mod.ts"],
+			"@ismail-elkorchi/textcorpus": ["./packages/textcorpus/src/index.ts"],
+			"@ismail-elkorchi/textcorpus/*": ["./packages/textcorpus/src/*/mod.ts"],
+			"@ismail-elkorchi/textsearch": ["./packages/textsearch/src/index.ts"],
+			"@ismail-elkorchi/textsearch/*": ["./packages/textsearch/src/*/mod.ts"],
+			"@ismail-elkorchi/textkb": ["./packages/textkb/src/index.ts"],
+			"@ismail-elkorchi/textkb/*": ["./packages/textkb/src/*/mod.ts"],
+			"@ismail-elkorchi/textquality": ["./packages/textquality/src/index.ts"],
+			"@ismail-elkorchi/textquality/*": ["./packages/textquality/src/*/mod.ts"],
+			"@ismail-elkorchi/textparallel": ["./packages/textparallel/src/index.ts"],
+			"@ismail-elkorchi/textparallel/*": [
+				"./packages/textparallel/src/*/mod.ts"
+			]
+		},
+		"allowImportingTsExtensions": true,
+		"lib": ["ES2024", "DOM"],
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": true,
+		"useDefineForClassFields": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": []
+	}
 }

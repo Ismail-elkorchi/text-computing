@@ -36,7 +36,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:538d8dcf237b76e64b0191443404989c16f33dc9c24fba27d7f07629915ff351",
+  "outputChecksum": "sha256:c8d79c77982bf232337760ca201bdd267f443a7fd1867e7722cef3c245fea81d",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
   "packageVersion": "0.1.0",

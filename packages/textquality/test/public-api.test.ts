@@ -24,6 +24,7 @@ test("root exports the final textquality API", () => {
 			"buildQualityReport",
 			"packageName",
 			"qualityEvidence",
+			"qualityResourcesFromPack",
 		].sort(),
 	);
 });

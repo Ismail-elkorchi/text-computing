@@ -4,6 +4,7 @@ import {
 	getResource,
 	type TextPackManifest,
 } from "../../dist/index.js";
+import { runFileBackedMaterializationSmoke } from "./file-backed-smoke.ts";
 
 test("textpack final API works in Bun", () => {
 	const manifest: TextPackManifest = {
@@ -21,4 +22,8 @@ test("textpack final API works in Bun", () => {
 	};
 	const pack = createPack(manifest, { "dataset-bun": "bun runtime" });
 	expect(getResource(pack, "dataset-bun")).toBe("bun runtime");
+});
+
+test("file-backed gzip textpack resources materialize in Bun", async () => {
+	await runFileBackedMaterializationSmoke("bun");
 });
