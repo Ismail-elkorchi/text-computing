@@ -23,6 +23,7 @@ export interface TextSearchPackResource {
 export interface SearchAnalyzerResourcesFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
+	readonly schemaIds?: readonly string[];
 }
 
 function idSet(values: readonly string[] | undefined): ReadonlySet<string> {
@@ -79,7 +80,12 @@ export async function searchAnalyzerResourcesFromPack(
 	options: SearchAnalyzerResourcesFromPackOptions = {},
 ): Promise<readonly TextSearchPackResource[]> {
 	const ids = idSet(options.resourceIds);
-	const resources = listResources(pack, { kind: "search-profile" })
+	const resources = listResources(pack, {
+		schemaId: options.schemaIds ?? [
+			"textsearch.analyzer-profile.v1",
+			"textsearch.analyzer-table.v1",
+		],
+	})
 		.filter((resource) => ids.size === 0 || ids.has(resource.id))
 		.sort((left, right) => left.id.localeCompare(right.id));
 	return Promise.all(

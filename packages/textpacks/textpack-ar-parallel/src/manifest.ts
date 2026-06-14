@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-eng",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-fra",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-spa",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-quality",
@@ -72,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-quality-profile",
@@ -83,9 +88,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"artifacts": [

@@ -26,7 +26,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-IANA-Language-Subtag-Registry",
 			"citations": [
 				"IANA Language Subtag Registry, File-Date 2026-05-05."
-			]
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
 			"id": "bcp47-language-registry-summary",
@@ -36,7 +37,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-IANA-Language-Subtag-Registry",
 			"citations": [
 				"IANA Language Subtag Registry, File-Date 2026-05-05."
-			]
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		}
 	],
 	"capabilitySlots": [

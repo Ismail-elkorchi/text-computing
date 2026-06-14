@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "wordnet-ar-senses",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wordnet-ar-synsets",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wordnet-ar-relations",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wordnet-ar-quality",
@@ -72,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "wordnet-ar-lexicon-canonical",
@@ -83,9 +88,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Arabic WordNet 4.1.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-lexicon-resource.schema.json"
-			}
+			"schemaId": "textlex.lexicon.v1"
 		},
 		{
 			"id": "wordnet-ar-kb-canonical",
@@ -96,9 +99,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Arabic WordNet 4.1.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-kb-resource.schema.json"
-			}
+			"schemaId": "textkb.knowledge-base.v1"
 		},
 		{
 			"id": "wordnet-ar-quality-profile",
@@ -109,9 +110,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Arabic WordNet 4.1.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

@@ -1,17 +1,3 @@
-export type {
-	CamelMorphCompatibility,
-	CamelMorphDefaultFeature,
-	CamelMorphFeature,
-	CamelMorphMorpheme,
-	CamelMorphology,
-	CamelMorphTokenizationField,
-} from "./camel-morph.js";
-export {
-	camelMorphologyFromPack,
-	camelMorphologyFromPack as camelMorphologyResourceFromPack,
-	camelMorphologyFromPackAsync,
-	camelMorphologyFromPackAsync as camelMorphologyResourceFromPackAsync,
-} from "./camel-morph.js";
 export {
 	parseAbbreviationResource,
 	parseAffixTableResource,

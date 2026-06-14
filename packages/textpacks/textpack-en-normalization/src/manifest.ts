@@ -33,7 +33,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "en-normalization-profile",
@@ -45,9 +46,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-normalization-resource.schema.json"
-			}
+			"schemaId": "textnorm.profile.v1"
 		},
 		{
 			"id": "en-normalization-quality",
@@ -58,7 +57,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-normalization-quality-profile",
@@ -70,9 +70,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

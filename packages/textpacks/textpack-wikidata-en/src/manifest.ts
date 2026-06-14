@@ -33,7 +33,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wikidata-en-aliases",
@@ -44,7 +45,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wikidata-en-relations",
@@ -55,7 +57,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wikidata-en-kb-canonical",
@@ -67,9 +70,7 @@ export const manifest: TextPackManifest = {
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-kb-resource.schema.json"
-			}
+			"schemaId": "textkb.knowledge-base.v1"
 		},
 		{
 			"id": "wikidata-en-quality",
@@ -80,7 +81,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "wikidata-en-quality-profile",
@@ -92,9 +94,7 @@ export const manifest: TextPackManifest = {
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"artifacts": [

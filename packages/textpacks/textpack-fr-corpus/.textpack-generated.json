@@ -29,7 +29,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:c203f10c59515231b38fc012aabab43f599d682032d8c5969d8d5dd23dcc9995",
+  "outputChecksum": "sha256:6f74f19637c42a7bd82e93790227e3c894b86c5eb2b90a7bb84f86c32426b220",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-fr-corpus",
   "packageVersion": "0.1.0",

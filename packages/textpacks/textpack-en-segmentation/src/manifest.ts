@@ -33,7 +33,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "en-grapheme-segmentation-profile",
@@ -45,9 +46,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "en-word-segmentation-profile",
@@ -59,9 +58,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "en-sentence-segmentation-profile",
@@ -73,9 +70,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "en-segmentation-quality",
@@ -86,7 +81,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-segmentation-quality-profile",
@@ -98,9 +94,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

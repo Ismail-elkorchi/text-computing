@@ -123,7 +123,11 @@ test("parallel textpack resources materialize through the adapter", async () => 
 		manifest: {
 			targets: { languages: ["en", "fr"] },
 			resources: [
-				{ id: "parallel-en-fr-links", kind: "alignment-table" as const },
+				{
+					id: "parallel-en-fr-links",
+					kind: "alignment-table" as const,
+					schemaId: "textparallel.alignment.rows.v1",
+				},
 			],
 		},
 		resources: {

@@ -17,8 +17,8 @@
   ],
   "resources": [
     {
-      "byteLength": 125,
-      "checksum": "sha256:583391d3c16a1936ccc934339859a8c5b0047b51156ff9361c5908c8c0bca0c0",
+      "byteLength": 188,
+      "checksum": "sha256:fe0f5a2c2230a73978e0dceb1fb83abfae0e507c5a5a06f387beae479e8835ff",
       "id": "ar-search-morphology-hooks",
       "kind": "morphology",
       "path": "resources/ar.search.morphology-hooks.tsv",
@@ -67,8 +67,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile"
     },
     {
-      "byteLength": 86,
-      "checksum": "sha256:4d9213255e9a95e68267cced8d89e2adcfda0cab020edd32d4e9669d17dd1203",
+      "byteLength": 122,
+      "checksum": "sha256:3887598c7c7dbc49300188708a27aeb944a1a704e16c1286c7b8b80744a84db7",
       "id": "ar-search-tokenization-hooks",
       "kind": "segmentation-profile",
       "path": "resources/ar.search.tokenization-hooks.tsv",

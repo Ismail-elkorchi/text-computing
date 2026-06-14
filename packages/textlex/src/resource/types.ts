@@ -32,6 +32,7 @@ export interface TextPackResourceLike {
 	readonly kind: TextPackResourceKindLike;
 	readonly name?: string;
 	readonly format?: string;
+	readonly schemaId?: string;
 	readonly metadata?: unknown;
 }
 
@@ -44,6 +45,7 @@ export interface TextPackLike {
 
 export interface PackResourceQueryLike {
 	readonly id?: string;
+	readonly schemaId?: string | readonly string[];
 	readonly kind?:
 		| TextPackResourceKindLike
 		| readonly TextPackResourceKindLike[];

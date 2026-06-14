@@ -23,6 +23,7 @@ export interface TextQualityPackResource {
 export interface QualityResourcesFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
+	readonly schemaIds?: readonly string[];
 }
 
 function idSet(values: readonly string[] | undefined): ReadonlySet<string> {
@@ -79,7 +80,12 @@ export async function qualityResourcesFromPack(
 	options: QualityResourcesFromPackOptions = {},
 ): Promise<readonly TextQualityPackResource[]> {
 	const ids = idSet(options.resourceIds);
-	const resources = listResources(pack, { kind: "quality-profile" })
+	const resources = listResources(pack, {
+		schemaId: options.schemaIds ?? [
+			"textquality.profile.v1",
+			"textquality.evidence.v1",
+		],
+	})
 		.filter((resource) => ids.size === 0 || ids.has(resource.id))
 		.sort((left, right) => left.id.localeCompare(right.id));
 	return Promise.all(

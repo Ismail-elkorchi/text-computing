@@ -1,9 +1,9 @@
 feature	observedMorphemeCount
-bw	203730
-diac	203666
-lex	175972
+buckwalter	203730
+diacritizedForm	203666
+lexicalForm	175972
 root	175972
-atbtok	31394
-d3tok	31394
-atbseg	27780
-d3seg	27780
+atbTokenization	31394
+d3Tokenization	31394
+atbSegmentation	27780
+d3Segmentation	27780

@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "fr-unimorph-lookup-analyzer",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "fr-unimorph-lookup-generator",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "fr-unimorph-feature-inventory",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "fr-unimorph-pos-inventory",
@@ -72,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "fr-unimorph-morphology-canonical",
@@ -83,9 +88,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-morphology-resource.schema.json"
-			}
+			"schemaId": "textlex.morphology.v1"
 		},
 		{
 			"id": "fr-unimorph-quality",
@@ -95,7 +98,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-unimorph-quality-profile",
@@ -106,9 +110,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

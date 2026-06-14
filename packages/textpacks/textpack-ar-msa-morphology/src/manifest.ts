@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "ar-msa-camel-morph-defaults",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "ar-msa-camel-morph-tokenizations",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "ar-msa-camel-morph-morphemes",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "ar-msa-camel-morph-compatibility",
@@ -72,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "ar-msa-camel-morph-quality",
@@ -82,7 +87,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-msa-camel-morphology-canonical",
@@ -93,9 +99,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-morphology-resource.schema.json"
-			}
+			"schemaId": "textlex.morphology.v1"
 		},
 		{
 			"id": "ar-msa-camel-segmentation-canonical",
@@ -106,9 +110,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "ar-msa-camel-quality-profile",
@@ -119,9 +121,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

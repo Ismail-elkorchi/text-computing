@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textdata.corpus.rows.v1"
 		},
 		{
 			"id": "en-tatoeba-corpus-canonical",
@@ -43,9 +44,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Tatoeba weekly exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-corpus-resource.schema.json"
-			}
+			"schemaId": "textdata.corpus.v1"
 		},
 		{
 			"id": "en-tatoeba-corpus-quality",
@@ -55,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-tatoeba-corpus-quality-profile",
@@ -66,9 +66,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Tatoeba weekly exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"artifacts": [

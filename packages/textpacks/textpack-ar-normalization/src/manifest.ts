@@ -34,7 +34,8 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "ar-normalization-observed-codepoints",
@@ -46,7 +47,8 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "ar-normalization-profile",
@@ -59,9 +61,7 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-normalization-resource.schema.json"
-			}
+			"schemaId": "textnorm.profile.v1"
 		},
 		{
 			"id": "ar-normalization-quality",
@@ -73,7 +73,8 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-normalization-quality-profile",
@@ -86,9 +87,7 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

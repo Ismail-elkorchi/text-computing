@@ -26,7 +26,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
 			"id": "unicode-17-property-value-aliases",
@@ -36,7 +37,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
 			"id": "unicode-17-scripts",
@@ -46,7 +48,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
 			"id": "unicode-17-core-summary",
@@ -56,7 +59,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		}
 	],
 	"capabilitySlots": [

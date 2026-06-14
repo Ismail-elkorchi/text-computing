@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"citations": [
 				"Open English WordNet 2025."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "wordnet-en-senses",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"citations": [
 				"Open English WordNet 2025."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wordnet-en-synsets",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"citations": [
 				"Open English WordNet 2025."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wordnet-en-relations",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"citations": [
 				"Open English WordNet 2025."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wordnet-en-quality",
@@ -72,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"citations": [
 				"Open English WordNet 2025."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "wordnet-en-lexicon-canonical",
@@ -83,9 +88,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Open English WordNet 2025."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-lexicon-resource.schema.json"
-			}
+			"schemaId": "textlex.lexicon.v1"
 		},
 		{
 			"id": "wordnet-en-kb-canonical",
@@ -96,9 +99,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Open English WordNet 2025."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-kb-resource.schema.json"
-			}
+			"schemaId": "textkb.knowledge-base.v1"
 		},
 		{
 			"id": "wordnet-en-quality-profile",
@@ -109,9 +110,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Open English WordNet 2025."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

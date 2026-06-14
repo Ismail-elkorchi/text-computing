@@ -38,9 +38,15 @@
 			},
 			"packClass": "foundation",
 			"supportLevel": "profiled",
-			"sourceIds": ["source:unicode:cldr-core"],
-			"snapshotIds": ["snapshot:source:unicode:cldr-core:48.2.0"],
-			"resourceSpecIds": ["resource-spec:textpack-cldr-core:cldr-core"],
+			"sourceIds": [
+				"source:unicode:cldr-core"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:cldr-core:48.2.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-cldr-core:cldr-core"
+			],
 			"generatedPackageFiles": true,
 			"generatedSourceFiles": [
 				"src/index.ts",
@@ -54,7 +60,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-cldr-core",
 				"targets": {
-					"modalities": ["typed"]
+					"modalities": [
+						"typed"
+					]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -68,7 +76,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "cldr-48-locale-aliases",
@@ -78,7 +87,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "cldr-48-script-data",
@@ -88,7 +98,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "cldr-48-core-summary",
@@ -98,7 +109,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -117,7 +129,9 @@
 					}
 				],
 				"license": "Unicode-3.0",
-				"citations": ["Unicode CLDR core data, cldr-core npm package 48.2.0."]
+				"citations": [
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
+				]
 			}
 		},
 		{
@@ -145,7 +159,9 @@
 			},
 			"packClass": "foundation",
 			"supportLevel": "registered",
-			"sourceIds": ["source:iana:language-subtag-registry"],
+			"sourceIds": [
+				"source:iana:language-subtag-registry"
+			],
 			"snapshotIds": [
 				"snapshot:source:iana:language-subtag-registry:2026-05-05"
 			],
@@ -165,7 +181,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-language-registry",
 				"targets": {
-					"modalities": ["typed"]
+					"modalities": [
+						"typed"
+					]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -179,7 +197,8 @@
 						"license": "LicenseRef-IANA-Language-Subtag-Registry",
 						"citations": [
 							"IANA Language Subtag Registry, File-Date 2026-05-05."
-						]
+						],
+						"schemaId": "textfacts.language-registry.v1"
 					},
 					{
 						"id": "bcp47-language-registry-summary",
@@ -189,7 +208,8 @@
 						"license": "LicenseRef-IANA-Language-Subtag-Registry",
 						"citations": [
 							"IANA Language Subtag Registry, File-Date 2026-05-05."
-						]
+						],
+						"schemaId": "textfacts.language-registry.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -206,7 +226,9 @@
 					}
 				],
 				"license": "LicenseRef-IANA-Language-Subtag-Registry",
-				"citations": ["IANA Language Subtag Registry, File-Date 2026-05-05."]
+				"citations": [
+					"IANA Language Subtag Registry, File-Date 2026-05-05."
+				]
 			}
 		},
 		{
@@ -235,9 +257,15 @@
 			},
 			"packClass": "foundation",
 			"supportLevel": "unicode-covered",
-			"sourceIds": ["source:unicode:ucd"],
-			"snapshotIds": ["snapshot:source:unicode:ucd:17.0.0"],
-			"resourceSpecIds": ["resource-spec:textpack-unicode-17:ucd-core"],
+			"sourceIds": [
+				"source:unicode:ucd"
+			],
+			"snapshotIds": [
+				"snapshot:source:unicode:ucd:17.0.0"
+			],
+			"resourceSpecIds": [
+				"resource-spec:textpack-unicode-17:ucd-core"
+			],
 			"generatedPackageFiles": true,
 			"generatedSourceFiles": [
 				"src/index.ts",
@@ -251,7 +279,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-unicode-17",
 				"targets": {
-					"modalities": ["typed"]
+					"modalities": [
+						"typed"
+					]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -263,7 +293,10 @@
 						"path": "resources/unicode-17.blocks.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": ["Unicode Character Database 17.0.0."]
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						],
+						"schemaId": "textfacts.unicode-profile.v1"
 					},
 					{
 						"id": "unicode-17-property-value-aliases",
@@ -271,7 +304,10 @@
 						"path": "resources/unicode-17.property-value-aliases.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": ["Unicode Character Database 17.0.0."]
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						],
+						"schemaId": "textfacts.unicode-profile.v1"
 					},
 					{
 						"id": "unicode-17-scripts",
@@ -279,7 +315,10 @@
 						"path": "resources/unicode-17.scripts.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": ["Unicode Character Database 17.0.0."]
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						],
+						"schemaId": "textfacts.unicode-profile.v1"
 					},
 					{
 						"id": "unicode-17-core-summary",
@@ -287,7 +326,10 @@
 						"path": "resources/unicode-17.core.summary.json",
 						"format": "json",
 						"license": "Unicode-3.0",
-						"citations": ["Unicode Character Database 17.0.0."]
+						"citations": [
+							"Unicode Character Database 17.0.0."
+						],
+						"schemaId": "textfacts.unicode-profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -306,7 +348,9 @@
 					}
 				],
 				"license": "Unicode-3.0",
-				"citations": ["Unicode Character Database 17.0.0."]
+				"citations": [
+					"Unicode Character Database 17.0.0."
+				]
 			}
 		}
 	]

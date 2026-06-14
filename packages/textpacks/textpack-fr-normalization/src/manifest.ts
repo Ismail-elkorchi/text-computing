@@ -34,7 +34,8 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "fr-normalization-profile",
@@ -47,9 +48,7 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-normalization-resource.schema.json"
-			}
+			"schemaId": "textnorm.profile.v1"
 		},
 		{
 			"id": "fr-normalization-elision-prefixes",
@@ -59,7 +58,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "fr-normalization-contraction-forms",
@@ -69,7 +69,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "fr-normalization-gold-cases",
@@ -79,7 +80,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-normalization-quality",
@@ -91,7 +93,8 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-normalization-quality-profile",
@@ -104,9 +107,7 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

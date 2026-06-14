@@ -26,7 +26,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "cldr-48-locale-aliases",
@@ -36,7 +37,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "cldr-48-script-data",
@@ -46,7 +48,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "cldr-48-core-summary",
@@ -56,7 +59,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		}
 	],
 	"capabilitySlots": [

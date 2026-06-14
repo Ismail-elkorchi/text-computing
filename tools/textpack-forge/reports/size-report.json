@@ -28,7 +28,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 32083,
-      "outputChecksum": "sha256:1f3909337e1eb02a3de371ad2e86b2fef9b85943df01504c28ec7a04144948da",
+      "outputChecksum": "sha256:da28ec55a0f548e6f476c0c7718b57e8471de739e1afc65c640a00c9fe23df9b",
       "packageDir": "packages/textpacks/textpack-ar-core",
       "packageName": "@ismail-elkorchi/textpack-ar-core",
       "publishability": {
@@ -128,7 +128,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 2214138,
-      "outputChecksum": "sha256:5e97e1a78db51950f9b0faaa4ca4ba5ee04fed035099dc96499bc5c36d8f7c5f",
+      "outputChecksum": "sha256:20432390bed63970f9648a51599ff8a9691a877e4a04ae5917ed189d721c5b83",
       "packageDir": "packages/textpacks/textpack-ar-corpus",
       "packageName": "@ismail-elkorchi/textpack-ar-corpus",
       "publishability": {
@@ -244,8 +244,8 @@
     },
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 15392543,
-      "outputChecksum": "sha256:4c14673f8d2dd587c8b5383dba7f3f0dd4e5b9e8719ca0e7fe3c9bfc282123e1",
+      "npmShippedSizeBytes": 15587707,
+      "outputChecksum": "sha256:b6a37dc9f3e259ad2347ee5295432585e01a3712d3cecd95e35fe7a59bd1c716",
       "packageDir": "packages/textpacks/textpack-ar-msa-morphology",
       "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
       "publishability": {
@@ -270,8 +270,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 34751,
-          "checksum": "sha256:2b607c4c428b46a3aee998899a8130078eb5cbb7d94e263e909bdc109b6d0600",
+          "byteLength": 37757,
+          "checksum": "sha256:682a3dd5ed6a3b57aaa39c859049d34c4c825246ec17db931a399bb19a82e9ec",
           "id": "ar-msa-camel-morph-defaults",
           "kind": "morphology",
           "lineCount": 1963,
@@ -280,12 +280,12 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 34751,
+          "resourceTextByteLength": 37757,
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 2252,
-          "checksum": "sha256:5c16537114428fbabb3b99bbd348e2c423fe1017646751ddfbca39864985d7d3",
+          "byteLength": 2333,
+          "checksum": "sha256:72a616b6e17508c29887148504f8bcd61c67bd6bc0590f181d2d35a491a6a648",
           "id": "ar-msa-camel-morph-features",
           "kind": "morphology",
           "lineCount": 55,
@@ -294,12 +294,12 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 2252,
+          "resourceTextByteLength": 2333,
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 15089553,
-          "checksum": "sha256:bde3cb3226b615f4d231ac0f9a4fb5315c21cd1b8543ca100300d20641852264",
+          "byteLength": 15281477,
+          "checksum": "sha256:cc3bef15ffef03db52eafc363283a5660a94d03df5e41e1fdaed77b41dffe897",
           "id": "ar-msa-camel-morph-morphemes",
           "kind": "morphology",
           "lineCount": 203742,
@@ -308,7 +308,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 109168048,
+          "resourceTextByteLength": 117913474,
           "sizeClass": "medium"
         },
         {
@@ -326,8 +326,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 86,
-          "checksum": "sha256:4d9213255e9a95e68267cced8d89e2adcfda0cab020edd32d4e9669d17dd1203",
+          "byteLength": 122,
+          "checksum": "sha256:3887598c7c7dbc49300188708a27aeb944a1a704e16c1286c7b8b80744a84db7",
           "id": "ar-msa-camel-morph-tokenizations",
           "kind": "segmentation-profile",
           "lineCount": 11,
@@ -336,12 +336,12 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 86,
+          "resourceTextByteLength": 122,
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 10720,
-          "checksum": "sha256:32f97d2a46615ef1b028883b4ae94a4f92acea4cf4679e28d4e741f601c62c83",
+          "byteLength": 10801,
+          "checksum": "sha256:8a54b71d3c60266980c818bc6046811a5877dc01f294b03020df6126efb844c8",
           "id": "ar-msa-camel-morphology-canonical",
           "kind": "morphology",
           "lineCount": 666,
@@ -350,7 +350,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 10720,
+          "resourceTextByteLength": 10801,
           "sizeClass": "tiny"
         },
         {
@@ -368,8 +368,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 1042,
-          "checksum": "sha256:f62251cc6c8c7660186bec417dae39446a6f5a4ec7ef74f4a9017acf4038e9c1",
+          "byteLength": 1078,
+          "checksum": "sha256:612031c2fdcc9a273886a24cabe9d8b9c5a0ad2041eaefcd96af1f890c10b228",
           "id": "ar-msa-camel-segmentation-canonical",
           "kind": "segmentation-profile",
           "lineCount": 57,
@@ -378,7 +378,7 @@
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 1042,
+          "resourceTextByteLength": 1078,
           "sizeClass": "tiny"
         }
       ],
@@ -387,7 +387,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 9146,
-      "outputChecksum": "sha256:d3a7eb5ed9648c93644a601c7b738db5a94c4960869f7a9b250f37044890cc1b",
+      "outputChecksum": "sha256:770991645e63283138704d380de7b0da3c0537778df374de3a826078b50a2260",
       "packageDir": "packages/textpacks/textpack-ar-normalization",
       "packageName": "@ismail-elkorchi/textpack-ar-normalization",
       "publishability": {
@@ -473,7 +473,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 507902,
-      "outputChecksum": "sha256:538782d39d1e3489b6138e26af3c5ead4b7f823fccab66f4ba14d508ffe48118",
+      "outputChecksum": "sha256:0d7495b85a143a22e3025946b86abc576302ee63f6232d2905a87b09dc9aaca0",
       "packageDir": "packages/textpacks/textpack-ar-parallel",
       "packageName": "@ismail-elkorchi/textpack-ar-parallel",
       "publishability": {
@@ -617,8 +617,8 @@
     },
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 12060880,
-      "outputChecksum": "sha256:4a0f0e19ef6ab90dca58d87e8c98609c20060054ab59a53c01db8872e12e59f4",
+      "npmShippedSizeBytes": 12060979,
+      "outputChecksum": "sha256:f69da007785a3410f4d2439840fe652a9924fcc9d0152103389bce82e40d1b45",
       "packageDir": "packages/textpacks/textpack-ar-search",
       "packageName": "@ismail-elkorchi/textpack-ar-search",
       "publishability": {
@@ -629,8 +629,8 @@
       "publishable": true,
       "resources": [
         {
-          "byteLength": 125,
-          "checksum": "sha256:583391d3c16a1936ccc934339859a8c5b0047b51156ff9361c5908c8c0bca0c0",
+          "byteLength": 188,
+          "checksum": "sha256:fe0f5a2c2230a73978e0dceb1fb83abfae0e507c5a5a06f387beae479e8835ff",
           "id": "ar-search-morphology-hooks",
           "kind": "morphology",
           "lineCount": 10,
@@ -639,7 +639,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
-          "resourceTextByteLength": 125,
+          "resourceTextByteLength": 188,
           "sizeClass": "tiny"
         },
         {
@@ -699,8 +699,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 86,
-          "checksum": "sha256:4d9213255e9a95e68267cced8d89e2adcfda0cab020edd32d4e9669d17dd1203",
+          "byteLength": 122,
+          "checksum": "sha256:3887598c7c7dbc49300188708a27aeb944a1a704e16c1286c7b8b80744a84db7",
           "id": "ar-search-tokenization-hooks",
           "kind": "segmentation-profile",
           "lineCount": 11,
@@ -709,7 +709,7 @@
           "pipelineId": "arabic-search-profile",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
-          "resourceTextByteLength": 86,
+          "resourceTextByteLength": 122,
           "sizeClass": "tiny"
         },
         {
@@ -777,7 +777,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 59260768,
-      "outputChecksum": "sha256:76f6aa54fe803d367d696d532a465f60d9c5aca4d11e3a22602cffa8e07c38a6",
+      "outputChecksum": "sha256:1eea423c76cefd87c63caff172d3882337d266a04b640316f24f874b5cd749d8",
       "packageDir": "packages/textpacks/textpack-ar-syntax-ud-nyuad-sa",
       "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
       "publishability": {
@@ -919,7 +919,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 163413,
-      "outputChecksum": "sha256:f2e4ee94e9c1e5bce9927eec662ecca87371ff8f99e0a8e9cf4631ca6337c28f",
+      "outputChecksum": "sha256:8d90a5a87db8bca9a1c3dc19beef0265882626528f0cdbd37beb184ad91b8f84",
       "packageDir": "packages/textpacks/textpack-cldr-core",
       "packageName": "@ismail-elkorchi/textpack-cldr-core",
       "publishability": {
@@ -1006,7 +1006,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 136084,
-      "outputChecksum": "sha256:9009f32022fc334718f5a787bfa27bae8bb72ab3cc89a69efd3ee108321dd3d1",
+      "outputChecksum": "sha256:fe46ab3101ea9e135327591b84fb33802786aee1391a339ab9f51e2ec11f6963",
       "packageDir": "packages/textpacks/textpack-en-core",
       "packageName": "@ismail-elkorchi/textpack-en-core",
       "publishability": {
@@ -1134,7 +1134,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 64525315,
-      "outputChecksum": "sha256:b51b44a896f27841f0fb12dd5c4c598c7dcc11908a5d198c83525be60bf8e495",
+      "outputChecksum": "sha256:c14519d85e57b0243d02592488c58d0521ba58846af3d209e1cd3010fba5ba8c",
       "packageDir": "packages/textpacks/textpack-en-corpus",
       "packageName": "@ismail-elkorchi/textpack-en-corpus",
       "publishability": {
@@ -1206,7 +1206,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 17283249,
-      "outputChecksum": "sha256:5c82c3ad89789764d2c0818c219b7f027808a37517423b8b09d8a04c429e1431",
+      "outputChecksum": "sha256:6de57bee7b629621e0203ad48675aeec43ac120f230790312e338547eddafce0",
       "packageDir": "packages/textpacks/textpack-en-inflection-scowl",
       "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
       "publishability": {
@@ -1379,7 +1379,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 3984,
-      "outputChecksum": "sha256:c12b74cf2c8abee0c87d6d7fdbc3cfbfbde9cbb9642dbac9296fe51ebc07be19",
+      "outputChecksum": "sha256:bc8b1c62f90ee4250e16ed2f0fd3023360321f1eab45251400fb250184369e41",
       "packageDir": "packages/textpacks/textpack-en-normalization",
       "packageName": "@ismail-elkorchi/textpack-en-normalization",
       "publishability": {
@@ -1451,7 +1451,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 17038763,
-      "outputChecksum": "sha256:3893dae0300c22303ed171fa856e313148289b79fbd71b31af4199b9c4a786b2",
+      "outputChecksum": "sha256:972a964cc852074ec4c376f2957d39fdc108a2d3764f71aee03c4929b7767b54",
       "packageDir": "packages/textpacks/textpack-en-parallel",
       "packageName": "@ismail-elkorchi/textpack-en-parallel",
       "publishability": {
@@ -1637,7 +1637,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 8483,
-      "outputChecksum": "sha256:08842c829ac0817a2630cfb8606c89794843f2ea0cc39159c908fba19b5399e8",
+      "outputChecksum": "sha256:c3acc4c3a6f0a99b2b972e6862ba33207fbaa34029046f901a7d2b945b78446c",
       "packageDir": "packages/textpacks/textpack-en-segmentation",
       "packageName": "@ismail-elkorchi/textpack-en-segmentation",
       "publishability": {
@@ -1752,7 +1752,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 1710535,
-      "outputChecksum": "sha256:65a4607e47477bc4228caa91ccbc0588f7741a363cacc20a9ca578df44114050",
+      "outputChecksum": "sha256:2296e0c06cfba42038e3f1b2a8243800d0a1fb78bab078ceeae6cdb354be8559",
       "packageDir": "packages/textpacks/textpack-en-syntax-ud-gumreddit",
       "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
       "publishability": {
@@ -1894,7 +1894,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 2464061,
-      "outputChecksum": "sha256:5329ec5f6f0e9fae63cb5d0ad4ea139e31a1bf973205a2f531c4c3f867428315",
+      "outputChecksum": "sha256:a540a9df0cb2294e3706483de69c3875bff60aadbc7482e1ea9e9e1808217107",
       "packageDir": "packages/textpacks/textpack-en-wordlist-esdb",
       "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
       "publishability": {
@@ -2024,7 +2024,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 29406,
-      "outputChecksum": "sha256:d884003ddfb9f067dc7800b76749a13f1a81992fd5eb8d25828bc2879002a3ee",
+      "outputChecksum": "sha256:9bfffb045ea7c63c4849207dbb321cb234ccc93c51bc93c1751362e6f4242a9b",
       "packageDir": "packages/textpacks/textpack-fr-core",
       "packageName": "@ismail-elkorchi/textpack-fr-core",
       "publishability": {
@@ -2124,7 +2124,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 26675304,
-      "outputChecksum": "sha256:c203f10c59515231b38fc012aabab43f599d682032d8c5969d8d5dd23dcc9995",
+      "outputChecksum": "sha256:6f74f19637c42a7bd82e93790227e3c894b86c5eb2b90a7bb84f86c32426b220",
       "packageDir": "packages/textpacks/textpack-fr-corpus",
       "packageName": "@ismail-elkorchi/textpack-fr-corpus",
       "publishability": {
@@ -2241,7 +2241,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 3796958,
-      "outputChecksum": "sha256:c8d79c77982bf232337760ca201bdd267f443a7fd1867e7722cef3c245fea81d",
+      "outputChecksum": "sha256:369f38d3ca3e09de5a6f71a769c5ae681ad7f8db70c02788b3d2fc3419e0880d",
       "packageDir": "packages/textpacks/textpack-fr-lexique-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
       "publishability": {
@@ -2441,7 +2441,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 16358,
-      "outputChecksum": "sha256:4b3628f60460e8ee070cfee556e6ea9bfe428d061f9dbcb2328b558152ca0ab8",
+      "outputChecksum": "sha256:d895234819764f176ea78f3e979233765d821c94a5eefbcdda486529c47c64f5",
       "packageDir": "packages/textpacks/textpack-fr-normalization",
       "packageName": "@ismail-elkorchi/textpack-fr-normalization",
       "publishability": {
@@ -2555,7 +2555,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 5516538,
-      "outputChecksum": "sha256:978cf7c67bf1af99ea596a67942a01c4919aaf1d2ada5ac59a703544849be7cc",
+      "outputChecksum": "sha256:2b13ce5b9cedc6c24cd25aebff6691b2ca5643fcb92f8983d15e4fcf983f30e0",
       "packageDir": "packages/textpacks/textpack-fr-parallel",
       "packageName": "@ismail-elkorchi/textpack-fr-parallel",
       "publishability": {
@@ -2730,7 +2730,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 23409,
-      "outputChecksum": "sha256:613bd1affaeb120d25bedb8b48401c7e9459c69263b7223fa49328996915cd57",
+      "outputChecksum": "sha256:01e36e06a069dcde74c350728ff8ea2eb3e49505ce42c3ad8692ee259bb0f85b",
       "packageDir": "packages/textpacks/textpack-fr-segmentation",
       "packageName": "@ismail-elkorchi/textpack-fr-segmentation",
       "publishability": {
@@ -2930,7 +2930,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 25827248,
-      "outputChecksum": "sha256:3939475538d0b8f4d12e28ee4095e86b4b286a4ca081d6503f7dc13788681348",
+      "outputChecksum": "sha256:e66813873672393b0aa7eaab739c13d4d463454f0ea8c37fa57aeb2853880432",
       "packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
       "publishability": {
@@ -3072,7 +3072,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 11141522,
-      "outputChecksum": "sha256:f80dac63e70bdbdde92f05fd7b73ac530702e1ba8bb6b68e96e622858ab7c7a8",
+      "outputChecksum": "sha256:cb6dae8bad11cd05ced17b6f4a2cb89375296d74b18e7437c5338fec48df35c8",
       "packageDir": "packages/textpacks/textpack-fr-unimorph-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
       "publishability": {
@@ -3200,7 +3200,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 409021,
-      "outputChecksum": "sha256:3401c8e08fbb7d328c69ca9b3ebccb5208db97ac83fdd8390460c89bbb7f9d57",
+      "outputChecksum": "sha256:16241e2e8eb4d96bc301e1f2906d85b02606fb996ef7456723c7996632e5c793",
       "packageDir": "packages/textpacks/textpack-language-registry",
       "packageName": "@ismail-elkorchi/textpack-language-registry",
       "publishability": {
@@ -3244,7 +3244,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 200479,
-      "outputChecksum": "sha256:fa14106c8129dc3739bb86513d9fac128b97c59e3a3a631866bf318749c1a2e7",
+      "outputChecksum": "sha256:65320b0d1dcf07f6ae09db9282f55e8489c859b63eb5f3da4d5754cb8616006e",
       "packageDir": "packages/textpacks/textpack-unicode-17",
       "packageName": "@ismail-elkorchi/textpack-unicode-17",
       "publishability": {
@@ -3315,8 +3315,8 @@
     },
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 190999,
-      "outputChecksum": "sha256:37c141f9ff11944a880802ad77102840ad0f1a474e3ae84b31de850a18f4c22b",
+      "npmShippedSizeBytes": 190991,
+      "outputChecksum": "sha256:c1c6b7f74f826f7a2319b8a0237c945f2b6b70dbc22d49d97df2e3927f3f6d3b",
       "packageDir": "packages/textpacks/textpack-wikidata-ar",
       "packageName": "@ismail-elkorchi/textpack-wikidata-ar",
       "publishability": {
@@ -3341,8 +3341,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 134633,
-          "checksum": "sha256:bfde77b44f2a2180da72bb9bc8874fb85262a69f25275b218fd71937a101181f",
+          "byteLength": 134629,
+          "checksum": "sha256:31c7cc2d35d7c53c8d6e401f54bf42f910fdf02b094d6d2a39bf6a33ffb07226",
           "id": "wikidata-ar-entities",
           "kind": "knowledge-base",
           "lineCount": 3011,
@@ -3351,7 +3351,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
-          "resourceTextByteLength": 601528,
+          "resourceTextByteLength": 601526,
           "sizeClass": "tiny"
         },
         {
@@ -3397,8 +3397,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 16457,
-          "checksum": "sha256:e9b2117bec25186e241f1b68347caf2b2fce8d7ed95e6c4e9344adaf04bd7d9a",
+          "byteLength": 16453,
+          "checksum": "sha256:4b8d4b765a972b21ba2119e61c5156051a534c7f12edc34b05c8a7b7e6b60888",
           "id": "wikidata-ar-relations",
           "kind": "knowledge-base",
           "lineCount": 3011,
@@ -3407,7 +3407,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
-          "resourceTextByteLength": 181451,
+          "resourceTextByteLength": 181440,
           "sizeClass": "tiny"
         }
       ],
@@ -3415,8 +3415,8 @@
     },
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 629013,
-      "outputChecksum": "sha256:406432607dac1742a85879b08fd7d8af031eb88ee12cbde4316be5bbe290c02b",
+      "npmShippedSizeBytes": 629005,
+      "outputChecksum": "sha256:a45d79149ebe7bfa4244fc3ca3251ff14670228cc2a8608b2fd77d07e1aae547",
       "packageDir": "packages/textpacks/textpack-wikidata-en",
       "packageName": "@ismail-elkorchi/textpack-wikidata-en",
       "publishability": {
@@ -3442,7 +3442,7 @@
         },
         {
           "byteLength": 359241,
-          "checksum": "sha256:3cb863cf304d512296628efe5f0260aea643187d8de239f4430ecaeef39f9217",
+          "checksum": "sha256:e0464d6ba65415a0ebce0245fb4a7d7ec21a8024269f2fef6025c6ef73e98d49",
           "id": "wikidata-en-entities",
           "kind": "knowledge-base",
           "lineCount": 11620,
@@ -3451,7 +3451,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-          "resourceTextByteLength": 1207332,
+          "resourceTextByteLength": 1207330,
           "sizeClass": "tiny"
         },
         {
@@ -3497,8 +3497,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 60585,
-          "checksum": "sha256:fb6d1e09d6aeaf9973c743da7af57987db1cb4cc836f97f82fba653252cdf3a4",
+          "byteLength": 60577,
+          "checksum": "sha256:cabc7d7e7827e51ec1a2be36abe512c52de6b7e7ae195f0d3f0c197b4c7d2c4e",
           "id": "wikidata-en-relations",
           "kind": "knowledge-base",
           "lineCount": 11620,
@@ -3507,7 +3507,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-          "resourceTextByteLength": 364007,
+          "resourceTextByteLength": 363996,
           "sizeClass": "tiny"
         }
       ],
@@ -3516,7 +3516,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 430652,
-      "outputChecksum": "sha256:06c8eac994b78a24930aeb43c423462e53caaf635908fa8c091e87618e618371",
+      "outputChecksum": "sha256:b3025d9302a42c288813e01dd08f94cfc58bb74ca798eba79327c51293e0c66f",
       "packageDir": "packages/textpacks/textpack-wikidata-fr",
       "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
       "publishability": {
@@ -3542,7 +3542,7 @@
         },
         {
           "byteLength": 296517,
-          "checksum": "sha256:b7d1ae2ae01a8b19a07ac1a69f4713a571a4b536dc24ff166288b26591d146c3",
+          "checksum": "sha256:618e4ab92aee11dfe1a002f9bf2920617610d28ae3773d366f16723fb1a2442e",
           "id": "wikidata-fr-entities",
           "kind": "knowledge-base",
           "lineCount": 9379,
@@ -3551,7 +3551,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-          "resourceTextByteLength": 1164023,
+          "resourceTextByteLength": 1164021,
           "sizeClass": "tiny"
         },
         {
@@ -3598,7 +3598,7 @@
         },
         {
           "byteLength": 50729,
-          "checksum": "sha256:d91bc4a1cbb5de836dd12f520330975c9959f174390f22441cb7a704624f0c81",
+          "checksum": "sha256:90729f4eae6c1daad5b6ada6b38cc3eae7470efe8964f78d5c3e29049ae92040",
           "id": "wikidata-fr-relations",
           "kind": "knowledge-base",
           "lineCount": 9379,
@@ -3607,7 +3607,7 @@
           "pipelineId": "wikidata-main-artifact",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-          "resourceTextByteLength": 581521,
+          "resourceTextByteLength": 581510,
           "sizeClass": "tiny"
         }
       ],
@@ -3615,8 +3615,8 @@
     },
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 48460654,
-      "outputChecksum": "sha256:e7e21a09e05c9b3cd2fc1177625687e2683336f8037f2abde2eec8fd8e743c10",
+      "npmShippedSizeBytes": 48460658,
+      "outputChecksum": "sha256:4acca4d44e6ec2638df4ae570133c2e0e66a3e22fb547cecf7ad5d4082cd90de",
       "packageDir": "packages/textpacks/textpack-wordnet-ar",
       "packageName": "@ismail-elkorchi/textpack-wordnet-ar",
       "publishability": {
@@ -3697,8 +3697,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 14510261,
-          "checksum": "sha256:8b0a9afd6e9dfb393eca5f0959481553f27374d2509746ac4c6505675baf9e7d",
+          "byteLength": 14510265,
+          "checksum": "sha256:59c8f1b3b3efd0d2debd5fce1f8591dbcf9614d75491839f88eb4d35a406d065",
           "id": "wordnet-ar-relations",
           "kind": "knowledge-base",
           "lineCount": 297152,
@@ -3707,7 +3707,7 @@
           "pipelineId": "arabic-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
-          "resourceTextByteLength": 14510261,
+          "resourceTextByteLength": 14510265,
           "sizeClass": "medium"
         },
         {
@@ -3743,8 +3743,8 @@
     },
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 51491550,
-      "outputChecksum": "sha256:18bb473b5c398b9625b0910790c104ead30b48ed96c23a4a77f8d598ac61c1e4",
+      "npmShippedSizeBytes": 51491554,
+      "outputChecksum": "sha256:ed4c3224dee813e5d1979af7c4201cd416bf9fb7406ecba98747c027568391d0",
       "packageDir": "packages/textpacks/textpack-wordnet-en",
       "packageName": "@ismail-elkorchi/textpack-wordnet-en",
       "publishability": {
@@ -3825,8 +3825,8 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 19570884,
-          "checksum": "sha256:fcf45d3d2ddeb3350ae18f50087387635369d8807e109bb1b30fa07ab1969ed6",
+          "byteLength": 19570888,
+          "checksum": "sha256:11e617f1eab3f06e869bd8e9be1f68da9a051c56a86aa9063aa28fc75e535b33",
           "id": "wordnet-en-relations",
           "kind": "knowledge-base",
           "lineCount": 355066,
@@ -3835,7 +3835,7 @@
           "pipelineId": "open-english-wordnet-lmf",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-          "resourceTextByteLength": 19570884,
+          "resourceTextByteLength": 19570888,
           "sizeClass": "medium"
         },
         {

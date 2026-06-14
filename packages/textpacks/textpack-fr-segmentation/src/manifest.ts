@@ -33,7 +33,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "fr-grapheme-segmentation-profile",
@@ -45,9 +46,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "fr-word-segmentation-profile",
@@ -59,9 +58,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "fr-sentence-segmentation-profile",
@@ -73,9 +70,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "fr-token-segmentation-profile",
@@ -88,9 +83,7 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "fr-segmentation-elision-prefixes",
@@ -100,7 +93,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "fr-segmentation-contraction-forms",
@@ -110,7 +104,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "fr-segmentation-abbreviations",
@@ -120,7 +115,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "fr-segmentation-gold-cases",
@@ -130,7 +126,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-segmentation-quality",
@@ -142,7 +139,8 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-segmentation-quality-profile",
@@ -155,9 +153,7 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

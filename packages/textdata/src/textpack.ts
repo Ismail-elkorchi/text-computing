@@ -1,7 +1,6 @@
 import {
 	listResources,
 	openResourceTable,
-	type ResourceKind,
 	type TextPack,
 	type TextPackMaterializedTable,
 	type TextPackResource,
@@ -11,11 +10,11 @@ import {
 export interface TextDataRowsFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
+	readonly schemaIds?: readonly string[];
 }
 
 export interface TextDataTableResource {
 	readonly id: string;
-	readonly kind: ResourceKind;
 	readonly descriptor: TextPackResource;
 	readonly columns: readonly string[];
 	readonly rows: TextPackMaterializedTable["rows"];
@@ -29,11 +28,11 @@ function resourceIdSet(
 
 function selectedResources(
 	pack: TextPack,
-	kinds: readonly ResourceKind[],
+	schemaIds: readonly string[],
 	resourceIds: readonly string[] | undefined,
 ): readonly TextPackResource[] {
 	const ids = resourceIdSet(resourceIds);
-	return listResources(pack, { kind: kinds })
+	return listResources(pack, { schemaId: schemaIds })
 		.filter((resource) => ids.size === 0 || ids.has(resource.id))
 		.sort((left, right) => left.id.localeCompare(right.id));
 }
@@ -46,7 +45,6 @@ async function tableResourceFromPack(
 	const table = await openResourceTable(pack, resource.id, reader);
 	return Object.freeze({
 		id: resource.id,
-		kind: resource.kind,
 		descriptor: resource,
 		columns: table.columns,
 		rows: table.rows,
@@ -58,20 +56,9 @@ export async function corpusRowsFromPack(
 	options: TextDataRowsFromPackOptions = {},
 ): Promise<readonly TextDataTableResource[]> {
 	return Promise.all(
-		selectedResources(pack, ["corpus"], options.resourceIds).map((resource) =>
-			tableResourceFromPack(pack, resource, options.reader),
-		),
-	);
-}
-
-export async function parallelRowsFromPack(
-	pack: TextPack,
-	options: TextDataRowsFromPackOptions = {},
-): Promise<readonly TextDataTableResource[]> {
-	return Promise.all(
 		selectedResources(
 			pack,
-			["alignment-table", "translation-memory"],
+			options.schemaIds ?? ["textdata.corpus.rows.v1"],
 			options.resourceIds,
 		).map((resource) => tableResourceFromPack(pack, resource, options.reader)),
 	);

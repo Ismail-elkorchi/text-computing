@@ -38,7 +38,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "en-esdb-default-profiles",
@@ -48,7 +49,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "en-esdb-wordlist-lexicon-canonical",
@@ -59,9 +61,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-lexicon-resource.schema.json"
-			}
+			"schemaId": "textlex.lexicon.v1"
 		},
 		{
 			"id": "en-esdb-wordlist-search-profile",
@@ -72,9 +72,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-			}
+			"schemaId": "textsearch.analyzer-profile.v1"
 		},
 		{
 			"id": "en-esdb-wordlist-quality",
@@ -84,7 +82,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-esdb-wordlist-quality-profile",
@@ -95,9 +94,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

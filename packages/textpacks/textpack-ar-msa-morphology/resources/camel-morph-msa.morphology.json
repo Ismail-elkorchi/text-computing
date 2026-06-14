@@ -42,21 +42,21 @@
     },
     {
       "count": 1,
-      "feature": "atbseg",
+      "feature": "atbSegmentation",
       "values": [
         "*open*"
       ]
     },
     {
       "count": 1,
-      "feature": "atbtok",
+      "feature": "atbTokenization",
       "values": [
         "*open*"
       ]
     },
     {
       "count": 1,
-      "feature": "bw",
+      "feature": "buckwalter",
       "values": [
         "*open*"
       ]
@@ -166,21 +166,21 @@
     },
     {
       "count": 1,
-      "feature": "d3seg",
+      "feature": "d3Segmentation",
       "values": [
         "*open*"
       ]
     },
     {
       "count": 1,
-      "feature": "d3tok",
+      "feature": "d3Tokenization",
       "values": [
         "*open*"
       ]
     },
     {
       "count": 1,
-      "feature": "diac",
+      "feature": "diacritizedForm",
       "values": [
         "*open*"
       ]
@@ -320,14 +320,14 @@
     },
     {
       "count": 1,
-      "feature": "lex",
+      "feature": "lex_logprob",
       "values": [
         "*open*"
       ]
     },
     {
       "count": 1,
-      "feature": "lex_logprob",
+      "feature": "lexicalForm",
       "values": [
         "*open*"
       ]
@@ -368,32 +368,8 @@
       ]
     },
     {
-      "count": 1,
-      "feature": "pattern",
-      "values": [
-        "*open*"
-      ]
-    },
-    {
-      "count": 1,
-      "feature": "pattern_abstract",
-      "values": [
-        "*open*"
-      ]
-    },
-    {
-      "count": 4,
-      "feature": "per",
-      "values": [
-        "na",
-        "3",
-        "2",
-        "1"
-      ]
-    },
-    {
       "count": 36,
-      "feature": "pos",
+      "feature": "partOfSpeech",
       "values": [
         "noun",
         "part_neg",
@@ -431,6 +407,30 @@
         "latin",
         "pron_dem",
         "part_connect"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "pattern",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 1,
+      "feature": "pattern_abstract",
+      "values": [
+        "*open*"
+      ]
+    },
+    {
+      "count": 4,
+      "feature": "per",
+      "values": [
+        "na",
+        "3",
+        "2",
+        "1"
       ]
     },
     {
@@ -557,7 +557,7 @@
     },
     {
       "count": 7,
-      "feature": "source",
+      "feature": "sourceType",
       "values": [
         "lex",
         "punct",
@@ -577,7 +577,7 @@
     },
     {
       "count": 1,
-      "feature": "stemcat",
+      "feature": "stemCategory",
       "values": [
         "*open*"
       ]

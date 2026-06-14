@@ -31,7 +31,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:d3a7eb5ed9648c93644a601c7b738db5a94c4960869f7a9b250f37044890cc1b",
+  "outputChecksum": "sha256:770991645e63283138704d380de7b0da3c0537778df374de3a826078b50a2260",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-ar-normalization",
   "packageVersion": "0.1.0",

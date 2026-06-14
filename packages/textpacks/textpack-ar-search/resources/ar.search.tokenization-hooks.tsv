@@ -1,10 +1,10 @@
 order	field
 1	d1seg
 2	d2seg
-3	d3seg
-4	atbseg
+3	d3Segmentation
+4	atbSegmentation
 5	d1tok
 6	d2tok
-7	d3tok
-8	atbtok
+7	d3Tokenization
+8	atbTokenization
 9	bwtok

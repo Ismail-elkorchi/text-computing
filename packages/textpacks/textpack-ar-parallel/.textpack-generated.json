@@ -31,7 +31,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:538782d39d1e3489b6138e26af3c5ead4b7f823fccab66f4ba14d508ffe48118",
+  "outputChecksum": "sha256:0d7495b85a143a22e3025946b86abc576302ee63f6232d2905a87b09dc9aaca0",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-ar-parallel",
   "packageVersion": "0.1.0",

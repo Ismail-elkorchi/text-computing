@@ -27,7 +27,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-eng",
@@ -37,7 +38,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-fra",
@@ -47,7 +49,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-spa",
@@ -57,7 +60,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textparallel.alignment.rows.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-quality",
@@ -67,7 +71,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-tatoeba-parallel-quality-profile",
@@ -78,9 +83,7 @@
 			"citations": [
 				"Tatoeba weekly Arabic exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"artifacts": [

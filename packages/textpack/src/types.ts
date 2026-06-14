@@ -64,6 +64,7 @@ export interface TextPackResource {
 	readonly path?: string;
 	readonly format?: string;
 	readonly mediaType?: string;
+	readonly schemaId?: string;
 	readonly targets?: TextPackTargets;
 	readonly license?: string;
 	readonly citations?: readonly string[];
@@ -286,6 +287,7 @@ type QueryText = string | readonly string[];
 export interface ResourceQuery {
 	readonly id?: QueryText;
 	readonly kind?: ResourceKind | readonly ResourceKind[];
+	readonly schemaId?: QueryText;
 	readonly packageId?: QueryText;
 	readonly packageName?: QueryText;
 	readonly languages?: QueryText;

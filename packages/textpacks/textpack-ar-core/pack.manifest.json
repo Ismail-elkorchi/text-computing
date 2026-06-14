@@ -32,7 +32,8 @@
 				"IANA Language Subtag Registry, File-Date 2026-05-05.",
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "ar-core-orthography",
@@ -42,7 +43,8 @@
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "ar-core-punctuation",
@@ -52,7 +54,8 @@
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "ar-core-basic-segmentation",
@@ -64,9 +67,7 @@
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "ar-core-quality",
@@ -78,7 +79,8 @@
 				"IANA Language Subtag Registry, File-Date 2026-05-05.",
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-core-quality-profile",
@@ -91,9 +93,7 @@
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

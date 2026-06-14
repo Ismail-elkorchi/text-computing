@@ -33,7 +33,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textnorm.rules.v1"
 		},
 		{
 			"id": "ar-search-tokenization-hooks",
@@ -43,7 +44,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textdata.segmentation-table.v1"
 		},
 		{
 			"id": "ar-search-morphology-hooks",
@@ -53,7 +55,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "ar-search-wordnet-synonyms",
@@ -63,7 +66,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "ar-search-profile",
@@ -76,9 +80,7 @@ export const manifest: TextPackManifest = {
 				"CAMeL Morph MSA LREC-COLING 2024 release.",
 				"Arabic WordNet 4.1.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-			}
+			"schemaId": "textsearch.analyzer-profile.v1"
 		},
 		{
 			"id": "ar-search-quality",
@@ -90,7 +92,8 @@ export const manifest: TextPackManifest = {
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"CAMeL Morph MSA LREC-COLING 2024 release.",
 				"Arabic WordNet 4.1.0."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-search-quality-profile",
@@ -103,9 +106,7 @@ export const manifest: TextPackManifest = {
 				"CAMeL Morph MSA LREC-COLING 2024 release.",
 				"Arabic WordNet 4.1.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

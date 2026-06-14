@@ -12,9 +12,9 @@ import {
   createPack,
   getResource,
   listResources,
-  loadMorphology,
-  loadSyntaxResources,
   loadPack,
+  openResourceJson,
+  openResourceTable,
   validateManifest,
 } from "@ismail-elkorchi/textpack";
 ```
@@ -43,20 +43,22 @@ const data = getResource<string>(pack, stoplists[0].id);
 Resource ids are exact. `getResource(pack, "x")` only returns the resource whose descriptor id is
 `"x"`.
 
-## Resource Family Adapters
+## Schema-Based Selection
 
-`textpack` provides lightweight adapters that select resources by capability slot and resource kind,
-then parse declared payload formats into resource handles:
+`textpack` selects and materializes resources. It does not own lexicon, KB, corpus, morphology,
+syntax, search, quality, or parallel behavior. Task packages select canonical schemas and build
+their own runtime objects:
 
 ```ts
 const pack = await loadPack(await import("@ismail-elkorchi/textpack-en-syntax-ud-gumreddit"));
-const syntax = loadSyntaxResources(pack);
-const morphology = loadMorphology(pack);
+const syntaxResources = listResources(pack, { schemaId: "textdata.syntax.v1" });
+const syntaxProfile = await openResourceJson(pack, syntaxResources[0].id, reader);
+const annotationRows = await openResourceTable(pack, "en-ud-gumreddit-annotations", reader);
 ```
 
-The adapters cover the shared textpack resource families: lexicon, segmentation, normalization,
-morphology, syntax, search, knowledge base, corpus, parallel, and quality. They parse TSV resources
-as `{ columns, rows }`, JSON resources as JSON values, and leave unknown formats as raw payloads.
+Runtime packages decide how to interpret canonical resources. `textpack` only validates manifests,
+loads modules, composes resource maps, queries descriptors, and materializes text/JSON/table payloads
+from caller-provided resource values.
 
 ## Composition
 

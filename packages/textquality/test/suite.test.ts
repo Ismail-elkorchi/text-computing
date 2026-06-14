@@ -120,6 +120,7 @@ test("quality profile textpack resources materialize through the adapter", async
 					id: "quality-fr-profile",
 					kind: "quality-profile" as const,
 					format: "json",
+					schemaId: "textquality.profile.v1",
 				},
 			],
 		},

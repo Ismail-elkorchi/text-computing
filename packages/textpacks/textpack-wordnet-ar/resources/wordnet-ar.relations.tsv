@@ -1,4 +1,4 @@
-scope	sourceId	relType	targetId
+scope	sourceId	predicateId	targetId
 synset	awn4-00001740-a	attribute	awn4-05207437-n
 synset	awn4-00001740-a	attribute	awn4-05624029-n
 synset	awn4-00001740-n	hyponym	awn4-00001930-n

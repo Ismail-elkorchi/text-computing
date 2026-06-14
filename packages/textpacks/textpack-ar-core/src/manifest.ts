@@ -37,7 +37,8 @@ export const manifest: TextPackManifest = {
 				"IANA Language Subtag Registry, File-Date 2026-05-05.",
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "ar-core-orthography",
@@ -47,7 +48,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "ar-core-punctuation",
@@ -57,7 +59,8 @@ export const manifest: TextPackManifest = {
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "ar-core-basic-segmentation",
@@ -69,9 +72,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "ar-core-quality",
@@ -83,7 +84,8 @@ export const manifest: TextPackManifest = {
 				"IANA Language Subtag Registry, File-Date 2026-05-05.",
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-core-quality-profile",
@@ -96,9 +98,7 @@ export const manifest: TextPackManifest = {
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

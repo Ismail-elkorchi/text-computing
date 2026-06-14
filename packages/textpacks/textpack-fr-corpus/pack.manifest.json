@@ -27,7 +27,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textdata.corpus.rows.v1"
 		},
 		{
 			"id": "fr-tatoeba-corpus-canonical",
@@ -38,9 +39,7 @@
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-corpus-resource.schema.json"
-			}
+			"schemaId": "textdata.corpus.v1"
 		},
 		{
 			"id": "fr-tatoeba-corpus-quality",
@@ -50,7 +49,8 @@
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-tatoeba-corpus-quality-profile",
@@ -61,9 +61,7 @@
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"artifacts": [

@@ -172,6 +172,7 @@ test("search profile textpack resources materialize through the adapter", async 
 					id: "search-fr-profile",
 					kind: "search-profile" as const,
 					format: "json",
+					schemaId: "textsearch.analyzer-profile.v1",
 				},
 			],
 		},

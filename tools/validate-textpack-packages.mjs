@@ -1,6 +1,7 @@
 import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { gunzipSync } from "node:zlib";
 import Ajv from "ajv";
 
 const ROOT = process.cwd();
@@ -15,45 +16,67 @@ const EVALUATION_RECORD_SCHEMA_PATH =
 	"schemas/textpack-evaluation-record.schema.json";
 const CANONICAL_RESOURCE_SCHEMA_PATHS = new Map([
 	[
-		"textpack-corpus-resource.schema.json",
+		"textdata.corpus.v1",
 		"schemas/textpack-corpus-resource.schema.json",
 	],
 	[
-		"textpack-kb-resource.schema.json",
+		"textkb.knowledge-base.v1",
 		"schemas/textpack-kb-resource.schema.json",
 	],
 	[
-		"textpack-lexicon-resource.schema.json",
+		"textlex.lexicon.v1",
 		"schemas/textpack-lexicon-resource.schema.json",
 	],
 	[
-		"textpack-morphology-resource.schema.json",
+		"textlex.morphology.v1",
 		"schemas/textpack-morphology-resource.schema.json",
 	],
 	[
-		"textpack-normalization-resource.schema.json",
+		"textnorm.profile.v1",
 		"schemas/textpack-normalization-resource.schema.json",
 	],
 	[
-		"textpack-parallel-resource.schema.json",
+		"textparallel.alignment.v1",
 		"schemas/textpack-parallel-resource.schema.json",
 	],
 	[
-		"textpack-quality-profile-resource.schema.json",
+		"textquality.profile.v1",
 		"schemas/textpack-quality-profile-resource.schema.json",
 	],
 	[
-		"textpack-search-analyzer-resource.schema.json",
+		"textsearch.analyzer-profile.v1",
 		"schemas/textpack-search-analyzer-resource.schema.json",
 	],
 	[
-		"textpack-segmentation-resource.schema.json",
+		"textdata.segmentation-profile.v1",
 		"schemas/textpack-segmentation-resource.schema.json",
 	],
 	[
-		"textpack-syntax-resource.schema.json",
+		"textdata.syntax.v1",
 		"schemas/textpack-syntax-resource.schema.json",
 	],
+]);
+const CANONICAL_RESOURCE_SCHEMA_IDS = new Set([
+	...CANONICAL_RESOURCE_SCHEMA_PATHS.keys(),
+	"textdata.corpus.rows.v1",
+	"textdata.dataset.v1",
+	"textdata.segmentation-table.v1",
+	"textdata.syntax-table.v1",
+	"textdata.syntax-profile.v1",
+	"textfacts.language-registry.v1",
+	"textfacts.locale-profile.v1",
+	"textfacts.unicode-profile.v1",
+	"textlex.abbreviation-table.v1",
+	"textlex.lexicon.rows.v1",
+	"textlex.morphology.rows.v1",
+	"textlex.stoplist.v1",
+	"textkb.knowledge-base.rows.v1",
+	"textnorm.policy.v1",
+	"textnorm.rules.v1",
+	"textparallel.alignment.rows.v1",
+	"textquality.evidence.v1",
+	"textsearch.analyzer-table.v1",
+	"textpack.raw-resource.v1",
 ]);
 const GENERATED_PACKAGE_FILES = [
 	".textpack-generated.json",
@@ -65,6 +88,23 @@ const GENERATED_PACKAGE_FILES = [
 	"EVALUATION.generated.json",
 	"QUALITY.generated.json",
 ];
+const SOURCE_SHAPED_TABLE_COLUMNS = new Set([
+	"arwikiUrl",
+	"atbseg",
+	"atbtok",
+	"bw",
+	"d3seg",
+	"d3tok",
+	"diac",
+	"enwikiUrl",
+	"frwikiUrl",
+	"lex",
+	"propertyId",
+	"relType",
+	"sourceEntityId",
+	"stemcat",
+	"targetEntityId",
+]);
 const EXPECTED_LANGUAGE_COMPOSITE_SLOTS = [
 	"foundation",
 	"core",
@@ -182,6 +222,35 @@ function assertPackageRelativePath(value, label) {
 	expect(
 		!/^https?:\/\//u.test(value),
 		`${label} must reference a local package artifact.`,
+	);
+}
+
+function decodedResourceText(relativePath, encodedText) {
+	if (!relativePath.endsWith(".gz.b64")) return encodedText;
+	return gunzipSync(
+		Buffer.from(encodedText.replace(/\s+/gu, ""), "base64"),
+	).toString("utf8");
+}
+
+function tableHeaderColumns(text) {
+	const firstLine = text
+		.replace(/\r\n/gu, "\n")
+		.replace(/\r/gu, "\n")
+		.split("\n")[0];
+	return firstLine === undefined || firstLine.length === 0
+		? []
+		: firstLine.split("\t");
+}
+
+function assertNeutralTableHeader(packageName, resource, text) {
+	if (!String(resource.format ?? "").includes("tsv")) return;
+	const sourceShapedColumns = tableHeaderColumns(text).filter((column) =>
+		SOURCE_SHAPED_TABLE_COLUMNS.has(column),
+	);
+	expect(
+		sourceShapedColumns.length === 0,
+		`${packageName} resource ${resource.id} exposes source-shaped table columns under schema ${resource.schemaId}.`,
+		{ columns: sourceShapedColumns },
 	);
 }
 
@@ -323,9 +392,86 @@ async function collectTextpackPackageDirs() {
 function assertFamilyCount(packageName, family, minimumCount, label) {
 	expect(
 		family.resources.length >= minimumCount,
-		`${packageName} ${label} adapter must expose at least ${minimumCount} resources.`,
+		`${packageName} ${label} resources must expose at least ${minimumCount} canonical resources.`,
 		{ actual: family.resources.map((resource) => resource.id) },
 	);
+}
+
+const RESOURCE_GROUP_SCHEMA_IDS = {
+	lexicon: new Set([
+		"textlex.lexicon.v1",
+		"textlex.lexicon.rows.v1",
+		"textlex.stoplist.v1",
+		"textlex.abbreviation-table.v1",
+	]),
+	segmentation: new Set([
+		"textdata.segmentation-profile.v1",
+		"textdata.segmentation-table.v1",
+	]),
+	normalization: new Set([
+		"textnorm.profile.v1",
+		"textnorm.rules.v1",
+		"textnorm.policy.v1",
+	]),
+	morphology: new Set([
+		"textlex.morphology.v1",
+		"textlex.morphology.rows.v1",
+	]),
+	syntax: new Set([
+		"textdata.syntax.v1",
+		"textdata.syntax-table.v1",
+		"textdata.dataset.v1",
+		"textdata.syntax-profile.v1",
+	]),
+	search: new Set([
+		"textsearch.analyzer-profile.v1",
+		"textsearch.analyzer-table.v1",
+	]),
+	"knowledge-base": new Set([
+		"textkb.knowledge-base.v1",
+		"textkb.knowledge-base.rows.v1",
+	]),
+	corpus: new Set(["textdata.corpus.v1", "textdata.corpus.rows.v1"]),
+	parallel: new Set([
+		"textparallel.alignment.v1",
+		"textparallel.alignment.rows.v1",
+	]),
+	quality: new Set(["textquality.profile.v1", "textquality.evidence.v1"]),
+};
+
+function payloadForResource(runtimePack, resource) {
+	const value = runtimePack.resources[resource.id];
+	if (isFileBackedResourceValue(value)) {
+		return Object.freeze({ type: "raw", value });
+	}
+	const format = resource.format ?? "";
+	if (typeof value === "string") {
+		if (format.includes("tsv") || format.includes("tab-separated-values")) {
+			return Object.freeze({ type: "table" });
+		}
+		if (format === "json" || format.endsWith("+json")) {
+			return Object.freeze({ type: "json" });
+		}
+	}
+	if (format === "json" || format.endsWith("+json")) {
+		return Object.freeze({ type: "json" });
+	}
+	return Object.freeze({ type: "raw", value });
+}
+
+function resourceGroup(runtimePack, groupName) {
+	const schemaIds = RESOURCE_GROUP_SCHEMA_IDS[groupName];
+	expect(schemaIds !== undefined, `Unknown textpack resource group ${groupName}.`);
+	const resources = runtimePack.manifest.resources
+		.filter((resource) => schemaIds.has(resource.schemaId))
+		.map((resource) =>
+			Object.freeze({
+				id: resource.id,
+				descriptor: resource,
+				payload: payloadForResource(runtimePack, resource),
+			}),
+		);
+	return Object.freeze({ resources: Object.freeze(resources) });
 }
 
 function assertFirstPayload(packageName, family, payloadType, label) {
@@ -335,7 +481,7 @@ function assertFirstPayload(packageName, family, payloadType, label) {
 	}
 	expect(
 		payload?.type === payloadType,
-		`${packageName} ${label} adapter must parse ${payloadType} payloads.`,
+		`${packageName} ${label} resources must expose ${payloadType} payloads.`,
 		payload,
 	);
 }
@@ -387,8 +533,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const localeProfiles = runtime.listResources(runtimePack, {
 			kind: "locale-profile",
 		});
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const quality = resourceGroup(runtimePack, "quality");
 		expect(
 			localeProfiles.length >= 3,
 			`${packageName} core resources must expose language, orthography, and punctuation profiles.`,
@@ -400,9 +546,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-ar-msa-morphology") {
-		const morphology = runtime.loadMorphology(runtimePack);
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, morphology, 4, "morphology");
 		assertFamilyCount(packageName, segmentation, 1, "segmentation");
 		assertFamilyCount(packageName, quality, 1, "quality");
@@ -432,8 +578,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-ar-normalization") {
-		const normalization = runtime.loadNormalizer(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const normalization = resourceGroup(runtimePack, "normalization");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, normalization, 3, "normalization");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, normalization, "table", "normalization");
@@ -441,12 +587,12 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-ar-search") {
-		const normalization = runtime.loadNormalizer(runtimePack);
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const morphology = runtime.loadMorphology(runtimePack);
-		const lexicon = runtime.loadLexicon(runtimePack);
-		const search = runtime.loadSearchAnalyzer(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const normalization = resourceGroup(runtimePack, "normalization");
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const lexicon = resourceGroup(runtimePack, "lexicon");
+		const search = resourceGroup(runtimePack, "search");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, normalization, 1, "normalization");
 		assertFamilyCount(packageName, segmentation, 1, "segmentation");
 		assertFamilyCount(packageName, morphology, 1, "morphology");
@@ -508,9 +654,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa") {
-		const syntax = runtime.loadSyntaxResources(runtimePack);
-		const morphology = runtime.loadMorphology(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const syntax = resourceGroup(runtimePack, "syntax");
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, syntax, 5, "syntax");
 		assertFamilyCount(packageName, morphology, 1, "morphology");
 		assertFamilyCount(packageName, quality, 1, "quality");
@@ -543,9 +689,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit") {
-		const syntax = runtime.loadSyntaxResources(runtimePack);
-		const morphology = runtime.loadMorphology(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const syntax = resourceGroup(runtimePack, "syntax");
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, syntax, 5, "syntax");
 		assertFamilyCount(packageName, morphology, 1, "morphology");
 		assertFamilyCount(packageName, quality, 1, "quality");
@@ -620,8 +766,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-corpus") {
-		const corpus = runtime.loadCorpus(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const corpus = resourceGroup(runtimePack, "corpus");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, corpus, 1, "corpus");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, corpus, "table", "corpus");
@@ -630,8 +776,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-parallel") {
-		const parallel = runtime.loadParallelResources(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const parallel = resourceGroup(runtimePack, "parallel");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, parallel, 8, "parallel");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, parallel, "table", "parallel");
@@ -640,8 +786,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-ar-corpus") {
-		const corpus = runtime.loadCorpus(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const corpus = resourceGroup(runtimePack, "corpus");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, corpus, 1, "corpus");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, corpus, "table", "corpus");
@@ -650,8 +796,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-ar-parallel") {
-		const parallel = runtime.loadParallelResources(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const parallel = resourceGroup(runtimePack, "parallel");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, parallel, 4, "parallel");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, parallel, "table", "parallel");
@@ -664,8 +810,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		packageName === "@ismail-elkorchi/textpack-wikidata-en" ||
 		packageName === "@ismail-elkorchi/textpack-wikidata-fr"
 	) {
-		const knowledge = runtime.loadKnowledgeBase(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const knowledge = resourceGroup(runtimePack, "knowledge-base");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, knowledge, 4, "knowledge-base");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, knowledge, "table", "knowledge-base");
@@ -692,8 +838,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 			kind: "abbreviation-table",
 		});
 		const stoplists = runtime.listResources(runtimePack, { kind: "stoplist" });
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const quality = resourceGroup(runtimePack, "quality");
 		expect(
 			localeProfiles.length >= 3,
 			`${packageName} core resources must expose language, orthography, and punctuation profiles.`,
@@ -713,8 +859,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-normalization") {
-		const normalization = runtime.loadNormalizer(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const normalization = resourceGroup(runtimePack, "normalization");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, normalization, 2, "normalization");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, normalization, "table", "normalization");
@@ -722,8 +868,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-segmentation") {
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, segmentation, 4, "segmentation");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, segmentation, "table", "segmentation");
@@ -731,8 +877,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-normalization") {
-		const normalization = runtime.loadNormalizer(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const normalization = resourceGroup(runtimePack, "normalization");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, normalization, 2, "normalization");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, normalization, "table", "normalization");
@@ -743,8 +889,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		const localeProfiles = runtime.listResources(runtimePack, {
 			kind: "locale-profile",
 		});
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const quality = resourceGroup(runtimePack, "quality");
 		expect(
 			localeProfiles.length >= 3,
 			`${packageName} core resources must expose language, orthography, and punctuation profiles.`,
@@ -756,8 +902,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-segmentation") {
-		const segmentation = runtime.loadSegmenter(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const segmentation = resourceGroup(runtimePack, "segmentation");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, segmentation, 4, "segmentation");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, segmentation, "table", "segmentation");
@@ -765,8 +911,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-corpus") {
-		const corpus = runtime.loadCorpus(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const corpus = resourceGroup(runtimePack, "corpus");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, corpus, 1, "corpus");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, corpus, "table", "corpus");
@@ -775,8 +921,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-parallel") {
-		const parallel = runtime.loadParallelResources(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const parallel = resourceGroup(runtimePack, "parallel");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, parallel, 4, "parallel");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, parallel, "table", "parallel");
@@ -895,10 +1041,10 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-lexique-sa") {
-		const lexicon = runtime.loadLexicon(runtimePack);
-		const morphology = runtime.loadMorphology(runtimePack);
-		const search = runtime.loadSearchAnalyzer(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const lexicon = resourceGroup(runtimePack, "lexicon");
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const search = resourceGroup(runtimePack, "search");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, lexicon, 3, "lexicon");
 		assertFamilyCount(packageName, morphology, 2, "morphology");
 		assertFamilyCount(packageName, search, 1, "search");
@@ -910,9 +1056,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa") {
-		const syntax = runtime.loadSyntaxResources(runtimePack);
-		const morphology = runtime.loadMorphology(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const syntax = resourceGroup(runtimePack, "syntax");
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, syntax, 5, "syntax");
 		assertFamilyCount(packageName, morphology, 1, "morphology");
 		assertFamilyCount(packageName, quality, 1, "quality");
@@ -922,8 +1068,8 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-fr-unimorph-sa") {
-		const morphology = runtime.loadMorphology(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, morphology, 6, "morphology");
 		assertFamilyCount(packageName, quality, 2, "quality");
 		assertFirstPayload(packageName, morphology, "table", "morphology");
@@ -931,9 +1077,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-inflection-scowl") {
-		const lexicon = runtime.loadLexicon(runtimePack);
-		const morphology = runtime.loadMorphology(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const lexicon = resourceGroup(runtimePack, "lexicon");
+		const morphology = resourceGroup(runtimePack, "morphology");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, lexicon, 1, "lexicon");
 		assertFamilyCount(packageName, morphology, 5, "morphology");
 		assertFamilyCount(packageName, quality, 2, "quality");
@@ -943,9 +1089,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-en-wordlist-esdb") {
-		const lexicon = runtime.loadLexicon(runtimePack);
-		const search = runtime.loadSearchAnalyzer(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const lexicon = resourceGroup(runtimePack, "lexicon");
+		const search = resourceGroup(runtimePack, "search");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, lexicon, 3, "lexicon");
 		assertFamilyCount(packageName, search, 1, "search");
 		assertFamilyCount(packageName, quality, 2, "quality");
@@ -955,9 +1101,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		return;
 	}
 	if (packageName === "@ismail-elkorchi/textpack-wordnet-en") {
-		const lexicon = runtime.loadLexicon(runtimePack);
-		const knowledgeBase = runtime.loadKnowledgeBase(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const lexicon = resourceGroup(runtimePack, "lexicon");
+		const knowledgeBase = resourceGroup(runtimePack, "knowledge-base");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, lexicon, 1, "lexicon");
 		assertFamilyCount(packageName, knowledgeBase, 4, "knowledge-base");
 		assertFamilyCount(packageName, quality, 1, "quality");
@@ -966,9 +1112,9 @@ function assertGeneratedTaskAdapters(packageName, runtimePack, runtime) {
 		assertFirstPayload(packageName, quality, "json", "quality");
 	}
 	if (packageName === "@ismail-elkorchi/textpack-wordnet-ar") {
-		const lexicon = runtime.loadLexicon(runtimePack);
-		const knowledgeBase = runtime.loadKnowledgeBase(runtimePack);
-		const quality = runtime.loadQualityProfile(runtimePack);
+		const lexicon = resourceGroup(runtimePack, "lexicon");
+		const knowledgeBase = resourceGroup(runtimePack, "knowledge-base");
+		const quality = resourceGroup(runtimePack, "quality");
 		assertFamilyCount(packageName, lexicon, 1, "lexicon");
 		assertFamilyCount(packageName, knowledgeBase, 4, "knowledge-base");
 		assertFamilyCount(packageName, quality, 1, "quality");
@@ -998,10 +1144,10 @@ const languagePolicyByTag = new Map(
 		language,
 	]),
 );
-const validateCanonicalResourceByName = new Map();
-for (const [schemaName, schemaPath] of CANONICAL_RESOURCE_SCHEMA_PATHS) {
-	validateCanonicalResourceByName.set(
-		schemaName,
+const validateCanonicalResourceBySchemaId = new Map();
+for (const [schemaId, schemaPath] of CANONICAL_RESOURCE_SCHEMA_PATHS) {
+	validateCanonicalResourceBySchemaId.set(
+		schemaId,
 		canonicalAjv.compile(await readJson(schemaPath)),
 	);
 }
@@ -1301,7 +1447,8 @@ for (const packDir of packDirs) {
 				await fileExists(relativePath),
 				`${manifest.packageName} missing resource ${resource.path}.`,
 			);
-			const content = await readFile(path.join(ROOT, relativePath), "utf8");
+			const encodedContent = await readFile(path.join(ROOT, relativePath), "utf8");
+			const content = decodedResourceText(resource.path, encodedContent);
 			const nonEmptyLineCount = content
 				.split(/\r?\n/u)
 				.map((line) => line.trim())
@@ -1310,28 +1457,32 @@ for (const packDir of packDirs) {
 				nonEmptyLineCount > 0,
 				`${manifest.packageName} resource ${resource.path} must not be empty.`,
 			);
-			const canonicalSchema = isRecord(resource.metadata)
-				? resource.metadata.canonicalSchema
-				: undefined;
-			if (canonicalSchema !== undefined) {
-				expect(
-					typeof canonicalSchema === "string",
-					`${manifest.packageName} resource ${resource.id} canonicalSchema must be a schema filename.`,
-				);
+			assertNeutralTableHeader(manifest.packageName, resource, content);
+			expect(
+				typeof resource.schemaId === "string" &&
+					resource.schemaId.length > 0,
+				`${manifest.packageName} resource ${resource.id} must declare schemaId.`,
+			);
+			expect(
+				CANONICAL_RESOURCE_SCHEMA_IDS.has(resource.schemaId),
+				`${manifest.packageName} resource ${resource.id} references unknown schemaId ${resource.schemaId}.`,
+			);
+			expect(
+				!isRecord(resource.metadata) ||
+					resource.metadata.canonicalSchema === undefined,
+				`${manifest.packageName} resource ${resource.id} must use schemaId, not metadata.canonicalSchema.`,
+			);
+			const validateCanonicalResource =
+				validateCanonicalResourceBySchemaId.get(resource.schemaId);
+			if (validateCanonicalResource !== undefined) {
 				expect(
 					resource.format === "json",
 					`${manifest.packageName} canonical resource ${resource.id} must use json format.`,
 				);
-				const validateCanonicalResource =
-					validateCanonicalResourceByName.get(canonicalSchema);
-				expect(
-					validateCanonicalResource !== undefined,
-					`${manifest.packageName} resource ${resource.id} references unknown canonical schema ${canonicalSchema}.`,
-				);
 				const resourceJson = JSON.parse(content);
 				expect(
 					validateCanonicalResource(resourceJson),
-					`${manifest.packageName} resource ${resource.id} failed ${canonicalSchema}.`,
+					`${manifest.packageName} resource ${resource.id} failed ${resource.schemaId}.`,
 					validateCanonicalResource.errors,
 				);
 			}

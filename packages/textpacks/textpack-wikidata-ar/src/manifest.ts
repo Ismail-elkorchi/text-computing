@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wikidata-ar-aliases",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wikidata-ar-relations",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
-			]
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
 		},
 		{
 			"id": "wikidata-ar-kb-canonical",
@@ -63,9 +66,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-kb-resource.schema.json"
-			}
+			"schemaId": "textkb.knowledge-base.v1"
 		},
 		{
 			"id": "wikidata-ar-quality",
@@ -75,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "wikidata-ar-quality-profile",
@@ -86,9 +88,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"artifacts": [

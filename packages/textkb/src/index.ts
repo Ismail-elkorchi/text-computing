@@ -78,27 +78,5 @@ export {
 	thesaurusRelations,
 	traverseSemanticRelations,
 } from "./internal/core.js";
-export type {
-	WikidataAliasRecord,
-	WikidataEntityRecord,
-	WikidataPackOptions,
-	WikidataPackResources,
-	WikidataRelationRecord,
-	WikidataResourceIds,
-} from "./wikidata/mod.js";
-export { wikidataResourcesFromPack } from "./wikidata/mod.js";
-export type {
-	WordNetLexicalEntryRecord,
-	WordNetPackOptions,
-	WordNetPackResources,
-	WordNetRelationRecord,
-	WordNetResourceIds,
-	WordNetSenseRecord,
-	WordNetSynsetRecord,
-} from "./wordnet/mod.js";
-export {
-	openEnglishWordNetFromPack,
-	openEnglishWordNetFromPackAsync,
-	wordNetResourcesFromPack,
-	wordNetResourcesFromPackAsync,
-} from "./wordnet/mod.js";
+export type { KnowledgeBaseFromPackOptions } from "./textpack.js";
+export { knowledgeBaseFromPack } from "./textpack.js";

@@ -132,8 +132,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 19570884,
-      "checksum": "sha256:fcf45d3d2ddeb3350ae18f50087387635369d8807e109bb1b30fa07ab1969ed6",
+      "byteLength": 19570888,
+      "checksum": "sha256:11e617f1eab3f06e869bd8e9be1f68da9a051c56a86aa9063aa28fc75e535b33",
       "id": "wordnet-en-relations",
       "kind": "knowledge-base",
       "lineCount": 355066,
@@ -142,7 +142,7 @@
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 19570884,
+      "resourceTextByteLength": 19570888,
       "sizeClass": "medium"
     },
     {

@@ -6,12 +6,7 @@ import {
 	createPack,
 	getResource,
 	listResources,
-	loadLexicon,
-	loadNormalizer,
 	loadPack,
-	loadQualityProfile,
-	loadSegmenter,
-	loadSyntaxResources,
 	openResourceJson,
 	openResourceTable,
 	openResourceText,
@@ -56,6 +51,7 @@ const manifest: TextPackManifest = {
 			kind: "stoplist",
 			path: "resources/stopwords.txt",
 			format: "lines",
+			schemaId: "textlex.stoplist.v1",
 			metadata: {
 				role: "function-words",
 			},
@@ -65,6 +61,7 @@ const manifest: TextPackManifest = {
 			kind: "lexicon",
 			path: "resources/lexicon.tsv",
 			format: "tsv",
+			schemaId: "textlex.lexicon.rows.v1",
 		},
 		{
 			id: "gazetteer-en-test",
@@ -82,6 +79,7 @@ const manifest: TextPackManifest = {
 			id: "quality-en-test",
 			kind: "quality-profile",
 			format: "json",
+			schemaId: "textquality.profile.v1",
 		},
 	],
 	capabilitySlots: [
@@ -299,8 +297,23 @@ assert.throws(
 		}),
 	/I-JSON/,
 );
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			resources: [
+				{
+					id: "bad",
+					kind: "dataset",
+					metadata: { canonicalSchema: "textpack-corpus-resource.schema.json" },
+				},
+			],
+		}),
+	/metadata\.canonicalSchema is not supported/,
+);
 
 const pack = createPack(manifest, resources);
+assert.equal(pack.manifest.resources[0]?.schemaId, "textlex.stoplist.v1");
 assert.equal(getResource<string>(pack, "stoplist-en-test"), "a\nan\nthe\n");
 assert.throws(() => getResource(pack, "missing"), /not present/);
 assert.throws(
@@ -329,47 +342,34 @@ assert.deepEqual(
 	}).map((resource) => resource.id),
 	["stoplist-en-test"],
 );
+assert.deepEqual(
+	listResources(pack, { schemaId: "textlex.stoplist.v1" }).map(
+		(resource) => resource.id,
+	),
+	["stoplist-en-test"],
+);
 assert.deepEqual(capabilities(pack), {
 	segmentation: "rules",
 	extraction: "gazetteer",
 	terminology: "lexicon",
 });
-const lexiconFamily = loadLexicon(pack);
+const lexiconResources = listResources(pack, {
+	schemaId: ["textlex.stoplist.v1", "textlex.lexicon.rows.v1"],
+});
 assert.deepEqual(
-	lexiconFamily.resources.map((resource) => resource.id),
-	["stoplist-en-test", "lexicon-en-test", "gazetteer-en-test"],
+	lexiconResources.map((resource) => resource.id),
+	["stoplist-en-test", "lexicon-en-test"],
 );
-const lexiconTable = lexiconFamily.resources[1]?.payload;
-assert.equal(lexiconTable?.type, "table");
-if (lexiconTable?.type !== "table") {
-	throw new Error("lexicon payload must parse as a table");
-}
+const lexiconTable = await openResourceTable(pack, "lexicon-en-test");
 assert.deepEqual(lexiconTable.columns, ["surface", "lemma", "pos"]);
 assert.deepEqual(lexiconTable.rows[0], {
 	surface: "analyses",
 	lemma: "analysis",
 	pos: "NOUN",
 });
-assert.deepEqual(
-	loadSegmenter(pack).resources.map((resource) => resource.id),
-	["rules-en-test"],
-);
-assert.deepEqual(
-	loadSyntaxResources(pack).resources.map((resource) => resource.id),
-	["rules-en-test"],
-);
-assert.deepEqual(
-	loadSyntaxResources(pack, { slots: [] }).resources.map(
-		(resource) => resource.id,
-	),
-	["rules-en-test"],
-);
-const qualityPayload = loadQualityProfile(pack).resources[0]?.payload;
-assert.equal(qualityPayload?.type, "json");
-if (qualityPayload?.type !== "json") {
-	throw new Error("quality payload must parse as JSON");
-}
-assert.deepEqual(qualityPayload.value, { recordCount: 1 });
+assert.deepEqual(await openResourceJson(pack, "quality-en-test"), {
+	recordCount: 1,
+});
 
 const loadedFromNamed = await loadPack({ manifest, resources });
 assert.equal(
@@ -556,6 +556,7 @@ const frHistoricalManifest: TextPackManifest = {
 		{
 			id: "normalization-fr-historical",
 			kind: "normalization-profile",
+			schemaId: "textnorm.rules.v1",
 		},
 	],
 	capabilitySlots: [
@@ -657,7 +658,9 @@ assert.equal(
 	"estoit=>etait\n",
 );
 assert.deepEqual(
-	loadNormalizer(resolvedFrenchFull).resources.map((resource) => resource.id),
+	listResources(resolvedFrenchFull, { schemaId: "textnorm.rules.v1" }).map(
+		(resource) => resource.id,
+	),
 	["normalization-fr-historical"],
 );
 await assert.rejects(

@@ -10,6 +10,7 @@ import {
 export interface ParallelRowsFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
+	readonly schemaIds?: readonly string[];
 }
 
 export interface ParallelTableResource {
@@ -43,7 +44,10 @@ export async function parallelTablesFromPack(
 ): Promise<readonly ParallelTableResource[]> {
 	const ids = idSet(options.resourceIds);
 	const resources = listResources(pack, {
-		kind: ["alignment-table", "translation-memory"],
+		schemaId: options.schemaIds ?? [
+			"textparallel.alignment.v1",
+			"textparallel.alignment.rows.v1",
+		],
 	})
 		.filter((resource) => ids.size === 0 || ids.has(resource.id))
 		.sort((left, right) => left.id.localeCompare(right.id));

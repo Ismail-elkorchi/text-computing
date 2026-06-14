@@ -21,11 +21,11 @@
           "order": 2
         },
         {
-          "name": "d3seg",
+          "name": "d3Segmentation",
           "order": 3
         },
         {
-          "name": "atbseg",
+          "name": "atbSegmentation",
           "order": 4
         },
         {
@@ -37,11 +37,11 @@
           "order": 6
         },
         {
-          "name": "d3tok",
+          "name": "d3Tokenization",
           "order": 7
         },
         {
-          "name": "atbtok",
+          "name": "atbTokenization",
           "order": 8
         },
         {

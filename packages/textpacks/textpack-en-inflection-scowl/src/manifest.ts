@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "en-scowl-pos-inventory",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "en-scowl-lookup-analyzer",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "en-scowl-lookup-generator",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "en-scowl-inflection-lexicon-canonical",
@@ -73,9 +77,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-lexicon-resource.schema.json"
-			}
+			"schemaId": "textlex.lexicon.v1"
 		},
 		{
 			"id": "en-scowl-inflection-morphology-canonical",
@@ -86,9 +88,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-morphology-resource.schema.json"
-			}
+			"schemaId": "textlex.morphology.v1"
 		},
 		{
 			"id": "en-scowl-inflection-quality",
@@ -98,7 +98,8 @@ export const manifest: TextPackManifest = {
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-scowl-inflection-quality-profile",
@@ -109,9 +110,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

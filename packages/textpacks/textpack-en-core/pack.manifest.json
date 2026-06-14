@@ -34,7 +34,8 @@
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "en-core-orthography",
@@ -44,7 +45,8 @@
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "en-core-punctuation",
@@ -54,7 +56,8 @@
 			"license": "Unicode-3.0",
 			"citations": [
 				"Unicode Character Database 17.0.0."
-			]
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
 			"id": "en-core-abbreviations",
@@ -64,7 +67,8 @@
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.abbreviation-table.v1"
 		},
 		{
 			"id": "en-core-function-words",
@@ -74,7 +78,8 @@
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textlex.stoplist.v1"
 		},
 		{
 			"id": "en-core-basic-segmentation",
@@ -86,9 +91,7 @@
 				"Unicode Character Database 17.0.0.",
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-segmentation-resource.schema.json"
-			}
+			"schemaId": "textdata.segmentation-profile.v1"
 		},
 		{
 			"id": "en-core-quality",
@@ -102,7 +105,8 @@
 				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 				"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 				"SCOWLv2 rich text export, rel-2026.02.25."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-core-quality-profile",
@@ -117,9 +121,7 @@
 				"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 				"SCOWLv2 rich text export, rel-2026.02.25."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

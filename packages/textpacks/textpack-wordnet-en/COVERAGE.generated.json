@@ -152,8 +152,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 19570884,
-      "checksum": "sha256:fcf45d3d2ddeb3350ae18f50087387635369d8807e109bb1b30fa07ab1969ed6",
+      "byteLength": 19570888,
+      "checksum": "sha256:11e617f1eab3f06e869bd8e9be1f68da9a051c56a86aa9063aa28fc75e535b33",
       "kind": "knowledge-base",
       "nonEmptyLineCount": 355065,
       "path": "resources/wordnet-en.relations.tsv",

@@ -339,6 +339,7 @@ function validateResource(value: unknown, path: string): TextPackResource {
 			"path",
 			"format",
 			"mediaType",
+			"schemaId",
 			"targets",
 			"license",
 			"citations",
@@ -349,6 +350,17 @@ function validateResource(value: unknown, path: string): TextPackResource {
 	);
 	const metadata = record.metadata;
 	if (metadata !== undefined) assertJsonValue(metadata, `${path}.metadata`);
+	if (
+		metadata !== undefined &&
+		metadata !== null &&
+		typeof metadata === "object" &&
+		!Array.isArray(metadata) &&
+		"canonicalSchema" in metadata
+	) {
+		throw new TypeError(
+			`${path}.metadata.canonicalSchema is not supported; use ${path}.schemaId.`,
+		);
+	}
 	const citations = readStringArray(record.citations, `${path}.citations`);
 	const dependencies = validateDependencies(
 		record.dependencies,
@@ -365,6 +377,7 @@ function validateResource(value: unknown, path: string): TextPackResource {
 		path?: string;
 		format?: string;
 		mediaType?: string;
+		schemaId?: string;
 		targets?: TextPackTargets;
 		license?: string;
 		citations?: readonly string[];
@@ -378,11 +391,13 @@ function validateResource(value: unknown, path: string): TextPackResource {
 	const resourcePath = readOptionalString(record, "path", path);
 	const format = readOptionalString(record, "format", path);
 	const mediaType = readOptionalString(record, "mediaType", path);
+	const schemaId = readOptionalString(record, "schemaId", path);
 	const license = readOptionalString(record, "license", path);
 	if (name !== undefined) resource.name = name;
 	if (resourcePath !== undefined) resource.path = resourcePath;
 	if (format !== undefined) resource.format = format;
 	if (mediaType !== undefined) resource.mediaType = mediaType;
+	if (schemaId !== undefined) resource.schemaId = schemaId;
 	if (targets !== undefined) resource.targets = targets;
 	if (license !== undefined) resource.license = license;
 	if (citations !== undefined) resource.citations = citations;

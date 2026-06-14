@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.syntax-table.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-features",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-dependencies",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.syntax-table.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-sentence-profile",
@@ -62,7 +65,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.syntax-profile.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-annotations",
@@ -72,7 +76,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.dataset.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-quality",
@@ -82,7 +87,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-syntax-canonical",
@@ -93,9 +99,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-syntax-resource.schema.json"
-			}
+			"schemaId": "textdata.syntax.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-morphology-canonical",
@@ -106,9 +110,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-morphology-resource.schema.json"
-			}
+			"schemaId": "textlex.morphology.v1"
 		},
 		{
 			"id": "ar-ud-nyuad-quality-profile",
@@ -119,9 +121,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies Arabic NYUAD r2.18 annotations."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

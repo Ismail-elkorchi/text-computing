@@ -308,6 +308,7 @@ const normalizationPack = {
 				id: "normalization-fr-profile",
 				kind: "normalization-profile" as const,
 				format: "tsv",
+				schemaId: "textnorm.rules.v1",
 			},
 		],
 	},

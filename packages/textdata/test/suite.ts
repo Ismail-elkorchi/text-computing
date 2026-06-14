@@ -4,7 +4,6 @@ import test from "node:test";
 import { parseConllu } from "../dist/conllu/mod.js";
 import {
 	corpusRowsFromPack,
-	parallelRowsFromPack,
 	readDataset,
 	readUdAnnotationDatasetFromPack,
 	readUdAnnotationDatasetFromPackAsync,
@@ -117,31 +116,56 @@ test("UD annotation textpack resources become annotation-only datasets", async (
 	const pack = {
 		manifest: {
 			resources: [
-				{ id: "fr-ud-gsd-upos", kind: "grammar" as const },
-				{ id: "fr-ud-gsd-features", kind: "morphology" as const },
-				{ id: "fr-ud-gsd-dependencies", kind: "grammar" as const },
 				{
-					id: "fr-ud-gsd-sentence-profile",
+					id: "syntax-canonical",
+					kind: "grammar" as const,
+					schemaId: "textdata.syntax.v1",
+				},
+				{ id: "pos-profile", kind: "grammar" as const },
+				{ id: "feature-profile", kind: "morphology" as const },
+				{ id: "dependency-profile", kind: "grammar" as const },
+				{
+					id: "sentence-counts",
 					kind: "statistical-model" as const,
 				},
-				{ id: "fr-ud-gsd-annotations", kind: "dataset" as const },
-				{ id: "fr-ud-gsd-quality", kind: "quality-profile" as const },
+				{ id: "annotation-rows", kind: "dataset" as const },
+				{
+					id: "quality-evidence",
+					kind: "quality-profile" as const,
+					schemaId: "textquality.evidence.v1",
+				},
 			],
 		},
 		resources: {
-			"fr-ud-gsd-upos": "upos\txpos\tcount\nNOUN\tNN\t1\n",
-			"fr-ud-gsd-features": "feature\tvalue\tcount\nNumber\tSing\t1\n",
-			"fr-ud-gsd-dependencies": "split\tdeprel\tcount\ntrain\troot\t1\n",
-			"fr-ud-gsd-sentence-profile":
+			"syntax-canonical": JSON.stringify({
+				schemaVersion: "1",
+				kind: "syntax",
+				syntaxId: "renamed-fixture-syntax",
+				annotationScheme: "Universal Dependencies",
+				resourceRefs: [
+					{ resourceId: "pos-profile", role: "tagset" },
+					{ resourceId: "feature-profile", role: "feature-inventory" },
+					{
+						resourceId: "dependency-profile",
+						role: "dependency-labels",
+					},
+					{ resourceId: "sentence-counts", role: "sentence-profile" },
+					{ resourceId: "annotation-rows", role: "annotation-table" },
+				],
+			}),
+			"pos-profile": "upos\txpos\tcount\nNOUN\tNN\t1\n",
+			"feature-profile": "feature\tvalue\tcount\nNumber\tSing\t1\n",
+			"dependency-profile": "split\tdeprel\tcount\ntrain\troot\t1\n",
+			"sentence-counts":
 				"split\tsentenceCount\ttokenCount\taverageTokenCount\tmaxTokenCount\ntrain\t2\t4\t2\t3\n",
-			"fr-ud-gsd-annotations": [
+			"annotation-rows": [
 				"split\tsentenceIndex\ttokenId\tupos\txpos\tfeatures\thead\tdeprel\tdeps\tmisc",
 				"train\t10\t1\tNOUN\tNN\tNumber=Sing\t0\troot\t0:root\t_",
 				"train\t2\t1\tNOUN\tNN\tNumber=Sing\t0\troot\t0:root\t_",
 				"train\t2\t10\tPUNCT\t.\t_\t1\tpunct\t1:punct\t_",
 				"train\t2\t2\tADJ\tJJ\t_\t1\tamod\t1:amod\t_",
 			].join("\n"),
-			"fr-ud-gsd-quality": '{"rawTextIncluded":false}',
+			"quality-evidence": '{"rawTextIncluded":false}',
 		},
 	};
 	const resources = udSyntaxResourcesFromPack(pack);
@@ -187,16 +211,17 @@ test("UD annotation textpack resources become annotation-only datasets", async (
 	);
 });
 
-test("textpack table adapters materialize corpus and parallel resources", async () => {
+test("textpack corpus adapter materializes canonical corpus resources", async () => {
 	const corpusText = "id\ttext\tlanguage\nc1\tHello world\ten\n";
-	const parallelText =
-		"id\tsourceText\ttargetText\tsourceLanguage\ttargetLanguage\np1\tHello\tBonjour\ten\tfr\n";
 	const pack = {
 		manifest: {
 			targets: { languages: ["en"] },
 			resources: [
-				{ id: "corpus-en", kind: "corpus" as const },
-				{ id: "parallel-en-fr", kind: "alignment-table" as const },
+				{
+					id: "corpus-en",
+					kind: "corpus" as const,
+					schemaId: "textdata.corpus.rows.v1",
+				},
 			],
 		},
 		resources: {
@@ -204,29 +229,16 @@ test("textpack table adapters materialize corpus and parallel resources", async 
 				"resources/corpus.tsv",
 				corpusText,
 			),
-			"parallel-en-fr": await fileBackedTextResource(
-				"resources/parallel.tsv",
-				parallelText,
-			),
 		},
 	};
 	const reader = textResourceReader({
 		"resources/corpus.tsv": corpusText,
-		"resources/parallel.tsv": parallelText,
 	});
 	const corpusTables = await corpusRowsFromPack(pack, { reader });
-	const parallelTables = await parallelRowsFromPack(pack, { reader });
 	assert.deepEqual(corpusTables[0]?.rows[0], {
 		id: "c1",
 		language: "en",
 		text: "Hello world",
-	});
-	assert.deepEqual(parallelTables[0]?.rows[0], {
-		id: "p1",
-		sourceLanguage: "en",
-		sourceText: "Hello",
-		targetLanguage: "fr",
-		targetText: "Bonjour",
 	});
 });
 

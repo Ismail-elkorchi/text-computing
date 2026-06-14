@@ -77,7 +77,7 @@
     },
     {
       "byteLength": 359241,
-      "checksum": "sha256:3cb863cf304d512296628efe5f0260aea643187d8de239f4430ecaeef39f9217",
+      "checksum": "sha256:e0464d6ba65415a0ebce0245fb4a7d7ec21a8024269f2fef6025c6ef73e98d49",
       "id": "wikidata-en-entities",
       "kind": "knowledge-base",
       "lineCount": 11620,
@@ -86,7 +86,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 1207332,
+      "resourceTextByteLength": 1207330,
       "sizeClass": "tiny"
     },
     {
@@ -132,8 +132,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 60585,
-      "checksum": "sha256:fb6d1e09d6aeaf9973c743da7af57987db1cb4cc836f97f82fba653252cdf3a4",
+      "byteLength": 60577,
+      "checksum": "sha256:cabc7d7e7827e51ec1a2be36abe512c52de6b7e7ae195f0d3f0c197b4c7d2c4e",
       "id": "wikidata-en-relations",
       "kind": "knowledge-base",
       "lineCount": 11620,
@@ -142,7 +142,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 364007,
+      "resourceTextByteLength": 363996,
       "sizeClass": "tiny"
     }
   ],

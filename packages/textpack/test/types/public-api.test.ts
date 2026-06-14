@@ -13,17 +13,8 @@ import type {
 	TextPackCompositeProfile,
 	TextPackDependency,
 	TextPackGapNote,
-	TextPackJsonPayload,
-	TextPackLoadedResource,
 	TextPackManifest,
-	TextPackRawPayload,
 	TextPackResource,
-	TextPackResourceFamily,
-	TextPackResourceFamilyLoadOptions,
-	TextPackResourceFamilyName,
-	TextPackResourcePayload,
-	TextPackTablePayload,
-	TextPackTableRow,
 	TextPackTargets,
 } from "../../src/index.ts";
 
@@ -45,15 +36,6 @@ type PublicApiSmoke = {
 	resolveComponent: TextPackComponentResolver;
 	profile: TextPackCompositeProfile;
 	capabilities: TextPackCapabilities;
-	familyName: TextPackResourceFamilyName;
-	family: TextPackResourceFamily;
-	familyOptions: TextPackResourceFamilyLoadOptions;
-	loaded: TextPackLoadedResource;
-	payload: TextPackResourcePayload;
-	table: TextPackTablePayload;
-	row: TextPackTableRow;
-	json: TextPackJsonPayload;
-	raw: TextPackRawPayload;
 };
 
 export type { PublicApiSmoke };

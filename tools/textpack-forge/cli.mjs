@@ -419,6 +419,10 @@ function expect(condition, message, details) {
 	if (!condition) fail(message, details);
 }
 
+function isRecord(value) {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 function sha256(text) {
 	return `sha256:${createHash("sha256").update(text).digest("hex")}`;
 }
@@ -623,6 +627,17 @@ function validatePackSpec(packSpec, resourceSpecById) {
 			packSpec.manifest.resources.length > 0,
 		`${packSpec.packageName} concrete pack specs must declare at least one resource. Use a composite spec for resource-less recipe packs.`,
 	);
+	for (const resource of packSpec.manifest.resources) {
+		expect(
+			typeof resource.schemaId === "string" && resource.schemaId.length > 0,
+			`${packSpec.packageName} resource ${resource.id} must declare schemaId.`,
+		);
+		expect(
+			!isRecord(resource.metadata) ||
+				resource.metadata.canonicalSchema === undefined,
+			`${packSpec.packageName} resource ${resource.id} must use schemaId, not metadata.canonicalSchema.`,
+		);
+	}
 	for (const resourceSpecId of packSpec.resourceSpecIds) {
 		const resourceSpec = resourceSpecById.get(resourceSpecId);
 		expect(
@@ -3797,6 +3812,31 @@ function sortedCountRows(counts) {
 	});
 }
 
+const ARABIC_MORPH_FEATURE_ALIASES = new Map([
+	["pos", "partOfSpeech"],
+	["lex", "lexicalForm"],
+	["diac", "diacritizedForm"],
+	["bw", "buckwalter"],
+	["stemcat", "stemCategory"],
+	["source", "sourceType"],
+	["d3seg", "d3Segmentation"],
+	["atbseg", "atbSegmentation"],
+	["d3tok", "d3Tokenization"],
+	["atbtok", "atbTokenization"],
+]);
+
+function canonicalArabicMorphFeature(feature) {
+	return ARABIC_MORPH_FEATURE_ALIASES.get(feature) ?? feature;
+}
+
+function canonicalArabicMorphFeatureBundle(features) {
+	return Object.entries(features)
+		.map(([feature, value]) => [canonicalArabicMorphFeature(feature), value])
+		.sort((left, right) => left[0].localeCompare(right[0]))
+		.map(([feature, value]) => `${feature}:${value}`)
+		.join(" ");
+}
+
 function transformCamelMorphMsa(resourceSpec, inputs) {
 	const text = requiredInput(inputs, "camel_morph_msa_v1.0.db", resourceSpec);
 	const sections = camelSections(text);
@@ -3809,7 +3849,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 	for (const line of defines) {
 		const parts = line.split(/\s+/u);
 		if (parts[0] !== "DEFINE" || parts.length < 3) continue;
-		const feature = parts[1];
+		const feature = canonicalArabicMorphFeature(parts[1]);
 		const values = parts.slice(2).map((token) => {
 			const pair = splitFeatureToken(token);
 			return pair === undefined ? token : pair[1];
@@ -3826,7 +3866,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 		for (const [feature, value] of Object.entries(features).sort(
 			(left, right) => left[0].localeCompare(right[0]),
 		)) {
-			defaultRows.push([pos, feature, value]);
+			defaultRows.push([pos, canonicalArabicMorphFeature(feature), value]);
 		}
 	}
 
@@ -3835,7 +3875,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 		const parts = line.split(/\s+/u);
 		if (parts[0] !== "TOKENIZATION") continue;
 		parts.slice(1).forEach((field, index) => {
-			tokenizationRows.push([index + 1, field]);
+			tokenizationRows.push([index + 1, canonicalArabicMorphFeature(field)]);
 		});
 	}
 
@@ -3868,7 +3908,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 				features.atbseg ?? "",
 				features.d3tok ?? "",
 				features.atbtok ?? "",
-				featureText,
+				canonicalArabicMorphFeatureBundle(features),
 			]);
 		}
 	}
@@ -4060,7 +4100,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 		outputFor(
 			resourceSpec,
 			"ar-msa-camel-morph-defaults",
-			tsvFile(["pos", "feature", "value"], defaultRows),
+			tsvFile(["partOfSpeech", "feature", "value"], defaultRows),
 		),
 		outputFor(
 			resourceSpec,
@@ -4075,21 +4115,21 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 					"section",
 					"surface",
 					"category",
-					"pos",
-					"lex",
-					"diac",
-					"bw",
+					"partOfSpeech",
+					"lexicalForm",
+					"diacritizedForm",
+					"buckwalter",
 					"gloss",
 					"root",
 					"pattern",
 					"stem",
-					"stemcat",
-					"source",
-					"d3seg",
-					"atbseg",
-					"d3tok",
-					"atbtok",
-					"features",
+					"stemCategory",
+					"sourceType",
+					"d3Segmentation",
+					"atbSegmentation",
+					"d3Tokenization",
+					"atbTokenization",
+					"featureBundle",
 				],
 				morphemeRows,
 			),
@@ -4411,7 +4451,7 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 		const parts = line.split(/\s+/u);
 		if (parts[0] !== "TOKENIZATION") continue;
 		parts.slice(1).forEach((field, index) => {
-			tokenizationRows.push([index + 1, field]);
+			tokenizationRows.push([index + 1, canonicalArabicMorphFeature(field)]);
 		});
 	}
 
@@ -4434,7 +4474,10 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 				"atbtok",
 			]) {
 				if ((features[feature] ?? "").length > 0) {
-					incrementCount(morphHookCounts, feature);
+					incrementCount(
+						morphHookCounts,
+						canonicalArabicMorphFeature(feature),
+					);
 				}
 			}
 		}
@@ -5008,7 +5051,7 @@ function transformWordnetLmf(resourceSpec, inputs, config) {
 		outputFor(
 			resourceSpec,
 			ids.relations,
-			tsvFile(["scope", "sourceId", "relType", "targetId"], relationRows),
+			tsvFile(["scope", "sourceId", "predicateId", "targetId"], relationRows),
 		),
 		outputFor(resourceSpec, ids.quality, stableJson(summary)),
 		outputFor(
@@ -5121,6 +5164,45 @@ function wikidataArtifactConfig(resourceSpec) {
 	};
 }
 
+function canonicalizeWikidataEntityRows(text) {
+	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
+	const header = lines[0];
+	expect(
+		header !== undefined && header.length > 0,
+		"Wikidata entity extract must contain a TSV header.",
+	);
+	const columns = header.split("\t").map((column) =>
+		/^[a-z]{2,3}wikiUrl$/u.test(column) ? "wikiUrl" : column,
+	);
+	expect(
+		new Set(columns).size === columns.length,
+		"Wikidata entity extract canonicalized header must not duplicate columns.",
+	);
+	lines[0] = columns.join("\t");
+	return lines.join("\n");
+}
+
+function canonicalizeWikidataRelationRows(text) {
+	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
+	const header = lines[0];
+	expect(
+		header !== undefined && header.length > 0,
+		"Wikidata relation extract must contain a TSV header.",
+	);
+	const columns = header.split("\t").map((column) => {
+		if (column === "sourceEntityId") return "sourceId";
+		if (column === "propertyId") return "predicateId";
+		if (column === "targetEntityId") return "targetId";
+		return column;
+	});
+	expect(
+		new Set(columns).size === columns.length,
+		"Wikidata relation extract canonicalized header must not duplicate columns.",
+	);
+	lines[0] = columns.join("\t");
+	return lines.join("\n");
+}
+
 function transformWikidataMainArtifact(resourceSpec, inputs) {
 	const config = wikidataArtifactConfig(resourceSpec);
 	const sha1Sums = requiredInput(
@@ -5150,6 +5232,7 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 			`${extractBasename}-entities.tsv`,
 			resourceSpec,
 		);
+		const canonicalEntities = canonicalizeWikidataEntityRows(entities);
 		const aliases = requiredInput(
 			inputs,
 			`${extractBasename}-aliases.tsv`,
@@ -5160,6 +5243,7 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 			`${extractBasename}-relations.tsv`,
 			resourceSpec,
 		);
+		const canonicalRelations = canonicalizeWikidataRelationRows(relations);
 		const extractMetadata = JSON.parse(
 			requiredInput(
 				inputs,
@@ -5274,9 +5358,9 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 			evaluationRecordIds: [],
 		};
 		return [
-			outputFor(resourceSpec, ids.entities, entities),
+			outputFor(resourceSpec, ids.entities, canonicalEntities),
 			outputFor(resourceSpec, ids.aliases, aliases),
-			outputFor(resourceSpec, ids.relations, relations),
+			outputFor(resourceSpec, ids.relations, canonicalRelations),
 			outputFor(resourceSpec, ids.kb, stableJson(kbResource)),
 			outputFor(resourceSpec, config.qualityResourceId, stableJson(summary)),
 			outputFor(

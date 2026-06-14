@@ -29,6 +29,7 @@ import {
 import type {
 	PackResourceQueryLike,
 	ResourceMaterializationOptions,
+	ResourceParseOptions,
 	TextPackLike,
 	TextPackResourceLike,
 } from "./types.js";
@@ -41,6 +42,16 @@ function kindMatches(
 	return Array.isArray(kind)
 		? kind.includes(resource.kind)
 		: resource.kind === kind;
+}
+
+function schemaMatches(
+	resource: TextPackResourceLike,
+	schemaId: PackResourceQueryLike["schemaId"],
+): boolean {
+	if (schemaId === undefined) return true;
+	return Array.isArray(schemaId)
+		? schemaId.includes(resource.schemaId ?? "")
+		: resource.schemaId === schemaId;
 }
 
 function findResource(
@@ -60,7 +71,8 @@ function findResource(
 			(resource) =>
 				(queryOrResourceId.id === undefined ||
 					resource.id === queryOrResourceId.id) &&
-				kindMatches(resource, queryOrResourceId.kind),
+				kindMatches(resource, queryOrResourceId.kind) &&
+				schemaMatches(resource, queryOrResourceId.schemaId),
 		)
 		.sort((left, right) => left.id.localeCompare(right.id))[0];
 	if (found === undefined)
@@ -88,6 +100,108 @@ async function materializedResourceValue(
 		return openResourceText(pack as never, descriptor.id, reader);
 	}
 	return value;
+}
+
+function parseTable(text: string): readonly Readonly<Record<string, string>>[] {
+	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
+	while (lines.length > 0 && lines[lines.length - 1] === "") lines.pop();
+	const header = lines[0]?.split("\t") ?? [];
+	if (header.length === 0) return [];
+	const rows: Readonly<Record<string, string>>[] = [];
+	for (const line of lines.slice(1)) {
+		if (line.length === 0) continue;
+		const cells = line.split("\t");
+		const row: Record<string, string> = {};
+		for (let index = 0; index < header.length; index += 1) {
+			const column = header[index];
+			if (column !== undefined && column.length > 0) {
+				row[column] = cells[index] ?? "";
+			}
+		}
+		rows.push(Object.freeze(row));
+	}
+	return Object.freeze(rows);
+}
+
+function canonicalLexiconRows(
+	text: string,
+	options: ResourceParseOptions,
+): readonly LexicalEntry[] {
+	return parseTable(text).flatMap((row) => {
+		const id = row.entryId;
+		const form =
+			row.form !== undefined && row.form !== "-" ? row.form : row.lemma;
+		if (
+			id === undefined ||
+			id.length === 0 ||
+			form === undefined ||
+			form.length === 0 ||
+			form === "-"
+		) {
+			return [];
+		}
+		const features: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(row)) {
+			if (
+				value.length > 0 &&
+				![
+					"entryId",
+					"form",
+					"lemma",
+					"languageTag",
+					"script",
+					"partOfSpeech",
+				].includes(key)
+			) {
+				features[key] = value;
+			}
+		}
+		return {
+			id,
+			forms: [form],
+			...(row.lemma !== undefined && row.lemma.length > 0 && row.lemma !== "-"
+				? { canonical: row.lemma }
+				: {}),
+			...(row.partOfSpeech !== undefined && row.partOfSpeech.length > 0
+				? {
+						labels: [row.partOfSpeech],
+						features: { ...features, partOfSpeech: row.partOfSpeech },
+					}
+				: Object.keys(features).length > 0
+					? { features }
+					: {}),
+			...(row.languageTag !== undefined && row.languageTag.length > 0
+				? { language: row.languageTag }
+				: options.language !== undefined
+					? { language: options.language }
+					: {}),
+			...(row.script !== undefined && row.script.length > 0
+				? { script: row.script }
+				: options.script !== undefined
+					? { script: options.script }
+					: {}),
+			...(options.source !== undefined ? { source: options.source } : {}),
+		};
+	});
+}
+
+function canonicalLexiconResource(value: unknown):
+	| {
+			readonly entries?: readonly unknown[];
+			readonly resourceRefs?: readonly { readonly resourceId?: unknown }[];
+			readonly languageTag?: string;
+			readonly script?: string;
+	  }
+	| undefined {
+	if (typeof value === "string")
+		return canonicalLexiconResource(JSON.parse(value));
+	if (value === null || typeof value !== "object" || Array.isArray(value)) {
+		return undefined;
+	}
+	const record = value as Readonly<Record<string, unknown>>;
+	if (record.kind !== "lexicon" || record.schemaVersion !== "1")
+		return undefined;
+	return record as ReturnType<typeof canonicalLexiconResource>;
 }
 
 export function lexiconFromPack(
@@ -162,6 +276,49 @@ export async function lexiconFromPackAsync(
 		descriptor,
 		options.reader,
 	);
+	if (descriptor.schemaId === "textlex.lexicon.v1") {
+		const canonical = canonicalLexiconResource(value);
+		if (canonical === undefined) {
+			throw new TypeError(
+				`${descriptor.id} is not a canonical lexicon resource.`,
+			);
+		}
+		const parseOptions: ResourceParseOptions = {
+			source: descriptor.id,
+			...((canonical.languageTag ?? options.language)
+				? { language: canonical.languageTag ?? options.language }
+				: {}),
+			...((canonical.script ?? options.script)
+				? { script: canonical.script ?? options.script }
+				: {}),
+		};
+		const inlineEntries =
+			canonical.entries === undefined
+				? []
+				: parseLexiconResource(canonical.entries, parseOptions);
+		const referencedEntries: LexicalEntry[] = [];
+		for (const ref of canonical.resourceRefs ?? []) {
+			if (typeof ref.resourceId !== "string") continue;
+			const referenced = findResource(pack, ref.resourceId);
+			const referencedValue = await materializedResourceValue(
+				pack,
+				referenced,
+				options.reader,
+			);
+			if (typeof referencedValue !== "string") {
+				throw new TypeError(
+					`${referenced.id} must be text-backed for canonical lexicon refs.`,
+				);
+			}
+			referencedEntries.push(
+				...canonicalLexiconRows(referencedValue, {
+					...parseOptions,
+					source: referenced.id,
+				}),
+			);
+		}
+		return buildLexicon([...inlineEntries, ...referencedEntries], options);
+	}
 	if (descriptor.kind === "gazetteer") {
 		return buildGazetteer(
 			parseGazetteerResource(value, { source: descriptor.id }),

@@ -10,9 +10,8 @@ import * as ontology from "../dist/ontology/mod.js";
 import * as semanticRelations from "../dist/semantic-relations/mod.js";
 import * as sense from "../dist/sense/mod.js";
 import * as term from "../dist/term/mod.js";
+import * as textpack from "../dist/textpack.js";
 import * as thesaurus from "../dist/thesaurus/mod.js";
-import * as wikidata from "../dist/wikidata/mod.js";
-import * as wordnet from "../dist/wordnet/mod.js";
 
 test("root exports the final textkb API only", () => {
 	assert.deepEqual(
@@ -38,9 +37,8 @@ test("root exports the final textkb API only", () => {
 			"lexicalChains",
 			"linkEntities",
 			"linkTerms",
+			"knowledgeBaseFromPack",
 			"ontologyGazetteer",
-			"openEnglishWordNetFromPack",
-			"openEnglishWordNetFromPackAsync",
 			"packageName",
 			"parseAliasRows",
 			"parseEntityRows",
@@ -51,9 +49,6 @@ test("root exports the final textkb API only", () => {
 			"standardSemanticRelationTypes",
 			"thesaurusRelations",
 			"traverseSemanticRelations",
-			"wikidataResourcesFromPack",
-			"wordNetResourcesFromPack",
-			"wordNetResourcesFromPackAsync",
 		].sort(),
 	);
 });
@@ -68,7 +63,5 @@ test("required final subpaths are importable", () => {
 	assert.equal(typeof link.linkEntities, "function");
 	assert.equal(typeof disambiguate.scoreDisambiguation, "function");
 	assert.equal(typeof semanticRelations.querySemanticRelations, "function");
-	assert.equal(typeof wordnet.openEnglishWordNetFromPack, "function");
-	assert.equal(typeof wordnet.openEnglishWordNetFromPackAsync, "function");
-	assert.equal(typeof wikidata.wikidataResourcesFromPack, "function");
+	assert.equal(typeof textpack.knowledgeBaseFromPack, "function");
 });

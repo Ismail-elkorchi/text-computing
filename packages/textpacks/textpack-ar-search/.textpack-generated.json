@@ -35,7 +35,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:4a0f0e19ef6ab90dca58d87e8c98609c20060054ab59a53c01db8872e12e59f4",
+  "outputChecksum": "sha256:f69da007785a3410f4d2439840fe652a9924fcc9d0152103389bce82e40d1b45",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-ar-search",
   "packageVersion": "0.1.0",

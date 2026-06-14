@@ -121,7 +121,8 @@
 							"IANA Language Subtag Registry, File-Date 2026-05-05.",
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "ar-core-orthography",
@@ -131,7 +132,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode Character Database 17.0.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "ar-core-punctuation",
@@ -141,7 +143,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode Character Database 17.0.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "ar-core-basic-segmentation",
@@ -153,9 +156,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "ar-core-quality",
@@ -167,7 +168,8 @@
 							"IANA Language Subtag Registry, File-Date 2026-05-05.",
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-core-quality-profile",
@@ -180,9 +182,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -292,7 +292,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textdata.corpus.rows.v1"
 					},
 					{
 						"id": "ar-tatoeba-corpus-canonical",
@@ -303,9 +304,7 @@
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-corpus-resource.schema.json"
-						}
+						"schemaId": "textdata.corpus.v1"
 					},
 					{
 						"id": "ar-tatoeba-corpus-quality",
@@ -315,7 +314,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-tatoeba-corpus-quality-profile",
@@ -326,9 +326,7 @@
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -468,7 +466,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "ar-msa-camel-morph-defaults",
@@ -478,7 +477,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "ar-msa-camel-morph-tokenizations",
@@ -488,7 +488,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
 						"id": "ar-msa-camel-morph-morphemes",
@@ -498,7 +499,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "ar-msa-camel-morph-compatibility",
@@ -508,7 +510,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "ar-msa-camel-morph-quality",
@@ -518,7 +521,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-msa-camel-morphology-canonical",
@@ -529,9 +533,7 @@
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "ar-msa-camel-segmentation-canonical",
@@ -542,9 +544,7 @@
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "ar-msa-camel-quality-profile",
@@ -555,9 +555,7 @@
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -688,7 +686,8 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textnorm.rules.v1"
 					},
 					{
 						"id": "ar-normalization-observed-codepoints",
@@ -700,7 +699,8 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textnorm.rules.v1"
 					},
 					{
 						"id": "ar-normalization-profile",
@@ -713,9 +713,7 @@
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-normalization-resource.schema.json"
-						}
+						"schemaId": "textnorm.profile.v1"
 					},
 					{
 						"id": "ar-normalization-quality",
@@ -727,7 +725,8 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-normalization-quality-profile",
@@ -740,9 +739,7 @@
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -851,7 +848,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "ar-tatoeba-parallel-eng",
@@ -861,7 +859,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "ar-tatoeba-parallel-fra",
@@ -871,7 +870,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "ar-tatoeba-parallel-spa",
@@ -881,7 +881,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "ar-tatoeba-parallel-quality",
@@ -891,7 +892,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-tatoeba-parallel-quality-profile",
@@ -902,9 +904,7 @@
 						"citations": [
 							"Tatoeba weekly Arabic exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -1147,7 +1147,8 @@
 						"citations": [
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textnorm.rules.v1"
 					},
 					{
 						"id": "ar-search-tokenization-hooks",
@@ -1157,7 +1158,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
 						"id": "ar-search-morphology-hooks",
@@ -1167,7 +1169,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"CAMeL Morph MSA LREC-COLING 2024 release."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "ar-search-wordnet-synonyms",
@@ -1177,7 +1180,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "ar-search-profile",
@@ -1190,9 +1194,7 @@
 							"CAMeL Morph MSA LREC-COLING 2024 release.",
 							"Arabic WordNet 4.1.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-						}
+						"schemaId": "textsearch.analyzer-profile.v1"
 					},
 					{
 						"id": "ar-search-quality",
@@ -1204,7 +1206,8 @@
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"CAMeL Morph MSA LREC-COLING 2024 release.",
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-search-quality-profile",
@@ -1217,9 +1220,7 @@
 							"CAMeL Morph MSA LREC-COLING 2024 release.",
 							"Arabic WordNet 4.1.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -1331,7 +1332,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-table.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-features",
@@ -1341,7 +1343,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-dependencies",
@@ -1351,7 +1354,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-table.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-sentence-profile",
@@ -1361,7 +1365,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-profile.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-annotations",
@@ -1371,7 +1376,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.dataset.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-quality",
@@ -1381,7 +1387,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-syntax-canonical",
@@ -1392,9 +1399,7 @@
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-syntax-resource.schema.json"
-						}
+						"schemaId": "textdata.syntax.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-morphology-canonical",
@@ -1405,9 +1410,7 @@
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "ar-ud-nyuad-quality-profile",
@@ -1418,9 +1421,7 @@
 						"citations": [
 							"Universal Dependencies Arabic NYUAD r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -1563,7 +1564,8 @@
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "en-core-orthography",
@@ -1573,7 +1575,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode Character Database 17.0.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "en-core-punctuation",
@@ -1583,7 +1586,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode Character Database 17.0.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "en-core-abbreviations",
@@ -1593,7 +1597,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.abbreviation-table.v1"
 					},
 					{
 						"id": "en-core-function-words",
@@ -1603,7 +1608,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.stoplist.v1"
 					},
 					{
 						"id": "en-core-basic-segmentation",
@@ -1615,9 +1621,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "en-core-quality",
@@ -1631,7 +1635,8 @@
 							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 							"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-core-quality-profile",
@@ -1646,9 +1651,7 @@
 							"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 							"SCOWLv2 rich text export, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -1762,7 +1765,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textdata.corpus.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-corpus-canonical",
@@ -1773,9 +1777,7 @@
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-corpus-resource.schema.json"
-						}
+						"schemaId": "textdata.corpus.v1"
 					},
 					{
 						"id": "en-tatoeba-corpus-quality",
@@ -1785,7 +1787,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-tatoeba-corpus-quality-profile",
@@ -1796,9 +1799,7 @@
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -1940,7 +1941,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "en-scowl-pos-inventory",
@@ -1950,7 +1952,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "en-scowl-lookup-analyzer",
@@ -1960,7 +1963,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "en-scowl-lookup-generator",
@@ -1970,7 +1974,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "en-scowl-inflection-lexicon-canonical",
@@ -1981,9 +1986,7 @@
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-lexicon-resource.schema.json"
-						}
+						"schemaId": "textlex.lexicon.v1"
 					},
 					{
 						"id": "en-scowl-inflection-morphology-canonical",
@@ -1994,9 +1997,7 @@
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "en-scowl-inflection-quality",
@@ -2006,7 +2007,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-scowl-inflection-quality-profile",
@@ -2017,9 +2019,7 @@
 						"citations": [
 							"SCOWLv2 rich text export, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -2145,7 +2145,8 @@
 						"citations": [
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textnorm.rules.v1"
 					},
 					{
 						"id": "en-normalization-profile",
@@ -2157,9 +2158,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-normalization-resource.schema.json"
-						}
+						"schemaId": "textnorm.profile.v1"
 					},
 					{
 						"id": "en-normalization-quality",
@@ -2170,7 +2169,8 @@
 						"citations": [
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-normalization-quality-profile",
@@ -2182,9 +2182,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -2291,7 +2289,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-deu",
@@ -2301,7 +2300,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-fra",
@@ -2311,7 +2311,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-spa",
@@ -2321,7 +2322,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-ita",
@@ -2331,7 +2333,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-ell",
@@ -2341,7 +2344,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-grc",
@@ -2351,7 +2355,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-lat",
@@ -2361,7 +2366,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-quality",
@@ -2371,7 +2377,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-tatoeba-parallel-quality-profile",
@@ -2382,9 +2389,7 @@
 						"citations": [
 							"Tatoeba weekly exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -2754,7 +2759,8 @@
 						"citations": [
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
 						"id": "en-grapheme-segmentation-profile",
@@ -2766,9 +2772,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "en-word-segmentation-profile",
@@ -2780,9 +2784,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "en-sentence-segmentation-profile",
@@ -2794,9 +2796,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "en-segmentation-quality",
@@ -2807,7 +2807,8 @@
 						"citations": [
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-segmentation-quality-profile",
@@ -2819,9 +2820,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -2932,7 +2931,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-table.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-features",
@@ -2942,7 +2942,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-dependencies",
@@ -2952,7 +2953,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-table.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-sentence-profile",
@@ -2962,7 +2964,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-profile.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-annotations",
@@ -2972,7 +2975,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.dataset.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-quality",
@@ -2982,7 +2986,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-syntax-canonical",
@@ -2993,9 +2998,7 @@
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-syntax-resource.schema.json"
-						}
+						"schemaId": "textdata.syntax.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-morphology-canonical",
@@ -3006,9 +3009,7 @@
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "en-ud-gumreddit-quality-profile",
@@ -3019,9 +3020,7 @@
 						"citations": [
 							"Universal Dependencies English GUMReddit r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -3150,7 +3149,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"English Speller Database generated wordlist outputs, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "en-esdb-default-profiles",
@@ -3160,7 +3160,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"English Speller Database generated wordlist outputs, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "en-esdb-wordlist-lexicon-canonical",
@@ -3171,9 +3172,7 @@
 						"citations": [
 							"English Speller Database generated wordlist outputs, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-lexicon-resource.schema.json"
-						}
+						"schemaId": "textlex.lexicon.v1"
 					},
 					{
 						"id": "en-esdb-wordlist-search-profile",
@@ -3184,9 +3183,7 @@
 						"citations": [
 							"English Speller Database generated wordlist outputs, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-						}
+						"schemaId": "textsearch.analyzer-profile.v1"
 					},
 					{
 						"id": "en-esdb-wordlist-quality",
@@ -3196,7 +3193,8 @@
 						"license": "LicenseRef-ESDB-MIT-Like",
 						"citations": [
 							"English Speller Database generated wordlist outputs, rel-2026.02.25."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "en-esdb-wordlist-quality-profile",
@@ -3207,9 +3205,7 @@
 						"citations": [
 							"English Speller Database generated wordlist outputs, rel-2026.02.25."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -3340,7 +3336,8 @@
 							"IANA Language Subtag Registry, File-Date 2026-05-05.",
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "fr-core-orthography",
@@ -3350,7 +3347,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode Character Database 17.0.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "fr-core-punctuation",
@@ -3360,7 +3358,8 @@
 						"license": "Unicode-3.0",
 						"citations": [
 							"Unicode Character Database 17.0.0."
-						]
+						],
+						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
 						"id": "fr-core-basic-segmentation",
@@ -3372,9 +3371,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "fr-core-quality",
@@ -3386,7 +3383,8 @@
 							"IANA Language Subtag Registry, File-Date 2026-05-05.",
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "fr-core-quality-profile",
@@ -3399,9 +3397,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -3511,7 +3507,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textdata.corpus.rows.v1"
 					},
 					{
 						"id": "fr-tatoeba-corpus-canonical",
@@ -3522,9 +3519,7 @@
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-corpus-resource.schema.json"
-						}
+						"schemaId": "textdata.corpus.v1"
 					},
 					{
 						"id": "fr-tatoeba-corpus-quality",
@@ -3534,7 +3529,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "fr-tatoeba-corpus-quality-profile",
@@ -3545,9 +3541,7 @@
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -3693,7 +3687,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Lexique 3.83, 2019-06-04."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "fr-lexique-lemmas",
@@ -3703,7 +3698,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Lexique 3.83, 2019-06-04."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "fr-lexique-pos-inventory",
@@ -3713,7 +3709,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Lexique 3.83, 2019-06-04."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-lexique-lexicon-canonical",
@@ -3724,9 +3721,7 @@
 						"citations": [
 							"Lexique 3.83, 2019-06-04."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-lexicon-resource.schema.json"
-						}
+						"schemaId": "textlex.lexicon.v1"
 					},
 					{
 						"id": "fr-lexique-morphology-canonical",
@@ -3737,78 +3732,76 @@
 						"citations": [
 							"Lexique 3.83, 2019-06-04."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "fr-lexique-search-profile",
 						"kind": "search-profile",
-							"path": "resources/lexique-383.search-profile.json",
-							"format": "json",
-							"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Lexique 3.83, 2019-06-04.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							],
-							"metadata": {
-								"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-							}
-						},
-						{
-							"id": "fr-lexique-search-elision-prefixes",
-							"kind": "search-profile",
-							"path": "resources/lexique-383.search-elision-prefixes.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-lexique-search-contraction-forms",
-							"kind": "search-profile",
-							"path": "resources/lexique-383.search-contraction-forms.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-lexique-search-gold-cases",
-							"kind": "quality-profile",
-							"path": "resources/lexique-383.search-gold-cases.json",
-							"format": "json",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-lexique-quality",
-							"kind": "quality-profile",
-							"path": "resources/lexique-383.quality.json",
-							"format": "json",
-							"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Lexique 3.83, 2019-06-04.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
+						"path": "resources/lexique-383.search-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Lexique 3.83, 2019-06-04.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textsearch.analyzer-profile.v1"
+					},
+					{
+						"id": "fr-lexique-search-elision-prefixes",
+						"kind": "search-profile",
+						"path": "resources/lexique-383.search-elision-prefixes.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textsearch.analyzer-table.v1"
+					},
+					{
+						"id": "fr-lexique-search-contraction-forms",
+						"kind": "search-profile",
+						"path": "resources/lexique-383.search-contraction-forms.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textsearch.analyzer-table.v1"
+					},
+					{
+						"id": "fr-lexique-search-gold-cases",
+						"kind": "quality-profile",
+						"path": "resources/lexique-383.search-gold-cases.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.evidence.v1"
+					},
+					{
+						"id": "fr-lexique-quality",
+						"kind": "quality-profile",
+						"path": "resources/lexique-383.quality.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Lexique 3.83, 2019-06-04.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.evidence.v1"
+					},
+					{
 						"id": "fr-lexique-quality-profile",
 						"kind": "quality-profile",
-							"path": "resources/lexique-383.quality-profile.json",
-							"format": "json",
-							"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Lexique 3.83, 2019-06-04.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"path": "resources/lexique-383.quality-profile.json",
+						"format": "json",
+						"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Lexique 3.83, 2019-06-04.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -3840,36 +3833,36 @@
 					{
 						"slot": "search",
 						"status": "task-supported",
-							"resourceIds": [
-								"fr-lexique-search-profile",
-								"fr-lexique-search-elision-prefixes",
-								"fr-lexique-search-contraction-forms",
-								"fr-lexique-search-gold-cases"
-							],
-							"notes": [
-								"Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
-							]
-						},
+						"resourceIds": [
+							"fr-lexique-search-profile",
+							"fr-lexique-search-elision-prefixes",
+							"fr-lexique-search-contraction-forms",
+							"fr-lexique-search-gold-cases"
+						],
+						"notes": [
+							"Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
+						]
+					},
 					{
 						"slot": "quality",
 						"status": "task-supported",
-							"resourceIds": [
-								"fr-lexique-quality",
-								"fr-lexique-quality-profile",
-								"fr-lexique-search-gold-cases"
-							],
-							"notes": [
-								"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
-							]
-						}
-					],
-					"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
-					"citations": [
-						"Lexique 3.83, 2019-06-04.",
-						"Tatoeba weekly French exports, 2026-06-06."
-					]
-				}
-			},
+						"resourceIds": [
+							"fr-lexique-quality",
+							"fr-lexique-quality-profile",
+							"fr-lexique-search-gold-cases"
+						],
+						"notes": [
+							"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
+						]
+					}
+				],
+				"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+				"citations": [
+					"Lexique 3.83, 2019-06-04.",
+					"Tatoeba weekly French exports, 2026-06-06."
+				]
+			}
+		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
 			"packageDir": "packages/textpacks/textpack-fr-normalization",
@@ -3943,127 +3936,128 @@
 					{
 						"id": "fr-normalization-rules",
 						"kind": "normalization-profile",
-							"path": "resources/fr.normalization-rules.tsv",
-							"format": "tsv",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
+						"path": "resources/fr.normalization-rules.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textnorm.rules.v1"
+					},
 					{
 						"id": "fr-normalization-profile",
 						"kind": "normalization-profile",
-							"path": "resources/fr.normalization.json",
-							"format": "json",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							],
-						"metadata": {
-							"canonicalSchema": "textpack-normalization-resource.schema.json"
-						}
-						},
-						{
-							"id": "fr-normalization-elision-prefixes",
-							"kind": "normalization-profile",
-							"path": "resources/fr.normalization-elision-prefixes.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-normalization-contraction-forms",
-							"kind": "normalization-profile",
-							"path": "resources/fr.normalization-contraction-forms.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-normalization-gold-cases",
-							"kind": "quality-profile",
-							"path": "resources/fr.normalization-gold-cases.json",
-							"format": "json",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-normalization-quality",
-							"kind": "quality-profile",
-							"path": "resources/fr.normalization.quality.json",
-							"format": "json",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
+						"path": "resources/fr.normalization.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textnorm.profile.v1"
+					},
+					{
+						"id": "fr-normalization-elision-prefixes",
+						"kind": "normalization-profile",
+						"path": "resources/fr.normalization-elision-prefixes.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textnorm.rules.v1"
+					},
+					{
+						"id": "fr-normalization-contraction-forms",
+						"kind": "normalization-profile",
+						"path": "resources/fr.normalization-contraction-forms.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textnorm.rules.v1"
+					},
+					{
+						"id": "fr-normalization-gold-cases",
+						"kind": "quality-profile",
+						"path": "resources/fr.normalization-gold-cases.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.evidence.v1"
+					},
+					{
+						"id": "fr-normalization-quality",
+						"kind": "quality-profile",
+						"path": "resources/fr.normalization.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.evidence.v1"
+					},
 					{
 						"id": "fr-normalization-quality-profile",
 						"kind": "quality-profile",
-							"path": "resources/fr.normalization.quality-profile.json",
-							"format": "json",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"path": "resources/fr.normalization.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
 					{
 						"slot": "normalization",
 						"status": "task-supported",
-							"resourceIds": [
-								"fr-normalization-rules",
-								"fr-normalization-profile",
-								"fr-normalization-elision-prefixes",
-								"fr-normalization-contraction-forms",
-								"fr-normalization-gold-cases"
-								],
-								"capabilities": {
-									"normalization": "rules"
-								},
-							"notes": [
-								"Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
-							]
+						"resourceIds": [
+							"fr-normalization-rules",
+							"fr-normalization-profile",
+							"fr-normalization-elision-prefixes",
+							"fr-normalization-contraction-forms",
+							"fr-normalization-gold-cases"
+						],
+						"capabilities": {
+							"normalization": "rules"
 						},
+						"notes": [
+							"Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
+						]
+					},
 					{
 						"slot": "quality",
 						"status": "task-supported",
-							"resourceIds": [
-								"fr-normalization-quality",
-								"fr-normalization-quality-profile",
-								"fr-normalization-gold-cases"
-							],
-							"notes": [
-								"Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage."
-							]
-						}
-					],
-					"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-					"citations": [
-						"Unicode Character Database 17.0.0.",
-						"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-						"Tatoeba weekly French exports, 2026-06-06."
-					]
-				}
-			},
+						"resourceIds": [
+							"fr-normalization-quality",
+							"fr-normalization-quality-profile",
+							"fr-normalization-gold-cases"
+						],
+						"notes": [
+							"Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+					"Tatoeba weekly French exports, 2026-06-06."
+				]
+			}
+		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 			"packageDir": "packages/textpacks/textpack-fr-parallel",
@@ -4134,7 +4128,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "fr-tatoeba-parallel-deu",
@@ -4144,7 +4139,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "fr-tatoeba-parallel-eng",
@@ -4154,7 +4150,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "fr-tatoeba-parallel-spa",
@@ -4164,7 +4161,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
 						"id": "fr-tatoeba-parallel-quality",
@@ -4174,7 +4172,8 @@
 						"license": "CC-BY-2.0-FR",
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "fr-tatoeba-parallel-quality-profile",
@@ -4185,9 +4184,7 @@
 						"citations": [
 							"Tatoeba weekly French exports, 2026-06-06."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -4429,13 +4426,14 @@
 					{
 						"id": "fr-segmentation-boundary-properties",
 						"kind": "segmentation-profile",
-							"path": "resources/fr.segmentation-boundary-properties.tsv",
-							"format": "tsv",
-							"license": "Unicode-3.0",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0."
-						]
+						"path": "resources/fr.segmentation-boundary-properties.tsv",
+						"format": "tsv",
+						"license": "Unicode-3.0",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
+						],
+						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
 						"id": "fr-grapheme-segmentation-profile",
@@ -4447,9 +4445,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "fr-word-segmentation-profile",
@@ -4461,9 +4457,7 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
+						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
 						"id": "fr-sentence-segmentation-profile",
@@ -4475,91 +4469,90 @@
 							"Unicode Character Database 17.0.0.",
 							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-segmentation-resource.schema.json"
-						}
-						},
-						{
-							"id": "fr-token-segmentation-profile",
-							"kind": "segmentation-profile",
-							"path": "resources/fr.segmentation.token.json",
-							"format": "json",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							],
-							"metadata": {
-								"canonicalSchema": "textpack-segmentation-resource.schema.json"
-							}
-						},
-						{
-							"id": "fr-segmentation-elision-prefixes",
-							"kind": "segmentation-profile",
-							"path": "resources/fr.segmentation-elision-prefixes.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-segmentation-contraction-forms",
-							"kind": "segmentation-profile",
-							"path": "resources/fr.segmentation-contraction-forms.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-segmentation-abbreviations",
-							"kind": "segmentation-profile",
-							"path": "resources/fr.segmentation-abbreviations.tsv",
-							"format": "tsv",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-segmentation-gold-cases",
-							"kind": "quality-profile",
-							"path": "resources/fr.segmentation-gold-cases.json",
-							"format": "json",
-							"license": "CC-BY-2.0-FR",
-							"citations": [
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
-						{
-							"id": "fr-segmentation-quality",
-							"kind": "quality-profile",
-							"path": "resources/fr.segmentation.quality.json",
-							"format": "json",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							]
-						},
+						"schemaId": "textdata.segmentation-profile.v1"
+					},
+					{
+						"id": "fr-token-segmentation-profile",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation.token.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textdata.segmentation-profile.v1"
+					},
+					{
+						"id": "fr-segmentation-elision-prefixes",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation-elision-prefixes.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textdata.segmentation-table.v1"
+					},
+					{
+						"id": "fr-segmentation-contraction-forms",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation-contraction-forms.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textdata.segmentation-table.v1"
+					},
+					{
+						"id": "fr-segmentation-abbreviations",
+						"kind": "segmentation-profile",
+						"path": "resources/fr.segmentation-abbreviations.tsv",
+						"format": "tsv",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textdata.segmentation-table.v1"
+					},
+					{
+						"id": "fr-segmentation-gold-cases",
+						"kind": "quality-profile",
+						"path": "resources/fr.segmentation-gold-cases.json",
+						"format": "json",
+						"license": "CC-BY-2.0-FR",
+						"citations": [
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.evidence.v1"
+					},
+					{
+						"id": "fr-segmentation-quality",
+						"kind": "quality-profile",
+						"path": "resources/fr.segmentation.quality.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.evidence.v1"
+					},
 					{
 						"id": "fr-segmentation-quality-profile",
 						"kind": "quality-profile",
-							"path": "resources/fr.segmentation.quality-profile.json",
-							"format": "json",
-							"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-							"citations": [
-								"Unicode Character Database 17.0.0.",
-								"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-								"Tatoeba weekly French exports, 2026-06-06."
-							],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"path": "resources/fr.segmentation.quality-profile.json",
+						"format": "json",
+						"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+						"citations": [
+							"Unicode Character Database 17.0.0.",
+							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+							"Tatoeba weekly French exports, 2026-06-06."
+						],
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -4567,44 +4560,44 @@
 						"slot": "segmentation",
 						"status": "task-supported",
 						"resourceIds": [
-								"fr-segmentation-boundary-properties",
-								"fr-grapheme-segmentation-profile",
-								"fr-word-segmentation-profile",
-								"fr-sentence-segmentation-profile",
-								"fr-token-segmentation-profile",
-								"fr-segmentation-elision-prefixes",
-								"fr-segmentation-contraction-forms",
-								"fr-segmentation-abbreviations",
-								"fr-segmentation-gold-cases"
-								],
-								"capabilities": {
-									"segmentation": "profile"
-								},
-							"notes": [
-								"Unicode UAX #29 grapheme, word, and sentence boundary profiles plus Tatoeba-observed elision-prefix, contraction-surface, abbreviation-period, and token gold-case resources are available for modern typed French text."
-							]
+							"fr-segmentation-boundary-properties",
+							"fr-grapheme-segmentation-profile",
+							"fr-word-segmentation-profile",
+							"fr-sentence-segmentation-profile",
+							"fr-token-segmentation-profile",
+							"fr-segmentation-elision-prefixes",
+							"fr-segmentation-contraction-forms",
+							"fr-segmentation-abbreviations",
+							"fr-segmentation-gold-cases"
+						],
+						"capabilities": {
+							"segmentation": "profile"
 						},
+						"notes": [
+							"Unicode UAX #29 grapheme, word, and sentence boundary profiles plus Tatoeba-observed elision-prefix, contraction-surface, abbreviation-period, and token gold-case resources are available for modern typed French text."
+						]
+					},
 					{
 						"slot": "quality",
 						"status": "task-supported",
-							"resourceIds": [
-								"fr-segmentation-quality",
-								"fr-segmentation-quality-profile",
-								"fr-segmentation-gold-cases"
-							],
-							"notes": [
-								"Generated quality profile records boundary-property coverage, French surface-policy counts, accepted records, and gold-case coverage."
-							]
-						}
-					],
-					"license": "Unicode-3.0 AND CC-BY-2.0-FR",
-					"citations": [
-						"Unicode Character Database 17.0.0.",
-						"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-						"Tatoeba weekly French exports, 2026-06-06."
-					]
-				}
-			},
+						"resourceIds": [
+							"fr-segmentation-quality",
+							"fr-segmentation-quality-profile",
+							"fr-segmentation-gold-cases"
+						],
+						"notes": [
+							"Generated quality profile records boundary-property coverage, French surface-policy counts, accepted records, and gold-case coverage."
+						]
+					}
+				],
+				"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+				"citations": [
+					"Unicode Character Database 17.0.0.",
+					"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+					"Tatoeba weekly French exports, 2026-06-06."
+				]
+			}
+		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
 			"packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
@@ -4676,7 +4669,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-table.v1"
 					},
 					{
 						"id": "fr-ud-gsd-features",
@@ -4686,7 +4680,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-ud-gsd-dependencies",
@@ -4696,7 +4691,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-table.v1"
 					},
 					{
 						"id": "fr-ud-gsd-sentence-profile",
@@ -4706,7 +4702,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.syntax-profile.v1"
 					},
 					{
 						"id": "fr-ud-gsd-annotations",
@@ -4716,7 +4713,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
-						]
+						],
+						"schemaId": "textdata.dataset.v1"
 					},
 					{
 						"id": "fr-ud-gsd-quality",
@@ -4726,7 +4724,8 @@
 						"license": "CC-BY-SA-4.0",
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "fr-ud-gsd-syntax-canonical",
@@ -4737,9 +4736,7 @@
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-syntax-resource.schema.json"
-						}
+						"schemaId": "textdata.syntax.v1"
 					},
 					{
 						"id": "fr-ud-gsd-morphology-canonical",
@@ -4750,9 +4747,7 @@
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "fr-ud-gsd-quality-profile",
@@ -4763,9 +4758,7 @@
 						"citations": [
 							"Universal Dependencies French GSD r2.18 annotations."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -4889,7 +4882,8 @@
 						"license": "CC-BY-SA-3.0",
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-unimorph-lookup-analyzer",
@@ -4899,7 +4893,8 @@
 						"license": "CC-BY-SA-3.0",
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-unimorph-lookup-generator",
@@ -4909,7 +4904,8 @@
 						"license": "CC-BY-SA-3.0",
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-unimorph-feature-inventory",
@@ -4919,7 +4915,8 @@
 						"license": "CC-BY-SA-3.0",
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-unimorph-pos-inventory",
@@ -4929,7 +4926,8 @@
 						"license": "CC-BY-SA-3.0",
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						]
+						],
+						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
 						"id": "fr-unimorph-morphology-canonical",
@@ -4940,9 +4938,7 @@
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-morphology-resource.schema.json"
-						}
+						"schemaId": "textlex.morphology.v1"
 					},
 					{
 						"id": "fr-unimorph-quality",
@@ -4952,7 +4948,8 @@
 						"license": "CC-BY-SA-3.0",
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "fr-unimorph-quality-profile",
@@ -4963,9 +4960,7 @@
 						"citations": [
 							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -5075,7 +5070,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-ar-aliases",
@@ -5085,7 +5081,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-ar-relations",
@@ -5095,7 +5092,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-ar-kb-canonical",
@@ -5106,9 +5104,7 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-kb-resource.schema.json"
-						}
+						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
 						"id": "wikidata-ar-quality",
@@ -5118,7 +5114,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "wikidata-ar-quality-profile",
@@ -5129,9 +5126,7 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -5277,7 +5272,8 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08.",
 							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-en-aliases",
@@ -5288,7 +5284,8 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08.",
 							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-en-relations",
@@ -5299,7 +5296,8 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08.",
 							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-en-kb-canonical",
@@ -5311,9 +5309,7 @@
 							"Wikidata main structured data dump, 2026-06-08.",
 							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-kb-resource.schema.json"
-						}
+						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
 						"id": "wikidata-en-quality",
@@ -5324,7 +5320,8 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08.",
 							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "wikidata-en-quality-profile",
@@ -5336,9 +5333,7 @@
 							"Wikidata main structured data dump, 2026-06-08.",
 							"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -5483,7 +5478,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-fr-aliases",
@@ -5493,7 +5489,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-fr-relations",
@@ -5503,7 +5500,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wikidata-fr-kb-canonical",
@@ -5514,9 +5512,7 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-kb-resource.schema.json"
-						}
+						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
 						"id": "wikidata-fr-quality",
@@ -5526,7 +5522,8 @@
 						"license": "CC0-1.0",
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "wikidata-fr-quality-profile",
@@ -5537,9 +5534,7 @@
 						"citations": [
 							"Wikidata main structured data dump, 2026-06-08."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
@@ -5685,7 +5680,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "wordnet-ar-senses",
@@ -5695,7 +5691,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wordnet-ar-synsets",
@@ -5705,7 +5702,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wordnet-ar-relations",
@@ -5715,7 +5713,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wordnet-ar-quality",
@@ -5725,7 +5724,8 @@
 						"license": "CC-BY-4.0",
 						"citations": [
 							"Arabic WordNet 4.1.0."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "wordnet-ar-lexicon-canonical",
@@ -5736,9 +5736,7 @@
 						"citations": [
 							"Arabic WordNet 4.1.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-lexicon-resource.schema.json"
-						}
+						"schemaId": "textlex.lexicon.v1"
 					},
 					{
 						"id": "wordnet-ar-kb-canonical",
@@ -5749,9 +5747,7 @@
 						"citations": [
 							"Arabic WordNet 4.1.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-kb-resource.schema.json"
-						}
+						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
 						"id": "wordnet-ar-quality-profile",
@@ -5762,9 +5758,7 @@
 						"citations": [
 							"Arabic WordNet 4.1.0."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [
@@ -5876,7 +5870,8 @@
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 						"citations": [
 							"Open English WordNet 2025."
-						]
+						],
+						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
 						"id": "wordnet-en-senses",
@@ -5886,7 +5881,8 @@
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 						"citations": [
 							"Open English WordNet 2025."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wordnet-en-synsets",
@@ -5896,7 +5892,8 @@
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 						"citations": [
 							"Open English WordNet 2025."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wordnet-en-relations",
@@ -5906,7 +5903,8 @@
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 						"citations": [
 							"Open English WordNet 2025."
-						]
+						],
+						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
 						"id": "wordnet-en-quality",
@@ -5916,7 +5914,8 @@
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 						"citations": [
 							"Open English WordNet 2025."
-						]
+						],
+						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "wordnet-en-lexicon-canonical",
@@ -5927,9 +5926,7 @@
 						"citations": [
 							"Open English WordNet 2025."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-lexicon-resource.schema.json"
-						}
+						"schemaId": "textlex.lexicon.v1"
 					},
 					{
 						"id": "wordnet-en-kb-canonical",
@@ -5940,9 +5937,7 @@
 						"citations": [
 							"Open English WordNet 2025."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-kb-resource.schema.json"
-						}
+						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
 						"id": "wordnet-en-quality-profile",
@@ -5953,9 +5948,7 @@
 						"citations": [
 							"Open English WordNet 2025."
 						],
-						"metadata": {
-							"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-						}
+						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"capabilitySlots": [

@@ -8,6 +8,7 @@ export { serializeConllu } from "./serialize.js";
 export type {
 	TextPackLike,
 	TextPackResourceLike,
+	UdAnnotationPackOptions,
 	UdAnnotationRecord,
 	UdAnnotationToken,
 	UdDependencyProfileRecord,

@@ -22,7 +22,6 @@ import {
 	buildTokenPhraseIndex,
 	buildTrie,
 	buildWordlist,
-	camelMorphologyFromPack,
 	hasDawgKey,
 	hasDoubleArrayTrieKey,
 	hasStopword,
@@ -322,42 +321,6 @@ assert.deepEqual(
 	asyncLexicon.entries.map((entry) => entry.id),
 	["id:bonjour", "id:salut"],
 );
-
-const camelPack = {
-	manifest: {
-		resources: [
-			{ id: "ar-msa-camel-morph-features", kind: "morphology" as const },
-			{ id: "ar-msa-camel-morph-defaults", kind: "morphology" as const },
-			{
-				id: "ar-msa-camel-morph-tokenizations",
-				kind: "segmentation-profile" as const,
-			},
-			{ id: "ar-msa-camel-morph-morphemes", kind: "morphology" as const },
-			{
-				id: "ar-msa-camel-morph-compatibility",
-				kind: "morphology" as const,
-			},
-			{ id: "ar-msa-camel-morph-quality", kind: "quality-profile" as const },
-		],
-	},
-	resources: {
-		"ar-msa-camel-morph-features":
-			"feature\tvalueCount\tvalues\npos\t1\tnoun\n",
-		"ar-msa-camel-morph-defaults": "pos\tfeature\tvalue\nnoun\tcas\tn\n",
-		"ar-msa-camel-morph-tokenizations": "order\tfield\n1\td3seg\n",
-		"ar-msa-camel-morph-morphemes": [
-			"section\tsurface\tcategory\tpos\tlex\tdiac\tbw\tgloss\troot\tpattern\tstem\tstemcat\tsource\td3seg\tatbseg\td3tok\tatbtok\tfeatures",
-			"STEMS\tكتب\tS00001\tnoun\tكتاب\tكِتاب\tkitAb/NOUN\tbook\tكتب\tفِعال\tكتب\tN\tcamel\tكتب\tكتب\tكتب\tكتب\tcas:n gen:m num:s",
-		].join("\n"),
-		"ar-msa-camel-morph-compatibility":
-			"table\tleftCategory\trightCategory\nAB\tP1\tS00001\n",
-		"ar-msa-camel-morph-quality": '{"acceptedRecords":1}',
-	},
-};
-const camel = camelMorphologyFromPack(camelPack);
-assert.equal(camel.features[0]?.feature, "pos");
-assert.equal(camel.lookupSurface("كتب")[0]?.category, "S00001");
-assert.equal(camel.lookupCategory("S00001")[0]?.features.cas, "n");
 
 const doc = createDocument("Alice visited New York.", { id: "doc:lex" });
 const existingLayer = addLayer(doc, {

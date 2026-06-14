@@ -35,7 +35,7 @@
   "lockfile": "tools/textpack-forge/forge.lock.json",
   "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
   "mode": "source-backed",
-  "outputChecksum": "sha256:65a4607e47477bc4228caa91ccbc0588f7741a363cacc20a9ca578df44114050",
+  "outputChecksum": "sha256:2296e0c06cfba42038e3f1b2a8243800d0a1fb78bab078ceeae6cdb354be8559",
   "packSpecPath": "tools/textpack-forge/packs/task-packs.pack.json",
   "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
   "packageVersion": "0.1.0",

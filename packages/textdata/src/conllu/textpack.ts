@@ -8,6 +8,7 @@ import { createDataset, type DatasetReadOptions } from "../dataset/mod.js";
 export interface TextPackResourceLike {
 	readonly id: string;
 	readonly kind: string;
+	readonly schemaId?: string;
 }
 
 export interface TextPackLike {
@@ -86,18 +87,37 @@ export interface UdSyntaxResourceIds {
 }
 
 export interface UdSyntaxPackOptions {
+	readonly syntaxResourceId?: string;
 	readonly resourceIds?: Partial<UdSyntaxResourceIds>;
 	readonly reader?: TextPackResourceReader;
 }
 
-const RESOURCE_SUFFIXES = {
-	upos: "-upos",
-	features: "-features",
-	dependencies: "-dependencies",
-	sentenceProfile: "-sentence-profile",
-	annotations: "-annotations",
-	quality: "-quality",
-} as const;
+export interface UdAnnotationPackOptions {
+	readonly resourceId?: string;
+	readonly syntaxResourceId?: string;
+	readonly reader?: TextPackResourceReader;
+}
+
+interface CanonicalSyntaxResourceRef {
+	readonly resourceId: string;
+	readonly role:
+		| "tagset"
+		| "feature-inventory"
+		| "dependency-labels"
+		| "sentence-profile"
+		| "annotation-table"
+		| "grammar"
+		| "model";
+}
+
+interface CanonicalSyntaxResource {
+	readonly schemaVersion: "1";
+	readonly kind: "syntax";
+	readonly resourceRefs?: readonly CanonicalSyntaxResourceRef[];
+}
+
+const SYNTAX_SCHEMA_ID = "textdata.syntax.v1";
+const QUALITY_EVIDENCE_SCHEMA_ID = "textquality.evidence.v1";
 
 function resourceText(pack: TextPackLike, resourceId: string): string {
 	const value = pack.resources[resourceId];
@@ -105,6 +125,21 @@ function resourceText(pack: TextPackLike, resourceId: string): string {
 		throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
 	}
 	return value;
+}
+
+function canonicalSyntaxResource(
+	value: unknown,
+	resourceId: string,
+): CanonicalSyntaxResource {
+	const parsed = typeof value === "string" ? JSON.parse(value) : value;
+	if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+		throw new TypeError(`${resourceId} must be a canonical syntax object.`);
+	}
+	const record = parsed as Readonly<Record<string, unknown>>;
+	if (record.schemaVersion !== "1" || record.kind !== "syntax") {
+		throw new TypeError(`${resourceId} must use ${SYNTAX_SCHEMA_ID}.`);
+	}
+	return record as unknown as CanonicalSyntaxResource;
 }
 
 async function materializedResourceText(
@@ -120,6 +155,17 @@ async function materializedResourceText(
 	throw new TypeError(`textpack resource ${resourceId} must be loaded text.`);
 }
 
+async function materializedCanonicalSyntaxResource(
+	pack: TextPackLike,
+	resourceId: string,
+	reader: TextPackResourceReader | undefined,
+): Promise<CanonicalSyntaxResource> {
+	return canonicalSyntaxResource(
+		await materializedResourceText(pack, resourceId, reader),
+		resourceId,
+	);
+}
+
 function nonEmptyRows(text: string): readonly string[][] {
 	const [, ...rows] = text
 		.split(/\r?\n/u)
@@ -132,94 +178,130 @@ function numberCell(value: string | undefined): number {
 	return Number(value ?? "0");
 }
 
-function resourceIds(pack: TextPackLike): readonly string[] {
-	return Object.freeze(
-		[
-			...new Set([
-				...pack.manifest.resources.map((resource) => resource.id),
-				...Object.keys(pack.resources),
-			]),
-		].sort((left, right) => left.localeCompare(right)),
+function singleResourceBySchemaId(
+	pack: TextPackLike,
+	schemaId: string,
+): TextPackResourceLike {
+	const matches = pack.manifest.resources
+		.filter((resource) => resource.schemaId === schemaId)
+		.sort((left, right) => left.id.localeCompare(right.id));
+	if (matches.length === 1) return matches[0] as TextPackResourceLike;
+	if (matches.length === 0) {
+		throw new TypeError(`No ${schemaId} textpack resource is present.`);
+	}
+	throw new TypeError(
+		`Multiple ${schemaId} textpack resources are present: ${matches
+			.map((resource) => resource.id)
+			.join(", ")}.`,
 	);
 }
 
-function requiredResourceId(
+function syntaxResourceId(
 	pack: TextPackLike,
-	suffix: string,
 	explicit: string | undefined,
 ): string {
 	if (explicit !== undefined) return explicit;
-	const matches = resourceIds(pack).filter((id) => id.endsWith(suffix));
+	return singleResourceBySchemaId(pack, SYNTAX_SCHEMA_ID).id;
+}
+
+function refByRole(
+	syntax: CanonicalSyntaxResource,
+	role: CanonicalSyntaxResourceRef["role"],
+): string {
+	const matches = (syntax.resourceRefs ?? [])
+		.filter((ref) => ref.role === role)
+		.map((ref) => ref.resourceId)
+		.sort((left, right) => left.localeCompare(right));
 	if (matches.length === 1) return matches[0] ?? "";
-	if (matches.length === 0)
-		throw new TypeError(`textpack UD resource is missing: *${suffix}`);
+	if (matches.length === 0) {
+		throw new TypeError(`${SYNTAX_SCHEMA_ID} is missing ${role} resource ref.`);
+	}
 	throw new TypeError(
-		`textpack UD resource suffix *${suffix} is ambiguous: ${matches.join(", ")}`,
+		`${SYNTAX_SCHEMA_ID} has ambiguous ${role} resource refs: ${matches.join(
+			", ",
+		)}.`,
 	);
 }
 
-function inferResourcePrefix(
-	resourceIds: Partial<UdSyntaxResourceIds>,
-): string | undefined {
-	for (const [key, suffix] of Object.entries(RESOURCE_SUFFIXES) as readonly [
-		keyof UdSyntaxResourceIds,
-		string,
-	][]) {
-		const id = resourceIds[key];
-		if (id?.endsWith(suffix)) {
-			return id.slice(0, -suffix.length);
-		}
-	}
-	return undefined;
+function qualityResourceId(
+	pack: TextPackLike,
+	explicit: string | undefined,
+): string {
+	if (explicit !== undefined) return explicit;
+	return singleResourceBySchemaId(pack, QUALITY_EVIDENCE_SCHEMA_ID).id;
 }
 
 function resolveUdSyntaxResourceIds(
 	pack: TextPackLike,
-	overrides: Partial<UdSyntaxResourceIds> = {},
+	options: Pick<UdSyntaxPackOptions, "resourceIds" | "syntaxResourceId"> = {},
 ): UdSyntaxResourceIds {
-	const prefix = inferResourcePrefix(overrides);
-	if (prefix !== undefined) {
-		return Object.freeze({
-			upos: overrides.upos ?? `${prefix}${RESOURCE_SUFFIXES.upos}`,
-			features: overrides.features ?? `${prefix}${RESOURCE_SUFFIXES.features}`,
-			dependencies:
-				overrides.dependencies ?? `${prefix}${RESOURCE_SUFFIXES.dependencies}`,
-			sentenceProfile:
-				overrides.sentenceProfile ??
-				`${prefix}${RESOURCE_SUFFIXES.sentenceProfile}`,
-			annotations:
-				overrides.annotations ?? `${prefix}${RESOURCE_SUFFIXES.annotations}`,
-			quality: overrides.quality ?? `${prefix}${RESOURCE_SUFFIXES.quality}`,
-		});
-	}
+	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	const syntax = canonicalSyntaxResource(
+		resourceText(pack, syntaxId),
+		syntaxId,
+	);
+	const overrides = options.resourceIds ?? {};
 	return Object.freeze({
-		upos: requiredResourceId(pack, RESOURCE_SUFFIXES.upos, overrides.upos),
-		features: requiredResourceId(
-			pack,
-			RESOURCE_SUFFIXES.features,
-			overrides.features,
-		),
-		dependencies: requiredResourceId(
-			pack,
-			RESOURCE_SUFFIXES.dependencies,
-			overrides.dependencies,
-		),
-		sentenceProfile: requiredResourceId(
-			pack,
-			RESOURCE_SUFFIXES.sentenceProfile,
-			overrides.sentenceProfile,
-		),
-		annotations: requiredResourceId(
-			pack,
-			RESOURCE_SUFFIXES.annotations,
-			overrides.annotations,
-		),
-		quality: requiredResourceId(
-			pack,
-			RESOURCE_SUFFIXES.quality,
-			overrides.quality,
-		),
+		upos: overrides.upos ?? refByRole(syntax, "tagset"),
+		features: overrides.features ?? refByRole(syntax, "feature-inventory"),
+		dependencies:
+			overrides.dependencies ?? refByRole(syntax, "dependency-labels"),
+		sentenceProfile:
+			overrides.sentenceProfile ?? refByRole(syntax, "sentence-profile"),
+		annotations: overrides.annotations ?? refByRole(syntax, "annotation-table"),
+		quality: qualityResourceId(pack, overrides.quality),
 	});
+}
+
+async function resolveUdSyntaxResourceIdsAsync(
+	pack: TextPackLike,
+	options: UdSyntaxPackOptions = {},
+): Promise<UdSyntaxResourceIds> {
+	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	const syntax = await materializedCanonicalSyntaxResource(
+		pack,
+		syntaxId,
+		options.reader,
+	);
+	const overrides = options.resourceIds ?? {};
+	return Object.freeze({
+		upos: overrides.upos ?? refByRole(syntax, "tagset"),
+		features: overrides.features ?? refByRole(syntax, "feature-inventory"),
+		dependencies:
+			overrides.dependencies ?? refByRole(syntax, "dependency-labels"),
+		sentenceProfile:
+			overrides.sentenceProfile ?? refByRole(syntax, "sentence-profile"),
+		annotations: overrides.annotations ?? refByRole(syntax, "annotation-table"),
+		quality: qualityResourceId(pack, overrides.quality),
+	});
+}
+
+function annotationResourceId(
+	pack: TextPackLike,
+	options: Pick<UdAnnotationPackOptions, "resourceId" | "syntaxResourceId">,
+): string {
+	if (options.resourceId !== undefined) return options.resourceId;
+	return resolveUdSyntaxResourceIds(
+		pack,
+		options.syntaxResourceId === undefined
+			? {}
+			: { syntaxResourceId: options.syntaxResourceId },
+	).annotations;
+}
+
+async function annotationResourceIdAsync(
+	pack: TextPackLike,
+	options: UdAnnotationPackOptions,
+): Promise<string> {
+	if (options.resourceId !== undefined) return options.resourceId;
+	const syntaxOptions: UdSyntaxPackOptions = {
+		...(options.syntaxResourceId === undefined
+			? {}
+			: { syntaxResourceId: options.syntaxResourceId }),
+		...(options.reader === undefined ? {} : { reader: options.reader }),
+	};
+	return (await resolveUdSyntaxResourceIdsAsync(pack, syntaxOptions))
+		.annotations;
 }
 
 function conlluTokenIdParts(tokenId: string): {
@@ -291,12 +373,12 @@ function tokenFromRecord(record: UdAnnotationRecord): UdAnnotationToken {
 
 export function udAnnotationRecordsFromPack(
 	pack: TextPackLike,
-	resourceId: string = requiredResourceId(
-		pack,
-		RESOURCE_SUFFIXES.annotations,
-		undefined,
-	),
+	options: Pick<
+		UdAnnotationPackOptions,
+		"resourceId" | "syntaxResourceId"
+	> = {},
 ): readonly UdAnnotationRecord[] {
+	const resourceId = annotationResourceId(pack, options);
 	return Object.freeze(
 		nonEmptyRows(resourceText(pack, resourceId))
 			.map(
@@ -364,14 +446,9 @@ function parseUdAnnotationRecords(text: string): readonly UdAnnotationRecord[] {
 
 export async function udAnnotationRecordsFromPackAsync(
 	pack: TextPackLike,
-	options: {
-		readonly resourceId?: string;
-		readonly reader?: TextPackResourceReader;
-	} = {},
+	options: UdAnnotationPackOptions = {},
 ): Promise<readonly UdAnnotationRecord[]> {
-	const resourceId =
-		options.resourceId ??
-		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
+	const resourceId = await annotationResourceIdAsync(pack, options);
 	return parseUdAnnotationRecords(
 		await materializedResourceText(pack, resourceId, options.reader),
 	);
@@ -381,7 +458,7 @@ export function udSyntaxResourcesFromPack(
 	pack: TextPackLike,
 	options: UdSyntaxPackOptions = {},
 ): UdSyntaxPackResources {
-	const ids = resolveUdSyntaxResourceIds(pack, options.resourceIds);
+	const ids = resolveUdSyntaxResourceIds(pack, options);
 	const upos = nonEmptyRows(resourceText(pack, ids.upos)).map(
 		([upos = "", xpos = "", count = "0"]) =>
 			Object.freeze({ upos, xpos, count: numberCell(count) }),
@@ -417,7 +494,9 @@ export function udSyntaxResourcesFromPack(
 		features: Object.freeze(features),
 		dependencies: Object.freeze(dependencies),
 		sentenceProfiles: Object.freeze(sentenceProfiles),
-		annotations: udAnnotationRecordsFromPack(pack, ids.annotations),
+		annotations: udAnnotationRecordsFromPack(pack, {
+			resourceId: ids.annotations,
+		}),
 		quality: Object.freeze(
 			JSON.parse(resourceText(pack, ids.quality)) as Record<string, unknown>,
 		),
@@ -428,7 +507,7 @@ export async function udSyntaxResourcesFromPackAsync(
 	pack: TextPackLike,
 	options: UdSyntaxPackOptions = {},
 ): Promise<UdSyntaxPackResources> {
-	const ids = resolveUdSyntaxResourceIds(pack, options.resourceIds);
+	const ids = await resolveUdSyntaxResourceIdsAsync(pack, options);
 	const [
 		uposText,
 		featuresText,
@@ -441,12 +520,10 @@ export async function udSyntaxResourcesFromPackAsync(
 		materializedResourceText(pack, ids.features, options.reader),
 		materializedResourceText(pack, ids.dependencies, options.reader),
 		materializedResourceText(pack, ids.sentenceProfile, options.reader),
-		udAnnotationRecordsFromPackAsync(
-			pack,
-			options.reader === undefined
-				? { resourceId: ids.annotations }
-				: { resourceId: ids.annotations, reader: options.reader },
-		),
+		udAnnotationRecordsFromPackAsync(pack, {
+			resourceId: ids.annotations,
+			...(options.reader === undefined ? {} : { reader: options.reader }),
+		}),
 		materializedResourceText(pack, ids.quality, options.reader),
 	]);
 	const upos = nonEmptyRows(uposText).map(
@@ -489,13 +566,12 @@ export async function udSyntaxResourcesFromPackAsync(
 
 export function readUdAnnotationDatasetFromPack(
 	pack: TextPackLike,
-	options: DatasetReadOptions & { readonly resourceId?: string } = {},
+	options: DatasetReadOptions &
+		Pick<UdAnnotationPackOptions, "resourceId" | "syntaxResourceId"> = {},
 ) {
-	const resourceId =
-		options.resourceId ??
-		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
+	const resourceId = annotationResourceId(pack, options);
 	const grouped = new Map<string, UdAnnotationRecord[]>();
-	for (const record of udAnnotationRecordsFromPack(pack, resourceId)) {
+	for (const record of udAnnotationRecordsFromPack(pack, { resourceId })) {
 		const key = `${record.split}\t${record.sentenceIndex}`;
 		const existing = grouped.get(key);
 		if (existing === undefined) {
@@ -545,19 +621,16 @@ export async function readUdAnnotationDatasetFromPackAsync(
 	pack: TextPackLike,
 	options: DatasetReadOptions & {
 		readonly resourceId?: string;
+		readonly syntaxResourceId?: string;
 		readonly reader?: TextPackResourceReader;
 	} = {},
 ) {
-	const resourceId =
-		options.resourceId ??
-		requiredResourceId(pack, RESOURCE_SUFFIXES.annotations, undefined);
+	const resourceId = await annotationResourceIdAsync(pack, options);
 	const grouped = new Map<string, UdAnnotationRecord[]>();
-	for (const record of await udAnnotationRecordsFromPackAsync(
-		pack,
-		options.reader === undefined
-			? { resourceId }
-			: { resourceId, reader: options.reader },
-	)) {
+	for (const record of await udAnnotationRecordsFromPackAsync(pack, {
+		resourceId,
+		...(options.reader === undefined ? {} : { reader: options.reader }),
+	})) {
 		const key = `${record.split}\t${record.sentenceIndex}`;
 		const existing = grouped.get(key);
 		if (existing === undefined) {

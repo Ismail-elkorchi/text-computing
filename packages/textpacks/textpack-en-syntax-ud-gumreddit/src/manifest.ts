@@ -33,7 +33,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.syntax-table.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-features",
@@ -43,7 +44,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-dependencies",
@@ -53,7 +55,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.syntax-table.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-sentence-profile",
@@ -63,7 +66,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.syntax-profile.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-annotations",
@@ -73,7 +77,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
-			]
+			],
+			"schemaId": "textdata.dataset.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-quality",
@@ -83,7 +88,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-syntax-canonical",
@@ -94,9 +100,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-syntax-resource.schema.json"
-			}
+			"schemaId": "textdata.syntax.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-morphology-canonical",
@@ -107,9 +111,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-morphology-resource.schema.json"
-			}
+			"schemaId": "textlex.morphology.v1"
 		},
 		{
 			"id": "en-ud-gumreddit-quality-profile",
@@ -120,9 +122,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Universal Dependencies English GUMReddit r2.18 annotations."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

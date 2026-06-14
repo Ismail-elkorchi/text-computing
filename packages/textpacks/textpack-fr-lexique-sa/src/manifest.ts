@@ -32,7 +32,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "fr-lexique-lemmas",
@@ -42,7 +43,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
-			]
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
 		},
 		{
 			"id": "fr-lexique-pos-inventory",
@@ -52,7 +54,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
-			]
+			],
+			"schemaId": "textlex.morphology.rows.v1"
 		},
 		{
 			"id": "fr-lexique-lexicon-canonical",
@@ -63,9 +66,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-lexicon-resource.schema.json"
-			}
+			"schemaId": "textlex.lexicon.v1"
 		},
 		{
 			"id": "fr-lexique-morphology-canonical",
@@ -76,9 +77,7 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-morphology-resource.schema.json"
-			}
+			"schemaId": "textlex.morphology.v1"
 		},
 		{
 			"id": "fr-lexique-search-profile",
@@ -90,9 +89,7 @@ export const manifest: TextPackManifest = {
 				"Lexique 3.83, 2019-06-04.",
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-search-analyzer-resource.schema.json"
-			}
+			"schemaId": "textsearch.analyzer-profile.v1"
 		},
 		{
 			"id": "fr-lexique-search-elision-prefixes",
@@ -102,7 +99,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textsearch.analyzer-table.v1"
 		},
 		{
 			"id": "fr-lexique-search-contraction-forms",
@@ -112,7 +110,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textsearch.analyzer-table.v1"
 		},
 		{
 			"id": "fr-lexique-search-gold-cases",
@@ -122,7 +121,8 @@ export const manifest: TextPackManifest = {
 			"license": "CC-BY-2.0-FR",
 			"citations": [
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-lexique-quality",
@@ -133,7 +133,8 @@ export const manifest: TextPackManifest = {
 			"citations": [
 				"Lexique 3.83, 2019-06-04.",
 				"Tatoeba weekly French exports, 2026-06-06."
-			]
+			],
+			"schemaId": "textquality.evidence.v1"
 		},
 		{
 			"id": "fr-lexique-quality-profile",
@@ -145,9 +146,7 @@ export const manifest: TextPackManifest = {
 				"Lexique 3.83, 2019-06-04.",
 				"Tatoeba weekly French exports, 2026-06-06."
 			],
-			"metadata": {
-				"canonicalSchema": "textpack-quality-profile-resource.schema.json"
-			}
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [

@@ -1,4 +1,5 @@
 export type {
+	UdAnnotationPackOptions,
 	UdAnnotationRecord,
 	UdAnnotationToken,
 	UdDependencyProfileRecord,
@@ -54,5 +55,5 @@ export type {
 	TextDataRowsFromPackOptions,
 	TextDataTableResource,
 } from "./textpack.js";
-export { corpusRowsFromPack, parallelRowsFromPack } from "./textpack.js";
+export { corpusRowsFromPack } from "./textpack.js";
 export { writeDataset } from "./writer/mod.js";

@@ -27,7 +27,6 @@ assertKeys("root exports", root, [
 	"normalizeDatasetManifest",
 	"packageName",
 	"packageVersion",
-	"parallelRowsFromPack",
 	"readDataset",
 	"readUdAnnotationDatasetFromPack",
 	"readUdAnnotationDatasetFromPackAsync",

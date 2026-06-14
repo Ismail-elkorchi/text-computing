@@ -293,7 +293,9 @@ the relevant schema before they can pass a production-grade publishability revie
 Source-specific resource schemas, such as UD syntax, CAMeL morphology, and WordNet projections, MAY
 exist beside the canonical schemas. They do not replace the canonical family contracts; they
 specialize them for a source family or task pipeline. A generated resource that declares
-`metadata.canonicalSchema` in its manifest MUST validate against the named canonical schema.
+`schemaId` in its manifest MUST validate against the named canonical schema when that schema is
+JSON-backed. Canonical schema identity MUST be declared on `TextPackResource.schemaId`, not inside
+resource metadata.
 
 The source policy classes are:
 
