@@ -1,4 +1,5 @@
 import {
+	createFetchResourceReader,
 	createPack,
 	openResourceTable,
 	openResourceText,
@@ -10,38 +11,13 @@ const fixtureUrl = new URL(fixturePath, fixturePackageRoot).href;
 const encodedFixtureText =
 	"H4sIAAAAAAAAA8tM4SxJrSjhKjLk9EjNyclXSEstSc5QKEpNTEkt4ioy4nTKz8vKLy1SSK/KLOACAKdG/7ouAAAA\n";
 
-type FetchLike = (
-	input: string | URL,
-) => Promise<Pick<Response, "ok" | "status" | "text">>;
-
-type RuntimeSmokeResourceReader = {
-	readonly readText: (context: {
-		readonly descriptor: {
-			readonly packageRoot?: string;
-			readonly path: string;
-		};
-	}) => Promise<string> | string;
-};
-
-function fetchTextPackResourceReader(
-	fetchLike: FetchLike,
-): RuntimeSmokeResourceReader {
-	return {
-		async readText({ descriptor }) {
-			const url = new URL(descriptor.path, descriptor.packageRoot);
-			const response = await fetchLike(url);
-			if (!response.ok) {
-				throw new TypeError(
-					`fixture fetch failed for ${url.href}: ${response.status}`,
-				);
-			}
-			return response.text();
-		},
-	};
-}
-
-const fixtureFetch: FetchLike = async (input) => {
-	const url = input instanceof URL ? input.href : new URL(input).href;
+const fixtureFetch: typeof fetch = async (input) => {
+	const url =
+		input instanceof URL
+			? input.href
+			: typeof input === "string"
+				? new URL(input).href
+				: input.url;
 	if (url !== fixtureUrl) return new Response("missing", { status: 404 });
 	return new Response(encodedFixtureText, {
 		headers: { "content-type": "text/plain; charset=utf-8" },
@@ -93,7 +69,7 @@ export async function runFileBackedMaterializationSmoke(
 			nonEmptyLineCount: 3,
 		},
 	});
-	const reader = fetchTextPackResourceReader(fixtureFetch);
+	const reader = createFetchResourceReader({ fetch: fixtureFetch });
 	const text = await openResourceText(pack, resourceId, reader);
 	if (text !== "id\ttext\nr1\tHello fetch reader\nr2\tBonjour gzip\n") {
 		throw new Error(`${runtimeName} gzip materialization returned wrong text.`);

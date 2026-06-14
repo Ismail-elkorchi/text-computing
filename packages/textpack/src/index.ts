@@ -5,6 +5,7 @@ export { capabilities } from "./capabilities.js";
 export { composePacks } from "./compose.js";
 export { validateManifest } from "./manifest.js";
 export type {
+	TextPackFetchResourceReaderOptions,
 	TextPackFileBackedResource,
 	TextPackMaterializedTable,
 	TextPackMaterializedTableRow,
@@ -13,6 +14,7 @@ export type {
 	TextPackResourceReader,
 } from "./materialize.js";
 export {
+	createFetchResourceReader,
 	isFileBackedResource,
 	openResourceJson,
 	openResourceTable,

@@ -10,8 +10,10 @@ import {
 import {
 	analyzeCorpusQuality,
 	analyzeDocumentQuality,
+	analyzeDocumentQualityFromPack,
 	annotateQuality,
 	assertJsonValue,
+	qualityProfileFromPack,
 	qualityResourcesFromPack,
 } from "../dist/index.js";
 import {
@@ -110,8 +112,15 @@ test("analyzes document quality across section 19 dimensions", () => {
 });
 
 test("quality profile textpack resources materialize through the adapter", async () => {
-	const qualityText =
-		'{"profileId":"fr-quality","metrics":{"coverage.lexicon":0.98}}';
+	const qualityText = JSON.stringify({
+		schemaVersion: "1",
+		kind: "quality-profile",
+		profileId: "fr-quality",
+		languageTag: "fr",
+		script: "Latn",
+		metrics: [{ metricId: "coverage.lexicon", value: 0.98 }],
+		thresholds: [{ metricId: "readiness.warning_count", value: 99 }],
+	});
 	const pack = {
 		manifest: {
 			targets: { languages: ["fr"] },
@@ -137,10 +146,23 @@ test("quality profile textpack resources materialize through the adapter", async
 	assert.deepEqual(resources[0]?.payload, {
 		type: "json",
 		value: {
-			metrics: { "coverage.lexicon": 0.98 },
+			schemaVersion: "1",
+			kind: "quality-profile",
 			profileId: "fr-quality",
+			languageTag: "fr",
+			script: "Latn",
+			metrics: [{ metricId: "coverage.lexicon", value: 0.98 }],
+			thresholds: [{ metricId: "readiness.warning_count", value: 99 }],
 		},
 	});
+	const profile = await qualityProfileFromPack(pack, {
+		reader: textResourceReader({ "resources/quality-fr.json": qualityText }),
+	});
+	assert.equal(profile.id, "fr-quality");
+	const report = await analyzeDocumentQualityFromPack(pack, noisyDocument(), {
+		reader: textResourceReader({ "resources/quality-fr.json": qualityText }),
+	});
+	assert.equal(report.target, "document");
 });
 
 test("adds quality annotations without removing existing layers", () => {

@@ -18,6 +18,7 @@ import {
 	createHistoricalView,
 	createNormalizedView,
 	historicalTargetViewKind,
+	normalizationProfileFromPack,
 	normalizationResourcesFromPack,
 	normalizeDocument,
 	spanMapFromEditScript,
@@ -336,3 +337,61 @@ assert.deepEqual(normalizationPayload.value.rows[0], {
 	source: "l'",
 	target: "le",
 });
+
+const normalizationProfileText = JSON.stringify({
+	schemaVersion: "1",
+	kind: "normalization-profile",
+	profileId: "fr-search-normalization",
+	languageTag: "fr",
+	script: "Latn",
+	unicodeNormalization: "NFC",
+	rules: [
+		{ ruleId: "unicode-nfc-compose", operation: "compose", priority: 10 },
+		{ ruleId: "unicode-casefold", operation: "casefold", priority: 20 },
+		{
+			ruleId: "french-apostrophe-normalize",
+			operation: "replace",
+			input: "’",
+			output: "'",
+			priority: 30,
+		},
+		{
+			ruleId: "french-accent-fold",
+			operation: "strip-diacritic",
+			priority: 40,
+		},
+	],
+});
+const normalizationProfilePack = {
+	manifest: {
+		targets: { languages: ["fr"] },
+		resources: [
+			{
+				id: "fr-normalization-profile",
+				kind: "normalization-profile" as const,
+				format: "json",
+				schemaId: "textnorm.profile.v1",
+			},
+		],
+	},
+	resources: {
+		"fr-normalization-profile": await fileBackedTextResource(
+			"resources/fr-normalization.json",
+			normalizationProfileText,
+		),
+	},
+};
+const compiledNormalization = await normalizationProfileFromPack(
+	normalizationProfilePack,
+	{
+		reader: textResourceReader({
+			"resources/fr-normalization.json": normalizationProfileText,
+		}),
+	},
+);
+assert.equal(compiledNormalization.normalizeText("Été ’", "search"), "ete '");
+const normalizedView = compiledNormalization.searchView(
+	createDocument("Été ’", { id: "doc:norm:profile" }),
+);
+assert.equal(normalizedView.view.text, "ete '");
+assert.equal(normalizedView.spanMap.sourceViewId, "raw");

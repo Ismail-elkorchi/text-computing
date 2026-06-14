@@ -30,6 +30,11 @@ export interface TextPackResourceReader {
 	) => Promise<string> | string;
 }
 
+export interface TextPackFetchResourceReaderOptions {
+	readonly fetch?: typeof fetch;
+	readonly requestInit?: RequestInit;
+}
+
 export interface TextPackMaterializedTable {
 	readonly columns: readonly string[];
 	readonly rows: readonly TextPackMaterializedTableRow[];
@@ -44,6 +49,44 @@ function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
 
 function isResourceEncoding(value: unknown): value is TextPackResourceEncoding {
 	return value === "utf8" || value === "gzip-base64";
+}
+
+function packageRootUrl(packageRoot: string | undefined): URL {
+	if (packageRoot === undefined || packageRoot.length === 0) {
+		throw new TypeError(
+			"Fetch-backed textpack resource reading requires descriptor.packageRoot.",
+		);
+	}
+	return new URL(packageRoot.endsWith("/") ? packageRoot : `${packageRoot}/`);
+}
+
+export function createFetchResourceReader(
+	options: TextPackFetchResourceReaderOptions = {},
+): TextPackResourceReader {
+	const fetchResource = options.fetch ?? globalThis.fetch;
+	if (typeof fetchResource !== "function") {
+		throw new TypeError(
+			"Fetch-backed textpack resource reading requires fetch.",
+		);
+	}
+	return {
+		async readText({ descriptor }) {
+			const rootUrl = packageRootUrl(descriptor.packageRoot);
+			const resourceUrl = new URL(descriptor.path, rootUrl);
+			if (!resourceUrl.href.startsWith(rootUrl.href)) {
+				throw new TypeError(
+					`Textpack resource path ${descriptor.path} escapes package root ${rootUrl.href}.`,
+				);
+			}
+			const response = await fetchResource(resourceUrl, options.requestInit);
+			if (!response.ok) {
+				throw new TypeError(
+					`Textpack resource fetch failed for ${resourceUrl.href}: ${response.status} ${response.statusText}`.trim(),
+				);
+			}
+			return response.text();
+		},
+	};
 }
 
 export function isFileBackedResource(

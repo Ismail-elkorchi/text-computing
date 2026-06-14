@@ -34,8 +34,13 @@ export {
 	TextQualityError,
 } from "./internal/core.js";
 export type {
+	QualityProfileFromPackOptions,
 	QualityResourcesFromPackOptions,
 	TextQualityPackResource,
 	TextQualityPackResourcePayload,
 } from "./textpack.js";
-export { qualityResourcesFromPack } from "./textpack.js";
+export {
+	analyzeDocumentQualityFromPack,
+	qualityProfileFromPack,
+	qualityResourcesFromPack,
+} from "./textpack.js";

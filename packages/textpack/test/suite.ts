@@ -3,6 +3,7 @@ import { gzipSync } from "node:zlib";
 import {
 	capabilities,
 	composePacks,
+	createFetchResourceReader,
 	createPack,
 	getResource,
 	listResources,
@@ -503,6 +504,41 @@ assert.deepEqual(
 		)
 	).rows[0],
 	{ name: "bonjour", value: "monde" },
+);
+const fetchReader = createFetchResourceReader({
+	fetch: async (input) => {
+		assert.equal(
+			input instanceof URL ? input.href : String(input),
+			"file:///fixture/resources/table.tsv",
+		);
+		return new Response(materializedTableText);
+	},
+});
+assert.equal(
+	await openResourceText(materializedPack, "table-materialized", fetchReader),
+	materializedTableText,
+);
+const escapedResource = materializedManifest.resources[0];
+if (escapedResource === undefined) throw new Error("missing escaped resource");
+const escapedText = "escaped";
+const escapedChecksum = `sha256:${await sha256(escapedText)}`;
+await assert.rejects(
+	() =>
+		createFetchResourceReader({
+			fetch: async () => new Response(escapedText),
+		}).readText({
+			pack: materializedPack,
+			resource: escapedResource,
+			descriptor: {
+				kind: "file-backed-resource",
+				packageRoot: "https://textpack.invalid/package/",
+				path: "../outside.tsv",
+				encoding: "utf8",
+				checksum: escapedChecksum,
+				byteLength: utf8ByteLength(escapedText),
+			},
+		}),
+	/escapes package root/,
 );
 await assert.rejects(
 	() =>

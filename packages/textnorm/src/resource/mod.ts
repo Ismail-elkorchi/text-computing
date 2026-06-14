@@ -11,10 +11,15 @@ export {
 export { withTextfstResources } from "./textfst.js";
 export { withTextlexResources } from "./textlex.js";
 export type {
+	CompiledTextNormProfile,
 	TextNormPackResource,
 	TextNormPackResourcePayload,
+	TextNormProfileMode,
 	TextNormResourcesFromPackOptions,
 } from "./textpack.js";
-export { normalizationResourcesFromPack } from "./textpack.js";
+export {
+	normalizationProfileFromPack,
+	normalizationResourcesFromPack,
+} from "./textpack.js";
 export { withTextrulesResources } from "./textrules.js";
 export type * from "./types.js";

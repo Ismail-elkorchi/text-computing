@@ -7,6 +7,8 @@ import {
 	readDataset,
 	readUdAnnotationDatasetFromPack,
 	readUdAnnotationDatasetFromPackAsync,
+	segmentationAdapterFromPack,
+	segmentationResourcesFromPack,
 	splitDataset,
 	streamRecords,
 	udAnnotationRecordsFromPack,
@@ -110,6 +112,60 @@ test("CoNLL-U creates token layers and dependency graphs", async () => {
 		3,
 	);
 	assert.equal(record?.document?.graphs.dependency?.kind, "dependency");
+});
+
+test("segmentation textpack resources expose a lexical-unit adapter", async () => {
+	const profileText = JSON.stringify({
+		schemaVersion: "1",
+		kind: "segmentation-profile",
+		profileId: "fr-token",
+		languageTag: "fr",
+		granularity: "token",
+	});
+	const elisionsText = "prefix\tobservedCount\nj\t1\nqu\t1\n";
+	const pack = {
+		manifest: {
+			id: "pack:fr-segmentation-test",
+			targets: { languages: ["fr"] },
+			resources: [
+				{
+					id: "fr-token-profile",
+					kind: "segmentation-profile" as const,
+					format: "json",
+					schemaId: "textdata.segmentation-profile.v1",
+				},
+				{
+					id: "fr-segmentation-elision-prefixes",
+					kind: "segmentation-profile" as const,
+					format: "tsv",
+					schemaId: "textdata.segmentation-table.v1",
+				},
+			],
+		},
+		resources: {
+			"fr-token-profile": await fileBackedTextResource(
+				"resources/fr-token.json",
+				profileText,
+			),
+			"fr-segmentation-elision-prefixes": await fileBackedTextResource(
+				"resources/fr-elisions.tsv",
+				elisionsText,
+			),
+		},
+	};
+	const reader = textResourceReader({
+		"resources/fr-token.json": profileText,
+		"resources/fr-elisions.tsv": elisionsText,
+	});
+	const resources = await segmentationResourcesFromPack(pack as never, {
+		reader,
+	});
+	assert.equal(resources.profiles[0]?.id, "fr-token-profile");
+	const adapter = await segmentationAdapterFromPack(pack as never, { reader });
+	assert.deepEqual(
+		adapter.lexicalUnits("J'en parle.").map((segment) => segment.text),
+		["J'", "en", "parle", "."],
+	);
 });
 
 test("UD annotation textpack resources become annotation-only datasets", async () => {

@@ -12,6 +12,7 @@ import type {
 	TextPackComponentResolver,
 	TextPackCompositeProfile,
 	TextPackDependency,
+	TextPackFetchResourceReaderOptions,
 	TextPackGapNote,
 	TextPackManifest,
 	TextPackResource,
@@ -36,6 +37,7 @@ type PublicApiSmoke = {
 	resolveComponent: TextPackComponentResolver;
 	profile: TextPackCompositeProfile;
 	capabilities: TextPackCapabilities;
+	fetchReaderOptions: TextPackFetchResourceReaderOptions;
 };
 
 export type { PublicApiSmoke };

@@ -35,6 +35,8 @@ import {
 	lookupGazetteer,
 	lookupPronunciations,
 	lookupTermbase,
+	mergedLexiconFromPackAsync,
+	morphologyIndexFromPackAsync,
 	parseAffixTableResource,
 	parseLexiconResource,
 	parsePronunciationLexiconResource,
@@ -382,3 +384,100 @@ const normalizedAnnotations = selectAnnotations(normalizedAnnotated, {
 assert.equal(normalizedAnnotations.length, 1);
 assert.equal(normalizedAnnotations[0]?.spans[0]?.span.start, 0);
 assert.equal(normalizedAnnotations[0]?.spans[0]?.span.end, "résumé".length);
+
+const canonicalLexiconText = JSON.stringify({
+	schemaVersion: "1",
+	kind: "lexicon",
+	languageTag: "fr",
+	resourceRefs: [{ resourceId: "fr-lexicon-rows", role: "entries" }],
+});
+const canonicalLexiconRows =
+	"entryId\tform\tlemma\tlanguageTag\tpartOfSpeech\nfr-1\tparle\tparler\tfr\tVERB\n";
+const morphologyText = JSON.stringify({
+	schemaVersion: "1",
+	kind: "morphology",
+	morphologyId: "fr-morph",
+	languageTag: "fr",
+	resourceRefs: [
+		{ resourceId: "fr-morph-analyzer", role: "analyzer" },
+		{ resourceId: "fr-morph-generator", role: "generator" },
+	],
+});
+const morphologyAnalyzerRows =
+	"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nparle\tparler\tVERB\tV;IND;PRS;1;SG\tm1\n";
+const morphologyGeneratorRows =
+	"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nparler\tparle\tVERB\tV;IND;PRS;1;SG\tm1\n";
+const generatedPack = {
+	manifest: {
+		resources: [
+			{
+				id: "fr-lexicon",
+				kind: "lexicon" as const,
+				format: "json",
+				schemaId: "textlex.lexicon.v1",
+			},
+			{
+				id: "fr-lexicon-rows",
+				kind: "lexicon" as const,
+				format: "tsv",
+				schemaId: "textlex.lexicon.rows.v1",
+			},
+			{
+				id: "fr-morphology",
+				kind: "morphology" as const,
+				format: "json",
+				schemaId: "textlex.morphology.v1",
+			},
+			{
+				id: "fr-morph-analyzer",
+				kind: "morphology" as const,
+				format: "tsv",
+				schemaId: "textlex.morphology.rows.v1",
+			},
+			{
+				id: "fr-morph-generator",
+				kind: "morphology" as const,
+				format: "tsv",
+				schemaId: "textlex.morphology.rows.v1",
+			},
+		],
+	},
+	resources: {
+		"fr-lexicon": await fileBackedTextResource(
+			"resources/fr-lexicon.json",
+			canonicalLexiconText,
+		),
+		"fr-lexicon-rows": await fileBackedTextResource(
+			"resources/fr-lexicon.tsv",
+			canonicalLexiconRows,
+		),
+		"fr-morphology": await fileBackedTextResource(
+			"resources/fr-morphology.json",
+			morphologyText,
+		),
+		"fr-morph-analyzer": await fileBackedTextResource(
+			"resources/fr-morph-analyzer.tsv",
+			morphologyAnalyzerRows,
+		),
+		"fr-morph-generator": await fileBackedTextResource(
+			"resources/fr-morph-generator.tsv",
+			morphologyGeneratorRows,
+		),
+	},
+};
+const generatedReader = textResourceReader({
+	"resources/fr-lexicon.json": canonicalLexiconText,
+	"resources/fr-lexicon.tsv": canonicalLexiconRows,
+	"resources/fr-morphology.json": morphologyText,
+	"resources/fr-morph-analyzer.tsv": morphologyAnalyzerRows,
+	"resources/fr-morph-generator.tsv": morphologyGeneratorRows,
+});
+const mergedLexicon = await mergedLexiconFromPackAsync(generatedPack, {
+	reader: generatedReader,
+});
+assert.equal(lookup(mergedLexicon, "parle")[0]?.canonical, "parler");
+const morphology = await morphologyIndexFromPackAsync(generatedPack, {
+	reader: generatedReader,
+});
+assert.equal(morphology.analyze("parle")[0]?.lemma, "parler");
+assert.equal(morphology.generate("parler", { SG: "true" })[0]?.form, "parle");

@@ -4,6 +4,7 @@ import test from "node:test";
 import {
 	addToIndex,
 	analyze,
+	analyzerFromPack,
 	createAnalyzer,
 	createIndex,
 	explain,
@@ -11,6 +12,8 @@ import {
 	parseCql,
 	search,
 	searchAnalyzerResourcesFromPack,
+	searchIndexFromPack,
+	searchIndexSchemaFromPack,
 	serializeCql,
 	suggest,
 	termVector,
@@ -162,8 +165,19 @@ test("analyzes strings and TextDocument inputs with deterministic components", (
 });
 
 test("search profile textpack resources materialize through the adapter", async () => {
-	const profileText =
-		'{"analyzerId":"fr-basic","components":[{"kind":"tokenizer","mode":"unicode-word"}]}';
+	const profileText = JSON.stringify({
+		schemaVersion: "1",
+		kind: "search-profile",
+		analyzerId: "fr-basic",
+		languageTag: "fr",
+		script: "Latn",
+		tokenizer: { type: "unicode-word-boundary", mode: "default" },
+		tokenFilters: [
+			{ componentId: "casefold", type: "casefold" },
+			{ componentId: "accent-fold", type: "diacritic-fold" },
+		],
+		fields: [{ fieldName: "text", analyzerRole: "index" }],
+	});
 	const pack = {
 		manifest: {
 			targets: { languages: ["fr"] },
@@ -189,10 +203,34 @@ test("search profile textpack resources materialize through the adapter", async 
 	assert.deepEqual(resources[0]?.payload, {
 		type: "json",
 		value: {
+			schemaVersion: "1",
+			kind: "search-profile",
 			analyzerId: "fr-basic",
-			components: [{ kind: "tokenizer", mode: "unicode-word" }],
+			languageTag: "fr",
+			script: "Latn",
+			tokenizer: { type: "unicode-word-boundary", mode: "default" },
+			tokenFilters: [
+				{ componentId: "casefold", type: "casefold" },
+				{ componentId: "accent-fold", type: "diacritic-fold" },
+			],
+			fields: [{ fieldName: "text", analyzerRole: "index" }],
 		},
 	});
+	const analyzer = await analyzerFromPack(pack, {
+		reader: textResourceReader({ "resources/search-fr.json": profileText }),
+	});
+	assert.deepEqual(
+		analyze(analyzer, "Été").map((token) => token.term),
+		["ete"],
+	);
+	const schema = await searchIndexSchemaFromPack(pack, {
+		reader: textResourceReader({ "resources/search-fr.json": profileText }),
+	});
+	assert.equal(schema.defaultAnalyzer?.id, "fr-basic");
+	const emptyIndex = await searchIndexFromPack(pack, {
+		reader: textResourceReader({ "resources/search-fr.json": profileText }),
+	});
+	assert.equal(emptyIndex.fields.text?.analyzerId, "fr-basic");
 });
 
 test("builds fielded positional indexes without mutating source documents", () => {

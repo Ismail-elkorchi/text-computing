@@ -8,10 +8,14 @@ import {
 	type AliasEntryInput,
 	assertJsonObject,
 	type ConceptRecord,
+	candidateEntities,
 	createKnowledgeBase,
+	type EntityCandidate,
+	type EntityLinkOptions,
 	type EntityRecord,
 	type JsonObject,
 	type KnowledgeBase,
+	linkEntities as linkEntitiesWithKnowledgeBase,
 	type SemanticRelation,
 	type SenseRecord,
 } from "./internal/core.js";
@@ -19,6 +23,23 @@ import {
 export interface KnowledgeBaseFromPackOptions {
 	readonly resourceId?: string;
 	readonly reader?: TextPackResourceReader;
+}
+
+export interface EntityLinkerFromPackOptions
+	extends KnowledgeBaseFromPackOptions {
+	readonly linkOptions?: EntityLinkOptions;
+}
+
+export interface TextPackEntityLinker {
+	readonly kb: KnowledgeBase;
+	readonly candidates: (
+		text: string,
+		options?: EntityLinkOptions,
+	) => readonly EntityCandidate[];
+	readonly linkEntities: (
+		doc: Parameters<typeof linkEntitiesWithKnowledgeBase>[0],
+		options?: EntityLinkOptions,
+	) => ReturnType<typeof linkEntitiesWithKnowledgeBase>;
 }
 
 interface CanonicalLabel {
@@ -456,5 +477,30 @@ export async function knowledgeBaseFromPack(
 			languageTags: [...(resource.languageTags ?? [])],
 		},
 		allowExternalRelationEndpoints: true,
+	});
+}
+
+export async function entityLinkerFromPack(
+	pack: TextPack,
+	options: EntityLinkerFromPackOptions = {},
+): Promise<TextPackEntityLinker> {
+	const kb = await knowledgeBaseFromPack(pack, options);
+	return Object.freeze({
+		kb,
+		candidates(text: string, candidateOptions: EntityLinkOptions = {}) {
+			return candidateEntities(kb, text, {
+				...options.linkOptions,
+				...candidateOptions,
+			});
+		},
+		linkEntities(
+			doc: Parameters<typeof linkEntitiesWithKnowledgeBase>[0],
+			linkOptions: EntityLinkOptions = {},
+		) {
+			return linkEntitiesWithKnowledgeBase(doc, kb, {
+				...options.linkOptions,
+				...linkOptions,
+			});
+		},
 	});
 }

@@ -32,6 +32,7 @@ test("root exports the final textkb API only", () => {
 			"createSemanticRelationStore",
 			"createSenseRecordStore",
 			"disambiguateSense",
+			"entityLinkerFromPack",
 			"explainCandidate",
 			"explainRelationPath",
 			"lexicalChains",

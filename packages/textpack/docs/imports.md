@@ -6,6 +6,7 @@ Use the root entrypoint:
 import {
   capabilities,
   composePacks,
+  createFetchResourceReader,
   createPack,
   getResource,
   listResources,

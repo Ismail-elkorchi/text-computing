@@ -53,7 +53,15 @@ export { splitDataset } from "./split/mod.js";
 export { streamRecords } from "./stream/mod.js";
 export type {
 	TextDataRowsFromPackOptions,
+	TextDataSegment,
+	TextDataSegmentationAdapter,
+	TextDataSegmentationProfileResource,
+	TextDataSegmentationResources,
 	TextDataTableResource,
 } from "./textpack.js";
-export { corpusRowsFromPack } from "./textpack.js";
+export {
+	corpusRowsFromPack,
+	segmentationAdapterFromPack,
+	segmentationResourcesFromPack,
+} from "./textpack.js";
 export { writeDataset } from "./writer/mod.js";

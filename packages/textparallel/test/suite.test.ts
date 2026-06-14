@@ -12,6 +12,8 @@ import {
 	createParallelDocument,
 	extractBilingualTerms,
 	induceBilingualLexicon,
+	parallelCorpusFromPack,
+	parallelLinkRowsFromPack,
 	parallelTablesFromPack,
 	searchTranslationMemory,
 	shallowTransfer,
@@ -118,7 +120,7 @@ test("runs the final section 20 parallel workflow", () => {
 
 test("parallel textpack resources materialize through the adapter", async () => {
 	const alignmentText =
-		"id\tsourceText\ttargetText\tsourceLanguage\ttargetLanguage\np1\tGood morning\tBonjour\ten\tfr\n";
+		"sourceSentenceId\ttargetSentenceId\tsourceLanguageTag\ttargetLanguageTag\tsourceText\ttargetText\ns1\tt1\ten\tfr\tGood morning\tBonjour\n";
 	const pack = {
 		manifest: {
 			targets: { languages: ["en", "fr"] },
@@ -143,12 +145,26 @@ test("parallel textpack resources materialize through the adapter", async () => 
 		}),
 	});
 	assert.deepEqual(tables[0]?.rows[0], {
-		id: "p1",
-		sourceLanguage: "en",
+		sourceLanguageTag: "en",
+		sourceSentenceId: "s1",
 		sourceText: "Good morning",
-		targetLanguage: "fr",
+		targetLanguageTag: "fr",
+		targetSentenceId: "t1",
 		targetText: "Bonjour",
 	});
+	const links = await parallelLinkRowsFromPack(pack, {
+		reader: textResourceReader({
+			"resources/parallel-en-fr.tsv": alignmentText,
+		}),
+	});
+	assert.equal(links[0]?.sourceSentenceId, "s1");
+	const corpus = await parallelCorpusFromPack(pack, {
+		reader: textResourceReader({
+			"resources/parallel-en-fr.tsv": alignmentText,
+		}),
+		targetLanguage: "fr",
+	});
+	assert.equal(corpus.documents[0]?.sourceDoc.views.raw?.text, "Good morning");
 });
 
 test("keeps corpus construction and metadata JSON-safe", () => {

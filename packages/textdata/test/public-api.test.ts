@@ -30,6 +30,8 @@ assertKeys("root exports", root, [
 	"readDataset",
 	"readUdAnnotationDatasetFromPack",
 	"readUdAnnotationDatasetFromPackAsync",
+	"segmentationAdapterFromPack",
+	"segmentationResourcesFromPack",
 	"splitDataset",
 	"streamRecords",
 	"udAnnotationRecordsFromPack",

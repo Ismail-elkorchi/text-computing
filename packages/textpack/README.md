@@ -9,6 +9,7 @@ network resources, discover packs implicitly, or apply hidden canonicalization.
 
 ```ts
 import {
+  createFetchResourceReader,
   createPack,
   getResource,
   listResources,
@@ -52,13 +53,16 @@ their own runtime objects:
 ```ts
 const pack = await loadPack(await import("@ismail-elkorchi/textpack-en-syntax-ud-gumreddit"));
 const syntaxResources = listResources(pack, { schemaId: "textdata.syntax.v1" });
+const reader = createFetchResourceReader();
 const syntaxProfile = await openResourceJson(pack, syntaxResources[0].id, reader);
 const annotationRows = await openResourceTable(pack, "en-ud-gumreddit-annotations", reader);
 ```
 
 Runtime packages decide how to interpret canonical resources. `textpack` only validates manifests,
 loads modules, composes resource maps, queries descriptors, and materializes text/JSON/table payloads
-from caller-provided resource values.
+from caller-provided resource values. `createFetchResourceReader()` is a runtime-neutral helper for
+file-backed generated resources whose descriptors include `packageRoot` and package-relative `path`;
+it uses `fetch`, not filesystem APIs.
 
 ## Composition
 

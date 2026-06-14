@@ -10,11 +10,21 @@ export {
 	parseTermbaseResource,
 	parseWordlistResource,
 } from "./parse.js";
+export type {
+	MergedLexiconFromPackOptions,
+	MorphologyAnalysis,
+	MorphologyGeneration,
+	MorphologyIndex,
+	MorphologyIndexFromPackOptions,
+	MorphologyParadigm,
+} from "./textpack.js";
 export {
 	affixTableFromPack,
 	affixTableFromPackAsync,
 	lexiconFromPack,
 	lexiconFromPackAsync,
+	mergedLexiconFromPackAsync,
+	morphologyIndexFromPackAsync,
 	pronunciationLexiconFromPack,
 	pronunciationLexiconFromPackAsync,
 	wordlistFromPack,

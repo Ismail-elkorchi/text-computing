@@ -9,6 +9,7 @@ import {
 	cohesionFeatures,
 	createKnowledgeBase,
 	disambiguateSense,
+	entityLinkerFromPack,
 	knowledgeBaseFromPack,
 	lexicalChains,
 	linkEntities,
@@ -219,6 +220,41 @@ test("canonical WordNet textpack resources become a runtime knowledge base", asy
 	assert.equal(kb.concepts.size, 2);
 	assert.equal(candidateSenses(kb, "contract")[0]?.senseId, "oewn-contract__1");
 	assert.equal(querySemanticRelations(kb, { type: "hypernymy" }).length, 1);
+});
+
+test("entity linker facade uses canonical knowledge-base textpacks", async () => {
+	const pack = {
+		manifest: {
+			resources: [
+				{
+					id: "wikidata-fr-kb-canonical",
+					kind: "knowledge-base" as const,
+					format: "json",
+					schemaId: "textkb.knowledge-base.v1",
+				},
+			],
+		},
+		resources: {
+			"wikidata-fr-kb-canonical": JSON.stringify({
+				schemaVersion: "1",
+				kind: "knowledge-base",
+				kbId: "wikidata-fr",
+				languageTags: ["fr"],
+				entities: [
+					{
+						entityId: "Q90",
+						typeIds: ["Q515"],
+						labels: [{ languageTag: "fr", value: "Paris" }],
+						aliases: [{ languageTag: "fr", value: "Paris" }],
+					},
+				],
+			}),
+		},
+	};
+	const linker = await entityLinkerFromPack(pack as never, {
+		linkOptions: { language: "fr" },
+	});
+	assert.equal(linker.candidates("Paris")[0]?.entityId, "Q90");
 });
 
 test("canonical WordNet loader is language-neutral", async () => {

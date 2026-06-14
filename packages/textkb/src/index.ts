@@ -78,5 +78,9 @@ export {
 	thesaurusRelations,
 	traverseSemanticRelations,
 } from "./internal/core.js";
-export type { KnowledgeBaseFromPackOptions } from "./textpack.js";
-export { knowledgeBaseFromPack } from "./textpack.js";
+export type {
+	EntityLinkerFromPackOptions,
+	KnowledgeBaseFromPackOptions,
+	TextPackEntityLinker,
+} from "./textpack.js";
+export { entityLinkerFromPack, knowledgeBaseFromPack } from "./textpack.js";
