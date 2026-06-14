@@ -5,7 +5,8 @@ Generated ArabicShareAlike recipe composite textpack.
 ```ts
 import { loadArabicShareAlike } from "@ismail-elkorchi/textpack-ar-sa";
 
-const pack = await loadArabicShareAlike();
+const runtime = await loadArabicShareAlike({ reader });
+const pack = runtime.pack;
 ```
 
 ## Required Components

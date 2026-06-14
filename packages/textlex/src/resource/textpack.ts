@@ -522,7 +522,7 @@ export async function mergedLexiconFromPackAsync(
 	const entries: LexicalEntry[] = [];
 	for (const resource of resources) {
 		const lexicon = await lexiconFromPackAsync(pack, resource.id, options);
-		entries.push(...lexicon.entries);
+		for (const entry of lexicon.entries) entries.push(entry);
 	}
 	return buildLexicon(entries, {
 		...options,
@@ -577,12 +577,12 @@ export async function lexiconFromPackAsync(
 					`${referenced.id} must be text-backed for canonical lexicon refs.`,
 				);
 			}
-			referencedEntries.push(
-				...canonicalLexiconRows(referencedValue, {
-					...parseOptions,
-					source: referenced.id,
-				}),
-			);
+			for (const entry of canonicalLexiconRows(referencedValue, {
+				...parseOptions,
+				source: referenced.id,
+			})) {
+				referencedEntries.push(entry);
+			}
 		}
 		return buildLexicon([...inlineEntries, ...referencedEntries], options);
 	}

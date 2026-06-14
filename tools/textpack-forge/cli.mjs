@@ -83,10 +83,7 @@ const policyExpandedWrapperSourcePolicyClasses = new Set([
 	"attribution",
 	"share-alike",
 ]);
-const compositePolicySurfaces = new Set([
-	"default",
-	"policy-expanded-wrapper",
-]);
+const compositePolicySurfaces = new Set(["default", "policy-expanded-wrapper"]);
 const componentLicensePolicyClasses = {
 	default: new Set(["default-safe"]),
 	"allow-attribution": new Set(["default-safe", "attribution"]),
@@ -170,7 +167,8 @@ const languageReadinessSourceRequirements = {
 		],
 		morphology: [
 			{
-				label: "SCOWLv2 exact audited default-safe English lookup morphology source",
+				label:
+					"SCOWLv2 exact audited default-safe English lookup morphology source",
 				anySourceIds: ["source:scowl:v2-rel-2026-02-25"],
 			},
 		],
@@ -186,7 +184,8 @@ const languageReadinessSourceRequirements = {
 				anySourceIds: ["source:wordnet:open-english-2025"],
 			},
 			{
-				label: "Wikidata main structured data for entity labels, aliases, and KB links",
+				label:
+					"Wikidata main structured data for entity labels, aliases, and KB links",
 				anySourceIds: ["source:wikidata:main"],
 			},
 		],
@@ -210,11 +209,13 @@ const languageReadinessSourceRequirements = {
 		],
 		quality: [
 			{
-				label: "English quality evidence must cover the audited lexicon/search source",
+				label:
+					"English quality evidence must cover the audited lexicon/search source",
 				anySourceIds: ["source:esdb:wordlist-diff-en-default-2026-02-25"],
 			},
 			{
-				label: "English quality evidence must cover the audited morphology source",
+				label:
+					"English quality evidence must cover the audited morphology source",
 				anySourceIds: ["source:scowl:v2-rel-2026-02-25"],
 			},
 			{
@@ -230,7 +231,8 @@ const languageReadinessSourceRequirements = {
 				anySourceIds: ["source:wikidata:main"],
 			},
 			{
-				label: "English quality evidence must cover the audited corpus and parallel source",
+				label:
+					"English quality evidence must cover the audited corpus and parallel source",
 				anySourceIds: ["source:tatoeba:weekly-2026-06-06"],
 			},
 		],
@@ -260,7 +262,8 @@ const languageReadinessSourceRequirements = {
 		],
 		syntax: [
 			{
-				label: "audited exact UD Arabic treebank source boundary; audited PADT, PUD, and NYUAD rows are isolated or blocked and do not unlock default Arabic syntax",
+				label:
+					"audited exact UD Arabic treebank source boundary; audited PADT, PUD, and NYUAD rows are isolated or blocked and do not unlock default Arabic syntax",
 				anySourceIds: [
 					"source:ud:arabic-padt-r2.18",
 					"source:ud:arabic-pud-r2.18",
@@ -274,7 +277,8 @@ const languageReadinessSourceRequirements = {
 				anySourceIds: ["source:wordnet:arabic-v4.1.0"],
 			},
 			{
-				label: "Wikidata main structured data for Arabic entity labels, aliases, and KB links",
+				label:
+					"Wikidata main structured data for Arabic entity labels, aliases, and KB links",
 				anySourceIds: ["source:wikidata:main"],
 			},
 		],
@@ -302,7 +306,8 @@ const languageReadinessSourceRequirements = {
 		],
 		quality: [
 			{
-				label: "Arabic quality evidence must wait for an audited exact Arabic syntax source boundary",
+				label:
+					"Arabic quality evidence must wait for an audited exact Arabic syntax source boundary",
 				anySourceIds: [
 					"source:ud:arabic-padt-r2.18",
 					"source:ud:arabic-pud-r2.18",
@@ -314,7 +319,8 @@ const languageReadinessSourceRequirements = {
 	fr: {
 		lexicon: [
 			{
-				label: "audited exact French lexical source boundary; Morphalou and Lefff are isolated copyleft sources, and Lexique 3.83 is share-alike isolated",
+				label:
+					"audited exact French lexical source boundary; Morphalou and Lefff are isolated copyleft sources, and Lexique 3.83 is share-alike isolated",
 				anySourceIds: [
 					"source:fr:morphalou",
 					"source:fr:lefff",
@@ -325,7 +331,8 @@ const languageReadinessSourceRequirements = {
 		],
 		morphology: [
 			{
-				label: "audited exact French morphology source boundary; UniMorph French and Lexique 3.83 are share-alike isolated, while Morphalou and Lefff are copyleft isolated",
+				label:
+					"audited exact French morphology source boundary; UniMorph French and Lexique 3.83 are share-alike isolated, while Morphalou and Lefff are copyleft isolated",
 				anySourceIds: [
 					"source:unimorph:french-master-f672f8c",
 					"source:fr:morphalou",
@@ -337,7 +344,8 @@ const languageReadinessSourceRequirements = {
 		],
 		syntax: [
 			{
-				label: "audited exact UD French treebank source boundary; audited ALTS, FQB, GSD, ParisStories, PoitevinDIVITAL, Rhapsodie, Spoken, PUD, Sequoia, and ParTUT rows are isolated or blocked and do not unlock default French syntax",
+				label:
+					"audited exact UD French treebank source boundary; audited ALTS, FQB, GSD, ParisStories, PoitevinDIVITAL, Rhapsodie, Spoken, PUD, Sequoia, and ParTUT rows are isolated or blocked and do not unlock default French syntax",
 				anySourceIds: [
 					"source:ud:french-alts-r2.18",
 					"source:ud:french-fqb-r2.18",
@@ -354,13 +362,15 @@ const languageReadinessSourceRequirements = {
 		],
 		kb: [
 			{
-				label: "Wikidata main structured data for French entity labels, aliases, and KB links",
+				label:
+					"Wikidata main structured data for French entity labels, aliases, and KB links",
 				anySourceIds: ["source:wikidata:main"],
 			},
 		],
 		search: [
 			{
-				label: "audited exact French search source boundary; Unicode/CLDR alone is not enough for full French search readiness",
+				label:
+					"audited exact French search source boundary; Unicode/CLDR alone is not enough for full French search readiness",
 				anySourceIds: [
 					"source:fr:lexique-383",
 					"source:fr:lexique",
@@ -372,7 +382,8 @@ const languageReadinessSourceRequirements = {
 		],
 		quality: [
 			{
-				label: "French quality evidence must wait for audited French lexicon source coverage",
+				label:
+					"French quality evidence must wait for audited French lexicon source coverage",
 				anySourceIds: [
 					"source:fr:morphalou",
 					"source:fr:lefff",
@@ -381,7 +392,8 @@ const languageReadinessSourceRequirements = {
 				],
 			},
 			{
-				label: "French quality evidence must wait for audited French morphology source coverage",
+				label:
+					"French quality evidence must wait for audited French morphology source coverage",
 				anySourceIds: [
 					"source:unimorph:french-master-f672f8c",
 					"source:fr:morphalou",
@@ -391,7 +403,8 @@ const languageReadinessSourceRequirements = {
 				],
 			},
 			{
-				label: "French quality evidence must wait for audited French syntax source coverage",
+				label:
+					"French quality evidence must wait for audited French syntax source coverage",
 				anySourceIds: [
 					"source:ud:french-alts-r2.18",
 					"source:ud:french-fqb-r2.18",
@@ -2002,10 +2015,7 @@ function transformEnglishCoreProfile(resourceSpec, inputs) {
 				pattern: "UAX29:grapheme-word-sentence",
 				label: "basic-boundary-profile",
 				conditions: {
-					sourceIds: [
-						"source:unicode:ucd",
-						"source:unicode:cldr-core",
-					],
+					sourceIds: ["source:unicode:ucd", "source:unicode:cldr-core"],
 					likelySubtag,
 					graphemeRangeCount: graphemeRows.length,
 					wordRangeCount: wordRows.length,
@@ -2308,10 +2318,7 @@ function transformFrenchCoreProfile(resourceSpec, inputs) {
 				pattern: "UAX29:grapheme-word-sentence",
 				label: "basic-boundary-profile",
 				conditions: {
-					sourceIds: [
-						"source:unicode:ucd",
-						"source:unicode:cldr-core",
-					],
+					sourceIds: ["source:unicode:ucd", "source:unicode:cldr-core"],
 					likelySubtag,
 					graphemeRangeCount: graphemeRows.length,
 					wordRangeCount: wordRows.length,
@@ -2563,10 +2570,7 @@ function transformArabicCoreProfile(resourceSpec, inputs) {
 				pattern: "UAX29:grapheme-word-sentence",
 				label: "basic-boundary-profile",
 				conditions: {
-					sourceIds: [
-						"source:unicode:ucd",
-						"source:unicode:cldr-core",
-					],
+					sourceIds: ["source:unicode:ucd", "source:unicode:cldr-core"],
 					likelySubtag,
 					graphemeRangeCount: graphemeRows.length,
 					wordRangeCount: wordRows.length,
@@ -2830,16 +2834,15 @@ function deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs) {
 			const apostrophe = match[2];
 			incrementCount(prefixCounts, prefix);
 			incrementCount(apostropheCounts, apostrophe);
-			incrementCount(
-				prefixApostropheCounts,
-				`${prefix}\u0000${apostrophe}`,
-			);
+			incrementCount(prefixApostropheCounts, `${prefix}\u0000${apostrophe}`);
 			elisionObservationCount += 1;
 			if (!prefixExamples.has(prefix)) {
 				prefixExamples.set(prefix, { sentenceId, text: sentenceText });
 			}
 		}
-		for (const match of sentenceText.matchAll(/\b[\p{Letter}\p{Mark}.]+\b\.?/gu)) {
+		for (const match of sentenceText.matchAll(
+			/\b[\p{Letter}\p{Mark}.]+\b\.?/gu,
+		)) {
 			const token = match[0];
 			const folded = token.toLocaleLowerCase("fr").replace(/\.$/u, "");
 			if (frenchSurfaceContractionForms.includes(folded)) {
@@ -2868,13 +2871,19 @@ function deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs) {
 					key.slice(key.indexOf("\u0000") + 1),
 					apostropheCount,
 				])
-				.sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+				.sort(
+					(left, right) =>
+						right[1] - left[1] || left[0].localeCompare(right[0]),
+				);
 			const example = prefixExamples.get(prefix);
 			return {
 				prefix,
 				count,
 				apostrophes: apostropheRows
-					.map(([apostrophe, apostropheCount]) => `${apostrophe}:${apostropheCount}`)
+					.map(
+						([apostrophe, apostropheCount]) =>
+							`${apostrophe}:${apostropheCount}`,
+					)
 					.join(" "),
 				exampleSentenceId: example?.sentenceId ?? "",
 			};
@@ -2903,63 +2912,69 @@ function deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs) {
 		observedElisionRows.map((row) => row.prefix),
 	);
 	const normalizationGoldCases = [
-		...observedElisionRows.slice(0, frenchSurfaceGoldCaseLimit / 2).map((row) => {
-			const example = prefixExamples.get(row.prefix);
-			const input = example?.text ?? "";
-			return {
-				caseId: `fr-normalization-elision-${row.prefix}`,
-				source: "source:tatoeba:weekly-french-2026-06-06",
-				sourceSentenceId: example?.sentenceId ?? "",
-				category: "elision-apostrophe",
-				input,
-				expectedNfcCasefoldApostrophe: normalizeFrenchApostrophes(
+		...observedElisionRows
+			.slice(0, frenchSurfaceGoldCaseLimit / 2)
+			.map((row) => {
+				const example = prefixExamples.get(row.prefix);
+				const input = example?.text ?? "";
+				return {
+					caseId: `fr-normalization-elision-${row.prefix}`,
+					source: "source:tatoeba:weekly-french-2026-06-06",
+					sourceSentenceId: example?.sentenceId ?? "",
+					category: "elision-apostrophe",
 					input,
-				).toLocaleLowerCase("fr"),
-				expectedLookupFold: frenchLookupFold(input),
-			};
-		}),
-		...observedContractionRows.slice(0, frenchSurfaceGoldCaseLimit / 2).map((row) => {
-			const example = contractionExamples.get(row.form);
-			const input = example?.text ?? "";
-			return {
-				caseId: `fr-normalization-contraction-${row.form}`,
-				source: "source:tatoeba:weekly-french-2026-06-06",
-				sourceSentenceId: example?.sentenceId ?? "",
-				category: "contraction-surface-form",
-				input,
-				expectedNfcCasefoldApostrophe: normalizeFrenchApostrophes(
+					expectedNfcCasefoldApostrophe:
+						normalizeFrenchApostrophes(input).toLocaleLowerCase("fr"),
+					expectedLookupFold: frenchLookupFold(input),
+				};
+			}),
+		...observedContractionRows
+			.slice(0, frenchSurfaceGoldCaseLimit / 2)
+			.map((row) => {
+				const example = contractionExamples.get(row.form);
+				const input = example?.text ?? "";
+				return {
+					caseId: `fr-normalization-contraction-${row.form}`,
+					source: "source:tatoeba:weekly-french-2026-06-06",
+					sourceSentenceId: example?.sentenceId ?? "",
+					category: "contraction-surface-form",
 					input,
-				).toLocaleLowerCase("fr"),
-				expectedLookupFold: frenchLookupFold(input),
-				recognizedSurfaceForm: row.form,
-			};
-		}),
+					expectedNfcCasefoldApostrophe:
+						normalizeFrenchApostrophes(input).toLocaleLowerCase("fr"),
+					expectedLookupFold: frenchLookupFold(input),
+					recognizedSurfaceForm: row.form,
+				};
+			}),
 	].slice(0, frenchSurfaceGoldCaseLimit);
 	const segmentationGoldCases = [
-		...observedElisionRows.slice(0, frenchSurfaceGoldCaseLimit / 2).map((row) => {
-			const example = prefixExamples.get(row.prefix);
-			const input = example?.text ?? "";
-			return {
-				caseId: `fr-segmentation-elision-${row.prefix}`,
-				source: "source:tatoeba:weekly-french-2026-06-06",
-				sourceSentenceId: example?.sentenceId ?? "",
-				category: "elision-apostrophe",
-				input,
-				expectedTokens: frenchSurfaceTokens(input, elisionPrefixSet),
-			};
-		}),
-		...observedAbbreviationRows.slice(0, frenchSurfaceGoldCaseLimit / 4).map((row) => {
-			const example = abbreviationExamples.get(row.form);
-			const input = example?.text ?? "";
-			return {
-				caseId: `fr-segmentation-abbreviation-${row.form.replace(/\.$/u, "")}`,
-				source: "source:tatoeba:weekly-french-2026-06-06",
-				sourceSentenceId: example?.sentenceId ?? "",
-				category: "abbreviation-period",
-				input,
-				expectedTokens: frenchSurfaceTokens(input, elisionPrefixSet),
-			};
-		}),
+		...observedElisionRows
+			.slice(0, frenchSurfaceGoldCaseLimit / 2)
+			.map((row) => {
+				const example = prefixExamples.get(row.prefix);
+				const input = example?.text ?? "";
+				return {
+					caseId: `fr-segmentation-elision-${row.prefix}`,
+					source: "source:tatoeba:weekly-french-2026-06-06",
+					sourceSentenceId: example?.sentenceId ?? "",
+					category: "elision-apostrophe",
+					input,
+					expectedTokens: frenchSurfaceTokens(input, elisionPrefixSet),
+				};
+			}),
+		...observedAbbreviationRows
+			.slice(0, frenchSurfaceGoldCaseLimit / 4)
+			.map((row) => {
+				const example = abbreviationExamples.get(row.form);
+				const input = example?.text ?? "";
+				return {
+					caseId: `fr-segmentation-abbreviation-${row.form.replace(/\.$/u, "")}`,
+					source: "source:tatoeba:weekly-french-2026-06-06",
+					sourceSentenceId: example?.sentenceId ?? "",
+					category: "abbreviation-period",
+					input,
+					expectedTokens: frenchSurfaceTokens(input, elisionPrefixSet),
+				};
+			}),
 	].slice(0, frenchSurfaceGoldCaseLimit);
 	return {
 		sentenceRowCount,
@@ -2975,7 +2990,11 @@ function deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs) {
 	};
 }
 
-function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) {
+function transformUnicodeCldrNormalizationProfile(
+	resourceSpec,
+	inputs,
+	config,
+) {
 	const aliasesText = inputs.get("aliases.json");
 	const likelySubtagsText = inputs.get("likelySubtags.json");
 	const propertyValueAliasesText = inputs.get("PropertyValueAliases.txt");
@@ -3082,20 +3101,20 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 		rules: rules.map((rule) => ({
 			ruleId: rule.ruleId,
 			operation: rule.operation,
-				priority: rule.priority,
-				...(rule.input === undefined ? {} : { input: rule.input }),
-				...(rule.output === undefined ? {} : { output: rule.output }),
-				...(rule.pattern === undefined ? {} : { pattern: rule.pattern }),
-				conditions: {
-					scope: `${config.scopeLabel} normalization profile`,
-					sourceIds: resourceSpec.sourceIds,
-					note: rule.note,
-					...(rule.evidenceResourceId === undefined
-						? {}
-						: { evidenceResourceId: rule.evidenceResourceId }),
-				},
-			})),
-		};
+			priority: rule.priority,
+			...(rule.input === undefined ? {} : { input: rule.input }),
+			...(rule.output === undefined ? {} : { output: rule.output }),
+			...(rule.pattern === undefined ? {} : { pattern: rule.pattern }),
+			conditions: {
+				scope: `${config.scopeLabel} normalization profile`,
+				sourceIds: resourceSpec.sourceIds,
+				note: rule.note,
+				...(rule.evidenceResourceId === undefined
+					? {}
+					: { evidenceResourceId: rule.evidenceResourceId }),
+			},
+		})),
+	};
 	const summary = {
 		schemaVersion: "1",
 		sourceIds: resourceSpec.sourceIds,
@@ -3104,37 +3123,34 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 		languageTag: config.languageTag,
 		script: config.script,
 		likelySubtag,
-			ruleCount: rules.length,
-			nfcQuickCheckValueCount: nfcQuickCheckAliases.length,
-			caseAliasRowCount: caseAliasRows.length,
-			aliasKindCount: aliasKinds.length,
-			aliasKinds,
-			...(frenchSurfaceEvidence === undefined
-				? {}
-				: {
-						tatoebaSentenceRowCount:
-							frenchSurfaceEvidence.sentenceRowCount,
-						apostropheCounts: frenchSurfaceEvidence.apostropheCounts,
-						elisionPrefixCount:
-							frenchSurfaceEvidence.elisionPrefixRows.length,
-						elisionObservationCount:
-							frenchSurfaceEvidence.elisionObservationCount,
-						contractionFormCount:
-							frenchSurfaceEvidence.contractionRows.length,
-						contractionObservationCount:
-							frenchSurfaceEvidence.contractionObservationCount,
-						normalizationGoldCaseCount:
-							frenchSurfaceEvidence.normalizationGoldCases.length,
-					}),
-			recordsAccepted: rules.length,
-			recordsRejected: 0,
-			warnings: [
-				`This profile declares Unicode/CLDR-backed normalization policy for ${config.scopeLabel} text.`,
-				frenchSurfaceEvidence === undefined
-					? "It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, or corpus-derived normalization."
-					: "It adds Tatoeba-observed French apostrophe, elision-prefix, contraction-surface, and lookup accent-fold evidence; spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, and OCR cleanup remain outside this component.",
-			],
-		};
+		ruleCount: rules.length,
+		nfcQuickCheckValueCount: nfcQuickCheckAliases.length,
+		caseAliasRowCount: caseAliasRows.length,
+		aliasKindCount: aliasKinds.length,
+		aliasKinds,
+		...(frenchSurfaceEvidence === undefined
+			? {}
+			: {
+					tatoebaSentenceRowCount: frenchSurfaceEvidence.sentenceRowCount,
+					apostropheCounts: frenchSurfaceEvidence.apostropheCounts,
+					elisionPrefixCount: frenchSurfaceEvidence.elisionPrefixRows.length,
+					elisionObservationCount:
+						frenchSurfaceEvidence.elisionObservationCount,
+					contractionFormCount: frenchSurfaceEvidence.contractionRows.length,
+					contractionObservationCount:
+						frenchSurfaceEvidence.contractionObservationCount,
+					normalizationGoldCaseCount:
+						frenchSurfaceEvidence.normalizationGoldCases.length,
+				}),
+		recordsAccepted: rules.length,
+		recordsRejected: 0,
+		warnings: [
+			`This profile declares Unicode/CLDR-backed normalization policy for ${config.scopeLabel} text.`,
+			frenchSurfaceEvidence === undefined
+				? "It does not claim spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, or corpus-derived normalization."
+				: "It adds Tatoeba-observed French apostrophe, elision-prefix, contraction-surface, and lookup accent-fold evidence; spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, and OCR cleanup remain outside this component.",
+		],
+	};
 	const canonicalQuality = {
 		schemaVersion: "1",
 		kind: "quality-profile",
@@ -3145,24 +3161,24 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 			{
 				diagnosticId: `${config.languageTag}-normalization-scope`,
 				task: "normalization.profile",
-					severity: "info",
-					message: `Unicode/CLDR-backed profile for ${config.scopeLabel}; spelling correction and noisy-text normalization are out of scope.`,
-					metadata: {
-						likelySubtag,
-						sourceIds: resourceSpec.sourceIds,
-						...(frenchSurfaceEvidence === undefined
-							? {}
-							: {
-									elisionPrefixCount:
-										frenchSurfaceEvidence.elisionPrefixRows.length,
-									contractionFormCount:
-										frenchSurfaceEvidence.contractionRows.length,
-									normalizationGoldCaseCount:
-										frenchSurfaceEvidence.normalizationGoldCases.length,
-								}),
-					},
+				severity: "info",
+				message: `Unicode/CLDR-backed profile for ${config.scopeLabel}; spelling correction and noisy-text normalization are out of scope.`,
+				metadata: {
+					likelySubtag,
+					sourceIds: resourceSpec.sourceIds,
+					...(frenchSurfaceEvidence === undefined
+						? {}
+						: {
+								elisionPrefixCount:
+									frenchSurfaceEvidence.elisionPrefixRows.length,
+								contractionFormCount:
+									frenchSurfaceEvidence.contractionRows.length,
+								normalizationGoldCaseCount:
+									frenchSurfaceEvidence.normalizationGoldCases.length,
+							}),
 				},
-			],
+			},
+		],
 		metrics: [
 			{
 				metricId: "rule-count",
@@ -3182,102 +3198,102 @@ function transformUnicodeCldrNormalizationProfile(resourceSpec, inputs, config) 
 				value: summary.caseAliasRowCount,
 				unit: "aliases",
 			},
-				{
-					metricId: "records-rejected",
-					name: "recordsRejected",
-					value: summary.recordsRejected,
-					unit: "records",
-				},
-				...(frenchSurfaceEvidence === undefined
-					? []
-					: [
-							{
-								metricId: "french-elision-prefix-count",
-								name: "elisionPrefixCount",
-								value: summary.elisionPrefixCount,
-								unit: "prefixes",
-							},
-							{
-								metricId: "french-contraction-form-count",
-								name: "contractionFormCount",
-								value: summary.contractionFormCount,
-								unit: "forms",
-							},
-							{
-								metricId: "french-normalization-gold-case-count",
-								name: "normalizationGoldCaseCount",
-								value: summary.normalizationGoldCaseCount,
-								unit: "cases",
-							},
-						]),
-			],
-			thresholds: [],
-			evaluationRecordIds: [],
+			{
+				metricId: "records-rejected",
+				name: "recordsRejected",
+				value: summary.recordsRejected,
+				unit: "records",
+			},
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						{
+							metricId: "french-elision-prefix-count",
+							name: "elisionPrefixCount",
+							value: summary.elisionPrefixCount,
+							unit: "prefixes",
+						},
+						{
+							metricId: "french-contraction-form-count",
+							name: "contractionFormCount",
+							value: summary.contractionFormCount,
+							unit: "forms",
+						},
+						{
+							metricId: "french-normalization-gold-case-count",
+							name: "normalizationGoldCaseCount",
+							value: summary.normalizationGoldCaseCount,
+							unit: "cases",
+						},
+					]),
+		],
+		thresholds: [],
+		evaluationRecordIds: [],
 	};
 	return [
 		outputFor(
 			resourceSpec,
 			config.normalizationOutputIds.rules,
 			tsvFile(
-					["ruleId", "operation", "priority", "input", "output", "note"],
-					rules.map((rule) => [
-						rule.ruleId,
-						rule.operation,
-						rule.priority,
+				["ruleId", "operation", "priority", "input", "output", "note"],
+				rules.map((rule) => [
+					rule.ruleId,
+					rule.operation,
+					rule.priority,
 					rule.input ?? "",
 					rule.output ?? "",
-						rule.note,
-					]),
-				),
+					rule.note,
+				]),
 			),
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						outputFor(
-							resourceSpec,
-							"fr-normalization-elision-prefixes",
-							tsvFile(
-								[
-									"prefix",
-									"observedCount",
-									"apostropheCounts",
-									"exampleSentenceId",
-								],
-								frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
-									row.prefix,
-									row.count,
-									row.apostrophes,
-									row.exampleSentenceId,
-								]),
-							),
+		),
+		...(frenchSurfaceEvidence === undefined
+			? []
+			: [
+					outputFor(
+						resourceSpec,
+						"fr-normalization-elision-prefixes",
+						tsvFile(
+							[
+								"prefix",
+								"observedCount",
+								"apostropheCounts",
+								"exampleSentenceId",
+							],
+							frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
+								row.prefix,
+								row.count,
+								row.apostrophes,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-normalization-contraction-forms",
-							tsvFile(
-								["form", "observedCount", "exampleSentenceId"],
-								frenchSurfaceEvidence.contractionRows.map((row) => [
-									row.form,
-									row.count,
-									row.exampleSentenceId,
-								]),
-							),
+					),
+					outputFor(
+						resourceSpec,
+						"fr-normalization-contraction-forms",
+						tsvFile(
+							["form", "observedCount", "exampleSentenceId"],
+							frenchSurfaceEvidence.contractionRows.map((row) => [
+								row.form,
+								row.count,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-normalization-gold-cases",
-							stableJson({
-								schemaVersion: "1",
-								kind: "normalization-gold-cases",
-								languageTag: "fr",
-								sourceIds: resourceSpec.sourceIds,
-								cases: frenchSurfaceEvidence.normalizationGoldCases,
-							}),
-						),
-					]),
-			outputFor(
-				resourceSpec,
-				config.normalizationOutputIds.profile,
+					),
+					outputFor(
+						resourceSpec,
+						"fr-normalization-gold-cases",
+						stableJson({
+							schemaVersion: "1",
+							kind: "normalization-gold-cases",
+							languageTag: "fr",
+							sourceIds: resourceSpec.sourceIds,
+							cases: frenchSurfaceEvidence.normalizationGoldCases,
+						}),
+					),
+				]),
+		outputFor(
+			resourceSpec,
+			config.normalizationOutputIds.profile,
 			stableJson(canonicalNormalization),
 		),
 		outputFor(
@@ -3423,8 +3439,8 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 			profileId: config.segmentationProfileIds.sentence,
 			schemeId: "unicode-uax29-sentence",
 			description: "Unicode UAX #29 sentence boundary profile.",
-			},
-		];
+		},
+	];
 	const frenchSurfaceEvidence =
 		config.languageTag === "fr"
 			? deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs)
@@ -3456,44 +3472,41 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 		graphemeRangeCount: graphemeRows.length,
 		wordRangeCount: wordRows.length,
 		sentenceRangeCount: sentenceRows.length,
-			propertyRows: propertyRows.length,
-			propertyCountsByGranularity: Object.fromEntries(
-				summaries.map((summary) => [summary.granularity, summary.counts]),
-			),
-			...(frenchSurfaceEvidence === undefined
-				? {}
-				: {
-						tatoebaSentenceRowCount:
-							frenchSurfaceEvidence.sentenceRowCount,
-						elisionPrefixCount:
-							frenchSurfaceEvidence.elisionPrefixRows.length,
-						elisionObservationCount:
-							frenchSurfaceEvidence.elisionObservationCount,
-						contractionFormCount:
-							frenchSurfaceEvidence.contractionRows.length,
-						contractionObservationCount:
-							frenchSurfaceEvidence.contractionObservationCount,
-						abbreviationCandidateCount:
-							frenchSurfaceEvidence.abbreviationRows.length,
-						abbreviationObservationCount:
-							frenchSurfaceEvidence.abbreviationObservationCount,
-						segmentationGoldCaseCount:
-							frenchSurfaceEvidence.segmentationGoldCases.length,
-					}),
-			recordsAccepted:
-				graphemeRows.length + wordRows.length + sentenceRows.length,
-			recordsRejected: 0,
-			warnings: [
-				`This profile declares Unicode UAX #29-backed grapheme, word, and sentence boundary resources for ${config.scopeLabel} text.`,
-				frenchSurfaceEvidence === undefined
-					? "It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, or language-composite coverage."
-					: "It adds Tatoeba-observed French elision-prefix, contraction-surface, abbreviation-candidate, and token gold-case resources; social-text tokenization, historical segmentation, and OCR segmentation remain outside this component.",
-			],
-		};
-		const frenchTokenProfile =
+		propertyRows: propertyRows.length,
+		propertyCountsByGranularity: Object.fromEntries(
+			summaries.map((summary) => [summary.granularity, summary.counts]),
+		),
+		...(frenchSurfaceEvidence === undefined
+			? {}
+			: {
+					tatoebaSentenceRowCount: frenchSurfaceEvidence.sentenceRowCount,
+					elisionPrefixCount: frenchSurfaceEvidence.elisionPrefixRows.length,
+					elisionObservationCount:
+						frenchSurfaceEvidence.elisionObservationCount,
+					contractionFormCount: frenchSurfaceEvidence.contractionRows.length,
+					contractionObservationCount:
+						frenchSurfaceEvidence.contractionObservationCount,
+					abbreviationCandidateCount:
+						frenchSurfaceEvidence.abbreviationRows.length,
+					abbreviationObservationCount:
+						frenchSurfaceEvidence.abbreviationObservationCount,
+					segmentationGoldCaseCount:
+						frenchSurfaceEvidence.segmentationGoldCases.length,
+				}),
+		recordsAccepted:
+			graphemeRows.length + wordRows.length + sentenceRows.length,
+		recordsRejected: 0,
+		warnings: [
+			`This profile declares Unicode UAX #29-backed grapheme, word, and sentence boundary resources for ${config.scopeLabel} text.`,
 			frenchSurfaceEvidence === undefined
-				? undefined
-				: {
+				? "It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, or language-composite coverage."
+				: "It adds Tatoeba-observed French elision-prefix, contraction-surface, abbreviation-candidate, and token gold-case resources; social-text tokenization, historical segmentation, and OCR segmentation remain outside this component.",
+		],
+	};
+	const frenchTokenProfile =
+		frenchSurfaceEvidence === undefined
+			? undefined
+			: {
 					schemaVersion: "1",
 					kind: "segmentation-profile",
 					profileId: "fr-modern-typed-french-token-segmentation",
@@ -3551,45 +3564,45 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 								abbreviationCandidateCount:
 									frenchSurfaceEvidence.abbreviationRows.length,
 							},
-							},
-						],
-						dictionaryRefs: [],
-					};
-		const segmentationScopeMessage =
-			frenchSurfaceEvidence === undefined
-				? `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}.`
-				: `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}, with source-derived French elision, contraction, abbreviation, and gold-case evidence.`;
-		const canonicalQuality = {
-			schemaVersion: "1",
-			kind: "quality-profile",
-			profileId: `${config.languageTag}-segmentation-quality`,
-			languageTag: config.languageTag,
-			script: config.script,
-			diagnostics: [
-				{
-					diagnosticId: `${config.languageTag}-segmentation-scope`,
-					task: "segmentation.profile",
-					severity: "info",
-					message: segmentationScopeMessage,
-					metadata: {
-						likelySubtag,
-						sourceIds: resourceSpec.sourceIds,
-						...(frenchSurfaceEvidence === undefined
-							? {}
-							: {
-									elisionPrefixCount:
-										frenchSurfaceEvidence.elisionPrefixRows.length,
-									contractionFormCount:
-										frenchSurfaceEvidence.contractionRows.length,
-									abbreviationCandidateCount:
-										frenchSurfaceEvidence.abbreviationRows.length,
-									segmentationGoldCaseCount:
-										frenchSurfaceEvidence.segmentationGoldCases.length,
-								}),
-					},
+						},
+					],
+					dictionaryRefs: [],
+				};
+	const segmentationScopeMessage =
+		frenchSurfaceEvidence === undefined
+			? `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}.`
+			: `Unicode/CLDR-backed boundary profile for ${config.scopeLabel}, with source-derived French elision, contraction, abbreviation, and gold-case evidence.`;
+	const canonicalQuality = {
+		schemaVersion: "1",
+		kind: "quality-profile",
+		profileId: `${config.languageTag}-segmentation-quality`,
+		languageTag: config.languageTag,
+		script: config.script,
+		diagnostics: [
+			{
+				diagnosticId: `${config.languageTag}-segmentation-scope`,
+				task: "segmentation.profile",
+				severity: "info",
+				message: segmentationScopeMessage,
+				metadata: {
+					likelySubtag,
+					sourceIds: resourceSpec.sourceIds,
+					...(frenchSurfaceEvidence === undefined
+						? {}
+						: {
+								elisionPrefixCount:
+									frenchSurfaceEvidence.elisionPrefixRows.length,
+								contractionFormCount:
+									frenchSurfaceEvidence.contractionRows.length,
+								abbreviationCandidateCount:
+									frenchSurfaceEvidence.abbreviationRows.length,
+								segmentationGoldCaseCount:
+									frenchSurfaceEvidence.segmentationGoldCases.length,
+							}),
 				},
-			],
-			metrics: [
+			},
+		],
+		metrics: [
 			{
 				metricId: "grapheme-range-count",
 				name: "graphemeRangeCount",
@@ -3608,44 +3621,44 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 				value: quality.sentenceRangeCount,
 				unit: "ranges",
 			},
-				{
-					metricId: "records-rejected",
-					name: "recordsRejected",
-					value: quality.recordsRejected,
-					unit: "records",
-				},
-				...(frenchSurfaceEvidence === undefined
-					? []
-					: [
-							{
-								metricId: "french-elision-prefix-count",
-								name: "elisionPrefixCount",
-								value: quality.elisionPrefixCount,
-								unit: "prefixes",
-							},
-							{
-								metricId: "french-contraction-form-count",
-								name: "contractionFormCount",
-								value: quality.contractionFormCount,
-								unit: "forms",
-							},
-							{
-								metricId: "french-abbreviation-candidate-count",
-								name: "abbreviationCandidateCount",
-								value: quality.abbreviationCandidateCount,
-								unit: "forms",
-							},
-							{
-								metricId: "french-segmentation-gold-case-count",
-								name: "segmentationGoldCaseCount",
-								value: quality.segmentationGoldCaseCount,
-								unit: "cases",
-							},
-						]),
-			],
-			thresholds: [],
-			evaluationRecordIds: [],
-		};
+			{
+				metricId: "records-rejected",
+				name: "recordsRejected",
+				value: quality.recordsRejected,
+				unit: "records",
+			},
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						{
+							metricId: "french-elision-prefix-count",
+							name: "elisionPrefixCount",
+							value: quality.elisionPrefixCount,
+							unit: "prefixes",
+						},
+						{
+							metricId: "french-contraction-form-count",
+							name: "contractionFormCount",
+							value: quality.contractionFormCount,
+							unit: "forms",
+						},
+						{
+							metricId: "french-abbreviation-candidate-count",
+							name: "abbreviationCandidateCount",
+							value: quality.abbreviationCandidateCount,
+							unit: "forms",
+						},
+						{
+							metricId: "french-segmentation-gold-case-count",
+							name: "segmentationGoldCaseCount",
+							value: quality.segmentationGoldCaseCount,
+							unit: "cases",
+						},
+					]),
+		],
+		thresholds: [],
+		evaluationRecordIds: [],
+	};
 	return [
 		outputFor(
 			resourceSpec,
@@ -3674,73 +3687,73 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 						scopeLabel: config.scopeLabel,
 					}),
 				),
-				),
 			),
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						outputFor(
-							resourceSpec,
-							"fr-token-segmentation-profile",
-							stableJson(frenchTokenProfile),
+		),
+		...(frenchSurfaceEvidence === undefined
+			? []
+			: [
+					outputFor(
+						resourceSpec,
+						"fr-token-segmentation-profile",
+						stableJson(frenchTokenProfile),
+					),
+					outputFor(
+						resourceSpec,
+						"fr-segmentation-elision-prefixes",
+						tsvFile(
+							[
+								"prefix",
+								"observedCount",
+								"apostropheCounts",
+								"exampleSentenceId",
+							],
+							frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
+								row.prefix,
+								row.count,
+								row.apostrophes,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-segmentation-elision-prefixes",
-							tsvFile(
-								[
-									"prefix",
-									"observedCount",
-									"apostropheCounts",
-									"exampleSentenceId",
-								],
-								frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
-									row.prefix,
-									row.count,
-									row.apostrophes,
-									row.exampleSentenceId,
-								]),
-							),
+					),
+					outputFor(
+						resourceSpec,
+						"fr-segmentation-contraction-forms",
+						tsvFile(
+							["form", "observedCount", "exampleSentenceId"],
+							frenchSurfaceEvidence.contractionRows.map((row) => [
+								row.form,
+								row.count,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-segmentation-contraction-forms",
-							tsvFile(
-								["form", "observedCount", "exampleSentenceId"],
-								frenchSurfaceEvidence.contractionRows.map((row) => [
-									row.form,
-									row.count,
-									row.exampleSentenceId,
-								]),
-							),
+					),
+					outputFor(
+						resourceSpec,
+						"fr-segmentation-abbreviations",
+						tsvFile(
+							["form", "observedCount", "exampleSentenceId"],
+							frenchSurfaceEvidence.abbreviationRows.map((row) => [
+								row.form,
+								row.count,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-segmentation-abbreviations",
-							tsvFile(
-								["form", "observedCount", "exampleSentenceId"],
-								frenchSurfaceEvidence.abbreviationRows.map((row) => [
-									row.form,
-									row.count,
-									row.exampleSentenceId,
-								]),
-							),
-						),
-						outputFor(
-							resourceSpec,
-							"fr-segmentation-gold-cases",
-							stableJson({
-								schemaVersion: "1",
-								kind: "segmentation-gold-cases",
-								languageTag: "fr",
-								sourceIds: resourceSpec.sourceIds,
-								cases: frenchSurfaceEvidence.segmentationGoldCases,
-							}),
-						),
-					]),
-			outputFor(
-				resourceSpec,
-				config.segmentationOutputIds.quality,
+					),
+					outputFor(
+						resourceSpec,
+						"fr-segmentation-gold-cases",
+						stableJson({
+							schemaVersion: "1",
+							kind: "segmentation-gold-cases",
+							languageTag: "fr",
+							sourceIds: resourceSpec.sourceIds,
+							cases: frenchSurfaceEvidence.segmentationGoldCases,
+						}),
+					),
+				]),
+		outputFor(
+			resourceSpec,
+			config.segmentationOutputIds.quality,
 			stableJson(quality),
 		),
 		outputFor(
@@ -4386,7 +4399,15 @@ function transformArabicNormalizationProfile(resourceSpec, inputs) {
 			resourceSpec,
 			"ar-normalization-rules",
 			tsvFile(
-				["ruleId", "operation", "priority", "input", "output", "pattern", "note"],
+				[
+					"ruleId",
+					"operation",
+					"priority",
+					"input",
+					"output",
+					"pattern",
+					"note",
+				],
 				normalizationRules.map((rule) => [
 					rule.ruleId,
 					rule.operation,
@@ -4474,10 +4495,7 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 				"atbtok",
 			]) {
 				if ((features[feature] ?? "").length > 0) {
-					incrementCount(
-						morphHookCounts,
-						canonicalArabicMorphFeature(feature),
-					);
+					incrementCount(morphHookCounts, canonicalArabicMorphFeature(feature));
 				}
 			}
 		}
@@ -5054,17 +5072,9 @@ function transformWordnetLmf(resourceSpec, inputs, config) {
 			tsvFile(["scope", "sourceId", "predicateId", "targetId"], relationRows),
 		),
 		outputFor(resourceSpec, ids.quality, stableJson(summary)),
-		outputFor(
-			resourceSpec,
-			ids.lexiconCanonical,
-			stableJson(canonicalLexicon),
-		),
+		outputFor(resourceSpec, ids.lexiconCanonical, stableJson(canonicalLexicon)),
 		outputFor(resourceSpec, ids.kbCanonical, stableJson(canonicalKb)),
-		outputFor(
-			resourceSpec,
-			ids.qualityProfile,
-			stableJson(canonicalQuality),
-		),
+		outputFor(resourceSpec, ids.qualityProfile, stableJson(canonicalQuality)),
 	];
 }
 
@@ -5171,9 +5181,11 @@ function canonicalizeWikidataEntityRows(text) {
 		header !== undefined && header.length > 0,
 		"Wikidata entity extract must contain a TSV header.",
 	);
-	const columns = header.split("\t").map((column) =>
-		/^[a-z]{2,3}wikiUrl$/u.test(column) ? "wikiUrl" : column,
-	);
+	const columns = header
+		.split("\t")
+		.map((column) =>
+			/^[a-z]{2,3}wikiUrl$/u.test(column) ? "wikiUrl" : column,
+		);
 	expect(
 		new Set(columns).size === columns.length,
 		"Wikidata entity extract canonicalized header must not duplicate columns.",
@@ -5262,29 +5274,29 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 		};
 		const kbResource = {
 			schemaVersion: "1",
-		kind: "knowledge-base",
-		kbId: config.kbId,
-		languageTags: [config.languageTag],
-		entityCount: entityRowCount,
-		relationCount: relationRowCount,
-		resourceRefs: [
-			{
-				resourceId: ids.entities,
-				role: "entities",
-				recordCount: entityRowCount,
-			},
-			{
-				resourceId: ids.aliases,
-				role: "aliases",
-				recordCount: aliasRowCount,
-			},
-			{
-				resourceId: ids.relations,
-				role: "relations",
-				recordCount: relationRowCount,
-			},
-		],
-	};
+			kind: "knowledge-base",
+			kbId: config.kbId,
+			languageTags: [config.languageTag],
+			entityCount: entityRowCount,
+			relationCount: relationRowCount,
+			resourceRefs: [
+				{
+					resourceId: ids.entities,
+					role: "entities",
+					recordCount: entityRowCount,
+				},
+				{
+					resourceId: ids.aliases,
+					role: "aliases",
+					recordCount: aliasRowCount,
+				},
+				{
+					resourceId: ids.relations,
+					role: "relations",
+					recordCount: relationRowCount,
+				},
+			],
+		};
 		const summary = {
 			schemaVersion: "1",
 			sourceId: "source:wikidata:main",
@@ -5474,9 +5486,7 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 }
 
 function tatoebaMetadata(resourceSpec, inputs, fileName) {
-	const metadata = JSON.parse(
-		requiredInput(inputs, fileName, resourceSpec),
-	);
+	const metadata = JSON.parse(requiredInput(inputs, fileName, resourceSpec));
 	expect(
 		Array.isArray(metadata.exports),
 		`${resourceSpec.resourceSpecId} Tatoeba metadata must declare exports.`,
@@ -5533,7 +5543,14 @@ function canonicalTatoebaCorpusTsv(text, artifact, config) {
 			rejected += 1;
 			continue;
 		}
-		const [sentenceId, tatoebaLanguageCode, sentenceText, owner, createdAt, modifiedAt] = cells;
+		const [
+			sentenceId,
+			tatoebaLanguageCode,
+			sentenceText,
+			owner,
+			createdAt,
+			modifiedAt,
+		] = cells;
 		if (
 			sentenceId === undefined ||
 			tatoebaLanguageCode !== artifact.tatoebaLanguageCode ||
@@ -5714,8 +5731,7 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 					diagnosticId: `tatoeba-${config.resourcePrefix}-explicit-corpus-artifact-fetch`,
 					task: "corpus.artifact",
 					severity: "info",
-					message:
-						`Tatoeba ${config.languageName} sentence data is exposed as an explicit artifact descriptor; local corpus rows have not been materialized yet.`,
+					message: `Tatoeba ${config.languageName} sentence data is exposed as an explicit artifact descriptor; local corpus rows have not been materialized yet.`,
 					metadata: {
 						artifactId: corpusArtifact.artifactId,
 						artifactPolicy: "fetch-explicit",
@@ -5845,8 +5861,7 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 				diagnosticId: `tatoeba-${config.resourcePrefix}-local-corpus-rows`,
 				task: "corpus.materialization",
 				severity: "info",
-				message:
-					`Tatoeba ${config.languageName} sentence data is materialized as local canonical TSV rows.`,
+				message: `Tatoeba ${config.languageName} sentence data is materialized as local canonical TSV rows.`,
 				metadata: {
 					artifactId: corpusArtifact.artifactId,
 					resourceId: `${config.resourcePrefix}-tatoeba-corpus-sentences`,
@@ -5882,11 +5897,7 @@ function transformTatoebaCorpusArtifact(resourceSpec, inputs, config) {
 		evaluationRecordIds: [],
 	};
 	return [
-		outputFor(
-			resourceSpec,
-			sentenceResourceId,
-			materialized.text,
-		),
+		outputFor(resourceSpec, sentenceResourceId, materialized.text),
 		outputFor(
 			resourceSpec,
 			`${config.resourcePrefix}-tatoeba-corpus-canonical`,
@@ -6056,7 +6067,9 @@ function transformTatoebaParallelArtifact(resourceSpec, inputs, config) {
 					}
 				: {}),
 		})),
-		recordsAccepted: allLinksMaterialized ? totalRowCount : linkArtifacts.length,
+		recordsAccepted: allLinksMaterialized
+			? totalRowCount
+			: linkArtifacts.length,
 		recordsRejected: 0,
 		warnings: allLinksMaterialized
 			? [
@@ -6731,7 +6744,8 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 		}
 		inGroup = true;
 		parsedLineCount += 1;
-		if (!record.lemmaInfo.trim().startsWith("-")) groupLemma = parsedLemma.lemma;
+		if (!record.lemmaInfo.trim().startsWith("-"))
+			groupLemma = parsedLemma.lemma;
 		addEntry({
 			scowlInfo: record.scowlInfo,
 			size,
@@ -7025,10 +7039,7 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 		outputFor(
 			resourceSpec,
 			"en-scowl-pos-inventory",
-			tsvFile(
-				["partOfSpeech", "posClass", "formRole", "count"],
-				posRows,
-			),
+			tsvFile(["partOfSpeech", "posClass", "formRole", "count"], posRows),
 		),
 		outputFor(
 			resourceSpec,
@@ -7073,11 +7084,7 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 		const [lemma = "", form = "", featureBundle = ""] = columns.map((value) =>
 			value.trim(),
 		);
-		if (
-			lemma.length === 0 ||
-			form.length === 0 ||
-			featureBundle.length === 0
-		) {
+		if (lemma.length === 0 || form.length === 0 || featureBundle.length === 0) {
 			recordsRejected += 1;
 			continue;
 		}
@@ -7336,7 +7343,10 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 		"",
 	);
 	const lines = text.split(/\r?\n/u).filter((line) => line.trim().length > 0);
-	expect(lines.length > 1, `${resourceSpec.resourceSpecId} has no Lexique rows.`);
+	expect(
+		lines.length > 1,
+		`${resourceSpec.resourceSpecId} has no Lexique rows.`,
+	);
 	const header = lines[0].split("\t");
 	const columnIndex = new Map(header.map((column, index) => [column, index]));
 	for (const requiredColumn of ["ortho", "lemme", "cgram", "genre", "nombre"]) {
@@ -7417,7 +7427,9 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			entry.lemma,
 			entry.partOfSpeech,
 			entry.forms.size,
-			[...entry.forms].sort((left, right) => left.localeCompare(right)).join(" "),
+			[...entry.forms]
+				.sort((left, right) => left.localeCompare(right))
+				.join(" "),
 		])
 		.sort((left, right) => {
 			const lemmaDelta = left[0].localeCompare(right[0]);
@@ -7447,8 +7459,7 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 		...(frenchSurfaceEvidence === undefined
 			? {}
 			: {
-					tatoebaSentenceRowCount:
-						frenchSurfaceEvidence.sentenceRowCount,
+					tatoebaSentenceRowCount: frenchSurfaceEvidence.sentenceRowCount,
 					searchElisionPrefixCount:
 						frenchSurfaceEvidence.elisionPrefixRows.length,
 					searchContractionFormCount:
@@ -7547,62 +7558,59 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			type: "unicode-word-boundary",
 			mode: "default",
 		},
-			charFilters: [
-				{
-					componentId: "french-apostrophe-normalizer",
-					type: "character-policy",
-					mode: "normalize-typographic-and-straight-apostrophes",
-					options: {
-						characters: ["'", "’"],
-						evidenceResourceId:
-							frenchSurfaceEvidence === undefined
-								? undefined
-								: "fr-lexique-search-elision-prefixes",
-					},
+		charFilters: [
+			{
+				componentId: "french-apostrophe-normalizer",
+				type: "character-policy",
+				mode: "normalize-typographic-and-straight-apostrophes",
+				options: {
+					characters: ["'", "’"],
+					evidenceResourceId:
+						frenchSurfaceEvidence === undefined
+							? undefined
+							: "fr-lexique-search-elision-prefixes",
 				},
-			],
+			},
+		],
 		tokenFilters: [
 			{
 				componentId: "unicode-simple-casefold",
 				type: "casefold",
-					mode: "unicode-simple",
+				mode: "unicode-simple",
+			},
+			{
+				componentId: "french-accent-fold",
+				type: "diacritic-fold",
+				mode: "lookup-only",
+				options: {
+					normalization: "NFD",
+					removeUnicodeMarks: true,
 				},
-				{
-					componentId: "french-accent-fold",
-					type: "diacritic-fold",
-					mode: "lookup-only",
-					options: {
-						normalization: "NFD",
-						removeUnicodeMarks: true,
-					},
-				},
-				...(frenchSurfaceEvidence === undefined
-					? []
-					: [
-							{
-								componentId: "french-observed-elision-prefixes",
-								type: "elision-policy",
-								mode: "prefix-apostrophe-boundary",
-								options: {
-									evidenceResourceId:
-										"fr-lexique-search-elision-prefixes",
-									minimumObservedCount:
-										frenchSurfaceEvidenceMinimumCount,
-								},
+			},
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						{
+							componentId: "french-observed-elision-prefixes",
+							type: "elision-policy",
+							mode: "prefix-apostrophe-boundary",
+							options: {
+								evidenceResourceId: "fr-lexique-search-elision-prefixes",
+								minimumObservedCount: frenchSurfaceEvidenceMinimumCount,
 							},
-							{
-								componentId: "french-observed-contraction-surfaces",
-								type: "contraction-policy",
-								mode: "surface-form-recognition",
-								options: {
-									evidenceResourceId:
-										"fr-lexique-search-contraction-forms",
-								},
+						},
+						{
+							componentId: "french-observed-contraction-surfaces",
+							type: "contraction-policy",
+							mode: "surface-form-recognition",
+							options: {
+								evidenceResourceId: "fr-lexique-search-contraction-forms",
 							},
-						]),
-				{
-					componentId: "lexique-form-lemma-lookup",
-					type: "lexicon-lookup",
+						},
+					]),
+			{
+				componentId: "lexique-form-lemma-lookup",
+				type: "lexicon-lookup",
 				mode: "form-to-lemma",
 				options: {
 					entryResourceId: "fr-lexique-entries",
@@ -7612,27 +7620,27 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			},
 		],
 		resources: [
-				{
-					resourceId: "fr-lexique-entries",
-					role: "lexicon",
-				},
-				...(frenchSurfaceEvidence === undefined
-					? []
-					: [
-							{
-								resourceId: "fr-lexique-search-elision-prefixes",
-								role: "normalizer",
-							},
-							{
-								resourceId: "fr-lexique-search-contraction-forms",
-								role: "normalizer",
-							},
-							{
-								resourceId: "fr-lexique-search-gold-cases",
-								role: "quality",
-							},
-						]),
-			],
+			{
+				resourceId: "fr-lexique-entries",
+				role: "lexicon",
+			},
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						{
+							resourceId: "fr-lexique-search-elision-prefixes",
+							role: "normalizer",
+						},
+						{
+							resourceId: "fr-lexique-search-contraction-forms",
+							role: "normalizer",
+						},
+						{
+							resourceId: "fr-lexique-search-gold-cases",
+							role: "quality",
+						},
+					]),
+		],
 		fields: [
 			{
 				fieldName: "text",
@@ -7659,13 +7667,13 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 				diagnosticId: "fr-lexique-383-share-alike-isolation",
 				task: "license.boundary",
 				severity: "info",
-					message:
-						"Lexique 3.83 resources are generated only in an explicit share-alike isolated package.",
-					metadata: {
-						sourceIds: quality.sourceIds,
-						license: "CC-BY-SA-4.0",
-					},
+				message:
+					"Lexique 3.83 resources are generated only in an explicit share-alike isolated package.",
+				metadata: {
+					sourceIds: quality.sourceIds,
+					license: "CC-BY-SA-4.0",
 				},
+			},
 		],
 		metrics: [
 			{
@@ -7686,37 +7694,37 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 				value: quality.uniqueFormCount,
 				unit: "forms",
 			},
-				{
-					metricId: "records-rejected",
-					name: "recordsRejected",
-					value: quality.recordsRejected,
-					unit: "records",
-				},
-				...(frenchSurfaceEvidence === undefined
-					? []
-					: [
-							{
-								metricId: "search-elision-prefix-count",
-								name: "searchElisionPrefixCount",
-								value: quality.searchElisionPrefixCount,
-								unit: "prefixes",
-							},
-							{
-								metricId: "search-contraction-form-count",
-								name: "searchContractionFormCount",
-								value: quality.searchContractionFormCount,
-								unit: "forms",
-							},
-							{
-								metricId: "search-gold-case-count",
-								name: "searchGoldCaseCount",
-								value: quality.searchGoldCaseCount,
-								unit: "cases",
-							},
-						]),
-			],
-			thresholds: [],
-			evaluationRecordIds: [],
+			{
+				metricId: "records-rejected",
+				name: "recordsRejected",
+				value: quality.recordsRejected,
+				unit: "records",
+			},
+			...(frenchSurfaceEvidence === undefined
+				? []
+				: [
+						{
+							metricId: "search-elision-prefix-count",
+							name: "searchElisionPrefixCount",
+							value: quality.searchElisionPrefixCount,
+							unit: "prefixes",
+						},
+						{
+							metricId: "search-contraction-form-count",
+							name: "searchContractionFormCount",
+							value: quality.searchContractionFormCount,
+							unit: "forms",
+						},
+						{
+							metricId: "search-gold-case-count",
+							name: "searchGoldCaseCount",
+							value: quality.searchGoldCaseCount,
+							unit: "cases",
+						},
+					]),
+		],
+		thresholds: [],
+		evaluationRecordIds: [],
 	};
 
 	return [
@@ -7762,76 +7770,76 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			"fr-lexique-morphology-canonical",
 			stableJson(canonicalMorphology),
 		),
-			outputFor(
-				resourceSpec,
-				"fr-lexique-search-profile",
-				stableJson(canonicalSearchProfile),
-			),
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						outputFor(
-							resourceSpec,
-							"fr-lexique-search-elision-prefixes",
-							tsvFile(
-								[
-									"prefix",
-									"observedCount",
-									"apostropheCounts",
-									"exampleSentenceId",
-								],
-								frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
-									row.prefix,
-									row.count,
-									row.apostrophes,
-									row.exampleSentenceId,
-								]),
-							),
+		outputFor(
+			resourceSpec,
+			"fr-lexique-search-profile",
+			stableJson(canonicalSearchProfile),
+		),
+		...(frenchSurfaceEvidence === undefined
+			? []
+			: [
+					outputFor(
+						resourceSpec,
+						"fr-lexique-search-elision-prefixes",
+						tsvFile(
+							[
+								"prefix",
+								"observedCount",
+								"apostropheCounts",
+								"exampleSentenceId",
+							],
+							frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
+								row.prefix,
+								row.count,
+								row.apostrophes,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-lexique-search-contraction-forms",
-							tsvFile(
-								["form", "observedCount", "exampleSentenceId"],
-								frenchSurfaceEvidence.contractionRows.map((row) => [
-									row.form,
-									row.count,
-									row.exampleSentenceId,
-								]),
-							),
+					),
+					outputFor(
+						resourceSpec,
+						"fr-lexique-search-contraction-forms",
+						tsvFile(
+							["form", "observedCount", "exampleSentenceId"],
+							frenchSurfaceEvidence.contractionRows.map((row) => [
+								row.form,
+								row.count,
+								row.exampleSentenceId,
+							]),
 						),
-						outputFor(
-							resourceSpec,
-							"fr-lexique-search-gold-cases",
-							stableJson({
-								schemaVersion: "1",
-								kind: "search-gold-cases",
-								languageTag: "fr",
-								sourceIds: resourceSpec.sourceIds,
-								cases: frenchSurfaceEvidence.normalizationGoldCases.map(
-									(testCase) => ({
-										caseId: testCase.caseId.replace(
-											"fr-normalization",
-											"fr-search",
-										),
-										source: testCase.source,
-										sourceSentenceId: testCase.sourceSentenceId,
-										category: testCase.category,
-										input: testCase.input,
-										expectedAnalyzerTokens: frenchSurfaceTokens(
-											testCase.input,
-											new Set(
-												frenchSurfaceEvidence.elisionPrefixRows.map(
-													(row) => row.prefix,
-												),
+					),
+					outputFor(
+						resourceSpec,
+						"fr-lexique-search-gold-cases",
+						stableJson({
+							schemaVersion: "1",
+							kind: "search-gold-cases",
+							languageTag: "fr",
+							sourceIds: resourceSpec.sourceIds,
+							cases: frenchSurfaceEvidence.normalizationGoldCases.map(
+								(testCase) => ({
+									caseId: testCase.caseId.replace(
+										"fr-normalization",
+										"fr-search",
+									),
+									source: testCase.source,
+									sourceSentenceId: testCase.sourceSentenceId,
+									category: testCase.category,
+									input: testCase.input,
+									expectedAnalyzerTokens: frenchSurfaceTokens(
+										testCase.input,
+										new Set(
+											frenchSurfaceEvidence.elisionPrefixRows.map(
+												(row) => row.prefix,
 											),
-										).map((token) => frenchLookupFold(token)),
-									}),
-								),
-							}),
-						),
-					]),
-			outputFor(resourceSpec, "fr-lexique-quality", stableJson(quality)),
+										),
+									).map((token) => frenchLookupFold(token)),
+								}),
+							),
+						}),
+					),
+				]),
+		outputFor(resourceSpec, "fr-lexique-quality", stableJson(quality)),
 		outputFor(
 			resourceSpec,
 			"fr-lexique-quality-profile",
@@ -8309,7 +8317,10 @@ const transformRunners = new Map([
 	["tatoeba-arabic-corpus-artifact", transformTatoebaArabicCorpusArtifact],
 	["tatoeba-arabic-parallel-artifact", transformTatoebaArabicParallelArtifact],
 	["tatoeba-english-corpus-artifact", transformTatoebaEnglishCorpusArtifact],
-	["tatoeba-english-parallel-artifact", transformTatoebaEnglishParallelArtifact],
+	[
+		"tatoeba-english-parallel-artifact",
+		transformTatoebaEnglishParallelArtifact,
+	],
 	["tatoeba-french-corpus-artifact", transformTatoebaFrenchCorpusArtifact],
 	["tatoeba-french-parallel-artifact", transformTatoebaFrenchParallelArtifact],
 	["ud-conllu-profile", transformUdConlluProfile],
@@ -8462,13 +8473,17 @@ function capabilities(manifest) {
 function knownGaps(packSpec, manifest) {
 	const gaps = [];
 	if (packSpec.packClass === "language-composite") {
-		const hasRequiredLanguageSlots = languageCompositeRequiredSlots.every((slot) =>
-			manifest.capabilitySlots.some(
-				(candidate) =>
-					candidate.slot === slot && candidate.status === "task-supported",
-			),
+		const hasRequiredLanguageSlots = languageCompositeRequiredSlots.every(
+			(slot) =>
+				manifest.capabilitySlots.some(
+					(candidate) =>
+						candidate.slot === slot && candidate.status === "task-supported",
+				),
 		);
-		if (packSpec.supportLevel !== "feature-complete" || !hasRequiredLanguageSlots) {
+		if (
+			packSpec.supportLevel !== "feature-complete" ||
+			!hasRequiredLanguageSlots
+		) {
 			gaps.push(
 				"generated language recipe composite has incomplete required task-supported slot coverage",
 			);
@@ -8541,6 +8556,11 @@ import { resources } from "./resources.js";
 
 export default { manifest, resources };
 `;
+}
+
+function languageRuntimeInterfaceName(pack) {
+	const name = pack.loader.languageName.replace(/[^A-Za-z0-9_$]+/gu, "");
+	return `${name.length === 0 ? "Language" : name}Runtime`;
 }
 
 const componentLicensePolicyOrder = [
@@ -8668,6 +8688,723 @@ ${loaderDeclaration}
 \t\t\toptions.resolveComponent ??
 \t\t\t((component) => resolveGeneratedComponent(component, options)),
 \t});
+}
+
+export default { manifest, resources, ${pack.loader.functionName} };
+`;
+}
+
+function languageCompositeIndexTs(pack) {
+	const conflictPolicy = `"first"`;
+	const defaultLicensePolicy = maxComponentPolicy(
+		pack.components,
+		"licensePolicy",
+		componentLicensePolicyOrder,
+		"default",
+	);
+	const defaultArtifactPolicy = maxComponentPolicy(
+		pack.components,
+		"artifactPolicy",
+		componentArtifactPolicyOrder,
+		"none",
+	);
+	const cases = pack.components
+		.map((component) => {
+			const loader = pack.componentLoaders?.[component.packageName];
+			if (loader !== undefined) {
+				const loaderAccess = /^[A-Za-z_$][\w$]*$/u.test(loader)
+					? `module.${loader}`
+					: `module[${JSON.stringify(loader)}]`;
+				return `\t\tcase ${JSON.stringify(component.packageName)}: {
+\t\t\tconst module = await import(component.packageName);
+\t\t\tconst loader = ${loaderAccess};
+\t\t\tif (typeof loader !== "function") {
+\t\t\t\tthrow new TypeError(
+\t\t\t\t\t\`Generated component resolver for \${component.packageName} did not export ${loader}.\`,
+\t\t\t\t);
+\t\t\t}
+\t\t\treturn loader(options);
+\t\t}`;
+			}
+			return `\t\tcase ${JSON.stringify(component.packageName)}:
+\t\t\treturn import(component.packageName);`;
+		})
+		.join("\n");
+	const runtimeName = languageRuntimeInterfaceName(pack);
+	const languageTag = pack.manifest.targets.languages?.[0] ?? "und";
+	const scriptTag = pack.manifest.targets.scripts?.[0] ?? "Zyyy";
+	return `${generatedHeader()}export { manifest } from "./manifest.js";
+export { resources } from "./resources.js";
+
+import {
+\tcorpusRowsFromPack,
+\treadUdAnnotationDatasetFromPackAsync,
+\tsegmentationAdapterFromPack,
+\ttype TextDataSegment,
+\ttype TextDataSegmentationAdapter,
+\ttype TextDataTableResource,
+\ttype UdAnnotationRecord,
+\ttype UdSyntaxPackResources,
+\tudAnnotationRecordsFromPackAsync,
+\tudSyntaxResourcesFromPackAsync,
+} from "@ismail-elkorchi/textdata";
+import {
+\tcandidateEntities,
+\tcreateKnowledgeBase,
+\ttype EntityCandidate,
+\ttype EntityLinkOptions,
+\ttype KnowledgeBase,
+\tknowledgeBaseFromPack,
+\tlinkEntities,
+\ttype TextPackEntityLinker,
+} from "@ismail-elkorchi/textkb";
+import {
+\ttype LexicalMatch,
+\ttype Lexicon,
+\ttype LookupOptions,
+\tlookup,
+\ttype MorphologyAnalysis,
+\ttype MorphologyGeneration,
+\ttype MorphologyIndex,
+\ttype MorphologyParadigm,
+\tmergedLexiconFromPackAsync,
+\tmorphologyIndexFromPackAsync,
+} from "@ismail-elkorchi/textlex";
+import {
+\ttype CompiledTextNormProfile,
+\tnormalizationProfileFromPack,
+\ttype TextNormProfileMode,
+} from "@ismail-elkorchi/textnorm";
+import {
+\tloadPack,
+\ttype ResolveTextPackComponentsOptions,
+\tresolvePackComponents,
+\ttype TextPack,
+\ttype TextPackComponent,
+\ttype TextPackResourceReader,
+} from "@ismail-elkorchi/textpack";
+import {
+\ttype ParallelCorpus,
+\ttype ParallelLinkRow,
+\ttype ParallelRowsFromPackOptions,
+\ttype ParallelTableResource,
+\tparallelCorpusFromPack,
+\tparallelLinkRowsFromPack,
+\tparallelTablesFromPack,
+} from "@ismail-elkorchi/textparallel";
+import {
+\tanalyzeDocumentQualityFromPack,
+\ttype DocumentQualityOptions,
+\ttype QualityProfile,
+\ttype QualityProfileFromPackOptions,
+\ttype QualityReport,
+\tqualityProfileFromPack,
+\tqualityResourcesFromPack,
+\ttype TextQualityPackResource,
+} from "@ismail-elkorchi/textquality";
+import {
+\ttype Analyzer,
+\tanalyzerFromPack,
+\ttype IndexOptions,
+\ttype SearchIndex,
+\tsearchIndexFromPack,
+} from "@ismail-elkorchi/textsearch";
+import { manifest } from "./manifest.js";
+import { resources } from "./resources.js";
+
+const languageTag = ${JSON.stringify(languageTag)} as const;
+const languageName = ${JSON.stringify(pack.loader.languageName)} as const;
+const scriptTag = ${JSON.stringify(scriptTag)} as const;
+
+type UdAnnotationDataset = Awaited<
+\tReturnType<typeof readUdAnnotationDatasetFromPackAsync>
+>;
+
+export interface ${pack.loader.optionsName}
+\textends Omit<ResolveTextPackComponentsOptions, "resolveComponent"> {
+\treadonly resolveComponent?: ResolveTextPackComponentsOptions["resolveComponent"];
+\treadonly reader?: TextPackResourceReader;
+}
+
+export interface ${runtimeName} {
+\treadonly languageTag: typeof languageTag;
+\treadonly languageName: typeof languageName;
+\treadonly pack: TextPack;
+\treadonly reader: TextPackResourceReader | undefined;
+\treadonly segmentation: {
+\t\treadonly open: () => Promise<TextDataSegmentationAdapter>;
+\t\treadonly lexicalUnits: (
+\t\t\ttext: string,
+\t\t) => Promise<readonly TextDataSegment[]>;
+\t\treadonly words: (text: string) => Promise<readonly TextDataSegment[]>;
+\t\treadonly sentences: (text: string) => Promise<readonly TextDataSegment[]>;
+\t};
+\treadonly normalization: {
+\t\treadonly open: () => Promise<CompiledTextNormProfile>;
+\t\treadonly normalizeText: (
+\t\t\ttext: string,
+\t\t\tmode?: TextNormProfileMode,
+\t\t) => Promise<string>;
+\t\treadonly normalizeDocument: (
+\t\t\tdoc: Parameters<CompiledTextNormProfile["normalizeDocument"]>[0],
+\t\t\tmode?: TextNormProfileMode,
+\t\t) => Promise<ReturnType<CompiledTextNormProfile["normalizeDocument"]>>;
+\t\treadonly searchView: (
+\t\t\tdoc: Parameters<CompiledTextNormProfile["searchView"]>[0],
+\t\t) => Promise<ReturnType<CompiledTextNormProfile["searchView"]>>;
+\t};
+\treadonly lexicon: {
+\t\treadonly open: () => Promise<Lexicon>;
+\t\treadonly lookup: (
+\t\t\tform: string,
+\t\t\toptions?: LookupOptions,
+\t\t) => Promise<readonly LexicalMatch[]>;
+\t};
+\treadonly morphology: {
+\t\treadonly open: () => Promise<MorphologyIndex>;
+\t\treadonly analyze: (
+\t\t\tform: string,
+\t\t\toptions?: { readonly maxResults?: number },
+\t\t) => Promise<readonly MorphologyAnalysis[]>;
+\t\treadonly generate: (
+\t\t\tlemma: string,
+\t\t\tfeatures?: Readonly<Record<string, string>>,
+\t\t\toptions?: { readonly maxResults?: number },
+\t\t) => Promise<readonly MorphologyGeneration[]>;
+\t\treadonly paradigms: (
+\t\t\tlemma?: string,
+\t\t) => Promise<readonly MorphologyParadigm[]>;
+\t};
+\treadonly syntax: {
+\t\treadonly resources: () => Promise<UdSyntaxPackResources>;
+\t\treadonly annotations: () => Promise<readonly UdAnnotationRecord[]>;
+\t\treadonly dataset: () => Promise<UdAnnotationDataset>;
+\t};
+\treadonly kb: {
+\t\treadonly open: () => Promise<KnowledgeBase>;
+\t\treadonly candidates: (
+\t\t\ttext: string,
+\t\t\toptions?: EntityLinkOptions,
+\t\t) => Promise<readonly EntityCandidate[]>;
+\t\treadonly linkEntities: (
+\t\t\tdoc: Parameters<TextPackEntityLinker["linkEntities"]>[0],
+\t\t\toptions?: EntityLinkOptions,
+\t\t) => Promise<Awaited<ReturnType<TextPackEntityLinker["linkEntities"]>>>;
+\t};
+\treadonly search: {
+\t\treadonly analyzer: () => Promise<Analyzer>;
+\t\treadonly createIndex: (options?: IndexOptions) => Promise<SearchIndex>;
+\t};
+\treadonly corpus: {
+\t\treadonly rows: () => Promise<readonly TextDataTableResource[]>;
+\t};
+\treadonly parallel: {
+\t\treadonly rows: (
+\t\t\toptions?: Omit<ParallelRowsFromPackOptions, "reader">,
+\t\t) => Promise<readonly ParallelTableResource[]>;
+\t\treadonly links: (
+\t\t\toptions?: Omit<ParallelRowsFromPackOptions, "reader">,
+\t\t) => Promise<readonly ParallelLinkRow[]>;
+\t\treadonly corpus: (
+\t\t\toptions?: Omit<ParallelRowsFromPackOptions, "reader">,
+\t\t) => Promise<ParallelCorpus>;
+\t};
+\treadonly quality: {
+\t\treadonly resources: () => Promise<readonly TextQualityPackResource[]>;
+\t\treadonly profiles: () => Promise<readonly QualityProfile[]>;
+\t\treadonly analyzeDocument: (
+\t\t\tdoc: Parameters<typeof analyzeDocumentQualityFromPack>[1],
+\t\t\toptions?: Omit<
+\t\t\t\tQualityProfileFromPackOptions & DocumentQualityOptions,
+\t\t\t\t"reader" | "resourceId" | "resourceIds"
+\t\t\t>,
+\t\t) => Promise<QualityReport>;
+\t};
+}
+
+async function resolveGeneratedComponent(
+\tcomponent: TextPackComponent,
+\toptions: ${pack.loader.optionsName},
+): Promise<unknown> {
+\tswitch (component.packageName) {
+${cases}
+\t\tdefault:
+\t\t\tthrow new TypeError(
+\t\t\t\t\`No generated resolver entry for \${component.packageName}.\`,
+\t\t\t);
+\t}
+}
+
+function taskReader(
+\treader: TextPackResourceReader | undefined,
+\ttaskName: string,
+): TextPackResourceReader {
+\tif (reader !== undefined) return reader;
+\tthrow new TypeError(
+\t\t\`${pack.loader.functionName} task \${taskName} requires options.reader to materialize generated file-backed resources.\`,
+\t);
+}
+
+function assertTaskSlot(pack: TextPack, slot: string): void {
+\tconst status = pack.manifest.capabilitySlots?.find(
+\t\t(candidate) => candidate.slot === slot,
+\t)?.status;
+\tif (status !== "task-supported") {
+\t\tthrow new TypeError(
+\t\t\t\`Language task slot \${slot} is not task-supported by this pack.\`,
+\t\t);
+\t}
+}
+
+function schemaResourceIds(
+\tpack: TextPack,
+\tschemaId: string,
+): readonly string[] {
+\treturn Object.freeze(
+\t\tpack.manifest.resources
+\t\t\t.filter((resource) => resource.schemaId === schemaId)
+\t\t\t.map((resource) => resource.id)
+\t\t\t.sort((left, right) => left.localeCompare(right)),
+\t);
+}
+
+function requireSchemaResourceIds(
+\tpack: TextPack,
+\tschemaId: string,
+\ttaskName: string,
+): readonly string[] {
+\tconst ids = schemaResourceIds(pack, schemaId);
+\tif (ids.length > 0) return ids;
+\tthrow new TypeError(
+\t\t\`Language task \${taskName} requires at least one \${schemaId} resource.\`,
+\t);
+}
+
+function firstSchemaResourceId(
+\tpack: TextPack,
+\tschemaId: string,
+\ttaskName: string,
+): string {
+\treturn requireSchemaResourceIds(pack, schemaId, taskName)[0] ?? "";
+}
+
+function syntaxQualityResourceId(
+\tpack: TextPack,
+\tsyntaxResourceId: string,
+): string {
+\tconst qualityIds = requireSchemaResourceIds(
+\t\tpack,
+\t\t"textquality.evidence.v1",
+\t\t"syntax",
+\t);
+\tconst prefixes = [
+\t\tsyntaxResourceId.replace(/-syntax-canonical$/u, ""),
+\t\tsyntaxResourceId.replace(/-syntax$/u, ""),
+\t];
+\tfor (const prefix of prefixes) {
+\t\tconst candidate = \`\${prefix}-quality\`;
+\t\tif (qualityIds.includes(candidate)) return candidate;
+\t}
+\tthrow new TypeError(
+\t\t\`Syntax resource \${syntaxResourceId} does not have a matching textquality.evidence.v1 resource.\`,
+\t);
+}
+
+async function createMergedMorphologyIndex(
+\tpack: TextPack,
+\treader: TextPackResourceReader,
+): Promise<MorphologyIndex> {
+\tconst resourceIds = requireSchemaResourceIds(
+\t\tpack,
+\t\t"textlex.morphology.v1",
+\t\t"morphology",
+\t);
+\tconst indexes = await Promise.all(
+\t\tresourceIds.map((resourceId) =>
+\t\t\tmorphologyIndexFromPackAsync(pack, { reader, resourceId }),
+\t\t),
+\t);
+\tif (indexes.length === 1 && indexes[0] !== undefined) return indexes[0];
+\tconst analyses = Object.freeze(indexes.flatMap((index) => index.analyses));
+\tconst generations = Object.freeze(
+\t\tindexes.flatMap((index) => index.generations),
+\t);
+\treturn Object.freeze({
+\t\tid: \`\${pack.manifest.id}:morphology\`,
+\t\tlanguage: languageTag,
+\t\tscript: scriptTag,
+\t\tanalyses,
+\t\tgenerations,
+\t\tanalyze(form: string, options: { readonly maxResults?: number } = {}) {
+\t\t\treturn Object.freeze(
+\t\t\t\tindexes
+\t\t\t\t\t.flatMap((index) => index.analyze(form, options))
+\t\t\t\t\t.slice(0, options.maxResults),
+\t\t\t);
+\t\t},
+\t\tgenerate(
+\t\t\tlemma: string,
+\t\t\tfeatures?: Readonly<Record<string, string>>,
+\t\t\toptions: { readonly maxResults?: number } = {},
+\t\t) {
+\t\t\treturn Object.freeze(
+\t\t\t\tindexes
+\t\t\t\t\t.flatMap((index) => index.generate(lemma, features, options))
+\t\t\t\t\t.slice(0, options.maxResults),
+\t\t\t);
+\t\t},
+\t\tparadigms(lemma?: string) {
+\t\t\tconst byLemma = new Map<string, MorphologyGeneration[]>();
+\t\t\tfor (const index of indexes) {
+\t\t\t\tfor (const paradigm of index.paradigms(lemma)) {
+\t\t\t\t\tbyLemma.set(paradigm.lemma, [
+\t\t\t\t\t\t...(byLemma.get(paradigm.lemma) ?? []),
+\t\t\t\t\t\t...paradigm.entries,
+\t\t\t\t\t]);
+\t\t\t\t}
+\t\t\t}
+\t\t\treturn Object.freeze(
+\t\t\t\t[...byLemma.entries()]
+\t\t\t\t\t.sort(([left], [right]) => left.localeCompare(right))
+\t\t\t\t\t.map(([entryLemma, entries]) =>
+\t\t\t\t\t\tObject.freeze({
+\t\t\t\t\t\t\tlemma: entryLemma,
+\t\t\t\t\t\t\tentries: Object.freeze(entries),
+\t\t\t\t\t\t}),
+\t\t\t\t\t),
+\t\t\t);
+\t\t},
+\t});
+}
+
+async function createMergedKnowledgeBase(
+\tpack: TextPack,
+\treader: TextPackResourceReader,
+): Promise<KnowledgeBase> {
+\tconst resourceIds = requireSchemaResourceIds(
+\t\tpack,
+\t\t"textkb.knowledge-base.v1",
+\t\t"kb",
+\t);
+\tconst bases = await Promise.all(
+\t\tresourceIds.map((resourceId) =>
+\t\t\tknowledgeBaseFromPack(pack, { reader, resourceId }),
+\t\t),
+\t);
+\tif (bases.length === 1 && bases[0] !== undefined) return bases[0];
+\treturn createKnowledgeBase({
+\t\tid: \`\${pack.manifest.id}:kb\`,
+\t\tentities: bases.flatMap((base) => Object.values(base.entities.records)),
+\t\tconcepts: bases.flatMap((base) => Object.values(base.concepts.records)),
+\t\tsenses: bases.flatMap((base) => Object.values(base.senses.records)),
+\t\trelations: bases.flatMap((base) => Object.values(base.relations.records)),
+\t\taliases: bases.flatMap((base) =>
+\t\t\tObject.values(base.aliases.entries).flat(),
+\t\t),
+\t\tmetadata: {
+\t\t\tpackageName: pack.manifest.packageName,
+\t\t\tresourceIds,
+\t\t\tschemaId: "textkb.knowledge-base.v1",
+\t\t},
+\t\tallowExternalRelationEndpoints: true,
+\t});
+}
+
+async function resolveLanguagePack(
+\toptions: ${pack.loader.optionsName},
+): Promise<TextPack> {
+\tconst { reader: _reader, ...resolveOptions } = options;
+\tvoid _reader;
+\treturn resolvePackComponents(await loadPack({ manifest, resources }), {
+\t\t...resolveOptions,
+\t\tlicensePolicy: options.licensePolicy ?? ${JSON.stringify(defaultLicensePolicy)},
+\t\tartifactPolicy: options.artifactPolicy ?? ${JSON.stringify(defaultArtifactPolicy)},
+\t\tconflictPolicy: options.conflictPolicy ?? ${conflictPolicy},
+\t\tresolveComponent:
+\t\t\toptions.resolveComponent ??
+\t\t\t((component) => resolveGeneratedComponent(component, options)),
+\t});
+}
+
+function createLanguageRuntime(
+\tpack: TextPack,
+\treader: TextPackResourceReader | undefined,
+): ${runtimeName} {
+\tlet segmentationPromise: Promise<TextDataSegmentationAdapter> | undefined;
+\tlet normalizationPromise: Promise<CompiledTextNormProfile> | undefined;
+\tlet lexiconPromise: Promise<Lexicon> | undefined;
+\tlet morphologyPromise: Promise<MorphologyIndex> | undefined;
+\tlet syntaxResourcesPromise: Promise<UdSyntaxPackResources> | undefined;
+\tlet syntaxAnnotationsPromise:
+\t\t| Promise<readonly UdAnnotationRecord[]>
+\t\t| undefined;
+\tlet syntaxDatasetPromise: Promise<UdAnnotationDataset> | undefined;
+\tlet kbPromise: Promise<KnowledgeBase> | undefined;
+\tlet analyzerPromise: Promise<Analyzer> | undefined;
+\tlet qualityResourcesPromise:
+\t\t| Promise<readonly TextQualityPackResource[]>
+\t\t| undefined;
+\tlet qualityProfilesPromise: Promise<readonly QualityProfile[]> | undefined;
+
+\tconst openSegmentation = () => {
+\t\tassertTaskSlot(pack, "segmentation");
+\t\tsegmentationPromise ??= segmentationAdapterFromPack(pack, {
+\t\t\treader: taskReader(reader, "segmentation"),
+\t\t});
+\t\treturn segmentationPromise;
+\t};
+\tconst openNormalization = () => {
+\t\tassertTaskSlot(pack, "normalization");
+\t\tnormalizationPromise ??= normalizationProfileFromPack(pack, {
+\t\t\treader: taskReader(reader, "normalization"),
+\t\t\tresourceIds: [
+\t\t\t\tfirstSchemaResourceId(pack, "textnorm.profile.v1", "normalization"),
+\t\t\t],
+\t\t});
+\t\treturn normalizationPromise;
+\t};
+\tconst openLexicon = () => {
+\t\tassertTaskSlot(pack, "lexicon");
+\t\tlexiconPromise ??= mergedLexiconFromPackAsync(pack, {
+\t\t\treader: taskReader(reader, "lexicon"),
+\t\t\tresourceIds: requireSchemaResourceIds(
+\t\t\t\tpack,
+\t\t\t\t"textlex.lexicon.v1",
+\t\t\t\t"lexicon",
+\t\t\t),
+\t\t\tschemaIds: ["textlex.lexicon.v1"],
+\t\t\tlanguage: languageTag,
+\t\t\tscript: scriptTag,
+\t\t});
+\t\treturn lexiconPromise;
+\t};
+\tconst openMorphology = () => {
+\t\tassertTaskSlot(pack, "morphology");
+\t\tmorphologyPromise ??= createMergedMorphologyIndex(
+\t\t\tpack,
+\t\t\ttaskReader(reader, "morphology"),
+\t\t);
+\t\treturn morphologyPromise;
+\t};
+\tconst syntaxResourceId = () =>
+\t\tfirstSchemaResourceId(pack, "textdata.syntax.v1", "syntax");
+\tconst openKb = () => {
+\t\tassertTaskSlot(pack, "kb");
+\t\tkbPromise ??= createMergedKnowledgeBase(pack, taskReader(reader, "kb"));
+\t\treturn kbPromise;
+\t};
+\tconst openAnalyzer = () => {
+\t\tassertTaskSlot(pack, "search");
+\t\tanalyzerPromise ??= analyzerFromPack(pack, {
+\t\t\treader: taskReader(reader, "search"),
+\t\t\tresourceId: firstSchemaResourceId(
+\t\t\t\tpack,
+\t\t\t\t"textsearch.analyzer-profile.v1",
+\t\t\t\t"search",
+\t\t\t),
+\t\t});
+\t\treturn analyzerPromise;
+\t};
+\tconst openQualityResources = () => {
+\t\tassertTaskSlot(pack, "quality");
+\t\tqualityResourcesPromise ??= qualityResourcesFromPack(pack, {
+\t\t\treader: taskReader(reader, "quality"),
+\t\t});
+\t\treturn qualityResourcesPromise;
+\t};
+\tconst openQualityProfiles = () => {
+\t\tassertTaskSlot(pack, "quality");
+\t\tqualityProfilesPromise ??= Promise.all(
+\t\t\trequireSchemaResourceIds(pack, "textquality.profile.v1", "quality").map(
+\t\t\t\t(resourceId) =>
+\t\t\t\t\tqualityProfileFromPack(pack, {
+\t\t\t\t\t\treader: taskReader(reader, "quality"),
+\t\t\t\t\t\tresourceId,
+\t\t\t\t\t}),
+\t\t\t),
+\t\t);
+\t\treturn qualityProfilesPromise;
+\t};
+
+\treturn Object.freeze({
+\t\tlanguageTag,
+\t\tlanguageName,
+\t\tpack,
+\t\treader,
+\t\tsegmentation: Object.freeze({
+\t\t\topen: openSegmentation,
+\t\t\tasync lexicalUnits(text: string) {
+\t\t\t\treturn (await openSegmentation()).lexicalUnits(text);
+\t\t\t},
+\t\t\tasync words(text: string) {
+\t\t\t\treturn (await openSegmentation()).words(text);
+\t\t\t},
+\t\t\tasync sentences(text: string) {
+\t\t\t\treturn (await openSegmentation()).sentences(text);
+\t\t\t},
+\t\t}),
+\t\tnormalization: Object.freeze({
+\t\t\topen: openNormalization,
+\t\t\tasync normalizeText(text: string, mode?: TextNormProfileMode) {
+\t\t\t\treturn (await openNormalization()).normalizeText(text, mode);
+\t\t\t},
+\t\t\tasync normalizeDocument(
+\t\t\t\tdoc: Parameters<CompiledTextNormProfile["normalizeDocument"]>[0],
+\t\t\t\tmode?: TextNormProfileMode,
+\t\t\t) {
+\t\t\t\treturn (await openNormalization()).normalizeDocument(doc, mode);
+\t\t\t},
+\t\t\tasync searchView(
+\t\t\t\tdoc: Parameters<CompiledTextNormProfile["searchView"]>[0],
+\t\t\t) {
+\t\t\t\treturn (await openNormalization()).searchView(doc);
+\t\t\t},
+\t\t}),
+\t\tlexicon: Object.freeze({
+\t\t\topen: openLexicon,
+\t\t\tasync lookup(form: string, options: LookupOptions = {}) {
+\t\t\t\treturn lookup(await openLexicon(), form, options);
+\t\t\t},
+\t\t}),
+\t\tmorphology: Object.freeze({
+\t\t\topen: openMorphology,
+\t\t\tasync analyze(
+\t\t\t\tform: string,
+\t\t\t\toptions: { readonly maxResults?: number } = {},
+\t\t\t) {
+\t\t\t\treturn (await openMorphology()).analyze(form, options);
+\t\t\t},
+\t\t\tasync generate(
+\t\t\t\tlemma: string,
+\t\t\t\tfeatures?: Readonly<Record<string, string>>,
+\t\t\t\toptions: { readonly maxResults?: number } = {},
+\t\t\t) {
+\t\t\t\treturn (await openMorphology()).generate(lemma, features, options);
+\t\t\t},
+\t\t\tasync paradigms(lemma?: string) {
+\t\t\t\treturn (await openMorphology()).paradigms(lemma);
+\t\t\t},
+\t\t}),
+\t\tsyntax: Object.freeze({
+\t\t\tresources() {
+\t\t\t\tassertTaskSlot(pack, "syntax");
+\t\t\t\tsyntaxResourcesPromise ??= udSyntaxResourcesFromPackAsync(pack, {
+\t\t\t\t\treader: taskReader(reader, "syntax"),
+\t\t\t\t\tsyntaxResourceId: syntaxResourceId(),
+\t\t\t\t\tresourceIds: {
+\t\t\t\t\t\tquality: syntaxQualityResourceId(pack, syntaxResourceId()),
+\t\t\t\t\t},
+\t\t\t\t});
+\t\t\t\treturn syntaxResourcesPromise;
+\t\t\t},
+\t\t\tannotations() {
+\t\t\t\tassertTaskSlot(pack, "syntax");
+\t\t\t\tsyntaxAnnotationsPromise ??= udAnnotationRecordsFromPackAsync(pack, {
+\t\t\t\t\treader: taskReader(reader, "syntax"),
+\t\t\t\t\tsyntaxResourceId: syntaxResourceId(),
+\t\t\t\t});
+\t\t\t\treturn syntaxAnnotationsPromise;
+\t\t\t},
+\t\t\tdataset() {
+\t\t\t\tassertTaskSlot(pack, "syntax");
+\t\t\t\tsyntaxDatasetPromise ??= readUdAnnotationDatasetFromPackAsync(pack, {
+\t\t\t\t\treader: taskReader(reader, "syntax"),
+\t\t\t\t\tsyntaxResourceId: syntaxResourceId(),
+\t\t\t\t});
+\t\t\t\treturn syntaxDatasetPromise;
+\t\t\t},
+\t\t}),
+\t\tkb: Object.freeze({
+\t\t\topen: openKb,
+\t\t\tasync candidates(text: string, options: EntityLinkOptions = {}) {
+\t\t\t\treturn candidateEntities(await openKb(), text, options);
+\t\t\t},
+\t\t\tasync linkEntities(
+\t\t\t\tdoc: Parameters<TextPackEntityLinker["linkEntities"]>[0],
+\t\t\t\toptions: EntityLinkOptions = {},
+\t\t\t) {
+\t\t\t\treturn linkEntities(doc, await openKb(), options);
+\t\t\t},
+\t\t}),
+\t\tsearch: Object.freeze({
+\t\t\tanalyzer: openAnalyzer,
+\t\t\tasync createIndex(options?: IndexOptions) {
+\t\t\t\tassertTaskSlot(pack, "search");
+\t\t\t\treturn searchIndexFromPack(pack, {
+\t\t\t\t\treader: taskReader(reader, "search"),
+\t\t\t\t\tresourceId: firstSchemaResourceId(
+\t\t\t\t\t\tpack,
+\t\t\t\t\t\t"textsearch.analyzer-profile.v1",
+\t\t\t\t\t\t"search",
+\t\t\t\t\t),
+\t\t\t\t\t...(options === undefined ? {} : { index: options }),
+\t\t\t\t});
+\t\t\t},
+\t\t}),
+\t\tcorpus: Object.freeze({
+\t\t\trows() {
+\t\t\t\tassertTaskSlot(pack, "corpus");
+\t\t\t\treturn corpusRowsFromPack(pack, {
+\t\t\t\t\treader: taskReader(reader, "corpus"),
+\t\t\t\t\tschemaIds: ["textdata.corpus.rows.v1"],
+\t\t\t\t});
+\t\t\t},
+\t\t}),
+\t\tparallel: Object.freeze({
+\t\t\trows(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
+\t\t\t\tassertTaskSlot(pack, "parallel");
+\t\t\t\treturn parallelTablesFromPack(pack, {
+\t\t\t\t\t...options,
+\t\t\t\t\treader: taskReader(reader, "parallel"),
+\t\t\t\t});
+\t\t\t},
+\t\t\tlinks(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
+\t\t\t\tassertTaskSlot(pack, "parallel");
+\t\t\t\treturn parallelLinkRowsFromPack(pack, {
+\t\t\t\t\t...options,
+\t\t\t\t\treader: taskReader(reader, "parallel"),
+\t\t\t\t});
+\t\t\t},
+\t\t\tcorpus(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
+\t\t\t\tassertTaskSlot(pack, "parallel");
+\t\t\t\treturn parallelCorpusFromPack(pack, {
+\t\t\t\t\t...options,
+\t\t\t\t\treader: taskReader(reader, "parallel"),
+\t\t\t\t});
+\t\t\t},
+\t\t}),
+\t\tquality: Object.freeze({
+\t\t\tresources: openQualityResources,
+\t\t\tprofiles: openQualityProfiles,
+\t\t\tasync analyzeDocument(
+\t\t\t\tdoc: Parameters<typeof analyzeDocumentQualityFromPack>[1],
+\t\t\t\toptions: Omit<
+\t\t\t\t\tQualityProfileFromPackOptions & DocumentQualityOptions,
+\t\t\t\t\t"reader" | "resourceId" | "resourceIds"
+\t\t\t\t> = {},
+\t\t\t) {
+\t\t\t\tassertTaskSlot(pack, "quality");
+\t\t\t\treturn analyzeDocumentQualityFromPack(pack, doc, {
+\t\t\t\t\t...options,
+\t\t\t\t\treader: taskReader(reader, "quality"),
+\t\t\t\t\tresourceId: firstSchemaResourceId(
+\t\t\t\t\t\tpack,
+\t\t\t\t\t\t"textquality.profile.v1",
+\t\t\t\t\t\t"quality",
+\t\t\t\t\t),
+\t\t\t\t});
+\t\t\t},
+\t\t}),
+\t});
+}
+
+export async function ${pack.loader.functionName}(
+\toptions: ${pack.loader.optionsName} = {},
+): Promise<${runtimeName}> {
+\treturn createLanguageRuntime(
+\t\tawait resolveLanguagePack(options),
+\t\toptions.reader,
+\t);
 }
 
 export default { manifest, resources, ${pack.loader.functionName} };
@@ -8831,14 +9568,14 @@ function publishabilityFor(spec, manifest, context) {
 	) {
 		reasons.push("only source-backed generated packs can be publishable");
 	}
-		if (spec.supportLevel === "sampled") {
-			reasons.push("sampled support level is not production-grade");
-		}
-		if (spec.supportLevel === "artifact-backed") {
-			reasons.push(
-				"artifact-backed descriptors require local materialized payloads before publishability",
-			);
-		}
+	if (spec.supportLevel === "sampled") {
+		reasons.push("sampled support level is not production-grade");
+	}
+	if (spec.supportLevel === "artifact-backed") {
+		reasons.push(
+			"artifact-backed descriptors require local materialized payloads before publishability",
+		);
+	}
 	if (
 		spec.packageName.includes("demo") ||
 		manifest.targets?.domains?.includes("demo") === true
@@ -8868,16 +9605,16 @@ function publishabilityFor(spec, manifest, context) {
 			}
 		}
 	}
-		for (const slot of manifest.capabilitySlots ?? []) {
-			if (slot.status === "sampled") {
-				reasons.push(`capability slot ${slot.slot} is sampled`);
-			}
-			if (slot.status === "artifact-backed") {
-				reasons.push(
-					`capability slot ${slot.slot} is artifact-backed without local task-usable payloads`,
-				);
-			}
+	for (const slot of manifest.capabilitySlots ?? []) {
+		if (slot.status === "sampled") {
+			reasons.push(`capability slot ${slot.slot} is sampled`);
 		}
+		if (slot.status === "artifact-backed") {
+			reasons.push(
+				`capability slot ${slot.slot} is artifact-backed without local task-usable payloads`,
+			);
+		}
+	}
 	if (requested) {
 		for (const missing of missingPublishabilityEvidence(spec)) {
 			reasons.push(`missing publishability evidence: ${missing}`);
@@ -8940,6 +9677,17 @@ function compositePackageJson(pack) {
 	const dependencies = {
 		"@ismail-elkorchi/textpack": "0.1.0",
 	};
+	if (pack.packClass === "language-composite") {
+		Object.assign(dependencies, {
+			"@ismail-elkorchi/textdata": "0.1.0",
+			"@ismail-elkorchi/textkb": "0.1.0",
+			"@ismail-elkorchi/textlex": "0.1.0",
+			"@ismail-elkorchi/textnorm": "0.1.0",
+			"@ismail-elkorchi/textparallel": "0.1.0",
+			"@ismail-elkorchi/textquality": "0.1.0",
+			"@ismail-elkorchi/textsearch": "0.1.0",
+		});
+	}
 	for (const component of pack.components) {
 		if (component.role === "required") {
 			dependencies[component.packageName] = component.versionRange;
@@ -9094,7 +9842,12 @@ Generated ${pack.loader.languageName} recipe composite textpack.
 \`\`\`ts
 import { ${pack.loader.functionName} } from "${pack.packageName}";
 
-const pack = await ${pack.loader.functionName}();
+${
+	pack.packClass === "language-composite"
+		? `const runtime = await ${pack.loader.functionName}({ reader });
+const pack = runtime.pack;`
+		: `const pack = await ${pack.loader.functionName}();`
+}
 \`\`\`
 
 ## Required Components
@@ -9399,15 +10152,15 @@ function languageCompositeSmokeAssertions(pack) {
 		],
 		[
 			"@ismail-elkorchi/textpack-fr",
-				[
-					"fr-tatoeba-corpus-sentences",
-					"fr-tatoeba-parallel-eng",
-					"fr-normalization-elision-prefixes",
-					"fr-segmentation-gold-cases",
-					"fr-lexique-search-gold-cases",
-					"wikidata-fr-entities",
-					"wikidata-fr-aliases",
-					"wikidata-fr-relations",
+			[
+				"fr-tatoeba-corpus-sentences",
+				"fr-tatoeba-parallel-eng",
+				"fr-normalization-elision-prefixes",
+				"fr-segmentation-gold-cases",
+				"fr-lexique-search-gold-cases",
+				"wikidata-fr-entities",
+				"wikidata-fr-aliases",
+				"wikidata-fr-relations",
 			],
 		],
 	]);
@@ -9456,6 +10209,91 @@ for (const resourceKey of ${serializedResourceKeys}) {
 `;
 }
 
+function jsStringLiteral(value) {
+	return JSON.stringify(value).replace(/[^\x20-\x7E]/gu, (character) => {
+		const codePoint = character.codePointAt(0);
+		return codePoint === undefined ? "" : `\\u{${codePoint.toString(16)}}`;
+	});
+}
+
+function languageCompositeTaskSmokeAssertions(pack) {
+	if (pack.packClass !== "language-composite") return "";
+	const samplesByPackageName = new Map([
+		[
+			"@ismail-elkorchi/textpack-en",
+			{
+				languageTag: "en",
+				text: "Paris is a city.",
+				lookup: "Paris",
+				form: "walks",
+				lemma: "walk",
+				entity: "Paris",
+			},
+		],
+		[
+			"@ismail-elkorchi/textpack-ar",
+			{
+				languageTag: "ar",
+				text: "\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629} \u{645}\u{62f}\u{64a}\u{646}\u{629}.",
+				lookup: "\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629}",
+				form: "\u{627}\u{644}\u{643}\u{62a}\u{627}\u{628}",
+				lemma: "\u{643}\u{62a}\u{627}\u{628}",
+				entity: "\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629}",
+			},
+		],
+		[
+			"@ismail-elkorchi/textpack-fr",
+			{
+				languageTag: "fr",
+				text: "J'aime Paris.",
+				lookup: "Paris",
+				form: "parle",
+				lemma: "parler",
+				entity: "Paris",
+			},
+		],
+	]);
+	const sample = samplesByPackageName.get(pack.packageName) ?? {
+		languageTag: pack.manifest.targets.languages?.[0] ?? "und",
+		text: "Text.",
+		lookup: "Text",
+		form: "Text",
+		lemma: "Text",
+		entity: "Text",
+	};
+	const sampleTextLiteral = jsStringLiteral(sample.text);
+	const sampleTextDeclaration =
+		`const sampleText = ${sampleTextLiteral};`.length <= 80
+			? `const sampleText = ${sampleTextLiteral};`
+			: `const sampleText =\n\t${sampleTextLiteral};`;
+	return `
+${sampleTextDeclaration}
+
+assert.equal(runtime.languageTag, ${jsStringLiteral(sample.languageTag)});
+assert.equal(runtime.pack, resolved);
+
+assert.ok((await runtime.segmentation.lexicalUnits(sampleText)).length > 0);
+assert.equal(
+\ttypeof (await runtime.normalization.normalizeText(sampleText)),
+\t"string",
+);
+assert.equal(typeof runtime.lexicon.lookup, "function");
+assert.equal(typeof runtime.morphology.analyze, "function");
+assert.equal(typeof runtime.morphology.generate, "function");
+assert.ok((await runtime.syntax.resources()).annotations.length > 0);
+assert.ok((await runtime.syntax.annotations()).length > 0);
+assert.equal(typeof runtime.kb.candidates, "function");
+assert.ok(
+\t[...(await runtime.search.analyzer()).analyze(sampleText)].length > 0,
+);
+assert.equal(typeof runtime.corpus.rows, "function");
+assert.equal(typeof runtime.parallel.rows, "function");
+assert.equal(typeof runtime.parallel.links, "function");
+assert.ok((await runtime.quality.resources()).length > 0);
+assert.ok((await runtime.quality.profiles()).length > 0);
+`;
+}
+
 function compositeSmokeTest(pack) {
 	const importedNames =
 		pack.languageSupport === true
@@ -9474,6 +10312,26 @@ function compositeSmokeTest(pack) {
 			: `import {
 \t${importedNames.join(",\n\t")},
 } from "../dist/index.js";`;
+	const resourceReader =
+		pack.packClass === "language-composite"
+			? `import { readFile } from "node:fs/promises";
+`
+			: "";
+	const readerDefinition =
+		pack.packClass === "language-composite"
+			? `
+const reader = {
+\tasync readText({ descriptor }) {
+\t\treturn readFile(new URL(descriptor.path, descriptor.packageRoot), "utf8");
+\t},
+};
+`
+			: "";
+	const loaderCall =
+		pack.packClass === "language-composite"
+			? `const runtime = await ${pack.loader.functionName}({ reader });
+const resolved = runtime.pack;`
+			: `const resolved = await ${pack.loader.functionName}();`;
 	const languageSupportAssertions =
 		pack.languageSupport === true
 			? `
@@ -9491,6 +10349,7 @@ assert.ok(languageSupport.length > 1000);
 			: "";
 	const optionalAssertions = [
 		languageCompositeSmokeAssertions(pack),
+		languageCompositeTaskSmokeAssertions(pack),
 		languageSupportAssertions,
 	]
 		.filter((assertion) => assertion !== "")
@@ -9499,9 +10358,9 @@ assert.ok(languageSupport.length > 1000);
 	const optionalAssertionBlock =
 		optionalAssertions === "" ? "" : `\n\n${optionalAssertions}`;
 	return `import assert from "node:assert/strict";
-${importStatement}
-
-const resolved = await ${pack.loader.functionName}();
+${resourceReader}${importStatement}
+${readerDefinition}
+${loaderCall}
 
 assert.equal(resolved.manifest.packageName, manifest.packageName);
 assert.ok(Object.keys(resolved.resources).length > 0);
@@ -10879,10 +11738,7 @@ function frenchNormalizationEvaluationRecords(pack) {
 			capabilitySlot: "normalization",
 			taskType: "normalization.gold-cases",
 			evaluationKind: "gold-evaluation",
-			resourceIds: [
-				"fr-normalization-gold-cases",
-				"fr-normalization-profile",
-			],
+			resourceIds: ["fr-normalization-gold-cases", "fr-normalization-profile"],
 			metricName: "normalizationGoldCaseCount",
 			value: quality.normalizationGoldCaseCount,
 			unit: "cases",
@@ -11309,10 +12165,7 @@ function lexiqueEvaluationRecords(pack) {
 			capabilitySlot: "lexicon",
 			taskType: "lexicon.entry-inventory",
 			evaluationKind: "coverage",
-			resourceIds: [
-				"fr-lexique-entries",
-				"fr-lexique-lexicon-canonical",
-			],
+			resourceIds: ["fr-lexique-entries", "fr-lexique-lexicon-canonical"],
 			metricName: "entryCount",
 			value: quality.entryCount,
 			unit: "entries",
@@ -11333,10 +12186,7 @@ function lexiqueEvaluationRecords(pack) {
 			capabilitySlot: "lexicon",
 			taskType: "lexicon.lemma-inventory",
 			evaluationKind: "coverage",
-			resourceIds: [
-				"fr-lexique-lemmas",
-				"fr-lexique-lexicon-canonical",
-			],
+			resourceIds: ["fr-lexique-lemmas", "fr-lexique-lexicon-canonical"],
 			metricName: "lemmaCount",
 			value: quality.lemmaCount,
 			unit: "lemmas",
@@ -11365,10 +12215,10 @@ function lexiqueEvaluationRecords(pack) {
 				numberCounts: quality.numberCounts,
 			},
 		}),
-			evaluationRecord(pack, {
-				recordId: "eval:fr-lexique:search-profile",
-				resourceSpecId,
-				pipelineId,
+		evaluationRecord(pack, {
+			recordId: "eval:fr-lexique:search-profile",
+			resourceSpecId,
+			pipelineId,
 			capabilitySlot: "search",
 			taskType: "search.analyzer-profile",
 			evaluationKind: "resource-conformance",
@@ -11380,68 +12230,68 @@ function lexiqueEvaluationRecords(pack) {
 			threshold: 1,
 			limitations: [
 				"The search profile is source-backed by Lexique form/lemma data; it is not a corpus-trained French ranking profile.",
-				],
-			}),
-			evaluationRecord(pack, {
-				recordId: "eval:fr-lexique:search-elision-prefixes",
-				resourceSpecId,
-				pipelineId,
-				capabilitySlot: "search",
-				taskType: "search.elision-apostrophe-policy",
-				evaluationKind: "coverage",
-				resourceIds: [
-					"fr-lexique-search-profile",
-					"fr-lexique-search-elision-prefixes",
-				],
-				metricName: "searchElisionPrefixCount",
-				value: quality.searchElisionPrefixCount,
-				unit: "prefixes",
-				operator: "gte",
-				threshold: 10,
-				observations: {
-					tatoebaSentenceRowCount: quality.tatoebaSentenceRowCount,
-				},
-			}),
-			evaluationRecord(pack, {
-				recordId: "eval:fr-lexique:search-contraction-forms",
-				resourceSpecId,
-				pipelineId,
-				capabilitySlot: "search",
-				taskType: "search.contraction-surface-policy",
-				evaluationKind: "coverage",
-				resourceIds: [
-					"fr-lexique-search-profile",
-					"fr-lexique-search-contraction-forms",
-				],
-				metricName: "searchContractionFormCount",
-				value: quality.searchContractionFormCount,
-				unit: "forms",
-				operator: "eq",
-				threshold: 4,
-			}),
-			evaluationRecord(pack, {
-				recordId: "eval:fr-lexique:search-gold-cases",
-				resourceSpecId,
-				pipelineId,
-				capabilitySlot: "search",
-				taskType: "search.gold-cases",
-				evaluationKind: "gold-evaluation",
-				resourceIds: [
-					"fr-lexique-search-profile",
-					"fr-lexique-search-gold-cases",
-				],
-				metricName: "searchGoldCaseCount",
-				value: quality.searchGoldCaseCount,
-				unit: "cases",
-				operator: "gte",
-				threshold: 10,
-				limitations: [
-					"Gold cases verify analyzer policy coverage for observed Tatoeba surface forms; ranked retrieval evaluation belongs in corpus/search benchmark packs.",
-				],
-			}),
-			evaluationRecord(pack, {
-				recordId: "eval:fr-lexique:transform-rejections",
-				resourceSpecId,
+			],
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-lexique:search-elision-prefixes",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "search",
+			taskType: "search.elision-apostrophe-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-lexique-search-profile",
+				"fr-lexique-search-elision-prefixes",
+			],
+			metricName: "searchElisionPrefixCount",
+			value: quality.searchElisionPrefixCount,
+			unit: "prefixes",
+			operator: "gte",
+			threshold: 10,
+			observations: {
+				tatoebaSentenceRowCount: quality.tatoebaSentenceRowCount,
+			},
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-lexique:search-contraction-forms",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "search",
+			taskType: "search.contraction-surface-policy",
+			evaluationKind: "coverage",
+			resourceIds: [
+				"fr-lexique-search-profile",
+				"fr-lexique-search-contraction-forms",
+			],
+			metricName: "searchContractionFormCount",
+			value: quality.searchContractionFormCount,
+			unit: "forms",
+			operator: "eq",
+			threshold: 4,
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-lexique:search-gold-cases",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "search",
+			taskType: "search.gold-cases",
+			evaluationKind: "gold-evaluation",
+			resourceIds: [
+				"fr-lexique-search-profile",
+				"fr-lexique-search-gold-cases",
+			],
+			metricName: "searchGoldCaseCount",
+			value: quality.searchGoldCaseCount,
+			unit: "cases",
+			operator: "gte",
+			threshold: 10,
+			limitations: [
+				"Gold cases verify analyzer policy coverage for observed Tatoeba surface forms; ranked retrieval evaluation belongs in corpus/search benchmark packs.",
+			],
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:fr-lexique:transform-rejections",
+			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "quality",
 			taskType: "quality.transform-integrity",
@@ -11645,12 +12495,8 @@ function wordnetLinkCoverage(pack, ids) {
 	const entryRows = tsvDataRows(
 		payloadById(pack, ids.lexicalEntries).resourceText,
 	);
-	const senseRows = tsvDataRows(
-		payloadById(pack, ids.senses).resourceText,
-	);
-	const synsetRows = tsvDataRows(
-		payloadById(pack, ids.synsets).resourceText,
-	);
+	const senseRows = tsvDataRows(payloadById(pack, ids.senses).resourceText);
+	const synsetRows = tsvDataRows(payloadById(pack, ids.synsets).resourceText);
 	const relationRows = tsvDataRows(
 		payloadById(pack, ids.relations).resourceText,
 	);
@@ -11927,9 +12773,7 @@ function tatoebaCorpusEvaluationRecords(pack, config) {
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "corpus",
-			taskType: materialized
-				? "corpus.materialized-rows"
-				: "corpus.artifact",
+			taskType: materialized ? "corpus.materialized-rows" : "corpus.artifact",
 			evaluationKind: "resource-conformance",
 			resourceIds: [
 				materialized
@@ -12406,7 +13250,10 @@ function coverageReportFor(pack, context, evaluationRecords) {
 	};
 }
 
-function assertFeatureCompleteLanguageCompositeEvidence(pack, evaluationRecords) {
+function assertFeatureCompleteLanguageCompositeEvidence(
+	pack,
+	evaluationRecords,
+) {
 	if (
 		pack.packClass !== "language-composite" ||
 		pack.supportLevel !== "feature-complete"
@@ -12423,8 +13270,7 @@ function assertFeatureCompleteLanguageCompositeEvidence(pack, evaluationRecords)
 			(candidate) => candidate.slot === slot,
 		);
 		expect(
-			declaredSlot?.status === "task-supported" &&
-				evaluatedSlots.has(slot),
+			declaredSlot?.status === "task-supported" && evaluatedSlots.has(slot),
 			`${pack.packageName} is feature-complete but slot ${slot} lacks passing generated evaluation evidence.`,
 		);
 	}
@@ -12433,7 +13279,10 @@ function assertFeatureCompleteLanguageCompositeEvidence(pack, evaluationRecords)
 async function packageOutputsFor(pack, context) {
 	const outputs = new Map();
 	const evaluationReport = evaluationReportFor(pack, context);
-	assertFeatureCompleteLanguageCompositeEvidence(pack, evaluationReport.records);
+	assertFeatureCompleteLanguageCompositeEvidence(
+		pack,
+		evaluationReport.records,
+	);
 	if (isCompositePack(pack)) {
 		outputs.set(`${pack.packageDir}/package.json`, compositePackageJson(pack));
 		outputs.set(`${pack.packageDir}/README.md`, compositeReadme(pack));
@@ -12463,7 +13312,11 @@ async function packageOutputsFor(pack, context) {
 	if (pack.generatedSourceFiles.includes("src/index.ts")) {
 		outputs.set(
 			`${pack.packageDir}/src/index.ts`,
-			isCompositePack(pack) ? compositeIndexTs(pack) : indexTs(),
+			isCompositePack(pack)
+				? pack.packClass === "language-composite"
+					? languageCompositeIndexTs(pack)
+					: compositeIndexTs(pack)
+				: indexTs(),
 		);
 	}
 	if (pack.generatedSourceFiles.includes("src/manifest.ts")) {
@@ -12473,10 +13326,7 @@ async function packageOutputsFor(pack, context) {
 		);
 	}
 	if (pack.generatedSourceFiles.includes("src/resources.ts")) {
-		outputs.set(
-			`${pack.packageDir}/src/resources.ts`,
-			resourcesTs(pack),
-		);
+		outputs.set(`${pack.packageDir}/src/resources.ts`, resourcesTs(pack));
 	}
 	for (const payload of pack.payloads) {
 		outputs.set(`${pack.packageDir}/${payload.path}`, payload.text);
@@ -13214,8 +14064,7 @@ function sourceAuditedForDefaultComposite(pack, context) {
 		const policy = context.sourcePolicyById.get(sourceId);
 		if (isPolicyExpandedWrapper(pack)) {
 			return (
-				policy !== undefined &&
-				sourcePolicyAllowsPolicyExpandedWrapper(policy)
+				policy !== undefined && sourcePolicyAllowsPolicyExpandedWrapper(policy)
 			);
 		}
 		return (
@@ -13240,7 +14089,9 @@ function sourceRequirementSatisfied(requirement, sourceIds) {
 		);
 	}
 	if (Array.isArray(requirement.anySourceIds)) {
-		return requirement.anySourceIds.some((sourceId) => sourceIdSet.has(sourceId));
+		return requirement.anySourceIds.some((sourceId) =>
+			sourceIdSet.has(sourceId),
+		);
 	}
 	return true;
 }
@@ -13330,11 +14181,15 @@ function languageSlotBlockers({
 		return blockers;
 	}
 	if (!sourceAudited) {
-		blockers.push("source policy audit is incomplete for default composite use.");
+		blockers.push(
+			"source policy audit is incomplete for default composite use.",
+		);
 	}
 	if (!generated) blockers.push("generated package files are incomplete.");
-	if (!schemaValid) blockers.push("manifest/resource schema validation is incomplete.");
-	if (!standardReports) blockers.push("standard generated reports are incomplete.");
+	if (!schemaValid)
+		blockers.push("manifest/resource schema validation is incomplete.");
+	if (!standardReports)
+		blockers.push("standard generated reports are incomplete.");
 	if (!evaluated) blockers.push("evaluation evidence is incomplete.");
 	if (!adapterValid) blockers.push("runtime adapter evidence is incomplete.");
 	if (artifactBacked) {
@@ -13342,7 +14197,8 @@ function languageSlotBlockers({
 			"slot is artifact-backed; descriptor-only metadata must be materialized into local task-usable payloads.",
 		);
 	}
-	if (!publishable) blockers.push("package has not passed the publishability gate.");
+	if (!publishable)
+		blockers.push("package has not passed the publishability gate.");
 	if (!sourceRequirementsSatisfied) {
 		blockers.push(...sourceRequirementBlockers);
 	}
@@ -13411,7 +14267,8 @@ function languageCompositeReadinessFor(context) {
 					exactPack !== undefined && exactPack.publishable === true;
 				const exactSlot = exactPack?.capabilitySlots.find(
 					(capabilitySlot) =>
-						capabilitySlot.slot === slot || slotAliases(slot).includes(capabilitySlot.slot),
+						capabilitySlot.slot === slot ||
+						slotAliases(slot).includes(capabilitySlot.slot),
 				);
 				const artifactBacked =
 					exactPack?.supportLevel === "artifact-backed" ||
@@ -13419,12 +14276,13 @@ function languageCompositeReadinessFor(context) {
 				const slotCapabilitySatisfied =
 					exactPack !== undefined && packSupportsReadinessSlot(exactPack, slot);
 				const sourceRequirements = sourceRequirementsFor(languageTag, slot);
-				const sourceRequirementBlockers =
-					languageSlotSourceRequirementBlockers({
+				const sourceRequirementBlockers = languageSlotSourceRequirementBlockers(
+					{
 						exactPack,
 						languageTag,
 						slot,
-					});
+					},
+				);
 				const sourceRequirementsSatisfied =
 					sourceRequirementBlockers.length === 0;
 				const compositeReady =

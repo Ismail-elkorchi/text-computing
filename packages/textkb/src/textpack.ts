@@ -350,10 +350,13 @@ function relationTableRow(
 function senseRow(
 	row: Readonly<Record<string, string>>,
 	language: string,
-): SenseRecord {
+): SenseRecord | undefined {
+	const id = optionalString(row.senseId);
+	const lemma = optionalString(row.lemma);
+	if (id === undefined || lemma === undefined) return undefined;
 	return Object.freeze({
-		id: expectString(row.senseId, "senseId"),
-		lemma: expectString(row.lemma, "lemma"),
+		id,
+		lemma,
 		pos: optionalString(row.partOfSpeech),
 		language,
 		metadata: {
@@ -413,6 +416,35 @@ function groupSensesBySynset(
 	);
 }
 
+function relationKey(relation: SemanticRelation): string {
+	return [
+		relation.sourceKind,
+		relation.sourceId,
+		relation.type,
+		relation.targetKind,
+		relation.targetId,
+	].join("\u0000");
+}
+
+function uniqueRelations(
+	relations: readonly SemanticRelation[],
+): readonly SemanticRelation[] {
+	const byKey = new Map<string, SemanticRelation>();
+	for (const relation of relations) {
+		if (!byKey.has(relationKey(relation))) {
+			byKey.set(relationKey(relation), relation);
+		}
+	}
+	return Object.freeze(
+		[...byKey.values()].sort(
+			(left, right) =>
+				left.sourceId.localeCompare(right.sourceId) ||
+				left.type.localeCompare(right.type) ||
+				left.targetId.localeCompare(right.targetId),
+		),
+	);
+}
+
 export async function knowledgeBaseFromPack(
 	pack: TextPack,
 	options: KnowledgeBaseFromPackOptions = {},
@@ -433,7 +465,9 @@ export async function knowledgeBaseFromPack(
 	for (const entity of resource.entities ?? []) {
 		upsertEntity(entities, canonicalEntity(entity));
 	}
-	relations.push(...(resource.relations ?? []).map(canonicalRelation));
+	for (const relation of resource.relations ?? []) {
+		relations.push(canonicalRelation(relation));
+	}
 
 	const tableRefs = new Map<
 		string,
@@ -446,22 +480,25 @@ export async function knowledgeBaseFromPack(
 			for (const row of table.rows) upsertEntity(entities, entityTableRow(row));
 		}
 		if (ref.role === "aliases") {
-			aliases.push(...table.rows.map(aliasTableRow));
+			for (const row of table.rows) aliases.push(aliasTableRow(row));
 		}
 		if (ref.role === "relations") {
-			relations.push(...table.rows.map(relationTableRow));
+			for (const row of table.rows) relations.push(relationTableRow(row));
 		}
 		if (ref.role === "senses") {
-			senses.push(...table.rows.map((row) => senseRow(row, language)));
+			for (const row of table.rows) {
+				const sense = senseRow(row, language);
+				if (sense !== undefined) senses.push(sense);
+			}
 		}
 	}
 
 	const synsetRows = tableRefs.get("synsets") ?? [];
 	if (synsetRows.length > 0) {
 		const sensesBySynset = groupSensesBySynset(senses);
-		concepts.push(
-			...synsetRows.map((row) => synsetRow(row, sensesBySynset, language)),
-		);
+		for (const row of synsetRows) {
+			concepts.push(synsetRow(row, sensesBySynset, language));
+		}
 	}
 
 	return createKnowledgeBase({
@@ -470,7 +507,7 @@ export async function knowledgeBaseFromPack(
 		concepts,
 		senses,
 		aliases,
-		relations,
+		relations: uniqueRelations(relations),
 		metadata: {
 			resourceId,
 			schemaId: "textkb.knowledge-base.v1",

@@ -281,12 +281,11 @@ function annotationResourceId(
 	options: Pick<UdAnnotationPackOptions, "resourceId" | "syntaxResourceId">,
 ): string {
 	if (options.resourceId !== undefined) return options.resourceId;
-	return resolveUdSyntaxResourceIds(
-		pack,
-		options.syntaxResourceId === undefined
-			? {}
-			: { syntaxResourceId: options.syntaxResourceId },
-	).annotations;
+	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	return refByRole(
+		canonicalSyntaxResource(resourceText(pack, syntaxId), syntaxId),
+		"annotation-table",
+	);
 }
 
 async function annotationResourceIdAsync(
@@ -294,14 +293,11 @@ async function annotationResourceIdAsync(
 	options: UdAnnotationPackOptions,
 ): Promise<string> {
 	if (options.resourceId !== undefined) return options.resourceId;
-	const syntaxOptions: UdSyntaxPackOptions = {
-		...(options.syntaxResourceId === undefined
-			? {}
-			: { syntaxResourceId: options.syntaxResourceId }),
-		...(options.reader === undefined ? {} : { reader: options.reader }),
-	};
-	return (await resolveUdSyntaxResourceIdsAsync(pack, syntaxOptions))
-		.annotations;
+	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	return refByRole(
+		await materializedCanonicalSyntaxResource(pack, syntaxId, options.reader),
+		"annotation-table",
+	);
 }
 
 function conlluTokenIdParts(tokenId: string): {

@@ -1,7 +1,15 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { loadArabic, manifest } from "../dist/index.js";
 
-const resolved = await loadArabic();
+const reader = {
+	async readText({ descriptor }) {
+		return readFile(new URL(descriptor.path, descriptor.packageRoot), "utf8");
+	},
+};
+
+const runtime = await loadArabic({ reader });
+const resolved = runtime.pack;
 
 assert.equal(resolved.manifest.packageName, manifest.packageName);
 assert.ok(Object.keys(resolved.resources).length > 0);
@@ -51,3 +59,29 @@ for (const resourceKey of [
 		`Expected generated resource ${resourceKey} to be loaded.`,
 	);
 }
+
+const sampleText =
+	"\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629} \u{645}\u{62f}\u{64a}\u{646}\u{629}.";
+
+assert.equal(runtime.languageTag, "ar");
+assert.equal(runtime.pack, resolved);
+
+assert.ok((await runtime.segmentation.lexicalUnits(sampleText)).length > 0);
+assert.equal(
+	typeof (await runtime.normalization.normalizeText(sampleText)),
+	"string",
+);
+assert.equal(typeof runtime.lexicon.lookup, "function");
+assert.equal(typeof runtime.morphology.analyze, "function");
+assert.equal(typeof runtime.morphology.generate, "function");
+assert.ok((await runtime.syntax.resources()).annotations.length > 0);
+assert.ok((await runtime.syntax.annotations()).length > 0);
+assert.equal(typeof runtime.kb.candidates, "function");
+assert.ok(
+	[...(await runtime.search.analyzer()).analyze(sampleText)].length > 0,
+);
+assert.equal(typeof runtime.corpus.rows, "function");
+assert.equal(typeof runtime.parallel.rows, "function");
+assert.equal(typeof runtime.parallel.links, "function");
+assert.ok((await runtime.quality.resources()).length > 0);
+assert.ok((await runtime.quality.profiles()).length > 0);

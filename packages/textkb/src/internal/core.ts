@@ -906,12 +906,16 @@ export function buildAliasIndex(input: BuildAliasIndexInput = {}): AliasIndex {
 		entries.push(normalizeAliasEntryInput(alias, `aliases[${index}]`));
 	}
 	validateAliasTargets(entries, input);
-	const grouped: Record<string, AliasEntry[]> = {};
+	const grouped: Record<string, AliasEntry[]> = Object.create(null);
 	for (const entry of entries) {
 		if (entry.key.length === 0) continue;
-		grouped[entry.key] = [...(grouped[entry.key] ?? []), entry];
+		const bucket = Object.hasOwn(grouped, entry.key)
+			? (grouped[entry.key] ?? [])
+			: [];
+		bucket.push(entry);
+		grouped[entry.key] = bucket;
 	}
-	const output: Record<string, readonly AliasEntry[]> = {};
+	const output: Record<string, readonly AliasEntry[]> = Object.create(null);
 	for (const [key, values] of stableEntries(grouped)) {
 		output[key] = freezeArray(values.sort(compareAliasEntries));
 	}

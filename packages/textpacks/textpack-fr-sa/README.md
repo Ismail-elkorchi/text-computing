@@ -5,7 +5,8 @@ Generated FrenchShareAlike recipe composite textpack.
 ```ts
 import { loadFrenchShareAlike } from "@ismail-elkorchi/textpack-fr-sa";
 
-const pack = await loadFrenchShareAlike();
+const runtime = await loadFrenchShareAlike({ reader });
+const pack = runtime.pack;
 ```
 
 ## Required Components

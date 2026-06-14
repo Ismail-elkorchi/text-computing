@@ -5,7 +5,8 @@ Generated French recipe composite textpack.
 ```ts
 import { loadFrench } from "@ismail-elkorchi/textpack-fr";
 
-const pack = await loadFrench();
+const runtime = await loadFrench({ reader });
+const pack = runtime.pack;
 ```
 
 ## Required Components

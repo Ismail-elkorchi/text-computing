@@ -20,7 +20,7 @@ export function buildTokenPhraseIndex(
 	entries: Iterable<LexicalEntry>,
 ): TokenPhraseIndex {
 	const phraseEntries: PhraseIndexEntry[] = [];
-	const byFirstToken: Record<string, PhraseIndexEntry[]> = {};
+	const byFirstToken: Record<string, PhraseIndexEntry[]> = Object.create(null);
 	let maxLength = 0;
 	let entryIndex = 0;
 	for (const entry of entries) {
@@ -42,13 +42,16 @@ export function buildTokenPhraseIndex(
 			});
 			phraseEntries.push(phraseEntry);
 			const first = tokens[0] ?? "";
-			const bucket = byFirstToken[first] ?? [];
+			const bucket = Object.hasOwn(byFirstToken, first)
+				? (byFirstToken[first] ?? [])
+				: [];
 			bucket.push(phraseEntry);
 			byFirstToken[first] = bucket;
 		}
 		entryIndex += 1;
 	}
-	const frozenBuckets: Record<string, readonly PhraseIndexEntry[]> = {};
+	const frozenBuckets: Record<string, readonly PhraseIndexEntry[]> =
+		Object.create(null);
 	for (const [key, values] of Object.entries(byFirstToken)) {
 		frozenBuckets[key] = Object.freeze(
 			[...values].sort(

@@ -5,7 +5,8 @@ Generated Arabic recipe composite textpack.
 ```ts
 import { loadArabic } from "@ismail-elkorchi/textpack-ar";
 
-const pack = await loadArabic();
+const runtime = await loadArabic({ reader });
+const pack = runtime.pack;
 ```
 
 ## Required Components

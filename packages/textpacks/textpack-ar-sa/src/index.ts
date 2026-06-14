@@ -4,24 +4,195 @@ export { manifest } from "./manifest.js";
 export { resources } from "./resources.js";
 
 import {
+	corpusRowsFromPack,
+	readUdAnnotationDatasetFromPackAsync,
+	segmentationAdapterFromPack,
+	type TextDataSegment,
+	type TextDataSegmentationAdapter,
+	type TextDataTableResource,
+	type UdAnnotationRecord,
+	type UdSyntaxPackResources,
+	udAnnotationRecordsFromPackAsync,
+	udSyntaxResourcesFromPackAsync,
+} from "@ismail-elkorchi/textdata";
+import {
+	candidateEntities,
+	createKnowledgeBase,
+	type EntityCandidate,
+	type EntityLinkOptions,
+	type KnowledgeBase,
+	knowledgeBaseFromPack,
+	linkEntities,
+	type TextPackEntityLinker,
+} from "@ismail-elkorchi/textkb";
+import {
+	type LexicalMatch,
+	type Lexicon,
+	type LookupOptions,
+	lookup,
+	type MorphologyAnalysis,
+	type MorphologyGeneration,
+	type MorphologyIndex,
+	type MorphologyParadigm,
+	mergedLexiconFromPackAsync,
+	morphologyIndexFromPackAsync,
+} from "@ismail-elkorchi/textlex";
+import {
+	type CompiledTextNormProfile,
+	normalizationProfileFromPack,
+	type TextNormProfileMode,
+} from "@ismail-elkorchi/textnorm";
+import {
 	loadPack,
 	type ResolveTextPackComponentsOptions,
 	resolvePackComponents,
+	type TextPack,
 	type TextPackComponent,
+	type TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
+import {
+	type ParallelCorpus,
+	type ParallelLinkRow,
+	type ParallelRowsFromPackOptions,
+	type ParallelTableResource,
+	parallelCorpusFromPack,
+	parallelLinkRowsFromPack,
+	parallelTablesFromPack,
+} from "@ismail-elkorchi/textparallel";
+import {
+	analyzeDocumentQualityFromPack,
+	type DocumentQualityOptions,
+	type QualityProfile,
+	type QualityProfileFromPackOptions,
+	type QualityReport,
+	qualityProfileFromPack,
+	qualityResourcesFromPack,
+	type TextQualityPackResource,
+} from "@ismail-elkorchi/textquality";
+import {
+	type Analyzer,
+	analyzerFromPack,
+	type IndexOptions,
+	type SearchIndex,
+	searchIndexFromPack,
+} from "@ismail-elkorchi/textsearch";
 import { manifest } from "./manifest.js";
 import { resources } from "./resources.js";
+
+const languageTag = "ar" as const;
+const languageName = "ArabicShareAlike" as const;
+const scriptTag = "Arab" as const;
+
+type UdAnnotationDataset = Awaited<
+	ReturnType<typeof readUdAnnotationDatasetFromPackAsync>
+>;
 
 export interface LoadArabicShareAlikeOptions
 	extends Omit<ResolveTextPackComponentsOptions, "resolveComponent"> {
 	readonly resolveComponent?: ResolveTextPackComponentsOptions["resolveComponent"];
+	readonly reader?: TextPackResourceReader;
+}
+
+export interface ArabicShareAlikeRuntime {
+	readonly languageTag: typeof languageTag;
+	readonly languageName: typeof languageName;
+	readonly pack: TextPack;
+	readonly reader: TextPackResourceReader | undefined;
+	readonly segmentation: {
+		readonly open: () => Promise<TextDataSegmentationAdapter>;
+		readonly lexicalUnits: (
+			text: string,
+		) => Promise<readonly TextDataSegment[]>;
+		readonly words: (text: string) => Promise<readonly TextDataSegment[]>;
+		readonly sentences: (text: string) => Promise<readonly TextDataSegment[]>;
+	};
+	readonly normalization: {
+		readonly open: () => Promise<CompiledTextNormProfile>;
+		readonly normalizeText: (
+			text: string,
+			mode?: TextNormProfileMode,
+		) => Promise<string>;
+		readonly normalizeDocument: (
+			doc: Parameters<CompiledTextNormProfile["normalizeDocument"]>[0],
+			mode?: TextNormProfileMode,
+		) => Promise<ReturnType<CompiledTextNormProfile["normalizeDocument"]>>;
+		readonly searchView: (
+			doc: Parameters<CompiledTextNormProfile["searchView"]>[0],
+		) => Promise<ReturnType<CompiledTextNormProfile["searchView"]>>;
+	};
+	readonly lexicon: {
+		readonly open: () => Promise<Lexicon>;
+		readonly lookup: (
+			form: string,
+			options?: LookupOptions,
+		) => Promise<readonly LexicalMatch[]>;
+	};
+	readonly morphology: {
+		readonly open: () => Promise<MorphologyIndex>;
+		readonly analyze: (
+			form: string,
+			options?: { readonly maxResults?: number },
+		) => Promise<readonly MorphologyAnalysis[]>;
+		readonly generate: (
+			lemma: string,
+			features?: Readonly<Record<string, string>>,
+			options?: { readonly maxResults?: number },
+		) => Promise<readonly MorphologyGeneration[]>;
+		readonly paradigms: (
+			lemma?: string,
+		) => Promise<readonly MorphologyParadigm[]>;
+	};
+	readonly syntax: {
+		readonly resources: () => Promise<UdSyntaxPackResources>;
+		readonly annotations: () => Promise<readonly UdAnnotationRecord[]>;
+		readonly dataset: () => Promise<UdAnnotationDataset>;
+	};
+	readonly kb: {
+		readonly open: () => Promise<KnowledgeBase>;
+		readonly candidates: (
+			text: string,
+			options?: EntityLinkOptions,
+		) => Promise<readonly EntityCandidate[]>;
+		readonly linkEntities: (
+			doc: Parameters<TextPackEntityLinker["linkEntities"]>[0],
+			options?: EntityLinkOptions,
+		) => Promise<Awaited<ReturnType<TextPackEntityLinker["linkEntities"]>>>;
+	};
+	readonly search: {
+		readonly analyzer: () => Promise<Analyzer>;
+		readonly createIndex: (options?: IndexOptions) => Promise<SearchIndex>;
+	};
+	readonly corpus: {
+		readonly rows: () => Promise<readonly TextDataTableResource[]>;
+	};
+	readonly parallel: {
+		readonly rows: (
+			options?: Omit<ParallelRowsFromPackOptions, "reader">,
+		) => Promise<readonly ParallelTableResource[]>;
+		readonly links: (
+			options?: Omit<ParallelRowsFromPackOptions, "reader">,
+		) => Promise<readonly ParallelLinkRow[]>;
+		readonly corpus: (
+			options?: Omit<ParallelRowsFromPackOptions, "reader">,
+		) => Promise<ParallelCorpus>;
+	};
+	readonly quality: {
+		readonly resources: () => Promise<readonly TextQualityPackResource[]>;
+		readonly profiles: () => Promise<readonly QualityProfile[]>;
+		readonly analyzeDocument: (
+			doc: Parameters<typeof analyzeDocumentQualityFromPack>[1],
+			options?: Omit<
+				QualityProfileFromPackOptions & DocumentQualityOptions,
+				"reader" | "resourceId" | "resourceIds"
+			>,
+		) => Promise<QualityReport>;
+	};
 }
 
 async function resolveGeneratedComponent(
 	component: TextPackComponent,
 	options: LoadArabicShareAlikeOptions,
 ): Promise<unknown> {
-	void options;
 	switch (component.packageName) {
 		case "@ismail-elkorchi/textpack-foundation": {
 			const module = await import(component.packageName);
@@ -110,11 +281,188 @@ async function resolveGeneratedComponent(
 	}
 }
 
-export async function loadArabicShareAlike(
-	options: LoadArabicShareAlikeOptions = {},
-) {
+function taskReader(
+	reader: TextPackResourceReader | undefined,
+	taskName: string,
+): TextPackResourceReader {
+	if (reader !== undefined) return reader;
+	throw new TypeError(
+		`loadArabicShareAlike task ${taskName} requires options.reader to materialize generated file-backed resources.`,
+	);
+}
+
+function assertTaskSlot(pack: TextPack, slot: string): void {
+	const status = pack.manifest.capabilitySlots?.find(
+		(candidate) => candidate.slot === slot,
+	)?.status;
+	if (status !== "task-supported") {
+		throw new TypeError(
+			`Language task slot ${slot} is not task-supported by this pack.`,
+		);
+	}
+}
+
+function schemaResourceIds(
+	pack: TextPack,
+	schemaId: string,
+): readonly string[] {
+	return Object.freeze(
+		pack.manifest.resources
+			.filter((resource) => resource.schemaId === schemaId)
+			.map((resource) => resource.id)
+			.sort((left, right) => left.localeCompare(right)),
+	);
+}
+
+function requireSchemaResourceIds(
+	pack: TextPack,
+	schemaId: string,
+	taskName: string,
+): readonly string[] {
+	const ids = schemaResourceIds(pack, schemaId);
+	if (ids.length > 0) return ids;
+	throw new TypeError(
+		`Language task ${taskName} requires at least one ${schemaId} resource.`,
+	);
+}
+
+function firstSchemaResourceId(
+	pack: TextPack,
+	schemaId: string,
+	taskName: string,
+): string {
+	return requireSchemaResourceIds(pack, schemaId, taskName)[0] ?? "";
+}
+
+function syntaxQualityResourceId(
+	pack: TextPack,
+	syntaxResourceId: string,
+): string {
+	const qualityIds = requireSchemaResourceIds(
+		pack,
+		"textquality.evidence.v1",
+		"syntax",
+	);
+	const prefixes = [
+		syntaxResourceId.replace(/-syntax-canonical$/u, ""),
+		syntaxResourceId.replace(/-syntax$/u, ""),
+	];
+	for (const prefix of prefixes) {
+		const candidate = `${prefix}-quality`;
+		if (qualityIds.includes(candidate)) return candidate;
+	}
+	throw new TypeError(
+		`Syntax resource ${syntaxResourceId} does not have a matching textquality.evidence.v1 resource.`,
+	);
+}
+
+async function createMergedMorphologyIndex(
+	pack: TextPack,
+	reader: TextPackResourceReader,
+): Promise<MorphologyIndex> {
+	const resourceIds = requireSchemaResourceIds(
+		pack,
+		"textlex.morphology.v1",
+		"morphology",
+	);
+	const indexes = await Promise.all(
+		resourceIds.map((resourceId) =>
+			morphologyIndexFromPackAsync(pack, { reader, resourceId }),
+		),
+	);
+	if (indexes.length === 1 && indexes[0] !== undefined) return indexes[0];
+	const analyses = Object.freeze(indexes.flatMap((index) => index.analyses));
+	const generations = Object.freeze(
+		indexes.flatMap((index) => index.generations),
+	);
+	return Object.freeze({
+		id: `${pack.manifest.id}:morphology`,
+		language: languageTag,
+		script: scriptTag,
+		analyses,
+		generations,
+		analyze(form: string, options: { readonly maxResults?: number } = {}) {
+			return Object.freeze(
+				indexes
+					.flatMap((index) => index.analyze(form, options))
+					.slice(0, options.maxResults),
+			);
+		},
+		generate(
+			lemma: string,
+			features?: Readonly<Record<string, string>>,
+			options: { readonly maxResults?: number } = {},
+		) {
+			return Object.freeze(
+				indexes
+					.flatMap((index) => index.generate(lemma, features, options))
+					.slice(0, options.maxResults),
+			);
+		},
+		paradigms(lemma?: string) {
+			const byLemma = new Map<string, MorphologyGeneration[]>();
+			for (const index of indexes) {
+				for (const paradigm of index.paradigms(lemma)) {
+					byLemma.set(paradigm.lemma, [
+						...(byLemma.get(paradigm.lemma) ?? []),
+						...paradigm.entries,
+					]);
+				}
+			}
+			return Object.freeze(
+				[...byLemma.entries()]
+					.sort(([left], [right]) => left.localeCompare(right))
+					.map(([entryLemma, entries]) =>
+						Object.freeze({
+							lemma: entryLemma,
+							entries: Object.freeze(entries),
+						}),
+					),
+			);
+		},
+	});
+}
+
+async function createMergedKnowledgeBase(
+	pack: TextPack,
+	reader: TextPackResourceReader,
+): Promise<KnowledgeBase> {
+	const resourceIds = requireSchemaResourceIds(
+		pack,
+		"textkb.knowledge-base.v1",
+		"kb",
+	);
+	const bases = await Promise.all(
+		resourceIds.map((resourceId) =>
+			knowledgeBaseFromPack(pack, { reader, resourceId }),
+		),
+	);
+	if (bases.length === 1 && bases[0] !== undefined) return bases[0];
+	return createKnowledgeBase({
+		id: `${pack.manifest.id}:kb`,
+		entities: bases.flatMap((base) => Object.values(base.entities.records)),
+		concepts: bases.flatMap((base) => Object.values(base.concepts.records)),
+		senses: bases.flatMap((base) => Object.values(base.senses.records)),
+		relations: bases.flatMap((base) => Object.values(base.relations.records)),
+		aliases: bases.flatMap((base) =>
+			Object.values(base.aliases.entries).flat(),
+		),
+		metadata: {
+			packageName: pack.manifest.packageName,
+			resourceIds,
+			schemaId: "textkb.knowledge-base.v1",
+		},
+		allowExternalRelationEndpoints: true,
+	});
+}
+
+async function resolveLanguagePack(
+	options: LoadArabicShareAlikeOptions,
+): Promise<TextPack> {
+	const { reader: _reader, ...resolveOptions } = options;
+	void _reader;
 	return resolvePackComponents(await loadPack({ manifest, resources }), {
-		...options,
+		...resolveOptions,
 		licensePolicy: options.licensePolicy ?? "allow-share-alike",
 		artifactPolicy: options.artifactPolicy ?? "none",
 		conflictPolicy: options.conflictPolicy ?? "first",
@@ -122,6 +470,287 @@ export async function loadArabicShareAlike(
 			options.resolveComponent ??
 			((component) => resolveGeneratedComponent(component, options)),
 	});
+}
+
+function createLanguageRuntime(
+	pack: TextPack,
+	reader: TextPackResourceReader | undefined,
+): ArabicShareAlikeRuntime {
+	let segmentationPromise: Promise<TextDataSegmentationAdapter> | undefined;
+	let normalizationPromise: Promise<CompiledTextNormProfile> | undefined;
+	let lexiconPromise: Promise<Lexicon> | undefined;
+	let morphologyPromise: Promise<MorphologyIndex> | undefined;
+	let syntaxResourcesPromise: Promise<UdSyntaxPackResources> | undefined;
+	let syntaxAnnotationsPromise:
+		| Promise<readonly UdAnnotationRecord[]>
+		| undefined;
+	let syntaxDatasetPromise: Promise<UdAnnotationDataset> | undefined;
+	let kbPromise: Promise<KnowledgeBase> | undefined;
+	let analyzerPromise: Promise<Analyzer> | undefined;
+	let qualityResourcesPromise:
+		| Promise<readonly TextQualityPackResource[]>
+		| undefined;
+	let qualityProfilesPromise: Promise<readonly QualityProfile[]> | undefined;
+
+	const openSegmentation = () => {
+		assertTaskSlot(pack, "segmentation");
+		segmentationPromise ??= segmentationAdapterFromPack(pack, {
+			reader: taskReader(reader, "segmentation"),
+		});
+		return segmentationPromise;
+	};
+	const openNormalization = () => {
+		assertTaskSlot(pack, "normalization");
+		normalizationPromise ??= normalizationProfileFromPack(pack, {
+			reader: taskReader(reader, "normalization"),
+			resourceIds: [
+				firstSchemaResourceId(pack, "textnorm.profile.v1", "normalization"),
+			],
+		});
+		return normalizationPromise;
+	};
+	const openLexicon = () => {
+		assertTaskSlot(pack, "lexicon");
+		lexiconPromise ??= mergedLexiconFromPackAsync(pack, {
+			reader: taskReader(reader, "lexicon"),
+			resourceIds: requireSchemaResourceIds(
+				pack,
+				"textlex.lexicon.v1",
+				"lexicon",
+			),
+			schemaIds: ["textlex.lexicon.v1"],
+			language: languageTag,
+			script: scriptTag,
+		});
+		return lexiconPromise;
+	};
+	const openMorphology = () => {
+		assertTaskSlot(pack, "morphology");
+		morphologyPromise ??= createMergedMorphologyIndex(
+			pack,
+			taskReader(reader, "morphology"),
+		);
+		return morphologyPromise;
+	};
+	const syntaxResourceId = () =>
+		firstSchemaResourceId(pack, "textdata.syntax.v1", "syntax");
+	const openKb = () => {
+		assertTaskSlot(pack, "kb");
+		kbPromise ??= createMergedKnowledgeBase(pack, taskReader(reader, "kb"));
+		return kbPromise;
+	};
+	const openAnalyzer = () => {
+		assertTaskSlot(pack, "search");
+		analyzerPromise ??= analyzerFromPack(pack, {
+			reader: taskReader(reader, "search"),
+			resourceId: firstSchemaResourceId(
+				pack,
+				"textsearch.analyzer-profile.v1",
+				"search",
+			),
+		});
+		return analyzerPromise;
+	};
+	const openQualityResources = () => {
+		assertTaskSlot(pack, "quality");
+		qualityResourcesPromise ??= qualityResourcesFromPack(pack, {
+			reader: taskReader(reader, "quality"),
+		});
+		return qualityResourcesPromise;
+	};
+	const openQualityProfiles = () => {
+		assertTaskSlot(pack, "quality");
+		qualityProfilesPromise ??= Promise.all(
+			requireSchemaResourceIds(pack, "textquality.profile.v1", "quality").map(
+				(resourceId) =>
+					qualityProfileFromPack(pack, {
+						reader: taskReader(reader, "quality"),
+						resourceId,
+					}),
+			),
+		);
+		return qualityProfilesPromise;
+	};
+
+	return Object.freeze({
+		languageTag,
+		languageName,
+		pack,
+		reader,
+		segmentation: Object.freeze({
+			open: openSegmentation,
+			async lexicalUnits(text: string) {
+				return (await openSegmentation()).lexicalUnits(text);
+			},
+			async words(text: string) {
+				return (await openSegmentation()).words(text);
+			},
+			async sentences(text: string) {
+				return (await openSegmentation()).sentences(text);
+			},
+		}),
+		normalization: Object.freeze({
+			open: openNormalization,
+			async normalizeText(text: string, mode?: TextNormProfileMode) {
+				return (await openNormalization()).normalizeText(text, mode);
+			},
+			async normalizeDocument(
+				doc: Parameters<CompiledTextNormProfile["normalizeDocument"]>[0],
+				mode?: TextNormProfileMode,
+			) {
+				return (await openNormalization()).normalizeDocument(doc, mode);
+			},
+			async searchView(
+				doc: Parameters<CompiledTextNormProfile["searchView"]>[0],
+			) {
+				return (await openNormalization()).searchView(doc);
+			},
+		}),
+		lexicon: Object.freeze({
+			open: openLexicon,
+			async lookup(form: string, options: LookupOptions = {}) {
+				return lookup(await openLexicon(), form, options);
+			},
+		}),
+		morphology: Object.freeze({
+			open: openMorphology,
+			async analyze(
+				form: string,
+				options: { readonly maxResults?: number } = {},
+			) {
+				return (await openMorphology()).analyze(form, options);
+			},
+			async generate(
+				lemma: string,
+				features?: Readonly<Record<string, string>>,
+				options: { readonly maxResults?: number } = {},
+			) {
+				return (await openMorphology()).generate(lemma, features, options);
+			},
+			async paradigms(lemma?: string) {
+				return (await openMorphology()).paradigms(lemma);
+			},
+		}),
+		syntax: Object.freeze({
+			resources() {
+				assertTaskSlot(pack, "syntax");
+				syntaxResourcesPromise ??= udSyntaxResourcesFromPackAsync(pack, {
+					reader: taskReader(reader, "syntax"),
+					syntaxResourceId: syntaxResourceId(),
+					resourceIds: {
+						quality: syntaxQualityResourceId(pack, syntaxResourceId()),
+					},
+				});
+				return syntaxResourcesPromise;
+			},
+			annotations() {
+				assertTaskSlot(pack, "syntax");
+				syntaxAnnotationsPromise ??= udAnnotationRecordsFromPackAsync(pack, {
+					reader: taskReader(reader, "syntax"),
+					syntaxResourceId: syntaxResourceId(),
+				});
+				return syntaxAnnotationsPromise;
+			},
+			dataset() {
+				assertTaskSlot(pack, "syntax");
+				syntaxDatasetPromise ??= readUdAnnotationDatasetFromPackAsync(pack, {
+					reader: taskReader(reader, "syntax"),
+					syntaxResourceId: syntaxResourceId(),
+				});
+				return syntaxDatasetPromise;
+			},
+		}),
+		kb: Object.freeze({
+			open: openKb,
+			async candidates(text: string, options: EntityLinkOptions = {}) {
+				return candidateEntities(await openKb(), text, options);
+			},
+			async linkEntities(
+				doc: Parameters<TextPackEntityLinker["linkEntities"]>[0],
+				options: EntityLinkOptions = {},
+			) {
+				return linkEntities(doc, await openKb(), options);
+			},
+		}),
+		search: Object.freeze({
+			analyzer: openAnalyzer,
+			async createIndex(options?: IndexOptions) {
+				assertTaskSlot(pack, "search");
+				return searchIndexFromPack(pack, {
+					reader: taskReader(reader, "search"),
+					resourceId: firstSchemaResourceId(
+						pack,
+						"textsearch.analyzer-profile.v1",
+						"search",
+					),
+					...(options === undefined ? {} : { index: options }),
+				});
+			},
+		}),
+		corpus: Object.freeze({
+			rows() {
+				assertTaskSlot(pack, "corpus");
+				return corpusRowsFromPack(pack, {
+					reader: taskReader(reader, "corpus"),
+					schemaIds: ["textdata.corpus.rows.v1"],
+				});
+			},
+		}),
+		parallel: Object.freeze({
+			rows(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
+				assertTaskSlot(pack, "parallel");
+				return parallelTablesFromPack(pack, {
+					...options,
+					reader: taskReader(reader, "parallel"),
+				});
+			},
+			links(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
+				assertTaskSlot(pack, "parallel");
+				return parallelLinkRowsFromPack(pack, {
+					...options,
+					reader: taskReader(reader, "parallel"),
+				});
+			},
+			corpus(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
+				assertTaskSlot(pack, "parallel");
+				return parallelCorpusFromPack(pack, {
+					...options,
+					reader: taskReader(reader, "parallel"),
+				});
+			},
+		}),
+		quality: Object.freeze({
+			resources: openQualityResources,
+			profiles: openQualityProfiles,
+			async analyzeDocument(
+				doc: Parameters<typeof analyzeDocumentQualityFromPack>[1],
+				options: Omit<
+					QualityProfileFromPackOptions & DocumentQualityOptions,
+					"reader" | "resourceId" | "resourceIds"
+				> = {},
+			) {
+				assertTaskSlot(pack, "quality");
+				return analyzeDocumentQualityFromPack(pack, doc, {
+					...options,
+					reader: taskReader(reader, "quality"),
+					resourceId: firstSchemaResourceId(
+						pack,
+						"textquality.profile.v1",
+						"quality",
+					),
+				});
+			},
+		}),
+	});
+}
+
+export async function loadArabicShareAlike(
+	options: LoadArabicShareAlikeOptions = {},
+): Promise<ArabicShareAlikeRuntime> {
+	return createLanguageRuntime(
+		await resolveLanguagePack(options),
+		options.reader,
+	);
 }
 
 export default { manifest, resources, loadArabicShareAlike };

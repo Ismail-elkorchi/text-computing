@@ -5,7 +5,8 @@ Generated English recipe composite textpack.
 ```ts
 import { loadEnglish } from "@ismail-elkorchi/textpack-en";
 
-const pack = await loadEnglish();
+const runtime = await loadEnglish({ reader });
+const pack = runtime.pack;
 ```
 
 ## Required Components
