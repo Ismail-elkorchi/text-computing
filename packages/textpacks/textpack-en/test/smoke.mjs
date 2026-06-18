@@ -84,3 +84,17 @@ assert.equal(typeof runtime.parallel.rows, "function");
 assert.equal(typeof runtime.parallel.links, "function");
 assert.ok((await runtime.quality.resources()).length > 0);
 assert.ok((await runtime.quality.profiles()).length > 0);
+const documentPipeline = runtime.pipeline.createDocumentAnalysisPipeline();
+assert.equal(documentPipeline.processors.length, 1);
+assert.ok(
+	documentPipeline.processors[0]?.provides.some(
+		(output) => output.viewKind === "search",
+	),
+);
+assert.ok(
+	documentPipeline.processors[0]?.provides.some(
+		(output) => output.layer === "link.entity",
+	),
+);
+assert.equal(typeof runtime.pipeline.runText, "function");
+assert.equal(typeof runtime.pipeline.runDocument, "function");

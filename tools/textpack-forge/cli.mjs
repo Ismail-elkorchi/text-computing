@@ -8799,6 +8799,16 @@ import {
 \tparallelTablesFromPack,
 } from "@ismail-elkorchi/textparallel";
 import {
+\tcreatePipeline,
+\tcreatePipelineResourceRegistry,
+\ttype PipelineDiagnostic,
+\ttype PipelineTraceEvent,
+\ttype RunOptions,
+\trunPipeline,
+\ttype TextPipeline,
+\ttype TextProcessor,
+} from "@ismail-elkorchi/textpipeline";
+import {
 \tanalyzeDocumentQualityFromPack,
 \ttype DocumentQualityOptions,
 \ttype QualityProfile,
@@ -8855,6 +8865,22 @@ export interface LanguageDocumentAnalysis {
 \treadonly lexicalUnitAnalyses: readonly LanguageLexicalUnitAnalysis[];
 \treadonly searchTokens: readonly SearchToken[];
 \treadonly qualityReport: QualityReport;
+}
+
+export interface LanguagePipelineRunOptions
+\textends LanguageDocumentAnalysisOptions {
+\treadonly run?: Omit<
+\t\tRunOptions,
+\t\t"cache" | "cachePolicy" | "diagnostics" | "resources" | "trace"
+\t>;
+}
+
+export interface LanguagePipelineRun {
+\treadonly pipeline: TextPipeline;
+\treadonly document: TextDocument;
+\treadonly analysis: LanguageDocumentAnalysis;
+\treadonly diagnostics: readonly PipelineDiagnostic[];
+\treadonly trace: readonly PipelineTraceEvent[];
 }
 
 export interface ${pack.loader.optionsName}
@@ -8966,6 +8992,19 @@ export interface ${runtimeName} {
 \t\t\tdoc: TextDocument,
 \t\t\toptions?: LanguageDocumentAnalysisOptions,
 \t\t) => Promise<LanguageDocumentAnalysis>;
+\t};
+\treadonly pipeline: {
+\t\treadonly createDocumentAnalysisPipeline: (
+\t\t\toptions?: LanguageDocumentAnalysisOptions,
+\t\t) => TextPipeline;
+\t\treadonly runText: (
+\t\t\ttext: string,
+\t\t\toptions?: LanguagePipelineRunOptions,
+\t\t) => Promise<LanguagePipelineRun>;
+\t\treadonly runDocument: (
+\t\t\tdoc: TextDocument,
+\t\t\toptions?: LanguagePipelineRunOptions,
+\t\t) => Promise<LanguagePipelineRun>;
 \t};
 }
 
@@ -9384,6 +9423,79 @@ function createLanguageRuntime(
 \t\t\t}),
 \t\t\toptions,
 \t\t);
+\tconst documentAnalysisProcessor = (
+\t\toptions: LanguageDocumentAnalysisOptions = {},
+\t\tonAnalysis?: (analysis: LanguageDocumentAnalysis) => void,
+\t): TextProcessor =>
+\t\tObject.freeze({
+\t\t\tid: \`\${pack.manifest.id}:document-analysis\`,
+\t\t\tversion: pack.manifest.version,
+\t\t\tprovides: Object.freeze([
+\t\t\t\tObject.freeze({ viewKind: "search" as const }),
+\t\t\t\tObject.freeze({ layer: "link.entity" }),
+\t\t\t]),
+\t\t\tasync process(doc: TextDocument) {
+\t\t\t\tconst analysis = await analyzeDocument(doc, options);
+\t\t\t\tonAnalysis?.(analysis);
+\t\t\t\treturn analysis.entityLinkedDocument;
+\t\t\t},
+\t\t});
+\tconst createDocumentAnalysisPipeline = (
+\t\toptions: LanguageDocumentAnalysisOptions = {},
+\t) =>
+\t\tcreatePipeline([documentAnalysisProcessor(options)], {
+\t\t\tid: \`\${pack.manifest.id}:document-analysis\`,
+\t\t\tresources: createPipelineResourceRegistry({ packs: [pack] }),
+\t\t});
+\tconst runDocumentPipeline = async (
+\t\tdoc: TextDocument,
+\t\toptions: LanguagePipelineRunOptions = {},
+\t): Promise<LanguagePipelineRun> => {
+\t\tlet analysis: LanguageDocumentAnalysis | undefined;
+\t\tconst pipeline = createPipeline(
+\t\t\t[
+\t\t\t\tdocumentAnalysisProcessor(options, (result) => {
+\t\t\t\t\tanalysis = result;
+\t\t\t\t}),
+\t\t\t],
+\t\t\t{
+\t\t\t\tid: \`\${pack.manifest.id}:document-analysis\`,
+\t\t\t\tresources: createPipelineResourceRegistry({ packs: [pack] }),
+\t\t\t},
+\t\t);
+\t\tconst diagnostics: PipelineDiagnostic[] = [];
+\t\tconst trace: PipelineTraceEvent[] = [];
+\t\tconst document = await runPipeline(pipeline, doc, {
+\t\t\t...(options.run ?? {}),
+\t\t\tdiagnostics,
+\t\t\ttrace,
+\t\t});
+\t\tif (analysis === undefined) {
+\t\t\tthrow new TypeError(
+\t\t\t\t\`Language document analysis pipeline did not produce analysis for \${doc.id}.\`,
+\t\t\t);
+\t\t}
+\t\treturn Object.freeze({
+\t\t\tpipeline,
+\t\t\tdocument,
+\t\t\tanalysis,
+\t\t\tdiagnostics: Object.freeze([...diagnostics]),
+\t\t\ttrace: Object.freeze([...trace]),
+\t\t});
+\t};
+\tconst runTextPipeline = (
+\t\ttext: string,
+\t\toptions: LanguagePipelineRunOptions = {},
+\t) =>
+\t\trunDocumentPipeline(
+\t\t\tcreateDocument(text, {
+\t\t\t\t...(options.id === undefined ? {} : { id: options.id }),
+\t\t\t\t...(options.metadata === undefined
+\t\t\t\t\t? {}
+\t\t\t\t\t: { metadata: options.metadata }),
+\t\t\t}),
+\t\t\toptions,
+\t\t);
 
 \treturn Object.freeze({
 \t\tlanguageTag,
@@ -9557,6 +9669,11 @@ function createLanguageRuntime(
 \t\tdocument: Object.freeze({
 \t\t\tanalyzeText,
 \t\t\tanalyzeDocument,
+\t\t}),
+\t\tpipeline: Object.freeze({
+\t\t\tcreateDocumentAnalysisPipeline,
+\t\t\trunText: runTextPipeline,
+\t\t\trunDocument: runDocumentPipeline,
 \t\t}),
 \t});
 }
@@ -9848,6 +9965,7 @@ function compositePackageJson(pack) {
 			"@ismail-elkorchi/textlex": "0.1.0",
 			"@ismail-elkorchi/textnorm": "0.1.0",
 			"@ismail-elkorchi/textparallel": "0.1.0",
+			"@ismail-elkorchi/textpipeline": "0.1.0",
 			"@ismail-elkorchi/textquality": "0.1.0",
 			"@ismail-elkorchi/textsearch": "0.1.0",
 		});
@@ -9896,6 +10014,7 @@ function compositePackageJson(pack) {
 			"COVERAGE.generated.json",
 			"EVALUATION.generated.json",
 			"QUALITY.generated.json",
+			...(pack.packClass === "language-composite" ? ["examples"] : []),
 			"README.md",
 			"CHANGELOG.md",
 		],
@@ -9978,7 +10097,145 @@ function tsconfigBuildJson() {
 `;
 }
 
+function languageCompositeExampleSample(pack) {
+	const samplesByPackageName = new Map([
+		[
+			"@ismail-elkorchi/textpack-en",
+			{
+				text: "Paris is a city, and people walk through its museums.",
+				expectedTerm: "paris",
+			},
+		],
+		[
+			"@ismail-elkorchi/textpack-fr",
+			{
+				text: "En France, j'aime apprendre chaque jour.",
+				expectedTerm: "france",
+			},
+		],
+		[
+			"@ismail-elkorchi/textpack-fr-sa",
+			{
+				text: "En France, j'aime apprendre chaque jour.",
+				expectedTerm: "france",
+			},
+		],
+		[
+			"@ismail-elkorchi/textpack-ar",
+			{
+				text: "القاهرة مدينة ويكتب الناس عن الكتب.",
+				expectedTerm: "القاهرة",
+			},
+		],
+		[
+			"@ismail-elkorchi/textpack-ar-sa",
+			{
+				text: "القاهرة مدينة ويكتب الناس عن الكتب.",
+				expectedTerm: "القاهرة",
+			},
+		],
+	]);
+	return (
+		samplesByPackageName.get(pack.packageName) ?? {
+			text: "Text.",
+			expectedTerm: "text",
+		}
+	);
+}
+
+function languageCompositeFetchExample(pack) {
+	if (pack.packClass !== "language-composite") return "";
+	const sample = languageCompositeExampleSample(pack);
+	const policyOption =
+		pack.policySurface === "policy-expanded-wrapper"
+			? '\n\tlicensePolicy: "allow-share-alike",'
+			: "";
+	return `import { createFetchResourceReader } from "@ismail-elkorchi/textpack";
+import { ${pack.loader.functionName} } from "${pack.packageName}";
+
+const reader = createFetchResourceReader({
+\tfetch: globalThis.fetch,
+});
+
+const runtime = await ${pack.loader.functionName}({
+\treader,${policyOption}
+});
+
+const analysis = await runtime.document.analyzeText(
+\t${JSON.stringify(sample.text)},
+\t{
+\t\tentityLanguage: runtime.languageTag,
+\t},
+);
+
+console.log({
+\tlanguage: runtime.languageTag,
+\tcomponentCount: runtime.pack.manifest.components?.length ?? 0,
+\tsentences: analysis.sentences.length,
+\twords: analysis.words.length,
+\tsearchTerms: analysis.searchTokens.map((token) => token.term),
+\tmatchedExpectedTerm: analysis.searchTokens.some(
+\t\t(token) => token.term === ${JSON.stringify(sample.expectedTerm)},
+\t),
+\tqualityMetrics: analysis.qualityReport.metrics,
+});
+`;
+}
+
+function languageCompositeReadmeExample(pack) {
+	if (pack.packClass !== "language-composite") return "";
+	const sample = languageCompositeExampleSample(pack);
+	const policyOption =
+		pack.policySurface === "policy-expanded-wrapper"
+			? '\n\tlicensePolicy: "allow-share-alike",'
+			: "";
+	return `
+## Fetch-Style Reader Example
+
+Use this shape in runtimes where package resources are served at the URLs recorded by generated resource descriptors, such as browser, Worker, Bun, Deno, or CDN-hosted package execution. The fetch reader performs no hidden download policy; it only materializes declared file-backed resources requested by the task API.
+
+\`\`\`ts
+import { createFetchResourceReader } from "@ismail-elkorchi/textpack";
+import { ${pack.loader.functionName} } from "${pack.packageName}";
+
+const reader = createFetchResourceReader({
+\tfetch: globalThis.fetch,
+});
+
+const runtime = await ${pack.loader.functionName}({
+\treader,${policyOption}
+});
+
+const analysis = await runtime.document.analyzeText(
+\t${JSON.stringify(sample.text)},
+\t{
+\t\tentityLanguage: runtime.languageTag,
+\t},
+);
+
+console.log(analysis.searchTokens.map((token) => token.term));
+\`\`\`
+
+The same example is included as \`examples/fetch-style-reader.ts\`.
+`;
+}
+
+function languageCompositeReadmePipelineSection(pack) {
+	if (pack.packClass !== "language-composite") return "";
+	return `
+## Pipeline Facade
+
+\`runtime.pipeline.runText(...)\` and \`runtime.pipeline.runDocument(...)\` wrap the document-analysis facade in a real \`@ismail-elkorchi/textpipeline\` execution. Use \`runtime.pipeline.createDocumentAnalysisPipeline(...)\` when you need the underlying \`TextPipeline\` for planning or inspection. Use the task groups directly when you need partial workflows such as only segmentation, search, KB lookup, corpus rows, or parallel rows.
+`;
+}
+
 function compositeReadme(pack) {
+	const fetchExample = languageCompositeReadmeExample(pack);
+	const pipelineSection = languageCompositeReadmePipelineSection(pack);
+	const afterIntro =
+		fetchExample === "" && pipelineSection === ""
+			? "\n"
+			: `${fetchExample}${pipelineSection}\n`;
 	const required = pack.components
 		.filter((component) => component.role === "required")
 		.map((component) => `- \`${component.packageName}\``)
@@ -10020,8 +10277,7 @@ const pack = runtime.pack;`
 		: `const pack = await ${pack.loader.functionName}();`
 }
 \`\`\`
-
-## Required Components
+${afterIntro}## Required Components
 
 ${required}
 
@@ -10462,6 +10718,20 @@ assert.equal(typeof runtime.parallel.rows, "function");
 assert.equal(typeof runtime.parallel.links, "function");
 assert.ok((await runtime.quality.resources()).length > 0);
 assert.ok((await runtime.quality.profiles()).length > 0);
+const documentPipeline = runtime.pipeline.createDocumentAnalysisPipeline();
+assert.equal(documentPipeline.processors.length, 1);
+assert.ok(
+\tdocumentPipeline.processors[0]?.provides.some(
+\t\t(output) => output.viewKind === "search",
+\t),
+);
+assert.ok(
+\tdocumentPipeline.processors[0]?.provides.some(
+\t\t(output) => output.layer === "link.entity",
+\t),
+);
+assert.equal(typeof runtime.pipeline.runText, "function");
+assert.equal(typeof runtime.pipeline.runDocument, "function");
 `;
 }
 
@@ -13593,6 +13863,12 @@ async function packageOutputsFor(pack, context) {
 		outputs.set(`${pack.packageDir}/CHANGELOG.md`, compositeChangelog(pack));
 		outputs.set(`${pack.packageDir}/tsconfig.json`, tsconfigJson());
 		outputs.set(`${pack.packageDir}/tsconfig.build.json`, tsconfigBuildJson());
+		if (pack.packClass === "language-composite") {
+			outputs.set(
+				`${pack.packageDir}/examples/fetch-style-reader.ts`,
+				languageCompositeFetchExample(pack),
+			);
+		}
 		outputs.set(`${pack.packageDir}/test/smoke.mjs`, compositeSmokeTest(pack));
 		if (hasLanguageCompositeConsumerTest(pack)) {
 			outputs.set(

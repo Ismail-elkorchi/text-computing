@@ -66,6 +66,16 @@ import {
 	parallelTablesFromPack,
 } from "@ismail-elkorchi/textparallel";
 import {
+	createPipeline,
+	createPipelineResourceRegistry,
+	type PipelineDiagnostic,
+	type PipelineTraceEvent,
+	type RunOptions,
+	runPipeline,
+	type TextPipeline,
+	type TextProcessor,
+} from "@ismail-elkorchi/textpipeline";
+import {
 	analyzeDocumentQualityFromPack,
 	type DocumentQualityOptions,
 	type QualityProfile,
@@ -122,6 +132,22 @@ export interface LanguageDocumentAnalysis {
 	readonly lexicalUnitAnalyses: readonly LanguageLexicalUnitAnalysis[];
 	readonly searchTokens: readonly SearchToken[];
 	readonly qualityReport: QualityReport;
+}
+
+export interface LanguagePipelineRunOptions
+	extends LanguageDocumentAnalysisOptions {
+	readonly run?: Omit<
+		RunOptions,
+		"cache" | "cachePolicy" | "diagnostics" | "resources" | "trace"
+	>;
+}
+
+export interface LanguagePipelineRun {
+	readonly pipeline: TextPipeline;
+	readonly document: TextDocument;
+	readonly analysis: LanguageDocumentAnalysis;
+	readonly diagnostics: readonly PipelineDiagnostic[];
+	readonly trace: readonly PipelineTraceEvent[];
 }
 
 export interface LoadFrenchOptions
@@ -233,6 +259,19 @@ export interface FrenchRuntime {
 			doc: TextDocument,
 			options?: LanguageDocumentAnalysisOptions,
 		) => Promise<LanguageDocumentAnalysis>;
+	};
+	readonly pipeline: {
+		readonly createDocumentAnalysisPipeline: (
+			options?: LanguageDocumentAnalysisOptions,
+		) => TextPipeline;
+		readonly runText: (
+			text: string,
+			options?: LanguagePipelineRunOptions,
+		) => Promise<LanguagePipelineRun>;
+		readonly runDocument: (
+			doc: TextDocument,
+			options?: LanguagePipelineRunOptions,
+		) => Promise<LanguagePipelineRun>;
 	};
 }
 
@@ -730,6 +769,79 @@ function createLanguageRuntime(
 			}),
 			options,
 		);
+	const documentAnalysisProcessor = (
+		options: LanguageDocumentAnalysisOptions = {},
+		onAnalysis?: (analysis: LanguageDocumentAnalysis) => void,
+	): TextProcessor =>
+		Object.freeze({
+			id: `${pack.manifest.id}:document-analysis`,
+			version: pack.manifest.version,
+			provides: Object.freeze([
+				Object.freeze({ viewKind: "search" as const }),
+				Object.freeze({ layer: "link.entity" }),
+			]),
+			async process(doc: TextDocument) {
+				const analysis = await analyzeDocument(doc, options);
+				onAnalysis?.(analysis);
+				return analysis.entityLinkedDocument;
+			},
+		});
+	const createDocumentAnalysisPipeline = (
+		options: LanguageDocumentAnalysisOptions = {},
+	) =>
+		createPipeline([documentAnalysisProcessor(options)], {
+			id: `${pack.manifest.id}:document-analysis`,
+			resources: createPipelineResourceRegistry({ packs: [pack] }),
+		});
+	const runDocumentPipeline = async (
+		doc: TextDocument,
+		options: LanguagePipelineRunOptions = {},
+	): Promise<LanguagePipelineRun> => {
+		let analysis: LanguageDocumentAnalysis | undefined;
+		const pipeline = createPipeline(
+			[
+				documentAnalysisProcessor(options, (result) => {
+					analysis = result;
+				}),
+			],
+			{
+				id: `${pack.manifest.id}:document-analysis`,
+				resources: createPipelineResourceRegistry({ packs: [pack] }),
+			},
+		);
+		const diagnostics: PipelineDiagnostic[] = [];
+		const trace: PipelineTraceEvent[] = [];
+		const document = await runPipeline(pipeline, doc, {
+			...(options.run ?? {}),
+			diagnostics,
+			trace,
+		});
+		if (analysis === undefined) {
+			throw new TypeError(
+				`Language document analysis pipeline did not produce analysis for ${doc.id}.`,
+			);
+		}
+		return Object.freeze({
+			pipeline,
+			document,
+			analysis,
+			diagnostics: Object.freeze([...diagnostics]),
+			trace: Object.freeze([...trace]),
+		});
+	};
+	const runTextPipeline = (
+		text: string,
+		options: LanguagePipelineRunOptions = {},
+	) =>
+		runDocumentPipeline(
+			createDocument(text, {
+				...(options.id === undefined ? {} : { id: options.id }),
+				...(options.metadata === undefined
+					? {}
+					: { metadata: options.metadata }),
+			}),
+			options,
+		);
 
 	return Object.freeze({
 		languageTag,
@@ -903,6 +1015,11 @@ function createLanguageRuntime(
 		document: Object.freeze({
 			analyzeText,
 			analyzeDocument,
+		}),
+		pipeline: Object.freeze({
+			createDocumentAnalysisPipeline,
+			runText: runTextPipeline,
+			runDocument: runDocumentPipeline,
 		}),
 	});
 }

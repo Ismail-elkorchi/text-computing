@@ -28,6 +28,7 @@
 		"@ismail-elkorchi/textlex": "0.1.0",
 		"@ismail-elkorchi/textnorm": "0.1.0",
 		"@ismail-elkorchi/textparallel": "0.1.0",
+		"@ismail-elkorchi/textpipeline": "0.1.0",
 		"@ismail-elkorchi/textquality": "0.1.0",
 		"@ismail-elkorchi/textsearch": "0.1.0",
 		"@ismail-elkorchi/textpack-foundation": "0.1.0",
@@ -56,6 +57,7 @@
 		"COVERAGE.generated.json",
 		"EVALUATION.generated.json",
 		"QUALITY.generated.json",
+		"examples",
 		"README.md",
 		"CHANGELOG.md"
 	],
