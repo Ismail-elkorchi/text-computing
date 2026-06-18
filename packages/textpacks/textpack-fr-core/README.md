@@ -1,26 +1,22 @@
-# @ismail-elkorchi/textpack-fr-core
+# `@ismail-elkorchi/textpack-fr-core`
 
-Generated language-concrete textpack.
+French core reference resources for final `@ismail-elkorchi/textpack` workflows.
 
-This package is generated from pinned source snapshots by `tools/textpack-forge`.
-
-```ts
-import { manifest, resources } from "@ismail-elkorchi/textpack-fr-core";
-```
+The package exports final `manifest`, `resources`, and default `{ manifest, resources }`.
 
 ## Resources
 
-- `fr-core-language-profile` (locale-profile, json)
-- `fr-core-orthography` (locale-profile, tsv)
-- `fr-core-punctuation` (locale-profile, tsv)
-- `fr-core-basic-segmentation` (segmentation-profile, json)
-- `fr-core-quality` (quality-profile, json)
-- `fr-core-quality-profile` (quality-profile, json)
+- `profile-fr-core`: segmentation profile
+- `abbrev-fr-core`: abbreviation table
+- `stoplist-fr-core`: stoplist
+- `lexicon-fr-core`: lexicon with inflected forms
+- `gazetteer-fr-core`: gazetteer
+- `tagset-fr-ud-lite`: dataset
+- `morph-fr-core`: morphology lookup data
+- `fst-fr-core`: finite-state examples
+- `grammar-fr-core`: grammar examples
+- `corpus-fr-smoke`: small smoke corpus
 
-## Publishability
+## Verification
 
-Publishable: `true`
-Status: `publishable`
-
-- None
-
+`npm -w @ismail-elkorchi/textpack-fr-core run -s test:all`

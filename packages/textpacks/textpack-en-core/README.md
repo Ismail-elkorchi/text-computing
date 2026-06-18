@@ -1,28 +1,22 @@
-# @ismail-elkorchi/textpack-en-core
+# `@ismail-elkorchi/textpack-en-core`
 
-Generated language-concrete textpack.
+English core reference resources for final `@ismail-elkorchi/textpack` workflows.
 
-This package is generated from pinned source snapshots by `tools/textpack-forge`.
-
-```ts
-import { manifest, resources } from "@ismail-elkorchi/textpack-en-core";
-```
+The package exports final `manifest`, `resources`, and default `{ manifest, resources }`.
 
 ## Resources
 
-- `en-core-language-profile` (locale-profile, json)
-- `en-core-orthography` (locale-profile, tsv)
-- `en-core-punctuation` (locale-profile, tsv)
-- `en-core-abbreviations` (abbreviation-table, tsv)
-- `en-core-function-words` (stoplist, tsv)
-- `en-core-basic-segmentation` (segmentation-profile, json)
-- `en-core-quality` (quality-profile, json)
-- `en-core-quality-profile` (quality-profile, json)
+- `profile-en-core`: segmentation profile
+- `abbrev-en-core`: abbreviation table
+- `stoplist-en-core`: stoplist
+- `lexicon-en-core`: lexicon
+- `gazetteer-en-core`: gazetteer
+- `tagset-ud-lite`: dataset
+- `morph-en-core`: morphology lookup data
+- `fst-en-core`: finite-state examples
+- `grammar-en-core`: grammar examples
+- `corpus-en-smoke`: small smoke corpus
 
-## Publishability
+## Verification
 
-Publishable: `true`
-Status: `publishable`
-
-- None
-
+`npm -w @ismail-elkorchi/textpack-en-core run -s test:all`

@@ -1,0 +1,4 @@
+Paris	LOC	id=loc-paris	normalized=Paris
+Lyon	LOC	id=loc-lyon	normalized=Lyon
+Marie	PER	id=per-marie	normalized=Marie
+Société Exemple	ORG	id=org-societe-exemple	normalized=Société Exemple

@@ -1,0 +1,37 @@
+{
+	"name": "@ismail-elkorchi/textpack-ja-segmentation",
+	"version": "0.1.0",
+	"description": "Japanese segmentation reference textpack resources.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./pack.manifest.json": "./pack.manifest.json"
+	},
+	"scripts": {
+		"build": "node ../../../tools/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run",
+		"test:all": "npm run -s build && node test/smoke.mjs && npm run -s check:pack",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textpack": "0.1.0"
+	},
+	"license": "MIT",
+	"files": [
+		"dist",
+		"pack.manifest.json",
+		"resources",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	}
+}

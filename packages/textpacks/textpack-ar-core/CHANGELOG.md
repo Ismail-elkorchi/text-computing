@@ -1,5 +1,5 @@
-# @ismail-elkorchi/textpack-ar-core
+# Changelog
 
 ## 0.1.0
 
-- Generated source-backed foundation package.
+- Add final Arabic core reference resources.

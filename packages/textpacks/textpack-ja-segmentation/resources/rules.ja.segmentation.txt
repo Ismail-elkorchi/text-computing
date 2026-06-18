@@ -1,0 +1,2 @@
+prefer-longest-dictionary-match
+keep-katakana-runs

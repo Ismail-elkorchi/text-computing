@@ -1,4 +1,0 @@
-ruleId	operation	priority	input	output	note
-unicode-nfc-compose	compose	10			Use Unicode NFC canonical composition for stored and comparable modern typed English text.
-unicode-casefold-for-lookup	casefold	20			Use Unicode casefolding for lookup/search normalization while preserving source text elsewhere.
-cldr-english-latn-likely-subtag	map	30	en	en-Latn-US	Use CLDR likely-subtag context for the default modern English Latin-script profile.

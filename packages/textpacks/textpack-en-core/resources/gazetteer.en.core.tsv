@@ -1,0 +1,20 @@
+Acme Corp	ORG	id=org-acme-corp	normalized=Acme Corp	aliases=Acme
+Contoso Labs	ORG	id=org-contoso-labs	normalized=Contoso Labs
+Globex Research	ORG	id=org-globex-research	normalized=Globex Research
+Initech	ORG	id=org-initech	normalized=Initech
+Umbrella Systems	ORG	id=org-umbrella-systems	normalized=Umbrella Systems
+Alice	PER	id=per-alice	normalized=Alice
+Bob	PER	id=per-bob	normalized=Bob
+Carol	PER	id=per-carol	normalized=Carol
+Dana	PER	id=per-dana	normalized=Dana
+Eve	PER	id=per-eve	normalized=Eve
+Mallory	PER	id=per-mallory	normalized=Mallory
+Trent	PER	id=per-trent	normalized=Trent
+Berlin	LOC	id=loc-berlin	normalized=Berlin
+London	LOC	id=loc-london	normalized=London
+Madrid	LOC	id=loc-madrid	normalized=Madrid
+New York	LOC	id=loc-new-york	normalized=New York	aliases=NYC|New York City
+Paris	LOC	id=loc-paris	normalized=Paris
+Rabat	LOC	id=loc-rabat	normalized=Rabat
+Tokyo	LOC	id=loc-tokyo	normalized=Tokyo
+Toronto	LOC	id=loc-toronto	normalized=Toronto

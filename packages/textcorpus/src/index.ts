@@ -74,3 +74,12 @@ export {
 } from "./stylometry/mod.js";
 export type { TermCandidate, TermExtractionOptions } from "./terms/mod.js";
 export { extractTerms } from "./terms/mod.js";
+export type {
+	CorpusDocumentsFromPackOptions,
+	TextCorpusFromPackOptions,
+} from "./textpack.js";
+export {
+	corpusDatasetFromPack,
+	corpusDocumentsFromPack,
+	textCorpusFromPack,
+} from "./textpack.js";

@@ -8737,6 +8737,13 @@ function languageCompositeIndexTs(pack) {
 export { resources } from "./resources.js";
 
 import {
+\ttype CorpusDocumentsFromPackOptions,
+\tcorpusDocumentsFromPack,
+\ttype TextCorpus,
+\ttype TextCorpusFromPackOptions,
+\ttextCorpusFromPack,
+} from "@ismail-elkorchi/textcorpus";
+import {
 \tcorpusRowsFromPack,
 \treadUdAnnotationDatasetFromPackAsync,
 \tsegmentationAdapterFromPack,
@@ -8819,7 +8826,9 @@ import {
 \ttype TextQualityPackResource,
 } from "@ismail-elkorchi/textquality";
 import {
+\ttype AddOptions,
 \ttype Analyzer,
+\taddToIndex,
 \tanalyzerFromPack,
 \ttype IndexOptions,
 \ttype SearchIndex,
@@ -8881,6 +8890,11 @@ export interface LanguagePipelineRun {
 \treadonly analysis: LanguageDocumentAnalysis;
 \treadonly diagnostics: readonly PipelineDiagnostic[];
 \treadonly trace: readonly PipelineTraceEvent[];
+}
+
+export interface LanguageSearchIndexOptions {
+\treadonly index?: IndexOptions;
+\treadonly add?: AddOptions;
 }
 
 export interface ${pack.loader.optionsName}
@@ -8957,9 +8971,23 @@ export interface ${runtimeName} {
 \treadonly search: {
 \t\treadonly analyzer: () => Promise<Analyzer>;
 \t\treadonly createIndex: (options?: IndexOptions) => Promise<SearchIndex>;
+\t\treadonly indexDocument: (
+\t\t\tdoc: TextDocument,
+\t\t\toptions?: LanguageSearchIndexOptions,
+\t\t) => Promise<SearchIndex>;
+\t\treadonly indexAnalysis: (
+\t\t\tanalysis: LanguageDocumentAnalysis,
+\t\t\toptions?: LanguageSearchIndexOptions,
+\t\t) => Promise<SearchIndex>;
 \t};
 \treadonly corpus: {
 \t\treadonly rows: () => Promise<readonly TextDataTableResource[]>;
+\t\treadonly documents: (
+\t\t\toptions: Omit<CorpusDocumentsFromPackOptions, "reader">,
+\t\t) => Promise<readonly TextDocument[]>;
+\t\treadonly open: (
+\t\t\toptions: Omit<TextCorpusFromPackOptions, "reader">,
+\t\t) => Promise<TextCorpus>;
 \t};
 \treadonly parallel: {
 \t\treadonly rows: (
@@ -9318,6 +9346,22 @@ function createLanguageRuntime(
 \t\t});
 \t\treturn analyzerPromise;
 \t};
+\tconst createSearchIndex = (options?: IndexOptions) => {
+\t\tassertTaskSlot(pack, "search");
+\t\treturn searchIndexFromPack(pack, {
+\t\t\treader: taskReader(reader, "search"),
+\t\t\tresourceId: firstSchemaResourceId(
+\t\t\t\tpack,
+\t\t\t\t"textsearch.analyzer-profile.v1",
+\t\t\t\t"search",
+\t\t\t),
+\t\t\t...(options === undefined ? {} : { index: options }),
+\t\t});
+\t};
+\tconst indexSearchDocument = async (
+\t\tdoc: TextDocument,
+\t\toptions: LanguageSearchIndexOptions = {},
+\t) => addToIndex(await createSearchIndex(options.index), doc, options.add);
 \tconst openQualityResources = () => {
 \t\tassertTaskSlot(pack, "quality");
 \t\tqualityResourcesPromise ??= qualityResourcesFromPack(pack, {
@@ -9599,17 +9643,13 @@ function createLanguageRuntime(
 \t\t}),
 \t\tsearch: Object.freeze({
 \t\t\tanalyzer: openAnalyzer,
-\t\t\tasync createIndex(options?: IndexOptions) {
-\t\t\t\tassertTaskSlot(pack, "search");
-\t\t\t\treturn searchIndexFromPack(pack, {
-\t\t\t\t\treader: taskReader(reader, "search"),
-\t\t\t\t\tresourceId: firstSchemaResourceId(
-\t\t\t\t\t\tpack,
-\t\t\t\t\t\t"textsearch.analyzer-profile.v1",
-\t\t\t\t\t\t"search",
-\t\t\t\t\t),
-\t\t\t\t\t...(options === undefined ? {} : { index: options }),
-\t\t\t\t});
+\t\t\tcreateIndex: createSearchIndex,
+\t\t\tindexDocument: indexSearchDocument,
+\t\t\tindexAnalysis(
+\t\t\t\tanalysis: LanguageDocumentAnalysis,
+\t\t\t\toptions: LanguageSearchIndexOptions = {},
+\t\t\t) {
+\t\t\t\treturn indexSearchDocument(analysis.entityLinkedDocument, options);
 \t\t\t},
 \t\t}),
 \t\tcorpus: Object.freeze({
@@ -9618,6 +9658,22 @@ function createLanguageRuntime(
 \t\t\t\treturn corpusRowsFromPack(pack, {
 \t\t\t\t\treader: taskReader(reader, "corpus"),
 \t\t\t\t\tschemaIds: ["textdata.corpus.rows.v1"],
+\t\t\t\t});
+\t\t\t},
+\t\t\tdocuments(options: Omit<CorpusDocumentsFromPackOptions, "reader">) {
+\t\t\t\tassertTaskSlot(pack, "corpus");
+\t\t\t\treturn corpusDocumentsFromPack(pack, {
+\t\t\t\t\t...options,
+\t\t\t\t\treader: taskReader(reader, "corpus"),
+\t\t\t\t\tschemaIds: options.schemaIds ?? ["textdata.corpus.rows.v1"],
+\t\t\t\t});
+\t\t\t},
+\t\t\topen(options: Omit<TextCorpusFromPackOptions, "reader">) {
+\t\t\t\tassertTaskSlot(pack, "corpus");
+\t\t\t\treturn textCorpusFromPack(pack, {
+\t\t\t\t\t...options,
+\t\t\t\t\treader: taskReader(reader, "corpus"),
+\t\t\t\t\tschemaIds: options.schemaIds ?? ["textdata.corpus.rows.v1"],
 \t\t\t\t});
 \t\t\t},
 \t\t}),
@@ -9959,6 +10015,7 @@ function compositePackageJson(pack) {
 	};
 	if (pack.packClass === "language-composite") {
 		Object.assign(dependencies, {
+			"@ismail-elkorchi/textcorpus": "0.1.0",
 			"@ismail-elkorchi/textdata": "0.1.0",
 			"@ismail-elkorchi/textdoc": "0.1.0",
 			"@ismail-elkorchi/textkb": "0.1.0",
@@ -10167,12 +10224,16 @@ const analysis = await runtime.document.analyzeText(
 \t\tentityLanguage: runtime.languageTag,
 \t},
 );
+const index = await runtime.search.indexAnalysis(analysis, {
+\tindex: { id: "example-search" },
+});
 
 console.log({
 \tlanguage: runtime.languageTag,
 \tcomponentCount: runtime.pack.manifest.components?.length ?? 0,
 \tsentences: analysis.sentences.length,
 \twords: analysis.words.length,
+\tindexedDocuments: index.stats.documentCount,
 \tsearchTerms: analysis.searchTokens.map((token) => token.term),
 \tmatchedExpectedTerm: analysis.searchTokens.some(
 \t\t(token) => token.term === ${JSON.stringify(sample.expectedTerm)},
@@ -10212,8 +10273,14 @@ const analysis = await runtime.document.analyzeText(
 \t\tentityLanguage: runtime.languageTag,
 \t},
 );
+const index = await runtime.search.indexAnalysis(analysis, {
+\tindex: { id: "example-search" },
+});
 
-console.log(analysis.searchTokens.map((token) => token.term));
+console.log({
+\tterms: analysis.searchTokens.map((token) => token.term),
+\tindexedDocuments: index.stats.documentCount,
+});
 \`\`\`
 
 The same example is included as \`examples/fetch-style-reader.ts\`.
@@ -10225,7 +10292,7 @@ function languageCompositeReadmePipelineSection(pack) {
 	return `
 ## Pipeline Facade
 
-\`runtime.pipeline.runText(...)\` and \`runtime.pipeline.runDocument(...)\` wrap the document-analysis facade in a real \`@ismail-elkorchi/textpipeline\` execution. Use \`runtime.pipeline.createDocumentAnalysisPipeline(...)\` when you need the underlying \`TextPipeline\` for planning or inspection. Use the task groups directly when you need partial workflows such as only segmentation, search, KB lookup, corpus rows, or parallel rows.
+\`runtime.pipeline.runText(...)\` and \`runtime.pipeline.runDocument(...)\` wrap the document-analysis facade in a real \`@ismail-elkorchi/textpipeline\` execution. Use \`runtime.pipeline.createDocumentAnalysisPipeline(...)\` when you need the underlying \`TextPipeline\` for planning or inspection. Use the task groups directly when you need partial workflows such as only segmentation, search indexing, KB lookup, bounded corpus materialization, or parallel rows.
 `;
 }
 
@@ -10713,7 +10780,11 @@ assert.equal(typeof runtime.kb.candidates, "function");
 assert.ok(
 \t[...(await runtime.search.analyzer()).analyze(sampleText)].length > 0,
 );
+assert.equal(typeof runtime.search.indexDocument, "function");
+assert.equal(typeof runtime.search.indexAnalysis, "function");
 assert.equal(typeof runtime.corpus.rows, "function");
+assert.equal(typeof runtime.corpus.documents, "function");
+assert.equal(typeof runtime.corpus.open, "function");
 assert.equal(typeof runtime.parallel.rows, "function");
 assert.equal(typeof runtime.parallel.links, "function");
 assert.ok((await runtime.quality.resources()).length > 0);
@@ -10752,7 +10823,7 @@ function languageCompositeConsumerTest(pack) {
 import { readFile } from "node:fs/promises";
 
 import { createDocument } from "@ismail-elkorchi/textdoc";
-import { addToIndex, search, termQuery } from "@ismail-elkorchi/textsearch";
+import { search, termQuery } from "@ismail-elkorchi/textsearch";
 import { ${pack.loader.functionName} } from "../dist/index.js";
 
 const reader = {
@@ -10841,11 +10912,9 @@ const terms = analysis.searchTokens.map((token) => token.term);
 assert.ok(terms.includes("reussite"));
 assert.ok(terms.includes("amerique"));
 
-let searchIndex = await french.search.createIndex({
-\tid: "consumer-fr-search",
-});
-searchIndex = addToIndex(searchIndex, analysis.normalizedDocument, {
-\tstoredFields: { title: "Réussite personnelle" },
+const searchIndex = await french.search.indexAnalysis(analysis, {
+\tindex: { id: "consumer-fr-search" },
+\tadd: { storedFields: { title: "Réussite personnelle" } },
 });
 assert.equal(searchIndex.stats.documentCount, 1);
 assert.equal(search(searchIndex, termQuery("reussite")).length, 1);
@@ -10857,6 +10926,16 @@ assert.equal(
 );
 assert.ok((corpusResources[0]?.rows.length ?? 0) > 1000);
 assert.equal(corpusResources[0]?.rows[0]?.languageTag, "fr");
+const corpusDocuments = await french.corpus.documents({ maxDocuments: 2 });
+assert.equal(corpusDocuments.length, 2);
+assert.equal(corpusDocuments[0]?.metadata.languageTag, "fr");
+const corpus = await french.corpus.open({
+\tmaxDocuments: 2,
+\tcorpus: { id: "consumer-fr-corpus" },
+});
+assert.equal(corpus.id, "consumer-fr-corpus");
+assert.equal(corpus.documents.length, 2);
+assert.ok(corpus.indexes.tokens > 0);
 
 const parallelLinks = await french.parallel.links({ targetLanguage: "en" });
 assert.ok(parallelLinks.length > 1000);

@@ -1,0 +1,17 @@
+ADJ	description=adjective
+ADP	description=adposition
+ADV	description=adverb
+AUX	description=auxiliary-verb
+CCONJ	description=coordinating-conjunction
+DET	description=determiner
+INTJ	description=interjection
+NOUN	description=common-noun
+NUM	description=numeral
+PART	description=particle
+PRON	description=pronoun
+PROPN	description=proper-noun
+PUNCT	description=punctuation
+SCONJ	description=subordinating-conjunction
+SYM	description=symbol
+VERB	description=verb
+X	description=other

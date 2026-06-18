@@ -1,0 +1,46 @@
+host	lemma=host	pos=VERB
+hosts	lemma=host	pos=VERB	Number=Sing	Person=3
+hosted	lemma=host	pos=VERB	Tense=Past	VerbForm=Fin
+hosting	lemma=host	pos=VERB	VerbForm=Ger
+sign	lemma=sign	pos=VERB	VerbForm=Inf
+signs	lemma=sign	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+signed	lemma=sign	pos=VERB	Tense=Past	VerbForm=Fin
+signing	lemma=sign	pos=VERB	VerbForm=Ger
+audit	lemma=audit	pos=VERB	VerbForm=Inf
+audits	lemma=audit	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+audited	lemma=audit	pos=VERB	Tense=Past	VerbForm=Fin
+auditing	lemma=audit	pos=VERB	VerbForm=Ger
+load	lemma=load	pos=VERB	VerbForm=Inf
+loads	lemma=load	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+loaded	lemma=load	pos=VERB	Tense=Past	VerbForm=Fin
+loading	lemma=load	pos=VERB	VerbForm=Ger
+validate	lemma=validate	pos=VERB	VerbForm=Inf
+validates	lemma=validate	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+validated	lemma=validate	pos=VERB	Tense=Past	VerbForm=Fin
+validating	lemma=validate	pos=VERB	VerbForm=Ger
+query	lemma=query	pos=VERB	VerbForm=Inf
+queries	lemma=query	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+queried	lemma=query	pos=VERB	Tense=Past	VerbForm=Fin
+querying	lemma=query	pos=VERB	VerbForm=Ger
+build	lemma=build	pos=VERB	VerbForm=Inf
+builds	lemma=build	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+built	lemma=build	pos=VERB	Tense=Past	VerbForm=Fin
+building	lemma=build	pos=VERB	VerbForm=Ger
+run	lemma=run	pos=VERB	VerbForm=Inf
+runs	lemma=run	pos=VERB	Number=Sing	Person=3	Tense=Pres	VerbForm=Fin
+ran	lemma=run	pos=VERB	Tense=Past	VerbForm=Fin
+running	lemma=run	pos=VERB	VerbForm=Ger
+document	lemma=document	pos=NOUN	Number=Sing
+documents	lemma=document	pos=NOUN	Number=Plur
+corpus	lemma=corpus	pos=NOUN	Number=Sing
+corpora	lemma=corpus	pos=NOUN	Number=Plur
+analysis	lemma=analysis	pos=NOUN	Number=Sing
+analyses	lemma=analysis	pos=NOUN	Number=Plur
+city	lemma=city	pos=NOUN	Number=Sing
+cities	lemma=city	pos=NOUN	Number=Plur
+entry	lemma=entry	pos=NOUN	Number=Sing
+entries	lemma=entry	pos=NOUN	Number=Plur
+cache	lemma=cache	pos=NOUN	Number=Sing
+caches	lemma=cache	pos=NOUN	Number=Plur
+index	lemma=index	pos=NOUN	Number=Sing
+indexes	lemma=index	pos=NOUN	Number=Plur

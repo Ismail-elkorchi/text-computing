@@ -1,20 +1,24 @@
 import assert from "node:assert/strict";
-import { manifest, resources } from "../dist/index.js";
+import { readFile } from "node:fs/promises";
+import {
+	capabilities,
+	getResource,
+	loadPack,
+	validateManifest,
+} from "@ismail-elkorchi/textpack";
+import * as moduleExports from "@ismail-elkorchi/textpack-en-core";
 
-const packageName = "@ismail-elkorchi/textpack-en-core";
+const pack = await loadPack(moduleExports);
+assert.equal(pack.manifest.id, "pack:en-core");
+assert.equal(pack.manifest.name, "English Core Reference Pack");
+assert.equal(moduleExports.default.manifest, moduleExports.manifest);
+assert.equal(moduleExports.default.resources, moduleExports.resources);
+assert.equal(capabilities(pack).segmentation, "rules");
+assert.match(getResource(pack, "stoplist-en-core"), /\bthe\b/);
 
-assert.equal(manifest.packageName, packageName);
-assert.equal(typeof resources, "object");
-assert.equal(Object.keys(resources).length, manifest.resources.length);
-assert.ok(manifest.resources.length > 0);
-
-for (const resource of manifest.resources) {
-	const value = resources[resource.id];
-	assert.equal(typeof value, "object");
-	assert.equal(value?.kind, "file-backed-resource");
-	assert.equal(value?.path, resource.path);
-	assert.equal(typeof value?.checksum, "string");
-	assert.equal(typeof value?.byteLength, "number");
-	assert.equal(typeof value?.encoding, "string");
-	assert.equal(typeof value?.lineCount, "number");
-}
+const jsonManifest = JSON.parse(await readFile("pack.manifest.json", "utf8"));
+assert.equal(validateManifest(jsonManifest).id, moduleExports.manifest.id);
+assert.equal(
+	jsonManifest.resources.length,
+	moduleExports.manifest.resources.length,
+);

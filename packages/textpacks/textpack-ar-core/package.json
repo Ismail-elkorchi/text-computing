@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-ar-core",
 	"version": "0.1.0",
-	"description": "Source-backed Arabic core language profile generated from IANA, Unicode, and CLDR.",
+	"description": "Arabic core reference textpack resources.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -16,32 +16,18 @@
 		"lint": "biome check src test README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
 		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
 		"check:pack": "npm pack --dry-run",
+		"test:all": "npm run -s build && node test/smoke.mjs && npm run -s check:pack",
 		"test": "npm run test:all",
-		"prepack": "npm run build",
-		"test:all": "npm run -s build && node test/smoke.mjs && npm run -s check:pack"
+		"prepack": "npm run build"
 	},
 	"dependencies": {
 		"@ismail-elkorchi/textpack": "0.1.0"
 	},
-	"license": "SEE LICENSE IN LICENSE.generated.md",
+	"license": "MIT",
 	"files": [
 		"dist",
 		"pack.manifest.json",
-		"resources/ar.core.language-profile.json",
-		"resources/ar.core.orthography.tsv",
-		"resources/ar.core.punctuation.tsv",
-		"resources/ar.core.basic-segmentation.json",
-		"resources/ar.core.quality.json",
-		"resources/ar.core.quality-profile.json",
-		".textpack-generated.json",
-		"licenses",
-		"LICENSE.generated.md",
-		"NOTICE.generated.md",
-		"SOURCES.generated.json",
-		"ATTRIBUTION.generated.md",
-		"COVERAGE.generated.json",
-		"EVALUATION.generated.json",
-		"QUALITY.generated.json",
+		"resources",
 		"README.md",
 		"CHANGELOG.md"
 	],
