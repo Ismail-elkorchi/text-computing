@@ -8749,6 +8749,11 @@ import {
 \tudSyntaxResourcesFromPackAsync,
 } from "@ismail-elkorchi/textdata";
 import {
+\taddViewWithSpanMap,
+\tcreateDocument,
+\ttype TextDocument,
+} from "@ismail-elkorchi/textdoc";
+import {
 \tcandidateEntities,
 \tcreateKnowledgeBase,
 \ttype EntityCandidate,
@@ -8772,6 +8777,7 @@ import {
 } from "@ismail-elkorchi/textlex";
 import {
 \ttype CompiledTextNormProfile,
+\ttype NormalizationViewResult,
 \tnormalizationProfileFromPack,
 \ttype TextNormProfileMode,
 } from "@ismail-elkorchi/textnorm";
@@ -8807,6 +8813,7 @@ import {
 \tanalyzerFromPack,
 \ttype IndexOptions,
 \ttype SearchIndex,
+\ttype SearchToken,
 \tsearchIndexFromPack,
 } from "@ismail-elkorchi/textsearch";
 import { manifest } from "./manifest.js";
@@ -8819,6 +8826,36 @@ const scriptTag = ${JSON.stringify(scriptTag)} as const;
 type UdAnnotationDataset = Awaited<
 \tReturnType<typeof readUdAnnotationDatasetFromPackAsync>
 >;
+
+export interface LanguageDocumentAnalysisOptions {
+\treadonly id?: string;
+\treadonly metadata?: Readonly<Record<string, unknown>>;
+\treadonly lexiconMaxResults?: number;
+\treadonly morphologyMaxResults?: number;
+\treadonly entityMaxCandidates?: number;
+\treadonly entityLanguage?: string;
+\treadonly quality?: DocumentQualityOptions;
+}
+
+export interface LanguageLexicalUnitAnalysis {
+\treadonly segment: TextDataSegment;
+\treadonly lexiconMatches: readonly LexicalMatch[];
+\treadonly morphologyAnalyses: readonly MorphologyAnalysis[];
+}
+
+export interface LanguageDocumentAnalysis {
+\treadonly languageTag: typeof languageTag;
+\treadonly sourceDocument: TextDocument;
+\treadonly normalizedDocument: TextDocument;
+\treadonly entityLinkedDocument: TextDocument;
+\treadonly searchView: NormalizationViewResult;
+\treadonly sentences: readonly TextDataSegment[];
+\treadonly words: readonly TextDataSegment[];
+\treadonly lexicalUnits: readonly TextDataSegment[];
+\treadonly lexicalUnitAnalyses: readonly LanguageLexicalUnitAnalysis[];
+\treadonly searchTokens: readonly SearchToken[];
+\treadonly qualityReport: QualityReport;
+}
 
 export interface ${pack.loader.optionsName}
 \textends Omit<ResolveTextPackComponentsOptions, "resolveComponent"> {
@@ -8920,6 +8957,16 @@ export interface ${runtimeName} {
 \t\t\t>,
 \t\t) => Promise<QualityReport>;
 \t};
+\treadonly document: {
+\t\treadonly analyzeText: (
+\t\t\ttext: string,
+\t\t\toptions?: LanguageDocumentAnalysisOptions,
+\t\t) => Promise<LanguageDocumentAnalysis>;
+\t\treadonly analyzeDocument: (
+\t\t\tdoc: TextDocument,
+\t\t\toptions?: LanguageDocumentAnalysisOptions,
+\t\t) => Promise<LanguageDocumentAnalysis>;
+\t};
 }
 
 async function resolveGeneratedComponent(
@@ -8986,6 +9033,33 @@ function firstSchemaResourceId(
 \ttaskName: string,
 ): string {
 \treturn requireSchemaResourceIds(pack, schemaId, taskName)[0] ?? "";
+}
+
+function sourceText(doc: TextDocument): string {
+\tconst view =
+\t\tdoc.views.raw ??
+\t\tdoc.views[
+\t\t\tObject.keys(doc.views).sort((left, right) =>
+\t\t\t\tleft.localeCompare(right),
+\t\t\t)[0] ?? ""
+\t\t];
+\tif (view === undefined) {
+\t\tthrow new TypeError(\`Document \${doc.id} has no text view.\`);
+\t}
+\treturn view.text;
+}
+
+function ensureSearchView(
+\tdoc: TextDocument,
+\tsearchView: NormalizationViewResult,
+): TextDocument {
+\tif (
+\t\tdoc.views[searchView.view.id] !== undefined &&
+\t\tdoc.spanMaps[searchView.spanMap.id] !== undefined
+\t) {
+\t\treturn doc;
+\t}
+\treturn addViewWithSpanMap(doc, searchView.view, searchView.spanMap);
 }
 
 function syntaxQualityResourceId(
@@ -9225,6 +9299,91 @@ function createLanguageRuntime(
 \t\t);
 \t\treturn qualityProfilesPromise;
 \t};
+\tconst analyzeDocument = async (
+\t\tdoc: TextDocument,
+\t\toptions: LanguageDocumentAnalysisOptions = {},
+\t): Promise<LanguageDocumentAnalysis> => {
+\t\tconst text = sourceText(doc);
+\t\tconst [
+\t\t\tsentences,
+\t\t\twords,
+\t\t\tlexicalUnits,
+\t\t\tnormalization,
+\t\t\tlexicon,
+\t\t\tmorphology,
+\t\t\tkb,
+\t\t\tanalyzer,
+\t\t] = await Promise.all([
+\t\t\topenSegmentation().then((adapter) => adapter.sentences(text)),
+\t\t\topenSegmentation().then((adapter) => adapter.words(text)),
+\t\t\topenSegmentation().then((adapter) => adapter.lexicalUnits(text)),
+\t\t\topenNormalization(),
+\t\t\topenLexicon(),
+\t\t\topenMorphology(),
+\t\t\topenKb(),
+\t\t\topenAnalyzer(),
+\t\t]);
+\t\tconst searchView = normalization.searchView(doc);
+\t\tconst normalizedDocument = ensureSearchView(doc, searchView);
+\t\tconst lexicalUnitAnalyses = await Promise.all(
+\t\t\tlexicalUnits
+\t\t\t\t.filter((segment) => segment.isWordLike)
+\t\t\t\t.map(async (segment) =>
+\t\t\t\t\tObject.freeze({
+\t\t\t\t\t\tsegment,
+\t\t\t\t\t\tlexiconMatches: await lookup(lexicon, segment.text, {
+\t\t\t\t\t\t\tmaxResults: options.lexiconMaxResults ?? 5,
+\t\t\t\t\t\t}),
+\t\t\t\t\t\tmorphologyAnalyses: morphology.analyze(segment.text, {
+\t\t\t\t\t\t\tmaxResults: options.morphologyMaxResults ?? 5,
+\t\t\t\t\t\t}),
+\t\t\t\t\t}),
+\t\t\t\t),
+\t\t);
+\t\tconst entityLinkedDocument = linkEntities(normalizedDocument, kb, {
+\t\t\tlanguage: options.entityLanguage ?? languageTag,
+\t\t\tmaxCandidates: options.entityMaxCandidates ?? 5,
+\t\t});
+\t\tconst qualityReport = await analyzeDocumentQualityFromPack(
+\t\t\tpack,
+\t\t\tentityLinkedDocument,
+\t\t\t{
+\t\t\t\treader: taskReader(reader, "quality"),
+\t\t\t\tresourceId: firstSchemaResourceId(
+\t\t\t\t\tpack,
+\t\t\t\t\t"textquality.profile.v1",
+\t\t\t\t\t"quality",
+\t\t\t\t),
+\t\t\t\t...(options.quality === undefined ? {} : { analysis: options.quality }),
+\t\t\t},
+\t\t);
+\t\treturn Object.freeze({
+\t\t\tlanguageTag,
+\t\t\tsourceDocument: doc,
+\t\t\tnormalizedDocument,
+\t\t\tentityLinkedDocument,
+\t\t\tsearchView,
+\t\t\tsentences,
+\t\t\twords,
+\t\t\tlexicalUnits,
+\t\t\tlexicalUnitAnalyses: Object.freeze(lexicalUnitAnalyses),
+\t\t\tsearchTokens: Object.freeze([...analyzer.analyze(searchView.view.text)]),
+\t\t\tqualityReport,
+\t\t});
+\t};
+\tconst analyzeText = (
+\t\ttext: string,
+\t\toptions: LanguageDocumentAnalysisOptions = {},
+\t) =>
+\t\tanalyzeDocument(
+\t\t\tcreateDocument(text, {
+\t\t\t\t...(options.id === undefined ? {} : { id: options.id }),
+\t\t\t\t...(options.metadata === undefined
+\t\t\t\t\t? {}
+\t\t\t\t\t: { metadata: options.metadata }),
+\t\t\t}),
+\t\t\toptions,
+\t\t);
 
 \treturn Object.freeze({
 \t\tlanguageTag,
@@ -9394,6 +9553,10 @@ function createLanguageRuntime(
 \t\t\t\t\t),
 \t\t\t\t});
 \t\t\t},
+\t\t}),
+\t\tdocument: Object.freeze({
+\t\t\tanalyzeText,
+\t\t\tanalyzeDocument,
 \t\t}),
 \t});
 }
@@ -9680,6 +9843,7 @@ function compositePackageJson(pack) {
 	if (pack.packClass === "language-composite") {
 		Object.assign(dependencies, {
 			"@ismail-elkorchi/textdata": "0.1.0",
+			"@ismail-elkorchi/textdoc": "0.1.0",
 			"@ismail-elkorchi/textkb": "0.1.0",
 			"@ismail-elkorchi/textlex": "0.1.0",
 			"@ismail-elkorchi/textnorm": "0.1.0",
@@ -9708,8 +9872,15 @@ function compositePackageJson(pack) {
 		},
 		scripts: {
 			...PACKAGE_SCRIPTS,
-			"test:all":
-				"npm run -s build && node test/smoke.mjs && node test/negative.mjs && npm run -s check:pack",
+			"test:all": [
+				"npm run -s build",
+				"node test/smoke.mjs",
+				...(hasLanguageCompositeConsumerTest(pack)
+					? ["node test/consumer.mjs"]
+					: []),
+				"node test/negative.mjs",
+				"npm run -s check:pack",
+			].join(" && "),
 		},
 		dependencies,
 		license: packageJsonLicenseField(pack),
@@ -10291,6 +10462,139 @@ assert.equal(typeof runtime.parallel.rows, "function");
 assert.equal(typeof runtime.parallel.links, "function");
 assert.ok((await runtime.quality.resources()).length > 0);
 assert.ok((await runtime.quality.profiles()).length > 0);
+`;
+}
+
+const languageCompositeConsumerTestPackages = new Set([
+	"@ismail-elkorchi/textpack-fr",
+]);
+
+function hasLanguageCompositeConsumerTest(pack) {
+	return (
+		pack.packClass === "language-composite" &&
+		languageCompositeConsumerTestPackages.has(pack.packageName)
+	);
+}
+
+function languageCompositeConsumerTest(pack) {
+	if (!hasLanguageCompositeConsumerTest(pack)) return "";
+	return `import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+
+import { createDocument } from "@ismail-elkorchi/textdoc";
+import { addToIndex, search, termQuery } from "@ismail-elkorchi/textsearch";
+import { ${pack.loader.functionName} } from "../dist/index.js";
+
+const reader = {
+\tasync readText({ descriptor }) {
+\t\treturn readFile(new URL(descriptor.path, descriptor.packageRoot), "utf8");
+\t},
+};
+
+const french = await ${pack.loader.functionName}({
+\treader,
+\tlicensePolicy: "allow-share-alike",
+});
+
+const articleText =
+\t"Réussite personnelle\\nEn France, j'aime apprendre chaque jour et je parle de motivation en Amérique.";
+const article = createDocument(articleText, {
+\tid: "article:consumer-fr-1",
+\tmetadata: {
+\t\ttitle: "Réussite personnelle",
+\t\tsource: "reussite-personnelle-nlp-consumer-style",
+\t},
+});
+
+assert.equal(french.languageTag, "fr");
+assert.equal(french.pack.manifest.packageName, "${pack.packageName}");
+assert.equal(
+\tfrench.pack.manifest.components?.filter(
+\t\t(component) => component.role === "required",
+\t).length,
+\t12,
+);
+
+const analysis = await french.document.analyzeDocument(article, {
+\tentityLanguage: "fr",
+\tentityMaxCandidates: 3,
+\tlexiconMaxResults: 5,
+\tmorphologyMaxResults: 5,
+});
+assert.equal(analysis.languageTag, "fr");
+assert.equal(analysis.sourceDocument.id, article.id);
+assert.ok(analysis.sentences.length > 0);
+assert.ok(analysis.words.length > 0);
+assert.ok(analysis.lexicalUnits.some((segment) => segment.text === "France"));
+assert.ok(analysis.lexicalUnits.some((segment) => segment.text === "Amérique"));
+assert.ok(analysis.lexicalUnits.some((segment) => segment.text === "parle"));
+
+const normalizedText = await french.normalization.normalizeText(
+\tarticleText,
+\t"search",
+);
+assert.ok(normalizedText.includes("reussite personnelle"));
+assert.ok(normalizedText.includes("amerique"));
+
+assert.equal(analysis.normalizedDocument.views["raw:search"]?.kind, "search");
+assert.ok(analysis.normalizedDocument.spanMaps[analysis.searchView.spanMap.id]);
+
+const parleAnalysis = analysis.lexicalUnitAnalyses.find(
+\t(entry) => entry.segment.text === "parle",
+);
+assert.ok(parleAnalysis);
+assert.ok(
+\tparleAnalysis.lexiconMatches.some((match) => match.canonical === "parler"),
+\t"French lexicon lookup should resolve parle -> parler.",
+);
+assert.ok(
+\tparleAnalysis.morphologyAnalyses.some(
+\t\t(morphologyAnalysis) => morphologyAnalysis.lemma === "parler",
+\t),
+\t"French morphology should analyze parle as a form of parler.",
+);
+
+const entityCandidates = await french.kb.candidates("France", {
+\tlanguage: "fr",
+\tmaxCandidates: 3,
+});
+assert.equal(entityCandidates[0]?.label, "France");
+
+assert.ok(
+\tObject.keys(
+\t\tanalysis.entityLinkedDocument.layers["link.entity"]?.annotations ?? {},
+\t).length >= 2,
+\t"French entity linking should annotate France and Amérique.",
+);
+
+const terms = analysis.searchTokens.map((token) => token.term);
+assert.ok(terms.includes("reussite"));
+assert.ok(terms.includes("amerique"));
+
+let searchIndex = await french.search.createIndex({
+\tid: "consumer-fr-search",
+});
+searchIndex = addToIndex(searchIndex, analysis.normalizedDocument, {
+\tstoredFields: { title: "Réussite personnelle" },
+});
+assert.equal(searchIndex.stats.documentCount, 1);
+assert.equal(search(searchIndex, termQuery("reussite")).length, 1);
+
+const corpusResources = await french.corpus.rows();
+assert.equal(
+\tcorpusResources[0]?.descriptor.schemaId,
+\t"textdata.corpus.rows.v1",
+);
+assert.ok((corpusResources[0]?.rows.length ?? 0) > 1000);
+assert.equal(corpusResources[0]?.rows[0]?.languageTag, "fr");
+
+const parallelLinks = await french.parallel.links({ targetLanguage: "en" });
+assert.ok(parallelLinks.length > 1000);
+assert.equal(parallelLinks[0]?.sourceLanguageTag, "fr");
+assert.equal(parallelLinks[0]?.targetLanguageTag, "en");
+
+assert.equal(analysis.qualityReport.target, "document");
+assert.ok((analysis.qualityReport.metrics["readability.word_count"] ?? 0) > 0);
 `;
 }
 
@@ -13290,6 +13594,12 @@ async function packageOutputsFor(pack, context) {
 		outputs.set(`${pack.packageDir}/tsconfig.json`, tsconfigJson());
 		outputs.set(`${pack.packageDir}/tsconfig.build.json`, tsconfigBuildJson());
 		outputs.set(`${pack.packageDir}/test/smoke.mjs`, compositeSmokeTest(pack));
+		if (hasLanguageCompositeConsumerTest(pack)) {
+			outputs.set(
+				`${pack.packageDir}/test/consumer.mjs`,
+				languageCompositeConsumerTest(pack),
+			);
+		}
 		outputs.set(
 			`${pack.packageDir}/test/negative.mjs`,
 			compositeNegativeTest(pack),

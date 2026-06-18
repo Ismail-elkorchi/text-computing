@@ -23,6 +23,7 @@
 	"dependencies": {
 		"@ismail-elkorchi/textpack": "0.1.0",
 		"@ismail-elkorchi/textdata": "0.1.0",
+		"@ismail-elkorchi/textdoc": "0.1.0",
 		"@ismail-elkorchi/textkb": "0.1.0",
 		"@ismail-elkorchi/textlex": "0.1.0",
 		"@ismail-elkorchi/textnorm": "0.1.0",

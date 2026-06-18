@@ -18,11 +18,12 @@
 		"check:pack": "npm pack --dry-run",
 		"test": "npm run test:all",
 		"prepack": "npm run build",
-		"test:all": "npm run -s build && node test/smoke.mjs && node test/negative.mjs && npm run -s check:pack"
+		"test:all": "npm run -s build && node test/smoke.mjs && node test/consumer.mjs && node test/negative.mjs && npm run -s check:pack"
 	},
 	"dependencies": {
 		"@ismail-elkorchi/textpack": "0.1.0",
 		"@ismail-elkorchi/textdata": "0.1.0",
+		"@ismail-elkorchi/textdoc": "0.1.0",
 		"@ismail-elkorchi/textkb": "0.1.0",
 		"@ismail-elkorchi/textlex": "0.1.0",
 		"@ismail-elkorchi/textnorm": "0.1.0",

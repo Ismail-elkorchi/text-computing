@@ -13,7 +13,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:0632f3dc15b4c1c98d2a925423b4dde788dccbafe3f0394e895d318e15ab5dc7",
+      "outputChecksum": "sha256:b081bd85a9c8c674fd326c0c010b7b00ba95763f58ac8c56a22df5c0f427825e",
       "packageDir": "packages/textpacks/textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
       "publishability": {
@@ -603,7 +603,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:9607b5b1650bed1ac344329ccbb801512ed174f5e7846d87bfacfa109da69c12",
+      "outputChecksum": "sha256:39d48ced1a840150fcb8c470e7d6ea6b9418d6d5346b64cfc1aac9b2ab3bfe71",
       "packageDir": "packages/textpacks/textpack-ar-sa",
       "packageName": "@ismail-elkorchi/textpack-ar-sa",
       "publishability": {
@@ -991,7 +991,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:f47ee364f3b59c358b031a80a4cc1eae25cabfe0111c66cf4cca771a25c3b4e3",
+      "outputChecksum": "sha256:72aa4663a2d1ce96d33ff76c53e764f42d064031bde28c472a293f81a3356e35",
       "packageDir": "packages/textpacks/textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
       "publishability": {
@@ -2009,7 +2009,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:1276e95dc22408a888f5219220ea46f021d30b1abd14e2d424b123955f7ce86e",
+      "outputChecksum": "sha256:1c1d0e9e937644039792c153686af31a0d11d3459b07e97866408556747d74a3",
       "packageDir": "packages/textpacks/textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",
       "publishability": {
@@ -2685,7 +2685,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 0,
-      "outputChecksum": "sha256:4fc50c458e8a8d8e6190616f4ebfac432839f991506a6d798370bb4b676ef496",
+      "outputChecksum": "sha256:9b86caefca2bfc1a825bc097f2448b9e8a2b9e6d68187dda9e9d452a406a49fa",
       "packageDir": "packages/textpacks/textpack-fr-sa",
       "packageName": "@ismail-elkorchi/textpack-fr-sa",
       "publishability": {

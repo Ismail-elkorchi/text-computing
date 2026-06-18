@@ -16,6 +16,11 @@ import {
 	udSyntaxResourcesFromPackAsync,
 } from "@ismail-elkorchi/textdata";
 import {
+	addViewWithSpanMap,
+	createDocument,
+	type TextDocument,
+} from "@ismail-elkorchi/textdoc";
+import {
 	candidateEntities,
 	createKnowledgeBase,
 	type EntityCandidate,
@@ -39,6 +44,7 @@ import {
 } from "@ismail-elkorchi/textlex";
 import {
 	type CompiledTextNormProfile,
+	type NormalizationViewResult,
 	normalizationProfileFromPack,
 	type TextNormProfileMode,
 } from "@ismail-elkorchi/textnorm";
@@ -74,6 +80,7 @@ import {
 	analyzerFromPack,
 	type IndexOptions,
 	type SearchIndex,
+	type SearchToken,
 	searchIndexFromPack,
 } from "@ismail-elkorchi/textsearch";
 import { manifest } from "./manifest.js";
@@ -86,6 +93,36 @@ const scriptTag = "Arab" as const;
 type UdAnnotationDataset = Awaited<
 	ReturnType<typeof readUdAnnotationDatasetFromPackAsync>
 >;
+
+export interface LanguageDocumentAnalysisOptions {
+	readonly id?: string;
+	readonly metadata?: Readonly<Record<string, unknown>>;
+	readonly lexiconMaxResults?: number;
+	readonly morphologyMaxResults?: number;
+	readonly entityMaxCandidates?: number;
+	readonly entityLanguage?: string;
+	readonly quality?: DocumentQualityOptions;
+}
+
+export interface LanguageLexicalUnitAnalysis {
+	readonly segment: TextDataSegment;
+	readonly lexiconMatches: readonly LexicalMatch[];
+	readonly morphologyAnalyses: readonly MorphologyAnalysis[];
+}
+
+export interface LanguageDocumentAnalysis {
+	readonly languageTag: typeof languageTag;
+	readonly sourceDocument: TextDocument;
+	readonly normalizedDocument: TextDocument;
+	readonly entityLinkedDocument: TextDocument;
+	readonly searchView: NormalizationViewResult;
+	readonly sentences: readonly TextDataSegment[];
+	readonly words: readonly TextDataSegment[];
+	readonly lexicalUnits: readonly TextDataSegment[];
+	readonly lexicalUnitAnalyses: readonly LanguageLexicalUnitAnalysis[];
+	readonly searchTokens: readonly SearchToken[];
+	readonly qualityReport: QualityReport;
+}
 
 export interface LoadArabicShareAlikeOptions
 	extends Omit<ResolveTextPackComponentsOptions, "resolveComponent"> {
@@ -186,6 +223,16 @@ export interface ArabicShareAlikeRuntime {
 				"reader" | "resourceId" | "resourceIds"
 			>,
 		) => Promise<QualityReport>;
+	};
+	readonly document: {
+		readonly analyzeText: (
+			text: string,
+			options?: LanguageDocumentAnalysisOptions,
+		) => Promise<LanguageDocumentAnalysis>;
+		readonly analyzeDocument: (
+			doc: TextDocument,
+			options?: LanguageDocumentAnalysisOptions,
+		) => Promise<LanguageDocumentAnalysis>;
 	};
 }
 
@@ -332,6 +379,33 @@ function firstSchemaResourceId(
 	taskName: string,
 ): string {
 	return requireSchemaResourceIds(pack, schemaId, taskName)[0] ?? "";
+}
+
+function sourceText(doc: TextDocument): string {
+	const view =
+		doc.views.raw ??
+		doc.views[
+			Object.keys(doc.views).sort((left, right) =>
+				left.localeCompare(right),
+			)[0] ?? ""
+		];
+	if (view === undefined) {
+		throw new TypeError(`Document ${doc.id} has no text view.`);
+	}
+	return view.text;
+}
+
+function ensureSearchView(
+	doc: TextDocument,
+	searchView: NormalizationViewResult,
+): TextDocument {
+	if (
+		doc.views[searchView.view.id] !== undefined &&
+		doc.spanMaps[searchView.spanMap.id] !== undefined
+	) {
+		return doc;
+	}
+	return addViewWithSpanMap(doc, searchView.view, searchView.spanMap);
 }
 
 function syntaxQualityResourceId(
@@ -571,6 +645,91 @@ function createLanguageRuntime(
 		);
 		return qualityProfilesPromise;
 	};
+	const analyzeDocument = async (
+		doc: TextDocument,
+		options: LanguageDocumentAnalysisOptions = {},
+	): Promise<LanguageDocumentAnalysis> => {
+		const text = sourceText(doc);
+		const [
+			sentences,
+			words,
+			lexicalUnits,
+			normalization,
+			lexicon,
+			morphology,
+			kb,
+			analyzer,
+		] = await Promise.all([
+			openSegmentation().then((adapter) => adapter.sentences(text)),
+			openSegmentation().then((adapter) => adapter.words(text)),
+			openSegmentation().then((adapter) => adapter.lexicalUnits(text)),
+			openNormalization(),
+			openLexicon(),
+			openMorphology(),
+			openKb(),
+			openAnalyzer(),
+		]);
+		const searchView = normalization.searchView(doc);
+		const normalizedDocument = ensureSearchView(doc, searchView);
+		const lexicalUnitAnalyses = await Promise.all(
+			lexicalUnits
+				.filter((segment) => segment.isWordLike)
+				.map(async (segment) =>
+					Object.freeze({
+						segment,
+						lexiconMatches: await lookup(lexicon, segment.text, {
+							maxResults: options.lexiconMaxResults ?? 5,
+						}),
+						morphologyAnalyses: morphology.analyze(segment.text, {
+							maxResults: options.morphologyMaxResults ?? 5,
+						}),
+					}),
+				),
+		);
+		const entityLinkedDocument = linkEntities(normalizedDocument, kb, {
+			language: options.entityLanguage ?? languageTag,
+			maxCandidates: options.entityMaxCandidates ?? 5,
+		});
+		const qualityReport = await analyzeDocumentQualityFromPack(
+			pack,
+			entityLinkedDocument,
+			{
+				reader: taskReader(reader, "quality"),
+				resourceId: firstSchemaResourceId(
+					pack,
+					"textquality.profile.v1",
+					"quality",
+				),
+				...(options.quality === undefined ? {} : { analysis: options.quality }),
+			},
+		);
+		return Object.freeze({
+			languageTag,
+			sourceDocument: doc,
+			normalizedDocument,
+			entityLinkedDocument,
+			searchView,
+			sentences,
+			words,
+			lexicalUnits,
+			lexicalUnitAnalyses: Object.freeze(lexicalUnitAnalyses),
+			searchTokens: Object.freeze([...analyzer.analyze(searchView.view.text)]),
+			qualityReport,
+		});
+	};
+	const analyzeText = (
+		text: string,
+		options: LanguageDocumentAnalysisOptions = {},
+	) =>
+		analyzeDocument(
+			createDocument(text, {
+				...(options.id === undefined ? {} : { id: options.id }),
+				...(options.metadata === undefined
+					? {}
+					: { metadata: options.metadata }),
+			}),
+			options,
+		);
 
 	return Object.freeze({
 		languageTag,
@@ -740,6 +899,10 @@ function createLanguageRuntime(
 					),
 				});
 			},
+		}),
+		document: Object.freeze({
+			analyzeText,
+			analyzeDocument,
 		}),
 	});
 }
