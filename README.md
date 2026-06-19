@@ -19,13 +19,26 @@
 - `@ismail-elkorchi/textkb` — knowledge resources, entity linking, sense linking, terminology KB lookup, ontology, thesaurus, and semantic relation package.
 - `@ismail-elkorchi/textquality` — text quality, noisy-text quality, OCR/ATR diagnostics, readability, style, corpus quality, annotation quality, and integrity package.
 - `@ismail-elkorchi/textparallel` — parallel corpus, alignment, translation memory, bilingual terminology, bilingual lexicon, and rule-based transfer package.
+- `@ismail-elkorchi/text-computing` — single developer-facing SDK over runtime engines and generated textpack data packages.
+
+## Developer entrypoint
+
+Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint. Generated `textpack-*` packages are data-only inputs.
+
+```ts
+import { createFetchResourceReader, load } from "@ismail-elkorchi/text-computing";
+import fr from "@ismail-elkorchi/textpack-fr";
+
+const nlp = await load(fr, { reader: createFetchResourceReader() });
+const doc = await nlp("L'Etat francais reconnait Paris.");
+```
 
 ## Generated textpacks
 
 - `@ismail-elkorchi/textpack-language-registry` — Generated source-backed BCP 47 language registry foundation resources.
 - `@ismail-elkorchi/textpack-unicode-17` — Generated source-backed Unicode 17 foundation resources.
 - `@ismail-elkorchi/textpack-cldr-core` — Generated source-backed CLDR core foundation resources.
-- `@ismail-elkorchi/textpack-ar` — Generated Arabic developer composite; 12/12 ready for the declared MSA graph with local KB, corpus, parallel, and quality payloads.
+- `@ismail-elkorchi/textpack-ar` — Generated Arabic data composite; 12/12 ready for the declared MSA graph with local KB, corpus, parallel, and quality payloads.
 - `@ismail-elkorchi/textpack-ar-core` — Generated source-backed Arabic core language profile from IANA, Unicode, and CLDR.
 - `@ismail-elkorchi/textpack-ar-corpus` — Generated source-backed Arabic Tatoeba corpus pack with local sentence rows and quality evidence.
 - `@ismail-elkorchi/textpack-ar-kb` — Generated source-backed Arabic KB composite over Arabic WordNet plus a local Wikidata Arabic core extract.
@@ -36,13 +49,13 @@
 - `@ismail-elkorchi/textpack-ar-parallel` — Generated source-backed Arabic Tatoeba parallel pack with local link rows and quality evidence.
 - `@ismail-elkorchi/textpack-ar-quality` — Generated Arabic quality wrapper over materialized KB, corpus, parallel, and required component evidence.
 - `@ismail-elkorchi/textpack-ar-quality-sa` — Generated Arabic share-alike quality composite over materialized payloads and isolated syntax evidence.
-- `@ismail-elkorchi/textpack-ar-sa` — Generated Arabic share-alike developer composite; 12/12 ready for the declared MSA graph.
+- `@ismail-elkorchi/textpack-ar-sa` — Generated Arabic share-alike data composite; 12/12 ready for the declared MSA graph.
 - `@ismail-elkorchi/textpack-ar-search` — Generated source-backed Arabic MSA search analyzer resources from CLDR, CAMeL Morph, and Arabic WordNet.
 - `@ismail-elkorchi/textpack-ar-segmentation` — Generated source-backed Arabic MSA segmentation composite over CAMeL Morph tokenization resources.
 - `@ismail-elkorchi/textpack-ar-syntax` — Generated policy-expanded Arabic syntax wrapper over the share-alike isolated UD NYUAD syntax graph.
 - `@ismail-elkorchi/textpack-ar-syntax-sa` — Generated share-alike isolated Arabic syntax composite over UD NYUAD resources.
 - `@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa` — Generated source-backed, share-alike isolated Arabic UD NYUAD syntax and tagging resources without raw text fields.
-- `@ismail-elkorchi/textpack-en` — Generated English developer composite; 12/12 ready with local KB, corpus, parallel, and quality payloads.
+- `@ismail-elkorchi/textpack-en` — Generated English data composite; 12/12 ready with local KB, corpus, parallel, and quality payloads.
 - `@ismail-elkorchi/textpack-en-core` — Generated source-backed English core language profile from IANA, Unicode, CLDR, ESDB, and SCOWLv2.
 - `@ismail-elkorchi/textpack-en-corpus` — Generated source-backed English Tatoeba corpus pack with local sentence rows and quality evidence.
 - `@ismail-elkorchi/textpack-en-inflection-scowl` — Generated source-backed English lookup analyzer/generator, POS, and inflection resources from SCOWLv2.
@@ -60,7 +73,7 @@
 - `@ismail-elkorchi/textpack-wikidata-ar` — Generated source-backed Arabic Wikidata core extract with local entity, alias, relation, KB, and quality resources.
 - `@ismail-elkorchi/textpack-wikidata-en` — Generated source-backed English Wikidata core extract with local entity, alias, relation, KB, and quality resources.
 - `@ismail-elkorchi/textpack-wikidata-fr` — Generated source-backed French Wikidata core extract with local entity, alias, relation, KB, and quality resources.
-- `@ismail-elkorchi/textpack-fr` — Generated French developer composite; 12/12 ready for the declared graph with local KB, corpus, parallel, and quality payloads.
+- `@ismail-elkorchi/textpack-fr` — Generated French data composite; 12/12 ready for the declared graph with local KB, corpus, parallel, and quality payloads.
 - `@ismail-elkorchi/textpack-fr-corpus` — Generated source-backed French Tatoeba corpus pack with local sentence rows and quality evidence.
 - `@ismail-elkorchi/textpack-fr-core` — Generated source-backed French core language profile from IANA, Unicode, and CLDR.
 - `@ismail-elkorchi/textpack-fr-kb` — Generated source-backed French KB composite over a local Wikidata French core extract.
@@ -73,7 +86,7 @@
 - `@ismail-elkorchi/textpack-fr-parallel` — Generated source-backed French Tatoeba parallel pack with local link rows and quality evidence.
 - `@ismail-elkorchi/textpack-fr-quality` — Generated French quality wrapper over materialized KB, corpus, parallel, and required component evidence.
 - `@ismail-elkorchi/textpack-fr-quality-sa` — Generated French share-alike quality composite over materialized payloads and isolated component evidence.
-- `@ismail-elkorchi/textpack-fr-sa` — Generated French share-alike developer composite; 12/12 ready for the declared graph.
+- `@ismail-elkorchi/textpack-fr-sa` — Generated French share-alike data composite; 12/12 ready for the declared graph.
 - `@ismail-elkorchi/textpack-fr-search` — Generated policy-expanded French search wrapper over the share-alike isolated Lexique search component.
 - `@ismail-elkorchi/textpack-fr-search-sa` — Generated share-alike isolated French search composite over Lexique 3.83 resources.
 - `@ismail-elkorchi/textpack-fr-segmentation` — Generated source-backed French Unicode/CLDR segmentation profiles.

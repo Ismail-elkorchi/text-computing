@@ -1,0 +1,27 @@
+{
+  "entityCount": 292648,
+  "kbId": "wordnet-en-kb",
+  "kind": "knowledge-base",
+  "languageTags": [
+    "en"
+  ],
+  "relationCount": 355064,
+  "resourceRefs": [
+    {
+      "recordCount": 185129,
+      "resourceId": "wordnet-en-senses",
+      "role": "senses"
+    },
+    {
+      "recordCount": 107519,
+      "resourceId": "wordnet-en-synsets",
+      "role": "synsets"
+    },
+    {
+      "recordCount": 355064,
+      "resourceId": "wordnet-en-relations",
+      "role": "relations"
+    }
+  ],
+  "schemaVersion": "1"
+}

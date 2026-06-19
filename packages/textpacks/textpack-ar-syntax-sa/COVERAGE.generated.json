@@ -1,0 +1,82 @@
+{
+  "capabilities": {},
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:textpack-ar-syntax-sa:required-component-graph"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "syntax",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "Generated component reports and evaluation records are available for the required share-alike syntax component."
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides UD Arabic NYUAD dependency-label, dependency-integrity, sentence-profile, and token/part-of-speech tagging signals under the share-alike policy surface."
+      ],
+      "slot": "syntax",
+      "status": "task-supported"
+    }
+  ],
+  "components": [
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "available-optional",
+      "licensePolicy": "allow-share-alike",
+      "packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+      "reason": "Share-alike isolated UD Arabic NYUAD annotation-derived syntax and tagging resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:textpack-ar-syntax-sa:required-component-graph"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-syntax-sa",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [],
+  "resourceKinds": [],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "ar"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Arab"
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:wordnet-ar",
+	"name": "Arabic WordNet Pack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-wordnet-ar",
+	"targets": {
+		"languages": [
+			"ar"
+		],
+		"scripts": [
+			"Arab"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [
+		{
+			"id": "wordnet-ar-lexical-entries",
+			"kind": "lexicon",
+			"path": "resources/wordnet-ar.lexical-entries.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-senses",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.senses.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-synsets",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.synsets.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.relations.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-quality",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-ar.quality.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wordnet-ar-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/wordnet-ar.lexicon.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textlex.lexicon.v1"
+		},
+		{
+			"id": "wordnet-ar-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.kb.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wordnet-ar-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-ar.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textquality.profile.v1"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"resourceIds": [
+				"wordnet-ar-lexical-entries",
+				"wordnet-ar-lexicon-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wordnet-ar-lexicon-canonical",
+					"schemaId": "textlex.lexicon.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-lexical-entries",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Arabic WordNet lexical entries are available as generated lexicon resources."
+			],
+			"capabilities": {
+				"terminology": "lexicon",
+				"extraction": "gazetteer"
+			}
+		},
+		{
+			"slot": "kb",
+			"status": "task-supported",
+			"resourceIds": [
+				"wordnet-ar-senses",
+				"wordnet-ar-synsets",
+				"wordnet-ar-relations",
+				"wordnet-ar-kb-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wordnet-ar-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-senses",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-synsets",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Arabic WordNet senses, synsets, and semantic relations are available as generated KB resources."
+			],
+			"capabilities": {
+				"terminology": "kb",
+				"extraction": "gazetteer"
+			}
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"resourceIds": [
+				"wordnet-ar-quality",
+				"wordnet-ar-quality-profile"
+			],
+			"bindings": [
+				{
+					"role": "evidence",
+					"resourceId": "wordnet-ar-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wordnet-ar-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Generated quality profile records lexical-entry, sense, synset, and relation counts."
+			]
+		}
+	],
+	"license": "CC-BY-4.0",
+	"citations": [
+		"Arabic WordNet 4.1.0."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

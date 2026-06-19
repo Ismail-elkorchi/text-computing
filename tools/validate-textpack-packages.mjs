@@ -10,27 +10,16 @@ const TEXTPACKS_DIR = path.join(PACKAGES_DIR, "textpacks");
 const MANIFEST_SCHEMA_PATH = "schemas/textpack-manifest.schema.json";
 const SOURCE_POLICY_GENERATED_PATH =
 	"tools/textpack-forge/source-policy.generated.json";
+const GENERATED_INVENTORY_PATH = "docs/textpacks/generated-inventory.json";
 const COVERAGE_REPORT_SCHEMA_PATH =
 	"schemas/textpack-coverage-report.schema.json";
 const EVALUATION_RECORD_SCHEMA_PATH =
 	"schemas/textpack-evaluation-record.schema.json";
 const CANONICAL_RESOURCE_SCHEMA_PATHS = new Map([
-	[
-		"textdata.corpus.v1",
-		"schemas/textpack-corpus-resource.schema.json",
-	],
-	[
-		"textkb.knowledge-base.v1",
-		"schemas/textpack-kb-resource.schema.json",
-	],
-	[
-		"textlex.lexicon.v1",
-		"schemas/textpack-lexicon-resource.schema.json",
-	],
-	[
-		"textlex.morphology.v1",
-		"schemas/textpack-morphology-resource.schema.json",
-	],
+	["textdata.corpus.v1", "schemas/textpack-corpus-resource.schema.json"],
+	["textkb.knowledge-base.v1", "schemas/textpack-kb-resource.schema.json"],
+	["textlex.lexicon.v1", "schemas/textpack-lexicon-resource.schema.json"],
+	["textlex.morphology.v1", "schemas/textpack-morphology-resource.schema.json"],
 	[
 		"textnorm.profile.v1",
 		"schemas/textpack-normalization-resource.schema.json",
@@ -51,10 +40,7 @@ const CANONICAL_RESOURCE_SCHEMA_PATHS = new Map([
 		"textdata.segmentation-profile.v1",
 		"schemas/textpack-segmentation-resource.schema.json",
 	],
-	[
-		"textdata.syntax.v1",
-		"schemas/textpack-syntax-resource.schema.json",
-	],
+	["textdata.syntax.v1", "schemas/textpack-syntax-resource.schema.json"],
 ]);
 const CANONICAL_RESOURCE_SCHEMA_IDS = new Set([
 	...CANONICAL_RESOURCE_SCHEMA_PATHS.keys(),
@@ -124,70 +110,6 @@ const policyExpandedWrapperSourcePolicyClasses = new Set([
 	"attribution",
 	"share-alike",
 ]);
-const EXPECTED_TEXTPACK_DIRS = [
-	"packages/textpacks/textpack-ar",
-	"packages/textpacks/textpack-ar-core",
-	"packages/textpacks/textpack-ar-corpus",
-	"packages/textpacks/textpack-ar-kb",
-	"packages/textpacks/textpack-ar-lexicon",
-	"packages/textpacks/textpack-ar-morphology",
-	"packages/textpacks/textpack-ar-msa-morphology",
-	"packages/textpacks/textpack-ar-normalization",
-	"packages/textpacks/textpack-ar-parallel",
-	"packages/textpacks/textpack-ar-quality",
-	"packages/textpacks/textpack-ar-quality-sa",
-	"packages/textpacks/textpack-ar-sa",
-	"packages/textpacks/textpack-ar-search",
-	"packages/textpacks/textpack-ar-segmentation",
-	"packages/textpacks/textpack-ar-syntax",
-	"packages/textpacks/textpack-ar-syntax-sa",
-	"packages/textpacks/textpack-ar-syntax-ud-nyuad-sa",
-	"packages/textpacks/textpack-cldr-core",
-	"packages/textpacks/textpack-en",
-	"packages/textpacks/textpack-en-core",
-	"packages/textpacks/textpack-en-corpus",
-	"packages/textpacks/textpack-en-inflection-scowl",
-	"packages/textpacks/textpack-en-kb",
-	"packages/textpacks/textpack-en-lexicon",
-	"packages/textpacks/textpack-en-morphology",
-	"packages/textpacks/textpack-en-normalization",
-	"packages/textpacks/textpack-en-parallel",
-	"packages/textpacks/textpack-en-quality",
-	"packages/textpacks/textpack-en-search",
-	"packages/textpacks/textpack-en-segmentation",
-	"packages/textpacks/textpack-en-syntax",
-	"packages/textpacks/textpack-en-syntax-ud-gumreddit",
-	"packages/textpacks/textpack-en-wordlist-esdb",
-	"packages/textpacks/textpack-foundation",
-	"packages/textpacks/textpack-fr",
-	"packages/textpacks/textpack-fr-core",
-	"packages/textpacks/textpack-fr-corpus",
-	"packages/textpacks/textpack-fr-kb",
-	"packages/textpacks/textpack-fr-lexicon",
-	"packages/textpacks/textpack-fr-lexicon-sa",
-	"packages/textpacks/textpack-fr-lexique-sa",
-	"packages/textpacks/textpack-fr-morphology",
-	"packages/textpacks/textpack-fr-morphology-sa",
-	"packages/textpacks/textpack-fr-normalization",
-	"packages/textpacks/textpack-fr-parallel",
-	"packages/textpacks/textpack-fr-quality",
-	"packages/textpacks/textpack-fr-quality-sa",
-	"packages/textpacks/textpack-fr-sa",
-	"packages/textpacks/textpack-fr-search",
-	"packages/textpacks/textpack-fr-search-sa",
-	"packages/textpacks/textpack-fr-segmentation",
-	"packages/textpacks/textpack-fr-syntax",
-	"packages/textpacks/textpack-fr-syntax-sa",
-	"packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
-	"packages/textpacks/textpack-fr-unimorph-sa",
-	"packages/textpacks/textpack-language-registry",
-	"packages/textpacks/textpack-unicode-17",
-	"packages/textpacks/textpack-wikidata-ar",
-	"packages/textpacks/textpack-wikidata-en",
-	"packages/textpacks/textpack-wikidata-fr",
-	"packages/textpacks/textpack-wordnet-ar",
-	"packages/textpacks/textpack-wordnet-en",
-];
 
 function fail(message, details) {
 	console.error(message);
@@ -389,6 +311,27 @@ async function collectTextpackPackageDirs() {
 		.sort((left, right) => left.localeCompare(right));
 }
 
+function inventoryPackageDir(entry) {
+	if (typeof entry.packageId === "string" && entry.packageId.length > 0) {
+		return `packages/textpacks/${entry.packageId}`;
+	}
+	expect(
+		typeof entry.packageName === "string" && entry.packageName.length > 0,
+		"Generated inventory entries must declare packageId or packageName.",
+		entry,
+	);
+	return `packages/textpacks/${entry.packageName.split("/").at(-1)}`;
+}
+
+async function expectedTextpackPackageDirsFromInventory() {
+	const inventory = await readJson(GENERATED_INVENTORY_PATH);
+	expect(
+		Array.isArray(inventory.packages),
+		`${GENERATED_INVENTORY_PATH} must declare packages.`,
+	);
+	return sorted(inventory.packages.map((entry) => inventoryPackageDir(entry)));
+}
+
 function assertFamilyCount(packageName, family, minimumCount, label) {
 	expect(
 		family.resources.length >= minimumCount,
@@ -413,10 +356,7 @@ const RESOURCE_GROUP_SCHEMA_IDS = {
 		"textnorm.rules.v1",
 		"textnorm.policy.v1",
 	]),
-	morphology: new Set([
-		"textlex.morphology.v1",
-		"textlex.morphology.rows.v1",
-	]),
+	morphology: new Set(["textlex.morphology.v1", "textlex.morphology.rows.v1"]),
 	syntax: new Set([
 		"textdata.syntax.v1",
 		"textdata.syntax-table.v1",
@@ -438,6 +378,103 @@ const RESOURCE_GROUP_SCHEMA_IDS = {
 	]),
 	quality: new Set(["textquality.profile.v1", "textquality.evidence.v1"]),
 };
+const TASK_RUNNABLE_SLOT_STATUSES = new Set([
+	"task-supported",
+	"feature-complete",
+]);
+const RUNTIME_OWNER_SCHEMA_PREFIXES = [
+	["textdata.", "@ismail-elkorchi/textdata"],
+	["textkb.", "@ismail-elkorchi/textkb"],
+	["textlex.", "@ismail-elkorchi/textlex"],
+	["textnorm.", "@ismail-elkorchi/textnorm"],
+	["textparallel.", "@ismail-elkorchi/textparallel"],
+	["textquality.", "@ismail-elkorchi/textquality"],
+	["textsearch.", "@ismail-elkorchi/textsearch"],
+];
+
+function runtimeOwnerPackageForSlotResource(slotName, resource) {
+	const schemaId = resource?.schemaId ?? "";
+	if (slotName === "corpus" && schemaId.startsWith("textdata.corpus.")) {
+		return "@ismail-elkorchi/textcorpus";
+	}
+	if (slotName === "parallel" && schemaId.startsWith("textparallel.")) {
+		return "@ismail-elkorchi/textparallel";
+	}
+	for (const [prefix, ownerPackage] of RUNTIME_OWNER_SCHEMA_PREFIXES) {
+		if (schemaId.startsWith(prefix)) return ownerPackage;
+	}
+	return undefined;
+}
+
+function assertCapabilitySlotBindings(
+	packageName,
+	manifestPath,
+	slot,
+	resourceById,
+) {
+	const slotResourceIds = new Set(slot.resourceIds ?? []);
+	const runtimeOwnedResources = [...slotResourceIds]
+		.map((resourceId) => resourceById.get(resourceId))
+		.filter(
+			(resource) =>
+				runtimeOwnerPackageForSlotResource(slot.slot, resource) !== undefined,
+		);
+	const bindings = slot.bindings ?? [];
+	if (
+		TASK_RUNNABLE_SLOT_STATUSES.has(slot.status) &&
+		runtimeOwnedResources.length > 0
+	) {
+		expect(
+			bindings.some((binding) => binding.required === true),
+			`${manifestPath} task-runnable slot ${slot.slot} must declare at least one required runtime binding.`,
+		);
+	}
+	for (const binding of bindings) {
+		const resource = resourceById.get(binding.resourceId);
+		expect(
+			resource !== undefined,
+			`${manifestPath} capability slot ${slot.slot} binding references unknown resource ${binding.resourceId}.`,
+		);
+		expect(
+			slotResourceIds.has(binding.resourceId),
+			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} must also be listed in resourceIds.`,
+		);
+		expect(
+			resource.schemaId === binding.schemaId,
+			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} schemaId must match its resource descriptor.`,
+			{ actual: binding.schemaId, expected: resource.schemaId },
+		);
+		const expectedOwner = runtimeOwnerPackageForSlotResource(
+			slot.slot,
+			resource,
+		);
+		expect(
+			expectedOwner !== undefined,
+			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} has no runtime owner for schema ${resource.schemaId}.`,
+		);
+		expect(
+			binding.ownerPackage === expectedOwner,
+			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} ownerPackage must match canonical schema ownership.`,
+			{ actual: binding.ownerPackage, expected: expectedOwner },
+		);
+	}
+	const requiredFileBackedBindings = bindings.filter((binding) => {
+		const resource = resourceById.get(binding.resourceId);
+		return binding.required === true && resource?.path !== undefined;
+	});
+	if (requiredFileBackedBindings.length > 0) {
+		expect(
+			slot.readerRequired === true,
+			`${manifestPath} capability slot ${slot.slot} must set readerRequired when required bindings point to file-backed resources.`,
+		);
+	}
+	if (slot.readerRequired === true) {
+		expect(
+			requiredFileBackedBindings.length > 0,
+			`${packageName} capability slot ${slot.slot} sets readerRequired without a required file-backed binding.`,
+		);
+	}
+}
 
 function payloadForResource(runtimePack, resource) {
 	const value = runtimePack.resources[resource.id];
@@ -461,7 +498,10 @@ function payloadForResource(runtimePack, resource) {
 
 function resourceGroup(runtimePack, groupName) {
 	const schemaIds = RESOURCE_GROUP_SCHEMA_IDS[groupName];
-	expect(schemaIds !== undefined, `Unknown textpack resource group ${groupName}.`);
+	expect(
+		schemaIds !== undefined,
+		`Unknown textpack resource group ${groupName}.`,
+	);
 	const resources = runtimePack.manifest.resources
 		.filter((resource) => schemaIds.has(resource.schemaId))
 		.map((resource) =>
@@ -486,7 +526,11 @@ function assertFirstPayload(packageName, family, payloadType, label) {
 	);
 }
 
-function assertCompositeComponents(packageName, runtimePack, expectedComponents) {
+function assertCompositeComponents(
+	packageName,
+	runtimePack,
+	expectedComponents,
+) {
 	const requiredComponents = (runtimePack.manifest.components ?? []).filter(
 		(component) => component.role === "required",
 	);
@@ -495,8 +539,9 @@ function assertCompositeComponents(packageName, runtimePack, expectedComponents)
 		`${packageName} composite must not expose direct resource payloads.`,
 	);
 	expect(
-		JSON.stringify(requiredComponents.map((component) => component.packageName)) ===
-			JSON.stringify(expectedComponents),
+		JSON.stringify(
+			requiredComponents.map((component) => component.packageName),
+		) === JSON.stringify(expectedComponents),
 		`${packageName} composite must require the expected audited components.`,
 		{
 			actual: requiredComponents.map((component) => component.packageName),
@@ -1198,11 +1243,11 @@ function sourcePolicyAllowsGeneratedPublishability(
 
 const packDirs = await collectTextpackPackageDirs();
 const textpackRuntime = await maybeImportTextpackRuntime();
-
+const expectedTextpackDirs = await expectedTextpackPackageDirsFromInventory();
 expect(
-	JSON.stringify(packDirs) === JSON.stringify(EXPECTED_TEXTPACK_DIRS),
-	"Generated textpack package graph does not match the active foundation graph.",
-	{ expected: EXPECTED_TEXTPACK_DIRS, actual: packDirs },
+	JSON.stringify(packDirs) === JSON.stringify(expectedTextpackDirs),
+	"Generated textpack package folders must match the forge inventory.",
+	{ expected: expectedTextpackDirs, actual: packDirs },
 );
 
 let publishableCount = 0;
@@ -1218,6 +1263,10 @@ for (const packDir of packDirs) {
 	const evaluationReport = await readJson(
 		`${packDir}/EVALUATION.generated.json`,
 	);
+	const readmeText = await readFile(
+		path.join(ROOT, `${packDir}/README.md`),
+		"utf8",
+	);
 
 	expect(
 		packageJson.name === manifest.packageName,
@@ -1226,6 +1275,18 @@ for (const packDir of packDirs) {
 	expect(
 		packageJson.version === manifest.version,
 		`${manifestPath} version must match package.json.`,
+	);
+	expect(
+		readmeText.includes(
+			"This package is a generated data package. It exports structural textpack data only.",
+		),
+		`${packageJson.name} README must declare the generated textpack data-only boundary.`,
+	);
+	expect(
+		readmeText.includes(
+			"Use `@ismail-elkorchi/text-computing` for developer-facing NLP task APIs.",
+		),
+		`${packageJson.name} README must point task APIs to @ismail-elkorchi/text-computing.`,
 	);
 	expect(
 		packageJson.license === expectedPackageLicense(manifest),
@@ -1302,7 +1363,7 @@ for (const packDir of packDirs) {
 			]);
 			expect(
 				allowedSources.has(sourceId),
-				`${packageJson.name} targets ${languageTag}, but ${sourceId} is not declared in sources.md first, second-wave, or isolated lanes for that language.`,
+				`${packageJson.name} targets ${languageTag}, but ${sourceId} is not declared in generated source-policy first, second-wave, or isolated lanes for that language.`,
 			);
 		}
 		if (generatedMarker.publishable === true) {
@@ -1370,7 +1431,10 @@ for (const packDir of packDirs) {
 		for (const resourceFile of packageJson.files.filter((entry) =>
 			entry.startsWith("resources/"),
 		)) {
-			assertPackageRelativePath(resourceFile, `${packageJson.name} files entry`);
+			assertPackageRelativePath(
+				resourceFile,
+				`${packageJson.name} files entry`,
+			);
 			expect(
 				await fileExists(`${packDir}/${resourceFile}`),
 				`${packageJson.name} files entry ${resourceFile} must exist.`,
@@ -1427,12 +1491,14 @@ for (const packDir of packDirs) {
 		`${packageJson.name} EVALUATION.generated.json must be a generated evaluation report.`,
 	);
 	const resourceIds = new Set();
+	const resourceById = new Map();
 	for (const resource of manifest.resources) {
 		expect(
 			!resourceIds.has(resource.id),
 			`${manifestPath} duplicates resource id ${resource.id}.`,
 		);
 		resourceIds.add(resource.id);
+		resourceById.set(resource.id, resource);
 		if (resource.path !== undefined) {
 			assertPackageRelativePath(
 				resource.path,
@@ -1447,7 +1513,10 @@ for (const packDir of packDirs) {
 				await fileExists(relativePath),
 				`${manifest.packageName} missing resource ${resource.path}.`,
 			);
-			const encodedContent = await readFile(path.join(ROOT, relativePath), "utf8");
+			const encodedContent = await readFile(
+				path.join(ROOT, relativePath),
+				"utf8",
+			);
 			const content = decodedResourceText(resource.path, encodedContent);
 			const nonEmptyLineCount = content
 				.split(/\r?\n/u)
@@ -1459,8 +1528,7 @@ for (const packDir of packDirs) {
 			);
 			assertNeutralTableHeader(manifest.packageName, resource, content);
 			expect(
-				typeof resource.schemaId === "string" &&
-					resource.schemaId.length > 0,
+				typeof resource.schemaId === "string" && resource.schemaId.length > 0,
 				`${manifest.packageName} resource ${resource.id} must declare schemaId.`,
 			);
 			expect(
@@ -1472,8 +1540,9 @@ for (const packDir of packDirs) {
 					resource.metadata.canonicalSchema === undefined,
 				`${manifest.packageName} resource ${resource.id} must use schemaId, not metadata.canonicalSchema.`,
 			);
-			const validateCanonicalResource =
-				validateCanonicalResourceBySchemaId.get(resource.schemaId);
+			const validateCanonicalResource = validateCanonicalResourceBySchemaId.get(
+				resource.schemaId,
+			);
 			if (validateCanonicalResource !== undefined) {
 				expect(
 					resource.format === "json",
@@ -1556,6 +1625,12 @@ for (const packDir of packDirs) {
 				`${manifestPath} capability slot ${slot.slot} references unknown artifact ${artifactId}.`,
 			);
 		}
+		assertCapabilitySlotBindings(
+			packageJson.name,
+			manifestPath,
+			slot,
+			resourceById,
+		);
 	}
 
 	const builtPack = await maybeImportBuiltPack(packDir);
@@ -1569,168 +1644,22 @@ for (const packDir of packDirs) {
 			`${packageJson.name} must export resources.`,
 		);
 		expect(
-			builtPack.default?.manifest === builtPack.manifest,
-			`${packageJson.name} default manifest must reuse manifest export.`,
+			builtPack.pack !== undefined,
+			`${packageJson.name} must export pack.`,
 		);
 		expect(
-			builtPack.default?.resources === builtPack.resources,
-			`${packageJson.name} default resources must reuse resources export.`,
+			builtPack.default === builtPack.pack,
+			`${packageJson.name} default export must be the pack export.`,
+		);
+		expect(
+			builtPack.pack?.manifest?.packageName === packageJson.name,
+			`${packageJson.name} pack manifest packageName must match package.json.`,
 		);
 		assertDeepEqualJson(
 			builtPack.manifest,
 			manifest,
 			`${packageJson.name} built manifest`,
 		);
-		if (packageJson.name === "@ismail-elkorchi/textpack-en-lexicon") {
-			expect(
-				typeof builtPack.loadEnglishLexicon === "function",
-				`${packageJson.name} must export loadEnglishLexicon.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-en") {
-			expect(
-				typeof builtPack.loadEnglish === "function",
-				`${packageJson.name} must export loadEnglish.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-morphology") {
-			expect(
-				typeof builtPack.loadArabicMorphology === "function",
-				`${packageJson.name} must export loadArabicMorphology.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-kb") {
-			expect(
-				typeof builtPack.loadArabicKnowledgeBase === "function",
-				`${packageJson.name} must export loadArabicKnowledgeBase.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-lexicon") {
-			expect(
-				typeof builtPack.loadArabicLexicon === "function",
-				`${packageJson.name} must export loadArabicLexicon.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-quality") {
-			expect(
-				typeof builtPack.loadArabicQuality === "function",
-				`${packageJson.name} must export loadArabicQuality.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-quality-sa") {
-			expect(
-				typeof builtPack.loadArabicQualityShareAlike === "function",
-				`${packageJson.name} must export loadArabicQualityShareAlike.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-syntax") {
-			expect(
-				typeof builtPack.loadArabicSyntax === "function",
-				`${packageJson.name} must export loadArabicSyntax.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar") {
-			expect(
-				typeof builtPack.loadArabic === "function",
-				`${packageJson.name} must export loadArabic.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-sa") {
-			expect(
-				typeof builtPack.loadArabicShareAlike === "function",
-				`${packageJson.name} must export loadArabicShareAlike.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-ar-segmentation") {
-			expect(
-				typeof builtPack.loadArabicSegmentation === "function",
-				`${packageJson.name} must export loadArabicSegmentation.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-en-morphology") {
-			expect(
-				typeof builtPack.loadEnglishMorphology === "function",
-				`${packageJson.name} must export loadEnglishMorphology.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-en-quality") {
-			expect(
-				typeof builtPack.loadEnglishQuality === "function",
-				`${packageJson.name} must export loadEnglishQuality.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-en-search") {
-			expect(
-				typeof builtPack.loadEnglishSearch === "function",
-				`${packageJson.name} must export loadEnglishSearch.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-en-kb") {
-			expect(
-				typeof builtPack.loadEnglishKnowledgeBase === "function",
-				`${packageJson.name} must export loadEnglishKnowledgeBase.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-en-syntax") {
-			expect(
-				typeof builtPack.loadEnglishSyntax === "function",
-				`${packageJson.name} must export loadEnglishSyntax.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-kb") {
-			expect(
-				typeof builtPack.loadFrenchKnowledgeBase === "function",
-				`${packageJson.name} must export loadFrenchKnowledgeBase.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-lexicon") {
-			expect(
-				typeof builtPack.loadFrenchLexicon === "function",
-				`${packageJson.name} must export loadFrenchLexicon.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-morphology") {
-			expect(
-				typeof builtPack.loadFrenchMorphology === "function",
-				`${packageJson.name} must export loadFrenchMorphology.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-quality") {
-			expect(
-				typeof builtPack.loadFrenchQuality === "function",
-				`${packageJson.name} must export loadFrenchQuality.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-search") {
-			expect(
-				typeof builtPack.loadFrenchSearch === "function",
-				`${packageJson.name} must export loadFrenchSearch.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-syntax") {
-			expect(
-				typeof builtPack.loadFrenchSyntax === "function",
-				`${packageJson.name} must export loadFrenchSyntax.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr") {
-			expect(
-				typeof builtPack.loadFrench === "function",
-				`${packageJson.name} must export loadFrench.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-quality-sa") {
-			expect(
-				typeof builtPack.loadFrenchQualityShareAlike === "function",
-				`${packageJson.name} must export loadFrenchQualityShareAlike.`,
-			);
-		}
-		if (packageJson.name === "@ismail-elkorchi/textpack-fr-sa") {
-			expect(
-				typeof builtPack.loadFrenchShareAlike === "function",
-				`${packageJson.name} must export loadFrenchShareAlike.`,
-			);
-		}
 		const builtResources = builtPack.resources;
 		expect(
 			isRecord(builtResources),

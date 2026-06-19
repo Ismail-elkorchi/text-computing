@@ -2,7 +2,9 @@
 
 Deterministic processor graph, planning, execution, streaming, cache, and pack-composition runtime for final `TextDocument` values.
 
-`textpipeline` owns orchestration. Task algorithms live in processors supplied by callers, lower runtime packages, reference packs, or later packages that implement the final `TextProcessor` contract.
+`textpipeline` owns orchestration. Task algorithms live in processors supplied by callers, lower runtime packages, or later processor packages that implement the final `TextProcessor` contract.
+
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
 
 ## Install
 

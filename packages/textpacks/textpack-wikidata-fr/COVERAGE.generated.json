@@ -1,0 +1,183 @@
+{
+  "capabilities": {
+    "extraction": "gazetteer",
+    "terminology": "kb"
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:wikidata-fr:alias-coverage",
+        "eval:wikidata-fr:entity-extract",
+        "eval:wikidata-fr:relation-coverage"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "The Wikidata French extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump."
+      ],
+      "resourceIds": [
+        "wikidata-fr-entities",
+        "wikidata-fr-aliases",
+        "wikidata-fr-relations",
+        "wikidata-fr-kb-canonical"
+      ],
+      "slot": "kb",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "resource-inventory",
+      "limitations": [],
+      "resourceIds": [
+        "wikidata-fr-quality",
+        "wikidata-fr-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608"
+      ],
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "kb"
+      },
+      "notes": [
+        "Wikidata French entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+        "The local extract is scoped and does not claim complete Wikidata dump coverage."
+      ],
+      "resourceIds": [
+        "wikidata-fr-entities",
+        "wikidata-fr-aliases",
+        "wikidata-fr-relations",
+        "wikidata-fr-kb-canonical"
+      ],
+      "slot": "kb",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations."
+      ],
+      "resourceIds": [
+        "wikidata-fr-quality",
+        "wikidata-fr-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:wikidata-fr:alias-coverage",
+    "eval:wikidata-fr:entity-extract",
+    "eval:wikidata-fr:relation-coverage"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 79125,
+      "checksum": "sha256:0e96289b045c28692bcc7deb038b42418d496159c7a82125116be9532f329162",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 6102,
+      "path": "resources/wikidata-fr.aliases.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-fr-aliases",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 296517,
+      "checksum": "sha256:618e4ab92aee11dfe1a002f9bf2920617610d28ae3773d366f16723fb1a2442e",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 9378,
+      "path": "resources/wikidata-fr.entities.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-fr-entities",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 523,
+      "checksum": "sha256:7fed608bae8857594d1274ee0b23adeabddc41eb2e1b31d3b0a02d1b9317c3dd",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 27,
+      "path": "resources/wikidata-fr.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-fr-kb-canonical",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 969,
+      "checksum": "sha256:5e65208de66fd8a1aec1fbf81e635829c8d4ae134be16af5b25b973a69bd8c76",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 26,
+      "path": "resources/wikidata-fr.quality.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-fr-quality",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2789,
+      "checksum": "sha256:30d9f50cfa22854e71e8ed76e201ce9cdd2bde5f8370fbcc8348fbdd2a67e189",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 101,
+      "path": "resources/wikidata-fr.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-fr-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 50729,
+      "checksum": "sha256:90729f4eae6c1daad5b6ada6b38cc3eae7470efe8964f78d5c3e29049ae92040",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 9378,
+      "path": "resources/wikidata-fr.relations.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-fr-relations",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "knowledge-base",
+    "quality-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "fr"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+	"name": "@ismail-elkorchi/textpack-fr-normalization",
+	"version": "0.1.0",
+	"description": "Source-backed French normalization profile generated from Unicode, CLDR, and Tatoeba-observed French surface evidence.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./pack.manifest.json": "./pack.manifest.json"
+	},
+	"scripts": {
+		"build": "node ../../../tools/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"check:pack": "npm pack --dry-run",
+		"test": "npm run test:all",
+		"prepack": "npm run build",
+		"test:all": "npm run -s build && node test/smoke.mjs && npm run -s check:pack"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textpack": "0.1.0"
+	},
+	"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+	"files": [
+		"dist",
+		"pack.manifest.json",
+		"resources/fr.normalization-rules.tsv",
+		"resources/fr.normalization.json",
+		"resources/fr.normalization-elision-prefixes.tsv",
+		"resources/fr.normalization-contraction-forms.tsv",
+		"resources/fr.normalization-gold-cases.json",
+		"resources/fr.normalization.quality.json",
+		"resources/fr.normalization.quality-profile.json",
+		".textpack-generated.json",
+		"LICENSE.generated.md",
+		"NOTICE.generated.md",
+		"SOURCES.generated.json",
+		"ATTRIBUTION.generated.md",
+		"COVERAGE.generated.json",
+		"EVALUATION.generated.json",
+		"QUALITY.generated.json",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	}
+}

@@ -1,0 +1,59 @@
+{
+	"name": "@ismail-elkorchi/text-computing",
+	"version": "0.1.0",
+	"description": "Single-entrypoint SDK for Text Computing NLP workflows.",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
+		"lint": "biome check src test scripts README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"test:prepare": "npm --prefix ../.. run -s build",
+		"test:node:run": "node --test test/suite.ts test/runtime/node.test.ts test/consumer/en-consumer-smoke.ts test/consumer/fr-reussite-smoke.ts test/consumer/ar-consumer-smoke.ts",
+		"test:deno:run": "deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
+		"test:bun:run": "if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
+		"test:browser:run": "node scripts/browser-smoke.mjs",
+		"test:workers:run": "node scripts/cloudflare-workers-smoke.mjs",
+		"test:node": "npm run test:prepare && npm run test:node:run",
+		"test:deno": "npm run test:prepare && npm run test:deno:run",
+		"test:bun": "npm run test:prepare && npm run test:bun:run",
+		"test:browser": "npm run test:prepare && npm run test:browser:run",
+		"test:workers": "npm run test:prepare && npm run test:workers:run",
+		"test:all": "npm run test:prepare && npm run test:node:run && npm run test:deno:run && npm run test:bun:run && npm run test:browser:run && npm run test:workers:run",
+		"test": "npm run test:all",
+		"prepack": "npm run build"
+	},
+	"dependencies": {
+		"@ismail-elkorchi/textcorpus": "0.1.0",
+		"@ismail-elkorchi/textdata": "0.1.0",
+		"@ismail-elkorchi/textdoc": "0.1.0",
+		"@ismail-elkorchi/textkb": "0.1.0",
+		"@ismail-elkorchi/textlex": "0.1.0",
+		"@ismail-elkorchi/textnorm": "0.1.0",
+		"@ismail-elkorchi/textpack": "0.1.0",
+		"@ismail-elkorchi/textparallel": "0.1.0",
+		"@ismail-elkorchi/textpipeline": "0.1.0",
+		"@ismail-elkorchi/textquality": "0.1.0",
+		"@ismail-elkorchi/textsearch": "0.1.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"esbuild": "0.28.0",
+		"typescript": "6.0.3"
+	},
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	}
+}

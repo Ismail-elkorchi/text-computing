@@ -1,8 +1,11 @@
 import {
 	openResourceJson,
 	openResourceTable,
+	openResourceText,
+	requireSingleTaskResourceBinding,
 	type TextPack,
 	type TextPackResourceReader,
+	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 import {
 	type AliasEntryInput,
@@ -23,6 +26,12 @@ import {
 export interface KnowledgeBaseFromPackOptions {
 	readonly resourceId?: string;
 	readonly reader?: TextPackResourceReader;
+}
+
+export interface KnowledgeBaseSliceFromPackOptions
+	extends KnowledgeBaseFromPackOptions {
+	readonly mentions: readonly string[];
+	readonly language?: string;
 }
 
 export interface EntityLinkerFromPackOptions
@@ -94,6 +103,39 @@ function expectString(value: unknown, path: string): string {
 
 function optionalString(value: unknown): string | undefined {
 	return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function normalizedMention(value: string): string {
+	return value
+		.normalize("NFKC")
+		.toLocaleLowerCase()
+		.replace(/\s+/gu, " ")
+		.trim();
+}
+
+function parseMatchingRows(
+	text: string,
+	matches: (row: Readonly<Record<string, string>>) => boolean,
+): readonly Readonly<Record<string, string>>[] {
+	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
+	while (lines.length > 0 && lines[lines.length - 1] === "") lines.pop();
+	const header = lines[0]?.split("\t") ?? [];
+	if (header.length === 0) return [];
+	const rows: Readonly<Record<string, string>>[] = [];
+	for (const line of lines.slice(1)) {
+		if (line.length === 0) continue;
+		const cells = line.split("\t");
+		const row: Record<string, string> = {};
+		for (let index = 0; index < header.length; index += 1) {
+			const column = header[index];
+			if (column !== undefined && column.length > 0) {
+				row[column] = cells[index] ?? "";
+			}
+		}
+		const frozen = Object.freeze(row);
+		if (matches(frozen)) rows.push(frozen);
+	}
+	return Object.freeze(rows);
 }
 
 function stringList(value: readonly string[] | undefined): readonly string[] {
@@ -194,19 +236,30 @@ function selectedKbResourceId(
 	pack: TextPack,
 	options: KnowledgeBaseFromPackOptions,
 ): string {
-	if (options.resourceId !== undefined) return options.resourceId;
-	const resources = pack.manifest.resources
-		.filter((resource) => resource.schemaId === "textkb.knowledge-base.v1")
-		.sort((left, right) => left.id.localeCompare(right.id));
-	if (resources.length === 1) return resources[0]?.id ?? "";
-	if (resources.length === 0) {
-		throw new TypeError("No textkb.knowledge-base.v1 resource is present.");
-	}
-	throw new TypeError(
-		`Multiple textkb.knowledge-base.v1 resources are present: ${resources
-			.map((resource) => resource.id)
-			.join(", ")}.`,
-	);
+	return requireSingleTaskResourceBinding(pack, {
+		slot: "kb",
+		ownerPackage: "@ismail-elkorchi/textkb",
+		schemaId: "textkb.knowledge-base.v1",
+		role: "primary",
+		...(options.resourceId === undefined
+			? {}
+			: { resourceId: options.resourceId }),
+	}).resourceId;
+}
+
+function selectedKbResourceIds(
+	pack: TextPack,
+	options: KnowledgeBaseFromPackOptions,
+): readonly string[] {
+	return taskResourceIdsFromBindings(pack, {
+		slot: "kb",
+		ownerPackage: "@ismail-elkorchi/textkb",
+		schemaId: "textkb.knowledge-base.v1",
+		role: "primary",
+		...(options.resourceId === undefined
+			? {}
+			: { resourceId: options.resourceId }),
+	});
 }
 
 function assertNeutralWikiUrlColumns(
@@ -515,6 +568,176 @@ export async function knowledgeBaseFromPack(
 		},
 		allowExternalRelationEndpoints: true,
 	});
+}
+
+function labelMatchesMention(
+	labels: readonly CanonicalLabel[] | undefined,
+	mentionKeys: ReadonlySet<string>,
+	language: string | undefined,
+): boolean {
+	return (labels ?? []).some(
+		(label) =>
+			(language === undefined || label.languageTag === language) &&
+			mentionKeys.has(normalizedMention(label.value)),
+	);
+}
+
+function inlineEntityAliases(
+	entity: CanonicalEntity,
+): readonly AliasEntryInput[] {
+	const aliases: AliasEntryInput[] = [];
+	for (const label of entity.labels) {
+		aliases.push(
+			Object.freeze({
+				alias: label.value,
+				targetKind: "entity" as const,
+				targetId: entity.entityId,
+				matchKind: "label" as const,
+				language: label.languageTag,
+				source: "textpack",
+			}),
+		);
+	}
+	for (const alias of entity.aliases ?? []) {
+		aliases.push(
+			Object.freeze({
+				alias: alias.value,
+				targetKind: "entity" as const,
+				targetId: entity.entityId,
+				matchKind: "alias" as const,
+				language: alias.languageTag,
+				source: "textpack",
+			}),
+		);
+	}
+	return Object.freeze(aliases);
+}
+
+export async function knowledgeBaseSliceFromPack(
+	pack: TextPack,
+	options: KnowledgeBaseSliceFromPackOptions,
+): Promise<KnowledgeBase> {
+	const mentionKeys = new Set(
+		options.mentions
+			.map((mention) => normalizedMention(mention))
+			.filter((mention) => mention.length > 0),
+	);
+	const resourceIds = selectedKbResourceIds(pack, options);
+	const entities = new Map<string, EntityRecord>();
+	const aliases: AliasEntryInput[] = [];
+	const relations: SemanticRelation[] = [];
+	const entityIds = new Set<string>();
+	const languageTags = new Set<string>();
+
+	for (const resourceId of resourceIds) {
+		const resource = await openResourceJson<CanonicalKnowledgeBaseResource>(
+			pack,
+			resourceId,
+			options.reader,
+		);
+		for (const tag of resource.languageTags ?? []) languageTags.add(tag);
+		const language = options.language ?? resource.languageTags?.[0];
+
+		for (const entity of resource.entities ?? []) {
+			if (
+				!labelMatchesMention(entity.labels, mentionKeys, language) &&
+				!labelMatchesMention(entity.aliases, mentionKeys, language)
+			) {
+				continue;
+			}
+			const record = canonicalEntity(entity);
+			upsertEntity(entities, record);
+			entityIds.add(record.id);
+			aliases.push(...inlineEntityAliases(entity));
+		}
+
+		const refs = resource.resourceRefs ?? [];
+		for (const ref of refs.filter(
+			(candidate) => candidate.role === "aliases",
+		)) {
+			const text = await openResourceText(pack, ref.resourceId, options.reader);
+			for (const row of parseMatchingRows(
+				text,
+				(row) =>
+					(options.language === undefined ||
+						row.languageTag === options.language) &&
+					row.alias !== undefined &&
+					mentionKeys.has(normalizedMention(row.alias)),
+			)) {
+				const alias = aliasTableRow(row);
+				aliases.push(alias);
+				entityIds.add(alias.targetId);
+			}
+		}
+
+		for (const ref of refs.filter(
+			(candidate) => candidate.role === "entities",
+		)) {
+			const text = await openResourceText(pack, ref.resourceId, options.reader);
+			for (const row of parseMatchingRows(
+				text,
+				(row) =>
+					(row.entityId !== undefined && entityIds.has(row.entityId)) ||
+					((options.language === undefined ||
+						row.languageTag === options.language) &&
+						row.label !== undefined &&
+						mentionKeys.has(normalizedMention(row.label))),
+			)) {
+				const record = entityTableRow(row);
+				upsertEntity(entities, record);
+				entityIds.add(record.id);
+			}
+		}
+
+		for (const ref of refs.filter(
+			(candidate) => candidate.role === "relations",
+		)) {
+			const text = await openResourceText(pack, ref.resourceId, options.reader);
+			for (const row of parseMatchingRows(
+				text,
+				(row) =>
+					(row.sourceId !== undefined && entityIds.has(row.sourceId)) ||
+					(row.targetId !== undefined && entityIds.has(row.targetId)),
+			)) {
+				relations.push(relationTableRow(row));
+			}
+		}
+	}
+
+	const knownAliases = aliases.filter((alias) => entityIds.has(alias.targetId));
+	return createKnowledgeBase({
+		id: `${pack.manifest.id}:kb-slice`,
+		entities: [...entities.values()],
+		aliases: knownAliases,
+		relations: uniqueRelations(relations),
+		metadata: {
+			resourceIds: [...resourceIds],
+			schemaId: "textkb.knowledge-base.v1",
+			mentions: [...mentionKeys].sort((left, right) =>
+				left.localeCompare(right),
+			),
+			languageTags: [...languageTags].sort((left, right) =>
+				left.localeCompare(right),
+			),
+		},
+		allowExternalRelationEndpoints: true,
+	});
+}
+
+export async function candidateEntitiesFromPack(
+	pack: TextPack,
+	mention: string,
+	options: KnowledgeBaseFromPackOptions & EntityLinkOptions = {},
+): Promise<readonly EntityCandidate[]> {
+	const kb = await knowledgeBaseSliceFromPack(pack, {
+		...(options.resourceId === undefined
+			? {}
+			: { resourceId: options.resourceId }),
+		...(options.reader === undefined ? {} : { reader: options.reader }),
+		mentions: [mention],
+		...(options.language === undefined ? {} : { language: options.language }),
+	});
+	return Object.freeze(candidateEntities(kb, mention, options));
 }
 
 export async function entityLinkerFromPack(

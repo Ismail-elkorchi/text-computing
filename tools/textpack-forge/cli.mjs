@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import {
 	access,
 	mkdir,
+	readdir,
 	readFile,
 	rename,
 	rm,
@@ -1341,7 +1342,7 @@ function validateCompositeSpec(spec, knownPackageNames) {
 		"version",
 		"packClass",
 		"supportLevel",
-		"loader",
+		"display",
 		"targets",
 		"components",
 		"capabilitySlots",
@@ -1364,14 +1365,9 @@ function validateCompositeSpec(spec, knownPackageNames) {
 	);
 	assertRelativePath(spec.packageDir, `${spec.packageName} packageDir`);
 	expect(
-		typeof spec.loader.functionName === "string" &&
-			spec.loader.functionName.length > 0,
-		`${spec.packageName} loader.functionName must be a non-empty string.`,
-	);
-	expect(
-		typeof spec.loader.languageName === "string" &&
-			spec.loader.languageName.length > 0,
-		`${spec.packageName} loader.languageName must be a non-empty string.`,
+		typeof spec.display.languageName === "string" &&
+			spec.display.languageName.length > 0,
+		`${spec.packageName} display.languageName must be a non-empty string.`,
 	);
 	expect(
 		Array.isArray(spec.components) && spec.components.length > 0,
@@ -1422,8 +1418,124 @@ function generatedGapNotes(manifest, generatedKind, mode = "source-backed") {
 		}));
 }
 
+const runtimeOwnerBySchemaPrefix = [
+	["textdata.", "@ismail-elkorchi/textdata"],
+	["textkb.", "@ismail-elkorchi/textkb"],
+	["textlex.", "@ismail-elkorchi/textlex"],
+	["textnorm.", "@ismail-elkorchi/textnorm"],
+	["textparallel.", "@ismail-elkorchi/textparallel"],
+	["textquality.", "@ismail-elkorchi/textquality"],
+	["textsearch.", "@ismail-elkorchi/textsearch"],
+];
+
+function runtimeOwnerPackageFor(slotName, resource) {
+	const schemaId = resource.schemaId ?? "";
+	if (slotName === "corpus" && schemaId.startsWith("textdata.corpus.")) {
+		return "@ismail-elkorchi/textcorpus";
+	}
+	if (slotName === "parallel" && schemaId.startsWith("textparallel.")) {
+		return "@ismail-elkorchi/textparallel";
+	}
+	for (const [prefix, ownerPackage] of runtimeOwnerBySchemaPrefix) {
+		if (schemaId.startsWith(prefix)) return ownerPackage;
+	}
+	return undefined;
+}
+
+function taskBindingRoleFor(slotName, resource) {
+	const schemaId = resource.schemaId ?? "";
+	if (schemaId === "textquality.evidence.v1") return "evidence";
+	if (slotName === "quality" || schemaId === "textquality.profile.v1") {
+		return "quality";
+	}
+	if (
+		schemaId.includes(".rows.") ||
+		schemaId.includes(".table.") ||
+		resource.kind === "alignment-table" ||
+		resource.kind === "dataset" ||
+		String(resource.format ?? "").includes("tsv")
+	) {
+		return "table";
+	}
+	if (resource.id.includes("annotation") || schemaId.includes("annotation")) {
+		return "annotation";
+	}
+	if (resource.id.includes("index") || schemaId.includes("index")) {
+		return "index";
+	}
+	if (resource.kind.endsWith("-profile") || schemaId.includes("profile")) {
+		return "profile";
+	}
+	if (schemaId.length > 0) return "primary";
+	return "metadata";
+}
+
+function inferredTaskBindings(slot, resourcesById) {
+	const bindings = [];
+	for (const resourceId of slot.resourceIds ?? []) {
+		const resource = resourcesById.get(resourceId);
+		if (resource === undefined || typeof resource.schemaId !== "string") {
+			continue;
+		}
+		const ownerPackage = runtimeOwnerPackageFor(slot.slot, resource);
+		if (ownerPackage === undefined) continue;
+		bindings.push({
+			role: taskBindingRoleFor(slot.slot, resource),
+			resourceId,
+			schemaId: resource.schemaId,
+			required: true,
+			ownerPackage,
+		});
+	}
+	return bindings.sort(
+		(left, right) =>
+			left.ownerPackage.localeCompare(right.ownerPackage) ||
+			left.role.localeCompare(right.role) ||
+			left.resourceId.localeCompare(right.resourceId) ||
+			left.schemaId.localeCompare(right.schemaId),
+	);
+}
+
+function withInferredCapabilityBindings(manifest) {
+	const resourcesById = new Map(
+		manifest.resources.map((resource) => [resource.id, resource]),
+	);
+	return {
+		...manifest,
+		capabilitySlots: manifest.capabilitySlots.map((slot) => {
+			const bindings =
+				slot.bindings ?? inferredTaskBindings(slot, resourcesById);
+			const readerRequired =
+				slot.readerRequired === true ||
+				bindings.some((binding) => {
+					const resource = resourcesById.get(binding.resourceId);
+					return binding.required === true && resource?.path !== undefined;
+				});
+			return {
+				slot: slot.slot,
+				status: slot.status,
+				...(slot.resourceIds === undefined
+					? {}
+					: { resourceIds: slot.resourceIds }),
+				...(slot.artifactIds === undefined
+					? {}
+					: { artifactIds: slot.artifactIds }),
+				...(bindings.length === 0 ? {} : { bindings }),
+				...(slot.prerequisites === undefined
+					? {}
+					: { prerequisites: slot.prerequisites }),
+				...(readerRequired ? { readerRequired: true } : {}),
+				...(slot.notes === undefined ? {} : { notes: slot.notes }),
+				...(slot.capabilities === undefined
+					? {}
+					: { capabilities: slot.capabilities }),
+			};
+		}),
+	};
+}
+
 function manifestFor(packSpec, context) {
-	const manifest = cloneJson(packSpec.manifest);
+	const manifest = withInferredCapabilityBindings(cloneJson(packSpec.manifest));
 	const gapNotes = generatedGapNotes(
 		manifest,
 		"concrete pack",
@@ -1440,7 +1552,7 @@ function manifestFor(packSpec, context) {
 }
 
 function compositeManifestFor(spec, context) {
-	const manifest = {
+	const manifest = withInferredCapabilityBindings({
 		schemaVersion: "1",
 		id: `pack:${spec.packageName.replace("@ismail-elkorchi/textpack-", "")}`,
 		name: spec.name,
@@ -1455,7 +1567,7 @@ function compositeManifestFor(spec, context) {
 		capabilitySlots: spec.capabilitySlots,
 		license: spec.license,
 		citations: spec.citations,
-	};
+	});
 	const gapNotes = generatedGapNotes(
 		manifest,
 		"recipe composite pack",
@@ -8549,89 +8661,106 @@ export const manifest: TextPackManifest = ${jsonFile(manifest).trimEnd()} as con
 
 function indexTs() {
 	return `${generatedHeader()}export { manifest } from "./manifest.js";
+export { pack } from "./pack.js";
 export { resources } from "./resources.js";
+
+import { pack } from "./pack.js";
+
+export default pack;
+`;
+}
+
+function packTs(pack) {
+	if (isCompositePack(pack)) return compositePackTs(pack);
+	return `${generatedHeader()}import { createPack } from "@ismail-elkorchi/textpack";
 
 import { manifest } from "./manifest.js";
 import { resources } from "./resources.js";
 
-export default { manifest, resources };
+export const pack = createPack(manifest, resources);
 `;
 }
 
-function languageRuntimeInterfaceName(pack) {
-	const name = pack.loader.languageName.replace(/[^A-Za-z0-9_$]+/gu, "");
-	return `${name.length === 0 ? "Language" : name}Runtime`;
+function componentImportIdentifier(index) {
+	return `componentPack${index}`;
 }
 
-const componentLicensePolicyOrder = [
-	"default",
-	"allow-attribution",
-	"allow-share-alike",
-	"allow-copyleft",
-	"local-only",
-];
-
-const componentArtifactPolicyOrder = ["none", "locked", "fetch-explicit"];
-
-function maxComponentPolicy(components, field, order, fallback) {
-	let maxIndex = order.indexOf(fallback);
-	for (const component of components) {
-		const value = component[field] ?? fallback;
-		const index = order.indexOf(value);
-		if (index > maxIndex) maxIndex = index;
-	}
-	return order[maxIndex] ?? fallback;
-}
-
-function compositeIndexTs(pack) {
+function compositePackTs(pack) {
+	const requiredComponents = pack.components.filter(
+		(component) => component.role === "required",
+	);
+	const componentImports = requiredComponents
+		.map((component, index) => ({
+			component,
+			line: `import ${componentImportIdentifier(index)} from ${JSON.stringify(component.packageName)};`,
+		}))
+		.sort((left, right) =>
+			left.component.packageName.localeCompare(right.component.packageName),
+		)
+		.map((entry) => entry.line)
+		.join("\n");
+	const componentArrayInline = `[basePack${requiredComponents
+		.map((_, index) => `, ${componentImportIdentifier(index)}`)
+		.join("")}]`;
+	const componentArray =
+		componentArrayInline.length <= 80
+			? componentArrayInline
+			: `[
+\t\tbasePack,
+${requiredComponents
+	.map((_, index) => `\t\t${componentImportIdentifier(index)},`)
+	.join("\n")}
+\t]`;
+	const composePackStatement =
+		`const composedPack = composePacks(${componentArrayInline}, composeOptions);`
+			.length <= 80
+			? `const composedPack = composePacks(${componentArrayInline}, composeOptions);`
+			: `const composedPack = composePacks(
+\t${componentArray},
+\tcomposeOptions,
+);`;
 	const conflictPolicy = [
 		"language-composite",
 		"language-component-composite",
 		"foundation-composite",
 	].includes(pack.packClass)
-		? `"first"`
-		: `"error"`;
-	const defaultLicensePolicy = maxComponentPolicy(
-		pack.components,
-		"licensePolicy",
-		componentLicensePolicyOrder,
-		"default",
-	);
-	const defaultArtifactPolicy = maxComponentPolicy(
-		pack.components,
-		"artifactPolicy",
-		componentArtifactPolicyOrder,
-		"none",
-	);
-	const oneLineLoaderDeclaration = `export async function ${pack.loader.functionName}(options: ${pack.loader.optionsName} = {}) {`;
-	const loaderDeclaration =
-		oneLineLoaderDeclaration.length <= 80
-			? oneLineLoaderDeclaration
-			: `export async function ${pack.loader.functionName}(
-\toptions: ${pack.loader.optionsName} = {},
-) {`;
-	const cases = pack.components
-		.map((component) => {
-			const loader = pack.componentLoaders?.[component.packageName];
-			if (loader !== undefined) {
-				const loaderAccess = /^[A-Za-z_$][\w$]*$/u.test(loader)
-					? `module.${loader}`
-					: `module[${JSON.stringify(loader)}]`;
-				return `\t\tcase ${JSON.stringify(component.packageName)}: {
-\t\t\tconst module = await import(component.packageName);
-\t\t\tconst loader = ${loaderAccess};
-\t\t\tif (typeof loader !== "function") {
-\t\t\t\tthrow new TypeError(
-\t\t\t\t\t\`Generated component resolver for \${component.packageName} did not export ${loader}.\`,
-\t\t\t\t);
-\t\t\t}
-\t\t\treturn loader(options);
-\t\t}`;
-			}
-			return `\t\tcase ${JSON.stringify(component.packageName)}:
-\t\t\treturn import(component.packageName);`;
-		})
-		.join("\n");
+		? "first"
+		: "error";
+	const importBlock =
+		componentImports.length === 0 ? "" : `\n${componentImports}\n`;
+	return `${generatedHeader()}import {
+\tcomposePacks,
+\tcreatePack,
+\ttype PackComposeOptions,
+} from "@ismail-elkorchi/textpack";${importBlock}
+import { manifest } from "./manifest.js";
+import { resources } from "./resources.js";
+
+const basePack = createPack(manifest, resources);
+const composeOptions: PackComposeOptions = {
+\tid: manifest.id,
+\tname: manifest.name,
+\tversion: manifest.version,
+\tpackageName: manifest.packageName,
+\tconflictPolicy: ${JSON.stringify(conflictPolicy)},
+\t...(manifest.license === undefined ? {} : { license: manifest.license }),
+\t...(manifest.citations === undefined
+\t\t? {}
+\t\t: { citations: manifest.citations }),
+};
+${composePackStatement}
+const composedManifest = {
+\t...composedPack.manifest,
+\t...(manifest.components === undefined
+\t\t? {}
+\t\t: { components: manifest.components }),
+};
+
+export const pack = createPack(composedManifest, composedPack.resources);
+`;
+}
+
+function compositeIndexTs(pack) {
 	const languageSupportExports =
 		pack.languageSupport === true
 			? `export type {
@@ -8648,1102 +8777,12 @@ export {
 `
 			: "";
 	return `${generatedHeader()}${languageSupportExports}export { manifest } from "./manifest.js";
+export { pack } from "./pack.js";
 export { resources } from "./resources.js";
 
-import {
-\tloadPack,
-\ttype ResolveTextPackComponentsOptions,
-\tresolvePackComponents,
-\ttype TextPackComponent,
-} from "@ismail-elkorchi/textpack";
-import { manifest } from "./manifest.js";
-import { resources } from "./resources.js";
+import { pack } from "./pack.js";
 
-export interface ${pack.loader.optionsName}
-\textends Omit<ResolveTextPackComponentsOptions, "resolveComponent"> {
-\treadonly resolveComponent?: ResolveTextPackComponentsOptions["resolveComponent"];
-}
-
-async function resolveGeneratedComponent(
-\tcomponent: TextPackComponent,
-\toptions: ${pack.loader.optionsName},
-): Promise<unknown> {
-\tvoid options;
-\tswitch (component.packageName) {
-${cases}
-\t\tdefault:
-\t\t\tthrow new TypeError(
-\t\t\t\t\`No generated resolver entry for \${component.packageName}.\`,
-\t\t\t);
-\t}
-}
-
-${loaderDeclaration}
-\treturn resolvePackComponents(await loadPack({ manifest, resources }), {
-\t\t...options,
-\t\tlicensePolicy: options.licensePolicy ?? ${JSON.stringify(defaultLicensePolicy)},
-\t\tartifactPolicy: options.artifactPolicy ?? ${JSON.stringify(defaultArtifactPolicy)},
-\t\tconflictPolicy: options.conflictPolicy ?? ${conflictPolicy},
-\t\tresolveComponent:
-\t\t\toptions.resolveComponent ??
-\t\t\t((component) => resolveGeneratedComponent(component, options)),
-\t});
-}
-
-export default { manifest, resources, ${pack.loader.functionName} };
-`;
-}
-
-function languageCompositeIndexTs(pack) {
-	const conflictPolicy = `"first"`;
-	const defaultLicensePolicy = maxComponentPolicy(
-		pack.components,
-		"licensePolicy",
-		componentLicensePolicyOrder,
-		"default",
-	);
-	const defaultArtifactPolicy = maxComponentPolicy(
-		pack.components,
-		"artifactPolicy",
-		componentArtifactPolicyOrder,
-		"none",
-	);
-	const cases = pack.components
-		.map((component) => {
-			const loader = pack.componentLoaders?.[component.packageName];
-			if (loader !== undefined) {
-				const loaderAccess = /^[A-Za-z_$][\w$]*$/u.test(loader)
-					? `module.${loader}`
-					: `module[${JSON.stringify(loader)}]`;
-				return `\t\tcase ${JSON.stringify(component.packageName)}: {
-\t\t\tconst module = await import(component.packageName);
-\t\t\tconst loader = ${loaderAccess};
-\t\t\tif (typeof loader !== "function") {
-\t\t\t\tthrow new TypeError(
-\t\t\t\t\t\`Generated component resolver for \${component.packageName} did not export ${loader}.\`,
-\t\t\t\t);
-\t\t\t}
-\t\t\treturn loader(options);
-\t\t}`;
-			}
-			return `\t\tcase ${JSON.stringify(component.packageName)}:
-\t\t\treturn import(component.packageName);`;
-		})
-		.join("\n");
-	const runtimeName = languageRuntimeInterfaceName(pack);
-	const languageTag = pack.manifest.targets.languages?.[0] ?? "und";
-	const scriptTag = pack.manifest.targets.scripts?.[0] ?? "Zyyy";
-	return `${generatedHeader()}export { manifest } from "./manifest.js";
-export { resources } from "./resources.js";
-
-import {
-\ttype CorpusDocumentsFromPackOptions,
-\tcorpusDocumentsFromPack,
-\ttype TextCorpus,
-\ttype TextCorpusFromPackOptions,
-\ttextCorpusFromPack,
-} from "@ismail-elkorchi/textcorpus";
-import {
-\tcorpusRowsFromPack,
-\treadUdAnnotationDatasetFromPackAsync,
-\tsegmentationAdapterFromPack,
-\ttype TextDataSegment,
-\ttype TextDataSegmentationAdapter,
-\ttype TextDataTableResource,
-\ttype UdAnnotationRecord,
-\ttype UdSyntaxPackResources,
-\tudAnnotationRecordsFromPackAsync,
-\tudSyntaxResourcesFromPackAsync,
-} from "@ismail-elkorchi/textdata";
-import {
-\taddViewWithSpanMap,
-\tcreateDocument,
-\ttype TextDocument,
-} from "@ismail-elkorchi/textdoc";
-import {
-\tcandidateEntities,
-\tcreateKnowledgeBase,
-\ttype EntityCandidate,
-\ttype EntityLinkOptions,
-\ttype KnowledgeBase,
-\tknowledgeBaseFromPack,
-\tlinkEntities,
-\ttype TextPackEntityLinker,
-} from "@ismail-elkorchi/textkb";
-import {
-\ttype LexicalMatch,
-\ttype Lexicon,
-\ttype LookupOptions,
-\tlookup,
-\ttype MorphologyAnalysis,
-\ttype MorphologyGeneration,
-\ttype MorphologyIndex,
-\ttype MorphologyParadigm,
-\tmergedLexiconFromPackAsync,
-\tmorphologyIndexFromPackAsync,
-} from "@ismail-elkorchi/textlex";
-import {
-\ttype CompiledTextNormProfile,
-\ttype NormalizationViewResult,
-\tnormalizationProfileFromPack,
-\ttype TextNormProfileMode,
-} from "@ismail-elkorchi/textnorm";
-import {
-\tloadPack,
-\ttype ResolveTextPackComponentsOptions,
-\tresolvePackComponents,
-\ttype TextPack,
-\ttype TextPackComponent,
-\ttype TextPackResourceReader,
-} from "@ismail-elkorchi/textpack";
-import {
-\ttype ParallelCorpus,
-\ttype ParallelLinkRow,
-\ttype ParallelRowsFromPackOptions,
-\ttype ParallelTableResource,
-\tparallelCorpusFromPack,
-\tparallelLinkRowsFromPack,
-\tparallelTablesFromPack,
-} from "@ismail-elkorchi/textparallel";
-import {
-\tcreatePipeline,
-\tcreatePipelineResourceRegistry,
-\ttype PipelineDiagnostic,
-\ttype PipelineTraceEvent,
-\ttype RunOptions,
-\trunPipeline,
-\ttype TextPipeline,
-\ttype TextProcessor,
-} from "@ismail-elkorchi/textpipeline";
-import {
-\tanalyzeDocumentQualityFromPack,
-\ttype DocumentQualityOptions,
-\ttype QualityProfile,
-\ttype QualityProfileFromPackOptions,
-\ttype QualityReport,
-\tqualityProfileFromPack,
-\tqualityResourcesFromPack,
-\ttype TextQualityPackResource,
-} from "@ismail-elkorchi/textquality";
-import {
-\ttype AddOptions,
-\ttype Analyzer,
-\taddToIndex,
-\tanalyzerFromPack,
-\ttype IndexOptions,
-\ttype SearchIndex,
-\ttype SearchToken,
-\tsearchIndexFromPack,
-} from "@ismail-elkorchi/textsearch";
-import { manifest } from "./manifest.js";
-import { resources } from "./resources.js";
-
-const languageTag = ${JSON.stringify(languageTag)} as const;
-const languageName = ${JSON.stringify(pack.loader.languageName)} as const;
-const scriptTag = ${JSON.stringify(scriptTag)} as const;
-
-type UdAnnotationDataset = Awaited<
-\tReturnType<typeof readUdAnnotationDatasetFromPackAsync>
->;
-
-export interface LanguageDocumentAnalysisOptions {
-\treadonly id?: string;
-\treadonly metadata?: Readonly<Record<string, unknown>>;
-\treadonly lexiconMaxResults?: number;
-\treadonly morphologyMaxResults?: number;
-\treadonly entityMaxCandidates?: number;
-\treadonly entityLanguage?: string;
-\treadonly quality?: DocumentQualityOptions;
-}
-
-export interface LanguageLexicalUnitAnalysis {
-\treadonly segment: TextDataSegment;
-\treadonly lexiconMatches: readonly LexicalMatch[];
-\treadonly morphologyAnalyses: readonly MorphologyAnalysis[];
-}
-
-export interface LanguageDocumentAnalysis {
-\treadonly languageTag: typeof languageTag;
-\treadonly sourceDocument: TextDocument;
-\treadonly normalizedDocument: TextDocument;
-\treadonly entityLinkedDocument: TextDocument;
-\treadonly searchView: NormalizationViewResult;
-\treadonly sentences: readonly TextDataSegment[];
-\treadonly words: readonly TextDataSegment[];
-\treadonly lexicalUnits: readonly TextDataSegment[];
-\treadonly lexicalUnitAnalyses: readonly LanguageLexicalUnitAnalysis[];
-\treadonly searchTokens: readonly SearchToken[];
-\treadonly qualityReport: QualityReport;
-}
-
-export interface LanguagePipelineRunOptions
-\textends LanguageDocumentAnalysisOptions {
-\treadonly run?: Omit<
-\t\tRunOptions,
-\t\t"cache" | "cachePolicy" | "diagnostics" | "resources" | "trace"
-\t>;
-}
-
-export interface LanguagePipelineRun {
-\treadonly pipeline: TextPipeline;
-\treadonly document: TextDocument;
-\treadonly analysis: LanguageDocumentAnalysis;
-\treadonly diagnostics: readonly PipelineDiagnostic[];
-\treadonly trace: readonly PipelineTraceEvent[];
-}
-
-export interface LanguageSearchIndexOptions {
-\treadonly index?: IndexOptions;
-\treadonly add?: AddOptions;
-}
-
-export interface ${pack.loader.optionsName}
-\textends Omit<ResolveTextPackComponentsOptions, "resolveComponent"> {
-\treadonly resolveComponent?: ResolveTextPackComponentsOptions["resolveComponent"];
-\treadonly reader?: TextPackResourceReader;
-}
-
-export interface ${runtimeName} {
-\treadonly languageTag: typeof languageTag;
-\treadonly languageName: typeof languageName;
-\treadonly pack: TextPack;
-\treadonly reader: TextPackResourceReader | undefined;
-\treadonly segmentation: {
-\t\treadonly open: () => Promise<TextDataSegmentationAdapter>;
-\t\treadonly lexicalUnits: (
-\t\t\ttext: string,
-\t\t) => Promise<readonly TextDataSegment[]>;
-\t\treadonly words: (text: string) => Promise<readonly TextDataSegment[]>;
-\t\treadonly sentences: (text: string) => Promise<readonly TextDataSegment[]>;
-\t};
-\treadonly normalization: {
-\t\treadonly open: () => Promise<CompiledTextNormProfile>;
-\t\treadonly normalizeText: (
-\t\t\ttext: string,
-\t\t\tmode?: TextNormProfileMode,
-\t\t) => Promise<string>;
-\t\treadonly normalizeDocument: (
-\t\t\tdoc: Parameters<CompiledTextNormProfile["normalizeDocument"]>[0],
-\t\t\tmode?: TextNormProfileMode,
-\t\t) => Promise<ReturnType<CompiledTextNormProfile["normalizeDocument"]>>;
-\t\treadonly searchView: (
-\t\t\tdoc: Parameters<CompiledTextNormProfile["searchView"]>[0],
-\t\t) => Promise<ReturnType<CompiledTextNormProfile["searchView"]>>;
-\t};
-\treadonly lexicon: {
-\t\treadonly open: () => Promise<Lexicon>;
-\t\treadonly lookup: (
-\t\t\tform: string,
-\t\t\toptions?: LookupOptions,
-\t\t) => Promise<readonly LexicalMatch[]>;
-\t};
-\treadonly morphology: {
-\t\treadonly open: () => Promise<MorphologyIndex>;
-\t\treadonly analyze: (
-\t\t\tform: string,
-\t\t\toptions?: { readonly maxResults?: number },
-\t\t) => Promise<readonly MorphologyAnalysis[]>;
-\t\treadonly generate: (
-\t\t\tlemma: string,
-\t\t\tfeatures?: Readonly<Record<string, string>>,
-\t\t\toptions?: { readonly maxResults?: number },
-\t\t) => Promise<readonly MorphologyGeneration[]>;
-\t\treadonly paradigms: (
-\t\t\tlemma?: string,
-\t\t) => Promise<readonly MorphologyParadigm[]>;
-\t};
-\treadonly syntax: {
-\t\treadonly resources: () => Promise<UdSyntaxPackResources>;
-\t\treadonly annotations: () => Promise<readonly UdAnnotationRecord[]>;
-\t\treadonly dataset: () => Promise<UdAnnotationDataset>;
-\t};
-\treadonly kb: {
-\t\treadonly open: () => Promise<KnowledgeBase>;
-\t\treadonly candidates: (
-\t\t\ttext: string,
-\t\t\toptions?: EntityLinkOptions,
-\t\t) => Promise<readonly EntityCandidate[]>;
-\t\treadonly linkEntities: (
-\t\t\tdoc: Parameters<TextPackEntityLinker["linkEntities"]>[0],
-\t\t\toptions?: EntityLinkOptions,
-\t\t) => Promise<Awaited<ReturnType<TextPackEntityLinker["linkEntities"]>>>;
-\t};
-\treadonly search: {
-\t\treadonly analyzer: () => Promise<Analyzer>;
-\t\treadonly createIndex: (options?: IndexOptions) => Promise<SearchIndex>;
-\t\treadonly indexDocument: (
-\t\t\tdoc: TextDocument,
-\t\t\toptions?: LanguageSearchIndexOptions,
-\t\t) => Promise<SearchIndex>;
-\t\treadonly indexAnalysis: (
-\t\t\tanalysis: LanguageDocumentAnalysis,
-\t\t\toptions?: LanguageSearchIndexOptions,
-\t\t) => Promise<SearchIndex>;
-\t};
-\treadonly corpus: {
-\t\treadonly rows: () => Promise<readonly TextDataTableResource[]>;
-\t\treadonly documents: (
-\t\t\toptions: Omit<CorpusDocumentsFromPackOptions, "reader">,
-\t\t) => Promise<readonly TextDocument[]>;
-\t\treadonly open: (
-\t\t\toptions: Omit<TextCorpusFromPackOptions, "reader">,
-\t\t) => Promise<TextCorpus>;
-\t};
-\treadonly parallel: {
-\t\treadonly rows: (
-\t\t\toptions?: Omit<ParallelRowsFromPackOptions, "reader">,
-\t\t) => Promise<readonly ParallelTableResource[]>;
-\t\treadonly links: (
-\t\t\toptions?: Omit<ParallelRowsFromPackOptions, "reader">,
-\t\t) => Promise<readonly ParallelLinkRow[]>;
-\t\treadonly corpus: (
-\t\t\toptions?: Omit<ParallelRowsFromPackOptions, "reader">,
-\t\t) => Promise<ParallelCorpus>;
-\t};
-\treadonly quality: {
-\t\treadonly resources: () => Promise<readonly TextQualityPackResource[]>;
-\t\treadonly profiles: () => Promise<readonly QualityProfile[]>;
-\t\treadonly analyzeDocument: (
-\t\t\tdoc: Parameters<typeof analyzeDocumentQualityFromPack>[1],
-\t\t\toptions?: Omit<
-\t\t\t\tQualityProfileFromPackOptions & DocumentQualityOptions,
-\t\t\t\t"reader" | "resourceId" | "resourceIds"
-\t\t\t>,
-\t\t) => Promise<QualityReport>;
-\t};
-\treadonly document: {
-\t\treadonly analyzeText: (
-\t\t\ttext: string,
-\t\t\toptions?: LanguageDocumentAnalysisOptions,
-\t\t) => Promise<LanguageDocumentAnalysis>;
-\t\treadonly analyzeDocument: (
-\t\t\tdoc: TextDocument,
-\t\t\toptions?: LanguageDocumentAnalysisOptions,
-\t\t) => Promise<LanguageDocumentAnalysis>;
-\t};
-\treadonly pipeline: {
-\t\treadonly createDocumentAnalysisPipeline: (
-\t\t\toptions?: LanguageDocumentAnalysisOptions,
-\t\t) => TextPipeline;
-\t\treadonly runText: (
-\t\t\ttext: string,
-\t\t\toptions?: LanguagePipelineRunOptions,
-\t\t) => Promise<LanguagePipelineRun>;
-\t\treadonly runDocument: (
-\t\t\tdoc: TextDocument,
-\t\t\toptions?: LanguagePipelineRunOptions,
-\t\t) => Promise<LanguagePipelineRun>;
-\t};
-}
-
-async function resolveGeneratedComponent(
-\tcomponent: TextPackComponent,
-\toptions: ${pack.loader.optionsName},
-): Promise<unknown> {
-\tswitch (component.packageName) {
-${cases}
-\t\tdefault:
-\t\t\tthrow new TypeError(
-\t\t\t\t\`No generated resolver entry for \${component.packageName}.\`,
-\t\t\t);
-\t}
-}
-
-function taskReader(
-\treader: TextPackResourceReader | undefined,
-\ttaskName: string,
-): TextPackResourceReader {
-\tif (reader !== undefined) return reader;
-\tthrow new TypeError(
-\t\t\`${pack.loader.functionName} task \${taskName} requires options.reader to materialize generated file-backed resources.\`,
-\t);
-}
-
-function assertTaskSlot(pack: TextPack, slot: string): void {
-\tconst status = pack.manifest.capabilitySlots?.find(
-\t\t(candidate) => candidate.slot === slot,
-\t)?.status;
-\tif (status !== "task-supported") {
-\t\tthrow new TypeError(
-\t\t\t\`Language task slot \${slot} is not task-supported by this pack.\`,
-\t\t);
-\t}
-}
-
-function schemaResourceIds(
-\tpack: TextPack,
-\tschemaId: string,
-): readonly string[] {
-\treturn Object.freeze(
-\t\tpack.manifest.resources
-\t\t\t.filter((resource) => resource.schemaId === schemaId)
-\t\t\t.map((resource) => resource.id)
-\t\t\t.sort((left, right) => left.localeCompare(right)),
-\t);
-}
-
-function requireSchemaResourceIds(
-\tpack: TextPack,
-\tschemaId: string,
-\ttaskName: string,
-): readonly string[] {
-\tconst ids = schemaResourceIds(pack, schemaId);
-\tif (ids.length > 0) return ids;
-\tthrow new TypeError(
-\t\t\`Language task \${taskName} requires at least one \${schemaId} resource.\`,
-\t);
-}
-
-function firstSchemaResourceId(
-\tpack: TextPack,
-\tschemaId: string,
-\ttaskName: string,
-): string {
-\treturn requireSchemaResourceIds(pack, schemaId, taskName)[0] ?? "";
-}
-
-function sourceText(doc: TextDocument): string {
-\tconst view =
-\t\tdoc.views.raw ??
-\t\tdoc.views[
-\t\t\tObject.keys(doc.views).sort((left, right) =>
-\t\t\t\tleft.localeCompare(right),
-\t\t\t)[0] ?? ""
-\t\t];
-\tif (view === undefined) {
-\t\tthrow new TypeError(\`Document \${doc.id} has no text view.\`);
-\t}
-\treturn view.text;
-}
-
-function ensureSearchView(
-\tdoc: TextDocument,
-\tsearchView: NormalizationViewResult,
-): TextDocument {
-\tif (
-\t\tdoc.views[searchView.view.id] !== undefined &&
-\t\tdoc.spanMaps[searchView.spanMap.id] !== undefined
-\t) {
-\t\treturn doc;
-\t}
-\treturn addViewWithSpanMap(doc, searchView.view, searchView.spanMap);
-}
-
-function syntaxQualityResourceId(
-\tpack: TextPack,
-\tsyntaxResourceId: string,
-): string {
-\tconst qualityIds = requireSchemaResourceIds(
-\t\tpack,
-\t\t"textquality.evidence.v1",
-\t\t"syntax",
-\t);
-\tconst prefixes = [
-\t\tsyntaxResourceId.replace(/-syntax-canonical$/u, ""),
-\t\tsyntaxResourceId.replace(/-syntax$/u, ""),
-\t];
-\tfor (const prefix of prefixes) {
-\t\tconst candidate = \`\${prefix}-quality\`;
-\t\tif (qualityIds.includes(candidate)) return candidate;
-\t}
-\tthrow new TypeError(
-\t\t\`Syntax resource \${syntaxResourceId} does not have a matching textquality.evidence.v1 resource.\`,
-\t);
-}
-
-async function createMergedMorphologyIndex(
-\tpack: TextPack,
-\treader: TextPackResourceReader,
-): Promise<MorphologyIndex> {
-\tconst resourceIds = requireSchemaResourceIds(
-\t\tpack,
-\t\t"textlex.morphology.v1",
-\t\t"morphology",
-\t);
-\tconst indexes = await Promise.all(
-\t\tresourceIds.map((resourceId) =>
-\t\t\tmorphologyIndexFromPackAsync(pack, { reader, resourceId }),
-\t\t),
-\t);
-\tif (indexes.length === 1 && indexes[0] !== undefined) return indexes[0];
-\tconst analyses = Object.freeze(indexes.flatMap((index) => index.analyses));
-\tconst generations = Object.freeze(
-\t\tindexes.flatMap((index) => index.generations),
-\t);
-\treturn Object.freeze({
-\t\tid: \`\${pack.manifest.id}:morphology\`,
-\t\tlanguage: languageTag,
-\t\tscript: scriptTag,
-\t\tanalyses,
-\t\tgenerations,
-\t\tanalyze(form: string, options: { readonly maxResults?: number } = {}) {
-\t\t\treturn Object.freeze(
-\t\t\t\tindexes
-\t\t\t\t\t.flatMap((index) => index.analyze(form, options))
-\t\t\t\t\t.slice(0, options.maxResults),
-\t\t\t);
-\t\t},
-\t\tgenerate(
-\t\t\tlemma: string,
-\t\t\tfeatures?: Readonly<Record<string, string>>,
-\t\t\toptions: { readonly maxResults?: number } = {},
-\t\t) {
-\t\t\treturn Object.freeze(
-\t\t\t\tindexes
-\t\t\t\t\t.flatMap((index) => index.generate(lemma, features, options))
-\t\t\t\t\t.slice(0, options.maxResults),
-\t\t\t);
-\t\t},
-\t\tparadigms(lemma?: string) {
-\t\t\tconst byLemma = new Map<string, MorphologyGeneration[]>();
-\t\t\tfor (const index of indexes) {
-\t\t\t\tfor (const paradigm of index.paradigms(lemma)) {
-\t\t\t\t\tbyLemma.set(paradigm.lemma, [
-\t\t\t\t\t\t...(byLemma.get(paradigm.lemma) ?? []),
-\t\t\t\t\t\t...paradigm.entries,
-\t\t\t\t\t]);
-\t\t\t\t}
-\t\t\t}
-\t\t\treturn Object.freeze(
-\t\t\t\t[...byLemma.entries()]
-\t\t\t\t\t.sort(([left], [right]) => left.localeCompare(right))
-\t\t\t\t\t.map(([entryLemma, entries]) =>
-\t\t\t\t\t\tObject.freeze({
-\t\t\t\t\t\t\tlemma: entryLemma,
-\t\t\t\t\t\t\tentries: Object.freeze(entries),
-\t\t\t\t\t\t}),
-\t\t\t\t\t),
-\t\t\t);
-\t\t},
-\t});
-}
-
-async function createMergedKnowledgeBase(
-\tpack: TextPack,
-\treader: TextPackResourceReader,
-): Promise<KnowledgeBase> {
-\tconst resourceIds = requireSchemaResourceIds(
-\t\tpack,
-\t\t"textkb.knowledge-base.v1",
-\t\t"kb",
-\t);
-\tconst bases = await Promise.all(
-\t\tresourceIds.map((resourceId) =>
-\t\t\tknowledgeBaseFromPack(pack, { reader, resourceId }),
-\t\t),
-\t);
-\tif (bases.length === 1 && bases[0] !== undefined) return bases[0];
-\treturn createKnowledgeBase({
-\t\tid: \`\${pack.manifest.id}:kb\`,
-\t\tentities: bases.flatMap((base) => Object.values(base.entities.records)),
-\t\tconcepts: bases.flatMap((base) => Object.values(base.concepts.records)),
-\t\tsenses: bases.flatMap((base) => Object.values(base.senses.records)),
-\t\trelations: bases.flatMap((base) => Object.values(base.relations.records)),
-\t\taliases: bases.flatMap((base) =>
-\t\t\tObject.values(base.aliases.entries).flat(),
-\t\t),
-\t\tmetadata: {
-\t\t\tpackageName: pack.manifest.packageName,
-\t\t\tresourceIds,
-\t\t\tschemaId: "textkb.knowledge-base.v1",
-\t\t},
-\t\tallowExternalRelationEndpoints: true,
-\t});
-}
-
-async function resolveLanguagePack(
-\toptions: ${pack.loader.optionsName},
-): Promise<TextPack> {
-\tconst { reader: _reader, ...resolveOptions } = options;
-\tvoid _reader;
-\treturn resolvePackComponents(await loadPack({ manifest, resources }), {
-\t\t...resolveOptions,
-\t\tlicensePolicy: options.licensePolicy ?? ${JSON.stringify(defaultLicensePolicy)},
-\t\tartifactPolicy: options.artifactPolicy ?? ${JSON.stringify(defaultArtifactPolicy)},
-\t\tconflictPolicy: options.conflictPolicy ?? ${conflictPolicy},
-\t\tresolveComponent:
-\t\t\toptions.resolveComponent ??
-\t\t\t((component) => resolveGeneratedComponent(component, options)),
-\t});
-}
-
-function createLanguageRuntime(
-\tpack: TextPack,
-\treader: TextPackResourceReader | undefined,
-): ${runtimeName} {
-\tlet segmentationPromise: Promise<TextDataSegmentationAdapter> | undefined;
-\tlet normalizationPromise: Promise<CompiledTextNormProfile> | undefined;
-\tlet lexiconPromise: Promise<Lexicon> | undefined;
-\tlet morphologyPromise: Promise<MorphologyIndex> | undefined;
-\tlet syntaxResourcesPromise: Promise<UdSyntaxPackResources> | undefined;
-\tlet syntaxAnnotationsPromise:
-\t\t| Promise<readonly UdAnnotationRecord[]>
-\t\t| undefined;
-\tlet syntaxDatasetPromise: Promise<UdAnnotationDataset> | undefined;
-\tlet kbPromise: Promise<KnowledgeBase> | undefined;
-\tlet analyzerPromise: Promise<Analyzer> | undefined;
-\tlet qualityResourcesPromise:
-\t\t| Promise<readonly TextQualityPackResource[]>
-\t\t| undefined;
-\tlet qualityProfilesPromise: Promise<readonly QualityProfile[]> | undefined;
-
-\tconst openSegmentation = () => {
-\t\tassertTaskSlot(pack, "segmentation");
-\t\tsegmentationPromise ??= segmentationAdapterFromPack(pack, {
-\t\t\treader: taskReader(reader, "segmentation"),
-\t\t});
-\t\treturn segmentationPromise;
-\t};
-\tconst openNormalization = () => {
-\t\tassertTaskSlot(pack, "normalization");
-\t\tnormalizationPromise ??= normalizationProfileFromPack(pack, {
-\t\t\treader: taskReader(reader, "normalization"),
-\t\t\tresourceIds: [
-\t\t\t\tfirstSchemaResourceId(pack, "textnorm.profile.v1", "normalization"),
-\t\t\t],
-\t\t});
-\t\treturn normalizationPromise;
-\t};
-\tconst openLexicon = () => {
-\t\tassertTaskSlot(pack, "lexicon");
-\t\tlexiconPromise ??= mergedLexiconFromPackAsync(pack, {
-\t\t\treader: taskReader(reader, "lexicon"),
-\t\t\tresourceIds: requireSchemaResourceIds(
-\t\t\t\tpack,
-\t\t\t\t"textlex.lexicon.v1",
-\t\t\t\t"lexicon",
-\t\t\t),
-\t\t\tschemaIds: ["textlex.lexicon.v1"],
-\t\t\tlanguage: languageTag,
-\t\t\tscript: scriptTag,
-\t\t});
-\t\treturn lexiconPromise;
-\t};
-\tconst openMorphology = () => {
-\t\tassertTaskSlot(pack, "morphology");
-\t\tmorphologyPromise ??= createMergedMorphologyIndex(
-\t\t\tpack,
-\t\t\ttaskReader(reader, "morphology"),
-\t\t);
-\t\treturn morphologyPromise;
-\t};
-\tconst syntaxResourceId = () =>
-\t\tfirstSchemaResourceId(pack, "textdata.syntax.v1", "syntax");
-\tconst openKb = () => {
-\t\tassertTaskSlot(pack, "kb");
-\t\tkbPromise ??= createMergedKnowledgeBase(pack, taskReader(reader, "kb"));
-\t\treturn kbPromise;
-\t};
-\tconst openAnalyzer = () => {
-\t\tassertTaskSlot(pack, "search");
-\t\tanalyzerPromise ??= analyzerFromPack(pack, {
-\t\t\treader: taskReader(reader, "search"),
-\t\t\tresourceId: firstSchemaResourceId(
-\t\t\t\tpack,
-\t\t\t\t"textsearch.analyzer-profile.v1",
-\t\t\t\t"search",
-\t\t\t),
-\t\t});
-\t\treturn analyzerPromise;
-\t};
-\tconst createSearchIndex = (options?: IndexOptions) => {
-\t\tassertTaskSlot(pack, "search");
-\t\treturn searchIndexFromPack(pack, {
-\t\t\treader: taskReader(reader, "search"),
-\t\t\tresourceId: firstSchemaResourceId(
-\t\t\t\tpack,
-\t\t\t\t"textsearch.analyzer-profile.v1",
-\t\t\t\t"search",
-\t\t\t),
-\t\t\t...(options === undefined ? {} : { index: options }),
-\t\t});
-\t};
-\tconst indexSearchDocument = async (
-\t\tdoc: TextDocument,
-\t\toptions: LanguageSearchIndexOptions = {},
-\t) => addToIndex(await createSearchIndex(options.index), doc, options.add);
-\tconst openQualityResources = () => {
-\t\tassertTaskSlot(pack, "quality");
-\t\tqualityResourcesPromise ??= qualityResourcesFromPack(pack, {
-\t\t\treader: taskReader(reader, "quality"),
-\t\t});
-\t\treturn qualityResourcesPromise;
-\t};
-\tconst openQualityProfiles = () => {
-\t\tassertTaskSlot(pack, "quality");
-\t\tqualityProfilesPromise ??= Promise.all(
-\t\t\trequireSchemaResourceIds(pack, "textquality.profile.v1", "quality").map(
-\t\t\t\t(resourceId) =>
-\t\t\t\t\tqualityProfileFromPack(pack, {
-\t\t\t\t\t\treader: taskReader(reader, "quality"),
-\t\t\t\t\t\tresourceId,
-\t\t\t\t\t}),
-\t\t\t),
-\t\t);
-\t\treturn qualityProfilesPromise;
-\t};
-\tconst analyzeDocument = async (
-\t\tdoc: TextDocument,
-\t\toptions: LanguageDocumentAnalysisOptions = {},
-\t): Promise<LanguageDocumentAnalysis> => {
-\t\tconst text = sourceText(doc);
-\t\tconst [
-\t\t\tsentences,
-\t\t\twords,
-\t\t\tlexicalUnits,
-\t\t\tnormalization,
-\t\t\tlexicon,
-\t\t\tmorphology,
-\t\t\tkb,
-\t\t\tanalyzer,
-\t\t] = await Promise.all([
-\t\t\topenSegmentation().then((adapter) => adapter.sentences(text)),
-\t\t\topenSegmentation().then((adapter) => adapter.words(text)),
-\t\t\topenSegmentation().then((adapter) => adapter.lexicalUnits(text)),
-\t\t\topenNormalization(),
-\t\t\topenLexicon(),
-\t\t\topenMorphology(),
-\t\t\topenKb(),
-\t\t\topenAnalyzer(),
-\t\t]);
-\t\tconst searchView = normalization.searchView(doc);
-\t\tconst normalizedDocument = ensureSearchView(doc, searchView);
-\t\tconst lexicalUnitAnalyses = await Promise.all(
-\t\t\tlexicalUnits
-\t\t\t\t.filter((segment) => segment.isWordLike)
-\t\t\t\t.map(async (segment) =>
-\t\t\t\t\tObject.freeze({
-\t\t\t\t\t\tsegment,
-\t\t\t\t\t\tlexiconMatches: await lookup(lexicon, segment.text, {
-\t\t\t\t\t\t\tmaxResults: options.lexiconMaxResults ?? 5,
-\t\t\t\t\t\t}),
-\t\t\t\t\t\tmorphologyAnalyses: morphology.analyze(segment.text, {
-\t\t\t\t\t\t\tmaxResults: options.morphologyMaxResults ?? 5,
-\t\t\t\t\t\t}),
-\t\t\t\t\t}),
-\t\t\t\t),
-\t\t);
-\t\tconst entityLinkedDocument = linkEntities(normalizedDocument, kb, {
-\t\t\tlanguage: options.entityLanguage ?? languageTag,
-\t\t\tmaxCandidates: options.entityMaxCandidates ?? 5,
-\t\t});
-\t\tconst qualityReport = await analyzeDocumentQualityFromPack(
-\t\t\tpack,
-\t\t\tentityLinkedDocument,
-\t\t\t{
-\t\t\t\treader: taskReader(reader, "quality"),
-\t\t\t\tresourceId: firstSchemaResourceId(
-\t\t\t\t\tpack,
-\t\t\t\t\t"textquality.profile.v1",
-\t\t\t\t\t"quality",
-\t\t\t\t),
-\t\t\t\t...(options.quality === undefined ? {} : { analysis: options.quality }),
-\t\t\t},
-\t\t);
-\t\treturn Object.freeze({
-\t\t\tlanguageTag,
-\t\t\tsourceDocument: doc,
-\t\t\tnormalizedDocument,
-\t\t\tentityLinkedDocument,
-\t\t\tsearchView,
-\t\t\tsentences,
-\t\t\twords,
-\t\t\tlexicalUnits,
-\t\t\tlexicalUnitAnalyses: Object.freeze(lexicalUnitAnalyses),
-\t\t\tsearchTokens: Object.freeze([...analyzer.analyze(searchView.view.text)]),
-\t\t\tqualityReport,
-\t\t});
-\t};
-\tconst analyzeText = (
-\t\ttext: string,
-\t\toptions: LanguageDocumentAnalysisOptions = {},
-\t) =>
-\t\tanalyzeDocument(
-\t\t\tcreateDocument(text, {
-\t\t\t\t...(options.id === undefined ? {} : { id: options.id }),
-\t\t\t\t...(options.metadata === undefined
-\t\t\t\t\t? {}
-\t\t\t\t\t: { metadata: options.metadata }),
-\t\t\t}),
-\t\t\toptions,
-\t\t);
-\tconst documentAnalysisProcessor = (
-\t\toptions: LanguageDocumentAnalysisOptions = {},
-\t\tonAnalysis?: (analysis: LanguageDocumentAnalysis) => void,
-\t): TextProcessor =>
-\t\tObject.freeze({
-\t\t\tid: \`\${pack.manifest.id}:document-analysis\`,
-\t\t\tversion: pack.manifest.version,
-\t\t\tprovides: Object.freeze([
-\t\t\t\tObject.freeze({ viewKind: "search" as const }),
-\t\t\t\tObject.freeze({ layer: "link.entity" }),
-\t\t\t]),
-\t\t\tasync process(doc: TextDocument) {
-\t\t\t\tconst analysis = await analyzeDocument(doc, options);
-\t\t\t\tonAnalysis?.(analysis);
-\t\t\t\treturn analysis.entityLinkedDocument;
-\t\t\t},
-\t\t});
-\tconst createDocumentAnalysisPipeline = (
-\t\toptions: LanguageDocumentAnalysisOptions = {},
-\t) =>
-\t\tcreatePipeline([documentAnalysisProcessor(options)], {
-\t\t\tid: \`\${pack.manifest.id}:document-analysis\`,
-\t\t\tresources: createPipelineResourceRegistry({ packs: [pack] }),
-\t\t});
-\tconst runDocumentPipeline = async (
-\t\tdoc: TextDocument,
-\t\toptions: LanguagePipelineRunOptions = {},
-\t): Promise<LanguagePipelineRun> => {
-\t\tlet analysis: LanguageDocumentAnalysis | undefined;
-\t\tconst pipeline = createPipeline(
-\t\t\t[
-\t\t\t\tdocumentAnalysisProcessor(options, (result) => {
-\t\t\t\t\tanalysis = result;
-\t\t\t\t}),
-\t\t\t],
-\t\t\t{
-\t\t\t\tid: \`\${pack.manifest.id}:document-analysis\`,
-\t\t\t\tresources: createPipelineResourceRegistry({ packs: [pack] }),
-\t\t\t},
-\t\t);
-\t\tconst diagnostics: PipelineDiagnostic[] = [];
-\t\tconst trace: PipelineTraceEvent[] = [];
-\t\tconst document = await runPipeline(pipeline, doc, {
-\t\t\t...(options.run ?? {}),
-\t\t\tdiagnostics,
-\t\t\ttrace,
-\t\t});
-\t\tif (analysis === undefined) {
-\t\t\tthrow new TypeError(
-\t\t\t\t\`Language document analysis pipeline did not produce analysis for \${doc.id}.\`,
-\t\t\t);
-\t\t}
-\t\treturn Object.freeze({
-\t\t\tpipeline,
-\t\t\tdocument,
-\t\t\tanalysis,
-\t\t\tdiagnostics: Object.freeze([...diagnostics]),
-\t\t\ttrace: Object.freeze([...trace]),
-\t\t});
-\t};
-\tconst runTextPipeline = (
-\t\ttext: string,
-\t\toptions: LanguagePipelineRunOptions = {},
-\t) =>
-\t\trunDocumentPipeline(
-\t\t\tcreateDocument(text, {
-\t\t\t\t...(options.id === undefined ? {} : { id: options.id }),
-\t\t\t\t...(options.metadata === undefined
-\t\t\t\t\t? {}
-\t\t\t\t\t: { metadata: options.metadata }),
-\t\t\t}),
-\t\t\toptions,
-\t\t);
-
-\treturn Object.freeze({
-\t\tlanguageTag,
-\t\tlanguageName,
-\t\tpack,
-\t\treader,
-\t\tsegmentation: Object.freeze({
-\t\t\topen: openSegmentation,
-\t\t\tasync lexicalUnits(text: string) {
-\t\t\t\treturn (await openSegmentation()).lexicalUnits(text);
-\t\t\t},
-\t\t\tasync words(text: string) {
-\t\t\t\treturn (await openSegmentation()).words(text);
-\t\t\t},
-\t\t\tasync sentences(text: string) {
-\t\t\t\treturn (await openSegmentation()).sentences(text);
-\t\t\t},
-\t\t}),
-\t\tnormalization: Object.freeze({
-\t\t\topen: openNormalization,
-\t\t\tasync normalizeText(text: string, mode?: TextNormProfileMode) {
-\t\t\t\treturn (await openNormalization()).normalizeText(text, mode);
-\t\t\t},
-\t\t\tasync normalizeDocument(
-\t\t\t\tdoc: Parameters<CompiledTextNormProfile["normalizeDocument"]>[0],
-\t\t\t\tmode?: TextNormProfileMode,
-\t\t\t) {
-\t\t\t\treturn (await openNormalization()).normalizeDocument(doc, mode);
-\t\t\t},
-\t\t\tasync searchView(
-\t\t\t\tdoc: Parameters<CompiledTextNormProfile["searchView"]>[0],
-\t\t\t) {
-\t\t\t\treturn (await openNormalization()).searchView(doc);
-\t\t\t},
-\t\t}),
-\t\tlexicon: Object.freeze({
-\t\t\topen: openLexicon,
-\t\t\tasync lookup(form: string, options: LookupOptions = {}) {
-\t\t\t\treturn lookup(await openLexicon(), form, options);
-\t\t\t},
-\t\t}),
-\t\tmorphology: Object.freeze({
-\t\t\topen: openMorphology,
-\t\t\tasync analyze(
-\t\t\t\tform: string,
-\t\t\t\toptions: { readonly maxResults?: number } = {},
-\t\t\t) {
-\t\t\t\treturn (await openMorphology()).analyze(form, options);
-\t\t\t},
-\t\t\tasync generate(
-\t\t\t\tlemma: string,
-\t\t\t\tfeatures?: Readonly<Record<string, string>>,
-\t\t\t\toptions: { readonly maxResults?: number } = {},
-\t\t\t) {
-\t\t\t\treturn (await openMorphology()).generate(lemma, features, options);
-\t\t\t},
-\t\t\tasync paradigms(lemma?: string) {
-\t\t\t\treturn (await openMorphology()).paradigms(lemma);
-\t\t\t},
-\t\t}),
-\t\tsyntax: Object.freeze({
-\t\t\tresources() {
-\t\t\t\tassertTaskSlot(pack, "syntax");
-\t\t\t\tsyntaxResourcesPromise ??= udSyntaxResourcesFromPackAsync(pack, {
-\t\t\t\t\treader: taskReader(reader, "syntax"),
-\t\t\t\t\tsyntaxResourceId: syntaxResourceId(),
-\t\t\t\t\tresourceIds: {
-\t\t\t\t\t\tquality: syntaxQualityResourceId(pack, syntaxResourceId()),
-\t\t\t\t\t},
-\t\t\t\t});
-\t\t\t\treturn syntaxResourcesPromise;
-\t\t\t},
-\t\t\tannotations() {
-\t\t\t\tassertTaskSlot(pack, "syntax");
-\t\t\t\tsyntaxAnnotationsPromise ??= udAnnotationRecordsFromPackAsync(pack, {
-\t\t\t\t\treader: taskReader(reader, "syntax"),
-\t\t\t\t\tsyntaxResourceId: syntaxResourceId(),
-\t\t\t\t});
-\t\t\t\treturn syntaxAnnotationsPromise;
-\t\t\t},
-\t\t\tdataset() {
-\t\t\t\tassertTaskSlot(pack, "syntax");
-\t\t\t\tsyntaxDatasetPromise ??= readUdAnnotationDatasetFromPackAsync(pack, {
-\t\t\t\t\treader: taskReader(reader, "syntax"),
-\t\t\t\t\tsyntaxResourceId: syntaxResourceId(),
-\t\t\t\t});
-\t\t\t\treturn syntaxDatasetPromise;
-\t\t\t},
-\t\t}),
-\t\tkb: Object.freeze({
-\t\t\topen: openKb,
-\t\t\tasync candidates(text: string, options: EntityLinkOptions = {}) {
-\t\t\t\treturn candidateEntities(await openKb(), text, options);
-\t\t\t},
-\t\t\tasync linkEntities(
-\t\t\t\tdoc: Parameters<TextPackEntityLinker["linkEntities"]>[0],
-\t\t\t\toptions: EntityLinkOptions = {},
-\t\t\t) {
-\t\t\t\treturn linkEntities(doc, await openKb(), options);
-\t\t\t},
-\t\t}),
-\t\tsearch: Object.freeze({
-\t\t\tanalyzer: openAnalyzer,
-\t\t\tcreateIndex: createSearchIndex,
-\t\t\tindexDocument: indexSearchDocument,
-\t\t\tindexAnalysis(
-\t\t\t\tanalysis: LanguageDocumentAnalysis,
-\t\t\t\toptions: LanguageSearchIndexOptions = {},
-\t\t\t) {
-\t\t\t\treturn indexSearchDocument(analysis.entityLinkedDocument, options);
-\t\t\t},
-\t\t}),
-\t\tcorpus: Object.freeze({
-\t\t\trows() {
-\t\t\t\tassertTaskSlot(pack, "corpus");
-\t\t\t\treturn corpusRowsFromPack(pack, {
-\t\t\t\t\treader: taskReader(reader, "corpus"),
-\t\t\t\t\tschemaIds: ["textdata.corpus.rows.v1"],
-\t\t\t\t});
-\t\t\t},
-\t\t\tdocuments(options: Omit<CorpusDocumentsFromPackOptions, "reader">) {
-\t\t\t\tassertTaskSlot(pack, "corpus");
-\t\t\t\treturn corpusDocumentsFromPack(pack, {
-\t\t\t\t\t...options,
-\t\t\t\t\treader: taskReader(reader, "corpus"),
-\t\t\t\t\tschemaIds: options.schemaIds ?? ["textdata.corpus.rows.v1"],
-\t\t\t\t});
-\t\t\t},
-\t\t\topen(options: Omit<TextCorpusFromPackOptions, "reader">) {
-\t\t\t\tassertTaskSlot(pack, "corpus");
-\t\t\t\treturn textCorpusFromPack(pack, {
-\t\t\t\t\t...options,
-\t\t\t\t\treader: taskReader(reader, "corpus"),
-\t\t\t\t\tschemaIds: options.schemaIds ?? ["textdata.corpus.rows.v1"],
-\t\t\t\t});
-\t\t\t},
-\t\t}),
-\t\tparallel: Object.freeze({
-\t\t\trows(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-\t\t\t\tassertTaskSlot(pack, "parallel");
-\t\t\t\treturn parallelTablesFromPack(pack, {
-\t\t\t\t\t...options,
-\t\t\t\t\treader: taskReader(reader, "parallel"),
-\t\t\t\t});
-\t\t\t},
-\t\t\tlinks(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-\t\t\t\tassertTaskSlot(pack, "parallel");
-\t\t\t\treturn parallelLinkRowsFromPack(pack, {
-\t\t\t\t\t...options,
-\t\t\t\t\treader: taskReader(reader, "parallel"),
-\t\t\t\t});
-\t\t\t},
-\t\t\tcorpus(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-\t\t\t\tassertTaskSlot(pack, "parallel");
-\t\t\t\treturn parallelCorpusFromPack(pack, {
-\t\t\t\t\t...options,
-\t\t\t\t\treader: taskReader(reader, "parallel"),
-\t\t\t\t});
-\t\t\t},
-\t\t}),
-\t\tquality: Object.freeze({
-\t\t\tresources: openQualityResources,
-\t\t\tprofiles: openQualityProfiles,
-\t\t\tasync analyzeDocument(
-\t\t\t\tdoc: Parameters<typeof analyzeDocumentQualityFromPack>[1],
-\t\t\t\toptions: Omit<
-\t\t\t\t\tQualityProfileFromPackOptions & DocumentQualityOptions,
-\t\t\t\t\t"reader" | "resourceId" | "resourceIds"
-\t\t\t\t> = {},
-\t\t\t) {
-\t\t\t\tassertTaskSlot(pack, "quality");
-\t\t\t\treturn analyzeDocumentQualityFromPack(pack, doc, {
-\t\t\t\t\t...options,
-\t\t\t\t\treader: taskReader(reader, "quality"),
-\t\t\t\t\tresourceId: firstSchemaResourceId(
-\t\t\t\t\t\tpack,
-\t\t\t\t\t\t"textquality.profile.v1",
-\t\t\t\t\t\t"quality",
-\t\t\t\t\t),
-\t\t\t\t});
-\t\t\t},
-\t\t}),
-\t\tdocument: Object.freeze({
-\t\t\tanalyzeText,
-\t\t\tanalyzeDocument,
-\t\t}),
-\t\tpipeline: Object.freeze({
-\t\t\tcreateDocumentAnalysisPipeline,
-\t\t\trunText: runTextPipeline,
-\t\t\trunDocument: runDocumentPipeline,
-\t\t}),
-\t});
-}
-
-export async function ${pack.loader.functionName}(
-\toptions: ${pack.loader.optionsName} = {},
-): Promise<${runtimeName}> {
-\treturn createLanguageRuntime(
-\t\tawait resolveLanguagePack(options),
-\t\toptions.reader,
-\t);
-}
-
-export default { manifest, resources, ${pack.loader.functionName} };
+export default pack;
 `;
 }
 
@@ -10013,20 +9052,6 @@ function compositePackageJson(pack) {
 	const dependencies = {
 		"@ismail-elkorchi/textpack": "0.1.0",
 	};
-	if (pack.packClass === "language-composite") {
-		Object.assign(dependencies, {
-			"@ismail-elkorchi/textcorpus": "0.1.0",
-			"@ismail-elkorchi/textdata": "0.1.0",
-			"@ismail-elkorchi/textdoc": "0.1.0",
-			"@ismail-elkorchi/textkb": "0.1.0",
-			"@ismail-elkorchi/textlex": "0.1.0",
-			"@ismail-elkorchi/textnorm": "0.1.0",
-			"@ismail-elkorchi/textparallel": "0.1.0",
-			"@ismail-elkorchi/textpipeline": "0.1.0",
-			"@ismail-elkorchi/textquality": "0.1.0",
-			"@ismail-elkorchi/textsearch": "0.1.0",
-		});
-	}
 	for (const component of pack.components) {
 		if (component.role === "required") {
 			dependencies[component.packageName] = component.versionRange;
@@ -10050,9 +9075,6 @@ function compositePackageJson(pack) {
 			"test:all": [
 				"npm run -s build",
 				"node test/smoke.mjs",
-				...(hasLanguageCompositeConsumerTest(pack)
-					? ["node test/consumer.mjs"]
-					: []),
 				"node test/negative.mjs",
 				"npm run -s check:pack",
 			].join(" && "),
@@ -10071,7 +9093,6 @@ function compositePackageJson(pack) {
 			"COVERAGE.generated.json",
 			"EVALUATION.generated.json",
 			"QUALITY.generated.json",
-			...(pack.packClass === "language-composite" ? ["examples"] : []),
 			"README.md",
 			"CHANGELOG.md",
 		],
@@ -10154,155 +9175,7 @@ function tsconfigBuildJson() {
 `;
 }
 
-function languageCompositeExampleSample(pack) {
-	const samplesByPackageName = new Map([
-		[
-			"@ismail-elkorchi/textpack-en",
-			{
-				text: "Paris is a city, and people walk through its museums.",
-				expectedTerm: "paris",
-			},
-		],
-		[
-			"@ismail-elkorchi/textpack-fr",
-			{
-				text: "En France, j'aime apprendre chaque jour.",
-				expectedTerm: "france",
-			},
-		],
-		[
-			"@ismail-elkorchi/textpack-fr-sa",
-			{
-				text: "En France, j'aime apprendre chaque jour.",
-				expectedTerm: "france",
-			},
-		],
-		[
-			"@ismail-elkorchi/textpack-ar",
-			{
-				text: "القاهرة مدينة ويكتب الناس عن الكتب.",
-				expectedTerm: "القاهرة",
-			},
-		],
-		[
-			"@ismail-elkorchi/textpack-ar-sa",
-			{
-				text: "القاهرة مدينة ويكتب الناس عن الكتب.",
-				expectedTerm: "القاهرة",
-			},
-		],
-	]);
-	return (
-		samplesByPackageName.get(pack.packageName) ?? {
-			text: "Text.",
-			expectedTerm: "text",
-		}
-	);
-}
-
-function languageCompositeFetchExample(pack) {
-	if (pack.packClass !== "language-composite") return "";
-	const sample = languageCompositeExampleSample(pack);
-	const policyOption =
-		pack.policySurface === "policy-expanded-wrapper"
-			? '\n\tlicensePolicy: "allow-share-alike",'
-			: "";
-	return `import { createFetchResourceReader } from "@ismail-elkorchi/textpack";
-import { ${pack.loader.functionName} } from "${pack.packageName}";
-
-const reader = createFetchResourceReader({
-\tfetch: globalThis.fetch,
-});
-
-const runtime = await ${pack.loader.functionName}({
-\treader,${policyOption}
-});
-
-const analysis = await runtime.document.analyzeText(
-\t${JSON.stringify(sample.text)},
-\t{
-\t\tentityLanguage: runtime.languageTag,
-\t},
-);
-const index = await runtime.search.indexAnalysis(analysis, {
-\tindex: { id: "example-search" },
-});
-
-console.log({
-\tlanguage: runtime.languageTag,
-\tcomponentCount: runtime.pack.manifest.components?.length ?? 0,
-\tsentences: analysis.sentences.length,
-\twords: analysis.words.length,
-\tindexedDocuments: index.stats.documentCount,
-\tsearchTerms: analysis.searchTokens.map((token) => token.term),
-\tmatchedExpectedTerm: analysis.searchTokens.some(
-\t\t(token) => token.term === ${JSON.stringify(sample.expectedTerm)},
-\t),
-\tqualityMetrics: analysis.qualityReport.metrics,
-});
-`;
-}
-
-function languageCompositeReadmeExample(pack) {
-	if (pack.packClass !== "language-composite") return "";
-	const sample = languageCompositeExampleSample(pack);
-	const policyOption =
-		pack.policySurface === "policy-expanded-wrapper"
-			? '\n\tlicensePolicy: "allow-share-alike",'
-			: "";
-	return `
-## Fetch-Style Reader Example
-
-Use this shape in runtimes where package resources are served at the URLs recorded by generated resource descriptors, such as browser, Worker, Bun, Deno, or CDN-hosted package execution. The fetch reader performs no hidden download policy; it only materializes declared file-backed resources requested by the task API.
-
-\`\`\`ts
-import { createFetchResourceReader } from "@ismail-elkorchi/textpack";
-import { ${pack.loader.functionName} } from "${pack.packageName}";
-
-const reader = createFetchResourceReader({
-\tfetch: globalThis.fetch,
-});
-
-const runtime = await ${pack.loader.functionName}({
-\treader,${policyOption}
-});
-
-const analysis = await runtime.document.analyzeText(
-\t${JSON.stringify(sample.text)},
-\t{
-\t\tentityLanguage: runtime.languageTag,
-\t},
-);
-const index = await runtime.search.indexAnalysis(analysis, {
-\tindex: { id: "example-search" },
-});
-
-console.log({
-\tterms: analysis.searchTokens.map((token) => token.term),
-\tindexedDocuments: index.stats.documentCount,
-});
-\`\`\`
-
-The same example is included as \`examples/fetch-style-reader.ts\`.
-`;
-}
-
-function languageCompositeReadmePipelineSection(pack) {
-	if (pack.packClass !== "language-composite") return "";
-	return `
-## Pipeline Facade
-
-\`runtime.pipeline.runText(...)\` and \`runtime.pipeline.runDocument(...)\` wrap the document-analysis facade in a real \`@ismail-elkorchi/textpipeline\` execution. Use \`runtime.pipeline.createDocumentAnalysisPipeline(...)\` when you need the underlying \`TextPipeline\` for planning or inspection. Use the task groups directly when you need partial workflows such as only segmentation, search indexing, KB lookup, bounded corpus materialization, or parallel rows.
-`;
-}
-
 function compositeReadme(pack) {
-	const fetchExample = languageCompositeReadmeExample(pack);
-	const pipelineSection = languageCompositeReadmePipelineSection(pack);
-	const afterIntro =
-		fetchExample === "" && pipelineSection === ""
-			? "\n"
-			: `${fetchExample}${pipelineSection}\n`;
 	const required = pack.components
 		.filter((component) => component.role === "required")
 		.map((component) => `- \`${component.packageName}\``)
@@ -10332,19 +9205,20 @@ This package is a policy-expanded wrapper. It contains no direct resource payloa
 			: "";
 	return `# ${pack.packageName}
 
-Generated ${pack.loader.languageName} recipe composite textpack.
+Generated ${pack.display.languageName} recipe composite textpack.
+
+This package is a generated data package. It exports structural textpack data only.
+Use \`@ismail-elkorchi/text-computing\` for developer-facing NLP task APIs.
 
 \`\`\`ts
-import { ${pack.loader.functionName} } from "${pack.packageName}";
+import pack, { manifest, resources } from "${pack.packageName}";
 
-${
-	pack.packClass === "language-composite"
-		? `const runtime = await ${pack.loader.functionName}({ reader });
-const pack = runtime.pack;`
-		: `const pack = await ${pack.loader.functionName}();`
-}
+console.log(manifest.packageName);
+console.log(Object.keys(resources).length);
+console.log(pack.manifest.resources.length);
 \`\`\`
-${afterIntro}## Required Components
+
+## Required Components
 
 ${required}
 
@@ -10377,10 +9251,16 @@ function concreteReadme(pack) {
 
 Generated ${pack.packClass} textpack.
 
-This package is generated from pinned source snapshots by \`${GENERATED_BY}\`.
+This package is a generated data package. It exports structural textpack data only.
+Use \`@ismail-elkorchi/text-computing\` for developer-facing NLP task APIs.
+It is generated from pinned source snapshots by \`${GENERATED_BY}\`.
 
 \`\`\`ts
-import { manifest, resources } from "${pack.packageName}";
+import pack, { manifest, resources } from "${pack.packageName}";
+
+console.log(manifest.packageName);
+console.log(Object.keys(resources).length);
+console.log(pack.manifest.resources.length);
 \`\`\`
 
 ## Resources
@@ -10421,6 +9301,56 @@ for (const resource of manifest.resources) {
 \tassert.equal(typeof value?.encoding, "string");
 \tassert.equal(typeof value?.lineCount, "number");
 }
+`;
+}
+
+function compositeSmokeTest(pack) {
+	return `import assert from "node:assert/strict";
+import pack, { manifest, resources } from "../dist/index.js";
+
+const packageName = ${JSON.stringify(pack.packageName)};
+
+assert.equal(manifest.packageName, packageName);
+assert.equal(pack.manifest.packageName, packageName);
+assert.equal(pack, (await import("../dist/index.js")).pack);
+assert.equal(typeof resources, "object");
+assert.equal(Object.keys(resources).length, manifest.resources.length);
+assert.ok(pack.manifest.resources.length >= manifest.resources.length);
+assert.ok(Object.keys(pack.resources).length >= Object.keys(resources).length);
+
+for (const resource of manifest.resources) {
+\tassert.ok(resource.id in resources);
+\tassert.ok(resource.id in pack.resources);
+}
+
+const requiredComponents =
+\tmanifest.components?.filter((component) => component.role === "required") ??
+\t[];
+assert.equal(requiredComponents.length, ${pack.components.filter((component) => component.role === "required").length});
+`;
+}
+
+function compositeNegativeTest(_pack) {
+	return `import assert from "node:assert/strict";
+import * as mod from "../dist/index.js";
+
+for (const exportName of [
+\t"loadArabic",
+\t"loadEnglish",
+\t"loadFrench",
+\t"createLanguageRuntime",
+\t"analyzeText",
+]) {
+\tassert.equal(
+\t\texportName in mod,
+\t\tfalse,
+\t\t\`generated textpacks must not export \${exportName}\`,
+\t);
+}
+
+assert.equal(typeof mod.resources, "object");
+assert.equal(typeof mod.pack, "object");
+assert.equal(mod.default, mod.pack);
 `;
 }
 
@@ -10622,436 +9552,14 @@ export function listLanguagesBySupportLevel(
 `;
 }
 
-function languageCompositeSmokeAssertions(pack) {
-	const expectedResourceKeysByPackageName = new Map([
-		[
-			"@ismail-elkorchi/textpack-en",
-			[
-				"en-tatoeba-corpus-sentences",
-				"en-tatoeba-parallel-fra",
-				"wikidata-en-entities",
-				"wikidata-en-aliases",
-				"wikidata-en-relations",
-			],
-		],
-		[
-			"@ismail-elkorchi/textpack-ar",
-			[
-				"ar-tatoeba-corpus-sentences",
-				"ar-tatoeba-parallel-eng",
-				"wikidata-ar-entities",
-				"wikidata-ar-aliases",
-				"wikidata-ar-relations",
-			],
-		],
-		[
-			"@ismail-elkorchi/textpack-fr",
-			[
-				"fr-tatoeba-corpus-sentences",
-				"fr-tatoeba-parallel-eng",
-				"fr-normalization-elision-prefixes",
-				"fr-segmentation-gold-cases",
-				"fr-lexique-search-gold-cases",
-				"wikidata-fr-entities",
-				"wikidata-fr-aliases",
-				"wikidata-fr-relations",
-			],
-		],
-	]);
-	const expectedResourceKeys = expectedResourceKeysByPackageName.get(
-		pack.packageName,
-	);
-	if (expectedResourceKeys === undefined) return "";
-	const serializedResourceKeys = `[\n${expectedResourceKeys
-		.map((resourceKey) => `\t${JSON.stringify(resourceKey)},`)
-		.join("\n")}\n]`;
-	return `
-const requiredSlots = [
-\t"foundation",
-\t"core",
-\t"normalization",
-\t"segmentation",
-\t"lexicon",
-\t"morphology",
-\t"syntax",
-\t"kb",
-\t"search",
-\t"corpus",
-\t"parallel",
-\t"quality",
-];
-const slotStatuses = new Map(
-\tresolved.manifest.capabilitySlots?.map((slot) => [slot.slot, slot.status]) ??
-\t\t[],
-);
-
-assert.equal(
-\tresolved.manifest.components?.filter(
-\t\t(component) => component.role === "required",
-\t).length,
-\t12,
-);
-for (const slot of requiredSlots) {
-\tassert.equal(slotStatuses.get(slot), "task-supported");
-}
-for (const resourceKey of ${serializedResourceKeys}) {
-\tassert.ok(
-\t\tObject.hasOwn(resolved.resources, resourceKey),
-\t\t\`Expected generated resource \${resourceKey} to be loaded.\`,
-\t);
-}
-`;
-}
-
-function jsStringLiteral(value) {
-	return JSON.stringify(value).replace(/[^\x20-\x7E]/gu, (character) => {
-		const codePoint = character.codePointAt(0);
-		return codePoint === undefined ? "" : `\\u{${codePoint.toString(16)}}`;
-	});
-}
-
-function languageCompositeTaskSmokeAssertions(pack) {
-	if (pack.packClass !== "language-composite") return "";
-	const samplesByPackageName = new Map([
-		[
-			"@ismail-elkorchi/textpack-en",
-			{
-				languageTag: "en",
-				text: "Paris is a city.",
-				lookup: "Paris",
-				form: "walks",
-				lemma: "walk",
-				entity: "Paris",
-			},
-		],
-		[
-			"@ismail-elkorchi/textpack-ar",
-			{
-				languageTag: "ar",
-				text: "\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629} \u{645}\u{62f}\u{64a}\u{646}\u{629}.",
-				lookup: "\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629}",
-				form: "\u{627}\u{644}\u{643}\u{62a}\u{627}\u{628}",
-				lemma: "\u{643}\u{62a}\u{627}\u{628}",
-				entity: "\u{627}\u{644}\u{642}\u{627}\u{647}\u{631}\u{629}",
-			},
-		],
-		[
-			"@ismail-elkorchi/textpack-fr",
-			{
-				languageTag: "fr",
-				text: "J'aime Paris.",
-				lookup: "Paris",
-				form: "parle",
-				lemma: "parler",
-				entity: "Paris",
-			},
-		],
-	]);
-	const sample = samplesByPackageName.get(pack.packageName) ?? {
-		languageTag: pack.manifest.targets.languages?.[0] ?? "und",
-		text: "Text.",
-		lookup: "Text",
-		form: "Text",
-		lemma: "Text",
-		entity: "Text",
-	};
-	const sampleTextLiteral = jsStringLiteral(sample.text);
-	const sampleTextDeclaration =
-		`const sampleText = ${sampleTextLiteral};`.length <= 80
-			? `const sampleText = ${sampleTextLiteral};`
-			: `const sampleText =\n\t${sampleTextLiteral};`;
-	return `
-${sampleTextDeclaration}
-
-assert.equal(runtime.languageTag, ${jsStringLiteral(sample.languageTag)});
-assert.equal(runtime.pack, resolved);
-
-assert.ok((await runtime.segmentation.lexicalUnits(sampleText)).length > 0);
-assert.equal(
-\ttypeof (await runtime.normalization.normalizeText(sampleText)),
-\t"string",
-);
-assert.equal(typeof runtime.lexicon.lookup, "function");
-assert.equal(typeof runtime.morphology.analyze, "function");
-assert.equal(typeof runtime.morphology.generate, "function");
-assert.ok((await runtime.syntax.resources()).annotations.length > 0);
-assert.ok((await runtime.syntax.annotations()).length > 0);
-assert.equal(typeof runtime.kb.candidates, "function");
-assert.ok(
-\t[...(await runtime.search.analyzer()).analyze(sampleText)].length > 0,
-);
-assert.equal(typeof runtime.search.indexDocument, "function");
-assert.equal(typeof runtime.search.indexAnalysis, "function");
-assert.equal(typeof runtime.corpus.rows, "function");
-assert.equal(typeof runtime.corpus.documents, "function");
-assert.equal(typeof runtime.corpus.open, "function");
-assert.equal(typeof runtime.parallel.rows, "function");
-assert.equal(typeof runtime.parallel.links, "function");
-assert.ok((await runtime.quality.resources()).length > 0);
-assert.ok((await runtime.quality.profiles()).length > 0);
-const documentPipeline = runtime.pipeline.createDocumentAnalysisPipeline();
-assert.equal(documentPipeline.processors.length, 1);
-assert.ok(
-\tdocumentPipeline.processors[0]?.provides.some(
-\t\t(output) => output.viewKind === "search",
-\t),
-);
-assert.ok(
-\tdocumentPipeline.processors[0]?.provides.some(
-\t\t(output) => output.layer === "link.entity",
-\t),
-);
-assert.equal(typeof runtime.pipeline.runText, "function");
-assert.equal(typeof runtime.pipeline.runDocument, "function");
-`;
-}
-
-const languageCompositeConsumerTestPackages = new Set([
-	"@ismail-elkorchi/textpack-fr",
-]);
-
-function hasLanguageCompositeConsumerTest(pack) {
-	return (
-		pack.packClass === "language-composite" &&
-		languageCompositeConsumerTestPackages.has(pack.packageName)
-	);
-}
-
-function languageCompositeConsumerTest(pack) {
-	if (!hasLanguageCompositeConsumerTest(pack)) return "";
-	return `import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-
-import { createDocument } from "@ismail-elkorchi/textdoc";
-import { search, termQuery } from "@ismail-elkorchi/textsearch";
-import { ${pack.loader.functionName} } from "../dist/index.js";
-
-const reader = {
-\tasync readText({ descriptor }) {
-\t\treturn readFile(new URL(descriptor.path, descriptor.packageRoot), "utf8");
-\t},
-};
-
-const french = await ${pack.loader.functionName}({
-\treader,
-\tlicensePolicy: "allow-share-alike",
-});
-
-const articleText =
-\t"Réussite personnelle\\nEn France, j'aime apprendre chaque jour et je parle de motivation en Amérique.";
-const article = createDocument(articleText, {
-\tid: "article:consumer-fr-1",
-\tmetadata: {
-\t\ttitle: "Réussite personnelle",
-\t\tsource: "reussite-personnelle-nlp-consumer-style",
-\t},
-});
-
-assert.equal(french.languageTag, "fr");
-assert.equal(french.pack.manifest.packageName, "${pack.packageName}");
-assert.equal(
-\tfrench.pack.manifest.components?.filter(
-\t\t(component) => component.role === "required",
-\t).length,
-\t12,
-);
-
-const analysis = await french.document.analyzeDocument(article, {
-\tentityLanguage: "fr",
-\tentityMaxCandidates: 3,
-\tlexiconMaxResults: 5,
-\tmorphologyMaxResults: 5,
-});
-assert.equal(analysis.languageTag, "fr");
-assert.equal(analysis.sourceDocument.id, article.id);
-assert.ok(analysis.sentences.length > 0);
-assert.ok(analysis.words.length > 0);
-assert.ok(analysis.lexicalUnits.some((segment) => segment.text === "France"));
-assert.ok(analysis.lexicalUnits.some((segment) => segment.text === "Amérique"));
-assert.ok(analysis.lexicalUnits.some((segment) => segment.text === "parle"));
-
-const normalizedText = await french.normalization.normalizeText(
-\tarticleText,
-\t"search",
-);
-assert.ok(normalizedText.includes("reussite personnelle"));
-assert.ok(normalizedText.includes("amerique"));
-
-assert.equal(analysis.normalizedDocument.views["raw:search"]?.kind, "search");
-assert.ok(analysis.normalizedDocument.spanMaps[analysis.searchView.spanMap.id]);
-
-const parleAnalysis = analysis.lexicalUnitAnalyses.find(
-\t(entry) => entry.segment.text === "parle",
-);
-assert.ok(parleAnalysis);
-assert.ok(
-\tparleAnalysis.lexiconMatches.some((match) => match.canonical === "parler"),
-\t"French lexicon lookup should resolve parle -> parler.",
-);
-assert.ok(
-\tparleAnalysis.morphologyAnalyses.some(
-\t\t(morphologyAnalysis) => morphologyAnalysis.lemma === "parler",
-\t),
-\t"French morphology should analyze parle as a form of parler.",
-);
-
-const entityCandidates = await french.kb.candidates("France", {
-\tlanguage: "fr",
-\tmaxCandidates: 3,
-});
-assert.equal(entityCandidates[0]?.label, "France");
-
-assert.ok(
-\tObject.keys(
-\t\tanalysis.entityLinkedDocument.layers["link.entity"]?.annotations ?? {},
-\t).length >= 2,
-\t"French entity linking should annotate France and Amérique.",
-);
-
-const terms = analysis.searchTokens.map((token) => token.term);
-assert.ok(terms.includes("reussite"));
-assert.ok(terms.includes("amerique"));
-
-const searchIndex = await french.search.indexAnalysis(analysis, {
-\tindex: { id: "consumer-fr-search" },
-\tadd: { storedFields: { title: "Réussite personnelle" } },
-});
-assert.equal(searchIndex.stats.documentCount, 1);
-assert.equal(search(searchIndex, termQuery("reussite")).length, 1);
-
-const corpusResources = await french.corpus.rows();
-assert.equal(
-\tcorpusResources[0]?.descriptor.schemaId,
-\t"textdata.corpus.rows.v1",
-);
-assert.ok((corpusResources[0]?.rows.length ?? 0) > 1000);
-assert.equal(corpusResources[0]?.rows[0]?.languageTag, "fr");
-const corpusDocuments = await french.corpus.documents({ maxDocuments: 2 });
-assert.equal(corpusDocuments.length, 2);
-assert.equal(corpusDocuments[0]?.metadata.languageTag, "fr");
-const corpus = await french.corpus.open({
-\tmaxDocuments: 2,
-\tcorpus: { id: "consumer-fr-corpus" },
-});
-assert.equal(corpus.id, "consumer-fr-corpus");
-assert.equal(corpus.documents.length, 2);
-assert.ok(corpus.indexes.tokens > 0);
-
-const parallelLinks = await french.parallel.links({ targetLanguage: "en" });
-assert.ok(parallelLinks.length > 1000);
-assert.equal(parallelLinks[0]?.sourceLanguageTag, "fr");
-assert.equal(parallelLinks[0]?.targetLanguageTag, "en");
-
-assert.equal(analysis.qualityReport.target, "document");
-assert.ok((analysis.qualityReport.metrics["readability.word_count"] ?? 0) > 0);
-`;
-}
-
-function compositeSmokeTest(pack) {
-	const importedNames =
-		pack.languageSupport === true
-			? [
-					"getLanguageSupport",
-					"hasLanguageSupport",
-					"languageSupport",
-					"listLanguagesBySupportLevel",
-					pack.loader.functionName,
-					"manifest",
-				]
-			: [pack.loader.functionName, "manifest"];
-	const importStatement =
-		importedNames.length <= 2
-			? `import { ${importedNames.join(", ")} } from "../dist/index.js";`
-			: `import {
-\t${importedNames.join(",\n\t")},
-} from "../dist/index.js";`;
-	const resourceReader =
-		pack.packClass === "language-composite"
-			? `import { readFile } from "node:fs/promises";
-`
-			: "";
-	const readerDefinition =
-		pack.packClass === "language-composite"
-			? `
-const reader = {
-\tasync readText({ descriptor }) {
-\t\treturn readFile(new URL(descriptor.path, descriptor.packageRoot), "utf8");
-\t},
-};
-`
-			: "";
-	const loaderCall =
-		pack.packClass === "language-composite"
-			? `const runtime = await ${pack.loader.functionName}({ reader });
-const resolved = runtime.pack;`
-			: `const resolved = await ${pack.loader.functionName}();`;
-	const languageSupportAssertions =
-		pack.languageSupport === true
-			? `
-const english = getLanguageSupport("en");
-
-assert.ok(english);
-assert.ok(hasLanguageSupport("en", "registered"));
-assert.ok(hasLanguageSupport("en", "unicode-covered"));
-assert.ok(hasLanguageSupport("en", "profiled"));
-assert.equal(hasLanguageSupport("en", "task-supported"), true);
-assert.ok(listLanguagesBySupportLevel("registered").length > 1000);
-assert.ok(listLanguagesBySupportLevel("task-supported").length >= 2);
-assert.ok(languageSupport.length > 1000);
-`
-			: "";
-	const optionalAssertions = [
-		languageCompositeSmokeAssertions(pack),
-		languageCompositeTaskSmokeAssertions(pack),
-		languageSupportAssertions,
-	]
-		.filter((assertion) => assertion !== "")
-		.map((assertion) => assertion.trim())
-		.join("\n\n");
-	const optionalAssertionBlock =
-		optionalAssertions === "" ? "" : `\n\n${optionalAssertions}`;
-	return `import assert from "node:assert/strict";
-${resourceReader}${importStatement}
-${readerDefinition}
-${loaderCall}
-
-assert.equal(resolved.manifest.packageName, manifest.packageName);
-assert.ok(Object.keys(resolved.resources).length > 0);
-assert.ok(
-\tresolved.manifest.components?.some(
-\t\t(component) => component.role === "required",
-\t),
-);${optionalAssertionBlock}
-`;
-}
-
-function compositeNegativeTest(pack) {
-	const required = pack.components.find(
-		(component) => component.role === "required",
-	);
-	return `import assert from "node:assert/strict";
-import { ${pack.loader.functionName} } from "../dist/index.js";
-
-await assert.rejects(
-\t() =>
-\t\t${pack.loader.functionName}({
-\t\t\tresolveComponent: async () => {
-\t\t\t\tthrow new Error("missing component");
-\t\t\t},
-\t\t}),
-\t/Required textpack component ${required.packageName.replaceAll("/", "\\/")} could not be resolved: missing component/,
-);
-`;
-}
-
 function noticeMarkdown(pack, context) {
 	const packageDescription =
 		pack.packClass === "language-composite"
-			? "This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through generated loader helpers."
+			? "This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through structural pack composition."
 			: pack.packClass === "language-component-composite"
-				? "This package is a source-backed component recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through generated loader helpers."
+				? "This package is a source-backed component recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through structural pack composition."
 				: pack.packClass === "foundation-composite"
-					? "This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared foundation component textpacks through generated loader helpers and exposes the generated language-support API."
+					? "This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared foundation component textpacks through structural pack composition and exposes the generated language-support API."
 					: "This package is source-backed. Its resource payloads are deterministic transform outputs from pinned local source snapshots. The normal forge build is offline and verifies input checksums before emitting package files.";
 	return `# NOTICE
 
@@ -13212,17 +11720,17 @@ function wordnetEvaluationRecords(pack, config) {
 			recordId: `eval:${config.evaluationPrefix}:lexical-entry-volume`,
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "lexical-semantics",
-			taskType: "kb.lexical-semantics",
+			capabilitySlot: "lexicon",
+			taskType: "lexicon.lookup",
 			evaluationKind: "coverage",
-			resourceIds: [ids.lexicalEntries, ids.senses, ids.synsets],
-			metricName: "senseCount",
-			value: quality.senseCount,
-			unit: "senses",
+			resourceIds: [ids.lexicalEntries],
+			metricName: "lexicalEntryCount",
+			value: quality.lexicalEntryCount,
+			unit: "entries",
 			operator: "gte",
 			threshold: 1,
 			observations: {
-				lexicalEntryCount: quality.lexicalEntryCount,
+				senseCount: quality.senseCount,
 				synsetCount: quality.synsetCount,
 			},
 		}),
@@ -13230,7 +11738,7 @@ function wordnetEvaluationRecords(pack, config) {
 			recordId: `eval:${config.evaluationPrefix}:sense-entry-links`,
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "lexical-semantics",
+			capabilitySlot: "kb",
 			taskType: "kb.sense-linking",
 			evaluationKind: "resource-conformance",
 			resourceIds: [ids.lexicalEntries, ids.senses],
@@ -13248,7 +11756,7 @@ function wordnetEvaluationRecords(pack, config) {
 			recordId: `eval:${config.evaluationPrefix}:sense-synset-links`,
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "lexical-semantics",
+			capabilitySlot: "kb",
 			taskType: "kb.synset-linking",
 			evaluationKind: "resource-conformance",
 			resourceIds: [ids.senses, ids.synsets],
@@ -13266,7 +11774,7 @@ function wordnetEvaluationRecords(pack, config) {
 			recordId: `eval:${config.evaluationPrefix}:relation-endpoints`,
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "lexical-semantics",
+			capabilitySlot: "kb",
 			taskType: "kb.semantic-relations",
 			evaluationKind: "resource-conformance",
 			resourceIds: [ids.relations],
@@ -13942,19 +12450,7 @@ async function packageOutputsFor(pack, context) {
 		outputs.set(`${pack.packageDir}/CHANGELOG.md`, compositeChangelog(pack));
 		outputs.set(`${pack.packageDir}/tsconfig.json`, tsconfigJson());
 		outputs.set(`${pack.packageDir}/tsconfig.build.json`, tsconfigBuildJson());
-		if (pack.packClass === "language-composite") {
-			outputs.set(
-				`${pack.packageDir}/examples/fetch-style-reader.ts`,
-				languageCompositeFetchExample(pack),
-			);
-		}
 		outputs.set(`${pack.packageDir}/test/smoke.mjs`, compositeSmokeTest(pack));
-		if (hasLanguageCompositeConsumerTest(pack)) {
-			outputs.set(
-				`${pack.packageDir}/test/consumer.mjs`,
-				languageCompositeConsumerTest(pack),
-			);
-		}
 		outputs.set(
 			`${pack.packageDir}/test/negative.mjs`,
 			compositeNegativeTest(pack),
@@ -13977,12 +12473,9 @@ async function packageOutputsFor(pack, context) {
 	if (pack.generatedSourceFiles.includes("src/index.ts")) {
 		outputs.set(
 			`${pack.packageDir}/src/index.ts`,
-			isCompositePack(pack)
-				? pack.packClass === "language-composite"
-					? languageCompositeIndexTs(pack)
-					: compositeIndexTs(pack)
-				: indexTs(),
+			isCompositePack(pack) ? compositeIndexTs(pack) : indexTs(),
 		);
+		outputs.set(`${pack.packageDir}/src/pack.ts`, packTs(pack));
 	}
 	if (pack.generatedSourceFiles.includes("src/manifest.ts")) {
 		outputs.set(
@@ -14033,25 +12526,45 @@ async function packageOutputsFor(pack, context) {
 	return outputs;
 }
 
-function packageFileDigests(outputs, packageDir) {
-	const prefix = `${packageDir}/`;
-	return [...outputs.entries()]
-		.filter(([relative]) => relative.startsWith(prefix))
-		.map(([relative, text]) => ({
-			path: relative.slice(prefix.length),
-			checksum: sha256(text),
-		}))
-		.sort((left, right) => left.path.localeCompare(right.path));
-}
-
-function compositeGeneratedDataSizeBytes(outputs, pack) {
-	if (!isCompositePack(pack)) return 0;
-	const languageSupport = outputs.get(
-		`${pack.packageDir}/src/language-support.ts`,
+function expectedGeneratedFilesForPack(pack) {
+	const files = [];
+	if (isCompositePack(pack)) {
+		files.push(
+			"package.json",
+			"README.md",
+			"CHANGELOG.md",
+			"tsconfig.json",
+			"tsconfig.build.json",
+			"test/smoke.mjs",
+			"test/negative.mjs",
+		);
+		if (pack.languageSupport === true) {
+			files.push("src/language-support.ts");
+		}
+	} else if (pack.generatedPackageFiles === true) {
+		files.push(
+			"package.json",
+			"README.md",
+			"CHANGELOG.md",
+			"tsconfig.json",
+			"tsconfig.build.json",
+			"test/smoke.mjs",
+		);
+	}
+	files.push("pack.manifest.json");
+	files.push(...pack.generatedSourceFiles);
+	if (
+		pack.generatedSourceFiles.includes("src/index.ts") &&
+		!files.includes("src/pack.ts")
+	) {
+		files.push("src/pack.ts");
+	}
+	files.push(...pack.payloads.map((payload) => payload.path));
+	files.push(
+		...(pack.licenseEvidenceFiles ?? []).map((file) => file.packagePath),
 	);
-	return languageSupport === undefined
-		? 0
-		: Buffer.byteLength(languageSupport, "utf8");
+	files.push(...PACKAGE_REPORT_FILES);
+	return sorted(new Set(files));
 }
 
 async function validateSnapshotFiles(snapshot) {
@@ -14245,7 +12758,8 @@ async function buildLanguageSupportIndex(context, packs) {
 	);
 }
 
-async function collectContext() {
+async function collectContext(options = {}) {
+	const materializeResources = options.materializeResources !== false;
 	const lock = await readJson(LOCK_PATH);
 	const lockfileChecksum = sha256(await readText(LOCK_PATH));
 	expect(
@@ -14310,7 +12824,9 @@ async function collectContext() {
 	const sourceById = validateSourceCatalog(sources);
 	const sourcePolicyContext = collectSourcePolicies(sourcePolicySpecs);
 	const snapshotById = validateSnapshotCatalog(snapshots, sourceById);
-	for (const snapshot of snapshots) await validateSnapshotFiles(snapshot);
+	if (materializeResources) {
+		for (const snapshot of snapshots) await validateSnapshotFiles(snapshot);
+	}
 	for (const lockEntry of lock.snapshotLocks ?? []) {
 		const snapshot = snapshotById.get(lockEntry.snapshotId);
 		expect(
@@ -14360,9 +12876,6 @@ async function collectContext() {
 			})),
 		),
 	);
-	const compositeLoaderByPackageName = new Map(
-		compositeSpecs.map((spec) => [spec.packageName, spec.loader.functionName]),
-	);
 	const knownPackageNames = new Set([
 		...allPackSpecs.map((pack) => pack.packageName),
 		...compositeSpecs.map((spec) => spec.packageName),
@@ -14395,12 +12908,14 @@ async function collectContext() {
 			packageJson.version === manifest.version,
 			`${normalizedPackSpec.packageName} package version must match manifest version.`,
 		);
-		const payloads = await collectResourcePayloads(
-			normalizedPackSpec,
-			manifest,
-			resourceSpecById,
-		);
-		const stats = resourceStats(payloads);
+		const payloads = materializeResources
+			? await collectResourcePayloads(
+					normalizedPackSpec,
+					manifest,
+					resourceSpecById,
+				)
+			: [];
+		const stats = materializeResources ? resourceStats(payloads) : [];
 		const npmShippedSizeBytes = stats.reduce(
 			(total, resource) => total + resource.byteLength,
 			0,
@@ -14521,20 +13036,7 @@ async function collectContext() {
 				compositeSnapshotIds,
 				baseContext,
 			),
-			loader: {
-				...spec.loader,
-				optionsName: `Load${spec.loader.languageName}Options`,
-			},
-			componentLoaders: Object.fromEntries(
-				spec.components
-					.filter((component) =>
-						compositeLoaderByPackageName.has(component.packageName),
-					)
-					.map((component) => [
-						component.packageName,
-						compositeLoaderByPackageName.get(component.packageName),
-					]),
-			),
+			display: spec.display,
 			manifest,
 			npmShippedSizeBytes: 0,
 			packageDir: spec.packageDir,
@@ -14579,13 +13081,22 @@ async function collectContext() {
 		context.packs,
 	);
 	for (const pack of context.packs) {
-		const outputs = await packageOutputsFor(pack, context);
-		pack.npmShippedSizeBytes =
-			pack.npmShippedSizeBytes + compositeGeneratedDataSizeBytes(outputs, pack);
-		const fileDigests = packageFileDigests(outputs, pack.packageDir);
-		pack.fileDigests = fileDigests;
-		pack.generatedFiles = fileDigests.map((entry) => entry.path);
-		pack.outputChecksum = sha256(stableJson({ files: fileDigests }));
+		const generatedFiles = expectedGeneratedFilesForPack(pack);
+		if (pack.languageSupport === true) {
+			pack.npmShippedSizeBytes += Buffer.byteLength(
+				languageSupportTs(context.languageSupport),
+				"utf8",
+			);
+		}
+		pack.fileDigests = [];
+		pack.generatedFiles = generatedFiles;
+		pack.outputChecksum = sha256(
+			stableJson({
+				packageName: pack.packageName,
+				packageVersion: pack.packageVersion,
+				generatedFiles,
+			}),
+		);
 	}
 	const languageCompositeReadiness = languageCompositeReadinessFor(context);
 	validateDeveloperFacingCompositePublishability(
@@ -14650,6 +13161,13 @@ function inventoryFor(context) {
 				...(slot.artifactIds === undefined
 					? {}
 					: { artifactIds: slot.artifactIds }),
+				...(slot.bindings === undefined ? {} : { bindings: slot.bindings }),
+				...(slot.prerequisites === undefined
+					? {}
+					: { prerequisites: slot.prerequisites }),
+				...(slot.readerRequired === undefined
+					? {}
+					: { readerRequired: slot.readerRequired }),
 				...(slot.notes === undefined ? {} : { notes: slot.notes }),
 				...(slot.capabilities === undefined
 					? {}
@@ -15263,8 +13781,13 @@ async function writeGenerated(relative, text) {
 	await writeFile(path.join(ROOT, relative), text);
 }
 
-async function generatedOutputs() {
-	const context = await collectContext();
+function posixRelative(filePath) {
+	return filePath.split(path.sep).join("/");
+}
+
+async function generatedOutputs(options = {}) {
+	const includePackages = options.includePackages !== false;
+	const context = await collectContext({ materializeResources: false });
 	const inventory = inventoryFor(context);
 	const languageCompositeReadiness = languageCompositeReadinessFor(context);
 	const outputs = new Map([
@@ -15282,23 +13805,99 @@ async function generatedOutputs() {
 		],
 		[SIZE_REPORT_PATH, stableJson(sizeReportFor(context))],
 	]);
-	for (const pack of context.packs) {
-		for (const [relative, text] of await packageOutputsFor(pack, context)) {
-			outputs.set(relative, text);
+	if (includePackages) {
+		const packageContext = await collectContext({ materializeResources: true });
+		for (const pack of packageContext.packs) {
+			for (const [relative, text] of await packageOutputsFor(
+				pack,
+				packageContext,
+			)) {
+				outputs.set(relative, text);
+			}
+			outputs.set(
+				`${pack.packageDir}/.textpack-generated.json`,
+				stableJson(markerFor(pack, packageContext)),
+			);
 		}
-		outputs.set(
-			`${pack.packageDir}/.textpack-generated.json`,
-			stableJson(markerFor(pack, context)),
-		);
 	}
 	return outputs;
 }
 
+function generatedPackageDirs(outputs) {
+	return new Set(
+		[...outputs.keys()]
+			.filter((relative) => relative.startsWith("packages/textpacks/"))
+			.map((relative) => relative.split("/").slice(0, 3).join("/")),
+	);
+}
+
+async function cleanStaleTextpackPackageDirs(expectedPackageDirs) {
+	const textpacksDir = path.join(ROOT, "packages/textpacks");
+	let entries;
+	try {
+		entries = await readdir(textpacksDir, { withFileTypes: true });
+	} catch {
+		return;
+	}
+	for (const entry of entries) {
+		if (!entry.isDirectory()) continue;
+		const relative = `packages/textpacks/${entry.name}`;
+		if (expectedPackageDirs.has(relative)) continue;
+		const packageJsonPath = path.join(textpacksDir, entry.name, "package.json");
+		try {
+			await access(packageJsonPath);
+		} catch {
+			continue;
+		}
+		await rm(path.join(textpacksDir, entry.name), {
+			recursive: true,
+			force: true,
+		});
+	}
+}
+
+async function listFilesRecursive(dirPath, files) {
+	let entries;
+	try {
+		entries = await readdir(dirPath, { withFileTypes: true });
+	} catch {
+		return;
+	}
+	for (const entry of entries) {
+		const entryPath = path.join(dirPath, entry.name);
+		if (entry.isDirectory()) {
+			await listFilesRecursive(entryPath, files);
+			continue;
+		}
+		if (entry.isFile()) files.push(entryPath);
+	}
+}
+
+async function cleanStaleTextpackPackageFiles(outputs) {
+	const expectedFiles = new Set(outputs.keys());
+	for (const packageDir of generatedPackageDirs(outputs)) {
+		const absolutePackageDir = path.join(ROOT, packageDir);
+		const files = [];
+		await listFilesRecursive(absolutePackageDir, files);
+		for (const filePath of files) {
+			const relative = posixRelative(path.relative(ROOT, filePath));
+			if (expectedFiles.has(relative)) continue;
+			await rm(filePath, { force: true });
+		}
+	}
+}
+
 async function build(filter) {
-	const outputs = await generatedOutputs();
+	const includePackages = filter === undefined;
+	const outputs = await generatedOutputs({ includePackages });
+	if (includePackages) {
+		await cleanStaleTextpackPackageDirs(generatedPackageDirs(outputs));
+		await cleanStaleTextpackPackageFiles(outputs);
+	}
 	for (const [relative, text] of outputs) {
 		if (
 			filter === undefined ||
+			(filter === "reports" && !relative.startsWith("packages/textpacks/")) ||
 			(filter === "inventory" && relative.startsWith("docs/textpacks/")) ||
 			(filter === "size" && relative === SIZE_REPORT_PATH)
 		) {
@@ -15308,7 +13907,7 @@ async function build(filter) {
 }
 
 async function drift() {
-	const outputs = await generatedOutputs();
+	const outputs = await generatedOutputs({ includePackages: false });
 	const failures = [];
 	for (const [relative, expected] of outputs) {
 		const absolute = path.join(ROOT, relative);
@@ -15327,8 +13926,24 @@ async function drift() {
 	console.log(`Textpack forge drift OK (${outputs.size} files).`);
 }
 
+async function existingSnapshotFileState(file, absolute) {
+	try {
+		const bytes = await readFile(absolute);
+		const fileStat = await stat(absolute);
+		const checksum = sha256Bytes(bytes);
+		return {
+			exists: true,
+			matches: checksum === file.checksum && fileStat.size === file.byteLength,
+			checksum,
+			byteLength: fileStat.size,
+		};
+	} catch {
+		return { exists: false, matches: false };
+	}
+}
+
 async function licenseAudit() {
-	const context = await collectContext();
+	const context = await collectContext({ materializeResources: false });
 	const packageByName = new Map(
 		context.packs.map((pack) => [pack.packageName, pack]),
 	);
@@ -15376,15 +13991,27 @@ async function acquire() {
 		lock.snapshotPaths.map((snapshotPath) => readJson(snapshotPath)),
 	);
 	let acquiredCount = 0;
+	let alreadyCurrentCount = 0;
+	let skippedLocalDerivativeCount = 0;
 	for (const snapshot of snapshots) {
 		for (const file of snapshot.files ?? []) {
-			expect(
-				typeof file.sourceUrl === "string" && file.sourceUrl.length > 0,
-				`${snapshot.snapshotId} file ${file.path} does not declare sourceUrl.`,
-			);
 			const absolute = snapshotDataPath(
 				file.path,
 				`${snapshot.snapshotId} file path`,
+			);
+			if (typeof file.sourceUrl !== "string" || file.sourceUrl.length === 0) {
+				skippedLocalDerivativeCount += 1;
+				continue;
+			}
+			const existingState = await existingSnapshotFileState(file, absolute);
+			if (existingState.matches) {
+				alreadyCurrentCount += 1;
+				continue;
+			}
+			expect(
+				!existingState.exists,
+				`${snapshot.snapshotId} local file ${file.path} checksum mismatch.`,
+				`expected ${file.checksum} (${file.byteLength} bytes)\nactual   ${existingState.checksum} (${existingState.byteLength} bytes)`,
 			);
 			await mkdir(path.dirname(absolute), {
 				recursive: true,
@@ -15408,8 +14035,9 @@ async function acquire() {
 			acquiredCount += 1;
 		}
 	}
-	await collectContext();
-	console.log(`Textpack forge acquired ${acquiredCount} snapshot files.`);
+	console.log(
+		`Textpack forge acquired ${acquiredCount} snapshot files; ${alreadyCurrentCount} already current; skipped ${skippedLocalDerivativeCount} local derivative files.`,
+	);
 }
 
 async function snapshotUpdate() {
@@ -15492,6 +14120,10 @@ async function main() {
 		await build("inventory");
 		return;
 	}
+	if (command === "reports") {
+		await build("reports");
+		return;
+	}
 	if (command === "size") {
 		await build("size");
 		return;
@@ -15516,6 +14148,7 @@ async function main() {
 		"acquire",
 		"build",
 		"inventory",
+		"reports",
 		"size",
 		"drift",
 		"license-audit",

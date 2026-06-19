@@ -81,6 +81,12 @@ export {
 export type {
 	EntityLinkerFromPackOptions,
 	KnowledgeBaseFromPackOptions,
+	KnowledgeBaseSliceFromPackOptions,
 	TextPackEntityLinker,
 } from "./textpack.js";
-export { entityLinkerFromPack, knowledgeBaseFromPack } from "./textpack.js";
+export {
+	candidateEntitiesFromPack,
+	entityLinkerFromPack,
+	knowledgeBaseFromPack,
+	knowledgeBaseSliceFromPack,
+} from "./textpack.js";

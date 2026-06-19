@@ -12,9 +12,12 @@ import {
 	openResourceTable,
 	openResourceText,
 	type PackResourceMap,
+	requireSingleTaskResourceBinding,
+	requireTaskResourceBindings,
 	resolvePackComponents,
 	resourceKinds,
 	type TextPackManifest,
+	taskResourceIdsFromBindings,
 	textPackModalities,
 	validateManifest,
 } from "../dist/index.js";
@@ -96,6 +99,17 @@ const manifest: TextPackManifest = {
 			slot: "lexicon",
 			status: "sampled",
 			resourceIds: ["gazetteer-en-test", "lexicon-en-test"],
+			bindings: [
+				{
+					role: "table",
+					resourceId: "lexicon-en-test",
+					schemaId: "textlex.lexicon.rows.v1",
+					required: true,
+					ownerPackage: "@ismail-elkorchi/textlex",
+				},
+			],
+			prerequisites: ["core"],
+			readerRequired: true,
 			capabilities: {
 				extraction: "gazetteer",
 				terminology: "lexicon",
@@ -163,6 +177,20 @@ assert.deepEqual(textPackModalities, [
 
 const normalized = validateManifest(manifest);
 assert.equal(normalized.name, "Test Pack");
+const normalizedLexiconSlot = normalized.capabilitySlots.find(
+	(slot) => slot.slot === "lexicon",
+);
+assert.deepEqual(normalizedLexiconSlot?.bindings, [
+	{
+		role: "table",
+		resourceId: "lexicon-en-test",
+		schemaId: "textlex.lexicon.rows.v1",
+		required: true,
+		ownerPackage: "@ismail-elkorchi/textlex",
+	},
+]);
+assert.deepEqual(normalizedLexiconSlot?.prerequisites, ["core"]);
+assert.equal(normalizedLexiconSlot?.readerRequired, true);
 const recipeManifest = validateManifest({
 	schemaVersion: "1",
 	id: "pack:fr",
@@ -312,10 +340,214 @@ assert.throws(
 		}),
 	/metadata\.canonicalSchema is not supported/,
 );
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					resourceIds: ["lexicon-en-test"],
+					bindings: [
+						{
+							role: "runtime",
+							resourceId: "lexicon-en-test",
+							schemaId: "textlex.lexicon.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textlex",
+						},
+					],
+				},
+			],
+		}),
+	/role must be one of/,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					resourceIds: ["lexicon-en-test"],
+					bindings: [
+						{
+							role: "table",
+							resourceId: "lexicon-en-test",
+							schemaId: "textlex.lexicon.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textfacts",
+						},
+					],
+				},
+			],
+		}),
+	/ownerPackage must be one of/,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					resourceIds: ["lexicon-en-test"],
+					bindings: [
+						{
+							role: "table",
+							resourceId: "missing",
+							schemaId: "textlex.lexicon.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textlex",
+						},
+					],
+				},
+			],
+		}),
+	/bindings references unknown resource missing/,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					resourceIds: ["lexicon-en-test"],
+					bindings: [
+						{
+							role: "table",
+							resourceId: "lexicon-en-test",
+							schemaId: "textlex.lexicon.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textlex",
+						},
+					],
+				},
+			],
+		}),
+	/schemaId textlex\.lexicon\.v1 does not match resource schemaId textlex\.lexicon\.rows\.v1/,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					resourceIds: ["lexicon-en-test"],
+					bindings: [
+						{
+							role: "table",
+							resourceId: "gazetteer-en-test",
+							schemaId: "textlex.lexicon.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textlex",
+						},
+					],
+				},
+			],
+		}),
+	/must also be listed in resourceIds/,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					resourceIds: ["lexicon-en-test"],
+					prerequisites: ["normalization"],
+				},
+			],
+		}),
+	/prerequisites references unknown slot normalization/,
+);
 
 const pack = createPack(manifest, resources);
 assert.equal(pack.manifest.resources[0]?.schemaId, "textlex.stoplist.v1");
 assert.equal(getResource<string>(pack, "stoplist-en-test"), "a\nan\nthe\n");
+const runnableLexiconManifest: TextPackManifest = {
+	...manifest,
+	capabilitySlots: manifest.capabilitySlots.map((slot) =>
+		slot.slot === "lexicon" ? { ...slot, status: "task-supported" } : slot,
+	),
+};
+const runnableLexiconPack = createPack(runnableLexiconManifest, resources);
+assert.deepEqual(
+	taskResourceIdsFromBindings(runnableLexiconPack, {
+		slot: "lexicon",
+		ownerPackage: "@ismail-elkorchi/textlex",
+		schemaId: "textlex.lexicon.rows.v1",
+		role: "table",
+	}),
+	["lexicon-en-test"],
+);
+assert.deepEqual(
+	requireTaskResourceBindings(runnableLexiconPack, {
+		slot: "lexicon",
+		ownerPackage: "@ismail-elkorchi/textlex",
+		resourceId: "lexicon-en-test",
+	}).map((binding) => binding.resourceId),
+	["lexicon-en-test"],
+);
+assert.throws(
+	() =>
+		requireTaskResourceBindings(pack, {
+			slot: "lexicon",
+			ownerPackage: "@ismail-elkorchi/textlex",
+		}),
+	/slot lexicon is sampled, not task-runnable/,
+);
+assert.throws(
+	() =>
+		requireTaskResourceBindings(runnableLexiconPack, {
+			slot: "lexicon",
+			ownerPackage: "@ismail-elkorchi/textlex",
+			resourceId: "stoplist-en-test",
+		}),
+	/not bound for slot lexicon/,
+);
+const ambiguousPack = createPack(
+	{
+		...runnableLexiconManifest,
+		capabilitySlots: runnableLexiconManifest.capabilitySlots.map((slot) =>
+			slot.slot === "lexicon"
+				? {
+						...slot,
+						resourceIds: [...(slot.resourceIds ?? []), "stoplist-en-test"],
+						bindings: [
+							...(slot.bindings ?? []),
+							{
+								role: "table",
+								resourceId: "stoplist-en-test",
+								schemaId: "textlex.stoplist.v1",
+								required: true,
+								ownerPackage: "@ismail-elkorchi/textlex",
+							},
+						],
+					}
+				: slot,
+		),
+	},
+	resources,
+);
+assert.throws(
+	() =>
+		requireSingleTaskResourceBinding(ambiguousPack, {
+			slot: "lexicon",
+			ownerPackage: "@ismail-elkorchi/textlex",
+			role: "table",
+		}),
+	/ambiguous task resource bindings/,
+);
 assert.throws(() => getResource(pack, "missing"), /not present/);
 assert.throws(
 	() => createPack(manifest, { ...resources, extra: "bad" }),

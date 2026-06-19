@@ -2,6 +2,8 @@
 
 Final runtime package for corpus stores, structured corpus queries, corpus linguistics, terminology, lexicography, stylometry features, reuse detection, and diachronic trend tables.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Install
 
 ```sh

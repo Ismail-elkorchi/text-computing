@@ -4,6 +4,8 @@ Inspectable text quality diagnostics for final `TextDocument` values.
 
 `textquality` reports Unicode integrity, OCR/ATR noise, noisy-token candidates, OOV and lexical coverage, language/script mix, morphology coverage, punctuation and whitespace issues, readability, lexical diversity, sentence and paragraph complexity, annotation coverage/conflicts, corpus balance, metadata coverage, style findings, and processing readiness. It returns stable `QualityReport` values and can add final `quality.*` annotations.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Install
 
 ```sh

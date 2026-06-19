@@ -126,6 +126,7 @@ test("segmentation textpack resources expose a lexical-unit adapter", async () =
 	const pack = {
 		manifest: {
 			id: "pack:fr-segmentation-test",
+			packageName: "@ismail-elkorchi/textpack-fr-segmentation-test",
 			targets: { languages: ["fr"] },
 			resources: [
 				{
@@ -139,6 +140,29 @@ test("segmentation textpack resources expose a lexical-unit adapter", async () =
 					kind: "segmentation-profile" as const,
 					format: "tsv",
 					schemaId: "textdata.segmentation-table.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "segmentation",
+					status: "task-supported" as const,
+					resourceIds: ["fr-token-profile", "fr-segmentation-elision-prefixes"],
+					bindings: [
+						{
+							role: "profile" as const,
+							resourceId: "fr-token-profile",
+							schemaId: "textdata.segmentation-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata" as const,
+						},
+						{
+							role: "table" as const,
+							resourceId: "fr-segmentation-elision-prefixes",
+							schemaId: "textdata.segmentation-table.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata" as const,
+						},
+					],
 				},
 			],
 		},
@@ -171,6 +195,8 @@ test("segmentation textpack resources expose a lexical-unit adapter", async () =
 test("UD annotation textpack resources become annotation-only datasets", async () => {
 	const pack = {
 		manifest: {
+			id: "pack:ud-fixture",
+			packageName: "@ismail-elkorchi/textpack-ud-fixture",
 			resources: [
 				{
 					id: "syntax-canonical",
@@ -189,6 +215,29 @@ test("UD annotation textpack resources become annotation-only datasets", async (
 					id: "quality-evidence",
 					kind: "quality-profile" as const,
 					schemaId: "textquality.evidence.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "syntax",
+					status: "task-supported" as const,
+					resourceIds: ["syntax-canonical", "quality-evidence"],
+					bindings: [
+						{
+							role: "primary" as const,
+							resourceId: "syntax-canonical",
+							schemaId: "textdata.syntax.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata" as const,
+						},
+						{
+							role: "evidence" as const,
+							resourceId: "quality-evidence",
+							schemaId: "textquality.evidence.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textquality" as const,
+						},
+					],
 				},
 			],
 		},
@@ -271,12 +320,30 @@ test("textpack corpus adapter materializes canonical corpus resources", async ()
 	const corpusText = "id\ttext\tlanguage\nc1\tHello world\ten\n";
 	const pack = {
 		manifest: {
+			id: "pack:corpus-fixture",
+			packageName: "@ismail-elkorchi/textpack-corpus-fixture",
 			targets: { languages: ["en"] },
 			resources: [
 				{
 					id: "corpus-en",
 					kind: "corpus" as const,
 					schemaId: "textdata.corpus.rows.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "corpus",
+					status: "task-supported" as const,
+					resourceIds: ["corpus-en"],
+					bindings: [
+						{
+							role: "table" as const,
+							resourceId: "corpus-en",
+							schemaId: "textdata.corpus.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textcorpus" as const,
+						},
+					],
 				},
 			],
 		},

@@ -62,6 +62,25 @@ function textResourceReader(records: Readonly<Record<string, string>>) {
 	};
 }
 
+function kbCapabilitySlots(resourceId: string) {
+	return [
+		{
+			slot: "kb",
+			status: "task-supported" as const,
+			resourceIds: [resourceId],
+			bindings: [
+				{
+					role: "primary" as const,
+					resourceId,
+					schemaId: "textkb.knowledge-base.v1",
+					required: true,
+					ownerPackage: "@ismail-elkorchi/textkb" as const,
+				},
+			],
+		},
+	];
+}
+
 test("creates immutable knowledge bases and validates records", () => {
 	const kb = fixtureKb();
 	assert.equal(kb.id, "kb-demo");
@@ -161,6 +180,8 @@ test("generates deterministic entity concept and sense candidates", () => {
 test("canonical WordNet textpack resources become a runtime knowledge base", async () => {
 	const pack = {
 		manifest: {
+			id: "pack:wordnet-en-fixture",
+			packageName: "@ismail-elkorchi/textpack-wordnet-en-fixture",
 			resources: [
 				{
 					id: "wordnet-en-senses",
@@ -187,6 +208,7 @@ test("canonical WordNet textpack resources become a runtime knowledge base", asy
 					schemaId: "textkb.knowledge-base.v1",
 				},
 			],
+			capabilitySlots: kbCapabilitySlots("wordnet-en-kb-canonical"),
 		},
 		resources: {
 			"wordnet-en-senses": [
@@ -225,6 +247,8 @@ test("canonical WordNet textpack resources become a runtime knowledge base", asy
 test("entity linker facade uses canonical knowledge-base textpacks", async () => {
 	const pack = {
 		manifest: {
+			id: "pack:wikidata-fr-fixture",
+			packageName: "@ismail-elkorchi/textpack-wikidata-fr-fixture",
 			resources: [
 				{
 					id: "wikidata-fr-kb-canonical",
@@ -233,6 +257,7 @@ test("entity linker facade uses canonical knowledge-base textpacks", async () =>
 					schemaId: "textkb.knowledge-base.v1",
 				},
 			],
+			capabilitySlots: kbCapabilitySlots("wikidata-fr-kb-canonical"),
 		},
 		resources: {
 			"wikidata-fr-kb-canonical": JSON.stringify({
@@ -260,6 +285,8 @@ test("entity linker facade uses canonical knowledge-base textpacks", async () =>
 test("canonical WordNet loader is language-neutral", async () => {
 	const pack = {
 		manifest: {
+			id: "pack:wordnet-ar-fixture",
+			packageName: "@ismail-elkorchi/textpack-wordnet-ar-fixture",
 			resources: [
 				{
 					id: "wordnet-ar-senses",
@@ -286,6 +313,7 @@ test("canonical WordNet loader is language-neutral", async () => {
 					schemaId: "textkb.knowledge-base.v1",
 				},
 			],
+			capabilitySlots: kbCapabilitySlots("wordnet-ar-kb-canonical"),
 		},
 		resources: {
 			"wordnet-ar-senses": [
@@ -350,6 +378,8 @@ test("canonical KB textpack loader materializes file-backed resources", async ()
 	};
 	const pack = {
 		manifest: {
+			id: "pack:wordnet-en-file-fixture",
+			packageName: "@ismail-elkorchi/textpack-wordnet-en-file-fixture",
 			resources: [
 				{
 					id: "wordnet-en-senses",
@@ -376,6 +406,7 @@ test("canonical KB textpack loader materializes file-backed resources", async ()
 					schemaId: "textkb.knowledge-base.v1",
 				},
 			],
+			capabilitySlots: kbCapabilitySlots("wordnet-en-kb-canonical"),
 		},
 		resources: {
 			"wordnet-en-senses": await fileBackedTextResource(
@@ -425,6 +456,8 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 	};
 	const pack = {
 		manifest: {
+			id: "pack:wikidata-fr-file-fixture",
+			packageName: "@ismail-elkorchi/textpack-wikidata-fr-file-fixture",
 			resources: [
 				{
 					id: "wikidata-fr-entities",
@@ -451,6 +484,7 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 					schemaId: "textkb.knowledge-base.v1",
 				},
 			],
+			capabilitySlots: kbCapabilitySlots("wikidata-fr-kb-canonical"),
 		},
 		resources: {
 			"wikidata-fr-aliases": await fileBackedTextResource(

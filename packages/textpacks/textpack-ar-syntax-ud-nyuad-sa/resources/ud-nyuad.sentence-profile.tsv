@@ -1,0 +1,4 @@
+split	sentenceCount	tokenCount	averageTokenCount	maxTokenCount
+dev	1986	73945	37.23	495
+test	1963	74125	37.76	290
+train	15789	590819	37.42	609

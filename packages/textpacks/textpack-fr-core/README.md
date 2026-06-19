@@ -1,22 +1,32 @@
-# `@ismail-elkorchi/textpack-fr-core`
+# @ismail-elkorchi/textpack-fr-core
 
-French core reference resources for final `@ismail-elkorchi/textpack` workflows.
+Generated language-concrete textpack.
 
-The package exports final `manifest`, `resources`, and default `{ manifest, resources }`.
+This package is a generated data package. It exports structural textpack data only.
+Use `@ismail-elkorchi/text-computing` for developer-facing NLP task APIs.
+It is generated from pinned source snapshots by `tools/textpack-forge`.
+
+```ts
+import pack, { manifest, resources } from "@ismail-elkorchi/textpack-fr-core";
+
+console.log(manifest.packageName);
+console.log(Object.keys(resources).length);
+console.log(pack.manifest.resources.length);
+```
 
 ## Resources
 
-- `profile-fr-core`: segmentation profile
-- `abbrev-fr-core`: abbreviation table
-- `stoplist-fr-core`: stoplist
-- `lexicon-fr-core`: lexicon with inflected forms
-- `gazetteer-fr-core`: gazetteer
-- `tagset-fr-ud-lite`: dataset
-- `morph-fr-core`: morphology lookup data
-- `fst-fr-core`: finite-state examples
-- `grammar-fr-core`: grammar examples
-- `corpus-fr-smoke`: small smoke corpus
+- `fr-core-language-profile` (locale-profile, json)
+- `fr-core-orthography` (locale-profile, tsv)
+- `fr-core-punctuation` (locale-profile, tsv)
+- `fr-core-basic-segmentation` (segmentation-profile, json)
+- `fr-core-quality` (quality-profile, json)
+- `fr-core-quality-profile` (quality-profile, json)
 
-## Verification
+## Publishability
 
-`npm -w @ismail-elkorchi/textpack-fr-core run -s test:all`
+Publishable: `true`
+Status: `publishable`
+
+- None
+

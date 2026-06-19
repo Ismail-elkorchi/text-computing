@@ -20,6 +20,9 @@ import {
 	type TextPackModality,
 	type TextPackResource,
 	type TextPackTargets,
+	type TextPackTaskResourceBinding,
+	type TextPackTaskResourceBindingOwnerPackage,
+	type TextPackTaskResourceBindingRole,
 	textPackModalities,
 } from "./types.js";
 
@@ -102,6 +105,27 @@ const gapNoteStatuses = new Set([
 	"planned",
 	"artifact-backed",
 	"not-applicable",
+]);
+const taskResourceBindingRoles = new Set([
+	"primary",
+	"profile",
+	"table",
+	"index",
+	"annotation",
+	"evidence",
+	"quality",
+	"projection",
+	"metadata",
+]);
+const taskResourceBindingOwnerPackages = new Set([
+	"@ismail-elkorchi/textdata",
+	"@ismail-elkorchi/textlex",
+	"@ismail-elkorchi/textkb",
+	"@ismail-elkorchi/textnorm",
+	"@ismail-elkorchi/textsearch",
+	"@ismail-elkorchi/textquality",
+	"@ismail-elkorchi/textcorpus",
+	"@ismail-elkorchi/textparallel",
 ]);
 
 function rejectUnknownKeys(
@@ -668,6 +692,9 @@ function validateCapabilitySlots(
 				"status",
 				"resourceIds",
 				"artifactIds",
+				"bindings",
+				"prerequisites",
+				"readerRequired",
 				"notes",
 				"capabilities",
 			]),
@@ -678,6 +705,9 @@ function validateCapabilitySlots(
 			status: TextPackCapabilitySlotStatus;
 			resourceIds?: readonly string[];
 			artifactIds?: readonly string[];
+			bindings?: readonly TextPackTaskResourceBinding[];
+			prerequisites?: readonly string[];
+			readerRequired?: boolean;
 			notes?: readonly string[];
 			capabilities?: TextPackCapabilities;
 		} = {
@@ -696,6 +726,20 @@ function validateCapabilitySlots(
 			record.artifactIds,
 			`${itemPath}.artifactIds`,
 		);
+		const bindings = validateTaskResourceBindings(
+			record.bindings,
+			`${itemPath}.bindings`,
+		);
+		const prerequisites = readStringArray(
+			record.prerequisites,
+			`${itemPath}.prerequisites`,
+		);
+		if (
+			record.readerRequired !== undefined &&
+			typeof record.readerRequired !== "boolean"
+		) {
+			throw new TypeError(`${itemPath}.readerRequired must be a boolean.`);
+		}
 		const notes = readStringArray(record.notes, `${itemPath}.notes`);
 		const capabilities =
 			record.capabilities === undefined
@@ -703,11 +747,67 @@ function validateCapabilitySlots(
 				: validateCapabilities(record.capabilities, `${itemPath}.capabilities`);
 		if (resourceIds !== undefined) slot.resourceIds = resourceIds;
 		if (artifactIds !== undefined) slot.artifactIds = artifactIds;
+		if (bindings !== undefined) slot.bindings = bindings;
+		if (prerequisites !== undefined) slot.prerequisites = prerequisites;
+		if (record.readerRequired !== undefined) {
+			slot.readerRequired = record.readerRequired;
+		}
 		if (notes !== undefined) slot.notes = notes;
 		if (capabilities !== undefined) slot.capabilities = capabilities;
 		return Object.freeze(slot);
 	});
 	return Object.freeze(slots);
+}
+
+function validateTaskResourceBindings(
+	value: unknown,
+	path: string,
+): readonly TextPackTaskResourceBinding[] | undefined {
+	if (value === undefined) return undefined;
+	if (!Array.isArray(value)) throw new TypeError(`${path} must be an array.`);
+	if (value.length === 0) {
+		throw new TypeError(`${path} must contain at least one item.`);
+	}
+	const seen = new Set<string>();
+	return Object.freeze(
+		value.map((entry, index) => {
+			const itemPath = `${path}[${index}]`;
+			const record = requireRecord(entry, itemPath);
+			rejectUnknownKeys(
+				record,
+				new Set(["role", "resourceId", "schemaId", "required", "ownerPackage"]),
+				itemPath,
+			);
+			if (typeof record.required !== "boolean") {
+				throw new TypeError(`${itemPath}.required must be a boolean.`);
+			}
+			const binding = {
+				role: readEnum<TextPackTaskResourceBindingRole>(
+					record,
+					"role",
+					itemPath,
+					taskResourceBindingRoles,
+				),
+				resourceId: readRequiredString(record, "resourceId", itemPath),
+				schemaId: readRequiredString(record, "schemaId", itemPath),
+				required: record.required,
+				ownerPackage: readEnum<TextPackTaskResourceBindingOwnerPackage>(
+					record,
+					"ownerPackage",
+					itemPath,
+					taskResourceBindingOwnerPackages,
+				),
+			};
+			const key = `${binding.role}\u0000${binding.resourceId}\u0000${binding.ownerPackage}`;
+			if (seen.has(key)) {
+				throw new TypeError(
+					`${itemPath} duplicates binding for role ${binding.role}, resource ${binding.resourceId}, and owner ${binding.ownerPackage}.`,
+				);
+			}
+			seen.add(key);
+			return Object.freeze(binding);
+		}),
+	);
 }
 
 function validateGapNotes(
@@ -832,10 +932,40 @@ function validateManifestReferences(
 				);
 			}
 		}
+		for (const binding of slot.bindings ?? []) {
+			if (!resourceIds.has(binding.resourceId)) {
+				throw new TypeError(
+					`manifest.capabilitySlots.${slot.slot}.bindings references unknown resource ${binding.resourceId}.`,
+				);
+			}
+			if (
+				slot.resourceIds !== undefined &&
+				!slot.resourceIds.includes(binding.resourceId)
+			) {
+				throw new TypeError(
+					`manifest.capabilitySlots.${slot.slot}.bindings.${binding.resourceId} must also be listed in resourceIds.`,
+				);
+			}
+			const resource = resources.find(
+				(candidate) => candidate.id === binding.resourceId,
+			);
+			if (resource?.schemaId !== binding.schemaId) {
+				throw new TypeError(
+					`manifest.capabilitySlots.${slot.slot}.bindings.${binding.resourceId} schemaId ${binding.schemaId} does not match resource schemaId ${resource?.schemaId ?? "missing"}.`,
+				);
+			}
+		}
 		for (const artifactId of slot.artifactIds ?? []) {
 			if (!artifactIds.has(artifactId)) {
 				throw new TypeError(
 					`manifest.capabilitySlots.${slot.slot} references unknown artifact ${artifactId}.`,
+				);
+			}
+		}
+		for (const prerequisite of slot.prerequisites ?? []) {
+			if (!slotIds.has(prerequisite)) {
+				throw new TypeError(
+					`manifest.capabilitySlots.${slot.slot}.prerequisites references unknown slot ${prerequisite}.`,
 				);
 			}
 		}

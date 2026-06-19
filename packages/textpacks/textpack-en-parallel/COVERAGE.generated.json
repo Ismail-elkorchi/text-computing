@@ -1,0 +1,244 @@
+{
+  "capabilities": {
+    "parallel": true
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:tatoeba-en-parallel:checksum",
+        "eval:tatoeba-en-parallel:language-pair-coverage",
+        "eval:tatoeba-en-parallel:link-row-volume"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Tatoeba local link tables provide sentence-id alignments; sentence text is resolved from compatible Tatoeba sentence resources."
+      ],
+      "resourceIds": [
+        "en-tatoeba-parallel-ara",
+        "en-tatoeba-parallel-deu",
+        "en-tatoeba-parallel-ell",
+        "en-tatoeba-parallel-fra",
+        "en-tatoeba-parallel-grc",
+        "en-tatoeba-parallel-ita",
+        "en-tatoeba-parallel-lat",
+        "en-tatoeba-parallel-spa"
+      ],
+      "slot": "parallel",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "resource-inventory",
+      "limitations": [],
+      "resourceIds": [
+        "en-tatoeba-parallel-quality",
+        "en-tatoeba-parallel-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-en-parallel:full:tatoeba-eng-ara-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-ell-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-fra-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-grc-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-ita-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-lat-links:2026-06-06",
+        "artifact:textpack-en-parallel:full:tatoeba-eng-spa-links:2026-06-06"
+      ],
+      "capabilities": {
+        "parallel": true
+      },
+      "notes": [
+        "Tatoeba English-linked sentence-id alignment rows are materialized locally as canonical TSV from verified 2026-06-06 source artifacts.",
+        "Sentence text must be resolved from compatible Tatoeba sentence resources when a caller needs bilingual text pairs rather than ID alignments."
+      ],
+      "resourceIds": [
+        "en-tatoeba-parallel-ara",
+        "en-tatoeba-parallel-deu",
+        "en-tatoeba-parallel-ell",
+        "en-tatoeba-parallel-fra",
+        "en-tatoeba-parallel-grc",
+        "en-tatoeba-parallel-ita",
+        "en-tatoeba-parallel-lat",
+        "en-tatoeba-parallel-spa"
+      ],
+      "slot": "parallel",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records local link row counts, source checksum evidence, transform acceptance, and language-pair coverage."
+      ],
+      "resourceIds": [
+        "en-tatoeba-parallel-quality",
+        "en-tatoeba-parallel-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:tatoeba-en-parallel:checksum",
+    "eval:tatoeba-en-parallel:language-pair-coverage",
+    "eval:tatoeba-en-parallel:link-row-volume"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en-parallel",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 426433,
+      "checksum": "sha256:73dd80f5bf17b34f2f58bdb11092c3025e0daa7f2b0280131dd6c20b7a20ee8e",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 48605,
+      "path": "resources/tatoeba-en.parallel-ara.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-ara",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 4859685,
+      "checksum": "sha256:e6f370a7c682ccd189ab0472df15bdde19c58e3de729a5ba39d826e455b0a1f6",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 580203,
+      "path": "resources/tatoeba-en.parallel-deu.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-deu",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 267193,
+      "checksum": "sha256:feeb226b696a922b943f95b7e55ba040839991d56981431d5274ad976592dfc5",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 32319,
+      "path": "resources/tatoeba-en.parallel-ell.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-ell",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 3645417,
+      "checksum": "sha256:e4c2a6297d653b18fc37e4b9f95cf1e9ebef1fe888f7f4b7f40fd03d92a79e3c",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 435805,
+      "path": "resources/tatoeba-en.parallel-fra.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-fra",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 14733,
+      "checksum": "sha256:25f9fd4a62a38234bc5abbe72a4f84165fa6d1b3485c934f911feb2e41cf384d",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 1623,
+      "path": "resources/tatoeba-en.parallel-grc.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-grc",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 4938849,
+      "checksum": "sha256:57244227abf95928318be391c417d6e6d8a38b9b93ad7368eece7b15d16b1e5b",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 710111,
+      "path": "resources/tatoeba-en.parallel-ita.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-ita",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 396341,
+      "checksum": "sha256:0bcad4e24059e50b725c659ff333db28af2f46f303e48f28015f7a3848023755",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 43942,
+      "path": "resources/tatoeba-en.parallel-lat.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-lat",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 4060,
+      "checksum": "sha256:2c8990cd9bc443592d03d6942234d11e83ab97ae5208a8426b5fc0e032d40f72",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 107,
+      "path": "resources/tatoeba-en.parallel-quality.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-quality",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1935,
+      "checksum": "sha256:219d3a65f688339d0dd1b33daa749a7b306f266f0eb7a30c2ca63b14c480436d",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 59,
+      "path": "resources/tatoeba-en.parallel-quality-profile.json",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2484117,
+      "checksum": "sha256:7711eab02550343ae44f1e43895486df6068f50f310f697e216c63013e8f09d2",
+      "kind": "alignment-table",
+      "nonEmptyLineCount": 282355,
+      "path": "resources/tatoeba-en.parallel-spa.tsv.gz.b64",
+      "pipelineId": "tatoeba-english-parallel-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-tatoeba-parallel-spa",
+      "resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+      "sizeClass": "small"
+    }
+  ],
+  "resourceKinds": [
+    "alignment-table",
+    "quality-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "en"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Latn"
+    ]
+  }
+}

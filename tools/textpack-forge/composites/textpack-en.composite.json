@@ -27,20 +27,13 @@
 	"version": "0.1.0",
 	"packClass": "language-composite",
 	"supportLevel": "feature-complete",
-	"loader": {
-		"functionName": "loadEnglish",
+	"display": {
 		"languageName": "English"
 	},
 	"targets": {
-		"languages": [
-			"en"
-		],
-		"scripts": [
-			"Latn"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["en"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
 	},
 	"sourceIds": [
 		"source:iana:language-subtag-registry",

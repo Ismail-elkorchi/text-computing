@@ -222,6 +222,14 @@ function mergeCapabilitySlots(
 				...(existing.artifactIds ?? []),
 				...(slot.artifactIds ?? []),
 			]);
+			const bindings = uniqueBindings([
+				...(existing.bindings ?? []),
+				...(slot.bindings ?? []),
+			]);
+			const prerequisites = unique([
+				...(existing.prerequisites ?? []),
+				...(slot.prerequisites ?? []),
+			]);
 			const notes = unique([...(existing.notes ?? []), ...(slot.notes ?? [])]);
 			const capabilities = mergeCapabilities([
 				...(existing.capabilities === undefined ? [] : [existing.capabilities]),
@@ -234,6 +242,11 @@ function mergeCapabilitySlots(
 				status: nextRank > existingRank ? slot.status : existing.status,
 				...(resourceIds.length === 0 ? {} : { resourceIds }),
 				...(artifactIds.length === 0 ? {} : { artifactIds }),
+				...(bindings.length === 0 ? {} : { bindings }),
+				...(prerequisites.length === 0 ? {} : { prerequisites }),
+				...(existing.readerRequired === true || slot.readerRequired === true
+					? { readerRequired: true }
+					: {}),
 				...(notes.length === 0 ? {} : { notes }),
 				...(Object.keys(capabilities).length === 0 ? {} : { capabilities }),
 			});
@@ -243,6 +256,35 @@ function mergeCapabilitySlots(
 		[...slots.values()].sort((left, right) =>
 			left.slot.localeCompare(right.slot),
 		),
+	);
+}
+
+function uniqueBindings(
+	values: readonly NonNullable<TextPackCapabilitySlot["bindings"]>[number][],
+) {
+	const output = new Map<
+		string,
+		NonNullable<TextPackCapabilitySlot["bindings"]>[number]
+	>();
+	for (const binding of values) {
+		output.set(
+			[
+				binding.ownerPackage,
+				binding.role,
+				binding.resourceId,
+				binding.schemaId,
+				binding.required ? "required" : "optional",
+			].join("\u0000"),
+			binding,
+		);
+	}
+	return [...output.values()].sort(
+		(left, right) =>
+			left.ownerPackage.localeCompare(right.ownerPackage) ||
+			left.role.localeCompare(right.role) ||
+			left.resourceId.localeCompare(right.resourceId) ||
+			left.schemaId.localeCompare(right.schemaId) ||
+			Number(right.required) - Number(left.required),
 	);
 }
 

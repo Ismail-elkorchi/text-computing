@@ -26,8 +26,7 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadArabicMorphology",
+	"display": {
 		"languageName": "ArabicMorphology"
 	},
 	"targets": {
@@ -36,9 +35,7 @@
 		"modalities": ["typed"]
 	},
 	"sourceIds": ["source:camel:morph-msa-lrec-coling-2024"],
-	"snapshotIds": [
-		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
-	],
+	"snapshotIds": ["snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"],
 	"components": [
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",

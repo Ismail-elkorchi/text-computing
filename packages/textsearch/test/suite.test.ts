@@ -180,6 +180,8 @@ test("search profile textpack resources materialize through the adapter", async 
 	});
 	const pack = {
 		manifest: {
+			id: "pack:search:profile",
+			packageName: "@ismail-elkorchi/textpack-search-profile-test",
 			targets: { languages: ["fr"] },
 			resources: [
 				{
@@ -187,6 +189,22 @@ test("search profile textpack resources materialize through the adapter", async 
 					kind: "search-profile" as const,
 					format: "json",
 					schemaId: "textsearch.analyzer-profile.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "search",
+					status: "task-supported" as const,
+					resourceIds: ["search-fr-profile"],
+					bindings: [
+						{
+							role: "profile" as const,
+							resourceId: "search-fr-profile",
+							schemaId: "textsearch.analyzer-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textsearch" as const,
+						},
+					],
 				},
 			],
 		},
@@ -231,6 +249,121 @@ test("search profile textpack resources materialize through the adapter", async 
 		reader: textResourceReader({ "resources/search-fr.json": profileText }),
 	});
 	assert.equal(emptyIndex.fields.text?.analyzerId, "fr-basic");
+});
+
+test("search textpack adapter selects analyzer profiles from task bindings", async () => {
+	const profileA = JSON.stringify({
+		schemaVersion: "1",
+		kind: "search-profile",
+		analyzerId: "profile-a",
+		tokenizer: { type: "unicode-word-boundary" },
+	});
+	const profileB = JSON.stringify({
+		schemaVersion: "1",
+		kind: "search-profile",
+		analyzerId: "profile-b",
+		tokenizer: { type: "unicode-word-boundary" },
+	});
+	const pack = {
+		manifest: {
+			id: "pack:search:binding-selection",
+			packageName: "@ismail-elkorchi/textpack-search-binding-selection",
+			targets: { languages: ["en"] },
+			resources: [
+				{
+					id: "profile-a",
+					kind: "search-profile" as const,
+					format: "json",
+					schemaId: "textsearch.analyzer-profile.v1",
+				},
+				{
+					id: "profile-b",
+					kind: "search-profile" as const,
+					format: "json",
+					schemaId: "textsearch.analyzer-profile.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "search",
+					status: "task-supported" as const,
+					resourceIds: ["profile-b"],
+					bindings: [
+						{
+							role: "profile" as const,
+							resourceId: "profile-b",
+							schemaId: "textsearch.analyzer-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textsearch" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: {
+			"profile-a": profileA,
+			"profile-b": profileB,
+		},
+	};
+	assert.equal((await analyzerFromPack(pack)).id, "profile-b");
+	await assert.rejects(
+		() => analyzerFromPack(pack, { resourceId: "profile-a" }),
+		/not bound for slot search/,
+	);
+	const ambiguousPack = {
+		...pack,
+		manifest: {
+			...pack.manifest,
+			capabilitySlots: [
+				{
+					slot: "search",
+					status: "task-supported" as const,
+					resourceIds: ["profile-a", "profile-b"],
+					bindings: [
+						{
+							role: "profile" as const,
+							resourceId: "profile-a",
+							schemaId: "textsearch.analyzer-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textsearch" as const,
+						},
+						{
+							role: "profile" as const,
+							resourceId: "profile-b",
+							schemaId: "textsearch.analyzer-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textsearch" as const,
+						},
+					],
+				},
+			],
+		},
+	};
+	await assert.rejects(
+		() => analyzerFromPack(ambiguousPack),
+		/ambiguous task resource bindings/,
+	);
+	assert.equal(
+		(await analyzerFromPack(ambiguousPack, { resourceId: "profile-a" })).id,
+		"profile-a",
+	);
+	const missingBindingPack = {
+		...pack,
+		manifest: {
+			...pack.manifest,
+			capabilitySlots: [
+				{
+					slot: "search",
+					status: "task-supported" as const,
+					resourceIds: ["profile-a"],
+				},
+			],
+		},
+	};
+	await assert.rejects(
+		() => analyzerFromPack(missingBindingPack),
+		/no task resource bindings for slot search/,
+	);
 });
 
 test("builds fielded positional indexes without mutating source documents", () => {

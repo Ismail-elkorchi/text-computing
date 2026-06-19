@@ -1,0 +1,118 @@
+{
+  "acceptedRecordCount": 718695,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06"
+      ],
+      "notes": [
+        "Tatoeba French detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+        "The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-corpus-sentences",
+        "fr-tatoeba-corpus-canonical"
+      ],
+      "slot": "corpus",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
+      ],
+      "resourceIds": [
+        "fr-tatoeba-corpus-quality",
+        "fr-tatoeba-corpus-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-fr-corpus",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 4,
+  "resourcePaths": [
+    "resources/tatoeba-fr.corpus.json",
+    "resources/tatoeba-fr.corpus-quality.json",
+    "resources/tatoeba-fr.corpus-quality-profile.json",
+    "resources/tatoeba-fr.sentences.tsv.gz.b64"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+  ],
+  "resources": [
+    {
+      "byteLength": 1115,
+      "checksum": "sha256:a903a5e0762abc6dc6d0ef3598b24e18ff094b83cd76013fd50a7c81607afa45",
+      "id": "fr-tatoeba-corpus-canonical",
+      "kind": "corpus",
+      "lineCount": 34,
+      "nonEmptyLineCount": 33,
+      "path": "resources/tatoeba-fr.corpus.json",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 1115,
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 899,
+      "checksum": "sha256:5fda2a6afa7254d3d9591c8e06d19f71bc47a7baa4e975c1b77310286791e21d",
+      "id": "fr-tatoeba-corpus-quality",
+      "kind": "quality-profile",
+      "lineCount": 21,
+      "nonEmptyLineCount": 20,
+      "path": "resources/tatoeba-fr.corpus-quality.json",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 899,
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1345,
+      "checksum": "sha256:d5babdabae9427ebb8d3d605f4a932368765fec38666595bb9eaadd01fea8f4a",
+      "id": "fr-tatoeba-corpus-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 46,
+      "nonEmptyLineCount": 45,
+      "path": "resources/tatoeba-fr.corpus-quality-profile.json",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 1345,
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 26671945,
+      "checksum": "sha256:8526a9895132794ee1bfd5837c0da3e96968065b2e1c1aa482dd46669b087916",
+      "id": "fr-tatoeba-corpus-sentences",
+      "kind": "corpus",
+      "lineCount": 718598,
+      "nonEmptyLineCount": 718597,
+      "path": "resources/tatoeba-fr.sentences.tsv.gz.b64",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts",
+      "resourceTextByteLength": 77091245,
+      "sizeClass": "medium"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "source-backed foundation slice; downstream engine integration is follow-up"
+  ]
+}

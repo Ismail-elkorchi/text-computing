@@ -1,0 +1,118 @@
+{
+  "acceptedRecordCount": 68073,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "artifactIds": [
+        "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06"
+      ],
+      "notes": [
+        "Tatoeba Arabic detailed sentence rows are materialized locally as canonical TSV from the verified 2026-06-06 source artifact.",
+        "The pack scope is the Tatoeba sentence export; it does not claim balanced reference-corpus coverage."
+      ],
+      "resourceIds": [
+        "ar-tatoeba-corpus-sentences",
+        "ar-tatoeba-corpus-canonical"
+      ],
+      "slot": "corpus",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records local row count, source checksum evidence, transform acceptance, and attribution fields."
+      ],
+      "resourceIds": [
+        "ar-tatoeba-corpus-quality",
+        "ar-tatoeba-corpus-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-corpus",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 4,
+  "resourcePaths": [
+    "resources/tatoeba-ar.corpus.json",
+    "resources/tatoeba-ar.corpus-quality.json",
+    "resources/tatoeba-ar.corpus-quality-profile.json",
+    "resources/tatoeba-ar.sentences.tsv.gz.b64"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
+  ],
+  "resources": [
+    {
+      "byteLength": 1114,
+      "checksum": "sha256:ee7122e25157b3610c12f94ae539a124ba31133bb94cfbd64c1cf9126bd9252d",
+      "id": "ar-tatoeba-corpus-canonical",
+      "kind": "corpus",
+      "lineCount": 34,
+      "nonEmptyLineCount": 33,
+      "path": "resources/tatoeba-ar.corpus.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 1114,
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 895,
+      "checksum": "sha256:4ed720b4e8d06a9c3eb4da1342e0549c5cec19283f44ded459f44ca31a6d5b44",
+      "id": "ar-tatoeba-corpus-quality",
+      "kind": "quality-profile",
+      "lineCount": 21,
+      "nonEmptyLineCount": 20,
+      "path": "resources/tatoeba-ar.corpus-quality.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 895,
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1344,
+      "checksum": "sha256:fd8a5aa6b8b4f90c6a5ffa2ea0d18740f778d405f23466c0746a789d3b8a652d",
+      "id": "ar-tatoeba-corpus-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 46,
+      "nonEmptyLineCount": 45,
+      "path": "resources/tatoeba-ar.corpus-quality-profile.json",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 1344,
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2210785,
+      "checksum": "sha256:25934fc4d63b72bcfac67c1f83d3617da81f7c0d520af4f9b35063666d82f6bc",
+      "id": "ar-tatoeba-corpus-sentences",
+      "kind": "corpus",
+      "lineCount": 67976,
+      "nonEmptyLineCount": 67975,
+      "path": "resources/tatoeba-ar.sentences.tsv.gz.b64",
+      "pipelineId": "tatoeba-arabic-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts",
+      "resourceTextByteLength": 7313057,
+      "sizeClass": "small"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "source-backed foundation slice; downstream engine integration is follow-up"
+  ]
+}

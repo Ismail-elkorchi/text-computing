@@ -1,0 +1,168 @@
+{
+  "capabilities": {
+    "normalization": "rules"
+  },
+  "capabilityEvidence": [
+    {
+      "evaluationRecordIds": [
+        "eval:ar-normalization:camel-evidence-codepoints",
+        "eval:ar-normalization:cldr-likely-subtag",
+        "eval:ar-normalization:profile-rules",
+        "eval:ar-normalization:unicode-nfc-evidence"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "This verifies the generated Arabic MSA lookup normalization profile, not dialectal normalization, transliteration, spelling correction, OCR cleanup, or noisy-text normalization accuracy."
+      ],
+      "resourceIds": [
+        "ar-normalization-rules",
+        "ar-normalization-observed-codepoints",
+        "ar-normalization-profile"
+      ],
+      "slot": "normalization",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:ar-normalization:transform-rejections"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [],
+      "resourceIds": [
+        "ar-normalization-quality",
+        "ar-normalization-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "capabilitySlots": [
+    {
+      "capabilities": {
+        "normalization": "rules"
+      },
+      "notes": [
+        "Arabic MSA lookup normalization is generated from Unicode/CLDR policy plus CAMeL Morph MSA observed character evidence."
+      ],
+      "resourceIds": [
+        "ar-normalization-rules",
+        "ar-normalization-observed-codepoints",
+        "ar-normalization-profile"
+      ],
+      "slot": "normalization",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "Generated quality profile records source coverage, rule counts, observed codepoint evidence, accepted records, rejected records, and scope limitations."
+      ],
+      "resourceIds": [
+        "ar-normalization-quality",
+        "ar-normalization-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [],
+  "coverageStatus": "evaluated",
+  "evaluationRecordIds": [
+    "eval:ar-normalization:camel-evidence-codepoints",
+    "eval:ar-normalization:cldr-likely-subtag",
+    "eval:ar-normalization:profile-rules",
+    "eval:ar-normalization:transform-rejections",
+    "eval:ar-normalization:unicode-nfc-evidence"
+  ],
+  "gapNotes": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-normalization",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceCoverage": [
+    {
+      "byteLength": 162,
+      "checksum": "sha256:29d2973b1436014af335788e0e6b98f1f2f699d93be4ec38e23e7311807be094",
+      "kind": "normalization-profile",
+      "nonEmptyLineCount": 9,
+      "path": "resources/ar.normalization-observed-codepoints.tsv",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-normalization-observed-codepoints",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 5772,
+      "checksum": "sha256:815e26c0aa1d45f19e2fec5893932be98a7d0ecfd71326a6f82330beb9a5d240",
+      "kind": "normalization-profile",
+      "nonEmptyLineCount": 197,
+      "path": "resources/ar.normalization.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-normalization-profile",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 811,
+      "checksum": "sha256:94d1d277a949f8a692671c5f540ed19b80ff5544d793374316fb2b5996577e98",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 24,
+      "path": "resources/ar.normalization.quality.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-normalization-quality",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1163,
+      "checksum": "sha256:5affbca0b05411e2868442f1a24dcf1958e4b787cb697c2edbd4a0fb87beb28d",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 45,
+      "path": "resources/ar.normalization.quality-profile.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-normalization-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1238,
+      "checksum": "sha256:6f774cf6f8c74b95465107f08c5efbd35afe2efcbbe5e46f493217f66bfc840f",
+      "kind": "normalization-profile",
+      "nonEmptyLineCount": 11,
+      "path": "resources/ar.normalization-rules.tsv",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "ar-normalization-rules",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "sizeClass": "tiny"
+    }
+  ],
+  "resourceKinds": [
+    "normalization-profile",
+    "quality-profile"
+  ],
+  "schemaVersion": "1",
+  "targets": {
+    "languages": [
+      "ar"
+    ],
+    "modalities": [
+      "typed"
+    ],
+    "scripts": [
+      "Arab"
+    ]
+  }
+}

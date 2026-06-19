@@ -1,0 +1,42 @@
+{
+  "forgeVersion": "0.1.0",
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "generatedFiles": [
+    "ATTRIBUTION.generated.md",
+    "CHANGELOG.md",
+    "COVERAGE.generated.json",
+    "EVALUATION.generated.json",
+    "LICENSE.generated.md",
+    "NOTICE.generated.md",
+    "pack.manifest.json",
+    "package.json",
+    "QUALITY.generated.json",
+    "README.md",
+    "SOURCES.generated.json",
+    "src/index.ts",
+    "src/manifest.ts",
+    "src/pack.ts",
+    "src/resources.ts",
+    "test/negative.mjs",
+    "test/smoke.mjs",
+    "tsconfig.build.json",
+    "tsconfig.json"
+  ],
+  "generatorCommand": "node tools/textpack-forge/cli.mjs build",
+  "lockfile": "tools/textpack-forge/forge.lock.json",
+  "lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+  "mode": "source-backed",
+  "outputChecksum": "sha256:bf4133a6300a534ff79c1e8b89903662bccfb7a430e47c03c7bc1460ae089ff4",
+  "packSpecPath": "tools/textpack-forge/composites/textpack-fr-search.composite.json",
+  "packageName": "@ismail-elkorchi/textpack-fr-search",
+  "packageVersion": "0.1.0",
+  "policySurface": "policy-expanded-wrapper",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "schemaVersion": "1"
+}

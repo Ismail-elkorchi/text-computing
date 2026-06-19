@@ -2,6 +2,8 @@
 
 Finite-state automata and transducers for deterministic TypeScript text processing.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Quick Start
 
 ```ts

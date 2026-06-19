@@ -1,2 +1,0 @@
-pluriel-s->singulier
-élision-lapostrophe->article

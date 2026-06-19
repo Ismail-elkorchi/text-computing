@@ -303,6 +303,8 @@ const normalizationText =
 	"kind\tsource\ttarget\nelision\tl'\tle\naccent\te\te\n";
 const normalizationPack = {
 	manifest: {
+		id: "pack:norm:table",
+		packageName: "@ismail-elkorchi/textpack-norm-table-test",
 		targets: { languages: ["fr"] },
 		resources: [
 			{
@@ -310,6 +312,22 @@ const normalizationPack = {
 				kind: "normalization-profile" as const,
 				format: "tsv",
 				schemaId: "textnorm.rules.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "normalization",
+				status: "task-supported" as const,
+				resourceIds: ["normalization-fr-profile"],
+				bindings: [
+					{
+						role: "table" as const,
+						resourceId: "normalization-fr-profile",
+						schemaId: "textnorm.rules.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textnorm" as const,
+					},
+				],
 			},
 		],
 	},
@@ -364,6 +382,8 @@ const normalizationProfileText = JSON.stringify({
 });
 const normalizationProfilePack = {
 	manifest: {
+		id: "pack:norm:profile",
+		packageName: "@ismail-elkorchi/textpack-norm-profile-test",
 		targets: { languages: ["fr"] },
 		resources: [
 			{
@@ -371,6 +391,22 @@ const normalizationProfilePack = {
 				kind: "normalization-profile" as const,
 				format: "json",
 				schemaId: "textnorm.profile.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "normalization",
+				status: "task-supported" as const,
+				resourceIds: ["fr-normalization-profile"],
+				bindings: [
+					{
+						role: "profile" as const,
+						resourceId: "fr-normalization-profile",
+						schemaId: "textnorm.profile.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textnorm" as const,
+					},
+				],
 			},
 		],
 	},

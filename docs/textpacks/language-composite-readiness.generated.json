@@ -200,7 +200,8 @@
             },
             {
               "capabilitySlots": [
-                "lexical-semantics",
+                "kb",
+                "lexicon",
                 "quality"
               ],
               "packClass": "kb",
@@ -403,7 +404,8 @@
             },
             {
               "capabilitySlots": [
-                "lexical-semantics",
+                "kb",
+                "lexicon",
                 "quality"
               ],
               "packClass": "kb",
@@ -742,7 +744,8 @@
             },
             {
               "capabilitySlots": [
-                "lexical-semantics",
+                "kb",
+                "lexicon",
                 "quality"
               ],
               "packClass": "kb",
@@ -1042,7 +1045,8 @@
           "candidatePacks": [
             {
               "capabilitySlots": [
-                "lexical-semantics",
+                "kb",
+                "lexicon",
                 "quality"
               ],
               "packClass": "kb",
@@ -1249,7 +1253,8 @@
             },
             {
               "capabilitySlots": [
-                "lexical-semantics",
+                "kb",
+                "lexicon",
                 "quality"
               ],
               "packClass": "kb",
@@ -1592,7 +1597,8 @@
             },
             {
               "capabilitySlots": [
-                "lexical-semantics",
+                "kb",
+                "lexicon",
                 "quality"
               ],
               "packClass": "kb",

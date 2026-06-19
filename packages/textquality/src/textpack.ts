@@ -1,13 +1,15 @@
 import type { TextDocument } from "@ismail-elkorchi/textdoc";
 import {
-	listResources,
 	openResourceJson,
 	openResourceTable,
 	openResourceText,
+	requireSingleTaskResourceBinding,
 	type TextPack,
 	type TextPackMaterializedTable,
 	type TextPackResource,
 	type TextPackResourceReader,
+	type TextPackTaskResourceBindingRole,
+	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 import {
 	analyzeDocumentQuality,
@@ -31,6 +33,8 @@ export interface QualityResourcesFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
 	readonly schemaIds?: readonly string[];
+	readonly slot?: string;
+	readonly role?: TextPackTaskResourceBindingRole;
 }
 
 export interface QualityProfileFromPackOptions
@@ -38,8 +42,24 @@ export interface QualityProfileFromPackOptions
 	readonly resourceId?: string;
 }
 
-function idSet(values: readonly string[] | undefined): ReadonlySet<string> {
-	return new Set(values ?? []);
+function resourcesById(
+	pack: TextPack,
+	resourceIds: readonly string[],
+): readonly TextPackResource[] {
+	const byId = new Map(
+		pack.manifest.resources.map((resource) => [resource.id, resource]),
+	);
+	return Object.freeze(
+		resourceIds.map((resourceId) => {
+			const resource = byId.get(resourceId);
+			if (resource === undefined) {
+				throw new TypeError(
+					`Textpack ${pack.manifest.packageName} is missing bound resource ${resourceId}.`,
+				);
+			}
+			return resource;
+		}),
+	);
 }
 
 function isJson(resource: TextPackResource): boolean {
@@ -91,15 +111,19 @@ export async function qualityResourcesFromPack(
 	pack: TextPack,
 	options: QualityResourcesFromPackOptions = {},
 ): Promise<readonly TextQualityPackResource[]> {
-	const ids = idSet(options.resourceIds);
-	const resources = listResources(pack, {
+	const resourceIds = taskResourceIdsFromBindings(pack, {
+		slot: options.slot ?? "quality",
+		ownerPackage: "@ismail-elkorchi/textquality",
 		schemaId: options.schemaIds ?? [
 			"textquality.profile.v1",
 			"textquality.evidence.v1",
 		],
-	})
-		.filter((resource) => ids.size === 0 || ids.has(resource.id))
-		.sort((left, right) => left.id.localeCompare(right.id));
+		...(options.role === undefined ? {} : { role: options.role }),
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
+	const resources = resourcesById(pack, resourceIds);
 	return Promise.all(
 		resources.map((resource) =>
 			materializeQualityResource(pack, resource, options.reader),
@@ -166,13 +190,20 @@ export async function qualityProfileFromPack(
 	pack: TextPack,
 	options: QualityProfileFromPackOptions = {},
 ): Promise<QualityProfile> {
-	const resourceIds =
-		options.resourceId === undefined
-			? options.resourceIds
-			: [options.resourceId];
+	const profileBinding = requireSingleTaskResourceBinding(pack, {
+		slot: options.slot ?? "quality",
+		ownerPackage: "@ismail-elkorchi/textquality",
+		schemaId: "textquality.profile.v1",
+		role: options.role ?? "quality",
+		...(options.resourceId === undefined
+			? options.resourceIds === undefined
+				? {}
+				: { resourceIds: options.resourceIds }
+			: { resourceId: options.resourceId }),
+	});
 	const resources = await qualityResourcesFromPack(pack, {
 		...(options.reader !== undefined ? { reader: options.reader } : {}),
-		...(resourceIds !== undefined ? { resourceIds } : {}),
+		resourceIds: [profileBinding.resourceId],
 		schemaIds: ["textquality.profile.v1"],
 	});
 	const resource = resources[0];

@@ -1181,7 +1181,7 @@
       ],
       "licenseExpression": "CC-BY-2.0-FR",
       "name": "Tatoeba sentences",
-      "notes": "Attribution must preserve sentence-level author/source requirements. sources.md classifies Tatoeba as second wave for English, Arabic, and French; keep artifact descriptors private until the corpus/parallel phase is explicitly activated with local materialized rows or indexes.",
+      "notes": "Attribution must preserve sentence-level author/source requirements. Source policy records classify Tatoeba as second wave for English, Arabic, and French; keep artifact descriptors private until the corpus/parallel phase is explicitly activated with local materialized rows or indexes.",
       "policyClass": "attribution",
       "priority": "second",
       "publishableByDefault": false,

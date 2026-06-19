@@ -1,0 +1,45 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "tatoeba-en-local-corpus-rows",
+      "message": "Tatoeba English sentence data is materialized as local canonical TSV rows.",
+      "metadata": {
+        "artifactId": "artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06",
+        "resourceId": "en-tatoeba-corpus-sentences",
+        "rowChecksum": "sha256:76c777fb2688d5cef626f780c45625c72b01e040cf5de62789f426fc31fcc6e4"
+      },
+      "severity": "info",
+      "task": "corpus.materialization"
+    },
+    {
+      "diagnosticId": "tatoeba-en-attribution-corpus-fields",
+      "message": "The pinned detailed sentence export preserves owner and timestamp fields for attribution-aware downstream use.",
+      "metadata": {
+        "licenseExpression": "CC-BY-2.0-FR"
+      },
+      "severity": "info",
+      "task": "corpus.license"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "en",
+  "metrics": [
+    {
+      "metricId": "sentence-row-count",
+      "name": "sentenceRowCount",
+      "unit": "rows",
+      "value": 2028855
+    },
+    {
+      "metricId": "rejected-row-count",
+      "name": "rejectedRowCount",
+      "unit": "rows",
+      "value": 0
+    }
+  ],
+  "profileId": "tatoeba-en-corpus-materialized-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

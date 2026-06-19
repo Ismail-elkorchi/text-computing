@@ -13,7 +13,7 @@
 		"version",
 		"packClass",
 		"supportLevel",
-		"loader",
+		"display",
 		"targets",
 		"components",
 		"capabilitySlots",
@@ -68,12 +68,11 @@
 				"feature-complete"
 			]
 		},
-		"loader": {
+		"display": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["functionName", "languageName"],
+			"required": ["languageName"],
 			"properties": {
-				"functionName": { "type": "string", "minLength": 1 },
 				"languageName": { "type": "string", "minLength": 1 }
 			}
 		},

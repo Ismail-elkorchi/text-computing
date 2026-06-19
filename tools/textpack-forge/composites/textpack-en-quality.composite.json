@@ -26,20 +26,13 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadEnglishQuality",
+	"display": {
 		"languageName": "EnglishQuality"
 	},
 	"targets": {
-		"languages": [
-			"en"
-		],
-		"scripts": [
-			"Latn"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["en"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
 	},
 	"sourceIds": [
 		"source:iana:language-subtag-registry",

@@ -1,0 +1,20 @@
+{
+  "artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
+  "localResourceChecksum": "sha256:33aa70eab906f119b5b5b8a0accf1a771e8d7ef8dc3d3e60e6b0690e74bf0ae1",
+  "localResourceId": "ar-tatoeba-corpus-sentences",
+  "materializedRowCount": 67974,
+  "pipelineId": "tatoeba-arabic-corpus-artifact",
+  "pipelineVersion": "0.1.0",
+  "recordsAccepted": 67974,
+  "recordsRejected": 0,
+  "rowCount": 67974,
+  "schemaVersion": "1",
+  "sha256Checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77",
+  "sizeBytes": 1198138,
+  "sourceId": "source:tatoeba:weekly-arabic-2026-06-06",
+  "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2",
+  "version": "2026-06-06",
+  "warnings": [
+    "The detailed export includes contributor fields needed for attribution-aware downstream processing."
+  ]
+}

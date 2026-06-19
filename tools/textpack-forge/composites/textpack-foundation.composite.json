@@ -26,8 +26,7 @@
 	"version": "0.1.0",
 	"packClass": "foundation-composite",
 	"supportLevel": "profiled",
-	"loader": {
-		"functionName": "loadFoundation",
+	"display": {
 		"languageName": "Foundation"
 	},
 	"languageSupport": true,

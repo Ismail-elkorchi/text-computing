@@ -1,0 +1,386 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en-core",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "graphemeRangeCount": 1429,
+          "sentenceRangeCount": 2930
+        },
+        "resourceIds": [
+          "en-core-basic-segmentation"
+        ]
+      },
+      "limitations": [
+        "This verifies a basic Unicode UAX #29 segmentation baseline; richer English segmentation is provided by textpack-en-segmentation."
+      ],
+      "metric": {
+        "name": "wordRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 1432
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:basic-segmentation-baseline",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.basic-segmentation"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "ianaFileDate": "2026-05-05",
+          "ianaSuppressScript": "Latn"
+        },
+        "resourceIds": [
+          "en-core-language-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "likelySubtag",
+        "operator": "eq",
+        "threshold": "en-Latn-US",
+        "unit": "tag",
+        "value": "en-Latn-US"
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:iana-language-profile",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.language-profile"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "en-core-orthography"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "latinScriptRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 61
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:latin-orthography-ranges",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.orthography"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "en-core-abbreviations"
+        ]
+      },
+      "limitations": [
+        "SCOWLv2 abbreviation rows are lexical/POS resources; they are not a sentence-boundary disambiguation model."
+      ],
+      "metric": {
+        "name": "abbreviationCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "rows",
+        "value": 2807
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:scowl-abbreviation-rows",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.abbreviation-table"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "en-core-function-words"
+        ]
+      },
+      "limitations": [
+        "Rows are SCOWLv2 closed-class POS records with SCOWL size <= 60; they are not corpus-frequency stopword weights."
+      ],
+      "metric": {
+        "name": "functionWordCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "rows",
+        "value": 326
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:scowl-function-word-rows",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.stoplist-candidates"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "en-core-quality"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:transform-rejections",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:esdb:wordlist-diff-en-default-2026-02-25",
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "en-core-punctuation"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "punctuationRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 396
+      },
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "pipelineId": "english-core-profile",
+      "recordId": "eval:en-core:unicode-punctuation-ranges",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.punctuation"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-en-core:english-core-profile"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 7,
+    "recordCount": 7,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

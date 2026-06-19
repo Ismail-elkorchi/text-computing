@@ -2,6 +2,8 @@
 
 Unicode-pinned, deterministic facts about one text. No language packs, no corpus logic, no neural or statistical models.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Entrypoints
 
 ```ts
@@ -33,4 +35,3 @@ console.log(profile.counts.graphemes);
 ## Boundaries
 
 `textfacts` works only on local single-text facts and spec-pinned Unicode algorithms. It does not load resource packs, perform language-specific tokenization, run corpus analysis, or execute pipelines.
-

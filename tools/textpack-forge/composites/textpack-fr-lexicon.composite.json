@@ -29,8 +29,7 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadFrenchLexicon",
+	"display": {
 		"languageName": "FrenchLexicon"
 	},
 	"targets": {

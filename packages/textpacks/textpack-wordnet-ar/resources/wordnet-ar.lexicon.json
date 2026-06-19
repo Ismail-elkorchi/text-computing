@@ -1,0 +1,15 @@
+{
+  "entryCount": 136041,
+  "kind": "lexicon",
+  "languageTag": "ar",
+  "lexiconId": "wordnet-ar-lexicon",
+  "resourceRefs": [
+    {
+      "recordCount": 136041,
+      "resourceId": "wordnet-ar-lexical-entries",
+      "role": "entries"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Arab"
+}

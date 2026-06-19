@@ -1,17 +1,22 @@
 import {
-	listResources,
 	openResourceJson,
 	openResourceTable,
 	type TextPack,
 	type TextPackMaterializedTable,
 	type TextPackResource,
 	type TextPackResourceReader,
+	type TextPackTaskResourceBindingOwnerPackage,
+	type TextPackTaskResourceBindingRole,
+	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 
 export interface TextDataRowsFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
 	readonly schemaIds?: readonly string[];
+	readonly slot?: string;
+	readonly role?: TextPackTaskResourceBindingRole;
+	readonly ownerPackage?: TextPackTaskResourceBindingOwnerPackage;
 }
 
 export interface TextDataTableResource {
@@ -49,21 +54,24 @@ export interface TextDataSegmentationAdapter {
 	readonly sentences: (text: string) => readonly TextDataSegment[];
 }
 
-function resourceIdSet(
-	resourceIds: readonly string[] | undefined,
-): ReadonlySet<string> {
-	return new Set(resourceIds ?? []);
-}
-
-function selectedResources(
+function resourcesByBinding(
 	pack: TextPack,
-	schemaIds: readonly string[],
-	resourceIds: readonly string[] | undefined,
+	resourceIds: readonly string[],
 ): readonly TextPackResource[] {
-	const ids = resourceIdSet(resourceIds);
-	return listResources(pack, { schemaId: schemaIds })
-		.filter((resource) => ids.size === 0 || ids.has(resource.id))
-		.sort((left, right) => left.id.localeCompare(right.id));
+	const byId = new Map(
+		pack.manifest.resources.map((resource) => [resource.id, resource]),
+	);
+	return Object.freeze(
+		resourceIds.map((resourceId) => {
+			const resource = byId.get(resourceId);
+			if (resource === undefined) {
+				throw new TypeError(
+					`Textpack ${pack.manifest.packageName} is missing bound resource ${resourceId}.`,
+				);
+			}
+			return resource;
+		}),
+	);
 }
 
 async function tableResourceFromPack(
@@ -101,12 +109,21 @@ export async function corpusRowsFromPack(
 	pack: TextPack,
 	options: TextDataRowsFromPackOptions = {},
 ): Promise<readonly TextDataTableResource[]> {
+	const resourceIds = taskResourceIdsFromBindings(pack, {
+		slot: options.slot ?? "corpus",
+		...(options.ownerPackage === undefined
+			? {}
+			: { ownerPackage: options.ownerPackage }),
+		schemaId: options.schemaIds ?? ["textdata.corpus.rows.v1"],
+		role: options.role ?? "table",
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
 	return Promise.all(
-		selectedResources(
-			pack,
-			options.schemaIds ?? ["textdata.corpus.rows.v1"],
-			options.resourceIds,
-		).map((resource) => tableResourceFromPack(pack, resource, options.reader)),
+		resourcesByBinding(pack, resourceIds).map((resource) =>
+			tableResourceFromPack(pack, resource, options.reader),
+		),
 	);
 }
 
@@ -114,14 +131,20 @@ export async function segmentationResourcesFromPack(
 	pack: TextPack,
 	options: TextDataRowsFromPackOptions = {},
 ): Promise<TextDataSegmentationResources> {
-	const ids = resourceIdSet(options.resourceIds);
 	const schemaIds = options.schemaIds ?? [
 		"textdata.segmentation-profile.v1",
 		"textdata.segmentation-table.v1",
 	];
-	const resources = listResources(pack, { schemaId: schemaIds })
-		.filter((resource) => ids.size === 0 || ids.has(resource.id))
-		.sort((left, right) => left.id.localeCompare(right.id));
+	const resourceIds = taskResourceIdsFromBindings(pack, {
+		slot: options.slot ?? "segmentation",
+		ownerPackage: options.ownerPackage ?? "@ismail-elkorchi/textdata",
+		schemaId: schemaIds,
+		...(options.role === undefined ? {} : { role: options.role }),
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
+	const resources = resourcesByBinding(pack, resourceIds);
 	const profiles = await Promise.all(
 		resources
 			.filter(

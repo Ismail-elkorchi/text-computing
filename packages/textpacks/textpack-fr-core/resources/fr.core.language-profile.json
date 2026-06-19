@@ -1,0 +1,31 @@
+{
+  "coreResources": {
+    "basicSegmentationResourceId": "fr-core-basic-segmentation",
+    "orthographyResourceId": "fr-core-orthography",
+    "punctuationResourceId": "fr-core-punctuation"
+  },
+  "defaultRegion": "FR",
+  "iana": {
+    "added": "2005-10-16",
+    "fileDate": "2026-05-05",
+    "scope": "",
+    "suppressScript": "Latn"
+  },
+  "kind": "language-core-profile",
+  "languageName": "French",
+  "languageTag": "fr",
+  "likelySubtag": "fr-Latn-FR",
+  "orthography": {
+    "defaultScript": "Latn",
+    "latinScriptRangeCount": 61,
+    "scriptVariants": []
+  },
+  "profileId": "fr-modern-typed-core",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "sourceIds": [
+    "source:iana:language-subtag-registry",
+    "source:unicode:ucd",
+    "source:unicode:cldr-core"
+  ]
+}

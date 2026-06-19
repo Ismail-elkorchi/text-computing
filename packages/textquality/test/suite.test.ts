@@ -123,6 +123,8 @@ test("quality profile textpack resources materialize through the adapter", async
 	});
 	const pack = {
 		manifest: {
+			id: "pack:quality:profile",
+			packageName: "@ismail-elkorchi/textpack-quality-profile-test",
 			targets: { languages: ["fr"] },
 			resources: [
 				{
@@ -130,6 +132,22 @@ test("quality profile textpack resources materialize through the adapter", async
 					kind: "quality-profile" as const,
 					format: "json",
 					schemaId: "textquality.profile.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "quality",
+					status: "task-supported" as const,
+					resourceIds: ["quality-fr-profile"],
+					bindings: [
+						{
+							role: "quality" as const,
+							resourceId: "quality-fr-profile",
+							schemaId: "textquality.profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textquality" as const,
+						},
+					],
 				},
 			],
 		},

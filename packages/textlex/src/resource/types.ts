@@ -1,4 +1,9 @@
-import type { TextPackResourceReader } from "@ismail-elkorchi/textpack";
+import type {
+	TextPackCapabilitySlot,
+	TextPackGapNote,
+	TextPackResourceReader,
+	TextPackTaskResourceBindingRole,
+} from "@ismail-elkorchi/textpack";
 
 export type TextPackResourceKindLike =
 	| "unicode-profile"
@@ -39,6 +44,10 @@ export interface TextPackResourceLike {
 export interface TextPackLike {
 	readonly manifest: {
 		readonly resources: readonly TextPackResourceLike[];
+		readonly capabilitySlots: readonly TextPackCapabilitySlot[];
+		readonly gapNotes?: readonly TextPackGapNote[];
+		readonly id?: string;
+		readonly packageName?: string;
 	};
 	readonly resources: Readonly<Record<string, unknown>>;
 }
@@ -60,4 +69,6 @@ export interface ResourceParseOptions {
 
 export interface ResourceMaterializationOptions {
 	readonly reader?: TextPackResourceReader;
+	readonly slot?: string;
+	readonly role?: TextPackTaskResourceBindingRole;
 }

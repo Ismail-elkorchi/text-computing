@@ -11,7 +11,11 @@ export {
 	parseWordlistResource,
 } from "./parse.js";
 export type {
+	LookupFromPackOptions,
+	LookupManyFromPackResult,
 	MergedLexiconFromPackOptions,
+	MorphologyAnalysesFromPackOptions,
+	MorphologyAnalysesManyFromPackResult,
 	MorphologyAnalysis,
 	MorphologyGeneration,
 	MorphologyIndex,
@@ -23,7 +27,11 @@ export {
 	affixTableFromPackAsync,
 	lexiconFromPack,
 	lexiconFromPackAsync,
+	lookupFromPackAsync,
+	lookupManyFromPackAsync,
 	mergedLexiconFromPackAsync,
+	morphologyAnalysesFromPackAsync,
+	morphologyAnalysesManyFromPackAsync,
 	morphologyIndexFromPackAsync,
 	pronunciationLexiconFromPack,
 	pronunciationLexiconFromPackAsync,

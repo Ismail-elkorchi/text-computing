@@ -1,0 +1,160 @@
+{
+  "cases": [
+    {
+      "caseId": "fr-normalization-elision-l",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "aujourd'hui nous sommes le 18 juin et c'est l'anniversaire de muiriel !",
+      "expectedNfcCasefoldApostrophe": "aujourd'hui nous sommes le 18 juin et c'est l'anniversaire de muiriel !",
+      "input": "Aujourd'hui nous sommes le 18 juin et c'est l'anniversaire de Muiriel !",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3095"
+    },
+    {
+      "caseId": "fr-normalization-elision-n",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "ca n'arrivera pas.",
+      "expectedNfcCasefoldApostrophe": "ça n'arrivera pas.",
+      "input": "Ça n'arrivera pas.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3118"
+    },
+    {
+      "caseId": "fr-normalization-elision-d",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "ils sont trop occupes a se battre entre eux pour s'occuper d'ideaux communs.",
+      "expectedNfcCasefoldApostrophe": "ils sont trop occupés à se battre entre eux pour s'occuper d'idéaux communs.",
+      "input": "Ils sont trop occupés à se battre entre eux pour s'occuper d'idéaux communs.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3137"
+    },
+    {
+      "caseId": "fr-normalization-elision-j",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "j'en perds mes mots.",
+      "expectedNfcCasefoldApostrophe": "j'en perds mes mots.",
+      "input": "J'en perds mes mots.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3101"
+    },
+    {
+      "caseId": "fr-normalization-elision-qu",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "ne tenez aucun compte de ce qu'il dit.",
+      "expectedNfcCasefoldApostrophe": "ne tenez aucun compte de ce qu'il dit.",
+      "input": "Ne tenez aucun compte de ce qu'il dit.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "1593"
+    },
+    {
+      "caseId": "fr-normalization-elision-c",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "qu'est-ce que c'est ?",
+      "expectedNfcCasefoldApostrophe": "qu'est-ce que c'est ?",
+      "input": "Qu'est-ce que c'est ?",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3094"
+    },
+    {
+      "caseId": "fr-normalization-elision-s",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "ils sont trop occupes a se battre entre eux pour s'occuper d'ideaux communs.",
+      "expectedNfcCasefoldApostrophe": "ils sont trop occupés à se battre entre eux pour s'occuper d'idéaux communs.",
+      "input": "Ils sont trop occupés à se battre entre eux pour s'occuper d'idéaux communs.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3137"
+    },
+    {
+      "caseId": "fr-normalization-elision-m",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "je leur ai dit de m'envoyer un autre ticket.",
+      "expectedNfcCasefoldApostrophe": "je leur ai dit de m'envoyer un autre ticket.",
+      "input": "Je leur ai dit de m'envoyer un autre ticket.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3129"
+    },
+    {
+      "caseId": "fr-normalization-elision-t",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "ne t'inquiete pas.",
+      "expectedNfcCasefoldApostrophe": "ne t'inquiète pas.",
+      "input": "Ne t'inquiète pas.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3123"
+    },
+    {
+      "caseId": "fr-normalization-elision-aujourd",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "aujourd'hui nous sommes le 18 juin et c'est l'anniversaire de muiriel !",
+      "expectedNfcCasefoldApostrophe": "aujourd'hui nous sommes le 18 juin et c'est l'anniversaire de muiriel !",
+      "input": "Aujourd'hui nous sommes le 18 juin et c'est l'anniversaire de Muiriel !",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3095"
+    },
+    {
+      "caseId": "fr-normalization-elision-quelqu",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "si quelqu'un devait demander quel est le but de l'histoire, je ne saurais vraiment pas.",
+      "expectedNfcCasefoldApostrophe": "si quelqu'un devait demander quel est le but de l'histoire, je ne saurais vraiment pas.",
+      "input": "Si quelqu'un devait demander quel est le but de l'histoire, je ne saurais vraiment pas.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3198"
+    },
+    {
+      "caseId": "fr-normalization-elision-jusqu",
+      "category": "elision-apostrophe",
+      "expectedLookupFold": "tout est theoriquement impossible jusqu'a ce que ce soit fait.",
+      "expectedNfcCasefoldApostrophe": "tout est théoriquement impossible jusqu'à ce que ce soit fait.",
+      "input": "Tout est théoriquement impossible jusqu'à ce que ce soit fait.",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "4121"
+    },
+    {
+      "caseId": "fr-normalization-contraction-des",
+      "category": "contraction-surface-form",
+      "expectedLookupFold": "la plupart des gens pensent que je suis fou.",
+      "expectedNfcCasefoldApostrophe": "la plupart des gens pensent que je suis fou.",
+      "input": "La plupart des gens pensent que je suis fou.",
+      "recognizedSurfaceForm": "des",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3138"
+    },
+    {
+      "caseId": "fr-normalization-contraction-du",
+      "category": "contraction-surface-form",
+      "expectedLookupFold": "ca depend du contexte.",
+      "expectedNfcCasefoldApostrophe": "ça dépend du contexte.",
+      "input": "Ça dépend du contexte.",
+      "recognizedSurfaceForm": "du",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3149"
+    },
+    {
+      "caseId": "fr-normalization-contraction-au",
+      "category": "contraction-surface-form",
+      "expectedLookupFold": "reflechissons au pire qui pourrait arriver.",
+      "expectedNfcCasefoldApostrophe": "réfléchissons au pire qui pourrait arriver.",
+      "input": "Réfléchissons au pire qui pourrait arriver.",
+      "recognizedSurfaceForm": "au",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3169"
+    },
+    {
+      "caseId": "fr-normalization-contraction-aux",
+      "category": "contraction-surface-form",
+      "expectedLookupFold": "il se peut que je sois antisocial, mais ca ne veut pas dire pas que je ne parle pas aux gens.",
+      "expectedNfcCasefoldApostrophe": "il se peut que je sois antisocial, mais ça ne veut pas dire pas que je ne parle pas aux gens.",
+      "input": "Il se peut que je sois antisocial, mais ça ne veut pas dire pas que je ne parle pas aux gens.",
+      "recognizedSurfaceForm": "aux",
+      "source": "source:tatoeba:weekly-french-2026-06-06",
+      "sourceSentenceId": "3171"
+    }
+  ],
+  "kind": "normalization-gold-cases",
+  "languageTag": "fr",
+  "schemaVersion": "1",
+  "sourceIds": [
+    "source:unicode:ucd",
+    "source:unicode:cldr-core",
+    "source:tatoeba:weekly-french-2026-06-06"
+  ]
+}

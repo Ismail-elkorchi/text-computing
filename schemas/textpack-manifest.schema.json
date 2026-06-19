@@ -275,8 +275,50 @@
 				},
 				"resourceIds": { "$ref": "#/definitions/nonEmptyStringArray" },
 				"artifactIds": { "$ref": "#/definitions/nonEmptyStringArray" },
+				"bindings": {
+					"type": "array",
+					"minItems": 1,
+					"items": { "$ref": "#/definitions/taskResourceBinding" }
+				},
+				"prerequisites": { "$ref": "#/definitions/nonEmptyStringArray" },
+				"readerRequired": { "type": "boolean" },
 				"notes": { "$ref": "#/definitions/nonEmptyStringArray" },
 				"capabilities": { "$ref": "#/definitions/capabilities" }
+			}
+		},
+		"taskResourceBinding": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["role", "resourceId", "schemaId", "required", "ownerPackage"],
+			"properties": {
+				"role": {
+					"enum": [
+						"primary",
+						"profile",
+						"table",
+						"index",
+						"annotation",
+						"evidence",
+						"quality",
+						"projection",
+						"metadata"
+					]
+				},
+				"resourceId": { "type": "string", "minLength": 1 },
+				"schemaId": { "type": "string", "minLength": 1 },
+				"required": { "type": "boolean" },
+				"ownerPackage": {
+					"enum": [
+						"@ismail-elkorchi/textdata",
+						"@ismail-elkorchi/textlex",
+						"@ismail-elkorchi/textkb",
+						"@ismail-elkorchi/textnorm",
+						"@ismail-elkorchi/textsearch",
+						"@ismail-elkorchi/textquality",
+						"@ismail-elkorchi/textcorpus",
+						"@ismail-elkorchi/textparallel"
+					]
+				}
 			}
 		},
 		"capabilities": {

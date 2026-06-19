@@ -10,9 +10,7 @@
 		"productionGradeSourceCoverage": "Generated recipe composite over the publishable ESDB default regional spelling wordlist component, which provides the English search-analyzer profile and supporting wordlist resources.",
 		"auditedLicense": "The ESDB wordlist-diff source row is approved; the required component package carries package-local copyright evidence.",
 		"declaredScope": "English spelling-aware search analyzer component composite backed by ESDB default regional wordlists; does not claim a persistent search index, ranking model, corpus coverage, semantic search, or full language-composite coverage.",
-		"conformanceEvidence": [
-			"eval:textpack-en-search:required-component-graph"
-		],
+		"conformanceEvidence": ["eval:textpack-en-search:required-component-graph"],
 		"generatedReports": [
 			"LICENSE.generated.md",
 			"NOTICE.generated.md",
@@ -26,8 +24,7 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadEnglishSearch",
+	"display": {
 		"languageName": "EnglishSearch"
 	},
 	"targets": {

@@ -29,27 +29,16 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadFrenchKnowledgeBase",
+	"display": {
 		"languageName": "FrenchKnowledgeBase"
 	},
 	"targets": {
-		"languages": [
-			"fr"
-		],
-		"scripts": [
-			"Latn"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["fr"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
 	},
-	"sourceIds": [
-		"source:wikidata:main"
-	],
-	"snapshotIds": [
-		"snapshot:source:wikidata:main:20260608"
-	],
+	"sourceIds": ["source:wikidata:main"],
+	"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
 	"components": [
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
@@ -78,7 +67,5 @@
 		}
 	],
 	"license": "CC0-1.0",
-	"citations": [
-		"Wikidata main structured data dump, 2026-06-08."
-	]
+	"citations": ["Wikidata main structured data dump, 2026-06-08."]
 }

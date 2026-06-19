@@ -43,20 +43,13 @@
 	"version": "0.1.0",
 	"packClass": "language-composite",
 	"supportLevel": "feature-complete",
-	"loader": {
-		"functionName": "loadFrenchShareAlike",
+	"display": {
 		"languageName": "FrenchShareAlike"
 	},
 	"targets": {
-		"languages": [
-			"fr"
-		],
-		"scripts": [
-			"Latn"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["fr"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
 	},
 	"sourceIds": [
 		"source:iana:language-subtag-registry",

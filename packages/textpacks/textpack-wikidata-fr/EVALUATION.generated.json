@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed task capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "aliasRowCount": 6101,
+          "entityRowCount": 9377
+        },
+        "resourceIds": [
+          "wikidata-fr-aliases"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "aliasRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 6101
+      },
+      "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-fr:alias-coverage",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-aliases"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "endpoint": "https://query.wikidata.org/sparql",
+          "extractId": "wikidata-fr-core-entity-extract-20260612",
+          "version": "20260608"
+        },
+        "resourceIds": [
+          "wikidata-fr-entities",
+          "wikidata-fr-kb-canonical"
+        ]
+      },
+      "limitations": [
+        "The Wikidata French extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump."
+      ],
+      "metric": {
+        "name": "entityRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 9377
+      },
+      "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-fr:entity-extract",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-extract"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "relationRowCount": 9377
+        },
+        "resourceIds": [
+          "wikidata-fr-relations"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "relationRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 9377
+      },
+      "packageName": "@ismail-elkorchi/textpack-wikidata-fr",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-fr:relation-coverage",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-relations"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-wikidata-fr:wikidata-main-artifact"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 3,
+    "recordCount": 3,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

@@ -1,0 +1,964 @@
+{
+  "components": [
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "reason": "English core profile quality resources and transform-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-normalization",
+      "reason": "English normalization quality profile and transform-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-segmentation",
+      "reason": "English segmentation quality profile and transform-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+      "reason": "English spelling wordlist and search-profile quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+      "reason": "English POS and inflection inventory quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+      "reason": "English UD GUMReddit annotation-profile quality resources and redistribution-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+      "reason": "Open English WordNet lexical-semantic quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "default",
+      "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+      "reason": "English Wikidata core extract quality resources and checksum evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-corpus",
+      "reason": "English local Tatoeba corpus quality resources and checksum evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-parallel",
+      "reason": "English-linked local Tatoeba parallel quality resources and checksum evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-en-quality",
+  "packageName": "@ismail-elkorchi/textpack-en-quality",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceSpecIds": [],
+  "resources": [],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:iana:language-subtag-registry:2026-05-05",
+    "snapshot:source:unicode:ucd:17.0.0",
+    "snapshot:source:unicode:cldr-core:48.2.0",
+    "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+    "snapshot:source:scowl:v2-rel-2026.02.25",
+    "snapshot:source:ud:english-gumreddit:r2.18",
+    "snapshot:source:wordnet:open-english-2025:2025-edition",
+    "snapshot:source:wikidata:main:20260608",
+    "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:0316fc3584010643f9b1c3638d1ff8266960f9d8d71a1988b38392148eed16ca",
+      "files": [
+        {
+          "byteLength": 731465,
+          "checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt",
+          "sourceUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry"
+        },
+        {
+          "byteLength": 6480,
+          "checksum": "sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113",
+          "mediaType": "text/html; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/iana/LICENSE.html",
+          "sourceUrl": "https://www.iana.org/help/licensing-terms"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned local snapshot of the IANA Language Subtag Registry with local license evidence.",
+      "retrievedAt": "2026-06-08T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
+      "sourceId": "source:iana:language-subtag-registry",
+      "version": "2026-05-05"
+    },
+    {
+      "checksum": "sha256:6c59bfb7ea97c24f50ca48eeb0ac7dcb599d5f88c9788e70ae0a78ef6f87370e",
+      "files": [
+        {
+          "byteLength": 11663,
+          "checksum": "sha256:c0edefaf1a19771e830a82735472716af6bf3c3975f6c2a23ffbe2580fbbcb15",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/Blocks.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/Blocks.txt"
+        },
+        {
+          "byteLength": 277514,
+          "checksum": "sha256:d62e5bab70ca74f099343f71224fa051cb1fdd61a1ab45c0488c44cfc0b6102e",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/DerivedGeneralCategory.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/extracted/DerivedGeneralCategory.txt"
+        },
+        {
+          "byteLength": 99377,
+          "checksum": "sha256:d6b51d1d2ae5c33b451b7ed994b48f1f4dc62b2272a5831e7fd418514a6bae89",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/GraphemeBreakProperty.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/GraphemeBreakProperty.txt"
+        },
+        {
+          "byteLength": 81858,
+          "checksum": "sha256:64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/PropertyValueAliases.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/PropertyValueAliases.txt"
+        },
+        {
+          "byteLength": 192460,
+          "checksum": "sha256:9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/Scripts.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/Scripts.txt"
+        },
+        {
+          "byteLength": 221233,
+          "checksum": "sha256:871c0c985ad95125e25b302414065a10839d068970bceb383ecec138f22a0a18",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/SentenceBreakProperty.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/SentenceBreakProperty.txt"
+        },
+        {
+          "byteLength": 114445,
+          "checksum": "sha256:72274cac1e6b919507db35655c3e175aa27274668a1ece95c28d2069f2ad9852",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/unicode-17/WordBreakProperty.txt",
+          "sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/WordBreakProperty.txt"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned local snapshot of selected Unicode 17.0.0 UCD files, including auxiliary segmentation and general category property files.",
+      "retrievedAt": "2026-06-08T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+      "sourceId": "source:unicode:ucd",
+      "version": "17.0.0"
+    },
+    {
+      "checksum": "sha256:83b04279e29beb9f0533bf13a5f5d20e6807f8e69fead74516ff9f4c9ea39083",
+      "files": [
+        {
+          "byteLength": 137469,
+          "checksum": "sha256:b7011c866f27502ed6f160ca83f2a83fa42bce9fdc2176e60e2c6630961d877c",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/aliases.json",
+          "sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/aliases.json"
+        },
+        {
+          "byteLength": 220093,
+          "checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+          "sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/likelySubtags.json"
+        },
+        {
+          "byteLength": 1762,
+          "checksum": "sha256:47c8d71bbe0aa22ff742f329a88a6c40b69e6220cdc29fc466a260d5238c7ec0",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/scriptData.json",
+          "sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/scriptData.json"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned local snapshot of selected cldr-core supplemental JSON files.",
+      "retrievedAt": "2026-06-08T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+      "sourceId": "source:unicode:cldr-core",
+      "version": "48.2.0"
+    },
+    {
+      "checksum": "sha256:7833f814b9cf9cb58d83b30b530618793a065b34207cfdbca791447e4a8e0969",
+      "files": [
+        {
+          "byteLength": 4863,
+          "checksum": "sha256:090575a131b4260926c7a6b30a90aca0f5db5fbb5c46778e0c5855227bf6ebc3",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/Copyright",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/Copyright"
+        },
+        {
+          "byteLength": 1035341,
+          "checksum": "sha256:d115ebf51c6dcd819c8624019b762c59e185a5c875b97247e5ad2d3d8efe6c1d",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_AU.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_AU.txt"
+        },
+        {
+          "byteLength": 1030554,
+          "checksum": "sha256:905b1b6b0a98fcb3701c9c59290a090a4d6ab9127809017fefacbe9c2c6f15a4",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_CA.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_CA.txt"
+        },
+        {
+          "byteLength": 1030707,
+          "checksum": "sha256:82b22843c9958a1efac291e0ea7dbef22ce227dd4e5ca0fd84043cbc62e0a4f1",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_GB-ise.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_GB-ise.txt"
+        },
+        {
+          "byteLength": 1030897,
+          "checksum": "sha256:3ba9391531797b64bf48864f0921de2277596aee06c81e0c44118890338218f7",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_GB-ize.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_GB-ize.txt"
+        },
+        {
+          "byteLength": 1033485,
+          "checksum": "sha256:4ff7e0b6d86763e1e042ffd746e94cdf4432618702deac303a1669e2a838db04",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_US.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/en_US.txt"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned generated default regional English wordlist outputs from wordlist-diff rel-2026.02.25 with local copyright evidence.",
+      "retrievedAt": "2026-06-09T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+      "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25",
+      "version": "rel-2026.02.25"
+    },
+    {
+      "checksum": "sha256:04ba3b9121982264b6aefc8fee26eb9f5b29d17c6bdd5d08aa85e1d9bfcf838d",
+      "files": [
+        {
+          "byteLength": 4863,
+          "checksum": "sha256:090575a131b4260926c7a6b30a90aca0f5db5fbb5c46778e0c5855227bf6ebc3",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/Copyright",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/Copyright"
+        },
+        {
+          "byteLength": 36473,
+          "checksum": "sha256:b89a20a59590402e0753f07626e3b862fef3cdb80e2e95c26a25c00f962ed83a",
+          "mediaType": "text/markdown",
+          "path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/README.md",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist/rel-2026.02.25/README.md"
+        },
+        {
+          "byteLength": 8420269,
+          "checksum": "sha256:3da811b80d7163069e9676537845c49161a33505f24ad6bfcead92fe2cf10e41",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/scowl.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/en-wl/wordlist-diff/rel-2026.02.25/scowl.txt"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned SCOWLv2 rich text export and scope documentation from rel-2026.02.25 with local copyright evidence.",
+      "retrievedAt": "2026-06-09T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:scowl:v2-rel-2026.02.25",
+      "sourceId": "source:scowl:v2-rel-2026-02-25",
+      "version": "rel-2026.02.25"
+    },
+    {
+      "checksum": "sha256:f2814065fb07c813ce8ac6318396b42b0d13e1a15bde2b351cfa4f14dbe02c58",
+      "files": [
+        {
+          "byteLength": 209343,
+          "checksum": "sha256:f8bbf1b235557513f606cf147c43d8e70c663db26e929a77eedbe8aa62184625",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-dev.conllu",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/en_gumreddit-ud-dev.conllu"
+        },
+        {
+          "byteLength": 208252,
+          "checksum": "sha256:9afecc3c76deea4540a5f1fe6b2c851857ce5d272f78b476949a90352ea4f381",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-test.conllu",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/en_gumreddit-ud-test.conllu"
+        },
+        {
+          "byteLength": 1428562,
+          "checksum": "sha256:6c360c457d58e1fdcb8eba07ee1f6b352eb7c40f74b00af0872d87cb9388118e",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/en_gumreddit-ud-train.conllu",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/en_gumreddit-ud-train.conllu"
+        },
+        {
+          "byteLength": 313,
+          "checksum": "sha256:95e9985fb081b6c17bc4422f649bbe0d9555a7d597fcd32a6c4b04bcda4e734c",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/LICENSE.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/LICENSE.txt"
+        },
+        {
+          "byteLength": 39109,
+          "checksum": "sha256:c11626bcf5dd967bfefd08132a44bf3e717a1beb84ca58bdbe51a96268742eb9",
+          "mediaType": "text/markdown; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/ud-english-gumreddit-r2.18/README.md",
+          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUMReddit/cec04ae98e110305dc00cf147d6547c121d9d8dd/README.md"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned UD English GUMReddit r2.18 annotation-only files; not-to-release material is intentionally absent.",
+      "retrievedAt": "2026-06-09T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:ud:english-gumreddit:r2.18",
+      "sourceId": "source:ud:english-gumreddit-r2.18",
+      "version": "r2.18@cec04ae98e110305dc00cf147d6547c121d9d8dd"
+    },
+    {
+      "checksum": "sha256:8b23c165e1c21ed3b266a527e5eb4b9ae2ae621019a40a60fe525b0c83d4aa23",
+      "files": [
+        {
+          "byteLength": 11363503,
+          "checksum": "sha256:9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/english-wordnet-2025.xml.gz",
+          "sourceUrl": "https://en-word.net/static/english-wordnet-2025.xml.gz"
+        },
+        {
+          "byteLength": 19863,
+          "checksum": "sha256:672cc8b5663e8dc74c4b07a9dcf477193853575b119908fd3dc0aeeb60a9dbbb",
+          "mediaType": "text/markdown",
+          "path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/LICENSE.md",
+          "sourceUrl": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/2025-edition/LICENSE.md"
+        },
+        {
+          "byteLength": 1740,
+          "checksum": "sha256:df30ec18fbabcdaf031b79ea026d3e6b959010cffe6dd7be9ac137822175b904",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/open-english-wordnet-2025/WNDB_License.txt",
+          "sourceUrl": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/2025-edition/WNDB_License.txt"
+        }
+      ],
+      "kind": "archive",
+      "notes": "Pinned Open English WordNet 2025 LMF archive with local license evidence files.",
+      "retrievedAt": "2026-06-09T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:wordnet:open-english-2025:2025-edition",
+      "sourceId": "source:wordnet:open-english-2025",
+      "version": "2025-edition"
+    },
+    {
+      "checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c",
+      "files": [
+        {
+          "byteLength": 129,
+          "checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
+          "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-md5sums.txt"
+        },
+        {
+          "byteLength": 145,
+          "checksum": "sha256:a4b7efee9997d592e5abdd3e232ad7a66d19847343ac640adc1e9b12fe51b440",
+          "mediaType": "text/plain",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
+          "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
+        },
+        {
+          "byteLength": 176372,
+          "checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv"
+        },
+        {
+          "byteLength": 601528,
+          "checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv"
+        },
+        {
+          "byteLength": 9171,
+          "checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 181451,
+          "checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv"
+        },
+        {
+          "byteLength": 507718,
+          "checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1207332,
+          "checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv"
+        },
+        {
+          "byteLength": 9237,
+          "checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 364007,
+          "checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv"
+        },
+        {
+          "byteLength": 339445,
+          "checksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv"
+        },
+        {
+          "byteLength": 1164023,
+          "checksum": "sha256:b4dda64824d9b904703eac084931be6dad3c47a9d770673b29aed7cc731f9f85",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv"
+        },
+        {
+          "byteLength": 9173,
+          "checksum": "sha256:7d46ecdcaad81c6ef85139decbac517ee64c715e6a8069d6352d4d4b2725ca27",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json"
+        },
+        {
+          "byteLength": 581521,
+          "checksum": "sha256:0a549fbec2daeb2243e8352977852c3476f7e35a6ef4eb10141df0babc0df276",
+          "mediaType": "text/tab-separated-values; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv"
+        }
+      ],
+      "kind": "external",
+      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed.",
+      "retrievedAt": "2026-06-11T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:wikidata:main:20260608",
+      "sourceId": "source:wikidata:main",
+      "version": "20260608"
+    },
+    {
+      "checksum": "sha256:3070f313a1e9094acc43f04f58c4f62756c5ed51efa17b271913e912acb6d1ab",
+      "files": [
+        {
+          "byteLength": 34699431,
+          "checksum": "sha256:401a4ff01d6749cb44fc2eccad4f2699ebe775096b5cba7441e00f0a76c91579",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng_sentences_detailed.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2"
+        },
+        {
+          "byteLength": 298001,
+          "checksum": "sha256:c48698582a583ea1e259dceacdc4ed663c3f615d846ca7c1fc449397a1d8d3c1",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ara_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ara_links.tsv.bz2"
+        },
+        {
+          "byteLength": 3515460,
+          "checksum": "sha256:7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-deu_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-deu_links.tsv.bz2"
+        },
+        {
+          "byteLength": 191418,
+          "checksum": "sha256:a711268471634a2b169c824a2fcdab336555d3a2d83a812bf8796ae3fcd8df08",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ell_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ell_links.tsv.bz2"
+        },
+        {
+          "byteLength": 2631564,
+          "checksum": "sha256:b3e2018d6afa03ca9efb11e907674dde519fcb288707ac130d5a1ca61989c23d",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-fra_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-fra_links.tsv.bz2"
+        },
+        {
+          "byteLength": 9451,
+          "checksum": "sha256:b9659a219c5d8742257e60ca3876b2ad3869984f4437931f31419456126bada2",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-grc_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-grc_links.tsv.bz2"
+        },
+        {
+          "byteLength": 3721027,
+          "checksum": "sha256:47187cc3ddc4be8e0083a6a60f683c06e2341d1f459ce067f7dace9dd469ef4f",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ita_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-ita_links.tsv.bz2"
+        },
+        {
+          "byteLength": 279658,
+          "checksum": "sha256:83ffb4716016e7b8889b562c3ced046d0b168a8b81954f9994d88bfd83a8e2df",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-lat_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-lat_links.tsv.bz2"
+        },
+        {
+          "byteLength": 1750446,
+          "checksum": "sha256:976715308d3d034a1487f056cb95ad6dc9cb67c6a5410bb5c60170366d4c024e",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-spa_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/eng/eng-spa_links.tsv.bz2"
+        },
+        {
+          "byteLength": 6001,
+          "checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json"
+        }
+      ],
+      "kind": "external",
+      "notes": "Pinned metadata and local raw Tatoeba 2026-06-06 English sentence and English-linked parallel artifacts. The raw bzip2 source artifacts are stored as local snapshots and transformed into generated package resources.",
+      "retrievedAt": "2026-06-11T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+      "sourceId": "source:tatoeba:weekly-2026-06-06",
+      "version": "2026-06-06"
+    }
+  ],
+  "sourceIds": [
+    "source:iana:language-subtag-registry",
+    "source:unicode:ucd",
+    "source:unicode:cldr-core",
+    "source:esdb:wordlist-diff-en-default-2026-02-25",
+    "source:scowl:v2-rel-2026-02-25",
+    "source:ud:english-gumreddit-r2.18",
+    "source:wordnet:open-english-2025",
+    "source:wikidata:main",
+    "source:tatoeba:weekly-2026-06-06"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "language-registry",
+        "core"
+      ],
+      "citation": "IANA Language Subtag Registry.",
+      "defaultCompositeAllowed": true,
+      "family": "IANA",
+      "homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
+      "name": "IANA Language Subtag Registry",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:iana:language-subtag-registry"
+    },
+    {
+      "capabilitySlots": [
+        "unicode-profile",
+        "normalization",
+        "script-profile",
+        "segmentation",
+        "core",
+        "quality"
+      ],
+      "citation": "Unicode Character Database 17.0.0.",
+      "defaultCompositeAllowed": true,
+      "family": "UCD",
+      "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode Character Database",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:unicode:ucd"
+    },
+    {
+      "capabilitySlots": [
+        "locale-profile",
+        "script-profile",
+        "search",
+        "core"
+      ],
+      "citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+      "defaultCompositeAllowed": true,
+      "family": "CLDR",
+      "homepageUrl": "https://cldr.unicode.org/",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode CLDR Core",
+      "notes": "Active source-backed foundation input.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:unicode:cldr-core"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "spelling",
+        "search"
+      ],
+      "citation": "English Speller Database generated wordlist outputs, rel-2026.02.25.",
+      "defaultCompositeAllowed": true,
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist-diff/tree/rel-2026.02.25",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-ESDB-MIT-Like",
+      "name": "English Speller Database default English wordlist outputs 2026.02.25",
+      "notes": "Exact generated default regional wordlist outputs from wordlist-diff rel-2026.02.25; database internals remain review-only.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25"
+    },
+    {
+      "capabilitySlots": [
+        "lexicon",
+        "morphology",
+        "abbreviation-table",
+        "stoplist",
+        "core"
+      ],
+      "citation": "SCOWLv2 rich text export, rel-2026.02.25.",
+      "defaultCompositeAllowed": true,
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist/tree/rel-2026.02.25",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-ESDB-MIT-Like",
+      "name": "SCOWLv2 rich text export 2026.02.25",
+      "notes": "Exact SCOWLv2 scowl.txt rich export from rel-2026.02.25 for POS and inflection inventory resources; this is not a full English morphology analyzer.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:scowl:v2-rel-2026-02-25"
+    },
+    {
+      "capabilitySlots": [
+        "syntax",
+        "morphology",
+        "tagging"
+      ],
+      "citation": "Universal Dependencies English GUMReddit r2.18 annotations.",
+      "defaultCompositeAllowed": true,
+      "family": "UD",
+      "homepageUrl": "https://github.com/UniversalDependencies/UD_English-GUMReddit",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "UD English GUMReddit r2.18",
+      "notes": "Audited annotation-only treebank path. The released repository excludes underlying Reddit text; generated packs must not ingest not-to-release material.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:ud:english-gumreddit-r2.18"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "lexical-semantics"
+      ],
+      "citation": "Open English WordNet 2025.",
+      "defaultCompositeAllowed": true,
+      "family": "WN",
+      "homepageUrl": "https://en-word.net/",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "name": "Open English WordNet 2025",
+      "notes": "Audited 2025 release with Princeton WordNet lineage attribution and Open English WordNet CC-BY-4.0 attribution.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wordnet:open-english-2025"
+    },
+    {
+      "capabilitySlots": [
+        "kb",
+        "entity-linking",
+        "lexicon"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "WD",
+      "homepageUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "languages": [
+        "*"
+      ],
+      "licenseExpression": "CC0-1.0",
+      "name": "Wikidata main structured data",
+      "notes": "Only main structured namespaces are in this policy; non-main namespaces need separate entries.",
+      "policyClass": "default-safe",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:wikidata:main"
+    },
+    {
+      "capabilitySlots": [
+        "corpus",
+        "parallel",
+        "examples"
+      ],
+      "citation": "Tatoeba weekly exports, 2026-06-06.",
+      "defaultCompositeAllowed": true,
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "languages": [
+        "en"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly English exports 2026-06-06",
+      "notes": "Exact Tatoeba weekly English sentence and English-linked parallel exports. Attribution is preserved through detailed sentence artifacts and package reports. This second-wave source can provide task support only when transformed into local sentence rows, alignment/link rows, or an equivalent local index; the active English corpus and parallel packs materialize those local rows.",
+      "policyClass": "attribution",
+      "priority": "second",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:tatoeba:weekly-2026-06-06"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "IANA Language Subtag Registry, File-Date 2026-05-05.",
+      "family": "IANA",
+      "homepageUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+      "licenseEvidence": [
+        "https://www.iana.org/help/licensing-terms"
+      ],
+      "licenseExpression": "LicenseRef-IANA-Language-Subtag-Registry",
+      "name": "IANA Language Subtag Registry",
+      "notes": "BCP 47 language, script, region, variant, grandfathered, and redundant tag registry data.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:iana:language-subtag-registry"
+    },
+    {
+      "citation": "Unicode Character Database 17.0.0.",
+      "family": "UCD",
+      "homepageUrl": "https://www.unicode.org/Public/17.0.0/ucd/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode Character Database",
+      "notes": "Selected Unicode 17.0.0 UCD files used for script, block, property alias, general category, and auxiliary segmentation property resources.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:unicode:ucd"
+    },
+    {
+      "citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+      "family": "CLDR",
+      "homepageUrl": "https://cldr.unicode.org/",
+      "licenseEvidence": [
+        "https://www.unicode.org/license.txt",
+        "https://www.unicode.org/terms_of_use.html"
+      ],
+      "licenseExpression": "Unicode-3.0",
+      "name": "Unicode CLDR Core",
+      "notes": "Selected CLDR supplemental JSON files used for locale likely-subtag and alias foundation resources.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:unicode:cldr-core"
+    },
+    {
+      "citation": "English Speller Database generated wordlist outputs, rel-2026.02.25.",
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist-diff/tree/rel-2026.02.25",
+      "licenseEvidence": [
+        "https://github.com/en-wl/wordlist-diff/blob/rel-2026.02.25/Copyright"
+      ],
+      "licenseExpression": "LicenseRef-ESDB-MIT-Like",
+      "name": "English Speller Database default English wordlist outputs 2026.02.25",
+      "notes": "Pinned wordlist-diff generated outputs for default English regional spell-checker wordlists; this does not use unstable ESDB database internals.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25"
+    },
+    {
+      "citation": "SCOWLv2 rich text export, rel-2026.02.25.",
+      "family": "ENLEX",
+      "homepageUrl": "https://github.com/en-wl/wordlist/tree/rel-2026.02.25",
+      "licenseEvidence": [
+        "https://github.com/en-wl/wordlist-diff/blob/rel-2026.02.25/Copyright"
+      ],
+      "licenseExpression": "LicenseRef-ESDB-MIT-Like",
+      "name": "SCOWLv2 rich text export 2026.02.25",
+      "notes": "Pinned SCOWLv2 scowl.txt export for English POS and inflection inventory resources; this does not use the SQLite database directly.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:scowl:v2-rel-2026-02-25"
+    },
+    {
+      "citation": "Universal Dependencies English GUMReddit r2.18 annotations.",
+      "family": "UD",
+      "homepageUrl": "https://github.com/UniversalDependencies/UD_English-GUMReddit",
+      "licenseEvidence": [
+        "https://github.com/UniversalDependencies/UD_English-GUMReddit/blob/r2.18/LICENSE.txt",
+        "https://github.com/UniversalDependencies/UD_English-GUMReddit/blob/r2.18/README.md"
+      ],
+      "licenseExpression": "CC-BY-4.0",
+      "name": "UD English GUMReddit r2.18",
+      "notes": "Pinned annotation-only UD release; source README states the repository contains annotations without underlying Reddit text.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:ud:english-gumreddit-r2.18"
+    },
+    {
+      "citation": "Open English WordNet 2025.",
+      "family": "WN",
+      "homepageUrl": "https://en-word.net/",
+      "licenseEvidence": [
+        "https://github.com/globalwordnet/english-wordnet/blob/2025-edition/LICENSE.md",
+        "https://github.com/globalwordnet/english-wordnet/blob/2025-edition/WNDB_License.txt"
+      ],
+      "licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "name": "Open English WordNet 2025",
+      "notes": "Pinned 2025 LMF distribution from Open English WordNet; attribution includes Princeton WordNet lineage and Open English WordNet.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:wordnet:open-english-2025"
+    },
+    {
+      "citation": "Wikidata main structured data dump, 2026-06-08.",
+      "family": "WD",
+      "homepageUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "licenseEvidence": [
+        "https://www.wikidata.org/wiki/Wikidata:Licensing",
+        "https://www.wikidata.org/wiki/Wikidata:Database_download",
+        "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/"
+      ],
+      "licenseExpression": "CC0-1.0",
+      "name": "Wikidata Main Structured Data",
+      "notes": "Pinned versioned Wikidata entity dump metadata. Generated packages use explicit artifact descriptors for the full dump instead of vendoring the large raw dump into npm.",
+      "redistributionPolicy": "redistributable",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:wikidata:main"
+    },
+    {
+      "citation": "Tatoeba weekly exports, 2026-06-06.",
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "licenseEvidence": [
+        "https://tatoeba.org/en/downloads",
+        "https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly English exports 2026-06-06",
+      "notes": "Pinned Tatoeba English sentence and English-linked parallel export artifact metadata. Generated packages use explicit artifact descriptors instead of vendoring the raw corpus into npm.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:tatoeba:weekly-2026-06-06"
+    }
+  ]
+}

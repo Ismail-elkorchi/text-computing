@@ -1,6 +1,16 @@
 export const packageName = "@ismail-elkorchi/textpack" as const;
 export type PackageName = typeof packageName;
 
+export type {
+	TextPackTaskBindingQuery,
+	TextPackTaskBindingSource,
+} from "./bindings.js";
+export {
+	listTaskResourceBindings,
+	requireSingleTaskResourceBinding,
+	requireTaskResourceBindings,
+	taskResourceIdsFromBindings,
+} from "./bindings.js";
 export { capabilities } from "./capabilities.js";
 export { composePacks } from "./compose.js";
 export { validateManifest } from "./manifest.js";
@@ -55,5 +65,8 @@ export type {
 	TextPackModality,
 	TextPackResource,
 	TextPackTargets,
+	TextPackTaskResourceBinding,
+	TextPackTaskResourceBindingOwnerPackage,
+	TextPackTaskResourceBindingRole,
 } from "./types.js";
 export { resourceKinds, textPackModalities } from "./types.js";

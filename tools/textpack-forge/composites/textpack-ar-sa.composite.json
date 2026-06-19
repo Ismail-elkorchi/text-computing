@@ -29,20 +29,13 @@
 	"version": "0.1.0",
 	"packClass": "language-composite",
 	"supportLevel": "feature-complete",
-	"loader": {
-		"functionName": "loadArabicShareAlike",
+	"display": {
 		"languageName": "ArabicShareAlike"
 	},
 	"targets": {
-		"languages": [
-			"ar"
-		],
-		"scripts": [
-			"Arab"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["ar"],
+		"scripts": ["Arab"],
+		"modalities": ["typed"]
 	},
 	"sourceIds": [
 		"source:iana:language-subtag-registry",

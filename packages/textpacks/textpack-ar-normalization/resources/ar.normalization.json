@@ -1,0 +1,197 @@
+{
+  "casePolicy": "casefold",
+  "equivalenceClasses": [
+    {
+      "canonical": "ا",
+      "classId": "arabic-alef-variants",
+      "members": [
+        "ا",
+        "آ",
+        "أ",
+        "إ",
+        "ٱ"
+      ]
+    },
+    {
+      "canonical": "ي",
+      "classId": "arabic-ya-variants",
+      "members": [
+        "ي",
+        "ى"
+      ]
+    }
+  ],
+  "kind": "normalization-profile",
+  "languageTag": "ar",
+  "profileId": "ar-msa-camel-unicode-normalization",
+  "rules": [
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Use Unicode NFC canonical composition for stored and comparable Arabic MSA text.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "operation": "compose",
+      "priority": 10,
+      "ruleId": "unicode-nfc-compose"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Use Unicode casefolding for lookup/search normalization while preserving source text elsewhere.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "operation": "casefold",
+      "priority": 20,
+      "ruleId": "unicode-casefold-for-lookup"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Use CLDR likely-subtag context for the default Arabic script profile.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "ar",
+      "operation": "map",
+      "output": "ar-Arab-EG",
+      "priority": 30,
+      "ruleId": "cldr-arab-likely-subtag"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Delete tatweel for lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "ـ",
+      "operation": "delete",
+      "output": "",
+      "priority": 40,
+      "ruleId": "arabic-delete-tatweel-for-lookup"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Strip Arabic vowel marks and Quranic superscript alef for unvocalized lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "operation": "delete",
+      "pattern": "[ً-ٰٟ]",
+      "priority": 50,
+      "ruleId": "arabic-strip-harakat-for-lookup"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Map arabic-alef-variants member U+0622 to U+0627 for lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "آ",
+      "operation": "map",
+      "output": "ا",
+      "priority": 60,
+      "ruleId": "arabic-alef-variants-u+0622"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Map arabic-alef-variants member U+0623 to U+0627 for lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "أ",
+      "operation": "map",
+      "output": "ا",
+      "priority": 60,
+      "ruleId": "arabic-alef-variants-u+0623"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Map arabic-alef-variants member U+0625 to U+0627 for lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "إ",
+      "operation": "map",
+      "output": "ا",
+      "priority": 60,
+      "ruleId": "arabic-alef-variants-u+0625"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Map arabic-alef-variants member U+0671 to U+0627 for lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "ٱ",
+      "operation": "map",
+      "output": "ا",
+      "priority": 60,
+      "ruleId": "arabic-alef-variants-u+0671"
+    },
+    {
+      "conditions": {
+        "likelySubtag": "ar-Arab-EG",
+        "note": "Map arabic-ya-variants member U+0649 to U+064A for lookup normalization.",
+        "scope": "Arabic MSA lookup normalization profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "input": "ى",
+      "operation": "map",
+      "output": "ي",
+      "priority": 60,
+      "ruleId": "arabic-ya-variants-u+0649"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Arab",
+  "unicodeNormalization": "NFC"
+}

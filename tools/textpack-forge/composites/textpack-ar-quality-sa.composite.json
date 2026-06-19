@@ -30,20 +30,13 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadArabicQualityShareAlike",
+	"display": {
 		"languageName": "ArabicQualityShareAlike"
 	},
 	"targets": {
-		"languages": [
-			"ar"
-		],
-		"scripts": [
-			"Arab"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["ar"],
+		"scripts": ["Arab"],
+		"modalities": ["typed"]
 	},
 	"sourceIds": [
 		"source:iana:language-subtag-registry",

@@ -120,15 +120,33 @@ test("runs the final section 20 parallel workflow", () => {
 
 test("parallel textpack resources materialize through the adapter", async () => {
 	const alignmentText =
-		"sourceSentenceId\ttargetSentenceId\tsourceLanguageTag\ttargetLanguageTag\tsourceText\ttargetText\ns1\tt1\ten\tfr\tGood morning\tBonjour\n";
+		"sourceSentenceId\ttargetSentenceId\tsourceLanguageTag\ttargetLanguageTag\tsourceText\ttargetText\ns1\tt1\ten\tfr\tGood morning\tBonjour\ns2\tt2\ten\tfr\tGood evening\tBonsoir\n";
 	const pack = {
 		manifest: {
+			id: "pack:parallel-fixture",
+			packageName: "@ismail-elkorchi/textpack-parallel-fixture",
 			targets: { languages: ["en", "fr"] },
 			resources: [
 				{
 					id: "parallel-en-fr-links",
 					kind: "alignment-table" as const,
 					schemaId: "textparallel.alignment.rows.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "parallel",
+					status: "task-supported" as const,
+					resourceIds: ["parallel-en-fr-links"],
+					bindings: [
+						{
+							role: "table" as const,
+							resourceId: "parallel-en-fr-links",
+							schemaId: "textparallel.alignment.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textparallel" as const,
+						},
+					],
 				},
 			],
 		},
@@ -143,7 +161,9 @@ test("parallel textpack resources materialize through the adapter", async () => 
 		reader: textResourceReader({
 			"resources/parallel-en-fr.tsv": alignmentText,
 		}),
+		maxRows: 1,
 	});
+	assert.equal(tables[0]?.rows.length, 1);
 	assert.deepEqual(tables[0]?.rows[0], {
 		sourceLanguageTag: "en",
 		sourceSentenceId: "s1",
@@ -156,15 +176,28 @@ test("parallel textpack resources materialize through the adapter", async () => 
 		reader: textResourceReader({
 			"resources/parallel-en-fr.tsv": alignmentText,
 		}),
+		maxRows: 1,
 	});
+	assert.equal(links.length, 1);
 	assert.equal(links[0]?.sourceSentenceId, "s1");
 	const corpus = await parallelCorpusFromPack(pack, {
 		reader: textResourceReader({
 			"resources/parallel-en-fr.tsv": alignmentText,
 		}),
 		targetLanguage: "fr",
+		maxRows: 1,
 	});
+	assert.equal(corpus.documents.length, 1);
 	assert.equal(corpus.documents[0]?.sourceDoc.views.raw?.text, "Good morning");
+	await assert.rejects(
+		parallelTablesFromPack(pack, {
+			reader: textResourceReader({
+				"resources/parallel-en-fr.tsv": alignmentText,
+			}),
+			maxRows: 0,
+		}),
+		/maxRows must be a positive integer/u,
+	);
 });
 
 test("keeps corpus construction and metadata JSON-safe", () => {

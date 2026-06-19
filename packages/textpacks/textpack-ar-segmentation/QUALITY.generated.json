@@ -1,0 +1,52 @@
+{
+  "acceptedRecordCount": 0,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "Generated component reports and evaluation records are available for the required segmentation component."
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    },
+    {
+      "notes": [
+        "The required component graph provides CAMeL Morph MSA tokenization fields and canonical segmentation resources."
+      ],
+      "slot": "segmentation",
+      "status": "task-supported"
+    }
+  ],
+  "components": [
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
+      "reason": "Arabic MSA CAMeL Morph tokenization scheme and canonical segmentation resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar-segmentation",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 0,
+  "resourcePaths": [],
+  "resourceSpecIds": [],
+  "resources": [],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
+  ]
+}

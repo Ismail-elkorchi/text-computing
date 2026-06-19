@@ -29,25 +29,15 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadArabicKnowledgeBase",
+	"display": {
 		"languageName": "ArabicKnowledgeBase"
 	},
 	"targets": {
-		"languages": [
-			"ar"
-		],
-		"scripts": [
-			"Arab"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["ar"],
+		"scripts": ["Arab"],
+		"modalities": ["typed"]
 	},
-	"sourceIds": [
-		"source:wordnet:arabic-v4.1.0",
-		"source:wikidata:main"
-	],
+	"sourceIds": ["source:wordnet:arabic-v4.1.0", "source:wikidata:main"],
 	"snapshotIds": [
 		"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
 		"snapshot:source:wikidata:main:20260608"

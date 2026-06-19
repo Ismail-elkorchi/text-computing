@@ -1,2 +1,0 @@
-fr-core-default
-fr-core-news

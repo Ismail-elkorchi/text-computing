@@ -29,25 +29,15 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadEnglishKnowledgeBase",
+	"display": {
 		"languageName": "EnglishKnowledgeBase"
 	},
 	"targets": {
-		"languages": [
-			"en"
-		],
-		"scripts": [
-			"Latn"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["en"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
 	},
-	"sourceIds": [
-		"source:wordnet:open-english-2025",
-		"source:wikidata:main"
-	],
+	"sourceIds": ["source:wordnet:open-english-2025", "source:wikidata:main"],
 	"snapshotIds": [
 		"snapshot:source:wordnet:open-english-2025:2025-edition",
 		"snapshot:source:wikidata:main:20260608"

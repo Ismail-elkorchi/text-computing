@@ -1,16 +1,21 @@
 import {
 	isFileBackedResource,
 	openResourceText,
+	requireSingleTaskResourceBinding,
 	type TextPackResourceReader,
+	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 import { buildAbbreviationTable } from "../abbreviation/build.js";
 import { buildAffixTable } from "../affix/build.js";
 import { buildGazetteer } from "../gazetteer/build.js";
 import { buildLexicon } from "../lexicon/build.js";
+import { lookup } from "../lexicon/lookup.js";
 import type {
 	LexicalEntry,
+	LexicalMatch,
 	Lexicon,
 	LexiconOptions,
+	LookupOptions,
 } from "../lexicon/types.js";
 import { buildPronunciationLexicon } from "../pronunciation/build.js";
 import { buildTermbase } from "../term/build.js";
@@ -80,19 +85,27 @@ function findResource(
 	return found;
 }
 
-function findResources(
+function boundResources(
 	pack: TextPackLike,
-	query: PackResourceQueryLike,
+	options: ResourceMaterializationOptions & {
+		readonly resourceIds?: readonly string[];
+		readonly schemaIds?: string | readonly string[];
+		readonly defaultSlot: string;
+		readonly defaultRole?: ResourceMaterializationOptions["role"];
+	},
 ): readonly TextPackResourceLike[] {
+	const role = options.role ?? options.defaultRole;
+	const resourceIds = taskResourceIdsFromBindings(pack, {
+		slot: options.slot ?? options.defaultSlot,
+		ownerPackage: "@ismail-elkorchi/textlex",
+		...(options.schemaIds === undefined ? {} : { schemaId: options.schemaIds }),
+		...(role === undefined ? {} : { role }),
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
 	return Object.freeze(
-		pack.manifest.resources
-			.filter(
-				(resource) =>
-					(query.id === undefined || resource.id === query.id) &&
-					kindMatches(resource, query.kind) &&
-					schemaMatches(resource, query.schemaId),
-			)
-			.sort((left, right) => left.id.localeCompare(right.id)),
+		resourceIds.map((resourceId) => findResource(pack, resourceId)),
 	);
 }
 
@@ -139,16 +152,125 @@ function parseTable(text: string): readonly Readonly<Record<string, string>>[] {
 	return Object.freeze(rows);
 }
 
+function parseMatchingTableRows(
+	text: string,
+	matches: (row: Readonly<Record<string, string>>) => boolean,
+	maxRows: number | undefined,
+): readonly Readonly<Record<string, string>>[] {
+	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
+	while (lines.length > 0 && lines[lines.length - 1] === "") lines.pop();
+	const header = lines[0]?.split("\t") ?? [];
+	if (header.length === 0) return [];
+	const rows: Readonly<Record<string, string>>[] = [];
+	for (const line of lines.slice(1)) {
+		if (line.length === 0) continue;
+		const cells = line.split("\t");
+		const row: Record<string, string> = {};
+		for (let index = 0; index < header.length; index += 1) {
+			const column = header[index];
+			if (column !== undefined && column.length > 0) {
+				row[column] = cells[index] ?? "";
+			}
+		}
+		const frozen = Object.freeze(row);
+		if (!matches(frozen)) continue;
+		rows.push(frozen);
+		if (maxRows !== undefined && rows.length >= maxRows) break;
+	}
+	return Object.freeze(rows);
+}
+
+function tableTextFromRows(
+	rows: readonly Readonly<Record<string, string>>[],
+): string {
+	const columns = Object.keys(rows[0] ?? {});
+	if (columns.length === 0) return "";
+	return [
+		columns.join("\t"),
+		...rows.map((row) => columns.map((column) => row[column] ?? "").join("\t")),
+	].join("\n");
+}
+
+function normalizedLookupKey(value: string): string {
+	return value.normalize("NFC").toLocaleLowerCase();
+}
+
+function rowTextValues(
+	row: Readonly<Record<string, string>>,
+): readonly string[] {
+	const values = [
+		row.form,
+		row.word,
+		row.lemma,
+		row.surface,
+		row.lexicalForm,
+		row.stem,
+		row.root,
+		row.diacritizedForm,
+	];
+	const splitForms =
+		row.forms === undefined || row.forms.length === 0
+			? []
+			: row.forms.split(/[|, ]/u);
+	return Object.freeze(
+		[...values, ...splitForms].filter(
+			(value): value is string => value !== undefined && value.length > 0,
+		),
+	);
+}
+
+function queryTextsByKey(
+	texts: readonly string[],
+): ReadonlyMap<string, string[]> {
+	const output = new Map<string, string[]>();
+	for (const text of texts) {
+		const key = normalizedLookupKey(text);
+		output.set(key, [...(output.get(key) ?? []), text]);
+	}
+	return output;
+}
+
+function matchingQueryTexts(
+	row: Readonly<Record<string, string>>,
+	textsByKey: ReadonlyMap<string, readonly string[]>,
+): readonly string[] {
+	const output = new Set<string>();
+	for (const value of rowTextValues(row)) {
+		for (const text of textsByKey.get(normalizedLookupKey(value)) ?? []) {
+			output.add(text);
+		}
+	}
+	return Object.freeze(
+		[...output].sort((left, right) => left.localeCompare(right)),
+	);
+}
+
+function stableRowId(
+	row: Readonly<Record<string, string>>,
+	source: string | undefined,
+	index: number,
+): string {
+	return (
+		row.entryId ??
+		row.id ??
+		row.word ??
+		row.form ??
+		row.lemma ??
+		`${source ?? "row"}:${String(index + 1).padStart(8, "0")}`
+	);
+}
+
 function canonicalLexiconRows(
 	text: string,
 	options: ResourceParseOptions,
 ): readonly LexicalEntry[] {
-	return parseTable(text).flatMap((row) => {
-		const id = row.entryId;
+	return parseTable(text).flatMap((row, index) => {
+		const id = stableRowId(row, options.source, index);
 		const form =
-			row.form !== undefined && row.form !== "-" ? row.form : row.lemma;
+			row.form !== undefined && row.form !== "-"
+				? row.form
+				: firstNonEmpty(row.word, row.surface, row.lemma);
 		if (
-			id === undefined ||
 			id.length === 0 ||
 			form === undefined ||
 			form.length === 0 ||
@@ -162,7 +284,10 @@ function canonicalLexiconRows(
 				value.length > 0 &&
 				![
 					"entryId",
+					"id",
 					"form",
+					"word",
+					"surface",
 					"lemma",
 					"languageTag",
 					"script",
@@ -281,12 +406,36 @@ export interface MorphologyIndexFromPackOptions
 	readonly maxRows?: number;
 }
 
+export interface MorphologyAnalysesFromPackOptions
+	extends ResourceMaterializationOptions {
+	readonly resourceIds?: readonly string[];
+	readonly maxRowsPerResource?: number;
+}
+
+export type MorphologyAnalysesManyFromPackResult = ReadonlyMap<
+	string,
+	readonly MorphologyAnalysis[]
+>;
+
 export interface MergedLexiconFromPackOptions
 	extends LexiconOptions,
 		ResourceMaterializationOptions {
 	readonly resourceIds?: readonly string[];
 	readonly schemaIds?: readonly string[];
 }
+
+export interface LookupFromPackOptions
+	extends LookupOptions,
+		ResourceMaterializationOptions {
+	readonly resourceIds?: readonly string[];
+	readonly schemaIds?: readonly string[];
+	readonly maxRowsPerResource?: number;
+}
+
+export type LookupManyFromPackResult = ReadonlyMap<
+	string,
+	readonly LexicalMatch[]
+>;
 
 function canonicalMorphologyResource(
 	value: unknown,
@@ -438,6 +587,16 @@ function morphologyParadigms(
 	);
 }
 
+function isMorphologyRowRole(role: string): boolean {
+	return (
+		role.length === 0 ||
+		role === "analyzer" ||
+		role === "generator" ||
+		role === "paradigm-table" ||
+		role === "morpheme-inventory"
+	);
+}
+
 export function lexiconFromPack(
 	pack: TextPackLike,
 	queryOrResourceId: string | PackResourceQueryLike,
@@ -503,22 +662,15 @@ export async function mergedLexiconFromPackAsync(
 	pack: TextPackLike,
 	options: MergedLexiconFromPackOptions = {},
 ): Promise<Lexicon> {
-	const requested = new Set(options.resourceIds ?? []);
-	const resources = findResources(pack, {
-		schemaId: options.schemaIds ?? [
+	const resources = boundResources(pack, {
+		...options,
+		defaultSlot: "lexicon",
+		schemaIds: options.schemaIds ?? [
 			"textlex.lexicon.v1",
 			"textlex.abbreviation-table.v1",
 			"textlex.stoplist.v1",
 		],
-		kind: [
-			"lexicon",
-			"gazetteer",
-			"termbase",
-			"phrase-list",
-			"stoplist",
-			"abbreviation-table",
-		],
-	}).filter((resource) => requested.size === 0 || requested.has(resource.id));
+	});
 	const entries: LexicalEntry[] = [];
 	for (const resource of resources) {
 		const lexicon = await lexiconFromPackAsync(pack, resource.id, options);
@@ -530,6 +682,137 @@ export async function mergedLexiconFromPackAsync(
 		duplicateIdPolicy: "allow",
 		duplicateFormPolicy: options.duplicateFormPolicy ?? "allow",
 	});
+}
+
+export async function lookupManyFromPackAsync(
+	pack: TextPackLike,
+	texts: readonly string[],
+	options: LookupFromPackOptions = {},
+): Promise<LookupManyFromPackResult> {
+	const uniqueTexts = Object.freeze(
+		[...new Set(texts)].filter((text) => text.length > 0),
+	);
+	const textsByKey = queryTextsByKey(uniqueTexts);
+	const resources = boundResources(pack, {
+		...options,
+		defaultSlot: "lexicon",
+		schemaIds: options.schemaIds ?? [
+			"textlex.lexicon.v1",
+			"textlex.abbreviation-table.v1",
+			"textlex.stoplist.v1",
+		],
+	});
+	const entriesByText = new Map<string, LexicalEntry[]>();
+	for (const text of uniqueTexts) entriesByText.set(text, []);
+	for (const resource of resources) {
+		const value = await materializedResourceValue(
+			pack,
+			resource,
+			options.reader,
+		);
+		if (resource.schemaId !== "textlex.lexicon.v1") {
+			const lexicon = await lexiconFromPackAsync(pack, resource.id, {
+				...options,
+				duplicateIdPolicy: "allow",
+				duplicateFormPolicy: "allow",
+			});
+			for (const text of uniqueTexts) {
+				for (const match of lookup(lexicon, text, options)) {
+					entriesByText.get(text)?.push(match.entry);
+				}
+			}
+			continue;
+		}
+		const canonical = canonicalLexiconResource(value);
+		if (canonical === undefined) {
+			throw new TypeError(
+				`${resource.id} is not a canonical lexicon resource.`,
+			);
+		}
+		const parseOptions: ResourceParseOptions = {
+			source: resource.id,
+			...((canonical.languageTag ?? options.language)
+				? { language: canonical.languageTag ?? options.language }
+				: {}),
+			...((canonical.script ?? options.script)
+				? { script: canonical.script ?? options.script }
+				: {}),
+		};
+		if (canonical.entries !== undefined) {
+			for (const entry of parseLexiconResource(
+				canonical.entries,
+				parseOptions,
+			)) {
+				const matching = new Set<string>();
+				for (const form of entry.forms) {
+					for (const text of matchingQueryTexts({ form }, textsByKey)) {
+						matching.add(text);
+					}
+				}
+				if (entry.canonical !== undefined) {
+					for (const text of matchingQueryTexts(
+						{ lemma: entry.canonical },
+						textsByKey,
+					)) {
+						matching.add(text);
+					}
+				}
+				for (const text of matching) entriesByText.get(text)?.push(entry);
+			}
+		}
+		for (const ref of canonical.resourceRefs ?? []) {
+			if (typeof ref.resourceId !== "string") continue;
+			const referenced = findResource(pack, ref.resourceId);
+			const referencedValue = await materializedResourceValue(
+				pack,
+				referenced,
+				options.reader,
+			);
+			if (typeof referencedValue !== "string") {
+				throw new TypeError(
+					`${referenced.id} must be text-backed for canonical lexicon refs.`,
+				);
+			}
+			const matchingRows = parseMatchingTableRows(
+				referencedValue,
+				(row) => matchingQueryTexts(row, textsByKey).length > 0,
+				options.maxRowsPerResource,
+			);
+			for (const row of matchingRows) {
+				const rowEntries = canonicalLexiconRows(tableTextFromRows([row]), {
+					...parseOptions,
+					source: referenced.id,
+				});
+				for (const text of matchingQueryTexts(row, textsByKey)) {
+					entriesByText.get(text)?.push(...rowEntries);
+				}
+			}
+		}
+	}
+	const output = new Map<string, readonly LexicalMatch[]>();
+	for (const text of uniqueTexts) {
+		const entries = entriesByText.get(text) ?? [];
+		if (entries.length === 0) {
+			output.set(text, Object.freeze([]));
+			continue;
+		}
+		const lexicon = buildLexicon(entries, {
+			...options,
+			id: `${pack.manifest.resources.length}:${text}:targeted-lookup`,
+			duplicateIdPolicy: "allow",
+			duplicateFormPolicy: "allow",
+		});
+		output.set(text, Object.freeze(lookup(lexicon, text, options)));
+	}
+	return output;
+}
+
+export async function lookupFromPackAsync(
+	pack: TextPackLike,
+	text: string,
+	options: LookupFromPackOptions = {},
+): Promise<readonly LexicalMatch[]> {
+	return (await lookupManyFromPackAsync(pack, [text], options)).get(text) ?? [];
 }
 
 export async function lexiconFromPackAsync(
@@ -733,8 +1016,25 @@ export async function morphologyIndexFromPackAsync(
 ): Promise<MorphologyIndex> {
 	const descriptor =
 		options.resourceId === undefined
-			? findResource(pack, { schemaId: "textlex.morphology.v1" })
-			: findResource(pack, options.resourceId);
+			? findResource(
+					pack,
+					requireSingleTaskResourceBinding(pack, {
+						slot: options.slot ?? "morphology",
+						ownerPackage: "@ismail-elkorchi/textlex",
+						schemaId: "textlex.morphology.v1",
+						role: options.role ?? "primary",
+					}).resourceId,
+				)
+			: findResource(
+					pack,
+					requireSingleTaskResourceBinding(pack, {
+						slot: options.slot ?? "morphology",
+						ownerPackage: "@ismail-elkorchi/textlex",
+						schemaId: "textlex.morphology.v1",
+						role: options.role ?? "primary",
+						resourceId: options.resourceId,
+					}).resourceId,
+				);
 	const value = await materializedResourceValue(
 		pack,
 		descriptor,
@@ -759,7 +1059,11 @@ export async function morphologyIndexFromPackAsync(
 		if (typeof referencedValue !== "string") continue;
 		const rows = parseTable(referencedValue).slice(0, options.maxRows);
 		const role = typeof ref.role === "string" ? ref.role : "";
-		if (role === "generator" || role === "paradigm-table") {
+		if (
+			role === "generator" ||
+			role === "paradigm-table" ||
+			role === "morpheme-inventory"
+		) {
 			for (const row of rows) {
 				const generation = morphologyGenerationFromRow(row, referenced.id);
 				if (generation !== undefined) generations.push(generation);
@@ -823,4 +1127,78 @@ export async function morphologyIndexFromPackAsync(
 			return morphologyParadigms(generations, lemma);
 		},
 	});
+}
+
+export async function morphologyAnalysesManyFromPackAsync(
+	pack: TextPackLike,
+	forms: readonly string[],
+	options: MorphologyAnalysesFromPackOptions = {},
+): Promise<MorphologyAnalysesManyFromPackResult> {
+	const uniqueForms = Object.freeze(
+		[...new Set(forms)].filter((form) => form.length > 0),
+	);
+	const formsByKey = queryTextsByKey(uniqueForms);
+	const resources = boundResources(pack, {
+		...options,
+		defaultSlot: "morphology",
+		defaultRole: "primary",
+		schemaIds: "textlex.morphology.v1",
+	});
+	const analysesByForm = new Map<string, MorphologyAnalysis[]>();
+	for (const form of uniqueForms) analysesByForm.set(form, []);
+	for (const descriptor of resources) {
+		const value = await materializedResourceValue(
+			pack,
+			descriptor,
+			options.reader,
+		);
+		const canonical = canonicalMorphologyResource(value);
+		if (canonical === undefined) {
+			throw new TypeError(
+				`${descriptor.id} is not a canonical morphology resource.`,
+			);
+		}
+		for (const ref of canonical.resourceRefs ?? []) {
+			if (typeof ref.resourceId !== "string") continue;
+			const role = typeof ref.role === "string" ? ref.role : "";
+			if (!isMorphologyRowRole(role)) continue;
+			const referenced = findResource(pack, ref.resourceId);
+			const referencedValue = await materializedResourceValue(
+				pack,
+				referenced,
+				options.reader,
+			);
+			if (typeof referencedValue !== "string") continue;
+			const matchingRows = parseMatchingTableRows(
+				referencedValue,
+				(row) => matchingQueryTexts(row, formsByKey).length > 0,
+				options.maxRowsPerResource,
+			);
+			for (const row of matchingRows) {
+				const analysis = morphologyAnalysisFromRow(row, referenced.id);
+				if (analysis === undefined) continue;
+				for (const form of matchingQueryTexts(row, formsByKey)) {
+					analysesByForm.get(form)?.push(analysis);
+				}
+			}
+		}
+	}
+	return new Map(
+		[...analysesByForm.entries()].map(([form, analyses]) => [
+			form,
+			Object.freeze(analyses),
+		]),
+	);
+}
+
+export async function morphologyAnalysesFromPackAsync(
+	pack: TextPackLike,
+	form: string,
+	options: MorphologyAnalysesFromPackOptions = {},
+): Promise<readonly MorphologyAnalysis[]> {
+	return (
+		(await morphologyAnalysesManyFromPackAsync(pack, [form], options)).get(
+			form,
+		) ?? []
+	);
 }

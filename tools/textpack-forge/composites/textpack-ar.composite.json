@@ -30,20 +30,13 @@
 	"version": "0.1.0",
 	"packClass": "language-composite",
 	"supportLevel": "feature-complete",
-	"loader": {
-		"functionName": "loadArabic",
+	"display": {
 		"languageName": "Arabic"
 	},
 	"targets": {
-		"languages": [
-			"ar"
-		],
-		"scripts": [
-			"Arab"
-		],
-		"modalities": [
-			"typed"
-		]
+		"languages": ["ar"],
+		"scripts": ["Arab"],
+		"modalities": ["typed"]
 	},
 	"sourceIds": [
 		"source:iana:language-subtag-registry",

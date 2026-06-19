@@ -28,8 +28,7 @@
 	"version": "0.1.0",
 	"packClass": "language-component-composite",
 	"supportLevel": "task-supported",
-	"loader": {
-		"functionName": "loadFrenchSyntax",
+	"display": {
 		"languageName": "FrenchSyntax"
 	},
 	"targets": {

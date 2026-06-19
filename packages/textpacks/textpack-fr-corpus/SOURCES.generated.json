@@ -1,0 +1,167 @@
+{
+  "components": [],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "mode": "source-backed",
+  "packageId": "textpack-fr-corpus",
+  "packageName": "@ismail-elkorchi/textpack-fr-corpus",
+  "policySurface": "default",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+  ],
+  "resources": [
+    {
+      "byteLength": 1115,
+      "checksum": "sha256:a903a5e0762abc6dc6d0ef3598b24e18ff094b83cd76013fd50a7c81607afa45",
+      "id": "fr-tatoeba-corpus-canonical",
+      "kind": "corpus",
+      "path": "resources/tatoeba-fr.corpus.json",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+    },
+    {
+      "byteLength": 899,
+      "checksum": "sha256:5fda2a6afa7254d3d9591c8e06d19f71bc47a7baa4e975c1b77310286791e21d",
+      "id": "fr-tatoeba-corpus-quality",
+      "kind": "quality-profile",
+      "path": "resources/tatoeba-fr.corpus-quality.json",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+    },
+    {
+      "byteLength": 1345,
+      "checksum": "sha256:d5babdabae9427ebb8d3d605f4a932368765fec38666595bb9eaadd01fea8f4a",
+      "id": "fr-tatoeba-corpus-quality-profile",
+      "kind": "quality-profile",
+      "path": "resources/tatoeba-fr.corpus-quality-profile.json",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+    },
+    {
+      "byteLength": 26671945,
+      "checksum": "sha256:8526a9895132794ee1bfd5837c0da3e96968065b2e1c1aa482dd46669b087916",
+      "id": "fr-tatoeba-corpus-sentences",
+      "kind": "corpus",
+      "path": "resources/tatoeba-fr.sentences.tsv.gz.b64",
+      "pipelineId": "tatoeba-french-corpus-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
+    }
+  ],
+  "schemaVersion": "1",
+  "snapshotIds": [
+    "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+  ],
+  "snapshots": [
+    {
+      "checksum": "sha256:0b8ceb53a848692890f7c5f4c56321f1f84a3eb90ab37a5fc19830229952176f",
+      "files": [
+        {
+          "byteLength": 14624789,
+          "checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra_sentences_detailed.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2"
+        },
+        {
+          "byteLength": 19399,
+          "checksum": "sha256:43d9b95ed2b74940e3767915ae8ada2b6e5e83e83f5c96f589e4fb83f6492b30",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-ara_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-ara_links.tsv.bz2"
+        },
+        {
+          "byteLength": 986191,
+          "checksum": "sha256:0d719d633ce64b094686e98bf56cd753d02a040d0db1096a9165edcc918f84f2",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-deu_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-deu_links.tsv.bz2"
+        },
+        {
+          "byteLength": 2630353,
+          "checksum": "sha256:26cd42e6b219ecd016d6b5c38ace5a0b7285bf93da3a2cfa933f691341034689",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-eng_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-eng_links.tsv.bz2"
+        },
+        {
+          "byteLength": 390399,
+          "checksum": "sha256:c88802905f6cca575550e29e7c9fca7dfc3d0c1b49ddb9ae75db10a0d75a8de8",
+          "mediaType": "application/x-bzip2",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-spa_links.tsv.bz2",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra-spa_links.tsv.bz2"
+        },
+        {
+          "byteLength": 3402,
+          "checksum": "sha256:850382d60a9aa1b200d294eabf8dbe6c38a29902af8d2a2e02cc53369c6a693a",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/tatoeba-fr-artifacts.json",
+          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/"
+        }
+      ],
+      "kind": "external",
+      "notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts used to generate task-supported corpus and parallel textpacks.",
+      "retrievedAt": "2026-06-11T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
+      "sourceId": "source:tatoeba:weekly-french-2026-06-06",
+      "version": "2026-06-06"
+    }
+  ],
+  "sourceIds": [
+    "source:tatoeba:weekly-french-2026-06-06"
+  ],
+  "sourcePolicies": [
+    {
+      "capabilitySlots": [
+        "corpus",
+        "parallel",
+        "examples"
+      ],
+      "citation": "Tatoeba weekly French exports, 2026-06-06.",
+      "defaultCompositeAllowed": true,
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "languages": [
+        "fr"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly French exports 2026-06-06",
+      "notes": "Exact Tatoeba weekly French sentence and French-linked parallel exports. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave French source, not a first-wave lexicon, morphology, syntax, search, or KB source. It can provide task support only when transformed into local sentence rows, alignment/link rows, or an equivalent local index; the active French corpus and parallel packs materialize those local rows.",
+      "policyClass": "attribution",
+      "priority": "second",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:tatoeba:weekly-french-2026-06-06"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "Tatoeba weekly French exports, 2026-06-06.",
+      "family": "TATOEBA",
+      "homepageUrl": "https://tatoeba.org/en/downloads",
+      "licenseEvidence": [
+        "https://tatoeba.org/en/downloads",
+        "https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus"
+      ],
+      "licenseExpression": "CC-BY-2.0-FR",
+      "name": "Tatoeba weekly French exports 2026-06-06",
+      "notes": "Pinned Tatoeba French sentence and French-linked parallel export artifact metadata. Generated packages use explicit artifact descriptors instead of vendoring the raw corpus into npm.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:tatoeba:weekly-french-2026-06-06"
+    }
+  ]
+}

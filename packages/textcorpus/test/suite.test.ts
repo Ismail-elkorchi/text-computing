@@ -87,6 +87,22 @@ test("materializes bounded textpack corpus rows as documents and TextCorpus", as
 					format: "tsv",
 				},
 			],
+			capabilitySlots: [
+				{
+					slot: "corpus",
+					status: "task-supported" as const,
+					resourceIds: ["fixture-corpus-rows"],
+					bindings: [
+						{
+							role: "table" as const,
+							resourceId: "fixture-corpus-rows",
+							schemaId: "textdata.corpus.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textcorpus" as const,
+						},
+					],
+				},
+			],
 		},
 		resources: {
 			"fixture-corpus-rows":

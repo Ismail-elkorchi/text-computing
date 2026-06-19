@@ -1,0 +1,219 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:wikidata-en",
+	"name": "Wikidata English Core Entity Textpack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-wikidata-en",
+	"targets": {
+		"languages": [
+			"en"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [
+		{
+			"id": "wikidata-en-entities",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.entities.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-en-aliases",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.aliases.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-en-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.relations.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-en-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.kb.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wikidata-en-quality",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-en.quality.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wikidata-en-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-en.quality-profile.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textquality.profile.v1"
+		}
+	],
+	"artifacts": [
+		{
+			"artifactId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"version": "20260608",
+			"profile": "full",
+			"sizeBytes": 142291512349,
+			"mediaType": "application/json",
+			"compression": "gzip",
+			"checksum": {
+				"algorithm": "sha1",
+				"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+			},
+			"licenseExpression": "CC0-1.0",
+			"redistributionPolicy": "redistributable",
+			"retrieval": {
+				"kind": "https",
+				"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+				"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+			},
+			"cacheKey": "wikidata-main-20260608-all-json-gzip",
+			"expectedFiles": [
+				{
+					"path": "wikidata-20260608-all.json.gz",
+					"sizeBytes": 142291512349,
+					"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+				}
+			]
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "kb",
+			"status": "task-supported",
+			"resourceIds": [
+				"wikidata-en-entities",
+				"wikidata-en-aliases",
+				"wikidata-en-relations",
+				"wikidata-en-kb-canonical"
+			],
+			"artifactIds": [
+				"artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wikidata-en-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-en-aliases",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-en-entities",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-en-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Wikidata English core entity rows, aliases, and P31 relations are materialized locally for the declared class-and-sitelink-threshold extract scope.",
+				"The pack does not claim complete Wikidata dump coverage."
+			],
+			"capabilities": {
+				"terminology": "kb",
+				"extraction": "gazetteer"
+			}
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"resourceIds": [
+				"wikidata-en-quality",
+				"wikidata-en-quality-profile"
+			],
+			"bindings": [
+				{
+					"role": "evidence",
+					"resourceId": "wikidata-en-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wikidata-en-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Generated quality profile records local entity, alias, relation, scope, and checksum evidence."
+			]
+		}
+	],
+	"license": "CC0-1.0",
+	"citations": [
+		"Wikidata main structured data dump, 2026-06-08."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

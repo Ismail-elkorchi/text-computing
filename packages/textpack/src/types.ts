@@ -203,11 +203,43 @@ export interface TextPackArtifactDescriptor {
 	readonly expectedFiles: readonly TextPackArtifactExpectedFile[];
 }
 
+export type TextPackTaskResourceBindingRole =
+	| "primary"
+	| "profile"
+	| "table"
+	| "index"
+	| "annotation"
+	| "evidence"
+	| "quality"
+	| "projection"
+	| "metadata";
+
+export type TextPackTaskResourceBindingOwnerPackage =
+	| "@ismail-elkorchi/textdata"
+	| "@ismail-elkorchi/textlex"
+	| "@ismail-elkorchi/textkb"
+	| "@ismail-elkorchi/textnorm"
+	| "@ismail-elkorchi/textsearch"
+	| "@ismail-elkorchi/textquality"
+	| "@ismail-elkorchi/textcorpus"
+	| "@ismail-elkorchi/textparallel";
+
+export interface TextPackTaskResourceBinding {
+	readonly role: TextPackTaskResourceBindingRole;
+	readonly resourceId: string;
+	readonly schemaId: string;
+	readonly required: boolean;
+	readonly ownerPackage: TextPackTaskResourceBindingOwnerPackage;
+}
+
 export interface TextPackCapabilitySlot {
 	readonly slot: string;
 	readonly status: TextPackCapabilitySlotStatus;
 	readonly resourceIds?: readonly string[];
 	readonly artifactIds?: readonly string[];
+	readonly bindings?: readonly TextPackTaskResourceBinding[];
+	readonly prerequisites?: readonly string[];
+	readonly readerRequired?: boolean;
 	readonly notes?: readonly string[];
 	readonly capabilities?: TextPackCapabilities;
 }

@@ -1,0 +1,365 @@
+{
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "knownGaps": [
+    "source-backed language capability slice; broader resources and evaluation coverage remain follow-up"
+  ],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "records": [
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "likelySubtag",
+        "operator": "eq",
+        "threshold": "fr-Latn-FR",
+        "unit": "tag",
+        "value": "fr-Latn-FR"
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:cldr-likely-subtag",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.locale-context"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "gold-evaluation",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-gold-cases",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "normalizationGoldCaseCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "cases",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:gold-cases",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.gold-cases"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "contractionObservationCount": 93425
+        },
+        "resourceIds": [
+          "fr-normalization-contraction-forms",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This records French contraction surface forms observed in the pinned Tatoeba corpus; syntactic expansion lives in syntax/treebank resources."
+      ],
+      "metric": {
+        "name": "contractionFormCount",
+        "operator": "eq",
+        "threshold": 4,
+        "unit": "forms",
+        "value": 4
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:observed-contraction-forms",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.contraction-surface-policy"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "apostropheCounts": {
+            "'": 345202,
+            "’": 28765
+          },
+          "elisionObservationCount": 373967,
+          "tatoebaSentenceRowCount": 718596
+        },
+        "resourceIds": [
+          "fr-normalization-elision-prefixes",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies observed modern French apostrophe/elision surface policy from Tatoeba; it is not historical or OCR normalization."
+      ],
+      "metric": {
+        "name": "elisionPrefixCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "prefixes",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:observed-elision-prefixes",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.elision-apostrophe-policy"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-rules",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies the generated Unicode/CLDR normalization profile, not spelling correction or noisy-text normalization accuracy."
+      ],
+      "metric": {
+        "name": "ruleCount",
+        "operator": "gte",
+        "threshold": 3,
+        "unit": "rules",
+        "value": 7
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:profile-rules",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-quality"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:transform-rejections",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [],
+      "metric": {
+        "name": "nfcQuickCheckValueCount",
+        "operator": "gte",
+        "threshold": 3,
+        "unit": "aliases",
+        "value": 3
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr-normalization",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:unicode-nfc-evidence",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.unicode-nfc-policy"
+    }
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-fr-normalization:french-normalization-profile"
+  ],
+  "schemaVersion": "1",
+  "summary": {
+    "failCount": 0,
+    "notApplicableCount": 0,
+    "passCount": 7,
+    "recordCount": 7,
+    "status": "passed",
+    "warningCount": 0
+  }
+}

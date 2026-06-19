@@ -1,0 +1,59 @@
+{
+  "dictionaryRefs": [],
+  "granularity": "grapheme",
+  "kind": "segmentation-profile",
+  "languageTag": "fr",
+  "profileId": "fr-modern-typed-unicode-grapheme-segmentation",
+  "rules": [
+    {
+      "conditions": {
+        "likelySubtag": "fr-Latn-FR",
+        "propertyCounts": {
+          "CR": 1,
+          "Control": 26,
+          "Extend": 420,
+          "L": 2,
+          "LF": 1,
+          "LV": 399,
+          "LVT": 399,
+          "Prepend": 15,
+          "Regional_Indicator": 1,
+          "SpacingMark": 158,
+          "T": 2,
+          "V": 4,
+          "ZWJ": 1
+        },
+        "rangeCount": 1429,
+        "scope": "modern typed French Unicode segmentation profile",
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "label": "grapheme-boundary",
+      "operation": "label",
+      "pattern": "UAX29:grapheme",
+      "priority": 10,
+      "ruleId": "unicode-uax29-grapheme-uax29-boundary-policy"
+    }
+  ],
+  "schemaVersion": "1",
+  "schemes": [
+    {
+      "description": "Unicode UAX #29 extended grapheme cluster boundary profile.",
+      "fields": [
+        {
+          "name": "unicodeBreakProperty",
+          "order": 1
+        },
+        {
+          "name": "rangeCount",
+          "order": 2
+        }
+      ],
+      "schemeId": "unicode-uax29-grapheme"
+    }
+  ],
+  "script": "Latn"
+}

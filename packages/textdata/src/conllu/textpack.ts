@@ -1,6 +1,7 @@
 import {
 	isFileBackedResource,
 	openResourceText,
+	requireSingleTaskResourceBinding,
 	type TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
 import { createDataset, type DatasetReadOptions } from "../dataset/mod.js";
@@ -13,7 +14,56 @@ export interface TextPackResourceLike {
 
 export interface TextPackLike {
 	readonly manifest: {
+		readonly id?: string;
+		readonly packageName?: string;
 		readonly resources: readonly TextPackResourceLike[];
+		readonly capabilitySlots: readonly {
+			readonly slot: string;
+			readonly status:
+				| "unsupported"
+				| "planned"
+				| "profiled"
+				| "sampled"
+				| "artifact-backed"
+				| "task-supported"
+				| "feature-complete"
+				| "not-applicable";
+			readonly bindings?: readonly {
+				readonly role:
+					| "primary"
+					| "profile"
+					| "table"
+					| "index"
+					| "annotation"
+					| "evidence"
+					| "quality"
+					| "projection"
+					| "metadata";
+				readonly resourceId: string;
+				readonly schemaId: string;
+				readonly required: boolean;
+				readonly ownerPackage:
+					| "@ismail-elkorchi/textdata"
+					| "@ismail-elkorchi/textlex"
+					| "@ismail-elkorchi/textkb"
+					| "@ismail-elkorchi/textnorm"
+					| "@ismail-elkorchi/textsearch"
+					| "@ismail-elkorchi/textquality"
+					| "@ismail-elkorchi/textcorpus"
+					| "@ismail-elkorchi/textparallel";
+			}[];
+		}[];
+		readonly gapNotes?: readonly {
+			readonly id: string;
+			readonly slot?: string;
+			readonly runtimeSurface?: string;
+			readonly status:
+				| "unsupported"
+				| "planned"
+				| "artifact-backed"
+				| "not-applicable";
+			readonly message: string;
+		}[];
 	};
 	readonly resources: Readonly<Record<string, unknown>>;
 }
@@ -90,12 +140,14 @@ export interface UdSyntaxPackOptions {
 	readonly syntaxResourceId?: string;
 	readonly resourceIds?: Partial<UdSyntaxResourceIds>;
 	readonly reader?: TextPackResourceReader;
+	readonly slot?: string;
 }
 
 export interface UdAnnotationPackOptions {
 	readonly resourceId?: string;
 	readonly syntaxResourceId?: string;
 	readonly reader?: TextPackResourceReader;
+	readonly slot?: string;
 }
 
 interface CanonicalSyntaxResourceRef {
@@ -178,30 +230,18 @@ function numberCell(value: string | undefined): number {
 	return Number(value ?? "0");
 }
 
-function singleResourceBySchemaId(
-	pack: TextPackLike,
-	schemaId: string,
-): TextPackResourceLike {
-	const matches = pack.manifest.resources
-		.filter((resource) => resource.schemaId === schemaId)
-		.sort((left, right) => left.id.localeCompare(right.id));
-	if (matches.length === 1) return matches[0] as TextPackResourceLike;
-	if (matches.length === 0) {
-		throw new TypeError(`No ${schemaId} textpack resource is present.`);
-	}
-	throw new TypeError(
-		`Multiple ${schemaId} textpack resources are present: ${matches
-			.map((resource) => resource.id)
-			.join(", ")}.`,
-	);
-}
-
 function syntaxResourceId(
 	pack: TextPackLike,
 	explicit: string | undefined,
+	slot: string | undefined,
 ): string {
-	if (explicit !== undefined) return explicit;
-	return singleResourceBySchemaId(pack, SYNTAX_SCHEMA_ID).id;
+	return requireSingleTaskResourceBinding(pack, {
+		slot: slot ?? "syntax",
+		ownerPackage: "@ismail-elkorchi/textdata",
+		schemaId: SYNTAX_SCHEMA_ID,
+		role: "primary",
+		...(explicit === undefined ? {} : { resourceId: explicit }),
+	}).resourceId;
 }
 
 function refByRole(
@@ -226,16 +266,29 @@ function refByRole(
 function qualityResourceId(
 	pack: TextPackLike,
 	explicit: string | undefined,
+	slot: string | undefined,
 ): string {
-	if (explicit !== undefined) return explicit;
-	return singleResourceBySchemaId(pack, QUALITY_EVIDENCE_SCHEMA_ID).id;
+	return requireSingleTaskResourceBinding(pack, {
+		slot: slot ?? "syntax",
+		ownerPackage: "@ismail-elkorchi/textquality",
+		schemaId: QUALITY_EVIDENCE_SCHEMA_ID,
+		role: "evidence",
+		...(explicit === undefined ? {} : { resourceId: explicit }),
+	}).resourceId;
 }
 
 function resolveUdSyntaxResourceIds(
 	pack: TextPackLike,
-	options: Pick<UdSyntaxPackOptions, "resourceIds" | "syntaxResourceId"> = {},
+	options: Pick<
+		UdSyntaxPackOptions,
+		"resourceIds" | "syntaxResourceId" | "slot"
+	> = {},
 ): UdSyntaxResourceIds {
-	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	const syntaxId = syntaxResourceId(
+		pack,
+		options.syntaxResourceId,
+		options.slot,
+	);
 	const syntax = canonicalSyntaxResource(
 		resourceText(pack, syntaxId),
 		syntaxId,
@@ -249,7 +302,7 @@ function resolveUdSyntaxResourceIds(
 		sentenceProfile:
 			overrides.sentenceProfile ?? refByRole(syntax, "sentence-profile"),
 		annotations: overrides.annotations ?? refByRole(syntax, "annotation-table"),
-		quality: qualityResourceId(pack, overrides.quality),
+		quality: qualityResourceId(pack, overrides.quality, options.slot),
 	});
 }
 
@@ -257,7 +310,11 @@ async function resolveUdSyntaxResourceIdsAsync(
 	pack: TextPackLike,
 	options: UdSyntaxPackOptions = {},
 ): Promise<UdSyntaxResourceIds> {
-	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	const syntaxId = syntaxResourceId(
+		pack,
+		options.syntaxResourceId,
+		options.slot,
+	);
 	const syntax = await materializedCanonicalSyntaxResource(
 		pack,
 		syntaxId,
@@ -272,16 +329,23 @@ async function resolveUdSyntaxResourceIdsAsync(
 		sentenceProfile:
 			overrides.sentenceProfile ?? refByRole(syntax, "sentence-profile"),
 		annotations: overrides.annotations ?? refByRole(syntax, "annotation-table"),
-		quality: qualityResourceId(pack, overrides.quality),
+		quality: qualityResourceId(pack, overrides.quality, options.slot),
 	});
 }
 
 function annotationResourceId(
 	pack: TextPackLike,
-	options: Pick<UdAnnotationPackOptions, "resourceId" | "syntaxResourceId">,
+	options: Pick<
+		UdAnnotationPackOptions,
+		"resourceId" | "syntaxResourceId" | "slot"
+	>,
 ): string {
 	if (options.resourceId !== undefined) return options.resourceId;
-	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	const syntaxId = syntaxResourceId(
+		pack,
+		options.syntaxResourceId,
+		options.slot,
+	);
 	return refByRole(
 		canonicalSyntaxResource(resourceText(pack, syntaxId), syntaxId),
 		"annotation-table",
@@ -293,7 +357,11 @@ async function annotationResourceIdAsync(
 	options: UdAnnotationPackOptions,
 ): Promise<string> {
 	if (options.resourceId !== undefined) return options.resourceId;
-	const syntaxId = syntaxResourceId(pack, options.syntaxResourceId);
+	const syntaxId = syntaxResourceId(
+		pack,
+		options.syntaxResourceId,
+		options.slot,
+	);
 	return refByRole(
 		await materializedCanonicalSyntaxResource(pack, syntaxId, options.reader),
 		"annotation-table",

@@ -401,14 +401,19 @@ const morphologyText = JSON.stringify({
 	resourceRefs: [
 		{ resourceId: "fr-morph-analyzer", role: "analyzer" },
 		{ resourceId: "fr-morph-generator", role: "generator" },
+		{ resourceId: "fr-morph-morphemes", role: "morpheme-inventory" },
 	],
 });
 const morphologyAnalyzerRows =
 	"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nparle\tparler\tVERB\tV;IND;PRS;1;SG\tm1\n";
 const morphologyGeneratorRows =
 	"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nparler\tparle\tVERB\tV;IND;PRS;1;SG\tm1\n";
+const morphologyMorphemeRows =
+	"surface\tlexicalForm\tpartOfSpeech\tfeatureBundle\tentryId\nre\tre\tPREFIX\tmorpheme\tm2\n";
 const generatedPack = {
 	manifest: {
+		id: "pack:textlex-generated-fixture",
+		packageName: "@ismail-elkorchi/textpack-textlex-generated-fixture",
 		resources: [
 			{
 				id: "fr-lexicon",
@@ -440,6 +445,42 @@ const generatedPack = {
 				format: "tsv",
 				schemaId: "textlex.morphology.rows.v1",
 			},
+			{
+				id: "fr-morph-morphemes",
+				kind: "morphology" as const,
+				format: "tsv",
+				schemaId: "textlex.morphology.rows.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "lexicon",
+				status: "task-supported" as const,
+				resourceIds: ["fr-lexicon"],
+				bindings: [
+					{
+						role: "primary" as const,
+						resourceId: "fr-lexicon",
+						schemaId: "textlex.lexicon.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textlex" as const,
+					},
+				],
+			},
+			{
+				slot: "morphology",
+				status: "task-supported" as const,
+				resourceIds: ["fr-morphology"],
+				bindings: [
+					{
+						role: "primary" as const,
+						resourceId: "fr-morphology",
+						schemaId: "textlex.morphology.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textlex" as const,
+					},
+				],
+			},
 		],
 	},
 	resources: {
@@ -463,6 +504,10 @@ const generatedPack = {
 			"resources/fr-morph-generator.tsv",
 			morphologyGeneratorRows,
 		),
+		"fr-morph-morphemes": await fileBackedTextResource(
+			"resources/fr-morph-morphemes.tsv",
+			morphologyMorphemeRows,
+		),
 	},
 };
 const generatedReader = textResourceReader({
@@ -471,6 +516,7 @@ const generatedReader = textResourceReader({
 	"resources/fr-morphology.json": morphologyText,
 	"resources/fr-morph-analyzer.tsv": morphologyAnalyzerRows,
 	"resources/fr-morph-generator.tsv": morphologyGeneratorRows,
+	"resources/fr-morph-morphemes.tsv": morphologyMorphemeRows,
 });
 const mergedLexicon = await mergedLexiconFromPackAsync(generatedPack, {
 	reader: generatedReader,
@@ -481,3 +527,5 @@ const morphology = await morphologyIndexFromPackAsync(generatedPack, {
 });
 assert.equal(morphology.analyze("parle")[0]?.lemma, "parler");
 assert.equal(morphology.generate("parler", { SG: "true" })[0]?.form, "parle");
+assert.equal(morphology.analyze("re")[0]?.partOfSpeech, "PREFIX");
+assert.equal(morphology.generate("re")[0]?.form, "re");

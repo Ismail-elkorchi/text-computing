@@ -1,11 +1,12 @@
 import type { ParallelRecord } from "@ismail-elkorchi/textdata";
 import {
-	listResources,
 	openResourceTable,
 	type TextPack,
 	type TextPackMaterializedTable,
 	type TextPackResource,
 	type TextPackResourceReader,
+	type TextPackTaskResourceBindingRole,
+	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 import {
 	createParallelCorpus,
@@ -17,7 +18,10 @@ export interface ParallelRowsFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
 	readonly schemaIds?: readonly string[];
+	readonly slot?: string;
+	readonly role?: TextPackTaskResourceBindingRole;
 	readonly targetLanguage?: string;
+	readonly maxRows?: number;
 }
 
 export interface ParallelTableResource {
@@ -38,8 +42,32 @@ export interface ParallelLinkRow {
 	readonly resourceId: string;
 }
 
-function idSet(values: readonly string[] | undefined): ReadonlySet<string> {
-	return new Set(values ?? []);
+function rowLimit(value: number | undefined): number | undefined {
+	if (value === undefined) return undefined;
+	if (!Number.isInteger(value) || value <= 0) {
+		throw new TypeError("maxRows must be a positive integer.");
+	}
+	return value;
+}
+
+function resourcesById(
+	pack: TextPack,
+	resourceIds: readonly string[],
+): readonly TextPackResource[] {
+	const byId = new Map(
+		pack.manifest.resources.map((resource) => [resource.id, resource]),
+	);
+	return Object.freeze(
+		resourceIds.map((resourceId) => {
+			const resource = byId.get(resourceId);
+			if (resource === undefined) {
+				throw new TypeError(
+					`Textpack ${pack.manifest.packageName} is missing bound resource ${resourceId}.`,
+				);
+			}
+			return resource;
+		}),
+	);
 }
 
 async function parallelTableFromPack(
@@ -60,32 +88,43 @@ export async function parallelTablesFromPack(
 	pack: TextPack,
 	options: ParallelRowsFromPackOptions = {},
 ): Promise<readonly ParallelTableResource[]> {
-	const ids = idSet(options.resourceIds);
-	const resources = listResources(pack, {
+	const limit = rowLimit(options.maxRows);
+	const resourceIds = taskResourceIdsFromBindings(pack, {
+		slot: options.slot ?? "parallel",
+		ownerPackage: "@ismail-elkorchi/textparallel",
 		schemaId: options.schemaIds ?? [
 			"textparallel.alignment.v1",
 			"textparallel.alignment.rows.v1",
 		],
-	})
-		.filter((resource) => ids.size === 0 || ids.has(resource.id))
-		.sort((left, right) => left.id.localeCompare(right.id));
+		...(options.role === undefined ? {} : { role: options.role }),
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
+	const resources = resourcesById(pack, resourceIds);
 	const tables = await Promise.all(
 		resources.map((resource) =>
 			parallelTableFromPack(pack, resource, options.reader),
 		),
 	);
-	if (options.targetLanguage === undefined) return tables;
+	if (options.targetLanguage === undefined && limit === undefined)
+		return tables;
+	let remaining = limit ?? Number.POSITIVE_INFINITY;
 	return Object.freeze(
-		tables.map((table) =>
-			Object.freeze({
+		tables.map((table) => {
+			const filteredRows =
+				options.targetLanguage === undefined
+					? table.rows
+					: table.rows.filter(
+							(row) => row.targetLanguageTag === options.targetLanguage,
+						);
+			const rows = filteredRows.slice(0, remaining);
+			remaining -= rows.length;
+			return Object.freeze({
 				...table,
-				rows: Object.freeze(
-					table.rows.filter(
-						(row) => row.targetLanguageTag === options.targetLanguage,
-					),
-				),
-			}),
-		),
+				rows: Object.freeze(rows),
+			});
+		}),
 	);
 }
 

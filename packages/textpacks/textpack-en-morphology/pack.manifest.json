@@ -1,0 +1,59 @@
+{
+	"schemaVersion": "1",
+	"id": "pack:en-morphology",
+	"name": "English Morphology Composite Textpack",
+	"version": "0.1.0",
+	"packageName": "@ismail-elkorchi/textpack-en-morphology",
+	"targets": {
+		"languages": [
+			"en"
+		],
+		"scripts": [
+			"Latn"
+		],
+		"modalities": [
+			"typed"
+		]
+	},
+	"engines": {
+		"@ismail-elkorchi/textpack": "^0.1.0"
+	},
+	"resources": [],
+	"components": [
+		{
+			"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+			"versionRange": "0.1.0",
+			"role": "required",
+			"reason": "Default English SCOWLv2 lookup analyzer, lookup generator, POS, and inflection resources.",
+			"licensePolicy": "allow-attribution",
+			"capabilityPolicy": "contributes-default",
+			"artifactPolicy": "none"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"notes": [
+				"The required component graph provides SCOWLv2 English form-to-lemma lookup analysis, lemma-to-form generation candidates, POS inventory, and inflection-table resources."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"notes": [
+				"Generated component reports and evaluation records are available for the required morphology component."
+			]
+		}
+	],
+	"license": "LicenseRef-ESDB-MIT-Like",
+	"citations": [
+		"SCOWLv2 rich text export, rel-2026.02.25."
+	],
+	"generated": {
+		"forgeVersion": "0.1.0",
+		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
+	}
+}

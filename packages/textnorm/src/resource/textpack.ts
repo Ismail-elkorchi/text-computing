@@ -1,13 +1,15 @@
 import type { TextDocument } from "@ismail-elkorchi/textdoc";
 import {
-	listResources,
 	openResourceJson,
 	openResourceTable,
 	openResourceText,
+	requireSingleTaskResourceBinding,
 	type TextPack,
 	type TextPackMaterializedTable,
 	type TextPackResource,
 	type TextPackResourceReader,
+	type TextPackTaskResourceBindingRole,
+	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 import type { NormalizationViewResult } from "../normalize/types.js";
 import { computeEditScript, createNormalizedView } from "../view/mod.js";
@@ -27,6 +29,8 @@ export interface TextNormResourcesFromPackOptions {
 	readonly reader?: TextPackResourceReader;
 	readonly resourceIds?: readonly string[];
 	readonly schemaIds?: readonly string[];
+	readonly slot?: string;
+	readonly role?: TextPackTaskResourceBindingRole;
 }
 
 export type TextNormProfileMode = "storage" | "lookup" | "search";
@@ -46,8 +50,24 @@ export interface CompiledTextNormProfile {
 	readonly searchView: (doc: TextDocument) => NormalizationViewResult;
 }
 
-function idSet(values: readonly string[] | undefined): ReadonlySet<string> {
-	return new Set(values ?? []);
+function resourcesById(
+	pack: TextPack,
+	resourceIds: readonly string[],
+): readonly TextPackResource[] {
+	const byId = new Map(
+		pack.manifest.resources.map((resource) => [resource.id, resource]),
+	);
+	return Object.freeze(
+		resourceIds.map((resourceId) => {
+			const resource = byId.get(resourceId);
+			if (resource === undefined) {
+				throw new TypeError(
+					`Textpack ${pack.manifest.packageName} is missing bound resource ${resourceId}.`,
+				);
+			}
+			return resource;
+		}),
+	);
 }
 
 function isJson(resource: TextPackResource): boolean {
@@ -99,12 +119,16 @@ export async function normalizationResourcesFromPack(
 	pack: TextPack,
 	options: TextNormResourcesFromPackOptions = {},
 ): Promise<readonly TextNormPackResource[]> {
-	const ids = idSet(options.resourceIds);
-	const resources = listResources(pack, {
+	const resourceIds = taskResourceIdsFromBindings(pack, {
+		slot: options.slot ?? "normalization",
+		ownerPackage: "@ismail-elkorchi/textnorm",
 		schemaId: options.schemaIds ?? ["textnorm.profile.v1", "textnorm.rules.v1"],
-	})
-		.filter((resource) => ids.size === 0 || ids.has(resource.id))
-		.sort((left, right) => left.id.localeCompare(right.id));
+		...(options.role === undefined ? {} : { role: options.role }),
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
+	const resources = resourcesById(pack, resourceIds);
 	return Promise.all(
 		resources.map((resource) =>
 			materializeNormalizationResource(pack, resource, options.reader),
@@ -216,9 +240,18 @@ export async function normalizationProfileFromPack(
 	pack: TextPack,
 	options: TextNormResourcesFromPackOptions = {},
 ): Promise<CompiledTextNormProfile> {
+	const profileBinding = requireSingleTaskResourceBinding(pack, {
+		slot: options.slot ?? "normalization",
+		ownerPackage: "@ismail-elkorchi/textnorm",
+		schemaId: "textnorm.profile.v1",
+		role: options.role ?? "profile",
+		...(options.resourceIds === undefined
+			? {}
+			: { resourceIds: options.resourceIds }),
+	});
 	const resources = await normalizationResourcesFromPack(pack, options);
 	const profileResource = resources.find(
-		(resource) => resource.descriptor.schemaId === "textnorm.profile.v1",
+		(resource) => resource.id === profileBinding.resourceId,
 	);
 	if (profileResource?.payload.type !== "json") {
 		throw new TypeError("No textnorm.profile.v1 JSON resource is present.");

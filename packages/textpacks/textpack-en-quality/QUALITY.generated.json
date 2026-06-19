@@ -1,0 +1,126 @@
+{
+  "acceptedRecordCount": 0,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "notes": [
+        "The required component graph provides English quality-profile resources, generated quality reports, coverage reports, and evaluation records for the audited default English component graph."
+      ],
+      "slot": "quality",
+      "status": "task-supported"
+    }
+  ],
+  "components": [
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-core",
+      "reason": "English core profile quality resources and transform-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-normalization",
+      "reason": "English normalization quality profile and transform-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-segmentation",
+      "reason": "English segmentation quality profile and transform-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+      "reason": "English spelling wordlist and search-profile quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+      "reason": "English POS and inflection inventory quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
+      "reason": "English UD GUMReddit annotation-profile quality resources and redistribution-integrity evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-wordnet-en",
+      "reason": "Open English WordNet lexical-semantic quality resources.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "default",
+      "packageName": "@ismail-elkorchi/textpack-wikidata-en",
+      "reason": "English Wikidata core extract quality resources and checksum evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-corpus",
+      "reason": "English local Tatoeba corpus quality resources and checksum evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    },
+    {
+      "artifactPolicy": "none",
+      "capabilityPolicy": "contributes-default",
+      "licensePolicy": "allow-attribution",
+      "packageName": "@ismail-elkorchi/textpack-en-parallel",
+      "reason": "English-linked local Tatoeba parallel quality resources and checksum evidence.",
+      "role": "required",
+      "versionRange": "0.1.0"
+    }
+  ],
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-en-quality",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 0,
+  "resourcePaths": [],
+  "resourceSpecIds": [],
+  "resources": [],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "generated language component recipe composite; broader language composite coverage remains follow-up"
+  ]
+}

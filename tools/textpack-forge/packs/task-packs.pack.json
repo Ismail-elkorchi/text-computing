@@ -5763,14 +5763,27 @@
 				],
 				"capabilitySlots": [
 					{
-						"slot": "lexical-semantics",
+						"slot": "lexicon",
 						"status": "task-supported",
 						"resourceIds": [
 							"wordnet-ar-lexical-entries",
+							"wordnet-ar-lexicon-canonical"
+						],
+						"capabilities": {
+							"terminology": "lexicon",
+							"extraction": "gazetteer"
+						},
+						"notes": [
+							"Arabic WordNet lexical entries are available as generated lexicon resources."
+						]
+					},
+					{
+						"slot": "kb",
+						"status": "task-supported",
+						"resourceIds": [
 							"wordnet-ar-senses",
 							"wordnet-ar-synsets",
 							"wordnet-ar-relations",
-							"wordnet-ar-lexicon-canonical",
 							"wordnet-ar-kb-canonical"
 						],
 						"capabilities": {
@@ -5778,7 +5791,7 @@
 							"extraction": "gazetteer"
 						},
 						"notes": [
-							"Arabic WordNet lexical entries, senses, synsets, and semantic relations are available as generated KB resources."
+							"Arabic WordNet senses, synsets, and semantic relations are available as generated KB resources."
 						]
 					},
 					{
@@ -5953,14 +5966,27 @@
 				],
 				"capabilitySlots": [
 					{
-						"slot": "lexical-semantics",
+						"slot": "lexicon",
 						"status": "task-supported",
 						"resourceIds": [
 							"wordnet-en-lexical-entries",
+							"wordnet-en-lexicon-canonical"
+						],
+						"capabilities": {
+							"terminology": "lexicon",
+							"extraction": "gazetteer"
+						},
+						"notes": [
+							"Open English WordNet lexical entries are available as generated lexicon resources."
+						]
+					},
+					{
+						"slot": "kb",
+						"status": "task-supported",
+						"resourceIds": [
 							"wordnet-en-senses",
 							"wordnet-en-synsets",
 							"wordnet-en-relations",
-							"wordnet-en-lexicon-canonical",
 							"wordnet-en-kb-canonical"
 						],
 						"capabilities": {
@@ -5968,7 +5994,7 @@
 							"extraction": "gazetteer"
 						},
 						"notes": [
-							"Open English WordNet lexical entries, senses, synsets, and semantic relations are available as generated KB resources."
+							"Open English WordNet senses, synsets, and semantic relations are available as generated KB resources."
 						]
 					},
 					{
