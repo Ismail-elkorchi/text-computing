@@ -169,7 +169,7 @@ function comparatorVersion(comparator: string): VersionCore | undefined {
 	if (trimmed === "" || trimmed === "*" || trimmed.toLowerCase() === "x") {
 		return undefined;
 	}
-	return parseVersion(trimmed.replace(/^(?:>=|>|<=|<|=|\^|~)/u, ""));
+	return parseVersion(stripComparatorPrefix(trimmed));
 }
 
 function alternativeAllowsPrerelease(
@@ -211,12 +211,11 @@ function satisfiesComparator(
 			compareVersions(version, tildeUpperBound(minimum)) < 0
 		);
 	}
-	const match = /^(>=|>|<=|<|=)?(.+)$/u.exec(trimmed);
-	if (match === null) return false;
-	const expected = parseVersion(match[2] ?? "");
+	const parsedComparator = parseComparator(trimmed);
+	const expected = parseVersion(parsedComparator.version);
 	if (expected === undefined) return false;
 	const comparison = compareVersions(version, expected);
-	switch (match[1] ?? "=") {
+	switch (parsedComparator.operator) {
 		case ">":
 			return comparison > 0;
 		case ">=":
@@ -232,12 +231,97 @@ function satisfiesComparator(
 	}
 }
 
+type ComparatorOperator = ">" | ">=" | "<" | "<=" | "=";
+
+interface ParsedComparator {
+	readonly operator: ComparatorOperator;
+	readonly version: string;
+}
+
+function stripComparatorPrefix(value: string): string {
+	if (value.startsWith(">=") || value.startsWith("<=")) return value.slice(2);
+	const first = value[0];
+	return first === ">" ||
+		first === "<" ||
+		first === "=" ||
+		first === "^" ||
+		first === "~"
+		? value.slice(1)
+		: value;
+}
+
+function parseComparator(value: string): ParsedComparator {
+	if (value.startsWith(">=")) {
+		return { operator: ">=", version: value.slice(2) };
+	}
+	if (value.startsWith("<=")) {
+		return { operator: "<=", version: value.slice(2) };
+	}
+	const first = value[0];
+	if (first === ">" || first === "<" || first === "=") {
+		return { operator: first, version: value.slice(1) };
+	}
+	return { operator: "=", version: value };
+}
+
+function isVersionRangeWhitespace(value: string): boolean {
+	return (
+		value === " " ||
+		value === "\t" ||
+		value === "\n" ||
+		value === "\r" ||
+		value === "\f"
+	);
+}
+
+function stripWorkspaceRangePrefix(value: string): string {
+	const trimmed = value.trim();
+	return trimmed.startsWith("workspace:")
+		? trimmed.slice("workspace:".length).trim()
+		: trimmed;
+}
+
+function splitVersionRangeAlternatives(value: string): readonly string[] {
+	const alternatives: string[] = [];
+	let start = 0;
+	let index = 0;
+	while (index < value.length) {
+		if (value[index] === "|" && value[index + 1] === "|") {
+			alternatives.push(value.slice(start, index).trim());
+			index += 2;
+			start = index;
+			continue;
+		}
+		index += 1;
+	}
+	alternatives.push(value.slice(start).trim());
+	return alternatives;
+}
+
+function splitVersionComparators(value: string): readonly string[] {
+	const comparators: string[] = [];
+	let start: number | undefined;
+	for (let index = 0; index < value.length; index += 1) {
+		const character = value[index] ?? "";
+		if (isVersionRangeWhitespace(character)) {
+			if (start !== undefined) {
+				comparators.push(value.slice(start, index));
+				start = undefined;
+			}
+		} else if (start === undefined) {
+			start = index;
+		}
+	}
+	if (start !== undefined) comparators.push(value.slice(start));
+	return comparators.length === 0 ? [""] : comparators;
+}
+
 function satisfiesVersionRange(version: string, range: string): boolean {
 	const parsed = parseVersion(version);
 	if (parsed === undefined) return false;
-	const normalizedRange = range.trim().replace(/^workspace:/u, "");
-	return normalizedRange.split(/\s*\|\|\s*/u).some((alternative) => {
-		const comparators = alternative.trim().split(/\s+/u);
+	const normalizedRange = stripWorkspaceRangePrefix(range);
+	return splitVersionRangeAlternatives(normalizedRange).some((alternative) => {
+		const comparators = splitVersionComparators(alternative);
 		return (
 			alternativeAllowsPrerelease(parsed, comparators) &&
 			comparators.every((comparator) => satisfiesComparator(parsed, comparator))
