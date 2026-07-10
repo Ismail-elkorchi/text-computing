@@ -1,0 +1,17 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"paths": {
+			"@ismail-elkorchi/textpack": ["./src/index.ts"],
+			"@ismail-elkorchi/textpack/node": ["./src/node.ts"]
+		},
+		"types": ["node"],
+		"noEmit": true
+	},
+	"include": [
+		"test/suite.ts",
+		"test/runtime/node.test.ts",
+		"test/types/public-api.test.ts"
+	]
+}

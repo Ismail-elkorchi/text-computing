@@ -3,19 +3,24 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"packageDir": "packages/textpacks/textpack-ar",
-	"name": "Arabic Developer Composite Textpack",
-	"description": "Generated Arabic recipe composite over the current component graph with local KB, corpus, and parallel payloads.",
-	"policySurface": "policy-expanded-wrapper",
+	"name": "Arabic Developer Textpack",
+	"description": "Self-contained Arabic resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
 	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated Arabic foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and Tatoeba sources are materialized as local scoped payloads: Arabic entity/alias/relation rows, Tatoeba sentence rows, and Tatoeba parallel link rows. Quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
-		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. The UD Arabic NYUAD syntax path remains isolated behind -sa components and this wrapper exposes the full license expression and component policy.",
-		"declaredScope": "Policy-expanded Arabic MSA developer textpack for the currently generated Arabic resource graph. It includes the share-alike UD Arabic NYUAD syntax component explicitly and does not claim permissive default-package compatibility, dialectal Arabic, Classical/Quranic coverage, OPUS coverage, complete Wikidata dump coverage, neural models, statistical parsers, raw web corpora, or hidden network access.",
+		"productionGradeSourceCoverage": "Self-contained Arabic distribution with foundation, core, normalization, CAMeL lexicon/morphology/segmentation, Arabic WordNet and Wikidata KB, search, and quality resources.",
+		"auditedLicense": "Selected IANA, Unicode, CLDR, CAMeL Morph, Arabic WordNet, and Wikidata sources are approved and retain generated attribution and license evidence.",
+		"declaredScope": "Ordinary typed MSA document NLP. Large corpora, parallel alignments, and UD annotation datasets are deliberately excluded from the npm package and remain explicit forge acquisition inputs.",
 		"conformanceEvidence": [
-			"eval:textpack-ar:required-component-graph",
-			"eval:textpack-ar-quality:required-component-graph",
-			"eval:textpack-ar-syntax:required-component-graph",
-			"docs:textpacks/language-composite-readiness.generated.md#arabic-ar"
+			"eval:language-registry:bcp47-record-volume:distribution:textpack-ar",
+			"eval:ar-core:iana-language-profile:distribution:textpack-ar",
+			"eval:ar-normalization:profile-rules:distribution:textpack-ar",
+			"eval:ar-msa-camel-morph:tokenization-fields:distribution:textpack-ar",
+			"eval:wordnet-ar:lexical-entry-volume:distribution:textpack-ar",
+			"eval:ar-msa-camel-morph:morpheme-inventory:distribution:textpack-ar",
+			"eval:wikidata-ar:entity-extract:distribution:textpack-ar",
+			"eval:ar-search:analyzer-profile:distribution:textpack-ar",
+			"eval:ar-core:transform-rejections:distribution:textpack-ar",
+			"docs:textpacks/language-distribution-readiness.generated.md#arabic-ar"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -29,7 +34,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-composite",
-	"supportLevel": "feature-complete",
+	"supportLevel": "task-supported",
 	"display": {
 		"languageName": "Arabic"
 	},
@@ -38,134 +43,51 @@
 		"scripts": ["Arab"],
 		"modalities": ["typed"]
 	},
-	"sourceIds": [
-		"source:iana:language-subtag-registry",
-		"source:unicode:ucd",
-		"source:unicode:cldr-core",
-		"source:camel:morph-msa-lrec-coling-2024",
-		"source:wordnet:arabic-v4.1.0",
-		"source:wikidata:main",
-		"source:tatoeba:weekly-arabic-2026-06-06",
-		"source:ud:arabic-nyuad-r2.18"
-	],
-	"snapshotIds": [
-		"snapshot:source:iana:language-subtag-registry:2026-05-05",
-		"snapshot:source:unicode:ucd:17.0.0",
-		"snapshot:source:unicode:cldr-core:48.2.0",
-		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-		"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-		"snapshot:source:wikidata:main:20260608",
-		"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-		"snapshot:source:ud:arabic-nyuad:r2.18"
-	],
-	"components": [
+	"buildUnits": [
 		{
-			"packageName": "@ismail-elkorchi/textpack-foundation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "language-registry",
+			"reason": "BCP 47 language registry resources bundled into the Arabic distribution.",
+			"licensePolicy": "default"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-core",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "unicode-17",
+			"reason": "Unicode 17 resources bundled into the Arabic distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "cldr-core",
+			"reason": "CLDR core resources bundled into the Arabic distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "ar-core",
 			"reason": "Arabic core language profile resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "default"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-normalization",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "ar-normalization",
 			"reason": "Arabic MSA normalization policy and quality resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-segmentation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA segmentation profiles.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "ar-msa-morphology",
+			"reason": "Arabic MSA lexicon, morphology, and segmentation resources.",
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-lexicon",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA lexicon resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "wordnet-ar",
+			"reason": "Arabic WordNet lexical-semantic resources.",
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-morphology",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA morphology resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "wikidata-ar",
+			"reason": "Local Wikidata Arabic core entity extract.",
+			"licensePolicy": "default"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-syntax",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated Arabic UD-derived syntax and tagging resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-ar-kb",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-ar-search",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "ar-search",
 			"reason": "Arabic MSA search analyzer profile resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-ar-quality",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic generated quality evidence over the required policy-expanded component graph.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		}
 	],
 	"capabilitySlots": [
@@ -195,13 +117,16 @@
 		},
 		{
 			"slot": "syntax",
-			"status": "task-supported"
+			"status": "planned",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
 		},
 		{
 			"slot": "kb",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
+				"The bundled distribution resources provide local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
 			]
 		},
 		{
@@ -210,35 +135,33 @@
 		},
 		{
 			"slot": "corpus",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba Arabic sentence rows and canonical corpus metadata."
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba Arabic-linked sentence-id alignment rows for selected target languages."
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "quality",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides generated Arabic quality evidence and coverage reports over the required local component graph."
+				"The bundled distribution resources provide generated Arabic quality evidence and coverage reports over the selected local build units."
 			]
 		}
 	],
-	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0",
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
 		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 		"CAMeL Morph MSA LREC-COLING 2024 release.",
 		"Arabic WordNet 4.1.0.",
-		"Wikidata main structured data dump, 2026-06-08.",
-		"Tatoeba weekly Arabic exports, 2026-06-06.",
-		"Universal Dependencies Arabic NYUAD r2.18 annotations."
+		"Wikidata main structured data dump, 2026-06-08."
 	]
 }

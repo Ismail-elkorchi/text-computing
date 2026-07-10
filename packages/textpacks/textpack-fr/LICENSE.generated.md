@@ -11,11 +11,10 @@ Manifest license expression: `Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Re
 - `source:iana:language-subtag-registry`: `LicenseRef-IANA-Language-Subtag-Registry` (redistributable-with-attribution)
 - `source:unicode:ucd`: `Unicode-3.0` (redistributable-with-attribution)
 - `source:unicode:cldr-core`: `Unicode-3.0` (redistributable-with-attribution)
-- `source:wikidata:main`: `CC0-1.0` (redistributable)
 - `source:tatoeba:weekly-french-2026-06-06`: `CC-BY-2.0-FR` (redistributable-with-attribution)
 - `source:fr:lexique-383`: `CC-BY-SA-4.0` (share-alike-isolated)
 - `source:unimorph:french-master-f672f8c`: `CC-BY-SA-3.0` (share-alike-isolated)
-- `source:ud:french-gsd-r2.18`: `CC-BY-SA-4.0` (share-alike-isolated)
+- `source:wikidata:main`: `CC0-1.0` (redistributable)
 
 ## Source License Evidence URLs
 
@@ -24,8 +23,6 @@ Manifest license expression: `Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Re
 - https://dumps.wikimedia.org/wikidatawiki/entities/20260608/
 - https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus
 - https://github.com/unimorph/fra/blob/f672f8cceb2d5f5a1e2241b5622c8845f8274635/README.md
-- https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/LICENSE.txt
-- https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/README.md
 - https://tatoeba.org/en/downloads
 - https://www.iana.org/help/licensing-terms
 - https://www.lexique.org/?lang=en&page_id=790
@@ -37,7 +34,6 @@ Manifest license expression: `Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Re
 ## Included Package License Files
 
 - `licenses/source-iana-language-subtag-registry/LICENSE.html` from `tools/textpack-forge/snapshots/data/iana/LICENSE.html` (sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113)
-- `licenses/source-ud-french-gsd-r2.18/LICENSE.txt` from `tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/LICENSE.txt` (sha256:899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79)
 
 ## Included License Text
 
@@ -186,19 +182,5 @@ Checksum: `sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc1
 </body>
 
 </html>
-
-```
-
-### licenses/source-ud-french-gsd-r2.18/LICENSE.txt
-
-Source id: `source:ud:french-gsd-r2.18`
-Snapshot id: `snapshot:source:ud:french-gsd:r2.18`
-Checksum: `sha256:899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79`
-
-```text
-The treebank is licensed under the Creative Commons License Attribution-ShareAlike 4.0 International.
-
-The complete license text is available at:
-http://creativecommons.org/licenses/by-sa/4.0/legalcode
 
 ```

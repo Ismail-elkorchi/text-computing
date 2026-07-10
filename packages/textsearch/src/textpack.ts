@@ -159,18 +159,48 @@ function analyzerProfile(
 	return profile;
 }
 
+function profileComponentType(
+	raw: unknown,
+	category: "char filter" | "token filter" | "tokenizer",
+): {
+	readonly component: Readonly<Record<string, unknown>>;
+	readonly type: string;
+} {
+	const component = recordValue(raw);
+	const type = stringValue(component?.type);
+	if (component === undefined || type === undefined) {
+		throw new TypeError(
+			`Analyzer profile ${category} must declare a non-empty string type.`,
+		);
+	}
+	return { component, type };
+}
+
+function assertSupportedCharFilters(
+	profile: Readonly<Record<string, unknown>>,
+): void {
+	if (profile.charFilters === undefined) return;
+	if (!Array.isArray(profile.charFilters)) {
+		throw new TypeError("Analyzer profile charFilters must be an array.");
+	}
+	for (const raw of profile.charFilters) {
+		const { type } = profileComponentType(raw, "char filter");
+		throw new TypeError(
+			`Unsupported analyzer profile char filter type "${type}"; the built-in adapter does not execute char filters.`,
+		);
+	}
+}
+
 function tokenizerComponent(
 	profile: Readonly<Record<string, unknown>>,
 ): AnalyzerComponent {
-	const tokenizer = recordValue(profile.tokenizer);
-	const type = stringValue(tokenizer?.type);
-	if (type === "dictionary-tokenization") {
+	const { type } = profileComponentType(profile.tokenizer, "tokenizer");
+	if (type === "unicode-word-boundary") {
 		return { kind: "tokenizer", mode: "unicode-word" };
 	}
-	if (type === "unicode-word-boundary" || type === undefined) {
-		return { kind: "tokenizer", mode: "unicode-word" };
-	}
-	return { kind: "tokenizer", mode: "unicode-word" };
+	throw new TypeError(
+		`Unsupported analyzer profile tokenizer type "${type}"; the built-in adapter supports "unicode-word-boundary".`,
+	);
 }
 
 function customTokenTransform(
@@ -194,14 +224,20 @@ function customTokenTransform(
 function tokenFilterComponents(
 	profile: Readonly<Record<string, unknown>>,
 ): readonly AnalyzerComponent[] {
-	const filters = Array.isArray(profile.tokenFilters)
-		? profile.tokenFilters
-		: [];
+	if (
+		profile.tokenFilters !== undefined &&
+		!Array.isArray(profile.tokenFilters)
+	) {
+		throw new TypeError("Analyzer profile tokenFilters must be an array.");
+	}
+	const filters = profile.tokenFilters ?? [];
 	const components: AnalyzerComponent[] = [];
 	for (const raw of filters) {
-		const filter = recordValue(raw);
-		const type = stringValue(filter?.type);
-		const componentId = stringValue(filter?.componentId) ?? type ?? "filter";
+		const { component: filter, type } = profileComponentType(
+			raw,
+			"token filter",
+		);
+		const componentId = stringValue(filter.componentId) ?? type;
 		if (type === "casefold") {
 			components.push({ kind: "normalizer", form: "NFC", casefold: true });
 			continue;
@@ -223,7 +259,11 @@ function tokenFilterComponents(
 					term.replace(/[\u0640\u064B-\u065F\u0670]/gu, ""),
 				),
 			);
+			continue;
 		}
+		throw new TypeError(
+			`Unsupported analyzer profile token filter type "${type}"; the built-in adapter supports "casefold", "diacritic-fold", and "arabic-mark-policy".`,
+		);
 	}
 	return Object.freeze(components);
 }
@@ -267,6 +307,7 @@ export async function analyzerFromPack(
 		);
 	}
 	const profile = analyzerProfile(resource);
+	assertSupportedCharFilters(profile);
 	const components = [
 		tokenizerComponent(profile),
 		...tokenFilterComponents(profile),

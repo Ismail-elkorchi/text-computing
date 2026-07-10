@@ -130,11 +130,6 @@ export type TextPackComponentCapabilityPolicy =
 export type TextPackArtifactPolicy = "none" | "locked" | "fetch-explicit";
 
 export type TextPackArtifactProfile = "research" | "full" | "local";
-export type TextPackCompositeProfile =
-	| "default"
-	| "research"
-	| "full"
-	| "local";
 
 export type TextPackArtifactRedistributionPolicy =
 	| "redistributable"
@@ -297,21 +292,6 @@ export interface PackComposeOptions {
 	readonly conflictPolicy?: "error" | "first" | "last";
 	readonly license?: string;
 	readonly citations?: readonly string[];
-}
-
-export type TextPackComponentResolver = (
-	component: TextPackComponent,
-) => unknown | Promise<unknown>;
-
-export interface ResolveTextPackComponentsOptions {
-	readonly profile?: TextPackCompositeProfile;
-	readonly include?: readonly string[];
-	readonly exclude?: readonly string[];
-	readonly licensePolicy?: TextPackComponentLicensePolicy;
-	readonly artifactPolicy?: TextPackArtifactPolicy;
-	readonly conflictPolicy?: PackComposeOptions["conflictPolicy"];
-	readonly strict?: boolean;
-	readonly resolveComponent?: TextPackComponentResolver;
 }
 
 type QueryText = string | readonly string[];

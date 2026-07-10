@@ -33,11 +33,9 @@ export {
 } from "./materialize.js";
 export { createPack, getResource, loadPack } from "./pack.js";
 export { listResources } from "./query.js";
-export { resolvePackComponents } from "./resolve.js";
 export type {
 	PackComposeOptions,
 	PackResourceMap,
-	ResolveTextPackComponentsOptions,
 	ResourceKind,
 	ResourceQuery,
 	TextPack,
@@ -54,9 +52,7 @@ export type {
 	TextPackComponent,
 	TextPackComponentCapabilityPolicy,
 	TextPackComponentLicensePolicy,
-	TextPackComponentResolver,
 	TextPackComponentRole,
-	TextPackCompositeProfile,
 	TextPackDependency,
 	TextPackGapNote,
 	TextPackGeneratedInfo,

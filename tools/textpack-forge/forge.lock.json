@@ -19,7 +19,6 @@
 		"tools/textpack-forge/sources/ud-french-gsd-r2.18.source.json",
 		"tools/textpack-forge/sources/unicode-cldr-core.source.json",
 		"tools/textpack-forge/sources/unicode-ucd.source.json",
-		"tools/textpack-forge/sources/unimorph-english-66e0e9e.source.json",
 		"tools/textpack-forge/sources/unimorph-french-f672f8c.source.json",
 		"tools/textpack-forge/sources/wikidata-main.source.json"
 	],
@@ -42,7 +41,6 @@
 		"tools/textpack-forge/snapshots/ud-french-gsd-r2.18.snapshot.json",
 		"tools/textpack-forge/snapshots/unicode-cldr-core-48.2.0.snapshot.json",
 		"tools/textpack-forge/snapshots/unicode-ucd-17.0.0.snapshot.json",
-		"tools/textpack-forge/snapshots/unimorph-english-66e0e9e.snapshot.json",
 		"tools/textpack-forge/snapshots/unimorph-french-f672f8c.snapshot.json",
 		"tools/textpack-forge/snapshots/wikidata-main-20260608.snapshot.json"
 	],
@@ -58,7 +56,6 @@
 		"tools/textpack-forge/resources/textpack-en-core.resource.json",
 		"tools/textpack-forge/resources/textpack-en-corpus.resource.json",
 		"tools/textpack-forge/resources/textpack-en-inflection-scowl.resource.json",
-		"tools/textpack-forge/resources/textpack-en-lexicon.resource.json",
 		"tools/textpack-forge/resources/textpack-en-normalization.resource.json",
 		"tools/textpack-forge/resources/textpack-en-parallel.resource.json",
 		"tools/textpack-forge/resources/textpack-en-segmentation.resource.json",
@@ -86,36 +83,8 @@
 	],
 	"compositeSpecPaths": [
 		"tools/textpack-forge/composites/textpack-ar.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-kb.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-lexicon.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-morphology.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-quality.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-quality-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-segmentation.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-syntax.composite.json",
-		"tools/textpack-forge/composites/textpack-ar-syntax-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-en-kb.composite.json",
-		"tools/textpack-forge/composites/textpack-en-lexicon.composite.json",
-		"tools/textpack-forge/composites/textpack-en-morphology.composite.json",
-		"tools/textpack-forge/composites/textpack-en-quality.composite.json",
-		"tools/textpack-forge/composites/textpack-en-search.composite.json",
-		"tools/textpack-forge/composites/textpack-en-syntax.composite.json",
 		"tools/textpack-forge/composites/textpack-en.composite.json",
-		"tools/textpack-forge/composites/textpack-foundation.composite.json",
-		"tools/textpack-forge/composites/textpack-fr.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-kb.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-lexicon.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-lexicon-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-morphology.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-morphology-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-quality.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-quality-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-search.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-search-sa.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-syntax.composite.json",
-		"tools/textpack-forge/composites/textpack-fr-syntax-sa.composite.json"
+		"tools/textpack-forge/composites/textpack-fr.composite.json"
 	],
 	"snapshotLocks": [
 		{
@@ -179,24 +148,20 @@
 			"checksum": "sha256:6c59bfb7ea97c24f50ca48eeb0ac7dcb599d5f88c9788e70ae0a78ef6f87370e"
 		},
 		{
-			"snapshotId": "snapshot:source:unimorph:english-master-66e0e9e",
-			"checksum": "sha256:b26efe3d50b54c854d060d6511c2b88f5c75fb0786ca25e81a469ac945a8887b"
-		},
-		{
 			"snapshotId": "snapshot:source:unimorph:french-master-f672f8c",
 			"checksum": "sha256:b5ab9265e95ccd336c2dc26985d10508271140ab7146c71fab6c4f980dfb4199"
 		},
 		{
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
-			"checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c"
+			"checksum": "sha256:14ac14a875bdf8abd72d64cbff21aac27d8ad14519efa16b59f33c9f27cb4403"
 		}
 	],
 	"outputPaths": [
 		"docs/textpacks/generated-inventory.json",
 		"docs/textpacks/generated-inventory.md",
 		"docs/textpacks/source-readiness.generated.md",
-		"docs/textpacks/language-composite-readiness.generated.json",
-		"docs/textpacks/language-composite-readiness.generated.md",
+		"docs/textpacks/language-distribution-readiness.generated.json",
+		"docs/textpacks/language-distribution-readiness.generated.md",
 		"tools/textpack-forge/source-policy.generated.json",
 		"tools/textpack-forge/reports/size-report.json",
 		"packages/textpacks/*/pack.manifest.json",

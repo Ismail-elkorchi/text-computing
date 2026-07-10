@@ -56,6 +56,64 @@ function textResourceReader(records: Readonly<Record<string, string>>) {
 	};
 }
 
+function searchProfilePack(profile: Readonly<Record<string, unknown>>) {
+	const resourceId = "search-profile";
+	return {
+		manifest: {
+			id: "pack:search:adapter-test",
+			packageName: "@ismail-elkorchi/textpack-search-adapter-test",
+			targets: { languages: ["und"] },
+			resources: [
+				{
+					id: resourceId,
+					kind: "search-profile" as const,
+					format: "json",
+					schemaId: "textsearch.analyzer-profile.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "search",
+					status: "task-supported" as const,
+					resourceIds: [resourceId],
+					bindings: [
+						{
+							role: "profile" as const,
+							resourceId,
+							schemaId: "textsearch.analyzer-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textsearch" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: { [resourceId]: JSON.stringify(profile) },
+	};
+}
+
+function searchProfile(
+	overrides: Readonly<Record<string, unknown>> = {},
+): Readonly<Record<string, unknown>> {
+	return {
+		schemaVersion: "1",
+		kind: "search-profile",
+		analyzerId: "adapter-test",
+		tokenizer: { type: "unicode-word-boundary" },
+		...overrides,
+	};
+}
+
+async function assertUnsupportedSearchProfile(
+	profile: Readonly<Record<string, unknown>>,
+	message: RegExp,
+): Promise<void> {
+	await assert.rejects(() => analyzerFromPack(searchProfilePack(profile)), {
+		name: "TypeError",
+		message,
+	});
+}
+
 function fixtureAnalyzer() {
 	return createAnalyzer(
 		[
@@ -249,6 +307,52 @@ test("search profile textpack resources materialize through the adapter", async 
 		reader: textResourceReader({ "resources/search-fr.json": profileText }),
 	});
 	assert.equal(emptyIndex.fields.text?.analyzerId, "fr-basic");
+});
+
+test("search profile adapter rejects unsupported char filter types", async () => {
+	await assertUnsupportedSearchProfile(
+		searchProfile({
+			charFilters: [{ componentId: "apostrophes", type: "character-policy" }],
+		}),
+		/Unsupported analyzer profile char filter type "character-policy"/,
+	);
+});
+
+test("search profile adapter rejects unsupported tokenizer types", async () => {
+	await assertUnsupportedSearchProfile(
+		searchProfile({
+			tokenizer: {
+				componentId: "dictionary",
+				type: "dictionary-tokenization",
+			},
+		}),
+		/Unsupported analyzer profile tokenizer type "dictionary-tokenization"/,
+	);
+});
+
+test("search profile adapter rejects unsupported token filter types", async () => {
+	await assertUnsupportedSearchProfile(
+		searchProfile({
+			tokenFilters: [{ componentId: "wordlist", type: "wordlist-membership" }],
+		}),
+		/Unsupported analyzer profile token filter type "wordlist-membership"/,
+	);
+});
+
+test("search profile adapter executes Arabic mark filters", async () => {
+	const analyzer = await analyzerFromPack(
+		searchProfilePack(
+			searchProfile({
+				tokenFilters: [
+					{ componentId: "arabic-marks", type: "arabic-mark-policy" },
+				],
+			}),
+		),
+	);
+	assert.deepEqual(
+		analyze(analyzer, "مَـرْحَبًا").map((token) => token.term),
+		["مرحبا"],
+	);
 });
 
 test("search textpack adapter selects analyzer profiles from task bindings", async () => {

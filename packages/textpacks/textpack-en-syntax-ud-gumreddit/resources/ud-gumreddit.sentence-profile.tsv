@@ -1,4 +1,0 @@
-split	sentenceCount	tokenCount	averageTokenCount	maxTokenCount
-dev	104	1755	16.88	53
-test	105	1858	17.7	56
-train	686	12751	18.59	100

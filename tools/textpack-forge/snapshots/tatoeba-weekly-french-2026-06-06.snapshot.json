@@ -11,8 +11,7 @@
 			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra_sentences_detailed.tsv.bz2",
 			"mediaType": "application/x-bzip2",
 			"byteLength": 14624789,
-			"checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1",
-			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2"
+			"checksum": "sha256:bc6a17bd87705dc021a1cc2fd2cddc7b6862cd60b0128ea5dda2dbb50910cfd1"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/fra-ara_links.tsv.bz2",
@@ -46,9 +45,8 @@
 			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-french-2026-06-06/tatoeba-fr-artifacts.json",
 			"mediaType": "application/json",
 			"byteLength": 3402,
-			"checksum": "sha256:850382d60a9aa1b200d294eabf8dbe6c38a29902af8d2a2e02cc53369c6a693a",
-			"sourceUrl": "https://downloads.tatoeba.org/exports/per_language/fra/"
+			"checksum": "sha256:850382d60a9aa1b200d294eabf8dbe6c38a29902af8d2a2e02cc53369c6a693a"
 		}
 	],
-	"notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts used to generate task-supported corpus and parallel textpacks."
+	"notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 French sentence and French-linked parallel artifacts. The selected sentence export is retained as a frozen snapshot because the upstream per-language URL is mutable; large parallel artifacts remain optional acquisition inputs."
 }

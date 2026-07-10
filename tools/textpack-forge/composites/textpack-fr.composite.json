@@ -3,33 +3,25 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-fr",
 	"packageDir": "packages/textpacks/textpack-fr",
-	"name": "French Developer Composite Textpack",
-	"description": "Generated French recipe composite over the current component graph with local KB, corpus, and parallel payloads.",
-	"policySurface": "policy-expanded-wrapper",
+	"name": "French Developer Textpack",
+	"description": "Self-contained French resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"policySurface": "license-inclusive",
 	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated French foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Wikidata and Tatoeba sources are materialized as local scoped payloads: French entity/alias/relation rows, Tatoeba sentence rows, Tatoeba parallel link rows, French apostrophe/elision/contraction surface evidence, and French normalization/segmentation/search gold cases. Quality components aggregate generated quality reports and evaluation evidence over those materialized payloads.",
-		"auditedLicense": "Required component source rows are approved and either default-compatible, attribution-compatible, or share-alike isolated. Lexique 3.83, UniMorph French, and UD French GSD remain isolated behind -sa components and this wrapper exposes the full license expression and component policy.",
-		"declaredScope": "Policy-expanded French developer textpack for the currently generated French resource graph. It includes share-alike Lexique, UniMorph French, and UD French GSD components explicitly; WOLF/OMW, OPUS, Wiktionary/DBnary, parser-model, neural-model, raw-web-corpus, and full-Wikidata-dump source families remain separate future package surfaces rather than hidden dependencies.",
+		"productionGradeSourceCoverage": "Self-contained French distribution with foundation, core, normalization, segmentation, Lexique and UniMorph lexicon/morphology, Wikidata KB, search, and quality resources.",
+		"auditedLicense": "Selected IANA, Unicode, CLDR, Wikidata, Tatoeba-derived profile evidence, Lexique, and UniMorph sources are approved and retain generated attribution and license evidence in this honestly share-alike distribution.",
+		"declaredScope": "Ordinary typed-French document NLP. Large corpora, parallel alignments, and UD annotation datasets are deliberately excluded from the npm package and remain explicit forge acquisition inputs.",
 		"conformanceEvidence": [
-			"eval:textpack-fr:foundation-component-evidence",
-			"eval:textpack-fr:core-component-evidence",
-			"eval:textpack-fr:normalization-component-evidence",
-			"eval:textpack-fr:segmentation-component-evidence",
-			"eval:textpack-fr:lexicon-component-evidence",
-			"eval:textpack-fr:morphology-component-evidence",
-			"eval:textpack-fr:syntax-component-evidence",
-			"eval:textpack-fr:kb-component-evidence",
-			"eval:textpack-fr:search-component-evidence",
-			"eval:textpack-fr:corpus-component-evidence",
-			"eval:textpack-fr:parallel-component-evidence",
-			"eval:textpack-fr:quality-component-evidence",
-			"eval:textpack-fr-quality:required-component-graph",
-			"eval:textpack-fr-lexicon:required-component-graph",
-			"eval:textpack-fr-morphology:required-component-graph",
-			"eval:textpack-fr-syntax:required-component-graph",
-			"eval:textpack-fr-search:required-component-graph",
-			"docs:textpacks/language-composite-readiness.generated.md#french-fr"
+			"eval:language-registry:bcp47-record-volume:distribution:textpack-fr",
+			"eval:fr-core:iana-language-profile:distribution:textpack-fr",
+			"eval:fr-normalization:profile-rules:distribution:textpack-fr",
+			"eval:fr-segmentation:word-boundary-properties:distribution:textpack-fr",
+			"eval:fr-lexique:entry-volume:distribution:textpack-fr",
+			"eval:fr-unimorph:lookup-analyzer-volume:distribution:textpack-fr",
+			"eval:wikidata-fr:entity-extract:distribution:textpack-fr",
+			"eval:fr-lexique:search-profile:distribution:textpack-fr",
+			"eval:fr-core:transform-rejections:distribution:textpack-fr",
+			"docs:textpacks/language-distribution-readiness.generated.md#french-fr"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -43,7 +35,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-composite",
-	"supportLevel": "feature-complete",
+	"supportLevel": "task-supported",
 	"display": {
 		"languageName": "French"
 	},
@@ -52,134 +44,51 @@
 		"scripts": ["Latn"],
 		"modalities": ["typed"]
 	},
-	"sourceIds": [
-		"source:iana:language-subtag-registry",
-		"source:unicode:ucd",
-		"source:unicode:cldr-core",
-		"source:wikidata:main",
-		"source:tatoeba:weekly-french-2026-06-06",
-		"source:fr:lexique-383",
-		"source:unimorph:french-master-f672f8c",
-		"source:ud:french-gsd-r2.18"
-	],
-	"snapshotIds": [
-		"snapshot:source:iana:language-subtag-registry:2026-05-05",
-		"snapshot:source:unicode:ucd:17.0.0",
-		"snapshot:source:unicode:cldr-core:48.2.0",
-		"snapshot:source:wikidata:main:20260608",
-		"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-		"snapshot:source:fr:lexique-383:2019-06-04",
-		"snapshot:source:unimorph:french-master-f672f8c",
-		"snapshot:source:ud:french-gsd:r2.18"
-	],
-	"components": [
+	"buildUnits": [
 		{
-			"packageName": "@ismail-elkorchi/textpack-foundation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "language-registry",
+			"reason": "BCP 47 language registry resources bundled into the French distribution.",
+			"licensePolicy": "default"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-core",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "unicode-17",
+			"reason": "Unicode 17 resources bundled into the French distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "cldr-core",
+			"reason": "CLDR core resources bundled into the French distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "fr-core",
 			"reason": "French core language profile resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "default"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "fr-normalization",
 			"reason": "French normalization policy and quality resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "fr-segmentation",
 			"reason": "French segmentation profiles.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-lexicon",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French lexicon resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "fr-lexique-sa",
+			"reason": "French Lexique lexicon, morphology, frequency, and search resources.",
+			"licensePolicy": "allow-share-alike"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-morphology",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French morphology resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "fr-unimorph-sa",
+			"reason": "French UniMorph paradigm and lookup morphology resources.",
+			"licensePolicy": "allow-share-alike"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-syntax",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French UD-derived syntax and tagging resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-fr-kb",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "wikidata-fr",
 			"reason": "Local Wikidata French core entity extract.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-fr-search",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French search analyzer profile resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French local Tatoeba corpus sentence rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French local Tatoeba parallel link rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-fr-quality",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French generated quality evidence over the required policy-expanded component graph.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "default"
 		}
 	],
 	"capabilitySlots": [
@@ -209,13 +118,16 @@
 		},
 		{
 			"slot": "syntax",
-			"status": "task-supported"
+			"status": "planned",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
 		},
 		{
 			"slot": "kb",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides local Wikidata French core entity rows."
+				"The bundled distribution resources provide local Wikidata French core entity rows."
 			]
 		},
 		{
@@ -224,23 +136,23 @@
 		},
 		{
 			"slot": "corpus",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba French sentence rows and canonical corpus metadata."
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba French-linked sentence-id alignment rows for selected target languages."
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "quality",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides generated French quality evidence and coverage reports over the required local component graph."
+				"The bundled distribution resources provide generated French quality evidence and coverage reports over the selected local build units."
 			]
 		}
 	],
@@ -252,7 +164,6 @@
 		"Wikidata main structured data dump, 2026-06-08.",
 		"Tatoeba weekly French exports, 2026-06-06.",
 		"Lexique 3.83, 2019-06-04.",
-		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.",
-		"Universal Dependencies French GSD r2.18 annotations."
+		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 	]
 }

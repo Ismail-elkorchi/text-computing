@@ -5,7 +5,7 @@
 	"version": "20260608",
 	"retrievedAt": "2026-06-11T00:00:00.000Z",
 	"kind": "external",
-	"checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c",
+	"checksum": "sha256:14ac14a875bdf8abd72d64cbff21aac27d8ad14519efa16b59f33c9f27cb4403",
 	"files": [
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
@@ -22,16 +22,16 @@
 			"sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 176372,
-			"checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 26091,
+			"checksum": "sha256:80a3a6a3265d5e6cfccae879ede9f615bfaa36c8e7e61de4fc8d26a8785732a9"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 601528,
-			"checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 98663,
+			"checksum": "sha256:51956d2b33efc6ba0131085c406e429927b2d620281f924deeae019699c86dbf"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json",
@@ -40,22 +40,22 @@
 			"checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 181451,
-			"checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 11764,
+			"checksum": "sha256:1aefa0de6acf094c990150179afe0c5d46b03a4a95f354aba4cae770009a8881"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 507718,
-			"checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 153917,
+			"checksum": "sha256:47a45e2d5b883287d5102c6bb2ee2f6c201eea5f72d71a6a44796d01d0095876"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 1207332,
-			"checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 267859,
+			"checksum": "sha256:bd181acaad69bd9518925ea752e12e613701562bb345d09fca902f4b045f7199"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json",
@@ -64,22 +64,22 @@
 			"checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 364007,
-			"checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 42416,
+			"checksum": "sha256:b6af9ff9b693af5a67035e892b7379e3c2a01cbcd0e4361846bfc2ab1ac6e238"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 339445,
-			"checksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 57475,
+			"checksum": "sha256:d6035cc9244e051ef28ffd775cccce41dcfed4b9944634d872a651b58c18df67"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 1164023,
-			"checksum": "sha256:b4dda64824d9b904703eac084931be6dad3c47a9d770673b29aed7cc731f9f85"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 219449,
+			"checksum": "sha256:43b2bce09bd00a033231ea3464a89b9573e98ed6f1abf8f81c7e402b94f7baa8"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json",
@@ -88,11 +88,11 @@
 			"checksum": "sha256:7d46ecdcaad81c6ef85139decbac517ee64c715e6a8069d6352d4d4b2725ca27"
 		},
 		{
-			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv",
-			"mediaType": "text/tab-separated-values; charset=utf-8",
-			"byteLength": 581521,
-			"checksum": "sha256:0a549fbec2daeb2243e8352977852c3476f7e35a6ef4eb10141df0babc0df276"
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv.gz",
+			"mediaType": "application/gzip",
+			"byteLength": 35012,
+			"checksum": "sha256:5d34ef46865321833bb0f7d597cbe81250adb189f502ffb8cdd0262c28635e06"
 		}
 	],
-	"notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed."
+	"notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus deterministic gzip-compressed local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed."
 }

@@ -5,57 +5,19 @@
 	"pipelineId": "arabic-search-profile",
 	"pipelineVersion": "0.1.0",
 	"sourceIds": [
-		"source:unicode:cldr-core",
-		"source:camel:morph-msa-lrec-coling-2024",
-		"source:wordnet:arabic-v4.1.0"
+		"source:unicode:cldr-core"
 	],
 	"snapshotIds": [
-		"snapshot:source:unicode:cldr-core:48.2.0",
-		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-		"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+		"snapshot:source:unicode:cldr-core:48.2.0"
 	],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
 			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
 			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
-		},
-		{
-			"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/camel_morph_msa_v1.0.db",
-			"checksum": "sha256:110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60"
-		},
-		{
-			"snapshotId": "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-			"path": "tools/textpack-forge/snapshots/data/arabic-wordnet-v4.1.0/awn4.xml.gz",
-			"checksum": "sha256:bd24bee99026ecc773cf51f3dc58979d8424092a49dc80f90b938fb44d32a085"
 		}
 	],
 	"outputs": [
-		{
-			"resourceId": "ar-search-normalization-policy",
-			"path": "resources/ar.search.normalization-policy.json",
-			"kind": "normalization-profile",
-			"format": "json"
-		},
-		{
-			"resourceId": "ar-search-tokenization-hooks",
-			"path": "resources/ar.search.tokenization-hooks.tsv",
-			"kind": "segmentation-profile",
-			"format": "tsv"
-		},
-		{
-			"resourceId": "ar-search-morphology-hooks",
-			"path": "resources/ar.search.morphology-hooks.tsv",
-			"kind": "morphology",
-			"format": "tsv"
-		},
-		{
-			"resourceId": "ar-search-wordnet-synonyms",
-			"path": "resources/ar.search.wordnet-synonyms.tsv",
-			"kind": "lexicon",
-			"format": "tsv"
-		},
 		{
 			"resourceId": "ar-search-profile",
 			"path": "resources/ar.search.profile.json",

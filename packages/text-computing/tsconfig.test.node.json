@@ -1,0 +1,20 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"paths": {
+			"@ismail-elkorchi/text-computing": ["./src/index.ts"],
+			"@ismail-elkorchi/text-computing/node": ["./src/node.ts"]
+		},
+		"types": ["node"],
+		"noEmit": true
+	},
+	"include": [
+		"test/suite.ts",
+		"test/runtime/node.test.ts",
+		"test/runtime/file-backed-smoke.ts",
+		"test/consumer/en-consumer-smoke.ts",
+		"test/consumer/fr-reussite-smoke.ts",
+		"test/consumer/ar-consumer-smoke.ts"
+	]
+}

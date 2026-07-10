@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:ar",
-	"name": "Arabic Developer Composite Textpack",
+	"name": "Arabic Developer Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"targets": {
@@ -23,194 +23,1070 @@ export const manifest: TextPackManifest = {
 	"engines": {
 		"@ismail-elkorchi/textpack": "^0.1.0"
 	},
-	"resources": [],
-	"components": [
+	"resources": [
 		{
-			"packageName": "@ismail-elkorchi/textpack-foundation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "bcp47-language-subtags",
+			"kind": "language-registry",
+			"path": "resources/bcp47.language-subtags.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05."
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-core",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic core language profile resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "bcp47-language-registry-summary",
+			"kind": "language-registry",
+			"path": "resources/bcp47.language-registry.summary.json",
+			"format": "json",
+			"license": "LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05."
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-normalization",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA normalization policy and quality resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-blocks",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.blocks.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-segmentation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA segmentation profiles.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-property-value-aliases",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.property-value-aliases.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-lexicon",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA lexicon resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-scripts",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.scripts.tsv.gz.b64",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-morphology",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA morphology resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-core-summary",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.core.summary.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-syntax",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated Arabic UD-derived syntax and tagging resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-likely-subtags",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-kb",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-locale-aliases",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.locale-aliases.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-search",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic MSA search analyzer profile resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-script-data",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.script-data.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-core-summary",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.core.summary.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "ar-core-language-profile",
+			"kind": "locale-profile",
+			"path": "resources/ar.core.language-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-ar-quality",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Arabic generated quality evidence over the required policy-expanded component graph.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "ar-core-orthography",
+			"kind": "locale-profile",
+			"path": "resources/ar.core.orthography.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
+		},
+		{
+			"id": "ar-core-punctuation",
+			"kind": "locale-profile",
+			"path": "resources/ar.core.punctuation.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
+		},
+		{
+			"id": "ar-core-basic-segmentation",
+			"kind": "segmentation-profile",
+			"path": "resources/ar.core.basic-segmentation.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "ar-core-quality",
+			"kind": "quality-profile",
+			"path": "resources/ar.core.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "ar-core-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/ar.core.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "ar-normalization-rules",
+			"kind": "normalization-profile",
+			"path": "resources/ar.normalization-rules.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0 AND CC-BY-4.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textnorm.rules.v1"
+		},
+		{
+			"id": "ar-normalization-observed-codepoints",
+			"kind": "normalization-profile",
+			"path": "resources/ar.normalization-observed-codepoints.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0 AND CC-BY-4.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textnorm.rules.v1"
+		},
+		{
+			"id": "ar-normalization-profile",
+			"kind": "normalization-profile",
+			"path": "resources/ar.normalization.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-4.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textnorm.profile.v1"
+		},
+		{
+			"id": "ar-normalization-quality",
+			"kind": "quality-profile",
+			"path": "resources/ar.normalization.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-4.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "ar-normalization-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/ar.normalization.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-4.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "ar-msa-camel-morph-features",
+			"kind": "morphology",
+			"path": "resources/camel-morph-msa.features.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "ar-msa-camel-morph-defaults",
+			"kind": "morphology",
+			"path": "resources/camel-morph-msa.defaults.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "ar-msa-camel-morph-tokenizations",
+			"kind": "segmentation-profile",
+			"path": "resources/camel-morph-msa.tokenizations.tsv",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textdata.segmentation-table.v1"
+		},
+		{
+			"id": "ar-msa-camel-morph-morphemes",
+			"kind": "morphology",
+			"path": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "ar-msa-camel-morph-compatibility",
+			"kind": "morphology",
+			"path": "resources/camel-morph-msa.compatibility.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "ar-msa-camel-morph-quality",
+			"kind": "quality-profile",
+			"path": "resources/camel-morph-msa.quality.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "ar-msa-camel-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/camel-morph-msa.morphology.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textlex.morphology.v1"
+		},
+		{
+			"id": "ar-msa-camel-segmentation-canonical",
+			"kind": "segmentation-profile",
+			"path": "resources/camel-morph-msa.segmentation.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "ar-msa-camel-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/camel-morph-msa.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wordnet-ar-lexical-entries",
+			"kind": "lexicon",
+			"path": "resources/wordnet-ar.lexical-entries.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-senses",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.senses.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-synsets",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.synsets.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.relations.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-ar-quality",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-ar.quality.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wordnet-ar-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/wordnet-ar.lexicon.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textlex.lexicon.v1"
+		},
+		{
+			"id": "wordnet-ar-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-ar.kb.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wordnet-ar-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-ar.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wikidata-ar-entities",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-ar.entities.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-ar-aliases",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-ar.aliases.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-ar-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-ar.relations.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-ar-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-ar.kb.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wikidata-ar-quality",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-ar.quality.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wikidata-ar-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-ar.quality-profile.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "ar-search-profile",
+			"kind": "search-profile",
+			"path": "resources/ar.search.profile.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textsearch.analyzer-profile.v1"
+		},
+		{
+			"id": "ar-search-quality",
+			"kind": "quality-profile",
+			"path": "resources/ar.search.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "ar-search-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/ar.search.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [
+		{
+			"slot": "core",
+			"status": "task-supported",
+			"resourceIds": [
+				"ar-core-language-profile",
+				"ar-core-orthography",
+				"ar-core-punctuation",
+				"ar-core-basic-segmentation"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "ar-core-basic-segmentation",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Core profile resources cover modern typed Arabic identity, Arabic-script orthography, Unicode punctuation, and a basic UAX #29 segmentation baseline."
+			],
+			"capabilities": {
+				"segmentation": "profile",
+				"normalization": "unicode"
+			}
+		},
+		{
+			"slot": "corpus",
+			"status": "planned",
+			"notes": [
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
 		{
 			"slot": "foundation",
 			"status": "task-supported"
 		},
 		{
-			"slot": "core",
-			"status": "task-supported"
+			"slot": "kb",
+			"status": "task-supported",
+			"resourceIds": [
+				"wordnet-ar-senses",
+				"wordnet-ar-synsets",
+				"wordnet-ar-relations",
+				"wordnet-ar-kb-canonical",
+				"wikidata-ar-entities",
+				"wikidata-ar-aliases",
+				"wikidata-ar-relations",
+				"wikidata-ar-kb-canonical"
+			],
+			"artifactIds": [
+				"artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wikidata-ar-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "primary",
+					"resourceId": "wordnet-ar-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-ar-aliases",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-ar-entities",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-ar-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-senses",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-synsets",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The bundled distribution resources provide local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources.",
+				"Arabic WordNet senses, synsets, and semantic relations are available as generated KB resources.",
+				"Wikidata Arabic entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+				"The local extract is scoped and does not claim complete Wikidata dump coverage."
+			],
+			"capabilities": {
+				"terminology": "kb",
+				"extraction": "gazetteer"
+			}
 		},
 		{
-			"slot": "normalization",
-			"status": "task-supported"
-		},
-		{
-			"slot": "segmentation",
-			"status": "task-supported"
+			"slot": "language-registry",
+			"status": "task-supported",
+			"resourceIds": [
+				"bcp47-language-subtags",
+				"bcp47-language-registry-summary"
+			],
+			"notes": [
+				"BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
+			]
 		},
 		{
 			"slot": "lexicon",
-			"status": "task-supported"
+			"status": "task-supported",
+			"resourceIds": [
+				"wordnet-ar-lexical-entries",
+				"wordnet-ar-lexicon-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wordnet-ar-lexicon-canonical",
+					"schemaId": "textlex.lexicon.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-ar-lexical-entries",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Arabic WordNet lexical entries are available as generated lexicon resources."
+			],
+			"capabilities": {
+				"terminology": "lexicon",
+				"extraction": "gazetteer"
+			}
+		},
+		{
+			"slot": "locale-profile",
+			"status": "task-supported",
+			"resourceIds": [
+				"cldr-48-likely-subtags",
+				"cldr-48-locale-aliases",
+				"cldr-48-script-data",
+				"cldr-48-core-summary"
+			],
+			"notes": [
+				"CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
+			]
 		},
 		{
 			"slot": "morphology",
-			"status": "task-supported"
-		},
-		{
-			"slot": "syntax",
-			"status": "task-supported"
-		},
-		{
-			"slot": "kb",
 			"status": "task-supported",
+			"resourceIds": [
+				"ar-msa-camel-morph-features",
+				"ar-msa-camel-morph-defaults",
+				"ar-msa-camel-morph-morphemes",
+				"ar-msa-camel-morph-compatibility",
+				"ar-msa-camel-morphology-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "ar-msa-camel-morphology-canonical",
+					"schemaId": "textlex.morphology.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-msa-camel-morph-compatibility",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-msa-camel-morph-defaults",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-msa-camel-morph-features",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-msa-camel-morph-morphemes",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
-			]
+				"CAMeL Morph MSA morpheme inventory, feature inventory, defaults, and compatibility tables are available as generated lookup resources."
+			],
+			"capabilities": {
+				"morphology": "lookup"
+			}
 		},
 		{
-			"slot": "search",
-			"status": "task-supported"
-		},
-		{
-			"slot": "corpus",
+			"slot": "normalization",
 			"status": "task-supported",
+			"resourceIds": [
+				"ar-normalization-rules",
+				"ar-normalization-observed-codepoints",
+				"ar-normalization-profile"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "ar-normalization-profile",
+					"schemaId": "textnorm.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-normalization-observed-codepoints",
+					"schemaId": "textnorm.rules.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-normalization-rules",
+					"schemaId": "textnorm.rules.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides local Tatoeba Arabic sentence rows and canonical corpus metadata."
-			]
+				"Arabic MSA lookup normalization is generated from Unicode/CLDR policy plus CAMeL Morph MSA observed character evidence."
+			],
+			"capabilities": {
+				"normalization": "rules"
+			}
 		},
 		{
 			"slot": "parallel",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba Arabic-linked sentence-id alignment rows for selected target languages."
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"resourceIds": [
+				"ar-core-quality",
+				"ar-core-quality-profile",
+				"ar-normalization-quality",
+				"ar-normalization-quality-profile",
+				"ar-msa-camel-morph-quality",
+				"ar-msa-camel-quality-profile",
+				"wordnet-ar-quality",
+				"wordnet-ar-quality-profile",
+				"wikidata-ar-quality",
+				"wikidata-ar-quality-profile",
+				"ar-search-quality",
+				"ar-search-quality-profile"
+			],
+			"bindings": [
+				{
+					"role": "evidence",
+					"resourceId": "ar-core-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "ar-msa-camel-morph-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "ar-normalization-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "ar-search-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "wikidata-ar-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "wordnet-ar-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "ar-core-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "ar-msa-camel-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "ar-normalization-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "ar-search-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wikidata-ar-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wordnet-ar-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides generated Arabic quality evidence and coverage reports over the required local component graph."
+				"The bundled distribution resources provide generated Arabic quality evidence and coverage reports over the selected local build units.",
+				"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations.",
+				"Generated quality profile records source coverage, rule counts, observed codepoint evidence, accepted records, rejected records, and scope limitations.",
+				"Generated quality profile records source counts, accepted records, and transform warnings.",
+				"Generated quality profile records lexical-entry, sense, synset, and relation counts.",
+				"Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations.",
+				"Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"resourceIds": [
+				"ar-search-profile"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "ar-search-profile",
+					"schemaId": "textsearch.analyzer-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textsearch"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The built-in Arabic analyzer executes Unicode word tokenization and removes tatweel and Arabic combining marks; it does not claim morphology, stemming, or synonym expansion."
+			],
+			"capabilities": {
+				"search": "analyzer"
+			}
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"resourceIds": [
+				"ar-msa-camel-segmentation-canonical"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "ar-msa-camel-segmentation-canonical",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as expert morphology data and are not presented as executed dictionary segmentation."
+			],
+			"capabilities": {
+				"segmentation": "profile"
+			}
+		},
+		{
+			"slot": "syntax",
+			"status": "planned",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "unicode-profile",
+			"status": "task-supported",
+			"resourceIds": [
+				"unicode-17-blocks",
+				"unicode-17-property-value-aliases",
+				"unicode-17-scripts",
+				"unicode-17-core-summary"
+			],
+			"notes": [
+				"Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
 			]
 		}
 	],
-	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0",
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
 		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 		"CAMeL Morph MSA LREC-COLING 2024 release.",
 		"Arabic WordNet 4.1.0.",
-		"Wikidata main structured data dump, 2026-06-08.",
-		"Tatoeba weekly Arabic exports, 2026-06-06.",
-		"Universal Dependencies Arabic NYUAD r2.18 annotations."
+		"Wikidata main structured data dump, 2026-06-08."
+	],
+	"gapNotes": [
+		{
+			"id": "gap:pack:ar:syntax",
+			"slot": "syntax",
+			"status": "planned",
+			"message": "syntax is planned in this source-backed self-contained language distribution."
+		},
+		{
+			"id": "gap:pack:ar:corpus",
+			"slot": "corpus",
+			"status": "planned",
+			"message": "corpus is planned in this source-backed self-contained language distribution."
+		},
+		{
+			"id": "gap:pack:ar:parallel",
+			"slot": "parallel",
+			"status": "planned",
+			"message": "parallel is planned in this source-backed self-contained language distribution."
+		}
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+		"lockfileChecksum": "sha256:78d906f0c73d85650e1ff58aab0aa93a116dc7978756c724328785533464d0ef",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
-	}
+	},
+	"artifacts": [
+		{
+			"artifactId": "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"version": "20260608",
+			"profile": "full",
+			"sizeBytes": 142291512349,
+			"mediaType": "application/json",
+			"compression": "gzip",
+			"checksum": {
+				"algorithm": "sha1",
+				"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+			},
+			"licenseExpression": "CC0-1.0",
+			"redistributionPolicy": "redistributable",
+			"retrieval": {
+				"kind": "https",
+				"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+				"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+			},
+			"cacheKey": "wikidata-main-20260608-all-json-gzip",
+			"expectedFiles": [
+				{
+					"path": "wikidata-20260608-all.json.gz",
+					"sizeBytes": 142291512349,
+					"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+				}
+			]
+		}
+	]
 } as const;

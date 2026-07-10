@@ -1,7 +1,7 @@
 ---
-"@ismail-elkorchi/textpack-en-core": patch
-"@ismail-elkorchi/textpack-en-legal": patch
-"@ismail-elkorchi/textpack-fr-core": patch
+"@ismail-elkorchi/textpack-ar": patch
+"@ismail-elkorchi/textpack-en": patch
+"@ismail-elkorchi/textpack-fr": patch
 ---
 
-Expand reference packs so each declares every textpack resource family with package-relative multi-entry resources.
+Publish package-relative resource families directly from each self-contained language distribution.

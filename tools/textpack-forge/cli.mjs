@@ -17,6 +17,8 @@ import { gunzipSync, gzipSync } from "node:zlib";
 
 const ROOT = path.resolve(new URL("../..", import.meta.url).pathname);
 const LOCK_PATH = "tools/textpack-forge/forge.lock.json";
+const FORGE_CLI_PATH = "tools/textpack-forge/cli.mjs";
+const FORGE_SCHEMA_DIR = "tools/textpack-forge/schemas";
 const DEFAULT_PACK_SPEC_PATH =
 	"tools/textpack-forge/packs/foundation-packs.pack.json";
 const INVENTORY_JSON_PATH = "docs/textpacks/generated-inventory.json";
@@ -24,15 +26,21 @@ const INVENTORY_MD_PATH = "docs/textpacks/generated-inventory.md";
 const SOURCE_POLICY_JSON_PATH =
 	"tools/textpack-forge/source-policy.generated.json";
 const SOURCE_READINESS_MD_PATH = "docs/textpacks/source-readiness.generated.md";
-const LANGUAGE_COMPOSITE_READINESS_JSON_PATH =
-	"docs/textpacks/language-composite-readiness.generated.json";
-const LANGUAGE_COMPOSITE_READINESS_MD_PATH =
-	"docs/textpacks/language-composite-readiness.generated.md";
+const LANGUAGE_DISTRIBUTION_READINESS_JSON_PATH =
+	"docs/textpacks/language-distribution-readiness.generated.json";
+const LANGUAGE_DISTRIBUTION_READINESS_MD_PATH =
+	"docs/textpacks/language-distribution-readiness.generated.md";
 const SIZE_REPORT_PATH = "tools/textpack-forge/reports/size-report.json";
 const SNAPSHOT_DATA_DIR = "tools/textpack-forge/snapshots/data";
 const GENERATED_BY = "tools/textpack-forge";
 const BUILD_COMMAND = "node tools/textpack-forge/cli.mjs build";
 const GZIP_BASE64_RESOURCE_SUFFIX = ".gz.b64";
+const AUTO_COMPRESS_RESOURCE_BYTES = 64 * 1024;
+const DISTRIBUTION_PACKAGE_NAMES = new Set([
+	"@ismail-elkorchi/textpack-ar",
+	"@ismail-elkorchi/textpack-en",
+	"@ismail-elkorchi/textpack-fr",
+]);
 const PACKAGE_REPORT_FILES = [
 	"LICENSE.generated.md",
 	"NOTICE.generated.md",
@@ -42,11 +50,6 @@ const PACKAGE_REPORT_FILES = [
 	"EVALUATION.generated.json",
 	"QUALITY.generated.json",
 ];
-const SUPPORTED_GENERATED_SOURCE_FILES = new Set([
-	"src/index.ts",
-	"src/manifest.ts",
-	"src/resources.ts",
-]);
 const PACKAGE_SCRIPTS = {
 	build:
 		"node ../../../tools/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
@@ -58,12 +61,6 @@ const PACKAGE_SCRIPTS = {
 	prepack: "npm run build",
 };
 
-const supportLevels = [
-	"registered",
-	"unicode-covered",
-	"profiled",
-	"task-supported",
-];
 const sourcePolicyClasses = [
 	"default-safe",
 	"attribution",
@@ -79,12 +76,12 @@ const defaultCompositeSourcePolicyClasses = new Set([
 ]);
 const publishableSourcePolicyClasses = new Set(["default-safe", "attribution"]);
 const isolatedPublishableSourcePolicyClasses = new Set(["share-alike"]);
-const policyExpandedWrapperSourcePolicyClasses = new Set([
+const licenseInclusiveSourcePolicyClasses = new Set([
 	"default-safe",
 	"attribution",
 	"share-alike",
 ]);
-const compositePolicySurfaces = new Set(["default", "policy-expanded-wrapper"]);
+const compositePolicySurfaces = new Set(["default", "license-inclusive"]);
 const componentLicensePolicyClasses = {
 	default: new Set(["default-safe"]),
 	"allow-attribution": new Set(["default-safe", "attribution"]),
@@ -110,30 +107,15 @@ const requiredSourcePolicyLanguageTags = [
 	"la",
 ];
 const developerFacingLanguageTags = ["en", "ar", "fr"];
-const foundationSourceIds = new Set([
-	"source:iana:language-subtag-registry",
-	"source:unicode:cldr-core",
-	"source:unicode:ucd",
-]);
-const foundationOnlyAllowedSlots = new Set([
-	"core",
-	"foundation",
-	"language-registry",
-	"locale-profile",
-	"unicode-profile",
-]);
-const languageCompositeRequiredSlots = [
+const languageDistributionRequiredSlots = [
 	"foundation",
 	"core",
 	"normalization",
 	"segmentation",
 	"lexicon",
 	"morphology",
-	"syntax",
 	"kb",
 	"search",
-	"corpus",
-	"parallel",
 	"quality",
 ];
 const languageReadinessSlotAliases = {
@@ -220,21 +202,12 @@ const languageReadinessSourceRequirements = {
 				anySourceIds: ["source:scowl:v2-rel-2026-02-25"],
 			},
 			{
-				label: "English quality evidence must cover the audited syntax source",
-				anySourceIds: ["source:ud:english-gumreddit-r2.18"],
-			},
-			{
 				label: "English quality evidence must cover the audited KB source",
 				anySourceIds: ["source:wordnet:open-english-2025"],
 			},
 			{
 				label: "English quality evidence must cover the audited entity source",
 				anySourceIds: ["source:wikidata:main"],
-			},
-			{
-				label:
-					"English quality evidence must cover the audited corpus and parallel source",
-				anySourceIds: ["source:tatoeba:weekly-2026-06-06"],
 			},
 		],
 	},
@@ -308,12 +281,16 @@ const languageReadinessSourceRequirements = {
 		quality: [
 			{
 				label:
-					"Arabic quality evidence must wait for an audited exact Arabic syntax source boundary",
-				anySourceIds: [
-					"source:ud:arabic-padt-r2.18",
-					"source:ud:arabic-pud-r2.18",
-					"source:ud:arabic-nyuad-r2.18",
-				],
+					"Arabic quality evidence must cover the audited morphology source",
+				anySourceIds: ["source:camel:morph-msa-lrec-coling-2024"],
+			},
+			{
+				label: "Arabic quality evidence must cover the audited KB source",
+				anySourceIds: ["source:wordnet:arabic-v4.1.0"],
+			},
+			{
+				label: "Arabic quality evidence must cover the audited entity source",
+				anySourceIds: ["source:wikidata:main"],
 			},
 		],
 	},
@@ -403,22 +380,6 @@ const languageReadinessSourceRequirements = {
 					"source:fr:lexique",
 				],
 			},
-			{
-				label:
-					"French quality evidence must wait for audited French syntax source coverage",
-				anySourceIds: [
-					"source:ud:french-alts-r2.18",
-					"source:ud:french-fqb-r2.18",
-					"source:ud:french-gsd-r2.18",
-					"source:ud:french-sequoia-r2.18",
-					"source:ud:french-parisstories-r2.18",
-					"source:ud:french-rhapsodie-r2.18",
-					"source:ud:french-spoken-r2.18",
-					"source:ud:french-partut-r2.18",
-					"source:ud:french-poitevindivital-r2.18",
-					"source:ud:french-pud-r2.18",
-				],
-			},
 		],
 	},
 };
@@ -503,11 +464,10 @@ function splitSourceUrl(sourceUrl) {
 }
 
 function sourceDownloadUrl(sourceUrl) {
-	const { url, fragment } = splitSourceUrl(sourceUrl);
+	const { url } = splitSourceUrl(sourceUrl);
 	const parsedUrl = new URL(url);
 	expect(parsedUrl.protocol === "https:", `Source URL ${url} must use HTTPS.`);
-	if (fragment === undefined || fragment.length === 0) return url;
-	fail(`Unsupported snapshot sourceUrl fragment ${sourceUrl}.`);
+	return url;
 }
 
 function runCommand(command, args) {
@@ -535,7 +495,10 @@ function runCommand(command, args) {
 }
 
 async function acquireSourceUrl(sourceUrl, outputPath) {
+	const { fragment } = splitSourceUrl(sourceUrl);
 	const url = sourceDownloadUrl(sourceUrl);
+	const downloadPath =
+		fragment === undefined ? outputPath : `${outputPath}.zip`;
 	await runCommand("curl", [
 		"--fail",
 		"--location",
@@ -544,9 +507,29 @@ async function acquireSourceUrl(sourceUrl, outputPath) {
 		"--silent",
 		"--show-error",
 		"--output",
-		outputPath,
+		downloadPath,
 		url,
 	]);
+	if (fragment === undefined) return;
+	const memberPath = decodeURIComponent(fragment);
+	expect(
+		memberPath.length > 0 &&
+			!memberPath.includes("..") &&
+			!memberPath.startsWith("/") &&
+			!memberPath.includes("\\"),
+		`Unsafe archive member ${fragment}.`,
+	);
+	const extracted = spawnSync("unzip", ["-p", downloadPath, memberPath], {
+		encoding: null,
+		maxBuffer: 512 * 1024 * 1024,
+	});
+	await rm(downloadPath, { force: true });
+	expect(
+		extracted.status === 0 && extracted.stdout !== null,
+		`Failed to extract ${memberPath} from ${url}.`,
+		extracted.stderr?.toString("utf8").trim(),
+	);
+	await writeFile(outputPath, extracted.stdout);
 }
 
 function cloneJson(value) {
@@ -569,6 +552,36 @@ function sortJson(value) {
 		output[key] = sortJson(value[key]);
 	}
 	return output;
+}
+
+async function forgeInputChecksum(lock) {
+	const schemaPaths = (await readdir(path.join(ROOT, FORGE_SCHEMA_DIR)))
+		.filter((name) => name.endsWith(".json"))
+		.map((name) => `${FORGE_SCHEMA_DIR}/${name}`);
+	const inputPaths = sorted(
+		new Set([
+			LOCK_PATH,
+			FORGE_CLI_PATH,
+			...schemaPaths,
+			...(lock.sourcePaths ?? []),
+			...(lock.sourcePolicyPaths ?? []),
+			...(lock.snapshotPaths ?? []),
+			...(lock.resourceSpecPaths ?? []),
+			...(lock.packSpecPaths ?? []),
+			...(lock.compositeSpecPaths ?? []),
+		]),
+	);
+	const entries = await Promise.all(
+		inputPaths.map(async (inputPath) => {
+			const bytes = await readFile(path.join(ROOT, inputPath));
+			return {
+				path: inputPath,
+				byteLength: bytes.byteLength,
+				checksum: sha256Bytes(bytes),
+			};
+		}),
+	);
+	return sha256(stableJson(entries));
 }
 
 function sizeClass(byteLength) {
@@ -599,20 +612,11 @@ function generatedHeader() {
 }
 
 function isCompositePack(pack) {
-	return (
-		pack.packClass === "foundation-composite" ||
-		pack.packClass === "language-component-composite" ||
-		pack.packClass === "language-composite"
-	);
+	return pack.packClass === "language-composite";
 }
 
 function validatePackSpec(packSpec, resourceSpecById) {
-	for (const key of [
-		"packageName",
-		"packageDir",
-		"packClass",
-		"supportLevel",
-	]) {
+	for (const key of ["packageName", "packClass", "supportLevel"]) {
 		expect(
 			typeof packSpec[key] === "string" && packSpec[key].length > 0,
 			`Pack spec is missing ${key}.`,
@@ -620,16 +624,11 @@ function validatePackSpec(packSpec, resourceSpecById) {
 	}
 	expect(
 		!isCompositePack(packSpec),
-		`${packSpec.packageName} recipe composites must be declared in tools/textpack-forge/composites, not in pack catalogs.`,
+		`${packSpec.packageName} language distributions must be declared in tools/textpack-forge/composites, not in build-unit catalogs.`,
 	);
-	assertRelativePath(packSpec.packageDir, `${packSpec.packageName} packageDir`);
 	expect(
 		typeof packSpec.description === "string" && packSpec.description.length > 0,
 		`${packSpec.packageName} description is required.`,
-	);
-	expect(
-		packSpec.generatedPackageFiles === true,
-		`${packSpec.packageName} packs must generate package files.`,
 	);
 	expect(
 		Array.isArray(packSpec.resourceSpecIds) &&
@@ -639,7 +638,7 @@ function validatePackSpec(packSpec, resourceSpecById) {
 	expect(
 		Array.isArray(packSpec.manifest?.resources) &&
 			packSpec.manifest.resources.length > 0,
-		`${packSpec.packageName} concrete pack specs must declare at least one resource. Use a composite spec for resource-less recipe packs.`,
+		`${packSpec.packageName} internal build unit must declare at least one resource.`,
 	);
 	for (const resource of packSpec.manifest.resources) {
 		expect(
@@ -663,24 +662,6 @@ function validatePackSpec(packSpec, resourceSpecById) {
 			`${packSpec.packageName} resource spec ${resourceSpecId} packageName mismatch.`,
 		);
 	}
-	expect(
-		Array.isArray(packSpec.generatedSourceFiles),
-		`${packSpec.packageName} generatedSourceFiles must be an array.`,
-	);
-	for (const generatedSourceFile of packSpec.generatedSourceFiles) {
-		expect(
-			SUPPORTED_GENERATED_SOURCE_FILES.has(generatedSourceFile),
-			`${packSpec.packageName} declares unsupported generated source file ${generatedSourceFile}.`,
-		);
-	}
-	expect(
-		packSpec.generatedSourceFiles.includes("src/manifest.ts"),
-		`${packSpec.packageName} must generate src/manifest.ts.`,
-	);
-	expect(
-		packSpec.generatedSourceFiles.includes("src/resources.ts"),
-		`${packSpec.packageName} must generate src/resources.ts.`,
-	);
 	expect(
 		packSpec.manifest !== undefined &&
 			typeof packSpec.manifest === "object" &&
@@ -836,30 +817,30 @@ function policySurfaceFor(pack) {
 	return pack.policySurface ?? "default";
 }
 
-function isPolicyExpandedWrapper(pack) {
-	return policySurfaceFor(pack) === "policy-expanded-wrapper";
+function isLicenseInclusiveDistribution(pack) {
+	return policySurfaceFor(pack) === "license-inclusive";
 }
 
-function sourcePolicyAllowsPolicyExpandedWrapper(policy) {
+function sourcePolicyAllowsLicenseInclusiveDistribution(policy) {
 	return (
 		policy.reviewState === "approved" &&
-		policyExpandedWrapperSourcePolicyClasses.has(policy.policyClass)
+		licenseInclusiveSourcePolicyClasses.has(policy.policyClass)
 	);
 }
 
 function sourcePolicyAllowsPackagePublishability(policy, pack) {
 	return (
 		sourcePolicyAllowsPackPublishability(policy, pack.packageName) ||
-		(isPolicyExpandedWrapper(pack) &&
-			sourcePolicyAllowsPolicyExpandedWrapper(policy))
+		(isLicenseInclusiveDistribution(pack) &&
+			sourcePolicyAllowsLicenseInclusiveDistribution(policy))
 	);
 }
 
 function sourcePolicyAllowsDirectCompositeSource(policy, pack) {
 	return (
 		sourcePolicyAllowsCompositeReference(policy, pack.packageName) ||
-		(isPolicyExpandedWrapper(pack) &&
-			sourcePolicyAllowsPolicyExpandedWrapper(policy))
+		(isLicenseInclusiveDistribution(pack) &&
+			sourcePolicyAllowsLicenseInclusiveDistribution(policy))
 	);
 }
 
@@ -872,8 +853,8 @@ function sourcePolicyAllowsRequiredComponentReference(
 		return true;
 	}
 	if (
-		!isPolicyExpandedWrapper(composite) ||
-		!sourcePolicyAllowsPolicyExpandedWrapper(policy)
+		!isLicenseInclusiveDistribution(composite) ||
+		!sourcePolicyAllowsLicenseInclusiveDistribution(policy)
 	) {
 		return false;
 	}
@@ -883,7 +864,7 @@ function sourcePolicyAllowsRequiredComponentReference(
 			componentPack.packageName,
 			policy.requiredPackageNameSuffixes,
 		) ||
-		isPolicyExpandedWrapper(componentPack)
+		isLicenseInclusiveDistribution(componentPack)
 	);
 }
 
@@ -1205,7 +1186,7 @@ function validatePackageSourcePolicy(pack, context) {
 				hasAllowedPackageSuffix(
 					pack.packageName,
 					policy.requiredPackageNameSuffixes,
-				) || isPolicyExpandedWrapper(pack),
+				) || isLicenseInclusiveDistribution(pack),
 				`${pack.packageName} uses ${sourceId} but does not end with one of ${policy.requiredPackageNameSuffixes.join(", ")}.`,
 			);
 		}
@@ -1333,7 +1314,35 @@ function validateResourceSourceGraph(resourceSpec, sourceById, snapshotById) {
 	}
 }
 
-function validateCompositeSpec(spec, knownPackageNames) {
+function buildUnitIdForPackageName(packageName) {
+	const prefix = "@ismail-elkorchi/textpack-";
+	expect(
+		packageName.startsWith(prefix),
+		`Internal build unit key ${packageName} must start with ${prefix}.`,
+	);
+	return packageName.slice(prefix.length);
+}
+
+function buildUnitComponents(spec, buildUnitSpecById) {
+	return spec.buildUnits.map((selection) => {
+		const buildUnit = buildUnitSpecById.get(selection.buildUnitId);
+		expect(
+			buildUnit !== undefined,
+			`${spec.packageName} references unknown build unit ${selection.buildUnitId}.`,
+		);
+		return {
+			packageName: buildUnit.packageName,
+			versionRange: buildUnit.manifest.version,
+			role: "required",
+			reason: selection.reason,
+			licensePolicy: selection.licensePolicy,
+			capabilityPolicy: "contributes-default",
+			artifactPolicy: "none",
+		};
+	});
+}
+
+function validateCompositeSpec(spec, buildUnitSpecById) {
 	for (const key of [
 		"packageName",
 		"packageDir",
@@ -1344,7 +1353,7 @@ function validateCompositeSpec(spec, knownPackageNames) {
 		"supportLevel",
 		"display",
 		"targets",
-		"components",
+		"buildUnits",
 		"capabilitySlots",
 		"license",
 		"citations",
@@ -1353,15 +1362,19 @@ function validateCompositeSpec(spec, knownPackageNames) {
 	}
 	expect(
 		spec.mode === "source-backed",
-		`${spec.packageName} composite mode ${spec.mode} is unsupported.`,
+		`${spec.packageName} distribution mode ${spec.mode} is unsupported.`,
 	);
 	expect(
 		isCompositePack(spec),
-		`${spec.packageName} packClass must be foundation-composite, language-component-composite, or language-composite.`,
+		`${spec.packageName} packClass must be language-composite.`,
+	);
+	expect(
+		DISTRIBUTION_PACKAGE_NAMES.has(spec.packageName),
+		`${spec.packageName} is not one of the supported public language distributions.`,
 	);
 	expect(
 		compositePolicySurfaces.has(spec.policySurface ?? "default"),
-		`${spec.packageName} policySurface must be default or policy-expanded-wrapper.`,
+		`${spec.packageName} policySurface must be default or license-inclusive.`,
 	);
 	assertRelativePath(spec.packageDir, `${spec.packageName} packageDir`);
 	expect(
@@ -1370,30 +1383,22 @@ function validateCompositeSpec(spec, knownPackageNames) {
 		`${spec.packageName} display.languageName must be a non-empty string.`,
 	);
 	expect(
-		Array.isArray(spec.components) && spec.components.length > 0,
-		`${spec.packageName} must declare at least one component.`,
+		Array.isArray(spec.buildUnits) && spec.buildUnits.length > 0,
+		`${spec.packageName} must select at least one build unit.`,
 	);
-	const requiredComponents = spec.components.filter(
-		(component) => component.role === "required",
+	const selectedBuildUnitIds = new Set(
+		spec.buildUnits.map((buildUnit) => buildUnit.buildUnitId),
 	);
 	expect(
-		requiredComponents.length > 0,
-		`${spec.packageName} must declare at least one required component.`,
+		selectedBuildUnitIds.size === spec.buildUnits.length,
+		`${spec.packageName} must not select a build unit more than once.`,
 	);
-	for (const component of spec.components) {
+	for (const buildUnit of spec.buildUnits) {
 		expect(
-			knownPackageNames.has(component.packageName),
-			`${spec.packageName} references unknown component ${component.packageName}.`,
+			buildUnitSpecById.has(buildUnit.buildUnitId),
+			`${spec.packageName} references unknown build unit ${buildUnit.buildUnitId}.`,
 		);
 	}
-	expect(
-		Array.isArray(spec.sourceIds) && spec.sourceIds.length > 0,
-		`${spec.packageName} source-backed composite must declare sourceIds.`,
-	);
-	expect(
-		Array.isArray(spec.snapshotIds) && spec.snapshotIds.length > 0,
-		`${spec.packageName} source-backed composite must declare snapshotIds.`,
-	);
 }
 
 function generatedGapNotes(manifest, generatedKind, mode = "source-backed") {
@@ -1538,7 +1543,7 @@ function manifestFor(packSpec, context) {
 	const manifest = withInferredCapabilityBindings(cloneJson(packSpec.manifest));
 	const gapNotes = generatedGapNotes(
 		manifest,
-		"concrete pack",
+		"internal build unit",
 		packSpec.generationMode ?? "source-backed",
 	);
 	if (gapNotes.length > 0) manifest.gapNotes = gapNotes;
@@ -1563,14 +1568,13 @@ function compositeManifestFor(spec, context) {
 			"@ismail-elkorchi/textpack": "^0.1.0",
 		},
 		resources: [],
-		components: spec.components,
 		capabilitySlots: spec.capabilitySlots,
 		license: spec.license,
 		citations: spec.citations,
 	});
 	const gapNotes = generatedGapNotes(
 		manifest,
-		"recipe composite pack",
+		"self-contained language distribution",
 		spec.mode,
 	);
 	if (gapNotes.length > 0) manifest.gapNotes = gapNotes;
@@ -4160,19 +4164,9 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 		profileId: "ar-msa-camel-segmentation",
 		languageTag: "ar",
 		script: "Arab",
-		granularity: "morpheme",
-		schemes: [
-			{
-				schemeId: "camel-morph-tokenizations",
-				description: "CAMeL Morph MSA tokenization fields.",
-				fields: tokenizationRows.map(([order, field]) => ({
-					order,
-					name: field,
-				})),
-			},
-		],
+		granularity: "word",
 		rules: [],
-		dictionaryRefs: ["ar-msa-camel-morph-morphemes"],
+		dictionaryRefs: [],
 	};
 	const canonicalQuality = {
 		schemaVersion: "1",
@@ -4550,25 +4544,7 @@ function transformArabicNormalizationProfile(resourceSpec, inputs) {
 	];
 }
 
-function arabicLookupNormalize(value) {
-	return value
-		.normalize("NFC")
-		.replace(/\u0640/gu, "")
-		.replace(/[\u064B-\u065F\u0670]/gu, "")
-		.replace(/[\u0622\u0623\u0625\u0671]/gu, "\u0627")
-		.replace(/\u0649/gu, "\u064A")
-		.trim()
-		.replace(/\s+/gu, " ");
-}
-
 function transformArabicSearchProfile(resourceSpec, inputs) {
-	const camelText = requiredInput(
-		inputs,
-		"camel_morph_msa_v1.0.db",
-		resourceSpec,
-	);
-	const wordnetXml = requiredInput(inputs, "awn4.xml.gz", resourceSpec);
-	const sections = camelSections(camelText);
 	const likelySubtags = JSON.parse(
 		requiredInput(inputs, "likelySubtags.json", resourceSpec),
 	);
@@ -4579,107 +4555,6 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 		likelySubtag,
 	);
 
-	const tokenizationRows = [];
-	for (const line of sections.get("TOKENIZATIONS") ?? []) {
-		const parts = line.split(/\s+/u);
-		if (parts[0] !== "TOKENIZATION") continue;
-		parts.slice(1).forEach((field, index) => {
-			tokenizationRows.push([index + 1, canonicalArabicMorphFeature(field)]);
-		});
-	}
-
-	const morphHookCounts = new Map();
-	let morphemeCount = 0;
-	for (const section of ["PREFIXES", "STEMS", "SUFFIXES"]) {
-		for (const line of sections.get(section) ?? []) {
-			const [, , ...rest] = line.split("\t");
-			const features = parseFeatureString(rest.join(" ").trim());
-			morphemeCount += 1;
-			for (const feature of [
-				"lex",
-				"diac",
-				"bw",
-				"root",
-				"stem",
-				"d3seg",
-				"atbseg",
-				"d3tok",
-				"atbtok",
-			]) {
-				if ((features[feature] ?? "").length > 0) {
-					incrementCount(morphHookCounts, canonicalArabicMorphFeature(feature));
-				}
-			}
-		}
-	}
-	const morphologyHookRows = sortedCountRows(morphHookCounts).map(
-		([feature, count]) => [feature, count],
-	);
-
-	const entriesBySynset = new Map();
-	let lexicalEntryCount = 0;
-	for (const match of wordnetXml.matchAll(
-		/<LexicalEntry\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/LexicalEntry>/gu,
-	)) {
-		const entryId = xmlDecode(match[1]);
-		const body = match[2];
-		const lemmaMatch = body.match(/<Lemma\b([^>]*)\/>/u);
-		const lemmaAttrs = lemmaMatch === null ? {} : xmlAttributes(lemmaMatch[1]);
-		const lemma = lemmaAttrs.writtenForm ?? "";
-		const normalizedLemma = arabicLookupNormalize(lemma);
-		if (normalizedLemma.length === 0) continue;
-		lexicalEntryCount += 1;
-		for (const senseMatch of body.matchAll(
-			/<Sense\b([^>]*?)(?:\/>|>([\s\S]*?)<\/Sense>)/gu,
-		)) {
-			const senseAttrs = xmlAttributes(senseMatch[1]);
-			const synsetId = senseAttrs.synset ?? "";
-			if (synsetId.length === 0) continue;
-			const entries = entriesBySynset.get(synsetId) ?? [];
-			entries.push({
-				entryId,
-				lemma,
-				normalizedLemma,
-				partOfSpeech: lemmaAttrs.partOfSpeech ?? "",
-			});
-			entriesBySynset.set(synsetId, entries);
-		}
-	}
-
-	const synonymRows = [];
-	for (const [synsetId, entries] of [...entriesBySynset.entries()].sort(
-		(left, right) => left[0].localeCompare(right[0]),
-	)) {
-		const uniqueEntries = [
-			...new Map(
-				entries
-					.sort((left, right) => left.entryId.localeCompare(right.entryId))
-					.map((entry) => [entry.entryId, entry]),
-			).values(),
-		];
-		if (uniqueEntries.length < 2) continue;
-		for (const sourceEntry of uniqueEntries) {
-			for (const targetEntry of uniqueEntries) {
-				if (sourceEntry.entryId === targetEntry.entryId) continue;
-				synonymRows.push([
-					sourceEntry.normalizedLemma,
-					targetEntry.normalizedLemma,
-					sourceEntry.entryId,
-					targetEntry.entryId,
-					synsetId,
-					sourceEntry.partOfSpeech,
-				]);
-			}
-		}
-	}
-	synonymRows.sort((left, right) => {
-		for (let index = 0; index < left.length; index += 1) {
-			const delta = `${left[index]}`.localeCompare(`${right[index]}`);
-			if (delta !== 0) return delta;
-		}
-		return 0;
-	});
-
 	const analyzer = {
 		schemaVersion: "1",
 		kind: "search-profile",
@@ -4687,30 +4562,10 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 		languageTag: "ar",
 		script: "Arab",
 		tokenizer: {
-			componentId: "camel-morph-tokenization",
-			type: "dictionary-tokenization",
-			mode: "msa-tokenization-fields",
-			options: {
-				tokenizationResourceId: "ar-search-tokenization-hooks",
-				fallback: "unicode-word-boundary",
-			},
+			componentId: "unicode-word",
+			type: "unicode-word-boundary",
+			mode: "default",
 		},
-		charFilters: [
-			{
-				componentId: "unicode-nfc",
-				type: "unicode-normalization",
-				mode: "NFC",
-			},
-			{
-				componentId: "arabic-lookup-normalization",
-				type: "normalization-profile",
-				mode: "msa-lookup",
-				options: {
-					ruleResourceId: "ar-search-normalization-policy",
-					likelySubtag,
-				},
-			},
-		],
 		tokenFilters: [
 			{
 				componentId: "arabic-strip-tatweel-and-harakat",
@@ -4720,42 +4575,6 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 					deleteTatweel: true,
 					deleteHarakat: true,
 				},
-			},
-			{
-				componentId: "camel-morph-msa-morphology-hooks",
-				type: "morphology-lookup",
-				mode: "candidate-expansion",
-				options: {
-					hookResourceId: "ar-search-morphology-hooks",
-					source: "CAMeL Morph MSA",
-				},
-			},
-			{
-				componentId: "arabic-wordnet-synonym-expansion",
-				type: "synonym-expansion",
-				mode: "query-time-optional",
-				options: {
-					synonymResourceId: "ar-search-wordnet-synonyms",
-					source: "Arabic WordNet 4.1.0",
-				},
-			},
-		],
-		resources: [
-			{
-				resourceId: "ar-search-normalization-policy",
-				role: "normalizer",
-			},
-			{
-				resourceId: "ar-search-morphology-hooks",
-				role: "stemmer",
-			},
-			{
-				resourceId: "ar-search-wordnet-synonyms",
-				role: "synonyms",
-			},
-			{
-				resourceId: "ar-search-quality-profile",
-				role: "quality",
 			},
 		],
 		fields: [
@@ -4786,20 +4605,12 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 		languageTag: "ar",
 		script: "Arab",
 		likelySubtag,
-		tokenizationFieldCount: tokenizationRows.length,
-		morphemeCount,
-		morphologyHookCount: morphologyHookRows.length,
-		wordnetLexicalEntryCount: lexicalEntryCount,
-		wordnetSynsetWithSynonymCount: [...entriesBySynset.values()].filter(
-			(entries) => entries.length > 1,
-		).length,
-		synonymPairCount: synonymRows.length,
-		recordsAccepted:
-			tokenizationRows.length + morphologyHookRows.length + synonymRows.length,
+		analyzerProfileCount: 1,
+		recordsAccepted: 1,
 		recordsRejected: 0,
 		warnings: [
-			"This profile declares Arabic MSA lookup/search analyzer resources from CAMeL Morph and Arabic WordNet.",
-			"It does not claim a persistent index, corpus-derived ranking, dialectal Arabic search, Classical/Quranic Arabic search, or OPUS/Tatoeba-backed cross-lingual search.",
+			"The built-in analyzer executes Unicode word tokenization plus Arabic mark and tatweel removal.",
+			"Morphology-aware tokenization, stemming, synonym expansion, persistent indexing, corpus-derived ranking, dialectal Arabic search, and Classical/Quranic Arabic search are outside this profile.",
 		],
 	};
 	const canonicalQuality = {
@@ -4814,7 +4625,7 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 				task: "search.profile",
 				severity: "info",
 				message:
-					"Arabic MSA lookup/search profile; corpus ranking, dialectal search, and Classical/Quranic search are out of scope.",
+					"Arabic Unicode word and mark-normalization analyzer profile; morphology, synonyms, corpus ranking, dialectal search, and Classical/Quranic search are out of scope.",
 				metadata: {
 					likelySubtag,
 					sourceIds: resourceSpec.sourceIds,
@@ -4823,16 +4634,10 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 		],
 		metrics: [
 			{
-				metricId: "synonym-pair-count",
-				name: "synonymPairCount",
-				value: quality.synonymPairCount,
-				unit: "pairs",
-			},
-			{
-				metricId: "morphology-hook-count",
-				name: "morphologyHookCount",
-				value: quality.morphologyHookCount,
-				unit: "hooks",
+				metricId: "analyzer-profile-count",
+				name: "analyzerProfileCount",
+				value: quality.analyzerProfileCount,
+				unit: "profiles",
 			},
 			{
 				metricId: "records-rejected",
@@ -4846,49 +4651,6 @@ function transformArabicSearchProfile(resourceSpec, inputs) {
 	};
 
 	return [
-		outputFor(
-			resourceSpec,
-			"ar-search-normalization-policy",
-			stableJson({
-				schemaVersion: "1",
-				languageTag: "ar",
-				script: "Arab",
-				likelySubtag,
-				normalizationRuleIds: [
-					"unicode-nfc-compose",
-					"unicode-casefold-for-lookup",
-					"arabic-delete-tatweel-for-lookup",
-					"arabic-strip-harakat-for-lookup",
-					"arabic-alef-variants",
-					"arabic-ya-variants",
-				],
-			}),
-		),
-		outputFor(
-			resourceSpec,
-			"ar-search-tokenization-hooks",
-			tsvFile(["order", "field"], tokenizationRows),
-		),
-		outputFor(
-			resourceSpec,
-			"ar-search-morphology-hooks",
-			tsvFile(["feature", "observedMorphemeCount"], morphologyHookRows),
-		),
-		outputFor(
-			resourceSpec,
-			"ar-search-wordnet-synonyms",
-			tsvFile(
-				[
-					"sourceNormalizedLemma",
-					"targetNormalizedLemma",
-					"sourceEntryId",
-					"targetEntryId",
-					"synsetId",
-					"partOfSpeech",
-				],
-				synonymRows,
-			),
-		),
 		outputFor(resourceSpec, "ar-search-profile", stableJson(analyzer)),
 		outputFor(resourceSpec, "ar-search-quality", stableJson(quality)),
 		outputFor(
@@ -5350,21 +5112,21 @@ function transformWikidataMainArtifact(resourceSpec, inputs) {
 		"md5",
 	);
 	const extractBasename = `wikidata-${config.languageTag}-core`;
-	if (hasInputPath(inputs, `${extractBasename}-entities.tsv`)) {
+	if (hasInputPath(inputs, `${extractBasename}-entities.tsv.gz`)) {
 		const entities = requiredInput(
 			inputs,
-			`${extractBasename}-entities.tsv`,
+			`${extractBasename}-entities.tsv.gz`,
 			resourceSpec,
 		);
 		const canonicalEntities = canonicalizeWikidataEntityRows(entities);
 		const aliases = requiredInput(
 			inputs,
-			`${extractBasename}-aliases.tsv`,
+			`${extractBasename}-aliases.tsv.gz`,
 			resourceSpec,
 		);
 		const relations = requiredInput(
 			inputs,
-			`${extractBasename}-relations.tsv`,
+			`${extractBasename}-relations.tsv.gz`,
 			resourceSpec,
 		);
 		const canonicalRelations = canonicalizeWikidataRelationRows(relations);
@@ -6532,6 +6294,7 @@ function transformEsdbWordlistDiff(resourceSpec, inputs) {
 		recordsRejected,
 		warnings: [
 			"Generated wordlist outputs are spell-checker dictionaries, not a complete English lexical database.",
+			"The built-in search analyzer performs Unicode word tokenization and casefolding; wordlist membership and suggestion filtering require explicit consumer logic.",
 			"ESDB database internals are intentionally not used because the upstream schema is still unstable.",
 		],
 	};
@@ -6566,35 +6329,11 @@ function transformEsdbWordlistDiff(resourceSpec, inputs) {
 			type: "unicode-word-boundary",
 			mode: "default",
 		},
-		charFilters: [
-			{
-				componentId: "apostrophe-preserve",
-				type: "character-policy",
-				mode: "preserve-apostrophes",
-				options: {
-					characters: ["'", "’"],
-				},
-			},
-		],
 		tokenFilters: [
 			{
 				componentId: "unicode-simple-casefold",
 				type: "casefold",
 				mode: "unicode-simple",
-			},
-			{
-				componentId: "esdb-default-wordlist-filter",
-				type: "wordlist-membership",
-				mode: "regional-default",
-				options: {
-					profiles: esdbDefaultProfiles.map((profile) => profile.profileId),
-				},
-			},
-		],
-		resources: [
-			{
-				resourceId: "en-esdb-default-wordlists",
-				role: "lexicon",
 			},
 		],
 		fields: [
@@ -7480,14 +7219,10 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 
 	for (const line of lines.slice(1)) {
 		const cells = line.split("\t");
-		if (cells.length < header.length) {
-			recordsRejected += 1;
-			continue;
-		}
 		const form = lexiqueCell(cells, columnIndex, "ortho");
 		const lemma = lexiqueCell(cells, columnIndex, "lemme") || form;
-		const partOfSpeech = lexiqueCell(cells, columnIndex, "cgram");
-		if (form.length === 0 || lemma.length === 0 || partOfSpeech.length === 0) {
+		const partOfSpeech = lexiqueCell(cells, columnIndex, "cgram") || "unknown";
+		if (form.length === 0 || lemma.length === 0) {
 			recordsRejected += 1;
 			continue;
 		}
@@ -7548,12 +7283,6 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			return lemmaDelta !== 0 ? lemmaDelta : left[1].localeCompare(right[1]);
 		});
 	const posRows = sortedCountRows(posCounts);
-	const frenchSurfaceEvidence = hasInputPath(
-		inputs,
-		"fra_sentences_detailed.tsv.bz2",
-	)
-		? deriveFrenchTatoebaSurfaceEvidence(resourceSpec, inputs)
-		: undefined;
 	const quality = {
 		schemaVersion: "1",
 		sourceIds: resourceSpec.sourceIds,
@@ -7568,27 +7297,12 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 		genderCounts: Object.fromEntries(sortedCountRows(genderCounts)),
 		numberCounts: Object.fromEntries(sortedCountRows(numberCounts)),
 		inflectedVerbRowCount,
-		...(frenchSurfaceEvidence === undefined
-			? {}
-			: {
-					tatoebaSentenceRowCount: frenchSurfaceEvidence.sentenceRowCount,
-					searchElisionPrefixCount:
-						frenchSurfaceEvidence.elisionPrefixRows.length,
-					searchContractionFormCount:
-						frenchSurfaceEvidence.contractionRows.length,
-					searchGoldCaseCount:
-						frenchSurfaceEvidence.normalizationGoldCases.length,
-				}),
 		recordsAccepted: entryRows.length,
 		recordsRejected,
 		warnings: [
 			"Lexique 3.83 is CC-BY-SA-4.0 and this generated package is share-alike isolated.",
 			"Lexique frequency fields are source corpus statistics, not a full contemporary French corpus package.",
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						"Tatoeba French sentence evidence is used only for observed French apostrophe, elision-prefix, and contraction-surface search policy.",
-					]),
+			"The built-in search analyzer uses only its declared Unicode word, casefold, and accent-fold components; Lexique lookup rows remain explicit lexicon/morphology data.",
 		],
 	};
 	const canonicalLexicon = {
@@ -7670,20 +7384,6 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			type: "unicode-word-boundary",
 			mode: "default",
 		},
-		charFilters: [
-			{
-				componentId: "french-apostrophe-normalizer",
-				type: "character-policy",
-				mode: "normalize-typographic-and-straight-apostrophes",
-				options: {
-					characters: ["'", "’"],
-					evidenceResourceId:
-						frenchSurfaceEvidence === undefined
-							? undefined
-							: "fr-lexique-search-elision-prefixes",
-				},
-			},
-		],
 		tokenFilters: [
 			{
 				componentId: "unicode-simple-casefold",
@@ -7699,59 +7399,6 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 					removeUnicodeMarks: true,
 				},
 			},
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						{
-							componentId: "french-observed-elision-prefixes",
-							type: "elision-policy",
-							mode: "prefix-apostrophe-boundary",
-							options: {
-								evidenceResourceId: "fr-lexique-search-elision-prefixes",
-								minimumObservedCount: frenchSurfaceEvidenceMinimumCount,
-							},
-						},
-						{
-							componentId: "french-observed-contraction-surfaces",
-							type: "contraction-policy",
-							mode: "surface-form-recognition",
-							options: {
-								evidenceResourceId: "fr-lexique-search-contraction-forms",
-							},
-						},
-					]),
-			{
-				componentId: "lexique-form-lemma-lookup",
-				type: "lexicon-lookup",
-				mode: "form-to-lemma",
-				options: {
-					entryResourceId: "fr-lexique-entries",
-					lemmaResourceId: "fr-lexique-lemmas",
-					frequencyFields: ["freqfilms2", "freqlivres"],
-				},
-			},
-		],
-		resources: [
-			{
-				resourceId: "fr-lexique-entries",
-				role: "lexicon",
-			},
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						{
-							resourceId: "fr-lexique-search-elision-prefixes",
-							role: "normalizer",
-						},
-						{
-							resourceId: "fr-lexique-search-contraction-forms",
-							role: "normalizer",
-						},
-						{
-							resourceId: "fr-lexique-search-gold-cases",
-							role: "quality",
-						},
-					]),
 		],
 		fields: [
 			{
@@ -7812,28 +7459,6 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 				value: quality.recordsRejected,
 				unit: "records",
 			},
-			...(frenchSurfaceEvidence === undefined
-				? []
-				: [
-						{
-							metricId: "search-elision-prefix-count",
-							name: "searchElisionPrefixCount",
-							value: quality.searchElisionPrefixCount,
-							unit: "prefixes",
-						},
-						{
-							metricId: "search-contraction-form-count",
-							name: "searchContractionFormCount",
-							value: quality.searchContractionFormCount,
-							unit: "forms",
-						},
-						{
-							metricId: "search-gold-case-count",
-							name: "searchGoldCaseCount",
-							value: quality.searchGoldCaseCount,
-							unit: "cases",
-						},
-					]),
 		],
 		thresholds: [],
 		evaluationRecordIds: [],
@@ -7887,70 +7512,6 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 			"fr-lexique-search-profile",
 			stableJson(canonicalSearchProfile),
 		),
-		...(frenchSurfaceEvidence === undefined
-			? []
-			: [
-					outputFor(
-						resourceSpec,
-						"fr-lexique-search-elision-prefixes",
-						tsvFile(
-							[
-								"prefix",
-								"observedCount",
-								"apostropheCounts",
-								"exampleSentenceId",
-							],
-							frenchSurfaceEvidence.elisionPrefixRows.map((row) => [
-								row.prefix,
-								row.count,
-								row.apostrophes,
-								row.exampleSentenceId,
-							]),
-						),
-					),
-					outputFor(
-						resourceSpec,
-						"fr-lexique-search-contraction-forms",
-						tsvFile(
-							["form", "observedCount", "exampleSentenceId"],
-							frenchSurfaceEvidence.contractionRows.map((row) => [
-								row.form,
-								row.count,
-								row.exampleSentenceId,
-							]),
-						),
-					),
-					outputFor(
-						resourceSpec,
-						"fr-lexique-search-gold-cases",
-						stableJson({
-							schemaVersion: "1",
-							kind: "search-gold-cases",
-							languageTag: "fr",
-							sourceIds: resourceSpec.sourceIds,
-							cases: frenchSurfaceEvidence.normalizationGoldCases.map(
-								(testCase) => ({
-									caseId: testCase.caseId.replace(
-										"fr-normalization",
-										"fr-search",
-									),
-									source: testCase.source,
-									sourceSentenceId: testCase.sourceSentenceId,
-									category: testCase.category,
-									input: testCase.input,
-									expectedAnalyzerTokens: frenchSurfaceTokens(
-										testCase.input,
-										new Set(
-											frenchSurfaceEvidence.elisionPrefixRows.map(
-												(row) => row.prefix,
-											),
-										),
-									).map((token) => frenchLookupFold(token)),
-								}),
-							),
-						}),
-					),
-				]),
 		outputFor(resourceSpec, "fr-lexique-quality", stableJson(quality)),
 		outputFor(
 			resourceSpec,
@@ -8481,6 +8042,7 @@ async function collectResourcePayloads(packSpec, manifest, resourceSpecById) {
 				declaredOutputIds.has(output.id),
 				`${resourceSpec.resourceSpecId} produced undeclared output ${output.id}.`,
 			);
+			const encodedOutput = encodedResourceOutput(output);
 			const lines = output.text.split(/\r?\n/u);
 			const nonEmptyLineCount = lines
 				.map((line) => line.trim())
@@ -8488,21 +8050,18 @@ async function collectResourcePayloads(packSpec, manifest, resourceSpecById) {
 			payloadsById.set(output.id, {
 				id: output.id,
 				kind: output.kind,
-				path: output.path,
+				path: encodedOutput.path,
+				declaredPath: output.path,
 				sourcePath: resourceSpec.resourceSpecId,
-				text: encodedResourceText(output),
+				text: encodedOutput.text,
 				resourceText: output.text,
 				resourceTextByteLength: Buffer.byteLength(output.text, "utf8"),
-				encoded: output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)
-					? "gzip-base64"
-					: "utf8",
-				byteLength: Buffer.byteLength(encodedResourceText(output), "utf8"),
+				encoded: encodedOutput.encoding,
+				byteLength: Buffer.byteLength(encodedOutput.text, "utf8"),
 				lineCount: output.text.length === 0 ? 0 : lines.length,
 				nonEmptyLineCount,
-				checksum: sha256(encodedResourceText(output)),
-				sizeClass: sizeClass(
-					Buffer.byteLength(encodedResourceText(output), "utf8"),
-				),
+				checksum: sha256(encodedOutput.text),
+				sizeClass: sizeClass(Buffer.byteLength(encodedOutput.text, "utf8")),
 				pipelineId: resourceSpec.pipelineId,
 				pipelineVersion: resourceSpec.pipelineVersion,
 				resourceSpecId,
@@ -8517,17 +8076,29 @@ async function collectResourcePayloads(packSpec, manifest, resourceSpecById) {
 			`${packSpec.packageName} source-backed transform did not produce ${resource.id}.`,
 		);
 		expect(
-			payload.path === resource.path,
+			payload.declaredPath === resource.path,
 			`${packSpec.packageName} resource ${resource.id} path mismatch.`,
 		);
+		resource.path = payload.path;
 		payloads.push(payload);
 	}
 	return payloads;
 }
 
-function encodedResourceText(output) {
-	if (!output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)) return output.text;
-	return `${gzipSync(Buffer.from(output.text, "utf8")).toString("base64")}\n`;
+function encodedResourceOutput(output) {
+	const compress =
+		output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX) ||
+		Buffer.byteLength(output.text, "utf8") >= AUTO_COMPRESS_RESOURCE_BYTES;
+	if (!compress) {
+		return { path: output.path, text: output.text, encoding: "utf8" };
+	}
+	return {
+		path: output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)
+			? output.path
+			: `${output.path}${GZIP_BASE64_RESOURCE_SUFFIX}`,
+		text: `${gzipSync(Buffer.from(output.text, "utf8")).toString("base64")}\n`,
+		encoding: "gzip-base64",
+	};
 }
 
 function resourceStats(payloads) {
@@ -8582,32 +8153,227 @@ function capabilities(manifest) {
 	return output;
 }
 
+const capabilityStatusOrder = [
+	"not-applicable",
+	"unsupported",
+	"planned",
+	"profiled",
+	"sampled",
+	"artifact-backed",
+	"task-supported",
+	"feature-complete",
+];
+
+function uniqueValues(values) {
+	return [...new Set(values)];
+}
+
+function mergeDistributionCapabilities(values) {
+	const output = {};
+	for (const value of values) {
+		for (const [key, item] of Object.entries(value ?? {})) {
+			if (typeof item === "boolean") {
+				output[key] = Boolean(output[key]) || item;
+				continue;
+			}
+			const existing = output[key];
+			if (typeof existing !== "string") {
+				output[key] = item;
+				continue;
+			}
+			expect(
+				existing === item,
+				`Cannot merge conflicting ${key} capability values ${existing} and ${item} within one slot.`,
+			);
+		}
+	}
+	return output;
+}
+
+function distributionBindingKey(binding) {
+	return [
+		binding.ownerPackage,
+		binding.role,
+		binding.resourceId,
+		binding.schemaId,
+		binding.required === true ? "required" : "optional",
+	].join("\u0000");
+}
+
+function mergeDistributionCapabilitySlots(manifests) {
+	const ranks = new Map(
+		capabilityStatusOrder.map((status, index) => [status, index]),
+	);
+	const slots = new Map();
+	for (const manifest of manifests) {
+		for (const slot of manifest.capabilitySlots) {
+			const existing = slots.get(slot.slot);
+			if (existing === undefined) {
+				slots.set(slot.slot, cloneJson(slot));
+				continue;
+			}
+			const bindings = new Map(
+				[...(existing.bindings ?? []), ...(slot.bindings ?? [])].map(
+					(binding) => [distributionBindingKey(binding), binding],
+				),
+			);
+			const capabilities = mergeDistributionCapabilities([
+				existing.capabilities,
+				slot.capabilities,
+			]);
+			const existingRank = ranks.get(existing.status) ?? 0;
+			const nextRank = ranks.get(slot.status) ?? 0;
+			const resourceIds = uniqueValues([
+				...(existing.resourceIds ?? []),
+				...(slot.resourceIds ?? []),
+			]);
+			const artifactIds = uniqueValues([
+				...(existing.artifactIds ?? []),
+				...(slot.artifactIds ?? []),
+			]);
+			const prerequisites = uniqueValues([
+				...(existing.prerequisites ?? []),
+				...(slot.prerequisites ?? []),
+			]);
+			const notes = uniqueValues([
+				...(existing.notes ?? []),
+				...(slot.notes ?? []),
+			]);
+			slots.set(slot.slot, {
+				slot: slot.slot,
+				status: nextRank > existingRank ? slot.status : existing.status,
+				...(resourceIds.length === 0 ? {} : { resourceIds }),
+				...(artifactIds.length === 0 ? {} : { artifactIds }),
+				...(bindings.size === 0
+					? {}
+					: {
+							bindings: [...bindings.values()].sort((left, right) =>
+								distributionBindingKey(left).localeCompare(
+									distributionBindingKey(right),
+								),
+							),
+						}),
+				...(prerequisites.length === 0 ? {} : { prerequisites }),
+				...(existing.readerRequired === true || slot.readerRequired === true
+					? { readerRequired: true }
+					: {}),
+				...(notes.length === 0 ? {} : { notes }),
+				...(Object.keys(capabilities).length === 0 ? {} : { capabilities }),
+			});
+		}
+	}
+	return [...slots.values()].sort((left, right) =>
+		left.slot.localeCompare(right.slot),
+	);
+}
+
+function flattenDistributionPack(pack, packageByName) {
+	const componentPacks = pack.components
+		.filter((component) => component.role === "required")
+		.map((component) => packageByName.get(component.packageName));
+	expect(
+		componentPacks.every((component) => component !== undefined),
+		`${pack.packageName} has a missing distribution input.`,
+	);
+	expect(
+		componentPacks.every((component) => !isCompositePack(component)),
+		`${pack.packageName} distribution inputs must be concrete build units.`,
+	);
+	const resources = new Map();
+	const payloads = new Map();
+	const artifacts = new Map();
+	const gapNotes = new Map();
+	for (const note of pack.manifest.gapNotes ?? []) {
+		gapNotes.set(note.id, note);
+	}
+	const materialized = componentPacks.some(
+		(component) => component.payloads.length > 0,
+	);
+	for (const component of componentPacks) {
+		for (const resource of component.manifest.resources) {
+			expect(
+				!resources.has(resource.id),
+				`${pack.packageName} distribution inputs duplicate resource ${resource.id}.`,
+			);
+			resources.set(resource.id, resource);
+		}
+		for (const payload of component.payloads) {
+			expect(
+				!payloads.has(payload.id),
+				`${pack.packageName} distribution inputs duplicate payload ${payload.id}.`,
+			);
+			payloads.set(payload.id, payload);
+		}
+		for (const artifact of component.manifest.artifacts ?? []) {
+			const existing = artifacts.get(artifact.artifactId);
+			expect(
+				existing === undefined || stableJson(existing) === stableJson(artifact),
+				`${pack.packageName} distribution inputs conflict on artifact ${artifact.artifactId}.`,
+			);
+			artifacts.set(artifact.artifactId, artifact);
+		}
+		for (const note of component.manifest.gapNotes ?? []) {
+			gapNotes.set(note.id, note);
+		}
+	}
+	if (materialized) {
+		expect(
+			resources.size === payloads.size,
+			`${pack.packageName} flattened resource and payload counts differ.`,
+		);
+	}
+	const manifest = cloneJson(pack.manifest);
+	delete manifest.components;
+	manifest.resources = [...resources.values()];
+	manifest.capabilitySlots = mergeDistributionCapabilitySlots([
+		pack.manifest,
+		...componentPacks.map((component) => component.manifest),
+	]);
+	if (artifacts.size > 0) manifest.artifacts = [...artifacts.values()];
+	else delete manifest.artifacts;
+	if (gapNotes.size > 0) manifest.gapNotes = [...gapNotes.values()];
+	else delete manifest.gapNotes;
+	manifest.citations = uniqueValues([
+		...(pack.manifest.citations ?? []),
+		...componentPacks.flatMap(
+			(component) => component.manifest.citations ?? [],
+		),
+		...[...resources.values()].flatMap((resource) => resource.citations ?? []),
+	]);
+	pack.distribution = true;
+	pack.manifest = manifest;
+	pack.payloads = [...payloads.values()];
+	pack.resourceStats = resourceStats(pack.payloads);
+	pack.npmShippedSizeBytes = pack.resourceStats.reduce(
+		(total, resource) => total + resource.byteLength,
+		0,
+	);
+	pack.capabilitySlots = capabilitySlots(manifest);
+	pack.resourceSpecIds = uniqueValues(
+		componentPacks.flatMap((component) => component.resourceSpecIds),
+	);
+	return pack;
+}
+
+function isDistributionPack(pack) {
+	return pack.distribution === true;
+}
+
 function knownGaps(packSpec, manifest) {
 	const gaps = [];
 	if (packSpec.packClass === "language-composite") {
-		const hasRequiredLanguageSlots = languageCompositeRequiredSlots.every(
+		const hasRequiredLanguageSlots = languageDistributionRequiredSlots.every(
 			(slot) =>
 				manifest.capabilitySlots.some(
 					(candidate) =>
 						candidate.slot === slot && candidate.status === "task-supported",
 				),
 		);
-		if (
-			packSpec.supportLevel !== "feature-complete" ||
-			!hasRequiredLanguageSlots
-		) {
+		if (!hasRequiredLanguageSlots) {
 			gaps.push(
-				"generated language recipe composite has incomplete required task-supported slot coverage",
+				"generated language distribution has incomplete ordinary task-supported slot coverage",
 			);
 		}
-	} else if (packSpec.packClass === "language-component-composite") {
-		gaps.push(
-			"generated language component recipe composite; broader language composite coverage remains follow-up",
-		);
-	} else if (packSpec.packClass === "foundation-composite") {
-		gaps.push(
-			"source-backed foundation composite; downstream engine integration is follow-up",
-		);
 	} else if (
 		packSpec.generationMode === "source-backed" &&
 		packSpec.packClass === "language-concrete"
@@ -8670,119 +8436,13 @@ export default pack;
 `;
 }
 
-function packTs(pack) {
-	if (isCompositePack(pack)) return compositePackTs(pack);
+function packTs() {
 	return `${generatedHeader()}import { createPack } from "@ismail-elkorchi/textpack";
 
 import { manifest } from "./manifest.js";
 import { resources } from "./resources.js";
 
 export const pack = createPack(manifest, resources);
-`;
-}
-
-function componentImportIdentifier(index) {
-	return `componentPack${index}`;
-}
-
-function compositePackTs(pack) {
-	const requiredComponents = pack.components.filter(
-		(component) => component.role === "required",
-	);
-	const componentImports = requiredComponents
-		.map((component, index) => ({
-			component,
-			line: `import ${componentImportIdentifier(index)} from ${JSON.stringify(component.packageName)};`,
-		}))
-		.sort((left, right) =>
-			left.component.packageName.localeCompare(right.component.packageName),
-		)
-		.map((entry) => entry.line)
-		.join("\n");
-	const componentArrayInline = `[basePack${requiredComponents
-		.map((_, index) => `, ${componentImportIdentifier(index)}`)
-		.join("")}]`;
-	const componentArray =
-		componentArrayInline.length <= 80
-			? componentArrayInline
-			: `[
-\t\tbasePack,
-${requiredComponents
-	.map((_, index) => `\t\t${componentImportIdentifier(index)},`)
-	.join("\n")}
-\t]`;
-	const composePackStatement =
-		`const composedPack = composePacks(${componentArrayInline}, composeOptions);`
-			.length <= 80
-			? `const composedPack = composePacks(${componentArrayInline}, composeOptions);`
-			: `const composedPack = composePacks(
-\t${componentArray},
-\tcomposeOptions,
-);`;
-	const conflictPolicy = [
-		"language-composite",
-		"language-component-composite",
-		"foundation-composite",
-	].includes(pack.packClass)
-		? "first"
-		: "error";
-	const importBlock =
-		componentImports.length === 0 ? "" : `\n${componentImports}\n`;
-	return `${generatedHeader()}import {
-\tcomposePacks,
-\tcreatePack,
-\ttype PackComposeOptions,
-} from "@ismail-elkorchi/textpack";${importBlock}
-import { manifest } from "./manifest.js";
-import { resources } from "./resources.js";
-
-const basePack = createPack(manifest, resources);
-const composeOptions: PackComposeOptions = {
-\tid: manifest.id,
-\tname: manifest.name,
-\tversion: manifest.version,
-\tpackageName: manifest.packageName,
-\tconflictPolicy: ${JSON.stringify(conflictPolicy)},
-\t...(manifest.license === undefined ? {} : { license: manifest.license }),
-\t...(manifest.citations === undefined
-\t\t? {}
-\t\t: { citations: manifest.citations }),
-};
-${composePackStatement}
-const composedManifest = {
-\t...composedPack.manifest,
-\t...(manifest.components === undefined
-\t\t? {}
-\t\t: { components: manifest.components }),
-};
-
-export const pack = createPack(composedManifest, composedPack.resources);
-`;
-}
-
-function compositeIndexTs(pack) {
-	const languageSupportExports =
-		pack.languageSupport === true
-			? `export type {
-\tTextPackLanguageSupportEntry,
-\tTextPackLanguageSupportLevel,
-} from "./language-support.js";
-export {
-\tgetLanguageSupport,
-\thasLanguageSupport,
-\tlanguageSupport,
-\tlistLanguageSupport,
-\tlistLanguagesBySupportLevel,
-} from "./language-support.js";
-`
-			: "";
-	return `${generatedHeader()}${languageSupportExports}export { manifest } from "./manifest.js";
-export { pack } from "./pack.js";
-export { resources } from "./resources.js";
-
-import { pack } from "./pack.js";
-
-export default pack;
 `;
 }
 
@@ -8957,29 +8617,6 @@ function publishabilityFor(spec, manifest, context) {
 	) {
 		reasons.push("demo packs are validation outputs");
 	}
-	if (
-		requested &&
-		spec.packClass === "language-composite" &&
-		spec.supportLevel !== "feature-complete"
-	) {
-		reasons.push(
-			"language composites require feature-complete support before public developer use",
-		);
-	}
-	if (
-		requested &&
-		spec.packClass === "language-component-composite" &&
-		sourceIds.length > 0 &&
-		sourceIds.every((sourceId) => foundationSourceIds.has(sourceId))
-	) {
-		for (const slot of manifest.capabilitySlots ?? []) {
-			if (!foundationOnlyAllowedSlots.has(slot.slot)) {
-				reasons.push(
-					`foundation-only component composites cannot publish ${slot.slot} capability slots`,
-				);
-			}
-		}
-	}
 	for (const slot of manifest.capabilitySlots ?? []) {
 		if (slot.status === "sampled") {
 			reasons.push(`capability slot ${slot.slot} is sampled`);
@@ -9046,59 +8683,6 @@ Status: \`${pack.publishability.status}\`
 
 ${reasons}
 `;
-}
-
-function compositePackageJson(pack) {
-	const dependencies = {
-		"@ismail-elkorchi/textpack": "0.1.0",
-	};
-	for (const component of pack.components) {
-		if (component.role === "required") {
-			dependencies[component.packageName] = component.versionRange;
-		}
-	}
-	const packageJson = {
-		name: pack.packageName,
-		version: pack.packageVersion,
-		description: pack.description,
-		type: "module",
-		sideEffects: false,
-		exports: {
-			".": {
-				types: "./dist/index.d.ts",
-				import: "./dist/index.js",
-			},
-			"./pack.manifest.json": "./pack.manifest.json",
-		},
-		scripts: {
-			...PACKAGE_SCRIPTS,
-			"test:all": [
-				"npm run -s build",
-				"node test/smoke.mjs",
-				"node test/negative.mjs",
-				"npm run -s check:pack",
-			].join(" && "),
-		},
-		dependencies,
-		license: packageJsonLicenseField(pack),
-		files: [
-			"dist",
-			"pack.manifest.json",
-			".textpack-generated.json",
-			...(pack.licenseEvidenceFiles.length === 0 ? [] : ["licenses"]),
-			"LICENSE.generated.md",
-			"NOTICE.generated.md",
-			"SOURCES.generated.json",
-			"ATTRIBUTION.generated.md",
-			"COVERAGE.generated.json",
-			"EVALUATION.generated.json",
-			"QUALITY.generated.json",
-			"README.md",
-			"CHANGELOG.md",
-		],
-		...packagePublishFields(pack),
-	};
-	return jsonFile(packageJson);
 }
 
 function concretePackageJson(pack) {
@@ -9175,71 +8759,6 @@ function tsconfigBuildJson() {
 `;
 }
 
-function compositeReadme(pack) {
-	const required = pack.components
-		.filter((component) => component.role === "required")
-		.map((component) => `- \`${component.packageName}\``)
-		.join("\n");
-	const optional =
-		pack.components
-			.filter((component) => component.role === "optional")
-			.map((component) => `- \`${component.packageName}\``)
-			.join("\n") || "- None";
-	const supportApi =
-		pack.languageSupport === true
-			? `
-## Language Support API
-
-\`\`\`ts
-import { getLanguageSupport, hasLanguageSupport } from "${pack.packageName}";
-\`\`\`
-`
-			: "";
-	const policySurface =
-		pack.policySurface === "policy-expanded-wrapper"
-			? `
-## Policy Surface
-
-This package is a policy-expanded wrapper. It contains no direct resource payloads, but it requires isolated component packages with non-default license policy. The manifest dependency graph and generated reports preserve the component package names, license policies, and full license expression.
-`
-			: "";
-	return `# ${pack.packageName}
-
-Generated ${pack.display.languageName} recipe composite textpack.
-
-This package is a generated data package. It exports structural textpack data only.
-Use \`@ismail-elkorchi/text-computing\` for developer-facing NLP task APIs.
-
-\`\`\`ts
-import pack, { manifest, resources } from "${pack.packageName}";
-
-console.log(manifest.packageName);
-console.log(Object.keys(resources).length);
-console.log(pack.manifest.resources.length);
-\`\`\`
-
-## Required Components
-
-${required}
-
-## Optional Components
-
-${optional}
-${policySurface}
-${supportApi}
-${publishabilityMarkdown(pack)}
-`;
-}
-
-function compositeChangelog(pack) {
-	return `# ${pack.packageName}
-
-## 0.1.0
-
-- Generated ${pack.generationMode} recipe composite package.
-`;
-}
-
 function concreteReadme(pack) {
 	const resources = pack.manifest.resources
 		.map(
@@ -9247,13 +8766,17 @@ function concreteReadme(pack) {
 				`- \`${resource.id}\` (${resource.kind}, ${resource.format})`,
 		)
 		.join("\n");
+	const summary = isDistributionPack(pack)
+		? `Generated self-contained ${pack.display.languageName} language textpack.`
+		: `Generated ${pack.packClass} textpack.`;
 	return `# ${pack.packageName}
 
-Generated ${pack.packClass} textpack.
+${summary}
 
 This package is a generated data package. It exports structural textpack data only.
 Use \`@ismail-elkorchi/text-computing\` for developer-facing NLP task APIs.
 It is generated from pinned source snapshots by \`${GENERATED_BY}\`.
+${isDistributionPack(pack) ? "All resources are included directly; installing this package does not install component textpacks.\n" : ""}
 
 \`\`\`ts
 import pack, { manifest, resources } from "${pack.packageName}";
@@ -9276,13 +8799,13 @@ function concreteChangelog(pack) {
 
 ## 0.1.0
 
-- Generated source-backed foundation package.
+- Generated ${isDistributionPack(pack) ? "self-contained language distribution" : "source-backed data package"}.
 `;
 }
 
 function concreteSmokeTest(pack) {
 	return `import assert from "node:assert/strict";
-import { manifest, resources } from "../dist/index.js";
+import pack, { manifest, resources } from "../dist/index.js";
 
 const packageName = ${JSON.stringify(pack.packageName)};
 
@@ -9290,6 +8813,8 @@ assert.equal(manifest.packageName, packageName);
 assert.equal(typeof resources, "object");
 assert.equal(Object.keys(resources).length, manifest.resources.length);
 assert.ok(manifest.resources.length > 0);
+assert.deepEqual(pack.manifest, manifest);
+assert.deepEqual(pack.resources, resources);
 
 for (const resource of manifest.resources) {
 \tconst value = resources[resource.id];
@@ -9304,263 +8829,12 @@ for (const resource of manifest.resources) {
 `;
 }
 
-function compositeSmokeTest(pack) {
-	return `import assert from "node:assert/strict";
-import pack, { manifest, resources } from "../dist/index.js";
-
-const packageName = ${JSON.stringify(pack.packageName)};
-
-assert.equal(manifest.packageName, packageName);
-assert.equal(pack.manifest.packageName, packageName);
-assert.equal(pack, (await import("../dist/index.js")).pack);
-assert.equal(typeof resources, "object");
-assert.equal(Object.keys(resources).length, manifest.resources.length);
-assert.ok(pack.manifest.resources.length >= manifest.resources.length);
-assert.ok(Object.keys(pack.resources).length >= Object.keys(resources).length);
-
-for (const resource of manifest.resources) {
-\tassert.ok(resource.id in resources);
-\tassert.ok(resource.id in pack.resources);
-}
-
-const requiredComponents =
-\tmanifest.components?.filter((component) => component.role === "required") ??
-\t[];
-assert.equal(requiredComponents.length, ${pack.components.filter((component) => component.role === "required").length});
-`;
-}
-
-function compositeNegativeTest(_pack) {
-	return `import assert from "node:assert/strict";
-import * as mod from "../dist/index.js";
-
-for (const exportName of [
-\t"loadArabic",
-\t"loadEnglish",
-\t"loadFrench",
-\t"createLanguageRuntime",
-\t"analyzeText",
-]) {
-\tassert.equal(
-\t\texportName in mod,
-\t\tfalse,
-\t\t\`generated textpacks must not export \${exportName}\`,
-\t);
-}
-
-assert.equal(typeof mod.resources, "object");
-assert.equal(typeof mod.pack, "object");
-assert.equal(mod.default, mod.pack);
-`;
-}
-
-function languageSupportTs(entries) {
-	const levelCodes = {
-		registered: "r",
-		"unicode-covered": "u",
-		profiled: "p",
-		"task-supported": "t",
-	};
-	const foundationPacks = [
-		"@ismail-elkorchi/textpack-foundation",
-		"@ismail-elkorchi/textpack-language-registry",
-		"@ismail-elkorchi/textpack-unicode-17",
-		"@ismail-elkorchi/textpack-cldr-core",
-	];
-	const foundationSourceCoverage = [
-		"source:iana:language-subtag-registry",
-		"source:unicode:ucd",
-		"source:unicode:cldr-core",
-	];
-	const compactRows = entries.map((entry) => [
-		entry.languageTag,
-		entry.languageName,
-		entry.scripts.join(" "),
-		entry.regions.join(" "),
-		entry.supportLevels.map((level) => levelCodes[level]).join(""),
-		entry.packs.filter((pack) => !foundationPacks.includes(pack)).join(" "),
-		entry.capabilitySlots.join(" "),
-		entry.sourceCoverage
-			.filter((sourceId) => !foundationSourceCoverage.includes(sourceId))
-			.join(" "),
-		entry.knownGaps.join(" | "),
-	]);
-	return `${generatedHeader()}export type TextPackLanguageSupportLevel =
-\t| "registered"
-\t| "unicode-covered"
-\t| "profiled"
-\t| "task-supported";
-
-export interface TextPackLanguageSupportEntry {
-\treadonly languageTag: string;
-\treadonly languageName: string;
-\treadonly scripts: readonly string[];
-\treadonly regions: readonly string[];
-\treadonly supportLevels: readonly TextPackLanguageSupportLevel[];
-\treadonly packs: readonly string[];
-\treadonly capabilitySlots: readonly string[];
-\treadonly sourceCoverage: readonly string[];
-\treadonly lastBuiltAt: string;
-\treadonly knownGaps: readonly string[];
-}
-
-type LanguageSupportRow = readonly [
-\tlanguageTag: string,
-\tlanguageName: string,
-\tscripts: string,
-\tregions: string,
-\tsupportLevels: string,
-\ttaskPacks: string,
-\tcapabilitySlots: string,
-\ttaskSourceCoverage: string,
-\tknownGaps: string,
-];
-
-const lastBuiltAt = ${JSON.stringify(entries[0]?.lastBuiltAt ?? "")};
-
-const foundationPacks = [
-\t"@ismail-elkorchi/textpack-foundation",
-\t"@ismail-elkorchi/textpack-language-registry",
-] as const;
-
-const unicodeCoveredPacks = ["@ismail-elkorchi/textpack-unicode-17"] as const;
-const profiledPacks = ["@ismail-elkorchi/textpack-cldr-core"] as const;
-
-const foundationSourceCoverage = [
-\t"source:iana:language-subtag-registry",
-] as const;
-
-const unicodeCoveredSourceCoverage = ["source:unicode:ucd"] as const;
-const profiledSourceCoverage = ["source:unicode:cldr-core"] as const;
-
-// biome-ignore format: generated compact rows preserve deterministic source ordering.
-const languageSupportRows: readonly LanguageSupportRow[] = ${JSON.stringify(compactRows)} as const;
-
-const supportRank = new Map<TextPackLanguageSupportLevel, number>([
-\t["registered", 0],
-\t["unicode-covered", 1],
-\t["profiled", 2],
-\t["task-supported", 3],
-]);
-
-function uniqueSortedStrings(values: readonly string[]): readonly string[] {
-\treturn [...new Set(values)].sort((left, right) => left.localeCompare(right));
-}
-
-function splitCell(value: string): readonly string[] {
-\treturn value.length === 0 ? [] : value.split(" ");
-}
-
-function splitGapCell(value: string): readonly string[] {
-\treturn value.length === 0 ? [] : value.split(" | ");
-}
-
-function decodeSupportLevel(code: string): TextPackLanguageSupportLevel {
-\tswitch (code) {
-\t\tcase "r":
-\t\t\treturn "registered";
-\t\tcase "u":
-\t\t\treturn "unicode-covered";
-\t\tcase "p":
-\t\t\treturn "profiled";
-\t\tcase "t":
-\t\t\treturn "task-supported";
-\t\tdefault:
-\t\t\tthrow new TypeError(\`Unsupported language-support level code \${code}.\`);
-\t}
-}
-
-function decodeSupportLevels(
-\tcodes: string,
-): readonly TextPackLanguageSupportLevel[] {
-\treturn [...codes].map((code) => decodeSupportLevel(code));
-}
-
-function decodeLanguageSupportRow(
-\trow: LanguageSupportRow,
-): TextPackLanguageSupportEntry {
-\tconst supportLevels = decodeSupportLevels(row[4]);
-\tconst hasUnicodeCoverage = supportLevels.includes("unicode-covered");
-\tconst hasProfileCoverage = supportLevels.includes("profiled");
-\treturn {
-\t\tlanguageTag: row[0],
-\t\tlanguageName: row[1],
-\t\tscripts: splitCell(row[2]),
-\t\tregions: splitCell(row[3]),
-\t\tsupportLevels,
-\t\tpacks: uniqueSortedStrings([
-\t\t\t...foundationPacks,
-\t\t\t...(hasUnicodeCoverage ? unicodeCoveredPacks : []),
-\t\t\t...(hasProfileCoverage ? profiledPacks : []),
-\t\t\t...splitCell(row[5]),
-\t\t]),
-\t\tcapabilitySlots: splitCell(row[6]),
-\t\tsourceCoverage: uniqueSortedStrings([
-\t\t\t...foundationSourceCoverage,
-\t\t\t...(hasUnicodeCoverage ? unicodeCoveredSourceCoverage : []),
-\t\t\t...(hasProfileCoverage ? profiledSourceCoverage : []),
-\t\t\t...splitCell(row[7]),
-\t\t]),
-\t\tlastBuiltAt,
-\t\tknownGaps: splitGapCell(row[8]),
-\t};
-}
-
-export const languageSupport: readonly TextPackLanguageSupportEntry[] =
-\tlanguageSupportRows.map((row) => decodeLanguageSupportRow(row));
-
-const supportByTag = new Map(
-\tlanguageSupport.map((entry) => [entry.languageTag.toLowerCase(), entry]),
-);
-
-function normalizeLanguageTag(languageTag: string): string {
-\treturn (
-\t\tlanguageTag.trim().replace(/_/gu, "-").split("-")[0]?.toLowerCase() ?? ""
-\t);
-}
-
-export function listLanguageSupport(): readonly TextPackLanguageSupportEntry[] {
-\treturn languageSupport;
-}
-
-export function getLanguageSupport(
-\tlanguageTag: string,
-): TextPackLanguageSupportEntry | undefined {
-\treturn supportByTag.get(normalizeLanguageTag(languageTag));
-}
-
-export function hasLanguageSupport(
-\tlanguageTag: string,
-\tlevel: TextPackLanguageSupportLevel = "registered",
-): boolean {
-\tconst entry = getLanguageSupport(languageTag);
-\tif (entry === undefined) return false;
-\tconst requiredRank = supportRank.get(level) ?? Number.MAX_SAFE_INTEGER;
-\treturn entry.supportLevels.some(
-\t\t(candidate) =>
-\t\t\t(supportRank.get(candidate) ?? Number.MIN_SAFE_INTEGER) >= requiredRank,
-\t);
-}
-
-export function listLanguagesBySupportLevel(
-\tlevel: TextPackLanguageSupportLevel,
-): readonly TextPackLanguageSupportEntry[] {
-\treturn languageSupport.filter((entry) =>
-\t\thasLanguageSupport(entry.languageTag, level),
-\t);
-}
-`;
-}
-
 function noticeMarkdown(pack, context) {
-	const packageDescription =
-		pack.packClass === "language-composite"
-			? "This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through structural pack composition."
-			: pack.packClass === "language-component-composite"
-				? "This package is a source-backed component recipe composite. It contains no original resource payloads; it resolves declared production component textpacks through structural pack composition."
-				: pack.packClass === "foundation-composite"
-					? "This package is a source-backed recipe composite. It contains no original resource payloads; it resolves declared foundation component textpacks through structural pack composition and exposes the generated language-support API."
-					: "This package is source-backed. Its resource payloads are deterministic transform outputs from pinned local source snapshots. The normal forge build is offline and verifies input checksums before emitting package files.";
+	const packageDescription = isDistributionPack(pack)
+		? "This package is a self-contained language distribution. Its audited resource payloads are generated from pinned local source snapshots and shipped directly in this package; no component textpacks are installed."
+		: pack.packClass === "language-composite"
+			? "This is an internal source-backed composition recipe over selected build units. It is not a public textpack distribution."
+			: "This package is source-backed. Its resource payloads are deterministic transform outputs from pinned local source snapshots. The normal forge build is offline and verifies input checksums before emitting package files.";
 	return `# NOTICE
 
 Generated by \`${GENERATED_BY}\`.
@@ -9757,21 +9031,37 @@ function sourcesReportFor(pack, context) {
 		sources,
 		sourcePolicies,
 		snapshots,
-		components: pack.components ?? [],
-		resources: pack.resourceStats.map((resource) => ({
-			id: resource.id,
-			kind: resource.kind,
-			path: resource.path,
-			...(resource.resourceSpecId === undefined
-				? {}
-				: {
-						resourceSpecId: resource.resourceSpecId,
-						pipelineId: resource.pipelineId,
-						pipelineVersion: resource.pipelineVersion,
-					}),
-			checksum: resource.checksum,
-			byteLength: resource.byteLength,
-		})),
+		buildUnits: pack.buildUnits ?? [],
+		resources: pack.resourceStats.map((resource) => {
+			const resourceSpec = context.resourceSpecById.get(
+				resource.resourceSpecId,
+			);
+			const descriptor = pack.manifest.resources.find(
+				(candidate) => candidate.id === resource.id,
+			);
+			return {
+				id: resource.id,
+				kind: resource.kind,
+				path: resource.path,
+				...(resource.resourceSpecId === undefined
+					? {}
+					: {
+							resourceSpecId: resource.resourceSpecId,
+							pipelineId: resource.pipelineId,
+							pipelineVersion: resource.pipelineVersion,
+						}),
+				sourceIds: resourceSpec?.sourceIds ?? [],
+				snapshotIds: resourceSpec?.snapshotIds ?? [],
+				...(descriptor?.license === undefined
+					? {}
+					: { license: descriptor.license }),
+				...(descriptor?.citations === undefined
+					? {}
+					: { citations: descriptor.citations }),
+				checksum: resource.checksum,
+				byteLength: resource.byteLength,
+			};
+		}),
 	};
 }
 
@@ -10036,98 +9326,6 @@ function cldrFoundationEvaluationRecords(pack) {
 	];
 }
 
-function foundationCompositeEvaluationRecords(pack) {
-	const requiredComponents = (pack.components ?? []).filter(
-		(component) => component.role === "required",
-	);
-	return [
-		evaluationRecord(pack, {
-			recordId: "eval:textpack-foundation:required-component-graph",
-			resourceSpecId: pack.specPath ?? resourceSpecIdFor(pack),
-			pipelineId: "foundation-composite",
-			capabilitySlot: "language-registry",
-			taskType: "composite.required-component-graph",
-			evaluationKind: "resource-conformance",
-			resourceIds: [],
-			metricName: "requiredComponentCount",
-			value: requiredComponents.length,
-			unit: "components",
-			operator: "eq",
-			threshold: 3,
-			observations: {
-				requiredComponents: requiredComponents.map(
-					(component) => component.packageName,
-				),
-				capabilitySlots: (pack.capabilitySlots ?? []).map((slot) => slot.slot),
-			},
-		}),
-	];
-}
-
-function componentCompositeEvaluationRecords(pack) {
-	const requiredComponents = (pack.components ?? []).filter(
-		(component) => component.role === "required",
-	);
-	const primarySlot =
-		pack.capabilitySlots.find((slot) => slot.slot !== "quality")?.slot ??
-		pack.capabilitySlots[0]?.slot ??
-		"composite";
-	return [
-		evaluationRecord(pack, {
-			recordId: `eval:${pack.packageId}:required-component-graph`,
-			resourceSpecId: pack.specPath ?? resourceSpecIdFor(pack),
-			pipelineId: "component-composite",
-			capabilitySlot: primarySlot,
-			taskType: "composite.required-component-graph",
-			evaluationKind: "resource-conformance",
-			resourceIds: [],
-			metricName: "requiredComponentCount",
-			value: requiredComponents.length,
-			unit: "components",
-			operator: "eq",
-			threshold: requiredComponents.length,
-			observations: {
-				requiredComponents: requiredComponents.map(
-					(component) => component.packageName,
-				),
-				capabilitySlots: (pack.capabilitySlots ?? []).map((slot) => slot.slot),
-			},
-		}),
-	];
-}
-
-function languageCompositeEvaluationRecords(pack) {
-	const requiredComponents = (pack.components ?? []).filter(
-		(component) => component.role === "required",
-	);
-	return (pack.capabilitySlots ?? []).map((slot) =>
-		evaluationRecord(pack, {
-			recordId: `eval:${pack.packageId}:${slot.slot}-component-evidence`,
-			resourceSpecId: pack.specPath ?? resourceSpecIdFor(pack),
-			pipelineId: "language-composite",
-			capabilitySlot: slot.slot,
-			taskType: `composite.${slot.slot}.component-evidence`,
-			evaluationKind: "resource-conformance",
-			resourceIds: [],
-			metricName: `${slot.slot}RequiredComponentGraphPresent`,
-			value: Number(slot.status === "task-supported"),
-			unit: "boolean",
-			operator: "eq",
-			threshold: 1,
-			observations: {
-				requiredComponents: requiredComponents.map(
-					(component) => component.packageName,
-				),
-				slotNotes: slot.notes ?? [],
-				policySurface: pack.policySurface ?? "default",
-			},
-			limitations: [
-				"Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs.",
-			],
-		}),
-	);
-}
-
 function camelMorphEvaluationRecords(pack) {
 	const quality = payloadJson(pack, "ar-msa-camel-morph-quality");
 	const resourceSpecId = resourceSpecIdFor(pack);
@@ -10172,11 +9370,28 @@ function camelMorphEvaluationRecords(pack) {
 			},
 		}),
 		evaluationRecord(pack, {
-			recordId: "eval:ar-msa-camel-morph:tokenization-fields",
+			recordId: "eval:ar-msa-camel-morph:segmentation-profile",
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "segmentation",
-			taskType: "segmentation.dictionary-profile",
+			taskType: "segmentation.unicode-profile",
+			evaluationKind: "resource-conformance",
+			resourceIds: ["ar-msa-camel-segmentation-canonical"],
+			metricName: "segmentationProfilePresent",
+			value: 1,
+			unit: "boolean",
+			operator: "eq",
+			threshold: 1,
+			limitations: [
+				"The built-in adapter executes Unicode lexical segmentation. CAMeL tokenization fields are separate morphology reference data, not an executed dictionary segmenter.",
+			],
+		}),
+		evaluationRecord(pack, {
+			recordId: "eval:ar-msa-camel-morph:tokenization-fields",
+			resourceSpecId,
+			pipelineId,
+			capabilitySlot: "morphology",
+			taskType: "morphology.tokenization-scheme-data",
 			evaluationKind: "resource-conformance",
 			resourceIds: ["ar-msa-camel-morph-tokenizations"],
 			metricName: "tokenizationFieldCount",
@@ -10185,7 +9400,7 @@ function camelMorphEvaluationRecords(pack) {
 			operator: "gte",
 			threshold: 1,
 			limitations: [
-				"This verifies CAMeL Morph tokenization scheme coverage, not end-to-end clitic segmentation accuracy.",
+				"This verifies CAMeL Morph tokenization-field inventory only; the built-in segmentation adapter does not execute it as a dictionary or clitic segmenter.",
 			],
 		}),
 		evaluationRecord(pack, {
@@ -10434,7 +9649,7 @@ function esdbWordlistEvaluationRecords(pack) {
 			operator: "eq",
 			threshold: 1,
 			limitations: [
-				"The search profile declares analyzer resources and wordlist membership hooks; it is not a full search index.",
+				"The executable search profile performs Unicode word tokenization and casefolding. ESDB wordlists are separate lexicon data for explicit spelling/suggestion consumers, not an implicit analyzer filter.",
 			],
 		}),
 		evaluationRecord(pack, {
@@ -11134,8 +10349,8 @@ function frenchSegmentationEvaluationRecords(pack) {
 			recordId: "eval:fr-segmentation:observed-contraction-token-policy",
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "segmentation",
-			taskType: "segmentation.contraction-surface-policy",
+			capabilitySlot: "quality",
+			taskType: "quality.segmentation-contraction-reference-data",
 			evaluationKind: "coverage",
 			resourceIds: [
 				"fr-token-segmentation-profile",
@@ -11146,13 +10361,16 @@ function frenchSegmentationEvaluationRecords(pack) {
 			unit: "forms",
 			operator: "eq",
 			threshold: 4,
+			limitations: [
+				"These observed contraction surfaces are reference evidence; the built-in adapter does not execute them as contraction rules.",
+			],
 		}),
 		evaluationRecord(pack, {
 			recordId: "eval:fr-segmentation:observed-abbreviation-policy",
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "segmentation",
-			taskType: "segmentation.abbreviation-period-policy",
+			capabilitySlot: "quality",
+			taskType: "quality.segmentation-abbreviation-reference-data",
 			evaluationKind: "coverage",
 			resourceIds: [
 				"fr-token-segmentation-profile",
@@ -11164,15 +10382,15 @@ function frenchSegmentationEvaluationRecords(pack) {
 			operator: "gte",
 			threshold: 1,
 			limitations: [
-				"Abbreviation rows are high-frequency period-bearing candidates observed in Tatoeba; domain-specific abbreviations belong in domain packs.",
+				"Abbreviation rows are reference candidates observed in Tatoeba; the built-in adapter delegates sentence boundaries to Intl.Segmenter and does not execute this table.",
 			],
 		}),
 		evaluationRecord(pack, {
 			recordId: "eval:fr-segmentation:gold-cases",
 			resourceSpecId,
 			pipelineId,
-			capabilitySlot: "segmentation",
-			taskType: "segmentation.gold-cases",
+			capabilitySlot: "quality",
+			taskType: "quality.segmentation-reference-cases",
 			evaluationKind: "gold-evaluation",
 			resourceIds: [
 				"fr-token-segmentation-profile",
@@ -11183,6 +10401,9 @@ function frenchSegmentationEvaluationRecords(pack) {
 			unit: "cases",
 			operator: "gte",
 			threshold: 10,
+			limitations: [
+				"These generated cases document source-derived expectations; only Unicode segmentation and French elision-prefix splitting are executed by the built-in adapter.",
+			],
 		}),
 	];
 }
@@ -11390,64 +10611,7 @@ function lexiqueEvaluationRecords(pack) {
 			operator: "eq",
 			threshold: 1,
 			limitations: [
-				"The search profile is source-backed by Lexique form/lemma data; it is not a corpus-trained French ranking profile.",
-			],
-		}),
-		evaluationRecord(pack, {
-			recordId: "eval:fr-lexique:search-elision-prefixes",
-			resourceSpecId,
-			pipelineId,
-			capabilitySlot: "search",
-			taskType: "search.elision-apostrophe-policy",
-			evaluationKind: "coverage",
-			resourceIds: [
-				"fr-lexique-search-profile",
-				"fr-lexique-search-elision-prefixes",
-			],
-			metricName: "searchElisionPrefixCount",
-			value: quality.searchElisionPrefixCount,
-			unit: "prefixes",
-			operator: "gte",
-			threshold: 10,
-			observations: {
-				tatoebaSentenceRowCount: quality.tatoebaSentenceRowCount,
-			},
-		}),
-		evaluationRecord(pack, {
-			recordId: "eval:fr-lexique:search-contraction-forms",
-			resourceSpecId,
-			pipelineId,
-			capabilitySlot: "search",
-			taskType: "search.contraction-surface-policy",
-			evaluationKind: "coverage",
-			resourceIds: [
-				"fr-lexique-search-profile",
-				"fr-lexique-search-contraction-forms",
-			],
-			metricName: "searchContractionFormCount",
-			value: quality.searchContractionFormCount,
-			unit: "forms",
-			operator: "eq",
-			threshold: 4,
-		}),
-		evaluationRecord(pack, {
-			recordId: "eval:fr-lexique:search-gold-cases",
-			resourceSpecId,
-			pipelineId,
-			capabilitySlot: "search",
-			taskType: "search.gold-cases",
-			evaluationKind: "gold-evaluation",
-			resourceIds: [
-				"fr-lexique-search-profile",
-				"fr-lexique-search-gold-cases",
-			],
-			metricName: "searchGoldCaseCount",
-			value: quality.searchGoldCaseCount,
-			unit: "cases",
-			operator: "gte",
-			threshold: 10,
-			limitations: [
-				"Gold cases verify analyzer policy coverage for observed Tatoeba surface forms; ranked retrieval evaluation belongs in corpus/search benchmark packs.",
+				"The executable adapter uses the profile's Unicode word, casefold, and accent-fold components. Lexique lookup rows are exposed by their own slots and are not silently applied as search filters.",
 			],
 		}),
 		evaluationRecord(pack, {
@@ -11588,51 +10752,10 @@ function arabicSearchEvaluationRecords(pack) {
 			threshold: 1,
 			observations: {
 				likelySubtag: quality.likelySubtag,
-				tokenizationFieldCount: quality.tokenizationFieldCount,
+				analyzerProfileCount: quality.analyzerProfileCount,
 			},
 			limitations: [
-				"This verifies a source-backed Arabic MSA analyzer profile; it does not verify persistent index behavior or corpus-derived ranking.",
-			],
-		}),
-		evaluationRecord(pack, {
-			recordId: "eval:ar-search:wordnet-synonym-volume",
-			resourceSpecId,
-			pipelineId,
-			capabilitySlot: "search",
-			taskType: "search.synonym-expansion",
-			evaluationKind: "coverage",
-			resourceIds: ["ar-search-wordnet-synonyms"],
-			metricName: "synonymPairCount",
-			value: quality.synonymPairCount,
-			unit: "pairs",
-			operator: "gte",
-			threshold: 1,
-			observations: {
-				wordnetLexicalEntryCount: quality.wordnetLexicalEntryCount,
-				wordnetSynsetWithSynonymCount: quality.wordnetSynsetWithSynonymCount,
-			},
-			limitations: [
-				"Synonym hooks come from Arabic WordNet synset membership; they are optional query expansion candidates, not ranked semantic search.",
-			],
-		}),
-		evaluationRecord(pack, {
-			recordId: "eval:ar-search:camel-morphology-hooks",
-			resourceSpecId,
-			pipelineId,
-			capabilitySlot: "search",
-			taskType: "search.morphology-hooks",
-			evaluationKind: "coverage",
-			resourceIds: ["ar-search-morphology-hooks"],
-			metricName: "morphologyHookCount",
-			value: quality.morphologyHookCount,
-			unit: "hooks",
-			operator: "gte",
-			threshold: 1,
-			observations: {
-				morphemeCount: quality.morphemeCount,
-			},
-			limitations: [
-				"CAMeL Morph hooks expose source-backed lookup fields for analyzer construction; they do not perform context disambiguation.",
+				"This verifies the executable Unicode word and Arabic mark-normalization profile; morphology-aware tokenization, stemming, synonyms, persistent indexing, and ranking are outside its scope.",
 			],
 		}),
 		evaluationRecord(pack, {
@@ -12133,7 +11256,28 @@ function tatoebaFrenchParallelEvaluationRecords(pack) {
 	});
 }
 
-function evaluationRecordsForPack(pack) {
+function evaluationRecordsForPack(pack, context) {
+	if (isDistributionPack(pack)) {
+		const packageByName = new Map(
+			context.packs.map((candidate) => [candidate.packageName, candidate]),
+		);
+		return pack.components.flatMap((component) => {
+			const input = packageByName.get(component.packageName);
+			expect(
+				input !== undefined,
+				`${pack.packageName} evaluation input ${component.packageName} is missing.`,
+			);
+			return evaluationRecordsForPack(input, context).map((record) => ({
+				...record,
+				recordId: `${record.recordId}:distribution:${pack.packageId}`,
+				packageName: pack.packageName,
+				limitations: [
+					...record.limitations,
+					`Evaluated in internal build unit ${component.packageName}; the referenced payload is shipped directly in ${pack.packageName}.`,
+				],
+			}));
+		});
+	}
 	if (pack.packageName === "@ismail-elkorchi/textpack-language-registry") {
 		return languageRegistryEvaluationRecords(pack);
 	}
@@ -12142,15 +11286,6 @@ function evaluationRecordsForPack(pack) {
 	}
 	if (pack.packageName === "@ismail-elkorchi/textpack-cldr-core") {
 		return cldrFoundationEvaluationRecords(pack);
-	}
-	if (pack.packageName === "@ismail-elkorchi/textpack-foundation") {
-		return foundationCompositeEvaluationRecords(pack);
-	}
-	if (pack.packClass === "language-composite") {
-		return languageCompositeEvaluationRecords(pack);
-	}
-	if (pack.packClass === "language-component-composite") {
-		return componentCompositeEvaluationRecords(pack);
 	}
 	if (pack.packageName === "@ismail-elkorchi/textpack-ar-msa-morphology") {
 		return camelMorphEvaluationRecords(pack);
@@ -12284,7 +11419,7 @@ function evaluationSummary(records) {
 }
 
 function evaluationReportFor(pack, context) {
-	const records = evaluationRecordsForPack(pack).sort((left, right) =>
+	const records = evaluationRecordsForPack(pack, context).sort((left, right) =>
 		left.recordId.localeCompare(right.recordId),
 	);
 	return {
@@ -12323,7 +11458,6 @@ function qualityReportFor(pack, context) {
 		resourceSpecIds: pack.resourceSpecIds ?? [],
 		capabilitySlots: pack.capabilitySlots,
 		resourcePaths: pack.resourceStats.map((resource) => resource.path),
-		components: pack.components ?? [],
 		artifactRequirements: [],
 		licenseWarnings: [],
 	};
@@ -12405,7 +11539,6 @@ function coverageReportFor(pack, context, evaluationRecords) {
 		coverageStatus:
 			evaluationRecords.length > 0 ? "evaluated" : "declared-only",
 		evaluationRecordIds: evaluationRecords.map((record) => record.recordId),
-		components: pack.components ?? [],
 		gapNotes: pack.manifest.gapNotes ?? [],
 		knownGaps: pack.knownGaps,
 	};
@@ -12426,7 +11559,7 @@ function assertFeatureCompleteLanguageCompositeEvidence(
 			.filter((record) => record.result === "pass")
 			.map((record) => record.capabilitySlot),
 	);
-	for (const slot of languageCompositeRequiredSlots) {
+	for (const slot of languageDistributionRequiredSlots) {
 		const declaredSlot = pack.capabilitySlots.find(
 			(candidate) => candidate.slot === slot,
 		);
@@ -12444,48 +11577,20 @@ async function packageOutputsFor(pack, context) {
 		pack,
 		evaluationReport.records,
 	);
-	if (isCompositePack(pack)) {
-		outputs.set(`${pack.packageDir}/package.json`, compositePackageJson(pack));
-		outputs.set(`${pack.packageDir}/README.md`, compositeReadme(pack));
-		outputs.set(`${pack.packageDir}/CHANGELOG.md`, compositeChangelog(pack));
-		outputs.set(`${pack.packageDir}/tsconfig.json`, tsconfigJson());
-		outputs.set(`${pack.packageDir}/tsconfig.build.json`, tsconfigBuildJson());
-		outputs.set(`${pack.packageDir}/test/smoke.mjs`, compositeSmokeTest(pack));
-		outputs.set(
-			`${pack.packageDir}/test/negative.mjs`,
-			compositeNegativeTest(pack),
-		);
-		if (pack.languageSupport === true) {
-			outputs.set(
-				`${pack.packageDir}/src/language-support.ts`,
-				languageSupportTs(context.languageSupport),
-			);
-		}
-	} else if (pack.generatedPackageFiles === true) {
-		outputs.set(`${pack.packageDir}/package.json`, concretePackageJson(pack));
-		outputs.set(`${pack.packageDir}/README.md`, concreteReadme(pack));
-		outputs.set(`${pack.packageDir}/CHANGELOG.md`, concreteChangelog(pack));
-		outputs.set(`${pack.packageDir}/tsconfig.json`, tsconfigJson());
-		outputs.set(`${pack.packageDir}/tsconfig.build.json`, tsconfigBuildJson());
-		outputs.set(`${pack.packageDir}/test/smoke.mjs`, concreteSmokeTest(pack));
-	}
+	outputs.set(`${pack.packageDir}/package.json`, concretePackageJson(pack));
+	outputs.set(`${pack.packageDir}/README.md`, concreteReadme(pack));
+	outputs.set(`${pack.packageDir}/CHANGELOG.md`, concreteChangelog(pack));
+	outputs.set(`${pack.packageDir}/tsconfig.json`, tsconfigJson());
+	outputs.set(`${pack.packageDir}/tsconfig.build.json`, tsconfigBuildJson());
+	outputs.set(`${pack.packageDir}/test/smoke.mjs`, concreteSmokeTest(pack));
 	outputs.set(`${pack.packageDir}/pack.manifest.json`, jsonFile(pack.manifest));
-	if (pack.generatedSourceFiles.includes("src/index.ts")) {
-		outputs.set(
-			`${pack.packageDir}/src/index.ts`,
-			isCompositePack(pack) ? compositeIndexTs(pack) : indexTs(),
-		);
-		outputs.set(`${pack.packageDir}/src/pack.ts`, packTs(pack));
-	}
-	if (pack.generatedSourceFiles.includes("src/manifest.ts")) {
-		outputs.set(
-			`${pack.packageDir}/src/manifest.ts`,
-			manifestTs(pack.manifest),
-		);
-	}
-	if (pack.generatedSourceFiles.includes("src/resources.ts")) {
-		outputs.set(`${pack.packageDir}/src/resources.ts`, resourcesTs(pack));
-	}
+	outputs.set(`${pack.packageDir}/src/index.ts`, indexTs());
+	outputs.set(`${pack.packageDir}/src/pack.ts`, packTs());
+	outputs.set(
+		`${pack.packageDir}/src/manifest.ts`,
+		manifestTs(pack.manifest),
+	);
+	outputs.set(`${pack.packageDir}/src/resources.ts`, resourcesTs(pack));
 	for (const payload of pack.payloads) {
 		outputs.set(`${pack.packageDir}/${payload.path}`, payload.text);
 	}
@@ -12527,38 +11632,19 @@ async function packageOutputsFor(pack, context) {
 }
 
 function expectedGeneratedFilesForPack(pack) {
-	const files = [];
-	if (isCompositePack(pack)) {
-		files.push(
-			"package.json",
-			"README.md",
-			"CHANGELOG.md",
-			"tsconfig.json",
-			"tsconfig.build.json",
-			"test/smoke.mjs",
-			"test/negative.mjs",
-		);
-		if (pack.languageSupport === true) {
-			files.push("src/language-support.ts");
-		}
-	} else if (pack.generatedPackageFiles === true) {
-		files.push(
-			"package.json",
-			"README.md",
-			"CHANGELOG.md",
-			"tsconfig.json",
-			"tsconfig.build.json",
-			"test/smoke.mjs",
-		);
-	}
-	files.push("pack.manifest.json");
-	files.push(...pack.generatedSourceFiles);
-	if (
-		pack.generatedSourceFiles.includes("src/index.ts") &&
-		!files.includes("src/pack.ts")
-	) {
-		files.push("src/pack.ts");
-	}
+	const files = [
+		"package.json",
+		"README.md",
+		"CHANGELOG.md",
+		"tsconfig.json",
+		"tsconfig.build.json",
+		"test/smoke.mjs",
+		"pack.manifest.json",
+		"src/index.ts",
+		"src/pack.ts",
+		"src/manifest.ts",
+		"src/resources.ts",
+	];
 	files.push(...pack.payloads.map((payload) => payload.path));
 	files.push(
 		...(pack.licenseEvidenceFiles ?? []).map((file) => file.packagePath),
@@ -12567,201 +11653,16 @@ function expectedGeneratedFilesForPack(pack) {
 	return sorted(new Set(files));
 }
 
-async function validateSnapshotFiles(snapshot) {
-	if (!Array.isArray(snapshot.files)) return;
-	const entries = [];
-	for (const file of snapshot.files) {
-		const absolute = snapshotDataPath(
-			file.path,
-			`${snapshot.snapshotId} file path`,
-		);
-		const bytes = await readFile(absolute);
-		const fileStat = await stat(absolute);
-		const checksum = sha256Bytes(bytes);
-		expect(
-			checksum === file.checksum,
-			`${snapshot.snapshotId} file ${file.path} checksum mismatch.`,
-			`expected ${file.checksum}\nactual   ${checksum}`,
-		);
-		expect(
-			fileStat.size === file.byteLength,
-			`${snapshot.snapshotId} file ${file.path} byteLength mismatch.`,
-			`expected ${file.byteLength}\nactual   ${fileStat.size}`,
-		);
-		entries.push({
-			path: file.path,
-			checksum,
-			byteLength: fileStat.size,
-		});
-	}
-	entries.sort((left, right) => left.path.localeCompare(right.path));
-	const checksum = snapshotAggregateChecksum(entries);
-	expect(
-		checksum === snapshot.checksum,
-		`${snapshot.snapshotId} aggregate checksum mismatch.`,
-		`expected ${snapshot.checksum}\nactual   ${checksum}`,
-	);
-}
-
-function findSnapshotFile(context, snapshotId, basename) {
-	const snapshot = context.snapshotById.get(snapshotId);
-	expect(snapshot !== undefined, `Missing snapshot ${snapshotId}.`);
-	const file = snapshot.files?.find((candidate) =>
-		candidate.path.endsWith(`/${basename}`),
-	);
-	expect(
-		file !== undefined,
-		`Snapshot ${snapshotId} does not contain ${basename}.`,
-	);
-	return file.path;
-}
-
-function parseLikelySubtag(tag) {
-	const [language, script, region] = tag.split(/[-_]/u);
-	return {
-		language,
-		script: script?.length === 4 ? script : undefined,
-		region: region?.length === 2 || region?.length === 3 ? region : undefined,
-	};
-}
-
 function uniqueSorted(values) {
 	return sorted(
 		new Set(values.filter((value) => value !== undefined && value !== "")),
 	);
 }
 
-function orderedSupportLevels(values) {
-	const present = new Set(values);
-	return supportLevels.filter((level) => present.has(level));
-}
-
-function packHasLocalTaskSupport(pack) {
-	return pack.capabilitySlots.some((slot) =>
-		["task-supported", "feature-complete"].includes(slot.status),
-	);
-}
-
-async function buildLanguageSupportIndex(context, packs) {
-	const registryText = await readText(
-		findSnapshotFile(
-			context,
-			"snapshot:source:iana:language-subtag-registry:2026-05-05",
-			"language-subtag-registry.txt",
-		),
-	);
-	const likelySubtags = await readJson(
-		findSnapshotFile(
-			context,
-			"snapshot:source:unicode:cldr-core:48.2.0",
-			"likelySubtags.json",
-		),
-	);
-	const likelyByLanguage = new Map();
-	for (const [source, target] of Object.entries(
-		likelySubtags.supplemental.likelySubtags,
-	)) {
-		const sourceLanguage = source.split(/[-_]/u)[0];
-		if (!likelyByLanguage.has(sourceLanguage)) {
-			likelyByLanguage.set(sourceLanguage, parseLikelySubtag(target));
-		}
-	}
-	const registry = parseIanaRegistry(registryText);
-	const taskPacksByLanguage = new Map();
-	for (const pack of packs) {
-		if (pack.publishable !== true) continue;
-		if (!packHasLocalTaskSupport(pack)) continue;
-		const languages = pack.manifest.targets.languages ?? [];
-		if (languages.length === 0) continue;
-		if (
-			![
-				"language-composite",
-				"language-component-composite",
-				"language-concrete",
-				"domain",
-				"historical-noisy",
-				"parallel",
-			].includes(pack.packClass)
-		) {
-			continue;
-		}
-		for (const language of languages) {
-			const existing = taskPacksByLanguage.get(language) ?? [];
-			existing.push(pack);
-			taskPacksByLanguage.set(language, existing);
-		}
-	}
-	const entries = [];
-	for (const record of registry.records) {
-		if (record.type !== "language" || record.subtag.length === 0) continue;
-		const languageTag = record.subtag;
-		const likely = likelyByLanguage.get(languageTag);
-		const script = record.suppressScript || likely?.script;
-		const region = likely?.region;
-		const taskPacks = taskPacksByLanguage.get(languageTag) ?? [];
-		const levels = ["registered"];
-		if (script !== undefined) levels.push("unicode-covered");
-		if (likely !== undefined || record.suppressScript.length > 0) {
-			levels.push("profiled");
-		}
-		if (taskPacks.length > 0) levels.push("task-supported");
-		const componentPacks = [
-			"@ismail-elkorchi/textpack-foundation",
-			"@ismail-elkorchi/textpack-language-registry",
-			...(levels.includes("unicode-covered")
-				? ["@ismail-elkorchi/textpack-unicode-17"]
-				: []),
-			...(levels.includes("profiled")
-				? ["@ismail-elkorchi/textpack-cldr-core"]
-				: []),
-			...taskPacks.map((pack) => pack.packageName),
-		];
-		const sourceCoverage = [
-			"source:iana:language-subtag-registry",
-			...(levels.includes("unicode-covered") ? ["source:unicode:ucd"] : []),
-			...(levels.includes("profiled") ? ["source:unicode:cldr-core"] : []),
-			...taskPacks.flatMap((pack) => pack.sourceIds),
-		];
-		const capabilitySlots = uniqueSorted(
-			taskPacks.flatMap((pack) =>
-				pack.capabilitySlots
-					.filter((slot) => slot.status !== "planned")
-					.map((slot) => slot.slot),
-			),
-		);
-		entries.push({
-			languageTag,
-			languageName: record.description.split(" | ")[0] || languageTag,
-			scripts: script === undefined ? [] : [script],
-			regions: region === undefined ? [] : [region],
-			supportLevels: orderedSupportLevels(levels),
-			packs: uniqueSorted(componentPacks),
-			capabilitySlots,
-			sourceCoverage: uniqueSorted(sourceCoverage),
-			lastBuiltAt: context.generatedAt,
-			knownGaps:
-				taskPacks.length === 0
-					? []
-					: uniqueSorted(
-							taskPacks.flatMap((pack) =>
-								pack.supportLevel === "feature-complete"
-									? []
-									: [
-											`${pack.packageName} is ${pack.supportLevel}, not feature-complete.`,
-										],
-							),
-						),
-		});
-	}
-	return entries.sort((left, right) =>
-		left.languageTag.localeCompare(right.languageTag),
-	);
-}
-
 async function collectContext(options = {}) {
 	const materializeResources = options.materializeResources !== false;
 	const lock = await readJson(LOCK_PATH);
-	const lockfileChecksum = sha256(await readText(LOCK_PATH));
+	const lockfileChecksum = await forgeInputChecksum(lock);
 	expect(
 		Array.isArray(lock.packSpecPaths) && lock.packSpecPaths.length > 0,
 		"Forge lock must declare packSpecPaths.",
@@ -12824,9 +11725,6 @@ async function collectContext(options = {}) {
 	const sourceById = validateSourceCatalog(sources);
 	const sourcePolicyContext = collectSourcePolicies(sourcePolicySpecs);
 	const snapshotById = validateSnapshotCatalog(snapshots, sourceById);
-	if (materializeResources) {
-		for (const snapshot of snapshots) await validateSnapshotFiles(snapshot);
-	}
 	for (const lockEntry of lock.snapshotLocks ?? []) {
 		const snapshot = snapshotById.get(lockEntry.snapshotId);
 		expect(
@@ -12856,6 +11754,7 @@ async function collectContext(options = {}) {
 		sourcePolicySpecs,
 		snapshots,
 		sourceById,
+		resourceSpecById,
 		snapshotById,
 	};
 	validateActiveSourcePolicies(baseContext);
@@ -12863,11 +11762,20 @@ async function collectContext(options = {}) {
 	const allPackSpecs = catalogs.flatMap((catalog) =>
 		catalog.packs.map((pack) => ({
 			...pack,
+			buildUnitId: buildUnitIdForPackageName(pack.packageName),
 			catalogSourceIds: catalog.sourceIds,
 			catalogSnapshotIds: catalog.snapshotIds,
 			specPath: catalog.specPath,
 		})),
 	);
+	const buildUnitSpecById = new Map();
+	for (const buildUnit of allPackSpecs) {
+		expect(
+			!buildUnitSpecById.has(buildUnit.buildUnitId),
+			`Duplicate internal build unit id ${buildUnit.buildUnitId}.`,
+		);
+		buildUnitSpecById.set(buildUnit.buildUnitId, buildUnit);
+	}
 	const compositeSpecs = await Promise.all(
 		(lock.compositeSpecPaths ?? []).map((compositeSpecPath) =>
 			readJson(compositeSpecPath).then((spec) => ({
@@ -12876,10 +11784,20 @@ async function collectContext(options = {}) {
 			})),
 		),
 	);
-	const knownPackageNames = new Set([
-		...allPackSpecs.map((pack) => pack.packageName),
-		...compositeSpecs.map((spec) => spec.packageName),
-	]);
+	const distributionInputPackageNames = new Set(
+		compositeSpecs
+			.filter((spec) => DISTRIBUTION_PACKAGE_NAMES.has(spec.packageName))
+			.flatMap((spec) =>
+				spec.buildUnits.map((selection) => {
+					const buildUnit = buildUnitSpecById.get(selection.buildUnitId);
+					expect(
+						buildUnit !== undefined,
+						`${spec.packageName} references unknown build unit ${selection.buildUnitId}.`,
+					);
+					return buildUnit.packageName;
+				}),
+			),
+	);
 	for (const packSpec of allPackSpecs) {
 		const normalizedPackSpec = {
 			...packSpec,
@@ -12887,18 +11805,15 @@ async function collectContext(options = {}) {
 		};
 		validatePackSpec(normalizedPackSpec, resourceSpecById);
 		const manifest = manifestFor(packSpec, baseContext);
-		const packageJson =
-			normalizedPackSpec.generatedPackageFiles === true
-				? {
-						name: normalizedPackSpec.packageName,
-						version: manifest.version,
-						description: normalizedPackSpec.description,
-						license: manifest.license,
-					}
-				: await readJson(`${normalizedPackSpec.packageDir}/package.json`);
+		const packageJson = {
+			name: normalizedPackSpec.packageName,
+			version: manifest.version,
+			description: normalizedPackSpec.description,
+			license: manifest.license,
+		};
 		expect(
 			packageJson.name === normalizedPackSpec.packageName,
-			`${normalizedPackSpec.packageDir} package name does not match pack spec.`,
+			`${normalizedPackSpec.packageName} build unit id does not match its manifest packageName.`,
 		);
 		expect(
 			manifest.packageName === normalizedPackSpec.packageName,
@@ -12908,13 +11823,15 @@ async function collectContext(options = {}) {
 			packageJson.version === manifest.version,
 			`${normalizedPackSpec.packageName} package version must match manifest version.`,
 		);
-		const payloads = materializeResources
-			? await collectResourcePayloads(
-					normalizedPackSpec,
-					manifest,
-					resourceSpecById,
-				)
-			: [];
+		const payloads =
+			materializeResources &&
+			distributionInputPackageNames.has(normalizedPackSpec.packageName)
+				? await collectResourcePayloads(
+						normalizedPackSpec,
+						manifest,
+						resourceSpecById,
+					)
+				: [];
 		const stats = materializeResources ? resourceStats(payloads) : [];
 		const npmShippedSizeBytes = stats.reduce(
 			(total, resource) => total + resource.byteLength,
@@ -12960,10 +11877,7 @@ async function collectContext(options = {}) {
 			artifactBackedSizeBytes: 0,
 			artifactProfiles: [],
 			capabilitySlots: capabilitySlots(manifest),
-			components: manifest.components ?? [],
 			description: packageJson.description,
-			generatedPackageFiles: normalizedPackSpec.generatedPackageFiles === true,
-			generatedSourceFiles: normalizedPackSpec.generatedSourceFiles,
 			generationMode: normalizedPackSpec.generationMode,
 			knownGaps: knownGaps(normalizedPackSpec, manifest),
 			licenseExpression:
@@ -12971,7 +11885,6 @@ async function collectContext(options = {}) {
 			licenseEvidenceFiles,
 			manifest,
 			npmShippedSizeBytes,
-			packageDir: normalizedPackSpec.packageDir,
 			packageId: packageId(packageJson.name),
 			packageName: packageJson.name,
 			packageVersion: packageJson.version,
@@ -12989,10 +11902,22 @@ async function collectContext(options = {}) {
 		});
 	}
 	for (const spec of compositeSpecs) {
-		validateCompositeSpec(spec, knownPackageNames);
+		validateCompositeSpec(spec, buildUnitSpecById);
 		const manifest = compositeManifestFor(spec, baseContext);
-		const compositeSourceIds = spec.sourceIds ?? [];
-		const compositeSnapshotIds = spec.snapshotIds ?? [];
+		const selectedBuildUnits = spec.buildUnits.map((selection) =>
+			buildUnitSpecById.get(selection.buildUnitId),
+		);
+		const compositeSourceIds = uniqueValues(
+			selectedBuildUnits.flatMap(
+				(buildUnit) => buildUnit.sourceIds ?? buildUnit.catalogSourceIds,
+			),
+		);
+		const compositeSnapshotIds = uniqueValues(
+			selectedBuildUnits.flatMap(
+				(buildUnit) => buildUnit.snapshotIds ?? buildUnit.catalogSnapshotIds,
+			),
+		);
+		const components = buildUnitComponents(spec, buildUnitSpecById);
 		for (const sourceId of compositeSourceIds) {
 			expect(
 				sourceById.has(sourceId),
@@ -13020,16 +11945,11 @@ async function collectContext(options = {}) {
 			artifactBackedSizeBytes: 0,
 			artifactProfiles: [],
 			capabilitySlots: capabilitySlots(manifest),
-			components: manifest.components ?? [],
+			buildUnits: spec.buildUnits,
+			components,
 			description: spec.description,
-			generatedSourceFiles: [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts",
-			],
 			generationMode: spec.mode,
 			knownGaps: knownGaps(spec, manifest),
-			languageSupport: spec.languageSupport === true,
 			licenseExpression: manifest.license,
 			licenseEvidenceFiles: localLicenseEvidenceFilesForIds(
 				compositeSourceIds,
@@ -13054,7 +11974,12 @@ async function collectContext(options = {}) {
 			supportLevel: spec.supportLevel,
 		};
 		const publishability = assertPublishabilityRequest(
-			{ ...spec, generationMode: spec.mode },
+			{
+				...spec,
+				generationMode: spec.mode,
+				sourceIds: compositeSourceIds,
+				snapshotIds: compositeSnapshotIds,
+			},
 			manifest,
 			baseContext,
 		);
@@ -13076,18 +12001,13 @@ async function collectContext(options = {}) {
 	)) {
 		validateCompositeComponentSourcePolicies(composite, packageByName, context);
 	}
-	context.languageSupport = await buildLanguageSupportIndex(
-		context,
-		context.packs,
-	);
-	for (const pack of context.packs) {
+	for (const packageName of DISTRIBUTION_PACKAGE_NAMES) {
+		const distribution = packageByName.get(packageName);
+		expect(distribution !== undefined, `Missing distribution ${packageName}.`);
+		flattenDistributionPack(distribution, packageByName);
+	}
+	for (const pack of context.packs.filter(isDistributionPack)) {
 		const generatedFiles = expectedGeneratedFilesForPack(pack);
-		if (pack.languageSupport === true) {
-			pack.npmShippedSizeBytes += Buffer.byteLength(
-				languageSupportTs(context.languageSupport),
-				"utf8",
-			);
-		}
 		pack.fileDigests = [];
 		pack.generatedFiles = generatedFiles;
 		pack.outputChecksum = sha256(
@@ -13098,10 +12018,10 @@ async function collectContext(options = {}) {
 			}),
 		);
 	}
-	const languageCompositeReadiness = languageCompositeReadinessFor(context);
-	validateDeveloperFacingCompositePublishability(
+	const languageDistributionReadiness = languageDistributionReadinessFor(context);
+	validateDeveloperFacingDistributionPublishability(
 		context,
-		languageCompositeReadiness,
+		languageDistributionReadiness,
 	);
 	return context;
 }
@@ -13124,6 +12044,7 @@ function markerFor(pack, context) {
 		packSpecPath: pack.specPath ?? DEFAULT_PACK_SPEC_PATH,
 		outputChecksum: pack.outputChecksum,
 		generatedFiles: pack.generatedFiles,
+		fileDigests: pack.fileDigests,
 	};
 }
 
@@ -13133,7 +12054,7 @@ function inventoryFor(context) {
 		generatedAt: context.generatedAt,
 		generatedBy: GENERATED_BY,
 		mode: context.mode,
-		packages: context.packs.map((pack) => ({
+		packages: context.packs.filter(isDistributionPack).map((pack) => ({
 			packageId: pack.packageId,
 			packageName: pack.packageName,
 			version: pack.packageVersion,
@@ -13150,8 +12071,9 @@ function inventoryFor(context) {
 			artifactProfiles: pack.artifactProfiles,
 			outputChecksum: pack.outputChecksum,
 			generatedFiles: pack.generatedFiles,
+			fileDigests: pack.fileDigests,
 			reports: PACKAGE_REPORT_FILES,
-			components: pack.components ?? [],
+			buildUnits: pack.buildUnits ?? [],
 			capabilitySlots: pack.capabilitySlots.map((slot) => ({
 				slot: slot.slot,
 				status: slot.status,
@@ -13182,7 +12104,7 @@ function inventoryMarkdown(inventory) {
 	const lines = [
 		"# Generated Textpack Inventory",
 		"",
-		"Status: generated source-backed foundation packs, task slices, and component composites only; sampled, demo, fixture-backed, and transitional textpacks are excluded from the active package graph",
+		"Status: three self-contained source-backed language distributions; forge build units are internal and are not npm packages",
 		`Generated at: \`${inventory.generatedAt}\``,
 		"",
 		"| Package | Class | Support | Publishable | npm bytes | Artifact bytes | Slots | Reports | Known gaps |",
@@ -13200,19 +12122,13 @@ function inventoryMarkdown(inventory) {
 	return `${lines.join("\n")}\n`;
 }
 
-function requiredLanguageSlotPackageName(languageTag, slot) {
-	if (slot === "foundation") {
-		return "@ismail-elkorchi/textpack-foundation";
-	}
-	return `@ismail-elkorchi/textpack-${languageTag}-${slot}`;
+function requiredLanguageSlotPackageName(languageTag) {
+	return `@ismail-elkorchi/textpack-${languageTag}`;
 }
 
 function languageDisplayName(languageTag, context) {
 	return (
-		context.languagePolicyByTag.get(languageTag)?.languageName ??
-		context.languageSupport.find((entry) => entry.languageTag === languageTag)
-			?.languageName ??
-		languageTag
+		context.languagePolicyByTag.get(languageTag)?.languageName ?? languageTag
 	);
 }
 
@@ -13221,14 +12137,10 @@ function slotAliases(slot) {
 }
 
 function packSupportsLanguage(pack, languageTag) {
-	if (pack.packageName === "@ismail-elkorchi/textpack-foundation") return true;
 	return (pack.manifest.targets?.languages ?? []).includes(languageTag);
 }
 
 function packSupportsReadinessSlot(pack, slot) {
-	if (slot === "foundation") {
-		return pack.packageName === "@ismail-elkorchi/textpack-foundation";
-	}
 	const aliases = new Set(slotAliases(slot));
 	return pack.capabilitySlots.some(
 		(capabilitySlot) =>
@@ -13245,9 +12157,10 @@ function standardReportsGenerated(pack) {
 function sourceAuditedForDefaultComposite(pack, context) {
 	return pack.sourceIds.every((sourceId) => {
 		const policy = context.sourcePolicyById.get(sourceId);
-		if (isPolicyExpandedWrapper(pack)) {
+		if (isLicenseInclusiveDistribution(pack)) {
 			return (
-				policy !== undefined && sourcePolicyAllowsPolicyExpandedWrapper(policy)
+				policy !== undefined &&
+				sourcePolicyAllowsLicenseInclusiveDistribution(policy)
 			);
 		}
 		return (
@@ -13312,7 +12225,7 @@ function languageSlotSourceRequirementBlockers({
 function languageReadinessStage({
 	adapterValid,
 	artifactBacked,
-	compositeReady,
+	distributionReady,
 	evaluated,
 	exactPack,
 	generated,
@@ -13330,15 +12243,15 @@ function languageReadinessStage({
 	if (!evaluated) return "adapter-valid";
 	if (!publishable) return "evaluated";
 	if (!sourceRequirementsSatisfied) return "source-requirements-missing";
-	if (!compositeReady) return "publishable";
-	return "composite-ready";
+	if (!distributionReady) return "publishable";
+	return "distribution-ready";
 }
 
 function languageSlotBlockers({
 	adapterValid,
 	artifactBacked,
 	candidatePacks,
-	compositeReady,
+	distributionReady,
 	evaluated,
 	exactPack,
 	generated,
@@ -13357,7 +12270,7 @@ function languageSlotBlockers({
 		blockers.push(`${requiredPackageName} has not been generated.`);
 		if (candidatePacks.length > 0) {
 			blockers.push(
-				"Candidate source-backed packs exist, but the required slot package has not been selected for this composite slot.",
+				"Candidate internal build units exist, but no self-contained language distribution has selected them for this slot.",
 			);
 		}
 		blockers.push(...sourceRequirementBlockers);
@@ -13365,7 +12278,7 @@ function languageSlotBlockers({
 	}
 	if (!sourceAudited) {
 		blockers.push(
-			"source policy audit is incomplete for default composite use.",
+			"source policy audit is incomplete for default distribution use.",
 		);
 	}
 	if (!generated) blockers.push("generated package files are incomplete.");
@@ -13390,13 +12303,13 @@ function languageSlotBlockers({
 			`${requiredPackageName} does not declare production coverage for the ${slot} slot.`,
 		);
 	}
-	if (!compositeReady && blockers.length === 0) {
-		blockers.push("slot is not marked composite-ready.");
+	if (!distributionReady && blockers.length === 0) {
+		blockers.push("slot is not marked distribution-ready.");
 	}
 	return blockers;
 }
 
-function languageCompositeReadinessFor(context) {
+function languageDistributionReadinessFor(context) {
 	const packageByName = new Map(
 		context.packs.map((pack) => [pack.packageName, pack]),
 	);
@@ -13406,30 +12319,37 @@ function languageCompositeReadinessFor(context) {
 		generatedBy: GENERATED_BY,
 		mode: context.mode,
 		languages: developerFacingLanguageTags.map((languageTag) => {
-			const slots = languageCompositeRequiredSlots.map((slot) => {
+			const slots = languageDistributionRequiredSlots.map((slot) => {
 				const requiredPackageName = requiredLanguageSlotPackageName(
 					languageTag,
 					slot,
 				);
 				const exactPack = packageByName.get(requiredPackageName);
+				const selectedBuildUnitNames = new Set(
+					(exactPack?.components ?? [])
+						.filter((component) => component.role === "required")
+						.map((component) => component.packageName),
+				);
 				const candidatePacks = context.packs
 					.filter(
 						(pack) =>
 							pack.packageName !== requiredPackageName &&
 							pack.packClass !== "language-composite" &&
-							packSupportsLanguage(pack, languageTag) &&
+							(exactPack === undefined
+								? packSupportsLanguage(pack, languageTag)
+								: selectedBuildUnitNames.has(pack.packageName)) &&
 							packSupportsReadinessSlot(pack, slot),
 					)
 					.map((pack) => ({
-						packageName: pack.packageName,
-						packClass: pack.packClass,
+						buildUnitId: buildUnitIdForPackageName(pack.packageName),
+						buildUnitClass: pack.packClass,
 						publishable: pack.publishable,
 						capabilitySlots: pack.capabilitySlots.map(
 							(capabilitySlot) => capabilitySlot.slot,
 						),
 					}))
 					.sort((left, right) =>
-						left.packageName.localeCompare(right.packageName),
+						left.buildUnitId.localeCompare(right.buildUnitId),
 					);
 				const sourceAudited =
 					exactPack !== undefined &&
@@ -13468,7 +12388,7 @@ function languageCompositeReadinessFor(context) {
 				);
 				const sourceRequirementsSatisfied =
 					sourceRequirementBlockers.length === 0;
-				const compositeReady =
+				const distributionReady =
 					exactPack !== undefined &&
 					sourceAudited &&
 					generated &&
@@ -13482,7 +12402,7 @@ function languageCompositeReadinessFor(context) {
 				const state = {
 					adapterValid,
 					artifactBacked,
-					compositeReady,
+					distributionReady,
 					evaluated,
 					exactPack,
 					generated,
@@ -13516,7 +12436,7 @@ function languageCompositeReadinessFor(context) {
 						publishable,
 						sourceRequirementsSatisfied,
 						slotCapabilitySatisfied,
-						compositeReady,
+						distributionReady,
 					},
 					capabilityAliases: slotAliases(slot),
 					capabilitySlots:
@@ -13526,18 +12446,18 @@ function languageCompositeReadinessFor(context) {
 						})) ?? [],
 					sourceIds: exactPack?.sourceIds ?? [],
 					sourceRequirements,
-					candidatePacks,
+					selectedBuildUnits: candidatePacks,
 					blockers,
 				};
 			});
-			const readySlots = slots.filter((slot) => slot.checks.compositeReady);
-			const blockedSlots = slots.filter((slot) => !slot.checks.compositeReady);
-			const compositePackageName = `@ismail-elkorchi/textpack-${languageTag}`;
+			const readySlots = slots.filter((slot) => slot.checks.distributionReady);
+			const blockedSlots = slots.filter((slot) => !slot.checks.distributionReady);
+			const distributionPackageName = `@ismail-elkorchi/textpack-${languageTag}`;
 			return {
 				languageTag,
 				languageName: languageDisplayName(languageTag, context),
-				compositePackageName,
-				compositeReady: blockedSlots.length === 0,
+				distributionPackageName,
+				distributionReady: blockedSlots.length === 0,
 				summary: {
 					requiredSlotCount: slots.length,
 					readySlotCount: readySlots.length,
@@ -13551,38 +12471,38 @@ function languageCompositeReadinessFor(context) {
 	};
 }
 
-function validateDeveloperFacingCompositePublishability(context, readiness) {
+function validateDeveloperFacingDistributionPublishability(context, readiness) {
 	const packageByName = new Map(
 		context.packs.map((pack) => [pack.packageName, pack]),
 	);
 	for (const language of readiness.languages) {
-		const pack = packageByName.get(language.compositePackageName);
+		const pack = packageByName.get(language.distributionPackageName);
 		if (pack?.publishable !== true) continue;
 		expect(
-			language.compositeReady === true,
-			`${language.compositePackageName} cannot be publishable until every required language slot is composite-ready. Blocked slots: ${language.summary.blockedSlots.join(", ") || "none"}.`,
+			language.distributionReady === true,
+			`${language.distributionPackageName} cannot be publishable until every required language slot is distribution-ready. Blocked slots: ${language.summary.blockedSlots.join(", ") || "none"}.`,
 		);
 	}
 }
 
-function languageCompositeReadinessMarkdown(readiness) {
+function languageDistributionReadinessMarkdown(readiness) {
 	const lines = [
-		"# Language Composite Readiness",
+		"# Language Distribution Readiness",
 		"",
 		`Generated at: \`${readiness.generatedAt}\``,
 		"",
-		"This report is generated from the active forge graph. It gates language composites: `textpack-en`, `textpack-ar`, and `textpack-fr` stay non-publishable until every required slot is composite-ready.",
+		"This report is generated from the active forge graph. It gates the self-contained `textpack-en`, `textpack-ar`, and `textpack-fr` distributions.",
 		"",
-		"Candidate packs are informational only. A candidate does not satisfy a slot until the exact required package is generated, audited, evaluated, publishable, declares production coverage for that slot, and is not descriptor-only.",
+		"A slot is ready only when the language distribution contains audited, evaluated, task-usable resources for it.",
 		"",
 		"## Summary",
 		"",
-		"| Language | Composite | Ready slots | Blocked slots | Composite ready |",
+		"| Language | Distribution | Ready slots | Blocked slots | Distribution ready |",
 		"| --- | --- | ---: | --- | --- |",
 	];
 	for (const language of readiness.languages) {
 		lines.push(
-			`| \`${language.languageTag}\` ${markdownCell(language.languageName)} | \`${language.compositePackageName}\` | ${language.summary.readySlotCount}/${language.summary.requiredSlotCount} | ${language.summary.blockedSlots.map((slot) => `\`${slot}\``).join(", ") || "None"} | \`${language.compositeReady ? "true" : "false"}\` |`,
+			`| \`${language.languageTag}\` ${markdownCell(language.languageName)} | \`${language.distributionPackageName}\` | ${language.summary.readySlotCount}/${language.summary.requiredSlotCount} | ${language.summary.blockedSlots.map((slot) => `\`${slot}\``).join(", ") || "None"} | \`${language.distributionReady ? "true" : "false"}\` |`,
 		);
 	}
 	for (const language of readiness.languages) {
@@ -13590,12 +12510,12 @@ function languageCompositeReadinessMarkdown(readiness) {
 			"",
 			`## ${language.languageName} (${language.languageTag})`,
 			"",
-			"| Slot | Required package | Stage | Candidates | Blockers |",
+			"| Slot | Distribution | Stage | Selected build units | Blockers |",
 			"| --- | --- | --- | --- | --- |",
 		);
 		for (const slot of language.requiredSlots) {
 			lines.push(
-				`| \`${slot.slot}\` | \`${slot.requiredPackageName}\` | \`${slot.stage}\` | ${slot.candidatePacks.map((pack) => `\`${pack.packageName}\``).join(", ") || "None"} | ${slot.blockers.map(markdownCell).join("<br>") || "None"} |`,
+				`| \`${slot.slot}\` | \`${slot.requiredPackageName}\` | \`${slot.stage}\` | ${slot.selectedBuildUnits.map((unit) => `\`${unit.buildUnitId}\``).join(", ") || "None"} | ${slot.blockers.map(markdownCell).join("<br>") || "None"} |`,
 			);
 		}
 	}
@@ -13616,7 +12536,7 @@ function sizeReportFor(context) {
 			hugeUnpackedBytes: 500 * 1024 * 1024,
 			compositePackedBytes: 500 * 1024,
 		},
-		packages: context.packs.map((pack) => ({
+		packages: context.packs.filter(isDistributionPack).map((pack) => ({
 			packageName: pack.packageName,
 			packageDir: pack.packageDir,
 			publishable: pack.publishable,
@@ -13787,38 +12707,51 @@ function posixRelative(filePath) {
 
 async function generatedOutputs(options = {}) {
 	const includePackages = options.includePackages !== false;
-	const context = await collectContext({ materializeResources: false });
+	const context = await collectContext({
+		materializeResources: includePackages,
+	});
+	const packageOutputSets = [];
+	if (includePackages) {
+		for (const pack of context.packs.filter(isDistributionPack)) {
+			const packageOutputs = await packageOutputsFor(pack, context);
+			const prefix = `${pack.packageDir}/`;
+			pack.fileDigests = [...packageOutputs.entries()]
+				.map(([relative, value]) => ({
+					path: relative.slice(prefix.length),
+					byteLength: Buffer.byteLength(value, "utf8"),
+					checksum: sha256(value),
+				}))
+				.sort((left, right) => left.path.localeCompare(right.path));
+			pack.generatedFiles = pack.fileDigests.map((file) => file.path);
+			pack.outputChecksum = sha256(stableJson(pack.fileDigests));
+			packageOutputSets.push({ pack, packageOutputs });
+		}
+	}
 	const inventory = inventoryFor(context);
-	const languageCompositeReadiness = languageCompositeReadinessFor(context);
+	const languageDistributionReadiness = languageDistributionReadinessFor(context);
 	const outputs = new Map([
 		[INVENTORY_JSON_PATH, stableJson(inventory)],
 		[INVENTORY_MD_PATH, inventoryMarkdown(inventory)],
 		[SOURCE_POLICY_JSON_PATH, stableJson(sourcePolicyGeneratedFor(context))],
 		[SOURCE_READINESS_MD_PATH, sourceReadinessMarkdown(context)],
 		[
-			LANGUAGE_COMPOSITE_READINESS_JSON_PATH,
-			stableJson(languageCompositeReadiness),
+			LANGUAGE_DISTRIBUTION_READINESS_JSON_PATH,
+			stableJson(languageDistributionReadiness),
 		],
 		[
-			LANGUAGE_COMPOSITE_READINESS_MD_PATH,
-			languageCompositeReadinessMarkdown(languageCompositeReadiness),
+			LANGUAGE_DISTRIBUTION_READINESS_MD_PATH,
+			languageDistributionReadinessMarkdown(languageDistributionReadiness),
 		],
 		[SIZE_REPORT_PATH, stableJson(sizeReportFor(context))],
 	]);
-	if (includePackages) {
-		const packageContext = await collectContext({ materializeResources: true });
-		for (const pack of packageContext.packs) {
-			for (const [relative, text] of await packageOutputsFor(
-				pack,
-				packageContext,
-			)) {
-				outputs.set(relative, text);
-			}
-			outputs.set(
-				`${pack.packageDir}/.textpack-generated.json`,
-				stableJson(markerFor(pack, packageContext)),
-			);
+	for (const { pack, packageOutputs } of packageOutputSets) {
+		for (const [relative, value] of packageOutputs) {
+			outputs.set(relative, value);
 		}
+		outputs.set(
+			`${pack.packageDir}/.textpack-generated.json`,
+			stableJson(markerFor(pack, context)),
+		);
 	}
 	return outputs;
 }
@@ -13843,12 +12776,18 @@ async function cleanStaleTextpackPackageDirs(expectedPackageDirs) {
 		if (!entry.isDirectory()) continue;
 		const relative = `packages/textpacks/${entry.name}`;
 		if (expectedPackageDirs.has(relative)) continue;
-		const packageJsonPath = path.join(textpacksDir, entry.name, "package.json");
+		const markerPath = path.join(
+			textpacksDir,
+			entry.name,
+			".textpack-generated.json",
+		);
+		let marker;
 		try {
-			await access(packageJsonPath);
+			marker = JSON.parse(await readFile(markerPath, "utf8"));
 		} catch {
 			continue;
 		}
+		if (marker.generatedBy !== GENERATED_BY) continue;
 		await rm(path.join(textpacksDir, entry.name), {
 			recursive: true,
 			force: true,
@@ -13887,10 +12826,109 @@ async function cleanStaleTextpackPackageFiles(outputs) {
 	}
 }
 
+async function verifyGeneratedPackageFiles(expectedInputChecksum) {
+	const inventory = await readJson(INVENTORY_JSON_PATH);
+	expect(
+		stableJson(
+			sorted((inventory.packages ?? []).map((entry) => entry.packageName)),
+		) === stableJson(sorted(DISTRIBUTION_PACKAGE_NAMES)),
+		"Generated inventory must contain exactly the language distributions.",
+	);
+	const sizeReport = await readJson(SIZE_REPORT_PATH);
+	const sizeByPackage = new Map(
+		(sizeReport.packages ?? []).map((entry) => [entry.packageName, entry]),
+	);
+	const expectedDirs = new Set();
+	let verifiedFileCount = 0;
+	for (const entry of inventory.packages ?? []) {
+		const packageDir = `packages/textpacks/${entry.packageId}`;
+		expectedDirs.add(packageDir);
+		const marker = await readJson(`${packageDir}/.textpack-generated.json`);
+		expect(
+			marker.generatedBy === GENERATED_BY,
+			`${packageDir} is missing forge ownership metadata.`,
+		);
+		expect(
+			marker.packageName === entry.packageName,
+			`${packageDir} marker package name mismatch.`,
+		);
+		expect(
+			marker.lockfileChecksum === expectedInputChecksum,
+			`${packageDir} was generated from stale forge inputs.`,
+			`expected ${expectedInputChecksum}\nactual   ${marker.lockfileChecksum}`,
+		);
+		expect(
+			stableJson(marker.fileDigests) === stableJson(entry.fileDigests),
+			`${packageDir} inventory file digests are stale.`,
+		);
+		expect(
+			stableJson(marker.generatedFiles) ===
+				stableJson(marker.fileDigests.map((file) => file.path)),
+			`${packageDir} marker generated file list is stale.`,
+		);
+		const outputChecksum = sha256(stableJson(marker.fileDigests));
+		expect(
+			marker.outputChecksum === outputChecksum &&
+				entry.outputChecksum === outputChecksum,
+			`${packageDir} output checksum is stale.`,
+		);
+		for (const file of marker.fileDigests) {
+			const bytes = await readFile(path.join(ROOT, packageDir, file.path));
+			expect(
+				bytes.byteLength === file.byteLength,
+				`${packageDir}/${file.path} byte length mismatch.`,
+			);
+			expect(
+				sha256Bytes(bytes) === file.checksum,
+				`${packageDir}/${file.path} checksum mismatch.`,
+			);
+			verifiedFileCount += 1;
+		}
+		const actualFiles = [];
+		await listFilesRecursive(path.join(ROOT, packageDir), actualFiles);
+		const generatedFiles = actualFiles
+			.map((filePath) =>
+				posixRelative(path.relative(path.join(ROOT, packageDir), filePath)),
+			)
+			.filter(
+				(relative) =>
+					relative !== ".textpack-generated.json" &&
+					!relative.startsWith("dist/"),
+			)
+			.sort((left, right) => left.localeCompare(right));
+		expect(
+			stableJson(generatedFiles) === stableJson(marker.generatedFiles),
+			`${packageDir} contains stale or missing generated files.`,
+		);
+		const resourceBytes = marker.fileDigests
+			.filter((file) => file.path.startsWith("resources/"))
+			.reduce((total, file) => total + file.byteLength, 0);
+		const reportedSize = sizeByPackage.get(entry.packageName);
+		expect(
+			reportedSize?.npmShippedSizeBytes === resourceBytes,
+			`${packageDir} size report does not match generated resources.`,
+		);
+		expect(
+			reportedSize.outputChecksum === outputChecksum,
+			`${packageDir} size report output checksum is stale.`,
+		);
+	}
+	const textpacksDir = path.join(ROOT, "packages/textpacks");
+	const actualDirs = new Set(
+		(await readdir(textpacksDir, { withFileTypes: true }))
+			.filter((entry) => entry.isDirectory())
+			.map((entry) => `packages/textpacks/${entry.name}`),
+	);
+	expect(
+		stableJson(sorted(actualDirs)) === stableJson(sorted(expectedDirs)),
+		"Generated textpack directory inventory is stale.",
+	);
+	return verifiedFileCount;
+}
+
 async function build(filter) {
-	const includePackages = filter === undefined;
-	const outputs = await generatedOutputs({ includePackages });
-	if (includePackages) {
+	const outputs = await generatedOutputs({ includePackages: true });
+	if (filter === undefined) {
 		await cleanStaleTextpackPackageDirs(generatedPackageDirs(outputs));
 		await cleanStaleTextpackPackageFiles(outputs);
 	}
@@ -13907,7 +12945,24 @@ async function build(filter) {
 }
 
 async function drift() {
-	const outputs = await generatedOutputs({ includePackages: false });
+	const context = await collectContext({
+		materializeResources: false,
+	});
+	const languageDistributionReadiness = languageDistributionReadinessFor(context);
+	const inventory = await readJson(INVENTORY_JSON_PATH);
+	const outputs = new Map([
+		[INVENTORY_MD_PATH, inventoryMarkdown(inventory)],
+		[SOURCE_POLICY_JSON_PATH, stableJson(sourcePolicyGeneratedFor(context))],
+		[SOURCE_READINESS_MD_PATH, sourceReadinessMarkdown(context)],
+		[
+			LANGUAGE_DISTRIBUTION_READINESS_JSON_PATH,
+			stableJson(languageDistributionReadiness),
+		],
+		[
+			LANGUAGE_DISTRIBUTION_READINESS_MD_PATH,
+			languageDistributionReadinessMarkdown(languageDistributionReadiness),
+		],
+	]);
 	const failures = [];
 	for (const [relative, expected] of outputs) {
 		const absolute = path.join(ROOT, relative);
@@ -13923,7 +12978,12 @@ async function drift() {
 	if (failures.length > 0) {
 		fail("Textpack forge drift check failed.", failures.join("\n"));
 	}
-	console.log(`Textpack forge drift OK (${outputs.size} files).`);
+	const verifiedFileCount = await verifyGeneratedPackageFiles(
+		context.lockfileChecksum,
+	);
+	console.log(
+		`Textpack forge drift OK (${outputs.size} reports, ${verifiedFileCount} package files).`,
+	);
 }
 
 async function existingSnapshotFileState(file, absolute) {
@@ -13943,7 +13003,9 @@ async function existingSnapshotFileState(file, absolute) {
 }
 
 async function licenseAudit() {
-	const context = await collectContext({ materializeResources: false });
+	const context = await collectContext({
+		materializeResources: false,
+	});
 	const packageByName = new Map(
 		context.packs.map((pack) => [pack.packageName, pack]),
 	);
@@ -13956,7 +13018,7 @@ async function licenseAudit() {
 		validateCompositeComponentSourcePolicies(composite, packageByName, context);
 	}
 	console.log(
-		`Textpack forge license audit OK (${context.sourcePolicies.length} policy sources, ${context.sources.length} active sources, ${context.packs.length} packages).`,
+		`Textpack forge license audit OK (${context.sourcePolicies.length} policy sources, ${context.sources.length} active sources, ${context.packs.filter((pack) => !isDistributionPack(pack)).length} internal build units, ${context.packs.filter(isDistributionPack).length} distributions).`,
 	);
 }
 
@@ -13973,8 +13035,8 @@ async function verify() {
 		INVENTORY_MD_PATH,
 		SOURCE_POLICY_JSON_PATH,
 		SOURCE_READINESS_MD_PATH,
-		LANGUAGE_COMPOSITE_READINESS_JSON_PATH,
-		LANGUAGE_COMPOSITE_READINESS_MD_PATH,
+		LANGUAGE_DISTRIBUTION_READINESS_JSON_PATH,
+		LANGUAGE_DISTRIBUTION_READINESS_MD_PATH,
 		SIZE_REPORT_PATH,
 		...(lock.compositeSpecPaths ?? []),
 	];
@@ -13985,16 +13047,38 @@ async function verify() {
 	await drift();
 }
 
-async function acquire() {
+async function acquire(options = {}) {
 	const lock = await readJson(LOCK_PATH);
 	const snapshots = await Promise.all(
 		lock.snapshotPaths.map((snapshotPath) => readJson(snapshotPath)),
 	);
+	const requiredPaths = new Set();
+	if (options.all !== true) {
+		const context = await collectContext({
+			materializeResources: false,
+		});
+		for (const pack of context.packs.filter(isDistributionPack)) {
+			for (const resourceSpecId of pack.resourceSpecIds) {
+				const resourceSpec = context.resourceSpecById.get(resourceSpecId);
+				for (const inputFile of resourceSpec?.inputFiles ?? []) {
+					requiredPaths.add(inputFile.path);
+				}
+			}
+			for (const licenseFile of pack.licenseEvidenceFiles) {
+				requiredPaths.add(licenseFile.sourcePath);
+			}
+		}
+	}
 	let acquiredCount = 0;
 	let alreadyCurrentCount = 0;
 	let skippedLocalDerivativeCount = 0;
+	let skippedUnselectedCount = 0;
 	for (const snapshot of snapshots) {
 		for (const file of snapshot.files ?? []) {
+			if (options.all !== true && !requiredPaths.has(file.path)) {
+				skippedUnselectedCount += 1;
+				continue;
+			}
 			const absolute = snapshotDataPath(
 				file.path,
 				`${snapshot.snapshotId} file path`,
@@ -14036,7 +13120,7 @@ async function acquire() {
 		}
 	}
 	console.log(
-		`Textpack forge acquired ${acquiredCount} snapshot files; ${alreadyCurrentCount} already current; skipped ${skippedLocalDerivativeCount} local derivative files.`,
+		`Textpack forge acquired ${acquiredCount} snapshot files; ${alreadyCurrentCount} already current; skipped ${skippedLocalDerivativeCount} local derivatives and ${skippedUnselectedCount} unselected files.`,
 	);
 }
 
@@ -14109,7 +13193,7 @@ async function snapshotUpdate() {
 async function main() {
 	const command = process.argv[2] ?? "help";
 	if (command === "acquire") {
-		await acquire();
+		await acquire({ all: process.argv.includes("--all") });
 		return;
 	}
 	if (command === "build") {

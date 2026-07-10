@@ -1,1 +1,26 @@
-*.conllu whitespace=-blank-at-eof
+* text=auto eol=lf
+
+*.b64 text eol=lf
+*.bib text eol=lf
+*.conllu text eol=lf whitespace=-blank-at-eof
+*.csv text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.tsv text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+*.bz2 binary -eol
+*.db binary -eol
+*.gz binary -eol
+*.pdf binary -eol
+*.png binary -eol
+*.jpg binary -eol
+*.jpeg binary -eol
+*.webp binary -eol
+*.zip binary -eol

@@ -123,7 +123,7 @@ async function orderedGeneratedTextpackPackageDirs() {
 	return orderedPackageDirs(records, "Generated textpack");
 }
 
-await run("npm", ["run", "-s", "forge:build"]);
+await run("npm", ["run", "-s", "forge:verify"]);
 
 for (const packageDir of orderedPackageDirs(
 	await packageWorkspaceRecords(),

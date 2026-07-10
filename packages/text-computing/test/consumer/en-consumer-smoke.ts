@@ -1,36 +1,13 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
-
+import {
+	createNodeResourceReader,
+	load,
+} from "@ismail-elkorchi/text-computing/node";
 import en from "@ismail-elkorchi/textpack-en";
-import { load, type TextPackResourceReader } from "../../dist/index.js";
-
-function localGeneratedResourceReader(): TextPackResourceReader {
-	return {
-		readText({ descriptor }) {
-			if (descriptor.packageRoot === undefined) {
-				throw new TypeError(
-					`Generated textpack resource ${descriptor.path} has no packageRoot.`,
-				);
-			}
-			const root = new URL(
-				descriptor.packageRoot.endsWith("/")
-					? descriptor.packageRoot
-					: `${descriptor.packageRoot}/`,
-			);
-			const resourceUrl = new URL(descriptor.path, root);
-			if (!resourceUrl.href.startsWith(root.href)) {
-				throw new TypeError(
-					`Generated textpack resource path ${descriptor.path} escapes ${root.href}.`,
-				);
-			}
-			return readFile(resourceUrl, "utf8");
-		},
-	};
-}
 
 test("English consumer workflow uses only the SDK plus textpack-en", async () => {
-	const nlp = await load(en, { reader: localGeneratedResourceReader() });
+	const nlp = await load(en, { reader: createNodeResourceReader() });
 	const text = "The French Republic recognizes France.";
 	const doc = await nlp(text, {
 		entityMaxCandidates: 2,
@@ -72,16 +49,8 @@ test("English consumer workflow uses only the SDK plus textpack-en", async () =>
 	const index = await nlp.search.indexAnalysis(doc);
 	assert.equal(index.stats.documentCount, 1);
 
-	const corpusDocs = await nlp.corpus.documents({ maxDocuments: 1 });
-	assert.equal(corpusDocs.length, 1);
-	const parallelTables = await nlp.parallel.rows({ maxRows: 2 });
-	const parallelRowCount = parallelTables.reduce(
-		(total, table) => total + table.rows.length,
-		0,
-	);
-	assert.ok(parallelRowCount > 0 && parallelRowCount <= 2);
-	const parallelLinks = await nlp.parallel.links({ maxRows: 2 });
-	assert.ok(parallelLinks.length > 0 && parallelLinks.length <= 2);
+	assert.equal(nlp.corpus.resources().length, 0);
+	assert.equal(nlp.parallel.resources().length, 0);
 
 	const quality = await nlp.quality.analyzeDocument(doc.toTextDoc(), {
 		maxFindings: 4,

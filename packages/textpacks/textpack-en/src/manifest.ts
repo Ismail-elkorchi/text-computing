@@ -23,219 +23,1267 @@ export const manifest: TextPackManifest = {
 	"engines": {
 		"@ismail-elkorchi/textpack": "^0.1.0"
 	},
-	"resources": [],
-	"components": [
+	"resources": [
 		{
-			"packageName": "@ismail-elkorchi/textpack-foundation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "bcp47-language-subtags",
+			"kind": "language-registry",
+			"path": "resources/bcp47.language-subtags.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05."
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-core",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English core language profile resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "bcp47-language-registry-summary",
+			"kind": "language-registry",
+			"path": "resources/bcp47.language-registry.summary.json",
+			"format": "json",
+			"license": "LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05."
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-normalization",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English normalization policy and quality resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-blocks",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.blocks.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-segmentation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English segmentation profiles.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-property-value-aliases",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.property-value-aliases.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-lexicon",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English spelling, inflection-inventory, and lexical-semantic lexicon resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-scripts",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.scripts.tsv.gz.b64",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-morphology",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English lookup morphology resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-core-summary",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.core.summary.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-syntax",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English UD-derived syntax and tagging resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-likely-subtags",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-kb",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English WordNet lexical-semantic resources and local Wikidata core entity extract.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-locale-aliases",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.locale-aliases.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-search",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English search analyzer profile resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-script-data",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.script-data.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-corpus",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English local Tatoeba corpus rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-core-summary",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.core.summary.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-parallel",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English-linked local Tatoeba parallel alignment rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "en-core-language-profile",
+			"kind": "locale-profile",
+			"path": "resources/en.core.language-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-quality",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English generated quality evidence over the required default component graph.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "en-core-orthography",
+			"kind": "locale-profile",
+			"path": "resources/en.core.orthography.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
+		},
+		{
+			"id": "en-core-punctuation",
+			"kind": "locale-profile",
+			"path": "resources/en.core.punctuation.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
+		},
+		{
+			"id": "en-core-abbreviations",
+			"kind": "abbreviation-table",
+			"path": "resources/en.core.abbreviations.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.abbreviation-table.v1"
+		},
+		{
+			"id": "en-core-function-words",
+			"kind": "stoplist",
+			"path": "resources/en.core.function-words.tsv",
+			"format": "tsv",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.stoplist.v1"
+		},
+		{
+			"id": "en-core-basic-segmentation",
+			"kind": "segmentation-profile",
+			"path": "resources/en.core.basic-segmentation.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "en-core-quality",
+			"kind": "quality-profile",
+			"path": "resources/en.core.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "en-core-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/en.core.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "en-normalization-rules",
+			"kind": "normalization-profile",
+			"path": "resources/en.normalization-rules.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textnorm.rules.v1"
+		},
+		{
+			"id": "en-normalization-profile",
+			"kind": "normalization-profile",
+			"path": "resources/en.normalization.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textnorm.profile.v1"
+		},
+		{
+			"id": "en-normalization-quality",
+			"kind": "quality-profile",
+			"path": "resources/en.normalization.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "en-normalization-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/en.normalization.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "en-segmentation-boundary-properties",
+			"kind": "segmentation-profile",
+			"path": "resources/en.segmentation-boundary-properties.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-table.v1"
+		},
+		{
+			"id": "en-grapheme-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/en.segmentation.grapheme.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "en-word-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/en.segmentation.word.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "en-sentence-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/en.segmentation.sentence.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "en-segmentation-quality",
+			"kind": "quality-profile",
+			"path": "resources/en.segmentation.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "en-segmentation-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/en.segmentation.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "en-esdb-default-wordlists",
+			"kind": "lexicon",
+			"path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "en-esdb-default-profiles",
+			"kind": "lexicon",
+			"path": "resources/esdb-2026.default-profiles.tsv",
+			"format": "tsv",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "en-esdb-wordlist-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/esdb-2026.lexicon.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textlex.lexicon.v1"
+		},
+		{
+			"id": "en-esdb-wordlist-search-profile",
+			"kind": "search-profile",
+			"path": "resources/esdb-2026.search-profile.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textsearch.analyzer-profile.v1"
+		},
+		{
+			"id": "en-esdb-wordlist-quality",
+			"kind": "quality-profile",
+			"path": "resources/esdb-2026.quality.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "en-esdb-wordlist-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/esdb-2026.quality-profile.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "en-scowl-inflection-entries",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.inflections.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "en-scowl-pos-inventory",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.pos.tsv",
+			"format": "tsv",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "en-scowl-lookup-analyzer",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "en-scowl-lookup-generator",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "en-scowl-inflection-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/scowl-v2.lexicon.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.lexicon.v1"
+		},
+		{
+			"id": "en-scowl-inflection-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/scowl-v2.morphology.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textlex.morphology.v1"
+		},
+		{
+			"id": "en-scowl-inflection-quality",
+			"kind": "quality-profile",
+			"path": "resources/scowl-v2.quality.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "en-scowl-inflection-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/scowl-v2.quality-profile.json",
+			"format": "json",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wordnet-en-lexical-entries",
+			"kind": "lexicon",
+			"path": "resources/wordnet-en.lexical-entries.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "wordnet-en-senses",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-en.senses.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-en-synsets",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-en.synsets.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-en-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-en.relations.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wordnet-en-quality",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-en.quality.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wordnet-en-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/wordnet-en.lexicon.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textlex.lexicon.v1"
+		},
+		{
+			"id": "wordnet-en-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wordnet-en.kb.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wordnet-en-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wordnet-en.quality-profile.json",
+			"format": "json",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wikidata-en-entities",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.entities.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-en-aliases",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.aliases.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-en-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.relations.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-en-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-en.kb.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wikidata-en-quality",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-en.quality.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wikidata-en-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-en.quality-profile.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [
 		{
+			"slot": "core",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-core-language-profile",
+				"en-core-orthography",
+				"en-core-punctuation",
+				"en-core-abbreviations",
+				"en-core-function-words",
+				"en-core-basic-segmentation"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "en-core-basic-segmentation",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-core-abbreviations",
+					"schemaId": "textlex.abbreviation-table.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-core-function-words",
+					"schemaId": "textlex.stoplist.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The bundled distribution resources provide the English core language profile.",
+				"Core profile resources cover modern typed English identity, Latin-script orthography, Unicode punctuation, SCOWLv2 abbreviation rows, SCOWLv2 POS-derived function-word stoplist candidates, and a basic UAX #29 segmentation baseline."
+			],
+			"capabilities": {
+				"segmentation": "profile",
+				"normalization": "unicode"
+			}
+		},
+		{
+			"slot": "corpus",
+			"status": "planned",
+			"notes": [
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
 			"slot": "foundation",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Unicode, CLDR, and BCP 47 foundation resources."
-			]
-		},
-		{
-			"slot": "core",
-			"status": "task-supported",
-			"notes": [
-				"The required component graph provides the English core language profile."
-			]
-		},
-		{
-			"slot": "normalization",
-			"status": "task-supported",
-			"notes": [
-				"The required component graph provides English normalization resources."
-			]
-		},
-		{
-			"slot": "segmentation",
-			"status": "task-supported",
-			"notes": [
-				"The required component graph provides English segmentation resources."
-			]
-		},
-		{
-			"slot": "lexicon",
-			"status": "task-supported",
-			"notes": [
-				"The required component graph provides English spelling, inflection-inventory, and lexical-semantic lexicon resources."
-			]
-		},
-		{
-			"slot": "morphology",
-			"status": "task-supported",
-			"notes": [
-				"The required component graph provides English SCOWLv2 lookup morphology resources; isolated UniMorph paradigm tables are not included."
-			]
-		},
-		{
-			"slot": "syntax",
-			"status": "task-supported",
-			"notes": [
-				"The required component graph provides English UD-derived syntax and tagging resources."
+				"The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
 			]
 		},
 		{
 			"slot": "kb",
 			"status": "task-supported",
+			"resourceIds": [
+				"wordnet-en-senses",
+				"wordnet-en-synsets",
+				"wordnet-en-relations",
+				"wordnet-en-kb-canonical",
+				"wikidata-en-entities",
+				"wikidata-en-aliases",
+				"wikidata-en-relations",
+				"wikidata-en-kb-canonical"
+			],
+			"artifactIds": [
+				"artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wikidata-en-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "primary",
+					"resourceId": "wordnet-en-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-en-aliases",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-en-entities",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-en-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-en-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-en-senses",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-en-synsets",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides Open English WordNet resources and a local Wikidata English core entity extract."
+				"The bundled distribution resources provide Open English WordNet data and a local Wikidata English core entity extract.",
+				"Open English WordNet senses, synsets, and semantic relations are available as generated KB resources.",
+				"Wikidata English core entity rows, aliases, and P31 relations are materialized locally for the declared class-and-sitelink-threshold extract scope.",
+				"The pack does not claim complete Wikidata dump coverage."
+			],
+			"capabilities": {
+				"terminology": "kb",
+				"extraction": "gazetteer"
+			}
+		},
+		{
+			"slot": "language-registry",
+			"status": "task-supported",
+			"resourceIds": [
+				"bcp47-language-subtags",
+				"bcp47-language-registry-summary"
+			],
+			"notes": [
+				"BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
 			]
 		},
 		{
-			"slot": "search",
+			"slot": "lexicon",
 			"status": "task-supported",
+			"resourceIds": [
+				"en-esdb-default-wordlists",
+				"en-esdb-default-profiles",
+				"en-esdb-wordlist-lexicon-canonical",
+				"en-scowl-inflection-lexicon-canonical",
+				"wordnet-en-lexical-entries",
+				"wordnet-en-lexicon-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "en-esdb-wordlist-lexicon-canonical",
+					"schemaId": "textlex.lexicon.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "primary",
+					"resourceId": "en-scowl-inflection-lexicon-canonical",
+					"schemaId": "textlex.lexicon.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "primary",
+					"resourceId": "wordnet-en-lexicon-canonical",
+					"schemaId": "textlex.lexicon.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-esdb-default-profiles",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-esdb-default-wordlists",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "wordnet-en-lexical-entries",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides English search analyzer resources."
+				"The bundled distribution resources provide English spelling, inflection-inventory, and lexical-semantic lexicon data.",
+				"ESDB default regional spell-checker wordlists are available as generated English spelling-form resources. This pack does not claim full lexical semantics or morphology coverage.",
+				"Generated canonical lexicon resource references SCOWLv2 lemma and form inventory coverage for lookup consumers.",
+				"Open English WordNet lexical entries are available as generated lexicon resources."
+			],
+			"capabilities": {
+				"terminology": "lexicon",
+				"extraction": "gazetteer"
+			}
+		},
+		{
+			"slot": "locale-profile",
+			"status": "task-supported",
+			"resourceIds": [
+				"cldr-48-likely-subtags",
+				"cldr-48-locale-aliases",
+				"cldr-48-script-data",
+				"cldr-48-core-summary"
+			],
+			"notes": [
+				"CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
 			]
 		},
 		{
-			"slot": "corpus",
+			"slot": "morphology",
 			"status": "task-supported",
+			"resourceIds": [
+				"en-scowl-inflection-entries",
+				"en-scowl-lookup-analyzer",
+				"en-scowl-lookup-generator",
+				"en-scowl-pos-inventory",
+				"en-scowl-inflection-morphology-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "en-scowl-inflection-morphology-canonical",
+					"schemaId": "textlex.morphology.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-scowl-inflection-entries",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-scowl-lookup-analyzer",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-scowl-lookup-generator",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-scowl-pos-inventory",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides local Tatoeba English sentence rows and canonical corpus metadata."
-			]
+				"The bundled distribution resources provide English SCOWLv2 lookup morphology data; isolated UniMorph paradigm tables are not included.",
+				"SCOWLv2 form-to-lemma lookup analysis and lemma-to-form lookup generation candidates are available as generated compressed table resources."
+			],
+			"capabilities": {
+				"morphology": "lookup"
+			}
+		},
+		{
+			"slot": "normalization",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-normalization-rules",
+				"en-normalization-profile"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "en-normalization-profile",
+					"schemaId": "textnorm.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "table",
+					"resourceId": "en-normalization-rules",
+					"schemaId": "textnorm.rules.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The bundled distribution resources provide English normalization data.",
+				"Unicode/CLDR-backed NFC and lookup casefold policy for modern typed English text."
+			],
+			"capabilities": {
+				"normalization": "unicode"
+			}
 		},
 		{
 			"slot": "parallel",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba English-linked sentence-id alignment rows for selected target languages."
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"resourceIds": [
+				"en-core-quality",
+				"en-core-quality-profile",
+				"en-normalization-quality",
+				"en-normalization-quality-profile",
+				"en-segmentation-quality",
+				"en-segmentation-quality-profile",
+				"en-esdb-wordlist-quality",
+				"en-esdb-wordlist-quality-profile",
+				"en-scowl-inflection-quality",
+				"en-scowl-inflection-quality-profile",
+				"wordnet-en-quality",
+				"wordnet-en-quality-profile",
+				"wikidata-en-quality",
+				"wikidata-en-quality-profile"
+			],
+			"bindings": [
+				{
+					"role": "evidence",
+					"resourceId": "en-core-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "en-esdb-wordlist-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "en-normalization-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "en-scowl-inflection-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "en-segmentation-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "wikidata-en-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "wordnet-en-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "en-core-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "en-esdb-wordlist-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "en-normalization-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "en-scowl-inflection-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "en-segmentation-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wikidata-en-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wordnet-en-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides generated English quality evidence and coverage reports over the required local component graph."
+				"The bundled distribution resources provide generated English quality evidence and coverage reports over the selected local build units.",
+				"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations.",
+				"Generated quality profile records source coverage, accepted records, and scope limitations.",
+				"Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations.",
+				"Generated quality profile records profile counts, word counts, and transform integrity.",
+				"Generated quality profile records lemma, form, POS, and transform-integrity counts.",
+				"Generated quality profile records lexical-entry, sense, synset, and relation counts.",
+				"Generated quality profile records local entity, alias, relation, scope, and checksum evidence."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-esdb-wordlist-search-profile"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "en-esdb-wordlist-search-profile",
+					"schemaId": "textsearch.analyzer-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textsearch"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The bundled distribution resources provide English search analyzer data.",
+				"The executable profile performs Unicode word tokenization and casefolding. ESDB spelling forms remain available through the lexicon slot for explicit spelling or suggestion logic; they are not silently used as a token filter."
+			],
+			"capabilities": {
+				"search": "analyzer"
+			}
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"resourceIds": [
+				"en-grapheme-segmentation-profile",
+				"en-word-segmentation-profile",
+				"en-sentence-segmentation-profile"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "en-grapheme-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "profile",
+					"resourceId": "en-sentence-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "profile",
+					"resourceId": "en-word-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The bundled distribution resources provide English segmentation data.",
+				"The built-in adapter executes host Intl.Segmenter Unicode grapheme, word, and sentence segmentation for English. Generated UAX #29 property tables are conformance evidence, not a second unexecuted boundary engine."
+			],
+			"capabilities": {
+				"segmentation": "profile"
+			}
+		},
+		{
+			"slot": "syntax",
+			"status": "planned",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "unicode-profile",
+			"status": "task-supported",
+			"resourceIds": [
+				"unicode-17-blocks",
+				"unicode-17-property-value-aliases",
+				"unicode-17-scripts",
+				"unicode-17-core-summary"
+			],
+			"notes": [
+				"Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
 			]
 		}
 	],
-	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND CC-BY-4.0 AND LicenseRef-Princeton-WordNet AND CC0-1.0 AND CC-BY-2.0-FR",
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC0-1.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
 		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 		"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 		"SCOWLv2 rich text export, rel-2026.02.25.",
-		"Universal Dependencies English GUMReddit r2.18 annotations.",
 		"Open English WordNet 2025.",
 		"Wikidata main structured data dump, 2026-06-08.",
-		"Tatoeba weekly exports, 2026-06-06."
+		"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+	],
+	"gapNotes": [
+		{
+			"id": "gap:pack:en:syntax",
+			"slot": "syntax",
+			"status": "planned",
+			"message": "syntax is planned in this source-backed self-contained language distribution."
+		},
+		{
+			"id": "gap:pack:en:corpus",
+			"slot": "corpus",
+			"status": "planned",
+			"message": "corpus is planned in this source-backed self-contained language distribution."
+		},
+		{
+			"id": "gap:pack:en:parallel",
+			"slot": "parallel",
+			"status": "planned",
+			"message": "parallel is planned in this source-backed self-contained language distribution."
+		}
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+		"lockfileChecksum": "sha256:78d906f0c73d85650e1ff58aab0aa93a116dc7978756c724328785533464d0ef",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
-	}
+	},
+	"artifacts": [
+		{
+			"artifactId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"version": "20260608",
+			"profile": "full",
+			"sizeBytes": 142291512349,
+			"mediaType": "application/json",
+			"compression": "gzip",
+			"checksum": {
+				"algorithm": "sha1",
+				"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+			},
+			"licenseExpression": "CC0-1.0",
+			"redistributionPolicy": "redistributable",
+			"retrieval": {
+				"kind": "https",
+				"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+				"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+			},
+			"cacheKey": "wikidata-main-20260608-all-json-gzip",
+			"expectedFiles": [
+				{
+					"path": "wikidata-20260608-all.json.gz",
+					"sizeBytes": 142291512349,
+					"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+				}
+			]
+		}
+	]
 } as const;

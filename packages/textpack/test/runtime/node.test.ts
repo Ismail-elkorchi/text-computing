@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -8,8 +8,8 @@ import {
 	getResource,
 	openResourceTable,
 	type TextPackManifest,
-	type TextPackResourceReader,
-} from "../../dist/index.js";
+} from "@ismail-elkorchi/textpack";
+import { createNodeResourceReader } from "@ismail-elkorchi/textpack/node";
 
 async function sha256(text: string): Promise<string> {
 	const bytes = new TextEncoder().encode(text);
@@ -17,21 +17,6 @@ async function sha256(text: string): Promise<string> {
 	return [...new Uint8Array(digest)]
 		.map((byte) => byte.toString(16).padStart(2, "0"))
 		.join("");
-}
-
-function localFileResourceReader(packageRoot: string): TextPackResourceReader {
-	const root = pathToFileURL(
-		packageRoot.endsWith("/") ? packageRoot : `${packageRoot}/`,
-	);
-	return {
-		readText({ descriptor }) {
-			const resourceUrl = new URL(descriptor.path, root);
-			if (!resourceUrl.href.startsWith(root.href)) {
-				throw new TypeError(`resource path escapes test package root`);
-			}
-			return readFile(resourceUrl, "utf8");
-		},
-	};
 }
 
 const manifest: TextPackManifest = {
@@ -59,7 +44,14 @@ const fileBackedManifest: TextPackManifest = {
 	...manifest,
 	id: "pack:runtime-node-file-backed",
 	name: "Runtime Node File Backed Pack",
-	resources: [{ id: "dataset-file-backed", kind: "dataset", format: "tsv" }],
+	resources: [
+		{
+			id: "dataset-file-backed",
+			kind: "dataset",
+			path: "resources/table.tsv",
+			format: "tsv",
+		},
+	],
 	capabilitySlots: [
 		{
 			slot: "corpus",
@@ -72,6 +64,7 @@ const fileBackedPack = createPack(fileBackedManifest, {
 	"dataset-file-backed": {
 		kind: "file-backed-resource",
 		packageName: "@ismail-elkorchi/textpack-runtime-node",
+		packageRoot: pathToFileURL(`${packageRoot}/`).href,
 		path: "resources/table.tsv",
 		encoding: "utf8",
 		checksum: `sha256:${await sha256(tableText)}`,
@@ -81,6 +74,6 @@ const fileBackedPack = createPack(fileBackedManifest, {
 const table = await openResourceTable(
 	fileBackedPack,
 	"dataset-file-backed",
-	localFileResourceReader(packageRoot),
+	createNodeResourceReader(),
 );
 assert.deepEqual(table.rows[0], { id: "r1", text: "Node reader" });

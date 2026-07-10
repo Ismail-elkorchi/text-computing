@@ -15,4 +15,8 @@ import {
 } from "@ismail-elkorchi/textpack";
 ```
 
-The final spec does not define public `textpack` subpaths.
+Node-only package-file reading is isolated from the portable root entrypoint:
+
+```ts
+import { createNodeResourceReader } from "@ismail-elkorchi/textpack/node";
+```

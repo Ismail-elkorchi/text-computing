@@ -22,7 +22,6 @@ import {
 	lookupFromPackAsync,
 	type MorphologyGeneration,
 	type MorphologyIndex,
-	morphologyAnalysesFromPackAsync,
 	morphologyIndexFromPackAsync,
 } from "@ismail-elkorchi/textlex";
 import {
@@ -57,7 +56,6 @@ import {
 	searchIndexFromPack,
 } from "@ismail-elkorchi/textsearch";
 import { createDocumentRuntime } from "./document.js";
-import { requireTaskReader } from "./errors.js";
 import {
 	inspectionReport,
 	inspectSchemaResources,
@@ -76,9 +74,13 @@ type UdAnnotationDataset = Awaited<
 	ReturnType<typeof readUdAnnotationDatasetFromPackAsync>
 >;
 
+function readerOptions(reader: TextPackResourceReader | undefined) {
+	return reader === undefined ? {} : { reader };
+}
+
 async function createMergedMorphologyIndex(
 	pack: TextPack,
-	reader: TextPackResourceReader,
+	reader: TextPackResourceReader | undefined,
 	languageTag: string,
 	scriptTag: string,
 ): Promise<MorphologyIndex> {
@@ -90,7 +92,10 @@ async function createMergedMorphologyIndex(
 	});
 	const indexes = await Promise.all(
 		resourceIds.map((resourceId) =>
-			morphologyIndexFromPackAsync(pack, { reader, resourceId }),
+			morphologyIndexFromPackAsync(pack, {
+				...readerOptions(reader),
+				resourceId,
+			}),
 		),
 	);
 	if (indexes.length === 1 && indexes[0] !== undefined) return indexes[0];
@@ -148,7 +153,7 @@ async function createMergedMorphologyIndex(
 
 async function createMergedKnowledgeBase(
 	pack: TextPack,
-	reader: TextPackResourceReader,
+	reader: TextPackResourceReader | undefined,
 ): Promise<KnowledgeBase> {
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: "kb",
@@ -158,7 +163,10 @@ async function createMergedKnowledgeBase(
 	});
 	const bases = await Promise.all(
 		resourceIds.map((resourceId) =>
-			knowledgeBaseFromPack(pack, { reader, resourceId }),
+			knowledgeBaseFromPack(pack, {
+				...readerOptions(reader),
+				resourceId,
+			}),
 		),
 	);
 	if (bases.length === 1 && bases[0] !== undefined) return bases[0];
@@ -260,14 +268,14 @@ export function createTextComputingNlp(
 	const openSegmentation = () => {
 		assertRunnableTask(pack, "segmentation");
 		segmentationPromise ??= segmentationAdapterFromPack(pack, {
-			reader: requireTaskReader(reader, "segmentation"),
+			...readerOptions(reader),
 		});
 		return segmentationPromise;
 	};
 	const openNormalization = () => {
 		assertRunnableTask(pack, "normalization");
 		normalizationPromise ??= normalizationProfileFromPack(pack, {
-			reader: requireTaskReader(reader, "normalization"),
+			...readerOptions(reader),
 		});
 		return normalizationPromise;
 	};
@@ -275,7 +283,7 @@ export function createTextComputingNlp(
 		assertRunnableTask(pack, "morphology");
 		morphologyPromise ??= createMergedMorphologyIndex(
 			pack,
-			requireTaskReader(reader, "morphology"),
+			reader,
 			languageTag,
 			scriptTag,
 		);
@@ -283,23 +291,20 @@ export function createTextComputingNlp(
 	};
 	const openKb = () => {
 		assertRunnableTask(pack, "kb");
-		kbPromise ??= createMergedKnowledgeBase(
-			pack,
-			requireTaskReader(reader, "kb"),
-		);
+		kbPromise ??= createMergedKnowledgeBase(pack, reader);
 		return kbPromise;
 	};
 	const openAnalyzer = () => {
 		assertRunnableTask(pack, "search");
 		analyzerPromise ??= analyzerFromPack(pack, {
-			reader: requireTaskReader(reader, "search"),
+			...readerOptions(reader),
 		});
 		return analyzerPromise;
 	};
 	const createSearchIndex = (options?: IndexOptions) => {
 		assertRunnableTask(pack, "search");
 		return searchIndexFromPack(pack, {
-			reader: requireTaskReader(reader, "search"),
+			...readerOptions(reader),
 			...(options === undefined ? {} : { index: options }),
 		});
 	};
@@ -310,7 +315,7 @@ export function createTextComputingNlp(
 	const openQualityResources = () => {
 		assertRunnableTask(pack, "quality");
 		qualityResourcesPromise ??= qualityResourcesFromPack(pack, {
-			reader: requireTaskReader(reader, "quality"),
+			...readerOptions(reader),
 		});
 		return qualityResourcesPromise;
 	};
@@ -324,7 +329,7 @@ export function createTextComputingNlp(
 				role: "quality",
 			}).map((resourceId) =>
 				qualityProfileFromPack(pack, {
-					reader: requireTaskReader(reader, "quality"),
+					...readerOptions(reader),
 					resourceId,
 				}),
 			),
@@ -345,7 +350,7 @@ export function createTextComputingNlp(
 		assertRunnableTask(pack, "lexicon");
 		return lookupFromPackAsync(pack, form, {
 			...options,
-			reader: requireTaskReader(reader, "lexicon"),
+			...readerOptions(reader),
 			language: options.language ?? languageTag,
 			script: options.script ?? scriptTag,
 		});
@@ -397,15 +402,7 @@ export function createTextComputingNlp(
 				analyze: (
 					form: string,
 					options: { readonly maxResults?: number } = {},
-				) => {
-					assertRunnableTask(pack, "morphology");
-					return morphologyAnalysesFromPackAsync(pack, form, {
-						reader: requireTaskReader(reader, "morphology"),
-						...(options.maxResults === undefined
-							? {}
-							: { maxRowsPerResource: options.maxResults }),
-					});
-				},
+				) => openMorphology().then((index) => index.analyze(form, options)),
 				generate: (
 					lemma: string,
 					features?: Readonly<Record<string, string>>,
@@ -421,21 +418,21 @@ export function createTextComputingNlp(
 				resources() {
 					assertRunnableTask(pack, "syntax");
 					syntaxResourcesPromise ??= udSyntaxResourcesFromPackAsync(pack, {
-						reader: requireTaskReader(reader, "syntax"),
+						...readerOptions(reader),
 					});
 					return syntaxResourcesPromise;
 				},
 				annotations() {
 					assertRunnableTask(pack, "syntax");
 					syntaxAnnotationsPromise ??= udAnnotationRecordsFromPackAsync(pack, {
-						reader: requireTaskReader(reader, "syntax"),
+						...readerOptions(reader),
 					});
 					return syntaxAnnotationsPromise;
 				},
 				dataset() {
 					assertRunnableTask(pack, "syntax");
 					syntaxDatasetPromise ??= readUdAnnotationDatasetFromPackAsync(pack, {
-						reader: requireTaskReader(reader, "syntax"),
+						...readerOptions(reader),
 					});
 					return syntaxDatasetPromise;
 				},
@@ -452,7 +449,7 @@ export function createTextComputingNlp(
 					assertRunnableTask(pack, "kb");
 					return candidateEntitiesFromPack(pack, text, {
 						...options,
-						reader: requireTaskReader(reader, "kb"),
+						...readerOptions(reader),
 						language: options.language ?? languageTag,
 					});
 				},
@@ -487,14 +484,14 @@ export function createTextComputingNlp(
 				rows() {
 					assertRunnableTask(pack, "corpus");
 					return corpusRowsFromPack(pack, {
-						reader: requireTaskReader(reader, "corpus"),
+						...readerOptions(reader),
 					});
 				},
 				documents(options: { readonly maxDocuments: number }) {
 					assertRunnableTask(pack, "corpus");
 					return corpusDocumentsFromPack(pack, {
 						...options,
-						reader: requireTaskReader(reader, "corpus"),
+						...readerOptions(reader),
 					});
 				},
 			}),
@@ -508,21 +505,21 @@ export function createTextComputingNlp(
 					assertRunnableTask(pack, "parallel");
 					return parallelTablesFromPack(pack, {
 						...options,
-						reader: requireTaskReader(reader, "parallel"),
+						...readerOptions(reader),
 					});
 				},
 				links(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
 					assertRunnableTask(pack, "parallel");
 					return parallelLinkRowsFromPack(pack, {
 						...options,
-						reader: requireTaskReader(reader, "parallel"),
+						...readerOptions(reader),
 					});
 				},
 				corpus(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
 					assertRunnableTask(pack, "parallel");
 					return parallelCorpusFromPack(pack, {
 						...options,
-						reader: requireTaskReader(reader, "parallel"),
+						...readerOptions(reader),
 					});
 				},
 			}),

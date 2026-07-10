@@ -1,366 +1,595 @@
 {
-  "capabilities": {},
+  "capabilities": {
+    "extraction": "gazetteer",
+    "morphology": "lookup",
+    "normalization": "unicode",
+    "search": "analyzer",
+    "segmentation": "profile",
+    "terminology": "lexicon"
+  },
   "capabilityEvidence": [
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:core-component-evidence"
+        "eval:en-core:basic-segmentation-baseline:distribution:textpack-en",
+        "eval:en-core:iana-language-profile:distribution:textpack-en",
+        "eval:en-core:latin-orthography-ranges:distribution:textpack-en",
+        "eval:en-core:scowl-abbreviation-rows:distribution:textpack-en",
+        "eval:en-core:scowl-function-word-rows:distribution:textpack-en",
+        "eval:en-core:unicode-punctuation-ranges:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Rows are SCOWLv2 closed-class POS records with SCOWL size <= 60; they are not corpus-frequency stopword weights.",
+        "SCOWLv2 abbreviation rows are lexical/POS resources; they are not a sentence-boundary disambiguation model.",
+        "This verifies a basic Unicode UAX #29 segmentation baseline; richer English segmentation is provided by textpack-en-segmentation."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "en-core-language-profile",
+        "en-core-orthography",
+        "en-core-punctuation",
+        "en-core-abbreviations",
+        "en-core-function-words",
+        "en-core-basic-segmentation"
+      ],
       "slot": "core",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [
-        "eval:textpack-en:corpus-component-evidence"
-      ],
-      "evidenceLevel": "task-evaluated",
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
       "resourceIds": [],
       "slot": "corpus",
-      "status": "task-supported"
+      "status": "planned"
     },
     {
-      "evaluationRecordIds": [
-        "eval:textpack-en:foundation-component-evidence"
-      ],
-      "evidenceLevel": "task-evaluated",
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
       "resourceIds": [],
       "slot": "foundation",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:kb-component-evidence"
+        "eval:wikidata-en:alias-coverage:distribution:textpack-en",
+        "eval:wikidata-en:entity-extract:distribution:textpack-en",
+        "eval:wikidata-en:relation-coverage:distribution:textpack-en",
+        "eval:wordnet-en:relation-endpoints:distribution:textpack-en",
+        "eval:wordnet-en:sense-entry-links:distribution:textpack-en",
+        "eval:wordnet-en:sense-synset-links:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-en; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-en; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "The Wikidata English extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "wordnet-en-senses",
+        "wordnet-en-synsets",
+        "wordnet-en-relations",
+        "wordnet-en-kb-canonical",
+        "wikidata-en-entities",
+        "wikidata-en-aliases",
+        "wikidata-en-relations",
+        "wikidata-en-kb-canonical"
+      ],
       "slot": "kb",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:lexicon-component-evidence"
+        "eval:language-registry:bcp47-record-volume:distribution:textpack-en",
+        "eval:language-registry:bcp47-type-coverage:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-language-registry; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "bcp47-language-subtags",
+        "bcp47-language-registry-summary"
+      ],
+      "slot": "language-registry",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:en-esdb-wordlist:default-profile-count:distribution:textpack-en",
+        "eval:en-esdb-wordlist:word-volume:distribution:textpack-en",
+        "eval:wordnet-en:lexical-entry-volume:distribution:textpack-en"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-wordlist-esdb; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-en; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Profiles cover generated default regional spell-checker wordlists only; ESDB large dictionaries and unstable database internals are not included.",
+        "This is a spelling-form wordlist volume check, not proof of complete English lexicon or morphology coverage."
+      ],
+      "resourceIds": [
+        "en-esdb-default-wordlists",
+        "en-esdb-default-profiles",
+        "en-esdb-wordlist-lexicon-canonical",
+        "en-scowl-inflection-lexicon-canonical",
+        "wordnet-en-lexical-entries",
+        "wordnet-en-lexicon-canonical"
+      ],
       "slot": "lexicon",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:morphology-component-evidence"
+        "eval:cldr-core:likely-subtag-coverage:distribution:textpack-en",
+        "eval:cldr-core:locale-alias-coverage:distribution:textpack-en",
+        "eval:cldr-core:script-variant-coverage:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "cldr-48-likely-subtags",
+        "cldr-48-locale-aliases",
+        "cldr-48-script-data",
+        "cldr-48-core-summary"
+      ],
+      "slot": "locale-profile",
+      "status": "task-supported"
+    },
+    {
+      "evaluationRecordIds": [
+        "eval:en-scowl-inflection:derived-form-volume:distribution:textpack-en",
+        "eval:en-scowl-inflection:lemma-volume:distribution:textpack-en",
+        "eval:en-scowl-inflection:lookup-analyzer-volume:distribution:textpack-en",
+        "eval:en-scowl-inflection:lookup-generator-volume:distribution:textpack-en",
+        "eval:en-scowl-inflection:pos-inventory:distribution:textpack-en"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "Derived forms come from the pinned SCOWLv2 text export and preserve source release scope.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-inflection-scowl; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Lookup analyzer rows return SCOWLv2 candidate lemmas and POS metadata; they do not perform context disambiguation.",
+        "Lookup generator rows return SCOWLv2 candidate forms for a lemma; they do not rank forms by corpus frequency or context.",
+        "This verifies SCOWLv2 POS and inflection inventory volume; lookup analysis and generation are source-scope candidate tables, not context-disambiguating morphology."
+      ],
+      "resourceIds": [
+        "en-scowl-inflection-entries",
+        "en-scowl-lookup-analyzer",
+        "en-scowl-lookup-generator",
+        "en-scowl-pos-inventory",
+        "en-scowl-inflection-morphology-canonical"
+      ],
       "slot": "morphology",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:normalization-component-evidence"
+        "eval:en-normalization:cldr-likely-subtag:distribution:textpack-en",
+        "eval:en-normalization:profile-rules:distribution:textpack-en",
+        "eval:en-normalization:unicode-nfc-evidence:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "This verifies the generated Unicode/CLDR normalization profile, not spelling correction or noisy-text normalization accuracy."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "en-normalization-rules",
+        "en-normalization-profile"
+      ],
       "slot": "normalization",
       "status": "task-supported"
     },
     {
-      "evaluationRecordIds": [
-        "eval:textpack-en:parallel-component-evidence"
-      ],
-      "evidenceLevel": "task-evaluated",
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
       "resourceIds": [],
       "slot": "parallel",
-      "status": "task-supported"
+      "status": "planned"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:quality-component-evidence"
+        "eval:en-core:transform-rejections:distribution:textpack-en",
+        "eval:en-esdb-wordlist:transform-rejections:distribution:textpack-en",
+        "eval:en-normalization:transform-rejections:distribution:textpack-en",
+        "eval:en-scowl-inflection:transform-rejections:distribution:textpack-en",
+        "eval:en-segmentation:transform-rejections:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-inflection-scowl; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-wordlist-esdb; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "en-core-quality",
+        "en-core-quality-profile",
+        "en-normalization-quality",
+        "en-normalization-quality-profile",
+        "en-segmentation-quality",
+        "en-segmentation-quality-profile",
+        "en-esdb-wordlist-quality",
+        "en-esdb-wordlist-quality-profile",
+        "en-scowl-inflection-quality",
+        "en-scowl-inflection-quality-profile",
+        "wordnet-en-quality",
+        "wordnet-en-quality-profile",
+        "wikidata-en-quality",
+        "wikidata-en-quality-profile"
+      ],
       "slot": "quality",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:search-component-evidence"
+        "eval:en-esdb-wordlist:search-profile:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-wordlist-esdb; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "The executable search profile performs Unicode word tokenization and casefolding. ESDB wordlists are separate lexicon data for explicit spelling/suggestion consumers, not an implicit analyzer filter."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "en-esdb-wordlist-search-profile"
+      ],
       "slot": "search",
       "status": "task-supported"
     },
     {
       "evaluationRecordIds": [
-        "eval:textpack-en:segmentation-component-evidence"
+        "eval:en-segmentation:cldr-likely-subtag:distribution:textpack-en",
+        "eval:en-segmentation:grapheme-boundary-properties:distribution:textpack-en",
+        "eval:en-segmentation:sentence-boundary-properties:distribution:textpack-en",
+        "eval:en-segmentation:word-boundary-properties:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en.",
+        "This verifies Unicode grapheme break property coverage, not language-specific dictionary tokenization.",
+        "This verifies Unicode sentence break property coverage; English abbreviation tailoring is out of scope for this component.",
+        "This verifies Unicode word break property coverage, not a trained tokenizer or abbreviation model."
       ],
-      "resourceIds": [],
+      "resourceIds": [
+        "en-grapheme-segmentation-profile",
+        "en-word-segmentation-profile",
+        "en-sentence-segmentation-profile"
+      ],
       "slot": "segmentation",
       "status": "task-supported"
     },
     {
+      "evaluationRecordIds": [],
+      "evidenceLevel": "none",
+      "limitations": [],
+      "resourceIds": [],
+      "slot": "syntax",
+      "status": "planned"
+    },
+    {
       "evaluationRecordIds": [
-        "eval:textpack-en:syntax-component-evidence"
+        "eval:unicode-17:block-range-coverage:distribution:textpack-en",
+        "eval:unicode-17:property-alias-coverage:distribution:textpack-en",
+        "eval:unicode-17:script-range-coverage:distribution:textpack-en"
       ],
       "evidenceLevel": "task-evaluated",
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
       ],
-      "resourceIds": [],
-      "slot": "syntax",
+      "resourceIds": [
+        "unicode-17-blocks",
+        "unicode-17-property-value-aliases",
+        "unicode-17-scripts",
+        "unicode-17-core-summary"
+      ],
+      "slot": "unicode-profile",
       "status": "task-supported"
     }
   ],
   "capabilitySlots": [
     {
+      "capabilities": {
+        "normalization": "unicode",
+        "segmentation": "profile"
+      },
       "notes": [
-        "The required component graph provides the English core language profile."
+        "The bundled distribution resources provide the English core language profile.",
+        "Core profile resources cover modern typed English identity, Latin-script orthography, Unicode punctuation, SCOWLv2 abbreviation rows, SCOWLv2 POS-derived function-word stoplist candidates, and a basic UAX #29 segmentation baseline."
+      ],
+      "resourceIds": [
+        "en-core-language-profile",
+        "en-core-orthography",
+        "en-core-punctuation",
+        "en-core-abbreviations",
+        "en-core-function-words",
+        "en-core-basic-segmentation"
       ],
       "slot": "core",
       "status": "task-supported"
     },
     {
       "notes": [
-        "The required component graph provides local Tatoeba English sentence rows and canonical corpus metadata."
+        "Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "corpus",
-      "status": "task-supported"
+      "status": "planned"
     },
     {
       "notes": [
-        "The required component graph provides Unicode, CLDR, and BCP 47 foundation resources."
+        "The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
       ],
       "slot": "foundation",
       "status": "task-supported"
     },
     {
+      "artifactIds": [
+        "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
+      ],
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "kb"
+      },
       "notes": [
-        "The required component graph provides Open English WordNet resources and a local Wikidata English core entity extract."
+        "The bundled distribution resources provide Open English WordNet data and a local Wikidata English core entity extract.",
+        "Open English WordNet senses, synsets, and semantic relations are available as generated KB resources.",
+        "Wikidata English core entity rows, aliases, and P31 relations are materialized locally for the declared class-and-sitelink-threshold extract scope.",
+        "The pack does not claim complete Wikidata dump coverage."
+      ],
+      "resourceIds": [
+        "wordnet-en-senses",
+        "wordnet-en-synsets",
+        "wordnet-en-relations",
+        "wordnet-en-kb-canonical",
+        "wikidata-en-entities",
+        "wikidata-en-aliases",
+        "wikidata-en-relations",
+        "wikidata-en-kb-canonical"
       ],
       "slot": "kb",
       "status": "task-supported"
     },
     {
       "notes": [
-        "The required component graph provides English spelling, inflection-inventory, and lexical-semantic lexicon resources."
+        "BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
+      ],
+      "resourceIds": [
+        "bcp47-language-subtags",
+        "bcp47-language-registry-summary"
+      ],
+      "slot": "language-registry",
+      "status": "task-supported"
+    },
+    {
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "lexicon"
+      },
+      "notes": [
+        "The bundled distribution resources provide English spelling, inflection-inventory, and lexical-semantic lexicon data.",
+        "ESDB default regional spell-checker wordlists are available as generated English spelling-form resources. This pack does not claim full lexical semantics or morphology coverage.",
+        "Generated canonical lexicon resource references SCOWLv2 lemma and form inventory coverage for lookup consumers.",
+        "Open English WordNet lexical entries are available as generated lexicon resources."
+      ],
+      "resourceIds": [
+        "en-esdb-default-wordlists",
+        "en-esdb-default-profiles",
+        "en-esdb-wordlist-lexicon-canonical",
+        "en-scowl-inflection-lexicon-canonical",
+        "wordnet-en-lexical-entries",
+        "wordnet-en-lexicon-canonical"
       ],
       "slot": "lexicon",
       "status": "task-supported"
     },
     {
       "notes": [
-        "The required component graph provides English SCOWLv2 lookup morphology resources; isolated UniMorph paradigm tables are not included."
+        "CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
+      ],
+      "resourceIds": [
+        "cldr-48-likely-subtags",
+        "cldr-48-locale-aliases",
+        "cldr-48-script-data",
+        "cldr-48-core-summary"
+      ],
+      "slot": "locale-profile",
+      "status": "task-supported"
+    },
+    {
+      "capabilities": {
+        "morphology": "lookup"
+      },
+      "notes": [
+        "The bundled distribution resources provide English SCOWLv2 lookup morphology data; isolated UniMorph paradigm tables are not included.",
+        "SCOWLv2 form-to-lemma lookup analysis and lemma-to-form lookup generation candidates are available as generated compressed table resources."
+      ],
+      "resourceIds": [
+        "en-scowl-inflection-entries",
+        "en-scowl-lookup-analyzer",
+        "en-scowl-lookup-generator",
+        "en-scowl-pos-inventory",
+        "en-scowl-inflection-morphology-canonical"
       ],
       "slot": "morphology",
       "status": "task-supported"
     },
     {
+      "capabilities": {
+        "normalization": "unicode"
+      },
       "notes": [
-        "The required component graph provides English normalization resources."
+        "The bundled distribution resources provide English normalization data.",
+        "Unicode/CLDR-backed NFC and lookup casefold policy for modern typed English text."
+      ],
+      "resourceIds": [
+        "en-normalization-rules",
+        "en-normalization-profile"
       ],
       "slot": "normalization",
       "status": "task-supported"
     },
     {
       "notes": [
-        "The required component graph provides local Tatoeba English-linked sentence-id alignment rows for selected target languages."
+        "Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "parallel",
-      "status": "task-supported"
+      "status": "planned"
     },
     {
       "notes": [
-        "The required component graph provides generated English quality evidence and coverage reports over the required local component graph."
+        "The bundled distribution resources provide generated English quality evidence and coverage reports over the selected local build units.",
+        "Generated quality profile records source coverage, accepted records, rejected records, and scope limitations.",
+        "Generated quality profile records source coverage, accepted records, and scope limitations.",
+        "Generated quality profile records boundary-property coverage, source counts, accepted records, and scope limitations.",
+        "Generated quality profile records profile counts, word counts, and transform integrity.",
+        "Generated quality profile records lemma, form, POS, and transform-integrity counts.",
+        "Generated quality profile records lexical-entry, sense, synset, and relation counts.",
+        "Generated quality profile records local entity, alias, relation, scope, and checksum evidence."
+      ],
+      "resourceIds": [
+        "en-core-quality",
+        "en-core-quality-profile",
+        "en-normalization-quality",
+        "en-normalization-quality-profile",
+        "en-segmentation-quality",
+        "en-segmentation-quality-profile",
+        "en-esdb-wordlist-quality",
+        "en-esdb-wordlist-quality-profile",
+        "en-scowl-inflection-quality",
+        "en-scowl-inflection-quality-profile",
+        "wordnet-en-quality",
+        "wordnet-en-quality-profile",
+        "wikidata-en-quality",
+        "wikidata-en-quality-profile"
       ],
       "slot": "quality",
       "status": "task-supported"
     },
     {
+      "capabilities": {
+        "search": "analyzer"
+      },
       "notes": [
-        "The required component graph provides English search analyzer resources."
+        "The bundled distribution resources provide English search analyzer data.",
+        "The executable profile performs Unicode word tokenization and casefolding. ESDB spelling forms remain available through the lexicon slot for explicit spelling or suggestion logic; they are not silently used as a token filter."
+      ],
+      "resourceIds": [
+        "en-esdb-wordlist-search-profile"
       ],
       "slot": "search",
       "status": "task-supported"
     },
     {
+      "capabilities": {
+        "segmentation": "profile"
+      },
       "notes": [
-        "The required component graph provides English segmentation resources."
+        "The bundled distribution resources provide English segmentation data.",
+        "The built-in adapter executes host Intl.Segmenter Unicode grapheme, word, and sentence segmentation for English. Generated UAX #29 property tables are conformance evidence, not a second unexecuted boundary engine."
+      ],
+      "resourceIds": [
+        "en-grapheme-segmentation-profile",
+        "en-word-segmentation-profile",
+        "en-sentence-segmentation-profile"
       ],
       "slot": "segmentation",
       "status": "task-supported"
     },
     {
       "notes": [
-        "The required component graph provides English UD-derived syntax and tagging resources."
+        "UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "syntax",
+      "status": "planned"
+    },
+    {
+      "notes": [
+        "Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
+      ],
+      "resourceIds": [
+        "unicode-17-blocks",
+        "unicode-17-property-value-aliases",
+        "unicode-17-scripts",
+        "unicode-17-core-summary"
+      ],
+      "slot": "unicode-profile",
       "status": "task-supported"
-    }
-  ],
-  "components": [
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "default",
-      "packageName": "@ismail-elkorchi/textpack-foundation",
-      "reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-core",
-      "reason": "English core language profile resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-normalization",
-      "reason": "English normalization policy and quality resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-segmentation",
-      "reason": "English segmentation profiles.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-lexicon",
-      "reason": "English spelling, inflection-inventory, and lexical-semantic lexicon resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-morphology",
-      "reason": "English lookup morphology resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-syntax",
-      "reason": "English UD-derived syntax and tagging resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-kb",
-      "reason": "English WordNet lexical-semantic resources and local Wikidata core entity extract.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-search",
-      "reason": "English search analyzer profile resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-corpus",
-      "reason": "English local Tatoeba corpus rows and quality evidence.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-parallel",
-      "reason": "English-linked local Tatoeba parallel alignment rows and quality evidence.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-en-quality",
-      "reason": "English generated quality evidence over the required default component graph.",
-      "role": "required",
-      "versionRange": "0.1.0"
     }
   ],
   "coverageStatus": "evaluated",
   "evaluationRecordIds": [
-    "eval:textpack-en:core-component-evidence",
-    "eval:textpack-en:corpus-component-evidence",
-    "eval:textpack-en:foundation-component-evidence",
-    "eval:textpack-en:kb-component-evidence",
-    "eval:textpack-en:lexicon-component-evidence",
-    "eval:textpack-en:morphology-component-evidence",
-    "eval:textpack-en:normalization-component-evidence",
-    "eval:textpack-en:parallel-component-evidence",
-    "eval:textpack-en:quality-component-evidence",
-    "eval:textpack-en:search-component-evidence",
-    "eval:textpack-en:segmentation-component-evidence",
-    "eval:textpack-en:syntax-component-evidence"
+    "eval:cldr-core:likely-subtag-coverage:distribution:textpack-en",
+    "eval:cldr-core:locale-alias-coverage:distribution:textpack-en",
+    "eval:cldr-core:script-variant-coverage:distribution:textpack-en",
+    "eval:en-core:basic-segmentation-baseline:distribution:textpack-en",
+    "eval:en-core:iana-language-profile:distribution:textpack-en",
+    "eval:en-core:latin-orthography-ranges:distribution:textpack-en",
+    "eval:en-core:scowl-abbreviation-rows:distribution:textpack-en",
+    "eval:en-core:scowl-function-word-rows:distribution:textpack-en",
+    "eval:en-core:transform-rejections:distribution:textpack-en",
+    "eval:en-core:unicode-punctuation-ranges:distribution:textpack-en",
+    "eval:en-esdb-wordlist:default-profile-count:distribution:textpack-en",
+    "eval:en-esdb-wordlist:search-profile:distribution:textpack-en",
+    "eval:en-esdb-wordlist:transform-rejections:distribution:textpack-en",
+    "eval:en-esdb-wordlist:word-volume:distribution:textpack-en",
+    "eval:en-normalization:cldr-likely-subtag:distribution:textpack-en",
+    "eval:en-normalization:profile-rules:distribution:textpack-en",
+    "eval:en-normalization:transform-rejections:distribution:textpack-en",
+    "eval:en-normalization:unicode-nfc-evidence:distribution:textpack-en",
+    "eval:en-scowl-inflection:derived-form-volume:distribution:textpack-en",
+    "eval:en-scowl-inflection:lemma-volume:distribution:textpack-en",
+    "eval:en-scowl-inflection:lookup-analyzer-volume:distribution:textpack-en",
+    "eval:en-scowl-inflection:lookup-generator-volume:distribution:textpack-en",
+    "eval:en-scowl-inflection:pos-inventory:distribution:textpack-en",
+    "eval:en-scowl-inflection:transform-rejections:distribution:textpack-en",
+    "eval:en-segmentation:cldr-likely-subtag:distribution:textpack-en",
+    "eval:en-segmentation:grapheme-boundary-properties:distribution:textpack-en",
+    "eval:en-segmentation:sentence-boundary-properties:distribution:textpack-en",
+    "eval:en-segmentation:transform-rejections:distribution:textpack-en",
+    "eval:en-segmentation:word-boundary-properties:distribution:textpack-en",
+    "eval:language-registry:bcp47-record-volume:distribution:textpack-en",
+    "eval:language-registry:bcp47-type-coverage:distribution:textpack-en",
+    "eval:unicode-17:block-range-coverage:distribution:textpack-en",
+    "eval:unicode-17:property-alias-coverage:distribution:textpack-en",
+    "eval:unicode-17:script-range-coverage:distribution:textpack-en",
+    "eval:wikidata-en:alias-coverage:distribution:textpack-en",
+    "eval:wikidata-en:entity-extract:distribution:textpack-en",
+    "eval:wikidata-en:relation-coverage:distribution:textpack-en",
+    "eval:wordnet-en:lexical-entry-volume:distribution:textpack-en",
+    "eval:wordnet-en:relation-endpoints:distribution:textpack-en",
+    "eval:wordnet-en:sense-entry-links:distribution:textpack-en",
+    "eval:wordnet-en:sense-synset-links:distribution:textpack-en"
   ],
-  "gapNotes": [],
+  "gapNotes": [
+    {
+      "id": "gap:pack:en:syntax",
+      "message": "syntax is planned in this source-backed self-contained language distribution.",
+      "slot": "syntax",
+      "status": "planned"
+    },
+    {
+      "id": "gap:pack:en:corpus",
+      "message": "corpus is planned in this source-backed self-contained language distribution.",
+      "slot": "corpus",
+      "status": "planned"
+    },
+    {
+      "id": "gap:pack:en:parallel",
+      "message": "parallel is planned in this source-backed self-contained language distribution.",
+      "slot": "parallel",
+      "status": "planned"
+    }
+  ],
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
-  "knownGaps": [],
+  "knownGaps": [
+    "corpus is planned in this source-backed self-contained language distribution.",
+    "parallel is planned in this source-backed self-contained language distribution.",
+    "syntax is planned in this source-backed self-contained language distribution."
+  ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-en",
   "publishability": {
@@ -369,8 +598,694 @@
     "status": "publishable"
   },
   "publishable": true,
-  "resourceCoverage": [],
-  "resourceKinds": [],
+  "resourceCoverage": [
+    {
+      "byteLength": 325,
+      "checksum": "sha256:14cb57e1bccb04a5fe9f2a7dec407044348b2887cdd0bc9f48dfd59e70c0667d",
+      "kind": "language-registry",
+      "nonEmptyLineCount": 16,
+      "path": "resources/bcp47.language-registry.summary.json",
+      "pipelineId": "iana-language-registry",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "bcp47-language-registry-summary",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 125893,
+      "checksum": "sha256:bf94c569b9adc9341439201748bc93cc6026fdd940858c799ef2d2bcdbbb4545",
+      "kind": "language-registry",
+      "nonEmptyLineCount": 9296,
+      "path": "resources/bcp47.language-subtags.tsv.gz.b64",
+      "pipelineId": "iana-language-registry",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "bcp47-language-subtags",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 192,
+      "checksum": "sha256:274ed6518c70f5ea0f92990b53b3d64ff1834af03b2c655b33a7992bde5d0ff7",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 9,
+      "path": "resources/cldr-48.core.summary.json",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "cldr-48-core-summary",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 65213,
+      "checksum": "sha256:70abb380d92a5f24d8480d383ed5b0e3e224ddbd72f2e405b2fc2d0f480526c6",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 7789,
+      "path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "cldr-48-likely-subtags",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 36386,
+      "checksum": "sha256:9c4e018288bde0698003a52fcba6dad6b907f65ba4585bb142db8cc1c9733419",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 1307,
+      "path": "resources/cldr-48.locale-aliases.tsv",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "cldr-48-locale-aliases",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 326,
+      "checksum": "sha256:e48aef1d01403e80be986717f4dcccda20064d7cf46a15436f1d921b617f4ab0",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 16,
+      "path": "resources/cldr-48.script-data.tsv",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "cldr-48-script-data",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 31989,
+      "checksum": "sha256:8af27bf837b3b1c30916b12e81dc7457be4845a19f95aa9fee2ec7bbaa1e1a9a",
+      "kind": "abbreviation-table",
+      "nonEmptyLineCount": 2808,
+      "path": "resources/en.core.abbreviations.tsv.gz.b64",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-abbreviations",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1397,
+      "checksum": "sha256:a8cd5e19d6b877bb125c5f3571a3d6b50af842f181a838c08ea570cbaced9cfe",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 60,
+      "path": "resources/en.core.basic-segmentation.json",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-basic-segmentation",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 8294,
+      "checksum": "sha256:c3c064d185f5ce621913758292869a0bbb659907bf32c37f299da9658600c673",
+      "kind": "stoplist",
+      "nonEmptyLineCount": 327,
+      "path": "resources/en.core.function-words.tsv",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-function-words",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1069,
+      "checksum": "sha256:56c3cfc0569a146c132716f0421cfece3a4fb04f523b256033cd7d38d3d766f7",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 39,
+      "path": "resources/en.core.language-profile.json",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-language-profile",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 5095,
+      "checksum": "sha256:0186ad15ab0ce54530d3b3bebc1c2fe8e670f56c2421f81aed85a0fb0ec22038",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 62,
+      "path": "resources/en.core.orthography.tsv",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-orthography",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 20036,
+      "checksum": "sha256:0fa27f5d4292a966193ae7829825909d5aa099afa725c77b109ac4a3883f4eec",
+      "kind": "locale-profile",
+      "nonEmptyLineCount": 397,
+      "path": "resources/en.core.punctuation.tsv",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-punctuation",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1163,
+      "checksum": "sha256:048ab84f7750a35790ce1629a884966475cc443f0b0f2aace4a96ab8ede0bf0a",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 33,
+      "path": "resources/en.core.quality.json",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-quality",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1479,
+      "checksum": "sha256:5964e786212c3441cefb30e8181f3375e1639558c115005b45abf48b9880a3a7",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 59,
+      "path": "resources/en.core.quality-profile.json",
+      "pipelineId": "english-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-core-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 290,
+      "checksum": "sha256:c4530d89003dc9e1a6f46f0f76bf0f3c986a3f267c52a59cdddeb5cdb2c3ef37",
+      "kind": "lexicon",
+      "nonEmptyLineCount": 6,
+      "path": "resources/esdb-2026.default-profiles.tsv",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-esdb-default-profiles",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2460241,
+      "checksum": "sha256:098eed6a0af63b5144589cdce3e713828d65b092a07af318605e4603f05ab31b",
+      "kind": "lexicon",
+      "nonEmptyLineCount": 548643,
+      "path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-esdb-default-wordlists",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 405,
+      "checksum": "sha256:fc73c734e691507ea87c8ec4e799a28721280b397ba66408cd3ad272a9236b5c",
+      "kind": "lexicon",
+      "nonEmptyLineCount": 20,
+      "path": "resources/esdb-2026.lexicon.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-esdb-wordlist-lexicon-canonical",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 928,
+      "checksum": "sha256:40a8165b6337e89a26410c154613396bda410ebf3cc5322d39ece60296aea0ae",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 26,
+      "path": "resources/esdb-2026.quality.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-esdb-wordlist-quality",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1075,
+      "checksum": "sha256:f42bc78ac8245b6d7cb0b781ebf55f0d7913714af5d1bf962c4c2528b0c369f3",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 46,
+      "path": "resources/esdb-2026.quality-profile.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-esdb-wordlist-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 639,
+      "checksum": "sha256:73b8a5a34bb53af7c739f4ba7ac4b466feda51a044a41e18f38b91ff98a5acdb",
+      "kind": "search-profile",
+      "nonEmptyLineCount": 33,
+      "path": "resources/esdb-2026.search-profile.json",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-esdb-wordlist-search-profile",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1380,
+      "checksum": "sha256:294f8a5e1dc96d9cb25b16b9b14f39048db8d6c92aeea6b65234d27aba14245a",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 58,
+      "path": "resources/en.segmentation.grapheme.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-grapheme-segmentation-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1532,
+      "checksum": "sha256:7bff0c8f82389849ee811fff868ce9c7f76e888d70bd88e67372b899d00a59ff",
+      "kind": "normalization-profile",
+      "nonEmptyLineCount": 52,
+      "path": "resources/en.normalization.json",
+      "pipelineId": "english-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-normalization-profile",
+      "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 825,
+      "checksum": "sha256:f4c43f23f3afccf79bb291b27dd527c818054b398c14365d311d191d0947883e",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 30,
+      "path": "resources/en.normalization.quality.json",
+      "pipelineId": "english-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-normalization-quality",
+      "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1184,
+      "checksum": "sha256:2b998774efaf4f4b045f3567365aaf47ced790d0603087f00216bfbe4768faa8",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 50,
+      "path": "resources/en.normalization.quality-profile.json",
+      "pipelineId": "english-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-normalization-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 443,
+      "checksum": "sha256:7162c5b9d2b2234ce8c44fe8432e995f42d39c585c0d9ad86fdc65cc0dd1b7a9",
+      "kind": "normalization-profile",
+      "nonEmptyLineCount": 4,
+      "path": "resources/en.normalization-rules.tsv",
+      "pipelineId": "english-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-normalization-rules",
+      "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 7328209,
+      "checksum": "sha256:2aff974f56754dc4190f7c9d79084efac7a8ddfd1be566d9084b47c61213d7d8",
+      "kind": "morphology",
+      "nonEmptyLineCount": 401710,
+      "path": "resources/scowl-v2.inflections.tsv.gz.b64",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-inflection-entries",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 412,
+      "checksum": "sha256:434af7796427f70752f91a1952078f1faff44440693669097ba7249934059007",
+      "kind": "lexicon",
+      "nonEmptyLineCount": 20,
+      "path": "resources/scowl-v2.lexicon.json",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-inflection-lexicon-canonical",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1856,
+      "checksum": "sha256:546c40de190116857b21e009974063ae9b28d09980153cb7d2c42d04020708ca",
+      "kind": "morphology",
+      "nonEmptyLineCount": 96,
+      "path": "resources/scowl-v2.morphology.json",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-inflection-morphology-canonical",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 842,
+      "checksum": "sha256:322086f21d57e011b7c51faaf8da127a5410d2f1b0339d6ce046732af8c063f5",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 23,
+      "path": "resources/scowl-v2.quality.json",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-inflection-quality",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1079,
+      "checksum": "sha256:5ab60db572325548aaee12a4d3055b52f251f65a7bafb1831b7e968cd0210fde",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 46,
+      "path": "resources/scowl-v2.quality-profile.json",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-inflection-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 5129709,
+      "checksum": "sha256:bf0b7f4d223444618a650ae5ff9f908099590776c0895b0b6ddfd32bec22c15c",
+      "kind": "morphology",
+      "nonEmptyLineCount": 401710,
+      "path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-lookup-analyzer",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 4819189,
+      "checksum": "sha256:771f858c850bca4e3e1018ea2b053d22735658f63ecf827c5c79948d1df3c079",
+      "kind": "morphology",
+      "nonEmptyLineCount": 401710,
+      "path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-lookup-generator",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 1953,
+      "checksum": "sha256:0235931224b8488aa53ba2008d02dff457301d7e2a586ed82f6b55de09e59e3c",
+      "kind": "morphology",
+      "nonEmptyLineCount": 104,
+      "path": "resources/scowl-v2.pos.tsv",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-scowl-pos-inventory",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1322,
+      "checksum": "sha256:18de26411aa8666b2abade4388fcb70ece9ba2bceef7f501f34f8db26af9fb1a",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 46,
+      "path": "resources/en.segmentation-boundary-properties.tsv",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-segmentation-boundary-properties",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1759,
+      "checksum": "sha256:f209d08c6362bc6630209d38de5c89805b99058bf4bdd4d20652e38fe92d52c8",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 75,
+      "path": "resources/en.segmentation.quality.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-segmentation-quality",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1130,
+      "checksum": "sha256:7e876f3a2211f0ef66802155b5c27b1a3b6152339028fa911e9b4f2ee1b45719",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 50,
+      "path": "resources/en.segmentation.quality-profile.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-segmentation-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1389,
+      "checksum": "sha256:ea955841783eb674d2183b135898d30e0da48cd38f72270adbd3c45972a0daac",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 59,
+      "path": "resources/en.segmentation.sentence.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-sentence-segmentation-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1503,
+      "checksum": "sha256:126c2433c32d6a6691c769b9f004e928d3cdb11a49a0d0037c154fc6fed3dca8",
+      "kind": "segmentation-profile",
+      "nonEmptyLineCount": 63,
+      "path": "resources/en.segmentation.word.json",
+      "pipelineId": "english-segmentation-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "en-word-segmentation-profile",
+      "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 10002,
+      "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
+      "kind": "unicode-profile",
+      "nonEmptyLineCount": 347,
+      "path": "resources/unicode-17.blocks.tsv",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "unicode-17-blocks",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 181,
+      "checksum": "sha256:d0ad3bd0f0d98f21c8d8d1350d4c3e78186e9a0812f63fd49c37e5aa810fb213",
+      "kind": "unicode-profile",
+      "nonEmptyLineCount": 8,
+      "path": "resources/unicode-17.core.summary.json",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "unicode-17-core-summary",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 28940,
+      "checksum": "sha256:02d11d047c9f3a334821a6ebd6f629937a4779826dbc11e26c13b6b52849e254",
+      "kind": "unicode-profile",
+      "nonEmptyLineCount": 1195,
+      "path": "resources/unicode-17.property-value-aliases.tsv",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "unicode-17-property-value-aliases",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 60233,
+      "checksum": "sha256:36410d853d44b364758dfdeb742e01af2b858b9c2c891cef61415a40a71ebfce",
+      "kind": "unicode-profile",
+      "nonEmptyLineCount": 2288,
+      "path": "resources/unicode-17.scripts.tsv.gz.b64",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "unicode-17-scripts",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 204893,
+      "checksum": "sha256:7604d6fcac1965ec5828b0e699905e6492d878965cb4097be263dc4e1c55307b",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 19782,
+      "path": "resources/wikidata-en.aliases.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-aliases",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 359241,
+      "checksum": "sha256:e0464d6ba65415a0ebce0245fb4a7d7ec21a8024269f2fef6025c6ef73e98d49",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 11619,
+      "path": "resources/wikidata-en.entities.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-entities",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 528,
+      "checksum": "sha256:18480b9acd2b25de4e4d90c711218044de6177529085446262d08ede54fe73aa",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 27,
+      "path": "resources/wikidata-en.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-kb-canonical",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 972,
+      "checksum": "sha256:799f427bf95894042df2a54225fefc958a095b9eed84220ae07737b499a94627",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 26,
+      "path": "resources/wikidata-en.quality.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-quality",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2794,
+      "checksum": "sha256:db2113a597d624eb16cddc83ae055068554a845e24ee8738464e356df91db72e",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 101,
+      "path": "resources/wikidata-en.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 60577,
+      "checksum": "sha256:cabc7d7e7827e51ec1a2be36abe512c52de6b7e7ae195f0d3f0c197b4c7d2c4e",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 11619,
+      "path": "resources/wikidata-en.relations.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wikidata-en-relations",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 518,
+      "checksum": "sha256:4d2e5c099d1a5959f45818e4c315afba95d1719bb2396833377d5dc1905f0ba8",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 27,
+      "path": "resources/wordnet-en.kb.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-kb-canonical",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1347373,
+      "checksum": "sha256:ab4a31e2a2bb008aa968f2e482949be3ff3789eabe9eaa1e90e07aeb8032595e",
+      "kind": "lexicon",
+      "nonEmptyLineCount": 135970,
+      "path": "resources/wordnet-en.lexical-entries.tsv.gz.b64",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-lexical-entries",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 292,
+      "checksum": "sha256:938ab3964d5732e9517cb77d63372be6c91423343bcf417ebb980485743543e4",
+      "kind": "lexicon",
+      "nonEmptyLineCount": 15,
+      "path": "resources/wordnet-en.lexicon.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-lexicon-canonical",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1401,
+      "checksum": "sha256:c20aa32a35394b476849490164227ba64237489bbc3de36498e50d146095db94",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 53,
+      "path": "resources/wordnet-en.quality.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-quality",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 876,
+      "checksum": "sha256:681ae437d9d4b42caa837baedd35a08c5930d45b99ecc4059a75ba3b636ac6a8",
+      "kind": "quality-profile",
+      "nonEmptyLineCount": 40,
+      "path": "resources/wordnet-en.quality-profile.json",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2876697,
+      "checksum": "sha256:57a8a408463a619b4550afb76d50c7e29e57aff8471a76aad5b136c5d1c54a1a",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 355065,
+      "path": "resources/wordnet-en.relations.tsv.gz.b64",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-relations",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 3919057,
+      "checksum": "sha256:5f52fe383c638d252aaf16899ee059b475d8e024315d87045e2a02edc86d2415",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 185130,
+      "path": "resources/wordnet-en.senses.tsv.gz.b64",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-senses",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 5435529,
+      "checksum": "sha256:b49971b785716b3af40f2bce4014f1e49422743c58c3561ca858db050d3a28e5",
+      "kind": "knowledge-base",
+      "nonEmptyLineCount": 107520,
+      "path": "resources/wordnet-en.synsets.tsv.gz.b64",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceId": "wordnet-en-synsets",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sizeClass": "medium"
+    }
+  ],
+  "resourceKinds": [
+    "abbreviation-table",
+    "knowledge-base",
+    "language-registry",
+    "lexicon",
+    "locale-profile",
+    "morphology",
+    "normalization-profile",
+    "quality-profile",
+    "search-profile",
+    "segmentation-profile",
+    "stoplist",
+    "unicode-profile"
+  ],
   "schemaVersion": "1",
   "targets": {
     "languages": [

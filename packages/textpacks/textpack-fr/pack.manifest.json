@@ -1,7 +1,7 @@
 {
 	"schemaVersion": "1",
 	"id": "pack:fr",
-	"name": "French Developer Composite Textpack",
+	"name": "French Developer Textpack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-fr",
 	"targets": {
@@ -18,176 +18,1178 @@
 	"engines": {
 		"@ismail-elkorchi/textpack": "^0.1.0"
 	},
-	"resources": [],
-	"components": [
+	"resources": [
 		{
-			"packageName": "@ismail-elkorchi/textpack-foundation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "bcp47-language-subtags",
+			"kind": "language-registry",
+			"path": "resources/bcp47.language-subtags.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05."
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-core",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French core language profile resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "bcp47-language-registry-summary",
+			"kind": "language-registry",
+			"path": "resources/bcp47.language-registry.summary.json",
+			"format": "json",
+			"license": "LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05."
+			],
+			"schemaId": "textfacts.language-registry.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French normalization policy and quality resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-blocks",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.blocks.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French segmentation profiles.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-property-value-aliases",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.property-value-aliases.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-lexicon",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French lexicon resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-scripts",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.scripts.tsv.gz.b64",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-morphology",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French morphology resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "unicode-17-core-summary",
+			"kind": "unicode-profile",
+			"path": "resources/unicode-17.core.summary.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.unicode-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-syntax",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French UD-derived syntax and tagging resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-likely-subtags",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-kb",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Local Wikidata French core entity extract.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-locale-aliases",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.locale-aliases.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-search",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Explicit wrapper over share-alike isolated French search analyzer profile resources.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-script-data",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.script-data.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French local Tatoeba corpus sentence rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "cldr-48-core-summary",
+			"kind": "locale-profile",
+			"path": "resources/cldr-48.core.summary.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French local Tatoeba parallel link rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "fr-core-language-profile",
+			"kind": "locale-profile",
+			"path": "resources/fr.core.language-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-fr-quality",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "French generated quality evidence over the required policy-expanded component graph.",
-			"licensePolicy": "allow-share-alike",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"id": "fr-core-orthography",
+			"kind": "locale-profile",
+			"path": "resources/fr.core.orthography.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
+		},
+		{
+			"id": "fr-core-punctuation",
+			"kind": "locale-profile",
+			"path": "resources/fr.core.punctuation.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0."
+			],
+			"schemaId": "textfacts.locale-profile.v1"
+		},
+		{
+			"id": "fr-core-basic-segmentation",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.core.basic-segmentation.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "fr-core-quality",
+			"kind": "quality-profile",
+			"path": "resources/fr.core.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-core-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/fr.core.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+			"citations": [
+				"IANA Language Subtag Registry, File-Date 2026-05-05.",
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "fr-normalization-rules",
+			"kind": "normalization-profile",
+			"path": "resources/fr.normalization-rules.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textnorm.rules.v1"
+		},
+		{
+			"id": "fr-normalization-profile",
+			"kind": "normalization-profile",
+			"path": "resources/fr.normalization.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textnorm.profile.v1"
+		},
+		{
+			"id": "fr-normalization-elision-prefixes",
+			"kind": "normalization-profile",
+			"path": "resources/fr.normalization-elision-prefixes.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textnorm.rules.v1"
+		},
+		{
+			"id": "fr-normalization-contraction-forms",
+			"kind": "normalization-profile",
+			"path": "resources/fr.normalization-contraction-forms.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textnorm.rules.v1"
+		},
+		{
+			"id": "fr-normalization-gold-cases",
+			"kind": "quality-profile",
+			"path": "resources/fr.normalization-gold-cases.json",
+			"format": "json",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-normalization-quality",
+			"kind": "quality-profile",
+			"path": "resources/fr.normalization.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-normalization-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/fr.normalization.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "fr-segmentation-boundary-properties",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-boundary-properties.tsv",
+			"format": "tsv",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-table.v1"
+		},
+		{
+			"id": "fr-grapheme-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation.grapheme.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "fr-word-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation.word.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "fr-sentence-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation.sentence.json",
+			"format": "json",
+			"license": "Unicode-3.0",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "fr-token-segmentation-profile",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation.token.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textdata.segmentation-profile.v1"
+		},
+		{
+			"id": "fr-segmentation-elision-prefixes",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-elision-prefixes.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textdata.segmentation-table.v1"
+		},
+		{
+			"id": "fr-segmentation-contraction-forms",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-contraction-forms.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textdata.segmentation-table.v1"
+		},
+		{
+			"id": "fr-segmentation-abbreviations",
+			"kind": "segmentation-profile",
+			"path": "resources/fr.segmentation-abbreviations.tsv",
+			"format": "tsv",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textdata.segmentation-table.v1"
+		},
+		{
+			"id": "fr-segmentation-gold-cases",
+			"kind": "quality-profile",
+			"path": "resources/fr.segmentation-gold-cases.json",
+			"format": "json",
+			"license": "CC-BY-2.0-FR",
+			"citations": [
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-segmentation-quality",
+			"kind": "quality-profile",
+			"path": "resources/fr.segmentation.quality.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-segmentation-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/fr.segmentation.quality-profile.json",
+			"format": "json",
+			"license": "Unicode-3.0 AND CC-BY-2.0-FR",
+			"citations": [
+				"Unicode Character Database 17.0.0.",
+				"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+				"Tatoeba weekly French exports, 2026-06-06."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "fr-lexique-entries",
+			"kind": "lexicon",
+			"path": "resources/lexique-383.entries.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "fr-lexique-lemmas",
+			"kind": "lexicon",
+			"path": "resources/lexique-383.lemmas.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textlex.lexicon.rows.v1"
+		},
+		{
+			"id": "fr-lexique-pos-inventory",
+			"kind": "morphology",
+			"path": "resources/lexique-383.pos.tsv",
+			"format": "tsv",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "fr-lexique-lexicon-canonical",
+			"kind": "lexicon",
+			"path": "resources/lexique-383.lexicon.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textlex.lexicon.v1"
+		},
+		{
+			"id": "fr-lexique-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/lexique-383.morphology.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textlex.morphology.v1"
+		},
+		{
+			"id": "fr-lexique-search-profile",
+			"kind": "search-profile",
+			"path": "resources/lexique-383.search-profile.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textsearch.analyzer-profile.v1"
+		},
+		{
+			"id": "fr-lexique-quality",
+			"kind": "quality-profile",
+			"path": "resources/lexique-383.quality.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-lexique-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/lexique-383.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "fr-unimorph-paradigms",
+			"kind": "morphology",
+			"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "fr-unimorph-lookup-analyzer",
+			"kind": "morphology",
+			"path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "fr-unimorph-lookup-generator",
+			"kind": "morphology",
+			"path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
+			"format": "tsv+gzip+base64",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "fr-unimorph-feature-inventory",
+			"kind": "morphology",
+			"path": "resources/unimorph-fra.features.tsv",
+			"format": "tsv",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "fr-unimorph-pos-inventory",
+			"kind": "morphology",
+			"path": "resources/unimorph-fra.pos.tsv",
+			"format": "tsv",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textlex.morphology.rows.v1"
+		},
+		{
+			"id": "fr-unimorph-morphology-canonical",
+			"kind": "morphology",
+			"path": "resources/unimorph-fra.morphology.json",
+			"format": "json",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textlex.morphology.v1"
+		},
+		{
+			"id": "fr-unimorph-quality",
+			"kind": "quality-profile",
+			"path": "resources/unimorph-fra.quality.json",
+			"format": "json",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "fr-unimorph-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/unimorph-fra.quality-profile.json",
+			"format": "json",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wikidata-fr-entities",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-fr.entities.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-fr-aliases",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-fr.aliases.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-fr-relations",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-fr.relations.tsv.gz.b64",
+			"format": "text/tab-separated-values",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.rows.v1"
+		},
+		{
+			"id": "wikidata-fr-kb-canonical",
+			"kind": "knowledge-base",
+			"path": "resources/wikidata-fr.kb.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textkb.knowledge-base.v1"
+		},
+		{
+			"id": "wikidata-fr-quality",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-fr.quality.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textquality.evidence.v1"
+		},
+		{
+			"id": "wikidata-fr-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/wikidata-fr.quality-profile.json",
+			"format": "json",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [
+		{
+			"slot": "core",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-core-language-profile",
+				"fr-core-orthography",
+				"fr-core-punctuation",
+				"fr-core-basic-segmentation"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "fr-core-basic-segmentation",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Core profile resources cover modern typed French identity, Latin-script orthography, Unicode punctuation, and a basic UAX #29 segmentation baseline."
+			],
+			"capabilities": {
+				"segmentation": "profile",
+				"normalization": "unicode"
+			}
+		},
+		{
+			"slot": "corpus",
+			"status": "planned",
+			"notes": [
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
 		{
 			"slot": "foundation",
 			"status": "task-supported"
 		},
 		{
-			"slot": "core",
-			"status": "task-supported"
+			"slot": "kb",
+			"status": "task-supported",
+			"resourceIds": [
+				"wikidata-fr-entities",
+				"wikidata-fr-aliases",
+				"wikidata-fr-relations",
+				"wikidata-fr-kb-canonical"
+			],
+			"artifactIds": [
+				"artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "wikidata-fr-kb-canonical",
+					"schemaId": "textkb.knowledge-base.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-fr-aliases",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-fr-entities",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "table",
+					"resourceId": "wikidata-fr-relations",
+					"schemaId": "textkb.knowledge-base.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The bundled distribution resources provide local Wikidata French core entity rows.",
+				"Wikidata French entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+				"The local extract is scoped and does not claim complete Wikidata dump coverage."
+			],
+			"capabilities": {
+				"terminology": "kb",
+				"extraction": "gazetteer"
+			}
 		},
 		{
-			"slot": "normalization",
-			"status": "task-supported"
-		},
-		{
-			"slot": "segmentation",
-			"status": "task-supported"
+			"slot": "language-registry",
+			"status": "task-supported",
+			"resourceIds": [
+				"bcp47-language-subtags",
+				"bcp47-language-registry-summary"
+			],
+			"notes": [
+				"BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
+			]
 		},
 		{
 			"slot": "lexicon",
-			"status": "task-supported"
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-entries",
+				"fr-lexique-lemmas",
+				"fr-lexique-lexicon-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "fr-lexique-lexicon-canonical",
+					"schemaId": "textlex.lexicon.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-lexique-entries",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-lexique-lemmas",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Lexique 3.83 provides French forms, lemmas, POS, gender/number fields, phonology, and source frequency fields.",
+				"This package is share-alike isolated and is not eligible for the default French composite."
+			]
+		},
+		{
+			"slot": "locale-profile",
+			"status": "task-supported",
+			"resourceIds": [
+				"cldr-48-likely-subtags",
+				"cldr-48-locale-aliases",
+				"cldr-48-script-data",
+				"cldr-48-core-summary"
+			],
+			"notes": [
+				"CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
+			]
 		},
 		{
 			"slot": "morphology",
-			"status": "task-supported"
-		},
-		{
-			"slot": "syntax",
-			"status": "task-supported"
-		},
-		{
-			"slot": "kb",
 			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-entries",
+				"fr-lexique-pos-inventory",
+				"fr-lexique-morphology-canonical",
+				"fr-unimorph-paradigms",
+				"fr-unimorph-lookup-analyzer",
+				"fr-unimorph-lookup-generator",
+				"fr-unimorph-feature-inventory",
+				"fr-unimorph-pos-inventory",
+				"fr-unimorph-morphology-canonical"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "fr-lexique-morphology-canonical",
+					"schemaId": "textlex.morphology.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "primary",
+					"resourceId": "fr-unimorph-morphology-canonical",
+					"schemaId": "textlex.morphology.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-lexique-entries",
+					"schemaId": "textlex.lexicon.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-lexique-pos-inventory",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-unimorph-feature-inventory",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-unimorph-lookup-analyzer",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-unimorph-lookup-generator",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-unimorph-paradigms",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-unimorph-pos-inventory",
+					"schemaId": "textlex.morphology.rows.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides local Wikidata French core entity rows."
-			]
+				"Lexique 3.83 provides lookup morphology evidence; it is not a context-disambiguating analyzer.",
+				"UniMorph French lemma/form paradigms, feature bundles, lookup analyzer rows, and lookup generator rows are available under the share-alike policy surface."
+			],
+			"capabilities": {
+				"morphology": "paradigm-table"
+			}
 		},
 		{
-			"slot": "search",
-			"status": "task-supported"
-		},
-		{
-			"slot": "corpus",
+			"slot": "normalization",
 			"status": "task-supported",
+			"resourceIds": [
+				"fr-normalization-rules",
+				"fr-normalization-profile",
+				"fr-normalization-elision-prefixes",
+				"fr-normalization-contraction-forms",
+				"fr-normalization-gold-cases"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "fr-normalization-profile",
+					"schemaId": "textnorm.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-normalization-contraction-forms",
+					"schemaId": "textnorm.rules.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-normalization-elision-prefixes",
+					"schemaId": "textnorm.rules.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-normalization-rules",
+					"schemaId": "textnorm.rules.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textnorm"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-normalization-gold-cases",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides local Tatoeba French sentence rows and canonical corpus metadata."
-			]
+				"Unicode/CLDR-backed NFC and lookup casefold policy plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case resources for modern typed French text."
+			],
+			"capabilities": {
+				"normalization": "rules"
+			}
 		},
 		{
 			"slot": "parallel",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba French-linked sentence-id alignment rows for selected target languages."
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"resourceIds": [
+				"fr-core-quality",
+				"fr-core-quality-profile",
+				"fr-normalization-quality",
+				"fr-normalization-quality-profile",
+				"fr-normalization-gold-cases",
+				"fr-segmentation-quality",
+				"fr-segmentation-quality-profile",
+				"fr-segmentation-gold-cases",
+				"fr-lexique-quality",
+				"fr-lexique-quality-profile",
+				"fr-unimorph-quality",
+				"fr-unimorph-quality-profile",
+				"wikidata-fr-quality",
+				"wikidata-fr-quality-profile"
+			],
+			"bindings": [
+				{
+					"role": "evidence",
+					"resourceId": "fr-core-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-lexique-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-normalization-gold-cases",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-normalization-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-segmentation-gold-cases",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-segmentation-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "fr-unimorph-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "evidence",
+					"resourceId": "wikidata-fr-quality",
+					"schemaId": "textquality.evidence.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "fr-core-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "fr-lexique-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "fr-normalization-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "fr-segmentation-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "fr-unimorph-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				},
+				{
+					"role": "quality",
+					"resourceId": "wikidata-fr-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textquality"
+				}
+			],
+			"readerRequired": true,
 			"notes": [
-				"The required component graph provides generated French quality evidence and coverage reports over the required local component graph."
+				"The bundled distribution resources provide generated French quality evidence and coverage reports over the selected local build units.",
+				"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations.",
+				"Generated quality profile records source coverage, accepted records, observed French surface-policy counts, and gold-case coverage.",
+				"Generated quality profile records boundary-property coverage, French surface-policy counts, accepted records, and gold-case coverage.",
+				"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes.",
+				"Generated quality profile records source coverage, accepted records, rejected records, and share-alike isolation evidence.",
+				"Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-lexique-search-profile"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "fr-lexique-search-profile",
+					"schemaId": "textsearch.analyzer-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textsearch"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The executable search profile performs Unicode word tokenization, Unicode casefolding, and lookup-only accent folding. Lexique form/lemma data remains available through the lexicon and morphology slots and is not applied automatically by the search adapter."
+			],
+			"capabilities": {
+				"search": "analyzer"
+			}
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"resourceIds": [
+				"fr-grapheme-segmentation-profile",
+				"fr-word-segmentation-profile",
+				"fr-sentence-segmentation-profile",
+				"fr-token-segmentation-profile",
+				"fr-segmentation-elision-prefixes"
+			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "fr-grapheme-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "profile",
+					"resourceId": "fr-sentence-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "profile",
+					"resourceId": "fr-token-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "profile",
+					"resourceId": "fr-word-segmentation-profile",
+					"schemaId": "textdata.segmentation-profile.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-segmentation-elision-prefixes",
+					"schemaId": "textdata.segmentation-table.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textdata"
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"The built-in adapter executes host Intl.Segmenter Unicode boundaries and applies the observed French elision-prefix table. Contraction, abbreviation, boundary-property, and gold-case resources are retained as quality/reference evidence rather than presented as executed rules."
+			],
+			"capabilities": {
+				"segmentation": "profile"
+			}
+		},
+		{
+			"slot": "syntax",
+			"status": "planned",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "unicode-profile",
+			"status": "task-supported",
+			"resourceIds": [
+				"unicode-17-blocks",
+				"unicode-17-property-value-aliases",
+				"unicode-17-scripts",
+				"unicode-17-core-summary"
+			],
+			"notes": [
+				"Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
 			]
 		}
 	],
@@ -199,13 +1201,64 @@
 		"Wikidata main structured data dump, 2026-06-08.",
 		"Tatoeba weekly French exports, 2026-06-06.",
 		"Lexique 3.83, 2019-06-04.",
-		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.",
-		"Universal Dependencies French GSD r2.18 annotations."
+		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+	],
+	"gapNotes": [
+		{
+			"id": "gap:pack:fr:syntax",
+			"slot": "syntax",
+			"status": "planned",
+			"message": "syntax is planned in this source-backed self-contained language distribution."
+		},
+		{
+			"id": "gap:pack:fr:corpus",
+			"slot": "corpus",
+			"status": "planned",
+			"message": "corpus is planned in this source-backed self-contained language distribution."
+		},
+		{
+			"id": "gap:pack:fr:parallel",
+			"slot": "parallel",
+			"status": "planned",
+			"message": "parallel is planned in this source-backed self-contained language distribution."
+		}
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:47e22f7d7e35324945ccf546ccb43d204cd6941b133a20a6988898b7e3280d64",
+		"lockfileChecksum": "sha256:78d906f0c73d85650e1ff58aab0aa93a116dc7978756c724328785533464d0ef",
 		"generatedAt": "2026-06-08T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
-	}
+	},
+	"artifacts": [
+		{
+			"artifactId": "artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608",
+			"sourceIds": [
+				"source:wikidata:main"
+			],
+			"version": "20260608",
+			"profile": "full",
+			"sizeBytes": 142291512349,
+			"mediaType": "application/json",
+			"compression": "gzip",
+			"checksum": {
+				"algorithm": "sha1",
+				"value": "7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+			},
+			"licenseExpression": "CC0-1.0",
+			"redistributionPolicy": "redistributable",
+			"retrieval": {
+				"kind": "https",
+				"uri": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-all.json.gz",
+				"instructions": "Fetch explicitly and verify against the upstream SHA-1 checksum sidecar before unpacking or indexing."
+			},
+			"cacheKey": "wikidata-main-20260608-all-json-gzip",
+			"expectedFiles": [
+				{
+					"path": "wikidata-20260608-all.json.gz",
+					"sizeBytes": 142291512349,
+					"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+				}
+			]
+		}
+	]
 }

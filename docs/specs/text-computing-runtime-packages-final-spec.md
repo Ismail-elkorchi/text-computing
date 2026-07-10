@@ -87,38 +87,25 @@ All language-specific, domain-specific, corpus, KB, historical, noisy-text, fini
 
 | Family | Purpose |
 |---|---|
-| `@ismail-elkorchi/textpack-*` | Generated language, script, locale, domain, historical, noisy-text, finite-state, grammar, lexicon, KB, corpus, parallel, artifact-backed, and composite resource packs. |
+| `@ismail-elkorchi/textpack-*` | Generated self-contained language distributions. Source- and task-specific transforms remain internal forge build units. |
 | `@ismail-elkorchi/textplugin-*` | Optional standalone processors built on the runtime APIs. |
 
 Repository layout for generated resource packs:
 
 ```text
-packages/textpacks/textpack-language-registry/
-packages/textpacks/textpack-unicode-17/
-packages/textpacks/textpack-cldr-core/
-packages/textpacks/textpack-foundation/
+packages/textpacks/textpack-en/
+packages/textpacks/textpack-fr/
+packages/textpacks/textpack-ar/
 ```
 
-The package names remain `@ismail-elkorchi/textpack-*`; only their repository location is grouped under `packages/textpacks/`. Composite packs such as `@ismail-elkorchi/textpack-fr` are generated packs too. They normally declare a recipe graph rather than bundling all resources.
+Each package directly exports its final manifest and resource map. Capability slots are views over those resources, not npm package boundaries.
 
 Examples after the publishability gate passes for the declared scope:
 
 ```text
-@ismail-elkorchi/textpack-foundation
-@ismail-elkorchi/textpack-language-registry
-@ismail-elkorchi/textpack-script-profiles
 @ismail-elkorchi/textpack-en
 @ismail-elkorchi/textpack-fr
 @ismail-elkorchi/textpack-ar
-@ismail-elkorchi/textpack-fr-morphology
-@ismail-elkorchi/textpack-la-historical
-@ismail-elkorchi/textpack-grc-syntax
-@ismail-elkorchi/textpack-en-legal
-@ismail-elkorchi/textpack-de-news
-@ismail-elkorchi/textpack-wordnet-omw
-@ismail-elkorchi/textpack-kb-wikidata-core
-@ismail-elkorchi/textpack-parallel-en-fr
-@ismail-elkorchi/textpack-corpus-fr-artifacts
 ```
 
 Small KB and corpus examples belong in fixtures. Demo-named npm packages are not part of the final production package inventory.
@@ -242,8 +229,7 @@ text-computing
   └── textpipeline
 
 textpack-*
-  ├── textpack
-  └── component dependencies on other textpack-* packages only
+  └── textpack
 
 textplugin-*
   └── peer dependencies on the runtime packages extended by the plugin
@@ -969,8 +955,7 @@ export interface TextPackTaskResourceBinding {
 `resourceIds` remain a coarse inventory field. Task execution MUST use
 `bindings`, not schema-ID guessing or package-specific resource ID heuristics.
 For `task-supported` and `feature-complete` slots, at least one required binding
-MUST point to a local task-usable resource unless the slot is satisfied entirely
-by required component slots in a recipe composite. `readerRequired` MUST be true
+MUST point to a local task-usable resource. `readerRequired` MUST be true
 when any required binding points to a file-backed resource. `prerequisites` name
 required slots such as `segmentation` or `normalization` for higher-level task
 surfaces.
@@ -2145,7 +2130,7 @@ export function shallowTransfer(doc: TextDocument, resources: TransferResources,
 
 ### 21.1 Pack package shape
 
-Every production `textpack-*` package is generated. A generated concrete pack exports:
+Every production `textpack-*` package is a generated, self-contained language distribution. It exports:
 
 ```ts
 export const manifest: TextPackManifest;
@@ -2154,59 +2139,35 @@ export const pack: TextPack;
 export default pack;
 ```
 
-A generated composite pack exports the same structural package shape. A resource pack MUST NOT export language-specific loader helpers such as `loadFrench` or `loadArabic`; `text-computing` owns developer-facing loading and task APIs.
+A language distribution MUST NOT export loader helpers such as `loadFrench` or `loadArabic`; `text-computing` owns developer-facing loading and task APIs.
 
-Every resource pack is an npm workspace package located at `packages/textpacks/<textpack-package>/`. The root workspace owns the lockfile and package-manager state; `packages/textpacks/` is a grouping folder, not a nested monorepo.
+Every public language distribution is an npm workspace package located at `packages/textpacks/<textpack-package>/`. The root workspace owns the lockfile and package-manager state; `packages/textpacks/` is a grouping folder, not a nested monorepo.
 
 The source of truth for production packs is the generated-pack input graph under `tools/textpack-forge/`, not hand-maintained package folders.
 
 ### 21.2 Pack classes
 
-Recommended generated pack classes:
-
-```text
-foundation
-foundation-composite
-language-composite
-language-component-composite
-language-concrete
-domain
-historical-noisy
-kb
-parallel
-artifact-backed
-license-isolated
-```
-
-Composite packs are the intended data graph for the SDK after their required component graph is
-production-grade:
+The public generated package class is a self-contained language distribution. Source- and task-specific processing remains internal forge build units and does not create additional npm packages.
 
 ```text
 @ismail-elkorchi/textpack-en
 @ismail-elkorchi/textpack-ar
 @ismail-elkorchi/textpack-fr
-@ismail-elkorchi/textpack-grc
-@ismail-elkorchi/textpack-la
-@ismail-elkorchi/textpack-es
-@ismail-elkorchi/textpack-it
-@ismail-elkorchi/textpack-de
 ```
 
-They are generated packs too. They normally declare required and optional component packs, artifact profiles, license policy, and capability policy instead of bundling every resource.
+These are the SDK data distributions. Future languages use the same one-package-per-language shape after their selected resources pass the publishability gate. Internal source transforms preserve provenance and license policy without becoming npm dependencies.
 
 The canonical root schema registry defines the family contracts future production packs must target: lexicon, segmentation, normalization, morphology, FST, syntax/treebank, search analyzer, KB/entity/sense, corpus, parallel/alignment, quality profile, evaluation-record, and coverage-report resources. Source-specific projections such as UD syntax, CAMeL morphology, or WordNet resources MAY specialize those family contracts, but they do not replace the canonical family contracts. A generated resource MUST declare canonical identity with `TextPackResource.schemaId`; JSON-backed canonical resources MUST validate against the named canonical schema.
 
-`@ismail-elkorchi/textpack-foundation` is the generated source-backed foundation composite. It composes `textpack-language-registry`, `textpack-unicode-17`, and `textpack-cldr-core`, and exposes a generated language-support index/API so runtime code can ask whether a language is `registered`, `unicode-covered`, `profiled`, or `task-supported` before concrete language ingestion is complete.
+Sampled language-core slices, sampled or placeholder search profiles, sampled or placeholder normalization profiles, sampled or placeholder quality profiles, UD task samples, demo packs, fixture-backed references, and descriptor-only artifact packs are not public task-supported textpacks. Language distributions such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be public until their selected resources are production-grade for the declared scope and pass the publishability gate.
 
-Sampled language-core slices, sampled or placeholder search profiles, sampled or placeholder normalization profiles, sampled or placeholder quality profiles, UD task samples, demo packs, fixture-backed references, and descriptor-only artifact packs are not public task-supported textpacks. Language composites such as `textpack-en`, `textpack-fr`, and `textpack-ar` MUST NOT be generated as public packages until their required component graph is production-grade for the declared scope and passes the publishability gate.
-
-When a default language data composite needs approved share-alike sources, the share-alike resources MUST remain in isolated suffixed components such as `*-sa`. An unsuffixed package MAY be publishable only as a generated policy-expanded wrapper: it contains no direct resource payloads, declares the full license expression, requires the isolated components explicitly, and records the wrapper policy surface in generated reports. Copyleft, noncommercial/research, local-only, blocked, aggregate, and review-only sources MUST NOT enter these wrappers.
+When a language distribution contains approved share-alike data, its manifest, npm license field, per-resource provenance, and generated license reports MUST state that policy honestly. Empty wrapper packages and suffix-only indirection are forbidden. Copyleft, noncommercial/research, local-only, blocked, aggregate, and review-only sources remain excluded unless a separate distribution has a materially different payload and explicit policy.
 
 The forge MUST NOT synthesize missing language data. KB, corpus, parallel, broad evaluation coverage, production morphology analyzers, production syntax models, and production Arabic clitic segmentation remain gaps until backed by real sources, local materialized payloads, runtime adapters, and evaluation.
 
 ### 21.3 Capability slots
 
-A fully supported language must cover the Text Computing feature surface through generated local task packs, materialized local artifact outputs, or explicit known gaps. Capability slots are not fixed package names; each language may split or combine concrete packs according to its writing system, morphology, source availability, and task needs.
+A fully supported language must cover the Text Computing feature surface through bundled local resources, materialized local artifact outputs, or explicit known gaps. Capability slots are views over one language distribution's resources, not package boundaries.
 
 Language capability slots:
 
@@ -2234,7 +2195,7 @@ Language capability slots:
 - search analyzer profile
 - local parallel or alignment resources when relevant
 
-Domain packs use concrete domain names and may contain:
+Domain-specific capability groups use concrete domain names and may contain:
 
 - domain termbase
 - domain gazetteers
@@ -2245,7 +2206,7 @@ Domain packs use concrete domain names and may contain:
 - corpus reference profile
 - quality profile
 
-Historical/noisy packs may contain:
+Historical/noisy capability groups may contain:
 
 - historical spelling maps
 - abbreviation expansion tables
@@ -2256,7 +2217,7 @@ Historical/noisy packs may contain:
 - editorial convention profiles
 - search-normalization profiles
 
-Parallel packs may contain:
+Parallel/alignment capability groups may contain:
 
 - bilingual dictionary
 - transfer rules
@@ -2267,7 +2228,7 @@ Parallel packs may contain:
 
 ### 21.4 Distribution and artifacts
 
-npm packages carry manifests, structural pack exports, resources approved for public distribution, descriptors, checksums, license files, attribution, reports, and composite recipes.
+npm packages carry final manifests, structural pack exports, resources approved for public distribution, descriptors, checksums, license files, attribution, and reports.
 
 The ecosystem must not use postinstall downloads or implicit network access. During alpha, large generated resources may be local monorepo outputs. Public distribution optimization happens later, and large corpora, large indexes, large snapshots, and heavy model/resource archives are fetched only by explicit artifact commands and recorded in an artifact lockfile.
 

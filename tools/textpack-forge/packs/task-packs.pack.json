@@ -42,7 +42,6 @@
 	"packs": [
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-core",
-			"packageDir": "packages/textpacks/textpack-ar-core",
 			"description": "Source-backed Arabic core language profile generated from IANA, Unicode, and CLDR.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -80,12 +79,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-core:arabic-core-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -225,7 +218,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-corpus",
-			"packageDir": "packages/textpacks/textpack-ar-corpus",
 			"description": "Source-backed Arabic Tatoeba corpus pack with local generated sentence rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -256,12 +248,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-corpus:tatoeba-arabic-artifacts"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -397,7 +383,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
-			"packageDir": "packages/textpacks/textpack-ar-msa-morphology",
 			"description": "Source-backed Arabic MSA morphology resources generated from CAMeL Morph.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -407,6 +392,7 @@
 				"conformanceEvidence": [
 					"eval:ar-msa-camel-morph:morpheme-inventory",
 					"eval:ar-msa-camel-morph:compatibility-tables",
+					"eval:ar-msa-camel-morph:segmentation-profile",
 					"eval:ar-msa-camel-morph:tokenization-fields",
 					"eval:ar-msa-camel-morph:transform-rejections"
 				],
@@ -430,12 +416,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-msa-morphology:camel-morph-msa"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -580,14 +560,13 @@
 						"slot": "segmentation",
 						"status": "task-supported",
 						"resourceIds": [
-							"ar-msa-camel-morph-tokenizations",
 							"ar-msa-camel-segmentation-canonical"
 						],
 						"capabilities": {
-							"segmentation": "dictionary"
+							"segmentation": "profile"
 						},
 						"notes": [
-							"CAMeL Morph tokenization schemes are available for Arabic MSA segmentation consumers."
+							"The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as expert morphology data and are not presented as executed dictionary segmentation."
 						]
 					},
 					{
@@ -610,7 +589,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-normalization",
-			"packageDir": "packages/textpacks/textpack-ar-normalization",
 			"description": "Source-backed Arabic MSA normalization profile generated from Unicode, CLDR, and CAMeL Morph.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -648,12 +626,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-normalization:arabic-normalization-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -780,7 +752,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-parallel",
-			"packageDir": "packages/textpacks/textpack-ar-parallel",
 			"description": "Source-backed Arabic Tatoeba parallel pack with local generated alignment rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -812,12 +783,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-parallel:tatoeba-arabic-links-artifacts"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -1073,17 +1038,14 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-search",
-			"packageDir": "packages/textpacks/textpack-ar-search",
-			"description": "Source-backed Arabic MSA lookup/search analyzer profile generated from CLDR, CAMeL Morph, and Arabic WordNet.",
+			"description": "Source-backed Arabic MSA Unicode word and mark-normalization search analyzer profile generated from CLDR context.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned CLDR 48.2 likelySubtags, the exact CAMeL Morph MSA LREC-COLING 2024 release, and Arabic WordNet 4.1.0 transformed into Arabic MSA search analyzer policy, tokenization hooks, morphology hooks, WordNet synonym expansion hooks, canonical search-profile resources, and quality-profile resources.",
-				"auditedLicense": "CLDR, CAMeL Morph MSA, and Arabic WordNet exact source rows are approved; required snapshots pin package-local license and attribution evidence.",
-				"declaredScope": "Arabic MSA lookup/search analyzer profile: Unicode/CLDR context, CAMeL Morph MSA tokenization and morphology hooks, and Arabic WordNet synonym expansion hooks. It does not claim a persistent search index, corpus-derived ranking model, semantic search ranking, dialectal Arabic search, Classical/Quranic Arabic search, syntax, corpus, parallel, or full language-composite coverage.",
+				"productionGradeSourceCoverage": "Pinned CLDR 48.2 likely-subtag context transformed into an Arabic MSA Unicode word analyzer profile, Arabic mark/tatweel lookup normalization, and quality-profile resources.",
+				"auditedLicense": "The CLDR exact source row is approved and its snapshot pins Unicode-3.0 evidence.",
+				"declaredScope": "Arabic MSA Unicode word and mark-normalization analyzer profile. It does not claim morphology-aware tokenization, stemming, synonym expansion, a persistent search index, corpus-derived ranking, dialectal Arabic search, Classical/Quranic Arabic search, syntax, corpus, parallel, or full language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:ar-search:analyzer-profile",
-					"eval:ar-search:wordnet-synonym-volume",
-					"eval:ar-search:camel-morphology-hooks",
 					"eval:ar-search:transform-rejections"
 				],
 				"generatedReports": [
@@ -1099,23 +1061,13 @@
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
 			"sourceIds": [
-				"source:unicode:cldr-core",
-				"source:camel:morph-msa-lrec-coling-2024",
-				"source:wordnet:arabic-v4.1.0"
+				"source:unicode:cldr-core"
 			],
 			"snapshotIds": [
-				"snapshot:source:unicode:cldr-core:48.2.0",
-				"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-				"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+				"snapshot:source:unicode:cldr-core:48.2.0"
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-search:arabic-search-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -1139,60 +1091,13 @@
 				},
 				"resources": [
 					{
-						"id": "ar-search-normalization-policy",
-						"kind": "normalization-profile",
-						"path": "resources/ar.search.normalization-policy.json",
-						"format": "json",
-						"license": "Unicode-3.0 AND CC-BY-4.0",
-						"citations": [
-							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
-						"schemaId": "textnorm.rules.v1"
-					},
-					{
-						"id": "ar-search-tokenization-hooks",
-						"kind": "segmentation-profile",
-						"path": "resources/ar.search.tokenization-hooks.tsv",
-						"format": "tsv",
-						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
-						"schemaId": "textdata.segmentation-table.v1"
-					},
-					{
-						"id": "ar-search-morphology-hooks",
-						"kind": "morphology",
-						"path": "resources/ar.search.morphology-hooks.tsv",
-						"format": "tsv",
-						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
-						"schemaId": "textlex.morphology.rows.v1"
-					},
-					{
-						"id": "ar-search-wordnet-synonyms",
-						"kind": "lexicon",
-						"path": "resources/ar.search.wordnet-synonyms.tsv",
-						"format": "tsv",
-						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
-						"schemaId": "textlex.lexicon.rows.v1"
-					},
-					{
 						"id": "ar-search-profile",
 						"kind": "search-profile",
 						"path": "resources/ar.search.profile.json",
 						"format": "json",
-						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"license": "Unicode-3.0",
 						"citations": [
-							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-							"CAMeL Morph MSA LREC-COLING 2024 release.",
-							"Arabic WordNet 4.1.0."
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
 						"schemaId": "textsearch.analyzer-profile.v1"
 					},
@@ -1201,11 +1106,9 @@
 						"kind": "quality-profile",
 						"path": "resources/ar.search.quality.json",
 						"format": "json",
-						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"license": "Unicode-3.0",
 						"citations": [
-							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-							"CAMeL Morph MSA LREC-COLING 2024 release.",
-							"Arabic WordNet 4.1.0."
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
 						"schemaId": "textquality.evidence.v1"
 					},
@@ -1214,11 +1117,9 @@
 						"kind": "quality-profile",
 						"path": "resources/ar.search.quality-profile.json",
 						"format": "json",
-						"license": "Unicode-3.0 AND CC-BY-4.0",
+						"license": "Unicode-3.0",
 						"citations": [
-							"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-							"CAMeL Morph MSA LREC-COLING 2024 release.",
-							"Arabic WordNet 4.1.0."
+							"Unicode CLDR core data, cldr-core npm package 48.2.0."
 						],
 						"schemaId": "textquality.profile.v1"
 					}
@@ -1228,17 +1129,13 @@
 						"slot": "search",
 						"status": "task-supported",
 						"resourceIds": [
-							"ar-search-normalization-policy",
-							"ar-search-tokenization-hooks",
-							"ar-search-morphology-hooks",
-							"ar-search-wordnet-synonyms",
 							"ar-search-profile"
 						],
 						"capabilities": {
 							"search": "analyzer"
 						},
 						"notes": [
-							"Arabic MSA lookup/search analyzer resources are generated from CLDR context, CAMeL Morph MSA tokenization and morphology hooks, and Arabic WordNet synonym hooks."
+							"The built-in Arabic analyzer executes Unicode word tokenization and removes tatweel and Arabic combining marks; it does not claim morphology, stemming, or synonym expansion."
 						]
 					},
 					{
@@ -1249,21 +1146,18 @@
 							"ar-search-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records source coverage, synonym and morphology hook counts, accepted records, rejected records, and scope limitations."
+							"Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations."
 						]
 					}
 				],
-				"license": "Unicode-3.0 AND CC-BY-4.0",
+				"license": "Unicode-3.0",
 				"citations": [
-					"Unicode CLDR core data, cldr-core npm package 48.2.0.",
-					"CAMeL Morph MSA LREC-COLING 2024 release.",
-					"Arabic WordNet 4.1.0."
+					"Unicode CLDR core data, cldr-core npm package 48.2.0."
 				]
 			}
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
-			"packageDir": "packages/textpacks/textpack-ar-syntax-ud-nyuad-sa",
 			"description": "Source-backed isolated Arabic UD NYUAD annotation-derived syntax and tagging profiles.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -1296,12 +1190,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -1477,7 +1365,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-core",
-			"packageDir": "packages/textpacks/textpack-en-core",
 			"description": "Source-backed English core language profile generated from IANA, Unicode, CLDR, ESDB, and SCOWLv2.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -1521,12 +1408,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-core:english-core-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -1698,7 +1579,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-corpus",
-			"packageDir": "packages/textpacks/textpack-en-corpus",
 			"description": "Source-backed English Tatoeba corpus pack with local generated sentence rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -1729,12 +1609,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-corpus:tatoeba-english-artifacts"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -1870,7 +1744,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
-			"packageDir": "packages/textpacks/textpack-en-inflection-scowl",
 			"description": "Source-backed English lookup morphology generated from SCOWLv2.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -1905,12 +1778,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -2073,7 +1940,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-normalization",
-			"packageDir": "packages/textpacks/textpack-en-normalization",
 			"description": "Source-backed English normalization profile generated from Unicode and CLDR.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -2108,12 +1974,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-normalization:english-normalization-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -2221,7 +2081,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-parallel",
-			"packageDir": "packages/textpacks/textpack-en-parallel",
 			"description": "Source-backed English Tatoeba parallel pack with local generated alignment rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -2253,12 +2112,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -2686,13 +2539,12 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-segmentation",
-			"packageDir": "packages/textpacks/textpack-en-segmentation",
 			"description": "Source-backed English segmentation profiles generated from Unicode UAX #29 break properties and CLDR.",
 			"publishable": true,
 			"publishabilityEvidence": {
 				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots plus CLDR 48.2 English likely-subtag context transformed into modern typed-English Unicode segmentation profiles, property tables, canonical segmentation resources, and quality-profile resources.",
 				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
-				"declaredScope": "Modern typed English Unicode grapheme, word, and sentence boundary profile. It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-composite coverage.",
+				"declaredScope": "Modern typed English segmentation through the built-in adapter's host Intl.Segmenter Unicode grapheme, word, and sentence behavior. Generated UAX #29 property tables are conformance evidence, not a separate executed engine. It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:en-segmentation:grapheme-boundary-properties",
 					"eval:en-segmentation:word-boundary-properties",
@@ -2722,12 +2574,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-segmentation:english-segmentation-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -2828,7 +2674,6 @@
 						"slot": "segmentation",
 						"status": "task-supported",
 						"resourceIds": [
-							"en-segmentation-boundary-properties",
 							"en-grapheme-segmentation-profile",
 							"en-word-segmentation-profile",
 							"en-sentence-segmentation-profile"
@@ -2837,7 +2682,7 @@
 							"segmentation": "profile"
 						},
 						"notes": [
-							"Unicode UAX #29 grapheme, word, and sentence boundary profiles are available for modern typed English text."
+							"The built-in adapter executes host Intl.Segmenter Unicode grapheme, word, and sentence segmentation for English. Generated UAX #29 property tables are conformance evidence, not a second unexecuted boundary engine."
 						]
 					},
 					{
@@ -2861,7 +2706,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
-			"packageDir": "packages/textpacks/textpack-en-syntax-ud-gumreddit",
 			"description": "Source-backed English UD GUMReddit annotation-derived syntax and tagging profiles.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -2894,12 +2738,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -3074,13 +2912,12 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
-			"packageDir": "packages/textpacks/textpack-en-wordlist-esdb",
-			"description": "Source-backed English spelling wordlist resources generated from ESDB wordlist-diff default regional outputs.",
+			"description": "Source-backed English spelling wordlists plus a Unicode word/casefold search profile generated from ESDB default regional outputs.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Exact wordlist-diff rel-2026.02.25 default generated English regional wordlists for en_US, en_GB-ise, en_GB-ize, en_CA, and en_AU transformed into spelling-form, profile, search-analyzer, canonical lexicon, and quality resources.",
+				"productionGradeSourceCoverage": "Exact wordlist-diff rel-2026.02.25 default generated English regional wordlists for en_US, en_GB-ise, en_GB-ize, en_CA, and en_AU transformed into spelling-form, regional-profile, canonical lexicon, executable Unicode word/casefold analyzer, and quality resources.",
 				"auditedLicense": "The ESDB wordlist-diff source row is approved; package-local LICENSE.generated.md includes the pinned Copyright evidence file.",
-				"declaredScope": "English spelling wordlist and analyzer-profile component from ESDB generated default regional outputs; does not claim full English lexicon, inflectional morphology, frequency coverage, corpus coverage, or language-composite coverage.",
+				"declaredScope": "English spelling wordlists and a Unicode word/casefold analyzer profile. The built-in search adapter does not apply wordlist membership or suggestion filtering automatically. This component does not claim full English lexicon, inflectional morphology, frequency coverage, corpus coverage, or full language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:en-esdb-wordlist:default-profile-count",
 					"eval:en-esdb-wordlist:word-volume",
@@ -3107,12 +2944,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -3234,7 +3065,7 @@
 							"search": "analyzer"
 						},
 						"notes": [
-							"Generated analyzer profile references the ESDB wordlist resource for spelling-aware search and suggestion consumers."
+							"The executable profile performs Unicode word tokenization and casefolding. ESDB spelling forms remain available through the lexicon slot for explicit spelling or suggestion logic; they are not silently used as a token filter."
 						]
 					},
 					{
@@ -3257,7 +3088,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-core",
-			"packageDir": "packages/textpacks/textpack-fr-core",
 			"description": "Source-backed French core language profile generated from IANA, Unicode, and CLDR.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -3295,12 +3125,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-core:french-core-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -3440,7 +3264,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-corpus",
-			"packageDir": "packages/textpacks/textpack-fr-corpus",
 			"description": "Source-backed French Tatoeba corpus pack with local generated sentence rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -3471,12 +3294,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-corpus:tatoeba-french-artifacts"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -3612,21 +3429,17 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
-			"packageDir": "packages/textpacks/textpack-fr-lexique-sa",
-			"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, morphology, frequency, search, and quality resources with Tatoeba-observed French surface search evidence.",
+			"description": "Source-backed share-alike isolated French Lexique 3.83 lexicon, lookup morphology, Unicode search analyzer, and quality resources.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned Lexique 3.83 TSV transformed into compressed form entries, lemma inventory, POS inventory, canonical lexicon, canonical lookup morphology, a Lexique-backed search profile, quality profile, coverage report, and evaluation records. The pinned Tatoeba French sentence snapshot contributes observed apostrophe/elision/contraction surface evidence and search gold cases.",
-				"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated and the exact Tatoeba French source row is approved as attribution-required; this package uses the required -sa suffix and package reports cite Lexique, CC-BY-SA-4.0, Tatoeba, and CC-BY-2.0-FR evidence.",
-				"declaredScope": "French Lexique 3.83 share-alike isolated component: lexical form inventory, lemma inventory, POS/gender/number inventory, source frequency fields, lookup morphology metadata, and a source-backed search analyzer profile with observed French apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence. It does not claim default-composite eligibility, WOLF/OMW KB coverage, French syntax, corpus packaging, parallel data, or full French language-composite coverage.",
+				"productionGradeSourceCoverage": "Pinned Lexique 3.83 TSV transformed into compressed form entries, lemma and POS inventories, canonical lexicon, canonical lookup morphology, a Unicode word/casefold/accent-fold search profile, quality profile, coverage report, and evaluation records.",
+				"auditedLicense": "The exact Lexique 3.83 source row is approved as share-alike isolated; this package uses the required -sa suffix and package reports include the pinned CC-BY-SA-4.0 evidence.",
+				"declaredScope": "French Lexique 3.83 share-alike isolated component: lexical forms, lemmas, POS/gender/number inventory, source frequency fields, lookup morphology metadata, and an executable Unicode word/casefold/accent-fold search profile. Lexique lookup data is exposed separately and is not applied automatically by the search adapter. It does not claim default-distribution eligibility, context-sensitive lemmatization, elision/contraction search policy, syntax, corpus, parallel data, or full French language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:fr-lexique:entry-volume",
 					"eval:fr-lexique:lemma-volume",
 					"eval:fr-lexique:pos-inventory",
 					"eval:fr-lexique:search-profile",
-					"eval:fr-lexique:search-elision-prefixes",
-					"eval:fr-lexique:search-contraction-forms",
-					"eval:fr-lexique:search-gold-cases",
 					"eval:fr-lexique:transform-rejections"
 				],
 				"generatedReports": [
@@ -3642,21 +3455,13 @@
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
 			"sourceIds": [
-				"source:fr:lexique-383",
-				"source:tatoeba:weekly-french-2026-06-06"
+				"source:fr:lexique-383"
 			],
 			"snapshotIds": [
-				"snapshot:source:fr:lexique-383:2019-06-04",
-				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+				"snapshot:source:fr:lexique-383:2019-06-04"
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-lexique-sa:lexique-383"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -3739,55 +3544,20 @@
 						"kind": "search-profile",
 						"path": "resources/lexique-383.search-profile.json",
 						"format": "json",
-						"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+						"license": "CC-BY-SA-4.0",
 						"citations": [
-							"Lexique 3.83, 2019-06-04.",
-							"Tatoeba weekly French exports, 2026-06-06."
+							"Lexique 3.83, 2019-06-04."
 						],
 						"schemaId": "textsearch.analyzer-profile.v1"
-					},
-					{
-						"id": "fr-lexique-search-elision-prefixes",
-						"kind": "search-profile",
-						"path": "resources/lexique-383.search-elision-prefixes.tsv",
-						"format": "tsv",
-						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"schemaId": "textsearch.analyzer-table.v1"
-					},
-					{
-						"id": "fr-lexique-search-contraction-forms",
-						"kind": "search-profile",
-						"path": "resources/lexique-383.search-contraction-forms.tsv",
-						"format": "tsv",
-						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"schemaId": "textsearch.analyzer-table.v1"
-					},
-					{
-						"id": "fr-lexique-search-gold-cases",
-						"kind": "quality-profile",
-						"path": "resources/lexique-383.search-gold-cases.json",
-						"format": "json",
-						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
-						"schemaId": "textquality.evidence.v1"
 					},
 					{
 						"id": "fr-lexique-quality",
 						"kind": "quality-profile",
 						"path": "resources/lexique-383.quality.json",
 						"format": "json",
-						"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+						"license": "CC-BY-SA-4.0",
 						"citations": [
-							"Lexique 3.83, 2019-06-04.",
-							"Tatoeba weekly French exports, 2026-06-06."
+							"Lexique 3.83, 2019-06-04."
 						],
 						"schemaId": "textquality.evidence.v1"
 					},
@@ -3796,10 +3566,9 @@
 						"kind": "quality-profile",
 						"path": "resources/lexique-383.quality-profile.json",
 						"format": "json",
-						"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+						"license": "CC-BY-SA-4.0",
 						"citations": [
-							"Lexique 3.83, 2019-06-04.",
-							"Tatoeba weekly French exports, 2026-06-06."
+							"Lexique 3.83, 2019-06-04."
 						],
 						"schemaId": "textquality.profile.v1"
 					}
@@ -3834,13 +3603,13 @@
 						"slot": "search",
 						"status": "task-supported",
 						"resourceIds": [
-							"fr-lexique-search-profile",
-							"fr-lexique-search-elision-prefixes",
-							"fr-lexique-search-contraction-forms",
-							"fr-lexique-search-gold-cases"
+							"fr-lexique-search-profile"
 						],
+						"capabilities": {
+							"search": "analyzer"
+						},
 						"notes": [
-							"Lexique form/lemma/frequency fields plus Tatoeba-observed apostrophe, elision-prefix, contraction-surface, accent-fold, and gold-case evidence back a French analyzer profile for isolated share-alike use."
+							"The executable search profile performs Unicode word tokenization, Unicode casefolding, and lookup-only accent folding. Lexique form/lemma data remains available through the lexicon and morphology slots and is not applied automatically by the search adapter."
 						]
 					},
 					{
@@ -3848,24 +3617,21 @@
 						"status": "task-supported",
 						"resourceIds": [
 							"fr-lexique-quality",
-							"fr-lexique-quality-profile",
-							"fr-lexique-search-gold-cases"
+							"fr-lexique-quality-profile"
 						],
 						"notes": [
-							"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, search gold-case coverage, and license isolation notes."
+							"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
 						]
 					}
 				],
-				"license": "CC-BY-SA-4.0 AND CC-BY-2.0-FR",
+				"license": "CC-BY-SA-4.0",
 				"citations": [
-					"Lexique 3.83, 2019-06-04.",
-					"Tatoeba weekly French exports, 2026-06-06."
+					"Lexique 3.83, 2019-06-04."
 				]
 			}
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-normalization",
-			"packageDir": "packages/textpacks/textpack-fr-normalization",
 			"description": "Source-backed French normalization profile generated from Unicode, CLDR, and Tatoeba-observed French surface evidence.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -3905,12 +3671,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-normalization:french-normalization-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -4060,7 +3820,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-parallel",
-			"packageDir": "packages/textpacks/textpack-fr-parallel",
 			"description": "Source-backed French Tatoeba parallel pack with local generated alignment rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -4092,12 +3851,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-parallel:tatoeba-french-links-artifacts"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -4353,13 +4106,12 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
-			"packageDir": "packages/textpacks/textpack-fr-segmentation",
 			"description": "Source-backed French segmentation profiles generated from Unicode UAX #29, CLDR, and Tatoeba-observed French surface evidence.",
 			"publishable": true,
 			"publishabilityEvidence": {
 				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots, CLDR 48.2 French likely-subtag context, and the pinned Tatoeba French sentence snapshot transformed into modern typed-French Unicode segmentation profiles, a French token profile, observed elision/contraction/abbreviation evidence tables, canonical segmentation resources, quality-profile resources, and gold cases.",
 				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence; the exact Tatoeba French source row is approved as CC-BY-2.0-FR with attribution evidence.",
-				"declaredScope": "Modern typed French Unicode grapheme, word, sentence, and token segmentation profile with observed apostrophe elision-prefix handling, contraction-surface recognition, abbreviation-period candidates, and gold cases. It does not claim social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus packaging, parallel packaging, or full language-composite coverage.",
+				"declaredScope": "Modern typed French segmentation: the built-in adapter executes host Unicode grapheme/word/sentence boundaries and observed apostrophe elision-prefix splitting. Contraction surfaces, abbreviation candidates, boundary tables, and generated cases are reference/quality evidence, not additional executed rules. It does not claim social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus packaging, parallel packaging, or full language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:fr-segmentation:grapheme-boundary-properties",
 					"eval:fr-segmentation:word-boundary-properties",
@@ -4395,12 +4147,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-segmentation:french-segmentation-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -4560,21 +4306,17 @@
 						"slot": "segmentation",
 						"status": "task-supported",
 						"resourceIds": [
-							"fr-segmentation-boundary-properties",
 							"fr-grapheme-segmentation-profile",
 							"fr-word-segmentation-profile",
 							"fr-sentence-segmentation-profile",
 							"fr-token-segmentation-profile",
-							"fr-segmentation-elision-prefixes",
-							"fr-segmentation-contraction-forms",
-							"fr-segmentation-abbreviations",
-							"fr-segmentation-gold-cases"
+							"fr-segmentation-elision-prefixes"
 						],
 						"capabilities": {
 							"segmentation": "profile"
 						},
 						"notes": [
-							"Unicode UAX #29 grapheme, word, and sentence boundary profiles plus Tatoeba-observed elision-prefix, contraction-surface, abbreviation-period, and token gold-case resources are available for modern typed French text."
+							"The built-in adapter executes host Intl.Segmenter Unicode boundaries and applies the observed French elision-prefix table. Contraction, abbreviation, boundary-property, and gold-case resources are retained as quality/reference evidence rather than presented as executed rules."
 						]
 					},
 					{
@@ -4600,7 +4342,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
-			"packageDir": "packages/textpacks/textpack-fr-syntax-ud-gsd-sa",
 			"description": "Source-backed isolated French UD GSD annotation-derived syntax and tagging profiles.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -4633,12 +4374,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -4812,7 +4547,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
-			"packageDir": "packages/textpacks/textpack-fr-unimorph-sa",
 			"description": "Source-backed share-alike isolated French UniMorph inflection and paradigm resources.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -4846,12 +4580,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-unimorph-sa:french-unimorph"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -5002,7 +4730,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
-			"packageDir": "packages/textpacks/textpack-wikidata-ar",
 			"description": "Source-backed Arabic Wikidata core entity extract pack with local generated KB rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -5034,12 +4761,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -5203,7 +4924,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-en",
-			"packageDir": "packages/textpacks/textpack-wikidata-en",
 			"description": "Source-backed English Wikidata core entity extract with local generated KB rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -5235,12 +4955,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wikidata-en:wikidata-main-artifact"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -5410,7 +5124,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
-			"packageDir": "packages/textpacks/textpack-wikidata-fr",
 			"description": "Source-backed French Wikidata core entity extract pack with local generated KB rows.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -5442,12 +5155,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wikidata-fr:wikidata-main-artifact"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -5611,7 +5318,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-wordnet-ar",
-			"packageDir": "packages/textpacks/textpack-wordnet-ar",
 			"description": "Source-backed Arabic lexical-semantic resources generated from Arabic WordNet 4.1.0.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -5644,12 +5350,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -5814,7 +5514,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-wordnet-en",
-			"packageDir": "packages/textpacks/textpack-wordnet-en",
 			"description": "Source-backed English lexical-semantic resources generated from Open English WordNet.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -5847,12 +5546,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",

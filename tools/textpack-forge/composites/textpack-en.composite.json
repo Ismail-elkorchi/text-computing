@@ -4,15 +4,23 @@
 	"packageName": "@ismail-elkorchi/textpack-en",
 	"packageDir": "packages/textpacks/textpack-en",
 	"name": "English Developer Textpack",
-	"description": "Generated English developer recipe composite over the current English component graph with local KB, corpus, and parallel payloads.",
+	"description": "Self-contained English resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
 	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Generated recipe composite over the currently generated English foundation, core, normalization, segmentation, lexicon, morphology, syntax, KB, search, corpus, parallel, and quality component graph. Required KB, corpus, and parallel components now provide local task-usable payloads for their declared scopes.",
-		"auditedLicense": "Required component source rows are approved and default-composite compatible: IANA, Unicode, CLDR, ESDB, SCOWLv2, UD English GUMReddit, Open English WordNet, Wikidata main structured data, and local Tatoeba weekly English sentence/link exports. Share-alike UniMorph English, Wiktionary, DBnary, Wikipedia-derived raw text, OPUS, and blocked aggregate sources are excluded from this default composite.",
-		"declaredScope": "Default English developer textpack for the currently generated English resource graph: core profile, normalization, segmentation, spelling/lexicon, lookup morphology, syntax annotation profiles, lexical-semantic WordNet KB resources, local Wikidata English core entity extract, search analyzer profile, local Tatoeba corpus rows, local Tatoeba parallel link rows, and generated quality evidence. It does not claim UniMorph paradigm-table coverage, Wiktionary/DBnary-derived lexical coverage, OPUS coverage, complete Wikidata dump coverage, parser models, neural models, raw web corpora, or hidden network access.",
+		"productionGradeSourceCoverage": "Self-contained English distribution with foundation, core, normalization, segmentation, lexicon, lookup morphology, WordNet and Wikidata KB, search, and quality resources.",
+		"auditedLicense": "Selected IANA, Unicode, CLDR, ESDB, SCOWLv2, Open English WordNet, and Wikidata sources are approved for this distribution and retain generated attribution and license evidence.",
+		"declaredScope": "Ordinary typed-English document NLP. Large corpora, parallel alignments, and UD annotation datasets are deliberately excluded from the npm package and remain explicit forge acquisition inputs.",
 		"conformanceEvidence": [
-			"eval:textpack-en:required-component-graph",
-			"docs:textpacks/language-composite-readiness.generated.md#english-en"
+			"eval:language-registry:bcp47-record-volume:distribution:textpack-en",
+			"eval:en-core:iana-language-profile:distribution:textpack-en",
+			"eval:en-normalization:profile-rules:distribution:textpack-en",
+			"eval:en-segmentation:word-boundary-properties:distribution:textpack-en",
+			"eval:en-esdb-wordlist:word-volume:distribution:textpack-en",
+			"eval:en-scowl-inflection:lookup-analyzer-volume:distribution:textpack-en",
+			"eval:wikidata-en:entity-extract:distribution:textpack-en",
+			"eval:en-esdb-wordlist:search-profile:distribution:textpack-en",
+			"eval:en-core:transform-rejections:distribution:textpack-en",
+			"docs:textpacks/language-distribution-readiness.generated.md#english-en"
 		],
 		"generatedReports": [
 			"LICENSE.generated.md",
@@ -26,7 +34,7 @@
 	},
 	"version": "0.1.0",
 	"packClass": "language-composite",
-	"supportLevel": "feature-complete",
+	"supportLevel": "task-supported",
 	"display": {
 		"languageName": "English"
 	},
@@ -35,136 +43,56 @@
 		"scripts": ["Latn"],
 		"modalities": ["typed"]
 	},
-	"sourceIds": [
-		"source:iana:language-subtag-registry",
-		"source:unicode:ucd",
-		"source:unicode:cldr-core",
-		"source:esdb:wordlist-diff-en-default-2026-02-25",
-		"source:scowl:v2-rel-2026-02-25",
-		"source:ud:english-gumreddit-r2.18",
-		"source:wordnet:open-english-2025",
-		"source:wikidata:main",
-		"source:tatoeba:weekly-2026-06-06"
-	],
-	"snapshotIds": [
-		"snapshot:source:iana:language-subtag-registry:2026-05-05",
-		"snapshot:source:unicode:ucd:17.0.0",
-		"snapshot:source:unicode:cldr-core:48.2.0",
-		"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
-		"snapshot:source:scowl:v2-rel-2026.02.25",
-		"snapshot:source:ud:english-gumreddit:r2.18",
-		"snapshot:source:wordnet:open-english-2025:2025-edition",
-		"snapshot:source:wikidata:main:20260608",
-		"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
-	],
-	"components": [
+	"buildUnits": [
 		{
-			"packageName": "@ismail-elkorchi/textpack-foundation",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-			"licensePolicy": "default",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "language-registry",
+			"reason": "BCP 47 language registry resources bundled into the English distribution.",
+			"licensePolicy": "default"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-core",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "unicode-17",
+			"reason": "Unicode 17 resources bundled into the English distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "cldr-core",
+			"reason": "CLDR core resources bundled into the English distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "en-core",
 			"reason": "English core language profile resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-normalization",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "en-normalization",
 			"reason": "English normalization policy and quality resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-segmentation",
-			"versionRange": "0.1.0",
-			"role": "required",
+			"buildUnitId": "en-segmentation",
 			"reason": "English segmentation profiles.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-lexicon",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English spelling, inflection-inventory, and lexical-semantic lexicon resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "en-wordlist-esdb",
+			"reason": "English spelling wordlists and search analyzer resources.",
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-morphology",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English lookup morphology resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "en-inflection-scowl",
+			"reason": "English SCOWLv2 inflection and lookup morphology resources.",
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-syntax",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English UD-derived syntax and tagging resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "wordnet-en",
+			"reason": "English WordNet lexical-semantic resources.",
+			"licensePolicy": "allow-attribution"
 		},
 		{
-			"packageName": "@ismail-elkorchi/textpack-en-kb",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English WordNet lexical-semantic resources and local Wikidata core entity extract.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-en-search",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English search analyzer profile resources.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-en-corpus",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English local Tatoeba corpus rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-en-parallel",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English-linked local Tatoeba parallel alignment rows and quality evidence.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
-		},
-		{
-			"packageName": "@ismail-elkorchi/textpack-en-quality",
-			"versionRange": "0.1.0",
-			"role": "required",
-			"reason": "English generated quality evidence over the required default component graph.",
-			"licensePolicy": "allow-attribution",
-			"capabilityPolicy": "contributes-default",
-			"artifactPolicy": "none"
+			"buildUnitId": "wikidata-en",
+			"reason": "Local Wikidata English core entity extract.",
+			"licensePolicy": "default"
 		}
 	],
 	"capabilitySlots": [
@@ -172,97 +100,95 @@
 			"slot": "foundation",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Unicode, CLDR, and BCP 47 foundation resources."
+				"The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
 			]
 		},
 		{
 			"slot": "core",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides the English core language profile."
+				"The bundled distribution resources provide the English core language profile."
 			]
 		},
 		{
 			"slot": "normalization",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides English normalization resources."
+				"The bundled distribution resources provide English normalization data."
 			]
 		},
 		{
 			"slot": "segmentation",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides English segmentation resources."
+				"The bundled distribution resources provide English segmentation data."
 			]
 		},
 		{
 			"slot": "lexicon",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides English spelling, inflection-inventory, and lexical-semantic lexicon resources."
+				"The bundled distribution resources provide English spelling, inflection-inventory, and lexical-semantic lexicon data."
 			]
 		},
 		{
 			"slot": "morphology",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides English SCOWLv2 lookup morphology resources; isolated UniMorph paradigm tables are not included."
+				"The bundled distribution resources provide English SCOWLv2 lookup morphology data; isolated UniMorph paradigm tables are not included."
 			]
 		},
 		{
 			"slot": "syntax",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides English UD-derived syntax and tagging resources."
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "kb",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides Open English WordNet resources and a local Wikidata English core entity extract."
+				"The bundled distribution resources provide Open English WordNet data and a local Wikidata English core entity extract."
 			]
 		},
 		{
 			"slot": "search",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides English search analyzer resources."
+				"The bundled distribution resources provide English search analyzer data."
 			]
 		},
 		{
 			"slot": "corpus",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba English sentence rows and canonical corpus metadata."
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "parallel",
-			"status": "task-supported",
+			"status": "planned",
 			"notes": [
-				"The required component graph provides local Tatoeba English-linked sentence-id alignment rows for selected target languages."
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "quality",
 			"status": "task-supported",
 			"notes": [
-				"The required component graph provides generated English quality evidence and coverage reports over the required local component graph."
+				"The bundled distribution resources provide generated English quality evidence and coverage reports over the selected local build units."
 			]
 		}
 	],
-	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND CC-BY-4.0 AND LicenseRef-Princeton-WordNet AND CC0-1.0 AND CC-BY-2.0-FR",
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC0-1.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
 		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 		"English Speller Database generated wordlist outputs, rel-2026.02.25.",
 		"SCOWLv2 rich text export, rel-2026.02.25.",
-		"Universal Dependencies English GUMReddit r2.18 annotations.",
 		"Open English WordNet 2025.",
-		"Wikidata main structured data dump, 2026-06-08.",
-		"Tatoeba weekly exports, 2026-06-06."
+		"Wikidata main structured data dump, 2026-06-08."
 	]
 }

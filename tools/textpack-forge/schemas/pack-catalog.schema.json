@@ -23,17 +23,9 @@
 			"items": {
 				"type": "object",
 				"additionalProperties": false,
-				"required": [
-					"packageName",
-					"packageDir",
-					"packClass",
-					"supportLevel",
-					"generatedSourceFiles",
-					"manifest"
-				],
+				"required": ["packageName", "packClass", "supportLevel", "manifest"],
 				"properties": {
 					"packageName": { "type": "string", "minLength": 1 },
-					"packageDir": { "type": "string", "minLength": 1 },
 					"packClass": {
 						"enum": [
 							"foundation",
@@ -91,15 +83,6 @@
 					"resourceSpecIds": {
 						"type": "array",
 						"items": { "type": "string", "minLength": 1 }
-					},
-					"generatedPackageFiles": { "type": "boolean" },
-					"generatedSourceFiles": {
-						"type": "array",
-						"minItems": 1,
-						"uniqueItems": true,
-						"items": {
-							"enum": ["src/index.ts", "src/manifest.ts", "src/resources.ts"]
-						}
 					},
 					"manifest": {
 						"type": "object",

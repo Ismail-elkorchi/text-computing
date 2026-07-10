@@ -11,16 +11,14 @@
 			"path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt",
 			"mediaType": "text/plain; charset=utf-8",
 			"byteLength": 731465,
-			"checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6",
-			"sourceUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry"
+			"checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/iana/LICENSE.html",
 			"mediaType": "text/html; charset=utf-8",
 			"byteLength": 6480,
-			"checksum": "sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113",
-			"sourceUrl": "https://www.iana.org/help/licensing-terms"
+			"checksum": "sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113"
 		}
 	],
-	"notes": "Pinned local snapshot of the IANA Language Subtag Registry with local license evidence."
+	"notes": "Frozen local snapshot of the IANA Language Subtag Registry and license evidence. The public endpoints are mutable, so checksum-pinned regeneration uses these retained inputs."
 }

@@ -537,7 +537,16 @@ test("links entities terms and senses while preserving source annotations", () =
 	);
 	assert.equal(entityLinks.length, 1);
 	assert.equal(entityLinks[0]?.evidence.mode, "kb");
-	assert.equal((entityLinks[0]?.value as { entityId?: string }).entityId, "Q1");
+	const entityLinkValue = entityLinks[0]?.value as {
+		readonly entityId?: string;
+		readonly entityTypes?: readonly string[];
+		readonly aliasMatchKind?: string;
+		readonly matchKind?: string;
+	};
+	assert.equal(entityLinkValue.entityId, "Q1");
+	assert.deepEqual(entityLinkValue.entityTypes, ["Organization"]);
+	assert.equal(entityLinkValue.aliasMatchKind, "alias");
+	assert.equal(entityLinkValue.matchKind, "exact");
 
 	const linkedTerms = linkTerms(linkedEntities, kb, {
 		sourceLayerIds: ["term.candidate"],

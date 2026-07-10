@@ -8,12 +8,16 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
+		},
+		"./node": {
+			"types": "./dist/node.d.ts",
+			"import": "./dist/node.js"
 		}
 	},
 	"scripts": {
 		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
-		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json --files-ignore-unknown=true",
-		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json tsconfig.test.node.json --files-ignore-unknown=true",
+		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters && tsc -p tsconfig.test.node.json --noEmit --noUnusedLocals --noUnusedParameters",
 		"check:pack": "npm pack --dry-run && node test/artifacts/pack-audit.mjs",
 		"test:node": "npm run build && node --test test/suite.ts test/runtime/node.test.ts",
 		"test:deno": "npm run build && deno test --allow-read test/runtime/deno.test.ts",
@@ -35,7 +39,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.15",
-		"esbuild": "0.28.0",
+		"@types/node": "25.9.1",
+		"esbuild": "0.28.1",
 		"typescript": "6.0.3"
 	}
 }

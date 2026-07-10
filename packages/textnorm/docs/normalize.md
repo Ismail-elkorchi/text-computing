@@ -6,3 +6,6 @@ inspectable candidate list.
 
 The source document is not mutated. To store the returned view and span map, callers use
 `textdoc`'s `addViewWithSpanMap` helper.
+
+Normalization-profile `casefold` rules use the Unicode-pinned full case-fold implementation from
+`textfacts`. Their output does not depend on the host locale or runtime locale data.

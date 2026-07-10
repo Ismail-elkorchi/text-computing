@@ -1,7 +1,11 @@
 {
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
-  "knownGaps": [],
+  "knownGaps": [
+    "corpus is planned in this source-backed self-contained language distribution.",
+    "parallel is planned in this source-backed self-contained language distribution.",
+    "syntax is planned in this source-backed self-contained language distribution."
+  ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-fr",
   "publishability": {
@@ -11,6 +15,124 @@
   },
   "publishable": true,
   "records": [
+    {
+      "capabilitySlot": "locale-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "cldrVersion": "48",
+          "unicodeVersion": "16.0.0"
+        },
+        "resourceIds": [
+          "cldr-48-likely-subtags",
+          "cldr-48-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "likelySubtagCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "mappings",
+        "value": 7788
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "cldr-core-foundation",
+      "recordId": "eval:cldr-core:likely-subtag-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "locale-profile.likely-subtags"
+    },
+    {
+      "capabilitySlot": "locale-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "cldr-48-locale-aliases",
+          "cldr-48-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "aliasCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "aliases",
+        "value": 1306
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "cldr-core-foundation",
+      "recordId": "eval:cldr-core:locale-alias-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "locale-profile.aliases"
+    },
+    {
+      "capabilitySlot": "locale-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "cldr-48-script-data",
+          "cldr-48-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "scriptVariantCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "variants",
+        "value": 15
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "cldr-core-foundation",
+      "recordId": "eval:cldr-core:script-variant-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "locale-profile.script-variants"
+    },
     {
       "capabilitySlot": "core",
       "dataset": {
@@ -26,66 +148,45 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "coverage",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
+          "graphemeRangeCount": 1429,
+          "sentenceRangeCount": 2930
         },
-        "resourceIds": []
+        "resourceIds": [
+          "fr-core-basic-segmentation"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "This verifies a basic Unicode UAX #29 segmentation baseline; richer French segmentation is provided by textpack-fr-segmentation.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "coreRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "wordRangeCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "ranges",
+        "value": 1432
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:core-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-core-profile",
+      "recordId": "eval:fr-core:basic-segmentation-baseline:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.core.component-evidence"
+      "taskType": "core.basic-segmentation"
     },
     {
-      "capabilitySlot": "corpus",
+      "capabilitySlot": "core",
       "dataset": {
         "languages": [
           "fr"
@@ -99,68 +200,44 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides local Tatoeba French sentence rows and canonical corpus metadata."
-          ]
+          "ianaFileDate": "2026-05-05",
+          "ianaSuppressScript": "Latn"
         },
-        "resourceIds": []
+        "resourceIds": [
+          "fr-core-language-profile"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "corpusRequiredComponentGraphPresent",
+        "name": "likelySubtag",
         "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "threshold": "fr-Latn-FR",
+        "unit": "tag",
+        "value": "fr-Latn-FR"
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:corpus-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-core-profile",
+      "recordId": "eval:fr-core:iana-language-profile:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.corpus.component-evidence"
+      "taskType": "core.language-profile"
     },
     {
-      "capabilitySlot": "foundation",
+      "capabilitySlot": "core",
       "dataset": {
         "languages": [
           "fr"
@@ -174,432 +251,37 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "coverage",
       "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "foundationRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:foundation-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.foundation.component-evidence"
-    },
-    {
-      "capabilitySlot": "kb",
-      "dataset": {
-        "languages": [
-          "fr"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Latn"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+        "resourceIds": [
+          "fr-core-orthography"
         ]
       },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides local Wikidata French core entity rows."
-          ]
-        },
-        "resourceIds": []
-      },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "kbRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "latinScriptRangeCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "ranges",
+        "value": 61
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:kb-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-core-profile",
+      "recordId": "eval:fr-core:latin-orthography-ranges:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.kb.component-evidence"
-    },
-    {
-      "capabilitySlot": "lexicon",
-      "dataset": {
-        "languages": [
-          "fr"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Latn"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "lexiconRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:lexicon-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.lexicon.component-evidence"
-    },
-    {
-      "capabilitySlot": "morphology",
-      "dataset": {
-        "languages": [
-          "fr"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Latn"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "morphologyRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:morphology-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.morphology.component-evidence"
-    },
-    {
-      "capabilitySlot": "normalization",
-      "dataset": {
-        "languages": [
-          "fr"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Latn"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "normalizationRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:normalization-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.normalization.component-evidence"
-    },
-    {
-      "capabilitySlot": "parallel",
-      "dataset": {
-        "languages": [
-          "fr"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Latn"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides local Tatoeba French-linked sentence-id alignment rows for selected target languages."
-          ]
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "parallelRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:parallel-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.parallel.component-evidence"
+      "taskType": "core.orthography"
     },
     {
       "capabilitySlot": "quality",
@@ -616,65 +298,232 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-core-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-core-profile",
+      "recordId": "eval:fr-core:transform-rejections:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "core",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05",
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry",
+          "source:unicode:ucd",
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-core-punctuation"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "punctuationRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 396
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-core-profile",
+      "recordId": "eval:fr-core:unicode-punctuation-ranges:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.punctuation"
+    },
+    {
+      "capabilitySlot": "lexicon",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "uniqueFormCount": 125653,
+          "uniqueLemmaCount": 46947
+        },
+        "resourceIds": [
+          "fr-lexique-entries",
+          "fr-lexique-lexicon-canonical"
+        ]
+      },
+      "limitations": [
+        "Lexique 3.83 is an isolated share-alike lexical database and does not unlock the default French composite.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-lexique-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "entryCount",
+        "operator": "gte",
+        "threshold": 100000,
+        "unit": "entries",
+        "value": 142694
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:entry-volume:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "lexicon.entry-inventory"
+    },
+    {
+      "capabilitySlot": "lexicon",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-lexique-lemmas",
+          "fr-lexique-lexicon-canonical"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-lexique-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "lemmaCount",
+        "operator": "gte",
+        "threshold": 50000,
+        "unit": "lemmas",
+        "value": 51126
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:lemma-volume:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "lexicon.lemma-inventory"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides generated French quality evidence and coverage reports over the required local component graph."
-          ]
+          "genderCounts": {
+            "f": 35672,
+            "m": 46610
+          },
+          "inflectedVerbRowCount": 65017,
+          "numberCounts": {
+            "p": 34820,
+            "s": 52139
+          }
         },
-        "resourceIds": []
+        "resourceIds": [
+          "fr-lexique-pos-inventory",
+          "fr-lexique-morphology-canonical"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-lexique-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "qualityRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "posInventoryCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "rows",
+        "value": 23
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:quality-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:pos-inventory:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.quality.component-evidence"
+      "taskType": "morphology.pos-inventory"
     },
     {
       "capabilitySlot": "search",
@@ -689,65 +538,426 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:fr:lexique-383:2019-06-04"
         ],
         "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:fr:lexique-383"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
+        "resourceIds": [
+          "fr-lexique-search-profile"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "The executable adapter uses the profile's Unicode word, casefold, and accent-fold components. Lexique lookup rows are exposed by their own slots and are not silently applied as search filters.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-lexique-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "searchRequiredComponentGraphPresent",
+        "name": "searchProfilePresent",
         "operator": "eq",
         "threshold": 1,
         "unit": "boolean",
         "value": 1
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:search-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:search-profile:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.search.component-evidence"
+      "taskType": "search.analyzer-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:fr:lexique-383:2019-06-04"
+        ],
+        "sourceIds": [
+          "source:fr:lexique-383"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-lexique-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-lexique-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-lexique-383",
+      "recordId": "eval:fr-lexique:transform-rejections:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "likelySubtag",
+        "operator": "eq",
+        "threshold": "fr-Latn-FR",
+        "unit": "tag",
+        "value": "fr-Latn-FR"
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:cldr-likely-subtag:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.locale-context"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "gold-evaluation",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-gold-cases",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "normalizationGoldCaseCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "cases",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:gold-cases:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.gold-cases"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "contractionObservationCount": 93425
+        },
+        "resourceIds": [
+          "fr-normalization-contraction-forms",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This records French contraction surface forms observed in the pinned Tatoeba corpus; syntactic expansion lives in syntax/treebank resources.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "contractionFormCount",
+        "operator": "eq",
+        "threshold": 4,
+        "unit": "forms",
+        "value": 4
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:observed-contraction-forms:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.contraction-surface-policy"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "apostropheCounts": {
+            "'": 345202,
+            "’": 28765
+          },
+          "elisionObservationCount": 373967,
+          "tatoebaSentenceRowCount": 718596
+        },
+        "resourceIds": [
+          "fr-normalization-elision-prefixes",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies observed modern French apostrophe/elision surface policy from Tatoeba; it is not historical or OCR normalization.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "elisionPrefixCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "prefixes",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:observed-elision-prefixes:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.elision-apostrophe-policy"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-rules",
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies the generated Unicode/CLDR normalization profile, not spelling correction or noisy-text normalization accuracy.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "ruleCount",
+        "operator": "gte",
+        "threshold": 3,
+        "unit": "rules",
+        "value": 7
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:profile-rules:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:transform-rejections:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "nfcQuickCheckValueCount",
+        "operator": "gte",
+        "threshold": 3,
+        "unit": "aliases",
+        "value": 3
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-normalization-profile",
+      "recordId": "eval:fr-normalization:unicode-nfc-evidence:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.unicode-nfc-policy"
     },
     {
       "capabilitySlot": "segmentation",
@@ -762,68 +972,42 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
           "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:iana:language-subtag-registry",
           "source:unicode:ucd",
           "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "coverage",
       "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
+        "resourceIds": [
+          "fr-word-segmentation-profile"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "segmentationRequiredComponentGraphPresent",
+        "name": "likelySubtag",
         "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "threshold": "fr-Latn-FR",
+        "unit": "tag",
+        "value": "fr-Latn-FR"
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:segmentation-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:cldr-likely-subtag:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.segmentation.component-evidence"
+      "taskType": "segmentation.locale-context"
     },
     {
-      "capabilitySlot": "syntax",
+      "capabilitySlot": "quality",
       "dataset": {
         "languages": [
           "fr"
@@ -835,74 +1019,983 @@
           "Latn"
         ],
         "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
           "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06",
-          "snapshot:source:fr:lexique-383:2019-06-04",
-          "snapshot:source:unimorph:french-master-f672f8c",
-          "snapshot:source:ud:french-gsd:r2.18"
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
         ],
         "sourceIds": [
-          "source:iana:language-subtag-registry",
           "source:unicode:ucd",
           "source:unicode:cldr-core",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-french-2026-06-06",
-          "source:fr:lexique-383",
-          "source:unimorph:french-master-f672f8c",
-          "source:ud:french-gsd-r2.18"
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "gold-evaluation",
+      "evidence": {
+        "resourceIds": [
+          "fr-token-segmentation-profile",
+          "fr-segmentation-gold-cases"
+        ]
+      },
+      "limitations": [
+        "These generated cases document source-derived expectations; only Unicode segmentation and French elision-prefix splitting are executed by the built-in adapter.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "segmentationGoldCaseCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "cases",
+        "value": 18
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:gold-cases:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.segmentation-reference-cases"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-boundary-properties",
+          "fr-grapheme-segmentation-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies Unicode grapheme break property coverage, not language-specific dictionary tokenization.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "graphemeRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 1429
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:grapheme-boundary-properties:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.grapheme-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-token-segmentation-profile",
+          "fr-segmentation-abbreviations"
+        ]
+      },
+      "limitations": [
+        "Abbreviation rows are reference candidates observed in Tatoeba; the built-in adapter delegates sentence boundaries to Intl.Segmenter and does not execute this table.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "abbreviationCandidateCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "forms",
+        "value": 149
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:observed-abbreviation-policy:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.segmentation-abbreviation-reference-data"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-token-segmentation-profile",
+          "fr-segmentation-contraction-forms"
+        ]
+      },
+      "limitations": [
+        "These observed contraction surfaces are reference evidence; the built-in adapter does not execute them as contraction rules.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "contractionFormCount",
+        "operator": "eq",
+        "threshold": 4,
+        "unit": "forms",
+        "value": 4
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:observed-contraction-token-policy:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.segmentation-contraction-reference-data"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "elisionObservationCount": 373967,
+          "tatoebaSentenceRowCount": 718596
+        },
+        "resourceIds": [
+          "fr-token-segmentation-profile",
+          "fr-segmentation-elision-prefixes"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "elisionPrefixCount",
+        "operator": "gte",
+        "threshold": 10,
+        "unit": "prefixes",
+        "value": 16
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:observed-elision-token-policy:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.elision-token-policy"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-boundary-properties",
+          "fr-sentence-segmentation-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies Unicode sentence break property coverage; English abbreviation tailoring is out of scope for this component.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "sentenceRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 2930
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:sentence-boundary-properties:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.sentence-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:transform-rejections:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "segmentation",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:tatoeba:weekly-french-2026-06-06"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-segmentation-boundary-properties",
+          "fr-word-segmentation-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies Unicode word break property coverage, not a trained tokenizer or abbreviation model.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "wordRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 1432
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-segmentation-profile",
+      "recordId": "eval:fr-segmentation:word-boundary-properties:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "segmentation.word-profile"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unimorph:french-master-f672f8c"
+        ],
+        "sourceIds": [
+          "source:unimorph:french-master-f672f8c"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "featureValueCount": 19,
+          "uniqueFormCount": 274192,
+          "uniqueLemmaCount": 7535
+        },
+        "resourceIds": [
+          "fr-unimorph-paradigms",
+          "fr-unimorph-morphology-canonical"
+        ]
+      },
+      "limitations": [
+        "UniMorph French is an isolated share-alike paradigm source and does not unlock the default French composite.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "entryCount",
+        "operator": "gte",
+        "threshold": 100000,
+        "unit": "entries",
+        "value": 367732
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-unimorph",
+      "recordId": "eval:fr-unimorph:entry-volume:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.paradigm-table"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unimorph:french-master-f672f8c"
+        ],
+        "sourceIds": [
+          "source:unimorph:french-master-f672f8c"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-fr-core",
-            "@ismail-elkorchi/textpack-fr-normalization",
-            "@ismail-elkorchi/textpack-fr-segmentation",
-            "@ismail-elkorchi/textpack-fr-lexicon",
-            "@ismail-elkorchi/textpack-fr-morphology",
-            "@ismail-elkorchi/textpack-fr-syntax",
-            "@ismail-elkorchi/textpack-fr-kb",
-            "@ismail-elkorchi/textpack-fr-search",
-            "@ismail-elkorchi/textpack-fr-corpus",
-            "@ismail-elkorchi/textpack-fr-parallel",
-            "@ismail-elkorchi/textpack-fr-quality"
-          ],
-          "slotNotes": []
+          "partOfSpeechCount": 3
         },
-        "resourceIds": []
+        "resourceIds": [
+          "fr-unimorph-feature-inventory",
+          "fr-unimorph-pos-inventory"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "syntaxRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "featureValueCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "features",
+        "value": 19
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-fr:syntax-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-fr.composite.json",
+      "pipelineId": "french-unimorph",
+      "recordId": "eval:fr-unimorph:feature-inventory:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.syntax.component-evidence"
+      "taskType": "morphology.feature-inventory"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unimorph:french-master-f672f8c"
+        ],
+        "sourceIds": [
+          "source:unimorph:french-master-f672f8c"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-unimorph-lookup-analyzer",
+          "fr-unimorph-morphology-canonical"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "lookupAnalyzerRowCount",
+        "operator": "gte",
+        "threshold": 100000,
+        "unit": "rows",
+        "value": 367732
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-unimorph",
+      "recordId": "eval:fr-unimorph:lookup-analyzer-volume:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.lookup-analyzer"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unimorph:french-master-f672f8c"
+        ],
+        "sourceIds": [
+          "source:unimorph:french-master-f672f8c"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "fr-unimorph-lookup-generator",
+          "fr-unimorph-morphology-canonical"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "lookupGeneratorRowCount",
+        "operator": "gte",
+        "threshold": 100000,
+        "unit": "rows",
+        "value": 367732
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-unimorph",
+      "recordId": "eval:fr-unimorph:lookup-generator-volume:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.lookup-generator"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unimorph:french-master-f672f8c"
+        ],
+        "sourceIds": [
+          "source:unimorph:french-master-f672f8c"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "fr-unimorph-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "french-unimorph",
+      "recordId": "eval:fr-unimorph:transform-rejections:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "language-registry",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "countsByType": {
+            "extlang": 258,
+            "grandfathered": 26,
+            "language": 8275,
+            "redundant": 67,
+            "region": 305,
+            "script": 225,
+            "variant": 139
+          },
+          "fileDate": "2026-05-05"
+        },
+        "resourceIds": [
+          "bcp47-language-subtags",
+          "bcp47-language-registry-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-language-registry; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "recordCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "records",
+        "value": 9295
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "iana-language-registry",
+      "recordId": "eval:language-registry:bcp47-record-volume:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "language-registry.bcp47"
+    },
+    {
+      "capabilitySlot": "language-registry",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "deprecatedRecordCount": 299
+        },
+        "resourceIds": [
+          "bcp47-language-subtags",
+          "bcp47-language-registry-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-language-registry; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "registryTypeCount",
+        "operator": "gte",
+        "threshold": 7,
+        "unit": "types",
+        "value": 7
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "iana-language-registry",
+      "recordId": "eval:language-registry:bcp47-type-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "language-registry.type-coverage"
+    },
+    {
+      "capabilitySlot": "unicode-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "version": "17.0.0"
+        },
+        "resourceIds": [
+          "unicode-17-blocks",
+          "unicode-17-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "blockRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 346
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "unicode-17-core",
+      "recordId": "eval:unicode-17:block-range-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "unicode-profile.blocks"
+    },
+    {
+      "capabilitySlot": "unicode-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "unicode-17-property-value-aliases",
+          "unicode-17-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "propertyValueAliasCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "aliases",
+        "value": 1194
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "unicode-17-core",
+      "recordId": "eval:unicode-17:property-alias-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "unicode-profile.property-aliases"
+    },
+    {
+      "capabilitySlot": "unicode-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "unicode-17-scripts",
+          "unicode-17-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "scriptRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 2287
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "unicode-17-core",
+      "recordId": "eval:unicode-17:script-range-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "unicode-profile.scripts"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "aliasRowCount": 6101,
+          "entityRowCount": 9377
+        },
+        "resourceIds": [
+          "wikidata-fr-aliases"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-fr; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "aliasRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 6101
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-fr:alias-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-aliases"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "endpoint": "https://query.wikidata.org/sparql",
+          "extractId": "wikidata-fr-core-entity-extract-20260612",
+          "version": "20260608"
+        },
+        "resourceIds": [
+          "wikidata-fr-entities",
+          "wikidata-fr-kb-canonical"
+        ]
+      },
+      "limitations": [
+        "The Wikidata French extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-fr; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "entityRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 9377
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-fr:entity-extract:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-extract"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "fr"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "relationRowCount": 9377
+        },
+        "resourceIds": [
+          "wikidata-fr-relations"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-fr; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
+      ],
+      "metric": {
+        "name": "relationRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 9377
+      },
+      "packageName": "@ismail-elkorchi/textpack-fr",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-fr:relation-coverage:distribution:textpack-fr",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-relations"
     }
   ],
-  "resourceSpecIds": [],
+  "resourceSpecIds": [
+    "resource-spec:textpack-language-registry:iana-bcp47",
+    "resource-spec:textpack-unicode-17:ucd-core",
+    "resource-spec:textpack-cldr-core:cldr-core",
+    "resource-spec:textpack-fr-core:french-core-profile",
+    "resource-spec:textpack-fr-normalization:french-normalization-profile",
+    "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+    "resource-spec:textpack-fr-lexique-sa:lexique-383",
+    "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+    "resource-spec:textpack-wikidata-fr:wikidata-main-artifact"
+  ],
   "schemaVersion": "1",
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 12,
-    "recordCount": 12,
+    "passCount": 42,
+    "recordCount": 42,
     "status": "passed",
     "warningCount": 0
   }

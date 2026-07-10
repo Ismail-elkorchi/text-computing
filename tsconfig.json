@@ -9,6 +9,7 @@
 			"@ismail-elkorchi/textdoc": ["./packages/textdoc/src/mod.ts"],
 			"@ismail-elkorchi/textdoc/*": ["./packages/textdoc/src/*/mod.ts"],
 			"@ismail-elkorchi/textpack": ["./packages/textpack/src/index.ts"],
+			"@ismail-elkorchi/textpack/node": ["./packages/textpack/src/node.ts"],
 			"@ismail-elkorchi/textlex": ["./packages/textlex/src/index.ts"],
 			"@ismail-elkorchi/textlex/*": ["./packages/textlex/src/*/mod.ts"],
 			"@ismail-elkorchi/textfst": ["./packages/textfst/src/index.ts"],
@@ -39,7 +40,12 @@
 			"@ismail-elkorchi/textparallel/*": [
 				"./packages/textparallel/src/*/mod.ts"
 			],
-			"@ismail-elkorchi/text-computing": ["./packages/text-computing/src/index.ts"]
+			"@ismail-elkorchi/text-computing": [
+				"./packages/text-computing/src/index.ts"
+			],
+			"@ismail-elkorchi/text-computing/node": [
+				"./packages/text-computing/src/node.ts"
+			]
 		},
 		"allowImportingTsExtensions": true,
 		"lib": ["ES2024", "DOM"],

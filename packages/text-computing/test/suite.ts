@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-
+import {
+	analyze,
+	createFetchResourceReader,
+	inspect,
+	load,
+	support,
+} from "@ismail-elkorchi/text-computing";
 import {
 	segmentationAdapterFromPack,
 	type TextDataSegment,
@@ -17,16 +23,10 @@ import type {
 	TextPack,
 	TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
+import { createPack } from "@ismail-elkorchi/textpack";
 import ar from "@ismail-elkorchi/textpack-ar";
 import en from "@ismail-elkorchi/textpack-en";
 import fr from "@ismail-elkorchi/textpack-fr";
-import {
-	analyze,
-	createFetchResourceReader,
-	inspect,
-	load,
-	support,
-} from "../dist/index.js";
 
 function localGeneratedResourceReader(): TextPackResourceReader {
 	return {
@@ -85,7 +85,21 @@ test("loads generated language textpacks as data for English, French, and Arabic
 
 		assert.equal(report.packageName, expectedPackageName);
 		assert.equal(report.languages.includes(languageTag), true);
-		assert.equal(report.componentCount > 0, true);
+		assert.equal(report.componentCount, 0);
+		const normalizationSlot = report.slots.find(
+			(slot) => slot.slot === "normalization",
+		);
+		assert.equal(normalizationSlot?.readerRequired, true);
+		assert.deepEqual(
+			normalizationSlot?.capabilities,
+			pack.manifest.capabilitySlots.find(
+				(slot) => slot.slot === "normalization",
+			)?.capabilities,
+		);
+		assert.equal(Object.isFrozen(normalizationSlot?.capabilities), true);
+		const corpusSlot = report.slots.find((slot) => slot.slot === "corpus");
+		assert.equal(corpusSlot?.readerRequired, false);
+		assert.deepEqual(corpusSlot?.capabilities, {});
 		assert.equal(
 			report.slots.some(
 				(slot) =>
@@ -149,16 +163,8 @@ test("runs lightweight task APIs over generated English, French, and Arabic pack
 			true,
 			`${languageTag} KB descriptors`,
 		);
-		assert.equal(
-			nlp.corpus.resources().length > 0,
-			true,
-			`${languageTag} corpus descriptors`,
-		);
-		assert.equal(
-			nlp.parallel.resources().length > 0,
-			true,
-			`${languageTag} parallel descriptors`,
-		);
+		assert.equal(nlp.corpus.resources().length, 0, `${languageTag} corpus`);
+		assert.equal(nlp.parallel.resources().length, 0, `${languageTag} parallel`);
 	}
 });
 
@@ -248,7 +254,7 @@ test("reports generated pack resources without treating textpack as SDK", async 
 	const report = await inspect(fr);
 
 	assert.equal(report.packageName, "@ismail-elkorchi/textpack-fr");
-	assert.equal(report.componentCount > 0, true);
+	assert.equal(report.componentCount, 0);
 	assert.equal(Array.isArray(report.resources), true);
 	assert.equal(
 		"loadFrench" in (fr as unknown as Record<string, unknown>),
@@ -259,9 +265,9 @@ test("reports generated pack resources without treating textpack as SDK", async 
 test("tasks fail clearly when file-backed resources need a reader", async () => {
 	const nlp = await load(fr);
 
-	assert.throws(
-		() => nlp.tokenize("L'Etat francais reconnait Paris."),
-		/requires options\.reader/u,
+	await assert.rejects(
+		nlp.tokenize("L'Etat francais reconnait Paris."),
+		/requires a resource reader/u,
 	);
 });
 
@@ -360,7 +366,7 @@ test("exports the portable fetch-style reader through the entrypoint package", a
 		pack: fr as TextPack,
 		resource: {
 			id: "profile",
-			kind: "profile",
+			kind: "quality-profile",
 			format: "json",
 		},
 		descriptor: {
@@ -392,4 +398,297 @@ test("analyzes an existing TextDocument through the SDK document namespace", asy
 
 	assert.equal(doc.toTextDoc().id, "text-computing-doc-test");
 	assert.equal(doc.tokens.length > 0, true);
+	const searchPipeline = nlp.pipeline.createDocumentAnalysisPipeline({
+		tasks: ["search"],
+	});
+	assert.deepEqual(searchPipeline.processors[0]?.provides, [
+		{ viewKind: "search" },
+	]);
+});
+
+test("document analysis links hyphenated multi-token KB entities with link metadata", async () => {
+	const pack = createPack(
+		{
+			schemaVersion: "1",
+			id: "pack:text-computing:kb-phrase-test",
+			name: "Text Computing KB Phrase Test",
+			version: "0.1.0",
+			packageName: "@example/textpack-en-kb-phrase-test",
+			targets: { languages: ["en"], scripts: ["Latn"] },
+			engines: {},
+			resources: [
+				{
+					id: "en-segmentation-profile",
+					kind: "segmentation-profile",
+					format: "json",
+					schemaId: "textdata.segmentation-profile.v1",
+				},
+				{
+					id: "en-normalization-profile",
+					kind: "normalization-profile",
+					format: "json",
+					schemaId: "textnorm.profile.v1",
+				},
+				{
+					id: "en-kb",
+					kind: "knowledge-base",
+					format: "json",
+					schemaId: "textkb.knowledge-base.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "segmentation",
+					status: "task-supported",
+					resourceIds: ["en-segmentation-profile"],
+					bindings: [
+						{
+							role: "profile",
+							resourceId: "en-segmentation-profile",
+							schemaId: "textdata.segmentation-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata",
+						},
+					],
+				},
+				{
+					slot: "normalization",
+					status: "task-supported",
+					resourceIds: ["en-normalization-profile"],
+					bindings: [
+						{
+							role: "profile",
+							resourceId: "en-normalization-profile",
+							schemaId: "textnorm.profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textnorm",
+						},
+					],
+				},
+				{
+					slot: "kb",
+					status: "task-supported",
+					resourceIds: ["en-kb"],
+					bindings: [
+						{
+							role: "primary",
+							resourceId: "en-kb",
+							schemaId: "textkb.knowledge-base.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textkb",
+						},
+					],
+				},
+			],
+			license: "MIT",
+		},
+		{
+			"en-segmentation-profile": {
+				schemaVersion: "1",
+				kind: "segmentation-profile",
+				profileId: "en-segmentation-test",
+				languageTag: "en",
+				granularity: "token",
+			},
+			"en-normalization-profile": {
+				schemaVersion: "1",
+				kind: "normalization-profile",
+				profileId: "en-normalization-test",
+				languageTag: "en",
+				script: "Latn",
+				unicodeNormalization: "NFC",
+				rules: [],
+			},
+			"en-kb": {
+				schemaVersion: "1",
+				kind: "knowledge-base",
+				kbId: "kb:phrase-test",
+				languageTags: ["en"],
+				entities: [
+					{
+						entityId: "Q-phrase",
+						typeIds: ["Q6256"],
+						labels: [
+							{
+								languageTag: "en",
+								value: "Republic of Guinea-Bissau",
+							},
+						],
+						aliases: [
+							{
+								languageTag: "en",
+								value: "Guinea-Bissau",
+							},
+						],
+					},
+				],
+			},
+		},
+	);
+	const nlp = await load(pack);
+	const doc = await nlp("Guinea-Bissau joined the meeting.", {
+		tasks: ["kb"],
+		entityMaxCandidates: 1,
+	});
+
+	assert.equal(doc.entities.length, 1);
+	assert.equal(doc.entities[0]?.entityId, "Q-phrase");
+	assert.equal(doc.entities[0]?.matchedAlias, "Guinea-Bissau");
+	assert.equal(doc.entities[0]?.matchKind, "exact");
+	assert.deepEqual(doc.entities[0]?.types, ["Q6256"]);
+	assert.equal(doc.quality.skipped, true);
+	assert.equal(
+		doc.evidence.some((entry) => entry.kind === "quality-report"),
+		false,
+	);
+});
+
+test("document morphology deduplicates and limits analyses independently per form", async () => {
+	const pack = createPack(
+		{
+			schemaVersion: "1",
+			id: "pack:text-computing:morphology-per-form-test",
+			name: "Text Computing Morphology Per Form Test",
+			version: "0.1.0",
+			packageName: "@example/textpack-morphology-per-form-test",
+			targets: { languages: ["en"], scripts: ["Latn"] },
+			engines: {},
+			resources: [
+				{
+					id: "en-segmentation-profile",
+					kind: "segmentation-profile",
+					format: "json",
+					schemaId: "textdata.segmentation-profile.v1",
+				},
+				{
+					id: "en-normalization-profile",
+					kind: "normalization-profile",
+					format: "json",
+					schemaId: "textnorm.profile.v1",
+				},
+				{
+					id: "en-morphology",
+					kind: "morphology",
+					format: "json",
+					schemaId: "textlex.morphology.v1",
+				},
+				{
+					id: "en-morphology-paradigms",
+					kind: "morphology",
+					format: "tsv",
+					schemaId: "textlex.morphology.rows.v1",
+				},
+				{
+					id: "en-morphology-analyzer",
+					kind: "morphology",
+					format: "tsv",
+					schemaId: "textlex.morphology.rows.v1",
+				},
+				{
+					id: "en-morphology-generator",
+					kind: "morphology",
+					format: "tsv",
+					schemaId: "textlex.morphology.rows.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "segmentation",
+					status: "task-supported",
+					resourceIds: ["en-segmentation-profile"],
+					bindings: [
+						{
+							role: "profile",
+							resourceId: "en-segmentation-profile",
+							schemaId: "textdata.segmentation-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata",
+						},
+					],
+				},
+				{
+					slot: "normalization",
+					status: "task-supported",
+					resourceIds: ["en-normalization-profile"],
+					bindings: [
+						{
+							role: "profile",
+							resourceId: "en-normalization-profile",
+							schemaId: "textnorm.profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textnorm",
+						},
+					],
+				},
+				{
+					slot: "morphology",
+					status: "task-supported",
+					resourceIds: ["en-morphology"],
+					bindings: [
+						{
+							role: "primary",
+							resourceId: "en-morphology",
+							schemaId: "textlex.morphology.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textlex",
+						},
+					],
+				},
+			],
+		},
+		{
+			"en-segmentation-profile": {
+				schemaVersion: "1",
+				kind: "segmentation-profile",
+				profileId: "en-segmentation-test",
+				languageTag: "en",
+				granularity: "token",
+			},
+			"en-normalization-profile": {
+				schemaVersion: "1",
+				kind: "normalization-profile",
+				profileId: "en-normalization-test",
+				languageTag: "en",
+				script: "Latn",
+				unicodeNormalization: "NFC",
+				rules: [],
+			},
+			"en-morphology": {
+				schemaVersion: "1",
+				kind: "morphology",
+				morphologyId: "en-morphology-test",
+				languageTag: "en",
+				resourceRefs: [
+					{ resourceId: "en-morphology-paradigms", role: "paradigm-table" },
+					{ resourceId: "en-morphology-analyzer", role: "analyzer" },
+					{ resourceId: "en-morphology-generator", role: "generator" },
+				],
+			},
+			"en-morphology-paradigms":
+				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\n",
+			"en-morphology-analyzer":
+				"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nalpha\tlemma-alpha\tNOUN\tN;SG\ta1\nbeta\tlemma-beta\tNOUN\tN;SG\tb1\n",
+			"en-morphology-generator":
+				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\n",
+		},
+	);
+	const nlp = await load(pack);
+	const doc = await nlp("alpha beta", {
+		tasks: ["morphology"],
+		morphologyMaxResults: 1,
+	});
+
+	assert.deepEqual(
+		doc.morphology.map((analysis) => [analysis.form, analysis.lemma]),
+		[
+			["alpha", "lemma-alpha"],
+			["beta", "lemma-beta"],
+		],
+	);
+	assert.deepEqual(doc.lemmas, ["lemma-alpha", "lemma-beta"]);
+	const noMorphology = await nlp("alpha beta", {
+		tasks: ["morphology"],
+		morphologyMaxResults: 0,
+	});
+	assert.deepEqual(noMorphology.morphology, []);
 });

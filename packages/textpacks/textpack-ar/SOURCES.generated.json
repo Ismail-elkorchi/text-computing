@@ -1,112 +1,49 @@
 {
-  "components": [
+  "buildUnits": [
     {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
+      "buildUnitId": "language-registry",
       "licensePolicy": "default",
-      "packageName": "@ismail-elkorchi/textpack-foundation",
-      "reason": "Default Unicode, CLDR, and BCP 47 foundation resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
+      "reason": "BCP 47 language registry resources bundled into the Arabic distribution."
     },
     {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
+      "buildUnitId": "unicode-17",
       "licensePolicy": "default",
-      "packageName": "@ismail-elkorchi/textpack-ar-core",
-      "reason": "Arabic core language profile resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
+      "reason": "Unicode 17 resources bundled into the Arabic distribution."
     },
     {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
+      "buildUnitId": "cldr-core",
+      "licensePolicy": "default",
+      "reason": "CLDR core resources bundled into the Arabic distribution."
+    },
+    {
+      "buildUnitId": "ar-core",
+      "licensePolicy": "default",
+      "reason": "Arabic core language profile resources."
+    },
+    {
+      "buildUnitId": "ar-normalization",
       "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-normalization",
-      "reason": "Arabic MSA normalization policy and quality resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
+      "reason": "Arabic MSA normalization policy and quality resources."
     },
     {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
+      "buildUnitId": "ar-msa-morphology",
       "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-segmentation",
-      "reason": "Arabic MSA segmentation profiles.",
-      "role": "required",
-      "versionRange": "0.1.0"
+      "reason": "Arabic MSA lexicon, morphology, and segmentation resources."
     },
     {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
+      "buildUnitId": "wordnet-ar",
       "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-lexicon",
-      "reason": "Arabic MSA lexicon resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
+      "reason": "Arabic WordNet lexical-semantic resources."
     },
     {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
+      "buildUnitId": "wikidata-ar",
+      "licensePolicy": "default",
+      "reason": "Local Wikidata Arabic core entity extract."
+    },
+    {
+      "buildUnitId": "ar-search",
       "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-morphology",
-      "reason": "Arabic MSA morphology resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-share-alike",
-      "packageName": "@ismail-elkorchi/textpack-ar-syntax",
-      "reason": "Explicit wrapper over share-alike isolated Arabic UD-derived syntax and tagging resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-kb",
-      "reason": "Arabic WordNet lexical-semantic resources and local Wikidata Arabic core entity extract.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-search",
-      "reason": "Arabic MSA search analyzer profile resources.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-corpus",
-      "reason": "Arabic local Tatoeba corpus sentence rows and quality evidence.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-attribution",
-      "packageName": "@ismail-elkorchi/textpack-ar-parallel",
-      "reason": "Arabic local Tatoeba parallel link rows and quality evidence.",
-      "role": "required",
-      "versionRange": "0.1.0"
-    },
-    {
-      "artifactPolicy": "none",
-      "capabilityPolicy": "contributes-default",
-      "licensePolicy": "allow-share-alike",
-      "packageName": "@ismail-elkorchi/textpack-ar-quality",
-      "reason": "Arabic generated quality evidence over the required policy-expanded component graph.",
-      "role": "required",
-      "versionRange": "0.1.0"
+      "reason": "Arabic MSA search analyzer profile resources."
     }
   ],
   "generatedAt": "2026-06-08T00:00:00.000Z",
@@ -114,15 +51,1027 @@
   "mode": "source-backed",
   "packageId": "textpack-ar",
   "packageName": "@ismail-elkorchi/textpack-ar",
-  "policySurface": "policy-expanded-wrapper",
+  "policySurface": "default",
   "publishability": {
     "publishable": true,
     "reasons": [],
     "status": "publishable"
   },
   "publishable": true,
-  "resourceSpecIds": [],
-  "resources": [],
+  "resourceSpecIds": [
+    "resource-spec:textpack-language-registry:iana-bcp47",
+    "resource-spec:textpack-unicode-17:ucd-core",
+    "resource-spec:textpack-cldr-core:cldr-core",
+    "resource-spec:textpack-ar-core:arabic-core-profile",
+    "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+    "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+    "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+    "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+    "resource-spec:textpack-ar-search:arabic-search-profile"
+  ],
+  "resources": [
+    {
+      "byteLength": 1397,
+      "checksum": "sha256:06d3f8347e25d6a388efaf3c43042eefd811f7daccee3c50bb8e83ca4705a920",
+      "citations": [
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-core-basic-segmentation",
+      "kind": "segmentation-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/ar.core.basic-segmentation.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:ucd",
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 791,
+      "checksum": "sha256:2a5513ac6f821a6b213930e254844f174689d5a4e523341a8d9365494e52e12f",
+      "citations": [
+        "IANA Language Subtag Registry, File-Date 2026-05-05.",
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-core-language-profile",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+      "path": "resources/ar.core.language-profile.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:ucd",
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 7774,
+      "checksum": "sha256:908d7047d0d07c2ca72545f6d5c64da9e38d7b032106aeab51e1e694e5ae3b3e",
+      "citations": [
+        "Unicode Character Database 17.0.0."
+      ],
+      "id": "ar-core-orthography",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/ar.core.orthography.tsv",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:ucd",
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 20036,
+      "checksum": "sha256:0fa27f5d4292a966193ae7829825909d5aa099afa725c77b109ac4a3883f4eec",
+      "citations": [
+        "Unicode Character Database 17.0.0."
+      ],
+      "id": "ar-core-punctuation",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/ar.core.punctuation.tsv",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:ucd",
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 985,
+      "checksum": "sha256:1f61bb905944b48309d0d449e4cc4d926b6e38be3a54e2610fbf1e8bb2af0146",
+      "citations": [
+        "IANA Language Subtag Registry, File-Date 2026-05-05.",
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-core-quality",
+      "kind": "quality-profile",
+      "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+      "path": "resources/ar.core.quality.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:ucd",
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 1100,
+      "checksum": "sha256:00a48bc0a66fe8118f429efe2f686ce096ec7e70215d57bd4a99e4dda89f6742",
+      "citations": [
+        "IANA Language Subtag Registry, File-Date 2026-05-05.",
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-core-quality-profile",
+      "kind": "quality-profile",
+      "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+      "path": "resources/ar.core.quality-profile.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05",
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry",
+        "source:unicode:ucd",
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 48029,
+      "checksum": "sha256:66131372dec38eee6893194ea4f924d9f3464a2854e9b1f9c1517af7841c3ae0",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morph-compatibility",
+      "kind": "morphology",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.compatibility.tsv.gz.b64",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 37757,
+      "checksum": "sha256:682a3dd5ed6a3b57aaa39c859049d34c4c825246ec17db931a399bb19a82e9ec",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morph-defaults",
+      "kind": "morphology",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.defaults.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 2333,
+      "checksum": "sha256:72a616b6e17508c29887148504f8bcd61c67bd6bc0590f181d2d35a491a6a648",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morph-features",
+      "kind": "morphology",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.features.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 15281477,
+      "checksum": "sha256:cc3bef15ffef03db52eafc363283a5660a94d03df5e41e1fdaed77b41dffe897",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morph-morphemes",
+      "kind": "morphology",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 1216,
+      "checksum": "sha256:01b1a94f619c179273e03c5983894e587703299e0adaa4bbbe1ac74221d55da9",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morph-quality",
+      "kind": "quality-profile",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.quality.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 122,
+      "checksum": "sha256:3887598c7c7dbc49300188708a27aeb944a1a704e16c1286c7b8b80744a84db7",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morph-tokenizations",
+      "kind": "segmentation-profile",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.tokenizations.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 10801,
+      "checksum": "sha256:8a54b71d3c60266980c818bc6046811a5877dc01f294b03020df6126efb844c8",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-morphology-canonical",
+      "kind": "morphology",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.morphology.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 899,
+      "checksum": "sha256:8137ea877e03d9e445930c6640d754634bf76071fb2b1d9fabc8df3b7afb00e9",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-quality-profile",
+      "kind": "quality-profile",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.quality-profile.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 212,
+      "checksum": "sha256:e794823519eb8c2e99f31c63d2097466746288f47a21d55f561af8fc1caf6618",
+      "citations": [
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-msa-camel-segmentation-canonical",
+      "kind": "segmentation-profile",
+      "license": "CC-BY-4.0",
+      "path": "resources/camel-morph-msa.segmentation.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "snapshotIds": [
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 162,
+      "checksum": "sha256:29d2973b1436014af335788e0e6b98f1f2f699d93be4ec38e23e7311807be094",
+      "citations": [
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-normalization-observed-codepoints",
+      "kind": "normalization-profile",
+      "license": "Unicode-3.0 AND CC-BY-4.0",
+      "path": "resources/ar.normalization-observed-codepoints.tsv",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 5772,
+      "checksum": "sha256:815e26c0aa1d45f19e2fec5893932be98a7d0ecfd71326a6f82330beb9a5d240",
+      "citations": [
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-normalization-profile",
+      "kind": "normalization-profile",
+      "license": "Unicode-3.0 AND CC-BY-4.0",
+      "path": "resources/ar.normalization.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 811,
+      "checksum": "sha256:94d1d277a949f8a692671c5f540ed19b80ff5544d793374316fb2b5996577e98",
+      "citations": [
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-normalization-quality",
+      "kind": "quality-profile",
+      "license": "Unicode-3.0 AND CC-BY-4.0",
+      "path": "resources/ar.normalization.quality.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 1163,
+      "checksum": "sha256:5affbca0b05411e2868442f1a24dcf1958e4b787cb697c2edbd4a0fb87beb28d",
+      "citations": [
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-normalization-quality-profile",
+      "kind": "quality-profile",
+      "license": "Unicode-3.0 AND CC-BY-4.0",
+      "path": "resources/ar.normalization.quality-profile.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 1238,
+      "checksum": "sha256:6f774cf6f8c74b95465107f08c5efbd35afe2efcbbe5e46f493217f66bfc840f",
+      "citations": [
+        "Unicode Character Database 17.0.0.",
+        "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+        "CAMeL Morph MSA LREC-COLING 2024 release."
+      ],
+      "id": "ar-normalization-rules",
+      "kind": "normalization-profile",
+      "license": "Unicode-3.0 AND CC-BY-4.0",
+      "path": "resources/ar.normalization-rules.tsv",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0",
+        "snapshot:source:unicode:cldr-core:48.2.0",
+        "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd",
+        "source:unicode:cldr-core",
+        "source:camel:morph-msa-lrec-coling-2024"
+      ]
+    },
+    {
+      "byteLength": 816,
+      "checksum": "sha256:30727d134f32936313d32d3aecb2827b66292ef132ae1dd6468772e5e6896c88",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-search-profile",
+      "kind": "search-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/ar.search.profile.json",
+      "pipelineId": "arabic-search-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 624,
+      "checksum": "sha256:c05bb3c122826698a345003356a79d1b3d6d01a24e2731dca428134eeebeb251",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-search-quality",
+      "kind": "quality-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/ar.search.quality.json",
+      "pipelineId": "arabic-search-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 922,
+      "checksum": "sha256:0769558eea5917ffb8c89e2143eac1628238bcca4da0f407e991ba47b3e32dc9",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "ar-search-quality-profile",
+      "kind": "quality-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/ar.search.quality-profile.json",
+      "pipelineId": "arabic-search-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 325,
+      "checksum": "sha256:14cb57e1bccb04a5fe9f2a7dec407044348b2887cdd0bc9f48dfd59e70c0667d",
+      "citations": [
+        "IANA Language Subtag Registry, File-Date 2026-05-05."
+      ],
+      "id": "bcp47-language-registry-summary",
+      "kind": "language-registry",
+      "license": "LicenseRef-IANA-Language-Subtag-Registry",
+      "path": "resources/bcp47.language-registry.summary.json",
+      "pipelineId": "iana-language-registry",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry"
+      ]
+    },
+    {
+      "byteLength": 125893,
+      "checksum": "sha256:bf94c569b9adc9341439201748bc93cc6026fdd940858c799ef2d2bcdbbb4545",
+      "citations": [
+        "IANA Language Subtag Registry, File-Date 2026-05-05."
+      ],
+      "id": "bcp47-language-subtags",
+      "kind": "language-registry",
+      "license": "LicenseRef-IANA-Language-Subtag-Registry",
+      "path": "resources/bcp47.language-subtags.tsv.gz.b64",
+      "pipelineId": "iana-language-registry",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "snapshotIds": [
+        "snapshot:source:iana:language-subtag-registry:2026-05-05"
+      ],
+      "sourceIds": [
+        "source:iana:language-subtag-registry"
+      ]
+    },
+    {
+      "byteLength": 192,
+      "checksum": "sha256:274ed6518c70f5ea0f92990b53b3d64ff1834af03b2c655b33a7992bde5d0ff7",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "cldr-48-core-summary",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/cldr-48.core.summary.json",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 65213,
+      "checksum": "sha256:70abb380d92a5f24d8480d383ed5b0e3e224ddbd72f2e405b2fc2d0f480526c6",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "cldr-48-likely-subtags",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 36386,
+      "checksum": "sha256:9c4e018288bde0698003a52fcba6dad6b907f65ba4585bb142db8cc1c9733419",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "cldr-48-locale-aliases",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/cldr-48.locale-aliases.tsv",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 326,
+      "checksum": "sha256:e48aef1d01403e80be986717f4dcccda20064d7cf46a15436f1d921b617f4ab0",
+      "citations": [
+        "Unicode CLDR core data, cldr-core npm package 48.2.0."
+      ],
+      "id": "cldr-48-script-data",
+      "kind": "locale-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/cldr-48.script-data.tsv",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:cldr-core:48.2.0"
+      ],
+      "sourceIds": [
+        "source:unicode:cldr-core"
+      ]
+    },
+    {
+      "byteLength": 10002,
+      "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
+      "citations": [
+        "Unicode Character Database 17.0.0."
+      ],
+      "id": "unicode-17-blocks",
+      "kind": "unicode-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/unicode-17.blocks.tsv",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd"
+      ]
+    },
+    {
+      "byteLength": 181,
+      "checksum": "sha256:d0ad3bd0f0d98f21c8d8d1350d4c3e78186e9a0812f63fd49c37e5aa810fb213",
+      "citations": [
+        "Unicode Character Database 17.0.0."
+      ],
+      "id": "unicode-17-core-summary",
+      "kind": "unicode-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/unicode-17.core.summary.json",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd"
+      ]
+    },
+    {
+      "byteLength": 28940,
+      "checksum": "sha256:02d11d047c9f3a334821a6ebd6f629937a4779826dbc11e26c13b6b52849e254",
+      "citations": [
+        "Unicode Character Database 17.0.0."
+      ],
+      "id": "unicode-17-property-value-aliases",
+      "kind": "unicode-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/unicode-17.property-value-aliases.tsv",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd"
+      ]
+    },
+    {
+      "byteLength": 60233,
+      "checksum": "sha256:36410d853d44b364758dfdeb742e01af2b858b9c2c891cef61415a40a71ebfce",
+      "citations": [
+        "Unicode Character Database 17.0.0."
+      ],
+      "id": "unicode-17-scripts",
+      "kind": "unicode-profile",
+      "license": "Unicode-3.0",
+      "path": "resources/unicode-17.scripts.tsv.gz.b64",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "snapshotIds": [
+        "snapshot:source:unicode:ucd:17.0.0"
+      ],
+      "sourceIds": [
+        "source:unicode:ucd"
+      ]
+    },
+    {
+      "byteLength": 35629,
+      "checksum": "sha256:ddf27c30b153ee9e4941a438ec96cce399f7f335ed270442090b10bdb1b365c8",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-ar-aliases",
+      "kind": "knowledge-base",
+      "license": "CC0-1.0",
+      "path": "resources/wikidata-ar.aliases.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 134629,
+      "checksum": "sha256:31c7cc2d35d7c53c8d6e401f54bf42f910fdf02b094d6d2a39bf6a33ffb07226",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-ar-entities",
+      "kind": "knowledge-base",
+      "license": "CC0-1.0",
+      "path": "resources/wikidata-ar.entities.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 523,
+      "checksum": "sha256:bb58bdd4440a0884b24b4f0189a8e4f31a01d36c235ed253536e0341a905335b",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-ar-kb-canonical",
+      "kind": "knowledge-base",
+      "license": "CC0-1.0",
+      "path": "resources/wikidata-ar.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 968,
+      "checksum": "sha256:6b18694e3b24875a4b6268fbeb71ed978d17327b455e38d443124d801219dd40",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-ar-quality",
+      "kind": "quality-profile",
+      "license": "CC0-1.0",
+      "path": "resources/wikidata-ar.quality.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 2789,
+      "checksum": "sha256:688883a208a912f996fef965c46d04720e4494295003542ed1cbc48d3601050d",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-ar-quality-profile",
+      "kind": "quality-profile",
+      "license": "CC0-1.0",
+      "path": "resources/wikidata-ar.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 16453,
+      "checksum": "sha256:4b8d4b765a972b21ba2119e61c5156051a534c7f12edc34b05c8a7b7e6b60888",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-ar-relations",
+      "kind": "knowledge-base",
+      "license": "CC0-1.0",
+      "path": "resources/wikidata-ar.relations.tsv.gz.b64",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 518,
+      "checksum": "sha256:682ff3f41f8947e9cbbc6837113c720f28155bdb0311d5f6d618f89ea2023b90",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-kb-canonical",
+      "kind": "knowledge-base",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.kb.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 2976517,
+      "checksum": "sha256:154325bf6314d693e9e2e83ae4ee80498a484196949888e49f74289a7233e2cb",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-lexical-entries",
+      "kind": "lexicon",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.lexical-entries.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 292,
+      "checksum": "sha256:7074f09d301beb8bd3cefb472574dfcb90d29c0b9ea762a34b8c91e954090b18",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-lexicon-canonical",
+      "kind": "lexicon",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.lexicon.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 1207,
+      "checksum": "sha256:ccc8e95b79a9be634efdd4d76dd9b3e6483ec5b70a7c0c46ae8e5629dfd0a046",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-quality",
+      "kind": "quality-profile",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.quality.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 876,
+      "checksum": "sha256:08b8157d6ea3f692751131a51219d318f301b077575d6fa72dab158a7e89b04a",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-quality-profile",
+      "kind": "quality-profile",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.quality-profile.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 2334305,
+      "checksum": "sha256:d8231e9f75e0fc7e07f6fd0b658f1138ff4f5530977342b562e5e825d824b131",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-relations",
+      "kind": "knowledge-base",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.relations.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 7406269,
+      "checksum": "sha256:37dbd21ab4ad9e56adee64927e8704cb83a3c2a4e7bf85fa08728effbe051b17",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-senses",
+      "kind": "knowledge-base",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.senses.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    },
+    {
+      "byteLength": 4886241,
+      "checksum": "sha256:728d6dd0a936ca1c4e78f0a6bc71321a393a2066b798f2053251c3e8edf9ff91",
+      "citations": [
+        "Arabic WordNet 4.1.0."
+      ],
+      "id": "wordnet-ar-synsets",
+      "kind": "knowledge-base",
+      "license": "CC-BY-4.0",
+      "path": "resources/wordnet-ar.synsets.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "snapshotIds": [
+        "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+      ],
+      "sourceIds": [
+        "source:wordnet:arabic-v4.1.0"
+      ]
+    }
+  ],
   "schemaVersion": "1",
   "snapshotIds": [
     "snapshot:source:iana:language-subtag-registry:2026-05-05",
@@ -130,9 +1079,7 @@
     "snapshot:source:unicode:cldr-core:48.2.0",
     "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
     "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-    "snapshot:source:wikidata:main:20260608",
-    "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-    "snapshot:source:ud:arabic-nyuad:r2.18"
+    "snapshot:source:wikidata:main:20260608"
   ],
   "snapshots": [
     {
@@ -142,19 +1089,17 @@
           "byteLength": 731465,
           "checksum": "sha256:c74531b64a34937cb50071acff356bb8d80f8472d198bc701464f88086089cf6",
           "mediaType": "text/plain; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt",
-          "sourceUrl": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry"
+          "path": "tools/textpack-forge/snapshots/data/iana/language-subtag-registry.txt"
         },
         {
           "byteLength": 6480,
           "checksum": "sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113",
           "mediaType": "text/html; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/iana/LICENSE.html",
-          "sourceUrl": "https://www.iana.org/help/licensing-terms"
+          "path": "tools/textpack-forge/snapshots/data/iana/LICENSE.html"
         }
       ],
       "kind": "file-set",
-      "notes": "Pinned local snapshot of the IANA Language Subtag Registry with local license evidence.",
+      "notes": "Frozen local snapshot of the IANA Language Subtag Registry and license evidence. The public endpoints are mutable, so checksum-pinned regeneration uses these retained inputs.",
       "retrievedAt": "2026-06-08T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:iana:language-subtag-registry:2026-05-05",
@@ -343,7 +1288,7 @@
       "version": "v4.1.0@3d244b30a0e4a8807bc7509cac32342ad5a4e86d"
     },
     {
-      "checksum": "sha256:0bc036651ffa79463a4e3fe6444849763f5f2cb82ad13ccbd90ca05e74723b9c",
+      "checksum": "sha256:14ac14a875bdf8abd72d64cbff21aac27d8ad14519efa16b59f33c9f27cb4403",
       "files": [
         {
           "byteLength": 129,
@@ -360,16 +1305,16 @@
           "sourceUrl": "https://dumps.wikimedia.org/wikidatawiki/entities/20260608/wikidata-20260608-sha1sums.txt"
         },
         {
-          "byteLength": 176372,
-          "checksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv"
+          "byteLength": 26091,
+          "checksum": "sha256:80a3a6a3265d5e6cfccae879ede9f615bfaa36c8e7e61de4fc8d26a8785732a9",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv.gz"
         },
         {
-          "byteLength": 601528,
-          "checksum": "sha256:02aea2262fd908515eafd76195f38ced9f15680ceea4d86011135a0bd749dad4",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv"
+          "byteLength": 98663,
+          "checksum": "sha256:51956d2b33efc6ba0131085c406e429927b2d620281f924deeae019699c86dbf",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv.gz"
         },
         {
           "byteLength": 9171,
@@ -378,22 +1323,22 @@
           "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json"
         },
         {
-          "byteLength": 181451,
-          "checksum": "sha256:9b653c1667e835fdd26e08573fe10a9604c39bf1da4ea21d03eb856c328358a0",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv"
+          "byteLength": 11764,
+          "checksum": "sha256:1aefa0de6acf094c990150179afe0c5d46b03a4a95f354aba4cae770009a8881",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv.gz"
         },
         {
-          "byteLength": 507718,
-          "checksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv"
+          "byteLength": 153917,
+          "checksum": "sha256:47a45e2d5b883287d5102c6bb2ee2f6c201eea5f72d71a6a44796d01d0095876",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-aliases.tsv.gz"
         },
         {
-          "byteLength": 1207332,
-          "checksum": "sha256:4f868c649e2eca94c698cdfe95937f1f879b520721fb2b8b6c00a625dbec70b0",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv"
+          "byteLength": 267859,
+          "checksum": "sha256:bd181acaad69bd9518925ea752e12e613701562bb345d09fca902f4b045f7199",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-entities.tsv.gz"
         },
         {
           "byteLength": 9237,
@@ -402,22 +1347,22 @@
           "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json"
         },
         {
-          "byteLength": 364007,
-          "checksum": "sha256:68fd75050c3c4288e08a1cc578ea60a842484424a756eb5885a9beb1a03b59ae",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv"
+          "byteLength": 42416,
+          "checksum": "sha256:b6af9ff9b693af5a67035e892b7379e3c2a01cbcd0e4361846bfc2ab1ac6e238",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv.gz"
         },
         {
-          "byteLength": 339445,
-          "checksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv"
+          "byteLength": 57475,
+          "checksum": "sha256:d6035cc9244e051ef28ffd775cccce41dcfed4b9944634d872a651b58c18df67",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-aliases.tsv.gz"
         },
         {
-          "byteLength": 1164023,
-          "checksum": "sha256:b4dda64824d9b904703eac084931be6dad3c47a9d770673b29aed7cc731f9f85",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv"
+          "byteLength": 219449,
+          "checksum": "sha256:43b2bce09bd00a033231ea3464a89b9573e98ed6f1abf8f81c7e402b94f7baa8",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-entities.tsv.gz"
         },
         {
           "byteLength": 9173,
@@ -426,120 +1371,19 @@
           "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json"
         },
         {
-          "byteLength": 581521,
-          "checksum": "sha256:0a549fbec2daeb2243e8352977852c3476f7e35a6ef4eb10141df0babc0df276",
-          "mediaType": "text/tab-separated-values; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv"
+          "byteLength": 35012,
+          "checksum": "sha256:5d34ef46865321833bb0f7d597cbe81250adb189f502ffb8cdd0262c28635e06",
+          "mediaType": "application/gzip",
+          "path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv.gz"
         }
       ],
       "kind": "external",
-      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed.",
+      "notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus deterministic gzip-compressed local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed.",
       "retrievedAt": "2026-06-11T00:00:00.000Z",
       "schemaVersion": "1",
       "snapshotId": "snapshot:source:wikidata:main:20260608",
       "sourceId": "source:wikidata:main",
       "version": "20260608"
-    },
-    {
-      "checksum": "sha256:b3ff1462e8003c18c897b893c12c363b2e6aaf68ded2fb62e77295ef167b71dd",
-      "files": [
-        {
-          "byteLength": 1198138,
-          "checksum": "sha256:a4b324a9721bc7974009521675b380047eb9525aebe7646859c3e2cb7a7ecc77",
-          "mediaType": "application/x-bzip2",
-          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara_sentences_detailed.tsv.bz2",
-          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2"
-        },
-        {
-          "byteLength": 18446,
-          "checksum": "sha256:63c69fb6b074f918126f47e532dd3e6bd4aad35e2fad62708c0d468f58a8d124",
-          "mediaType": "application/x-bzip2",
-          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-deu_links.tsv.bz2",
-          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-deu_links.tsv.bz2"
-        },
-        {
-          "byteLength": 297959,
-          "checksum": "sha256:e053b397b50ff0f622b6104b62e4939658e876fccdaffa8f5b29fcce98800d83",
-          "mediaType": "application/x-bzip2",
-          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-eng_links.tsv.bz2",
-          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-eng_links.tsv.bz2"
-        },
-        {
-          "byteLength": 19407,
-          "checksum": "sha256:1d465582dd31e7cf73fabc86df8c595340d98f76b8ca8dacddd4f15a26e9d947",
-          "mediaType": "application/x-bzip2",
-          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-fra_links.tsv.bz2",
-          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-fra_links.tsv.bz2"
-        },
-        {
-          "byteLength": 21075,
-          "checksum": "sha256:45620b4d7e1b2ddfae38b95b060d557940c10dd3c16055e870dd92720d3019bc",
-          "mediaType": "application/x-bzip2",
-          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/ara-spa_links.tsv.bz2",
-          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/ara-spa_links.tsv.bz2"
-        },
-        {
-          "byteLength": 3390,
-          "checksum": "sha256:1da1e3b520e616444f8b383b79fe94819fb030a5cff3c4a204bd5f91cfdab262",
-          "mediaType": "application/json",
-          "path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-arabic-2026-06-06/tatoeba-ar-artifacts.json",
-          "sourceUrl": "https://downloads.tatoeba.org/exports/per_language/ara/"
-        }
-      ],
-      "kind": "external",
-      "notes": "Pinned metadata, checksums, sizes, timestamps, row counts, and local raw Tatoeba 2026-06-06 Arabic sentence and Arabic-linked parallel artifacts used to generate task-supported corpus and parallel textpacks.",
-      "retrievedAt": "2026-06-11T00:00:00.000Z",
-      "schemaVersion": "1",
-      "snapshotId": "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-      "sourceId": "source:tatoeba:weekly-arabic-2026-06-06",
-      "version": "2026-06-06"
-    },
-    {
-      "checksum": "sha256:79a36bf67b81b68e52068e22a9661396d588cd44eb007e610f73ab418788d19d",
-      "files": [
-        {
-          "byteLength": 5846069,
-          "checksum": "sha256:ac49fac056085ffbc29248d8cf3e30b8a504b5dedf27b09f33fb0cb4faa1ee3f",
-          "mediaType": "text/plain; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-dev.conllu",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/ar_nyuad-ud-dev.conllu"
-        },
-        {
-          "byteLength": 5856617,
-          "checksum": "sha256:bc4670763e0e3f282ef079b55af0c58d73ac541aafc421161eb4d904bbaca52b",
-          "mediaType": "text/plain; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-test.conllu",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/ar_nyuad-ud-test.conllu"
-        },
-        {
-          "byteLength": 46880990,
-          "checksum": "sha256:2172eb1780eb1a0cb0276b84ba97cdb8d63065588d144ecfd7cee7a249e35167",
-          "mediaType": "text/plain; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-train.conllu",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/ar_nyuad-ud-train.conllu"
-        },
-        {
-          "byteLength": 202,
-          "checksum": "sha256:899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79",
-          "mediaType": "text/plain; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/LICENSE.txt",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/LICENSE.txt"
-        },
-        {
-          "byteLength": 2995,
-          "checksum": "sha256:8a99b4a445ed16e1c634336bd62269e4f4d8d268cfcc0d788c823f5ee6bca102",
-          "mediaType": "text/markdown; charset=utf-8",
-          "path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/README.md",
-          "sourceUrl": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-NYUAD/815cf25fb7c87bd98c15e8c99a3ea1daa64288b6/README.md"
-        }
-      ],
-      "kind": "file-set",
-      "notes": "Pinned UD Arabic NYUAD r2.18 annotation-only files; LDC source text is intentionally absent.",
-      "retrievedAt": "2026-06-11T00:00:00.000Z",
-      "schemaVersion": "1",
-      "snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
-      "sourceId": "source:ud:arabic-nyuad-r2.18",
-      "version": "r2.18@815cf25fb7c87bd98c15e8c99a3ea1daa64288b6"
     }
   ],
   "sourceIds": [
@@ -548,9 +1392,7 @@
     "source:unicode:cldr-core",
     "source:camel:morph-msa-lrec-coling-2024",
     "source:wordnet:arabic-v4.1.0",
-    "source:wikidata:main",
-    "source:tatoeba:weekly-arabic-2026-06-06",
-    "source:ud:arabic-nyuad-r2.18"
+    "source:wikidata:main"
   ],
   "sourcePolicies": [
     {
@@ -699,56 +1541,6 @@
       "requiredPackageNameSuffixes": [],
       "reviewState": "approved",
       "sourceId": "source:wikidata:main"
-    },
-    {
-      "capabilitySlots": [
-        "corpus",
-        "parallel",
-        "examples"
-      ],
-      "citation": "Tatoeba weekly Arabic exports, 2026-06-06.",
-      "defaultCompositeAllowed": true,
-      "family": "TATOEBA",
-      "homepageUrl": "https://tatoeba.org/en/downloads",
-      "languages": [
-        "ar"
-      ],
-      "licenseExpression": "CC-BY-2.0-FR",
-      "name": "Tatoeba weekly Arabic exports 2026-06-06",
-      "notes": "Exact Tatoeba weekly Arabic sentence and Arabic-linked parallel exports. Attribution is preserved through detailed sentence artifacts and package reports. This is a second-wave Arabic source, not a first-wave morphology, syntax, lexicon, or KB source. It can provide task support only when transformed into local sentence rows, alignment/link rows, or an equivalent local index; the active Arabic corpus and parallel packs materialize those local rows.",
-      "policyClass": "attribution",
-      "priority": "second",
-      "publishableByDefault": true,
-      "redistributionPolicy": "redistributable-with-attribution",
-      "requiredPackageNameSuffixes": [],
-      "reviewState": "approved",
-      "sourceId": "source:tatoeba:weekly-arabic-2026-06-06"
-    },
-    {
-      "capabilitySlots": [
-        "syntax",
-        "morphology",
-        "tagging"
-      ],
-      "citation": "Universal Dependencies Arabic NYUAD r2.18 annotations.",
-      "defaultCompositeAllowed": false,
-      "family": "UD",
-      "homepageUrl": "https://github.com/UniversalDependencies/UD_Arabic-NYUAD",
-      "languages": [
-        "ar"
-      ],
-      "licenseExpression": "CC-BY-SA-4.0",
-      "name": "UD Arabic NYUAD r2.18",
-      "notes": "Pinned audit found NYUAD r2.18 is CC-BY-SA-4.0 and excludes underlying text. The share-alike license still prevents default Arabic composite inclusion.",
-      "policyClass": "share-alike",
-      "priority": "isolated",
-      "publishableByDefault": false,
-      "redistributionPolicy": "share-alike-isolated",
-      "requiredPackageNameSuffixes": [
-        "-sa"
-      ],
-      "reviewState": "approved",
-      "sourceId": "source:ud:arabic-nyuad-r2.18"
     }
   ],
   "sources": [
@@ -847,38 +1639,6 @@
       "reviewState": "approved",
       "schemaVersion": "1",
       "sourceId": "source:wikidata:main"
-    },
-    {
-      "citation": "Tatoeba weekly Arabic exports, 2026-06-06.",
-      "family": "TATOEBA",
-      "homepageUrl": "https://tatoeba.org/en/downloads",
-      "licenseEvidence": [
-        "https://tatoeba.org/en/downloads",
-        "https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus"
-      ],
-      "licenseExpression": "CC-BY-2.0-FR",
-      "name": "Tatoeba weekly Arabic exports 2026-06-06",
-      "notes": "Pinned Tatoeba Arabic sentence and Arabic-linked parallel export artifact metadata. Generated packages use explicit artifact descriptors instead of vendoring the raw corpus into npm.",
-      "redistributionPolicy": "redistributable-with-attribution",
-      "reviewState": "approved",
-      "schemaVersion": "1",
-      "sourceId": "source:tatoeba:weekly-arabic-2026-06-06"
-    },
-    {
-      "citation": "Universal Dependencies Arabic NYUAD r2.18 annotations.",
-      "family": "UD",
-      "homepageUrl": "https://github.com/UniversalDependencies/UD_Arabic-NYUAD",
-      "licenseEvidence": [
-        "https://github.com/UniversalDependencies/UD_Arabic-NYUAD/blob/r2.18/LICENSE.txt",
-        "https://github.com/UniversalDependencies/UD_Arabic-NYUAD/blob/r2.18/README.md"
-      ],
-      "licenseExpression": "CC-BY-SA-4.0",
-      "name": "UD Arabic NYUAD r2.18",
-      "notes": "Pinned annotation-only UD release; source README states the repository contains annotations without underlying LDC text.",
-      "redistributionPolicy": "share-alike-isolated",
-      "reviewState": "approved",
-      "schemaVersion": "1",
-      "sourceId": "source:ud:arabic-nyuad-r2.18"
     }
   ]
 }

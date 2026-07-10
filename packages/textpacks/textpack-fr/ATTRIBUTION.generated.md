@@ -10,11 +10,10 @@ License expression: `Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AN
 - `source:iana:language-subtag-registry`
 - `source:unicode:ucd`
 - `source:unicode:cldr-core`
-- `source:wikidata:main`
 - `source:tatoeba:weekly-french-2026-06-06`
 - `source:fr:lexique-383`
 - `source:unimorph:french-master-f672f8c`
-- `source:ud:french-gsd-r2.18`
+- `source:wikidata:main`
 
 ## License Evidence
 
@@ -25,8 +24,6 @@ Source evidence:
 - https://dumps.wikimedia.org/wikidatawiki/entities/20260608/
 - https://en.wiki.tatoeba.org/articles/show/using-the-tatoeba-corpus
 - https://github.com/unimorph/fra/blob/f672f8cceb2d5f5a1e2241b5622c8845f8274635/README.md
-- https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/LICENSE.txt
-- https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/README.md
 - https://tatoeba.org/en/downloads
 - https://www.iana.org/help/licensing-terms
 - https://www.lexique.org/?lang=en&page_id=790
@@ -38,7 +35,6 @@ Source evidence:
 Local snapshot evidence:
 
 - `licenses/source-iana-language-subtag-registry/LICENSE.html` from `tools/textpack-forge/snapshots/data/iana/LICENSE.html` (sha256:7dc8d5e34e9943414b0ba9de3e055341e8fe4085d7a6eef1ef5d4de01accc113)
-- `licenses/source-ud-french-gsd-r2.18/LICENSE.txt` from `tools/textpack-forge/snapshots/data/ud-french-gsd-r2.18/LICENSE.txt` (sha256:899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79)
 
 ## Citations
 
@@ -49,4 +45,3 @@ Local snapshot evidence:
 - Tatoeba weekly French exports, 2026-06-06.
 - Lexique 3.83, 2019-06-04.
 - UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635.
-- Universal Dependencies French GSD r2.18 annotations.

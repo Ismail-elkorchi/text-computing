@@ -1,0 +1,37 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "ar-search-scope",
+      "message": "Arabic Unicode word and mark-normalization analyzer profile; morphology, synonyms, corpus ranking, dialectal search, and Classical/Quranic search are out of scope.",
+      "metadata": {
+        "likelySubtag": "ar-Arab-EG",
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "severity": "info",
+      "task": "search.profile"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "ar",
+  "metrics": [
+    {
+      "metricId": "analyzer-profile-count",
+      "name": "analyzerProfileCount",
+      "unit": "profiles",
+      "value": 1
+    },
+    {
+      "metricId": "records-rejected",
+      "name": "recordsRejected",
+      "unit": "records",
+      "value": 0
+    }
+  ],
+  "profileId": "ar-search-quality",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "thresholds": []
+}

@@ -14,7 +14,6 @@
 	"packs": [
 		{
 			"packageName": "@ismail-elkorchi/textpack-cldr-core",
-			"packageDir": "packages/textpacks/textpack-cldr-core",
 			"description": "Source-backed CLDR core foundation textpack resources.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -46,12 +45,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-cldr-core:cldr-core"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -136,7 +129,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-language-registry",
-			"packageDir": "packages/textpacks/textpack-language-registry",
 			"description": "Source-backed BCP 47 language registry foundation textpack resources.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -167,12 +159,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-language-registry:iana-bcp47"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",
@@ -233,7 +219,6 @@
 		},
 		{
 			"packageName": "@ismail-elkorchi/textpack-unicode-17",
-			"packageDir": "packages/textpacks/textpack-unicode-17",
 			"description": "Source-backed Unicode 17 foundation textpack resources.",
 			"publishable": true,
 			"publishabilityEvidence": {
@@ -265,12 +250,6 @@
 			],
 			"resourceSpecIds": [
 				"resource-spec:textpack-unicode-17:ucd-core"
-			],
-			"generatedPackageFiles": true,
-			"generatedSourceFiles": [
-				"src/index.ts",
-				"src/manifest.ts",
-				"src/resources.ts"
 			],
 			"manifest": {
 				"schemaVersion": "1",

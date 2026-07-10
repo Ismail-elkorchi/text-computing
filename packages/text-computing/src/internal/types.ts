@@ -22,6 +22,7 @@ import type {
 } from "@ismail-elkorchi/textnorm";
 import type {
 	TextPack,
+	TextPackCapabilities,
 	TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
 import type {
@@ -129,6 +130,7 @@ export interface TextComputingQualityFindingSummary {
 export interface TextComputingQualitySummary {
 	readonly id: string;
 	readonly target: string;
+	readonly skipped?: boolean;
 	readonly findingCount: number;
 	readonly findings: readonly TextComputingQualityFindingSummary[];
 	readonly metricCount: number;
@@ -215,6 +217,8 @@ export interface TextComputingCapabilitySlotReport {
 	readonly status: string;
 	readonly resourceIds: readonly string[];
 	readonly artifactIds: readonly string[];
+	readonly readerRequired: boolean;
+	readonly capabilities: TextPackCapabilities;
 	readonly notes: readonly string[];
 }
 

@@ -5,7 +5,6 @@ import {
 	type TextDocument,
 } from "@ismail-elkorchi/textdoc";
 import {
-	type EntityCandidate,
 	knowledgeBaseSliceFromPack,
 	linkEntities,
 } from "@ismail-elkorchi/textkb";
@@ -38,7 +37,6 @@ import {
 	type QualityReport,
 } from "@ismail-elkorchi/textquality";
 import type { Analyzer, SearchToken } from "@ismail-elkorchi/textsearch";
-import { requireTaskReader } from "./errors.js";
 import {
 	assertRunnableTask,
 	planDocumentTasks,
@@ -131,23 +129,86 @@ function entityCandidatesFromDocument(
 			if (value === undefined || value === null || typeof value !== "object") {
 				return [];
 			}
-			const record = value as Partial<EntityCandidate>;
+			const record = value as {
+				readonly entityId?: unknown;
+				readonly label?: unknown;
+				readonly matchedAlias?: unknown;
+				readonly matchKind?: unknown;
+				readonly score?: unknown;
+				readonly rank?: unknown;
+				readonly types?: unknown;
+				readonly entityTypes?: unknown;
+			};
 			return typeof record.entityId === "string" &&
 				typeof record.label === "string"
 				? [
 						Object.freeze({
 							entityId: record.entityId,
 							label: record.label,
-							matchedAlias: record.matchedAlias ?? record.label,
-							matchKind: record.matchKind ?? "exact",
-							score: record.score ?? 0,
-							rank: record.rank ?? 0,
-							types: Object.freeze([...(record.types ?? [])]),
+							matchedAlias:
+								typeof record.matchedAlias === "string"
+									? record.matchedAlias
+									: record.label,
+							matchKind:
+								typeof record.matchKind === "string"
+									? record.matchKind
+									: "link",
+							score: typeof record.score === "number" ? record.score : 0,
+							rank: typeof record.rank === "number" ? record.rank : 0,
+							types: jsonStringArray(record.entityTypes ?? record.types),
 						}),
 					]
 				: [];
 		}),
 	);
+}
+
+function jsonStringArray(value: unknown): readonly string[] {
+	if (!Array.isArray(value)) return Object.freeze([]);
+	return Object.freeze(
+		value.flatMap((entry) => (typeof entry === "string" ? [entry] : [])),
+	);
+}
+
+function mentionCandidates(
+	text: string,
+	lexicalUnits: readonly {
+		readonly startCU: number;
+		readonly endCU: number;
+		readonly text: string;
+		readonly isWordLike?: boolean;
+	}[],
+): readonly string[] {
+	const wordLike = lexicalUnits.filter((segment) => segment.isWordLike);
+	const mentions = new Set<string>();
+	for (const segment of wordLike) {
+		mentions.add(segment.text);
+	}
+	for (let start = 0; start < wordLike.length; start += 1) {
+		for (
+			let end = start + 1;
+			end < wordLike.length && end - start < 5;
+			end += 1
+		) {
+			const previous = wordLike[end - 1];
+			const current = wordLike[end];
+			if (previous === undefined || current === undefined) continue;
+			const separator = text.slice(previous.endCU, current.startCU);
+			if (!isMentionJoiner(separator)) break;
+			mentions.add(text.slice(wordLike[start]?.startCU ?? 0, current.endCU));
+		}
+	}
+	return Object.freeze(
+		[...mentions]
+			.map((mention) => mention.trim())
+			.filter((mention) => mention.length > 0)
+			.sort((left, right) => left.localeCompare(right)),
+	);
+}
+
+function isMentionJoiner(value: string): boolean {
+	if (value.length === 0) return true;
+	return /^[\p{White_Space}\u00ad\u058a\u05be\u2010-\u2015-]+$/u.test(value);
 }
 
 function documentJson(doc: TextComputingDocument): TextComputingDocumentJson {
@@ -177,6 +238,7 @@ function emptyQualityReport(doc: TextDocument): QualityReport {
 }
 
 interface LexicalUnitAnalysis {
+	readonly lexiconMatches: readonly LexicalMatch[];
 	readonly morphologyAnalyses: readonly MorphologyAnalysis[];
 }
 
@@ -224,6 +286,7 @@ function qualitySummary(report: QualityReport): TextComputingQualitySummary {
 		),
 		metricCount: Object.keys(report.metrics).length,
 		metrics: Object.freeze({ ...report.metrics }),
+		...(report.summaries.skipped === true ? { skipped: true } : {}),
 	});
 }
 
@@ -232,7 +295,7 @@ function evidenceForTasks(
 	tasks: ReadonlySet<
 		NonNullable<TextComputingDocumentAnalysisOptions["tasks"]>[number]
 	>,
-	quality: QualityReport,
+	quality: QualityReport | undefined,
 ): readonly TextComputingEvidence[] {
 	const componentPackageNames = Object.freeze(
 		[...(pack.manifest.components ?? [])]
@@ -262,17 +325,91 @@ function evidenceForTasks(
 		});
 	return Object.freeze([
 		...slotEvidence,
-		Object.freeze({
-			id: `${pack.manifest.id}:quality:${quality.id}`,
-			kind: "quality-report" as const,
-			task: "quality" as const,
-			packageName: pack.manifest.packageName,
-			packId: pack.manifest.id,
-			resourceIds: Object.freeze([]),
-			componentPackageNames,
-			reportId: quality.id,
-		}),
+		...(quality === undefined
+			? []
+			: [
+					Object.freeze({
+						id: `${pack.manifest.id}:quality:${quality.id}`,
+						kind: "quality-report" as const,
+						task: "quality" as const,
+						packageName: pack.manifest.packageName,
+						packId: pack.manifest.id,
+						resourceIds: Object.freeze([]),
+						componentPackageNames,
+						reportId: quality.id,
+					}),
+				]),
 	]);
+}
+
+function readerOption(reader: TextPackResourceReader | undefined) {
+	return reader === undefined ? {} : { reader };
+}
+
+function morphologyFeatureKey(
+	features: Readonly<Record<string, string>>,
+): string {
+	const featureBundle = features.featureBundle;
+	if (featureBundle !== undefined) return featureBundle;
+	return JSON.stringify(
+		Object.entries(features)
+			.filter(
+				([name]) =>
+					name !== "featureCount" &&
+					name !== "source" &&
+					name !== "sourceLineNumber",
+			)
+			.sort(([left], [right]) => left.localeCompare(right)),
+	);
+}
+
+function morphologySemanticKey(analysis: MorphologyAnalysis): string {
+	return JSON.stringify([
+		analysis.form,
+		analysis.lemma ?? "",
+		analysis.partOfSpeech ?? "",
+		analysis.entryId ?? "",
+		morphologyFeatureKey(analysis.features),
+	]);
+}
+
+function limitMorphologyAnalyses(
+	analyses: readonly MorphologyAnalysis[],
+	maxResults: number,
+): readonly MorphologyAnalysis[] {
+	const uniqueAnalyses = new Map<string, MorphologyAnalysis>();
+	for (const analysis of analyses) {
+		const key = morphologySemanticKey(analysis);
+		if (!uniqueAnalyses.has(key)) uniqueAnalyses.set(key, analysis);
+	}
+	return Object.freeze([...uniqueAnalyses.values()].slice(0, maxResults));
+}
+
+async function documentMorphologyAnalyses(
+	pack: TextPack,
+	forms: readonly string[],
+	reader: TextPackResourceReader | undefined,
+	maxResults: number | undefined,
+): Promise<ReadonlyMap<string, readonly MorphologyAnalysis[]>> {
+	const limit = maxResults ?? 5;
+	if (!Number.isSafeInteger(limit) || limit < 0) {
+		throw new TypeError(
+			"morphologyMaxResults must be a non-negative safe integer.",
+		);
+	}
+	const analysesByForm = await morphologyAnalysesManyFromPackAsync(
+		pack,
+		forms,
+		{
+			...readerOption(reader),
+		},
+	);
+	return new Map(
+		[...analysesByForm.entries()].map(([form, analyses]) => [
+			form,
+			limitMorphologyAnalyses(analyses, limit),
+		]),
+	);
 }
 
 export function createDocumentRuntime(
@@ -306,29 +443,29 @@ export function createDocumentRuntime(
 		const lexicalUnits = segmentation.lexicalUnits(text);
 		const searchView = normalization.searchView(sourceDocument);
 		const normalizedDocument = ensureSearchView(sourceDocument, searchView);
-		const mentions = lexicalUnits
-			.filter((segment) => segment.isWordLike)
-			.map((segment) => segment.text);
+		const mentions = mentionCandidates(text, lexicalUnits);
 		const [lexiconMatchesByText, morphologyAnalysesByText] = await Promise.all([
 			tasks.has("lexicon")
 				? lookupManyFromPackAsync(pack, mentions, {
-						reader: requireTaskReader(reader, "lexicon"),
+						...readerOption(reader),
 						language: languageTag,
 						script: pack.manifest.targets.scripts?.[0] ?? "Zyyy",
 						maxResults: options.lexiconMaxResults ?? 5,
 					})
 				: new Map<string, readonly LexicalMatch[]>(),
 			tasks.has("morphology")
-				? morphologyAnalysesManyFromPackAsync(pack, mentions, {
-						reader: requireTaskReader(reader, "morphology"),
-						maxRowsPerResource: options.morphologyMaxResults ?? 5,
-					})
+				? documentMorphologyAnalyses(
+						pack,
+						mentions,
+						reader,
+						options.morphologyMaxResults,
+					)
 				: new Map<string, readonly MorphologyAnalysis[]>(),
 		]);
 		const documentKb =
 			tasks.has("kb") && mentions.length > 0
 				? await knowledgeBaseSliceFromPack(pack, {
-						reader: requireTaskReader(reader, "kb"),
+						...readerOption(reader),
 						mentions,
 						language: options.entityLanguage ?? languageTag,
 					})
@@ -365,11 +502,13 @@ export function createDocumentRuntime(
 						producer: options.quality?.producer ?? pack.manifest.packageName,
 					});
 				})()
-			: emptyQualityReport(entityLinkedDocument);
+			: undefined;
 		const morphologyAnalyses = lexicalUnitAnalyses.flatMap(
 			(analysis) => analysis.morphologyAnalyses,
 		);
-		const qualityResult = qualitySummary(quality);
+		const qualityResult = qualitySummary(
+			quality ?? emptyQualityReport(entityLinkedDocument),
+		);
 		const evidence = evidenceForTasks(pack, tasks, quality);
 		let result: TextComputingDocument;
 		result = {
@@ -378,13 +517,20 @@ export function createDocumentRuntime(
 			sentences,
 			tokens: words,
 			lexicalUnits,
-			lemmas: uniqueSorted(
-				morphologyAnalyses.flatMap((analysis) =>
+			lemmas: uniqueSorted([
+				...morphologyAnalyses.flatMap((analysis) =>
 					typeof analysis.lemma === "string" && analysis.lemma.length > 0
 						? [analysis.lemma]
 						: [],
 				),
-			),
+				...lexicalUnitAnalyses.flatMap((analysis) =>
+					analysis.lexiconMatches.flatMap((match) =>
+						typeof match.canonical === "string" && match.canonical.length > 0
+							? [match.canonical]
+							: [],
+					),
+				),
+			]),
 			morphology: Object.freeze(morphologyAnalyses.map(morphologySummary)),
 			entities: entityCandidatesFromDocument(entityLinkedDocument),
 			searchTokens: Object.freeze(
@@ -417,13 +563,14 @@ export function createDocumentRuntime(
 	const documentAnalysisProcessor = (
 		options: TextComputingDocumentAnalysisOptions = {},
 		onAnalysis?: (analysis: TextComputingDocument) => void,
-	): TextProcessor =>
-		Object.freeze({
+	): TextProcessor => {
+		const tasks = planDocumentTasks(options.tasks);
+		return Object.freeze({
 			id: `${pack.manifest.id}:document-analysis`,
 			version: pack.manifest.version,
 			provides: Object.freeze([
 				Object.freeze({ viewKind: "search" as const }),
-				Object.freeze({ layer: "link.entity" }),
+				...(tasks.has("kb") ? [Object.freeze({ layer: "link.entity" })] : []),
 			]),
 			async process(doc: TextDocument) {
 				const analysis = await analyzeDocument(doc, options);
@@ -431,6 +578,7 @@ export function createDocumentRuntime(
 				return analysis.toTextDoc();
 			},
 		});
+	};
 
 	const createDocumentAnalysisPipeline = (
 		options: TextComputingDocumentAnalysisOptions = {},

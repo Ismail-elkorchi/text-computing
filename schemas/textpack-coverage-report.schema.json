@@ -20,7 +20,6 @@
 		"capabilityEvidence",
 		"coverageStatus",
 		"evaluationRecordIds",
-		"components",
 		"gapNotes",
 		"knownGaps"
 	],
@@ -59,10 +58,6 @@
 		"evaluationRecordIds": {
 			"type": "array",
 			"items": { "type": "string", "minLength": 1 }
-		},
-		"components": {
-			"type": "array",
-			"items": { "type": "object" }
 		},
 		"gapNotes": {
 			"type": "array",

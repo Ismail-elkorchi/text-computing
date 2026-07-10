@@ -2615,6 +2615,8 @@ export interface EntityLinkValue extends JsonObject {
 	readonly label: string;
 	readonly entityTypes: readonly JsonValue[];
 	readonly matchedAlias: string;
+	readonly aliasMatchKind: AliasEntry["matchKind"];
+	readonly matchKind: "exact" | "normalized" | "fuzzy";
 	readonly score: number;
 	readonly rank: number;
 	readonly sourceAnnotationId?: string;
@@ -2632,6 +2634,8 @@ function entityLinkValue(
 		label: candidate.label,
 		entityTypes: candidate.types,
 		matchedAlias: candidate.matchedAlias,
+		aliasMatchKind: candidate.aliasMatchKind,
+		matchKind: candidate.matchKind,
 		score: candidate.score,
 		rank: candidate.rank,
 		...(mention.sourceAnnotationId !== undefined
@@ -2735,6 +2739,8 @@ function candidateValue(kb: KnowledgeBase, candidate: Candidate): JsonObject {
 			label: candidate.label,
 			entityTypes: candidate.types,
 			matchedAlias: candidate.matchedAlias,
+			aliasMatchKind: candidate.aliasMatchKind,
+			matchKind: candidate.matchKind,
 			score: candidate.score,
 			rank: candidate.rank,
 		});

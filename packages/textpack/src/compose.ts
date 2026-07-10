@@ -72,13 +72,16 @@ function orderPacks(
 ): readonly TextPack[] {
 	if (precedence === undefined) return packs;
 	const rank = new Map(precedence.map((id, index) => [id, index]));
-	return [...packs].sort((left, right) => {
-		const leftRank = rank.get(left.manifest.id) ?? Number.MAX_SAFE_INTEGER;
-		const rightRank = rank.get(right.manifest.id) ?? Number.MAX_SAFE_INTEGER;
-		return (
-			leftRank - rightRank || left.manifest.id.localeCompare(right.manifest.id)
-		);
-	});
+	return packs
+		.map((pack, index) => ({ pack, index }))
+		.sort((left, right) => {
+			const leftRank =
+				rank.get(left.pack.manifest.id) ?? Number.MAX_SAFE_INTEGER;
+			const rightRank =
+				rank.get(right.pack.manifest.id) ?? Number.MAX_SAFE_INTEGER;
+			return leftRank - rightRank || left.index - right.index;
+		})
+		.map(({ pack }) => pack);
 }
 
 function mergeResources(
@@ -86,7 +89,7 @@ function mergeResources(
 	conflictPolicy: "error" | "first" | "last",
 ): { descriptors: readonly TextPackResource[]; resources: PackResourceMap } {
 	const descriptors = new Map<string, TextPackResource>();
-	const resources: Record<string, unknown> = {};
+	const resources: Record<string, unknown> = Object.create(null);
 	for (const pack of packs) {
 		for (const descriptor of pack.manifest.resources) {
 			if (descriptors.has(descriptor.id)) {
@@ -135,9 +138,9 @@ function mergeCitations(
 function mergeComponents(
 	packs: readonly TextPack[],
 ): readonly TextPackComponent[] {
-	const components = new Map<string, TextPackComponent>();
+	const directComponents = new Map<string, TextPackComponent>();
 	for (const pack of packs) {
-		components.set(pack.manifest.packageName, {
+		const directComponent: TextPackComponent = Object.freeze({
 			packageName: pack.manifest.packageName,
 			versionRange: pack.manifest.version,
 			role: "required",
@@ -145,23 +148,67 @@ function mergeComponents(
 			capabilityPolicy: "contributes-default",
 			artifactPolicy: "none",
 		});
+		const existing = directComponents.get(pack.manifest.packageName);
+		if (
+			existing !== undefined &&
+			existing.versionRange !== directComponent.versionRange
+		) {
+			throw new TypeError(
+				`Cannot compose conflicting direct component versions for ${pack.manifest.packageName}.`,
+			);
+		}
+		directComponents.set(pack.manifest.packageName, directComponent);
+	}
+	const components = new Map<string, TextPackComponent>(directComponents);
+	const componentReasons = new Map<string, Set<string>>();
+	for (const pack of packs) {
 		for (const component of pack.manifest.components ?? []) {
+			if (directComponents.has(component.packageName)) {
+				if (component.role === "excluded") {
+					throw new TypeError(
+						`Cannot compose directly supplied component ${component.packageName} because ${pack.manifest.packageName} explicitly excludes it.`,
+					);
+				}
+				continue;
+			}
+			const normalized = Object.freeze({
+				...component,
+				artifactPolicy: component.artifactPolicy ?? "none",
+			});
 			const existing = components.get(component.packageName);
 			if (
 				existing !== undefined &&
-				existing.versionRange !== component.versionRange
+				(existing.versionRange !== normalized.versionRange ||
+					existing.role !== normalized.role ||
+					existing.licensePolicy !== normalized.licensePolicy ||
+					existing.capabilityPolicy !== normalized.capabilityPolicy ||
+					existing.artifactPolicy !== normalized.artifactPolicy)
 			) {
 				throw new TypeError(
-					`Cannot compose incompatible component ${component.packageName}.`,
+					`Cannot compose conflicting component policy for ${component.packageName}.`,
 				);
 			}
-			components.set(component.packageName, component);
+			if (normalized.reason !== undefined) {
+				const reasons =
+					componentReasons.get(component.packageName) ?? new Set();
+				reasons.add(normalized.reason);
+				componentReasons.set(component.packageName, reasons);
+			}
+			components.set(component.packageName, normalized);
 		}
 	}
 	return Object.freeze(
-		[...components.values()].sort((left, right) =>
-			left.packageName.localeCompare(right.packageName),
-		),
+		[...components.values()]
+			.map((component) => {
+				const reasons = [
+					...(componentReasons.get(component.packageName) ?? []),
+				].sort((left, right) => left.localeCompare(right));
+				return Object.freeze({
+					...component,
+					...(reasons.length === 0 ? {} : { reason: reasons.join("; ") }),
+				});
+			})
+			.sort((left, right) => left.packageName.localeCompare(right.packageName)),
 	);
 }
 
@@ -194,6 +241,7 @@ function mergeCapabilitySlots(
 	packs: readonly TextPack[],
 ): readonly TextPackCapabilitySlot[] {
 	const statusOrder = [
+		"not-applicable",
 		"unsupported",
 		"planned",
 		"profiled",
@@ -201,7 +249,6 @@ function mergeCapabilitySlots(
 		"artifact-backed",
 		"task-supported",
 		"feature-complete",
-		"not-applicable",
 	] as const;
 	const statusRank = new Map(
 		statusOrder.map((status, index) => [status, index]),
@@ -267,15 +314,21 @@ function uniqueBindings(
 		NonNullable<TextPackCapabilitySlot["bindings"]>[number]
 	>();
 	for (const binding of values) {
+		const key = [binding.ownerPackage, binding.role, binding.resourceId].join(
+			"\u0000",
+		);
+		const existing = output.get(key);
+		if (existing !== undefined && existing.schemaId !== binding.schemaId) {
+			throw new TypeError(
+				`Cannot compose conflicting binding schemas for ${binding.ownerPackage} ${binding.role} ${binding.resourceId}.`,
+			);
+		}
 		output.set(
-			[
-				binding.ownerPackage,
-				binding.role,
-				binding.resourceId,
-				binding.schemaId,
-				binding.required ? "required" : "optional",
-			].join("\u0000"),
-			binding,
+			key,
+			Object.freeze({
+				...binding,
+				required: existing?.required === true || binding.required,
+			}),
 		);
 	}
 	return [...output.values()].sort(

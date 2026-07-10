@@ -1,7 +1,6 @@
 import type {
 	PackComposeOptions,
 	PackResourceMap,
-	ResolveTextPackComponentsOptions,
 	ResourceKind,
 	ResourceQuery,
 	TextPack,
@@ -9,8 +8,6 @@ import type {
 	TextPackCapabilities,
 	TextPackCapabilitySlot,
 	TextPackComponent,
-	TextPackComponentResolver,
-	TextPackCompositeProfile,
 	TextPackDependency,
 	TextPackFetchResourceReaderOptions,
 	TextPackGapNote,
@@ -33,9 +30,6 @@ type PublicApiSmoke = {
 	pack: TextPack;
 	query: ResourceQuery;
 	options: PackComposeOptions;
-	resolveOptions: ResolveTextPackComponentsOptions;
-	resolveComponent: TextPackComponentResolver;
-	profile: TextPackCompositeProfile;
 	capabilities: TextPackCapabilities;
 	fetchReaderOptions: TextPackFetchResourceReaderOptions;
 };

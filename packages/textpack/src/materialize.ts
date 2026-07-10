@@ -33,6 +33,8 @@ export interface TextPackResourceReader {
 export interface TextPackFetchResourceReaderOptions {
 	readonly fetch?: typeof fetch;
 	readonly requestInit?: RequestInit;
+	/** Overrides frozen descriptor package roots when resources are served from another location. */
+	readonly packageRoot?: string;
 }
 
 export interface TextPackMaterializedTable {
@@ -54,7 +56,7 @@ function isResourceEncoding(value: unknown): value is TextPackResourceEncoding {
 function packageRootUrl(packageRoot: string | undefined): URL {
 	if (packageRoot === undefined || packageRoot.length === 0) {
 		throw new TypeError(
-			"Fetch-backed textpack resource reading requires descriptor.packageRoot.",
+			"Fetch-backed textpack resource reading requires a package root.",
 		);
 	}
 	return new URL(packageRoot.endsWith("/") ? packageRoot : `${packageRoot}/`);
@@ -64,6 +66,10 @@ export function createFetchResourceReader(
 	options: TextPackFetchResourceReaderOptions = {},
 ): TextPackResourceReader {
 	const fetchResource = options.fetch ?? globalThis.fetch;
+	const packageRootOverride =
+		options.packageRoot === undefined
+			? undefined
+			: packageRootUrl(options.packageRoot);
 	if (typeof fetchResource !== "function") {
 		throw new TypeError(
 			"Fetch-backed textpack resource reading requires fetch.",
@@ -71,7 +77,8 @@ export function createFetchResourceReader(
 	}
 	return {
 		async readText({ descriptor }) {
-			const rootUrl = packageRootUrl(descriptor.packageRoot);
+			const rootUrl =
+				packageRootOverride ?? packageRootUrl(descriptor.packageRoot);
 			const resourceUrl = new URL(descriptor.path, rootUrl);
 			if (!resourceUrl.href.startsWith(rootUrl.href)) {
 				throw new TypeError(
@@ -293,6 +300,9 @@ export function parseResourceTable(text: string): TextPackMaterializedTable {
 		);
 	}
 	const columns = Object.freeze(header.split("\t"));
+	if (columns.some((column) => column.length === 0)) {
+		throw new TypeError("Textpack table header columns must be non-empty.");
+	}
 	if (new Set(columns).size !== columns.length) {
 		throw new TypeError("Textpack table header must not duplicate columns.");
 	}
@@ -312,7 +322,12 @@ export function parseResourceTable(text: string): TextPackMaterializedTable {
 			if (column === undefined || column.length === 0) {
 				throw new TypeError("Textpack table header contains an empty column.");
 			}
-			row[column] = cells[columnIndex] ?? "";
+			Object.defineProperty(row, column, {
+				value: cells[columnIndex] ?? "",
+				enumerable: true,
+				configurable: false,
+				writable: false,
+			});
 		}
 		rows.push(Object.freeze(row));
 	}

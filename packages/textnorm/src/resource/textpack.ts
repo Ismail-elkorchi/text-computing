@@ -1,4 +1,5 @@
 import type { TextDocument } from "@ismail-elkorchi/textdoc";
+import { caseFold } from "@ismail-elkorchi/textfacts/casefold";
 import {
 	openResourceJson,
 	openResourceTable,
@@ -178,7 +179,7 @@ function applyLookupRule(
 ): string {
 	const operation = stringValue(rule.operation);
 	if (operation === "compose") return text.normalize("NFC");
-	if (operation === "casefold") return text.toLocaleLowerCase();
+	if (operation === "casefold") return caseFold(text);
 	if (operation === "strip-diacritic") {
 		return text
 			.normalize("NFD")

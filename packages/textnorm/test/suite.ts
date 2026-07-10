@@ -426,6 +426,7 @@ const compiledNormalization = await normalizationProfileFromPack(
 	},
 );
 assert.equal(compiledNormalization.normalizeText("Été ’", "search"), "ete '");
+assert.equal(compiledNormalization.normalizeText("Iİß", "search"), "iiss");
 const normalizedView = compiledNormalization.searchView(
 	createDocument("Été ’", { id: "doc:norm:profile" }),
 );

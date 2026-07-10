@@ -1,0 +1,18 @@
+{
+  "analyzerProfileCount": 1,
+  "languageTag": "ar",
+  "likelySubtag": "ar-Arab-EG",
+  "pipelineId": "arabic-search-profile",
+  "pipelineVersion": "0.1.0",
+  "recordsAccepted": 1,
+  "recordsRejected": 0,
+  "schemaVersion": "1",
+  "script": "Arab",
+  "sourceIds": [
+    "source:unicode:cldr-core"
+  ],
+  "warnings": [
+    "The built-in analyzer executes Unicode word tokenization plus Arabic mark and tatweel removal.",
+    "Morphology-aware tokenization, stemming, synonym expansion, persistent indexing, corpus-derived ranking, dialectal Arabic search, and Classical/Quranic Arabic search are outside this profile."
+  ]
+}

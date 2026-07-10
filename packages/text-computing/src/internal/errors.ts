@@ -1,21 +1,4 @@
-import type {
-	TextPack,
-	TextPackResourceReader,
-} from "@ismail-elkorchi/textpack";
-
-export function missingReaderError(taskName: string): TypeError {
-	return new TypeError(
-		`text-computing task ${taskName} requires options.reader to materialize generated file-backed resources.`,
-	);
-}
-
-export function requireTaskReader(
-	reader: TextPackResourceReader | undefined,
-	taskName: string,
-): TextPackResourceReader {
-	if (reader !== undefined) return reader;
-	throw missingReaderError(taskName);
-}
+import type { TextPack } from "@ismail-elkorchi/textpack";
 
 export function unsupportedTaskError(pack: TextPack, slot: string): TypeError {
 	const capabilitySlot = pack.manifest.capabilitySlots.find(

@@ -462,7 +462,7 @@
       ],
       "defaultCompositeAllowed": false,
       "family": "FRLEX",
-      "homepageUrl": "http://www.lexique.org/databases/Lexique383/README-Lexique.txt",
+      "homepageUrl": "https://lexique.org/databases/Lexique383/README-Lexique.txt",
       "languages": [
         "fr"
       ],
@@ -2471,7 +2471,7 @@
     }
   ],
   "summaries": {
-    "activeSourceCount": 18,
+    "activeSourceCount": 17,
     "byPolicyClass": {
       "attribution": 15,
       "blocked/review-only": 31,

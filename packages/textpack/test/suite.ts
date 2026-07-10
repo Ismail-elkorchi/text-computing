@@ -12,15 +12,15 @@ import {
 	openResourceTable,
 	openResourceText,
 	type PackResourceMap,
+	parseResourceTable,
 	requireSingleTaskResourceBinding,
 	requireTaskResourceBindings,
-	resolvePackComponents,
 	resourceKinds,
 	type TextPackManifest,
 	taskResourceIdsFromBindings,
 	textPackModalities,
 	validateManifest,
-} from "../dist/index.js";
+} from "@ismail-elkorchi/textpack";
 
 async function sha256(text: string): Promise<string> {
 	const bytes = new TextEncoder().encode(text);
@@ -737,6 +737,19 @@ assert.deepEqual(
 	).rows[0],
 	{ name: "bonjour", value: "monde" },
 );
+assert.throws(
+	() => parseResourceTable("name\t\nvalue\trow\n"),
+	/header columns must be non-empty/,
+);
+const reservedColumnTable = parseResourceTable(
+	"__proto__\tconstructor\nvalue-a\tvalue-b\n",
+);
+assert.equal(reservedColumnTable.rows[0]?.__proto__, "value-a");
+assert.equal(reservedColumnTable.rows[0]?.constructor, "value-b");
+assert.equal(
+	Object.getPrototypeOf(reservedColumnTable.rows[0]),
+	Object.prototype,
+);
 const fetchReader = createFetchResourceReader({
 	fetch: async (input) => {
 		assert.equal(
@@ -750,12 +763,35 @@ assert.equal(
 	await openResourceText(materializedPack, "table-materialized", fetchReader),
 	materializedTableText,
 );
+const rebasedFetchReader = createFetchResourceReader({
+	packageRoot: "https://assets.textpack.invalid/textpack-en",
+	fetch: async (input) => {
+		assert.equal(
+			input instanceof URL ? input.href : String(input),
+			"https://assets.textpack.invalid/textpack-en/resources/table.tsv",
+		);
+		return new Response(materializedTableText);
+	},
+});
+assert.equal(
+	await openResourceText(
+		materializedPack,
+		"table-materialized",
+		rebasedFetchReader,
+	),
+	materializedTableText,
+);
+assert.equal(
+	getResource<Record<string, unknown>>(materializedPack, "table-materialized")
+		.packageRoot,
+	"file:///fixture/",
+);
 const escapedResource = materializedManifest.resources[0];
 if (escapedResource === undefined) throw new Error("missing escaped resource");
 const escapedText = "escaped";
 const escapedChecksum = `sha256:${await sha256(escapedText)}`;
 await assert.rejects(
-	() =>
+	async () =>
 		createFetchResourceReader({
 			fetch: async () => new Response(escapedText),
 		}).readText({
@@ -778,191 +814,6 @@ await assert.rejects(
 			readText: () => "name\tvalue\ncorrupt\trow\n",
 		}),
 	/byte length mismatch|checksum mismatch/,
-);
-
-const frCoreManifest: TextPackManifest = {
-	...manifest,
-	id: "pack:fr-core",
-	name: "French Core",
-	version: "0.1.0",
-	packageName: "@ismail-elkorchi/textpack-fr-core",
-	targets: {
-		languages: ["fr"],
-		scripts: ["Latn"],
-		modalities: ["typed"],
-	},
-	resources: [
-		{
-			id: "lexicon-fr-core",
-			kind: "lexicon",
-		},
-	],
-	capabilitySlots: [
-		{
-			slot: "lexicon",
-			status: "sampled",
-			resourceIds: ["lexicon-fr-core"],
-			capabilities: {
-				terminology: "lexicon",
-			},
-		},
-	],
-};
-const frHistoricalManifest: TextPackManifest = {
-	...manifest,
-	id: "pack:fr-historical",
-	name: "French Historical",
-	version: "0.1.0",
-	packageName: "@ismail-elkorchi/textpack-fr-historical",
-	targets: {
-		languages: ["fr"],
-		scripts: ["Latn"],
-		periods: ["19c"],
-		modalities: ["historical"],
-	},
-	resources: [
-		{
-			id: "normalization-fr-historical",
-			kind: "normalization-profile",
-			schemaId: "textnorm.rules.v1",
-		},
-	],
-	capabilitySlots: [
-		{
-			slot: "normalization",
-			status: "sampled",
-			resourceIds: ["normalization-fr-historical"],
-			capabilities: {
-				normalization: "rules",
-				historical: true,
-			},
-		},
-	],
-};
-const frComposite = createPack(
-	{
-		...recipeManifest,
-		id: "pack:fr",
-		name: "French Composite",
-		packageName: "@ismail-elkorchi/textpack-fr",
-		components: [
-			{
-				packageName: "@ismail-elkorchi/textpack-fr-core",
-				versionRange: "0.1.0",
-				role: "required",
-				licensePolicy: "default",
-				capabilityPolicy: "contributes-default",
-				artifactPolicy: "none",
-			},
-			{
-				packageName: "@ismail-elkorchi/textpack-fr-historical",
-				versionRange: "0.1.0",
-				role: "optional",
-				licensePolicy: "default",
-				capabilityPolicy: "available-optional",
-				artifactPolicy: "none",
-			},
-		],
-		artifacts: [],
-		capabilitySlots: [
-			{
-				slot: "lexicon",
-				status: "planned",
-			},
-			{
-				slot: "normalization",
-				status: "planned",
-			},
-			{
-				slot: "parallel",
-				status: "planned",
-			},
-		],
-	},
-	{},
-);
-const componentResolver = async (component: {
-	readonly packageName: string;
-}): Promise<unknown> => {
-	if (component.packageName === "@ismail-elkorchi/textpack-fr-core") {
-		return {
-			manifest: frCoreManifest,
-			resources: {
-				"lexicon-fr-core": "texte\tlemma=texte\tpos=NOUN\n",
-			},
-		};
-	}
-	if (component.packageName === "@ismail-elkorchi/textpack-fr-historical") {
-		return {
-			manifest: frHistoricalManifest,
-			resources: {
-				"normalization-fr-historical": "estoit=>etait\n",
-			},
-		};
-	}
-	throw new Error(`missing ${component.packageName}`);
-};
-const resolvedFrench = await resolvePackComponents(frComposite, {
-	resolveComponent: componentResolver,
-});
-assert.equal(
-	resolvedFrench.manifest.packageName,
-	"@ismail-elkorchi/textpack-fr",
-);
-assert.equal(
-	getResource<string>(resolvedFrench, "lexicon-fr-core"),
-	"texte\tlemma=texte\tpos=NOUN\n",
-);
-assert.equal(
-	resolvedFrench.resources["normalization-fr-historical"],
-	undefined,
-);
-const resolvedFrenchFull = await resolvePackComponents(frComposite, {
-	profile: "full",
-	resolveComponent: componentResolver,
-});
-assert.equal(
-	getResource<string>(resolvedFrenchFull, "normalization-fr-historical"),
-	"estoit=>etait\n",
-);
-assert.deepEqual(
-	listResources(resolvedFrenchFull, { schemaId: "textnorm.rules.v1" }).map(
-		(resource) => resource.id,
-	),
-	["normalization-fr-historical"],
-);
-await assert.rejects(
-	() =>
-		resolvePackComponents(frComposite, {
-			resolveComponent: async () => {
-				throw new Error("missing fixture");
-			},
-		}),
-	/Required textpack component @ismail-elkorchi\/textpack-fr-core could not be resolved: missing fixture/,
-);
-await assert.rejects(
-	() =>
-		resolvePackComponents(frComposite, {
-			resolveComponent: async () => ({
-				manifest: { ...frCoreManifest, version: "0.2.0" },
-				resources: {
-					"lexicon-fr-core": "texte\tlemma=texte\tpos=NOUN\n",
-				},
-			}),
-		}),
-	/does not satisfy declared range 0\.1\.0/,
-);
-await assert.rejects(
-	() =>
-		resolvePackComponents(frComposite, {
-			resolveComponent: async () => ({
-				manifest: { ...frCoreManifest, version: "0.1.0-beta.1" },
-				resources: {
-					"lexicon-fr-core": "texte\tlemma=texte\tpos=NOUN\n",
-				},
-			}),
-		}),
-	/does not satisfy declared range 0\.1\.0/,
 );
 
 const overlayManifest: TextPackManifest = {
@@ -1008,3 +859,273 @@ const composed = composePacks([pack, overlay], {
 assert.equal(getResource<string>(composed, "stoplist-en-test"), "thereof\n");
 assert.equal(capabilities(composed).segmentation, "rules");
 assert.equal(capabilities(composed).noisyText, true);
+
+const fileHandleManifest: TextPackManifest = {
+	...manifest,
+	id: "pack:file-handle",
+	name: "File Handle Pack",
+	packageName: "@ismail-elkorchi/textpack-file-handle",
+	resources: [
+		{
+			id: "file-handle-resource",
+			kind: "dataset",
+			path: "resources/file.tsv",
+		},
+	],
+	capabilitySlots: [],
+};
+const mutableFileHandle: Record<string, unknown> = {
+	kind: "file-backed-resource",
+	packageName: fileHandleManifest.packageName,
+	packageRoot: "file:///fixture/",
+	path: "resources/file.tsv",
+	encoding: "utf8",
+	checksum: `sha256:${"0".repeat(64)}`,
+	byteLength: 0,
+};
+const fileHandlePack = createPack(fileHandleManifest, {
+	"file-handle-resource": mutableFileHandle,
+});
+const normalizedFileHandle = getResource<Record<string, unknown>>(
+	fileHandlePack,
+	"file-handle-resource",
+);
+mutableFileHandle.path = "resources/mutated.tsv";
+assert.equal(normalizedFileHandle.path, "resources/file.tsv");
+assert.equal(Object.isFrozen(normalizedFileHandle), true);
+assert.throws(
+	() =>
+		createPack(fileHandleManifest, {
+			"file-handle-resource": {
+				...mutableFileHandle,
+				packageName: fileHandleManifest.packageName,
+				path: "resources/other.tsv",
+			},
+		}),
+	/path must match its manifest descriptor path/,
+);
+assert.throws(
+	() =>
+		createPack(fileHandleManifest, {
+			"file-handle-resource": {
+				...mutableFileHandle,
+				packageName: "@ismail-elkorchi/textpack-unrelated",
+				path: "resources/file.tsv",
+			},
+		}),
+	/packageName must identify the manifest package or a declared component package/,
+);
+const composedFileHandlePack = composePacks([fileHandlePack], {
+	id: "pack:file-handle-composite",
+	name: "File Handle Composite",
+	packageName: "@ismail-elkorchi/textpack-file-handle-composite",
+});
+assert.equal(
+	getResource<Record<string, unknown>>(
+		composedFileHandlePack,
+		"file-handle-resource",
+	).packageName,
+	fileHandleManifest.packageName,
+);
+
+const componentShared = {
+	packageName: "@ismail-elkorchi/textpack-shared",
+	versionRange: "^1.0.0",
+	role: "optional",
+	licensePolicy: "default",
+	capabilityPolicy: "available-optional",
+} as const;
+const componentPackA = createPack(
+	{
+		...manifest,
+		id: "pack:component-a",
+		name: "Component A",
+		packageName: "@ismail-elkorchi/textpack-component-a",
+		resources: [],
+		components: [
+			{
+				packageName: "@ismail-elkorchi/textpack-component-b",
+				versionRange: "^1.0.0",
+				role: "optional",
+				licensePolicy: "default",
+				capabilityPolicy: "available-optional",
+			},
+			{ ...componentShared, reason: "from a" },
+		],
+		capabilitySlots: [],
+	},
+	{},
+);
+const componentPackB = createPack(
+	{
+		...manifest,
+		id: "pack:component-b",
+		name: "Component B",
+		packageName: "@ismail-elkorchi/textpack-component-b",
+		resources: [],
+		components: [
+			{ ...componentShared, artifactPolicy: "none", reason: "from b" },
+		],
+		capabilitySlots: [],
+	},
+	{},
+);
+const componentForward = composePacks([componentPackA, componentPackB]);
+const componentReverse = composePacks([componentPackB, componentPackA]);
+assert.deepEqual(
+	componentForward.manifest.components,
+	componentReverse.manifest.components,
+);
+assert.deepEqual(
+	componentForward.manifest.components?.find(
+		(component) =>
+			component.packageName === "@ismail-elkorchi/textpack-component-b",
+	),
+	{
+		packageName: "@ismail-elkorchi/textpack-component-b",
+		versionRange: "1.0.0",
+		role: "required",
+		licensePolicy: "default",
+		capabilityPolicy: "contributes-default",
+		artifactPolicy: "none",
+	},
+);
+assert.equal(
+	componentForward.manifest.components?.find(
+		(component) => component.packageName === "@ismail-elkorchi/textpack-shared",
+	)?.reason,
+	"from a; from b",
+);
+const componentExcludingPack = createPack(
+	{
+		...manifest,
+		id: "pack:component-excluding",
+		name: "Component Excluding",
+		packageName: "@ismail-elkorchi/textpack-component-excluding",
+		resources: [],
+		components: [
+			{
+				packageName: "@ismail-elkorchi/textpack-component-b",
+				versionRange: "^1.0.0",
+				role: "excluded",
+				licensePolicy: "local-only",
+				capabilityPolicy: "documentation-only",
+				reason: "The package is explicitly excluded from this composition.",
+			},
+		],
+		capabilitySlots: [],
+	},
+	{},
+);
+for (const packs of [
+	[componentExcludingPack, componentPackB],
+	[componentPackB, componentExcludingPack],
+]) {
+	assert.throws(() => composePacks(packs), /explicitly excludes it/);
+}
+
+function bindingPack(
+	id: string,
+	packageName: string,
+	schemaId: string,
+	required: boolean,
+) {
+	return createPack(
+		{
+			...manifest,
+			id,
+			name: id,
+			packageName,
+			resources: [
+				{
+					id: "shared-binding-resource",
+					kind: "morphology",
+					schemaId,
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "morphology",
+					status: "task-supported",
+					resourceIds: ["shared-binding-resource"],
+					bindings: [
+						{
+							role: "primary",
+							resourceId: "shared-binding-resource",
+							schemaId,
+							required,
+							ownerPackage: "@ismail-elkorchi/textlex",
+						},
+					],
+				},
+			],
+		},
+		{ "shared-binding-resource": packageName },
+	);
+}
+
+const optionalBindingPack = bindingPack(
+	"pack:binding-optional",
+	"@ismail-elkorchi/textpack-binding-optional",
+	"textlex.morphology.v1",
+	false,
+);
+const requiredBindingPack = bindingPack(
+	"pack:binding-required",
+	"@ismail-elkorchi/textpack-binding-required",
+	"textlex.morphology.v1",
+	true,
+);
+for (const packs of [
+	[optionalBindingPack, requiredBindingPack],
+	[requiredBindingPack, optionalBindingPack],
+]) {
+	const bindingComposite = composePacks(packs, { conflictPolicy: "first" });
+	assert.deepEqual(
+		bindingComposite.manifest.capabilitySlots[0]?.bindings?.map((binding) => ({
+			resourceId: binding.resourceId,
+			required: binding.required,
+		})),
+		[{ resourceId: "shared-binding-resource", required: true }],
+	);
+}
+const conflictingSchemaPack = bindingPack(
+	"pack:binding-schema-conflict",
+	"@ismail-elkorchi/textpack-binding-schema-conflict",
+	"textlex.morphology.v2",
+	true,
+);
+assert.throws(
+	() =>
+		composePacks([requiredBindingPack, conflictingSchemaPack], {
+			conflictPolicy: "first",
+		}),
+	/conflicting binding schemas/,
+);
+
+const prototypeResources: Record<string, unknown> = Object.create(null);
+prototypeResources.__proto__ = "prototype-safe";
+const prototypePack = createPack(
+	{
+		...manifest,
+		id: "pack:prototype-resource",
+		name: "Prototype Resource",
+		packageName: "@ismail-elkorchi/textpack-prototype-resource",
+		resources: [{ id: "__proto__", kind: "dataset" }],
+		capabilitySlots: [],
+	},
+	prototypeResources,
+);
+const prototypeComposite = composePacks([prototypePack]);
+assert.equal(getResource(prototypeComposite, "__proto__"), "prototype-safe");
+
+let repeatedReadCount = 0;
+const repeatedReader = {
+	readText(): string {
+		repeatedReadCount += 1;
+		return materializedTableText;
+	},
+};
+await openResourceText(materializedPack, "table-materialized", repeatedReader);
+await openResourceText(materializedPack, "table-materialized", repeatedReader);
+assert.equal(repeatedReadCount, 2);

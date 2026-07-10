@@ -1,7 +1,11 @@
 {
   "generatedAt": "2026-06-08T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
-  "knownGaps": [],
+  "knownGaps": [
+    "corpus is planned in this source-backed self-contained language distribution.",
+    "parallel is planned in this source-backed self-contained language distribution.",
+    "syntax is planned in this source-backed self-contained language distribution."
+  ],
   "mode": "source-backed",
   "packageName": "@ismail-elkorchi/textpack-ar",
   "publishability": {
@@ -26,66 +30,40 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "coverage",
       "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
+        "resourceIds": [
+          "ar-core-orthography"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "coreRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "arabicScriptRangeCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "ranges",
+        "value": 95
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:core-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:arabic-orthography-ranges:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.core.component-evidence"
+      "taskType": "core.orthography"
     },
     {
-      "capabilitySlot": "corpus",
+      "capabilitySlot": "core",
       "dataset": {
         "languages": [
           "ar"
@@ -99,68 +77,45 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "coverage",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides local Tatoeba Arabic sentence rows and canonical corpus metadata."
-          ]
+          "graphemeRangeCount": 1429,
+          "sentenceRangeCount": 2930
         },
-        "resourceIds": []
+        "resourceIds": [
+          "ar-core-basic-segmentation"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "This verifies a basic Unicode UAX #29 segmentation baseline; richer Arabic MSA tokenization resources are provided by textpack-ar-segmentation.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "corpusRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "wordRangeCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "ranges",
+        "value": 1432
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:corpus-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:basic-segmentation-baseline:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.corpus.component-evidence"
+      "taskType": "core.basic-segmentation"
     },
     {
-      "capabilitySlot": "foundation",
+      "capabilitySlot": "core",
       "dataset": {
         "languages": [
           "ar"
@@ -174,432 +129,41 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
+          "ianaFileDate": "2026-05-05",
+          "ianaSuppressScript": "Arab"
         },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "foundationRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:foundation-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.foundation.component-evidence"
-    },
-    {
-      "capabilitySlot": "kb",
-      "dataset": {
-        "languages": [
-          "ar"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Arab"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+        "resourceIds": [
+          "ar-core-language-profile"
         ]
       },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
-          ]
-        },
-        "resourceIds": []
-      },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "kbRequiredComponentGraphPresent",
+        "name": "likelySubtag",
         "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "threshold": "ar-Arab-EG",
+        "unit": "tag",
+        "value": "ar-Arab-EG"
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:kb-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:iana-language-profile:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.kb.component-evidence"
-    },
-    {
-      "capabilitySlot": "lexicon",
-      "dataset": {
-        "languages": [
-          "ar"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Arab"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "lexiconRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:lexicon-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.lexicon.component-evidence"
-    },
-    {
-      "capabilitySlot": "morphology",
-      "dataset": {
-        "languages": [
-          "ar"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Arab"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "morphologyRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:morphology-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.morphology.component-evidence"
-    },
-    {
-      "capabilitySlot": "normalization",
-      "dataset": {
-        "languages": [
-          "ar"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Arab"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "normalizationRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:normalization-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.normalization.component-evidence"
-    },
-    {
-      "capabilitySlot": "parallel",
-      "dataset": {
-        "languages": [
-          "ar"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Arab"
-        ],
-        "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
-        ],
-        "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
-        ]
-      },
-      "evaluationKind": "resource-conformance",
-      "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides local Tatoeba Arabic-linked sentence-id alignment rows for selected target languages."
-          ]
-        },
-        "resourceIds": []
-      },
-      "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
-      ],
-      "metric": {
-        "name": "parallelRequiredComponentGraphPresent",
-        "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
-      },
-      "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:parallel-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "composite.parallel.component-evidence"
+      "taskType": "core.language-profile"
     },
     {
       "capabilitySlot": "quality",
@@ -616,68 +180,40 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:unicode:cldr-core"
         ]
       },
-      "evaluationKind": "resource-conformance",
+      "evaluationKind": "integrity",
       "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": [
-            "The required component graph provides generated Arabic quality evidence and coverage reports over the required local component graph."
-          ]
-        },
-        "resourceIds": []
+        "resourceIds": [
+          "ar-core-quality"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "qualityRequiredComponentGraphPresent",
+        "name": "recordsRejected",
         "operator": "eq",
-        "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:quality-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:transform-rejections:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.quality.component-evidence"
+      "taskType": "quality.transform-integrity"
     },
     {
-      "capabilitySlot": "search",
+      "capabilitySlot": "core",
       "dataset": {
         "languages": [
           "ar"
@@ -691,63 +227,135 @@
         "snapshotIds": [
           "snapshot:source:iana:language-subtag-registry:2026-05-05",
           "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:unicode:cldr-core:48.2.0"
         ],
         "sourceIds": [
           "source:iana:language-subtag-registry",
           "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "ar-core-punctuation"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "punctuationRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 396
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-core-profile",
+      "recordId": "eval:ar-core:unicode-punctuation-ranges:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "core.punctuation"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
+          "compatibilityCounts": {
+            "TABLE AB": 4332,
+            "TABLE AC": 1432,
+            "TABLE BC": 9059
+          }
         },
-        "resourceIds": []
+        "resourceIds": [
+          "ar-msa-camel-morph-compatibility"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-msa-morphology; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "searchRequiredComponentGraphPresent",
-        "operator": "eq",
+        "name": "compatibilityCount",
+        "operator": "gte",
         "threshold": 1,
-        "unit": "boolean",
-        "value": 1
+        "unit": "records",
+        "value": 14823
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:search-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:compatibility-tables:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.search.component-evidence"
+      "taskType": "morphology.compatibility"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "defaultFeatureCount": 1961,
+          "featureCount": 53
+        },
+        "resourceIds": [
+          "ar-msa-camel-morph-morphemes",
+          "ar-msa-camel-morph-features"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-msa-morphology; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "morphemeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "records",
+        "value": 203740
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:morpheme-inventory:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.lookup"
     },
     {
       "capabilitySlot": "segmentation",
@@ -762,68 +370,39 @@
           "Arab"
         ],
         "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
         ],
         "sourceIds": [
-          "source:iana:language-subtag-registry",
-          "source:unicode:ucd",
-          "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:camel:morph-msa-lrec-coling-2024"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
-        "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
-        },
-        "resourceIds": []
+        "resourceIds": [
+          "ar-msa-camel-segmentation-canonical"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "The built-in adapter executes Unicode lexical segmentation. CAMeL tokenization fields are separate morphology reference data, not an executed dictionary segmenter.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-msa-morphology; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "segmentationRequiredComponentGraphPresent",
+        "name": "segmentationProfilePresent",
         "operator": "eq",
         "threshold": 1,
         "unit": "boolean",
         "value": 1
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:segmentation-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:segmentation-profile:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.segmentation.component-evidence"
+      "taskType": "segmentation.unicode-profile"
     },
     {
-      "capabilitySlot": "syntax",
+      "capabilitySlot": "morphology",
       "dataset": {
         "languages": [
           "ar"
@@ -835,74 +414,1091 @@
           "Arab"
         ],
         "snapshotIds": [
-          "snapshot:source:iana:language-subtag-registry:2026-05-05",
-          "snapshot:source:unicode:ucd:17.0.0",
-          "snapshot:source:unicode:cldr-core:48.2.0",
-          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
-          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-          "snapshot:source:wikidata:main:20260608",
-          "snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06",
-          "snapshot:source:ud:arabic-nyuad:r2.18"
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
         ],
         "sourceIds": [
-          "source:iana:language-subtag-registry",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "resourceIds": [
+          "ar-msa-camel-morph-tokenizations"
+        ]
+      },
+      "limitations": [
+        "This verifies CAMeL Morph tokenization-field inventory only; the built-in segmentation adapter does not execute it as a dictionary or clitic segmenter.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-msa-morphology; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "tokenizationFieldCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "fields",
+        "value": 9
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:tokenization-fields:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.tokenization-scheme-data"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "ar-msa-camel-morph-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-msa-morphology; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "camel-morph-msa",
+      "recordId": "eval:ar-msa-camel-morph:transform-rejections:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
           "source:unicode:ucd",
           "source:unicode:cldr-core",
-          "source:camel:morph-msa-lrec-coling-2024",
-          "source:wordnet:arabic-v4.1.0",
-          "source:wikidata:main",
-          "source:tatoeba:weekly-arabic-2026-06-06",
-          "source:ud:arabic-nyuad-r2.18"
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "equivalenceClassCount": 2,
+          "observedFieldCount": 786971
+        },
+        "resourceIds": [
+          "ar-normalization-observed-codepoints",
+          "ar-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "observedEvidenceCodePointCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "codepoints",
+        "value": 8
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-normalization-profile",
+      "recordId": "eval:ar-normalization:camel-evidence-codepoints:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.source-evidence"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "ar-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "likelySubtag",
+        "operator": "eq",
+        "threshold": "ar-Arab-EG",
+        "unit": "tag",
+        "value": "ar-Arab-EG"
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-normalization-profile",
+      "recordId": "eval:ar-normalization:cldr-likely-subtag:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.locale-context"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "resourceIds": [
+          "ar-normalization-rules",
+          "ar-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "This verifies the generated Arabic MSA lookup normalization profile, not dialectal normalization, transliteration, spelling correction, OCR cleanup, or noisy-text normalization accuracy.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "ruleCount",
+        "operator": "gte",
+        "threshold": 7,
+        "unit": "rules",
+        "value": 10
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-normalization-profile",
+      "recordId": "eval:ar-normalization:profile-rules:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "ar-normalization-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-normalization-profile",
+      "recordId": "eval:ar-normalization:transform-rejections:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "normalization",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0",
+          "snapshot:source:unicode:cldr-core:48.2.0",
+          "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd",
+          "source:unicode:cldr-core",
+          "source:camel:morph-msa-lrec-coling-2024"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "ar-normalization-profile"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "nfcQuickCheckValueCount",
+        "operator": "gte",
+        "threshold": 3,
+        "unit": "aliases",
+        "value": 3
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-normalization-profile",
+      "recordId": "eval:ar-normalization:unicode-nfc-evidence:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "normalization.unicode-nfc-policy"
+    },
+    {
+      "capabilitySlot": "search",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
         ]
       },
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
-          "policySurface": "policy-expanded-wrapper",
-          "requiredComponents": [
-            "@ismail-elkorchi/textpack-foundation",
-            "@ismail-elkorchi/textpack-ar-core",
-            "@ismail-elkorchi/textpack-ar-normalization",
-            "@ismail-elkorchi/textpack-ar-segmentation",
-            "@ismail-elkorchi/textpack-ar-lexicon",
-            "@ismail-elkorchi/textpack-ar-morphology",
-            "@ismail-elkorchi/textpack-ar-syntax",
-            "@ismail-elkorchi/textpack-ar-kb",
-            "@ismail-elkorchi/textpack-ar-search",
-            "@ismail-elkorchi/textpack-ar-corpus",
-            "@ismail-elkorchi/textpack-ar-parallel",
-            "@ismail-elkorchi/textpack-ar-quality"
-          ],
-          "slotNotes": []
+          "analyzerProfileCount": 1,
+          "likelySubtag": "ar-Arab-EG"
         },
-        "resourceIds": []
+        "resourceIds": [
+          "ar-search-profile"
+        ]
       },
       "limitations": [
-        "Language-composite evidence verifies that the required generated component graph is present and policy-compatible; task-level metrics live in the component packs."
+        "This verifies the executable Unicode word and Arabic mark-normalization profile; morphology-aware tokenization, stemming, synonyms, persistent indexing, and ranking are outside its scope.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-search; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
       ],
       "metric": {
-        "name": "syntaxRequiredComponentGraphPresent",
+        "name": "analyzerProfilePresent",
         "operator": "eq",
         "threshold": 1,
         "unit": "boolean",
         "value": 1
       },
       "packageName": "@ismail-elkorchi/textpack-ar",
-      "pipelineId": "language-composite",
-      "recordId": "eval:textpack-ar:syntax-component-evidence",
-      "resourceSpecId": "tools/textpack-forge/composites/textpack-ar.composite.json",
+      "pipelineId": "arabic-search-profile",
+      "recordId": "eval:ar-search:analyzer-profile:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "composite.syntax.component-evidence"
+      "taskType": "search.analyzer-profile"
+    },
+    {
+      "capabilitySlot": "quality",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "resourceIds": [
+          "ar-search-quality"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ar-search; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "recordsRejected",
+        "operator": "eq",
+        "threshold": 0,
+        "unit": "records",
+        "value": 0
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-search-profile",
+      "recordId": "eval:ar-search:transform-rejections:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "quality.transform-integrity"
+    },
+    {
+      "capabilitySlot": "locale-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "cldrVersion": "48",
+          "unicodeVersion": "16.0.0"
+        },
+        "resourceIds": [
+          "cldr-48-likely-subtags",
+          "cldr-48-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "likelySubtagCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "mappings",
+        "value": 7788
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "cldr-core-foundation",
+      "recordId": "eval:cldr-core:likely-subtag-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "locale-profile.likely-subtags"
+    },
+    {
+      "capabilitySlot": "locale-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "cldr-48-locale-aliases",
+          "cldr-48-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "aliasCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "aliases",
+        "value": 1306
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "cldr-core-foundation",
+      "recordId": "eval:cldr-core:locale-alias-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "locale-profile.aliases"
+    },
+    {
+      "capabilitySlot": "locale-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:cldr-core:48.2.0"
+        ],
+        "sourceIds": [
+          "source:unicode:cldr-core"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "cldr-48-script-data",
+          "cldr-48-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-cldr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "scriptVariantCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "variants",
+        "value": 15
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "cldr-core-foundation",
+      "recordId": "eval:cldr-core:script-variant-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "locale-profile.script-variants"
+    },
+    {
+      "capabilitySlot": "language-registry",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "countsByType": {
+            "extlang": 258,
+            "grandfathered": 26,
+            "language": 8275,
+            "redundant": 67,
+            "region": 305,
+            "script": 225,
+            "variant": 139
+          },
+          "fileDate": "2026-05-05"
+        },
+        "resourceIds": [
+          "bcp47-language-subtags",
+          "bcp47-language-registry-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-language-registry; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "recordCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "records",
+        "value": 9295
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "iana-language-registry",
+      "recordId": "eval:language-registry:bcp47-record-volume:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "language-registry.bcp47"
+    },
+    {
+      "capabilitySlot": "language-registry",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:iana:language-subtag-registry:2026-05-05"
+        ],
+        "sourceIds": [
+          "source:iana:language-subtag-registry"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "deprecatedRecordCount": 299
+        },
+        "resourceIds": [
+          "bcp47-language-subtags",
+          "bcp47-language-registry-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-language-registry; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "registryTypeCount",
+        "operator": "gte",
+        "threshold": 7,
+        "unit": "types",
+        "value": 7
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "iana-language-registry",
+      "recordId": "eval:language-registry:bcp47-type-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "language-registry.type-coverage"
+    },
+    {
+      "capabilitySlot": "unicode-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "version": "17.0.0"
+        },
+        "resourceIds": [
+          "unicode-17-blocks",
+          "unicode-17-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "blockRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 346
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "unicode-17-core",
+      "recordId": "eval:unicode-17:block-range-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "unicode-profile.blocks"
+    },
+    {
+      "capabilitySlot": "unicode-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "unicode-17-property-value-aliases",
+          "unicode-17-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "propertyValueAliasCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "aliases",
+        "value": 1194
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "unicode-17-core",
+      "recordId": "eval:unicode-17:property-alias-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "unicode-profile.property-aliases"
+    },
+    {
+      "capabilitySlot": "unicode-profile",
+      "dataset": {
+        "modalities": [
+          "typed"
+        ],
+        "snapshotIds": [
+          "snapshot:source:unicode:ucd:17.0.0"
+        ],
+        "sourceIds": [
+          "source:unicode:ucd"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "resourceIds": [
+          "unicode-17-scripts",
+          "unicode-17-core-summary"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-unicode-17; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "scriptRangeCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "ranges",
+        "value": 2287
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "unicode-17-core",
+      "recordId": "eval:unicode-17:script-range-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "unicode-profile.scripts"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "aliasRowCount": 2776,
+          "entityRowCount": 3009
+        },
+        "resourceIds": [
+          "wikidata-ar-aliases"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "aliasRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 2776
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-ar:alias-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-aliases"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "endpoint": "https://query.wikidata.org/sparql",
+          "extractId": "wikidata-ar-core-entity-extract-20260612",
+          "version": "20260608"
+        },
+        "resourceIds": [
+          "wikidata-ar-entities",
+          "wikidata-ar-kb-canonical"
+        ]
+      },
+      "limitations": [
+        "The Wikidata Arabic extract is scoped to declared core entity classes and thresholds; it is not a full Wikidata dump.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "entityRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 3009
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-ar:entity-extract:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-extract"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wikidata:main:20260608"
+        ],
+        "sourceIds": [
+          "source:wikidata:main"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "relationRowCount": 3009
+        },
+        "resourceIds": [
+          "wikidata-ar-relations"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wikidata-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "relationRowCount",
+        "operator": "gte",
+        "threshold": 1000,
+        "unit": "rows",
+        "value": 3009
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "wikidata-main-artifact",
+      "recordId": "eval:wikidata-ar:relation-coverage:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.entity-relations"
+    },
+    {
+      "capabilitySlot": "lexicon",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+        ],
+        "sourceIds": [
+          "source:wordnet:arabic-v4.1.0"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "senseCount": 184238,
+          "synsetCount": 120630
+        },
+        "resourceIds": [
+          "wordnet-ar-lexical-entries"
+        ]
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "lexicalEntryCount",
+        "operator": "gte",
+        "threshold": 1,
+        "unit": "entries",
+        "value": 136041
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-wordnet-lmf",
+      "recordId": "eval:wordnet-ar:lexical-entry-volume:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "lexicon.lookup"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+        ],
+        "sourceIds": [
+          "source:wordnet:arabic-v4.1.0"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "relationCount": 297150,
+          "relationsWithKnownEndpoints": 297150
+        },
+        "resourceIds": [
+          "wordnet-ar-relations"
+        ],
+        "sampleSize": 297150
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "relationEndpointCoverageRatio",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "ratio",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-wordnet-lmf",
+      "recordId": "eval:wordnet-ar:relation-endpoints:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.semantic-relations"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+        ],
+        "sourceIds": [
+          "source:wordnet:arabic-v4.1.0"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "sensesWithKnownEntry": 184238
+        },
+        "resourceIds": [
+          "wordnet-ar-lexical-entries",
+          "wordnet-ar-senses"
+        ],
+        "sampleSize": 184238
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "senseEntryCoverageRatio",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "ratio",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-wordnet-lmf",
+      "recordId": "eval:wordnet-ar:sense-entry-links:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.sense-linking"
+    },
+    {
+      "capabilitySlot": "kb",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+        ],
+        "sourceIds": [
+          "source:wordnet:arabic-v4.1.0"
+        ]
+      },
+      "evaluationKind": "resource-conformance",
+      "evidence": {
+        "observations": {
+          "sensesWithKnownSynset": 184238
+        },
+        "resourceIds": [
+          "wordnet-ar-senses",
+          "wordnet-ar-synsets"
+        ],
+        "sampleSize": 184238
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "senseSynsetCoverageRatio",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "ratio",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-wordnet-lmf",
+      "recordId": "eval:wordnet-ar:sense-synset-links:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "kb.synset-linking"
     }
   ],
-  "resourceSpecIds": [],
+  "resourceSpecIds": [
+    "resource-spec:textpack-language-registry:iana-bcp47",
+    "resource-spec:textpack-unicode-17:ucd-core",
+    "resource-spec:textpack-cldr-core:cldr-core",
+    "resource-spec:textpack-ar-core:arabic-core-profile",
+    "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+    "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+    "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+    "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+    "resource-spec:textpack-ar-search:arabic-search-profile"
+  ],
   "schemaVersion": "1",
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 12,
-    "recordCount": 12,
+    "passCount": 32,
+    "recordCount": 32,
     "status": "passed",
     "warningCount": 0
   }
