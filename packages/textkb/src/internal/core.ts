@@ -220,6 +220,10 @@ function normalizeAliasText(text: string): string {
 	return nfkcCaseFold(text).replace(/\s+/gu, " ").trim();
 }
 
+export function normalizeKnowledgeBaseMention(text: string): string {
+	return normalizeAliasText(text);
+}
+
 function normalizedTextTokens(text: string): readonly string[] {
 	const normalized = normalizeAliasText(text);
 	if (normalized.length === 0) return [];

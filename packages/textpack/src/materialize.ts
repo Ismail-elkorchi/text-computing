@@ -47,6 +47,7 @@ const utf8Decoder = new TextDecoder("utf-8", { fatal: true });
 
 interface ResourceMaterializationCache {
 	readonly json: Map<string, Promise<unknown>>;
+	readonly storageText: Map<string, Promise<string>>;
 	readonly tables: Map<string, Promise<TextPackMaterializedTable>>;
 	readonly text: Map<string, Promise<string>>;
 }
@@ -64,6 +65,7 @@ const materializationCaches = new WeakMap<object, PackMaterializationCache>();
 function createResourceMaterializationCache(): ResourceMaterializationCache {
 	return {
 		json: new Map(),
+		storageText: new Map(),
 		tables: new Map(),
 		text: new Map(),
 	};
@@ -315,26 +317,82 @@ async function readFileBackedText(
 	return decodeResourceText(descriptor, encodedText);
 }
 
+function physicalStorageKey(descriptor: TextPackFileBackedResource): string {
+	return JSON.stringify([
+		descriptor.packageName ?? "",
+		descriptor.packageRoot ?? "",
+		descriptor.path,
+		descriptor.encoding,
+		descriptor.checksum,
+		descriptor.byteLength,
+	]);
+}
+
+function linkedLookupIndexResourceId(
+	pack: TextPack,
+	resource: TextPackResource,
+): string | undefined {
+	if (
+		resource.format !== "textpack-indexed-table-v2" ||
+		resource.schemaId === "textpack.lookup-index.v2"
+	) {
+		return undefined;
+	}
+	const matches = pack.manifest.resources.filter((candidate) => {
+		if (
+			candidate.schemaId !== "textpack.lookup-index.v2" ||
+			candidate.format !== "textpack-indexed-table-v2" ||
+			candidate.path !== resource.path ||
+			!isRecord(candidate.metadata)
+		) {
+			return false;
+		}
+		return candidate.metadata.indexedResourceId === resource.id;
+	});
+	if (matches.length !== 1) {
+		throw new TypeError(
+			`Textpack indexed table ${resource.id} must have exactly one linked lookup-index view.`,
+		);
+	}
+	return matches[0]?.id;
+}
+
 export async function openResourceText(
 	pack: TextPack,
 	resourceId: string,
 	reader?: TextPackResourceReader,
 ): Promise<string> {
-	return cachedMaterialization(
-		materializationCache(pack, reader).text,
-		resourceId,
-		() => {
-			const descriptor = resourceDescriptor(pack, resourceId);
-			const value = getResource(pack, resourceId);
-			if (typeof value === "string") return value;
-			if (isFileBackedResource(value)) {
-				return readFileBackedText(pack, descriptor, value, reader);
-			}
+	const cache = materializationCache(pack, reader);
+	return cachedMaterialization(cache.text, resourceId, async () => {
+		const descriptor = resourceDescriptor(pack, resourceId);
+		const value = getResource(pack, resourceId);
+		let text: string | undefined;
+		if (typeof value === "string") text = value;
+		if (isFileBackedResource(value)) {
+			text = await cachedMaterialization(
+				cache.storageText,
+				physicalStorageKey(value),
+				() => readFileBackedText(pack, descriptor, value, reader),
+			);
+		} else if (typeof value !== "string") {
 			throw new TypeError(
 				`Textpack resource ${resourceId} is not text-backed.`,
 			);
-		},
-	);
+		}
+		if (text === undefined) {
+			throw new TypeError(`Textpack resource ${resourceId} could not be read.`);
+		}
+		const indexResourceId = linkedLookupIndexResourceId(pack, descriptor);
+		if (indexResourceId === undefined) return text;
+		const { openResourceLookupIndex } = await import("./lookup-index.js");
+		const index = await openResourceLookupIndex(
+			pack,
+			resourceId,
+			indexResourceId,
+			reader,
+		);
+		return index.sourceText();
+	});
 }
 
 export async function openResourceJson<T = unknown>(

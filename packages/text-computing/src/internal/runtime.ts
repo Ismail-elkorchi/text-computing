@@ -8,14 +8,15 @@ import {
 	udAnnotationRecordsFromPackAsync,
 	udSyntaxResourcesFromPackAsync,
 } from "@ismail-elkorchi/textdata";
-import type { TextDocument } from "@ismail-elkorchi/textdoc";
+import type { SpanRef, TextDocument } from "@ismail-elkorchi/textdoc";
 import {
+	candidateEntities,
 	candidateEntitiesFromPack,
-	createKnowledgeBase,
 	type EntityLinkOptions,
-	type KnowledgeBase,
-	knowledgeBaseFromPack,
+	knowledgeBaseMentionKeyLengthsFromPack,
+	knowledgeBaseSliceFromPack,
 	linkEntities,
+	normalizeKnowledgeBaseMention,
 } from "@ismail-elkorchi/textkb";
 import {
 	type LookupOptions,
@@ -23,7 +24,9 @@ import {
 	type MorphologyGeneration,
 	type MorphologyIndex,
 	morphologyAnalysesManyFromPackAsync,
+	morphologyGenerationsFromPackAsync,
 	morphologyIndexFromPackAsync,
+	morphologyParadigmsFromPackAsync,
 } from "@ismail-elkorchi/textlex";
 import {
 	type CompiledTextNormProfile,
@@ -82,6 +85,234 @@ type UdAnnotationDataset = Awaited<
 
 function readerOptions(reader: TextPackResourceReader | undefined) {
 	return reader === undefined ? {} : { reader };
+}
+
+function entityLinkingView(doc: TextDocument, viewId: string | undefined) {
+	if (viewId !== undefined) {
+		const view = doc.views[viewId];
+		if (view === undefined) {
+			throw new TypeError(`Document ${doc.id} has no view ${viewId}.`);
+		}
+		return view;
+	}
+	const raw = doc.views.raw;
+	if (raw !== undefined) return raw;
+	const roots = Object.values(doc.views).filter(
+		(view) => view.sourceViewId === undefined,
+	);
+	if (roots.length !== 1) {
+		throw new TypeError(
+			`Document ${doc.id} requires an explicit entity-linking view.`,
+		);
+	}
+	return roots[0] as (typeof roots)[number];
+}
+
+function spanMention(
+	doc: TextDocument,
+	ref: {
+		readonly viewId: string;
+		readonly span: {
+			readonly start: number;
+			readonly end: number;
+			readonly unit: string;
+		};
+	},
+	strict = false,
+): string | undefined {
+	const view = doc.views[ref.viewId];
+	if (
+		view === undefined ||
+		ref.span.unit !== "utf16-code-unit" ||
+		!Number.isInteger(ref.span.start) ||
+		!Number.isInteger(ref.span.end) ||
+		ref.span.start < 0 ||
+		ref.span.end <= ref.span.start ||
+		ref.span.end > view.text.length
+	) {
+		if (strict) {
+			throw new TypeError(
+				`Entity mention span for view ${ref.viewId} must be a valid non-empty utf16-code-unit range.`,
+			);
+		}
+		return undefined;
+	}
+	return view.text.slice(ref.span.start, ref.span.end).trim();
+}
+
+function annotationValueMention(value: unknown): string | undefined {
+	if (typeof value === "string" && value.length > 0) return value;
+	if (value === null || typeof value !== "object" || Array.isArray(value)) {
+		return undefined;
+	}
+	const record = value as Readonly<Record<string, unknown>>;
+	for (const key of ["text", "term", "label", "canonical", "lemma"]) {
+		const candidate = record[key];
+		if (typeof candidate === "string" && candidate.length > 0) {
+			return candidate;
+		}
+	}
+	return undefined;
+}
+
+interface DocumentMentionCandidate {
+	readonly text: string;
+	readonly ref: SpanRef;
+}
+
+function nextCodePointBoundary(text: string, offset: number): number {
+	const codePoint = text.codePointAt(offset);
+	return offset + (codePoint !== undefined && codePoint > 0xffff ? 2 : 1);
+}
+
+function codePointAtOffset(text: string, offset: number): string | undefined {
+	if (offset < 0 || offset >= text.length) return undefined;
+	const codePoint = text.codePointAt(offset);
+	return codePoint === undefined ? undefined : String.fromCodePoint(codePoint);
+}
+
+function codePointBeforeOffset(
+	text: string,
+	offset: number,
+): string | undefined {
+	if (offset <= 0 || offset > text.length) return undefined;
+	const low = text.charCodeAt(offset - 1);
+	return codePointAtOffset(
+		text,
+		low >= 0xdc00 && low <= 0xdfff ? offset - 2 : offset - 1,
+	);
+}
+
+function isEntityWordCharacter(value: string | undefined): boolean {
+	return value !== undefined && /^[\p{L}\p{N}_]$/u.test(value);
+}
+
+function documentMentionCandidates(
+	text: string,
+	viewId: string,
+	codePointLengths: readonly number[],
+	maxEditDistance: number,
+): readonly DocumentMentionCandidate[] {
+	if (codePointLengths.length === 0) return Object.freeze([]);
+	const maximumLength = (codePointLengths.at(-1) ?? 0) + maxEditDistance;
+	const candidates: DocumentMentionCandidate[] = [];
+	for (
+		let start = 0;
+		start < text.length;
+		start = nextCodePointBoundary(text, start)
+	) {
+		if (/^\p{White_Space}$/u.test(codePointAtOffset(text, start) ?? "")) {
+			continue;
+		}
+		if (isEntityWordCharacter(codePointBeforeOffset(text, start))) continue;
+		for (
+			let end = nextCodePointBoundary(text, start);
+			end <= text.length;
+			end = nextCodePointBoundary(text, end)
+		) {
+			if (/^\p{White_Space}$/u.test(codePointBeforeOffset(text, end) ?? "")) {
+				continue;
+			}
+			const mention = text.slice(start, end);
+			const normalizedLength = Array.from(
+				normalizeKnowledgeBaseMention(mention),
+			).length;
+			if (normalizedLength > maximumLength) break;
+			if (
+				normalizedLength > 0 &&
+				!isEntityWordCharacter(codePointAtOffset(text, end)) &&
+				codePointLengths.some(
+					(length) => Math.abs(length - normalizedLength) <= maxEditDistance,
+				)
+			) {
+				candidates.push(
+					Object.freeze({
+						text: mention,
+						ref: Object.freeze({
+							viewId,
+							span: Object.freeze({
+								start,
+								end,
+								unit: "utf16-code-unit" as const,
+							}),
+						}),
+					}),
+				);
+			}
+			if (end === text.length) break;
+		}
+	}
+	return Object.freeze(candidates);
+}
+
+function nonOverlappingFuzzyMentionSpans(
+	candidates: readonly DocumentMentionCandidate[],
+	kb: Parameters<typeof candidateEntities>[0],
+	options: EntityLinkOptions,
+): readonly SpanRef[] {
+	const fuzzy = candidates.filter((candidate) => {
+		const matches = candidateEntities(kb, candidate.text, options);
+		return (
+			matches.length > 0 &&
+			matches.every((match) => match.matchKind === "fuzzy")
+		);
+	});
+	const selected: DocumentMentionCandidate[] = [];
+	for (const candidate of [...fuzzy].sort(
+		(left, right) =>
+			right.ref.span.end -
+				right.ref.span.start -
+				(left.ref.span.end - left.ref.span.start) ||
+			left.ref.span.start - right.ref.span.start,
+	)) {
+		if (
+			selected.some(
+				(existing) =>
+					existing.ref.span.start < candidate.ref.span.end &&
+					candidate.ref.span.start < existing.ref.span.end,
+			)
+		) {
+			continue;
+		}
+		selected.push(candidate);
+	}
+	return Object.freeze(
+		selected
+			.sort((left, right) => left.ref.span.start - right.ref.span.start)
+			.map((candidate) => candidate.ref),
+	);
+}
+
+function annotatedEntityMentions(
+	doc: TextDocument,
+	options: EntityLinkOptions,
+): readonly string[] {
+	const layerIds = new Set(options.sourceLayerIds ?? []);
+	const mentions = new Set<string>();
+	if (options.mentionSource !== "aliases") {
+		for (const layer of Object.values(doc.layers)) {
+			if (
+				layerIds.size > 0
+					? !layerIds.has(layer.id)
+					: !layer.id.startsWith("entity.") && !layer.type.startsWith("entity.")
+			) {
+				continue;
+			}
+			for (const annotation of Object.values(layer.annotations)) {
+				const mention =
+					annotationValueMention(annotation.value) ??
+					annotation.spans
+						.map((ref) => spanMention(doc, ref))
+						.find((value) => value !== undefined && value.length > 0);
+				if (mention !== undefined) mentions.add(mention);
+			}
+		}
+	}
+	for (const ref of options.mentionSpans ?? []) {
+		const mention = spanMention(doc, ref, true);
+		if (mention !== undefined && mention.length > 0) mentions.add(mention);
+	}
+	return Object.freeze([...mentions]);
 }
 
 async function createMergedMorphologyIndex(
@@ -157,43 +388,6 @@ async function createMergedMorphologyIndex(
 	});
 }
 
-async function createMergedKnowledgeBase(
-	pack: TextPack,
-	reader: TextPackResourceReader | undefined,
-): Promise<KnowledgeBase> {
-	const resourceIds = taskResourceIdsFromBindings(pack, {
-		slot: "kb",
-		ownerPackage: "@ismail-elkorchi/textkb",
-		schemaId: "textkb.knowledge-base.v1",
-		role: "primary",
-	});
-	const bases = await Promise.all(
-		resourceIds.map((resourceId) =>
-			knowledgeBaseFromPack(pack, {
-				...readerOptions(reader),
-				resourceId,
-			}),
-		),
-	);
-	if (bases.length === 1 && bases[0] !== undefined) return bases[0];
-	return createKnowledgeBase({
-		id: `${pack.manifest.id}:kb`,
-		entities: bases.flatMap((base) => Object.values(base.entities.records)),
-		concepts: bases.flatMap((base) => Object.values(base.concepts.records)),
-		senses: bases.flatMap((base) => Object.values(base.senses.records)),
-		relations: bases.flatMap((base) => Object.values(base.relations.records)),
-		aliases: bases.flatMap((base) =>
-			Object.values(base.aliases.entries).flat(),
-		),
-		metadata: {
-			packageName: pack.manifest.packageName,
-			resourceIds,
-			schemaId: "textkb.knowledge-base.v1",
-		},
-		allowExternalRelationEndpoints: true,
-	});
-}
-
 function mergedQualityProfile(
 	pack: TextPack,
 	profiles: readonly QualityProfile[],
@@ -264,7 +458,10 @@ export function createTextComputingNlp(
 		| Promise<readonly UdAnnotationRecord[]>
 		| undefined;
 	let syntaxDatasetPromise: Promise<UdAnnotationDataset> | undefined;
-	let kbPromise: Promise<KnowledgeBase> | undefined;
+	const kbMentionLengthsPromises = new Map<
+		string,
+		ReturnType<typeof knowledgeBaseMentionKeyLengthsFromPack>
+	>();
 	let analyzerPromise: Promise<Analyzer> | undefined;
 	let qualityResourcesPromise:
 		| Promise<readonly TextQualityPackResource[]>
@@ -295,10 +492,24 @@ export function createTextComputingNlp(
 		);
 		return morphologyPromise;
 	};
-	const openKb = () => {
-		assertRunnableTask(pack, "kb");
-		kbPromise ??= createMergedKnowledgeBase(pack, reader);
-		return kbPromise;
+	const openKbMentionLengths = (language: string) => {
+		const cached = kbMentionLengthsPromises.get(language);
+		if (cached !== undefined) return cached;
+		const pending = knowledgeBaseMentionKeyLengthsFromPack(pack, {
+			...readerOptions(reader),
+			language,
+		});
+		if (kbMentionLengthsPromises.size >= 8) {
+			const oldest = kbMentionLengthsPromises.keys().next().value;
+			if (oldest !== undefined) kbMentionLengthsPromises.delete(oldest);
+		}
+		kbMentionLengthsPromises.set(language, pending);
+		void pending.catch(() => {
+			if (kbMentionLengthsPromises.get(language) === pending) {
+				kbMentionLengthsPromises.delete(language);
+			}
+		});
+		return pending;
 	};
 	const openAnalyzer = () => {
 		assertRunnableTask(pack, "search");
@@ -425,12 +636,23 @@ export function createTextComputingNlp(
 					lemma: string,
 					features?: Readonly<Record<string, string>>,
 					options: { readonly maxResults?: number } = {},
-				) =>
-					openMorphology().then((index) =>
-						index.generate(lemma, features, options),
-					),
-				paradigms: (lemma?: string) =>
-					openMorphology().then((index) => index.paradigms(lemma)),
+				) => {
+					assertRunnableTask(pack, "morphology");
+					return morphologyGenerationsFromPackAsync(pack, lemma, features, {
+						...readerOptions(reader),
+						...(options.maxResults === undefined
+							? {}
+							: { maxResults: options.maxResults }),
+					});
+				},
+				paradigms: (lemma?: string) => {
+					assertRunnableTask(pack, "morphology");
+					return lemma === undefined
+						? openMorphology().then((index) => index.paradigms())
+						: morphologyParadigmsFromPackAsync(pack, lemma, {
+								...readerOptions(reader),
+							});
+				},
 			}),
 			syntax: Object.freeze({
 				resources() {
@@ -468,8 +690,55 @@ export function createTextComputingNlp(
 						language: options.language ?? languageTag,
 					});
 				},
-				linkEntities: (doc: TextDocument, options: EntityLinkOptions = {}) =>
-					openKb().then((kb) => linkEntities(doc, kb, options)),
+				linkEntities: async (
+					doc: TextDocument,
+					options: EntityLinkOptions = {},
+				) => {
+					assertRunnableTask(pack, "kb");
+					const maxEditDistance = options.maxEditDistance ?? 0;
+					if (!Number.isSafeInteger(maxEditDistance) || maxEditDistance < 0) {
+						throw new TypeError(
+							"maxEditDistance must be a non-negative safe integer.",
+						);
+					}
+					const mentions = new Set(annotatedEntityMentions(doc, options));
+					let documentCandidates: readonly DocumentMentionCandidate[] = [];
+					if (options.mentionSource !== "annotations") {
+						const view = entityLinkingView(doc, options.viewId);
+						const mentionLengths = await openKbMentionLengths(
+							options.language ?? languageTag,
+						);
+						documentCandidates = documentMentionCandidates(
+							view.text,
+							view.id,
+							mentionLengths.codePointLengths,
+							maxEditDistance,
+						);
+						for (const candidate of documentCandidates) {
+							mentions.add(candidate.text);
+						}
+					}
+					const kb = await knowledgeBaseSliceFromPack(pack, {
+						...readerOptions(reader),
+						mentions: [...mentions],
+						language: options.language ?? languageTag,
+						...(options.maxEditDistance === undefined
+							? {}
+							: { maxEditDistance: options.maxEditDistance }),
+					});
+					const fuzzyMentionSpans = nonOverlappingFuzzyMentionSpans(
+						documentCandidates,
+						kb,
+						options,
+					);
+					return linkEntities(doc, kb, {
+						...options,
+						mentionSpans: [
+							...(options.mentionSpans ?? []),
+							...fuzzyMentionSpans,
+						],
+					});
+				},
 			}),
 			search: Object.freeze({
 				analyze: (text: string) =>

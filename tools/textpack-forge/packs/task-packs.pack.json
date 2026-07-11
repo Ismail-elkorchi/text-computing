@@ -1594,14 +1594,14 @@
 			"description": "Source-backed English lookup morphology generated from SCOWLv2.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Exact SCOWLv2 scowl.txt rich text export from rel-2026.02.25 transformed into POS inventory, inflection table, compressed form-to-lemma lookup analyzer, compressed lemma-to-form lookup generator, canonical lexicon, canonical morphology, and quality resources. The medium npm resources are the compressed lookup tables required for this source-specific scope.",
+				"productionGradeSourceCoverage": "Exact SCOWLv2 scowl.txt rich text export from rel-2026.02.25 transformed into one compressed inflection table indexed by form and lemma, a POS inventory, canonical lexicon and morphology metadata, and quality resources.",
 				"auditedLicense": "The SCOWLv2 source row is approved; package-local LICENSE.generated.md includes the pinned Copyright evidence file.",
 				"declaredScope": "English SCOWLv2 lookup morphology component: form-to-lemma analysis, lemma-to-form generation candidates, POS inventory, and inflection inventory over the pinned SCOWLv2 release. It does not claim finite-state analysis, context disambiguation, corpus-frequency morphology, syntax, corpus, parallel, or language-composite coverage.",
 				"conformanceEvidence": [
 					"eval:en-scowl-inflection:lemma-volume",
 					"eval:en-scowl-inflection:derived-form-volume",
-					"eval:en-scowl-inflection:lookup-analyzer-volume",
-					"eval:en-scowl-inflection:lookup-generator-volume",
+					"eval:en-scowl-inflection:indexed-analysis-volume",
+					"eval:en-scowl-inflection:indexed-generation-volume",
 					"eval:en-scowl-inflection:pos-inventory",
 					"eval:en-scowl-inflection:transform-rejections"
 				],
@@ -1656,24 +1656,6 @@
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
-						"id": "en-scowl-lookup-analyzer",
-						"kind": "morphology",
-						"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
-						"format": "tsv+gzip+base64",
-						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
-						"schemaId": "textlex.morphology.rows.v1"
-					},
-					{
-						"id": "en-scowl-lookup-generator",
-						"kind": "morphology",
-						"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
-						"format": "tsv+gzip+base64",
-						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
-						"schemaId": "textlex.morphology.rows.v1"
-					},
-					{
 						"id": "en-scowl-inflection-lexicon-canonical",
 						"kind": "lexicon",
 						"path": "resources/scowl-v2.lexicon.json",
@@ -1717,8 +1699,6 @@
 						"tier": "lookup",
 						"resourceIds": [
 							"en-scowl-inflection-entries",
-							"en-scowl-lookup-analyzer",
-							"en-scowl-lookup-generator",
 							"en-scowl-pos-inventory",
 							"en-scowl-inflection-morphology-canonical"
 						],
@@ -1726,7 +1706,7 @@
 							"morphology": "lookup"
 						},
 						"notes": [
-							"SCOWLv2 form-to-lemma lookup analysis and lemma-to-form lookup generation candidates are available as generated compressed table resources."
+							"One SCOWLv2 inflection table serves targeted form-to-lemma analysis and lemma-to-form generation through its form-and-lemma lookup index."
 						]
 					},
 					{
@@ -4164,13 +4144,13 @@
 			"description": "Source-backed share-alike isolated French UniMorph inflection and paradigm resources.",
 			"publishable": true,
 			"publishabilityEvidence": {
-				"productionGradeSourceCoverage": "Pinned UniMorph French repository commit f672f8cceb2d5f5a1e2241b5622c8845f8274635 transformed into compressed paradigm rows, lookup analyzer/generator tables, feature inventory, canonical morphology resources, quality profile, coverage report, and evaluation records.",
+				"productionGradeSourceCoverage": "Pinned UniMorph French repository commit f672f8cceb2d5f5a1e2241b5622c8845f8274635 transformed into one compressed paradigm table indexed by form and lemma, feature inventories, canonical morphology metadata, a quality profile, and evaluation records.",
 				"auditedLicense": "The exact UniMorph French source row is approved as share-alike isolated; this package uses the required -sa suffix and package reports cite the upstream README plus CC-BY-SA-3.0 evidence.",
-				"declaredScope": "French UniMorph share-alike isolated component: lemma/form paradigm rows, source UniMorph feature bundles, lookup analyzer/generator tables, canonical morphology metadata, and quality evidence. It does not claim default-composite eligibility, context-disambiguating morphology, finite-state morphology, syntax parsing, corpus coverage, parallel data, or full French language-composite coverage.",
+				"declaredScope": "French UniMorph share-alike isolated component: lemma/form paradigm rows indexed for targeted analysis and generation, source UniMorph feature bundles, canonical morphology metadata, and quality evidence. It does not claim default-composite eligibility, context-disambiguating morphology, finite-state morphology, syntax parsing, corpus coverage, parallel data, or full French language-composite coverage.",
 				"conformanceEvidence": [
 					"eval:fr-unimorph:entry-volume",
-					"eval:fr-unimorph:lookup-analyzer-volume",
-					"eval:fr-unimorph:lookup-generator-volume",
+					"eval:fr-unimorph:indexed-analysis-volume",
+					"eval:fr-unimorph:indexed-generation-volume",
 					"eval:fr-unimorph:feature-inventory",
 					"eval:fr-unimorph:transform-rejections"
 				],
@@ -4210,28 +4190,6 @@
 						"id": "fr-unimorph-paradigms",
 						"kind": "morphology",
 						"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
-						"format": "tsv+gzip+base64",
-						"license": "CC-BY-SA-3.0",
-						"citations": [
-							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						],
-						"schemaId": "textlex.morphology.rows.v1"
-					},
-					{
-						"id": "fr-unimorph-lookup-analyzer",
-						"kind": "morphology",
-						"path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
-						"format": "tsv+gzip+base64",
-						"license": "CC-BY-SA-3.0",
-						"citations": [
-							"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-						],
-						"schemaId": "textlex.morphology.rows.v1"
-					},
-					{
-						"id": "fr-unimorph-lookup-generator",
-						"kind": "morphology",
-						"path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "CC-BY-SA-3.0",
 						"citations": [
@@ -4302,8 +4260,6 @@
 						"tier": "lookup",
 						"resourceIds": [
 							"fr-unimorph-paradigms",
-							"fr-unimorph-lookup-analyzer",
-							"fr-unimorph-lookup-generator",
 							"fr-unimorph-feature-inventory",
 							"fr-unimorph-pos-inventory",
 							"fr-unimorph-morphology-canonical"
@@ -4312,7 +4268,7 @@
 							"morphology": "paradigm-table"
 						},
 						"notes": [
-							"UniMorph French lemma/form paradigms, feature bundles, lookup analyzer rows, and lookup generator rows are available under the share-alike policy surface."
+							"One UniMorph French paradigm table serves targeted form analysis and lemma generation through its form-and-lemma lookup index."
 						]
 					},
 					{

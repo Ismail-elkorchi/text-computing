@@ -962,72 +962,21 @@
       "evaluationKind": "coverage",
       "evidence": {
         "observations": {
-          "inflectionRowCount": 401709,
-          "lookupAnalyzerRowCount": 401709,
-          "lookupGeneratorRowCount": 401709,
-          "uniqueFormCount": 358236
-        },
-        "resourceIds": [
-          "en-scowl-inflection-entries",
-          "en-scowl-inflection-morphology-canonical"
-        ]
-      },
-      "limitations": [
-        "This verifies SCOWLv2 POS and inflection inventory volume; lookup analysis and generation are source-scope candidate tables, not context-disambiguating morphology.",
-        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-inflection-scowl; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
-      ],
-      "metric": {
-        "name": "uniqueLemmaCount",
-        "operator": "gte",
-        "threshold": 100000,
-        "unit": "lemmas",
-        "value": 204268
-      },
-      "packageName": "@ismail-elkorchi/textpack-en",
-      "pipelineId": "scowl-v2-inflection",
-      "recordId": "eval:en-scowl-inflection:lemma-volume:distribution:textpack-en",
-      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "result": "pass",
-      "schemaVersion": "1",
-      "taskType": "morphology.inflection-inventory",
-      "tier": "lookup"
-    },
-    {
-      "capabilitySlot": "morphology",
-      "dataset": {
-        "languages": [
-          "en"
-        ],
-        "modalities": [
-          "typed"
-        ],
-        "scripts": [
-          "Latn"
-        ],
-        "snapshotIds": [
-          "snapshot:source:scowl:v2-rel-2026.02.25"
-        ],
-        "sourceIds": [
-          "source:scowl:v2-rel-2026-02-25"
-        ]
-      },
-      "evaluationKind": "coverage",
-      "evidence": {
-        "observations": {
           "uniqueFormCount": 358236,
           "uniqueLemmaCount": 204268
         },
         "resourceIds": [
-          "en-scowl-lookup-analyzer",
+          "en-scowl-inflection-entries",
+          "en-scowl-inflection-entries-lookup-index",
           "en-scowl-inflection-morphology-canonical"
         ]
       },
       "limitations": [
-        "Lookup analyzer rows return SCOWLv2 candidate lemmas and POS metadata; they do not perform context disambiguation.",
+        "Indexed form lookup over the canonical SCOWLv2 inflection rows returns candidate lemmas and POS metadata; it does not perform context disambiguation.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-en-inflection-scowl; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
       ],
       "metric": {
-        "name": "lookupAnalyzerRowCount",
+        "name": "analysisCandidateRowCount",
         "operator": "gte",
         "threshold": 100000,
         "unit": "rows",
@@ -1035,7 +984,7 @@
       },
       "packageName": "@ismail-elkorchi/textpack-en",
       "pipelineId": "scowl-v2-inflection",
-      "recordId": "eval:en-scowl-inflection:lookup-analyzer-volume:distribution:textpack-en",
+      "recordId": "eval:en-scowl-inflection:indexed-analysis-volume:distribution:textpack-en",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
@@ -1068,16 +1017,17 @@
           "uniqueLemmaCount": 204268
         },
         "resourceIds": [
-          "en-scowl-lookup-generator",
+          "en-scowl-inflection-entries",
+          "en-scowl-inflection-entries-lookup-index",
           "en-scowl-inflection-morphology-canonical"
         ]
       },
       "limitations": [
-        "Lookup generator rows return SCOWLv2 candidate forms for a lemma; they do not rank forms by corpus frequency or context.",
+        "Indexed lemma lookup over the canonical SCOWLv2 inflection rows returns candidate forms; it does not rank forms by corpus frequency or context.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-en-inflection-scowl; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
       ],
       "metric": {
-        "name": "lookupGeneratorRowCount",
+        "name": "generationCandidateRowCount",
         "operator": "gte",
         "threshold": 100000,
         "unit": "rows",
@@ -1085,11 +1035,63 @@
       },
       "packageName": "@ismail-elkorchi/textpack-en",
       "pipelineId": "scowl-v2-inflection",
-      "recordId": "eval:en-scowl-inflection:lookup-generator-volume:distribution:textpack-en",
+      "recordId": "eval:en-scowl-inflection:indexed-generation-volume:distribution:textpack-en",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
       "taskType": "morphology.lookup-generator",
+      "tier": "lookup"
+    },
+    {
+      "capabilitySlot": "morphology",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:scowl:v2-rel-2026.02.25"
+        ],
+        "sourceIds": [
+          "source:scowl:v2-rel-2026-02-25"
+        ]
+      },
+      "evaluationKind": "coverage",
+      "evidence": {
+        "observations": {
+          "analysisCandidateRowCount": 401709,
+          "generationCandidateRowCount": 401709,
+          "inflectionRowCount": 401709,
+          "uniqueFormCount": 358236
+        },
+        "resourceIds": [
+          "en-scowl-inflection-entries",
+          "en-scowl-inflection-morphology-canonical"
+        ]
+      },
+      "limitations": [
+        "This verifies SCOWLv2 POS and inflection inventory volume; lookup analysis and generation are source-scope candidate tables, not context-disambiguating morphology.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-en-inflection-scowl; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
+      ],
+      "metric": {
+        "name": "uniqueLemmaCount",
+        "operator": "gte",
+        "threshold": 100000,
+        "unit": "lemmas",
+        "value": 204268
+      },
+      "packageName": "@ismail-elkorchi/textpack-en",
+      "pipelineId": "scowl-v2-inflection",
+      "recordId": "eval:en-scowl-inflection:lemma-volume:distribution:textpack-en",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "morphology.inflection-inventory",
       "tier": "lookup"
     },
     {

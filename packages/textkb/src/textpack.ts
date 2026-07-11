@@ -1,9 +1,9 @@
 import { nfkcCaseFold } from "@ismail-elkorchi/textfacts/casefold";
+import { boundedEditDistance } from "@ismail-elkorchi/textlex/fuzzy";
 import {
 	openResourceJson,
 	openResourceLookupIndex,
 	openResourceTable,
-	openResourceText,
 	requireSingleTaskResourceBinding,
 	type TextPack,
 	type TextPackLookupIndex,
@@ -35,6 +35,12 @@ export interface KnowledgeBaseSliceFromPackOptions
 	extends KnowledgeBaseFromPackOptions {
 	readonly mentions: readonly string[];
 	readonly language?: string;
+	readonly maxEditDistance?: number;
+}
+
+export interface KnowledgeBaseMentionKeyLengths {
+	readonly codePointLengths: readonly number[];
+	readonly maximumCodePointLength: number;
 }
 
 export interface EntityLinkerFromPackOptions
@@ -172,145 +178,23 @@ function normalizedMention(value: string): string {
 	return nfkcCaseFold(value).replace(/\s+/gu, " ").trim();
 }
 
+function mentionKeyMatches(
+	value: string,
+	mentionKeys: ReadonlySet<string>,
+	maxEditDistance: number,
+): boolean {
+	const key = normalizedMention(value);
+	if (mentionKeys.has(key)) return true;
+	if (maxEditDistance === 0) return false;
+	for (const mention of mentionKeys) {
+		if (boundedEditDistance(key, mention, maxEditDistance) !== undefined) {
+			return true;
+		}
+	}
+	return false;
+}
+
 type KbTableIndexKind = "entity" | "mention" | "relation";
-
-interface KbTableIndex {
-	readonly columns: readonly string[];
-	readonly rowStartsByKind: Readonly<
-		Record<KbTableIndexKind, ReadonlyMap<string, readonly number[]>>
-	>;
-	readonly text: string;
-}
-
-interface KbPackTableIndexes {
-	readonly defaultReader: Map<string, KbTableIndex>;
-	readonly readers: WeakMap<TextPackResourceReader, Map<string, KbTableIndex>>;
-}
-
-const kbTableIndexes = new WeakMap<object, KbPackTableIndexes>();
-
-function kbTableIndexesForReader(
-	pack: TextPack,
-	reader: TextPackResourceReader | undefined,
-): Map<string, KbTableIndex> {
-	let packIndexes = kbTableIndexes.get(pack);
-	if (packIndexes === undefined) {
-		packIndexes = { defaultReader: new Map(), readers: new WeakMap() };
-		kbTableIndexes.set(pack, packIndexes);
-	}
-	if (reader === undefined) return packIndexes.defaultReader;
-	let indexes = packIndexes.readers.get(reader);
-	if (indexes === undefined) {
-		indexes = new Map();
-		packIndexes.readers.set(reader, indexes);
-	}
-	return indexes;
-}
-
-function addRowStart(
-	index: Map<string, number[]>,
-	key: string,
-	start: number,
-): void {
-	if (key.length === 0) return;
-	const starts = index.get(key);
-	if (starts === undefined) index.set(key, [start]);
-	else starts.push(start);
-}
-
-function buildKbTableIndex(text: string): KbTableIndex {
-	const headerEnd = text.indexOf("\n");
-	const rawHeader = text.slice(0, headerEnd === -1 ? text.length : headerEnd);
-	const columns = Object.freeze(
-		(rawHeader.endsWith("\r") ? rawHeader.slice(0, -1) : rawHeader).split("\t"),
-	);
-	const columnIndexes = new Map(
-		columns.map((column, index) => [column, index]),
-	);
-	const rowStartsByKind: Record<KbTableIndexKind, Map<string, number[]>> = {
-		entity: new Map(),
-		mention: new Map(),
-		relation: new Map(),
-	};
-	let start = headerEnd === -1 ? text.length : headerEnd + 1;
-	while (start < text.length) {
-		const newline = text.indexOf("\n", start);
-		const end = newline === -1 ? text.length : newline;
-		const rawLine = text.slice(start, end);
-		const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
-		if (line.length > 0) {
-			const cells = line.split("\t");
-			for (const name of ["alias", "label"] as const) {
-				const columnIndex = columnIndexes.get(name);
-				if (columnIndex !== undefined) {
-					addRowStart(
-						rowStartsByKind.mention,
-						normalizedMention(cells[columnIndex] ?? ""),
-						start,
-					);
-				}
-			}
-			const entityColumn = columnIndexes.get("entityId");
-			if (entityColumn !== undefined) {
-				addRowStart(
-					rowStartsByKind.entity,
-					canonicalKbIdentifier(cells[entityColumn] ?? ""),
-					start,
-				);
-			}
-			for (const name of ["sourceId", "targetId"] as const) {
-				const columnIndex = columnIndexes.get(name);
-				if (columnIndex !== undefined) {
-					addRowStart(
-						rowStartsByKind.relation,
-						canonicalKbIdentifier(cells[columnIndex] ?? ""),
-						start,
-					);
-				}
-			}
-		}
-		if (newline === -1) break;
-		start = newline + 1;
-	}
-	return { columns, rowStartsByKind, text };
-}
-
-function kbTableIndex(
-	pack: TextPack,
-	reader: TextPackResourceReader | undefined,
-	resourceId: string,
-	text: string,
-): KbTableIndex {
-	const indexes = kbTableIndexesForReader(pack, reader);
-	const cached = indexes.get(resourceId);
-	if (cached !== undefined) return cached;
-	const index = buildKbTableIndex(text);
-	indexes.set(resourceId, index);
-	return index;
-}
-
-function kbTableRow(
-	index: KbTableIndex,
-	start: number,
-): Readonly<Record<string, string>> {
-	const newline = index.text.indexOf("\n", start);
-	const end = newline === -1 ? index.text.length : newline;
-	const rawLine = index.text.slice(start, end);
-	const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
-	const cells = line.split("\t");
-	const row: Record<string, string> = {};
-	for (
-		let columnIndex = 0;
-		columnIndex < index.columns.length;
-		columnIndex += 1
-	) {
-		const column = index.columns[columnIndex];
-		if (column !== undefined && column.length > 0) {
-			row[column] = cells[columnIndex] ?? "";
-		}
-	}
-	return Object.freeze(row);
-}
 
 function kbLookupKeyVariants(
 	kind: KbTableIndexKind,
@@ -329,41 +213,48 @@ function kbLookupKeyVariants(
 	return Object.freeze([key]);
 }
 
-function generatedKbRows(
+const kbIndexColumns: Readonly<Record<KbTableIndexKind, readonly string[]>> =
+	Object.freeze({
+		entity: Object.freeze(["entityId"]),
+		mention: Object.freeze(["alias", "label"]),
+		relation: Object.freeze(["sourceId", "targetId"]),
+	});
+
+async function generatedKbRows(
 	index: TextPackLookupIndex,
 	keysByKind: Partial<Readonly<Record<KbTableIndexKind, ReadonlySet<string>>>>,
-): readonly Readonly<Record<string, string>>[] {
-	const rowsByStart = new Map<
-		number,
-		{ readonly length: number; readonly order: number }
-	>();
+	maxEditDistance = 0,
+): Promise<readonly Readonly<Record<string, string>>[]> {
+	const rowsByOrder = new Map<number, Readonly<Record<string, string>>>();
 	for (const kind of ["entity", "mention", "relation"] as const) {
+		const columns = kbIndexColumns[kind].filter((column) =>
+			index.keyColumns.includes(column),
+		);
 		for (const key of keysByKind[kind] ?? []) {
 			for (const variant of kbLookupKeyVariants(kind, key)) {
-				for (const row of index.rowsForNormalizedKey(nfkcCaseFold(variant))) {
-					if (!rowsByStart.has(row.rowStart)) {
-						rowsByStart.set(row.rowStart, {
-							length: row.rowLength,
-							order: row.rowOrder,
-						});
+				for (const column of columns) {
+					const normalized = nfkcCaseFold(variant);
+					const rows =
+						kind === "mention" && maxEditDistance > 0
+							? await index.rowsForNormalizedKeyWithinEditDistance(
+									column,
+									normalized,
+									maxEditDistance,
+								)
+							: await index.rowsForNormalizedKey(column, normalized);
+					for (const row of rows) {
+						if (!rowsByOrder.has(row.rowOrder)) {
+							rowsByOrder.set(row.rowOrder, row.values);
+						}
 					}
 				}
 			}
 		}
 	}
 	return Object.freeze(
-		[...rowsByStart.entries()]
-			.sort(
-				([leftStart, left], [rightStart, right]) =>
-					left.order - right.order || leftStart - rightStart,
-			)
-			.map(([rowStart, row]) =>
-				index.materializeRow({
-					rowStart,
-					rowLength: row.length,
-					rowOrder: row.order,
-				}),
-			),
+		[...rowsByOrder.entries()]
+			.sort(([leftOrder], [rightOrder]) => leftOrder - rightOrder)
+			.map(([, row]) => row),
 	);
 }
 
@@ -371,42 +262,27 @@ async function indexedKbRows(
 	pack: TextPack,
 	reader: TextPackResourceReader | undefined,
 	resourceId: string,
-	text: string,
 	keysByKind: Partial<Readonly<Record<KbTableIndexKind, ReadonlySet<string>>>>,
-	lookupIndexResourceId?: string,
+	lookupIndexResourceId: string,
+	maxEditDistance = 0,
 ): Promise<readonly Readonly<Record<string, string>>[]> {
-	if (lookupIndexResourceId !== undefined) {
-		return generatedKbRows(
-			await openResourceLookupIndex(
-				pack,
-				resourceId,
-				lookupIndexResourceId,
-				reader,
-			),
-			keysByKind,
-		);
-	}
-	const index = kbTableIndex(pack, reader, resourceId, text);
-	const starts = new Set<number>();
-	for (const kind of ["entity", "mention", "relation"] as const) {
-		for (const key of keysByKind[kind] ?? []) {
-			for (const start of index.rowStartsByKind[kind].get(key) ?? []) {
-				starts.add(start);
-			}
-		}
-	}
-	return Object.freeze(
-		[...starts]
-			.sort((left, right) => left - right)
-			.map((start) => kbTableRow(index, start)),
+	return generatedKbRows(
+		await openResourceLookupIndex(
+			pack,
+			resourceId,
+			lookupIndexResourceId,
+			reader,
+		),
+		keysByKind,
+		maxEditDistance,
 	);
 }
 
-function lookupIndexForKbSource(
+function requiredLookupIndexForKbSource(
 	pack: TextPack,
 	refs: readonly CanonicalResourceRef[],
 	sourceResourceId: string,
-): string | undefined {
+): string {
 	for (const ref of refs) {
 		if (ref.role !== "lookup-index") continue;
 		const descriptor = pack.manifest.resources.find(
@@ -424,7 +300,7 @@ function lookupIndexForKbSource(
 				? (descriptor.metadata as Readonly<Record<string, unknown>>)
 				: undefined;
 		if (
-			descriptor.schemaId !== "textpack.lookup-index.v1" ||
+			descriptor.schemaId !== "textpack.lookup-index.v2" ||
 			typeof metadata?.indexedResourceId !== "string"
 		) {
 			throw new TypeError(
@@ -433,7 +309,9 @@ function lookupIndexForKbSource(
 		}
 		if (metadata?.indexedResourceId === sourceResourceId) return ref.resourceId;
 	}
-	return undefined;
+	throw new TypeError(
+		`Canonical KB resource ${sourceResourceId} requires a textpack.lookup-index.v2 reference for targeted lookup.`,
+	);
 }
 
 function stringList(value: readonly string[] | undefined): readonly string[] {
@@ -919,11 +797,12 @@ function labelMatchesMention(
 	labels: readonly CanonicalLabel[] | undefined,
 	mentionKeys: ReadonlySet<string>,
 	language: string | undefined,
+	maxEditDistance: number,
 ): boolean {
 	return (labels ?? []).some(
 		(label) =>
 			(language === undefined || label.languageTag === language) &&
-			mentionKeys.has(normalizedMention(label.value)),
+			mentionKeyMatches(label.value, mentionKeys, maxEditDistance),
 	);
 }
 
@@ -963,6 +842,10 @@ async function materializeKnowledgeBaseSliceFromPack(
 	pack: TextPack,
 	options: KnowledgeBaseSliceFromPackOptions,
 ): Promise<KnowledgeBase> {
+	const maxEditDistance = options.maxEditDistance ?? 0;
+	if (!Number.isSafeInteger(maxEditDistance) || maxEditDistance < 0) {
+		throw new TypeError("maxEditDistance must be a non-negative safe integer.");
+	}
 	const mentionKeys = new Set(
 		options.mentions
 			.map((mention) => normalizedMention(mention))
@@ -972,10 +855,13 @@ async function materializeKnowledgeBaseSliceFromPack(
 	const entities = new Map<string, EntityRecord>();
 	const aliases: AliasEntryInput[] = [];
 	const relations: SemanticRelation[] = [];
-	const entityIds = new Set<string>();
 	const languageTags = new Set<string>();
 
 	for (const resourceId of resourceIds) {
+		// Candidate ids are scoped to one canonical KB. Carrying Wikidata QIDs
+		// into the following WordNet resource causes cross-KB relation probes and
+		// can contaminate an otherwise independent slice.
+		const entityIds = new Set<string>();
 		const resource = await openResourceJson<CanonicalKnowledgeBaseResource>(
 			pack,
 			resourceId,
@@ -986,8 +872,18 @@ async function materializeKnowledgeBaseSliceFromPack(
 
 		for (const entity of resource.entities ?? []) {
 			if (
-				!labelMatchesMention(entity.labels, mentionKeys, language) &&
-				!labelMatchesMention(entity.aliases, mentionKeys, language)
+				!labelMatchesMention(
+					entity.labels,
+					mentionKeys,
+					language,
+					maxEditDistance,
+				) &&
+				!labelMatchesMention(
+					entity.aliases,
+					mentionKeys,
+					language,
+					maxEditDistance,
+				)
 			) {
 				continue;
 			}
@@ -1001,20 +897,19 @@ async function materializeKnowledgeBaseSliceFromPack(
 		for (const ref of refs.filter(
 			(candidate) => candidate.role === "aliases",
 		)) {
-			const text = await openResourceText(pack, ref.resourceId, options.reader);
 			for (const row of await indexedKbRows(
 				pack,
 				options.reader,
 				ref.resourceId,
-				text,
 				{ mention: mentionKeys },
-				lookupIndexForKbSource(pack, refs, ref.resourceId),
+				requiredLookupIndexForKbSource(pack, refs, ref.resourceId),
+				maxEditDistance,
 			)) {
 				if (
 					(options.language !== undefined &&
 						row.languageTag !== options.language) ||
 					row.alias === undefined ||
-					!mentionKeys.has(normalizedMention(row.alias))
+					!mentionKeyMatches(row.alias, mentionKeys, maxEditDistance)
 				) {
 					continue;
 				}
@@ -1027,14 +922,13 @@ async function materializeKnowledgeBaseSliceFromPack(
 		for (const ref of refs.filter(
 			(candidate) => candidate.role === "entities",
 		)) {
-			const text = await openResourceText(pack, ref.resourceId, options.reader);
 			for (const row of await indexedKbRows(
 				pack,
 				options.reader,
 				ref.resourceId,
-				text,
 				{ entity: entityIds, mention: mentionKeys },
-				lookupIndexForKbSource(pack, refs, ref.resourceId),
+				requiredLookupIndexForKbSource(pack, refs, ref.resourceId),
+				maxEditDistance,
 			)) {
 				const matchesId =
 					row.entityId !== undefined &&
@@ -1043,7 +937,7 @@ async function materializeKnowledgeBaseSliceFromPack(
 					(options.language === undefined ||
 						row.languageTag === options.language) &&
 					row.label !== undefined &&
-					mentionKeys.has(normalizedMention(row.label));
+					mentionKeyMatches(row.label, mentionKeys, maxEditDistance);
 				if (!matchesId && !matchesLabel) continue;
 				const record = entityTableRow(row);
 				upsertEntity(entities, record);
@@ -1055,14 +949,12 @@ async function materializeKnowledgeBaseSliceFromPack(
 			(candidate) => candidate.role === "relations",
 		)) {
 			if (entityIds.size === 0) continue;
-			const text = await openResourceText(pack, ref.resourceId, options.reader);
 			for (const row of await indexedKbRows(
 				pack,
 				options.reader,
 				ref.resourceId,
-				text,
 				{ relation: entityIds },
-				lookupIndexForKbSource(pack, refs, ref.resourceId),
+				requiredLookupIndexForKbSource(pack, refs, ref.resourceId),
 			)) {
 				if (
 					!(
@@ -1079,7 +971,7 @@ async function materializeKnowledgeBaseSliceFromPack(
 		}
 	}
 
-	const knownAliases = aliases.filter((alias) => entityIds.has(alias.targetId));
+	const knownAliases = aliases.filter((alias) => entities.has(alias.targetId));
 	return createKnowledgeBase({
 		id: `${pack.manifest.id}:kb-slice`,
 		entities: [...entities.values()],
@@ -1103,20 +995,59 @@ export async function knowledgeBaseSliceFromPack(
 	pack: TextPack,
 	options: KnowledgeBaseSliceFromPackOptions,
 ): Promise<KnowledgeBase> {
-	const mentions = [...new Set(options.mentions.map(normalizedMention))]
-		.filter((mention) => mention.length > 0)
-		.sort((left, right) => left.localeCompare(right));
-	const key = JSON.stringify([
-		"slice",
-		options.resourceId ?? null,
-		options.language ?? null,
-		mentions,
-	]);
-	return cachedKnowledgeBase(
-		knowledgeBaseCache(pack, options.reader),
-		key,
-		() => materializeKnowledgeBaseSliceFromPack(pack, options),
+	return materializeKnowledgeBaseSliceFromPack(pack, options);
+}
+
+export async function knowledgeBaseMentionKeyLengthsFromPack(
+	pack: TextPack,
+	options: KnowledgeBaseFromPackOptions & { readonly language?: string } = {},
+): Promise<KnowledgeBaseMentionKeyLengths> {
+	const lengths = new Set<number>();
+	for (const resourceId of selectedKbResourceIds(pack, options)) {
+		const canonical = await openResourceJson<CanonicalKnowledgeBaseResource>(
+			pack,
+			resourceId,
+			options.reader,
+		);
+		for (const entity of canonical.entities ?? []) {
+			for (const label of [...entity.labels, ...(entity.aliases ?? [])]) {
+				if (
+					options.language !== undefined &&
+					label.languageTag !== options.language
+				) {
+					continue;
+				}
+				const normalized = normalizedMention(label.value);
+				if (normalized.length > 0) lengths.add(Array.from(normalized).length);
+			}
+		}
+		const refs = canonical.resourceRefs ?? [];
+		for (const ref of refs) {
+			const column =
+				ref.role === "aliases"
+					? "alias"
+					: ref.role === "entities"
+						? "label"
+						: undefined;
+			if (column === undefined) continue;
+			const index = await openResourceLookupIndex(
+				pack,
+				ref.resourceId,
+				requiredLookupIndexForKbSource(pack, refs, ref.resourceId),
+				options.reader,
+			);
+			for (const length of index.normalizedKeyCodePointLengths(column)) {
+				lengths.add(length);
+			}
+		}
+	}
+	const codePointLengths = Object.freeze(
+		[...lengths].sort((left, right) => left - right),
 	);
+	return Object.freeze({
+		codePointLengths,
+		maximumCodePointLength: codePointLengths.at(-1) ?? 0,
+	});
 }
 
 export async function candidateEntitiesFromPack(
@@ -1131,6 +1062,9 @@ export async function candidateEntitiesFromPack(
 		...(options.reader === undefined ? {} : { reader: options.reader }),
 		mentions: [mention],
 		...(options.language === undefined ? {} : { language: options.language }),
+		...(options.maxEditDistance === undefined
+			? {}
+			: { maxEditDistance: options.maxEditDistance }),
 	});
 	return Object.freeze(candidateEntities(kb, mention, options));
 }

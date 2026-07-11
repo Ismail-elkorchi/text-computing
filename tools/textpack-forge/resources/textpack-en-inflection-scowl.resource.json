@@ -19,25 +19,14 @@
 			"path": "resources/scowl-v2.inflections.tsv.gz.b64",
 			"kind": "morphology",
 			"format": "tsv+gzip+base64",
-			"lookupKeyColumns": ["form"]
+			"lookupKeyColumns": ["form", "lemma"],
+			"lookupPatternColumns": ["form"]
 		},
 		{
 			"resourceId": "en-scowl-pos-inventory",
 			"path": "resources/scowl-v2.pos.tsv",
 			"kind": "morphology",
 			"format": "tsv"
-		},
-		{
-			"resourceId": "en-scowl-lookup-analyzer",
-			"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
-			"kind": "morphology",
-			"format": "tsv+gzip+base64"
-		},
-		{
-			"resourceId": "en-scowl-lookup-generator",
-			"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
-			"kind": "morphology",
-			"format": "tsv+gzip+base64"
 		},
 		{
 			"resourceId": "en-scowl-inflection-lexicon-canonical",

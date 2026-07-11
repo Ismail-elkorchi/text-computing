@@ -173,6 +173,64 @@ export function evaluationSummary(records) {
 	};
 }
 
+export function assertTaskSupportedDistributionEvaluation(pack, records) {
+	if (pack.distribution !== true) return;
+	const failedRecordIds = records
+		.filter((record) => record.result === "fail")
+		.map((record) => record.recordId)
+		.sort((left, right) => left.localeCompare(right));
+	if (failedRecordIds.length > 0) {
+		throw new Error(
+			`${pack.packageName} has failed generated evaluation evidence: ${failedRecordIds.join(", ")}.`,
+		);
+	}
+	for (const slot of pack.capabilitySlots.filter((candidate) =>
+		["task-supported", "feature-complete"].includes(candidate.status),
+	)) {
+		if (
+			!records.some(
+				(record) =>
+					record.capabilitySlot === slot.slot && record.result === "pass",
+			)
+		) {
+			throw new Error(
+				`${pack.packageName} task-supported slot ${slot.slot} lacks passing generated evaluation evidence.`,
+			);
+		}
+	}
+}
+
+export function assertDeclaredConformanceEvaluation(pack, records) {
+	const declared = pack.publishabilityEvidence?.conformanceEvidence;
+	if (!Array.isArray(declared)) return;
+	const evaluationIds = declared.filter((entry) => entry.startsWith("eval:"));
+	if (pack.publishable === true && evaluationIds.length === 0) {
+		throw new Error(
+			`${pack.packageName} publishability evidence has no executable evaluation record ids.`,
+		);
+	}
+	for (const recordId of evaluationIds) {
+		const matching = records.filter((record) => record.recordId === recordId);
+		if (matching.length !== 1) {
+			throw new Error(
+				`${pack.packageName} publishability evidence ${recordId} resolves to ${matching.length} generated evaluation records; expected exactly one.`,
+			);
+		}
+		if (matching[0].result !== "pass") {
+			throw new Error(
+				`${pack.packageName} publishability evidence ${recordId} did not pass.`,
+			);
+		}
+	}
+}
+
+export function evaluationRecordsPassReadiness(records) {
+	return (
+		records.some((record) => record.result === "pass") &&
+		!records.some((record) => record.result === "fail")
+	);
+}
+
 export function coverageEvidenceLevel(slot, evaluationRecords, resourceIds) {
 	if (slot.status === "artifact-backed") {
 		return evaluationRecords.length > 0
@@ -1508,26 +1566,27 @@ function scowlInflectionEvaluationRecords(pack) {
 			observations: {
 				inflectionRowCount: quality.inflectionRowCount,
 				uniqueFormCount: quality.uniqueFormCount,
-				lookupAnalyzerRowCount: quality.lookupAnalyzerRowCount,
-				lookupGeneratorRowCount: quality.lookupGeneratorRowCount,
+				analysisCandidateRowCount: quality.analysisCandidateRowCount,
+				generationCandidateRowCount: quality.generationCandidateRowCount,
 			},
 			limitations: [
 				"This verifies SCOWLv2 POS and inflection inventory volume; lookup analysis and generation are source-scope candidate tables, not context-disambiguating morphology.",
 			],
 		}),
 		evaluationRecord(pack, {
-			recordId: "eval:en-scowl-inflection:lookup-analyzer-volume",
+			recordId: "eval:en-scowl-inflection:indexed-analysis-volume",
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "morphology",
 			taskType: "morphology.lookup-analyzer",
 			evaluationKind: "coverage",
 			resourceIds: [
-				"en-scowl-lookup-analyzer",
+				"en-scowl-inflection-entries",
+				"en-scowl-inflection-entries-lookup-index",
 				"en-scowl-inflection-morphology-canonical",
 			],
-			metricName: "lookupAnalyzerRowCount",
-			value: quality.lookupAnalyzerRowCount,
+			metricName: "analysisCandidateRowCount",
+			value: quality.analysisCandidateRowCount,
 			unit: "rows",
 			operator: "gte",
 			threshold: 100000,
@@ -1536,22 +1595,23 @@ function scowlInflectionEvaluationRecords(pack) {
 				uniqueLemmaCount: quality.uniqueLemmaCount,
 			},
 			limitations: [
-				"Lookup analyzer rows return SCOWLv2 candidate lemmas and POS metadata; they do not perform context disambiguation.",
+				"Indexed form lookup over the canonical SCOWLv2 inflection rows returns candidate lemmas and POS metadata; it does not perform context disambiguation.",
 			],
 		}),
 		evaluationRecord(pack, {
-			recordId: "eval:en-scowl-inflection:lookup-generator-volume",
+			recordId: "eval:en-scowl-inflection:indexed-generation-volume",
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "morphology",
 			taskType: "morphology.lookup-generator",
 			evaluationKind: "coverage",
 			resourceIds: [
-				"en-scowl-lookup-generator",
+				"en-scowl-inflection-entries",
+				"en-scowl-inflection-entries-lookup-index",
 				"en-scowl-inflection-morphology-canonical",
 			],
-			metricName: "lookupGeneratorRowCount",
-			value: quality.lookupGeneratorRowCount,
+			metricName: "generationCandidateRowCount",
+			value: quality.generationCandidateRowCount,
 			unit: "rows",
 			operator: "gte",
 			threshold: 100000,
@@ -1560,7 +1620,7 @@ function scowlInflectionEvaluationRecords(pack) {
 				uniqueLemmaCount: quality.uniqueLemmaCount,
 			},
 			limitations: [
-				"Lookup generator rows return SCOWLv2 candidate forms for a lemma; they do not rank forms by corpus frequency or context.",
+				"Indexed lemma lookup over the canonical SCOWLv2 inflection rows returns candidate forms; it does not rank forms by corpus frequency or context.",
 			],
 		}),
 		evaluationRecord(pack, {
@@ -1738,35 +1798,37 @@ function frenchUnimorphEvaluationRecords(pack) {
 			],
 		}),
 		evaluationRecord(pack, {
-			recordId: "eval:fr-unimorph:lookup-analyzer-volume",
+			recordId: "eval:fr-unimorph:indexed-analysis-volume",
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "morphology",
 			taskType: "morphology.lookup-analyzer",
 			evaluationKind: "coverage",
 			resourceIds: [
-				"fr-unimorph-lookup-analyzer",
+				"fr-unimorph-paradigms",
+				"fr-unimorph-paradigms-lookup-index",
 				"fr-unimorph-morphology-canonical",
 			],
-			metricName: "lookupAnalyzerRowCount",
-			value: quality.lookupAnalyzerRowCount,
+			metricName: "analysisCandidateRowCount",
+			value: quality.analysisCandidateRowCount,
 			unit: "rows",
 			operator: "gte",
 			threshold: 100000,
 		}),
 		evaluationRecord(pack, {
-			recordId: "eval:fr-unimorph:lookup-generator-volume",
+			recordId: "eval:fr-unimorph:indexed-generation-volume",
 			resourceSpecId,
 			pipelineId,
 			capabilitySlot: "morphology",
 			taskType: "morphology.lookup-generator",
 			evaluationKind: "coverage",
 			resourceIds: [
-				"fr-unimorph-lookup-generator",
+				"fr-unimorph-paradigms",
+				"fr-unimorph-paradigms-lookup-index",
 				"fr-unimorph-morphology-canonical",
 			],
-			metricName: "lookupGeneratorRowCount",
-			value: quality.lookupGeneratorRowCount,
+			metricName: "generationCandidateRowCount",
+			value: quality.generationCandidateRowCount,
 			unit: "rows",
 			operator: "gte",
 			threshold: 100000,
@@ -2517,7 +2579,8 @@ export function qualityReportFor(pack, context) {
 		supportLevel: pack.supportLevel,
 		resourceCount: pack.resourceStats.length,
 		acceptedRecordCount: pack.resourceStats.reduce(
-			(total, resource) => total + resource.nonEmptyLineCount,
+			(total, resource) =>
+				total + (resource.logicalRecordCount ?? resource.nonEmptyLineCount),
 			0,
 		),
 		rejectedRecordCount: 0,
@@ -2525,7 +2588,9 @@ export function qualityReportFor(pack, context) {
 		resources: pack.resourceStats,
 		resourceSpecIds: pack.resourceSpecIds ?? [],
 		capabilitySlots: pack.capabilitySlots,
-		resourcePaths: pack.resourceStats.map((resource) => resource.path),
+		resourcePaths: sorted(
+			new Set(pack.resourceStats.map((resource) => resource.path)),
+		),
 		artifactRequirements: [],
 		licenseWarnings: [],
 	};
@@ -2578,6 +2643,11 @@ export function coverageReportFor(pack, context, evaluationRecords) {
 			path: resource.path,
 			byteLength: resource.byteLength,
 			nonEmptyLineCount: resource.nonEmptyLineCount,
+			logicalRecordCount:
+				resource.logicalRecordCount ?? resource.nonEmptyLineCount,
+			sharedStorageResourceIds: resource.sharedStorageResourceIds ?? [
+				resource.id,
+			],
 			checksum: resource.checksum,
 			sizeClass: resource.sizeClass,
 			...(resource.resourceSpecId === undefined

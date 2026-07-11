@@ -38,7 +38,7 @@
     {
       "buildUnitId": "fr-unimorph-sa",
       "licensePolicy": "allow-share-alike",
-      "reason": "French UniMorph paradigm and lookup morphology resources."
+      "reason": "French UniMorph paradigm table with indexed form and lemma lookup."
     },
     {
       "buildUnitId": "wikidata-fr",
@@ -79,10 +79,14 @@
       "id": "bcp47-language-registry-summary",
       "kind": "language-registry",
       "license": "LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 16,
       "path": "resources/bcp47.language-registry.summary.json",
       "pipelineId": "iana-language-registry",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "sharedStorageResourceIds": [
+        "bcp47-language-registry-summary"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05"
       ],
@@ -99,10 +103,14 @@
       "id": "bcp47-language-subtags",
       "kind": "language-registry",
       "license": "LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 9296,
       "path": "resources/bcp47.language-subtags.tsv.gz.b64",
       "pipelineId": "iana-language-registry",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "sharedStorageResourceIds": [
+        "bcp47-language-subtags"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05"
       ],
@@ -119,10 +127,14 @@
       "id": "cldr-48-core-summary",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 9,
       "path": "resources/cldr-48.core.summary.json",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-core-summary"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -139,10 +151,14 @@
       "id": "cldr-48-likely-subtags",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 7789,
       "path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-likely-subtags"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -159,10 +175,14 @@
       "id": "cldr-48-locale-aliases",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 1307,
       "path": "resources/cldr-48.locale-aliases.tsv",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-locale-aliases"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -179,10 +199,14 @@
       "id": "cldr-48-script-data",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 16,
       "path": "resources/cldr-48.script-data.tsv",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-script-data"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -200,10 +224,14 @@
       "id": "fr-core-basic-segmentation",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 60,
       "path": "resources/fr.core.basic-segmentation.json",
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "sharedStorageResourceIds": [
+        "fr-core-basic-segmentation"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -226,10 +254,14 @@
       "id": "fr-core-language-profile",
       "kind": "locale-profile",
       "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 31,
       "path": "resources/fr.core.language-profile.json",
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "sharedStorageResourceIds": [
+        "fr-core-language-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -250,10 +282,14 @@
       "id": "fr-core-orthography",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 62,
       "path": "resources/fr.core.orthography.tsv",
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "sharedStorageResourceIds": [
+        "fr-core-orthography"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -274,10 +310,14 @@
       "id": "fr-core-punctuation",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 397,
       "path": "resources/fr.core.punctuation.tsv",
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "sharedStorageResourceIds": [
+        "fr-core-punctuation"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -300,10 +340,14 @@
       "id": "fr-core-quality",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 28,
       "path": "resources/fr.core.quality.json",
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "sharedStorageResourceIds": [
+        "fr-core-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -326,10 +370,14 @@
       "id": "fr-core-quality-profile",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 45,
       "path": "resources/fr.core.quality-profile.json",
       "pipelineId": "french-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
+      "sharedStorageResourceIds": [
+        "fr-core-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -351,10 +399,14 @@
       "id": "fr-grapheme-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 59,
       "path": "resources/fr.segmentation.grapheme.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-grapheme-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -367,18 +419,23 @@
       ]
     },
     {
-      "byteLength": 3070993,
-      "checksum": "sha256:f4cd3988dc9ebdaca0a009b73ebd349342dae2f85495ae31e365da9f5aed9082",
+      "byteLength": 5000638,
+      "checksum": "sha256:bf76e33d8b8d7304e99a62023799e3c1da34408b46ab14baaf01ed0c441c175c",
       "citations": [
         "Lexique 3.83, 2019-06-04."
       ],
       "id": "fr-lexique-entries",
       "kind": "lexicon",
       "license": "CC-BY-SA-4.0",
-      "path": "resources/lexique-383.entries.tsv.gz.b64",
+      "logicalRecordCount": 142694,
+      "path": "resources/lexique-383.entries.lookup-index.v2.txt",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-entries",
+        "fr-lexique-entries-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -387,18 +444,23 @@
       ]
     },
     {
-      "byteLength": 1957881,
-      "checksum": "sha256:adc7d4445d1dbbd17ef9d1f656cc93d951a3d62fdbb8a46e5a0236ff31ac2c76",
+      "byteLength": 5000638,
+      "checksum": "sha256:bf76e33d8b8d7304e99a62023799e3c1da34408b46ab14baaf01ed0c441c175c",
       "citations": [
         "Lexique 3.83, 2019-06-04."
       ],
       "id": "fr-lexique-entries-lookup-index",
       "kind": "dataset",
       "license": "CC-BY-SA-4.0",
-      "path": "resources/lexique-383.entries.lookup-index.tsv.gz.b64",
+      "logicalRecordCount": 0,
+      "path": "resources/lexique-383.entries.lookup-index.v2.txt",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-entries",
+        "fr-lexique-entries-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -415,10 +477,14 @@
       "id": "fr-lexique-lemmas",
       "kind": "lexicon",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 51127,
       "path": "resources/lexique-383.lemmas.tsv.gz.b64",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-lemmas"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -427,18 +493,22 @@
       ]
     },
     {
-      "byteLength": 511,
-      "checksum": "sha256:b15e5bb71b53eba9a55a237bd3e3f9a9a4f6e55d82cfa629fcd74aaafa562693",
+      "byteLength": 406,
+      "checksum": "sha256:4ac20e5a7c0a9e1d8b89a1d5e840cf6c32ba6abd17bc478f8d4d7c49fc114e11",
       "citations": [
         "Lexique 3.83, 2019-06-04."
       ],
       "id": "fr-lexique-lexicon-canonical",
       "kind": "lexicon",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 20,
       "path": "resources/lexique-383.lexicon.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-lexicon-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -448,17 +518,21 @@
     },
     {
       "byteLength": 1577,
-      "checksum": "sha256:7357891ea83da1b287390b19fdf969a0a76341f20f7f2a4a0c59fc7825c5bb8c",
+      "checksum": "sha256:fc8f89b1ee05a4c5e99a1e5d3d3b7cb4bbc50392e3de620903a48120c889e89e",
       "citations": [
         "Lexique 3.83, 2019-06-04."
       ],
       "id": "fr-lexique-morphology-canonical",
       "kind": "morphology",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 86,
       "path": "resources/lexique-383.morphology.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-morphology-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -475,10 +549,14 @@
       "id": "fr-lexique-pos-inventory",
       "kind": "morphology",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 24,
       "path": "resources/lexique-383.pos.tsv",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-pos-inventory"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -495,10 +573,14 @@
       "id": "fr-lexique-quality",
       "kind": "quality-profile",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 30,
       "path": "resources/lexique-383.quality.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -515,10 +597,14 @@
       "id": "fr-lexique-quality-profile",
       "kind": "quality-profile",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 49,
       "path": "resources/lexique-383.quality-profile.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -535,10 +621,14 @@
       "id": "fr-lexique-search-profile",
       "kind": "search-profile",
       "license": "CC-BY-SA-4.0",
+      "logicalRecordCount": 42,
       "path": "resources/lexique-383.search-profile.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "sharedStorageResourceIds": [
+        "fr-lexique-search-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:fr:lexique-383:2019-06-04"
       ],
@@ -555,10 +645,14 @@
       "id": "fr-normalization-contraction-forms",
       "kind": "normalization-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 5,
       "path": "resources/fr.normalization-contraction-forms.tsv",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-contraction-forms"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -579,10 +673,14 @@
       "id": "fr-normalization-elision-prefixes",
       "kind": "normalization-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 17,
       "path": "resources/fr.normalization-elision-prefixes.tsv",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-elision-prefixes"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -603,10 +701,14 @@
       "id": "fr-normalization-gold-cases",
       "kind": "quality-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 160,
       "path": "resources/fr.normalization-gold-cases.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-gold-cases"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -629,10 +731,14 @@
       "id": "fr-normalization-profile",
       "kind": "normalization-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 120,
       "path": "resources/fr.normalization.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -655,10 +761,14 @@
       "id": "fr-normalization-quality",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 41,
       "path": "resources/fr.normalization.quality.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -681,10 +791,14 @@
       "id": "fr-normalization-quality-profile",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 72,
       "path": "resources/fr.normalization.quality-profile.json",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -707,10 +821,14 @@
       "id": "fr-normalization-rules",
       "kind": "normalization-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 8,
       "path": "resources/fr.normalization-rules.tsv",
       "pipelineId": "french-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
+      "sharedStorageResourceIds": [
+        "fr-normalization-rules"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -731,10 +849,14 @@
       "id": "fr-segmentation-abbreviations",
       "kind": "segmentation-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 150,
       "path": "resources/fr.segmentation-abbreviations.tsv",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-abbreviations"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -756,10 +878,14 @@
       "id": "fr-segmentation-boundary-properties",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 46,
       "path": "resources/fr.segmentation-boundary-properties.tsv",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-boundary-properties"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -780,10 +906,14 @@
       "id": "fr-segmentation-contraction-forms",
       "kind": "segmentation-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 5,
       "path": "resources/fr.segmentation-contraction-forms.tsv",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-contraction-forms"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -804,10 +934,14 @@
       "id": "fr-segmentation-elision-prefixes",
       "kind": "segmentation-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 17,
       "path": "resources/fr.segmentation-elision-prefixes.tsv",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-elision-prefixes"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -828,10 +962,14 @@
       "id": "fr-segmentation-gold-cases",
       "kind": "quality-profile",
       "license": "CC-BY-2.0-FR",
+      "logicalRecordCount": 364,
       "path": "resources/fr.segmentation-gold-cases.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-gold-cases"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -854,10 +992,14 @@
       "id": "fr-segmentation-quality",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 84,
       "path": "resources/fr.segmentation.quality.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -880,10 +1022,14 @@
       "id": "fr-segmentation-quality-profile",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 79,
       "path": "resources/fr.segmentation.quality-profile.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-segmentation-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -905,10 +1051,14 @@
       "id": "fr-sentence-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 60,
       "path": "resources/fr.segmentation.sentence.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-sentence-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -931,10 +1081,14 @@
       "id": "fr-token-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0 AND CC-BY-2.0-FR",
+      "logicalRecordCount": 79,
       "path": "resources/fr.segmentation.token.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-token-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -955,10 +1109,14 @@
       "id": "fr-unimorph-feature-inventory",
       "kind": "morphology",
       "license": "CC-BY-SA-3.0",
+      "logicalRecordCount": 20,
       "path": "resources/unimorph-fra.features.tsv",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-feature-inventory"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -967,58 +1125,22 @@
       ]
     },
     {
-      "byteLength": 3819421,
-      "checksum": "sha256:02700dd8f417411d84fc5ca8be07a2d62cb427c288366be6439ffeb2ddcb0985",
-      "citations": [
-        "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-      ],
-      "id": "fr-unimorph-lookup-analyzer",
-      "kind": "morphology",
-      "license": "CC-BY-SA-3.0",
-      "path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
-      "pipelineId": "french-unimorph",
-      "pipelineVersion": "0.1.0",
-      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
-      "snapshotIds": [
-        "snapshot:source:unimorph:french-master-f672f8c"
-      ],
-      "sourceIds": [
-        "source:unimorph:french-master-f672f8c"
-      ]
-    },
-    {
-      "byteLength": 2978997,
-      "checksum": "sha256:0486e62bca8d4cbe68f7965208f93d63005edf6da2ba327c5055e208e59c7253",
-      "citations": [
-        "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-      ],
-      "id": "fr-unimorph-lookup-generator",
-      "kind": "morphology",
-      "license": "CC-BY-SA-3.0",
-      "path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
-      "pipelineId": "french-unimorph",
-      "pipelineVersion": "0.1.0",
-      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
-      "snapshotIds": [
-        "snapshot:source:unimorph:french-master-f672f8c"
-      ],
-      "sourceIds": [
-        "source:unimorph:french-master-f672f8c"
-      ]
-    },
-    {
-      "byteLength": 1779,
-      "checksum": "sha256:8c023956c9f416aa1f60fe9812e781d1625e3a09bdc05d767e1fb454615eaf3b",
+      "byteLength": 1553,
+      "checksum": "sha256:c6abde554c03f6b1690a0ed727e5126311cc7331f9c61bbea7794ab9b93799f0",
       "citations": [
         "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
       ],
       "id": "fr-unimorph-morphology-canonical",
       "kind": "morphology",
       "license": "CC-BY-SA-3.0",
+      "logicalRecordCount": 78,
       "path": "resources/unimorph-fra.morphology.json",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-morphology-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -1027,18 +1149,23 @@
       ]
     },
     {
-      "byteLength": 4339245,
-      "checksum": "sha256:af854f6251e94d5ba5469ea5d9fb1680656777ac87b1daf0ef11a8e2dd522ede",
+      "byteLength": 6267367,
+      "checksum": "sha256:d8629e7dcb96bc162552e49785fdef7dae4f0dfceb6edd27e9ca988c86abb77d",
       "citations": [
         "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
       ],
       "id": "fr-unimorph-paradigms",
       "kind": "morphology",
       "license": "CC-BY-SA-3.0",
-      "path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
+      "logicalRecordCount": 367732,
+      "path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-paradigms",
+        "fr-unimorph-paradigms-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -1047,18 +1174,23 @@
       ]
     },
     {
-      "byteLength": 3450913,
-      "checksum": "sha256:b889e25c71741bd0fd56484ea4459696e1c2b802ddb7041f07ed3fae6cc3cca5",
+      "byteLength": 6267367,
+      "checksum": "sha256:d8629e7dcb96bc162552e49785fdef7dae4f0dfceb6edd27e9ca988c86abb77d",
       "citations": [
         "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
       ],
       "id": "fr-unimorph-paradigms-lookup-index",
       "kind": "dataset",
       "license": "CC-BY-SA-3.0",
-      "path": "resources/unimorph-fra.paradigms.lookup-index.tsv.gz.b64",
+      "logicalRecordCount": 0,
+      "path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-paradigms",
+        "fr-unimorph-paradigms-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -1075,10 +1207,14 @@
       "id": "fr-unimorph-pos-inventory",
       "kind": "morphology",
       "license": "CC-BY-SA-3.0",
+      "logicalRecordCount": 4,
       "path": "resources/unimorph-fra.pos.tsv",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-pos-inventory"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -1087,18 +1223,22 @@
       ]
     },
     {
-      "byteLength": 705,
-      "checksum": "sha256:e0d90487864de078813601eab1a6feff09d9e118c6615fcc3f56f9d5de904209",
+      "byteLength": 765,
+      "checksum": "sha256:2b4fd580d463cb19067e0b6f6a62d0fe383eb2c1b983ff55a5f01d3a1d99dff8",
       "citations": [
         "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
       ],
       "id": "fr-unimorph-quality",
       "kind": "quality-profile",
       "license": "CC-BY-SA-3.0",
+      "logicalRecordCount": 24,
       "path": "resources/unimorph-fra.quality.json",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -1115,10 +1255,14 @@
       "id": "fr-unimorph-quality-profile",
       "kind": "quality-profile",
       "license": "CC-BY-SA-3.0",
+      "logicalRecordCount": 53,
       "path": "resources/unimorph-fra.quality-profile.json",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "sharedStorageResourceIds": [
+        "fr-unimorph-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unimorph:french-master-f672f8c"
       ],
@@ -1136,10 +1280,14 @@
       "id": "fr-word-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 64,
       "path": "resources/fr.segmentation.word.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "fr-word-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0",
@@ -1160,10 +1308,14 @@
       "id": "unicode-17-blocks",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 347,
       "path": "resources/unicode-17.blocks.tsv",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-blocks"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1180,10 +1332,14 @@
       "id": "unicode-17-core-summary",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 8,
       "path": "resources/unicode-17.core.summary.json",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-core-summary"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1200,10 +1356,14 @@
       "id": "unicode-17-property-value-aliases",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 1195,
       "path": "resources/unicode-17.property-value-aliases.tsv",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-property-value-aliases"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1220,10 +1380,14 @@
       "id": "unicode-17-scripts",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 2288,
       "path": "resources/unicode-17.scripts.tsv.gz.b64",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-scripts"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1232,18 +1396,23 @@
       ]
     },
     {
-      "byteLength": 79125,
-      "checksum": "sha256:0e96289b045c28692bcc7deb038b42418d496159c7a82125116be9532f329162",
+      "byteLength": 248637,
+      "checksum": "sha256:994792f665b4a36df1dcb73c616a58f82c040a58398af5a4c626ad87d47ee1c8",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
       "id": "wikidata-fr-aliases",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
-      "path": "resources/wikidata-fr.aliases.tsv.gz.b64",
+      "logicalRecordCount": 6101,
+      "path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-aliases",
+        "wikidata-fr-aliases-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1252,18 +1421,48 @@
       ]
     },
     {
-      "byteLength": 296517,
-      "checksum": "sha256:618e4ab92aee11dfe1a002f9bf2920617610d28ae3773d366f16723fb1a2442e",
+      "byteLength": 248637,
+      "checksum": "sha256:994792f665b4a36df1dcb73c616a58f82c040a58398af5a4c626ad87d47ee1c8",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-fr-aliases-lookup-index",
+      "kind": "dataset",
+      "license": "CC0-1.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-aliases",
+        "wikidata-fr-aliases-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 558306,
+      "checksum": "sha256:90d004951fecae447519e3c6ce89920b1607424e96fef154daf03f3491ef67e2",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
       "id": "wikidata-fr-entities",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
-      "path": "resources/wikidata-fr.entities.tsv.gz.b64",
+      "logicalRecordCount": 9377,
+      "path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-entities",
+        "wikidata-fr-entities-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1272,18 +1471,47 @@
       ]
     },
     {
-      "byteLength": 523,
-      "checksum": "sha256:7fed608bae8857594d1274ee0b23adeabddc41eb2e1b31d3b0a02d1b9317c3dd",
+      "byteLength": 558306,
+      "checksum": "sha256:90d004951fecae447519e3c6ce89920b1607424e96fef154daf03f3491ef67e2",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-fr-entities-lookup-index",
+      "kind": "dataset",
+      "license": "CC0-1.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-entities",
+        "wikidata-fr-entities-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 902,
+      "checksum": "sha256:23ef2ffc07faaaa6aab5596179c9530ceb8452d0b8342a8d5968bab63fe7b228",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
       "id": "wikidata-fr-kb-canonical",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
+      "logicalRecordCount": 42,
       "path": "resources/wikidata-fr.kb.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-kb-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1300,10 +1528,14 @@
       "id": "wikidata-fr-quality",
       "kind": "quality-profile",
       "license": "CC0-1.0",
+      "logicalRecordCount": 29,
       "path": "resources/wikidata-fr.quality.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1320,10 +1552,14 @@
       "id": "wikidata-fr-quality-profile",
       "kind": "quality-profile",
       "license": "CC0-1.0",
+      "logicalRecordCount": 101,
       "path": "resources/wikidata-fr.quality-profile.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1332,18 +1568,48 @@
       ]
     },
     {
-      "byteLength": 50729,
-      "checksum": "sha256:90729f4eae6c1daad5b6ada6b38cc3eae7470efe8964f78d5c3e29049ae92040",
+      "byteLength": 135481,
+      "checksum": "sha256:8943ca69ae27299a9bcebeed297628642ea0c88101e10e027ca67fbe74d90fd4",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
       "id": "wikidata-fr-relations",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
-      "path": "resources/wikidata-fr.relations.tsv.gz.b64",
+      "logicalRecordCount": 9377,
+      "path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-relations",
+        "wikidata-fr-relations-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 135481,
+      "checksum": "sha256:8943ca69ae27299a9bcebeed297628642ea0c88101e10e027ca67fbe74d90fd4",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08."
+      ],
+      "id": "wikidata-fr-relations-lookup-index",
+      "kind": "dataset",
+      "license": "CC0-1.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-fr-relations",
+        "wikidata-fr-relations-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],

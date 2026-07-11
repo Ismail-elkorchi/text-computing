@@ -21,6 +21,21 @@
       "recordCount": 9377,
       "resourceId": "wikidata-fr-relations",
       "role": "relations"
+    },
+    {
+      "recordCount": 18600,
+      "resourceId": "wikidata-fr-entities-lookup-index",
+      "role": "lookup-index"
+    },
+    {
+      "recordCount": 8943,
+      "resourceId": "wikidata-fr-aliases-lookup-index",
+      "role": "lookup-index"
+    },
+    {
+      "recordCount": 9382,
+      "resourceId": "wikidata-fr-relations-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1"

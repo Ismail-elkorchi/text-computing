@@ -11,13 +11,13 @@
       "path": "CHANGELOG.md"
     },
     {
-      "byteLength": 55649,
-      "checksum": "sha256:ff5d47363b2d0f34d85d96d9f2035ad3384ab9029cd3844b158f23fd7d53941a",
+      "byteLength": 64984,
+      "checksum": "sha256:5e1c6c2fd7cbe379bc207bfaf7e0c55c8a6280d40139da153dd5c942426077e8",
       "path": "COVERAGE.generated.json"
     },
     {
-      "byteLength": 64089,
-      "checksum": "sha256:d007b224d369f2df0501248cfb81822d5469e44ae7719753f63c7a0d0cb9d1bb",
+      "byteLength": 64277,
+      "checksum": "sha256:56e6840f5c3660828ac94a571f2a8e241141b667e990b75efa5b39d100d729b9",
       "path": "EVALUATION.generated.json"
     },
     {
@@ -56,23 +56,23 @@
       "path": "NOTICE.generated.md"
     },
     {
-      "byteLength": 40398,
-      "checksum": "sha256:3e41dec8df6c1d6637f92386db3b8896a1ae829b792c725279bd3c1fddb5feac",
+      "byteLength": 49338,
+      "checksum": "sha256:3d4e12ea425ad260e33c6c8afdb44c6b781a27c77d64b17e70cba9397e2591da",
       "path": "pack.manifest.json"
     },
     {
-      "byteLength": 3918,
-      "checksum": "sha256:7512322b54eee13efe56e25882afccd45db1d7c9ff30a8eed2d3534889920191",
+      "byteLength": 3809,
+      "checksum": "sha256:487dbd353dad451faa56eeeaac6a9e7df998b147e324af8f53b662fd1b2b13cf",
       "path": "package.json"
     },
     {
-      "byteLength": 44376,
-      "checksum": "sha256:3b5f64ca6844f6bd32f626ec39beed2bed21361f4466239e44be1c01f1e2b2b3",
+      "byteLength": 60388,
+      "checksum": "sha256:6c427904860ae624838ab821c2ec1e0ab9a19c99976d372d3044adacd6affa54",
       "path": "QUALITY.generated.json"
     },
     {
-      "byteLength": 3823,
-      "checksum": "sha256:f1b241e4f3ef38ad37ed330b5eacc8b38b9b8dcf92354964b979c95af5e04a97",
+      "byteLength": 4154,
+      "checksum": "sha256:79caa5ab5bb3b8020a4ab841ff06435d5989f9c793feb6a9b2c46de2e2fb67ed",
       "path": "README.md"
     },
     {
@@ -201,13 +201,13 @@
       "path": "resources/esdb-2026.default-profiles.tsv"
     },
     {
-      "byteLength": 2460241,
-      "checksum": "sha256:098eed6a0af63b5144589cdce3e713828d65b092a07af318605e4603f05ab31b",
-      "path": "resources/esdb-2026.default-wordlists.tsv.gz.b64"
+      "byteLength": 4064970,
+      "checksum": "sha256:48ff2648bb3eeb7c2fa58c6b63300b838f65a78bdffc486c5e458d689acc021c",
+      "path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt"
     },
     {
-      "byteLength": 405,
-      "checksum": "sha256:fc73c734e691507ea87c8ec4e799a28721280b397ba66408cd3ad272a9236b5c",
+      "byteLength": 429,
+      "checksum": "sha256:2f01773c8bf3efa14aea3d0554ae1e5a2021b8d8d29d30e278a5b410c1fc0c30",
       "path": "resources/esdb-2026.lexicon.json"
     },
     {
@@ -226,33 +226,18 @@
       "path": "resources/esdb-2026.search-profile.json"
     },
     {
-      "byteLength": 4844105,
-      "checksum": "sha256:11aec2ff40bb2daa747c65ad3474675be6466f33eaba1c60f71f612837304055",
-      "path": "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64"
+      "byteLength": 13687253,
+      "checksum": "sha256:3de1ad6ddb718d8eb8514e81541398f0712d13623a7a31bce3b506ce6878e159",
+      "path": "resources/scowl-v2.inflections.lookup-index.v2.txt"
     },
     {
-      "byteLength": 7328209,
-      "checksum": "sha256:2aff974f56754dc4190f7c9d79084efac7a8ddfd1be566d9084b47c61213d7d8",
-      "path": "resources/scowl-v2.inflections.tsv.gz.b64"
-    },
-    {
-      "byteLength": 547,
-      "checksum": "sha256:1702a6a8ca33af5d3c3a4640f68a5d9e973ce1a23a73ee8fcdb8823ec1645d67",
+      "byteLength": 438,
+      "checksum": "sha256:5b1a6501f5d200f7815b0769f7b9131e2660e4043bfd0fd888434b6810a57a18",
       "path": "resources/scowl-v2.lexicon.json"
     },
     {
-      "byteLength": 5129709,
-      "checksum": "sha256:bf0b7f4d223444618a650ae5ff9f908099590776c0895b0b6ddfd32bec22c15c",
-      "path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64"
-    },
-    {
-      "byteLength": 4819189,
-      "checksum": "sha256:771f858c850bca4e3e1018ea2b053d22735658f63ecf827c5c79948d1df3c079",
-      "path": "resources/scowl-v2.lookup-generator.tsv.gz.b64"
-    },
-    {
-      "byteLength": 1991,
-      "checksum": "sha256:a00c092d471a01a2a194df111bc597049e31f9f52bf75a957254f021144992c4",
+      "byteLength": 1769,
+      "checksum": "sha256:a8849ae680be361e5c2ba91d18ff0749362ed20dbe0045bfc7ef18d75bacd92d",
       "path": "resources/scowl-v2.morphology.json"
     },
     {
@@ -261,13 +246,13 @@
       "path": "resources/scowl-v2.pos.tsv"
     },
     {
-      "byteLength": 1079,
-      "checksum": "sha256:5ab60db572325548aaee12a4d3055b52f251f65a7bafb1831b7e968cd0210fde",
+      "byteLength": 1085,
+      "checksum": "sha256:86b5f205434e776f8b9bd8fbcf17551d2d026c3b8092fb200c2a4d1dd0f35626",
       "path": "resources/scowl-v2.quality-profile.json"
     },
     {
-      "byteLength": 842,
-      "checksum": "sha256:322086f21d57e011b7c51faaf8da127a5410d2f1b0339d6ce046732af8c063f5",
+      "byteLength": 906,
+      "checksum": "sha256:cb6423911c7a9e08982d1ae05f5749676a9d30ab988a8c80e35ef371919f8d1e",
       "path": "resources/scowl-v2.quality.json"
     },
     {
@@ -291,18 +276,18 @@
       "path": "resources/unicode-17.scripts.tsv.gz.b64"
     },
     {
-      "byteLength": 204893,
-      "checksum": "sha256:7604d6fcac1965ec5828b0e699905e6492d878965cb4097be263dc4e1c55307b",
-      "path": "resources/wikidata-en.aliases.tsv.gz.b64"
+      "byteLength": 651874,
+      "checksum": "sha256:5b3cc19902d532fd277e280d300f576fccbf786bb50618dff838089fe3aae636",
+      "path": "resources/wikidata-en.aliases.lookup-index.v2.txt"
     },
     {
-      "byteLength": 359241,
-      "checksum": "sha256:e0464d6ba65415a0ebce0245fb4a7d7ec21a8024269f2fef6025c6ef73e98d49",
-      "path": "resources/wikidata-en.entities.tsv.gz.b64"
+      "byteLength": 661412,
+      "checksum": "sha256:93468c380b5867d6f4be41b59ec44a7a159aba17778edc0e26ced84dff73007f",
+      "path": "resources/wikidata-en.entities.lookup-index.v2.txt"
     },
     {
-      "byteLength": 528,
-      "checksum": "sha256:18480b9acd2b25de4e4d90c711218044de6177529085446262d08ede54fe73aa",
+      "byteLength": 909,
+      "checksum": "sha256:b52367602efb27c25a40300b4af2d8cdafcf2dd5e09d37d866e4f6e188d1001c",
       "path": "resources/wikidata-en.kb.json"
     },
     {
@@ -316,9 +301,9 @@
       "path": "resources/wikidata-en.quality.json"
     },
     {
-      "byteLength": 60577,
-      "checksum": "sha256:cabc7d7e7827e51ec1a2be36abe512c52de6b7e7ae195f0d3f0c197b4c7d2c4e",
-      "path": "resources/wikidata-en.relations.tsv.gz.b64"
+      "byteLength": 153966,
+      "checksum": "sha256:78e2bc3e1a1aaae2084e3051be5ddd3428bf089b4f62d434bb4e8228c3693a0d",
+      "path": "resources/wikidata-en.relations.lookup-index.v2.txt"
     },
     {
       "byteLength": 518,
@@ -326,13 +311,13 @@
       "path": "resources/wordnet-en.kb.json"
     },
     {
-      "byteLength": 1421145,
-      "checksum": "sha256:767ed0dde940e39b449a84ac828fc1fc2f5aaa46dc2a3bc78f2fc9d182dc1bf1",
-      "path": "resources/wordnet-en.lexical-entries.tsv.gz.b64"
+      "byteLength": 3562564,
+      "checksum": "sha256:44b63fc08289c19fb42ba373941012565638b4ec16f76adba2703fd67efa3f40",
+      "path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt"
     },
     {
-      "byteLength": 292,
-      "checksum": "sha256:938ab3964d5732e9517cb77d63372be6c91423343bcf417ebb980485743543e4",
+      "byteLength": 426,
+      "checksum": "sha256:3cc6c73db791eb9c378f164c76de030ae9de6208ac12b959d5ab3cfdae7605a5",
       "path": "resources/wordnet-en.lexicon.json"
     },
     {
@@ -361,8 +346,8 @@
       "path": "resources/wordnet-en.synsets.tsv.gz.b64"
     },
     {
-      "byteLength": 78735,
-      "checksum": "sha256:a1327394de1ba598120d885483507e2597523a80631491eadffb545f32c8d7c5",
+      "byteLength": 88648,
+      "checksum": "sha256:fe018bd5f7bdb0d033c952e6a211d4c44b7f9d07892a888f8de1720ebf70d075",
       "path": "SOURCES.generated.json"
     },
     {
@@ -371,8 +356,8 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 40654,
-      "checksum": "sha256:fa32c7e0844c8147fc0d5deb44ad830069cc1326d46cdbdd3b24f97aba6fd4d5",
+      "byteLength": 49594,
+      "checksum": "sha256:1fcc8ee5a3707072c3adb8f87a799dd1e419f5231e84ef390a770a35d078ae8a",
       "path": "src/manifest.ts"
     },
     {
@@ -381,8 +366,8 @@
       "path": "src/pack.ts"
     },
     {
-      "byteLength": 23729,
-      "checksum": "sha256:65dbf43ad3eaf8fd0220e3ab26d6d70b866cccccbbde9d782fb86593a7d024b6",
+      "byteLength": 24964,
+      "checksum": "sha256:918a601540ef1ea20769e23eec7d031eab829fb724cc5d73555207050af8777e",
       "path": "src/resources.ts"
     },
     {
@@ -445,16 +430,13 @@
     "resources/en.segmentation.sentence.json",
     "resources/en.segmentation.word.json",
     "resources/esdb-2026.default-profiles.tsv",
-    "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+    "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
     "resources/esdb-2026.lexicon.json",
     "resources/esdb-2026.quality-profile.json",
     "resources/esdb-2026.quality.json",
     "resources/esdb-2026.search-profile.json",
-    "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
-    "resources/scowl-v2.inflections.tsv.gz.b64",
+    "resources/scowl-v2.inflections.lookup-index.v2.txt",
     "resources/scowl-v2.lexicon.json",
-    "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
-    "resources/scowl-v2.lookup-generator.tsv.gz.b64",
     "resources/scowl-v2.morphology.json",
     "resources/scowl-v2.pos.tsv",
     "resources/scowl-v2.quality-profile.json",
@@ -463,14 +445,14 @@
     "resources/unicode-17.core.summary.json",
     "resources/unicode-17.property-value-aliases.tsv",
     "resources/unicode-17.scripts.tsv.gz.b64",
-    "resources/wikidata-en.aliases.tsv.gz.b64",
-    "resources/wikidata-en.entities.tsv.gz.b64",
+    "resources/wikidata-en.aliases.lookup-index.v2.txt",
+    "resources/wikidata-en.entities.lookup-index.v2.txt",
     "resources/wikidata-en.kb.json",
     "resources/wikidata-en.quality-profile.json",
     "resources/wikidata-en.quality.json",
-    "resources/wikidata-en.relations.tsv.gz.b64",
+    "resources/wikidata-en.relations.lookup-index.v2.txt",
     "resources/wordnet-en.kb.json",
-    "resources/wordnet-en.lexical-entries.tsv.gz.b64",
+    "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
     "resources/wordnet-en.lexicon.json",
     "resources/wordnet-en.quality-profile.json",
     "resources/wordnet-en.quality.json",
@@ -488,9 +470,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+  "lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
   "mode": "source-backed",
-  "outputChecksum": "sha256:5fb81acb2eed7bfed537e624a3fa81fa04a855a472b7f569c55f56e0cdd79c29",
+  "outputChecksum": "sha256:ff56277e0b5894d6ddb0b7702ce1544d4e3d7b4114137144d5c1bf58fdf3f07e",
   "packSpecPath": "tools/textpack-forge/composites/textpack-en.composite.json",
   "packageName": "@ismail-elkorchi/textpack-en",
   "packageVersion": "0.1.0",

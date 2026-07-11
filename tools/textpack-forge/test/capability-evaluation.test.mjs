@@ -4,7 +4,12 @@ import test from "node:test";
 
 import Ajv from "ajv";
 
-import { assertModelBackedEvidence } from "../lib/evaluation.mjs";
+import {
+	assertDeclaredConformanceEvaluation,
+	assertModelBackedEvidence,
+	assertTaskSupportedDistributionEvaluation,
+	evaluationRecordsPassReadiness,
+} from "../lib/evaluation.mjs";
 import { capabilitySlotPolicy } from "../lib/policy.mjs";
 
 test("capability policy validates explicit status and tier claims", () => {
@@ -145,4 +150,150 @@ test("model-backed non-task records remain valid schema evidence", async () => {
 		true,
 		JSON.stringify(validate.errors),
 	);
+});
+
+test("failed evaluation evidence blocks task-supported distributions", () => {
+	const distribution = {
+		packageName: "@ismail-elkorchi/textpack-test",
+		distribution: true,
+		capabilitySlots: [
+			{ slot: "normalization", status: "task-supported", tier: "baseline" },
+		],
+	};
+	assert.throws(
+		() =>
+			assertTaskSupportedDistributionEvaluation(distribution, [
+				{ recordId: "eval:test:failed", result: "fail" },
+			]),
+		/eval:test:failed/u,
+	);
+	assert.doesNotThrow(() =>
+		assertTaskSupportedDistributionEvaluation(distribution, [
+			{
+				capabilitySlot: "normalization",
+				recordId: "eval:test:passed",
+				result: "pass",
+			},
+		]),
+	);
+	assert.throws(
+		() =>
+			assertTaskSupportedDistributionEvaluation(distribution, [
+				{
+					capabilitySlot: "segmentation",
+					recordId: "eval:test:wrong-slot",
+					result: "pass",
+				},
+			]),
+		/normalization lacks passing/u,
+	);
+});
+
+test("failed distribution evidence is fatal while internal packs remain independent", () => {
+	const failedResourceEvidence = [
+		{ recordId: "eval:test:resource", result: "fail" },
+	];
+	assert.throws(
+		() =>
+			assertTaskSupportedDistributionEvaluation(
+				{
+					packageName: "@ismail-elkorchi/textpack-resource-only",
+					distribution: true,
+					capabilitySlots: [
+						{ slot: "foundation", status: "profiled", tier: "resource-only" },
+					],
+				},
+				failedResourceEvidence,
+			),
+		/eval:test:resource/u,
+	);
+	assert.doesNotThrow(() =>
+		assertTaskSupportedDistributionEvaluation(
+			{
+				packageName: "@ismail-elkorchi/textpack-internal",
+				distribution: false,
+				capabilitySlots: [
+					{ slot: "normalization", status: "task-supported", tier: "baseline" },
+				],
+			},
+			failedResourceEvidence,
+		),
+	);
+});
+
+test("declared publishability evaluation ids must resolve uniquely and pass", () => {
+	const pack = {
+		packageName: "@ismail-elkorchi/textpack-test",
+		publishable: true,
+		publishabilityEvidence: {
+			conformanceEvidence: [
+				"eval:test:conformance",
+				"docs:textpacks/readiness.md#test",
+			],
+		},
+	};
+	assert.doesNotThrow(() =>
+		assertDeclaredConformanceEvaluation(pack, [
+			{ recordId: "eval:test:conformance", result: "pass" },
+		]),
+	);
+	assert.throws(
+		() => assertDeclaredConformanceEvaluation(pack, []),
+		/resolves to 0/u,
+	);
+	assert.throws(
+		() =>
+			assertDeclaredConformanceEvaluation(pack, [
+				{ recordId: "eval:test:conformance", result: "fail" },
+			]),
+		/did not pass/u,
+	);
+	assert.throws(
+		() =>
+			assertDeclaredConformanceEvaluation(pack, [
+				{ recordId: "eval:test:conformance", result: "pass" },
+				{ recordId: "eval:test:conformance", result: "pass" },
+			]),
+		/resolves to 2/u,
+	);
+	assert.throws(
+		() =>
+			assertDeclaredConformanceEvaluation(
+				{
+					...pack,
+					publishabilityEvidence: {
+						conformanceEvidence: ["docs:textpacks/readiness.md#test"],
+					},
+				},
+				[],
+			),
+		/no executable evaluation/u,
+	);
+});
+
+test("readiness requires passing slot evidence and rejects any failed record", () => {
+	assert.equal(
+		evaluationRecordsPassReadiness([
+			{
+				evaluationKind: "resource-conformance",
+				recordId: "eval:test:resource-pass",
+				result: "pass",
+			},
+		]),
+		true,
+	);
+	assert.equal(
+		evaluationRecordsPassReadiness([
+			{ recordId: "eval:test:pass", result: "pass" },
+			{ recordId: "eval:test:fail", result: "fail" },
+		]),
+		false,
+	);
+	assert.equal(
+		evaluationRecordsPassReadiness([
+			{ recordId: "eval:test:warning", result: "warning" },
+		]),
+		false,
+	);
+	assert.equal(evaluationRecordsPassReadiness([]), false);
 });

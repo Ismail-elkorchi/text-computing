@@ -353,13 +353,22 @@
 		{
 			"id": "en-esdb-default-wordlists",
 			"kind": "lexicon",
-			"path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
+			"path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"English Speller Database generated wordlist outputs, rel-2026.02.25."
 			],
-			"schemaId": "textlex.lexicon.rows.v1"
+			"schemaId": "textlex.lexicon.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "en-esdb-default-wordlists-lookup-index",
+				"logicalFormat": "tsv+gzip+base64",
+				"logicalPath": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:a21cffb19ea0c58045a6939601430be9c066a26294b1602285ccbd5177ba5ba2",
+				"logicalTextByteLength": 20301511,
+				"logicalRowCount": 548642
+			}
 		},
 		{
 			"id": "en-esdb-default-profiles",
@@ -417,43 +426,65 @@
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "en-esdb-default-wordlists-lookup-index",
+			"kind": "dataset",
+			"path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"English Speller Database generated wordlist outputs, rel-2026.02.25."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "en-esdb-default-wordlists",
+				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
+				"indexedResourceTextChecksum": "sha256:a21cffb19ea0c58045a6939601430be9c066a26294b1602285ccbd5177ba5ba2",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"word"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [
+					"word"
+				],
+				"bucketCount": 128,
+				"sourceRowCount": 548642,
+				"recordCount": 111648,
+				"rowReferenceCount": 548642,
+				"indexedResourceTextByteLength": 20301511,
+				"lookupIndexShippedByteLength": 4064970,
+				"storageBudgetByteLength": 26391965,
+				"storageSizeRatio": 0.20022992377266893,
+				"maximumBucketByteLength": 94700
+			}
+		},
+		{
 			"id": "en-scowl-inflection-entries",
 			"kind": "morphology",
-			"path": "resources/scowl-v2.inflections.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
+			"path": "resources/scowl-v2.inflections.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
 			],
-			"schemaId": "textlex.morphology.rows.v1"
+			"schemaId": "textlex.morphology.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "en-scowl-inflection-entries-lookup-index",
+				"logicalFormat": "tsv+gzip+base64",
+				"logicalPath": "resources/scowl-v2.inflections.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:cf7637649c1ccb607c5a09898dfc838a1f49557d0ba289bff1033c5a93cf0ea4",
+				"logicalTextByteLength": 33487594,
+				"logicalRowCount": 401709
+			}
 		},
 		{
 			"id": "en-scowl-pos-inventory",
 			"kind": "morphology",
 			"path": "resources/scowl-v2.pos.tsv",
 			"format": "tsv",
-			"license": "LicenseRef-ESDB-MIT-Like",
-			"citations": [
-				"SCOWLv2 rich text export, rel-2026.02.25."
-			],
-			"schemaId": "textlex.morphology.rows.v1"
-		},
-		{
-			"id": "en-scowl-lookup-analyzer",
-			"kind": "morphology",
-			"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
-			"license": "LicenseRef-ESDB-MIT-Like",
-			"citations": [
-				"SCOWLv2 rich text export, rel-2026.02.25."
-			],
-			"schemaId": "textlex.morphology.rows.v1"
-		},
-		{
-			"id": "en-scowl-lookup-generator",
-			"kind": "morphology",
-			"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
@@ -507,42 +538,58 @@
 		{
 			"id": "en-scowl-inflection-entries-lookup-index",
 			"kind": "dataset",
-			"path": "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
-			"format": "tsv",
+			"path": "resources/scowl-v2.inflections.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "LicenseRef-ESDB-MIT-Like",
 			"citations": [
 				"SCOWLv2 rich text export, rel-2026.02.25."
 			],
-			"schemaId": "textpack.lookup-index.v1",
+			"schemaId": "textpack.lookup-index.v2",
 			"metadata": {
-				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexFormat": "normalized-key-bucketed-rows-v2",
 				"indexedResourceId": "en-scowl-inflection-entries",
 				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
 				"indexedResourceTextChecksum": "sha256:cf7637649c1ccb607c5a09898dfc838a1f49557d0ba289bff1033c5a93cf0ea4",
-				"indexedResourceGzipBase64ByteLength": 7328209,
-				"lookupIndexGzipBase64ByteLength": 4844105,
-				"compressedSizeRatio": 0.661022,
-				"coordinateUnit": "utf16-code-unit",
-				"offsetBasis": "uncompressed-resource-text",
 				"keyNormalization": "NFKC-casefold-Unicode-17",
-				"keyOrdering": "unicode-code-unit",
 				"keyColumns": [
+					"form",
+					"lemma"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [
 					"form"
 				],
-				"recordCount": 349953,
-				"spanCount": 401709
+				"bucketCount": 128,
+				"sourceRowCount": 401709,
+				"recordCount": 548801,
+				"rowReferenceCount": 800253,
+				"indexedResourceTextByteLength": 33487594,
+				"lookupIndexShippedByteLength": 13687253,
+				"storageBudgetByteLength": 43533873,
+				"storageSizeRatio": 0.40872607927580584,
+				"maximumBucketByteLength": 265908
 			}
 		},
 		{
 			"id": "wordnet-en-lexical-entries",
 			"kind": "lexicon",
-			"path": "resources/wordnet-en.lexical-entries.tsv.gz.b64",
-			"format": "tsv",
+			"path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
 			"citations": [
 				"Open English WordNet 2025."
 			],
-			"schemaId": "textlex.lexicon.rows.v1"
+			"schemaId": "textlex.lexicon.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wordnet-en-lexical-entries-lookup-index",
+				"logicalFormat": "tsv",
+				"logicalPath": "resources/wordnet-en.lexical-entries.tsv",
+				"logicalTextChecksum": "sha256:f664206820369a0d71b9e969a1727df6f7646fb76261297630b78426d410342b",
+				"logicalTextByteLength": 4485654,
+				"logicalRowCount": 135969
+			}
 		},
 		{
 			"id": "wordnet-en-senses",
@@ -622,40 +669,102 @@
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "wordnet-en-lexical-entries-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+			"citations": [
+				"Open English WordNet 2025."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wordnet-en-lexical-entries",
+				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
+				"indexedResourceTextChecksum": "sha256:f664206820369a0d71b9e969a1727df6f7646fb76261297630b78426d410342b",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"lemma"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [
+					"lemma"
+				],
+				"bucketCount": 32,
+				"sourceRowCount": 135969,
+				"recordCount": 127311,
+				"rowReferenceCount": 135969,
+				"indexedResourceTextByteLength": 4485654,
+				"lookupIndexShippedByteLength": 3562564,
+				"storageBudgetByteLength": 5831351,
+				"storageSizeRatio": 0.7942128394209629,
+				"maximumBucketByteLength": 77984
+			}
+		},
+		{
 			"id": "wikidata-en-entities",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-en.entities.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-en.entities.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-en-entities-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-en.entities.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:340b6adb308d3a6d96bbaafc23e74d0b61ff510d504ca2ce44acf0ea7dca4d18",
+				"logicalTextByteLength": 1207330,
+				"logicalRowCount": 11618
+			}
 		},
 		{
 			"id": "wikidata-en-aliases",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-en.aliases.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-en.aliases.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-en-aliases-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-en.aliases.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
+				"logicalTextByteLength": 507718,
+				"logicalRowCount": 19781
+			}
 		},
 		{
 			"id": "wikidata-en-relations",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-en.relations.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-en.relations.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08.",
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-en-relations-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-en.relations.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:c3d1e904cc688092411dc84d6b800d6502f745fcb7d4e29fc95c9ba8a2e2caf2",
+				"logicalTextByteLength": 363996,
+				"logicalRowCount": 11618
+			}
 		},
 		{
 			"id": "wikidata-en-kb-canonical",
@@ -692,6 +801,115 @@
 				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
 			],
 			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wikidata-en-entities-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-en.entities.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-en-entities",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:340b6adb308d3a6d96bbaafc23e74d0b61ff510d504ca2ce44acf0ea7dca4d18",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"entityId",
+					"label"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [
+					"label"
+				],
+				"patternColumns": [],
+				"bucketCount": 8,
+				"sourceRowCount": 11618,
+				"recordCount": 23061,
+				"rowReferenceCount": 23236,
+				"indexedResourceTextByteLength": 1207330,
+				"lookupIndexShippedByteLength": 661412,
+				"storageBudgetByteLength": 1569529,
+				"storageSizeRatio": 0.5478303363620551,
+				"maximumBucketByteLength": 53844
+			}
+		},
+		{
+			"id": "wikidata-en-aliases-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-en.aliases.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-en-aliases",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:12902fab6a73fc4ead00c4e5dfe0050be3c6018797ecb86762132984c383c34f",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"alias",
+					"entityId"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [
+					"alias"
+				],
+				"patternColumns": [],
+				"bucketCount": 2,
+				"sourceRowCount": 19781,
+				"recordCount": 28613,
+				"rowReferenceCount": 39562,
+				"indexedResourceTextByteLength": 507718,
+				"lookupIndexShippedByteLength": 651874,
+				"storageBudgetByteLength": 660034,
+				"storageSizeRatio": 1.2839292678219012,
+				"maximumBucketByteLength": 148000
+			}
+		},
+		{
+			"id": "wikidata-en-relations-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-en.relations.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08.",
+				"Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-en-relations",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:c3d1e904cc688092411dc84d6b800d6502f745fcb7d4e29fc95c9ba8a2e2caf2",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"sourceId",
+					"targetId"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [],
+				"bucketCount": 2,
+				"sourceRowCount": 11618,
+				"recordCount": 11623,
+				"rowReferenceCount": 23236,
+				"indexedResourceTextByteLength": 363996,
+				"lookupIndexShippedByteLength": 153966,
+				"storageBudgetByteLength": 473195,
+				"storageSizeRatio": 0.42298816470510664,
+				"maximumBucketByteLength": 48508
+			}
 		}
 	],
 	"capabilitySlots": [
@@ -768,12 +986,36 @@
 				"wikidata-en-entities",
 				"wikidata-en-aliases",
 				"wikidata-en-relations",
-				"wikidata-en-kb-canonical"
+				"wikidata-en-kb-canonical",
+				"wikidata-en-entities-lookup-index",
+				"wikidata-en-aliases-lookup-index",
+				"wikidata-en-relations-lookup-index"
 			],
 			"artifactIds": [
 				"artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "wikidata-en-aliases-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "index",
+					"resourceId": "wikidata-en-entities-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "index",
+					"resourceId": "wikidata-en-relations-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
 				{
 					"role": "primary",
 					"resourceId": "wikidata-en-kb-canonical",
@@ -863,11 +1105,27 @@
 				"en-esdb-default-wordlists",
 				"en-esdb-default-profiles",
 				"en-esdb-wordlist-lexicon-canonical",
+				"en-esdb-default-wordlists-lookup-index",
 				"en-scowl-inflection-lexicon-canonical",
 				"wordnet-en-lexical-entries",
-				"wordnet-en-lexicon-canonical"
+				"wordnet-en-lexicon-canonical",
+				"wordnet-en-lexical-entries-lookup-index"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "en-esdb-default-wordlists-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "index",
+					"resourceId": "wordnet-en-lexical-entries-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
 				{
 					"role": "primary",
 					"resourceId": "en-esdb-wordlist-lexicon-canonical",
@@ -943,8 +1201,6 @@
 			"tier": "lookup",
 			"resourceIds": [
 				"en-scowl-inflection-entries",
-				"en-scowl-lookup-analyzer",
-				"en-scowl-lookup-generator",
 				"en-scowl-pos-inventory",
 				"en-scowl-inflection-morphology-canonical",
 				"en-scowl-inflection-entries-lookup-index"
@@ -953,7 +1209,7 @@
 				{
 					"role": "index",
 					"resourceId": "en-scowl-inflection-entries-lookup-index",
-					"schemaId": "textpack.lookup-index.v1",
+					"schemaId": "textpack.lookup-index.v2",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -973,20 +1229,6 @@
 				},
 				{
 					"role": "table",
-					"resourceId": "en-scowl-lookup-analyzer",
-					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
-				},
-				{
-					"role": "table",
-					"resourceId": "en-scowl-lookup-generator",
-					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
-				},
-				{
-					"role": "table",
 					"resourceId": "en-scowl-pos-inventory",
 					"schemaId": "textlex.morphology.rows.v1",
 					"required": true,
@@ -996,7 +1238,7 @@
 			"readerRequired": true,
 			"notes": [
 				"The bundled distribution resources provide English SCOWLv2 lookup morphology data; isolated UniMorph paradigm tables are not included.",
-				"SCOWLv2 form-to-lemma lookup analysis and lemma-to-form lookup generation candidates are available as generated compressed table resources."
+				"One SCOWLv2 inflection table serves targeted form-to-lemma analysis and lemma-to-form generation through its form-and-lemma lookup index."
 			],
 			"capabilities": {
 				"morphology": "lookup"
@@ -1297,7 +1539,7 @@
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+		"lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

@@ -1,10 +1,14 @@
 {
+  "analysisCandidateRowCount": 401709,
   "derivedFormCount": 167029,
+  "generationCandidateRowCount": 401709,
   "groupCount": 201781,
   "inflectionRowCount": 401709,
   "lemmaRecordCount": 234680,
-  "lookupAnalyzerRowCount": 401709,
-  "lookupGeneratorRowCount": 401709,
+  "lookupKeyColumns": [
+    "form",
+    "lemma"
+  ],
   "parsedLineCount": 234680,
   "pipelineId": "scowl-v2-inflection",
   "pipelineVersion": "0.1.0",
@@ -18,6 +22,6 @@
   "uniqueLemmaCount": 204268,
   "warnings": [
     "SCOWLv2 scowl.txt is a pinned release text export; this package does not claim stable upstream database-schema coverage.",
-    "Generated lookup analyzer and generator indexes preserve SCOWLv2 source-release scope and do not claim finite-state or context-disambiguating morphology."
+    "The single inflection table supports indexed form analysis and lemma generation lookups; it does not claim finite-state or context-disambiguating morphology."
   ]
 }

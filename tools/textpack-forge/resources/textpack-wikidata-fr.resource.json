@@ -47,19 +47,22 @@
 			"resourceId": "wikidata-fr-entities",
 			"path": "resources/wikidata-fr.entities.tsv.gz.b64",
 			"kind": "knowledge-base",
-			"format": "text/tab-separated-values"
+			"format": "text/tab-separated-values",
+			"lookupKeyColumns": ["entityId", "label"]
 		},
 		{
 			"resourceId": "wikidata-fr-aliases",
 			"path": "resources/wikidata-fr.aliases.tsv.gz.b64",
 			"kind": "knowledge-base",
-			"format": "text/tab-separated-values"
+			"format": "text/tab-separated-values",
+			"lookupKeyColumns": ["alias", "entityId"]
 		},
 		{
 			"resourceId": "wikidata-fr-relations",
 			"path": "resources/wikidata-fr.relations.tsv.gz.b64",
 			"kind": "knowledge-base",
-			"format": "text/tab-separated-values"
+			"format": "text/tab-separated-values",
+			"lookupKeyColumns": ["sourceId", "targetId"]
 		},
 		{
 			"resourceId": "wikidata-fr-kb-canonical",

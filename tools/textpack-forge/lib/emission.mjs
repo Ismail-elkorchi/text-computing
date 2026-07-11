@@ -85,8 +85,11 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
+	assertDeclaredConformanceEvaluation,
 	assertModelBackedEvidence,
+	assertTaskSupportedDistributionEvaluation,
 	coverageReportFor,
+	evaluationRecordsPassReadiness,
 	evaluationReportFor,
 	qualityReportFor,
 } from "./evaluation.mjs";
@@ -391,7 +394,7 @@ function concretePackageJson(pack) {
 		files: [
 			"dist",
 			"pack.manifest.json",
-			...pack.payloads.map((payload) => payload.path),
+			...sorted(new Set(pack.payloads.map((payload) => payload.path))),
 			".textpack-generated.json",
 			...(pack.licenseEvidenceFiles.length === 0 ? [] : ["licenses"]),
 			"LICENSE.generated.md",
@@ -740,6 +743,11 @@ function sourcesReportFor(pack, context) {
 					: { citations: descriptor.citations }),
 				checksum: resource.checksum,
 				byteLength: resource.byteLength,
+				logicalRecordCount:
+					resource.logicalRecordCount ?? resource.nonEmptyLineCount,
+				sharedStorageResourceIds: resource.sharedStorageResourceIds ?? [
+					resource.id,
+				],
 			};
 		}),
 	};
@@ -775,6 +783,8 @@ function assertFeatureCompleteLanguageCompositeEvidence(
 export async function packageOutputsFor(pack, context) {
 	const outputs = new Map();
 	const evaluationReport = evaluationReportFor(pack, context);
+	assertTaskSupportedDistributionEvaluation(pack, evaluationReport.records);
+	assertDeclaredConformanceEvaluation(pack, evaluationReport.records);
 	assertModelBackedEvidence(pack, evaluationReport.records);
 	assertFeatureCompleteLanguageCompositeEvidence(
 		pack,
@@ -1428,6 +1438,13 @@ export function languageDistributionReadinessFor(context) {
 		generatedBy: GENERATED_BY,
 		mode: context.mode,
 		languages: developerFacingLanguageTags.map((languageTag) => {
+			const distributionPackageName = `@ismail-elkorchi/textpack-${languageTag}`;
+			const distributionPack = packageByName.get(distributionPackageName);
+			const distributionEvaluationRecords =
+				distributionPack === undefined
+					? []
+					: (distributionPack.evaluationRecords ??
+						evaluationReportFor(distributionPack, context).records);
 			const slots = languageDistributionRequiredSlots.map((slot) => {
 				const requiredPackageName = requiredLanguageSlotPackageName(
 					languageTag,
@@ -1470,10 +1487,15 @@ export function languageDistributionReadinessFor(context) {
 				const schemaValid = exactPack !== undefined;
 				const standardReports =
 					exactPack !== undefined && standardReportsGenerated(exactPack);
+				const evaluatedSlotNames = new Set([slot, ...slotAliases(slot)]);
+				const slotEvaluationRecords = distributionEvaluationRecords.filter(
+					(record) => evaluatedSlotNames.has(record.capabilitySlot),
+				);
 				const evaluated =
 					exactPack !== undefined &&
 					standardReports &&
-					exactPack.generatedFiles.includes("EVALUATION.generated.json");
+					exactPack.generatedFiles.includes("EVALUATION.generated.json") &&
+					evaluationRecordsPassReadiness(slotEvaluationRecords);
 				const adapterValid = exactPack !== undefined && standardReports;
 				const publishable =
 					exactPack !== undefined && exactPack.publishable === true;
@@ -1564,7 +1586,6 @@ export function languageDistributionReadinessFor(context) {
 			const blockedSlots = slots.filter(
 				(slot) => !slot.checks.distributionReady,
 			);
-			const distributionPackageName = `@ismail-elkorchi/textpack-${languageTag}`;
 			return {
 				languageTag,
 				languageName: languageDisplayName(languageTag, context),
@@ -1596,6 +1617,13 @@ export function validateDeveloperFacingDistributionPublishability(
 		expect(
 			language.distributionReady === true,
 			`${language.distributionPackageName} cannot be publishable until every required language slot is distribution-ready. Blocked slots: ${language.summary.blockedSlots.join(", ") || "none"}.`,
+			language.requiredSlots
+				.filter((slot) => !slot.checks.distributionReady)
+				.map(
+					(slot) =>
+						`${slot.slot}: ${slot.blockers.join("; ")} (${JSON.stringify(slot.checks)})`,
+				)
+				.join("\n"),
 		);
 	}
 }
@@ -1639,6 +1667,30 @@ export function languageDistributionReadinessMarkdown(readiness) {
 }
 
 export function sizeReportFor(context) {
+	const physicalStorageFor = (pack) => {
+		const byPath = new Map();
+		for (const resource of pack.resourceStats) {
+			const existing = byPath.get(resource.path);
+			if (existing === undefined) {
+				byPath.set(resource.path, {
+					path: resource.path,
+					byteLength: resource.byteLength,
+					checksum: resource.checksum,
+					resourceIds: [resource.id],
+				});
+			} else {
+				expect(
+					existing.byteLength === resource.byteLength &&
+						existing.checksum === resource.checksum,
+					`${pack.packageName} shared storage ${resource.path} is divergent.`,
+				);
+				existing.resourceIds.push(resource.id);
+			}
+		}
+		return [...byPath.values()].sort((left, right) =>
+			left.path.localeCompare(right.path),
+		);
+	};
 	return {
 		schemaVersion: "1",
 		generatedAt: context.generatedAt,
@@ -1650,6 +1702,8 @@ export function sizeReportFor(context) {
 			mediumUnpackedBytes: 50 * 1024 * 1024,
 			hugeUnpackedBytes: 500 * 1024 * 1024,
 			compositePackedBytes: 500 * 1024,
+			distributionPackageBytes: 50 * 1024 * 1024,
+			distributionAggregateBytes: 120 * 1024 * 1024,
 		},
 		packages: context.packs.filter(isDistributionPack).map((pack) => ({
 			packageName: pack.packageName,
@@ -1661,8 +1715,31 @@ export function sizeReportFor(context) {
 			sizeClass: sizeClass(pack.npmShippedSizeBytes),
 			outputChecksum: pack.outputChecksum,
 			resources: pack.resourceStats,
+			physicalStorage: physicalStorageFor(pack),
 		})),
 	};
+}
+
+export function validateDistributionStorageBudgets(context) {
+	const distributions = context.packs.filter(isDistributionPack);
+	const packageLimit = 50 * 1024 * 1024;
+	const aggregateLimit = 120 * 1024 * 1024;
+	for (const pack of distributions) {
+		expect(
+			pack.npmShippedSizeBytes <= packageLimit,
+			`${pack.packageName} physical resource storage exceeds ${packageLimit} bytes.`,
+			`actual ${pack.npmShippedSizeBytes}`,
+		);
+	}
+	const aggregate = distributions.reduce(
+		(total, pack) => total + pack.npmShippedSizeBytes,
+		0,
+	);
+	expect(
+		aggregate <= aggregateLimit,
+		`Distribution physical resource storage exceeds ${aggregateLimit} bytes.`,
+		`actual ${aggregate}`,
+	);
 }
 
 function countBy(values, selector) {

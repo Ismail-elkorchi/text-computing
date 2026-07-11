@@ -10,9 +10,9 @@
       "role": "forms"
     },
     {
-      "recordCount": 5,
-      "resourceId": "en-esdb-default-profiles",
-      "role": "entries"
+      "recordCount": 111648,
+      "resourceId": "en-esdb-default-wordlists-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1",

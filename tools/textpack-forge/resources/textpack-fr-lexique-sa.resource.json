@@ -4,12 +4,8 @@
 	"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
 	"pipelineId": "french-lexique-383",
 	"pipelineVersion": "0.1.0",
-	"sourceIds": [
-		"source:fr:lexique-383"
-	],
-	"snapshotIds": [
-		"snapshot:source:fr:lexique-383:2019-06-04"
-	],
+	"sourceIds": ["source:fr:lexique-383"],
+	"snapshotIds": ["snapshot:source:fr:lexique-383:2019-06-04"],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:fr:lexique-383:2019-06-04",
@@ -23,7 +19,8 @@
 			"path": "resources/lexique-383.entries.tsv.gz.b64",
 			"kind": "lexicon",
 			"format": "tsv+gzip+base64",
-			"lookupKeyColumns": ["form", "lemma"]
+			"lookupKeyColumns": ["form", "lemma"],
+			"lookupPatternColumns": ["form"]
 		},
 		{
 			"resourceId": "fr-lexique-lemmas",

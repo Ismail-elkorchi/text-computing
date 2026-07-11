@@ -235,7 +235,7 @@ function jsonStringArray(value: unknown): readonly string[] {
 	);
 }
 
-function mentionCandidates(
+export function mentionCandidates(
 	text: string,
 	lexicalUnits: readonly {
 		readonly startCU: number;

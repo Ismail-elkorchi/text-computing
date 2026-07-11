@@ -1,17 +1,17 @@
 {
   "analyzers": [
     {
-      "analyzerId": "fr-unimorph-f672f8c-lookup-analyzer",
+      "analyzerId": "fr-unimorph-f672f8c-paradigm-table",
       "coverage": {
+        "analysisCandidateRowCount": 367732,
         "entryCount": 367732,
         "featureValueCount": 19,
+        "generationCandidateRowCount": 367732,
         "uniqueFormCount": 274192,
         "uniqueLemmaCount": 7535
       },
       "resourceIds": [
         "fr-unimorph-paradigms",
-        "fr-unimorph-lookup-analyzer",
-        "fr-unimorph-lookup-generator",
         "fr-unimorph-feature-inventory"
       ],
       "type": "paradigm-table"
@@ -63,22 +63,12 @@
       "role": "paradigm-table"
     },
     {
-      "recordCount": 367732,
-      "resourceId": "fr-unimorph-lookup-analyzer",
-      "role": "analyzer"
-    },
-    {
-      "recordCount": 367732,
-      "resourceId": "fr-unimorph-lookup-generator",
-      "role": "generator"
-    },
-    {
       "recordCount": 19,
       "resourceId": "fr-unimorph-feature-inventory",
       "role": "feature-inventory"
     },
     {
-      "recordCount": 274192,
+      "recordCount": 281727,
       "resourceId": "fr-unimorph-paradigms-lookup-index",
       "role": "lookup-index"
     }

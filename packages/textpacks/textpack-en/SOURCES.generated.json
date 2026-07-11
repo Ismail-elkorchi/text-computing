@@ -38,7 +38,7 @@
     {
       "buildUnitId": "en-inflection-scowl",
       "licensePolicy": "allow-attribution",
-      "reason": "English SCOWLv2 inflection and lookup morphology resources."
+      "reason": "English SCOWLv2 inflection table with indexed form and lemma lookup."
     },
     {
       "buildUnitId": "wordnet-en",
@@ -85,10 +85,14 @@
       "id": "bcp47-language-registry-summary",
       "kind": "language-registry",
       "license": "LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 16,
       "path": "resources/bcp47.language-registry.summary.json",
       "pipelineId": "iana-language-registry",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "sharedStorageResourceIds": [
+        "bcp47-language-registry-summary"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05"
       ],
@@ -105,10 +109,14 @@
       "id": "bcp47-language-subtags",
       "kind": "language-registry",
       "license": "LicenseRef-IANA-Language-Subtag-Registry",
+      "logicalRecordCount": 9296,
       "path": "resources/bcp47.language-subtags.tsv.gz.b64",
       "pipelineId": "iana-language-registry",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "sharedStorageResourceIds": [
+        "bcp47-language-subtags"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05"
       ],
@@ -125,10 +133,14 @@
       "id": "cldr-48-core-summary",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 9,
       "path": "resources/cldr-48.core.summary.json",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-core-summary"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -145,10 +157,14 @@
       "id": "cldr-48-likely-subtags",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 7789,
       "path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-likely-subtags"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -165,10 +181,14 @@
       "id": "cldr-48-locale-aliases",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 1307,
       "path": "resources/cldr-48.locale-aliases.tsv",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-locale-aliases"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -185,10 +205,14 @@
       "id": "cldr-48-script-data",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 16,
       "path": "resources/cldr-48.script-data.tsv",
       "pipelineId": "cldr-core-foundation",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "sharedStorageResourceIds": [
+        "cldr-48-script-data"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:cldr-core:48.2.0"
       ],
@@ -205,10 +229,14 @@
       "id": "en-core-abbreviations",
       "kind": "abbreviation-table",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 2808,
       "path": "resources/en.core.abbreviations.tsv.gz.b64",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-abbreviations"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -234,10 +262,14 @@
       "id": "en-core-basic-segmentation",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 60,
       "path": "resources/en.core.basic-segmentation.json",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-basic-segmentation"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -262,10 +294,14 @@
       "id": "en-core-function-words",
       "kind": "stoplist",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 327,
       "path": "resources/en.core.function-words.tsv",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-function-words"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -294,10 +330,14 @@
       "id": "en-core-language-profile",
       "kind": "locale-profile",
       "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 39,
       "path": "resources/en.core.language-profile.json",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-language-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -322,10 +362,14 @@
       "id": "en-core-orthography",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 62,
       "path": "resources/en.core.orthography.tsv",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-orthography"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -350,10 +394,14 @@
       "id": "en-core-punctuation",
       "kind": "locale-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 397,
       "path": "resources/en.core.punctuation.tsv",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-punctuation"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -382,10 +430,14 @@
       "id": "en-core-quality",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 33,
       "path": "resources/en.core.quality.json",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -414,10 +466,14 @@
       "id": "en-core-quality-profile",
       "kind": "quality-profile",
       "license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 59,
       "path": "resources/en.core.quality-profile.json",
       "pipelineId": "english-core-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
+      "sharedStorageResourceIds": [
+        "en-core-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:iana:language-subtag-registry:2026-05-05",
         "snapshot:source:unicode:ucd:17.0.0",
@@ -442,10 +498,14 @@
       "id": "en-esdb-default-profiles",
       "kind": "lexicon",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 6,
       "path": "resources/esdb-2026.default-profiles.tsv",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-default-profiles"
+      ],
       "snapshotIds": [
         "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
       ],
@@ -454,18 +514,23 @@
       ]
     },
     {
-      "byteLength": 2460241,
-      "checksum": "sha256:098eed6a0af63b5144589cdce3e713828d65b092a07af318605e4603f05ab31b",
+      "byteLength": 4064970,
+      "checksum": "sha256:48ff2648bb3eeb7c2fa58c6b63300b838f65a78bdffc486c5e458d689acc021c",
       "citations": [
         "English Speller Database generated wordlist outputs, rel-2026.02.25."
       ],
       "id": "en-esdb-default-wordlists",
       "kind": "lexicon",
       "license": "LicenseRef-ESDB-MIT-Like",
-      "path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+      "logicalRecordCount": 548642,
+      "path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-default-wordlists",
+        "en-esdb-default-wordlists-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
       ],
@@ -474,18 +539,47 @@
       ]
     },
     {
-      "byteLength": 405,
-      "checksum": "sha256:fc73c734e691507ea87c8ec4e799a28721280b397ba66408cd3ad272a9236b5c",
+      "byteLength": 4064970,
+      "checksum": "sha256:48ff2648bb3eeb7c2fa58c6b63300b838f65a78bdffc486c5e458d689acc021c",
+      "citations": [
+        "English Speller Database generated wordlist outputs, rel-2026.02.25."
+      ],
+      "id": "en-esdb-default-wordlists-lookup-index",
+      "kind": "dataset",
+      "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 0,
+      "path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
+      "pipelineId": "esdb-wordlist-diff",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-default-wordlists",
+        "en-esdb-default-wordlists-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
+      ],
+      "sourceIds": [
+        "source:esdb:wordlist-diff-en-default-2026-02-25"
+      ]
+    },
+    {
+      "byteLength": 429,
+      "checksum": "sha256:2f01773c8bf3efa14aea3d0554ae1e5a2021b8d8d29d30e278a5b410c1fc0c30",
       "citations": [
         "English Speller Database generated wordlist outputs, rel-2026.02.25."
       ],
       "id": "en-esdb-wordlist-lexicon-canonical",
       "kind": "lexicon",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 20,
       "path": "resources/esdb-2026.lexicon.json",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-wordlist-lexicon-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
       ],
@@ -502,10 +596,14 @@
       "id": "en-esdb-wordlist-quality",
       "kind": "quality-profile",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 26,
       "path": "resources/esdb-2026.quality.json",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-wordlist-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
       ],
@@ -522,10 +620,14 @@
       "id": "en-esdb-wordlist-quality-profile",
       "kind": "quality-profile",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 46,
       "path": "resources/esdb-2026.quality-profile.json",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-wordlist-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
       ],
@@ -542,10 +644,14 @@
       "id": "en-esdb-wordlist-search-profile",
       "kind": "search-profile",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 33,
       "path": "resources/esdb-2026.search-profile.json",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+      "sharedStorageResourceIds": [
+        "en-esdb-wordlist-search-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
       ],
@@ -563,10 +669,14 @@
       "id": "en-grapheme-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 58,
       "path": "resources/en.segmentation.grapheme.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "en-grapheme-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -586,10 +696,14 @@
       "id": "en-normalization-profile",
       "kind": "normalization-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 52,
       "path": "resources/en.normalization.json",
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sharedStorageResourceIds": [
+        "en-normalization-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -609,10 +723,14 @@
       "id": "en-normalization-quality",
       "kind": "quality-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 30,
       "path": "resources/en.normalization.quality.json",
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sharedStorageResourceIds": [
+        "en-normalization-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -632,10 +750,14 @@
       "id": "en-normalization-quality-profile",
       "kind": "quality-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 50,
       "path": "resources/en.normalization.quality-profile.json",
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sharedStorageResourceIds": [
+        "en-normalization-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -655,10 +777,14 @@
       "id": "en-normalization-rules",
       "kind": "normalization-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 4,
       "path": "resources/en.normalization-rules.tsv",
       "pipelineId": "english-normalization-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
+      "sharedStorageResourceIds": [
+        "en-normalization-rules"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -669,18 +795,23 @@
       ]
     },
     {
-      "byteLength": 7328209,
-      "checksum": "sha256:2aff974f56754dc4190f7c9d79084efac7a8ddfd1be566d9084b47c61213d7d8",
+      "byteLength": 13687253,
+      "checksum": "sha256:3de1ad6ddb718d8eb8514e81541398f0712d13623a7a31bce3b506ce6878e159",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
       "id": "en-scowl-inflection-entries",
       "kind": "morphology",
       "license": "LicenseRef-ESDB-MIT-Like",
-      "path": "resources/scowl-v2.inflections.tsv.gz.b64",
+      "logicalRecordCount": 401709,
+      "path": "resources/scowl-v2.inflections.lookup-index.v2.txt",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sharedStorageResourceIds": [
+        "en-scowl-inflection-entries",
+        "en-scowl-inflection-entries-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -689,18 +820,23 @@
       ]
     },
     {
-      "byteLength": 4844105,
-      "checksum": "sha256:11aec2ff40bb2daa747c65ad3474675be6466f33eaba1c60f71f612837304055",
+      "byteLength": 13687253,
+      "checksum": "sha256:3de1ad6ddb718d8eb8514e81541398f0712d13623a7a31bce3b506ce6878e159",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
       "id": "en-scowl-inflection-entries-lookup-index",
       "kind": "dataset",
       "license": "LicenseRef-ESDB-MIT-Like",
-      "path": "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
+      "logicalRecordCount": 0,
+      "path": "resources/scowl-v2.inflections.lookup-index.v2.txt",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sharedStorageResourceIds": [
+        "en-scowl-inflection-entries",
+        "en-scowl-inflection-entries-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -709,18 +845,22 @@
       ]
     },
     {
-      "byteLength": 547,
-      "checksum": "sha256:1702a6a8ca33af5d3c3a4640f68a5d9e973ce1a23a73ee8fcdb8823ec1645d67",
+      "byteLength": 438,
+      "checksum": "sha256:5b1a6501f5d200f7815b0769f7b9131e2660e4043bfd0fd888434b6810a57a18",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
       "id": "en-scowl-inflection-lexicon-canonical",
       "kind": "lexicon",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 20,
       "path": "resources/scowl-v2.lexicon.json",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sharedStorageResourceIds": [
+        "en-scowl-inflection-lexicon-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -729,18 +869,22 @@
       ]
     },
     {
-      "byteLength": 1991,
-      "checksum": "sha256:a00c092d471a01a2a194df111bc597049e31f9f52bf75a957254f021144992c4",
+      "byteLength": 1769,
+      "checksum": "sha256:a8849ae680be361e5c2ba91d18ff0749362ed20dbe0045bfc7ef18d75bacd92d",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
       "id": "en-scowl-inflection-morphology-canonical",
       "kind": "morphology",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 91,
       "path": "resources/scowl-v2.morphology.json",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sharedStorageResourceIds": [
+        "en-scowl-inflection-morphology-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -749,18 +893,22 @@
       ]
     },
     {
-      "byteLength": 842,
-      "checksum": "sha256:322086f21d57e011b7c51faaf8da127a5410d2f1b0339d6ce046732af8c063f5",
+      "byteLength": 906,
+      "checksum": "sha256:cb6423911c7a9e08982d1ae05f5749676a9d30ab988a8c80e35ef371919f8d1e",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
       "id": "en-scowl-inflection-quality",
       "kind": "quality-profile",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 27,
       "path": "resources/scowl-v2.quality.json",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sharedStorageResourceIds": [
+        "en-scowl-inflection-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -769,58 +917,22 @@
       ]
     },
     {
-      "byteLength": 1079,
-      "checksum": "sha256:5ab60db572325548aaee12a4d3055b52f251f65a7bafb1831b7e968cd0210fde",
+      "byteLength": 1085,
+      "checksum": "sha256:86b5f205434e776f8b9bd8fbcf17551d2d026c3b8092fb200c2a4d1dd0f35626",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
       "id": "en-scowl-inflection-quality-profile",
       "kind": "quality-profile",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 46,
       "path": "resources/scowl-v2.quality-profile.json",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "snapshotIds": [
-        "snapshot:source:scowl:v2-rel-2026.02.25"
+      "sharedStorageResourceIds": [
+        "en-scowl-inflection-quality-profile"
       ],
-      "sourceIds": [
-        "source:scowl:v2-rel-2026-02-25"
-      ]
-    },
-    {
-      "byteLength": 5129709,
-      "checksum": "sha256:bf0b7f4d223444618a650ae5ff9f908099590776c0895b0b6ddfd32bec22c15c",
-      "citations": [
-        "SCOWLv2 rich text export, rel-2026.02.25."
-      ],
-      "id": "en-scowl-lookup-analyzer",
-      "kind": "morphology",
-      "license": "LicenseRef-ESDB-MIT-Like",
-      "path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
-      "pipelineId": "scowl-v2-inflection",
-      "pipelineVersion": "0.1.0",
-      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "snapshotIds": [
-        "snapshot:source:scowl:v2-rel-2026.02.25"
-      ],
-      "sourceIds": [
-        "source:scowl:v2-rel-2026-02-25"
-      ]
-    },
-    {
-      "byteLength": 4819189,
-      "checksum": "sha256:771f858c850bca4e3e1018ea2b053d22735658f63ecf827c5c79948d1df3c079",
-      "citations": [
-        "SCOWLv2 rich text export, rel-2026.02.25."
-      ],
-      "id": "en-scowl-lookup-generator",
-      "kind": "morphology",
-      "license": "LicenseRef-ESDB-MIT-Like",
-      "path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
-      "pipelineId": "scowl-v2-inflection",
-      "pipelineVersion": "0.1.0",
-      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -837,10 +949,14 @@
       "id": "en-scowl-pos-inventory",
       "kind": "morphology",
       "license": "LicenseRef-ESDB-MIT-Like",
+      "logicalRecordCount": 104,
       "path": "resources/scowl-v2.pos.tsv",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "sharedStorageResourceIds": [
+        "en-scowl-pos-inventory"
+      ],
       "snapshotIds": [
         "snapshot:source:scowl:v2-rel-2026.02.25"
       ],
@@ -858,10 +974,14 @@
       "id": "en-segmentation-boundary-properties",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 46,
       "path": "resources/en.segmentation-boundary-properties.tsv",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "en-segmentation-boundary-properties"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -881,10 +1001,14 @@
       "id": "en-segmentation-quality",
       "kind": "quality-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 75,
       "path": "resources/en.segmentation.quality.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "en-segmentation-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -904,10 +1028,14 @@
       "id": "en-segmentation-quality-profile",
       "kind": "quality-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 50,
       "path": "resources/en.segmentation.quality-profile.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "en-segmentation-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -927,10 +1055,14 @@
       "id": "en-sentence-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 59,
       "path": "resources/en.segmentation.sentence.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "en-sentence-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -950,10 +1082,14 @@
       "id": "en-word-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 63,
       "path": "resources/en.segmentation.word.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
+      "sharedStorageResourceIds": [
+        "en-word-segmentation-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0",
         "snapshot:source:unicode:cldr-core:48.2.0"
@@ -972,10 +1108,14 @@
       "id": "unicode-17-blocks",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 347,
       "path": "resources/unicode-17.blocks.tsv",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-blocks"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -992,10 +1132,14 @@
       "id": "unicode-17-core-summary",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 8,
       "path": "resources/unicode-17.core.summary.json",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-core-summary"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1012,10 +1156,14 @@
       "id": "unicode-17-property-value-aliases",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 1195,
       "path": "resources/unicode-17.property-value-aliases.tsv",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-property-value-aliases"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1032,10 +1180,14 @@
       "id": "unicode-17-scripts",
       "kind": "unicode-profile",
       "license": "Unicode-3.0",
+      "logicalRecordCount": 2288,
       "path": "resources/unicode-17.scripts.tsv.gz.b64",
       "pipelineId": "unicode-17-core",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "sharedStorageResourceIds": [
+        "unicode-17-scripts"
+      ],
       "snapshotIds": [
         "snapshot:source:unicode:ucd:17.0.0"
       ],
@@ -1044,8 +1196,8 @@
       ]
     },
     {
-      "byteLength": 204893,
-      "checksum": "sha256:7604d6fcac1965ec5828b0e699905e6492d878965cb4097be263dc4e1c55307b",
+      "byteLength": 651874,
+      "checksum": "sha256:5b3cc19902d532fd277e280d300f576fccbf786bb50618dff838089fe3aae636",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1053,10 +1205,15 @@
       "id": "wikidata-en-aliases",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
-      "path": "resources/wikidata-en.aliases.tsv.gz.b64",
+      "logicalRecordCount": 19781,
+      "path": "resources/wikidata-en.aliases.lookup-index.v2.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-aliases",
+        "wikidata-en-aliases-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1065,8 +1222,34 @@
       ]
     },
     {
-      "byteLength": 359241,
-      "checksum": "sha256:e0464d6ba65415a0ebce0245fb4a7d7ec21a8024269f2fef6025c6ef73e98d49",
+      "byteLength": 651874,
+      "checksum": "sha256:5b3cc19902d532fd277e280d300f576fccbf786bb50618dff838089fe3aae636",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08.",
+        "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+      ],
+      "id": "wikidata-en-aliases-lookup-index",
+      "kind": "dataset",
+      "license": "CC0-1.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wikidata-en.aliases.lookup-index.v2.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-aliases",
+        "wikidata-en-aliases-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 661412,
+      "checksum": "sha256:93468c380b5867d6f4be41b59ec44a7a159aba17778edc0e26ced84dff73007f",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1074,10 +1257,15 @@
       "id": "wikidata-en-entities",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
-      "path": "resources/wikidata-en.entities.tsv.gz.b64",
+      "logicalRecordCount": 11618,
+      "path": "resources/wikidata-en.entities.lookup-index.v2.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-entities",
+        "wikidata-en-entities-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1086,8 +1274,34 @@
       ]
     },
     {
-      "byteLength": 528,
-      "checksum": "sha256:18480b9acd2b25de4e4d90c711218044de6177529085446262d08ede54fe73aa",
+      "byteLength": 661412,
+      "checksum": "sha256:93468c380b5867d6f4be41b59ec44a7a159aba17778edc0e26ced84dff73007f",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08.",
+        "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+      ],
+      "id": "wikidata-en-entities-lookup-index",
+      "kind": "dataset",
+      "license": "CC0-1.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wikidata-en.entities.lookup-index.v2.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-entities",
+        "wikidata-en-entities-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 909,
+      "checksum": "sha256:b52367602efb27c25a40300b4af2d8cdafcf2dd5e09d37d866e4f6e188d1001c",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1095,10 +1309,14 @@
       "id": "wikidata-en-kb-canonical",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
+      "logicalRecordCount": 42,
       "path": "resources/wikidata-en.kb.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-kb-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1116,10 +1334,14 @@
       "id": "wikidata-en-quality",
       "kind": "quality-profile",
       "license": "CC0-1.0",
+      "logicalRecordCount": 29,
       "path": "resources/wikidata-en.quality.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1137,10 +1359,14 @@
       "id": "wikidata-en-quality-profile",
       "kind": "quality-profile",
       "license": "CC0-1.0",
+      "logicalRecordCount": 101,
       "path": "resources/wikidata-en.quality-profile.json",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1149,8 +1375,8 @@
       ]
     },
     {
-      "byteLength": 60577,
-      "checksum": "sha256:cabc7d7e7827e51ec1a2be36abe512c52de6b7e7ae195f0d3f0c197b4c7d2c4e",
+      "byteLength": 153966,
+      "checksum": "sha256:78e2bc3e1a1aaae2084e3051be5ddd3428bf089b4f62d434bb4e8228c3693a0d",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1158,10 +1384,41 @@
       "id": "wikidata-en-relations",
       "kind": "knowledge-base",
       "license": "CC0-1.0",
-      "path": "resources/wikidata-en.relations.tsv.gz.b64",
+      "logicalRecordCount": 11618,
+      "path": "resources/wikidata-en.relations.lookup-index.v2.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-relations",
+        "wikidata-en-relations-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wikidata:main:20260608"
+      ],
+      "sourceIds": [
+        "source:wikidata:main"
+      ]
+    },
+    {
+      "byteLength": 153966,
+      "checksum": "sha256:78e2bc3e1a1aaae2084e3051be5ddd3428bf089b4f62d434bb4e8228c3693a0d",
+      "citations": [
+        "Wikidata main structured data dump, 2026-06-08.",
+        "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
+      ],
+      "id": "wikidata-en-relations-lookup-index",
+      "kind": "dataset",
+      "license": "CC0-1.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wikidata-en.relations.lookup-index.v2.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
+      "sharedStorageResourceIds": [
+        "wikidata-en-relations",
+        "wikidata-en-relations-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wikidata:main:20260608"
       ],
@@ -1178,10 +1435,14 @@
       "id": "wordnet-en-kb-canonical",
       "kind": "knowledge-base",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 27,
       "path": "resources/wordnet-en.kb.json",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-kb-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1190,18 +1451,23 @@
       ]
     },
     {
-      "byteLength": 1421145,
-      "checksum": "sha256:767ed0dde940e39b449a84ac828fc1fc2f5aaa46dc2a3bc78f2fc9d182dc1bf1",
+      "byteLength": 3562564,
+      "checksum": "sha256:44b63fc08289c19fb42ba373941012565638b4ec16f76adba2703fd67efa3f40",
       "citations": [
         "Open English WordNet 2025."
       ],
       "id": "wordnet-en-lexical-entries",
       "kind": "lexicon",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-      "path": "resources/wordnet-en.lexical-entries.tsv.gz.b64",
+      "logicalRecordCount": 135969,
+      "path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-lexical-entries",
+        "wordnet-en-lexical-entries-lookup-index"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1210,18 +1476,47 @@
       ]
     },
     {
-      "byteLength": 292,
-      "checksum": "sha256:938ab3964d5732e9517cb77d63372be6c91423343bcf417ebb980485743543e4",
+      "byteLength": 3562564,
+      "checksum": "sha256:44b63fc08289c19fb42ba373941012565638b4ec16f76adba2703fd67efa3f40",
+      "citations": [
+        "Open English WordNet 2025."
+      ],
+      "id": "wordnet-en-lexical-entries-lookup-index",
+      "kind": "dataset",
+      "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 0,
+      "path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
+      "pipelineId": "open-english-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-lexical-entries",
+        "wordnet-en-lexical-entries-lookup-index"
+      ],
+      "snapshotIds": [
+        "snapshot:source:wordnet:open-english-2025:2025-edition"
+      ],
+      "sourceIds": [
+        "source:wordnet:open-english-2025"
+      ]
+    },
+    {
+      "byteLength": 426,
+      "checksum": "sha256:3cc6c73db791eb9c378f164c76de030ae9de6208ac12b959d5ab3cfdae7605a5",
       "citations": [
         "Open English WordNet 2025."
       ],
       "id": "wordnet-en-lexicon-canonical",
       "kind": "lexicon",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 20,
       "path": "resources/wordnet-en.lexicon.json",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-lexicon-canonical"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1238,10 +1533,14 @@
       "id": "wordnet-en-quality",
       "kind": "quality-profile",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 54,
       "path": "resources/wordnet-en.quality.json",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-quality"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1258,10 +1557,14 @@
       "id": "wordnet-en-quality-profile",
       "kind": "quality-profile",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 52,
       "path": "resources/wordnet-en.quality-profile.json",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-quality-profile"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1278,10 +1581,14 @@
       "id": "wordnet-en-relations",
       "kind": "knowledge-base",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 355065,
       "path": "resources/wordnet-en.relations.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-relations"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1298,10 +1605,14 @@
       "id": "wordnet-en-senses",
       "kind": "knowledge-base",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 185130,
       "path": "resources/wordnet-en.senses.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-senses"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],
@@ -1318,10 +1629,14 @@
       "id": "wordnet-en-synsets",
       "kind": "knowledge-base",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+      "logicalRecordCount": 107520,
       "path": "resources/wordnet-en.synsets.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "sharedStorageResourceIds": [
+        "wordnet-en-synsets"
+      ],
       "snapshotIds": [
         "snapshot:source:wordnet:open-english-2025:2025-edition"
       ],

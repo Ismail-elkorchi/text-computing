@@ -27,12 +27,16 @@ import {
 	sourcePolicyGeneratedFor,
 	sourceReadinessMarkdown,
 	validateDeveloperFacingDistributionPublishability,
+	validateDistributionStorageBudgets,
 } from "./lib/emission.mjs";
 import {
+	assertDeclaredConformanceEvaluation,
+	assertTaskSupportedDistributionEvaluation,
+} from "./lib/evaluation.mjs";
+import {
 	buildLookupIndex,
-	LOOKUP_INDEX_MAX_COMPRESSED_SIZE_RATIO,
-	LOOKUP_INDEX_MIN_SOURCE_GZIP_BASE64_BYTES,
 	LOOKUP_INDEX_SCHEMA_ID,
+	LOOKUP_INDEX_STORAGE_FORMAT,
 	lookupIndexMetadata,
 	lookupIndexPath,
 	lookupIndexResourceId,
@@ -366,19 +370,27 @@ function withLookupIndexOutputs(resourceSpec, manifest, outputs) {
 	);
 	const indexes = [];
 	for (const output of outputs) {
-		if (Buffer.byteLength(output.text, "utf8") < AUTO_COMPRESS_RESOURCE_BYTES) {
-			continue;
-		}
 		const sourceDescriptor = sourceDescriptors.get(output.id);
 		if (sourceDescriptor === undefined) continue;
-		const lookupKeyColumns = outputSpecs.get(output.id)?.lookupKeyColumns;
+		const outputSpec = outputSpecs.get(output.id);
+		const lookupKeyColumns = outputSpec?.lookupKeyColumns;
 		if (!Array.isArray(lookupKeyColumns)) continue;
 		const index = buildLookupIndex(
 			output.text,
 			sourceDescriptor.schemaId,
 			lookupKeyColumns,
+			{
+				emptyKeyColumns: outputSpec.lookupEmptyKeyColumns ?? [],
+				patternColumns: outputSpec.lookupPatternColumns ?? [],
+			},
 		);
-		if (index === undefined || index.recordCount === 0) continue;
+		expect(
+			index !== undefined && index.recordCount > 0,
+			`${output.id} declares lookupKeyColumns but produced no lookup index records.`,
+		);
+		const logicalSourceText = output.text;
+		const logicalSourcePath = output.path;
+		const logicalSourceFormat = sourceDescriptor.format;
 		const indexId = lookupIndexResourceId(output.id);
 		const metadata = {
 			...lookupIndexMetadata({
@@ -387,34 +399,50 @@ function withLookupIndexOutputs(resourceSpec, manifest, outputs) {
 				sourceText: output.text,
 				indexText: index.text,
 				keyColumns: index.keyColumns,
+				emptyKeyColumns: index.emptyKeyColumns,
+				fuzzyColumns: index.fuzzyColumns,
+				patternColumns: index.patternColumns,
 				recordCount: index.recordCount,
-				spanCount: index.spanCount,
+				rowReferenceCount: index.rowReferenceCount,
 			}),
 		};
-		if (
-			metadata.indexedResourceGzipBase64ByteLength <
-				LOOKUP_INDEX_MIN_SOURCE_GZIP_BASE64_BYTES ||
-			metadata.compressedSizeRatio > LOOKUP_INDEX_MAX_COMPRESSED_SIZE_RATIO
-		) {
-			continue;
-		}
+		const sharedPath = lookupIndexPath(logicalSourcePath);
 		const descriptor = {
 			id: indexId,
 			kind: "dataset",
-			path: lookupIndexPath(output.path),
-			format: "tsv",
+			path: sharedPath,
+			format: LOOKUP_INDEX_STORAGE_FORMAT,
 			license: sourceDescriptor.license,
 			citations: sourceDescriptor.citations,
 			schemaId: LOOKUP_INDEX_SCHEMA_ID,
 			metadata,
 		};
+		sourceDescriptor.path = sharedPath;
+		sourceDescriptor.format = LOOKUP_INDEX_STORAGE_FORMAT;
+		sourceDescriptor.metadata = {
+			storageFormat: LOOKUP_INDEX_STORAGE_FORMAT,
+			lookupIndexResourceId: indexId,
+			logicalFormat: logicalSourceFormat,
+			logicalPath: logicalSourcePath,
+			logicalTextChecksum: metadata.indexedResourceTextChecksum,
+			logicalTextByteLength: metadata.indexedResourceTextByteLength,
+			logicalRowCount: metadata.sourceRowCount,
+		};
+		output.path = sharedPath;
+		output.text = index.text;
+		output.lookupIndex = true;
+		output.logicalText = logicalSourceText;
+		output.logicalRowCount = metadata.sourceRowCount;
+		output.sharedStorageResourceIds = [output.id, indexId];
 		const derivedOutput = {
 			id: indexId,
 			kind: descriptor.kind,
-			path: descriptor.path,
+			path: sharedPath,
 			text: index.text,
 			lookupIndex: true,
 			metadata,
+			logicalRowCount: 0,
+			sharedStorageResourceIds: [output.id, indexId],
 		};
 		manifest.resources.push(descriptor);
 		attachLookupIndexBinding(manifest, output.id, descriptor);
@@ -484,7 +512,8 @@ async function collectResourcePayloads(
 		);
 		for (const output of outputs) {
 			const encodedOutput = encodedResourceOutput(output);
-			const lines = output.text.split(/\r?\n/u);
+			const logicalText = output.logicalText ?? output.text;
+			const lines = logicalText.split(/\r?\n/u);
 			const nonEmptyLineCount = lines
 				.map((line) => line.trim())
 				.filter((line) => line.length > 0).length;
@@ -495,12 +524,25 @@ async function collectResourcePayloads(
 				declaredPath: output.path,
 				sourcePath: resourceSpec.resourceSpecId,
 				text: encodedOutput.text,
-				resourceText: output.text,
+				resourceText: logicalText,
 				resourceTextByteLength: Buffer.byteLength(output.text, "utf8"),
+				logicalResourceTextByteLength: Buffer.byteLength(logicalText, "utf8"),
+				logicalLineCount: logicalText.length === 0 ? 0 : lines.length,
+				logicalNonEmptyLineCount: nonEmptyLineCount,
+				logicalRecordCount: output.logicalRowCount ?? nonEmptyLineCount,
+				sharedStorageResourceIds: output.sharedStorageResourceIds ?? [
+					output.id,
+				],
 				encoded: encodedOutput.encoding,
 				byteLength: Buffer.byteLength(encodedOutput.text, "utf8"),
-				lineCount: output.text.length === 0 ? 0 : lines.length,
-				nonEmptyLineCount,
+				lineCount:
+					output.text.length === 0 ? 0 : output.text.split(/\r?\n/u).length,
+				nonEmptyLineCount:
+					output.text.length === 0
+						? 0
+						: output.text
+								.split(/\r?\n/u)
+								.filter((line) => line.trim().length > 0).length,
 				checksum: sha256(encodedOutput.text),
 				sizeClass: sizeClass(Buffer.byteLength(encodedOutput.text, "utf8")),
 				pipelineId: resourceSpec.pipelineId,
@@ -527,6 +569,9 @@ async function collectResourcePayloads(
 }
 
 function encodedResourceOutput(output) {
+	if (output.lookupIndex === true) {
+		return { path: output.path, text: output.text, encoding: "utf8" };
+	}
 	const compress =
 		output.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX) ||
 		Buffer.byteLength(output.text, "utf8") >= AUTO_COMPRESS_RESOURCE_BYTES;
@@ -552,6 +597,11 @@ function resourceStats(payloads) {
 			resourceTextByteLength: payload.resourceTextByteLength,
 			lineCount: payload.lineCount,
 			nonEmptyLineCount: payload.nonEmptyLineCount,
+			logicalResourceTextByteLength: payload.logicalResourceTextByteLength,
+			logicalLineCount: payload.logicalLineCount,
+			logicalNonEmptyLineCount: payload.logicalNonEmptyLineCount,
+			logicalRecordCount: payload.logicalRecordCount,
+			sharedStorageResourceIds: payload.sharedStorageResourceIds,
 			checksum: payload.checksum,
 			sizeClass: payload.sizeClass,
 			...(payload.resourceSpecId === undefined
@@ -563,6 +613,32 @@ function resourceStats(payloads) {
 					}),
 		}))
 		.sort((left, right) => left.id.localeCompare(right.id));
+}
+
+function physicalPayloads(payloads) {
+	const byPath = new Map();
+	for (const payload of payloads) {
+		const existing = byPath.get(payload.path);
+		if (existing === undefined) {
+			byPath.set(payload.path, payload);
+			continue;
+		}
+		expect(
+			existing.text === payload.text &&
+				existing.checksum === payload.checksum &&
+				existing.byteLength === payload.byteLength &&
+				existing.encoded === payload.encoded,
+			`Shared textpack storage path ${payload.path} has divergent physical payloads.`,
+		);
+	}
+	return [...byPath.values()];
+}
+
+function physicalPayloadByteLength(payloads) {
+	return physicalPayloads(payloads).reduce(
+		(total, payload) => total + payload.byteLength,
+		0,
+	);
 }
 
 function capabilitySlots(manifest) {
@@ -785,10 +861,7 @@ function flattenDistributionPack(pack, packageByName) {
 	pack.manifest = manifest;
 	pack.payloads = [...payloads.values()];
 	pack.resourceStats = resourceStats(pack.payloads);
-	pack.npmShippedSizeBytes = pack.resourceStats.reduce(
-		(total, resource) => total + resource.byteLength,
-		0,
-	);
+	pack.npmShippedSizeBytes = physicalPayloadByteLength(pack.payloads);
 	pack.capabilitySlots = capabilitySlots(manifest);
 	pack.resourceSpecIds = uniqueValues(
 		componentPacks.flatMap((component) => component.resourceSpecIds),
@@ -1040,10 +1113,7 @@ async function collectContext(options = {}) {
 					)
 				: [];
 		const stats = materializeResources ? resourceStats(payloads) : [];
-		const npmShippedSizeBytes = stats.reduce(
-			(total, resource) => total + resource.byteLength,
-			0,
-		);
+		const npmShippedSizeBytes = physicalPayloadByteLength(payloads);
 		const sourceIds =
 			normalizedPackSpec.sourceIds ?? normalizedPackSpec.catalogSourceIds;
 		const snapshotIds =
@@ -1101,6 +1171,7 @@ async function collectContext(options = {}) {
 			payloads,
 			publishable: publishability.publishable,
 			publishability,
+			publishabilityEvidence: normalizedPackSpec.publishabilityEvidence,
 			resourceStats: stats,
 			resourceSpecIds: normalizedPackSpec.resourceSpecIds ?? [],
 			specPath: normalizedPackSpec.specPath,
@@ -1175,6 +1246,7 @@ async function collectContext(options = {}) {
 			packClass: spec.packClass,
 			policySurface: spec.policySurface ?? "default",
 			payloads: [],
+			publishabilityEvidence: spec.publishabilityEvidence,
 			resourceStats: [],
 			resourceSpecIds: [],
 			sourceIds: compositeSourceIds,
@@ -1214,6 +1286,22 @@ async function collectContext(options = {}) {
 		const distribution = packageByName.get(packageName);
 		expect(distribution !== undefined, `Missing distribution ${packageName}.`);
 		flattenDistributionPack(distribution, packageByName);
+	}
+	if (materializeResources) validateDistributionStorageBudgets(context);
+	if (!materializeResources) {
+		for (const pack of context.packs.filter(isDistributionPack)) {
+			const evaluation = await readJson(
+				`${pack.packageDir}/EVALUATION.generated.json`,
+			);
+			expect(
+				evaluation.packageName === pack.packageName &&
+					Array.isArray(evaluation.records),
+				`${pack.packageName} has invalid generated evaluation evidence.`,
+			);
+			pack.evaluationRecords = evaluation.records;
+			assertTaskSupportedDistributionEvaluation(pack, evaluation.records);
+			assertDeclaredConformanceEvaluation(pack, evaluation.records);
+		}
 	}
 	for (const pack of context.packs.filter(isDistributionPack)) {
 		const generatedFiles = expectedGeneratedFilesForPack(pack);

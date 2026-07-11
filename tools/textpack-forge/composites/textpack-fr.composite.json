@@ -17,7 +17,7 @@
 			"eval:fr-normalization:profile-rules:distribution:textpack-fr",
 			"eval:fr-segmentation:word-boundary-properties:distribution:textpack-fr",
 			"eval:fr-lexique:entry-volume:distribution:textpack-fr",
-			"eval:fr-unimorph:lookup-analyzer-volume:distribution:textpack-fr",
+			"eval:fr-unimorph:indexed-analysis-volume:distribution:textpack-fr",
 			"eval:wikidata-fr:entity-extract:distribution:textpack-fr",
 			"eval:fr-lexique:search-profile:distribution:textpack-fr",
 			"eval:fr-core:transform-rejections:distribution:textpack-fr",
@@ -82,7 +82,7 @@
 		},
 		{
 			"buildUnitId": "fr-unimorph-sa",
-			"reason": "French UniMorph paradigm and lookup morphology resources.",
+			"reason": "French UniMorph paradigm table with indexed form and lemma lookup.",
 			"licensePolicy": "allow-share-alike"
 		},
 		{

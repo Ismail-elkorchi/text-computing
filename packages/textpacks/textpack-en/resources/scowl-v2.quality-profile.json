@@ -2,7 +2,7 @@
   "diagnostics": [
     {
       "diagnosticId": "en-scowl-v2-source-scope",
-      "message": "SCOWLv2 resources provide pinned lookup analyzer and generator indexes over source POS and inflection rows.",
+      "message": "SCOWLv2 provides one pinned inflection table indexed by both form and lemma for targeted analysis and generation.",
       "metadata": {
         "release": "rel-2026.02.25"
       },

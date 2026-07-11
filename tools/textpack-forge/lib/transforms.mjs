@@ -4577,11 +4577,6 @@ function transformEsdbWordlistDiff(resourceSpec, inputs) {
 				role: "forms",
 				recordCount: wordRows.length,
 			},
-			{
-				resourceId: "en-esdb-default-profiles",
-				role: "entries",
-				recordCount: profileRows.length,
-			},
 		],
 	};
 	const canonicalSearchProfile = {
@@ -4897,46 +4892,6 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 		if (formDelta !== 0) return formDelta;
 		return String(left[0]).localeCompare(String(right[0]));
 	});
-	const analyzerRows = entryRows
-		.map((row) => [
-			row[7],
-			row[6],
-			row[9],
-			row[10],
-			row[8],
-			row[3],
-			row[4],
-			row[0],
-		])
-		.sort((left, right) => {
-			const formDelta = left[0].localeCompare(right[0]);
-			if (formDelta !== 0) return formDelta;
-			const lemmaDelta = left[1].localeCompare(right[1]);
-			if (lemmaDelta !== 0) return lemmaDelta;
-			const posDelta = left[2].localeCompare(right[2]);
-			if (posDelta !== 0) return posDelta;
-			return left[7].localeCompare(right[7]);
-		});
-	const generatorRows = entryRows
-		.map((row) => [
-			row[6],
-			row[7],
-			row[9],
-			row[10],
-			row[8],
-			row[3],
-			row[4],
-			row[0],
-		])
-		.sort((left, right) => {
-			const lemmaDelta = left[0].localeCompare(right[0]);
-			if (lemmaDelta !== 0) return lemmaDelta;
-			const formDelta = left[1].localeCompare(right[1]);
-			if (formDelta !== 0) return formDelta;
-			const posDelta = left[2].localeCompare(right[2]);
-			if (posDelta !== 0) return posDelta;
-			return left[7].localeCompare(right[7]);
-		});
 	const posRows = sortedCountRows(posCounts).map(([key, count]) => [
 		...key.split("\t"),
 		count,
@@ -4960,14 +4915,15 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 		uniqueFormCount: formSet.size,
 		derivedFormCount,
 		inflectionRowCount: entryRows.length,
-		lookupAnalyzerRowCount: analyzerRows.length,
-		lookupGeneratorRowCount: generatorRows.length,
+		analysisCandidateRowCount: entryRows.length,
+		generationCandidateRowCount: entryRows.length,
+		lookupKeyColumns: ["form", "lemma"],
 		posInventoryCount: posRows.length,
 		recordsAccepted: entryRows.length,
 		recordsRejected,
 		warnings: [
 			"SCOWLv2 scowl.txt is a pinned release text export; this package does not claim stable upstream database-schema coverage.",
-			"Generated lookup analyzer and generator indexes preserve SCOWLv2 source-release scope and do not claim finite-state or context-disambiguating morphology.",
+			"The single inflection table supports indexed form analysis and lemma generation lookups; it does not claim finite-state or context-disambiguating morphology.",
 		],
 	};
 	const canonicalLexicon = {
@@ -4982,11 +4938,6 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 				resourceId: "en-scowl-inflection-entries",
 				role: "forms",
 				recordCount: entryRows.length,
-			},
-			{
-				resourceId: "en-scowl-pos-inventory",
-				role: "entries",
-				recordCount: posRows.length,
 			},
 		],
 	};
@@ -5003,16 +4954,6 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 				recordCount: entryRows.length,
 			},
 			{
-				resourceId: "en-scowl-lookup-analyzer",
-				role: "analyzer",
-				recordCount: analyzerRows.length,
-			},
-			{
-				resourceId: "en-scowl-lookup-generator",
-				role: "generator",
-				recordCount: generatorRows.length,
-			},
-			{
 				resourceId: "en-scowl-pos-inventory",
 				role: "feature-inventory",
 				recordCount: posRows.length,
@@ -5020,16 +4961,13 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 		],
 		analyzers: [
 			{
-				analyzerId: "en-scowl-v2-lookup-analyzer",
-				type: "lookup",
-				resourceIds: [
-					"en-scowl-lookup-analyzer",
-					"en-scowl-lookup-generator",
-					"en-scowl-pos-inventory",
-				],
+				analyzerId: "en-scowl-v2-paradigm-table",
+				type: "paradigm-table",
+				resourceIds: ["en-scowl-inflection-entries", "en-scowl-pos-inventory"],
 				coverage: {
-					lookupAnalyzerRowCount: analyzerRows.length,
-					lookupGeneratorRowCount: generatorRows.length,
+					entryCount: entryRows.length,
+					analysisCandidateRowCount: entryRows.length,
+					generationCandidateRowCount: entryRows.length,
 					uniqueLemmaCount: lemmaSet.size,
 					uniqueFormCount: formSet.size,
 					derivedFormCount,
@@ -5061,7 +4999,7 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 				task: "morphology.transform",
 				severity: "info",
 				message:
-					"SCOWLv2 resources provide pinned lookup analyzer and generator indexes over source POS and inflection rows.",
+					"SCOWLv2 provides one pinned inflection table indexed by both form and lemma for targeted analysis and generation.",
 				metadata: {
 					release: quality.release,
 				},
@@ -5121,40 +5059,6 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 		),
 		outputFor(
 			resourceSpec,
-			"en-scowl-lookup-analyzer",
-			tsvFile(
-				[
-					"form",
-					"lemma",
-					"partOfSpeech",
-					"posClass",
-					"formRole",
-					"scowlSize",
-					"tags",
-					"entryId",
-				],
-				analyzerRows,
-			),
-		),
-		outputFor(
-			resourceSpec,
-			"en-scowl-lookup-generator",
-			tsvFile(
-				[
-					"lemma",
-					"form",
-					"partOfSpeech",
-					"posClass",
-					"formRole",
-					"scowlSize",
-					"tags",
-					"entryId",
-				],
-				generatorRows,
-			),
-		),
-		outputFor(
-			resourceSpec,
 			"en-scowl-pos-inventory",
 			tsvFile(["partOfSpeech", "posClass", "formRole", "count"], posRows),
 		),
@@ -5180,8 +5084,6 @@ function transformScowlV2Inflection(resourceSpec, inputs) {
 function transformFrenchUnimorph(resourceSpec, inputs) {
 	const text = requiredInput(inputs, "fra", resourceSpec);
 	const entryRows = [];
-	const analyzerRows = [];
-	const generatorRows = [];
 	const featureCounts = new Map();
 	const posCounts = new Map();
 	const lemmaSet = new Set();
@@ -5220,8 +5122,6 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 			featureBundle,
 			features.length,
 		]);
-		analyzerRows.push([form, lemma, partOfSpeech, featureBundle, entryId]);
-		generatorRows.push([lemma, form, partOfSpeech, featureBundle, entryId]);
 		lemmaSet.add(lemma);
 		formSet.add(form);
 		incrementCount(posCounts, partOfSpeech);
@@ -5236,20 +5136,6 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 		const featureDelta = left[5].localeCompare(right[5]);
 		return featureDelta !== 0 ? featureDelta : left[0].localeCompare(right[0]);
 	});
-	analyzerRows.sort((left, right) => {
-		const formDelta = left[0].localeCompare(right[0]);
-		if (formDelta !== 0) return formDelta;
-		const lemmaDelta = left[1].localeCompare(right[1]);
-		if (lemmaDelta !== 0) return lemmaDelta;
-		return left[3].localeCompare(right[3]);
-	});
-	generatorRows.sort((left, right) => {
-		const lemmaDelta = left[0].localeCompare(right[0]);
-		if (lemmaDelta !== 0) return lemmaDelta;
-		const formDelta = left[1].localeCompare(right[1]);
-		if (formDelta !== 0) return formDelta;
-		return left[3].localeCompare(right[3]);
-	});
 	const featureRows = sortedCountRows(featureCounts);
 	const posRows = sortedCountRows(posCounts);
 	const quality = {
@@ -5259,8 +5145,9 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 		pipelineVersion: resourceSpec.pipelineVersion,
 		commit: "f672f8cceb2d5f5a1e2241b5622c8845f8274635",
 		entryCount: entryRows.length,
-		lookupAnalyzerRowCount: analyzerRows.length,
-		lookupGeneratorRowCount: generatorRows.length,
+		analysisCandidateRowCount: entryRows.length,
+		generationCandidateRowCount: entryRows.length,
+		lookupKeyColumns: ["form", "lemma"],
 		uniqueLemmaCount: lemmaSet.size,
 		uniqueFormCount: formSet.size,
 		featureValueCount: featureRows.length,
@@ -5285,16 +5172,6 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 				recordCount: entryRows.length,
 			},
 			{
-				resourceId: "fr-unimorph-lookup-analyzer",
-				role: "analyzer",
-				recordCount: analyzerRows.length,
-			},
-			{
-				resourceId: "fr-unimorph-lookup-generator",
-				role: "generator",
-				recordCount: generatorRows.length,
-			},
-			{
 				resourceId: "fr-unimorph-feature-inventory",
 				role: "feature-inventory",
 				recordCount: featureRows.length,
@@ -5302,16 +5179,13 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 		],
 		analyzers: [
 			{
-				analyzerId: "fr-unimorph-f672f8c-lookup-analyzer",
+				analyzerId: "fr-unimorph-f672f8c-paradigm-table",
 				type: "paradigm-table",
-				resourceIds: [
-					"fr-unimorph-paradigms",
-					"fr-unimorph-lookup-analyzer",
-					"fr-unimorph-lookup-generator",
-					"fr-unimorph-feature-inventory",
-				],
+				resourceIds: ["fr-unimorph-paradigms", "fr-unimorph-feature-inventory"],
 				coverage: {
 					entryCount: entryRows.length,
+					analysisCandidateRowCount: entryRows.length,
+					generationCandidateRowCount: entryRows.length,
 					uniqueLemmaCount: lemmaSet.size,
 					uniqueFormCount: formSet.size,
 					featureValueCount: featureRows.length,
@@ -5401,22 +5275,6 @@ function transformFrenchUnimorph(resourceSpec, inputs) {
 					"featureCount",
 				],
 				entryRows,
-			),
-		),
-		outputFor(
-			resourceSpec,
-			"fr-unimorph-lookup-analyzer",
-			tsvFile(
-				["form", "lemma", "partOfSpeech", "featureBundle", "entryId"],
-				analyzerRows,
-			),
-		),
-		outputFor(
-			resourceSpec,
-			"fr-unimorph-lookup-generator",
-			tsvFile(
-				["lemma", "form", "partOfSpeech", "featureBundle", "entryId"],
-				generatorRows,
 			),
 		),
 		outputFor(
@@ -5583,11 +5441,6 @@ function transformFrenchLexique383(resourceSpec, inputs) {
 				resourceId: "fr-lexique-entries",
 				role: "entries",
 				recordCount: entryRows.length,
-			},
-			{
-				resourceId: "fr-lexique-lemmas",
-				role: "lemmas",
-				recordCount: lemmaRows.length,
 			},
 		],
 	};

@@ -24,10 +24,14 @@ import { buildTrie } from "@ismail-elkorchi/textlex/trie";
 
 The package also exposes `./lexicon`, `./gazetteer`, `./term`, `./trie`, `./phrase`, `./fuzzy`, `./annotate`, and generated textpack resource adapters.
 
-Targeted textpack lookup uses a canonical packed `lookup-index` when one is present, validates it
-against the uncompressed source text, and parses only matching rows. Caller-authored packs without
-that resource use a pack- and reader-scoped one-pass fallback index. Lookup keys use the pinned
-Unicode 17 NFKC casefold contract. CAMeL morphology resources additionally compose compatible
+Targeted textpack lookup requires the canonical resource's generated v2 `lookup-index`, opens only
+the matching key and row buckets, and never materializes the full referenced table. Exact,
+normalized, and casefold modes use column-scoped Unicode 17 NFKC-casefold keys; prefix, suffix, and
+fuzzy expert modes use the lexicon's raw pattern buckets and preserve their public matching
+semantics. Packs that expose targeted canonical table references without their required indexed
+lookup view are invalid rather than silently falling back to a full-resource scan. The logical
+source and lookup view share one physical indexed-table store, so full expert APIs remain available
+without shipping duplicate rows. CAMeL morphology resources additionally compose compatible
 prefix, stem, and suffix rows through their AB, BC, and AC tables.
 
 ## Boundaries

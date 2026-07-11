@@ -5,6 +5,7 @@ import {
 	load,
 } from "@ismail-elkorchi/text-computing/node";
 import { createPack } from "@ismail-elkorchi/textpack";
+import { indexedMorphologyTableFixture } from "../fixtures/indexed-table.ts";
 import { runTextComputingFileBackedSmoke } from "./file-backed-smoke.ts";
 
 test("the Node package subpath resolves through the package export map", () => {
@@ -17,6 +18,16 @@ test("text-computing file-backed gzip resources materialize in Node with a fetch
 });
 
 test("merged morphology keeps all results when maxResults is omitted", async () => {
+	const morphologyATable = await indexedMorphologyTableFixture(
+		"morphology-a-table",
+		"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nparle\tparler-a\tVERB\tV;IND;PRS\ta1\nparle-a\tparler\tVERB\tV;IND;PRS\ta2\n",
+		["form", "lemma"],
+	);
+	const morphologyBTable = await indexedMorphologyTableFixture(
+		"morphology-b-table",
+		"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nparle\tparler-b\tVERB\tV;IND;PRS\tb1\nparle-b\tparler\tVERB\tV;IND;PRS\tb2\n",
+		["form", "lemma"],
+	);
 	const pack = createPack(
 		{
 			schemaVersion: "1",
@@ -32,31 +43,15 @@ test("merged morphology keeps all results when maxResults is omitted", async () 
 					kind: "morphology",
 					schemaId: "textlex.morphology.v1",
 				},
-				{
-					id: "morphology-a-analyzer",
-					kind: "morphology",
-					schemaId: "textlex.morphology.rows.v1",
-				},
-				{
-					id: "morphology-a-generator",
-					kind: "morphology",
-					schemaId: "textlex.morphology.rows.v1",
-				},
+				morphologyATable.source,
+				morphologyATable.index,
 				{
 					id: "morphology-b",
 					kind: "morphology",
 					schemaId: "textlex.morphology.v1",
 				},
-				{
-					id: "morphology-b-analyzer",
-					kind: "morphology",
-					schemaId: "textlex.morphology.rows.v1",
-				},
-				{
-					id: "morphology-b-generator",
-					kind: "morphology",
-					schemaId: "textlex.morphology.rows.v1",
-				},
+				morphologyBTable.source,
+				morphologyBTable.index,
 			],
 			capabilitySlots: [
 				{
@@ -90,28 +85,28 @@ test("merged morphology keeps all results when maxResults is omitted", async () 
 				morphologyId: "morphology-a",
 				languageTag: "fr",
 				resourceRefs: [
-					{ resourceId: "morphology-a-analyzer", role: "analyzer" },
-					{ resourceId: "morphology-a-generator", role: "generator" },
+					{ resourceId: "morphology-a-table", role: "paradigm-table" },
+					{
+						resourceId: "morphology-a-table-lookup-index",
+						role: "lookup-index",
+					},
 				],
 			},
-			"morphology-a-analyzer":
-				"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nparle\tparler-a\tVERB\tV;IND;PRS\ta1\n",
-			"morphology-a-generator":
-				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nparler\tparle-a\tVERB\tV;IND;PRS\ta1\n",
 			"morphology-b": {
 				schemaVersion: "1",
 				kind: "morphology",
 				morphologyId: "morphology-b",
 				languageTag: "fr",
 				resourceRefs: [
-					{ resourceId: "morphology-b-analyzer", role: "analyzer" },
-					{ resourceId: "morphology-b-generator", role: "generator" },
+					{ resourceId: "morphology-b-table", role: "paradigm-table" },
+					{
+						resourceId: "morphology-b-table-lookup-index",
+						role: "lookup-index",
+					},
 				],
 			},
-			"morphology-b-analyzer":
-				"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nparle\tparler-b\tVERB\tV;IND;PRS\tb1\n",
-			"morphology-b-generator":
-				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nparler\tparle-b\tVERB\tV;IND;PRS\tb1\n",
+			...morphologyATable.resources,
+			...morphologyBTable.resources,
 		},
 	);
 	const nlp = await load(pack);

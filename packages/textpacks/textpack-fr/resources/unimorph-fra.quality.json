@@ -1,9 +1,13 @@
 {
+  "analysisCandidateRowCount": 367732,
   "commit": "f672f8cceb2d5f5a1e2241b5622c8845f8274635",
   "entryCount": 367732,
   "featureValueCount": 19,
-  "lookupAnalyzerRowCount": 367732,
-  "lookupGeneratorRowCount": 367732,
+  "generationCandidateRowCount": 367732,
+  "lookupKeyColumns": [
+    "form",
+    "lemma"
+  ],
   "partOfSpeechCount": 3,
   "pipelineId": "french-unimorph",
   "pipelineVersion": "0.1.0",

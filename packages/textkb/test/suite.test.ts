@@ -13,10 +13,12 @@ import {
 	disambiguateSense,
 	entityLinkerFromPack,
 	knowledgeBaseFromPack,
+	knowledgeBaseMentionKeyLengthsFromPack,
 	knowledgeBaseSliceFromPack,
 	lexicalChains,
 	linkEntities,
 	linkTerms,
+	normalizeKnowledgeBaseMention,
 	ontologyGazetteer,
 	parseAliasRows,
 	parseEntityRows,
@@ -49,13 +51,17 @@ async function fileBackedTextResource(path: string, text: string) {
 	} as const;
 }
 
-function textResourceReader(records: Readonly<Record<string, string>>) {
+function textResourceReader(
+	records: Readonly<Record<string, string>>,
+	onRead?: (path: string) => void,
+) {
 	return {
 		readText({
 			descriptor,
 		}: {
 			readonly descriptor: { readonly path: string };
 		}): string {
+			onRead?.(descriptor.path);
 			const text = records[descriptor.path];
 			if (text === undefined) {
 				throw new Error(`missing fixture resource ${descriptor.path}`);
@@ -65,21 +71,42 @@ function textResourceReader(records: Readonly<Record<string, string>>) {
 	};
 }
 
-function packedLookupIndex(
+async function gzipBase64(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const compressed = new Uint8Array(
+		await new Response(
+			new Blob([bytes]).stream().pipeThrough(new CompressionStream("gzip")),
+		).arrayBuffer(),
+	);
+	let binary = "";
+	for (const byte of compressed) binary += String.fromCharCode(byte);
+	return btoa(binary);
+}
+
+async function bucketedLookupIndex(
 	text: string,
 	keyColumns: readonly string[],
-): string {
+): Promise<{
+	readonly text: string;
+	readonly sourceRowCount: number;
+	readonly recordCount: number;
+	readonly rowReferenceCount: number;
+	readonly fuzzyColumns: readonly string[];
+	readonly patternColumns: readonly string[];
+	readonly indexedResourceTextByteLength: number;
+	readonly lookupIndexShippedByteLength: number;
+	readonly storageBudgetByteLength: number;
+	readonly storageSizeRatio: number;
+	readonly maximumBucketByteLength: number;
+}> {
 	const headerEnd = text.indexOf("\n");
 	const columns = text.slice(0, headerEnd).split("\t");
-	const indexes = keyColumns.map((column) => columns.indexOf(column));
-	const rowsByKey = new Map<
-		string,
-		{
-			readonly start: number;
-			readonly length: number;
-			readonly order: number;
-		}[]
-	>();
+	const indexes = keyColumns.map((column) => ({
+		column,
+		index: columns.indexOf(column),
+	}));
+	const rowsByKey = new Map<string, number[]>();
+	const rowLines: string[] = [];
 	let start = headerEnd + 1;
 	let order = 0;
 	while (start < text.length) {
@@ -88,41 +115,185 @@ function packedLookupIndex(
 		const row = text.slice(start, end);
 		if (row.length > 0) {
 			const cells = row.split("\t");
-			for (const columnIndex of indexes) {
-				const key = nfkcCaseFold(cells[columnIndex] ?? "");
-				if (key.length === 0) continue;
-				rowsByKey.set(key, [
-					...(rowsByKey.get(key) ?? []),
-					{ start, length: row.length, order },
-				]);
+			rowLines.push(row);
+			for (const { column, index } of indexes) {
+				const values =
+					column === "forms"
+						? (cells[index] ?? "").split(/[|, ]/u)
+						: [cells[index] ?? ""];
+				for (const value of values) {
+					const key = nfkcCaseFold(value);
+					if (key.length === 0 || key === "-") continue;
+					const scopedKey = `${column}\u0000${key}`;
+					rowsByKey.set(scopedKey, [
+						...(rowsByKey.get(scopedKey) ?? []),
+						order,
+					]);
+				}
 			}
 			order += 1;
 		}
 		if (newline === -1) break;
 		start = newline + 1;
 	}
-	return `${[
-		"normalizedKey\trowSpans",
-		...[...rowsByKey.entries()]
-			.sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
-			.map(([key, rows]) => {
-				let previousStart = 0;
-				let previousOrder = 0;
-				const spans = rows.map((row, index) => {
-					const encodedStart =
-						index === 0 ? row.start : row.start - previousStart;
-					const encodedOrder =
-						index === 0 ? row.order : row.order - previousOrder;
-					previousStart = row.start;
-					previousOrder = row.order;
-					return [encodedStart, row.length, encodedOrder]
-						.map((value) => value.toString(36))
-						.join(",");
-				});
-				return `${key}\t${spans.join(";")}`;
-			}),
-		"",
-	].join("\n")}`;
+	const sortedKeyRows = [...rowsByKey.entries()].sort(([left], [right]) =>
+		left < right ? -1 : left > right ? 1 : 0,
+	);
+	const keyText = `${sortedKeyRows
+		.map(([key, rows]) => {
+			let previous = 0;
+			const deltas = [...new Set(rows)].map((row, index) => {
+				const delta = index === 0 ? row : row - previous;
+				previous = row;
+				return delta.toString(36);
+			});
+			return `${key}\t${deltas.join(",")}`;
+		})
+		.join("\n")}\n`;
+	const rowText = `${rowLines.join("\n")}\n`;
+	const keyEncoded = await gzipBase64(keyText);
+	const rowEncoded = await gzipBase64(rowText);
+	const descriptor = async (offset: number, encoded: string, raw: string) => ({
+		offset,
+		length: encoded.length,
+		textByteLength: new TextEncoder().encode(raw).byteLength,
+		textChecksum: `sha256:${await sha256(raw)}`,
+	});
+	const fuzzyEntries = [...rowsByKey.entries()]
+		.flatMap(([scopedKey]) => {
+			const separator = scopedKey.indexOf("\u0000");
+			const column = scopedKey.slice(0, separator);
+			if (column !== "alias" && column !== "label") return [];
+			const key = scopedKey.slice(separator + 1);
+			return [
+				{
+					column,
+					codePointLength: Array.from(key).length,
+					key,
+				},
+			];
+		})
+		.sort(
+			(left, right) =>
+				left.column.localeCompare(right.column) ||
+				left.codePointLength - right.codePointLength ||
+				left.key.localeCompare(right.key),
+		);
+	const fuzzyGroups = new Map<
+		string,
+		{
+			readonly column: string;
+			readonly codePointLength: number;
+			rows: string[];
+		}
+	>();
+	for (const entry of fuzzyEntries) {
+		const groupKey = `${entry.column}\u0000${String(entry.codePointLength)}`;
+		const group = fuzzyGroups.get(groupKey) ?? {
+			column: entry.column,
+			codePointLength: entry.codePointLength,
+			rows: [],
+		};
+		group.rows.push(entry.key);
+		fuzzyGroups.set(groupKey, group);
+	}
+	const fuzzyPayloads = await Promise.all(
+		[...fuzzyGroups.values()].map(async (group) => {
+			const raw = `${group.rows.join("\n")}\n`;
+			return { ...group, raw, encoded: await gzipBase64(raw) };
+		}),
+	);
+	let fuzzyOffset = keyEncoded.length + rowEncoded.length;
+	const fuzzyBuckets = [];
+	for (const payload of fuzzyPayloads) {
+		fuzzyBuckets.push({
+			column: payload.column,
+			codePointLength: payload.codePointLength,
+			...(await descriptor(fuzzyOffset, payload.encoded, payload.raw)),
+		});
+		fuzzyOffset += payload.encoded.length;
+	}
+	const directory = {
+		bucketCount: 1,
+		sourceRowCount: order,
+		sourceColumns: columns,
+		keyBuckets: [
+			{
+				firstKey: sortedKeyRows[0]?.[0] ?? "",
+				lastKey: sortedKeyRows.at(-1)?.[0] ?? "",
+				...(await descriptor(0, keyEncoded, keyText)),
+			},
+		],
+		rowBuckets: [
+			{
+				firstRowOrder: 0,
+				rowCount: order,
+				...(await descriptor(keyEncoded.length, rowEncoded, rowText)),
+			},
+		],
+		fuzzyBuckets,
+		patternBuckets: [],
+	};
+	const indexText = `textpack.lookup-index.bucketed-rows.v2\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${fuzzyPayloads.map((payload) => payload.encoded).join("")}`;
+	const indexedResourceTextByteLength = new TextEncoder().encode(
+		text,
+	).byteLength;
+	const lookupIndexShippedByteLength = new TextEncoder().encode(
+		indexText,
+	).byteLength;
+	const maximumBucketByteLength = Math.max(
+		keyEncoded.length,
+		rowEncoded.length,
+		...fuzzyPayloads.map((payload) => payload.encoded.length),
+	);
+	return {
+		text: indexText,
+		sourceRowCount: order,
+		recordCount: rowsByKey.size,
+		rowReferenceCount: [...rowsByKey.values()].reduce(
+			(total, rows) => total + new Set(rows).size,
+			0,
+		),
+		fuzzyColumns: [...new Set(fuzzyEntries.map((entry) => entry.column))],
+		patternColumns: [],
+		indexedResourceTextByteLength,
+		lookupIndexShippedByteLength,
+		storageBudgetByteLength: Math.max(
+			Math.ceil(indexedResourceTextByteLength * 1.3),
+			indexedResourceTextByteLength + 32 * 1024,
+		),
+		storageSizeRatio:
+			lookupIndexShippedByteLength / indexedResourceTextByteLength,
+		maximumBucketByteLength,
+	};
+}
+
+async function fixtureLookupMetadata(
+	index: Awaited<ReturnType<typeof bucketedLookupIndex>>,
+	sourceResourceId: string,
+	sourceText: string,
+	keyColumns: readonly string[],
+) {
+	return {
+		indexFormat: "normalized-key-bucketed-rows-v2",
+		indexedResourceId: sourceResourceId,
+		indexedResourceSchemaId: "textkb.knowledge-base.rows.v1",
+		indexedResourceTextChecksum: `sha256:${await sha256(sourceText)}`,
+		keyNormalization: "NFKC-casefold-Unicode-17",
+		keyColumns,
+		emptyKeyColumns: [],
+		fuzzyColumns: index.fuzzyColumns,
+		patternColumns: index.patternColumns,
+		bucketCount: 1,
+		sourceRowCount: index.sourceRowCount,
+		recordCount: index.recordCount,
+		rowReferenceCount: index.rowReferenceCount,
+		indexedResourceTextByteLength: index.indexedResourceTextByteLength,
+		lookupIndexShippedByteLength: index.lookupIndexShippedByteLength,
+		storageBudgetByteLength: index.storageBudgetByteLength,
+		storageSizeRatio: index.storageSizeRatio,
+		maximumBucketByteLength: index.maximumBucketByteLength,
+	};
 }
 
 function kbCapabilitySlots(resourceId: string) {
@@ -499,16 +670,25 @@ test("canonical KB textpack loader materializes file-backed resources", async ()
 test("canonical Wikidata textpack resources become a runtime knowledge base", async () => {
 	const aliasText =
 		"entityId\tlanguageTag\talias\nhttp://www.wikidata.org/entity/Q90\tfr\tVille de Paris\nhttp://www.wikidata.org/entity/Q90\tfr\tStraße\n";
-	const aliasIndexText = packedLookupIndex(aliasText, ["entityId", "alias"]);
+	const entityText = `${[
+		"entityId\tlanguageTag\tlabel\tdescription\ttypeId\ttypeLabel\tsitelinks\twikiUrl",
+		"http://www.wikidata.org/entity/Q90\tfr\tParis\tcapitale de la France\tQ515\tville\t120\thttps://fr.wikipedia.org/wiki/Paris",
+	].join("\n")}\n`;
+	const relationText =
+		"sourceId\tpredicateId\ttargetId\trelationLabel\nhttp://www.wikidata.org/entity/Q90\tP31\thttp://www.wikidata.org/entity/Q515\tinstance de\n";
+	const aliasIndex = await bucketedLookupIndex(aliasText, ["alias"]);
+	const entityIndex = await bucketedLookupIndex(entityText, [
+		"entityId",
+		"label",
+	]);
+	const relationIndex = await bucketedLookupIndex(relationText, [
+		"sourceId",
+		"targetId",
+	]);
 	const resourceTexts = {
-		"resources/wikidata-fr-entities.tsv": [
-			"entityId\tlanguageTag\tlabel\tdescription\ttypeId\ttypeLabel\tsitelinks\twikiUrl",
-			"http://www.wikidata.org/entity/Q90\tfr\tParis\tcapitale de la France\tQ515\tville\t120\thttps://fr.wikipedia.org/wiki/Paris",
-		].join("\n"),
-		"resources/wikidata-fr-aliases.tsv": aliasText,
-		"resources/wikidata-fr-aliases.lookup-index.tsv": aliasIndexText,
-		"resources/wikidata-fr-relations.tsv":
-			"sourceId\tpredicateId\ttargetId\trelationLabel\nhttp://www.wikidata.org/entity/Q90\tP31\thttp://www.wikidata.org/entity/Q515\tinstance de\n",
+		"resources/wikidata-fr-entities.indexed-table.v2.txt": entityIndex.text,
+		"resources/wikidata-fr-aliases.indexed-table.v2.txt": aliasIndex.text,
+		"resources/wikidata-fr-relations.indexed-table.v2.txt": relationIndex.text,
 		"resources/wikidata-fr-kb-canonical.json": JSON.stringify({
 			schemaVersion: "1",
 			kind: "knowledge-base",
@@ -516,12 +696,20 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 			languageTags: ["fr"],
 			resourceRefs: [
 				{ resourceId: "wikidata-fr-entities", role: "entities" },
+				{
+					resourceId: "wikidata-fr-entities-lookup-index",
+					role: "lookup-index",
+				},
 				{ resourceId: "wikidata-fr-aliases", role: "aliases" },
 				{
 					resourceId: "wikidata-fr-aliases-lookup-index",
 					role: "lookup-index",
 				},
 				{ resourceId: "wikidata-fr-relations", role: "relations" },
+				{
+					resourceId: "wikidata-fr-relations-lookup-index",
+					role: "lookup-index",
+				},
 			],
 		}),
 	};
@@ -533,36 +721,71 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-entities",
 					kind: "knowledge-base" as const,
-					format: "tsv",
+					path: "resources/wikidata-fr-entities.indexed-table.v2.txt",
+					format: "textpack-indexed-table-v2",
 					schemaId: "textkb.knowledge-base.rows.v1",
+					metadata: {
+						lookupIndexResourceId: "wikidata-fr-entities-lookup-index",
+					},
+				},
+				{
+					id: "wikidata-fr-entities-lookup-index",
+					kind: "dataset" as const,
+					path: "resources/wikidata-fr-entities.indexed-table.v2.txt",
+					format: "textpack-indexed-table-v2",
+					schemaId: "textpack.lookup-index.v2",
+					metadata: await fixtureLookupMetadata(
+						entityIndex,
+						"wikidata-fr-entities",
+						entityText,
+						["entityId", "label"],
+					),
 				},
 				{
 					id: "wikidata-fr-aliases",
 					kind: "knowledge-base" as const,
-					format: "tsv",
+					path: "resources/wikidata-fr-aliases.indexed-table.v2.txt",
+					format: "textpack-indexed-table-v2",
 					schemaId: "textkb.knowledge-base.rows.v1",
+					metadata: {
+						lookupIndexResourceId: "wikidata-fr-aliases-lookup-index",
+					},
 				},
 				{
 					id: "wikidata-fr-aliases-lookup-index",
 					kind: "dataset" as const,
-					format: "tsv",
-					schemaId: "textpack.lookup-index.v1",
-					metadata: {
-						indexFormat: "normalized-key-packed-row-spans-v1",
-						indexedResourceId: "wikidata-fr-aliases",
-						indexedResourceSchemaId: "textkb.knowledge-base.rows.v1",
-						indexedResourceTextChecksum: `sha256:${await sha256(aliasText)}`,
-						coordinateUnit: "utf16-code-unit",
-						offsetBasis: "uncompressed-resource-text",
-						keyNormalization: "NFKC-casefold-Unicode-17",
-						keyOrdering: "unicode-code-unit",
-					},
+					path: "resources/wikidata-fr-aliases.indexed-table.v2.txt",
+					format: "textpack-indexed-table-v2",
+					schemaId: "textpack.lookup-index.v2",
+					metadata: await fixtureLookupMetadata(
+						aliasIndex,
+						"wikidata-fr-aliases",
+						aliasText,
+						["alias"],
+					),
 				},
 				{
 					id: "wikidata-fr-relations",
 					kind: "knowledge-base" as const,
-					format: "tsv",
+					path: "resources/wikidata-fr-relations.indexed-table.v2.txt",
+					format: "textpack-indexed-table-v2",
 					schemaId: "textkb.knowledge-base.rows.v1",
+					metadata: {
+						lookupIndexResourceId: "wikidata-fr-relations-lookup-index",
+					},
+				},
+				{
+					id: "wikidata-fr-relations-lookup-index",
+					kind: "dataset" as const,
+					path: "resources/wikidata-fr-relations.indexed-table.v2.txt",
+					format: "textpack-indexed-table-v2",
+					schemaId: "textpack.lookup-index.v2",
+					metadata: await fixtureLookupMetadata(
+						relationIndex,
+						"wikidata-fr-relations",
+						relationText,
+						["sourceId", "targetId"],
+					),
 				},
 				{
 					id: "wikidata-fr-kb-canonical",
@@ -575,27 +798,74 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 		},
 		resources: {
 			"wikidata-fr-aliases": await fileBackedTextResource(
-				"resources/wikidata-fr-aliases.tsv",
-				resourceTexts["resources/wikidata-fr-aliases.tsv"],
+				"resources/wikidata-fr-aliases.indexed-table.v2.txt",
+				aliasIndex.text,
 			),
 			"wikidata-fr-aliases-lookup-index": await fileBackedTextResource(
-				"resources/wikidata-fr-aliases.lookup-index.tsv",
-				resourceTexts["resources/wikidata-fr-aliases.lookup-index.tsv"],
+				"resources/wikidata-fr-aliases.indexed-table.v2.txt",
+				aliasIndex.text,
+			),
+			"wikidata-fr-entities-lookup-index": await fileBackedTextResource(
+				"resources/wikidata-fr-entities.indexed-table.v2.txt",
+				entityIndex.text,
 			),
 			"wikidata-fr-entities": await fileBackedTextResource(
-				"resources/wikidata-fr-entities.tsv",
-				resourceTexts["resources/wikidata-fr-entities.tsv"],
+				"resources/wikidata-fr-entities.indexed-table.v2.txt",
+				entityIndex.text,
 			),
 			"wikidata-fr-kb-canonical": await fileBackedTextResource(
 				"resources/wikidata-fr-kb-canonical.json",
 				resourceTexts["resources/wikidata-fr-kb-canonical.json"],
 			),
 			"wikidata-fr-relations": await fileBackedTextResource(
-				"resources/wikidata-fr-relations.tsv",
-				resourceTexts["resources/wikidata-fr-relations.tsv"],
+				"resources/wikidata-fr-relations.indexed-table.v2.txt",
+				relationIndex.text,
+			),
+			"wikidata-fr-relations-lookup-index": await fileBackedTextResource(
+				"resources/wikidata-fr-relations.indexed-table.v2.txt",
+				relationIndex.text,
 			),
 		},
 	};
+	const targetedReads: string[] = [];
+	const targetedReader = textResourceReader(resourceTexts, (path) => {
+		targetedReads.push(path);
+	});
+	const targetedSlice = await knowledgeBaseSliceFromPack(pack as never, {
+		reader: targetedReader,
+		mentions: ["Ville de Paris"],
+		language: "fr",
+	});
+	assert.equal(targetedSlice.entities.records.Q90?.id, "Q90");
+	assert.equal(normalizeKnowledgeBaseMention("Straße"), "strasse");
+	assert.deepEqual(
+		(
+			await knowledgeBaseMentionKeyLengthsFromPack(pack as never, {
+				reader: targetedReader,
+				language: "fr",
+			})
+		).codePointLengths,
+		[5, 7, 14],
+	);
+	assert.equal(
+		targetedReads.some(
+			(path) => path.endsWith(".tsv") && !path.includes("lookup-index"),
+		),
+		false,
+	);
+	const fuzzySlice = await knowledgeBaseSliceFromPack(pack as never, {
+		reader: targetedReader,
+		mentions: ["Strase"],
+		language: "fr",
+		maxEditDistance: 2,
+	});
+	assert.equal(
+		candidateEntities(fuzzySlice, "Strase", {
+			language: "fr",
+			maxEditDistance: 2,
+		})[0]?.entityId,
+		"Q90",
+	);
 	const reader = textResourceReader(resourceTexts);
 	const kb = await knowledgeBaseFromPack(pack as never, { reader });
 	assert.equal(kb.entities.records.Q90?.labels.fr?.[0], "Paris");
@@ -621,14 +891,13 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 		language: "fr",
 	});
 	assert.equal(casefoldSlice.entities.records.Q90?.id, "Q90");
-	assert.equal(
-		await knowledgeBaseSliceFromPack(pack as never, {
-			reader,
-			mentions: ["Ville de Paris"],
-			language: "fr",
-		}),
-		slice,
-	);
+	const repeatedSlice = await knowledgeBaseSliceFromPack(pack as never, {
+		reader,
+		mentions: ["Ville de Paris"],
+		language: "fr",
+	});
+	assert.notEqual(repeatedSlice, slice);
+	assert.deepEqual(repeatedSlice, slice);
 });
 
 test("links entities terms and senses while preserving source annotations", () => {

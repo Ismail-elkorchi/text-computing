@@ -1,20 +1,20 @@
 {
   "analyzers": [
     {
-      "analyzerId": "en-scowl-v2-lookup-analyzer",
+      "analyzerId": "en-scowl-v2-paradigm-table",
       "coverage": {
+        "analysisCandidateRowCount": 401709,
         "derivedFormCount": 167029,
-        "lookupAnalyzerRowCount": 401709,
-        "lookupGeneratorRowCount": 401709,
+        "entryCount": 401709,
+        "generationCandidateRowCount": 401709,
         "uniqueFormCount": 358236,
         "uniqueLemmaCount": 204268
       },
       "resourceIds": [
-        "en-scowl-lookup-analyzer",
-        "en-scowl-lookup-generator",
+        "en-scowl-inflection-entries",
         "en-scowl-pos-inventory"
       ],
-      "type": "lookup"
+      "type": "paradigm-table"
     }
   ],
   "featureInventory": [
@@ -76,22 +76,12 @@
       "role": "paradigm-table"
     },
     {
-      "recordCount": 401709,
-      "resourceId": "en-scowl-lookup-analyzer",
-      "role": "analyzer"
-    },
-    {
-      "recordCount": 401709,
-      "resourceId": "en-scowl-lookup-generator",
-      "role": "generator"
-    },
-    {
       "recordCount": 103,
       "resourceId": "en-scowl-pos-inventory",
       "role": "feature-inventory"
     },
     {
-      "recordCount": 349953,
+      "recordCount": 548801,
       "resourceId": "en-scowl-inflection-entries-lookup-index",
       "role": "lookup-index"
     }

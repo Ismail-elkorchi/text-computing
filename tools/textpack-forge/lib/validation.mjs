@@ -6,6 +6,8 @@ import { gunzipSync } from "node:zlib";
 import {
 	assertLookupIndexIntegrity,
 	LOOKUP_INDEX_SCHEMA_ID,
+	LOOKUP_INDEX_STORAGE_FORMAT,
+	lookupIndexSourceText,
 } from "./lookup-index.mjs";
 import {
 	assertWikidataExtractLineage,
@@ -134,6 +136,36 @@ export function validateResourceSpec(resourceSpec) {
 						(column) => typeof column === "string" && column.length > 0,
 					),
 				`${resourceSpec.resourceSpecId} output ${output.resourceId} lookupKeyColumns must be unique non-empty strings.`,
+			);
+		}
+		if (output.lookupEmptyKeyColumns !== undefined) {
+			assert(
+				Array.isArray(output.lookupEmptyKeyColumns) &&
+					output.lookupEmptyKeyColumns.length > 0 &&
+					new Set(output.lookupEmptyKeyColumns).size ===
+						output.lookupEmptyKeyColumns.length &&
+					output.lookupEmptyKeyColumns.every(
+						(column) =>
+							typeof column === "string" &&
+							column.length > 0 &&
+							output.lookupKeyColumns?.includes(column),
+					),
+				`${resourceSpec.resourceSpecId} output ${output.resourceId} lookupEmptyKeyColumns must be a non-empty subset of lookupKeyColumns.`,
+			);
+		}
+		if (output.lookupPatternColumns !== undefined) {
+			assert(
+				Array.isArray(output.lookupPatternColumns) &&
+					output.lookupPatternColumns.length > 0 &&
+					new Set(output.lookupPatternColumns).size ===
+						output.lookupPatternColumns.length &&
+					output.lookupPatternColumns.every(
+						(column) =>
+							typeof column === "string" &&
+							column.length > 0 &&
+							output.lookupKeyColumns?.includes(column),
+					),
+				`${resourceSpec.resourceSpecId} output ${output.resourceId} lookupPatternColumns must be a non-empty subset of lookupKeyColumns.`,
 			);
 		}
 	}
@@ -481,6 +513,15 @@ async function listFilesRecursive(dirPath, files) {
 
 async function generatedResourceText(packageDir, resource) {
 	const bytes = await readFile(path.join(ROOT, packageDir, resource.path));
+	if (
+		resource.format === LOOKUP_INDEX_STORAGE_FORMAT &&
+		resource.schemaId !== LOOKUP_INDEX_SCHEMA_ID
+	) {
+		return lookupIndexSourceText(
+			bytes.toString("utf8"),
+			`${resource.id} indexed table`,
+		);
+	}
 	if (resource.path.endsWith(GZIP_BASE64_RESOURCE_SUFFIX)) {
 		return gunzipSync(
 			Buffer.from(bytes.toString("utf8").trim(), "base64"),
@@ -577,6 +618,16 @@ async function verifyGeneratedLookupIndexes(packageDir, manifest) {
 		expect(
 			sourceResource.schemaId === metadata.indexedResourceSchemaId,
 			`${manifest.packageName} ${indexResource.id} indexed resource schema is stale.`,
+		);
+		expect(
+			indexResource.format === LOOKUP_INDEX_STORAGE_FORMAT &&
+				sourceResource.format === LOOKUP_INDEX_STORAGE_FORMAT &&
+				indexResource.path === sourceResource.path &&
+				indexResource.license === sourceResource.license &&
+				JSON.stringify(indexResource.citations ?? []) ===
+					JSON.stringify(sourceResource.citations ?? []) &&
+				sourceResource.metadata?.lookupIndexResourceId === indexResource.id,
+			`${manifest.packageName} ${indexResource.id} must share one provenance-identical indexed-table payload with ${sourceResource.id}.`,
 		);
 		expect(
 			boundIndexIds.has(indexResource.id),
@@ -696,10 +747,22 @@ export async function verifyGeneratedPackageFiles(expectedInputChecksum) {
 			`${packageDir} size report does not match generated resources.`,
 		);
 		expect(
+			resourceBytes <= sizeReport.limits.distributionPackageBytes,
+			`${packageDir} exceeds the generated distribution package size budget.`,
+		);
+		expect(
 			reportedSize.outputChecksum === outputChecksum,
 			`${packageDir} size report output checksum is stale.`,
 		);
 	}
+	const aggregateResourceBytes = [...sizeByPackage.values()].reduce(
+		(total, report) => total + report.npmShippedSizeBytes,
+		0,
+	);
+	expect(
+		aggregateResourceBytes <= sizeReport.limits.distributionAggregateBytes,
+		"Generated distributions exceed the aggregate physical storage budget.",
+	);
 	const textpacksDir = path.join(ROOT, "packages/textpacks");
 	const actualDirs = new Set(
 		(await readdir(textpacksDir, { withFileTypes: true }))

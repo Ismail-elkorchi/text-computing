@@ -964,6 +964,69 @@ function validateManifestReferences(
 	gapNotes: readonly TextPackGapNote[] | undefined,
 ): void {
 	const resourceIds = new Set(resources.map((resource) => resource.id));
+	const resourcesByPath = new Map<string, TextPackResource[]>();
+	for (const resource of resources) {
+		if (resource.path === undefined) continue;
+		resourcesByPath.set(resource.path, [
+			...(resourcesByPath.get(resource.path) ?? []),
+			resource,
+		]);
+	}
+	for (const resource of resources.filter(
+		(candidate) => candidate.schemaId === "textpack.lookup-index.v2",
+	)) {
+		const metadata = requireRecord(
+			resource.metadata,
+			`manifest.resources.${resource.id}.metadata`,
+		);
+		const sourceId = readRequiredString(
+			metadata,
+			"indexedResourceId",
+			`manifest.resources.${resource.id}.metadata`,
+		);
+		const source = resources.find((candidate) => candidate.id === sourceId);
+		const shared =
+			resource.path === undefined
+				? []
+				: (resourcesByPath.get(resource.path) ?? []);
+		const sourceMetadata =
+			source?.metadata === undefined
+				? undefined
+				: requireRecord(
+						source.metadata,
+						`manifest.resources.${sourceId}.metadata`,
+					);
+		if (
+			source === undefined ||
+			resource.format !== "textpack-indexed-table-v2" ||
+			source.format !== "textpack-indexed-table-v2" ||
+			resource.path === undefined ||
+			resource.path !== source.path ||
+			shared.length !== 2 ||
+			!shared.includes(source) ||
+			resource.license !== source.license ||
+			JSON.stringify(resource.citations ?? []) !==
+				JSON.stringify(source.citations ?? []) ||
+			sourceMetadata?.lookupIndexResourceId !== resource.id
+		) {
+			throw new TypeError(
+				`manifest lookup index ${resource.id} must share one provenance-identical indexed-table payload with ${sourceId}.`,
+			);
+		}
+	}
+	for (const [resourcePath, shared] of resourcesByPath) {
+		if (shared.length === 1) continue;
+		if (
+			shared.length !== 2 ||
+			shared.filter(
+				(resource) => resource.schemaId === "textpack.lookup-index.v2",
+			).length !== 1
+		) {
+			throw new TypeError(
+				`manifest resource path ${resourcePath} may only be shared by one semantic source and its lookup-index view.`,
+			);
+		}
+	}
 	const artifactIds = new Set(
 		(artifacts ?? []).map((artifact) => artifact.artifactId),
 	);

@@ -41,11 +41,14 @@ checksums, and snapshot locks after an intentional source refresh.
 publishability posture, default-distribution eligibility, and build-unit license
 policy.
 
-Large declared TSV outputs may receive a compact lookup companion when the resource spec declares
-exact `lookupKeyColumns`. The forge normalizes keys with pinned Unicode 17 NFKC casefolding and emits
-one sorted key row containing packed UTF-16 source-row spans. Indexes are omitted below the size
-threshold or when their compressed size exceeds the configured source ratio; generated verification
-rebuilds every emitted index and compares its metadata and bytes.
+Declared TSV outputs use one v2 indexed-table store when their resource spec declares
+`lookupKeyColumns`. The logical source descriptor and its `lookup-index` view share that physical
+file, so rows are shipped once. The store contains column-scoped normalized key buckets, reusable
+row buckets, normalized fuzzy key catalogs for KB aliases and labels, and raw pattern catalogs only
+for expert lexicon prefix, suffix, and fuzzy lookup. Empty keys are indexed only through explicit
+`lookupEmptyKeyColumns`. Declaring lookup keys is a hard contract: forge generation fails instead of
+silently omitting an index, and generated verification reconstructs the logical TSV and
+deterministically rebuilds the complete store to compare its metadata and bytes.
 
 Commands:
 

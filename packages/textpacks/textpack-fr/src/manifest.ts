@@ -426,13 +426,22 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "fr-lexique-entries",
 			"kind": "lexicon",
-			"path": "resources/lexique-383.entries.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
+			"path": "resources/lexique-383.entries.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
 			],
-			"schemaId": "textlex.lexicon.rows.v1"
+			"schemaId": "textlex.lexicon.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "fr-lexique-entries-lookup-index",
+				"logicalFormat": "tsv+gzip+base64",
+				"logicalPath": "resources/lexique-383.entries.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:2364fefce469d493e6a7dda4c60e58e6de83129acf553d64546432cf1dd2d95b",
+				"logicalTextByteLength": 11808198,
+				"logicalRowCount": 142694
+			}
 		},
 		{
 			"id": "fr-lexique-lemmas",
@@ -514,65 +523,58 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "fr-lexique-entries-lookup-index",
 			"kind": "dataset",
-			"path": "resources/lexique-383.entries.lookup-index.tsv.gz.b64",
-			"format": "tsv",
+			"path": "resources/lexique-383.entries.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
 			],
-			"schemaId": "textpack.lookup-index.v1",
+			"schemaId": "textpack.lookup-index.v2",
 			"metadata": {
-				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexFormat": "normalized-key-bucketed-rows-v2",
 				"indexedResourceId": "fr-lexique-entries",
 				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
 				"indexedResourceTextChecksum": "sha256:2364fefce469d493e6a7dda4c60e58e6de83129acf553d64546432cf1dd2d95b",
-				"indexedResourceGzipBase64ByteLength": 3070993,
-				"lookupIndexGzipBase64ByteLength": 1957881,
-				"compressedSizeRatio": 0.63754,
-				"coordinateUnit": "utf16-code-unit",
-				"offsetBasis": "uncompressed-resource-text",
 				"keyNormalization": "NFKC-casefold-Unicode-17",
-				"keyOrdering": "unicode-code-unit",
 				"keyColumns": [
 					"form",
 					"lemma"
 				],
-				"recordCount": 128893,
-				"spanCount": 238046
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [
+					"form"
+				],
+				"bucketCount": 64,
+				"sourceRowCount": 142694,
+				"recordCount": 172600,
+				"rowReferenceCount": 285388,
+				"indexedResourceTextByteLength": 11808198,
+				"lookupIndexShippedByteLength": 5000638,
+				"storageBudgetByteLength": 15350658,
+				"storageSizeRatio": 0.42348866440078325,
+				"maximumBucketByteLength": 90148
 			}
 		},
 		{
 			"id": "fr-unimorph-paradigms",
 			"kind": "morphology",
-			"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
+			"path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 			],
-			"schemaId": "textlex.morphology.rows.v1"
-		},
-		{
-			"id": "fr-unimorph-lookup-analyzer",
-			"kind": "morphology",
-			"path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
-			"license": "CC-BY-SA-3.0",
-			"citations": [
-				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			],
-			"schemaId": "textlex.morphology.rows.v1"
-		},
-		{
-			"id": "fr-unimorph-lookup-generator",
-			"kind": "morphology",
-			"path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
-			"license": "CC-BY-SA-3.0",
-			"citations": [
-				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
-			],
-			"schemaId": "textlex.morphology.rows.v1"
+			"schemaId": "textlex.morphology.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "fr-unimorph-paradigms-lookup-index",
+				"logicalFormat": "tsv+gzip+base64",
+				"logicalPath": "resources/unimorph-fra.paradigms.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:0fcefb9d03bc51b09173b9b837f6491ad059bfc63e4ac64e6d64aae03879cb74",
+				"logicalTextByteLength": 25167521,
+				"logicalRowCount": 367732
+			}
 		},
 		{
 			"id": "fr-unimorph-feature-inventory",
@@ -632,64 +634,96 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "fr-unimorph-paradigms-lookup-index",
 			"kind": "dataset",
-			"path": "resources/unimorph-fra.paradigms.lookup-index.tsv.gz.b64",
-			"format": "tsv",
+			"path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 			],
-			"schemaId": "textpack.lookup-index.v1",
+			"schemaId": "textpack.lookup-index.v2",
 			"metadata": {
-				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexFormat": "normalized-key-bucketed-rows-v2",
 				"indexedResourceId": "fr-unimorph-paradigms",
 				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
 				"indexedResourceTextChecksum": "sha256:0fcefb9d03bc51b09173b9b837f6491ad059bfc63e4ac64e6d64aae03879cb74",
-				"indexedResourceGzipBase64ByteLength": 4339245,
-				"lookupIndexGzipBase64ByteLength": 3450913,
-				"compressedSizeRatio": 0.79528,
-				"coordinateUnit": "utf16-code-unit",
-				"offsetBasis": "uncompressed-resource-text",
 				"keyNormalization": "NFKC-casefold-Unicode-17",
-				"keyOrdering": "unicode-code-unit",
 				"keyColumns": [
-					"form"
+					"form",
+					"lemma"
 				],
-				"recordCount": 274192,
-				"spanCount": 367732
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [],
+				"bucketCount": 128,
+				"sourceRowCount": 367732,
+				"recordCount": 281727,
+				"rowReferenceCount": 735464,
+				"indexedResourceTextByteLength": 25167521,
+				"lookupIndexShippedByteLength": 6267367,
+				"storageBudgetByteLength": 32717778,
+				"storageSizeRatio": 0.24902599664067032,
+				"maximumBucketByteLength": 35488
 			}
 		},
 		{
 			"id": "wikidata-fr-entities",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-fr.entities.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-fr-entities-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-fr.entities.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:f787a6d0cb5950f59f9f02de22b97f1851ab29e7c6bc0123861ce62689a67d0b",
+				"logicalTextByteLength": 1164021,
+				"logicalRowCount": 9377
+			}
 		},
 		{
 			"id": "wikidata-fr-aliases",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-fr.aliases.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-fr-aliases-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-fr.aliases.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
+				"logicalTextByteLength": 339445,
+				"logicalRowCount": 6101
+			}
 		},
 		{
 			"id": "wikidata-fr-relations",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-fr.relations.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-fr-relations-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-fr.relations.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:13ccc689fc907f4e1a812ad865c57360247f113dc8d6db8743b22cb4417498e1",
+				"logicalTextByteLength": 581510,
+				"logicalRowCount": 9377
+			}
 		},
 		{
 			"id": "wikidata-fr-kb-canonical",
@@ -723,6 +757,112 @@ export const manifest: TextPackManifest = {
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wikidata-fr-entities-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-fr-entities",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:f787a6d0cb5950f59f9f02de22b97f1851ab29e7c6bc0123861ce62689a67d0b",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"entityId",
+					"label"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [
+					"label"
+				],
+				"patternColumns": [],
+				"bucketCount": 8,
+				"sourceRowCount": 9377,
+				"recordCount": 18600,
+				"rowReferenceCount": 18754,
+				"indexedResourceTextByteLength": 1164021,
+				"lookupIndexShippedByteLength": 558306,
+				"storageBudgetByteLength": 1513228,
+				"storageSizeRatio": 0.47963567667593626,
+				"maximumBucketByteLength": 44532
+			}
+		},
+		{
+			"id": "wikidata-fr-aliases-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-fr-aliases",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"alias",
+					"entityId"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [
+					"alias"
+				],
+				"patternColumns": [],
+				"bucketCount": 2,
+				"sourceRowCount": 6101,
+				"recordCount": 8943,
+				"rowReferenceCount": 12202,
+				"indexedResourceTextByteLength": 339445,
+				"lookupIndexShippedByteLength": 248637,
+				"storageBudgetByteLength": 441279,
+				"storageSizeRatio": 0.732480961569621,
+				"maximumBucketByteLength": 49684
+			}
+		},
+		{
+			"id": "wikidata-fr-relations-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-fr-relations",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:13ccc689fc907f4e1a812ad865c57360247f113dc8d6db8743b22cb4417498e1",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"sourceId",
+					"targetId"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [],
+				"bucketCount": 4,
+				"sourceRowCount": 9377,
+				"recordCount": 9382,
+				"rowReferenceCount": 18754,
+				"indexedResourceTextByteLength": 581510,
+				"lookupIndexShippedByteLength": 135481,
+				"storageBudgetByteLength": 755963,
+				"storageSizeRatio": 0.23298137607263847,
+				"maximumBucketByteLength": 25324
+			}
 		}
 	],
 	"capabilitySlots": [
@@ -775,12 +915,36 @@ export const manifest: TextPackManifest = {
 				"wikidata-fr-entities",
 				"wikidata-fr-aliases",
 				"wikidata-fr-relations",
-				"wikidata-fr-kb-canonical"
+				"wikidata-fr-kb-canonical",
+				"wikidata-fr-entities-lookup-index",
+				"wikidata-fr-aliases-lookup-index",
+				"wikidata-fr-relations-lookup-index"
 			],
 			"artifactIds": [
 				"artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "wikidata-fr-aliases-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "index",
+					"resourceId": "wikidata-fr-entities-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "index",
+					"resourceId": "wikidata-fr-relations-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
 				{
 					"role": "primary",
 					"resourceId": "wikidata-fr-kb-canonical",
@@ -847,7 +1011,7 @@ export const manifest: TextPackManifest = {
 				{
 					"role": "index",
 					"resourceId": "fr-lexique-entries-lookup-index",
-					"schemaId": "textpack.lookup-index.v1",
+					"schemaId": "textpack.lookup-index.v2",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -903,8 +1067,6 @@ export const manifest: TextPackManifest = {
 				"fr-lexique-morphology-canonical",
 				"fr-lexique-entries-lookup-index",
 				"fr-unimorph-paradigms",
-				"fr-unimorph-lookup-analyzer",
-				"fr-unimorph-lookup-generator",
 				"fr-unimorph-feature-inventory",
 				"fr-unimorph-pos-inventory",
 				"fr-unimorph-morphology-canonical",
@@ -914,14 +1076,14 @@ export const manifest: TextPackManifest = {
 				{
 					"role": "index",
 					"resourceId": "fr-lexique-entries-lookup-index",
-					"schemaId": "textpack.lookup-index.v1",
+					"schemaId": "textpack.lookup-index.v2",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
 				{
 					"role": "index",
 					"resourceId": "fr-unimorph-paradigms-lookup-index",
-					"schemaId": "textpack.lookup-index.v1",
+					"schemaId": "textpack.lookup-index.v2",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -962,20 +1124,6 @@ export const manifest: TextPackManifest = {
 				},
 				{
 					"role": "table",
-					"resourceId": "fr-unimorph-lookup-analyzer",
-					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
-				},
-				{
-					"role": "table",
-					"resourceId": "fr-unimorph-lookup-generator",
-					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
-				},
-				{
-					"role": "table",
 					"resourceId": "fr-unimorph-paradigms",
 					"schemaId": "textlex.morphology.rows.v1",
 					"required": true,
@@ -992,7 +1140,7 @@ export const manifest: TextPackManifest = {
 			"readerRequired": true,
 			"notes": [
 				"Lexique 3.83 provides lookup morphology evidence; it is not a context-disambiguating analyzer.",
-				"UniMorph French lemma/form paradigms, feature bundles, lookup analyzer rows, and lookup generator rows are available under the share-alike policy surface."
+				"One UniMorph French paradigm table serves targeted form analysis and lemma generation through its form-and-lemma lookup index."
 			],
 			"capabilities": {
 				"morphology": "paradigm-table"
@@ -1328,7 +1476,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+		"lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

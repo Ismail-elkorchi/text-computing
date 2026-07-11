@@ -16,7 +16,7 @@
 			"eval:en-normalization:profile-rules:distribution:textpack-en",
 			"eval:en-segmentation:word-boundary-properties:distribution:textpack-en",
 			"eval:en-esdb-wordlist:word-volume:distribution:textpack-en",
-			"eval:en-scowl-inflection:lookup-analyzer-volume:distribution:textpack-en",
+			"eval:en-scowl-inflection:indexed-analysis-volume:distribution:textpack-en",
 			"eval:wordnet-en:semantic-integrity:distribution:textpack-en",
 			"eval:wikidata-en:entity-extract:distribution:textpack-en",
 			"eval:en-esdb-wordlist:search-profile:distribution:textpack-en",
@@ -82,7 +82,7 @@
 		},
 		{
 			"buildUnitId": "en-inflection-scowl",
-			"reason": "English SCOWLv2 inflection and lookup morphology resources.",
+			"reason": "English SCOWLv2 inflection table with indexed form and lemma lookup.",
 			"licensePolicy": "allow-attribution"
 		},
 		{

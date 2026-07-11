@@ -308,13 +308,22 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "ar-msa-camel-morph-morphemes",
 			"kind": "morphology",
-			"path": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
-			"format": "tsv+gzip+base64",
+			"path": "resources/camel-morph-msa.morphemes.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"schemaId": "textlex.morphology.rows.v1"
+			"schemaId": "textlex.morphology.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "ar-msa-camel-morph-morphemes-lookup-index",
+				"logicalFormat": "tsv+gzip+base64",
+				"logicalPath": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:825277b95e8aa6b35ff718ae7ca07cfab84a4704e476ac29931ccd595b870d65",
+				"logicalTextByteLength": 117913474,
+				"logicalRowCount": 203740
+			}
 		},
 		{
 			"id": "ar-msa-camel-morph-compatibility",
@@ -374,45 +383,60 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "ar-msa-camel-morph-morphemes-lookup-index",
 			"kind": "dataset",
-			"path": "resources/camel-morph-msa.morphemes.lookup-index.tsv.gz.b64",
-			"format": "tsv",
+			"path": "resources/camel-morph-msa.morphemes.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"schemaId": "textpack.lookup-index.v1",
+			"schemaId": "textpack.lookup-index.v2",
 			"metadata": {
-				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexFormat": "normalized-key-bucketed-rows-v2",
 				"indexedResourceId": "ar-msa-camel-morph-morphemes",
 				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
 				"indexedResourceTextChecksum": "sha256:825277b95e8aa6b35ff718ae7ca07cfab84a4704e476ac29931ccd595b870d65",
-				"indexedResourceGzipBase64ByteLength": 15281477,
-				"lookupIndexGzipBase64ByteLength": 4692633,
-				"compressedSizeRatio": 0.30708,
-				"coordinateUnit": "utf16-code-unit",
-				"offsetBasis": "uncompressed-resource-text",
 				"keyNormalization": "NFKC-casefold-Unicode-17",
-				"keyOrdering": "unicode-code-unit",
 				"keyColumns": [
 					"surface",
 					"diacritizedForm",
 					"lexicalForm",
 					"stem"
 				],
-				"recordCount": 203199,
-				"spanCount": 429253
+				"emptyKeyColumns": [
+					"surface"
+				],
+				"fuzzyColumns": [],
+				"patternColumns": [],
+				"bucketCount": 512,
+				"sourceRowCount": 203740,
+				"recordCount": 344712,
+				"rowReferenceCount": 583378,
+				"indexedResourceTextByteLength": 117913474,
+				"lookupIndexShippedByteLength": 19452834,
+				"storageBudgetByteLength": 153287517,
+				"storageSizeRatio": 0.16497549720229598,
+				"maximumBucketByteLength": 47768
 			}
 		},
 		{
 			"id": "wordnet-ar-lexical-entries",
 			"kind": "lexicon",
-			"path": "resources/wordnet-ar.lexical-entries.tsv.gz.b64",
-			"format": "tsv",
+			"path": "resources/wordnet-ar.lexical-entries.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
 			],
-			"schemaId": "textlex.lexicon.rows.v1"
+			"schemaId": "textlex.lexicon.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wordnet-ar-lexical-entries-lookup-index",
+				"logicalFormat": "tsv",
+				"logicalPath": "resources/wordnet-ar.lexical-entries.tsv",
+				"logicalTextChecksum": "sha256:4254fb7dcd9bfa0a3b5b4d9512840a153970d9abdca1c0758d751a649eee74c5",
+				"logicalTextByteLength": 5814865,
+				"logicalRowCount": 136041
+			}
 		},
 		{
 			"id": "wordnet-ar-senses",
@@ -492,37 +516,99 @@ export const manifest: TextPackManifest = {
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "wordnet-ar-lexical-entries-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wordnet-ar.lexical-entries.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"Arabic WordNet 4.1.0."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wordnet-ar-lexical-entries",
+				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
+				"indexedResourceTextChecksum": "sha256:4254fb7dcd9bfa0a3b5b4d9512840a153970d9abdca1c0758d751a649eee74c5",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"lemma"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [
+					"lemma"
+				],
+				"bucketCount": 32,
+				"sourceRowCount": 136041,
+				"recordCount": 132810,
+				"rowReferenceCount": 136041,
+				"indexedResourceTextByteLength": 5814865,
+				"lookupIndexShippedByteLength": 5890936,
+				"storageBudgetByteLength": 7559325,
+				"storageSizeRatio": 1.0130821609788017,
+				"maximumBucketByteLength": 106652
+			}
+		},
+		{
 			"id": "wikidata-ar-entities",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-ar.entities.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-ar.entities.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-ar-entities-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-ar.entities.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:733a21bc3defd8c8d277b507ea0b0ad1ec18869fcc13ba7d4d2c6a026c6fc45a",
+				"logicalTextByteLength": 601526,
+				"logicalRowCount": 3009
+			}
 		},
 		{
 			"id": "wikidata-ar-aliases",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-ar.aliases.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-ar.aliases.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-ar-aliases-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-ar.aliases.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
+				"logicalTextByteLength": 176372,
+				"logicalRowCount": 2776
+			}
 		},
 		{
 			"id": "wikidata-ar-relations",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-ar.relations.tsv.gz.b64",
-			"format": "text/tab-separated-values",
+			"path": "resources/wikidata-ar.relations.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textkb.knowledge-base.rows.v1"
+			"schemaId": "textkb.knowledge-base.rows.v1",
+			"metadata": {
+				"storageFormat": "textpack-indexed-table-v2",
+				"lookupIndexResourceId": "wikidata-ar-relations-lookup-index",
+				"logicalFormat": "text/tab-separated-values",
+				"logicalPath": "resources/wikidata-ar.relations.tsv.gz.b64",
+				"logicalTextChecksum": "sha256:16e77e00bf6e1492f1be03b8ca003b781ffb17b87f0ea5c0a3eeabd6d7528ea1",
+				"logicalTextByteLength": 181440,
+				"logicalRowCount": 3009
+			}
 		},
 		{
 			"id": "wikidata-ar-kb-canonical",
@@ -556,6 +642,112 @@ export const manifest: TextPackManifest = {
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "wikidata-ar-entities-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-ar.entities.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-ar-entities",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:733a21bc3defd8c8d277b507ea0b0ad1ec18869fcc13ba7d4d2c6a026c6fc45a",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"entityId",
+					"label"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [
+					"label"
+				],
+				"patternColumns": [],
+				"bucketCount": 4,
+				"sourceRowCount": 3009,
+				"recordCount": 5991,
+				"rowReferenceCount": 6018,
+				"indexedResourceTextByteLength": 601526,
+				"lookupIndexShippedByteLength": 238909,
+				"storageBudgetByteLength": 781984,
+				"storageSizeRatio": 0.39717152708278614,
+				"maximumBucketByteLength": 36520
+			}
+		},
+		{
+			"id": "wikidata-ar-aliases-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-ar.aliases.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-ar-aliases",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"alias",
+					"entityId"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [
+					"alias"
+				],
+				"patternColumns": [],
+				"bucketCount": 1,
+				"sourceRowCount": 2776,
+				"recordCount": 4012,
+				"rowReferenceCount": 5552,
+				"indexedResourceTextByteLength": 176372,
+				"lookupIndexShippedByteLength": 123649,
+				"storageBudgetByteLength": 229284,
+				"storageSizeRatio": 0.7010693307327693,
+				"maximumBucketByteLength": 44028
+			}
+		},
+		{
+			"id": "wikidata-ar-relations-lookup-index",
+			"kind": "dataset",
+			"path": "resources/wikidata-ar.relations.lookup-index.v2.txt",
+			"format": "textpack-indexed-table-v2",
+			"license": "CC0-1.0",
+			"citations": [
+				"Wikidata main structured data dump, 2026-06-08."
+			],
+			"schemaId": "textpack.lookup-index.v2",
+			"metadata": {
+				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexedResourceId": "wikidata-ar-relations",
+				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
+				"indexedResourceTextChecksum": "sha256:16e77e00bf6e1492f1be03b8ca003b781ffb17b87f0ea5c0a3eeabd6d7528ea1",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyColumns": [
+					"sourceId",
+					"targetId"
+				],
+				"emptyKeyColumns": [],
+				"fuzzyColumns": [],
+				"patternColumns": [],
+				"bucketCount": 1,
+				"sourceRowCount": 3009,
+				"recordCount": 3014,
+				"rowReferenceCount": 6018,
+				"indexedResourceTextByteLength": 181440,
+				"lookupIndexShippedByteLength": 43733,
+				"storageBudgetByteLength": 235872,
+				"storageSizeRatio": 0.241032848324515,
+				"maximumBucketByteLength": 26740
+			}
 		},
 		{
 			"id": "ar-search-profile",
@@ -645,12 +837,36 @@ export const manifest: TextPackManifest = {
 				"wikidata-ar-entities",
 				"wikidata-ar-aliases",
 				"wikidata-ar-relations",
-				"wikidata-ar-kb-canonical"
+				"wikidata-ar-kb-canonical",
+				"wikidata-ar-entities-lookup-index",
+				"wikidata-ar-aliases-lookup-index",
+				"wikidata-ar-relations-lookup-index"
 			],
 			"artifactIds": [
 				"artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "wikidata-ar-aliases-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "index",
+					"resourceId": "wikidata-ar-entities-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
+				{
+					"role": "index",
+					"resourceId": "wikidata-ar-relations-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textkb"
+				},
 				{
 					"role": "primary",
 					"resourceId": "wikidata-ar-kb-canonical",
@@ -738,9 +954,17 @@ export const manifest: TextPackManifest = {
 			"tier": "lookup",
 			"resourceIds": [
 				"wordnet-ar-lexical-entries",
-				"wordnet-ar-lexicon-canonical"
+				"wordnet-ar-lexicon-canonical",
+				"wordnet-ar-lexical-entries-lookup-index"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "wordnet-ar-lexical-entries-lookup-index",
+					"schemaId": "textpack.lookup-index.v2",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
 				{
 					"role": "primary",
 					"resourceId": "wordnet-ar-lexicon-canonical",
@@ -795,7 +1019,7 @@ export const manifest: TextPackManifest = {
 				{
 					"role": "index",
 					"resourceId": "ar-msa-camel-morph-morphemes-lookup-index",
-					"schemaId": "textpack.lookup-index.v1",
+					"schemaId": "textpack.lookup-index.v2",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -1108,7 +1332,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+		"lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

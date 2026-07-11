@@ -18,7 +18,9 @@
 			"resourceId": "wordnet-en-lexical-entries",
 			"path": "resources/wordnet-en.lexical-entries.tsv",
 			"kind": "lexicon",
-			"format": "tsv"
+			"format": "tsv",
+			"lookupKeyColumns": ["lemma"],
+			"lookupPatternColumns": ["lemma"]
 		},
 		{
 			"resourceId": "wordnet-en-senses",

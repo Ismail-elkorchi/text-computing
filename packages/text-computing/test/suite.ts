@@ -31,6 +31,7 @@ import { createPack } from "@ismail-elkorchi/textpack";
 import ar from "@ismail-elkorchi/textpack-ar";
 import en from "@ismail-elkorchi/textpack-en";
 import fr from "@ismail-elkorchi/textpack-fr";
+import { indexedMorphologyTableFixture } from "./fixtures/indexed-table.ts";
 
 function localGeneratedResourceReader(): TextPackResourceReader {
 	return {
@@ -653,6 +654,11 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 });
 
 test("document morphology deduplicates and limits analyses independently per form", async () => {
+	const morphologyTable = await indexedMorphologyTableFixture(
+		"en-morphology-paradigms",
+		"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nalpha\tlemma-alpha\tNOUN\tN;SG\ta1\nbeta\tlemma-beta\tNOUN\tN;SG\tb1\ná\tlemma-accent\tNOUN\tN;SG\tc1\n",
+		["form", "lemma"],
+	);
 	const pack = createPack(
 		{
 			schemaVersion: "1",
@@ -681,24 +687,8 @@ test("document morphology deduplicates and limits analyses independently per for
 					format: "json",
 					schemaId: "textlex.morphology.v1",
 				},
-				{
-					id: "en-morphology-paradigms",
-					kind: "morphology",
-					format: "tsv",
-					schemaId: "textlex.morphology.rows.v1",
-				},
-				{
-					id: "en-morphology-analyzer",
-					kind: "morphology",
-					format: "tsv",
-					schemaId: "textlex.morphology.rows.v1",
-				},
-				{
-					id: "en-morphology-generator",
-					kind: "morphology",
-					format: "tsv",
-					schemaId: "textlex.morphology.rows.v1",
-				},
+				morphologyTable.source,
+				morphologyTable.index,
 			],
 			capabilitySlots: [
 				{
@@ -772,16 +762,13 @@ test("document morphology deduplicates and limits analyses independently per for
 				languageTag: "en",
 				resourceRefs: [
 					{ resourceId: "en-morphology-paradigms", role: "paradigm-table" },
-					{ resourceId: "en-morphology-analyzer", role: "analyzer" },
-					{ resourceId: "en-morphology-generator", role: "generator" },
+					{
+						resourceId: "en-morphology-paradigms-lookup-index",
+						role: "lookup-index",
+					},
 				],
 			},
-			"en-morphology-paradigms":
-				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\nlemma-accent\tá\tNOUN\tN;SG\tc1\n",
-			"en-morphology-analyzer":
-				"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nalpha\tlemma-alpha\tNOUN\tN;SG\ta1\nbeta\tlemma-beta\tNOUN\tN;SG\tb1\ná\tlemma-accent\tNOUN\tN;SG\tc1\n",
-			"en-morphology-generator":
-				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\nlemma-accent\tá\tNOUN\tN;SG\tc1\n",
+			...morphologyTable.resources,
 		},
 	);
 	const nlp = await load(pack);

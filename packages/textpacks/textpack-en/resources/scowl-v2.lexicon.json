@@ -10,12 +10,7 @@
       "role": "forms"
     },
     {
-      "recordCount": 103,
-      "resourceId": "en-scowl-pos-inventory",
-      "role": "entries"
-    },
-    {
-      "recordCount": 349953,
+      "recordCount": 548801,
       "resourceId": "en-scowl-inflection-entries-lookup-index",
       "role": "lookup-index"
     }

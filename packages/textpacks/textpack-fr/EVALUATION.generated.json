@@ -1549,7 +1549,8 @@
       "evaluationKind": "coverage",
       "evidence": {
         "resourceIds": [
-          "fr-unimorph-lookup-analyzer",
+          "fr-unimorph-paradigms",
+          "fr-unimorph-paradigms-lookup-index",
           "fr-unimorph-morphology-canonical"
         ]
       },
@@ -1557,7 +1558,7 @@
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "lookupAnalyzerRowCount",
+        "name": "analysisCandidateRowCount",
         "operator": "gte",
         "threshold": 100000,
         "unit": "rows",
@@ -1565,7 +1566,7 @@
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
       "pipelineId": "french-unimorph",
-      "recordId": "eval:fr-unimorph:lookup-analyzer-volume:distribution:textpack-fr",
+      "recordId": "eval:fr-unimorph:indexed-analysis-volume:distribution:textpack-fr",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
@@ -1594,7 +1595,8 @@
       "evaluationKind": "coverage",
       "evidence": {
         "resourceIds": [
-          "fr-unimorph-lookup-generator",
+          "fr-unimorph-paradigms",
+          "fr-unimorph-paradigms-lookup-index",
           "fr-unimorph-morphology-canonical"
         ]
       },
@@ -1602,7 +1604,7 @@
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr."
       ],
       "metric": {
-        "name": "lookupGeneratorRowCount",
+        "name": "generationCandidateRowCount",
         "operator": "gte",
         "threshold": 100000,
         "unit": "rows",
@@ -1610,7 +1612,7 @@
       },
       "packageName": "@ismail-elkorchi/textpack-fr",
       "pipelineId": "french-unimorph",
-      "recordId": "eval:fr-unimorph:lookup-generator-volume:distribution:textpack-fr",
+      "recordId": "eval:fr-unimorph:indexed-generation-volume:distribution:textpack-fr",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",

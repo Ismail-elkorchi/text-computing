@@ -19,19 +19,7 @@
 			"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
 			"kind": "morphology",
 			"format": "tsv+gzip+base64",
-			"lookupKeyColumns": ["form"]
-		},
-		{
-			"resourceId": "fr-unimorph-lookup-analyzer",
-			"path": "resources/unimorph-fra.lookup-analyzer.tsv.gz.b64",
-			"kind": "morphology",
-			"format": "tsv+gzip+base64"
-		},
-		{
-			"resourceId": "fr-unimorph-lookup-generator",
-			"path": "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
-			"kind": "morphology",
-			"format": "tsv+gzip+base64"
+			"lookupKeyColumns": ["form", "lemma"]
 		},
 		{
 			"resourceId": "fr-unimorph-feature-inventory",

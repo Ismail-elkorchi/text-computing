@@ -155,38 +155,32 @@ function parseTable(text: string): readonly Readonly<Record<string, string>>[] {
 	return Object.freeze(rows);
 }
 
-type TableIndexKind = "lexicon" | "morphology";
+type TableIndexKind = "generation" | "lexicon" | "morphology";
 
-interface CompleteTableIndex {
+interface CamelCompatibilityIndex {
 	readonly camelCompatibilityPairs: ReadonlySet<string>;
-	readonly camelMorphemeRowStarts: ReadonlyMap<string, readonly number[]>;
-	readonly columns: readonly string[];
-	readonly rowStartsByKind: Readonly<
-		Record<TableIndexKind, ReadonlyMap<string, readonly number[]>>
-	>;
-	readonly text: string;
 }
 
-interface PackTableIndexes {
-	readonly defaultReader: Map<string, CompleteTableIndex>;
+interface PackCompatibilityIndexes {
+	readonly defaultReader: Map<string, CamelCompatibilityIndex>;
 	readonly readers: WeakMap<
 		TextPackResourceReader,
-		Map<string, CompleteTableIndex>
+		Map<string, CamelCompatibilityIndex>
 	>;
 }
 
-const tableIndexes = new WeakMap<object, PackTableIndexes>();
+const compatibilityIndexes = new WeakMap<object, PackCompatibilityIndexes>();
 
-function tableIndexesForReader(
+function compatibilityIndexesForReader(
 	pack: TextPackLike,
 	reader: TextPackResourceReader | undefined,
-): Map<string, CompleteTableIndex> {
-	let packIndexes = tableIndexes.get(pack);
+): Map<string, CamelCompatibilityIndex> {
+	let packIndexes = compatibilityIndexes.get(pack);
 	if (packIndexes === undefined) {
 		packIndexes = { defaultReader: new Map(), readers: new WeakMap() };
-		tableIndexes.set(pack, packIndexes);
+		compatibilityIndexes.set(pack, packIndexes);
 	}
-	let resourceIndexes: Map<string, CompleteTableIndex>;
+	let resourceIndexes: Map<string, CamelCompatibilityIndex>;
 	if (reader === undefined) {
 		resourceIndexes = packIndexes.defaultReader;
 	} else {
@@ -198,148 +192,75 @@ function tableIndexesForReader(
 	return resourceIndexes;
 }
 
-function indexedColumnNames(kind: TableIndexKind): ReadonlySet<string> {
-	return new Set(
+function prioritizedIndexColumns(
+	index: TextPackLookupIndex,
+	kind: TableIndexKind,
+): readonly string[] {
+	const tiers =
 		kind === "lexicon"
-			? ["form", "forms", "lemma", "lexicalForm", "surface", "word"]
-			: ["diacritizedForm", "form", "lexicalForm", "stem", "surface"],
-	);
-}
-
-function buildCompleteTableIndex(text: string): CompleteTableIndex {
-	const headerEnd = text.indexOf("\n");
-	const rawHeader = text.slice(0, headerEnd === -1 ? text.length : headerEnd);
-	const columns = Object.freeze(
-		(rawHeader.endsWith("\r") ? rawHeader.slice(0, -1) : rawHeader).split("\t"),
-	);
-	const columnsForKind = (kind: TableIndexKind) => {
-		const names = indexedColumnNames(kind);
-		return columns.flatMap((name, index) =>
-			names.has(name) ? [{ index, split: name === "forms" }] : [],
+			? [
+					["form", "forms", "surface", "word"],
+					["lemma", "lexicalForm"],
+				]
+			: kind === "morphology"
+				? [
+						["form", "surface", "diacritizedForm"],
+						["stem", "lexicalForm"],
+					]
+				: [
+						["lemma", "lexicalForm"],
+						["stem", "root"],
+					];
+	for (const tier of tiers) {
+		const available = tier.filter((column) =>
+			index.keyColumns.includes(column),
 		);
-	};
-	const indexedColumns = {
-		lexicon: columnsForKind("lexicon"),
-		morphology: columnsForKind("morphology"),
-	} satisfies Readonly<
-		Record<
-			TableIndexKind,
-			readonly { readonly index: number; readonly split: boolean }[]
-		>
-	>;
-	const rowStartsByKind: Record<TableIndexKind, Map<string, number[]>> = {
-		lexicon: new Map(),
-		morphology: new Map(),
-	};
-	const camelCompatibilityPairs = new Set<string>();
-	const camelMorphemeRowStarts = new Map<string, number[]>();
-	const sectionColumn = columns.indexOf("section");
-	const surfaceColumn = columns.indexOf("surface");
-	const tableColumn = columns.indexOf("table");
-	const leftCategoryColumn = columns.indexOf("leftCategory");
-	const rightCategoryColumn = columns.indexOf("rightCategory");
-	let start = headerEnd === -1 ? text.length : headerEnd + 1;
-	while (start < text.length) {
-		const newline = text.indexOf("\n", start);
-		const end = newline === -1 ? text.length : newline;
-		const rawLine = text.slice(start, end);
-		const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
-		if (line.length > 0) {
-			const cells = line.split("\t");
-			if (sectionColumn >= 0 && surfaceColumn >= 0) {
-				const section = cells[sectionColumn] ?? "";
-				const surface = cells[surfaceColumn] ?? "";
-				if (
-					section === "PREFIXES" ||
-					section === "STEMS" ||
-					section === "SUFFIXES"
-				) {
-					const key = camelMorphemeKey(section, surface);
-					const starts = camelMorphemeRowStarts.get(key);
-					if (starts === undefined) camelMorphemeRowStarts.set(key, [start]);
-					else starts.push(start);
-				}
-			}
-			if (
-				tableColumn >= 0 &&
-				leftCategoryColumn >= 0 &&
-				rightCategoryColumn >= 0
-			) {
-				const table = cells[tableColumn] ?? "";
-				const leftCategory = cells[leftCategoryColumn] ?? "";
-				const rightCategory = cells[rightCategoryColumn] ?? "";
-				if (
-					(table === "AB" || table === "BC" || table === "AC") &&
-					leftCategory.length > 0 &&
-					rightCategory.length > 0
-				) {
-					camelCompatibilityPairs.add(
-						camelCompatibilityKey(table, leftCategory, rightCategory),
-					);
-				}
-			}
-			for (const kind of ["lexicon", "morphology"] as const) {
-				const keys = new Set<string>();
-				for (const column of indexedColumns[kind]) {
-					const value = cells[column.index] ?? "";
-					for (const form of column.split ? value.split(/[|, ]/u) : [value]) {
-						if (form.length > 0) keys.add(normalizedLookupKey(form));
-					}
-				}
-				for (const key of keys) {
-					const starts = rowStartsByKind[kind].get(key);
-					if (starts === undefined) rowStartsByKind[kind].set(key, [start]);
-					else starts.push(start);
-				}
-			}
-		}
-		if (newline === -1) break;
-		start = newline + 1;
+		if (available.length > 0) return Object.freeze(available);
 	}
-	return {
-		camelCompatibilityPairs,
-		camelMorphemeRowStarts,
-		columns,
-		rowStartsByKind,
-		text,
-	};
+	return Object.freeze([]);
 }
 
-function completeTableIndex(
+function isLexiconRowRole(role: unknown): boolean {
+	return (
+		role === undefined ||
+		role === "entries" ||
+		role === "forms" ||
+		role === "lemmas"
+	);
+}
+
+function buildCamelCompatibilityIndex(text: string): CamelCompatibilityIndex {
+	const rows = parseTable(text);
+	const camelCompatibilityPairs = new Set<string>();
+	for (const row of rows) {
+		const table = row.table;
+		const leftCategory = row.leftCategory ?? "";
+		const rightCategory = row.rightCategory ?? "";
+		if (
+			(table === "AB" || table === "BC" || table === "AC") &&
+			leftCategory.length > 0 &&
+			rightCategory.length > 0
+		) {
+			camelCompatibilityPairs.add(
+				camelCompatibilityKey(table, leftCategory, rightCategory),
+			);
+		}
+	}
+	return Object.freeze({ camelCompatibilityPairs });
+}
+
+function camelCompatibilityIndex(
 	pack: TextPackLike,
 	reader: TextPackResourceReader | undefined,
 	resourceId: string,
 	text: string,
-): CompleteTableIndex {
-	const indexes = tableIndexesForReader(pack, reader);
+): CamelCompatibilityIndex {
+	const indexes = compatibilityIndexesForReader(pack, reader);
 	const cached = indexes.get(resourceId);
 	if (cached !== undefined) return cached;
-	const index = buildCompleteTableIndex(text);
+	const index = buildCamelCompatibilityIndex(text);
 	indexes.set(resourceId, index);
 	return index;
-}
-
-function materializeIndexedRow(
-	index: CompleteTableIndex,
-	start: number,
-): Readonly<Record<string, string>> {
-	const newline = index.text.indexOf("\n", start);
-	const end = newline === -1 ? index.text.length : newline;
-	const rawLine = index.text.slice(start, end);
-	const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
-	const cells = line.split("\t");
-	const row: Record<string, string> = {};
-	for (
-		let columnIndex = 0;
-		columnIndex < index.columns.length;
-		columnIndex += 1
-	) {
-		const column = index.columns[columnIndex];
-		if (column !== undefined && column.length > 0) {
-			row[column] = cells[columnIndex] ?? "";
-		}
-	}
-	return Object.freeze(row);
 }
 
 type CamelMorphemeSection = "PREFIXES" | "STEMS" | "SUFFIXES";
@@ -360,20 +281,8 @@ function camelCompatibilityKey(
 	return `${table}\u0000${leftCategory}\u0000${rightCategory}`;
 }
 
-function indexedCamelMorphemeRows(
-	index: CompleteTableIndex,
-	section: CamelMorphemeSection,
-	surface: string,
-): readonly Readonly<Record<string, string>>[] {
-	return Object.freeze(
-		(
-			index.camelMorphemeRowStarts.get(camelMorphemeKey(section, surface)) ?? []
-		).map((start) => materializeIndexedRow(index, start)),
-	);
-}
-
 function camelCategoriesAreCompatible(
-	index: CompleteTableIndex,
+	index: CamelCompatibilityIndex,
 	prefixCategory: string,
 	stemCategory: string,
 	suffixCategory: string,
@@ -391,42 +300,75 @@ function camelCategoriesAreCompatible(
 	);
 }
 
-function generatedIndexRows(
+async function generatedIndexRows(
 	index: TextPackLookupIndex,
 	textsByKey: ReadonlyMap<string, readonly string[]>,
 	maxRows: number | undefined,
 	kind: TableIndexKind,
-): readonly Readonly<Record<string, string>>[] {
-	const rowsByStart = new Map<
-		number,
-		{ readonly length: number; readonly order: number }
-	>();
-	for (const key of textsByKey.keys()) {
-		for (const row of index.rowsForNormalizedKey(key)) {
-			if (!rowsByStart.has(row.rowStart)) {
-				rowsByStart.set(row.rowStart, {
-					length: row.rowLength,
-					order: row.rowOrder,
-				});
+	lookupOptions?: LookupOptions,
+): Promise<readonly Readonly<Record<string, string>>[]> {
+	const rowsByOrder = new Map<number, Readonly<Record<string, string>>>();
+	const keyColumns = prioritizedIndexColumns(index, kind);
+	if (keyColumns.length === 0) {
+		throw new TypeError(
+			`Lookup index ${index.indexResourceId} has no ${kind} query columns.`,
+		);
+	}
+	const addRows = (
+		rows: readonly {
+			readonly rowOrder: number;
+			readonly values: Readonly<Record<string, string>>;
+		}[],
+	) => {
+		for (const row of rows) {
+			if (!rowsByOrder.has(row.rowOrder)) {
+				rowsByOrder.set(row.rowOrder, row.values);
+			}
+		}
+	};
+	if (kind === "lexicon") {
+		const configuredModes = lookupOptions?.mode ?? "casefold";
+		const modes = Array.isArray(configuredModes)
+			? configuredModes
+			: [configuredModes];
+		const texts = [...new Set([...textsByKey.values()].flat())];
+		for (const text of texts) {
+			for (const column of keyColumns) {
+				for (const mode of modes) {
+					if (mode === "prefix" || mode === "suffix" || mode === "fuzzy") {
+						addRows(
+							await index.rowsForKeyPattern(
+								column,
+								text,
+								mode,
+								lookupOptions?.maxDistance ?? 1,
+							),
+						);
+					} else {
+						addRows(
+							await index.rowsForNormalizedKey(
+								column,
+								normalizedLookupKey(text),
+							),
+						);
+					}
+				}
+			}
+		}
+	} else {
+		for (const key of textsByKey.keys()) {
+			for (const column of keyColumns) {
+				addRows(await index.rowsForNormalizedKey(column, key));
 			}
 		}
 	}
-	const selected = [...rowsByStart.entries()].sort(
-		([leftStart, left], [rightStart, right]) =>
-			left.order - right.order || leftStart - rightStart,
+	const selected = [...rowsByOrder.entries()].sort(
+		([leftOrder], [rightOrder]) => leftOrder - rightOrder,
 	);
-	const matching = selected.flatMap(([start, row]) => {
-		const materialized = index.materializeRow({
-			rowStart: start,
-			rowLength: row.length,
-			rowOrder: row.order,
-		});
-		return matchingQueryTexts(materialized, textsByKey, kind).length === 0
-			? []
-			: [materialized];
-	});
 	return Object.freeze(
-		maxRows === undefined ? matching : matching.slice(0, maxRows),
+		maxRows === undefined
+			? selected.map(([, row]) => row)
+			: selected.slice(0, maxRows).map(([, row]) => row),
 	);
 }
 
@@ -434,34 +376,19 @@ async function indexedMatchingTableRows(
 	pack: TextPackLike,
 	reader: TextPackResourceReader | undefined,
 	resourceId: string,
-	text: string,
 	textsByKey: ReadonlyMap<string, readonly string[]>,
 	maxRows: number | undefined,
 	kind: TableIndexKind,
-	lookupIndexResourceId?: string,
+	lookupIndexResourceId: string,
+	lookupOptions?: LookupOptions,
 ): Promise<readonly Readonly<Record<string, string>>[]> {
-	if (lookupIndexResourceId !== undefined) {
-		const index = await openResourceLookupIndex(
-			pack as never,
-			resourceId,
-			lookupIndexResourceId,
-			reader,
-		);
-		return generatedIndexRows(index, textsByKey, maxRows, kind);
-	}
-	const index = completeTableIndex(pack, reader, resourceId, text);
-	const rowStarts = new Set<number>();
-	for (const key of textsByKey.keys()) {
-		for (const start of index.rowStartsByKind[kind].get(key) ?? []) {
-			rowStarts.add(start);
-		}
-	}
-	const starts = [...rowStarts].sort((left, right) => left - right);
-	return Object.freeze(
-		(maxRows === undefined ? starts : starts.slice(0, maxRows)).map((start) =>
-			materializeIndexedRow(index, start),
-		),
+	const index = await openResourceLookupIndex(
+		pack as never,
+		resourceId,
+		lookupIndexResourceId,
+		reader,
 	);
+	return generatedIndexRows(index, textsByKey, maxRows, kind, lookupOptions);
 }
 
 function tableTextFromRows(
@@ -479,24 +406,6 @@ function normalizedLookupKey(value: string): string {
 	return nfkcCaseFold(value);
 }
 
-function rowTextValues(
-	row: Readonly<Record<string, string>>,
-	kind: TableIndexKind,
-): readonly string[] {
-	const names = indexedColumnNames(kind);
-	const values = [...names]
-		.filter((name) => name !== "forms")
-		.map((name) => row[name]);
-	const splitForms = names.has("forms")
-		? (row.forms?.split(/[|, ]/u) ?? [])
-		: [];
-	return Object.freeze(
-		[...values, ...splitForms].filter(
-			(value): value is string => value !== undefined && value.length > 0,
-		),
-	);
-}
-
 function queryTextsByKey(
 	texts: readonly string[],
 ): ReadonlyMap<string, string[]> {
@@ -508,19 +417,25 @@ function queryTextsByKey(
 	return output;
 }
 
-function matchingQueryTexts(
-	row: Readonly<Record<string, string>>,
-	textsByKey: ReadonlyMap<string, readonly string[]>,
-	kind: TableIndexKind = "lexicon",
+function matchingLexiconQueryTexts(
+	entries: readonly LexicalEntry[],
+	texts: readonly string[],
+	options: LookupOptions,
 ): readonly string[] {
-	const output = new Set<string>();
-	for (const value of rowTextValues(row, kind)) {
-		for (const text of textsByKey.get(normalizedLookupKey(value)) ?? []) {
-			output.add(text);
-		}
-	}
+	if (entries.length === 0) return Object.freeze([]);
+	const lexicon = buildLexicon(entries, {
+		id: "targeted-row-match",
+		duplicateIdPolicy: "allow",
+		duplicateFormPolicy: "allow",
+	});
 	return Object.freeze(
-		[...output].sort((left, right) => left.localeCompare(right)),
+		texts.filter(
+			(text) =>
+				lookup(lexicon, text, {
+					...options,
+					mode: options.mode ?? "casefold",
+				}).length > 0,
+		),
 	);
 }
 
@@ -632,11 +547,11 @@ interface CanonicalResourceRef {
 	readonly role?: unknown;
 }
 
-function lookupIndexForSource(
+function requiredLookupIndexForSource(
 	pack: TextPackLike,
 	refs: readonly CanonicalResourceRef[] | undefined,
 	sourceResourceId: string,
-): string | undefined {
+): string {
 	for (const ref of refs ?? []) {
 		if (ref.role !== "lookup-index" || typeof ref.resourceId !== "string") {
 			continue;
@@ -649,7 +564,7 @@ function lookupIndexForSource(
 				? (descriptor.metadata as Readonly<Record<string, unknown>>)
 				: undefined;
 		if (
-			descriptor.schemaId !== "textpack.lookup-index.v1" ||
+			descriptor.schemaId !== "textpack.lookup-index.v2" ||
 			typeof metadata?.indexedResourceId !== "string"
 		) {
 			throw new TypeError(
@@ -658,7 +573,9 @@ function lookupIndexForSource(
 		}
 		if (metadata?.indexedResourceId === sourceResourceId) return descriptor.id;
 	}
-	return undefined;
+	throw new TypeError(
+		`Canonical resource ${sourceResourceId} requires a textpack.lookup-index.v2 reference for targeted lookup.`,
+	);
 }
 
 interface CanonicalMorphologyResource {
@@ -722,6 +639,13 @@ export interface MorphologyAnalysesFromPackOptions
 	readonly resourceIds?: readonly string[];
 	readonly maxRowsPerResource?: number;
 	readonly maxResultsPerForm?: number;
+}
+
+export interface MorphologyGenerationsFromPackOptions
+	extends ResourceMaterializationOptions {
+	readonly resourceIds?: readonly string[];
+	readonly maxRowsPerResource?: number;
+	readonly maxResults?: number;
 }
 
 export type MorphologyAnalysesManyFromPackResult = ReadonlyMap<
@@ -907,111 +831,39 @@ function camelCompositionAnalysis(
 	});
 }
 
-interface GeneratedCamelRowCache {
-	readonly rows: Map<string, readonly Readonly<Record<string, string>>[]>;
-	emptyRowsIndexed: boolean;
-}
-
-const generatedCamelRowCaches = new WeakMap<object, GeneratedCamelRowCache>();
-
-function generatedCamelRowCache(
+async function camelMorphemeRowsForForm(
 	index: TextPackLookupIndex,
-): GeneratedCamelRowCache {
-	let cache = generatedCamelRowCaches.get(index);
-	if (cache === undefined) {
-		cache = { rows: new Map(), emptyRowsIndexed: false };
-		generatedCamelRowCaches.set(index, cache);
-	}
-	return cache;
-}
-
-function tableCell(line: string, columnIndex: number): string {
-	let start = 0;
-	for (let index = 0; index < columnIndex; index += 1) {
-		const tab = line.indexOf("\t", start);
-		if (tab === -1) return "";
-		start = tab + 1;
-	}
-	const end = line.indexOf("\t", start);
-	return line.slice(start, end === -1 ? line.length : end);
-}
-
-function indexEmptyCamelRows(index: TextPackLookupIndex): void {
-	const cache = generatedCamelRowCache(index);
-	if (cache.emptyRowsIndexed) return;
-	const sectionColumn = index.sourceColumns.indexOf("section");
-	const surfaceColumn = index.sourceColumns.indexOf("surface");
-	if (sectionColumn < 0 || surfaceColumn < 0) {
-		cache.emptyRowsIndexed = true;
-		return;
-	}
-	const rowsBySection = new Map<
-		CamelMorphemeSection,
-		Readonly<Record<string, string>>[]
-	>();
-	let start = index.sourceText.indexOf("\n") + 1;
-	let order = 0;
-	while (start > 0 && start < index.sourceText.length) {
-		const newline = index.sourceText.indexOf("\n", start);
-		const end = newline === -1 ? index.sourceText.length : newline;
-		const rawLine = index.sourceText.slice(start, end);
-		const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
-		if (line.length > 0) {
-			const section = tableCell(line, sectionColumn);
-			if (
-				tableCell(line, surfaceColumn) === "" &&
-				(section === "PREFIXES" || section === "SUFFIXES")
-			) {
-				const rows = rowsBySection.get(section) ?? [];
-				rows.push(
-					index.materializeRow({
-						rowStart: start,
-						rowLength: line.length,
-						rowOrder: order,
-					}),
-				);
-				rowsBySection.set(section, rows);
-			}
-			order += 1;
+	form: string,
+): Promise<CamelMorphemeRows> {
+	const characters = [...form];
+	const surfaces = new Set<string>([""]);
+	for (let start = 0; start < characters.length; start += 1) {
+		for (let end = start + 1; end <= characters.length; end += 1) {
+			surfaces.add(characters.slice(start, end).join(""));
 		}
-		if (newline === -1) break;
-		start = newline + 1;
 	}
-	for (const section of ["PREFIXES", "SUFFIXES"] as const) {
-		cache.rows.set(
-			camelMorphemeKey(section, ""),
-			Object.freeze(rowsBySection.get(section) ?? []),
-		);
-	}
-	cache.emptyRowsIndexed = true;
-}
-
-function generatedCamelMorphemeRows(
-	index: TextPackLookupIndex,
-	section: CamelMorphemeSection,
-	surface: string,
-): readonly Readonly<Record<string, string>>[] {
-	const cache = generatedCamelRowCache(index);
-	const key = camelMorphemeKey(section, surface);
-	const cached = cache.rows.get(key);
-	if (cached !== undefined) return cached;
-	if (surface.length === 0) {
-		indexEmptyCamelRows(index);
-		return cache.rows.get(key) ?? Object.freeze([]);
-	}
-	const normalizedSurface = normalizedLookupKey(surface);
-	const rows = Object.freeze(
-		index
-			.rowsForNormalizedKey(normalizedSurface)
-			.map((row) => index.materializeRow(row))
-			.filter(
-				(row) =>
-					row.section === section &&
-					normalizedLookupKey(row.surface ?? "") === normalizedSurface,
-			),
+	const rowsBySurface = new Map(
+		await Promise.all(
+			[...surfaces].map(async (surface) => {
+				const normalizedSurface = normalizedLookupKey(surface);
+				const rows = (
+					await index.rowsForNormalizedKey("surface", normalizedSurface)
+				)
+					.map((row) => row.values)
+					.filter(
+						(row) =>
+							normalizedLookupKey(row.surface ?? "") === normalizedSurface,
+					);
+				return [surface, Object.freeze(rows)] as const;
+			}),
+		),
 	);
-	cache.rows.set(key, rows);
-	return rows;
+	return (section, surface) =>
+		Object.freeze(
+			(rowsBySurface.get(surface) ?? []).filter(
+				(row) => row.section === section,
+			),
+		);
 }
 
 type CamelMorphemeRows = (
@@ -1027,7 +879,7 @@ function camelAnalysisProbability(analysis: MorphologyAnalysis): number {
 function camelComposedAnalyses(
 	form: string,
 	morphemeRows: CamelMorphemeRows,
-	compatibilityIndex: CompleteTableIndex,
+	compatibilityIndex: CamelCompatibilityIndex,
 	sourceResourceId: string,
 	maxResults: number | undefined,
 ): readonly MorphologyAnalysis[] {
@@ -1149,8 +1001,7 @@ function featuresMatch(
 	if (query === undefined) return true;
 	for (const [key, expected] of Object.entries(query)) {
 		if (entry[key] === expected) continue;
-		const bundle = entry.featureBundle;
-		if (bundle?.split(/[; ]/u).includes(expected)) {
+		if (featureBundleRecord(entry.featureBundle)[key] === expected) {
 			continue;
 		}
 		return false;
@@ -1164,7 +1015,12 @@ function morphologyParadigms(
 ): readonly MorphologyParadigm[] {
 	const byLemma = new Map<string, MorphologyGeneration[]>();
 	for (const generation of generations) {
-		if (lemma !== undefined && generation.lemma !== lemma) continue;
+		if (
+			lemma !== undefined &&
+			normalizedLookupKey(generation.lemma) !== normalizedLookupKey(lemma)
+		) {
+			continue;
+		}
 		byLemma.set(generation.lemma, [
 			...(byLemma.get(generation.lemma) ?? []),
 			generation,
@@ -1188,14 +1044,17 @@ function morphologyParadigms(
 	);
 }
 
-function isMorphologyRowRole(role: string): boolean {
+function isAnalysisMorphologyRowRole(role: string): boolean {
 	return (
 		role.length === 0 ||
 		role === "analyzer" ||
 		role === "generator" ||
-		role === "paradigm-table" ||
-		role === "morpheme-inventory"
+		role === "paradigm-table"
 	);
+}
+
+function isGenerationMorphologyRowRole(role: string): boolean {
+	return role === "generator" || role === "paradigm-table";
 }
 
 export function lexiconFromPack(
@@ -1344,53 +1203,43 @@ export async function lookupManyFromPackAsync(
 				canonical.entries,
 				parseOptions,
 			)) {
-				const matching = new Set<string>();
-				for (const form of entry.forms) {
-					for (const text of matchingQueryTexts({ form }, textsByKey)) {
-						matching.add(text);
-					}
+				for (const text of matchingLexiconQueryTexts(
+					[entry],
+					uniqueTexts,
+					options,
+				)) {
+					entriesByText.get(text)?.push(entry);
 				}
-				if (entry.canonical !== undefined) {
-					for (const text of matchingQueryTexts(
-						{ lemma: entry.canonical },
-						textsByKey,
-					)) {
-						matching.add(text);
-					}
-				}
-				for (const text of matching) entriesByText.get(text)?.push(entry);
 			}
 		}
 		for (const ref of canonical.resourceRefs ?? []) {
 			if (typeof ref.resourceId !== "string") continue;
-			if (ref.role === "lookup-index") continue;
+			if (!isLexiconRowRole(ref.role)) continue;
 			const referenced = findResource(pack, ref.resourceId);
-			const referencedValue = await materializedResourceValue(
-				pack,
-				referenced,
-				options.reader,
-			);
-			if (typeof referencedValue !== "string") {
-				throw new TypeError(
-					`${referenced.id} must be text-backed for canonical lexicon refs.`,
-				);
-			}
 			const matchingRows = await indexedMatchingTableRows(
 				pack,
 				options.reader,
 				referenced.id,
-				referencedValue,
 				textsByKey,
 				options.maxRowsPerResource,
 				"lexicon",
-				lookupIndexForSource(pack, canonical.resourceRefs, referenced.id),
+				requiredLookupIndexForSource(
+					pack,
+					canonical.resourceRefs,
+					referenced.id,
+				),
+				options,
 			);
 			for (const row of matchingRows) {
 				const rowEntries = canonicalLexiconRows(tableTextFromRows([row]), {
 					...parseOptions,
 					source: referenced.id,
 				});
-				for (const text of matchingQueryTexts(row, textsByKey)) {
+				for (const text of matchingLexiconQueryTexts(
+					rowEntries,
+					uniqueTexts,
+					options,
+				)) {
 					entriesByText.get(text)?.push(...rowEntries);
 				}
 			}
@@ -1464,7 +1313,7 @@ export async function lexiconFromPackAsync(
 		const referencedEntries: LexicalEntry[] = [];
 		for (const ref of canonical.resourceRefs ?? []) {
 			if (typeof ref.resourceId !== "string") continue;
-			if (ref.role === "lookup-index") continue;
+			if (!isLexiconRowRole(ref.role)) continue;
 			const referenced = findResource(pack, ref.resourceId);
 			const referencedValue = await materializedResourceValue(
 				pack,
@@ -1666,7 +1515,10 @@ export async function morphologyIndexFromPackAsync(
 	const generations: MorphologyGeneration[] = [];
 	for (const ref of canonical.resourceRefs ?? []) {
 		if (typeof ref.resourceId !== "string") continue;
-		if (ref.role === "lookup-index") continue;
+		const role = typeof ref.role === "string" ? ref.role : "";
+		if (!isAnalysisMorphologyRowRole(role) && role !== "morpheme-inventory") {
+			continue;
+		}
 		const referenced = findResource(pack, ref.resourceId);
 		const referencedValue = await materializedResourceValue(
 			pack,
@@ -1675,12 +1527,15 @@ export async function morphologyIndexFromPackAsync(
 		);
 		if (typeof referencedValue !== "string") continue;
 		const rows = parseTable(referencedValue).slice(0, options.maxRows);
-		const role = typeof ref.role === "string" ? ref.role : "";
-		if (
-			role === "generator" ||
-			role === "paradigm-table" ||
-			role === "morpheme-inventory"
-		) {
+		if (role === "morpheme-inventory") {
+			for (const row of rows) {
+				if (row.section !== "STEMS") continue;
+				const generation = morphologyGenerationFromRow(row, referenced.id);
+				if (generation !== undefined) generations.push(generation);
+			}
+			continue;
+		}
+		if (isGenerationMorphologyRowRole(role)) {
 			for (const row of rows) {
 				const generation = morphologyGenerationFromRow(row, referenced.id);
 				if (generation !== undefined) generations.push(generation);
@@ -1790,8 +1645,7 @@ export async function morphologyAnalysesManyFromPackAsync(
 		let camelMorphemeResource:
 			| {
 					readonly descriptor: TextPackResourceLike;
-					readonly lookupIndexResourceId?: string;
-					readonly text: string;
+					readonly lookupIndexResourceId: string;
 			  }
 			| undefined;
 		let camelCompatibilityResource:
@@ -1803,51 +1657,64 @@ export async function morphologyAnalysesManyFromPackAsync(
 		for (const ref of canonical.resourceRefs ?? []) {
 			if (typeof ref.resourceId !== "string") continue;
 			const role = typeof ref.role === "string" ? ref.role : "";
-			if (!isMorphologyRowRole(role) && role !== "compatibility-table") {
+			if (
+				!isAnalysisMorphologyRowRole(role) &&
+				role !== "morpheme-inventory" &&
+				role !== "compatibility-table"
+			) {
 				continue;
 			}
 			const referenced = findResource(pack, ref.resourceId);
-			const referencedValue = await materializedResourceValue(
-				pack,
-				referenced,
-				options.reader,
-			);
-			if (typeof referencedValue !== "string") continue;
-			const lookupIndexResourceId = lookupIndexForSource(
-				pack,
-				canonical.resourceRefs,
-				referenced.id,
-			);
 			if (role === "compatibility-table") {
+				const referencedValue = await materializedResourceValue(
+					pack,
+					referenced,
+					options.reader,
+				);
+				if (typeof referencedValue !== "string") {
+					throw new TypeError(
+						`${referenced.id} compatibility table must be text-backed.`,
+					);
+				}
 				camelCompatibilityResource ??= {
 					descriptor: referenced,
 					text: referencedValue,
 				};
 				continue;
 			}
+			const lookupIndexResourceId = requiredLookupIndexForSource(
+				pack,
+				canonical.resourceRefs,
+				referenced.id,
+			);
 			if (role === "morpheme-inventory") {
 				camelMorphemeResource ??= {
 					descriptor: referenced,
-					...(lookupIndexResourceId === undefined
-						? {}
-						: { lookupIndexResourceId }),
-					text: referencedValue,
+					lookupIndexResourceId,
 				};
+				continue;
 			}
 			const matchingRows = await indexedMatchingTableRows(
 				pack,
 				options.reader,
 				referenced.id,
-				referencedValue,
 				formsByKey,
-				options.maxRowsPerResource,
+				undefined,
 				"morphology",
 				lookupIndexResourceId,
 			);
-			for (const row of matchingRows) {
-				const analysis = morphologyAnalysisFromRow(row, referenced.id);
-				if (analysis === undefined) continue;
-				for (const form of matchingQueryTexts(row, formsByKey, "morphology")) {
+			const matchingAnalyses = matchingRows
+				.flatMap((row) => {
+					const analysis = morphologyAnalysisFromRow(row, referenced.id);
+					return analysis === undefined ||
+						!formsByKey.has(normalizedLookupKey(analysis.form))
+						? []
+						: [analysis];
+				})
+				.slice(0, options.maxRowsPerResource);
+			for (const analysis of matchingAnalyses) {
+				for (const form of formsByKey.get(normalizedLookupKey(analysis.form)) ??
+					[]) {
 					analysesByForm.get(form)?.push(analysis);
 				}
 			}
@@ -1856,27 +1723,13 @@ export async function morphologyAnalysesManyFromPackAsync(
 			camelMorphemeResource !== undefined &&
 			camelCompatibilityResource !== undefined
 		) {
-			let morphemeRows: CamelMorphemeRows;
-			if (camelMorphemeResource.lookupIndexResourceId === undefined) {
-				const morphemeIndex = completeTableIndex(
-					pack,
-					options.reader,
-					camelMorphemeResource.descriptor.id,
-					camelMorphemeResource.text,
-				);
-				morphemeRows = (section, surface) =>
-					indexedCamelMorphemeRows(morphemeIndex, section, surface);
-			} else {
-				const generatedIndex = await openResourceLookupIndex(
-					pack as never,
-					camelMorphemeResource.descriptor.id,
-					camelMorphemeResource.lookupIndexResourceId,
-					options.reader,
-				);
-				morphemeRows = (section, surface) =>
-					generatedCamelMorphemeRows(generatedIndex, section, surface);
-			}
-			const compatibilityIndex = completeTableIndex(
+			const generatedIndex = await openResourceLookupIndex(
+				pack as never,
+				camelMorphemeResource.descriptor.id,
+				camelMorphemeResource.lookupIndexResourceId,
+				options.reader,
+			);
+			const compatibilityIndex = camelCompatibilityIndex(
 				pack,
 				options.reader,
 				camelCompatibilityResource.descriptor.id,
@@ -1885,6 +1738,10 @@ export async function morphologyAnalysesManyFromPackAsync(
 			for (const form of uniqueForms) {
 				const analyses = analysesByForm.get(form);
 				if (analyses === undefined || analyses.length > 0) continue;
+				const morphemeRows = await camelMorphemeRowsForForm(
+					generatedIndex,
+					form,
+				);
 				analyses.push(
 					...camelComposedAnalyses(
 						form,
@@ -1921,5 +1778,104 @@ export async function morphologyAnalysesFromPackAsync(
 		(await morphologyAnalysesManyFromPackAsync(pack, [form], options)).get(
 			form,
 		) ?? []
+	);
+}
+
+export async function morphologyGenerationsFromPackAsync(
+	pack: TextPackLike,
+	lemma: string,
+	features?: Readonly<Record<string, string>>,
+	options: MorphologyGenerationsFromPackOptions = {},
+): Promise<readonly MorphologyGeneration[]> {
+	if (lemma.length === 0) return Object.freeze([]);
+	if (
+		options.maxResults !== undefined &&
+		(!Number.isSafeInteger(options.maxResults) || options.maxResults < 0)
+	) {
+		throw new TypeError("maxResults must be a non-negative safe integer.");
+	}
+	const lemmasByKey = queryTextsByKey([lemma]);
+	const resources = boundResources(pack, {
+		...options,
+		defaultSlot: "morphology",
+		defaultRole: "primary",
+		schemaIds: "textlex.morphology.v1",
+	});
+	const generations: MorphologyGeneration[] = [];
+	for (const descriptor of resources) {
+		const value = await materializedResourceValue(
+			pack,
+			descriptor,
+			options.reader,
+		);
+		const canonical = canonicalMorphologyResource(value);
+		if (canonical === undefined) {
+			throw new TypeError(
+				`${descriptor.id} is not a canonical morphology resource.`,
+			);
+		}
+		for (const ref of canonical.resourceRefs ?? []) {
+			if (typeof ref.resourceId !== "string") continue;
+			const role = typeof ref.role === "string" ? ref.role : "";
+			if (
+				!isGenerationMorphologyRowRole(role) &&
+				role !== "morpheme-inventory"
+			) {
+				continue;
+			}
+			const referenced = findResource(pack, ref.resourceId);
+			const rows = await indexedMatchingTableRows(
+				pack,
+				options.reader,
+				referenced.id,
+				lemmasByKey,
+				undefined,
+				"generation",
+				requiredLookupIndexForSource(
+					pack,
+					canonical.resourceRefs,
+					referenced.id,
+				),
+			);
+			const matchingGenerations = rows
+				.flatMap((row) => {
+					if (role === "morpheme-inventory" && row.section !== "STEMS") {
+						return [];
+					}
+					const generation = morphologyGenerationFromRow(row, referenced.id);
+					return generation === undefined ||
+						normalizedLookupKey(generation.lemma) !==
+							normalizedLookupKey(lemma) ||
+						!featuresMatch(generation.features, features)
+						? []
+						: [generation];
+				})
+				.slice(0, options.maxRowsPerResource);
+			for (const generation of matchingGenerations) {
+				generations.push(generation);
+			}
+		}
+	}
+	const unique = new Map<string, MorphologyGeneration>();
+	for (const generation of generations) {
+		const key = JSON.stringify(generation);
+		if (!unique.has(key)) unique.set(key, generation);
+	}
+	const output = [...unique.values()];
+	return Object.freeze(
+		options.maxResults === undefined
+			? output
+			: output.slice(0, options.maxResults),
+	);
+}
+
+export async function morphologyParadigmsFromPackAsync(
+	pack: TextPackLike,
+	lemma: string,
+	options: MorphologyGenerationsFromPackOptions = {},
+): Promise<readonly MorphologyParadigm[]> {
+	return morphologyParadigms(
+		await morphologyGenerationsFromPackAsync(pack, lemma, undefined, options),
+		lemma,
 	);
 }

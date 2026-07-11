@@ -5,7 +5,9 @@
 	"pipelineId": "esdb-wordlist-diff",
 	"pipelineVersion": "0.1.0",
 	"sourceIds": ["source:esdb:wordlist-diff-en-default-2026-02-25"],
-	"snapshotIds": ["snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"],
+	"snapshotIds": [
+		"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
+	],
 	"inputFiles": [
 		{
 			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
@@ -38,7 +40,9 @@
 			"resourceId": "en-esdb-default-wordlists",
 			"path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
 			"kind": "lexicon",
-			"format": "tsv+gzip+base64"
+			"format": "tsv+gzip+base64",
+			"lookupKeyColumns": ["word"],
+			"lookupPatternColumns": ["word"]
 		},
 		{
 			"resourceId": "en-esdb-default-profiles",

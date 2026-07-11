@@ -15,7 +15,7 @@ import {
   listResources,
   loadPack,
   openResourceJson,
-	openResourceLookupIndex,
+  openResourceLookupIndex,
   openResourceTable,
   validateManifest,
 } from "@ismail-elkorchi/textpack";
@@ -68,12 +68,16 @@ Resource ids are exact. `getResource(pack, "x")` only returns the resource whose
 `"x"`.
 
 Generated large tables may declare a canonical `resourceRefs` entry with role `lookup-index` and
-schema `textpack.lookup-index.v1`. `openResourceLookupIndex()` validates the indexed source text's
-SHA-256 checksum, then exposes `rowsForNormalizedKey()` and row materialization without parsing the
-whole source table. The packed v1 index uses one UTF-16 code-unit-ordered row per key and base36,
-delta-coded source spans. Callers must supply keys already normalized as
-`NFKC-casefold-Unicode-17`; task adapters own that normalization so `textpack` stays independent of
-Unicode policy packages.
+schema `textpack.lookup-index.v2`. The logical source descriptor and lookup view share one
+`textpack-indexed-table-v2` physical store containing column-scoped key buckets, row buckets,
+optional alias/label fuzzy key catalogs, and raw pattern catalogs for lexicon expert lookup.
+`openResourceLookupIndex()` verifies the store and each bucket selected by a query; it never opens
+or reconstructs the full source table on a targeted lookup path. `openResourceText()` reconstructs
+the logical TSV only for callers that explicitly request full materialization. The forge rebuild
+verifier proves that the metadata, keys, row references, rows, and reconstructed source agree.
+Exact and KB-fuzzy callers must supply keys already normalized as `NFKC-casefold-Unicode-17`;
+lexicon prefix, suffix, and fuzzy pattern queries retain their raw-text semantics. Task adapters own
+normalization so `textpack` stays independent of Unicode policy packages.
 
 ## Descriptor Queries And Materialization
 

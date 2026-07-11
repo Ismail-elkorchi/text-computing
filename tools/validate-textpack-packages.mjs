@@ -62,7 +62,7 @@ const CANONICAL_RESOURCE_SCHEMA_IDS = new Set([
 	"textparallel.alignment.rows.v1",
 	"textquality.evidence.v1",
 	"textsearch.analyzer-table.v1",
-	"textpack.lookup-index.v1",
+	"textpack.lookup-index.v2",
 	"textpack.raw-resource.v1",
 ]);
 const GENERATED_PACKAGE_FILES = [
@@ -400,7 +400,7 @@ const RUNTIME_OWNER_SCHEMA_PREFIXES = [
 function runtimeOwnerPackageForSlotResource(slotName, resource) {
 	const descriptorSchemaId = resource?.schemaId ?? "";
 	const schemaId =
-		descriptorSchemaId === "textpack.lookup-index.v1" &&
+		descriptorSchemaId === "textpack.lookup-index.v2" &&
 		typeof resource?.metadata?.indexedResourceSchemaId === "string"
 			? resource.metadata.indexedResourceSchemaId
 			: descriptorSchemaId;
@@ -863,6 +863,10 @@ for (const packDir of packDirs) {
 		`${packageJson.name} must depend on final textpack.`,
 	);
 	assertPackScripts(packageJson);
+	expect(
+		new Set(packageJson.files).size === packageJson.files.length,
+		`${packageJson.name} package files must be unique.`,
+	);
 
 	expect(
 		validateManifest(manifest),
@@ -883,6 +887,7 @@ for (const packDir of packDirs) {
 	);
 	const resourceIds = new Set();
 	const resourceById = new Map();
+	const encodedContentByPath = new Map();
 	for (const resource of manifest.resources) {
 		expect(
 			!resourceIds.has(resource.id),
@@ -904,10 +909,11 @@ for (const packDir of packDirs) {
 				await fileExists(relativePath),
 				`${manifest.packageName} missing resource ${resource.path}.`,
 			);
-			const encodedContent = await readFile(
-				path.join(ROOT, relativePath),
-				"utf8",
-			);
+			let encodedContent = encodedContentByPath.get(resource.path);
+			if (encodedContent === undefined) {
+				encodedContent = await readFile(path.join(ROOT, relativePath), "utf8");
+				encodedContentByPath.set(resource.path, encodedContent);
+			}
 			const content = decodedResourceText(resource.path, encodedContent);
 			const nonEmptyLineCount = content
 				.split(/\r?\n/u)
@@ -947,6 +953,37 @@ for (const packDir of packDirs) {
 				);
 			}
 		}
+	}
+	const resourcesByPath = new Map();
+	for (const resource of manifest.resources) {
+		if (resource.path === undefined) continue;
+		resourcesByPath.set(resource.path, [
+			...(resourcesByPath.get(resource.path) ?? []),
+			resource,
+		]);
+	}
+	for (const [resourcePath, resources] of resourcesByPath) {
+		if (resources.length === 1) continue;
+		const indexes = resources.filter(
+			(resource) => resource.schemaId === "textpack.lookup-index.v2",
+		);
+		expect(
+			resources.length === 2 && indexes.length === 1,
+			`${packageJson.name} duplicate resource path ${resourcePath} must contain exactly one semantic source and one lookup view.`,
+			{ resourceIds: resources.map((resource) => resource.id) },
+		);
+		const index = indexes[0];
+		const source = resources.find((resource) => resource !== index);
+		expect(
+			index?.format === "textpack-indexed-table-v2" &&
+				source?.format === "textpack-indexed-table-v2" &&
+				index.metadata?.indexedResourceId === source?.id &&
+				source?.metadata?.lookupIndexResourceId === index?.id &&
+				index.license === source?.license &&
+				JSON.stringify(index.citations ?? []) ===
+					JSON.stringify(source?.citations ?? []),
+			`${packageJson.name} shared indexed storage ${resourcePath} has divergent schema links or provenance.`,
+		);
 	}
 	const evaluationRecordIds = new Set();
 	const evaluationRecordById = new Map();

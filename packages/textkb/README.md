@@ -50,10 +50,12 @@ const linked = linkEntities(doc, kb);
 ## Boundaries
 
 Canonical textpack KB slices prefer packed `lookup-index` resources for aliases, entities, and
-relations, materializing only rows needed by the requested mentions and linked identifiers. Index
-source checksums are validated before use; caller packs without generated indexes retain a scoped
-one-pass fallback. Mention keys use pinned Unicode 17 NFKC casefolding, and Wikidata IRIs are exposed
-as QIDs while the source identifier remains in provenance metadata.
+relations, materializing only rows needed by the requested mentions and linked identifiers. The
+generated v2 lookup view is required for targeted table references; no full-table fallback is
+performed. The logical source and lookup view share one physical indexed-table store. Selected
+buckets are checked when read, while the forge separately proves complete store/source
+consistency. Mention keys use pinned Unicode 17 NFKC casefolding, and Wikidata IRIs are exposed as
+QIDs while the source identifier remains in provenance metadata.
 
 The runtime accepts caller-provided records, loaded resource rows, and final `TextDocument` values. It does not scan packages, read filesystem resources, fetch external KBs, train models, use embeddings, or replace corpus terminology extraction.
 
