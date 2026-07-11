@@ -63,8 +63,24 @@ function activeCapabilities(pack: TextPack): readonly string[] {
 }
 
 function valueFingerprint(value: unknown, path: string): string {
+	if (value instanceof ArrayBuffer) {
+		return stableHash64(`bytes:${bytesHex(new Uint8Array(value))}`);
+	}
+	if (ArrayBuffer.isView(value)) {
+		return stableHash64(
+			`bytes:${bytesHex(
+				new Uint8Array(value.buffer, value.byteOffset, value.byteLength),
+			)}`,
+		);
+	}
 	assertJsonValue(value, path);
 	return stableHash64(stableJsonStringify(value));
+}
+
+function bytesHex(bytes: Uint8Array): string {
+	let output = "";
+	for (const byte of bytes) output += byte.toString(16).padStart(2, "0");
+	return output;
 }
 
 function normalizeEntry(entry: PipelineResourceEntry): PipelineResourceEntry {
@@ -117,14 +133,6 @@ function entriesFromPack(pack: TextPack): readonly PipelineResourceEntry[] {
 			packageVersion: pack.manifest.version,
 			descriptor,
 			value: pack.resources[descriptor.id],
-			fingerprint: stableHash64(
-				stableJsonStringify({
-					packId: pack.manifest.id,
-					packageName: pack.manifest.packageName,
-					packageVersion: pack.manifest.version,
-					resource: descriptor as unknown as JsonValue,
-				}),
-			),
 			...(descriptor.citations !== undefined
 				? { citations: descriptor.citations }
 				: pack.manifest.citations === undefined

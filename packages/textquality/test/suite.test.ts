@@ -138,6 +138,7 @@ test("quality profile textpack resources materialize through the adapter", async
 				{
 					slot: "quality",
 					status: "task-supported" as const,
+					tier: "rule-based" as const,
 					resourceIds: ["quality-fr-profile"],
 					bindings: [
 						{

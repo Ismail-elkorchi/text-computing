@@ -12,6 +12,8 @@ interface CompletedRun {
 	readonly ok: boolean;
 	readonly document?: TextDocument;
 	readonly error?: unknown;
+	readonly diagnostics: NonNullable<RunOptions["diagnostics"]>;
+	readonly trace: NonNullable<RunOptions["trace"]>;
 }
 
 function normalizeConcurrency(value: number | undefined): number {
@@ -25,10 +27,12 @@ function normalizeConcurrency(value: number | undefined): number {
 function settleRun(
 	index: number,
 	promise: Promise<TextDocument>,
+	diagnostics: NonNullable<RunOptions["diagnostics"]>,
+	trace: NonNullable<RunOptions["trace"]>,
 ): Promise<CompletedRun> {
 	return promise.then(
-		(document) => ({ index, ok: true, document }),
-		(error) => ({ index, ok: false, error }),
+		(document) => ({ index, ok: true, document, diagnostics, trace }),
+		(error) => ({ index, ok: false, error, diagnostics, trace }),
 	);
 }
 
@@ -55,6 +59,12 @@ export async function* streamPipeline(
 	let nextIndex = 0;
 	let nextYield = 0;
 	const active = new Map<number, Promise<CompletedRun>>();
+	const sharedDiagnostics = options.diagnostics;
+	const sharedTrace = options.trace;
+	function recordCompleted(run: CompletedRun): void {
+		sharedDiagnostics?.push(...run.diagnostics);
+		sharedTrace?.push(...run.trace);
+	}
 	async function fill(): Promise<void> {
 		while (!inputDone && active.size < concurrency) {
 			const item = await iterator.next();
@@ -64,9 +74,20 @@ export async function* streamPipeline(
 			}
 			const index = nextIndex;
 			nextIndex += 1;
+			const diagnostics: NonNullable<RunOptions["diagnostics"]> = [];
+			const trace: NonNullable<RunOptions["trace"]> = [];
 			active.set(
 				index,
-				settleRun(index, runPipeline(pipeline, item.value, options)),
+				settleRun(
+					index,
+					runPipeline(pipeline, item.value, {
+						...options,
+						diagnostics,
+						trace,
+					}),
+					diagnostics,
+					trace,
+				),
 			);
 		}
 	}
@@ -79,12 +100,14 @@ export async function* streamPipeline(
 			active.delete(nextYield);
 			nextYield += 1;
 			await fill();
+			recordCompleted(completed);
 			yield unwrapCompletedRun(completed);
 			continue;
 		}
 		const completed = await Promise.race(active.values());
 		active.delete(completed.index);
 		await fill();
+		recordCompleted(completed);
 		yield unwrapCompletedRun(completed);
 	}
 }

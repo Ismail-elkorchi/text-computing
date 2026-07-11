@@ -17,6 +17,7 @@
 			"eval:en-segmentation:word-boundary-properties:distribution:textpack-en",
 			"eval:en-esdb-wordlist:word-volume:distribution:textpack-en",
 			"eval:en-scowl-inflection:lookup-analyzer-volume:distribution:textpack-en",
+			"eval:wordnet-en:semantic-integrity:distribution:textpack-en",
 			"eval:wikidata-en:entity-extract:distribution:textpack-en",
 			"eval:en-esdb-wordlist:search-profile:distribution:textpack-en",
 			"eval:en-core:transform-rejections:distribution:textpack-en",
@@ -98,14 +99,16 @@
 	"capabilitySlots": [
 		{
 			"slot": "foundation",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"notes": [
 				"The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
 			]
 		},
 		{
 			"slot": "core",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"notes": [
 				"The bundled distribution resources provide the English core language profile."
 			]
@@ -113,6 +116,7 @@
 		{
 			"slot": "normalization",
 			"status": "task-supported",
+			"tier": "baseline",
 			"notes": [
 				"The bundled distribution resources provide English normalization data."
 			]
@@ -120,6 +124,7 @@
 		{
 			"slot": "segmentation",
 			"status": "task-supported",
+			"tier": "baseline",
 			"notes": [
 				"The bundled distribution resources provide English segmentation data."
 			]
@@ -127,6 +132,7 @@
 		{
 			"slot": "lexicon",
 			"status": "task-supported",
+			"tier": "lookup",
 			"notes": [
 				"The bundled distribution resources provide English spelling, inflection-inventory, and lexical-semantic lexicon data."
 			]
@@ -134,6 +140,7 @@
 		{
 			"slot": "morphology",
 			"status": "task-supported",
+			"tier": "lookup",
 			"notes": [
 				"The bundled distribution resources provide English SCOWLv2 lookup morphology data; isolated UniMorph paradigm tables are not included."
 			]
@@ -141,6 +148,7 @@
 		{
 			"slot": "syntax",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -148,6 +156,7 @@
 		{
 			"slot": "kb",
 			"status": "task-supported",
+			"tier": "lookup",
 			"notes": [
 				"The bundled distribution resources provide Open English WordNet data and a local Wikidata English core entity extract."
 			]
@@ -155,6 +164,7 @@
 		{
 			"slot": "search",
 			"status": "task-supported",
+			"tier": "baseline",
 			"notes": [
 				"The bundled distribution resources provide English search analyzer data."
 			]
@@ -162,6 +172,7 @@
 		{
 			"slot": "corpus",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -169,6 +180,7 @@
 		{
 			"slot": "parallel",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -176,12 +188,13 @@
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"notes": [
 				"The bundled distribution resources provide generated English quality evidence and coverage reports over the selected local build units."
 			]
 		}
 	],
-	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC0-1.0",
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",

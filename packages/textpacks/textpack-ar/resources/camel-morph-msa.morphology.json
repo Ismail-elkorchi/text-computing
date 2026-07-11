@@ -658,6 +658,11 @@
       "recordCount": 14823,
       "resourceId": "ar-msa-camel-morph-compatibility",
       "role": "compatibility-table"
+    },
+    {
+      "recordCount": 203199,
+      "resourceId": "ar-msa-camel-morph-morphemes-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1",

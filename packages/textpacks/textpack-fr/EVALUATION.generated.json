@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
     "corpus is planned in this source-backed self-contained language distribution.",
@@ -55,7 +55,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.likely-subtags"
+      "taskType": "locale-profile.likely-subtags",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -93,7 +94,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.aliases"
+      "taskType": "locale-profile.aliases",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -131,7 +133,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.script-variants"
+      "taskType": "locale-profile.script-variants",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -183,7 +186,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.basic-segmentation"
+      "taskType": "core.basic-segmentation",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -234,7 +238,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.language-profile"
+      "taskType": "core.language-profile",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -281,7 +286,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.orthography"
+      "taskType": "core.orthography",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "quality",
@@ -328,7 +334,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "core",
@@ -375,7 +382,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-core:french-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.punctuation"
+      "taskType": "core.punctuation",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "lexicon",
@@ -424,7 +432,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "lexicon.entry-inventory"
+      "taskType": "lexicon.entry-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "lexicon",
@@ -468,7 +477,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "lexicon.lemma-inventory"
+      "taskType": "lexicon.lemma-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -523,7 +533,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.pos-inventory"
+      "taskType": "morphology.pos-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "search",
@@ -567,7 +578,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "search.analyzer-profile"
+      "taskType": "search.analyzer-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "quality",
@@ -610,7 +622,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -657,7 +670,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.locale-context"
+      "taskType": "normalization.locale-context",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -682,7 +696,7 @@
           "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
-      "evaluationKind": "gold-evaluation",
+      "evaluationKind": "reference-coverage",
       "evidence": {
         "resourceIds": [
           "fr-normalization-gold-cases",
@@ -705,7 +719,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.gold-cases"
+      "taskType": "normalization.gold-cases",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -757,7 +772,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.contraction-surface-policy"
+      "taskType": "normalization.contraction-surface-policy",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -814,7 +830,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.elision-apostrophe-policy"
+      "taskType": "normalization.elision-apostrophe-policy",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -863,7 +880,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.profile"
+      "taskType": "normalization.profile",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -910,7 +928,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -957,7 +976,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-normalization:french-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.unicode-nfc-policy"
+      "taskType": "normalization.unicode-nfc-policy",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1004,7 +1024,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.locale-context"
+      "taskType": "segmentation.locale-context",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -1029,7 +1050,7 @@
           "source:tatoeba:weekly-french-2026-06-06"
         ]
       },
-      "evaluationKind": "gold-evaluation",
+      "evaluationKind": "reference-coverage",
       "evidence": {
         "resourceIds": [
           "fr-token-segmentation-profile",
@@ -1053,7 +1074,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.segmentation-reference-cases"
+      "taskType": "quality.segmentation-reference-cases",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1102,7 +1124,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.grapheme-profile"
+      "taskType": "segmentation.grapheme-profile",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -1151,7 +1174,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.segmentation-abbreviation-reference-data"
+      "taskType": "quality.segmentation-abbreviation-reference-data",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -1200,7 +1224,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.segmentation-contraction-reference-data"
+      "taskType": "quality.segmentation-contraction-reference-data",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1252,7 +1277,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.elision-token-policy"
+      "taskType": "segmentation.elision-token-policy",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1301,7 +1327,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.sentence-profile"
+      "taskType": "segmentation.sentence-profile",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -1348,7 +1375,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1397,7 +1425,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.word-profile"
+      "taskType": "segmentation.word-profile",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "morphology",
@@ -1447,7 +1476,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.paradigm-table"
+      "taskType": "morphology.paradigm-table",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -1494,7 +1524,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.feature-inventory"
+      "taskType": "morphology.feature-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -1538,7 +1569,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.lookup-analyzer"
+      "taskType": "morphology.lookup-analyzer",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -1582,7 +1614,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.lookup-generator"
+      "taskType": "morphology.lookup-generator",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "quality",
@@ -1625,7 +1658,8 @@
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "language-registry",
@@ -1675,7 +1709,8 @@
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "language-registry.bcp47"
+      "taskType": "language-registry.bcp47",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "language-registry",
@@ -1716,7 +1751,8 @@
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "language-registry.type-coverage"
+      "taskType": "language-registry.type-coverage",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1757,7 +1793,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.blocks"
+      "taskType": "unicode-profile.blocks",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1795,7 +1832,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.property-aliases"
+      "taskType": "unicode-profile.property-aliases",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1833,7 +1871,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.scripts"
+      "taskType": "unicode-profile.scripts",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "kb",
@@ -1880,7 +1919,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-aliases"
+      "taskType": "kb.entity-aliases",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1904,9 +1944,12 @@
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
+          "acquisitionMethod": "wikidata-query-service",
+          "derivedFromDumpArtifact": false,
+          "dumpArtifactVersion": "20260608",
           "endpoint": "https://query.wikidata.org/sparql",
           "extractId": "wikidata-fr-core-entity-extract-20260612",
-          "version": "20260608"
+          "extractRetrievedAt": "2026-06-12T00:00:00.000Z"
         },
         "resourceIds": [
           "wikidata-fr-entities",
@@ -1930,7 +1973,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-extract"
+      "taskType": "kb.entity-extract",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1976,7 +2020,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-relations"
+      "taskType": "kb.entity-relations",
+      "tier": "lookup"
     }
   ],
   "resourceSpecIds": [

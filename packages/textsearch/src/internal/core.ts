@@ -962,7 +962,6 @@ function applyCharacterNgrams(
 		fail("TEXTSEARCH_NGRAM", "character n-gram sizes are invalid");
 	}
 	const output: SearchToken[] = [];
-	let position = 0;
 	for (const token of tokens) {
 		const starts: number[] = [];
 		for (let index = 0; index < token.term.length; ) {
@@ -982,30 +981,27 @@ function applyCharacterNgrams(
 					normalizeSearchToken(
 						{
 							term: token.term.slice(startOffset, endOffset),
-							position,
+							position: token.position,
 							startCU: token.startCU + startOffset,
 							endCU: token.startCU + endOffset,
 							type: "character.ngram",
 						},
-						`$.charNgram.${position}`,
+						`$.charNgram.${token.position}.${left}.${size}`,
 					),
 				);
-				position += 1;
 			}
 		}
 	}
 	return output;
 }
 
-function renumber(tokens: readonly SearchToken[]): SearchToken[] {
-	return tokens.map((token, position) =>
-		normalizeSearchToken(
-			{
-				...token,
-				position,
-			},
-			`$.tokens.${position}`,
-		),
+function sortTokens(tokens: readonly SearchToken[]): SearchToken[] {
+	return [...tokens].sort(
+		(left, right) =>
+			compareNumbers(left.position, right.position) ||
+			compareNumbers(left.startCU, right.startCU) ||
+			compareNumbers(left.endCU, right.endCU) ||
+			compareStrings(left.term, right.term),
 	);
 }
 
@@ -1147,7 +1143,7 @@ function analyzeWithComponents(
 			normalizeSearchToken(token, `$.custom.${component.id}.${index}`),
 		);
 	}
-	return freezeArray(renumber(tokens)) as SearchToken[];
+	return freezeArray(sortTokens(tokens)) as SearchToken[];
 }
 
 export function analyze(
@@ -1275,6 +1271,35 @@ interface IndexedDocument {
 	readonly metadataBoosts: Readonly<Record<string, number>>;
 }
 
+interface DocumentNode {
+	readonly key: string;
+	readonly value: IndexedDocument;
+	readonly priority: number;
+	readonly left?: DocumentNode;
+	readonly right?: DocumentNode;
+}
+
+interface DocumentStore {
+	readonly root?: DocumentNode;
+	readonly size: number;
+}
+
+interface PersistentMapNode<T> {
+	readonly key: string;
+	readonly value: T;
+	readonly priority: number;
+	readonly left?: PersistentMapNode<T>;
+	readonly right?: PersistentMapNode<T>;
+	readonly size: number;
+}
+
+interface PersistentStringMap<T> {
+	readonly root?: PersistentMapNode<T>;
+	readonly size: number;
+}
+
+type PostingDocuments = PersistentStringMap<readonly SearchToken[]>;
+
 interface IndexState {
 	readonly id: string;
 	readonly fields: Readonly<Record<string, FieldConfig>>;
@@ -1285,11 +1310,383 @@ interface IndexState {
 	> & {
 		readonly metadata: JsonObject;
 	};
-	readonly documents: Readonly<Record<string, IndexedDocument>>;
+	readonly documents: DocumentStore;
+	readonly postings: PersistentStringMap<PostingDocuments>;
+	readonly vocabulary: PersistentStringMap<true>;
+	readonly termCounts: PersistentStringMap<number>;
+	readonly fieldTokenCounts: Readonly<Record<string, number>>;
+	readonly fieldDocumentCounts: Readonly<Record<string, number>>;
 	readonly stats: IndexStats;
 }
 
 const indexStates = new WeakMap<SearchIndex, IndexState>();
+const documentStoreCache = new WeakMap<
+	DocumentStore,
+	ReadonlyMap<string, IndexedDocument>
+>();
+
+const emptyDocumentStore: DocumentStore = Object.freeze({ size: 0 });
+const emptyPersistentMap: PersistentStringMap<never> = Object.freeze({
+	size: 0,
+});
+
+function persistentNode<T>(
+	key: string,
+	value: T,
+	priority: number,
+	left?: PersistentMapNode<T>,
+	right?: PersistentMapNode<T>,
+): PersistentMapNode<T> {
+	return Object.freeze({
+		key,
+		value,
+		priority,
+		...(left !== undefined ? { left } : {}),
+		...(right !== undefined ? { right } : {}),
+		size: 1 + (left?.size ?? 0) + (right?.size ?? 0),
+	});
+}
+
+function rotatePersistentRight<T>(
+	node: PersistentMapNode<T>,
+): PersistentMapNode<T> {
+	const left = node.left;
+	if (left === undefined) return node;
+	return persistentNode(
+		left.key,
+		left.value,
+		left.priority,
+		left.left,
+		persistentNode(node.key, node.value, node.priority, left.right, node.right),
+	);
+}
+
+function rotatePersistentLeft<T>(
+	node: PersistentMapNode<T>,
+): PersistentMapNode<T> {
+	const right = node.right;
+	if (right === undefined) return node;
+	return persistentNode(
+		right.key,
+		right.value,
+		right.priority,
+		persistentNode(node.key, node.value, node.priority, node.left, right.left),
+		right.right,
+	);
+}
+
+function setPersistentNode<T>(
+	node: PersistentMapNode<T> | undefined,
+	key: string,
+	value: T,
+): PersistentMapNode<T> {
+	if (node === undefined) {
+		return persistentNode(key, value, documentPriority(key));
+	}
+	const order = compareStrings(key, node.key);
+	if (order === 0) {
+		return persistentNode(
+			node.key,
+			value,
+			node.priority,
+			node.left,
+			node.right,
+		);
+	}
+	if (order < 0) {
+		const next = persistentNode(
+			node.key,
+			node.value,
+			node.priority,
+			setPersistentNode(node.left, key, value),
+			node.right,
+		);
+		return (next.left?.priority ?? Number.POSITIVE_INFINITY) < next.priority
+			? rotatePersistentRight(next)
+			: next;
+	}
+	const next = persistentNode(
+		node.key,
+		node.value,
+		node.priority,
+		node.left,
+		setPersistentNode(node.right, key, value),
+	);
+	return (next.right?.priority ?? Number.POSITIVE_INFINITY) < next.priority
+		? rotatePersistentLeft(next)
+		: next;
+}
+
+function mergePersistentNodes<T>(
+	left: PersistentMapNode<T> | undefined,
+	right: PersistentMapNode<T> | undefined,
+): PersistentMapNode<T> | undefined {
+	if (left === undefined) return right;
+	if (right === undefined) return left;
+	if (left.priority < right.priority) {
+		return persistentNode(
+			left.key,
+			left.value,
+			left.priority,
+			left.left,
+			mergePersistentNodes(left.right, right),
+		);
+	}
+	return persistentNode(
+		right.key,
+		right.value,
+		right.priority,
+		mergePersistentNodes(left, right.left),
+		right.right,
+	);
+}
+
+function deletePersistentNode<T>(
+	node: PersistentMapNode<T> | undefined,
+	key: string,
+): PersistentMapNode<T> | undefined {
+	if (node === undefined) return undefined;
+	const order = compareStrings(key, node.key);
+	if (order === 0) return mergePersistentNodes(node.left, node.right);
+	return order < 0
+		? persistentNode(
+				node.key,
+				node.value,
+				node.priority,
+				deletePersistentNode(node.left, key),
+				node.right,
+			)
+		: persistentNode(
+				node.key,
+				node.value,
+				node.priority,
+				node.left,
+				deletePersistentNode(node.right, key),
+			);
+}
+
+function persistentGet<T>(
+	map: PersistentStringMap<T>,
+	key: string,
+): T | undefined {
+	let node = map.root;
+	while (node !== undefined) {
+		const order = compareStrings(key, node.key);
+		if (order === 0) return node.value;
+		node = order < 0 ? node.left : node.right;
+	}
+	return undefined;
+}
+
+function persistentSet<T>(
+	map: PersistentStringMap<T>,
+	key: string,
+	value: T,
+): PersistentStringMap<T> {
+	const root = setPersistentNode(map.root, key, value);
+	return Object.freeze({ root, size: root.size });
+}
+
+function persistentDelete<T>(
+	map: PersistentStringMap<T>,
+	key: string,
+): PersistentStringMap<T> {
+	const root = deletePersistentNode(map.root, key);
+	return Object.freeze({
+		...(root !== undefined ? { root } : {}),
+		size: root?.size ?? 0,
+	});
+}
+
+function persistentEntries<T>(
+	map: PersistentStringMap<T>,
+): readonly (readonly [string, T])[] {
+	const entries: Array<readonly [string, T]> = [];
+	const pending: PersistentMapNode<T>[] = [];
+	let node = map.root;
+	while (node !== undefined || pending.length > 0) {
+		while (node !== undefined) {
+			pending.push(node);
+			node = node.left;
+		}
+		const current = pending.pop();
+		if (current === undefined) break;
+		entries.push([current.key, current.value]);
+		node = current.right;
+	}
+	return entries;
+}
+
+function documentFrequencyRecord(
+	postings: PersistentStringMap<PostingDocuments>,
+): Readonly<Record<string, number>> {
+	return new Proxy(Object.create(null) as Record<string, number>, {
+		get: (_target, property) =>
+			typeof property === "string"
+				? persistentGet(postings, property)?.size
+				: undefined,
+		has: (_target, property) =>
+			typeof property === "string" &&
+			persistentGet(postings, property) !== undefined,
+		ownKeys: () => persistentEntries(postings).map(([key]) => key),
+		getOwnPropertyDescriptor: (_target, property) => {
+			if (typeof property !== "string") return undefined;
+			const posting = persistentGet(postings, property);
+			return posting === undefined
+				? undefined
+				: {
+						configurable: true,
+						enumerable: true,
+						writable: false,
+						value: posting.size,
+					};
+		},
+		set: () => false,
+		deleteProperty: () => false,
+	});
+}
+
+function documentPriority(docId: string): number {
+	return Number.parseInt(stableHash64(docId).slice(0, 12), 16);
+}
+
+function documentNode(
+	key: string,
+	value: IndexedDocument,
+	priority: number,
+	left?: DocumentNode,
+	right?: DocumentNode,
+): DocumentNode {
+	return Object.freeze({
+		key,
+		value,
+		priority,
+		...(left !== undefined ? { left } : {}),
+		...(right !== undefined ? { right } : {}),
+	});
+}
+
+function rotateDocumentRight(node: DocumentNode): DocumentNode {
+	const left = node.left;
+	if (left === undefined) return node;
+	return documentNode(
+		left.key,
+		left.value,
+		left.priority,
+		left.left,
+		documentNode(node.key, node.value, node.priority, left.right, node.right),
+	);
+}
+
+function rotateDocumentLeft(node: DocumentNode): DocumentNode {
+	const right = node.right;
+	if (right === undefined) return node;
+	return documentNode(
+		right.key,
+		right.value,
+		right.priority,
+		documentNode(node.key, node.value, node.priority, node.left, right.left),
+		right.right,
+	);
+}
+
+function insertDocumentNode(
+	node: DocumentNode | undefined,
+	value: IndexedDocument,
+): DocumentNode {
+	if (node === undefined) {
+		return documentNode(value.id, value, documentPriority(value.id));
+	}
+	const order = compareStrings(value.id, node.key);
+	if (order === 0) {
+		return documentNode(node.key, value, node.priority, node.left, node.right);
+	}
+	if (order < 0) {
+		const next = documentNode(
+			node.key,
+			node.value,
+			node.priority,
+			insertDocumentNode(node.left, value),
+			node.right,
+		);
+		return (next.left?.priority ?? Number.POSITIVE_INFINITY) < next.priority
+			? rotateDocumentRight(next)
+			: next;
+	}
+	const next = documentNode(
+		node.key,
+		node.value,
+		node.priority,
+		node.left,
+		insertDocumentNode(node.right, value),
+	);
+	return (next.right?.priority ?? Number.POSITIVE_INFINITY) < next.priority
+		? rotateDocumentLeft(next)
+		: next;
+}
+
+function documentForUpdate(
+	store: DocumentStore,
+	docId: string,
+): IndexedDocument | undefined {
+	let current = store.root;
+	while (current !== undefined) {
+		const order = compareStrings(docId, current.key);
+		if (order === 0) return current.value;
+		current = order < 0 ? current.left : current.right;
+	}
+	return undefined;
+}
+
+function documentMap(
+	store: DocumentStore,
+): ReadonlyMap<string, IndexedDocument> {
+	const cached = documentStoreCache.get(store);
+	if (cached !== undefined) return cached;
+	const documents = new Map<string, IndexedDocument>();
+	const pending: DocumentNode[] = [];
+	let current = store.root;
+	while (current !== undefined || pending.length > 0) {
+		while (current !== undefined) {
+			pending.push(current);
+			current = current.left;
+		}
+		const node = pending.pop();
+		if (node === undefined) break;
+		documents.set(node.key, node.value);
+		current = node.right;
+	}
+	documentStoreCache.set(store, documents);
+	return documents;
+}
+
+function documentFor(
+	store: DocumentStore,
+	docId: string,
+): IndexedDocument | undefined {
+	return documentForUpdate(store, docId);
+}
+
+function storeDocument(
+	store: DocumentStore,
+	document: IndexedDocument,
+	replacing: boolean,
+): DocumentStore {
+	return Object.freeze({
+		root: insertDocumentNode(store.root, document),
+		size: store.size + (replacing ? 0 : 1),
+	});
+}
+
+function documentValues(store: DocumentStore): readonly IndexedDocument[] {
+	return [...documentMap(store).values()].sort((left, right) =>
+		compareStrings(left.id, right.id),
+	);
+}
+
+function documentIds(store: DocumentStore): readonly string[] {
+	return [...documentMap(store).keys()].sort(compareStrings);
+}
 
 const defaultAnalyzer = createAnalyzer(
 	[
@@ -1350,62 +1747,147 @@ function getIndexState(index: SearchIndex): IndexState {
 	return state;
 }
 
-function buildStats(
+function postingKey(fieldId: string, term: string): string {
+	return `${fieldId}\u0000${term}`;
+}
+
+function tokensGroupedByTerm(
+	doc: IndexedDocument | undefined,
+	fieldId: string,
+): ReadonlyMap<string, readonly SearchToken[]> {
+	const grouped = new Map<string, SearchToken[]>();
+	for (const token of doc?.fields[fieldId]?.tokens ?? []) {
+		grouped.set(token.term, [...(grouped.get(token.term) ?? []), token]);
+	}
+	return grouped;
+}
+
+function emptyStats(
 	id: string,
 	fields: Readonly<Record<string, FieldConfig>>,
-	documents: Readonly<Record<string, IndexedDocument>>,
-	diagnostics: readonly SearchDiagnostic[] = [],
 ): IndexStats {
-	const docValues = Object.values(documents).sort((left, right) =>
-		compareStrings(left.id, right.id),
-	);
-	const termDocs = new Map<string, Set<string>>();
-	const averageFieldLengths: Record<string, number> = {};
-	let tokenCount = 0;
-	let postingCount = 0;
-	for (const fieldId of Object.keys(fields).sort(compareStrings)) {
-		let fieldTokenCount = 0;
-		let fieldDocCount = 0;
-		for (const doc of docValues) {
-			const field = doc.fields[fieldId];
-			if (field === undefined) continue;
-			fieldDocCount += 1;
-			fieldTokenCount += field.tokens.length;
-			tokenCount += field.tokens.length;
-			postingCount += field.tokens.length;
-			for (const term of new Set(field.tokens.map((token) => token.term))) {
-				const key = `${fieldId}\u0000${term}`;
-				const docs = termDocs.get(key) ?? new Set<string>();
-				docs.add(doc.id);
-				termDocs.set(key, docs);
+	return Object.freeze({
+		documentCount: 0,
+		fieldCount: Object.keys(fields).length,
+		termCount: 0,
+		postingCount: 0,
+		tokenCount: 0,
+		averageFieldLengths: freezeRecord(
+			Object.fromEntries(Object.keys(fields).map((fieldId) => [fieldId, 0])),
+		),
+		documentFrequencies: freezeRecord({} as Record<string, number>),
+		version: id,
+		diagnostics: freezeArray([]),
+	});
+}
+
+function updateIndexStructures(
+	state: IndexState,
+	previous: IndexedDocument | undefined,
+	next: IndexedDocument,
+): Pick<
+	IndexState,
+	| "postings"
+	| "vocabulary"
+	| "termCounts"
+	| "fieldTokenCounts"
+	| "fieldDocumentCounts"
+	| "stats"
+> {
+	let postings = state.postings;
+	let vocabulary = state.vocabulary;
+	let termCounts = state.termCounts;
+	const fieldTokenCounts = { ...state.fieldTokenCounts };
+	const fieldDocumentCounts = { ...state.fieldDocumentCounts };
+	for (const fieldId of Object.keys(state.fields).sort(compareStrings)) {
+		const previousTokens = previous?.fields[fieldId]?.tokens.length ?? 0;
+		const nextTokens = next.fields[fieldId]?.tokens.length ?? 0;
+		fieldTokenCounts[fieldId] =
+			(fieldTokenCounts[fieldId] ?? 0) - previousTokens + nextTokens;
+		if (previous === undefined) {
+			fieldDocumentCounts[fieldId] = (fieldDocumentCounts[fieldId] ?? 0) + 1;
+		}
+		const previousTerms = tokensGroupedByTerm(previous, fieldId);
+		const nextTerms = tokensGroupedByTerm(next, fieldId);
+		const terms = uniqueSorted([...previousTerms.keys(), ...nextTerms.keys()]);
+		for (const term of terms) {
+			const key = postingKey(fieldId, term);
+			const priorDocuments = persistentGet(state.postings, key);
+			let postingDocuments: PostingDocuments =
+				priorDocuments ?? (emptyPersistentMap as PostingDocuments);
+			if (previous !== undefined) {
+				postingDocuments = persistentDelete(postingDocuments, previous.id);
+			}
+			const termTokens = nextTerms.get(term);
+			if (termTokens !== undefined && termTokens.length > 0) {
+				postingDocuments = persistentSet(
+					postingDocuments,
+					next.id,
+					freezeArray(termTokens),
+				);
+			}
+			const existed = (priorDocuments?.size ?? 0) > 0;
+			const exists = postingDocuments.size > 0;
+			if (exists) {
+				postings = persistentSet(postings, key, postingDocuments);
+			} else {
+				postings = persistentDelete(postings, key);
+			}
+			if (existed !== exists) {
+				if (exists) {
+					vocabulary = persistentSet(vocabulary, key, true);
+					termCounts = persistentSet(
+						termCounts,
+						term,
+						(persistentGet(termCounts, term) ?? 0) + 1,
+					);
+				} else {
+					vocabulary = persistentDelete(vocabulary, key);
+					const nextCount = (persistentGet(termCounts, term) ?? 1) - 1;
+					termCounts =
+						nextCount <= 0
+							? persistentDelete(termCounts, term)
+							: persistentSet(termCounts, term, nextCount);
+				}
 			}
 		}
+	}
+	const averageFieldLengths: Record<string, number> = {};
+	for (const fieldId of Object.keys(state.fields).sort(compareStrings)) {
+		const count = fieldDocumentCounts[fieldId] ?? 0;
 		averageFieldLengths[fieldId] =
-			fieldDocCount === 0 ? 0 : fieldTokenCount / fieldDocCount;
+			count === 0 ? 0 : (fieldTokenCounts[fieldId] ?? 0) / count;
 	}
-	const documentFrequencies: Record<string, number> = {};
-	for (const [key, docs] of [...termDocs.entries()].sort(([left], [right]) =>
-		compareStrings(left, right),
-	)) {
-		documentFrequencies[key] = docs.size;
-	}
-	return Object.freeze({
-		documentCount: docValues.length,
-		fieldCount: Object.keys(fields).length,
-		termCount: uniqueSorted(
-			docValues.flatMap((doc) =>
-				Object.values(doc.fields).flatMap((field) =>
-					field.tokens.map((token) => token.term),
-				),
-			),
-		).length,
-		postingCount,
-		tokenCount,
+	const tokenDelta =
+		Object.values(next.fields).reduce(
+			(total, field) => total + field.tokens.length,
+			0,
+		) -
+		(previous === undefined
+			? 0
+			: Object.values(previous.fields).reduce(
+					(total, field) => total + field.tokens.length,
+					0,
+				));
+	const stats: IndexStats = Object.freeze({
+		documentCount: state.stats.documentCount + (previous === undefined ? 1 : 0),
+		fieldCount: Object.keys(state.fields).length,
+		termCount: termCounts.size,
+		postingCount: state.stats.postingCount + tokenDelta,
+		tokenCount: state.stats.tokenCount + tokenDelta,
 		averageFieldLengths: freezeRecord(averageFieldLengths),
-		documentFrequencies: freezeRecord(documentFrequencies),
-		version: id,
-		diagnostics: freezeArray(diagnostics),
+		documentFrequencies: documentFrequencyRecord(postings),
+		version: state.id,
+		diagnostics: state.stats.diagnostics,
 	});
+	return {
+		postings,
+		vocabulary,
+		termCounts,
+		fieldTokenCounts: freezeRecord(fieldTokenCounts),
+		fieldDocumentCounts: freezeRecord(fieldDocumentCounts),
+		stats,
+	};
 }
 
 export function createIndex(
@@ -1460,8 +1942,17 @@ export function createIndex(
 			positions: options.positions ?? true,
 			strict: options.strict ?? true,
 		},
-		documents: freezeRecord({}),
-		stats: buildStats(id, fields, {}),
+		documents: emptyDocumentStore,
+		postings: emptyPersistentMap as PersistentStringMap<PostingDocuments>,
+		vocabulary: emptyPersistentMap as PersistentStringMap<true>,
+		termCounts: emptyPersistentMap as PersistentStringMap<number>,
+		fieldTokenCounts: freezeRecord(
+			Object.fromEntries(Object.keys(fields).map((fieldId) => [fieldId, 0])),
+		),
+		fieldDocumentCounts: freezeRecord(
+			Object.fromEntries(Object.keys(fields).map((fieldId) => [fieldId, 0])),
+		),
+		stats: emptyStats(id, fields),
 	};
 	return attachIndexState(state);
 }
@@ -1645,6 +2136,7 @@ function indexDocument(
 		const values = extractFieldValues(doc, config);
 		const tokens: SearchToken[] = [];
 		const textParts: string[] = [];
+		let positionBase = 0;
 		for (const value of values) {
 			textParts.push(value.text);
 			const analyzed = analyze(analyzer, value.text);
@@ -1653,6 +2145,7 @@ function indexDocument(
 					normalizeSearchToken(
 						{
 							...token,
+							position: token.position + positionBase,
 							startCU: token.startCU + value.baseStartCU,
 							endCU: token.endCU + value.baseStartCU,
 							payload: {
@@ -1668,6 +2161,11 @@ function indexDocument(
 					),
 				);
 			}
+			const maximumPosition = analyzed.reduce(
+				(maximum, token) => Math.max(maximum, token.position),
+				-1,
+			);
+			positionBase += maximumPosition + 2;
 		}
 		if (config.characterNgram !== undefined) {
 			tokens.push(
@@ -1684,7 +2182,7 @@ function indexDocument(
 			fieldId,
 			text: textParts.join("\n"),
 			...(viewId !== undefined ? { viewId } : {}),
-			tokens: freezeArray(renumber(tokens)),
+			tokens: freezeArray(sortTokens(tokens)),
 			values: freezeArray(values.map((value) => value.value)),
 		});
 	}
@@ -1707,24 +2205,23 @@ export function addToIndex(
 	const state = getIndexState(index);
 	const record = indexDocument(state, doc, options);
 	const onDuplicate = options.onDuplicate ?? "reject";
-	if (state.documents[record.id] !== undefined && onDuplicate === "reject") {
+	const previous = documentForUpdate(state.documents, record.id);
+	if (previous !== undefined && onDuplicate === "reject") {
 		fail(
 			"TEXTSEARCH_DUPLICATE_DOCUMENT",
 			`document already indexed: ${record.id}`,
 		);
 	}
-	const documents: Record<string, IndexedDocument> = { ...state.documents };
-	documents[record.id] = record;
-	const stats = buildStats(
-		state.id,
-		state.fields,
-		documents,
-		state.stats.diagnostics,
+	const structures = updateIndexStructures(state, previous, record);
+	const documents = storeDocument(
+		state.documents,
+		record,
+		previous !== undefined,
 	);
 	return attachIndexState({
 		...state,
-		documents: freezeRecord(documents),
-		stats,
+		documents,
+		...structures,
 	});
 }
 
@@ -1734,7 +2231,7 @@ export function termVector(
 	fieldId: string,
 ): TermVectorEntry[] {
 	const state = getIndexState(index);
-	const doc = state.documents[docId];
+	const doc = documentFor(state.documents, docId);
 	if (doc === undefined) {
 		fail("TEXTSEARCH_DOCUMENT_MISSING", `document is not indexed: ${docId}`);
 	}
@@ -2108,13 +2605,72 @@ function fieldTokens(
 	return doc.fields[fieldId]?.tokens ?? [];
 }
 
-function termCandidates(term: string): readonly string[] {
-	return uniqueSorted([term, caseFold(term), nfkcCaseFold(term)]);
+function analyzerForField(state: IndexState, fieldId: string): Analyzer {
+	const config = state.fields[fieldId];
+	return (
+		state.analyzers[config?.analyzerId ?? state.defaultAnalyzer.id] ??
+		state.defaultAnalyzer
+	);
 }
 
-function tokenMatchesTerm(token: SearchToken, term: string): boolean {
-	const candidates = termCandidates(term);
-	return candidates.includes(token.term);
+function queryTokensForField(
+	state: IndexState,
+	fieldId: string,
+	text: string,
+): readonly SearchToken[] {
+	return analyze(analyzerForField(state, fieldId), text);
+}
+
+function termsByPosition(
+	tokens: readonly SearchToken[],
+): readonly { readonly position: number; readonly terms: readonly string[] }[] {
+	const grouped = new Map<number, Set<string>>();
+	for (const token of tokens) {
+		const terms = grouped.get(token.position) ?? new Set<string>();
+		terms.add(token.term);
+		grouped.set(token.position, terms);
+	}
+	return freezeArray(
+		[...grouped]
+			.sort(([left], [right]) => compareNumbers(left, right))
+			.map(([position, terms]) => ({
+				position,
+				terms: freezeArray([...terms].sort(compareStrings)),
+			})),
+	);
+}
+
+function postingDocumentsForAlternatives(
+	state: IndexState,
+	fieldId: string,
+	terms: readonly string[],
+): ReadonlySet<string> {
+	const ids = new Set<string>();
+	for (const term of terms) {
+		const posting = persistentGet(state.postings, postingKey(fieldId, term));
+		for (const [docId] of persistentEntries(
+			posting ?? (emptyPersistentMap as PostingDocuments),
+		)) {
+			ids.add(docId);
+		}
+	}
+	return ids;
+}
+
+function candidateDocumentsForGroups(
+	state: IndexState,
+	fieldId: string,
+	groups: readonly { readonly terms: readonly string[] }[],
+): readonly string[] {
+	if (groups.length === 0) return [];
+	const sets = groups.map((group) =>
+		postingDocumentsForAlternatives(state, fieldId, group.terms),
+	);
+	const first = sets[0];
+	if (first === undefined) return [];
+	return [...first]
+		.filter((docId) => sets.slice(1).every((set) => set.has(docId)))
+		.sort(compareStrings);
 }
 
 function mergeMatches(
@@ -2156,9 +2712,11 @@ function mergeMatches(
 
 function allDocs(context: EvalContext): Map<string, MatchRecord> {
 	return mergeMatches(
-		Object.keys(context.state.documents)
-			.sort(compareStrings)
-			.map((docId) => ({ docId, spans: [], terms: [] })),
+		documentIds(context.state.documents).map((docId) => ({
+			docId,
+			spans: [],
+			terms: [],
+		})),
 	);
 }
 
@@ -2176,26 +2734,39 @@ function termMatch(
 			? allFieldIds(context.state, context.fieldScope)
 			: [field];
 	const matches: MatchRecord[] = [];
-	for (const doc of Object.values(context.state.documents)) {
-		const spans: SearchHitSpan[] = [];
-		for (const fieldId of fieldIds) {
-			const fieldRecord = doc.fields[fieldId];
-			if (fieldRecord === undefined) continue;
-			for (const token of fieldRecord.tokens) {
-				if (!tokenMatchesTerm(token, term)) continue;
-				const viewId = tokenViewId(token, fieldRecord.viewId);
-				spans.push({
-					fieldId,
-					term: token.term,
-					startCU: token.startCU,
-					endCU: token.endCU,
-					position: token.position,
-					...(viewId !== undefined ? { viewId } : {}),
+	for (const fieldId of fieldIds) {
+		const analyzedTerms = uniqueSorted(
+			queryTokensForField(context.state, fieldId, term).map(
+				(token) => token.term,
+			),
+		);
+		for (const analyzedTerm of analyzedTerms) {
+			const posting = persistentGet(
+				context.state.postings,
+				postingKey(fieldId, analyzedTerm),
+			);
+			for (const [docId, tokens] of persistentEntries(
+				posting ?? (emptyPersistentMap as PostingDocuments),
+			)) {
+				const doc = documentFor(context.state.documents, docId);
+				const fieldRecord = doc?.fields[fieldId];
+				if (doc === undefined || fieldRecord === undefined) continue;
+				matches.push({
+					docId,
+					spans: tokens.map((token) => {
+						const viewId = tokenViewId(token, fieldRecord.viewId);
+						return {
+							fieldId,
+							term: token.term,
+							startCU: token.startCU,
+							endCU: token.endCU,
+							position: token.position,
+							...(viewId !== undefined ? { viewId } : {}),
+						};
+					}),
+					terms: [analyzedTerm],
 				});
 			}
-		}
-		if (spans.length > 0) {
-			matches.push({ docId: doc.id, spans, terms: [term] });
 		}
 	}
 	return mergeMatches(matches);
@@ -2235,64 +2806,112 @@ function subtractMatch(
 	);
 }
 
+function restrictMatch(
+	base: Map<string, MatchRecord>,
+	constraints: readonly Map<string, MatchRecord>[],
+): Map<string, MatchRecord> {
+	return mergeMatches(
+		[...base.values()].filter((record) =>
+			constraints.every((constraint) => constraint.has(record.docId)),
+		),
+	);
+}
+
+function augmentMatch(
+	base: Map<string, MatchRecord>,
+	optional: readonly Map<string, MatchRecord>[],
+): Map<string, MatchRecord> {
+	const records: MatchRecord[] = [];
+	for (const record of base.values()) {
+		records.push(record);
+		for (const input of optional) {
+			const extra = input.get(record.docId);
+			if (extra !== undefined) records.push(extra);
+		}
+	}
+	return mergeMatches(records);
+}
+
 function phraseMatch(
 	context: EvalContext,
 	query: Extract<SearchQuery, { kind: "phrase" }>,
 ): Map<string, MatchRecord> {
-	const terms = query.terms.filter((term) => term.length > 0);
-	if (terms.length === 0) return noneDocs();
+	const queryText = query.terms.filter((term) => term.length > 0).join(" ");
+	if (queryText.length === 0) return noneDocs();
 	const fieldIds =
 		query.field === undefined
 			? allFieldIds(context.state, context.fieldScope)
 			: [query.field];
 	const slop = query.slop ?? 0;
 	const records: MatchRecord[] = [];
-	for (const doc of Object.values(context.state.documents)) {
-		const spans: SearchHitSpan[] = [];
-		for (const fieldId of fieldIds) {
-			const fieldRecord = doc.fields[fieldId];
-			if (fieldRecord === undefined) continue;
-			const tokens = [...fieldRecord.tokens].sort((left, right) =>
-				compareNumbers(left.position, right.position),
+	for (const fieldId of fieldIds) {
+		const groups = termsByPosition(
+			queryTokensForField(context.state, fieldId, queryText),
+		);
+		const firstGroup = groups[0];
+		if (firstGroup === undefined) continue;
+		const basePosition = firstGroup.position;
+		for (const docId of candidateDocumentsForGroups(
+			context.state,
+			fieldId,
+			groups,
+		)) {
+			const doc = documentFor(context.state.documents, docId);
+			const fieldRecord = doc?.fields[fieldId];
+			if (doc === undefined || fieldRecord === undefined) continue;
+			const byPosition = new Map<number, SearchToken[]>();
+			for (const token of fieldRecord.tokens) {
+				byPosition.set(token.position, [
+					...(byPosition.get(token.position) ?? []),
+					token,
+				]);
+			}
+			const firstTokens = fieldRecord.tokens.filter((token) =>
+				firstGroup.terms.includes(token.term),
 			);
-			for (let index = 0; index < tokens.length; index += 1) {
-				const first = tokens[index];
-				if (first === undefined || !tokenMatchesTerm(first, terms[0] as string))
-					continue;
-				let previous = first;
-				let matched = true;
+			for (const first of firstTokens) {
 				const matchedTokens = [first];
-				for (let termIndex = 1; termIndex < terms.length; termIndex += 1) {
-					const expected = terms[termIndex] as string;
-					const next = tokens
-						.slice(index + termIndex)
-						.find(
-							(candidate) =>
-								candidate.position > previous.position &&
-								candidate.position - previous.position <= slop + 1 &&
-								tokenMatchesTerm(candidate, expected),
+				let previousPosition = first.position;
+				for (const group of groups.slice(1)) {
+					const expectedPosition =
+						first.position + (group.position - basePosition);
+					let selected: SearchToken | undefined;
+					for (
+						let position = Math.max(previousPosition + 1, expectedPosition);
+						position <= expectedPosition + slop;
+						position += 1
+					) {
+						selected = (byPosition.get(position) ?? []).find((token) =>
+							group.terms.includes(token.term),
 						);
-					if (next === undefined) {
-						matched = false;
+						if (selected !== undefined) break;
+					}
+					if (selected === undefined) {
+						matchedTokens.length = 0;
 						break;
 					}
-					matchedTokens.push(next);
-					previous = next;
+					matchedTokens.push(selected);
+					previousPosition = selected.position;
 				}
-				if (!matched) continue;
-				const last = matchedTokens[matchedTokens.length - 1] ?? first;
+				if (matchedTokens.length !== groups.length) continue;
+				const last = matchedTokens.at(-1) ?? first;
 				const viewId = tokenViewId(first, fieldRecord.viewId);
-				spans.push({
-					fieldId,
-					term: terms.join(" "),
-					startCU: first.startCU,
-					endCU: last.endCU,
-					position: first.position,
-					...(viewId !== undefined ? { viewId } : {}),
+				records.push({
+					docId,
+					spans: [
+						{
+							fieldId,
+							term: matchedTokens.map((token) => token.term).join(" "),
+							startCU: first.startCU,
+							endCU: last.endCU,
+							position: first.position,
+							...(viewId !== undefined ? { viewId } : {}),
+						},
+					],
+					terms: uniqueSorted(matchedTokens.map((token) => token.term)),
 				});
 			}
 		}
-		if (spans.length > 0) records.push({ docId: doc.id, spans, terms });
 	}
 	return mergeMatches(records);
 }
@@ -2301,58 +2920,76 @@ function proximityMatch(
 	context: EvalContext,
 	query: Extract<SearchQuery, { kind: "proximity" }>,
 ): Map<string, MatchRecord> {
-	const terms = query.terms.filter((term) => term.length > 0);
-	if (terms.length === 0) return noneDocs();
+	const queryText = query.terms.filter((term) => term.length > 0).join(" ");
+	if (queryText.length === 0) return noneDocs();
 	const fieldIds =
 		query.field === undefined
 			? allFieldIds(context.state, context.fieldScope)
 			: [query.field];
 	const records: MatchRecord[] = [];
-	for (const doc of Object.values(context.state.documents)) {
-		const spans: SearchHitSpan[] = [];
-		for (const fieldId of fieldIds) {
-			const fieldRecord = doc.fields[fieldId];
-			if (fieldRecord === undefined) continue;
-			const matchedByTerm = terms.map((term) =>
-				fieldRecord.tokens.filter((token) => tokenMatchesTerm(token, term)),
+	for (const fieldId of fieldIds) {
+		const groups = termsByPosition(
+			queryTokensForField(context.state, fieldId, queryText),
+		);
+		const firstGroup = groups[0];
+		if (firstGroup === undefined) continue;
+		for (const docId of candidateDocumentsForGroups(
+			context.state,
+			fieldId,
+			groups,
+		)) {
+			const doc = documentFor(context.state.documents, docId);
+			const fieldRecord = doc?.fields[fieldId];
+			if (doc === undefined || fieldRecord === undefined) continue;
+			const candidates = groups.map((group) =>
+				fieldRecord.tokens.filter((token) => group.terms.includes(token.term)),
 			);
-			if (matchedByTerm.some((tokens) => tokens.length === 0)) continue;
-			for (const first of matchedByTerm[0] ?? []) {
-				const windowTokens = matchedByTerm.flatMap((tokens) =>
-					tokens.filter(
-						(token) =>
-							Math.abs(token.position - first.position) <= query.window,
-					),
-				);
-				const hasAllTerms = terms.every((term) =>
-					windowTokens.some((token) => tokenMatchesTerm(token, term)),
-				);
-				if (!hasAllTerms) continue;
-				const sorted = windowTokens.sort((left, right) =>
+			for (const first of candidates[0] ?? []) {
+				const selected = [first];
+				let previous = first.position;
+				for (const alternatives of candidates.slice(1)) {
+					const token = alternatives
+						.filter(
+							(candidate) =>
+								Math.abs(candidate.position - first.position) <= query.window &&
+								(query.ordered !== true || candidate.position >= previous),
+						)
+						.sort(
+							(left, right) =>
+								Math.abs(left.position - first.position) -
+									Math.abs(right.position - first.position) ||
+								left.position - right.position,
+						)[0];
+					if (token === undefined) {
+						selected.length = 0;
+						break;
+					}
+					selected.push(token);
+					previous = token.position;
+				}
+				if (selected.length !== groups.length) continue;
+				const sorted = [...selected].sort((left, right) =>
 					compareNumbers(left.position, right.position),
 				);
-				if (
-					query.ordered === true &&
-					terms.some((term, index) => {
-						const token = sorted[index];
-						return token === undefined || !tokenMatchesTerm(token, term);
-					})
-				) {
-					continue;
-				}
-				const last = sorted[sorted.length - 1] ?? first;
-				const viewId = tokenViewId(first, fieldRecord.viewId);
-				spans.push({
-					fieldId,
-					term: terms.join("~"),
-					startCU: first.startCU,
-					endCU: last.endCU,
-					position: first.position,
-					...(viewId !== undefined ? { viewId } : {}),
+				const firstSpan = sorted[0] ?? first;
+				const lastSpan = sorted.at(-1) ?? first;
+				const viewId = tokenViewId(firstSpan, fieldRecord.viewId);
+				records.push({
+					docId,
+					spans: [
+						{
+							fieldId,
+							term: selected.map((token) => token.term).join("~"),
+							startCU: firstSpan.startCU,
+							endCU: lastSpan.endCU,
+							position: firstSpan.position,
+							...(viewId !== undefined ? { viewId } : {}),
+						},
+					],
+					terms: uniqueSorted(selected.map((token) => token.term)),
 				});
 			}
 		}
-		if (spans.length > 0) records.push({ docId: doc.id, spans, terms });
 	}
 	return mergeMatches(records);
 }
@@ -2363,12 +3000,14 @@ function vocabulary(
 	scope: readonly string[] | undefined,
 ): string[] {
 	const fieldIds = field === undefined ? allFieldIds(state, scope) : [field];
+	const prefixes = new Set(fieldIds.map((fieldId) => `${fieldId}\u0000`));
 	return uniqueSorted(
-		Object.values(state.documents).flatMap((doc) =>
-			fieldIds.flatMap((fieldId) =>
-				(doc.fields[fieldId]?.tokens ?? []).map((token) => token.term),
-			),
-		),
+		persistentEntries(state.vocabulary).flatMap(([key]) => {
+			for (const prefix of prefixes) {
+				if (key.startsWith(prefix)) return [key.slice(prefix.length)];
+			}
+			return [];
+		}),
 	);
 }
 
@@ -2383,15 +3022,48 @@ function expandTerms(
 ): readonly string[] {
 	const field = "field" in query ? query.field : undefined;
 	const vocab = vocabulary(context.state, field, context.fieldScope);
+	const fieldIds =
+		field === undefined
+			? allFieldIds(context.state, context.fieldScope)
+			: [field];
+	const queryValue =
+		query.kind === "prefix"
+			? query.prefix
+			: query.kind === "suffix"
+				? query.suffix
+				: query.kind === "fuzzy"
+					? query.term
+					: undefined;
+	const analyzedValues =
+		queryValue === undefined
+			? []
+			: uniqueSorted(
+					fieldIds.flatMap((fieldId) =>
+						queryTokensForField(context.state, fieldId, queryValue).map(
+							(token) => token.term,
+						),
+					),
+				);
+	const probes =
+		analyzedValues.length > 0
+			? analyzedValues
+			: queryValue === undefined
+				? []
+				: [nfkcCaseFold(queryValue)];
 	const max = query.maxExpansions ?? 128;
 	let terms: string[] = [];
 	if (query.kind === "prefix") {
-		terms = vocab.filter((term) => term.startsWith(query.prefix));
+		terms = vocab.filter((term) =>
+			probes.some((probe) => term.startsWith(probe)),
+		);
 	} else if (query.kind === "suffix") {
-		terms = vocab.filter((term) => term.endsWith(query.suffix));
+		terms = vocab.filter((term) =>
+			probes.some((probe) => term.endsWith(probe)),
+		);
 	} else if (query.kind === "wildcard") {
+		const normalizedPattern = nfkcCaseFold(query.pattern);
 		const pattern = new RegExp(
-			`^${query.pattern
+			`^${normalizedPattern
 				.replace(/[.+^${}()|[\]\\]/g, "\\$&")
 				.replaceAll("*", ".*")
 				.replaceAll("?", ".")}$`,
@@ -2399,17 +3071,17 @@ function expandTerms(
 		);
 		terms = vocab.filter((term) => pattern.test(term));
 	} else if (query.kind === "regex") {
-		const pattern = new RegExp(query.pattern, "u");
+		const pattern = new RegExp(query.pattern, "iu");
 		terms = vocab.filter((term) => pattern.test(term));
 	} else {
 		const maxDistance = query.maxDistance ?? 2;
-		const prefix =
-			query.prefixLength === undefined
-				? ""
-				: query.term.slice(0, query.prefixLength);
+		const prefixLength = query.prefixLength ?? 0;
 		terms = vocab.filter((term) => {
-			if (prefix.length > 0 && !term.startsWith(prefix)) return false;
-			return boundedEditDistance(query.term, term, maxDistance) !== undefined;
+			return probes.some((probe) => {
+				const prefix = probe.slice(0, prefixLength);
+				if (prefix.length > 0 && !term.startsWith(prefix)) return false;
+				return boundedEditDistance(probe, term, maxDistance) !== undefined;
+			});
 		});
 	}
 	return terms.sort(compareStrings).slice(0, max);
@@ -2442,7 +3114,7 @@ function rangeMatch(
 	context: EvalContext,
 	query: Extract<SearchQuery, { kind: "range" }>,
 ): Map<string, MatchRecord> {
-	const records = Object.values(context.state.documents)
+	const records = documentValues(context.state.documents)
 		.filter((doc) => {
 			if (query.metadataKey !== undefined) {
 				const value = doc.metadata[query.metadataKey];
@@ -2482,7 +3154,7 @@ function annotationMatch(
 	query: Extract<SearchQuery, { kind: "annotation" }>,
 ): Map<string, MatchRecord> {
 	return mergeMatches(
-		Object.values(context.state.documents)
+		documentValues(context.state.documents)
 			.filter((doc) =>
 				doc.annotations.some((annotation) =>
 					annotationMatches(annotation, query),
@@ -2497,7 +3169,7 @@ function metadataMatch(
 	query: Extract<SearchQuery, { kind: "metadata" }>,
 ): Map<string, MatchRecord> {
 	return mergeMatches(
-		Object.values(context.state.documents)
+		documentValues(context.state.documents)
 			.filter((doc) => {
 				const value = doc.metadata[query.key];
 				if (query.value === undefined) return value !== undefined;
@@ -2546,6 +3218,9 @@ function evaluateQuery(
 				: should.length > 0
 					? unionMatch(should)
 					: allDocs(context);
+		if (must.length > 0 && should.length > 0) {
+			current = augmentMatch(current, should);
+		}
 		if (should.length > 0 && query.minimumShouldMatch !== undefined) {
 			const counts = new Map<string, number>();
 			for (const input of should) {
@@ -2559,7 +3234,7 @@ function evaluateQuery(
 				),
 			);
 		}
-		if (filters.length > 0) current = intersectMatch([current, ...filters]);
+		if (filters.length > 0) current = restrictMatch(current, filters);
 		return subtractMatch(current, mustNot);
 	}
 	if (query.kind === "field") {
@@ -2637,44 +3312,16 @@ function docMatchesFilter(
 	return !docMatchesFilter(state, doc, filter.filter);
 }
 
-function queryTerms(query: SearchQuery): string[] {
-	if (query.kind === "term") return [query.term];
-	if (
-		query.kind === "terms" ||
-		query.kind === "phrase" ||
-		query.kind === "proximity"
-	) {
-		return [...query.terms];
-	}
-	if (query.kind === "boolean") {
-		return uniqueSorted(
-			[
-				...(query.must ?? []),
-				...(query.should ?? []),
-				...(query.filter ?? []),
-				...(query.mustNot ?? []),
-			].flatMap(queryTerms),
-		);
-	}
-	if (query.kind === "field") return queryTerms(query.query);
-	if (query.kind === "wildcard") return [query.pattern];
-	if (query.kind === "prefix") return [query.prefix];
-	if (query.kind === "suffix") return [query.suffix];
-	if (query.kind === "fuzzy") return [query.term];
-	if (query.kind === "regex") return [query.pattern];
-	if (query.kind === "cql")
-		return queryTerms(query.query ?? parseCql(query.source));
-	return [];
-}
-
 function termFrequency(
+	state: IndexState,
 	doc: IndexedDocument,
 	fieldId: string,
 	term: string,
 ): number {
-	return fieldTokens(doc, fieldId).filter((token) =>
-		tokenMatchesTerm(token, term),
-	).length;
+	const posting = persistentGet(state.postings, postingKey(fieldId, term));
+	return posting === undefined
+		? 0
+		: (persistentGet(posting, doc.id)?.length ?? 0);
 }
 
 function documentFrequency(
@@ -2682,21 +3329,20 @@ function documentFrequency(
 	fieldId: string,
 	term: string,
 ): number {
-	return Object.values(state.documents).filter((doc) =>
-		fieldTokens(doc, fieldId).some((token) => tokenMatchesTerm(token, term)),
-	).length;
+	return persistentGet(state.postings, postingKey(fieldId, term))?.size ?? 0;
 }
 
 function collectionFrequency(state: IndexState, term: string): number {
-	return Object.values(state.documents).reduce(
-		(total, doc) =>
-			total +
-			Object.keys(state.fields).reduce(
-				(fieldTotal, fieldId) => fieldTotal + termFrequency(doc, fieldId, term),
-				0,
-			),
-		0,
-	);
+	let total = 0;
+	for (const fieldId of Object.keys(state.fields)) {
+		const posting = persistentGet(state.postings, postingKey(fieldId, term));
+		for (const [, tokens] of persistentEntries(
+			posting ?? (emptyPersistentMap as PostingDocuments),
+		)) {
+			total += tokens.length;
+		}
+	}
+	return total;
 }
 
 export function scoreBoolean(
@@ -2718,7 +3364,7 @@ export function scoreTfIdf(
 	for (const fieldId of Object.keys(state.fields)) {
 		length += fieldTokens(doc, fieldId).length;
 		for (const term of terms) {
-			const tf = termFrequency(doc, fieldId, term);
+			const tf = termFrequency(state, doc, fieldId, term);
 			if (tf === 0) continue;
 			const df = documentFrequency(state, fieldId, term);
 			const idf =
@@ -2745,7 +3391,7 @@ export function scoreBm25(
 		const avgLength = state.stats.averageFieldLengths[fieldId] ?? 0;
 		if (avgLength === 0) continue;
 		for (const term of terms) {
-			const tf = termFrequency(doc, fieldId, term);
+			const tf = termFrequency(state, doc, fieldId, term);
 			if (tf === 0) continue;
 			const df = documentFrequency(state, fieldId, term);
 			const idf = Math.log(
@@ -2774,7 +3420,7 @@ export function scoreBm25f(
 		const avgLength = state.stats.averageFieldLengths[fieldId] ?? 0;
 		if (avgLength === 0) continue;
 		for (const term of terms) {
-			const tf = termFrequency(doc, fieldId, term);
+			const tf = termFrequency(state, doc, fieldId, term);
 			if (tf === 0) continue;
 			const df = documentFrequency(state, fieldId, term);
 			const idf = Math.log(
@@ -2806,7 +3452,7 @@ export function scoreLanguageModel(
 	let score = 0;
 	for (const term of terms) {
 		const tf = Object.keys(state.fields).reduce(
-			(total, fieldId) => total + termFrequency(doc, fieldId, term),
+			(total, fieldId) => total + termFrequency(state, doc, fieldId, term),
 			0,
 		);
 		const collectionProbability =
@@ -2926,9 +3572,8 @@ export function search(
 	const queryValue =
 		query.kind === "cql" ? (query.query ?? parseCql(query.source)) : query;
 	const matches = evaluateQuery({ state }, queryValue);
-	const terms = queryTerms(queryValue);
 	const filtered = [...matches.values()].filter((match) => {
-		const doc = state.documents[match.docId];
+		const doc = documentFor(state.documents, match.docId);
 		return (
 			doc !== undefined &&
 			(options.filters ?? []).every((filter) =>
@@ -2936,15 +3581,18 @@ export function search(
 			)
 		);
 	});
+	const filteredDocIds = filtered
+		.map((match) => match.docId)
+		.sort(compareStrings);
 	const results = filtered
 		.map((match) => {
-			const doc = state.documents[match.docId];
+			const doc = documentFor(state.documents, match.docId);
 			if (doc === undefined) return undefined;
 			const { score, rerankDiagnostics } = scoreMatch(
 				state,
 				doc,
 				match,
-				terms,
+				match.terms,
 				options,
 			);
 			const result: Omit<SearchResult, "rank"> = {
@@ -2966,7 +3614,7 @@ export function search(
 				...(options.facets !== undefined
 					? {
 							facets: facets(index, options.facets, {
-								docIds: [...matches.keys()].sort(compareStrings),
+								docIds: filteredDocIds,
 							}),
 						}
 					: {}),
@@ -3008,7 +3656,7 @@ export function explain(
 	options: SearchOptions = {},
 ): SearchExplanation {
 	const state = getIndexState(index);
-	const doc = state.documents[docId];
+	const doc = documentFor(state.documents, docId);
 	if (doc === undefined) {
 		fail("TEXTSEARCH_DOCUMENT_MISSING", `document is not indexed: ${docId}`);
 	}
@@ -3016,7 +3664,7 @@ export function explain(
 		query.kind === "cql" ? (query.query ?? parseCql(query.source)) : query;
 	const matches = evaluateQuery({ state }, queryValue);
 	const match = matches.get(docId) ?? { docId, spans: [], terms: [] };
-	const terms = queryTerms(queryValue);
+	const terms = [...match.terms];
 	const { score, rerankDiagnostics } = scoreMatch(state, doc, match, terms, {
 		...options,
 		explain: true,
@@ -3028,7 +3676,7 @@ export function explain(
 		fieldLengths[fieldId] = fieldTokens(doc, fieldId).length;
 		for (const term of terms) {
 			const key = `${fieldId}\u0000${term}`;
-			termFrequencies[key] = termFrequency(doc, fieldId, term);
+			termFrequencies[key] = termFrequency(state, doc, fieldId, term);
 			documentFrequencies[key] = documentFrequency(state, fieldId, term);
 		}
 	}
@@ -3094,7 +3742,7 @@ export function highlight(
 	options: HighlightOptions = {},
 ): HighlightFragment[] {
 	const state = getIndexState(index);
-	const doc = state.documents[docId];
+	const doc = documentFor(state.documents, docId);
 	if (doc === undefined) {
 		fail("TEXTSEARCH_DOCUMENT_MISSING", `document is not indexed: ${docId}`);
 	}
@@ -3165,12 +3813,12 @@ export function facet(
 	options: FacetOptions = {},
 ): FacetResult {
 	const state = getIndexState(index);
-	const docIds = new Set(options.docIds ?? Object.keys(state.documents));
+	const docIds = new Set(options.docIds ?? documentIds(state.documents));
 	const counts = new Map<string, number>();
 	let missing = 0;
-	for (const doc of Object.values(state.documents).filter((candidate) =>
-		docIds.has(candidate.id),
-	)) {
+	for (const docId of [...docIds].sort(compareStrings)) {
+		const doc = documentFor(state.documents, docId);
+		if (doc === undefined) continue;
 		let values: readonly JsonValue[] = [];
 		if (request.metadataKey !== undefined) {
 			const value = doc.metadata[request.metadataKey];

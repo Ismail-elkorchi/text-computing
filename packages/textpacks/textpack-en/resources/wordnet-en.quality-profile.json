@@ -15,6 +15,18 @@
   "languageTag": "en",
   "metrics": [
     {
+      "metricId": "lexical-entry-semantic-integrity-ratio",
+      "name": "lexicalEntrySemanticIntegrityRatio",
+      "unit": "ratio",
+      "value": 1
+    },
+    {
+      "metricId": "sense-semantic-integrity-ratio",
+      "name": "senseSemanticIntegrityRatio",
+      "unit": "ratio",
+      "value": 1
+    },
+    {
       "metricId": "lexical-entry-count",
       "name": "lexicalEntryCount",
       "unit": "records",

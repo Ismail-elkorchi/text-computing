@@ -12,7 +12,11 @@ import {
 	segmentationAdapterFromPack,
 	type TextDataSegment,
 } from "@ismail-elkorchi/textdata";
-import { createDocument } from "@ismail-elkorchi/textdoc";
+import {
+	addViewWithSpanMap,
+	createDocument,
+	validateTextDocument,
+} from "@ismail-elkorchi/textdoc";
 import { candidateEntitiesFromPack } from "@ismail-elkorchi/textkb";
 import {
 	lookupManyFromPackAsync,
@@ -134,6 +138,15 @@ test("loads imported textpack data and runs the top-level analyze convenience AP
 	assert.equal(doc.searchTokens.length > 0, true);
 	assert.equal(doc.quality.findingCount <= 2, true);
 	assert.equal(doc.evidence.length > 0, true);
+	for (const evidence of doc.evidence.filter(
+		(entry) => entry.kind === "task-slot",
+	)) {
+		const slot = fr.manifest.capabilitySlots.find(
+			(candidate) => candidate.slot === evidence.task,
+		);
+		assert.equal(evidence.status, slot?.status);
+		assert.equal(evidence.tier, slot?.tier);
+	}
 });
 
 test("runs lightweight task APIs over generated English, French, and Arabic packs", async () => {
@@ -168,7 +181,7 @@ test("runs lightweight task APIs over generated English, French, and Arabic pack
 	}
 });
 
-test("runs default document analysis over generated English, French, and Arabic packs", async () => {
+test("keeps default document analysis lightweight and token-aligned", async () => {
 	for (const { languageTag, pack, text } of languageCases) {
 		const nlp = await load(pack, { reader: generatedReader });
 		const startedAt = performance.now();
@@ -184,7 +197,36 @@ test("runs default document analysis over generated English, French, and Arabic 
 		assert.equal(doc.tokens.length > 0, true, `${languageTag} tokens`);
 		assert.equal(doc.sentences.length > 0, true, `${languageTag} sentences`);
 		assert.equal(doc.searchTokens.length > 0, true, `${languageTag} search`);
-		assert.equal(doc.quality.id.length > 0, true, `${languageTag} quality`);
+		assert.equal(
+			doc.searchTokens.every((token) => {
+				const view = doc.toTextDoc().views[token.viewId];
+				return view !== undefined && token.endCU <= view.text.length;
+			}),
+			true,
+			`${languageTag} search token view provenance`,
+		);
+		assert.equal(doc.quality.skipped, true, `${languageTag} quality is opt-in`);
+		assert.equal(doc.lemmas.length, 0, `${languageTag} lookup is opt-in`);
+		assert.equal(
+			doc.morphology.length,
+			0,
+			`${languageTag} morphology is opt-in`,
+		);
+		assert.equal(doc.entities.length, 0, `${languageTag} KB linking is opt-in`);
+		assert.equal(
+			doc.tokens.every(
+				(token, index) =>
+					token.index === index &&
+					token.id.length > 0 &&
+					token.normalizedText.length > 0 &&
+					token.lemmas.length === 0 &&
+					token.morphology.length === 0 &&
+					token.entities.length === 0,
+			),
+			true,
+			`${languageTag} token alignment`,
+		);
+		assert.ok(doc.toTextDoc().layers["token.text-computing"]);
 		assert.equal(doc.evidence.length > 0, true, `${languageTag} evidence`);
 		assert.equal(
 			"entityLinkedDocument" in (doc as unknown as Record<string, unknown>),
@@ -204,11 +246,20 @@ test("runs default document analysis over generated English, French, and Arabic 
 		assert.equal(doc.toJSON().evidence.length, doc.evidence.length);
 		assert.equal(typeof doc.toTextDoc().id, "string");
 		assert.equal(
-			elapsedMs < 20_000,
+			elapsedMs < 2_000,
 			true,
 			`${languageTag} default document analysis took ${elapsedMs}ms`,
 		);
 	}
+});
+
+test("fails clearly instead of reusing stale SDK analysis layers", async () => {
+	const nlp = await load(en, { reader: generatedReader });
+	const analysis = await nlp("Paris");
+	await assert.rejects(
+		() => nlp.document.analyzeDocument(analysis.toTextDoc()),
+		/cannot replace existing analysis layer token\.text-computing/u,
+	);
 });
 
 test("keeps direct runtime packages usable as expert mode over the same textpack", async () => {
@@ -296,6 +347,7 @@ test("unsupported task errors include slot and policy context", async () => {
 				{
 					slot: "search",
 					status: "unsupported",
+					tier: "none",
 					notes: ["Search source excluded by package policy."],
 				},
 			],
@@ -333,6 +385,7 @@ test("artifact-backed tasks fail before execution until locally materialized", a
 				{
 					slot: "search",
 					status: "artifact-backed",
+					tier: "resource-only",
 					notes: [
 						"Search index descriptor exists but no local index is present.",
 					],
@@ -403,7 +456,22 @@ test("analyzes an existing TextDocument through the SDK document namespace", asy
 	});
 	assert.deepEqual(searchPipeline.processors[0]?.provides, [
 		{ viewKind: "search" },
+		{ layer: "token.text-computing" },
 	]);
+
+	const expectedSearchView = await nlp.normalization.searchView(source);
+	const conflictingSearchDocument = addViewWithSpanMap(
+		source,
+		{ ...expectedSearchView.view, text: "conflicting normalized text" },
+		expectedSearchView.spanMap,
+	);
+	await assert.rejects(
+		() =>
+			nlp.document.analyzeDocument(conflictingSearchDocument, {
+				tasks: ["search"],
+			}),
+		/conflicting normalization view or span map/u,
+	);
 });
 
 test("document analysis links hyphenated multi-token KB entities with link metadata", async () => {
@@ -440,6 +508,7 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 				{
 					slot: "segmentation",
 					status: "task-supported",
+					tier: "baseline",
 					resourceIds: ["en-segmentation-profile"],
 					bindings: [
 						{
@@ -454,6 +523,7 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 				{
 					slot: "normalization",
 					status: "task-supported",
+					tier: "rule-based",
 					resourceIds: ["en-normalization-profile"],
 					bindings: [
 						{
@@ -468,6 +538,7 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 				{
 					slot: "kb",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["en-kb"],
 					bindings: [
 						{
@@ -536,11 +607,49 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 	assert.equal(doc.entities[0]?.matchedAlias, "Guinea-Bissau");
 	assert.equal(doc.entities[0]?.matchKind, "exact");
 	assert.deepEqual(doc.entities[0]?.types, ["Q6256"]);
+	assert.equal(doc.entities[0]?.mention, "Guinea-Bissau");
+	assert.equal(doc.entities[0]?.startCU, 0);
+	assert.equal(doc.entities[0]?.endCU, 13);
+	assert.deepEqual(doc.entities[0]?.tokenIds, [
+		doc.tokens[0]?.id,
+		doc.tokens[1]?.id,
+	]);
 	assert.equal(doc.quality.skipped, true);
 	assert.equal(
 		doc.evidence.some((entry) => entry.kind === "quality-report"),
 		false,
 	);
+
+	const customSource = createDocument("Guinea-Bissau joined the meeting.", {
+		id: "text-computing-custom-source-view",
+		rawViewId: "source-text",
+	});
+	const customViewDoc = await nlp.document.analyzeDocument(customSource, {
+		tasks: ["kb"],
+		entityMaxCandidates: 1,
+	});
+	assert.equal(customViewDoc.sourceViewId, "source-text");
+	assert.equal(customViewDoc.toJSON().sourceViewId, "source-text");
+	assert.equal(
+		customViewDoc.tokens.every((token) => token.viewId === "source-text"),
+		true,
+	);
+	assert.equal(customViewDoc.entities[0]?.viewId, "source-text");
+	assert.equal(
+		customViewDoc.toTextDoc().layers["token.text-computing"]?.viewId,
+		"source-text",
+	);
+	assert.deepEqual(
+		Object.values(
+			customViewDoc.toTextDoc().layers["token.text-computing"]?.annotations ??
+				{},
+		).map((annotation) => annotation.evidence.inputViewIds),
+		customViewDoc.tokens.map(() => ["source-text"]),
+	);
+	assert.deepEqual(validateTextDocument(customViewDoc.toTextDoc()), {
+		ok: true,
+		diagnostics: [],
+	});
 });
 
 test("document morphology deduplicates and limits analyses independently per form", async () => {
@@ -595,6 +704,7 @@ test("document morphology deduplicates and limits analyses independently per for
 				{
 					slot: "segmentation",
 					status: "task-supported",
+					tier: "baseline",
 					resourceIds: ["en-segmentation-profile"],
 					bindings: [
 						{
@@ -609,6 +719,7 @@ test("document morphology deduplicates and limits analyses independently per for
 				{
 					slot: "normalization",
 					status: "task-supported",
+					tier: "rule-based",
 					resourceIds: ["en-normalization-profile"],
 					bindings: [
 						{
@@ -623,6 +734,7 @@ test("document morphology deduplicates and limits analyses independently per for
 				{
 					slot: "morphology",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["en-morphology"],
 					bindings: [
 						{
@@ -665,15 +777,15 @@ test("document morphology deduplicates and limits analyses independently per for
 				],
 			},
 			"en-morphology-paradigms":
-				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\n",
+				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\nlemma-accent\tá\tNOUN\tN;SG\tc1\n",
 			"en-morphology-analyzer":
-				"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nalpha\tlemma-alpha\tNOUN\tN;SG\ta1\nbeta\tlemma-beta\tNOUN\tN;SG\tb1\n",
+				"form\tlemma\tpartOfSpeech\tfeatureBundle\tentryId\nalpha\tlemma-alpha\tNOUN\tN;SG\ta1\nbeta\tlemma-beta\tNOUN\tN;SG\tb1\ná\tlemma-accent\tNOUN\tN;SG\tc1\n",
 			"en-morphology-generator":
-				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\n",
+				"lemma\tform\tpartOfSpeech\tfeatureBundle\tentryId\nlemma-alpha\talpha\tNOUN\tN;SG\ta1\nlemma-beta\tbeta\tNOUN\tN;SG\tb1\nlemma-accent\tá\tNOUN\tN;SG\tc1\n",
 		},
 	);
 	const nlp = await load(pack);
-	const doc = await nlp("alpha beta", {
+	const doc = await nlp("alpha beta a\u0301", {
 		tasks: ["morphology"],
 		morphologyMaxResults: 1,
 	});
@@ -683,10 +795,32 @@ test("document morphology deduplicates and limits analyses independently per for
 		[
 			["alpha", "lemma-alpha"],
 			["beta", "lemma-beta"],
+			["á", "lemma-accent"],
 		],
 	);
-	assert.deepEqual(doc.lemmas, ["lemma-alpha", "lemma-beta"]);
-	const noMorphology = await nlp("alpha beta", {
+	assert.deepEqual(
+		doc.lemmas.map((lemma) => [lemma.tokenId, lemma.value]),
+		[
+			[doc.tokens[0]?.id, "lemma-alpha"],
+			[doc.tokens[1]?.id, "lemma-beta"],
+			[doc.tokens[2]?.id, "lemma-accent"],
+		],
+	);
+	assert.equal(doc.tokens[2]?.text, "a\u0301");
+	assert.equal(doc.tokens[2]?.viewId, "raw");
+	assert.equal(doc.tokens[2]?.normalizedText, "á");
+	assert.equal(doc.tokens[2]?.morphology[0]?.queryForm, "á");
+	assert.equal(doc.tokens[2]?.morphology[0]?.viewId, "raw");
+	assert.equal(doc.tokens[2]?.lemmas[0]?.viewId, "raw");
+	assert.equal(
+		doc.toTextDoc().layers["morph.text-computing"] !== undefined,
+		true,
+	);
+	assert.equal(
+		doc.toTextDoc().layers["lemma.text-computing"] !== undefined,
+		true,
+	);
+	const noMorphology = await nlp("alpha beta a\u0301", {
 		tasks: ["morphology"],
 		morphologyMaxResults: 0,
 	});

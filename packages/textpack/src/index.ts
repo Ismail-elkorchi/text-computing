@@ -6,13 +6,24 @@ export type {
 	TextPackTaskBindingSource,
 } from "./bindings.js";
 export {
+	capabilityResourceIdsFromBindings,
 	listTaskResourceBindings,
+	requireCapabilityResourceBindings,
+	requireSingleCapabilityResourceBinding,
 	requireSingleTaskResourceBinding,
 	requireTaskResourceBindings,
 	taskResourceIdsFromBindings,
 } from "./bindings.js";
 export { capabilities } from "./capabilities.js";
 export { composePacks } from "./compose.js";
+export type {
+	TextPackLookupIndex,
+	TextPackLookupIndexRow,
+} from "./lookup-index.js";
+export {
+	lookupIndexSchemaId,
+	openResourceLookupIndex,
+} from "./lookup-index.js";
 export { validateManifest } from "./manifest.js";
 export type {
 	TextPackFetchResourceReaderOptions,
@@ -49,6 +60,7 @@ export type {
 	TextPackCapabilityName,
 	TextPackCapabilitySlot,
 	TextPackCapabilitySlotStatus,
+	TextPackCapabilityTier,
 	TextPackComponent,
 	TextPackComponentCapabilityPolicy,
 	TextPackComponentLicensePolicy,
@@ -65,4 +77,8 @@ export type {
 	TextPackTaskResourceBindingOwnerPackage,
 	TextPackTaskResourceBindingRole,
 } from "./types.js";
-export { resourceKinds, textPackModalities } from "./types.js";
+export {
+	resourceKinds,
+	textPackCapabilityTiers,
+	textPackModalities,
+} from "./types.js";

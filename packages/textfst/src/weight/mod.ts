@@ -54,9 +54,11 @@ export function assertWeight(
 	semiring: SemiringName,
 ): number {
 	const weight = value ?? 0;
-	if (!Number.isFinite(weight) || weight < 0) {
+	if (!Number.isFinite(weight) || (semiring !== "log" && weight < 0)) {
 		throw new TypeError(
-			`${semiring} weights must be finite non-negative numbers.`,
+			semiring === "log"
+				? "log weights must be finite real numbers."
+				: `${semiring} weights must be finite non-negative numbers.`,
 		);
 	}
 	return weight;

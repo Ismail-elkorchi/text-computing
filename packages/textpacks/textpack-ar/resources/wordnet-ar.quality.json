@@ -7,8 +7,9 @@
     "v": 13310
   },
   "lexicalEntryCount": 136041,
+  "lexicalEntrySemanticIntegrityRatio": 1,
   "pipelineId": "arabic-wordnet-lmf",
-  "pipelineVersion": "0.1.0",
+  "pipelineVersion": "0.2.0",
   "recordsAccepted": 738059,
   "recordsRejected": 0,
   "relationCount": 297150,
@@ -39,6 +40,7 @@
   },
   "schemaVersion": "1",
   "senseCount": 184238,
+  "senseSemanticIntegrityRatio": 1,
   "sourceId": "source:wordnet:arabic-v4.1.0",
   "synsetCount": 120630,
   "warnings": []

@@ -130,6 +130,24 @@
 			"type": "object",
 			"additionalProperties": false,
 			"required": ["id", "kind"],
+			"allOf": [
+				{
+					"if": {
+						"required": ["schemaId"],
+						"properties": {
+							"schemaId": { "const": "textpack.lookup-index.v1" }
+						}
+					},
+					"then": {
+						"required": ["format", "metadata"],
+						"properties": {
+							"kind": { "const": "dataset" },
+							"format": { "const": "tsv" },
+							"metadata": { "$ref": "#/definitions/lookupIndexMetadata" }
+						}
+					}
+				}
+			],
 			"properties": {
 				"id": { "type": "string", "minLength": 1 },
 				"kind": { "$ref": "#/definitions/resourceKind" },
@@ -146,6 +164,64 @@
 					"items": { "$ref": "#/definitions/dependency" }
 				},
 				"metadata": { "$ref": "#/definitions/jsonValue" }
+			}
+		},
+		"lookupIndexMetadata": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"indexFormat",
+				"indexedResourceId",
+				"indexedResourceSchemaId",
+				"indexedResourceTextChecksum",
+				"indexedResourceGzipBase64ByteLength",
+				"lookupIndexGzipBase64ByteLength",
+				"compressedSizeRatio",
+				"coordinateUnit",
+				"offsetBasis",
+				"keyNormalization",
+				"keyOrdering",
+				"keyColumns",
+				"recordCount",
+				"spanCount"
+			],
+			"properties": {
+				"indexFormat": {
+					"const": "normalized-key-packed-row-spans-v1"
+				},
+				"indexedResourceId": { "type": "string", "minLength": 1 },
+				"indexedResourceSchemaId": { "type": "string", "minLength": 1 },
+				"indexedResourceTextChecksum": {
+					"type": "string",
+					"pattern": "^sha256:[0-9a-f]{64}$"
+				},
+				"indexedResourceGzipBase64ByteLength": {
+					"type": "integer",
+					"minimum": 1
+				},
+				"lookupIndexGzipBase64ByteLength": {
+					"type": "integer",
+					"minimum": 1
+				},
+				"compressedSizeRatio": {
+					"type": "number",
+					"exclusiveMinimum": 0,
+					"maximum": 0.8
+				},
+				"coordinateUnit": { "const": "utf16-code-unit" },
+				"offsetBasis": { "const": "uncompressed-resource-text" },
+				"keyNormalization": {
+					"const": "NFKC-casefold-Unicode-17"
+				},
+				"keyOrdering": { "const": "unicode-code-unit" },
+				"keyColumns": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"recordCount": { "type": "integer", "minimum": 1 },
+				"spanCount": { "type": "integer", "minimum": 1 }
 			}
 		},
 		"component": {
@@ -258,7 +334,42 @@
 		"capabilitySlot": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["slot", "status"],
+			"required": ["slot", "status", "tier"],
+			"allOf": [
+				{
+					"if": {
+						"properties": {
+							"status": {
+								"enum": ["unsupported", "planned", "not-applicable"]
+							}
+						}
+					},
+					"then": { "properties": { "tier": { "const": "none" } } },
+					"else": { "properties": { "tier": { "not": { "const": "none" } } } }
+				},
+				{
+					"if": {
+						"properties": {
+							"status": { "enum": ["task-supported", "feature-complete"] }
+						}
+					},
+					"then": {
+						"properties": {
+							"tier": { "not": { "enum": ["none", "resource-only"] } }
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"status": { "enum": ["profiled", "sampled", "artifact-backed"] }
+						}
+					},
+					"then": {
+						"properties": { "tier": { "const": "resource-only" } }
+					}
+				}
+			],
 			"properties": {
 				"slot": { "type": "string", "minLength": 1 },
 				"status": {
@@ -271,6 +382,17 @@
 						"task-supported",
 						"feature-complete",
 						"not-applicable"
+					]
+				},
+				"tier": {
+					"enum": [
+						"none",
+						"resource-only",
+						"baseline",
+						"lookup",
+						"rule-based",
+						"contextual",
+						"model-backed"
 					]
 				},
 				"resourceIds": { "$ref": "#/definitions/nonEmptyStringArray" },

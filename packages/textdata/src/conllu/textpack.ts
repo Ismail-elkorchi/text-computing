@@ -1,7 +1,8 @@
 import {
 	isFileBackedResource,
 	openResourceText,
-	requireSingleTaskResourceBinding,
+	requireSingleCapabilityResourceBinding,
+	type TextPackCapabilityTier,
 	type TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
 import { createDataset, type DatasetReadOptions } from "../dataset/mod.js";
@@ -19,6 +20,7 @@ export interface TextPackLike {
 		readonly resources: readonly TextPackResourceLike[];
 		readonly capabilitySlots: readonly {
 			readonly slot: string;
+			readonly tier: TextPackCapabilityTier;
 			readonly status:
 				| "unsupported"
 				| "planned"
@@ -235,7 +237,7 @@ function syntaxResourceId(
 	explicit: string | undefined,
 	slot: string | undefined,
 ): string {
-	return requireSingleTaskResourceBinding(pack, {
+	return requireSingleCapabilityResourceBinding(pack, {
 		slot: slot ?? "syntax",
 		ownerPackage: "@ismail-elkorchi/textdata",
 		schemaId: SYNTAX_SCHEMA_ID,
@@ -268,7 +270,7 @@ function qualityResourceId(
 	explicit: string | undefined,
 	slot: string | undefined,
 ): string {
-	return requireSingleTaskResourceBinding(pack, {
+	return requireSingleCapabilityResourceBinding(pack, {
 		slot: slot ?? "syntax",
 		ownerPackage: "@ismail-elkorchi/textquality",
 		schemaId: QUALITY_EVIDENCE_SCHEMA_ID,

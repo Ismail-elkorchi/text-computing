@@ -23,6 +23,8 @@ import type {
 import type {
 	TextPack,
 	TextPackCapabilities,
+	TextPackCapabilitySlotStatus,
+	TextPackCapabilityTier,
 	TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
 import type {
@@ -47,6 +49,9 @@ import type {
 	AddOptions,
 	IndexOptions,
 	SearchIndex,
+	SearchOptions,
+	SearchQuery,
+	SearchResult,
 } from "@ismail-elkorchi/textsearch";
 
 export type TextComputingLoadTarget = TextPack | TextPackModule;
@@ -65,6 +70,7 @@ export interface TextComputingAnalyzeOptions extends TextComputingLoadOptions {
 	readonly pack: TextComputingLoadTarget;
 	readonly id?: string;
 	readonly metadata?: Readonly<Record<string, unknown>>;
+	readonly preset?: TextComputingTaskPreset;
 	readonly tasks?: readonly TextComputingDocumentTask[];
 	readonly lexiconMaxResults?: number;
 	readonly morphologyMaxResults?: number;
@@ -76,6 +82,7 @@ export interface TextComputingAnalyzeOptions extends TextComputingLoadOptions {
 export interface TextComputingDocumentAnalysisOptions {
 	readonly id?: string;
 	readonly metadata?: Readonly<Record<string, unknown>>;
+	readonly preset?: TextComputingTaskPreset;
 	readonly tasks?: readonly TextComputingDocumentTask[];
 	readonly lexiconMaxResults?: number;
 	readonly morphologyMaxResults?: number;
@@ -93,7 +100,14 @@ export type TextComputingDocumentTask =
 	| "search"
 	| "quality";
 
+export type TextComputingTaskPreset = "core" | "full" | "lookup";
+
 export interface TextComputingMorphologySummary {
+	readonly tokenId: string;
+	readonly viewId: string;
+	readonly startCU: number;
+	readonly endCU: number;
+	readonly queryForm: string;
 	readonly form: string;
 	readonly lemma?: string;
 	readonly partOfSpeech?: string;
@@ -110,6 +124,33 @@ export interface TextComputingEntitySummary {
 	readonly score: number;
 	readonly rank: number;
 	readonly types: readonly string[];
+	readonly mention: string;
+	readonly viewId: string;
+	readonly startCU: number;
+	readonly endCU: number;
+	readonly tokenIds: readonly string[];
+	readonly sourceEntityId?: string;
+}
+
+export interface TextComputingLemmaSummary {
+	readonly tokenId: string;
+	readonly viewId: string;
+	readonly startCU: number;
+	readonly endCU: number;
+	readonly value: string;
+	readonly queryForm: string;
+	readonly source: "lexicon" | "morphology";
+	readonly sourceResourceId?: string;
+}
+
+export interface TextComputingToken extends TextDataSegment {
+	readonly id: string;
+	readonly index: number;
+	readonly viewId: string;
+	readonly normalizedText: string;
+	readonly lemmas: readonly TextComputingLemmaSummary[];
+	readonly morphology: readonly TextComputingMorphologySummary[];
+	readonly entities: readonly TextComputingEntitySummary[];
 }
 
 export interface TextComputingSearchTokenSummary {
@@ -117,6 +158,7 @@ export interface TextComputingSearchTokenSummary {
 	readonly position: number;
 	readonly startCU: number;
 	readonly endCU: number;
+	readonly viewId: string;
 	readonly type?: string;
 }
 
@@ -137,25 +179,41 @@ export interface TextComputingQualitySummary {
 	readonly metrics: Readonly<Record<string, unknown>>;
 }
 
-export interface TextComputingEvidence {
+interface TextComputingEvidenceBase {
 	readonly id: string;
-	readonly kind: "task-slot" | "quality-report";
-	readonly task?: TextComputingDocumentTask;
 	readonly packageName: string;
 	readonly packId: string;
-	readonly status?: string;
 	readonly resourceIds: readonly string[];
 	readonly componentPackageNames: readonly string[];
-	readonly reportId?: string;
 }
+
+export interface TextComputingTaskSlotEvidence
+	extends TextComputingEvidenceBase {
+	readonly kind: "task-slot";
+	readonly task: TextComputingDocumentTask;
+	readonly status: TextPackCapabilitySlotStatus;
+	readonly tier: TextPackCapabilityTier;
+}
+
+export interface TextComputingQualityReportEvidence
+	extends TextComputingEvidenceBase {
+	readonly kind: "quality-report";
+	readonly task: "quality";
+	readonly reportId: string;
+}
+
+export type TextComputingEvidence =
+	| TextComputingTaskSlotEvidence
+	| TextComputingQualityReportEvidence;
 
 export interface TextComputingDocument {
 	readonly text: string;
+	readonly sourceViewId: string;
 	readonly languageTag: string;
 	readonly sentences: readonly TextDataSegment[];
-	readonly tokens: readonly TextDataSegment[];
+	readonly tokens: readonly TextComputingToken[];
 	readonly lexicalUnits: readonly TextDataSegment[];
-	readonly lemmas: readonly string[];
+	readonly lemmas: readonly TextComputingLemmaSummary[];
 	readonly morphology: readonly TextComputingMorphologySummary[];
 	readonly entities: readonly TextComputingEntitySummary[];
 	readonly searchTokens: readonly TextComputingSearchTokenSummary[];
@@ -167,11 +225,12 @@ export interface TextComputingDocument {
 
 export interface TextComputingDocumentJson {
 	readonly text: string;
+	readonly sourceViewId: string;
 	readonly languageTag: string;
 	readonly sentences: readonly TextDataSegment[];
-	readonly tokens: readonly TextDataSegment[];
+	readonly tokens: readonly TextComputingToken[];
 	readonly lexicalUnits: readonly TextDataSegment[];
-	readonly lemmas: readonly string[];
+	readonly lemmas: readonly TextComputingLemmaSummary[];
 	readonly morphology: readonly TextComputingMorphologySummary[];
 	readonly entities: readonly TextComputingEntitySummary[];
 	readonly searchTokens: readonly TextComputingSearchTokenSummary[];
@@ -195,11 +254,6 @@ export interface TextComputingPipelineRun {
 	readonly trace: readonly PipelineTraceEvent[];
 }
 
-export interface TextComputingSearchIndexOptions {
-	readonly index?: IndexOptions;
-	readonly add?: AddOptions;
-}
-
 export interface TextComputingSupportReport {
 	readonly packageName: string;
 	readonly packId: string;
@@ -215,6 +269,7 @@ export interface TextComputingSupportReport {
 export interface TextComputingCapabilitySlotReport {
 	readonly slot: string;
 	readonly status: string;
+	readonly tier: TextPackCapabilityTier;
 	readonly resourceIds: readonly string[];
 	readonly artifactIds: readonly string[];
 	readonly readerRequired: boolean;
@@ -314,14 +369,21 @@ export interface TextComputingNlp {
 			text: string,
 		) => Promise<readonly TextComputingSearchTokenSummary[]>;
 		readonly createIndex: (options?: IndexOptions) => Promise<SearchIndex>;
-		readonly indexDocument: (
+		readonly addDocument: (
+			index: SearchIndex,
 			doc: TextDocument,
-			options?: TextComputingSearchIndexOptions,
-		) => Promise<SearchIndex>;
-		readonly indexAnalysis: (
+			options?: AddOptions,
+		) => SearchIndex;
+		readonly addAnalysis: (
+			index: SearchIndex,
 			analysis: TextComputingDocument,
-			options?: TextComputingSearchIndexOptions,
-		) => Promise<SearchIndex>;
+			options?: AddOptions,
+		) => SearchIndex;
+		readonly query: (
+			index: SearchIndex,
+			query: string | SearchQuery,
+			options?: SearchOptions,
+		) => readonly SearchResult[];
 	};
 	readonly corpus: {
 		readonly resources: () => readonly TextComputingResourceInspection[];

@@ -12,6 +12,7 @@ import {
 	type TextPackCapabilityName,
 	type TextPackCapabilitySlot,
 	type TextPackCapabilitySlotStatus,
+	type TextPackCapabilityTier,
 	type TextPackComponent,
 	type TextPackDependency,
 	type TextPackGapNote,
@@ -23,6 +24,7 @@ import {
 	type TextPackTaskResourceBinding,
 	type TextPackTaskResourceBindingOwnerPackage,
 	type TextPackTaskResourceBindingRole,
+	textPackCapabilityTiers,
 	textPackModalities,
 } from "./types.js";
 
@@ -99,6 +101,21 @@ const capabilitySlotStatuses = new Set([
 	"task-supported",
 	"feature-complete",
 	"not-applicable",
+]);
+const capabilityTiers = new Set<string>(textPackCapabilityTiers);
+const absentCapabilitySlotStatuses = new Set([
+	"unsupported",
+	"planned",
+	"not-applicable",
+]);
+const resourceOnlyCapabilitySlotStatuses = new Set([
+	"profiled",
+	"sampled",
+	"artifact-backed",
+]);
+const runnableCapabilitySlotStatuses = new Set([
+	"task-supported",
+	"feature-complete",
 ]);
 const gapNoteStatuses = new Set([
 	"unsupported",
@@ -690,6 +707,7 @@ function validateCapabilitySlots(
 			new Set([
 				"slot",
 				"status",
+				"tier",
 				"resourceIds",
 				"artifactIds",
 				"bindings",
@@ -703,6 +721,7 @@ function validateCapabilitySlots(
 		const slot: {
 			slot: string;
 			status: TextPackCapabilitySlotStatus;
+			tier: TextPackCapabilityTier;
 			resourceIds?: readonly string[];
 			artifactIds?: readonly string[];
 			bindings?: readonly TextPackTaskResourceBinding[];
@@ -713,7 +732,32 @@ function validateCapabilitySlots(
 		} = {
 			slot: readRequiredString(record, "slot", itemPath),
 			status: readEnum(record, "status", itemPath, capabilitySlotStatuses),
+			tier: readEnum(record, "tier", itemPath, capabilityTiers),
 		};
+		if (
+			absentCapabilitySlotStatuses.has(slot.status) !==
+			(slot.tier === "none")
+		) {
+			throw new TypeError(
+				`${itemPath}.tier must be none exactly when status is unsupported, planned, or not-applicable.`,
+			);
+		}
+		if (
+			runnableCapabilitySlotStatuses.has(slot.status) &&
+			slot.tier === "resource-only"
+		) {
+			throw new TypeError(
+				`${itemPath}.tier resource-only cannot claim runnable status ${slot.status}.`,
+			);
+		}
+		if (
+			resourceOnlyCapabilitySlotStatuses.has(slot.status) &&
+			slot.tier !== "resource-only"
+		) {
+			throw new TypeError(
+				`${itemPath}.tier must be resource-only when status is ${slot.status}.`,
+			);
+		}
 		if (ids.has(slot.slot)) {
 			throw new TypeError(`${itemPath}.slot duplicates slot ${slot.slot}.`);
 		}

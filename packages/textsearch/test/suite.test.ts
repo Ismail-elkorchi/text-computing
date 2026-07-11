@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { createDocument } from "@ismail-elkorchi/textdoc";
+
 import {
 	addToIndex,
 	analyze,
@@ -75,6 +77,7 @@ function searchProfilePack(profile: Readonly<Record<string, unknown>>) {
 				{
 					slot: "search",
 					status: "task-supported" as const,
+					tier: "baseline" as const,
 					resourceIds: [resourceId],
 					bindings: [
 						{
@@ -191,6 +194,10 @@ test("analyzes strings and TextDocument inputs with deterministic components", (
 		["agreement", "contract", "terms"],
 	);
 	assert.deepEqual(
+		analyze(analyzer, "Contract and terms").map((token) => token.position),
+		[0, 0, 2],
+	);
+	assert.deepEqual(
 		analyze(analyzer, fixtureDocuments()[0], { tokenLayerId: "tokens" }).map(
 			(token) => token.term,
 		),
@@ -219,6 +226,57 @@ test("analyzes strings and TextDocument inputs with deterministic components", (
 	assert.deepEqual(
 		analyze(resourceAnalyzer, "Contract").map((token) => token.term),
 		["agreement", "contract"],
+	);
+});
+
+test("preserves analyzer positions and applies field analyzers to queries", () => {
+	const analyzer = createAnalyzer(
+		[
+			{ kind: "tokenizer", mode: "unicode-word" },
+			{ kind: "normalizer", form: "nfkc-casefold" },
+			{ kind: "stopwords", words: ["the"] },
+			{ kind: "stemmer", map: { contracts: "contract", clauses: "clause" } },
+			{ kind: "synonym", map: { contract: ["agreement"] } },
+		],
+		{ id: "position-query-analyzer" },
+	);
+	let index = createIndex({
+		id: "position-query-index",
+		fields: {
+			body: {
+				source: { kind: "view", viewId: "raw" },
+				analyzer,
+			},
+		},
+	});
+	for (const [id, text] of [
+		["gap", "quick the fox"],
+		["tight", "quick fox"],
+		["synonym", "contract clauses"],
+	] as const) {
+		index = addToIndex(index, createDocument(text, { id }));
+	}
+	assert.deepEqual(
+		search(index, {
+			kind: "phrase",
+			field: "body",
+			terms: ["quick", "the", "fox"],
+		}).map((result) => result.docId),
+		["gap"],
+	);
+	assert.deepEqual(
+		search(index, {
+			kind: "phrase",
+			field: "body",
+			terms: ["agreement", "clauses"],
+		}).map((result) => result.docId),
+		["synonym"],
+	);
+	assert.deepEqual(
+		search(index, { kind: "term", field: "body", term: "contracts" }).map(
+			(result) => result.docId,
+		),
+		["synonym"],
 	);
 });
 
@@ -253,6 +311,7 @@ test("search profile textpack resources materialize through the adapter", async 
 				{
 					slot: "search",
 					status: "task-supported" as const,
+					tier: "baseline" as const,
 					resourceIds: ["search-fr-profile"],
 					bindings: [
 						{
@@ -391,6 +450,7 @@ test("search textpack adapter selects analyzer profiles from task bindings", asy
 				{
 					slot: "search",
 					status: "task-supported" as const,
+					tier: "baseline" as const,
 					resourceIds: ["profile-b"],
 					bindings: [
 						{
@@ -422,6 +482,7 @@ test("search textpack adapter selects analyzer profiles from task bindings", asy
 				{
 					slot: "search",
 					status: "task-supported" as const,
+					tier: "baseline" as const,
 					resourceIds: ["profile-a", "profile-b"],
 					bindings: [
 						{
@@ -459,6 +520,7 @@ test("search textpack adapter selects analyzer profiles from task bindings", asy
 				{
 					slot: "search",
 					status: "task-supported" as const,
+					tier: "baseline" as const,
 					resourceIds: ["profile-a"],
 				},
 			],
@@ -645,6 +707,119 @@ test("applies boolean queries, filters, ranking models, boosts, facets, highligh
 	);
 	assert.equal(explanation.matchingTerms.includes("contract"), true);
 	assert.equal(Number.isFinite(explanation.score), true);
+});
+
+test("ranks only positive analyzed and expanded terms and facets post-filter hits", () => {
+	const index = fixtureIndex();
+	const rankedTerms: string[][] = [];
+	search(
+		index,
+		{
+			kind: "boolean",
+			must: [{ kind: "term", field: "body", term: "clauses" }],
+			filter: [{ kind: "term", field: "body", term: "legal" }],
+			mustNot: [{ kind: "term", field: "body", term: "archive" }],
+		},
+		{
+			ranking: {
+				kind: "dfr",
+				id: "capture-positive-terms",
+				score: (context) => {
+					rankedTerms.push([...context.queryTerms]);
+					return context.queryTerms.length;
+				},
+			},
+		},
+	);
+	assert.ok(
+		rankedTerms.every(
+			(terms) =>
+				terms.includes("clause") &&
+				!terms.includes("legal") &&
+				!terms.includes("archive"),
+		),
+	);
+	const expandedTerms: string[][] = [];
+	search(
+		index,
+		{ kind: "prefix", field: "body", prefix: "CONTR" },
+		{
+			ranking: {
+				kind: "dfr",
+				id: "capture-expanded-terms",
+				score: (context) => {
+					expandedTerms.push([...context.queryTerms]);
+					return 1;
+				},
+			},
+		},
+	);
+	assert.ok(expandedTerms.every((terms) => terms.includes("contract")));
+	const filtered = search(
+		index,
+		{ kind: "all" },
+		{
+			filters: [{ kind: "metadata", key: "domain", value: "legal" }],
+			facets: [{ metadataKey: "domain" }],
+		},
+	);
+	assert.deepEqual(filtered[0]?.facets?.[0]?.buckets, [
+		{ value: "legal", count: 2 },
+	]);
+});
+
+test("incrementally indexes a scale fixture without rebuilding prior documents", () => {
+	const analyzer = createAnalyzer([
+		{ kind: "tokenizer", mode: "unicode-word" },
+		{ kind: "normalizer", form: "nfkc-casefold" },
+	]);
+	let index = createIndex({
+		id: "scale-index",
+		fields: {
+			body: { source: { kind: "view", viewId: "raw" }, analyzer },
+		},
+	});
+	const emptyIndex = index;
+	const started = performance.now();
+	for (let documentId = 0; documentId < 750; documentId += 1) {
+		index = addToIndex(
+			index,
+			createDocument(`common unique${documentId}`, {
+				id: `scale-${documentId}`,
+			}),
+		);
+	}
+	const elapsed = performance.now() - started;
+	assert.equal(emptyIndex.stats.documentCount, 0);
+	assert.equal(index.stats.documentCount, 750);
+	assert.equal(index.stats.documentFrequencies["body\u0000common"], 750);
+	assert.deepEqual(
+		search(index, { kind: "term", field: "body", term: "unique749" }).map(
+			(result) => result.docId,
+		),
+		["scale-749"],
+	);
+	const beforeReplacement = index;
+	index = addToIndex(
+		index,
+		createDocument("common replacement", { id: "scale-749" }),
+		{ onDuplicate: "replace" },
+	);
+	assert.equal(index.stats.documentCount, 750);
+	assert.equal(index.stats.documentFrequencies["body\u0000common"], 750);
+	assert.equal(
+		search(index, { kind: "term", field: "body", term: "unique749" }).length,
+		0,
+	);
+	assert.equal(
+		search(beforeReplacement, {
+			kind: "term",
+			field: "body",
+			term: "unique749",
+		}).length,
+		1,
+	);
+	assert.ok(elapsed < 10_000, `incremental indexing took ${elapsed}ms`);
 });
 
 test("parses CQL into structured queries and serializes common query forms", () => {

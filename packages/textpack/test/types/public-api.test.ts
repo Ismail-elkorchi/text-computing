@@ -7,6 +7,7 @@ import type {
 	TextPackArtifactDescriptor,
 	TextPackCapabilities,
 	TextPackCapabilitySlot,
+	TextPackCapabilityTier,
 	TextPackComponent,
 	TextPackDependency,
 	TextPackFetchResourceReaderOptions,
@@ -23,6 +24,7 @@ type PublicApiSmoke = {
 	component: TextPackComponent;
 	artifact: TextPackArtifactDescriptor;
 	slot: TextPackCapabilitySlot;
+	tier: TextPackCapabilityTier;
 	gap: TextPackGapNote;
 	targets: TextPackTargets;
 	dependency: TextPackDependency;

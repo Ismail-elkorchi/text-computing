@@ -33,6 +33,38 @@ test("creates deterministic plans with dependency edges", () => {
 	);
 });
 
+test("rejects ambiguous providers unless a requirement selects one", () => {
+	const pipeline = createPipeline([
+		layerProcessor("token.word"),
+		{
+			...layerProcessor("token.word"),
+			id: "alternate-token-provider",
+		},
+		dependentProcessor("consumer", "token.word", "entity.name"),
+	]);
+	const plan = planPipeline(pipeline, createFinalDocument());
+	assert.equal(plan.ok, false);
+	assert.deepEqual(plan.ambiguousRequirements[0]?.providerIds, [
+		"alternate-token-provider",
+		"layer:token.word",
+	]);
+	assert.equal(plan.diagnostics[0]?.code, "TEXTPIPELINE_AMBIGUOUS_REQUIREMENT");
+	const selected = createPipeline([
+		...pipeline.processors.slice(0, 2),
+		{
+			...dependentProcessor("consumer", "token.word", "entity.name"),
+			requires: [{ layer: "token.word", providerId: "layer:token.word" }],
+		},
+	]);
+	assert.deepEqual(
+		planPipeline(selected, createFinalDocument()).edges.map((edge) => [
+			edge.from,
+			edge.to,
+		]),
+		[["layer:token.word", "consumer"]],
+	);
+});
+
 test("reports missing requirements", () => {
 	const pipeline = createPipeline([
 		identityProcessor("needs-token", {
@@ -76,6 +108,16 @@ test("handles continue failure policy without hiding diagnostics", async () => {
 	assert.equal(trace.at(-1)?.status, "failed");
 });
 
+test("rejects processors that omit declared outputs", async () => {
+	const processor = identityProcessor("missing-output", {
+		provides: [{ layer: "token.word" }],
+	});
+	await assert.rejects(
+		runPipeline(createPipeline([processor]), createFinalDocument()),
+		/does not satisfy its output contract/u,
+	);
+});
+
 test("cache keys include document content and id", () => {
 	const processor = identityProcessor("identity");
 	const first = createFinalDocument("first text");
@@ -92,6 +134,35 @@ test("cache keys include document content and id", () => {
 		document: second,
 	});
 	assert.notEqual(firstKey, secondKey);
+});
+
+test("pack resource fingerprints include inline values", () => {
+	const firstPack = demoPack();
+	const secondPack = {
+		...firstPack,
+		resources: Object.freeze({
+			...firstPack.resources,
+			"lexicon:demo": "different inline value",
+		}),
+	};
+	assert.notDeepEqual(
+		createPipelineResourceRegistry({ packs: [firstPack] }).fingerprint(),
+		createPipelineResourceRegistry({ packs: [secondPack] }).fingerprint(),
+	);
+});
+
+test("resource fingerprints support byte-backed payloads", () => {
+	const first = createPipelineResourceRegistry({
+		resources: [
+			{ id: "bytes", kind: "dataset", value: new Uint8Array([1, 2]) },
+		],
+	});
+	const second = createPipelineResourceRegistry({
+		resources: [
+			{ id: "bytes", kind: "dataset", value: new Uint8Array([1, 3]) },
+		],
+	});
+	assert.notDeepEqual(first.fingerprint(), second.fingerprint());
 });
 
 test("memory cache stores final document snapshots", async () => {

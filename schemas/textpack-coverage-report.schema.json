@@ -138,10 +138,21 @@
 		"capabilitySlot": {
 			"type": "object",
 			"additionalProperties": true,
-			"required": ["slot", "status"],
+			"required": ["slot", "status", "tier"],
 			"properties": {
 				"slot": { "type": "string", "minLength": 1 },
 				"status": { "type": "string", "minLength": 1 },
+				"tier": {
+					"enum": [
+						"none",
+						"resource-only",
+						"baseline",
+						"lookup",
+						"rule-based",
+						"contextual",
+						"model-backed"
+					]
+				},
 				"resourceIds": {
 					"type": "array",
 					"items": { "type": "string", "minLength": 1 }
@@ -172,6 +183,7 @@
 			"required": [
 				"slot",
 				"status",
+				"tier",
 				"resourceIds",
 				"evaluationRecordIds",
 				"evidenceLevel",
@@ -180,6 +192,17 @@
 			"properties": {
 				"slot": { "type": "string", "minLength": 1 },
 				"status": { "type": "string", "minLength": 1 },
+				"tier": {
+					"enum": [
+						"none",
+						"resource-only",
+						"baseline",
+						"lookup",
+						"rule-based",
+						"contextual",
+						"model-backed"
+					]
+				},
 				"resourceIds": {
 					"type": "array",
 					"items": { "type": "string", "minLength": 1 }
@@ -192,6 +215,7 @@
 					"enum": [
 						"none",
 						"resource-inventory",
+						"resource-evaluated",
 						"artifact-descriptor",
 						"artifact-evaluated",
 						"task-evaluated"

@@ -1,7 +1,10 @@
+import { nfkcCaseFold } from "@ismail-elkorchi/textfacts/casefold";
 import {
 	isFileBackedResource,
+	openResourceLookupIndex,
 	openResourceText,
 	requireSingleTaskResourceBinding,
+	type TextPackLookupIndex,
 	type TextPackResourceReader,
 	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
@@ -152,32 +155,313 @@ function parseTable(text: string): readonly Readonly<Record<string, string>>[] {
 	return Object.freeze(rows);
 }
 
-function parseMatchingTableRows(
-	text: string,
-	matches: (row: Readonly<Record<string, string>>) => boolean,
-	maxRows: number | undefined,
-): readonly Readonly<Record<string, string>>[] {
-	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
-	while (lines.length > 0 && lines[lines.length - 1] === "") lines.pop();
-	const header = lines[0]?.split("\t") ?? [];
-	if (header.length === 0) return [];
-	const rows: Readonly<Record<string, string>>[] = [];
-	for (const line of lines.slice(1)) {
-		if (line.length === 0) continue;
-		const cells = line.split("\t");
-		const row: Record<string, string> = {};
-		for (let index = 0; index < header.length; index += 1) {
-			const column = header[index];
-			if (column !== undefined && column.length > 0) {
-				row[column] = cells[index] ?? "";
+type TableIndexKind = "lexicon" | "morphology";
+
+interface CompleteTableIndex {
+	readonly camelCompatibilityPairs: ReadonlySet<string>;
+	readonly camelMorphemeRowStarts: ReadonlyMap<string, readonly number[]>;
+	readonly columns: readonly string[];
+	readonly rowStartsByKind: Readonly<
+		Record<TableIndexKind, ReadonlyMap<string, readonly number[]>>
+	>;
+	readonly text: string;
+}
+
+interface PackTableIndexes {
+	readonly defaultReader: Map<string, CompleteTableIndex>;
+	readonly readers: WeakMap<
+		TextPackResourceReader,
+		Map<string, CompleteTableIndex>
+	>;
+}
+
+const tableIndexes = new WeakMap<object, PackTableIndexes>();
+
+function tableIndexesForReader(
+	pack: TextPackLike,
+	reader: TextPackResourceReader | undefined,
+): Map<string, CompleteTableIndex> {
+	let packIndexes = tableIndexes.get(pack);
+	if (packIndexes === undefined) {
+		packIndexes = { defaultReader: new Map(), readers: new WeakMap() };
+		tableIndexes.set(pack, packIndexes);
+	}
+	let resourceIndexes: Map<string, CompleteTableIndex>;
+	if (reader === undefined) {
+		resourceIndexes = packIndexes.defaultReader;
+	} else {
+		resourceIndexes = packIndexes.readers.get(reader) ?? new Map();
+		if (!packIndexes.readers.has(reader)) {
+			packIndexes.readers.set(reader, resourceIndexes);
+		}
+	}
+	return resourceIndexes;
+}
+
+function indexedColumnNames(kind: TableIndexKind): ReadonlySet<string> {
+	return new Set(
+		kind === "lexicon"
+			? ["form", "forms", "lemma", "lexicalForm", "surface", "word"]
+			: ["diacritizedForm", "form", "lexicalForm", "stem", "surface"],
+	);
+}
+
+function buildCompleteTableIndex(text: string): CompleteTableIndex {
+	const headerEnd = text.indexOf("\n");
+	const rawHeader = text.slice(0, headerEnd === -1 ? text.length : headerEnd);
+	const columns = Object.freeze(
+		(rawHeader.endsWith("\r") ? rawHeader.slice(0, -1) : rawHeader).split("\t"),
+	);
+	const columnsForKind = (kind: TableIndexKind) => {
+		const names = indexedColumnNames(kind);
+		return columns.flatMap((name, index) =>
+			names.has(name) ? [{ index, split: name === "forms" }] : [],
+		);
+	};
+	const indexedColumns = {
+		lexicon: columnsForKind("lexicon"),
+		morphology: columnsForKind("morphology"),
+	} satisfies Readonly<
+		Record<
+			TableIndexKind,
+			readonly { readonly index: number; readonly split: boolean }[]
+		>
+	>;
+	const rowStartsByKind: Record<TableIndexKind, Map<string, number[]>> = {
+		lexicon: new Map(),
+		morphology: new Map(),
+	};
+	const camelCompatibilityPairs = new Set<string>();
+	const camelMorphemeRowStarts = new Map<string, number[]>();
+	const sectionColumn = columns.indexOf("section");
+	const surfaceColumn = columns.indexOf("surface");
+	const tableColumn = columns.indexOf("table");
+	const leftCategoryColumn = columns.indexOf("leftCategory");
+	const rightCategoryColumn = columns.indexOf("rightCategory");
+	let start = headerEnd === -1 ? text.length : headerEnd + 1;
+	while (start < text.length) {
+		const newline = text.indexOf("\n", start);
+		const end = newline === -1 ? text.length : newline;
+		const rawLine = text.slice(start, end);
+		const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
+		if (line.length > 0) {
+			const cells = line.split("\t");
+			if (sectionColumn >= 0 && surfaceColumn >= 0) {
+				const section = cells[sectionColumn] ?? "";
+				const surface = cells[surfaceColumn] ?? "";
+				if (
+					section === "PREFIXES" ||
+					section === "STEMS" ||
+					section === "SUFFIXES"
+				) {
+					const key = camelMorphemeKey(section, surface);
+					const starts = camelMorphemeRowStarts.get(key);
+					if (starts === undefined) camelMorphemeRowStarts.set(key, [start]);
+					else starts.push(start);
+				}
+			}
+			if (
+				tableColumn >= 0 &&
+				leftCategoryColumn >= 0 &&
+				rightCategoryColumn >= 0
+			) {
+				const table = cells[tableColumn] ?? "";
+				const leftCategory = cells[leftCategoryColumn] ?? "";
+				const rightCategory = cells[rightCategoryColumn] ?? "";
+				if (
+					(table === "AB" || table === "BC" || table === "AC") &&
+					leftCategory.length > 0 &&
+					rightCategory.length > 0
+				) {
+					camelCompatibilityPairs.add(
+						camelCompatibilityKey(table, leftCategory, rightCategory),
+					);
+				}
+			}
+			for (const kind of ["lexicon", "morphology"] as const) {
+				const keys = new Set<string>();
+				for (const column of indexedColumns[kind]) {
+					const value = cells[column.index] ?? "";
+					for (const form of column.split ? value.split(/[|, ]/u) : [value]) {
+						if (form.length > 0) keys.add(normalizedLookupKey(form));
+					}
+				}
+				for (const key of keys) {
+					const starts = rowStartsByKind[kind].get(key);
+					if (starts === undefined) rowStartsByKind[kind].set(key, [start]);
+					else starts.push(start);
+				}
 			}
 		}
-		const frozen = Object.freeze(row);
-		if (!matches(frozen)) continue;
-		rows.push(frozen);
-		if (maxRows !== undefined && rows.length >= maxRows) break;
+		if (newline === -1) break;
+		start = newline + 1;
 	}
-	return Object.freeze(rows);
+	return {
+		camelCompatibilityPairs,
+		camelMorphemeRowStarts,
+		columns,
+		rowStartsByKind,
+		text,
+	};
+}
+
+function completeTableIndex(
+	pack: TextPackLike,
+	reader: TextPackResourceReader | undefined,
+	resourceId: string,
+	text: string,
+): CompleteTableIndex {
+	const indexes = tableIndexesForReader(pack, reader);
+	const cached = indexes.get(resourceId);
+	if (cached !== undefined) return cached;
+	const index = buildCompleteTableIndex(text);
+	indexes.set(resourceId, index);
+	return index;
+}
+
+function materializeIndexedRow(
+	index: CompleteTableIndex,
+	start: number,
+): Readonly<Record<string, string>> {
+	const newline = index.text.indexOf("\n", start);
+	const end = newline === -1 ? index.text.length : newline;
+	const rawLine = index.text.slice(start, end);
+	const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
+	const cells = line.split("\t");
+	const row: Record<string, string> = {};
+	for (
+		let columnIndex = 0;
+		columnIndex < index.columns.length;
+		columnIndex += 1
+	) {
+		const column = index.columns[columnIndex];
+		if (column !== undefined && column.length > 0) {
+			row[column] = cells[columnIndex] ?? "";
+		}
+	}
+	return Object.freeze(row);
+}
+
+type CamelMorphemeSection = "PREFIXES" | "STEMS" | "SUFFIXES";
+type CamelCompatibilityTable = "AB" | "BC" | "AC";
+
+function camelMorphemeKey(
+	section: CamelMorphemeSection,
+	surface: string,
+): string {
+	return `${section}\u0000${normalizedLookupKey(surface)}`;
+}
+
+function camelCompatibilityKey(
+	table: CamelCompatibilityTable,
+	leftCategory: string,
+	rightCategory: string,
+): string {
+	return `${table}\u0000${leftCategory}\u0000${rightCategory}`;
+}
+
+function indexedCamelMorphemeRows(
+	index: CompleteTableIndex,
+	section: CamelMorphemeSection,
+	surface: string,
+): readonly Readonly<Record<string, string>>[] {
+	return Object.freeze(
+		(
+			index.camelMorphemeRowStarts.get(camelMorphemeKey(section, surface)) ?? []
+		).map((start) => materializeIndexedRow(index, start)),
+	);
+}
+
+function camelCategoriesAreCompatible(
+	index: CompleteTableIndex,
+	prefixCategory: string,
+	stemCategory: string,
+	suffixCategory: string,
+): boolean {
+	return (
+		index.camelCompatibilityPairs.has(
+			camelCompatibilityKey("AB", prefixCategory, stemCategory),
+		) &&
+		index.camelCompatibilityPairs.has(
+			camelCompatibilityKey("BC", stemCategory, suffixCategory),
+		) &&
+		index.camelCompatibilityPairs.has(
+			camelCompatibilityKey("AC", prefixCategory, suffixCategory),
+		)
+	);
+}
+
+function generatedIndexRows(
+	index: TextPackLookupIndex,
+	textsByKey: ReadonlyMap<string, readonly string[]>,
+	maxRows: number | undefined,
+	kind: TableIndexKind,
+): readonly Readonly<Record<string, string>>[] {
+	const rowsByStart = new Map<
+		number,
+		{ readonly length: number; readonly order: number }
+	>();
+	for (const key of textsByKey.keys()) {
+		for (const row of index.rowsForNormalizedKey(key)) {
+			if (!rowsByStart.has(row.rowStart)) {
+				rowsByStart.set(row.rowStart, {
+					length: row.rowLength,
+					order: row.rowOrder,
+				});
+			}
+		}
+	}
+	const selected = [...rowsByStart.entries()].sort(
+		([leftStart, left], [rightStart, right]) =>
+			left.order - right.order || leftStart - rightStart,
+	);
+	const matching = selected.flatMap(([start, row]) => {
+		const materialized = index.materializeRow({
+			rowStart: start,
+			rowLength: row.length,
+			rowOrder: row.order,
+		});
+		return matchingQueryTexts(materialized, textsByKey, kind).length === 0
+			? []
+			: [materialized];
+	});
+	return Object.freeze(
+		maxRows === undefined ? matching : matching.slice(0, maxRows),
+	);
+}
+
+async function indexedMatchingTableRows(
+	pack: TextPackLike,
+	reader: TextPackResourceReader | undefined,
+	resourceId: string,
+	text: string,
+	textsByKey: ReadonlyMap<string, readonly string[]>,
+	maxRows: number | undefined,
+	kind: TableIndexKind,
+	lookupIndexResourceId?: string,
+): Promise<readonly Readonly<Record<string, string>>[]> {
+	if (lookupIndexResourceId !== undefined) {
+		const index = await openResourceLookupIndex(
+			pack as never,
+			resourceId,
+			lookupIndexResourceId,
+			reader,
+		);
+		return generatedIndexRows(index, textsByKey, maxRows, kind);
+	}
+	const index = completeTableIndex(pack, reader, resourceId, text);
+	const rowStarts = new Set<number>();
+	for (const key of textsByKey.keys()) {
+		for (const start of index.rowStartsByKind[kind].get(key) ?? []) {
+			rowStarts.add(start);
+		}
+	}
+	const starts = [...rowStarts].sort((left, right) => left - right);
+	return Object.freeze(
+		(maxRows === undefined ? starts : starts.slice(0, maxRows)).map((start) =>
+			materializeIndexedRow(index, start),
+		),
+	);
 }
 
 function tableTextFromRows(
@@ -192,26 +476,20 @@ function tableTextFromRows(
 }
 
 function normalizedLookupKey(value: string): string {
-	return value.normalize("NFC").toLocaleLowerCase();
+	return nfkcCaseFold(value);
 }
 
 function rowTextValues(
 	row: Readonly<Record<string, string>>,
+	kind: TableIndexKind,
 ): readonly string[] {
-	const values = [
-		row.form,
-		row.word,
-		row.lemma,
-		row.surface,
-		row.lexicalForm,
-		row.stem,
-		row.root,
-		row.diacritizedForm,
-	];
-	const splitForms =
-		row.forms === undefined || row.forms.length === 0
-			? []
-			: row.forms.split(/[|, ]/u);
+	const names = indexedColumnNames(kind);
+	const values = [...names]
+		.filter((name) => name !== "forms")
+		.map((name) => row[name]);
+	const splitForms = names.has("forms")
+		? (row.forms?.split(/[|, ]/u) ?? [])
+		: [];
 	return Object.freeze(
 		[...values, ...splitForms].filter(
 			(value): value is string => value !== undefined && value.length > 0,
@@ -233,9 +511,10 @@ function queryTextsByKey(
 function matchingQueryTexts(
 	row: Readonly<Record<string, string>>,
 	textsByKey: ReadonlyMap<string, readonly string[]>,
+	kind: TableIndexKind = "lexicon",
 ): readonly string[] {
 	const output = new Set<string>();
-	for (const value of rowTextValues(row)) {
+	for (const value of rowTextValues(row, kind)) {
 		for (const text of textsByKey.get(normalizedLookupKey(value)) ?? []) {
 			output.add(text);
 		}
@@ -329,7 +608,10 @@ function canonicalLexiconRows(
 function canonicalLexiconResource(value: unknown):
 	| {
 			readonly entries?: readonly unknown[];
-			readonly resourceRefs?: readonly { readonly resourceId?: unknown }[];
+			readonly resourceRefs?: readonly {
+				readonly resourceId?: unknown;
+				readonly role?: unknown;
+			}[];
 			readonly languageTag?: string;
 			readonly script?: string;
 	  }
@@ -348,6 +630,35 @@ function canonicalLexiconResource(value: unknown):
 interface CanonicalResourceRef {
 	readonly resourceId?: unknown;
 	readonly role?: unknown;
+}
+
+function lookupIndexForSource(
+	pack: TextPackLike,
+	refs: readonly CanonicalResourceRef[] | undefined,
+	sourceResourceId: string,
+): string | undefined {
+	for (const ref of refs ?? []) {
+		if (ref.role !== "lookup-index" || typeof ref.resourceId !== "string") {
+			continue;
+		}
+		const descriptor = findResource(pack, ref.resourceId);
+		const metadata =
+			descriptor.metadata !== null &&
+			typeof descriptor.metadata === "object" &&
+			!Array.isArray(descriptor.metadata)
+				? (descriptor.metadata as Readonly<Record<string, unknown>>)
+				: undefined;
+		if (
+			descriptor.schemaId !== "textpack.lookup-index.v1" ||
+			typeof metadata?.indexedResourceId !== "string"
+		) {
+			throw new TypeError(
+				`Canonical lookup-index ref ${descriptor.id} has invalid metadata.`,
+			);
+		}
+		if (metadata?.indexedResourceId === sourceResourceId) return descriptor.id;
+	}
+	return undefined;
 }
 
 interface CanonicalMorphologyResource {
@@ -410,6 +721,7 @@ export interface MorphologyAnalysesFromPackOptions
 	extends ResourceMaterializationOptions {
 	readonly resourceIds?: readonly string[];
 	readonly maxRowsPerResource?: number;
+	readonly maxResultsPerForm?: number;
 }
 
 export type MorphologyAnalysesManyFromPackResult = ReadonlyMap<
@@ -452,6 +764,23 @@ function canonicalMorphologyResource(
 	return record as unknown as CanonicalMorphologyResource;
 }
 
+function featureBundleRecord(
+	bundle: string | undefined,
+): Record<string, string> {
+	const features: Record<string, string> = {};
+	if (bundle === undefined || bundle.length === 0) return features;
+	const items = bundle.includes(":")
+		? bundle.split(/\s+/u)
+		: bundle.split(/[; ]/u);
+	for (const item of items) {
+		if (item.length === 0) continue;
+		const colon = item.indexOf(":");
+		if (colon > 0) features[item.slice(0, colon)] = item.slice(colon + 1);
+		else features[item] = "true";
+	}
+	return features;
+}
+
 function featureRecord(
 	row: Readonly<Record<string, string>>,
 ): Record<string, string> {
@@ -478,10 +807,7 @@ function featureRecord(
 	const bundle = row.featureBundle;
 	if (bundle !== undefined && bundle.length > 0) {
 		features.featureBundle = bundle;
-		for (const item of bundle.split(/[; ]/u)) {
-			if (item.length === 0 || item.includes(":")) continue;
-			features[item] = "true";
-		}
+		Object.assign(features, featureBundleRecord(bundle));
 	}
 	return features;
 }
@@ -511,6 +837,281 @@ function morphologyAnalysisFromRow(
 			: {}),
 		sourceResourceId,
 	});
+}
+
+function camelBundleFeatures(
+	row: Readonly<Record<string, string>>,
+): Readonly<Record<string, string>> {
+	return featureBundleRecord(row.featureBundle);
+}
+
+function morphologyAnalysisProbability(analysis: MorphologyAnalysis): number {
+	for (const name of ["lex_logprob", "pos_lex_logprob"] as const) {
+		const value = Number(analysis.features[name]);
+		if (Number.isFinite(value)) return value;
+	}
+	return Number.NEGATIVE_INFINITY;
+}
+
+function rankMorphologyAnalyses(
+	analyses: readonly MorphologyAnalysis[],
+): readonly MorphologyAnalysis[] {
+	return Object.freeze(
+		analyses
+			.map((analysis, index) => ({ analysis, index }))
+			.sort(
+				(left, right) =>
+					morphologyAnalysisProbability(right.analysis) -
+						morphologyAnalysisProbability(left.analysis) ||
+					left.index - right.index,
+			)
+			.map(({ analysis }) => analysis),
+	);
+}
+
+function camelCompositionAnalysis(
+	form: string,
+	prefix: Readonly<Record<string, string>>,
+	stem: Readonly<Record<string, string>>,
+	suffix: Readonly<Record<string, string>>,
+	sourceResourceId: string,
+): MorphologyAnalysis | undefined {
+	const stemAnalysis = morphologyAnalysisFromRow(stem, sourceResourceId);
+	if (stemAnalysis === undefined) return undefined;
+	const prefixCategory = prefix.category ?? "";
+	const stemCategory = stem.category ?? "";
+	const suffixCategory = suffix.category ?? "";
+	return Object.freeze({
+		form,
+		...(stemAnalysis.lemma === undefined ? {} : { lemma: stemAnalysis.lemma }),
+		...(stemAnalysis.partOfSpeech === undefined
+			? {}
+			: { partOfSpeech: stemAnalysis.partOfSpeech }),
+		features: Object.freeze({
+			...stemAnalysis.features,
+			...camelBundleFeatures(stem),
+			...camelBundleFeatures(prefix),
+			...camelBundleFeatures(suffix),
+			prefixSurface: prefix.surface ?? "",
+			stemSurface: stem.surface ?? "",
+			suffixSurface: suffix.surface ?? "",
+			prefixCategory,
+			stemCategory,
+			suffixCategory,
+			composition: "CAMeL-AB-BC-AC",
+		}),
+		...(stemAnalysis.entryId === undefined
+			? {}
+			: { entryId: stemAnalysis.entryId }),
+		sourceResourceId,
+	});
+}
+
+interface GeneratedCamelRowCache {
+	readonly rows: Map<string, readonly Readonly<Record<string, string>>[]>;
+	emptyRowsIndexed: boolean;
+}
+
+const generatedCamelRowCaches = new WeakMap<object, GeneratedCamelRowCache>();
+
+function generatedCamelRowCache(
+	index: TextPackLookupIndex,
+): GeneratedCamelRowCache {
+	let cache = generatedCamelRowCaches.get(index);
+	if (cache === undefined) {
+		cache = { rows: new Map(), emptyRowsIndexed: false };
+		generatedCamelRowCaches.set(index, cache);
+	}
+	return cache;
+}
+
+function tableCell(line: string, columnIndex: number): string {
+	let start = 0;
+	for (let index = 0; index < columnIndex; index += 1) {
+		const tab = line.indexOf("\t", start);
+		if (tab === -1) return "";
+		start = tab + 1;
+	}
+	const end = line.indexOf("\t", start);
+	return line.slice(start, end === -1 ? line.length : end);
+}
+
+function indexEmptyCamelRows(index: TextPackLookupIndex): void {
+	const cache = generatedCamelRowCache(index);
+	if (cache.emptyRowsIndexed) return;
+	const sectionColumn = index.sourceColumns.indexOf("section");
+	const surfaceColumn = index.sourceColumns.indexOf("surface");
+	if (sectionColumn < 0 || surfaceColumn < 0) {
+		cache.emptyRowsIndexed = true;
+		return;
+	}
+	const rowsBySection = new Map<
+		CamelMorphemeSection,
+		Readonly<Record<string, string>>[]
+	>();
+	let start = index.sourceText.indexOf("\n") + 1;
+	let order = 0;
+	while (start > 0 && start < index.sourceText.length) {
+		const newline = index.sourceText.indexOf("\n", start);
+		const end = newline === -1 ? index.sourceText.length : newline;
+		const rawLine = index.sourceText.slice(start, end);
+		const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
+		if (line.length > 0) {
+			const section = tableCell(line, sectionColumn);
+			if (
+				tableCell(line, surfaceColumn) === "" &&
+				(section === "PREFIXES" || section === "SUFFIXES")
+			) {
+				const rows = rowsBySection.get(section) ?? [];
+				rows.push(
+					index.materializeRow({
+						rowStart: start,
+						rowLength: line.length,
+						rowOrder: order,
+					}),
+				);
+				rowsBySection.set(section, rows);
+			}
+			order += 1;
+		}
+		if (newline === -1) break;
+		start = newline + 1;
+	}
+	for (const section of ["PREFIXES", "SUFFIXES"] as const) {
+		cache.rows.set(
+			camelMorphemeKey(section, ""),
+			Object.freeze(rowsBySection.get(section) ?? []),
+		);
+	}
+	cache.emptyRowsIndexed = true;
+}
+
+function generatedCamelMorphemeRows(
+	index: TextPackLookupIndex,
+	section: CamelMorphemeSection,
+	surface: string,
+): readonly Readonly<Record<string, string>>[] {
+	const cache = generatedCamelRowCache(index);
+	const key = camelMorphemeKey(section, surface);
+	const cached = cache.rows.get(key);
+	if (cached !== undefined) return cached;
+	if (surface.length === 0) {
+		indexEmptyCamelRows(index);
+		return cache.rows.get(key) ?? Object.freeze([]);
+	}
+	const normalizedSurface = normalizedLookupKey(surface);
+	const rows = Object.freeze(
+		index
+			.rowsForNormalizedKey(normalizedSurface)
+			.map((row) => index.materializeRow(row))
+			.filter(
+				(row) =>
+					row.section === section &&
+					normalizedLookupKey(row.surface ?? "") === normalizedSurface,
+			),
+	);
+	cache.rows.set(key, rows);
+	return rows;
+}
+
+type CamelMorphemeRows = (
+	section: CamelMorphemeSection,
+	surface: string,
+) => readonly Readonly<Record<string, string>>[];
+
+function camelAnalysisProbability(analysis: MorphologyAnalysis): number {
+	const value = Number(analysis.features.lex_logprob);
+	return Number.isFinite(value) ? value : Number.NEGATIVE_INFINITY;
+}
+
+function camelComposedAnalyses(
+	form: string,
+	morphemeRows: CamelMorphemeRows,
+	compatibilityIndex: CompleteTableIndex,
+	sourceResourceId: string,
+	maxResults: number | undefined,
+): readonly MorphologyAnalysis[] {
+	if (maxResults === 0) return Object.freeze([]);
+	const characters = [...form];
+	const rowCache = new Map<
+		string,
+		readonly Readonly<Record<string, string>>[]
+	>();
+	const rows = (section: CamelMorphemeSection, surface: string) => {
+		const key = camelMorphemeKey(section, surface);
+		const cached = rowCache.get(key);
+		if (cached !== undefined) return cached;
+		const indexed = morphemeRows(section, surface);
+		rowCache.set(key, indexed);
+		return indexed;
+	};
+	const output: MorphologyAnalysis[] = [];
+	const seen = new Set<string>();
+	for (let prefixEnd = 0; prefixEnd < characters.length; prefixEnd += 1) {
+		const prefixRows = rows(
+			"PREFIXES",
+			characters.slice(0, prefixEnd).join(""),
+		);
+		if (prefixRows.length === 0) continue;
+		for (
+			let suffixStart = prefixEnd + 1;
+			suffixStart <= characters.length;
+			suffixStart += 1
+		) {
+			const stemRows = rows(
+				"STEMS",
+				characters.slice(prefixEnd, suffixStart).join(""),
+			);
+			if (stemRows.length === 0) continue;
+			const suffixRows = rows(
+				"SUFFIXES",
+				characters.slice(suffixStart).join(""),
+			);
+			if (suffixRows.length === 0) continue;
+			for (const prefix of prefixRows) {
+				const prefixCategory = prefix.category ?? "";
+				for (const stem of stemRows) {
+					const stemCategory = stem.category ?? "";
+					for (const suffix of suffixRows) {
+						const suffixCategory = suffix.category ?? "";
+						if (
+							!camelCategoriesAreCompatible(
+								compatibilityIndex,
+								prefixCategory,
+								stemCategory,
+								suffixCategory,
+							)
+						) {
+							continue;
+						}
+						const analysis = camelCompositionAnalysis(
+							form,
+							prefix,
+							stem,
+							suffix,
+							sourceResourceId,
+						);
+						if (analysis === undefined) continue;
+						const key = JSON.stringify(analysis);
+						if (seen.has(key)) continue;
+						seen.add(key);
+						output.push(analysis);
+					}
+				}
+			}
+		}
+	}
+	const sorted = output.sort(
+		(left, right) =>
+			camelAnalysisProbability(right) - camelAnalysisProbability(left) ||
+			(left.lemma ?? "").localeCompare(right.lemma ?? "") ||
+			JSON.stringify(left.features).localeCompare(
+				JSON.stringify(right.features),
+			),
+	);
+	return Object.freeze(
+		maxResults === undefined ? sorted : sorted.slice(0, maxResults),
+	);
 }
 
 function morphologyGenerationFromRow(
@@ -762,6 +1363,7 @@ export async function lookupManyFromPackAsync(
 		}
 		for (const ref of canonical.resourceRefs ?? []) {
 			if (typeof ref.resourceId !== "string") continue;
+			if (ref.role === "lookup-index") continue;
 			const referenced = findResource(pack, ref.resourceId);
 			const referencedValue = await materializedResourceValue(
 				pack,
@@ -773,10 +1375,15 @@ export async function lookupManyFromPackAsync(
 					`${referenced.id} must be text-backed for canonical lexicon refs.`,
 				);
 			}
-			const matchingRows = parseMatchingTableRows(
+			const matchingRows = await indexedMatchingTableRows(
+				pack,
+				options.reader,
+				referenced.id,
 				referencedValue,
-				(row) => matchingQueryTexts(row, textsByKey).length > 0,
+				textsByKey,
 				options.maxRowsPerResource,
+				"lexicon",
+				lookupIndexForSource(pack, canonical.resourceRefs, referenced.id),
 			);
 			for (const row of matchingRows) {
 				const rowEntries = canonicalLexiconRows(tableTextFromRows([row]), {
@@ -802,7 +1409,15 @@ export async function lookupManyFromPackAsync(
 			duplicateIdPolicy: "allow",
 			duplicateFormPolicy: "allow",
 		});
-		output.set(text, Object.freeze(lookup(lexicon, text, options)));
+		output.set(
+			text,
+			Object.freeze(
+				lookup(lexicon, text, {
+					...options,
+					mode: options.mode ?? "casefold",
+				}),
+			),
+		);
 	}
 	return output;
 }
@@ -849,6 +1464,7 @@ export async function lexiconFromPackAsync(
 		const referencedEntries: LexicalEntry[] = [];
 		for (const ref of canonical.resourceRefs ?? []) {
 			if (typeof ref.resourceId !== "string") continue;
+			if (ref.role === "lookup-index") continue;
 			const referenced = findResource(pack, ref.resourceId);
 			const referencedValue = await materializedResourceValue(
 				pack,
@@ -1050,6 +1666,7 @@ export async function morphologyIndexFromPackAsync(
 	const generations: MorphologyGeneration[] = [];
 	for (const ref of canonical.resourceRefs ?? []) {
 		if (typeof ref.resourceId !== "string") continue;
+		if (ref.role === "lookup-index") continue;
 		const referenced = findResource(pack, ref.resourceId);
 		const referencedValue = await materializedResourceValue(
 			pack,
@@ -1085,6 +1702,9 @@ export async function morphologyIndexFromPackAsync(
 			...(analysesByForm.get(analysis.form) ?? []),
 			analysis,
 		]);
+	}
+	for (const [form, formAnalyses] of analysesByForm) {
+		analysesByForm.set(form, [...rankMorphologyAnalyses(formAnalyses)]);
 	}
 	const generationsByLemma = new Map<string, MorphologyGeneration[]>();
 	for (const generation of generations) {
@@ -1134,6 +1754,15 @@ export async function morphologyAnalysesManyFromPackAsync(
 	forms: readonly string[],
 	options: MorphologyAnalysesFromPackOptions = {},
 ): Promise<MorphologyAnalysesManyFromPackResult> {
+	if (
+		options.maxResultsPerForm !== undefined &&
+		(!Number.isSafeInteger(options.maxResultsPerForm) ||
+			options.maxResultsPerForm < 0)
+	) {
+		throw new TypeError(
+			"maxResultsPerForm must be a non-negative safe integer.",
+		);
+	}
 	const uniqueForms = Object.freeze(
 		[...new Set(forms)].filter((form) => form.length > 0),
 	);
@@ -1158,10 +1787,25 @@ export async function morphologyAnalysesManyFromPackAsync(
 				`${descriptor.id} is not a canonical morphology resource.`,
 			);
 		}
+		let camelMorphemeResource:
+			| {
+					readonly descriptor: TextPackResourceLike;
+					readonly lookupIndexResourceId?: string;
+					readonly text: string;
+			  }
+			| undefined;
+		let camelCompatibilityResource:
+			| {
+					readonly descriptor: TextPackResourceLike;
+					readonly text: string;
+			  }
+			| undefined;
 		for (const ref of canonical.resourceRefs ?? []) {
 			if (typeof ref.resourceId !== "string") continue;
 			const role = typeof ref.role === "string" ? ref.role : "";
-			if (!isMorphologyRowRole(role)) continue;
+			if (!isMorphologyRowRole(role) && role !== "compatibility-table") {
+				continue;
+			}
 			const referenced = findResource(pack, ref.resourceId);
 			const referencedValue = await materializedResourceValue(
 				pack,
@@ -1169,24 +1813,101 @@ export async function morphologyAnalysesManyFromPackAsync(
 				options.reader,
 			);
 			if (typeof referencedValue !== "string") continue;
-			const matchingRows = parseMatchingTableRows(
+			const lookupIndexResourceId = lookupIndexForSource(
+				pack,
+				canonical.resourceRefs,
+				referenced.id,
+			);
+			if (role === "compatibility-table") {
+				camelCompatibilityResource ??= {
+					descriptor: referenced,
+					text: referencedValue,
+				};
+				continue;
+			}
+			if (role === "morpheme-inventory") {
+				camelMorphemeResource ??= {
+					descriptor: referenced,
+					...(lookupIndexResourceId === undefined
+						? {}
+						: { lookupIndexResourceId }),
+					text: referencedValue,
+				};
+			}
+			const matchingRows = await indexedMatchingTableRows(
+				pack,
+				options.reader,
+				referenced.id,
 				referencedValue,
-				(row) => matchingQueryTexts(row, formsByKey).length > 0,
+				formsByKey,
 				options.maxRowsPerResource,
+				"morphology",
+				lookupIndexResourceId,
 			);
 			for (const row of matchingRows) {
 				const analysis = morphologyAnalysisFromRow(row, referenced.id);
 				if (analysis === undefined) continue;
-				for (const form of matchingQueryTexts(row, formsByKey)) {
+				for (const form of matchingQueryTexts(row, formsByKey, "morphology")) {
 					analysesByForm.get(form)?.push(analysis);
 				}
+			}
+		}
+		if (
+			camelMorphemeResource !== undefined &&
+			camelCompatibilityResource !== undefined
+		) {
+			let morphemeRows: CamelMorphemeRows;
+			if (camelMorphemeResource.lookupIndexResourceId === undefined) {
+				const morphemeIndex = completeTableIndex(
+					pack,
+					options.reader,
+					camelMorphemeResource.descriptor.id,
+					camelMorphemeResource.text,
+				);
+				morphemeRows = (section, surface) =>
+					indexedCamelMorphemeRows(morphemeIndex, section, surface);
+			} else {
+				const generatedIndex = await openResourceLookupIndex(
+					pack as never,
+					camelMorphemeResource.descriptor.id,
+					camelMorphemeResource.lookupIndexResourceId,
+					options.reader,
+				);
+				morphemeRows = (section, surface) =>
+					generatedCamelMorphemeRows(generatedIndex, section, surface);
+			}
+			const compatibilityIndex = completeTableIndex(
+				pack,
+				options.reader,
+				camelCompatibilityResource.descriptor.id,
+				camelCompatibilityResource.text,
+			);
+			for (const form of uniqueForms) {
+				const analyses = analysesByForm.get(form);
+				if (analyses === undefined || analyses.length > 0) continue;
+				analyses.push(
+					...camelComposedAnalyses(
+						form,
+						morphemeRows,
+						compatibilityIndex,
+						camelMorphemeResource.descriptor.id,
+						options.maxResultsPerForm ?? options.maxRowsPerResource,
+					),
+				);
 			}
 		}
 	}
 	return new Map(
 		[...analysesByForm.entries()].map(([form, analyses]) => [
 			form,
-			Object.freeze(analyses),
+			Object.freeze(
+				options.maxResultsPerForm === undefined
+					? rankMorphologyAnalyses(analyses)
+					: rankMorphologyAnalyses(analyses).slice(
+							0,
+							options.maxResultsPerForm,
+						),
+			),
 		]),
 	);
 }

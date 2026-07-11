@@ -44,6 +44,7 @@ function manifest(runtimeName: string) {
 			{
 				slot: "corpus",
 				status: "sampled",
+				tier: "resource-only",
 				resourceIds: [`dataset-${runtimeName}-file-backed`],
 			},
 		],

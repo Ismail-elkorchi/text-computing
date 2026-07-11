@@ -15,7 +15,7 @@
 			"eval:ar-core:iana-language-profile:distribution:textpack-ar",
 			"eval:ar-normalization:profile-rules:distribution:textpack-ar",
 			"eval:ar-msa-camel-morph:tokenization-fields:distribution:textpack-ar",
-			"eval:wordnet-ar:lexical-entry-volume:distribution:textpack-ar",
+			"eval:wordnet-ar:semantic-integrity:distribution:textpack-ar",
 			"eval:ar-msa-camel-morph:morpheme-inventory:distribution:textpack-ar",
 			"eval:wikidata-ar:entity-extract:distribution:textpack-ar",
 			"eval:ar-search:analyzer-profile:distribution:textpack-ar",
@@ -93,31 +93,38 @@
 	"capabilitySlots": [
 		{
 			"slot": "foundation",
-			"status": "task-supported"
+			"status": "profiled",
+			"tier": "resource-only"
 		},
 		{
 			"slot": "core",
-			"status": "task-supported"
+			"status": "profiled",
+			"tier": "resource-only"
 		},
 		{
 			"slot": "normalization",
-			"status": "task-supported"
+			"status": "task-supported",
+			"tier": "rule-based"
 		},
 		{
 			"slot": "segmentation",
-			"status": "task-supported"
+			"status": "task-supported",
+			"tier": "baseline"
 		},
 		{
 			"slot": "lexicon",
-			"status": "task-supported"
+			"status": "task-supported",
+			"tier": "lookup"
 		},
 		{
 			"slot": "morphology",
-			"status": "task-supported"
+			"status": "task-supported",
+			"tier": "rule-based"
 		},
 		{
 			"slot": "syntax",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -125,17 +132,20 @@
 		{
 			"slot": "kb",
 			"status": "task-supported",
+			"tier": "lookup",
 			"notes": [
 				"The bundled distribution resources provide local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources."
 			]
 		},
 		{
 			"slot": "search",
-			"status": "task-supported"
+			"status": "task-supported",
+			"tier": "baseline"
 		},
 		{
 			"slot": "corpus",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -143,6 +153,7 @@
 		{
 			"slot": "parallel",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -150,6 +161,7 @@
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"notes": [
 				"The bundled distribution resources provide generated Arabic quality evidence and coverage reports over the selected local build units."
 			]

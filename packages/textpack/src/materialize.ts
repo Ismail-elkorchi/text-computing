@@ -45,6 +45,66 @@ export interface TextPackMaterializedTable {
 const utf8Encoder = new TextEncoder();
 const utf8Decoder = new TextDecoder("utf-8", { fatal: true });
 
+interface ResourceMaterializationCache {
+	readonly json: Map<string, Promise<unknown>>;
+	readonly tables: Map<string, Promise<TextPackMaterializedTable>>;
+	readonly text: Map<string, Promise<string>>;
+}
+
+interface PackMaterializationCache {
+	readonly defaultReader: ResourceMaterializationCache;
+	readonly readers: WeakMap<
+		TextPackResourceReader,
+		ResourceMaterializationCache
+	>;
+}
+
+const materializationCaches = new WeakMap<object, PackMaterializationCache>();
+
+function createResourceMaterializationCache(): ResourceMaterializationCache {
+	return {
+		json: new Map(),
+		tables: new Map(),
+		text: new Map(),
+	};
+}
+
+function materializationCache(
+	pack: TextPack,
+	reader: TextPackResourceReader | undefined,
+): ResourceMaterializationCache {
+	let packCache = materializationCaches.get(pack);
+	if (packCache === undefined) {
+		packCache = {
+			defaultReader: createResourceMaterializationCache(),
+			readers: new WeakMap(),
+		};
+		materializationCaches.set(pack, packCache);
+	}
+	if (reader === undefined) return packCache.defaultReader;
+	let readerCache = packCache.readers.get(reader);
+	if (readerCache === undefined) {
+		readerCache = createResourceMaterializationCache();
+		packCache.readers.set(reader, readerCache);
+	}
+	return readerCache;
+}
+
+function cachedMaterialization<T>(
+	cache: Map<string, Promise<T>>,
+	resourceId: string,
+	materialize: () => Promise<T> | T,
+): Promise<T> {
+	const cached = cache.get(resourceId);
+	if (cached !== undefined) return cached;
+	const pending = Promise.resolve().then(materialize);
+	cache.set(resourceId, pending);
+	void pending.catch(() => {
+		if (cache.get(resourceId) === pending) cache.delete(resourceId);
+	});
+	return pending;
+}
+
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
 	return value !== null && typeof value === "object" && !Array.isArray(value);
 }
@@ -163,11 +223,13 @@ function hex(bytes: Uint8Array): string {
 }
 
 async function sha256Hex(text: string): Promise<string> {
-	const digest = await globalThis.crypto.subtle.digest(
-		"SHA-256",
-		arrayBufferForBytes(bytesForText(text)),
-	);
+	const bytes = bytesForText(text) as Uint8Array<ArrayBuffer>;
+	const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
 	return hex(new Uint8Array(digest));
+}
+
+export async function resourceTextChecksum(text: string): Promise<string> {
+	return `sha256:${await sha256Hex(text)}`;
 }
 
 async function assertEncodedResourceIntegrity(
@@ -226,16 +288,15 @@ async function decodeResourceText(
 ): Promise<string> {
 	if (descriptor.encoding === "utf8") return encodedText;
 	const decodedBytes = await gunzip(base64Bytes(encodedText));
-	const decodedText = utf8Decoder.decode(decodedBytes);
 	if (
 		descriptor.resourceTextByteLength !== undefined &&
-		byteLength(decodedText) !== descriptor.resourceTextByteLength
+		decodedBytes.byteLength !== descriptor.resourceTextByteLength
 	) {
 		throw new TypeError(
-			`Textpack resource ${descriptor.path} decoded byte length mismatch: expected ${descriptor.resourceTextByteLength}, got ${byteLength(decodedText)}.`,
+			`Textpack resource ${descriptor.path} decoded byte length mismatch: expected ${descriptor.resourceTextByteLength}, got ${decodedBytes.byteLength}.`,
 		);
 	}
-	return decodedText;
+	return utf8Decoder.decode(decodedBytes);
 }
 
 async function readFileBackedText(
@@ -259,13 +320,21 @@ export async function openResourceText(
 	resourceId: string,
 	reader?: TextPackResourceReader,
 ): Promise<string> {
-	const descriptor = resourceDescriptor(pack, resourceId);
-	const value = getResource(pack, resourceId);
-	if (typeof value === "string") return value;
-	if (isFileBackedResource(value)) {
-		return readFileBackedText(pack, descriptor, value, reader);
-	}
-	throw new TypeError(`Textpack resource ${resourceId} is not text-backed.`);
+	return cachedMaterialization(
+		materializationCache(pack, reader).text,
+		resourceId,
+		() => {
+			const descriptor = resourceDescriptor(pack, resourceId);
+			const value = getResource(pack, resourceId);
+			if (typeof value === "string") return value;
+			if (isFileBackedResource(value)) {
+				return readFileBackedText(pack, descriptor, value, reader);
+			}
+			throw new TypeError(
+				`Textpack resource ${resourceId} is not text-backed.`,
+			);
+		},
+	);
 }
 
 export async function openResourceJson<T = unknown>(
@@ -273,11 +342,17 @@ export async function openResourceJson<T = unknown>(
 	resourceId: string,
 	reader?: TextPackResourceReader,
 ): Promise<T> {
-	const value = getResource(pack, resourceId);
-	if (!isFileBackedResource(value) && typeof value !== "string")
-		return value as T;
-	const text = await openResourceText(pack, resourceId, reader);
-	return JSON.parse(text) as T;
+	return cachedMaterialization(
+		materializationCache(pack, reader).json,
+		resourceId,
+		async () => {
+			const value = getResource(pack, resourceId);
+			if (!isFileBackedResource(value) && typeof value !== "string")
+				return value;
+			const text = await openResourceText(pack, resourceId, reader);
+			return JSON.parse(text) as unknown;
+		},
+	) as Promise<T>;
 }
 
 function normalizeLines(text: string): string[] {
@@ -342,5 +417,10 @@ export async function openResourceTable(
 	resourceId: string,
 	reader?: TextPackResourceReader,
 ): Promise<TextPackMaterializedTable> {
-	return parseResourceTable(await openResourceText(pack, resourceId, reader));
+	return cachedMaterialization(
+		materializationCache(pack, reader).tables,
+		resourceId,
+		async () =>
+			parseResourceTable(await openResourceText(pack, resourceId, reader)),
+	);
 }

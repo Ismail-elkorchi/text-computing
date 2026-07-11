@@ -17,7 +17,12 @@ test("textpack final API works in Bun", () => {
 		engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 		resources: [{ id: "dataset-bun", kind: "dataset" }],
 		capabilitySlots: [
-			{ slot: "corpus", status: "sampled", resourceIds: ["dataset-bun"] },
+			{
+				slot: "corpus",
+				status: "sampled",
+				tier: "resource-only",
+				resourceIds: ["dataset-bun"],
+			},
 		],
 	};
 	const pack = createPack(manifest, { "dataset-bun": "bun runtime" });

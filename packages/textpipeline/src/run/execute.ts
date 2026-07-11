@@ -2,9 +2,12 @@ import { isTextDocument, type TextDocument } from "@ismail-elkorchi/textdoc";
 import { createPipelineCacheKey } from "../cache/key.js";
 import type { PipelineCache } from "../cache/types.js";
 import { planPipeline } from "../graph/plan.js";
-import { externalSatisfiesRequirement } from "../graph/requirements.js";
+import {
+	documentSatisfiesRequirement,
+	externalSatisfiesRequirement,
+} from "../graph/requirements.js";
 import { assertFinalTextDocument } from "../internal/document.js";
-import { errorMessage, fail } from "../internal/errors.js";
+import { errorMessage, fail, PipelineError } from "../internal/errors.js";
 import { stableId } from "../internal/ids.js";
 import type { JsonValue } from "../internal/json.js";
 import { assertOptionalJsonValue } from "../internal/json.js";
@@ -13,6 +16,7 @@ import type {
 	PipelineDiagnostic,
 	PipelineFailurePolicy,
 	PipelineTraceEvent,
+	ProcessorOutput,
 	ProcessorRequirement,
 	TextPipeline,
 	TextProcessor,
@@ -26,6 +30,7 @@ function requirementDetails(requirement: ProcessorRequirement) {
 		viewKind: requirement.viewKind ?? null,
 		resourceKind: requirement.resourceKind ?? null,
 		capability: requirement.capability ?? null,
+		providerId: requirement.providerId ?? null,
 	};
 }
 
@@ -82,6 +87,46 @@ function unmetRequirementDiagnostics(
 			message: `runtime requirement is not satisfied: ${processor.id}`,
 			processorId: processor.id,
 			details: requirementDetails(requirement),
+		}));
+}
+
+function outputSatisfied(
+	document: TextDocument,
+	output: ProcessorOutput,
+): boolean {
+	if (
+		!documentSatisfiesRequirement(document, {
+			...(output.layer === undefined ? {} : { layer: output.layer }),
+			...(output.viewKind === undefined ? {} : { viewKind: output.viewKind }),
+		})
+	) {
+		return false;
+	}
+	if (output.annotations === undefined) return true;
+	const annotationTypes = new Set(
+		Object.values(document.layers).flatMap((layer) =>
+			Object.values(layer.annotations).map((annotation) => annotation.type),
+		),
+	);
+	return output.annotations.every((type) => annotationTypes.has(type));
+}
+
+function unmetOutputDiagnostics(
+	processor: TextProcessor,
+	document: TextDocument,
+): readonly PipelineDiagnostic[] {
+	return processor.provides
+		.filter((output) => !outputSatisfied(document, output))
+		.map((output) => ({
+			code: "TEXTPIPELINE_DECLARED_OUTPUT_MISSING",
+			severity: "error" as const,
+			message: `processor did not produce its declared output: ${processor.id}`,
+			processorId: processor.id,
+			details: {
+				layer: output.layer ?? null,
+				viewKind: output.viewKind ?? null,
+				annotations: output.annotations ?? null,
+			},
 		}));
 }
 
@@ -173,15 +218,26 @@ export async function runPipeline(
 		if (cacheKey !== undefined) {
 			const cached = await readCachedDocument(options.cache, cacheKey);
 			if (cached !== undefined) {
-				current = cached;
-				trace.push({
-					runId,
-					pipelineId: pipeline.id,
-					processorId: processor.id,
-					status: "cached",
-					cacheKey,
-				});
-				continue;
+				const missingOutputs = unmetOutputDiagnostics(processor, cached);
+				if (missingOutputs.length > 0) {
+					diagnostics.push(...missingOutputs);
+					handleFailure(
+						failurePolicy,
+						"TEXTPIPELINE_CACHED_OUTPUT_MISSING",
+						`cached processor result does not satisfy its output contract: ${processor.id}`,
+						missingOutputs,
+					);
+				} else {
+					current = cached;
+					trace.push({
+						runId,
+						pipelineId: pipeline.id,
+						processorId: processor.id,
+						status: "cached",
+						cacheKey,
+					});
+					continue;
+				}
 			}
 		}
 		trace.push({
@@ -201,6 +257,16 @@ export async function runPipeline(
 			}
 			if (validateDocuments)
 				assertFinalTextDocument(result, "processor result");
+			const missingOutputs = unmetOutputDiagnostics(processor, result);
+			if (missingOutputs.length > 0) {
+				diagnostics.push(...missingOutputs);
+				handleFailure(
+					failurePolicy,
+					"TEXTPIPELINE_DECLARED_OUTPUT_MISSING",
+					`processor result does not satisfy its output contract: ${processor.id}`,
+					missingOutputs,
+				);
+			}
 			current = result;
 			if (cacheKey !== undefined && options.cache?.set !== undefined) {
 				await options.cache.set(cacheKey, current);
@@ -213,6 +279,7 @@ export async function runPipeline(
 				...(cacheKey === undefined ? {} : { cacheKey }),
 			});
 		} catch (error) {
+			if (error instanceof PipelineError) throw error;
 			const diagnostic: PipelineDiagnostic = {
 				code: "TEXTPIPELINE_PROCESSOR_FAILED",
 				severity: "error",

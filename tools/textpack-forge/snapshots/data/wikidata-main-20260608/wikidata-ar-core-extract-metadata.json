@@ -1,7 +1,8 @@
 {
 	"schemaVersion": "1",
 	"sourceId": "source:wikidata:main",
-	"version": "20260608",
+	"acquisitionMethod": "wikidata-query-service",
+	"derivedFromDumpArtifact": false,
 	"retrievedAt": "2026-06-12T00:00:00.000Z",
 	"endpoint": "https://query.wikidata.org/sparql",
 	"languageTag": "ar",

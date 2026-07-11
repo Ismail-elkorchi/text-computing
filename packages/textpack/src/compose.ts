@@ -11,6 +11,7 @@ import type {
 	TextPackResource,
 	TextPackTargets,
 } from "./types.js";
+import { textPackCapabilityTiers } from "./types.js";
 
 function stableHash(value: string): string {
 	let hash = 2166136261;
@@ -253,7 +254,12 @@ function mergeCapabilitySlots(
 	const statusRank = new Map(
 		statusOrder.map((status, index) => [status, index]),
 	);
+	const tierRank = new Map(
+		textPackCapabilityTiers.map((tier, index) => [tier, index]),
+	);
 	const slots = new Map<string, TextPackCapabilitySlot>();
+	const isRunnable = (slot: TextPackCapabilitySlot) =>
+		slot.status === "task-supported" || slot.status === "feature-complete";
 	for (const pack of packs) {
 		for (const slot of pack.manifest.capabilitySlots) {
 			const existing = slots.get(slot.slot);
@@ -261,37 +267,54 @@ function mergeCapabilitySlots(
 				slots.set(slot.slot, slot);
 				continue;
 			}
-			const resourceIds = unique([
-				...(existing.resourceIds ?? []),
-				...(slot.resourceIds ?? []),
-			]);
-			const artifactIds = unique([
-				...(existing.artifactIds ?? []),
-				...(slot.artifactIds ?? []),
-			]);
-			const bindings = uniqueBindings([
-				...(existing.bindings ?? []),
-				...(slot.bindings ?? []),
-			]);
+			const contributions = [existing, slot] as const;
+			const hasRunnableContribution = contributions.some(isRunnable);
+			const executableContributions = hasRunnableContribution
+				? contributions.filter(isRunnable)
+				: contributions;
+			const resourceIds = unique(
+				executableContributions.flatMap((candidate) => [
+					...(candidate.resourceIds ?? []),
+				]),
+			);
+			const artifactIds = unique(
+				executableContributions.flatMap((candidate) => [
+					...(candidate.artifactIds ?? []),
+				]),
+			);
+			const bindings = uniqueBindings(
+				executableContributions.flatMap((candidate) => [
+					...(candidate.bindings ?? []),
+				]),
+			);
 			const prerequisites = unique([
 				...(existing.prerequisites ?? []),
 				...(slot.prerequisites ?? []),
 			]);
 			const notes = unique([...(existing.notes ?? []), ...(slot.notes ?? [])]);
-			const capabilities = mergeCapabilities([
-				...(existing.capabilities === undefined ? [] : [existing.capabilities]),
-				...(slot.capabilities === undefined ? [] : [slot.capabilities]),
-			]);
+			const capabilities = mergeCapabilities(
+				contributions.flatMap((candidate) =>
+					candidate.capabilities === undefined ||
+					(hasRunnableContribution && !isRunnable(candidate))
+						? []
+						: [candidate.capabilities],
+				),
+			);
 			const existingRank = statusRank.get(existing.status) ?? 0;
 			const nextRank = statusRank.get(slot.status) ?? 0;
+			const existingTierRank = tierRank.get(existing.tier) ?? 0;
+			const nextTierRank = tierRank.get(slot.tier) ?? 0;
 			slots.set(slot.slot, {
 				slot: slot.slot,
 				status: nextRank > existingRank ? slot.status : existing.status,
+				tier: nextTierRank > existingTierRank ? slot.tier : existing.tier,
 				...(resourceIds.length === 0 ? {} : { resourceIds }),
 				...(artifactIds.length === 0 ? {} : { artifactIds }),
 				...(bindings.length === 0 ? {} : { bindings }),
 				...(prerequisites.length === 0 ? {} : { prerequisites }),
-				...(existing.readerRequired === true || slot.readerRequired === true
+				...(executableContributions.some(
+					(candidate) => candidate.readerRequired === true,
+				)
 					? { readerRequired: true }
 					: {}),
 				...(notes.length === 0 ? {} : { notes }),

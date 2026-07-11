@@ -62,6 +62,7 @@ const CANONICAL_RESOURCE_SCHEMA_IDS = new Set([
 	"textparallel.alignment.rows.v1",
 	"textquality.evidence.v1",
 	"textsearch.analyzer-table.v1",
+	"textpack.lookup-index.v1",
 	"textpack.raw-resource.v1",
 ]);
 const GENERATED_PACKAGE_FILES = [
@@ -102,6 +103,7 @@ const REQUIRED_LANGUAGE_DISTRIBUTION_SLOTS = [
 	"search",
 	"quality",
 ];
+const STRUCTURAL_LANGUAGE_DISTRIBUTION_SLOTS = new Set(["foundation", "core"]);
 const PLANNED_LANGUAGE_DISTRIBUTION_SLOTS = ["corpus", "parallel", "syntax"];
 const DISTRIBUTION_LANGUAGE_BY_PACKAGE = new Map([
 	["@ismail-elkorchi/textpack-ar", "ar"],
@@ -396,7 +398,12 @@ const RUNTIME_OWNER_SCHEMA_PREFIXES = [
 ];
 
 function runtimeOwnerPackageForSlotResource(slotName, resource) {
-	const schemaId = resource?.schemaId ?? "";
+	const descriptorSchemaId = resource?.schemaId ?? "";
+	const schemaId =
+		descriptorSchemaId === "textpack.lookup-index.v1" &&
+		typeof resource?.metadata?.indexedResourceSchemaId === "string"
+			? resource.metadata.indexedResourceSchemaId
+			: descriptorSchemaId;
 	if (slotName === "corpus" && schemaId.startsWith("textdata.corpus.")) {
 		return "@ismail-elkorchi/textcorpus";
 	}
@@ -526,11 +533,19 @@ function assertFlattenedDistribution(packageName, manifest, packageJson) {
 		const slot = manifest.capabilitySlots.find(
 			(candidate) => candidate.slot === slotName,
 		);
-		expect(
-			slot !== undefined && TASK_RUNNABLE_SLOT_STATUSES.has(slot.status),
-			`${packageName} required distribution slot ${slotName} must be task-runnable.`,
-			slot,
-		);
+		if (STRUCTURAL_LANGUAGE_DISTRIBUTION_SLOTS.has(slotName)) {
+			expect(
+				slot?.status === "profiled" && slot.tier === "resource-only",
+				`${packageName} structural distribution slot ${slotName} must be an honest resource-only profile.`,
+				slot,
+			);
+		} else {
+			expect(
+				slot !== undefined && TASK_RUNNABLE_SLOT_STATUSES.has(slot.status),
+				`${packageName} required distribution slot ${slotName} must be task-runnable.`,
+				slot,
+			);
+		}
 		if (slotName !== "foundation") {
 			expect(
 				(slot.resourceIds ?? []).length > 0,

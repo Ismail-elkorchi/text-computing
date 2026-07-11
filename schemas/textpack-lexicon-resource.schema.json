@@ -38,7 +38,8 @@
 						"termbase",
 						"abbreviations",
 						"stoplist",
-						"aliases"
+						"aliases",
+						"lookup-index"
 					]
 				},
 				"recordCount": { "type": "integer", "minimum": 0 }

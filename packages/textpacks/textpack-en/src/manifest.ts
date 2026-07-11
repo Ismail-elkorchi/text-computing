@@ -510,6 +510,35 @@ export const manifest: TextPackManifest = {
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "en-scowl-inflection-entries-lookup-index",
+			"kind": "dataset",
+			"path": "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
+			"format": "tsv",
+			"license": "LicenseRef-ESDB-MIT-Like",
+			"citations": [
+				"SCOWLv2 rich text export, rel-2026.02.25."
+			],
+			"schemaId": "textpack.lookup-index.v1",
+			"metadata": {
+				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexedResourceId": "en-scowl-inflection-entries",
+				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
+				"indexedResourceTextChecksum": "sha256:cf7637649c1ccb607c5a09898dfc838a1f49557d0ba289bff1033c5a93cf0ea4",
+				"indexedResourceGzipBase64ByteLength": 7328209,
+				"lookupIndexGzipBase64ByteLength": 4844105,
+				"compressedSizeRatio": 0.661022,
+				"coordinateUnit": "utf16-code-unit",
+				"offsetBasis": "uncompressed-resource-text",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyOrdering": "unicode-code-unit",
+				"keyColumns": [
+					"form"
+				],
+				"recordCount": 349953,
+				"spanCount": 401709
+			}
+		},
+		{
 			"id": "wordnet-en-lexical-entries",
 			"kind": "lexicon",
 			"path": "resources/wordnet-en.lexical-entries.tsv.gz.b64",
@@ -673,7 +702,8 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "core",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"en-core-language-profile",
 				"en-core-orthography",
@@ -718,13 +748,15 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "corpus",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "foundation",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"notes": [
 				"The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
 			]
@@ -732,6 +764,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "kb",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"wordnet-en-senses",
 				"wordnet-en-synsets",
@@ -817,7 +850,8 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "language-registry",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"bcp47-language-subtags",
 				"bcp47-language-registry-summary"
@@ -829,6 +863,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "lexicon",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"en-esdb-default-wordlists",
 				"en-esdb-default-profiles",
@@ -895,7 +930,8 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "locale-profile",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"cldr-48-likely-subtags",
 				"cldr-48-locale-aliases",
@@ -909,14 +945,23 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "morphology",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"en-scowl-inflection-entries",
 				"en-scowl-lookup-analyzer",
 				"en-scowl-lookup-generator",
 				"en-scowl-pos-inventory",
-				"en-scowl-inflection-morphology-canonical"
+				"en-scowl-inflection-morphology-canonical",
+				"en-scowl-inflection-entries-lookup-index"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "en-scowl-inflection-entries-lookup-index",
+					"schemaId": "textpack.lookup-index.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
 				{
 					"role": "primary",
 					"resourceId": "en-scowl-inflection-morphology-canonical",
@@ -965,6 +1010,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "normalization",
 			"status": "task-supported",
+			"tier": "baseline",
 			"resourceIds": [
 				"en-normalization-rules",
 				"en-normalization-profile"
@@ -997,6 +1043,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "parallel",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -1004,6 +1051,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"en-core-quality",
 				"en-core-quality-profile",
@@ -1135,6 +1183,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "search",
 			"status": "task-supported",
+			"tier": "baseline",
 			"resourceIds": [
 				"en-esdb-wordlist-search-profile"
 			],
@@ -1159,6 +1208,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "segmentation",
 			"status": "task-supported",
+			"tier": "baseline",
 			"resourceIds": [
 				"en-grapheme-segmentation-profile",
 				"en-word-segmentation-profile",
@@ -1199,13 +1249,15 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "syntax",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "unicode-profile",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"unicode-17-blocks",
 				"unicode-17-property-value-aliases",
@@ -1217,7 +1269,7 @@ export const manifest: TextPackManifest = {
 			]
 		}
 	],
-	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC0-1.0",
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
@@ -1250,8 +1302,8 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:78d906f0c73d85650e1ff58aab0aa93a116dc7978756c724328785533464d0ef",
-		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},
 	"artifacts": [

@@ -90,7 +90,8 @@ test("materializes bounded textpack corpus rows as documents and TextCorpus", as
 			capabilitySlots: [
 				{
 					slot: "corpus",
-					status: "task-supported" as const,
+					status: "profiled" as const,
+					tier: "resource-only" as const,
 					resourceIds: ["fixture-corpus-rows"],
 					bindings: [
 						{
@@ -229,12 +230,30 @@ test("produces concordances, frequency lists, ngrams, collocations, and keyness"
 		collocates.some((row) => row.collocate === "terms"),
 		true,
 	);
+	const chiSquareCollocates = collocations(
+		corpus,
+		{ kind: "lemma", lemma: "contract" },
+		{ measure: "chi-square" },
+	);
+	assert.equal(
+		chiSquareCollocates.every(
+			(row) => Number.isFinite(row.score) && row.score >= 0,
+		),
+		true,
+	);
 	const focus = createCorpus(docs.slice(0, 2));
 	const reference = createCorpus(docs.slice(2));
 	assert.equal(
 		keyness(focus, reference).some((row) => row.item === "the"),
 		true,
 	);
+	const filtered = keyness(focus, reference, {
+		minCount: 2,
+		measure: "ratio",
+	});
+	const contract = filtered.find((row) => row.item === "contract");
+	assert.equal(contract?.focusRelativeFrequency, 3 / 14);
+	assert.equal(Number.isFinite(contract?.score ?? Number.NaN), true);
 });
 
 test("computes dispersion, terms, lexicographic examples, stylometry, reuse, and diachrony", () => {
@@ -267,7 +286,14 @@ test("computes dispersion, terms, lexicographic examples, stylometry, reuse, and
 	assert.equal(profile.documents.length, 3);
 	assert.equal(documentSimilarityMatrix(corpus).length, 3);
 	assert.equal(Object.keys(lexicalDiversity(corpus)).length, 3);
-	assert.equal(detectReuse(corpus, { shingleSize: 2 }).length > 0, true);
+	const reuseMatches = detectReuse(corpus, { shingleSize: 2 });
+	assert.equal(reuseMatches.length > 0, true);
+	assert.equal(
+		(reuseMatches[0]?.sourceSpan?.span.end ?? 0) -
+			(reuseMatches[0]?.sourceSpan?.span.start ?? 0) >
+			(reuseMatches[0]?.text.split(" ")[0]?.length ?? 0),
+		true,
+	);
 	const trends = diachronicTrends(corpus, {
 		periodKey: "year",
 		query: { kind: "lemma", lemma: "contract" },

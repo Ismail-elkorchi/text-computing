@@ -13,6 +13,11 @@
       "recordCount": 51126,
       "resourceId": "fr-lexique-lemmas",
       "role": "lemmas"
+    },
+    {
+      "recordCount": 128893,
+      "resourceId": "fr-lexique-entries-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1",

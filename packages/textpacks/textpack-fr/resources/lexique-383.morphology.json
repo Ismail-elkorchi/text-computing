@@ -74,6 +74,11 @@
       "recordCount": 23,
       "resourceId": "fr-lexique-pos-inventory",
       "role": "feature-inventory"
+    },
+    {
+      "recordCount": 128893,
+      "resourceId": "fr-lexique-entries-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1",

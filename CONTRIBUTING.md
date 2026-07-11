@@ -31,6 +31,16 @@ Validates repository-level schemas against their declared JSON Schema drafts,
 validates generated textpack packages, validates package schema registries such
 as `packages/textfacts/schemas/*.schema.json`, and enforces I-JSON safety.
 
+**Held-out multilingual NLP benchmark**
+```sh
+npm run test:nlp
+```
+
+Runs the committed English, French, and Arabic cases through the ordinary
+`@ismail-elkorchi/text-computing` entrypoint. Update expectations only when the
+task contract changes; do not derive benchmark cases from forge training or
+coverage inputs.
+
 **Documentation boundaries**
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
 - `fixtures/` and `schemas/` contain repository-level validation material.

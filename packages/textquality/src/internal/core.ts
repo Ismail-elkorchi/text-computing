@@ -798,10 +798,6 @@ function isPunctuationMark(value: string): boolean {
 	);
 }
 
-function isQuoteMark(value: string): boolean {
-	return value === '"' || value === "'" || value === "“" || value === "”";
-}
-
 function repeatedRunSpans(
 	text: string,
 	predicate: (value: string) => boolean,
@@ -865,16 +861,35 @@ function hasMixedLineEndings(text: string): boolean {
 
 function leadingWhitespaceBeforePunctuationSpans(
 	text: string,
+	allowedAfterWhitespace: ReadonlySet<string> = new Set(),
 ): readonly TextSpan[] {
 	const spans: TextSpan[] = [];
 	for (let index = 0; index < text.length; index += 1) {
 		if (!isPunctuationMark(text[index] ?? "")) continue;
+		if (allowedAfterWhitespace.has(text[index] ?? "")) continue;
 		if (index === 0 || !isWhitespace(text[index - 1] ?? "")) continue;
 		let start = index - 1;
 		while (start > 0 && isWhitespace(text[start - 1] ?? "")) start -= 1;
 		spans.push({ startCU: start, endCU: index + 1 });
 	}
 	return Object.freeze(spans);
+}
+
+function isQuoteAt(text: string, index: number): boolean {
+	const value = text[index] ?? "";
+	if (
+		value === '"' ||
+		value === "“" ||
+		value === "”" ||
+		value === "«" ||
+		value === "»"
+	) {
+		return true;
+	}
+	if (value !== "'" && value !== "‘" && value !== "’") return false;
+	const previous = text[index - 1] ?? "";
+	const next = text[index + 1] ?? "";
+	return !/^\p{Letter}$/u.test(previous) || !/^\p{Letter}$/u.test(next);
 }
 
 function unbalancedQuoteLineSpans(text: string): readonly TextSpan[] {
@@ -889,7 +904,7 @@ function unbalancedQuoteLineSpans(text: string): readonly TextSpan[] {
 		let quoteCount = 0;
 		let firstQuote = -1;
 		for (let cursor = lineStart; cursor < lineEnd; cursor += 1) {
-			if (!isQuoteMark(text[cursor] ?? "")) continue;
+			if (!isQuoteAt(text, cursor)) continue;
 			if (firstQuote < 0) firstQuote = cursor;
 			quoteCount += 1;
 		}
@@ -979,6 +994,23 @@ export function punctuationQualityFindings(
 		optionsHash: options.optionsHash,
 	});
 	const findings: QualityFinding[] = [];
+	const expectedLanguages = new Set(
+		(options.profile?.expectedLanguages ?? [])
+			.map(normalizeLanguageTag)
+			.filter((language) => language.length > 0),
+	);
+	for (const key of ["language", "lang", "locale"]) {
+		const value = doc.metadata[key];
+		if (typeof value === "string") {
+			expectedLanguages.add(normalizeLanguageTag(value));
+		}
+	}
+	const frenchSpacing = [...expectedLanguages].some(
+		(language) => language === "fr" || language.startsWith("fr-"),
+	);
+	const allowedAfterWhitespace = frenchSpacing
+		? new Set([";", ":", "?", "!"])
+		: new Set<string>();
 	for (const span of repeatedRunSpans(text, isPunctuationMark, 3)) {
 		findings.push(
 			finding({
@@ -992,7 +1024,10 @@ export function punctuationQualityFindings(
 			}),
 		);
 	}
-	for (const span of leadingWhitespaceBeforePunctuationSpans(text)) {
+	for (const span of leadingWhitespaceBeforePunctuationSpans(
+		text,
+		allowedAfterWhitespace,
+	)) {
 		findings.push(
 			finding({
 				targetId: doc.id,
@@ -1757,8 +1792,10 @@ export function noisyTextQualityFindings(
 			}),
 		);
 	}
-	for (const match of text.matchAll(/\b[\p{Letter}]*\d[\p{Letter}\d]*\b/giu)) {
-		if (!/[A-Za-z]/u.test(match[0])) continue;
+	for (const token of textTokens(text)) {
+		if (!/\p{Letter}/u.test(token.text) || !/\p{Number}/u.test(token.text)) {
+			continue;
+		}
 		findings.push(
 			finding({
 				targetId: doc.id,
@@ -1766,7 +1803,7 @@ export function noisyTextQualityFindings(
 				severity: "notice",
 				message: "Token mixes letters and digits",
 				evidence,
-				spans: [spanRef(viewId, match.index, match.index + match[0].length)],
+				spans: [spanRef(viewId, token.span.startCU, token.span.endCU)],
 			}),
 		);
 	}

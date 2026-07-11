@@ -22,6 +22,8 @@ export interface ProcessorRequirement {
 	readonly viewKind?: TextView["kind"];
 	readonly resourceKind?: ResourceKind;
 	readonly capability?: string;
+	/** Selects the producer when more than one processor provides the document requirement. */
+	readonly providerId?: string;
 }
 
 export interface ProcessorOutput {

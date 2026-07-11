@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "languages": [
     {
@@ -18,63 +18,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -140,63 +155,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -246,63 +276,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -352,63 +397,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -459,63 +519,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -606,63 +681,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -722,63 +812,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -851,63 +956,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -965,63 +1085,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1180,63 +1315,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1301,63 +1451,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1406,63 +1571,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1511,63 +1691,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1625,63 +1820,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1745,63 +1955,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1860,63 +2085,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -1988,63 +2228,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2106,63 +2361,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2304,63 +2574,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2426,63 +2711,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2532,63 +2832,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2638,63 +2953,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2745,63 +3075,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2864,63 +3209,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -2994,63 +3354,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -3107,63 +3482,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {
@@ -3226,63 +3616,78 @@
           "capabilitySlots": [
             {
               "slot": "core",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "corpus",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "foundation",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "kb",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "language-registry",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "lexicon",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "locale-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             },
             {
               "slot": "morphology",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "lookup"
             },
             {
               "slot": "normalization",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "parallel",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "quality",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "search",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "baseline"
             },
             {
               "slot": "segmentation",
-              "status": "task-supported"
+              "status": "task-supported",
+              "tier": "rule-based"
             },
             {
               "slot": "syntax",
-              "status": "planned"
+              "status": "planned",
+              "tier": "none"
             },
             {
               "slot": "unicode-profile",
-              "status": "task-supported"
+              "status": "profiled",
+              "tier": "resource-only"
             }
           ],
           "checks": {

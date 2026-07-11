@@ -22,7 +22,8 @@
 			"resourceId": "fr-lexique-entries",
 			"path": "resources/lexique-383.entries.tsv.gz.b64",
 			"kind": "lexicon",
-			"format": "tsv+gzip+base64"
+			"format": "tsv+gzip+base64",
+			"lookupKeyColumns": ["form", "lemma"]
 		},
 		{
 			"resourceId": "fr-lexique-lemmas",

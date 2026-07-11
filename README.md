@@ -53,7 +53,12 @@ Run repository checks from the workspace root:
 npm run -s lint
 npm run -s build
 npm run -s schema:validate
+npm run -s test:nlp
 ```
+
+`test:nlp` executes the held-out English, French, and Arabic end-to-end cases in
+[`fixtures/nlp-benchmarks/`](fixtures/nlp-benchmarks/) through the public SDK. It fails on task
+regressions and warm-runtime budget violations; forge resource counts do not substitute for it.
 
 ## Repository structure
 

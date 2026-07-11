@@ -18,7 +18,8 @@
 			"resourceId": "fr-unimorph-paradigms",
 			"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
 			"kind": "morphology",
-			"format": "tsv+gzip+base64"
+			"format": "tsv+gzip+base64",
+			"lookupKeyColumns": ["form"]
 		},
 		{
 			"resourceId": "fr-unimorph-lookup-analyzer",

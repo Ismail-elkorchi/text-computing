@@ -155,6 +155,18 @@ export type TextPackCapabilitySlotStatus =
 	| "feature-complete"
 	| "not-applicable";
 
+export const textPackCapabilityTiers = [
+	"none",
+	"resource-only",
+	"baseline",
+	"lookup",
+	"rule-based",
+	"contextual",
+	"model-backed",
+] as const;
+
+export type TextPackCapabilityTier = (typeof textPackCapabilityTiers)[number];
+
 export interface TextPackComponent {
 	readonly packageName: string;
 	readonly versionRange: string;
@@ -230,6 +242,7 @@ export interface TextPackTaskResourceBinding {
 export interface TextPackCapabilitySlot {
 	readonly slot: string;
 	readonly status: TextPackCapabilitySlotStatus;
+	readonly tier: TextPackCapabilityTier;
 	readonly resourceIds?: readonly string[];
 	readonly artifactIds?: readonly string[];
 	readonly bindings?: readonly TextPackTaskResourceBinding[];

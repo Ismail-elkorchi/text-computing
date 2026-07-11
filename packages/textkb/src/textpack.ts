@@ -1,9 +1,12 @@
+import { nfkcCaseFold } from "@ismail-elkorchi/textfacts/casefold";
 import {
 	openResourceJson,
+	openResourceLookupIndex,
 	openResourceTable,
 	openResourceText,
 	requireSingleTaskResourceBinding,
 	type TextPack,
+	type TextPackLookupIndex,
 	type TextPackResourceReader,
 	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
@@ -51,6 +54,49 @@ export interface TextPackEntityLinker {
 	) => ReturnType<typeof linkEntitiesWithKnowledgeBase>;
 }
 
+interface KnowledgeBasePackCache {
+	readonly defaultReader: Map<string, Promise<KnowledgeBase>>;
+	readonly readers: WeakMap<
+		TextPackResourceReader,
+		Map<string, Promise<KnowledgeBase>>
+	>;
+}
+
+const knowledgeBaseCaches = new WeakMap<object, KnowledgeBasePackCache>();
+
+function knowledgeBaseCache(
+	pack: TextPack,
+	reader: TextPackResourceReader | undefined,
+): Map<string, Promise<KnowledgeBase>> {
+	let packCache = knowledgeBaseCaches.get(pack);
+	if (packCache === undefined) {
+		packCache = { defaultReader: new Map(), readers: new WeakMap() };
+		knowledgeBaseCaches.set(pack, packCache);
+	}
+	if (reader === undefined) return packCache.defaultReader;
+	let cache = packCache.readers.get(reader);
+	if (cache === undefined) {
+		cache = new Map();
+		packCache.readers.set(reader, cache);
+	}
+	return cache;
+}
+
+function cachedKnowledgeBase(
+	cache: Map<string, Promise<KnowledgeBase>>,
+	key: string,
+	materialize: () => Promise<KnowledgeBase>,
+): Promise<KnowledgeBase> {
+	const cached = cache.get(key);
+	if (cached !== undefined) return cached;
+	const pending = materialize();
+	cache.set(key, pending);
+	void pending.catch(() => {
+		if (cache.get(key) === pending) cache.delete(key);
+	});
+	return pending;
+}
+
 interface CanonicalLabel {
 	readonly languageTag: string;
 	readonly value: string;
@@ -81,7 +127,8 @@ interface CanonicalResourceRef {
 		| "senses"
 		| "synsets"
 		| "relations"
-		| "ontology";
+		| "ontology"
+		| "lookup-index";
 }
 
 interface CanonicalKnowledgeBaseResource {
@@ -105,37 +152,288 @@ function optionalString(value: unknown): string | undefined {
 	return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
-function normalizedMention(value: string): string {
-	return value
-		.normalize("NFKC")
-		.toLocaleLowerCase()
-		.replace(/\s+/gu, " ")
-		.trim();
+function canonicalKbIdentifier(value: string): string {
+	return (
+		/^(?:https?:\/\/www\.wikidata\.org\/entity\/)?(Q[1-9][0-9]*)$/u.exec(
+			value,
+		)?.[1] ?? value
+	);
 }
 
-function parseMatchingRows(
-	text: string,
-	matches: (row: Readonly<Record<string, string>>) => boolean,
-): readonly Readonly<Record<string, string>>[] {
-	const lines = text.replace(/\r\n/gu, "\n").replace(/\r/gu, "\n").split("\n");
-	while (lines.length > 0 && lines[lines.length - 1] === "") lines.pop();
-	const header = lines[0]?.split("\t") ?? [];
-	if (header.length === 0) return [];
-	const rows: Readonly<Record<string, string>>[] = [];
-	for (const line of lines.slice(1)) {
-		if (line.length === 0) continue;
-		const cells = line.split("\t");
-		const row: Record<string, string> = {};
-		for (let index = 0; index < header.length; index += 1) {
-			const column = header[index];
-			if (column !== undefined && column.length > 0) {
-				row[column] = cells[index] ?? "";
+function identifierProvenance(
+	canonical: string,
+	source: string,
+	field: string,
+): Readonly<Record<string, string>> {
+	return canonical === source ? {} : { [field]: source };
+}
+
+function normalizedMention(value: string): string {
+	return nfkcCaseFold(value).replace(/\s+/gu, " ").trim();
+}
+
+type KbTableIndexKind = "entity" | "mention" | "relation";
+
+interface KbTableIndex {
+	readonly columns: readonly string[];
+	readonly rowStartsByKind: Readonly<
+		Record<KbTableIndexKind, ReadonlyMap<string, readonly number[]>>
+	>;
+	readonly text: string;
+}
+
+interface KbPackTableIndexes {
+	readonly defaultReader: Map<string, KbTableIndex>;
+	readonly readers: WeakMap<TextPackResourceReader, Map<string, KbTableIndex>>;
+}
+
+const kbTableIndexes = new WeakMap<object, KbPackTableIndexes>();
+
+function kbTableIndexesForReader(
+	pack: TextPack,
+	reader: TextPackResourceReader | undefined,
+): Map<string, KbTableIndex> {
+	let packIndexes = kbTableIndexes.get(pack);
+	if (packIndexes === undefined) {
+		packIndexes = { defaultReader: new Map(), readers: new WeakMap() };
+		kbTableIndexes.set(pack, packIndexes);
+	}
+	if (reader === undefined) return packIndexes.defaultReader;
+	let indexes = packIndexes.readers.get(reader);
+	if (indexes === undefined) {
+		indexes = new Map();
+		packIndexes.readers.set(reader, indexes);
+	}
+	return indexes;
+}
+
+function addRowStart(
+	index: Map<string, number[]>,
+	key: string,
+	start: number,
+): void {
+	if (key.length === 0) return;
+	const starts = index.get(key);
+	if (starts === undefined) index.set(key, [start]);
+	else starts.push(start);
+}
+
+function buildKbTableIndex(text: string): KbTableIndex {
+	const headerEnd = text.indexOf("\n");
+	const rawHeader = text.slice(0, headerEnd === -1 ? text.length : headerEnd);
+	const columns = Object.freeze(
+		(rawHeader.endsWith("\r") ? rawHeader.slice(0, -1) : rawHeader).split("\t"),
+	);
+	const columnIndexes = new Map(
+		columns.map((column, index) => [column, index]),
+	);
+	const rowStartsByKind: Record<KbTableIndexKind, Map<string, number[]>> = {
+		entity: new Map(),
+		mention: new Map(),
+		relation: new Map(),
+	};
+	let start = headerEnd === -1 ? text.length : headerEnd + 1;
+	while (start < text.length) {
+		const newline = text.indexOf("\n", start);
+		const end = newline === -1 ? text.length : newline;
+		const rawLine = text.slice(start, end);
+		const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
+		if (line.length > 0) {
+			const cells = line.split("\t");
+			for (const name of ["alias", "label"] as const) {
+				const columnIndex = columnIndexes.get(name);
+				if (columnIndex !== undefined) {
+					addRowStart(
+						rowStartsByKind.mention,
+						normalizedMention(cells[columnIndex] ?? ""),
+						start,
+					);
+				}
+			}
+			const entityColumn = columnIndexes.get("entityId");
+			if (entityColumn !== undefined) {
+				addRowStart(
+					rowStartsByKind.entity,
+					canonicalKbIdentifier(cells[entityColumn] ?? ""),
+					start,
+				);
+			}
+			for (const name of ["sourceId", "targetId"] as const) {
+				const columnIndex = columnIndexes.get(name);
+				if (columnIndex !== undefined) {
+					addRowStart(
+						rowStartsByKind.relation,
+						canonicalKbIdentifier(cells[columnIndex] ?? ""),
+						start,
+					);
+				}
 			}
 		}
-		const frozen = Object.freeze(row);
-		if (matches(frozen)) rows.push(frozen);
+		if (newline === -1) break;
+		start = newline + 1;
 	}
-	return Object.freeze(rows);
+	return { columns, rowStartsByKind, text };
+}
+
+function kbTableIndex(
+	pack: TextPack,
+	reader: TextPackResourceReader | undefined,
+	resourceId: string,
+	text: string,
+): KbTableIndex {
+	const indexes = kbTableIndexesForReader(pack, reader);
+	const cached = indexes.get(resourceId);
+	if (cached !== undefined) return cached;
+	const index = buildKbTableIndex(text);
+	indexes.set(resourceId, index);
+	return index;
+}
+
+function kbTableRow(
+	index: KbTableIndex,
+	start: number,
+): Readonly<Record<string, string>> {
+	const newline = index.text.indexOf("\n", start);
+	const end = newline === -1 ? index.text.length : newline;
+	const rawLine = index.text.slice(start, end);
+	const line = rawLine.endsWith("\r") ? rawLine.slice(0, -1) : rawLine;
+	const cells = line.split("\t");
+	const row: Record<string, string> = {};
+	for (
+		let columnIndex = 0;
+		columnIndex < index.columns.length;
+		columnIndex += 1
+	) {
+		const column = index.columns[columnIndex];
+		if (column !== undefined && column.length > 0) {
+			row[column] = cells[columnIndex] ?? "";
+		}
+	}
+	return Object.freeze(row);
+}
+
+function kbLookupKeyVariants(
+	kind: KbTableIndexKind,
+	key: string,
+): readonly string[] {
+	if (
+		(kind === "entity" || kind === "relation") &&
+		/^Q[1-9][0-9]*$/u.test(key)
+	) {
+		return Object.freeze([
+			key,
+			`http://www.wikidata.org/entity/${key}`,
+			`https://www.wikidata.org/entity/${key}`,
+		]);
+	}
+	return Object.freeze([key]);
+}
+
+function generatedKbRows(
+	index: TextPackLookupIndex,
+	keysByKind: Partial<Readonly<Record<KbTableIndexKind, ReadonlySet<string>>>>,
+): readonly Readonly<Record<string, string>>[] {
+	const rowsByStart = new Map<
+		number,
+		{ readonly length: number; readonly order: number }
+	>();
+	for (const kind of ["entity", "mention", "relation"] as const) {
+		for (const key of keysByKind[kind] ?? []) {
+			for (const variant of kbLookupKeyVariants(kind, key)) {
+				for (const row of index.rowsForNormalizedKey(nfkcCaseFold(variant))) {
+					if (!rowsByStart.has(row.rowStart)) {
+						rowsByStart.set(row.rowStart, {
+							length: row.rowLength,
+							order: row.rowOrder,
+						});
+					}
+				}
+			}
+		}
+	}
+	return Object.freeze(
+		[...rowsByStart.entries()]
+			.sort(
+				([leftStart, left], [rightStart, right]) =>
+					left.order - right.order || leftStart - rightStart,
+			)
+			.map(([rowStart, row]) =>
+				index.materializeRow({
+					rowStart,
+					rowLength: row.length,
+					rowOrder: row.order,
+				}),
+			),
+	);
+}
+
+async function indexedKbRows(
+	pack: TextPack,
+	reader: TextPackResourceReader | undefined,
+	resourceId: string,
+	text: string,
+	keysByKind: Partial<Readonly<Record<KbTableIndexKind, ReadonlySet<string>>>>,
+	lookupIndexResourceId?: string,
+): Promise<readonly Readonly<Record<string, string>>[]> {
+	if (lookupIndexResourceId !== undefined) {
+		return generatedKbRows(
+			await openResourceLookupIndex(
+				pack,
+				resourceId,
+				lookupIndexResourceId,
+				reader,
+			),
+			keysByKind,
+		);
+	}
+	const index = kbTableIndex(pack, reader, resourceId, text);
+	const starts = new Set<number>();
+	for (const kind of ["entity", "mention", "relation"] as const) {
+		for (const key of keysByKind[kind] ?? []) {
+			for (const start of index.rowStartsByKind[kind].get(key) ?? []) {
+				starts.add(start);
+			}
+		}
+	}
+	return Object.freeze(
+		[...starts]
+			.sort((left, right) => left - right)
+			.map((start) => kbTableRow(index, start)),
+	);
+}
+
+function lookupIndexForKbSource(
+	pack: TextPack,
+	refs: readonly CanonicalResourceRef[],
+	sourceResourceId: string,
+): string | undefined {
+	for (const ref of refs) {
+		if (ref.role !== "lookup-index") continue;
+		const descriptor = pack.manifest.resources.find(
+			(resource) => resource.id === ref.resourceId,
+		);
+		if (descriptor === undefined) {
+			throw new TypeError(
+				`Canonical lookup-index ref is missing: ${ref.resourceId}.`,
+			);
+		}
+		const metadata =
+			descriptor?.metadata !== null &&
+			typeof descriptor?.metadata === "object" &&
+			!Array.isArray(descriptor.metadata)
+				? (descriptor.metadata as Readonly<Record<string, unknown>>)
+				: undefined;
+		if (
+			descriptor.schemaId !== "textpack.lookup-index.v1" ||
+			typeof metadata?.indexedResourceId !== "string"
+		) {
+			throw new TypeError(
+				`Canonical lookup-index ref ${descriptor.id} has invalid metadata.`,
+			);
+		}
+		if (metadata?.indexedResourceId === sourceResourceId) return ref.resourceId;
+	}
+	return undefined;
 }
 
 function stringList(value: readonly string[] | undefined): readonly string[] {
@@ -201,8 +499,9 @@ function descriptionsByLanguage(
 }
 
 function canonicalEntity(record: CanonicalEntity): EntityRecord {
+	const id = canonicalKbIdentifier(record.entityId);
 	return Object.freeze({
-		id: record.entityId,
+		id,
 		labels: labelsByLanguage(record.labels),
 		...(record.aliases === undefined
 			? {}
@@ -213,22 +512,35 @@ function canonicalEntity(record: CanonicalEntity): EntityRecord {
 		...(record.typeIds === undefined
 			? {}
 			: { types: stringList(record.typeIds) }),
-		...(record.metadata === undefined
-			? {}
-			: { metadata: jsonObject(record.metadata) }),
+		metadata: {
+			...(jsonObject(record.metadata) ?? {}),
+			...identifierProvenance(id, record.entityId, "sourceEntityId"),
+		} as JsonObject,
 	});
 }
 
 function canonicalRelation(record: CanonicalRelation): SemanticRelation {
+	const sourceId = canonicalKbIdentifier(record.sourceId);
+	const targetId = canonicalKbIdentifier(record.targetId);
 	return Object.freeze({
-		sourceId: record.sourceId,
-		targetId: record.targetId,
+		sourceId,
+		targetId,
 		type: record.predicateId,
 		sourceKind: "entity" as const,
 		targetKind: "entity" as const,
-		...(record.metadata === undefined
-			? {}
-			: { metadata: jsonObject(record.metadata) }),
+		metadata: {
+			...(jsonObject(record.metadata) ?? {}),
+			...identifierProvenance(
+				sourceId,
+				record.sourceId,
+				"sourceRelationSourceId",
+			),
+			...identifierProvenance(
+				targetId,
+				record.targetId,
+				"sourceRelationTargetId",
+			),
+		} as JsonObject,
 	});
 }
 
@@ -331,12 +643,14 @@ function mergeLanguageLists(
 
 function entityTableRow(row: Readonly<Record<string, string>>): EntityRecord {
 	assertNeutralWikiUrlColumns(row);
-	const entityId = expectString(row.entityId, "entityId");
+	const sourceEntityId = expectString(row.entityId, "entityId");
+	const entityId = canonicalKbIdentifier(sourceEntityId);
 	const languageTag = expectString(row.languageTag, "languageTag");
 	const label = expectString(row.label, "label");
 	const description = optionalString(row.description);
 	const typeId = optionalString(row.typeId);
 	const metadata = {
+		...identifierProvenance(entityId, sourceEntityId, "sourceEntityId"),
 		...(optionalString(row.typeLabel) === undefined
 			? {}
 			: { typeLabel: row.typeLabel }),
@@ -364,7 +678,7 @@ function aliasTableRow(row: Readonly<Record<string, string>>): AliasEntryInput {
 	return Object.freeze({
 		alias: expectString(row.alias, "alias"),
 		targetKind: "entity" as const,
-		targetId: expectString(row.entityId, "entityId"),
+		targetId: canonicalKbIdentifier(expectString(row.entityId, "entityId")),
 		matchKind: "alias" as const,
 		language: expectString(row.languageTag, "languageTag"),
 		source: "textpack",
@@ -375,9 +689,13 @@ function relationTableRow(
 	row: Readonly<Record<string, string>>,
 ): SemanticRelation {
 	const scope = optionalString(row.scope);
+	const sourceSourceId = expectString(row.sourceId, "sourceId");
+	const sourceTargetId = expectString(row.targetId, "targetId");
+	const sourceId = canonicalKbIdentifier(sourceSourceId);
+	const targetId = canonicalKbIdentifier(sourceTargetId);
 	return Object.freeze({
-		sourceId: expectString(row.sourceId, "sourceId"),
-		targetId: expectString(row.targetId, "targetId"),
+		sourceId,
+		targetId,
 		type: expectString(row.predicateId, "predicateId"),
 		sourceKind:
 			scope === "sense"
@@ -393,6 +711,16 @@ function relationTableRow(
 					: ("entity" as const),
 		metadata: Object.freeze({
 			...(scope === undefined ? {} : { scope }),
+			...identifierProvenance(
+				sourceId,
+				sourceSourceId,
+				"sourceRelationSourceId",
+			),
+			...identifierProvenance(
+				targetId,
+				sourceTargetId,
+				"sourceRelationTargetId",
+			),
 			...(optionalString(row.relationLabel) === undefined
 				? {}
 				: { relationLabel: row.relationLabel }),
@@ -498,7 +826,7 @@ function uniqueRelations(
 	);
 }
 
-export async function knowledgeBaseFromPack(
+async function materializeKnowledgeBaseFromPack(
 	pack: TextPack,
 	options: KnowledgeBaseFromPackOptions = {},
 ): Promise<KnowledgeBase> {
@@ -527,6 +855,7 @@ export async function knowledgeBaseFromPack(
 		ReadonlyArray<Readonly<Record<string, string>>>
 	>();
 	for (const ref of resource.resourceRefs ?? []) {
+		if (ref.role === "lookup-index") continue;
 		const table = await openResourceTable(pack, ref.resourceId, options.reader);
 		tableRefs.set(ref.role, table.rows);
 		if (ref.role === "entities") {
@@ -570,6 +899,22 @@ export async function knowledgeBaseFromPack(
 	});
 }
 
+export async function knowledgeBaseFromPack(
+	pack: TextPack,
+	options: KnowledgeBaseFromPackOptions = {},
+): Promise<KnowledgeBase> {
+	const resourceId = selectedKbResourceId(pack, options);
+	return cachedKnowledgeBase(
+		knowledgeBaseCache(pack, options.reader),
+		JSON.stringify(["full", resourceId]),
+		() =>
+			materializeKnowledgeBaseFromPack(pack, {
+				...options,
+				resourceId,
+			}),
+	);
+}
+
 function labelMatchesMention(
 	labels: readonly CanonicalLabel[] | undefined,
 	mentionKeys: ReadonlySet<string>,
@@ -586,12 +931,13 @@ function inlineEntityAliases(
 	entity: CanonicalEntity,
 ): readonly AliasEntryInput[] {
 	const aliases: AliasEntryInput[] = [];
+	const entityId = canonicalKbIdentifier(entity.entityId);
 	for (const label of entity.labels) {
 		aliases.push(
 			Object.freeze({
 				alias: label.value,
 				targetKind: "entity" as const,
-				targetId: entity.entityId,
+				targetId: entityId,
 				matchKind: "label" as const,
 				language: label.languageTag,
 				source: "textpack",
@@ -603,7 +949,7 @@ function inlineEntityAliases(
 			Object.freeze({
 				alias: alias.value,
 				targetKind: "entity" as const,
-				targetId: entity.entityId,
+				targetId: entityId,
 				matchKind: "alias" as const,
 				language: alias.languageTag,
 				source: "textpack",
@@ -613,7 +959,7 @@ function inlineEntityAliases(
 	return Object.freeze(aliases);
 }
 
-export async function knowledgeBaseSliceFromPack(
+async function materializeKnowledgeBaseSliceFromPack(
 	pack: TextPack,
 	options: KnowledgeBaseSliceFromPackOptions,
 ): Promise<KnowledgeBase> {
@@ -656,14 +1002,22 @@ export async function knowledgeBaseSliceFromPack(
 			(candidate) => candidate.role === "aliases",
 		)) {
 			const text = await openResourceText(pack, ref.resourceId, options.reader);
-			for (const row of parseMatchingRows(
+			for (const row of await indexedKbRows(
+				pack,
+				options.reader,
+				ref.resourceId,
 				text,
-				(row) =>
-					(options.language === undefined ||
-						row.languageTag === options.language) &&
-					row.alias !== undefined &&
-					mentionKeys.has(normalizedMention(row.alias)),
+				{ mention: mentionKeys },
+				lookupIndexForKbSource(pack, refs, ref.resourceId),
 			)) {
+				if (
+					(options.language !== undefined &&
+						row.languageTag !== options.language) ||
+					row.alias === undefined ||
+					!mentionKeys.has(normalizedMention(row.alias))
+				) {
+					continue;
+				}
 				const alias = aliasTableRow(row);
 				aliases.push(alias);
 				entityIds.add(alias.targetId);
@@ -674,15 +1028,23 @@ export async function knowledgeBaseSliceFromPack(
 			(candidate) => candidate.role === "entities",
 		)) {
 			const text = await openResourceText(pack, ref.resourceId, options.reader);
-			for (const row of parseMatchingRows(
+			for (const row of await indexedKbRows(
+				pack,
+				options.reader,
+				ref.resourceId,
 				text,
-				(row) =>
-					(row.entityId !== undefined && entityIds.has(row.entityId)) ||
-					((options.language === undefined ||
-						row.languageTag === options.language) &&
-						row.label !== undefined &&
-						mentionKeys.has(normalizedMention(row.label))),
+				{ entity: entityIds, mention: mentionKeys },
+				lookupIndexForKbSource(pack, refs, ref.resourceId),
 			)) {
+				const matchesId =
+					row.entityId !== undefined &&
+					entityIds.has(canonicalKbIdentifier(row.entityId));
+				const matchesLabel =
+					(options.language === undefined ||
+						row.languageTag === options.language) &&
+					row.label !== undefined &&
+					mentionKeys.has(normalizedMention(row.label));
+				if (!matchesId && !matchesLabel) continue;
 				const record = entityTableRow(row);
 				upsertEntity(entities, record);
 				entityIds.add(record.id);
@@ -692,13 +1054,26 @@ export async function knowledgeBaseSliceFromPack(
 		for (const ref of refs.filter(
 			(candidate) => candidate.role === "relations",
 		)) {
+			if (entityIds.size === 0) continue;
 			const text = await openResourceText(pack, ref.resourceId, options.reader);
-			for (const row of parseMatchingRows(
+			for (const row of await indexedKbRows(
+				pack,
+				options.reader,
+				ref.resourceId,
 				text,
-				(row) =>
-					(row.sourceId !== undefined && entityIds.has(row.sourceId)) ||
-					(row.targetId !== undefined && entityIds.has(row.targetId)),
+				{ relation: entityIds },
+				lookupIndexForKbSource(pack, refs, ref.resourceId),
 			)) {
+				if (
+					!(
+						(row.sourceId !== undefined &&
+							entityIds.has(canonicalKbIdentifier(row.sourceId))) ||
+						(row.targetId !== undefined &&
+							entityIds.has(canonicalKbIdentifier(row.targetId)))
+					)
+				) {
+					continue;
+				}
 				relations.push(relationTableRow(row));
 			}
 		}
@@ -722,6 +1097,26 @@ export async function knowledgeBaseSliceFromPack(
 		},
 		allowExternalRelationEndpoints: true,
 	});
+}
+
+export async function knowledgeBaseSliceFromPack(
+	pack: TextPack,
+	options: KnowledgeBaseSliceFromPackOptions,
+): Promise<KnowledgeBase> {
+	const mentions = [...new Set(options.mentions.map(normalizedMention))]
+		.filter((mention) => mention.length > 0)
+		.sort((left, right) => left.localeCompare(right));
+	const key = JSON.stringify([
+		"slice",
+		options.resourceId ?? null,
+		options.language ?? null,
+		mentions,
+	]);
+	return cachedKnowledgeBase(
+		knowledgeBaseCache(pack, options.reader),
+		key,
+		() => materializeKnowledgeBaseSliceFromPack(pack, options),
+	);
 }
 
 export async function candidateEntitiesFromPack(

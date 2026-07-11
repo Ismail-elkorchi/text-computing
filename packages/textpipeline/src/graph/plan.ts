@@ -9,6 +9,7 @@ import type {
 	TextProcessor,
 } from "../processor/types.js";
 import {
+	ambiguousRequirementDiagnostic,
 	cycleDiagnostic,
 	missingRequirementDiagnostic,
 } from "./diagnostics.js";
@@ -39,6 +40,12 @@ export interface PipelineMissingRequirement {
 	readonly requirement: ProcessorRequirement;
 }
 
+export interface PipelineAmbiguousRequirement {
+	readonly processorId: string;
+	readonly requirement: ProcessorRequirement;
+	readonly providerIds: readonly string[];
+}
+
 export interface PipelineCycle {
 	readonly processorIds: readonly string[];
 }
@@ -51,6 +58,7 @@ export interface PipelinePlan {
 	readonly edges: readonly PipelinePlanEdge[];
 	readonly processorOrder: readonly string[];
 	readonly missingRequirements: readonly PipelineMissingRequirement[];
+	readonly ambiguousRequirements: readonly PipelineAmbiguousRequirement[];
 	readonly cycles: readonly PipelineCycle[];
 	readonly diagnostics: readonly PipelineDiagnostic[];
 }
@@ -66,6 +74,11 @@ function providersForRequirement(
 ): readonly TextProcessor[] {
 	return processors
 		.filter((candidate) => candidate.id !== consumer.id)
+		.filter(
+			(candidate) =>
+				requirement.providerId === undefined ||
+				candidate.id === requirement.providerId,
+		)
 		.filter((candidate) =>
 			candidate.provides.some((output) =>
 				outputSatisfiesRequirement(output, requirement),
@@ -92,6 +105,7 @@ export function planPipeline(
 	);
 	const edgeMap = new Map<string, PipelinePlanEdge>();
 	const missingRequirements: PipelineMissingRequirement[] = [];
+	const ambiguousRequirements: PipelineAmbiguousRequirement[] = [];
 	const diagnostics: PipelineDiagnostic[] = [];
 	for (const processor of pipeline.processors) {
 		for (const requirement of processor.requires ?? []) {
@@ -129,14 +143,29 @@ export function planPipeline(
 				diagnostics.push(missingRequirementDiagnostic(processor, requirement));
 				continue;
 			}
-			for (const provider of providers) {
-				const edge = Object.freeze({
-					from: provider.id,
-					to: processor.id,
-					requirement: Object.freeze({ ...requirement }),
-				});
-				edgeMap.set(edgeKey(edge), edge);
+			if (providers.length > 1) {
+				const providerIds = Object.freeze(
+					providers.map((provider) => provider.id),
+				);
+				ambiguousRequirements.push(
+					Object.freeze({
+						processorId: processor.id,
+						requirement: Object.freeze({ ...requirement }),
+						providerIds,
+					}),
+				);
+				diagnostics.push(
+					ambiguousRequirementDiagnostic(processor, requirement, providerIds),
+				);
+				continue;
 			}
+			const provider = providers[0] as TextProcessor;
+			const edge = Object.freeze({
+				from: provider.id,
+				to: processor.id,
+				requirement: Object.freeze({ ...requirement }),
+			});
+			edgeMap.set(edgeKey(edge), edge);
 		}
 	}
 	const edges = Object.freeze(
@@ -164,11 +193,15 @@ export function planPipeline(
 	return Object.freeze({
 		schemaVersion: pipelinePlanSchemaVersion,
 		pipelineId: pipeline.id,
-		ok: missingRequirements.length === 0 && cycles.length === 0,
+		ok:
+			missingRequirements.length === 0 &&
+			ambiguousRequirements.length === 0 &&
+			cycles.length === 0,
 		nodes,
 		edges,
 		processorOrder: order.order,
 		missingRequirements: Object.freeze(missingRequirements),
+		ambiguousRequirements: Object.freeze(ambiguousRequirements),
 		cycles: Object.freeze(cycles),
 		diagnostics: Object.freeze(diagnostics),
 	});

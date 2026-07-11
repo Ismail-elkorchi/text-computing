@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createDocument } from "@ismail-elkorchi/textdoc";
+import { nfkcCaseFold } from "@ismail-elkorchi/textfacts/casefold";
 
 import {
 	annotateOntologyGazetteer,
@@ -11,6 +13,7 @@ import {
 	disambiguateSense,
 	entityLinkerFromPack,
 	knowledgeBaseFromPack,
+	knowledgeBaseSliceFromPack,
 	lexicalChains,
 	linkEntities,
 	linkTerms,
@@ -62,11 +65,72 @@ function textResourceReader(records: Readonly<Record<string, string>>) {
 	};
 }
 
+function packedLookupIndex(
+	text: string,
+	keyColumns: readonly string[],
+): string {
+	const headerEnd = text.indexOf("\n");
+	const columns = text.slice(0, headerEnd).split("\t");
+	const indexes = keyColumns.map((column) => columns.indexOf(column));
+	const rowsByKey = new Map<
+		string,
+		{
+			readonly start: number;
+			readonly length: number;
+			readonly order: number;
+		}[]
+	>();
+	let start = headerEnd + 1;
+	let order = 0;
+	while (start < text.length) {
+		const newline = text.indexOf("\n", start);
+		const end = newline === -1 ? text.length : newline;
+		const row = text.slice(start, end);
+		if (row.length > 0) {
+			const cells = row.split("\t");
+			for (const columnIndex of indexes) {
+				const key = nfkcCaseFold(cells[columnIndex] ?? "");
+				if (key.length === 0) continue;
+				rowsByKey.set(key, [
+					...(rowsByKey.get(key) ?? []),
+					{ start, length: row.length, order },
+				]);
+			}
+			order += 1;
+		}
+		if (newline === -1) break;
+		start = newline + 1;
+	}
+	return `${[
+		"normalizedKey\trowSpans",
+		...[...rowsByKey.entries()]
+			.sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
+			.map(([key, rows]) => {
+				let previousStart = 0;
+				let previousOrder = 0;
+				const spans = rows.map((row, index) => {
+					const encodedStart =
+						index === 0 ? row.start : row.start - previousStart;
+					const encodedOrder =
+						index === 0 ? row.order : row.order - previousOrder;
+					previousStart = row.start;
+					previousOrder = row.order;
+					return [encodedStart, row.length, encodedOrder]
+						.map((value) => value.toString(36))
+						.join(",");
+				});
+				return `${key}\t${spans.join(";")}`;
+			}),
+		"",
+	].join("\n")}`;
+}
+
 function kbCapabilitySlots(resourceId: string) {
 	return [
 		{
 			slot: "kb",
 			status: "task-supported" as const,
+			tier: "lookup" as const,
 			resourceIds: [resourceId],
 			bindings: [
 				{
@@ -433,15 +497,18 @@ test("canonical KB textpack loader materializes file-backed resources", async ()
 });
 
 test("canonical Wikidata textpack resources become a runtime knowledge base", async () => {
+	const aliasText =
+		"entityId\tlanguageTag\talias\nhttp://www.wikidata.org/entity/Q90\tfr\tVille de Paris\nhttp://www.wikidata.org/entity/Q90\tfr\tStraße\n";
+	const aliasIndexText = packedLookupIndex(aliasText, ["entityId", "alias"]);
 	const resourceTexts = {
 		"resources/wikidata-fr-entities.tsv": [
 			"entityId\tlanguageTag\tlabel\tdescription\ttypeId\ttypeLabel\tsitelinks\twikiUrl",
-			"Q90\tfr\tParis\tcapitale de la France\tQ515\tville\t120\thttps://fr.wikipedia.org/wiki/Paris",
+			"http://www.wikidata.org/entity/Q90\tfr\tParis\tcapitale de la France\tQ515\tville\t120\thttps://fr.wikipedia.org/wiki/Paris",
 		].join("\n"),
-		"resources/wikidata-fr-aliases.tsv":
-			"entityId\tlanguageTag\talias\nQ90\tfr\tVille de Paris\n",
+		"resources/wikidata-fr-aliases.tsv": aliasText,
+		"resources/wikidata-fr-aliases.lookup-index.tsv": aliasIndexText,
 		"resources/wikidata-fr-relations.tsv":
-			"sourceId\tpredicateId\ttargetId\trelationLabel\nQ90\tP31\tQ515\tinstance de\n",
+			"sourceId\tpredicateId\ttargetId\trelationLabel\nhttp://www.wikidata.org/entity/Q90\tP31\thttp://www.wikidata.org/entity/Q515\tinstance de\n",
 		"resources/wikidata-fr-kb-canonical.json": JSON.stringify({
 			schemaVersion: "1",
 			kind: "knowledge-base",
@@ -450,6 +517,10 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 			resourceRefs: [
 				{ resourceId: "wikidata-fr-entities", role: "entities" },
 				{ resourceId: "wikidata-fr-aliases", role: "aliases" },
+				{
+					resourceId: "wikidata-fr-aliases-lookup-index",
+					role: "lookup-index",
+				},
 				{ resourceId: "wikidata-fr-relations", role: "relations" },
 			],
 		}),
@@ -472,6 +543,22 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 					schemaId: "textkb.knowledge-base.rows.v1",
 				},
 				{
+					id: "wikidata-fr-aliases-lookup-index",
+					kind: "dataset" as const,
+					format: "tsv",
+					schemaId: "textpack.lookup-index.v1",
+					metadata: {
+						indexFormat: "normalized-key-packed-row-spans-v1",
+						indexedResourceId: "wikidata-fr-aliases",
+						indexedResourceSchemaId: "textkb.knowledge-base.rows.v1",
+						indexedResourceTextChecksum: `sha256:${await sha256(aliasText)}`,
+						coordinateUnit: "utf16-code-unit",
+						offsetBasis: "uncompressed-resource-text",
+						keyNormalization: "NFKC-casefold-Unicode-17",
+						keyOrdering: "unicode-code-unit",
+					},
+				},
+				{
 					id: "wikidata-fr-relations",
 					kind: "knowledge-base" as const,
 					format: "tsv",
@@ -491,6 +578,10 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				"resources/wikidata-fr-aliases.tsv",
 				resourceTexts["resources/wikidata-fr-aliases.tsv"],
 			),
+			"wikidata-fr-aliases-lookup-index": await fileBackedTextResource(
+				"resources/wikidata-fr-aliases.lookup-index.tsv",
+				resourceTexts["resources/wikidata-fr-aliases.lookup-index.tsv"],
+			),
 			"wikidata-fr-entities": await fileBackedTextResource(
 				"resources/wikidata-fr-entities.tsv",
 				resourceTexts["resources/wikidata-fr-entities.tsv"],
@@ -505,12 +596,39 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 			),
 		},
 	};
-	const kb = await knowledgeBaseFromPack(pack as never, {
-		reader: textResourceReader(resourceTexts),
-	});
+	const reader = textResourceReader(resourceTexts);
+	const kb = await knowledgeBaseFromPack(pack as never, { reader });
 	assert.equal(kb.entities.records.Q90?.labels.fr?.[0], "Paris");
+	assert.equal(
+		kb.entities.records.Q90?.metadata?.sourceEntityId,
+		"http://www.wikidata.org/entity/Q90",
+	);
 	assert.equal(candidateEntities(kb, "Ville de Paris")[0]?.entityId, "Q90");
-	assert.equal(querySemanticRelations(kb, { type: "P31" }).length, 1);
+	assert.equal(
+		querySemanticRelations(kb, { type: "P31" })[0]?.targetId,
+		"Q515",
+	);
+	assert.equal(await knowledgeBaseFromPack(pack as never, { reader }), kb);
+	const slice = await knowledgeBaseSliceFromPack(pack as never, {
+		reader,
+		mentions: ["Ville de Paris"],
+		language: "fr",
+	});
+	assert.equal(slice.entities.records.Q90?.id, "Q90");
+	const casefoldSlice = await knowledgeBaseSliceFromPack(pack as never, {
+		reader,
+		mentions: ["STRASSE"],
+		language: "fr",
+	});
+	assert.equal(casefoldSlice.entities.records.Q90?.id, "Q90");
+	assert.equal(
+		await knowledgeBaseSliceFromPack(pack as never, {
+			reader,
+			mentions: ["Ville de Paris"],
+			language: "fr",
+		}),
+		slice,
+	);
 });
 
 test("links entities terms and senses while preserving source annotations", () => {
@@ -570,6 +688,73 @@ test("links entities terms and senses while preserving source annotations", () =
 			(annotation) =>
 				(annotation.value as { senseId?: string }).senseId === "S1",
 		),
+	);
+});
+
+test("links normalized aliases with language filtering and longest spans", () => {
+	const kb = createKnowledgeBase({
+		id: "kb-multilingual-aliases",
+		entities: [
+			{ id: "Q-DE", labels: { de: ["Straße"] } },
+			{ id: "Q-ROMA-EN", labels: { en: ["Roma"] } },
+			{ id: "Q-ROMA-FR", labels: { fr: ["Roma"] } },
+			{ id: "Q-NY", labels: { en: ["New York"] } },
+			{ id: "Q-YORK", labels: { en: ["York"] } },
+			{
+				id: "Q-FR",
+				labels: { fr: ["France"] },
+				aliases: { fr: ["La France"] },
+			},
+			{ id: "Q-A", labels: { en: ["A"] } },
+		],
+	});
+	assert.deepEqual(
+		candidateEntities(kb, "Roma", { language: "fr" }).map(
+			(candidate) => candidate.entityId,
+		),
+		["Q-ROMA-FR"],
+	);
+	const street = linkEntities(createDocument("STRASSE", { id: "street" }), kb, {
+		language: "de",
+	});
+	assert.equal(
+		Object.values(street.layers["link.entity"]?.annotations ?? {}).length,
+		1,
+	);
+	const city = linkEntities(createDocument("New York", { id: "city" }), kb, {
+		language: "en",
+	});
+	const links = Object.values(city.layers["link.entity"]?.annotations ?? {});
+	assert.equal(links.length, 1);
+	assert.equal((links[0]?.value as { entityId?: string }).entityId, "Q-NY");
+	const country = linkEntities(
+		createDocument("Je visite la France.", { id: "country" }),
+		kb,
+		{ language: "fr" },
+	);
+	const countryLinks = Object.values(
+		country.layers["link.entity"]?.annotations ?? {},
+	);
+	assert.equal(countryLinks.length, 1);
+	assert.deepEqual(countryLinks[0]?.spans[0]?.span, {
+		start: 13,
+		end: 19,
+		unit: "utf16-code-unit",
+	});
+	assert.equal(
+		(countryLinks[0]?.value as { entityId?: string }).entityId,
+		"Q-FR",
+	);
+	const supplementaryBoundary = linkEntities(
+		createDocument("A𐐀", { id: "supplementary-boundary" }),
+		kb,
+		{ language: "en" },
+	);
+	assert.equal(
+		Object.values(
+			supplementaryBoundary.layers["link.entity"]?.annotations ?? {},
+		).length,
+		0,
 	);
 });
 

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { createDocument } from "@ismail-elkorchi/textdoc";
+
 import {
 	alignSentences,
 	trainSentenceAligner,
@@ -25,4 +27,20 @@ test("trains a finite sentence alignment model from examples", () => {
 	});
 	assert.equal(model.id, "model-sentence");
 	assert.ok(Number.isFinite(model.averageLengthRatio));
+});
+
+test("uses global dynamic programming for unequal sentence counts", () => {
+	const source = createDocument("Alpha. Beta.", { id: "source-unequal" });
+	const target = createDocument("Un. Deux. Trois.", { id: "target-unequal" });
+	const links = alignSentences(source, target, {
+		lengthWeight: 1,
+		lexicalWeight: 0,
+	});
+	assert.equal(links.length, 2);
+	assert.ok(links.some((link) => link.relation === "partial"));
+	assert.ok(
+		links.some(
+			(link) => link.target.span.end - link.target.span.start > "Deux.".length,
+		),
+	);
 });

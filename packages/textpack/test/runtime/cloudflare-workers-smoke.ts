@@ -15,7 +15,12 @@ const manifest: TextPackManifest = {
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [{ id: "dataset-workers", kind: "dataset" }],
 	capabilitySlots: [
-		{ slot: "corpus", status: "sampled", resourceIds: ["dataset-workers"] },
+		{
+			slot: "corpus",
+			status: "sampled",
+			tier: "resource-only",
+			resourceIds: ["dataset-workers"],
+		},
 	],
 };
 

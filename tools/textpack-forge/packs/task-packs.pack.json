@@ -77,9 +77,7 @@
 				"snapshot:source:unicode:ucd:17.0.0",
 				"snapshot:source:unicode:cldr-core:48.2.0"
 			],
-			"resourceSpecIds": [
-				"resource-spec:textpack-ar-core:arabic-core-profile"
-			],
+			"resourceSpecIds": ["resource-spec:textpack-ar-core:arabic-core-profile"],
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:ar-core",
@@ -87,18 +85,10 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-core",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"regions": [
-						"EG"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"regions": ["EG"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -123,9 +113,7 @@
 						"path": "resources/ar.core.orthography.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						],
+						"citations": ["Unicode Character Database 17.0.0."],
 						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
@@ -134,9 +122,7 @@
 						"path": "resources/ar.core.punctuation.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						],
+						"citations": ["Unicode Character Database 17.0.0."],
 						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
@@ -181,7 +167,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "core",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"ar-core-language-profile",
 							"ar-core-orthography",
@@ -199,10 +186,8 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"ar-core-quality",
-							"ar-core-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["ar-core-quality", "ar-core-quality-profile"],
 						"notes": [
 							"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
 						]
@@ -240,9 +225,7 @@
 			},
 			"packClass": "corpus",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:tatoeba:weekly-arabic-2026-06-06"
-			],
+			"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 			"snapshotIds": [
 				"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
 			],
@@ -256,15 +239,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-corpus",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -276,9 +253,7 @@
 						"path": "resources/tatoeba-ar.sentences.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textdata.corpus.rows.v1"
 					},
 					{
@@ -287,9 +262,7 @@
 						"path": "resources/tatoeba-ar.corpus.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textdata.corpus.v1"
 					},
 					{
@@ -298,9 +271,7 @@
 						"path": "resources/tatoeba-ar.corpus-quality.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -309,18 +280,14 @@
 						"path": "resources/tatoeba-ar.corpus-quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-ar-corpus:full:tatoeba-ara-sentences-detailed:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-arabic-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 1198138,
@@ -350,7 +317,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "corpus",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"ar-tatoeba-corpus-sentences",
 							"ar-tatoeba-corpus-canonical"
@@ -366,6 +334,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"ar-tatoeba-corpus-quality",
 							"ar-tatoeba-corpus-quality-profile"
@@ -376,9 +345,7 @@
 					}
 				],
 				"license": "CC-BY-2.0-FR",
-				"citations": [
-					"Tatoeba weekly Arabic exports, 2026-06-06."
-				]
+				"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."]
 			}
 		},
 		{
@@ -408,9 +375,7 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:camel:morph-msa-lrec-coling-2024"
-			],
+			"sourceIds": ["source:camel:morph-msa-lrec-coling-2024"],
 			"snapshotIds": [
 				"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf"
 			],
@@ -424,15 +389,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-msa-morphology",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -444,9 +403,7 @@
 						"path": "resources/camel-morph-msa.features.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -455,9 +412,7 @@
 						"path": "resources/camel-morph-msa.defaults.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -466,9 +421,7 @@
 						"path": "resources/camel-morph-msa.tokenizations.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
@@ -477,9 +430,7 @@
 						"path": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -488,9 +439,7 @@
 						"path": "resources/camel-morph-msa.compatibility.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -499,9 +448,7 @@
 						"path": "resources/camel-morph-msa.quality.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -510,9 +457,7 @@
 						"path": "resources/camel-morph-msa.morphology.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textlex.morphology.v1"
 					},
 					{
@@ -521,9 +466,7 @@
 						"path": "resources/camel-morph-msa.segmentation.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textdata.segmentation-profile.v1"
 					},
 					{
@@ -532,9 +475,7 @@
 						"path": "resources/camel-morph-msa.quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"CAMeL Morph MSA LREC-COLING 2024 release."
-						],
+						"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
@@ -542,6 +483,7 @@
 					{
 						"slot": "morphology",
 						"status": "task-supported",
+						"tier": "rule-based",
 						"resourceIds": [
 							"ar-msa-camel-morph-features",
 							"ar-msa-camel-morph-defaults",
@@ -559,9 +501,8 @@
 					{
 						"slot": "segmentation",
 						"status": "task-supported",
-						"resourceIds": [
-							"ar-msa-camel-segmentation-canonical"
-						],
+						"tier": "baseline",
+						"resourceIds": ["ar-msa-camel-segmentation-canonical"],
 						"capabilities": {
 							"segmentation": "profile"
 						},
@@ -572,6 +513,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"ar-msa-camel-morph-quality",
 							"ar-msa-camel-quality-profile"
@@ -582,9 +524,7 @@
 					}
 				],
 				"license": "CC-BY-4.0",
-				"citations": [
-					"CAMeL Morph MSA LREC-COLING 2024 release."
-				]
+				"citations": ["CAMeL Morph MSA LREC-COLING 2024 release."]
 			}
 		},
 		{
@@ -634,15 +574,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-normalization",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -718,6 +652,7 @@
 					{
 						"slot": "normalization",
 						"status": "task-supported",
+						"tier": "rule-based",
 						"resourceIds": [
 							"ar-normalization-rules",
 							"ar-normalization-observed-codepoints",
@@ -733,6 +668,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"ar-normalization-quality",
 							"ar-normalization-quality-profile"
@@ -775,9 +711,7 @@
 			},
 			"packClass": "parallel",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:tatoeba:weekly-arabic-2026-06-06"
-			],
+			"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 			"snapshotIds": [
 				"snapshot:source:tatoeba:weekly-arabic-2026-06-06:2026-06-06"
 			],
@@ -791,15 +725,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-parallel",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -811,9 +739,7 @@
 						"path": "resources/tatoeba-ar.parallel-deu.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -822,9 +748,7 @@
 						"path": "resources/tatoeba-ar.parallel-eng.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -833,9 +757,7 @@
 						"path": "resources/tatoeba-ar.parallel-fra.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -844,9 +766,7 @@
 						"path": "resources/tatoeba-ar.parallel-spa.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -855,9 +775,7 @@
 						"path": "resources/tatoeba-ar.parallel-quality.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -866,18 +784,14 @@
 						"path": "resources/tatoeba-ar.parallel-quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly Arabic exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-eng-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-arabic-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 297959,
@@ -905,9 +819,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-fra-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-arabic-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 19407,
@@ -935,9 +847,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-spa-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-arabic-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 21075,
@@ -965,9 +875,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-ar-parallel:full:tatoeba-ara-deu-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-arabic-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-arabic-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 18446,
@@ -997,7 +905,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "parallel",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"ar-tatoeba-parallel-deu",
 							"ar-tatoeba-parallel-eng",
@@ -1021,6 +930,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"ar-tatoeba-parallel-quality",
 							"ar-tatoeba-parallel-quality-profile"
@@ -1031,9 +941,7 @@
 					}
 				],
 				"license": "CC-BY-2.0-FR",
-				"citations": [
-					"Tatoeba weekly Arabic exports, 2026-06-06."
-				]
+				"citations": ["Tatoeba weekly Arabic exports, 2026-06-06."]
 			}
 		},
 		{
@@ -1060,12 +968,8 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:unicode:cldr-core"
-			],
-			"snapshotIds": [
-				"snapshot:source:unicode:cldr-core:48.2.0"
-			],
+			"sourceIds": ["source:unicode:cldr-core"],
+			"snapshotIds": ["snapshot:source:unicode:cldr-core:48.2.0"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-search:arabic-search-profile"
 			],
@@ -1076,15 +980,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-search",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -1128,9 +1026,8 @@
 					{
 						"slot": "search",
 						"status": "task-supported",
-						"resourceIds": [
-							"ar-search-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["ar-search-profile"],
 						"capabilities": {
 							"search": "analyzer"
 						},
@@ -1141,19 +1038,15 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"ar-search-quality",
-							"ar-search-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["ar-search-quality", "ar-search-quality-profile"],
 						"notes": [
 							"Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations."
 						]
 					}
 				],
 				"license": "Unicode-3.0",
-				"citations": [
-					"Unicode CLDR core data, cldr-core npm package 48.2.0."
-				]
+				"citations": ["Unicode CLDR core data, cldr-core npm package 48.2.0."]
 			}
 		},
 		{
@@ -1182,12 +1075,8 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:ud:arabic-nyuad-r2.18"
-			],
-			"snapshotIds": [
-				"snapshot:source:ud:arabic-nyuad:r2.18"
-			],
+			"sourceIds": ["source:ud:arabic-nyuad-r2.18"],
+			"snapshotIds": ["snapshot:source:ud:arabic-nyuad:r2.18"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile"
 			],
@@ -1198,15 +1087,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -1315,7 +1198,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "tagging",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"ar-ud-nyuad-upos",
 							"ar-ud-nyuad-features",
@@ -1333,7 +1217,8 @@
 					},
 					{
 						"slot": "syntax",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"ar-ud-nyuad-dependencies",
 							"ar-ud-nyuad-sentence-profile",
@@ -1348,6 +1233,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"ar-ud-nyuad-quality",
 							"ar-ud-nyuad-quality-profile"
@@ -1358,9 +1244,7 @@
 					}
 				],
 				"license": "CC-BY-SA-4.0",
-				"citations": [
-					"Universal Dependencies Arabic NYUAD r2.18 annotations."
-				]
+				"citations": ["Universal Dependencies Arabic NYUAD r2.18 annotations."]
 			}
 		},
 		{
@@ -1416,18 +1300,10 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-core",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"regions": [
-						"US"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"regions": ["US"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -1454,9 +1330,7 @@
 						"path": "resources/en.core.orthography.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						],
+						"citations": ["Unicode Character Database 17.0.0."],
 						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
@@ -1465,9 +1339,7 @@
 						"path": "resources/en.core.punctuation.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						],
+						"citations": ["Unicode Character Database 17.0.0."],
 						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
@@ -1476,9 +1348,7 @@
 						"path": "resources/en.core.abbreviations.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.abbreviation-table.v1"
 					},
 					{
@@ -1487,9 +1357,7 @@
 						"path": "resources/en.core.function-words.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.stoplist.v1"
 					},
 					{
@@ -1538,7 +1406,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "core",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"en-core-language-profile",
 							"en-core-orthography",
@@ -1558,10 +1427,8 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"en-core-quality",
-							"en-core-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["en-core-quality", "en-core-quality-profile"],
 						"notes": [
 							"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
 						]
@@ -1601,12 +1468,8 @@
 			},
 			"packClass": "corpus",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:tatoeba:weekly-2026-06-06"
-			],
-			"snapshotIds": [
-				"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
-			],
+			"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
+			"snapshotIds": ["snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-corpus:tatoeba-english-artifacts"
 			],
@@ -1617,15 +1480,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-corpus",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -1637,9 +1494,7 @@
 						"path": "resources/tatoeba-en.sentences.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textdata.corpus.rows.v1"
 					},
 					{
@@ -1648,9 +1503,7 @@
 						"path": "resources/tatoeba-en.corpus.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textdata.corpus.v1"
 					},
 					{
@@ -1659,9 +1512,7 @@
 						"path": "resources/tatoeba-en.corpus-quality.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -1670,18 +1521,14 @@
 						"path": "resources/tatoeba-en.corpus-quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-en-corpus:full:tatoeba-eng-sentences-detailed:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 34699431,
@@ -1711,7 +1558,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "corpus",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"en-tatoeba-corpus-sentences",
 							"en-tatoeba-corpus-canonical"
@@ -1727,6 +1575,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-tatoeba-corpus-quality",
 							"en-tatoeba-corpus-quality-profile"
@@ -1737,9 +1586,7 @@
 					}
 				],
 				"license": "CC-BY-2.0-FR",
-				"citations": [
-					"Tatoeba weekly exports, 2026-06-06."
-				]
+				"citations": ["Tatoeba weekly exports, 2026-06-06."]
 			}
 		},
 		{
@@ -1770,12 +1617,8 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:scowl:v2-rel-2026-02-25"
-			],
-			"snapshotIds": [
-				"snapshot:source:scowl:v2-rel-2026.02.25"
-			],
+			"sourceIds": ["source:scowl:v2-rel-2026-02-25"],
+			"snapshotIds": ["snapshot:source:scowl:v2-rel-2026.02.25"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection"
 			],
@@ -1786,15 +1629,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -1806,9 +1643,7 @@
 						"path": "resources/scowl-v2.inflections.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -1817,9 +1652,7 @@
 						"path": "resources/scowl-v2.pos.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -1828,9 +1661,7 @@
 						"path": "resources/scowl-v2.lookup-analyzer.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -1839,9 +1670,7 @@
 						"path": "resources/scowl-v2.lookup-generator.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -1850,9 +1679,7 @@
 						"path": "resources/scowl-v2.lexicon.json",
 						"format": "json",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.lexicon.v1"
 					},
 					{
@@ -1861,9 +1688,7 @@
 						"path": "resources/scowl-v2.morphology.json",
 						"format": "json",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textlex.morphology.v1"
 					},
 					{
@@ -1872,9 +1697,7 @@
 						"path": "resources/scowl-v2.quality.json",
 						"format": "json",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -1883,9 +1706,7 @@
 						"path": "resources/scowl-v2.quality-profile.json",
 						"format": "json",
 						"license": "LicenseRef-ESDB-MIT-Like",
-						"citations": [
-							"SCOWLv2 rich text export, rel-2026.02.25."
-						],
+						"citations": ["SCOWLv2 rich text export, rel-2026.02.25."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
@@ -1893,6 +1714,7 @@
 					{
 						"slot": "morphology",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"en-scowl-inflection-entries",
 							"en-scowl-lookup-analyzer",
@@ -1910,9 +1732,8 @@
 					{
 						"slot": "lexicon",
 						"status": "task-supported",
-						"resourceIds": [
-							"en-scowl-inflection-lexicon-canonical"
-						],
+						"tier": "lookup",
+						"resourceIds": ["en-scowl-inflection-lexicon-canonical"],
 						"capabilities": {
 							"terminology": "lexicon"
 						},
@@ -1923,6 +1744,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-scowl-inflection-quality",
 							"en-scowl-inflection-quality-profile"
@@ -1933,9 +1755,7 @@
 					}
 				],
 				"license": "LicenseRef-ESDB-MIT-Like",
-				"citations": [
-					"SCOWLv2 rich text export, rel-2026.02.25."
-				]
+				"citations": ["SCOWLv2 rich text export, rel-2026.02.25."]
 			}
 		},
 		{
@@ -1964,10 +1784,7 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:unicode:ucd",
-				"source:unicode:cldr-core"
-			],
+			"sourceIds": ["source:unicode:ucd", "source:unicode:cldr-core"],
 			"snapshotIds": [
 				"snapshot:source:unicode:ucd:17.0.0",
 				"snapshot:source:unicode:cldr-core:48.2.0"
@@ -1982,15 +1799,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-normalization",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -2049,6 +1860,7 @@
 					{
 						"slot": "normalization",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-normalization-rules",
 							"en-normalization-profile"
@@ -2063,6 +1875,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-normalization-quality",
 							"en-normalization-quality-profile"
@@ -2104,12 +1917,8 @@
 			},
 			"packClass": "parallel",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:tatoeba:weekly-2026-06-06"
-			],
-			"snapshotIds": [
-				"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"
-			],
+			"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
+			"snapshotIds": ["snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts"
 			],
@@ -2120,15 +1929,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-parallel",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -2140,9 +1943,7 @@
 						"path": "resources/tatoeba-en.parallel-ara.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2151,9 +1952,7 @@
 						"path": "resources/tatoeba-en.parallel-deu.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2162,9 +1961,7 @@
 						"path": "resources/tatoeba-en.parallel-fra.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2173,9 +1970,7 @@
 						"path": "resources/tatoeba-en.parallel-spa.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2184,9 +1979,7 @@
 						"path": "resources/tatoeba-en.parallel-ita.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2195,9 +1988,7 @@
 						"path": "resources/tatoeba-en.parallel-ell.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2206,9 +1997,7 @@
 						"path": "resources/tatoeba-en.parallel-grc.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2217,9 +2006,7 @@
 						"path": "resources/tatoeba-en.parallel-lat.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -2228,9 +2015,7 @@
 						"path": "resources/tatoeba-en.parallel-quality.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -2239,18 +2024,14 @@
 						"path": "resources/tatoeba-en.parallel-quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly exports, 2026-06-06."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-ara-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 298001,
@@ -2278,9 +2059,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-deu-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 3515460,
@@ -2308,9 +2087,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-fra-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 2631564,
@@ -2338,9 +2115,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-spa-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 1750446,
@@ -2368,9 +2143,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-ita-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 3721027,
@@ -2398,9 +2171,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-ell-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 191418,
@@ -2428,9 +2199,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-grc-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 9451,
@@ -2458,9 +2227,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-en-parallel:full:tatoeba-eng-lat-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 279658,
@@ -2490,7 +2257,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "parallel",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"en-tatoeba-parallel-ara",
 							"en-tatoeba-parallel-deu",
@@ -2522,6 +2290,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-tatoeba-parallel-quality",
 							"en-tatoeba-parallel-quality-profile"
@@ -2532,9 +2301,7 @@
 					}
 				],
 				"license": "CC-BY-2.0-FR",
-				"citations": [
-					"Tatoeba weekly exports, 2026-06-06."
-				]
+				"citations": ["Tatoeba weekly exports, 2026-06-06."]
 			}
 		},
 		{
@@ -2564,10 +2331,7 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:unicode:ucd",
-				"source:unicode:cldr-core"
-			],
+			"sourceIds": ["source:unicode:ucd", "source:unicode:cldr-core"],
 			"snapshotIds": [
 				"snapshot:source:unicode:ucd:17.0.0",
 				"snapshot:source:unicode:cldr-core:48.2.0"
@@ -2582,15 +2346,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-segmentation",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -2673,6 +2431,7 @@
 					{
 						"slot": "segmentation",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-grapheme-segmentation-profile",
 							"en-word-segmentation-profile",
@@ -2688,6 +2447,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-segmentation-quality",
 							"en-segmentation-quality-profile"
@@ -2730,12 +2490,8 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:ud:english-gumreddit-r2.18"
-			],
-			"snapshotIds": [
-				"snapshot:source:ud:english-gumreddit:r2.18"
-			],
+			"sourceIds": ["source:ud:english-gumreddit-r2.18"],
+			"snapshotIds": ["snapshot:source:ud:english-gumreddit:r2.18"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-en-syntax-ud-gumreddit:ud-conllu-profile"
 			],
@@ -2746,16 +2502,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-syntax-ud-gumreddit",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed",
-						"social"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed", "social"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -2864,7 +2613,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "tagging",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"en-ud-gumreddit-upos",
 							"en-ud-gumreddit-features",
@@ -2881,7 +2631,8 @@
 					},
 					{
 						"slot": "syntax",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"en-ud-gumreddit-dependencies",
 							"en-ud-gumreddit-sentence-profile",
@@ -2895,6 +2646,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-ud-gumreddit-quality",
 							"en-ud-gumreddit-quality-profile"
@@ -2936,9 +2688,7 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:esdb:wordlist-diff-en-default-2026-02-25"
-			],
+			"sourceIds": ["source:esdb:wordlist-diff-en-default-2026-02-25"],
 			"snapshotIds": [
 				"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
 			],
@@ -2952,21 +2702,10 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"regions": [
-						"AU",
-						"CA",
-						"GB",
-						"US"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"regions": ["AU", "CA", "GB", "US"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -3043,6 +2782,7 @@
 					{
 						"slot": "lexicon",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"en-esdb-default-wordlists",
 							"en-esdb-default-profiles",
@@ -3058,9 +2798,8 @@
 					{
 						"slot": "search",
 						"status": "task-supported",
-						"resourceIds": [
-							"en-esdb-wordlist-search-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["en-esdb-wordlist-search-profile"],
 						"capabilities": {
 							"search": "analyzer"
 						},
@@ -3071,6 +2810,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"en-esdb-wordlist-quality",
 							"en-esdb-wordlist-quality-profile"
@@ -3123,9 +2863,7 @@
 				"snapshot:source:unicode:ucd:17.0.0",
 				"snapshot:source:unicode:cldr-core:48.2.0"
 			],
-			"resourceSpecIds": [
-				"resource-spec:textpack-fr-core:french-core-profile"
-			],
+			"resourceSpecIds": ["resource-spec:textpack-fr-core:french-core-profile"],
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:fr-core",
@@ -3133,18 +2871,10 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-core",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"regions": [
-						"FR"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"regions": ["FR"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -3169,9 +2899,7 @@
 						"path": "resources/fr.core.orthography.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						],
+						"citations": ["Unicode Character Database 17.0.0."],
 						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
@@ -3180,9 +2908,7 @@
 						"path": "resources/fr.core.punctuation.tsv",
 						"format": "tsv",
 						"license": "Unicode-3.0",
-						"citations": [
-							"Unicode Character Database 17.0.0."
-						],
+						"citations": ["Unicode Character Database 17.0.0."],
 						"schemaId": "textfacts.locale-profile.v1"
 					},
 					{
@@ -3227,7 +2953,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "core",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"fr-core-language-profile",
 							"fr-core-orthography",
@@ -3245,10 +2972,8 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-core-quality",
-							"fr-core-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["fr-core-quality", "fr-core-quality-profile"],
 						"notes": [
 							"Generated quality profile records source coverage, accepted records, rejected records, and scope limitations."
 						]
@@ -3286,9 +3011,7 @@
 			},
 			"packClass": "corpus",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:tatoeba:weekly-french-2026-06-06"
-			],
+			"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 			"snapshotIds": [
 				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
 			],
@@ -3302,15 +3025,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-corpus",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -3322,9 +3039,7 @@
 						"path": "resources/tatoeba-fr.sentences.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textdata.corpus.rows.v1"
 					},
 					{
@@ -3333,9 +3048,7 @@
 						"path": "resources/tatoeba-fr.corpus.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textdata.corpus.v1"
 					},
 					{
@@ -3344,9 +3057,7 @@
 						"path": "resources/tatoeba-fr.corpus-quality.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -3355,18 +3066,14 @@
 						"path": "resources/tatoeba-fr.corpus-quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-fr-corpus:full:tatoeba-fra-sentences-detailed:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-french-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 14624789,
@@ -3396,7 +3103,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "corpus",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"fr-tatoeba-corpus-sentences",
 							"fr-tatoeba-corpus-canonical"
@@ -3412,6 +3120,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"fr-tatoeba-corpus-quality",
 							"fr-tatoeba-corpus-quality-profile"
@@ -3422,9 +3131,7 @@
 					}
 				],
 				"license": "CC-BY-2.0-FR",
-				"citations": [
-					"Tatoeba weekly French exports, 2026-06-06."
-				]
+				"citations": ["Tatoeba weekly French exports, 2026-06-06."]
 			}
 		},
 		{
@@ -3454,15 +3161,9 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:fr:lexique-383"
-			],
-			"snapshotIds": [
-				"snapshot:source:fr:lexique-383:2019-06-04"
-			],
-			"resourceSpecIds": [
-				"resource-spec:textpack-fr-lexique-sa:lexique-383"
-			],
+			"sourceIds": ["source:fr:lexique-383"],
+			"snapshotIds": ["snapshot:source:fr:lexique-383:2019-06-04"],
+			"resourceSpecIds": ["resource-spec:textpack-fr-lexique-sa:lexique-383"],
 			"manifest": {
 				"schemaVersion": "1",
 				"id": "pack:fr-lexique-sa",
@@ -3470,15 +3171,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-lexique-sa",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -3490,9 +3185,7 @@
 						"path": "resources/lexique-383.entries.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
@@ -3501,9 +3194,7 @@
 						"path": "resources/lexique-383.lemmas.tsv.gz.b64",
 						"format": "tsv+gzip+base64",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
@@ -3512,9 +3203,7 @@
 						"path": "resources/lexique-383.pos.tsv",
 						"format": "tsv",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textlex.morphology.rows.v1"
 					},
 					{
@@ -3523,9 +3212,7 @@
 						"path": "resources/lexique-383.lexicon.json",
 						"format": "json",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textlex.lexicon.v1"
 					},
 					{
@@ -3534,9 +3221,7 @@
 						"path": "resources/lexique-383.morphology.json",
 						"format": "json",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textlex.morphology.v1"
 					},
 					{
@@ -3545,9 +3230,7 @@
 						"path": "resources/lexique-383.search-profile.json",
 						"format": "json",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textsearch.analyzer-profile.v1"
 					},
 					{
@@ -3556,9 +3239,7 @@
 						"path": "resources/lexique-383.quality.json",
 						"format": "json",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -3567,9 +3248,7 @@
 						"path": "resources/lexique-383.quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-SA-4.0",
-						"citations": [
-							"Lexique 3.83, 2019-06-04."
-						],
+						"citations": ["Lexique 3.83, 2019-06-04."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
@@ -3577,6 +3256,7 @@
 					{
 						"slot": "lexicon",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"fr-lexique-entries",
 							"fr-lexique-lemmas",
@@ -3590,6 +3270,7 @@
 					{
 						"slot": "morphology",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"fr-lexique-entries",
 							"fr-lexique-pos-inventory",
@@ -3602,9 +3283,8 @@
 					{
 						"slot": "search",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-lexique-search-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["fr-lexique-search-profile"],
 						"capabilities": {
 							"search": "analyzer"
 						},
@@ -3615,19 +3295,15 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-lexique-quality",
-							"fr-lexique-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["fr-lexique-quality", "fr-lexique-quality-profile"],
 						"notes": [
 							"Generated quality profile records source volume, POS/gender/number inventory, transform integrity, and license isolation notes."
 						]
 					}
 				],
 				"license": "CC-BY-SA-4.0",
-				"citations": [
-					"Lexique 3.83, 2019-06-04."
-				]
+				"citations": ["Lexique 3.83, 2019-06-04."]
 			}
 		},
 		{
@@ -3679,15 +3355,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-normalization",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -3725,9 +3395,7 @@
 						"path": "resources/fr.normalization-elision-prefixes.tsv",
 						"format": "tsv",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textnorm.rules.v1"
 					},
 					{
@@ -3736,9 +3404,7 @@
 						"path": "resources/fr.normalization-contraction-forms.tsv",
 						"format": "tsv",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textnorm.rules.v1"
 					},
 					{
@@ -3747,9 +3413,7 @@
 						"path": "resources/fr.normalization-gold-cases.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -3783,6 +3447,7 @@
 					{
 						"slot": "normalization",
 						"status": "task-supported",
+						"tier": "rule-based",
 						"resourceIds": [
 							"fr-normalization-rules",
 							"fr-normalization-profile",
@@ -3800,6 +3465,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"fr-normalization-quality",
 							"fr-normalization-quality-profile",
@@ -3843,9 +3509,7 @@
 			},
 			"packClass": "parallel",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:tatoeba:weekly-french-2026-06-06"
-			],
+			"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 			"snapshotIds": [
 				"snapshot:source:tatoeba:weekly-french-2026-06-06:2026-06-06"
 			],
@@ -3859,15 +3523,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-parallel",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -3879,9 +3537,7 @@
 						"path": "resources/tatoeba-fr.parallel-ara.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -3890,9 +3546,7 @@
 						"path": "resources/tatoeba-fr.parallel-deu.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -3901,9 +3555,7 @@
 						"path": "resources/tatoeba-fr.parallel-eng.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -3912,9 +3564,7 @@
 						"path": "resources/tatoeba-fr.parallel-spa.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textparallel.alignment.rows.v1"
 					},
 					{
@@ -3923,9 +3573,7 @@
 						"path": "resources/tatoeba-fr.parallel-quality.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -3934,18 +3582,14 @@
 						"path": "resources/tatoeba-fr.parallel-quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-eng-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-french-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 2630353,
@@ -3973,9 +3617,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-ara-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-french-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 19399,
@@ -4003,9 +3645,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-spa-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-french-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 390399,
@@ -4033,9 +3673,7 @@
 					},
 					{
 						"artifactId": "artifact:textpack-fr-parallel:full:tatoeba-fra-deu-links:2026-06-06",
-						"sourceIds": [
-							"source:tatoeba:weekly-french-2026-06-06"
-						],
+						"sourceIds": ["source:tatoeba:weekly-french-2026-06-06"],
 						"version": "2026-06-06",
 						"profile": "full",
 						"sizeBytes": 986191,
@@ -4065,7 +3703,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "parallel",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"fr-tatoeba-parallel-ara",
 							"fr-tatoeba-parallel-deu",
@@ -4089,6 +3728,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"fr-tatoeba-parallel-quality",
 							"fr-tatoeba-parallel-quality-profile"
@@ -4099,9 +3739,7 @@
 					}
 				],
 				"license": "CC-BY-2.0-FR",
-				"citations": [
-					"Tatoeba weekly French exports, 2026-06-06."
-				]
+				"citations": ["Tatoeba weekly French exports, 2026-06-06."]
 			}
 		},
 		{
@@ -4155,15 +3793,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-segmentation",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -4236,9 +3868,7 @@
 						"path": "resources/fr.segmentation-elision-prefixes.tsv",
 						"format": "tsv",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
@@ -4247,9 +3877,7 @@
 						"path": "resources/fr.segmentation-contraction-forms.tsv",
 						"format": "tsv",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
@@ -4258,9 +3886,7 @@
 						"path": "resources/fr.segmentation-abbreviations.tsv",
 						"format": "tsv",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textdata.segmentation-table.v1"
 					},
 					{
@@ -4269,9 +3895,7 @@
 						"path": "resources/fr.segmentation-gold-cases.json",
 						"format": "json",
 						"license": "CC-BY-2.0-FR",
-						"citations": [
-							"Tatoeba weekly French exports, 2026-06-06."
-						],
+						"citations": ["Tatoeba weekly French exports, 2026-06-06."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -4305,6 +3929,7 @@
 					{
 						"slot": "segmentation",
 						"status": "task-supported",
+						"tier": "rule-based",
 						"resourceIds": [
 							"fr-grapheme-segmentation-profile",
 							"fr-word-segmentation-profile",
@@ -4322,6 +3947,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"fr-segmentation-quality",
 							"fr-segmentation-quality-profile",
@@ -4366,12 +3992,8 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:ud:french-gsd-r2.18"
-			],
-			"snapshotIds": [
-				"snapshot:source:ud:french-gsd:r2.18"
-			],
+			"sourceIds": ["source:ud:french-gsd-r2.18"],
+			"snapshotIds": ["snapshot:source:ud:french-gsd:r2.18"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-syntax-ud-gsd-sa:ud-conllu-profile"
 			],
@@ -4382,15 +4004,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-syntax-ud-gsd-sa",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -4499,7 +4115,8 @@
 				"capabilitySlots": [
 					{
 						"slot": "tagging",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"fr-ud-gsd-upos",
 							"fr-ud-gsd-features",
@@ -4516,7 +4133,8 @@
 					},
 					{
 						"slot": "syntax",
-						"status": "task-supported",
+						"status": "profiled",
+						"tier": "resource-only",
 						"resourceIds": [
 							"fr-ud-gsd-dependencies",
 							"fr-ud-gsd-sentence-profile",
@@ -4530,19 +4148,15 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"fr-ud-gsd-quality",
-							"fr-ud-gsd-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["fr-ud-gsd-quality", "fr-ud-gsd-quality-profile"],
 						"notes": [
 							"Generated quality profile records source coverage, accepted records, rejected records, and raw-text exclusion evidence."
 						]
 					}
 				],
 				"license": "CC-BY-SA-4.0",
-				"citations": [
-					"Universal Dependencies French GSD r2.18 annotations."
-				]
+				"citations": ["Universal Dependencies French GSD r2.18 annotations."]
 			}
 		},
 		{
@@ -4572,12 +4186,8 @@
 			},
 			"packClass": "language-concrete",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:unimorph:french-master-f672f8c"
-			],
-			"snapshotIds": [
-				"snapshot:source:unimorph:french-master-f672f8c"
-			],
+			"sourceIds": ["source:unimorph:french-master-f672f8c"],
+			"snapshotIds": ["snapshot:source:unimorph:french-master-f672f8c"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-fr-unimorph-sa:french-unimorph"
 			],
@@ -4588,15 +4198,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-fr-unimorph-sa",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -4695,6 +4299,7 @@
 					{
 						"slot": "morphology",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"fr-unimorph-paradigms",
 							"fr-unimorph-lookup-analyzer",
@@ -4713,6 +4318,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"fr-unimorph-quality",
 							"fr-unimorph-quality-profile"
@@ -4753,12 +4359,8 @@
 			},
 			"packClass": "kb",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:wikidata:main"
-			],
-			"snapshotIds": [
-				"snapshot:source:wikidata:main:20260608"
-			],
+			"sourceIds": ["source:wikidata:main"],
+			"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wikidata-ar:wikidata-main-artifact"
 			],
@@ -4769,15 +4371,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -4789,9 +4385,7 @@
 						"path": "resources/wikidata-ar.entities.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -4800,9 +4394,7 @@
 						"path": "resources/wikidata-ar.aliases.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -4811,9 +4403,7 @@
 						"path": "resources/wikidata-ar.relations.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -4822,9 +4412,7 @@
 						"path": "resources/wikidata-ar.kb.json",
 						"format": "json",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
@@ -4833,9 +4421,7 @@
 						"path": "resources/wikidata-ar.quality.json",
 						"format": "json",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -4844,18 +4430,14 @@
 						"path": "resources/wikidata-ar.quality-profile.json",
 						"format": "json",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608",
-						"sourceIds": [
-							"source:wikidata:main"
-						],
+						"sourceIds": ["source:wikidata:main"],
 						"version": "20260608",
 						"profile": "full",
 						"sizeBytes": 142291512349,
@@ -4886,6 +4468,7 @@
 					{
 						"slot": "kb",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wikidata-ar-entities",
 							"wikidata-ar-aliases",
@@ -4907,6 +4490,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"wikidata-ar-quality",
 							"wikidata-ar-quality-profile"
@@ -4917,9 +4501,7 @@
 					}
 				],
 				"license": "CC0-1.0",
-				"citations": [
-					"Wikidata main structured data dump, 2026-06-08."
-				]
+				"citations": ["Wikidata main structured data dump, 2026-06-08."]
 			}
 		},
 		{
@@ -4947,12 +4529,8 @@
 			},
 			"packClass": "kb",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:wikidata:main"
-			],
-			"snapshotIds": [
-				"snapshot:source:wikidata:main:20260608"
-			],
+			"sourceIds": ["source:wikidata:main"],
+			"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wikidata-en:wikidata-main-artifact"
 			],
@@ -4963,15 +4541,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wikidata-en",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -5053,9 +4625,7 @@
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-wikidata-en:full:wikidata-entities-json:20260608",
-						"sourceIds": [
-							"source:wikidata:main"
-						],
+						"sourceIds": ["source:wikidata:main"],
 						"version": "20260608",
 						"profile": "full",
 						"sizeBytes": 142291512349,
@@ -5086,6 +4656,7 @@
 					{
 						"slot": "kb",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wikidata-en-entities",
 							"wikidata-en-aliases",
@@ -5107,6 +4678,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"wikidata-en-quality",
 							"wikidata-en-quality-profile"
@@ -5117,9 +4689,7 @@
 					}
 				],
 				"license": "CC0-1.0",
-				"citations": [
-					"Wikidata main structured data dump, 2026-06-08."
-				]
+				"citations": ["Wikidata main structured data dump, 2026-06-08."]
 			}
 		},
 		{
@@ -5147,12 +4717,8 @@
 			},
 			"packClass": "kb",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:wikidata:main"
-			],
-			"snapshotIds": [
-				"snapshot:source:wikidata:main:20260608"
-			],
+			"sourceIds": ["source:wikidata:main"],
+			"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wikidata-fr:wikidata-main-artifact"
 			],
@@ -5163,15 +4729,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wikidata-fr",
 				"targets": {
-					"languages": [
-						"fr"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["fr"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -5183,9 +4743,7 @@
 						"path": "resources/wikidata-fr.entities.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5194,9 +4752,7 @@
 						"path": "resources/wikidata-fr.aliases.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5205,9 +4761,7 @@
 						"path": "resources/wikidata-fr.relations.tsv.gz.b64",
 						"format": "text/tab-separated-values",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5216,9 +4770,7 @@
 						"path": "resources/wikidata-fr.kb.json",
 						"format": "json",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
@@ -5227,9 +4779,7 @@
 						"path": "resources/wikidata-fr.quality.json",
 						"format": "json",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -5238,18 +4788,14 @@
 						"path": "resources/wikidata-fr.quality-profile.json",
 						"format": "json",
 						"license": "CC0-1.0",
-						"citations": [
-							"Wikidata main structured data dump, 2026-06-08."
-						],
+						"citations": ["Wikidata main structured data dump, 2026-06-08."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
 				"artifacts": [
 					{
 						"artifactId": "artifact:textpack-wikidata-fr:full:wikidata-entities-json:20260608",
-						"sourceIds": [
-							"source:wikidata:main"
-						],
+						"sourceIds": ["source:wikidata:main"],
 						"version": "20260608",
 						"profile": "full",
 						"sizeBytes": 142291512349,
@@ -5280,6 +4826,7 @@
 					{
 						"slot": "kb",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wikidata-fr-entities",
 							"wikidata-fr-aliases",
@@ -5301,6 +4848,7 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
+						"tier": "baseline",
 						"resourceIds": [
 							"wikidata-fr-quality",
 							"wikidata-fr-quality-profile"
@@ -5311,9 +4859,7 @@
 					}
 				],
 				"license": "CC0-1.0",
-				"citations": [
-					"Wikidata main structured data dump, 2026-06-08."
-				]
+				"citations": ["Wikidata main structured data dump, 2026-06-08."]
 			}
 		},
 		{
@@ -5342,12 +4888,8 @@
 			},
 			"packClass": "kb",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:wordnet:arabic-v4.1.0"
-			],
-			"snapshotIds": [
-				"snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
-			],
+			"sourceIds": ["source:wordnet:arabic-v4.1.0"],
+			"snapshotIds": ["snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf"
 			],
@@ -5358,15 +4900,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wordnet-ar",
 				"targets": {
-					"languages": [
-						"ar"
-					],
-					"scripts": [
-						"Arab"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -5378,9 +4914,7 @@
 						"path": "resources/wordnet-ar.lexical-entries.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
@@ -5389,9 +4923,7 @@
 						"path": "resources/wordnet-ar.senses.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5400,9 +4932,7 @@
 						"path": "resources/wordnet-ar.synsets.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5411,9 +4941,7 @@
 						"path": "resources/wordnet-ar.relations.tsv",
 						"format": "tsv",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5422,9 +4950,7 @@
 						"path": "resources/wordnet-ar.quality.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -5433,9 +4959,7 @@
 						"path": "resources/wordnet-ar.lexicon.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textlex.lexicon.v1"
 					},
 					{
@@ -5444,9 +4968,7 @@
 						"path": "resources/wordnet-ar.kb.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
@@ -5455,9 +4977,7 @@
 						"path": "resources/wordnet-ar.quality-profile.json",
 						"format": "json",
 						"license": "CC-BY-4.0",
-						"citations": [
-							"Arabic WordNet 4.1.0."
-						],
+						"citations": ["Arabic WordNet 4.1.0."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
@@ -5465,6 +4985,7 @@
 					{
 						"slot": "lexicon",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wordnet-ar-lexical-entries",
 							"wordnet-ar-lexicon-canonical"
@@ -5480,6 +5001,7 @@
 					{
 						"slot": "kb",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wordnet-ar-senses",
 							"wordnet-ar-synsets",
@@ -5497,19 +5019,15 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"wordnet-ar-quality",
-							"wordnet-ar-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["wordnet-ar-quality", "wordnet-ar-quality-profile"],
 						"notes": [
 							"Generated quality profile records lexical-entry, sense, synset, and relation counts."
 						]
 					}
 				],
 				"license": "CC-BY-4.0",
-				"citations": [
-					"Arabic WordNet 4.1.0."
-				]
+				"citations": ["Arabic WordNet 4.1.0."]
 			}
 		},
 		{
@@ -5538,12 +5056,8 @@
 			},
 			"packClass": "kb",
 			"supportLevel": "task-supported",
-			"sourceIds": [
-				"source:wordnet:open-english-2025"
-			],
-			"snapshotIds": [
-				"snapshot:source:wordnet:open-english-2025:2025-edition"
-			],
+			"sourceIds": ["source:wordnet:open-english-2025"],
+			"snapshotIds": ["snapshot:source:wordnet:open-english-2025:2025-edition"],
 			"resourceSpecIds": [
 				"resource-spec:textpack-wordnet-en:open-english-wordnet-lmf"
 			],
@@ -5554,15 +5068,9 @@
 				"version": "0.1.0",
 				"packageName": "@ismail-elkorchi/textpack-wordnet-en",
 				"targets": {
-					"languages": [
-						"en"
-					],
-					"scripts": [
-						"Latn"
-					],
-					"modalities": [
-						"typed"
-					]
+					"languages": ["en"],
+					"scripts": ["Latn"],
+					"modalities": ["typed"]
 				},
 				"engines": {
 					"@ismail-elkorchi/textpack": "^0.1.0"
@@ -5574,9 +5082,7 @@
 						"path": "resources/wordnet-en.lexical-entries.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textlex.lexicon.rows.v1"
 					},
 					{
@@ -5585,9 +5091,7 @@
 						"path": "resources/wordnet-en.senses.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5596,9 +5100,7 @@
 						"path": "resources/wordnet-en.synsets.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5607,9 +5109,7 @@
 						"path": "resources/wordnet-en.relations.tsv",
 						"format": "tsv",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textkb.knowledge-base.rows.v1"
 					},
 					{
@@ -5618,9 +5118,7 @@
 						"path": "resources/wordnet-en.quality.json",
 						"format": "json",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textquality.evidence.v1"
 					},
 					{
@@ -5629,9 +5127,7 @@
 						"path": "resources/wordnet-en.lexicon.json",
 						"format": "json",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textlex.lexicon.v1"
 					},
 					{
@@ -5640,9 +5136,7 @@
 						"path": "resources/wordnet-en.kb.json",
 						"format": "json",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textkb.knowledge-base.v1"
 					},
 					{
@@ -5651,9 +5145,7 @@
 						"path": "resources/wordnet-en.quality-profile.json",
 						"format": "json",
 						"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-						"citations": [
-							"Open English WordNet 2025."
-						],
+						"citations": ["Open English WordNet 2025."],
 						"schemaId": "textquality.profile.v1"
 					}
 				],
@@ -5661,6 +5153,7 @@
 					{
 						"slot": "lexicon",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wordnet-en-lexical-entries",
 							"wordnet-en-lexicon-canonical"
@@ -5676,6 +5169,7 @@
 					{
 						"slot": "kb",
 						"status": "task-supported",
+						"tier": "lookup",
 						"resourceIds": [
 							"wordnet-en-senses",
 							"wordnet-en-synsets",
@@ -5693,19 +5187,15 @@
 					{
 						"slot": "quality",
 						"status": "task-supported",
-						"resourceIds": [
-							"wordnet-en-quality",
-							"wordnet-en-quality-profile"
-						],
+						"tier": "baseline",
+						"resourceIds": ["wordnet-en-quality", "wordnet-en-quality-profile"],
 						"notes": [
 							"Generated quality profile records lexical-entry, sense, synset, and relation counts."
 						]
 					}
 				],
 				"license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
-				"citations": [
-					"Open English WordNet 2025."
-				]
+				"citations": ["Open English WordNet 2025."]
 			}
 		}
 	]

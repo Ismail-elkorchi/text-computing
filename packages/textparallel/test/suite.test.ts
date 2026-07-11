@@ -102,7 +102,7 @@ test("runs the final section 20 parallel workflow", () => {
 	assert.equal(sentenceLinks.length, 2);
 	assert.ok(wordLinks.some((link) => link.relation === "equivalent"));
 	assert.equal(hits[0]?.targetText, "Bonjour monde.");
-	assert.ok(terms.some((term) => term.sourceText === "Hello world."));
+	assert.ok(terms.some((term) => term.sourceText === "Hello world"));
 	assert.ok(lexicon.some((entry) => entry.sourceForm === "Hello"));
 	assert.ok(
 		collocations.some((entry) => entry.sourceCollocation[0] === "hello"),
@@ -136,7 +136,8 @@ test("parallel textpack resources materialize through the adapter", async () => 
 			capabilitySlots: [
 				{
 					slot: "parallel",
-					status: "task-supported" as const,
+					status: "profiled" as const,
+					tier: "resource-only" as const,
 					resourceIds: ["parallel-en-fr-links"],
 					bindings: [
 						{

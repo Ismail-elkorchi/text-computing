@@ -11,6 +11,7 @@
 		"resourceSpecId",
 		"pipelineId",
 		"capabilitySlot",
+		"tier",
 		"taskType",
 		"evaluationKind",
 		"result",
@@ -26,15 +27,27 @@
 		"resourceSpecId": { "type": "string", "minLength": 1 },
 		"pipelineId": { "type": "string", "minLength": 1 },
 		"capabilitySlot": { "type": "string", "minLength": 1 },
+		"tier": {
+			"enum": [
+				"none",
+				"resource-only",
+				"baseline",
+				"lookup",
+				"rule-based",
+				"contextual",
+				"model-backed"
+			]
+		},
 		"taskType": { "type": "string", "minLength": 1 },
 		"evaluationKind": {
 			"enum": [
 				"artifact-validation",
 				"coverage",
-				"gold-evaluation",
 				"integrity",
+				"reference-coverage",
 				"resource-conformance",
-				"runtime-smoke"
+				"runtime-smoke",
+				"task-accuracy"
 			]
 		},
 		"result": {
@@ -48,6 +61,70 @@
 			"items": { "type": "string" }
 		}
 	},
+	"allOf": [
+		{
+			"if": {
+				"type": "object",
+				"properties": {
+					"tier": { "const": "model-backed" },
+					"evaluationKind": { "const": "task-accuracy" }
+				},
+				"required": ["tier", "evaluationKind"]
+			},
+			"then": {
+				"type": "object",
+				"properties": {
+					"result": { "const": "pass" },
+					"metric": {
+						"type": "object",
+						"required": ["name", "value", "unit", "operator", "threshold"],
+						"properties": {
+							"name": {},
+							"value": {},
+							"unit": {},
+							"operator": {},
+							"threshold": {}
+						}
+					},
+					"dataset": {
+						"type": "object",
+						"required": ["sourceIds", "snapshotIds", "split"],
+						"properties": {
+							"sourceIds": { "type": "array", "minItems": 1 },
+							"snapshotIds": { "type": "array", "minItems": 1 },
+							"split": {
+								"type": "string",
+								"pattern": "^(?!.*train).*(held[-_ ]?out|test|evaluation).*$"
+							}
+						}
+					},
+					"evidence": {
+						"type": "object",
+						"required": ["resourceIds", "sampleSize"],
+						"properties": {
+							"resourceIds": {},
+							"sampleSize": {
+								"type": "number",
+								"exclusiveMinimum": 0
+							}
+						},
+						"anyOf": [
+							{
+								"type": "object",
+								"required": ["modelId"],
+								"properties": { "modelId": {} }
+							},
+							{
+								"type": "object",
+								"required": ["artifactId"],
+								"properties": { "artifactId": {} }
+							}
+						]
+					}
+				}
+			}
+		}
+	],
 	"definitions": {
 		"metricValue": {
 			"anyOf": [
@@ -107,6 +184,8 @@
 					"type": "array",
 					"items": { "type": "string", "minLength": 1 }
 				},
+				"modelId": { "type": "string", "minLength": 1 },
+				"artifactId": { "type": "string", "minLength": 1 },
 				"sampleSize": { "type": "number", "minimum": 0 },
 				"observations": { "$ref": "#/definitions/jsonObject" }
 			}

@@ -48,7 +48,8 @@
 						"senses",
 						"synsets",
 						"relations",
-						"ontology"
+						"ontology",
+						"lookup-index"
 					]
 				},
 				"recordCount": { "type": "integer", "minimum": 0 }

@@ -3,7 +3,7 @@
 	"resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
 	"packageName": "@ismail-elkorchi/textpack-wordnet-en",
 	"pipelineId": "open-english-wordnet-lmf",
-	"pipelineVersion": "0.1.0",
+	"pipelineVersion": "0.2.0",
 	"sourceIds": ["source:wordnet:open-english-2025"],
 	"snapshotIds": ["snapshot:source:wordnet:open-english-2025:2025-edition"],
 	"inputFiles": [

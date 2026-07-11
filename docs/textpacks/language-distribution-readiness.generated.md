@@ -1,6 +1,6 @@
 # Language Distribution Readiness
 
-Generated at: `2026-06-08T00:00:00.000Z`
+Generated at: `2026-06-12T00:00:00.000Z`
 
 This report is generated from the active forge graph. It gates the self-contained `textpack-en`, `textpack-ar`, and `textpack-fr` distributions.
 

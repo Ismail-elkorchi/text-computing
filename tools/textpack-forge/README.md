@@ -5,6 +5,16 @@ This directory contains the generated-pack pipeline for `textpack-*` packages.
 The active graph separates internal source transforms from public distribution. It emits exactly
 three self-contained language packages: `textpack-en`, `textpack-fr`, and `textpack-ar`.
 
+The CLI is orchestration only. Subsystem ownership is explicit under `lib/`:
+
+- `acquisition.mjs` fetches, verifies, and updates pinned snapshots.
+- `transforms.mjs` parses every upstream format and emits canonical resources.
+- `validation.mjs` validates source graphs, specifications, generated files, lookup indexes, and
+  WordNet semantic integrity.
+- `evaluation.mjs` builds evaluation records and enforces capability-evidence gates.
+- `policy.mjs` validates source/license policy and explicit capability status/tier claims.
+- `emission.mjs` writes package modules, manifests, license material, and generated reports.
+
 - internal build units read pinned local snapshots under
   `tools/textpack-forge/snapshots/data/*` and execute deterministic transforms from
   `tools/textpack-forge/resources/*`.
@@ -31,6 +41,12 @@ checksums, and snapshot locks after an intentional source refresh.
 publishability posture, default-distribution eligibility, and build-unit license
 policy.
 
+Large declared TSV outputs may receive a compact lookup companion when the resource spec declares
+exact `lookupKeyColumns`. The forge normalizes keys with pinned Unicode 17 NFKC casefolding and emits
+one sorted key row containing packed UTF-16 source-row spans. Indexes are omitted below the size
+threshold or when their compressed size exceeds the configured source ratio; generated verification
+rebuilds every emitted index and compares its metadata and bytes.
+
 Commands:
 
 ```sh
@@ -42,6 +58,7 @@ npm run -s forge:verify
 npm run -s forge:drift
 npm run -s forge:inventory
 npm run -s forge:size
+node --test tools/textpack-forge/test/*.test.mjs
 ```
 
 Generated outputs:

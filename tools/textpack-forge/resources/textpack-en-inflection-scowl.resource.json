@@ -18,7 +18,8 @@
 			"resourceId": "en-scowl-inflection-entries",
 			"path": "resources/scowl-v2.inflections.tsv.gz.b64",
 			"kind": "morphology",
-			"format": "tsv+gzip+base64"
+			"format": "tsv+gzip+base64",
+			"lookupKeyColumns": ["form"]
 		},
 		{
 			"resourceId": "en-scowl-pos-inventory",

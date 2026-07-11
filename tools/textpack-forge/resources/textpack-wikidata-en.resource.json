@@ -3,7 +3,7 @@
 	"resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
 	"packageName": "@ismail-elkorchi/textpack-wikidata-en",
 	"pipelineId": "wikidata-main-artifact",
-	"pipelineVersion": "0.1.0",
+	"pipelineVersion": "0.2.0",
 	"sourceIds": ["source:wikidata:main"],
 	"snapshotIds": ["snapshot:source:wikidata:main:20260608"],
 	"inputFiles": [
@@ -35,7 +35,7 @@
 		{
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json",
-			"checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2"
+			"checksum": "sha256:e61e9414df26965fa492b6a04ade617bfd9c4ee0c916316b473c0589574f2d3d"
 		}
 	],
 	"outputs": [

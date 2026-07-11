@@ -15,6 +15,8 @@
 		"check:boundaries": "node tools/check-boundaries.mjs",
 		"check:public-language": "node tools/check-public-language.mjs",
 		"schema:validate": "node tools/validate-repo-schemas.mjs && node tools/validate-textpack-packages.mjs && npm -w @ismail-elkorchi/textfacts run schema:validate",
+		"test:forge": "node --test tools/textpack-forge/test/*.test.mjs",
+		"test:nlp": "node tools/run-nlp-benchmarks.mjs",
 		"forge:build": "node tools/textpack-forge/cli.mjs build",
 		"forge:acquire": "node tools/textpack-forge/cli.mjs acquire",
 		"forge:verify": "node tools/textpack-forge/cli.mjs verify",

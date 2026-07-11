@@ -84,7 +84,13 @@
 					"resourceId": { "type": "string", "minLength": 1 },
 					"path": { "type": "string", "minLength": 1 },
 					"kind": { "type": "string", "minLength": 1 },
-					"format": { "type": "string", "minLength": 1 }
+					"format": { "type": "string", "minLength": 1 },
+					"lookupKeyColumns": {
+						"type": "array",
+						"minItems": 1,
+						"uniqueItems": true,
+						"items": { "type": "string", "minLength": 1 }
+					}
 				}
 			}
 		}

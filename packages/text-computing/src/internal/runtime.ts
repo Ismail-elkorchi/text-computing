@@ -22,6 +22,7 @@ import {
 	lookupFromPackAsync,
 	type MorphologyGeneration,
 	type MorphologyIndex,
+	morphologyAnalysesManyFromPackAsync,
 	morphologyIndexFromPackAsync,
 } from "@ismail-elkorchi/textlex";
 import {
@@ -49,11 +50,17 @@ import {
 	type TextQualityPackResource,
 } from "@ismail-elkorchi/textquality";
 import {
+	type AddOptions,
 	type Analyzer,
 	addToIndex,
 	analyzerFromPack,
 	type IndexOptions,
+	search as querySearchIndex,
+	type SearchIndex,
+	type SearchOptions,
+	type SearchQuery,
 	searchIndexFromPack,
+	termQuery,
 } from "@ismail-elkorchi/textsearch";
 import { createDocumentRuntime } from "./document.js";
 import {
@@ -67,7 +74,6 @@ import type {
 	TextComputingDocumentAnalysisOptions,
 	TextComputingNlp,
 	TextComputingPipelineRunOptions,
-	TextComputingSearchIndexOptions,
 } from "./types.js";
 
 type UdAnnotationDataset = Awaited<
@@ -308,10 +314,6 @@ export function createTextComputingNlp(
 			...(options === undefined ? {} : { index: options }),
 		});
 	};
-	const indexSearchDocument = async (
-		doc: TextDocument,
-		options: TextComputingSearchIndexOptions = {},
-	) => addToIndex(await createSearchIndex(options.index), doc, options.add);
 	const openQualityResources = () => {
 		assertRunnableTask(pack, "quality");
 		qualityResourcesPromise ??= qualityResourcesFromPack(pack, {
@@ -399,10 +401,26 @@ export function createTextComputingNlp(
 				lookup,
 			}),
 			morphology: Object.freeze({
-				analyze: (
+				analyze: async (
 					form: string,
 					options: { readonly maxResults?: number } = {},
-				) => openMorphology().then((index) => index.analyze(form, options)),
+				) => {
+					assertRunnableTask(pack, "morphology");
+					const analyses =
+						(
+							await morphologyAnalysesManyFromPackAsync(pack, [form], {
+								...readerOptions(reader),
+								...(options.maxResults === undefined
+									? {}
+									: { maxResultsPerForm: options.maxResults }),
+							})
+						).get(form) ?? [];
+					return Object.freeze(
+						options.maxResults === undefined
+							? [...analyses]
+							: analyses.slice(0, options.maxResults),
+					);
+				},
 				generate: (
 					lemma: string,
 					features?: Readonly<Record<string, string>>,
@@ -416,21 +434,18 @@ export function createTextComputingNlp(
 			}),
 			syntax: Object.freeze({
 				resources() {
-					assertRunnableTask(pack, "syntax");
 					syntaxResourcesPromise ??= udSyntaxResourcesFromPackAsync(pack, {
 						...readerOptions(reader),
 					});
 					return syntaxResourcesPromise;
 				},
 				annotations() {
-					assertRunnableTask(pack, "syntax");
 					syntaxAnnotationsPromise ??= udAnnotationRecordsFromPackAsync(pack, {
 						...readerOptions(reader),
 					});
 					return syntaxAnnotationsPromise;
 				},
 				dataset() {
-					assertRunnableTask(pack, "syntax");
 					syntaxDatasetPromise ??= readUdAnnotationDatasetFromPackAsync(pack, {
 						...readerOptions(reader),
 					});
@@ -466,29 +481,45 @@ export function createTextComputingNlp(
 									position: token.position,
 									startCU: token.startCU,
 									endCU: token.endCU,
+									viewId: "raw",
 									...(token.type === undefined ? {} : { type: token.type }),
 								}),
 							),
 						),
 					),
 				createIndex: createSearchIndex,
-				indexDocument: indexSearchDocument,
-				indexAnalysis: (
+				addDocument: (
+					index: SearchIndex,
+					doc: TextDocument,
+					options: AddOptions = {},
+				) => addToIndex(index, doc, options),
+				addAnalysis: (
+					index: SearchIndex,
 					analysis: TextComputingDocument,
-					options: TextComputingSearchIndexOptions = {},
-				) => indexSearchDocument(analysis.toTextDoc(), options),
+					options: AddOptions = {},
+				) => addToIndex(index, analysis.toTextDoc(), options),
+				query: (
+					index: SearchIndex,
+					query: string | SearchQuery,
+					options: SearchOptions = {},
+				) =>
+					Object.freeze(
+						querySearchIndex(
+							index,
+							typeof query === "string" ? termQuery(query) : query,
+							options,
+						),
+					),
 			}),
 			corpus: Object.freeze({
 				resources: () =>
 					inspectSchemaResources(pack, ["textdata.corpus.rows.v1"]),
 				rows() {
-					assertRunnableTask(pack, "corpus");
 					return corpusRowsFromPack(pack, {
 						...readerOptions(reader),
 					});
 				},
 				documents(options: { readonly maxDocuments: number }) {
-					assertRunnableTask(pack, "corpus");
 					return corpusDocumentsFromPack(pack, {
 						...options,
 						...readerOptions(reader),
@@ -502,21 +533,18 @@ export function createTextComputingNlp(
 						"textparallel.alignment.rows.v1",
 					]),
 				rows(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-					assertRunnableTask(pack, "parallel");
 					return parallelTablesFromPack(pack, {
 						...options,
 						...readerOptions(reader),
 					});
 				},
 				links(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-					assertRunnableTask(pack, "parallel");
 					return parallelLinkRowsFromPack(pack, {
 						...options,
 						...readerOptions(reader),
 					});
 				},
 				corpus(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-					assertRunnableTask(pack, "parallel");
 					return parallelCorpusFromPack(pack, {
 						...options,
 						...readerOptions(reader),

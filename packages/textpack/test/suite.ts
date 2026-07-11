@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { gzipSync } from "node:zlib";
 import {
 	capabilities,
+	capabilityResourceIdsFromBindings,
 	composePacks,
 	createFetchResourceReader,
 	createPack,
@@ -13,11 +14,14 @@ import {
 	openResourceText,
 	type PackResourceMap,
 	parseResourceTable,
+	requireCapabilityResourceBindings,
+	requireSingleCapabilityResourceBinding,
 	requireSingleTaskResourceBinding,
 	requireTaskResourceBindings,
 	resourceKinds,
 	type TextPackManifest,
 	taskResourceIdsFromBindings,
+	textPackCapabilityTiers,
 	textPackModalities,
 	validateManifest,
 } from "@ismail-elkorchi/textpack";
@@ -90,6 +94,7 @@ const manifest: TextPackManifest = {
 		{
 			slot: "core",
 			status: "sampled",
+			tier: "resource-only",
 			resourceIds: ["stoplist-en-test"],
 			capabilities: {
 				segmentation: "rules",
@@ -98,6 +103,7 @@ const manifest: TextPackManifest = {
 		{
 			slot: "lexicon",
 			status: "sampled",
+			tier: "resource-only",
 			resourceIds: ["gazetteer-en-test", "lexicon-en-test"],
 			bindings: [
 				{
@@ -118,11 +124,13 @@ const manifest: TextPackManifest = {
 		{
 			slot: "syntax",
 			status: "sampled",
+			tier: "resource-only",
 			resourceIds: ["rules-en-test"],
 		},
 		{
 			slot: "quality",
 			status: "sampled",
+			tier: "resource-only",
 			resourceIds: ["quality-en-test"],
 		},
 	],
@@ -174,6 +182,43 @@ assert.deepEqual(textPackModalities, [
 	"transliterated",
 	"historical",
 ]);
+assert.deepEqual(textPackCapabilityTiers, [
+	"none",
+	"resource-only",
+	"baseline",
+	"lookup",
+	"rule-based",
+	"contextual",
+	"model-backed",
+]);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [{ slot: "search", status: "task-supported" }],
+		}),
+	/tier must be one of/u,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{ slot: "search", status: "task-supported", tier: "resource-only" },
+			],
+		}),
+	/resource-only cannot claim runnable status/u,
+);
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			capabilitySlots: [
+				{ slot: "syntax", status: "profiled", tier: "baseline" },
+			],
+		}),
+	/tier must be resource-only/u,
+);
 
 const normalized = validateManifest(manifest);
 assert.equal(normalized.name, "Test Pack");
@@ -241,10 +286,12 @@ const recipeManifest = validateManifest({
 		{
 			slot: "core",
 			status: "task-supported",
+			tier: "baseline",
 		},
 		{
 			slot: "parallel",
 			status: "planned",
+			tier: "none",
 			notes: ["No parallel component is installed by the default composite."],
 		},
 	],
@@ -348,6 +395,7 @@ assert.throws(
 				{
 					slot: "lexicon",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["lexicon-en-test"],
 					bindings: [
 						{
@@ -371,6 +419,7 @@ assert.throws(
 				{
 					slot: "lexicon",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["lexicon-en-test"],
 					bindings: [
 						{
@@ -394,6 +443,7 @@ assert.throws(
 				{
 					slot: "lexicon",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["lexicon-en-test"],
 					bindings: [
 						{
@@ -417,6 +467,7 @@ assert.throws(
 				{
 					slot: "lexicon",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["lexicon-en-test"],
 					bindings: [
 						{
@@ -440,6 +491,7 @@ assert.throws(
 				{
 					slot: "lexicon",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["lexicon-en-test"],
 					bindings: [
 						{
@@ -463,6 +515,7 @@ assert.throws(
 				{
 					slot: "lexicon",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["lexicon-en-test"],
 					prerequisites: ["normalization"],
 				},
@@ -474,13 +527,42 @@ assert.throws(
 const pack = createPack(manifest, resources);
 assert.equal(pack.manifest.resources[0]?.schemaId, "textlex.stoplist.v1");
 assert.equal(getResource<string>(pack, "stoplist-en-test"), "a\nan\nthe\n");
+assert.deepEqual(
+	capabilityResourceIdsFromBindings(pack, {
+		slot: "lexicon",
+		ownerPackage: "@ismail-elkorchi/textlex",
+		schemaId: "textlex.lexicon.rows.v1",
+		role: "table",
+	}),
+	["lexicon-en-test"],
+);
+assert.equal(
+	requireSingleCapabilityResourceBinding(pack, {
+		slot: "lexicon",
+		ownerPackage: "@ismail-elkorchi/textlex",
+	}).resourceId,
+	"lexicon-en-test",
+);
+assert.equal(
+	requireCapabilityResourceBindings(pack, {
+		slot: "lexicon",
+		ownerPackage: "@ismail-elkorchi/textlex",
+	}).length,
+	1,
+);
 const runnableLexiconManifest: TextPackManifest = {
 	...manifest,
 	capabilitySlots: manifest.capabilitySlots.map((slot) =>
-		slot.slot === "lexicon" ? { ...slot, status: "task-supported" } : slot,
+		slot.slot === "lexicon"
+			? { ...slot, status: "task-supported", tier: "lookup" }
+			: slot,
 	),
 };
 const runnableLexiconPack = createPack(runnableLexiconManifest, resources);
+assert.deepEqual(capabilities(runnableLexiconPack), {
+	extraction: "gazetteer",
+	terminology: "lexicon",
+});
 assert.deepEqual(
 	taskResourceIdsFromBindings(runnableLexiconPack, {
 		slot: "lexicon",
@@ -569,7 +651,7 @@ assert.deepEqual(
 	["gazetteer-en-test"],
 );
 assert.deepEqual(
-	listResources(pack, {
+	listResources(runnableLexiconPack, {
 		capability: "extraction",
 		metadata: { role: "function-words" },
 	}).map((resource) => resource.id),
@@ -581,11 +663,7 @@ assert.deepEqual(
 	),
 	["stoplist-en-test"],
 );
-assert.deepEqual(capabilities(pack), {
-	segmentation: "rules",
-	extraction: "gazetteer",
-	terminology: "lexicon",
-});
+assert.deepEqual(capabilities(pack), {});
 const lexiconResources = listResources(pack, {
 	schemaId: ["textlex.stoplist.v1", "textlex.lexicon.rows.v1"],
 });
@@ -654,12 +732,14 @@ const materializedManifest: TextPackManifest = {
 	capabilitySlots: [
 		{
 			slot: "corpus",
-			status: "task-supported",
+			status: "profiled",
+			tier: "resource-only",
 			resourceIds: ["table-materialized", "table-materialized-gzip"],
 		},
 		{
 			slot: "quality",
-			status: "task-supported",
+			status: "profiled",
+			tier: "resource-only",
 			resourceIds: ["json-materialized"],
 		},
 	],
@@ -831,6 +911,7 @@ const overlayManifest: TextPackManifest = {
 		{
 			slot: "core",
 			status: "sampled",
+			tier: "resource-only",
 			resourceIds: ["stoplist-en-test"],
 			capabilities: {
 				segmentation: "dictionary",
@@ -839,6 +920,7 @@ const overlayManifest: TextPackManifest = {
 		{
 			slot: "quality",
 			status: "sampled",
+			tier: "resource-only",
 			capabilities: {
 				noisyText: true,
 			},
@@ -857,8 +939,7 @@ const composed = composePacks([pack, overlay], {
 	conflictPolicy: "last",
 });
 assert.equal(getResource<string>(composed, "stoplist-en-test"), "thereof\n");
-assert.equal(capabilities(composed).segmentation, "rules");
-assert.equal(capabilities(composed).noisyText, true);
+assert.deepEqual(capabilities(composed), {});
 
 const fileHandleManifest: TextPackManifest = {
 	...manifest,
@@ -1047,6 +1128,7 @@ function bindingPack(
 				{
 					slot: "morphology",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["shared-binding-resource"],
 					bindings: [
 						{
@@ -1076,6 +1158,22 @@ const requiredBindingPack = bindingPack(
 	"textlex.morphology.v1",
 	true,
 );
+assert.throws(
+	() =>
+		requireTaskResourceBindings(optionalBindingPack, {
+			slot: "morphology",
+			ownerPackage: "@ismail-elkorchi/textlex",
+		}),
+	/no task resource bindings/u,
+);
+assert.equal(
+	requireSingleTaskResourceBinding(optionalBindingPack, {
+		slot: "morphology",
+		ownerPackage: "@ismail-elkorchi/textlex",
+		resourceId: "shared-binding-resource",
+	}).resourceId,
+	"shared-binding-resource",
+);
 for (const packs of [
 	[optionalBindingPack, requiredBindingPack],
 	[requiredBindingPack, optionalBindingPack],
@@ -1103,6 +1201,88 @@ assert.throws(
 	/conflicting binding schemas/,
 );
 
+const profiledOptionalBindingPack = createPack(
+	{
+		...manifest,
+		id: "pack:binding-profiled-optional",
+		name: "Profiled Optional Binding",
+		packageName: "@ismail-elkorchi/textpack-binding-profiled-optional",
+		resources: [
+			{
+				id: "profiled-morphology-resource",
+				kind: "morphology",
+				schemaId: "textlex.morphology.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "morphology",
+				status: "profiled",
+				tier: "resource-only",
+				readerRequired: true,
+				resourceIds: ["profiled-morphology-resource"],
+				bindings: [
+					{
+						role: "primary",
+						resourceId: "profiled-morphology-resource",
+						schemaId: "textlex.morphology.v1",
+						required: false,
+						ownerPackage: "@ismail-elkorchi/textlex",
+					},
+				],
+			},
+		],
+	},
+	{ "profiled-morphology-resource": "profiled morphology" },
+);
+assert.deepEqual(
+	capabilityResourceIdsFromBindings(profiledOptionalBindingPack, {
+		slot: "morphology",
+		ownerPackage: "@ismail-elkorchi/textlex",
+	}),
+	["profiled-morphology-resource"],
+);
+assert.throws(
+	() =>
+		requireCapabilityResourceBindings(profiledOptionalBindingPack, {
+			slot: "morphology",
+			ownerPackage: "@ismail-elkorchi/textlex",
+			required: true,
+		}),
+	/no task resource bindings/u,
+);
+
+for (const packs of [
+	[requiredBindingPack, profiledOptionalBindingPack],
+	[profiledOptionalBindingPack, requiredBindingPack],
+]) {
+	const mixedCapabilityComposite = composePacks(packs);
+	const morphologySlot = mixedCapabilityComposite.manifest.capabilitySlots.find(
+		(slot) => slot.slot === "morphology",
+	);
+	assert.equal(morphologySlot?.status, "task-supported");
+	assert.equal(morphologySlot?.tier, "lookup");
+	assert.deepEqual(morphologySlot?.resourceIds, ["shared-binding-resource"]);
+	assert.deepEqual(
+		morphologySlot?.bindings?.map((binding) => binding.resourceId),
+		["shared-binding-resource"],
+	);
+	assert.equal(morphologySlot?.readerRequired, undefined);
+	assert.deepEqual(
+		taskResourceIdsFromBindings(mixedCapabilityComposite, {
+			slot: "morphology",
+			ownerPackage: "@ismail-elkorchi/textlex",
+		}),
+		["shared-binding-resource"],
+	);
+	assert.equal(
+		listResources(mixedCapabilityComposite, {
+			id: "profiled-morphology-resource",
+		}).length,
+		1,
+	);
+}
+
 const prototypeResources: Record<string, unknown> = Object.create(null);
 prototypeResources.__proto__ = "prototype-safe";
 const prototypePack = createPack(
@@ -1128,4 +1308,4 @@ const repeatedReader = {
 };
 await openResourceText(materializedPack, "table-materialized", repeatedReader);
 await openResourceText(materializedPack, "table-materialized", repeatedReader);
-assert.equal(repeatedReadCount, 2);
+assert.equal(repeatedReadCount, 1);

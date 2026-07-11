@@ -33,9 +33,11 @@ import {
 	lookupAbbreviation,
 	lookupAffixes,
 	lookupGazetteer,
+	lookupManyFromPackAsync,
 	lookupPronunciations,
 	lookupTermbase,
 	mergedLexiconFromPackAsync,
+	morphologyAnalysesManyFromPackAsync,
 	morphologyIndexFromPackAsync,
 	parseAffixTableResource,
 	parseLexiconResource,
@@ -171,6 +173,36 @@ assert.deepEqual(
 	]),
 	[["new-york", 2, 4]],
 );
+assert.deepEqual(phraseMatches[0]?.tokenForms, ["New", "York"]);
+assert.equal(phraseMatches[0]?.matchedPhrase, "New York");
+const spannedPhraseMatches = phraseLookup(lexicon, [
+	"I",
+	"visited",
+	{
+		text: "New",
+		span: {
+			viewId: "raw",
+			span: { start: 10, end: 13, unit: "utf16-code-unit" },
+		},
+	},
+	{
+		text: "York",
+		span: {
+			viewId: "raw",
+			span: { start: 14, end: 18, unit: "utf16-code-unit" },
+		},
+	},
+]);
+assert.deepEqual(spannedPhraseMatches[0]?.sourceSpans, [
+	{
+		viewId: "raw",
+		span: { start: 10, end: 13, unit: "utf16-code-unit" },
+	},
+	{
+		viewId: "raw",
+		span: { start: 14, end: 18, unit: "utf16-code-unit" },
+	},
+]);
 assert.deepEqual(
 	phraseLookup(lexicon, ["new", "york"], { casefold: true }).map((match) => [
 		match.entryId,
@@ -385,14 +417,34 @@ assert.equal(normalizedAnnotations.length, 1);
 assert.equal(normalizedAnnotations[0]?.spans[0]?.span.start, 0);
 assert.equal(normalizedAnnotations[0]?.spans[0]?.span.end, "résumé".length);
 
+const canonicalLexiconRows =
+	"entryId\tform\tlemma\tlanguageTag\tpartOfSpeech\nfr-1\tparle\tparler\tfr\tVERB\nfr-2\tStraße\tstrasse\tfr\tNOUN\n";
+const canonicalLexiconRowStart = canonicalLexiconRows.indexOf("\n") + 1;
+const canonicalLexiconRowEnd = canonicalLexiconRows.indexOf(
+	"\n",
+	canonicalLexiconRowStart,
+);
+const canonicalLexiconRowLength =
+	canonicalLexiconRowEnd - canonicalLexiconRowStart;
+const casefoldLexiconRowStart = canonicalLexiconRowEnd + 1;
+const casefoldLexiconRowLength =
+	canonicalLexiconRows.trimEnd().length - casefoldLexiconRowStart;
+const canonicalLexiconIndexText = [
+	"normalizedKey\trowSpans",
+	`parle\t${canonicalLexiconRowStart.toString(36)},${canonicalLexiconRowLength.toString(36)},0`,
+	`parler\t${canonicalLexiconRowStart.toString(36)},${canonicalLexiconRowLength.toString(36)},0`,
+	`strasse\t${casefoldLexiconRowStart.toString(36)},${casefoldLexiconRowLength.toString(36)},1`,
+	"",
+].join("\n");
 const canonicalLexiconText = JSON.stringify({
 	schemaVersion: "1",
 	kind: "lexicon",
 	languageTag: "fr",
-	resourceRefs: [{ resourceId: "fr-lexicon-rows", role: "entries" }],
+	resourceRefs: [
+		{ resourceId: "fr-lexicon-rows", role: "entries" },
+		{ resourceId: "fr-lexicon-rows-index", role: "lookup-index" },
+	],
 });
-const canonicalLexiconRows =
-	"entryId\tform\tlemma\tlanguageTag\tpartOfSpeech\nfr-1\tparle\tparler\tfr\tVERB\n";
 const morphologyText = JSON.stringify({
 	schemaVersion: "1",
 	kind: "morphology",
@@ -428,6 +480,22 @@ const generatedPack = {
 				schemaId: "textlex.lexicon.rows.v1",
 			},
 			{
+				id: "fr-lexicon-rows-index",
+				kind: "dataset" as const,
+				format: "tsv",
+				schemaId: "textpack.lookup-index.v1",
+				metadata: {
+					indexFormat: "normalized-key-packed-row-spans-v1",
+					indexedResourceId: "fr-lexicon-rows",
+					indexedResourceSchemaId: "textlex.lexicon.rows.v1",
+					indexedResourceTextChecksum: `sha256:${await sha256(canonicalLexiconRows)}`,
+					coordinateUnit: "utf16-code-unit",
+					offsetBasis: "uncompressed-resource-text",
+					keyNormalization: "NFKC-casefold-Unicode-17",
+					keyOrdering: "unicode-code-unit",
+				},
+			},
+			{
 				id: "fr-morphology",
 				kind: "morphology" as const,
 				format: "json",
@@ -456,6 +524,7 @@ const generatedPack = {
 			{
 				slot: "lexicon",
 				status: "task-supported" as const,
+				tier: "lookup" as const,
 				resourceIds: ["fr-lexicon"],
 				bindings: [
 					{
@@ -470,6 +539,7 @@ const generatedPack = {
 			{
 				slot: "morphology",
 				status: "task-supported" as const,
+				tier: "lookup" as const,
 				resourceIds: ["fr-morphology"],
 				bindings: [
 					{
@@ -492,6 +562,10 @@ const generatedPack = {
 			"resources/fr-lexicon.tsv",
 			canonicalLexiconRows,
 		),
+		"fr-lexicon-rows-index": await fileBackedTextResource(
+			"resources/fr-lexicon-index.tsv",
+			canonicalLexiconIndexText,
+		),
 		"fr-morphology": await fileBackedTextResource(
 			"resources/fr-morphology.json",
 			morphologyText,
@@ -513,6 +587,7 @@ const generatedPack = {
 const generatedReader = textResourceReader({
 	"resources/fr-lexicon.json": canonicalLexiconText,
 	"resources/fr-lexicon.tsv": canonicalLexiconRows,
+	"resources/fr-lexicon-index.tsv": canonicalLexiconIndexText,
 	"resources/fr-morphology.json": morphologyText,
 	"resources/fr-morph-analyzer.tsv": morphologyAnalyzerRows,
 	"resources/fr-morph-generator.tsv": morphologyGeneratorRows,
@@ -522,6 +597,60 @@ const mergedLexicon = await mergedLexiconFromPackAsync(generatedPack, {
 	reader: generatedReader,
 });
 assert.equal(lookup(mergedLexicon, "parle")[0]?.canonical, "parler");
+const staleIndexPack = {
+	...generatedPack,
+	manifest: {
+		...generatedPack.manifest,
+		resources: generatedPack.manifest.resources.map((resource) =>
+			resource.id === "fr-lexicon-rows-index"
+				? {
+						...resource,
+						metadata: {
+							...resource.metadata,
+							indexedResourceTextChecksum: `sha256:${"0".repeat(64)}`,
+						},
+					}
+				: resource,
+		),
+	},
+};
+await assert.rejects(
+	() =>
+		lookupManyFromPackAsync(staleIndexPack, ["parle"], {
+			reader: generatedReader,
+		}),
+	/source checksum mismatch/u,
+);
+const malformedLexiconIndexText = canonicalLexiconIndexText.replace(
+	`${canonicalLexiconRowStart.toString(36)},${canonicalLexiconRowLength.toString(36)},0`,
+	`${(canonicalLexiconRowStart + 1).toString(36)},${canonicalLexiconRowLength.toString(36)},0`,
+);
+const malformedIndexPack = {
+	...generatedPack,
+	resources: {
+		...generatedPack.resources,
+		"fr-lexicon-rows-index": await fileBackedTextResource(
+			"resources/fr-lexicon-index.tsv",
+			malformedLexiconIndexText,
+		),
+	},
+};
+const malformedIndexReader = textResourceReader({
+	"resources/fr-lexicon.json": canonicalLexiconText,
+	"resources/fr-lexicon.tsv": canonicalLexiconRows,
+	"resources/fr-lexicon-index.tsv": malformedLexiconIndexText,
+	"resources/fr-morphology.json": morphologyText,
+	"resources/fr-morph-analyzer.tsv": morphologyAnalyzerRows,
+	"resources/fr-morph-generator.tsv": morphologyGeneratorRows,
+	"resources/fr-morph-morphemes.tsv": morphologyMorphemeRows,
+});
+await assert.rejects(
+	() =>
+		lookupManyFromPackAsync(malformedIndexPack, ["parle"], {
+			reader: malformedIndexReader,
+		}),
+	/row span is invalid/u,
+);
 const morphology = await morphologyIndexFromPackAsync(generatedPack, {
 	reader: generatedReader,
 });
@@ -529,3 +658,142 @@ assert.equal(morphology.analyze("parle")[0]?.lemma, "parler");
 assert.equal(morphology.generate("parler", { SG: "true" })[0]?.form, "parle");
 assert.equal(morphology.analyze("re")[0]?.partOfSpeech, "PREFIX");
 assert.equal(morphology.generate("re")[0]?.form, "re");
+const targetedLexicon = await lookupManyFromPackAsync(
+	generatedPack,
+	["parle", "absent"],
+	{ reader: generatedReader },
+);
+assert.equal(targetedLexicon.get("parle")?.[0]?.canonical, "parler");
+assert.deepEqual(targetedLexicon.get("absent"), []);
+const casefoldLexicon = await lookupManyFromPackAsync(
+	generatedPack,
+	["STRASSE"],
+	{ reader: generatedReader },
+);
+assert.equal(casefoldLexicon.get("STRASSE")?.[0]?.canonical, "strasse");
+const targetedMorphology = await morphologyAnalysesManyFromPackAsync(
+	generatedPack,
+	["parle", "re", "absent"],
+	{ reader: generatedReader },
+);
+assert.equal(targetedMorphology.get("parle")?.[0]?.lemma, "parler");
+assert.equal(targetedMorphology.get("re")?.[0]?.partOfSpeech, "PREFIX");
+assert.deepEqual(targetedMorphology.get("absent"), []);
+
+const camelCanonicalText = JSON.stringify({
+	schemaVersion: "1",
+	kind: "morphology",
+	morphologyId: "ar-camel-fixture",
+	languageTag: "ar",
+	resourceRefs: [
+		{ resourceId: "ar-camel-morphemes", role: "morpheme-inventory" },
+		{ resourceId: "ar-camel-compatibility", role: "compatibility-table" },
+	],
+});
+const camelMorphemeRows = [
+	"section\tsurface\tcategory\tpartOfSpeech\tlexicalForm\tdiacritizedForm\tfeatureBundle",
+	"PREFIXES\t\tP0\t\t\t\tprc0:0 prc2:0",
+	"PREFIXES\tال\tPA\t\t\tٱل#\tprc0:Al_det prc2:0",
+	"PREFIXES\tوال\tPA\t\t\tوَٱل#\tprc0:Al_det prc2:wa_conj",
+	"STEMS\tكتاب\tXV\tverb\tٱِكْتَأَب\tكْتَأَب\troot:ك.و.ب lex_logprob:-99",
+	"STEMS\tكتاب\tXN\tnoun\tكِتَاب\tكِتَاب\troot:ك.ت.ب num:s lex_logprob:-8",
+	"SUFFIXES\t\tS0\t\t\t\tenc0:0",
+].join("\n");
+const camelCompatibilityRows = [
+	"table\tleftCategory\trightCategory",
+	"AB\tP0\tXN",
+	"AB\tPA\tXN",
+	"BC\tXN\tS0",
+	"AC\tP0\tS0",
+	"AC\tPA\tS0",
+].join("\n");
+const camelPack = {
+	manifest: {
+		id: "pack:textlex-camel-fixture",
+		packageName: "@ismail-elkorchi/textpack-textlex-camel-fixture",
+		resources: [
+			{
+				id: "ar-camel-canonical",
+				kind: "morphology" as const,
+				format: "json",
+				schemaId: "textlex.morphology.v1",
+			},
+			{
+				id: "ar-camel-morphemes",
+				kind: "morphology" as const,
+				format: "tsv",
+				schemaId: "textlex.morphology.rows.v1",
+			},
+			{
+				id: "ar-camel-compatibility",
+				kind: "morphology" as const,
+				format: "tsv",
+				schemaId: "textlex.morphology.rows.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "morphology",
+				status: "task-supported" as const,
+				tier: "rule-based" as const,
+				resourceIds: ["ar-camel-canonical"],
+				bindings: [
+					{
+						role: "primary" as const,
+						resourceId: "ar-camel-canonical",
+						schemaId: "textlex.morphology.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textlex" as const,
+					},
+				],
+			},
+		],
+	},
+	resources: {
+		"ar-camel-canonical": await fileBackedTextResource(
+			"resources/ar-camel.json",
+			camelCanonicalText,
+		),
+		"ar-camel-morphemes": await fileBackedTextResource(
+			"resources/ar-camel-morphemes.tsv",
+			camelMorphemeRows,
+		),
+		"ar-camel-compatibility": await fileBackedTextResource(
+			"resources/ar-camel-compatibility.tsv",
+			camelCompatibilityRows,
+		),
+	},
+};
+const camelReads = new Map<string, number>();
+const camelReader = {
+	readText({ descriptor }: { readonly descriptor: { readonly path: string } }) {
+		camelReads.set(descriptor.path, (camelReads.get(descriptor.path) ?? 0) + 1);
+		const records: Readonly<Record<string, string>> = {
+			"resources/ar-camel.json": camelCanonicalText,
+			"resources/ar-camel-morphemes.tsv": camelMorphemeRows,
+			"resources/ar-camel-compatibility.tsv": camelCompatibilityRows,
+		};
+		const text = records[descriptor.path];
+		if (text === undefined) throw new Error(`missing ${descriptor.path}`);
+		return text;
+	},
+};
+const composedCamel = await morphologyAnalysesManyFromPackAsync(
+	camelPack,
+	["كتاب", "الكتاب", "والكتاب"],
+	{ reader: camelReader },
+);
+assert.equal(composedCamel.get("كتاب")?.[0]?.lemma, "كِتَاب");
+assert.equal(composedCamel.get("كتاب")?.[0]?.features.lex_logprob, "-8");
+for (const form of ["الكتاب", "والكتاب"]) {
+	const analysis = composedCamel.get(form)?.[0];
+	assert.equal(analysis?.form, form);
+	assert.equal(analysis?.lemma, "كِتَاب");
+	assert.equal(analysis?.features.stemSurface, "كتاب");
+}
+assert.equal(composedCamel.get("والكتاب")?.[0]?.features.prefixSurface, "وال");
+await morphologyAnalysesManyFromPackAsync(camelPack, ["الكتاب"], {
+	reader: camelReader,
+});
+assert.equal(camelReads.get("resources/ar-camel-morphemes.tsv"), 1);
+assert.equal(camelReads.get("resources/ar-camel-compatibility.tsv"), 1);

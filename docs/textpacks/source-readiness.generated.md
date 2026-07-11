@@ -1,6 +1,6 @@
 # Source Readiness
 
-Generated at: `2026-06-08T00:00:00.000Z`
+Generated at: `2026-06-12T00:00:00.000Z`
 
 This report is generated from the forge source-policy universe. It is metadata-only unless a source also appears in `sourcePaths`, `snapshotPaths`, and a resource spec.
 

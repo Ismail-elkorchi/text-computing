@@ -57,6 +57,7 @@ function smokePack(runtimeName: string) {
 				{
 					slot: "segmentation",
 					status: "task-supported",
+					tier: "baseline",
 					resourceIds: [`segmentation-${runtimeName}`],
 					bindings: [
 						{
@@ -71,6 +72,7 @@ function smokePack(runtimeName: string) {
 				{
 					slot: "normalization",
 					status: "task-supported",
+					tier: "baseline",
 					resourceIds: [`normalization-${runtimeName}`],
 					bindings: [
 						{

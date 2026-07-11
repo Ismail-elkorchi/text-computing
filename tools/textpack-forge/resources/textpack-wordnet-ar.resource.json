@@ -3,7 +3,7 @@
 	"resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
 	"packageName": "@ismail-elkorchi/textpack-wordnet-ar",
 	"pipelineId": "arabic-wordnet-lmf",
-	"pipelineVersion": "0.1.0",
+	"pipelineVersion": "0.2.0",
 	"sourceIds": ["source:wordnet:arabic-v4.1.0"],
 	"snapshotIds": ["snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"],
 	"inputFiles": [

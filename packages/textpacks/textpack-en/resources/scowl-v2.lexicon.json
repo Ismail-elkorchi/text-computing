@@ -13,6 +13,11 @@
       "recordCount": 103,
       "resourceId": "en-scowl-pos-inventory",
       "role": "entries"
+    },
+    {
+      "recordCount": 349953,
+      "resourceId": "en-scowl-inflection-entries-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1",

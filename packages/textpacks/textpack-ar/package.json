@@ -57,6 +57,7 @@
 		"resources/camel-morph-msa.morphology.json",
 		"resources/camel-morph-msa.segmentation.json",
 		"resources/camel-morph-msa.quality-profile.json",
+		"resources/camel-morph-msa.morphemes.lookup-index.tsv.gz.b64",
 		"resources/wordnet-ar.lexical-entries.tsv.gz.b64",
 		"resources/wordnet-ar.senses.tsv.gz.b64",
 		"resources/wordnet-ar.synsets.tsv.gz.b64",

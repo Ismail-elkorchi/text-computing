@@ -2,7 +2,7 @@
 	"schemaVersion": "1",
 	"forgeVersion": "0.1.0",
 	"mode": "source-backed",
-	"generatedAt": "2026-06-08T00:00:00.000Z",
+	"generatedAt": "2026-06-12T00:00:00.000Z",
 	"sourcePaths": [
 		"tools/textpack-forge/sources/arabic-wordnet-v4.1.0.source.json",
 		"tools/textpack-forge/sources/camel-morph-msa-lrec-coling-2024.source.json",
@@ -153,7 +153,7 @@
 		},
 		{
 			"snapshotId": "snapshot:source:wikidata:main:20260608",
-			"checksum": "sha256:14ac14a875bdf8abd72d64cbff21aac27d8ad14519efa16b59f33c9f27cb4403"
+			"checksum": "sha256:11d1f102728b5dbd9a88e8dfcbc33da952d956d4fc9c7a27390952db053dba14"
 		}
 	],
 	"outputPaths": [

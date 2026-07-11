@@ -101,6 +101,50 @@ assert.equal(normalized.view.text, "ye old shop");
 assert.equal(normalized.spanMap.targetViewId, "norm");
 assert.equal(doc.views.norm, undefined);
 
+const unicodeComposed = normalizeDocument(createDocument("e\u0301 olde"), {
+	modes: ["spelling"],
+	resources: { spellingMaps: [spellingMap] },
+	unicodeForm: "NFC",
+});
+assert.equal(unicodeComposed.view.text, "é old");
+assert.equal(
+	unicodeComposed.spanMap.entries.at(-1)?.target.end,
+	unicodeComposed.view.text.length,
+);
+assert.notEqual(
+	unicodeComposed.view.transform?.optionsHash,
+	normalizeDocument(createDocument("e\u0301 olde"), {
+		modes: ["spelling"],
+		resources: { spellingMaps: [spellingMap] },
+		unicodeForm: "NFD",
+	}).view.transform?.optionsHash,
+);
+
+const overlappingMap = buildSpellingMap(
+	[
+		{ source: "can not", candidates: ["cannot"], kind: "spacing" },
+		{ source: "not", candidates: ["n't"], kind: "spacing" },
+	],
+	{ id: "overlap:test", kind: "spacing" },
+);
+assert.throws(
+	() =>
+		normalizeDocument(createDocument("can not"), {
+			modes: ["spacing"],
+			resources: { spacingMaps: [overlappingMap] },
+			overlapPolicy: "all",
+		}),
+	/overlapPolicy "all" cannot apply overlapping/,
+);
+assert.equal(
+	normalizeDocument(createDocument("can not"), {
+		modes: ["spacing"],
+		resources: { spacingMaps: [overlappingMap] },
+		overlapPolicy: "longest",
+	}).view.text,
+	"cannot",
+);
+
 const materialized = addViewWithSpanMap(
 	doc,
 	normalized.view,
@@ -318,6 +362,7 @@ const normalizationPack = {
 			{
 				slot: "normalization",
 				status: "task-supported" as const,
+				tier: "rule-based" as const,
 				resourceIds: ["normalization-fr-profile"],
 				bindings: [
 					{
@@ -397,6 +442,7 @@ const normalizationProfilePack = {
 			{
 				slot: "normalization",
 				status: "task-supported" as const,
+				tier: "rule-based" as const,
 				resourceIds: ["fr-normalization-profile"],
 				bindings: [
 					{
@@ -432,3 +478,11 @@ const normalizedView = compiledNormalization.searchView(
 );
 assert.equal(normalizedView.view.text, "ete '");
 assert.equal(normalizedView.spanMap.sourceViewId, "raw");
+const customSourceView = compiledNormalization.searchView(
+	createDocument("Été ’", {
+		id: "doc:norm:custom-source-view",
+		rawViewId: "source-text",
+	}),
+);
+assert.equal(customSourceView.view.text, "ete '");
+assert.equal(customSourceView.spanMap.sourceViewId, "source-text");

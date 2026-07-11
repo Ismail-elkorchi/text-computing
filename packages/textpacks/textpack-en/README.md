@@ -60,6 +60,7 @@ console.log(pack.manifest.resources.length);
 - `en-scowl-inflection-morphology-canonical` (morphology, json)
 - `en-scowl-inflection-quality` (quality-profile, json)
 - `en-scowl-inflection-quality-profile` (quality-profile, json)
+- `en-scowl-inflection-entries-lookup-index` (dataset, tsv)
 - `wordnet-en-lexical-entries` (lexicon, tsv)
 - `wordnet-en-senses` (knowledge-base, tsv)
 - `wordnet-en-synsets` (knowledge-base, tsv)

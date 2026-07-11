@@ -10,6 +10,7 @@ test("Arabic consumer workflow uses only the SDK plus textpack-ar", async () => 
 	const nlp = await load(ar, { reader: createNodeResourceReader() });
 	const text = "تعترف فرنسا باللغة العربية.";
 	const doc = await nlp(text, {
+		preset: "full",
 		entityMaxCandidates: 2,
 		lexiconMaxResults: 3,
 		morphologyMaxResults: 3,
@@ -44,8 +45,10 @@ test("Arabic consumer workflow uses only the SDK plus textpack-ar", async () => 
 
 	const entities = await nlp.kb.candidates("فرنسا", { maxCandidates: 2 });
 	assert.ok(entities.some((entity) => entity.label === "فرنسا"));
-	const index = await nlp.search.indexAnalysis(doc);
+	const emptyIndex = await nlp.search.createIndex();
+	const index = nlp.search.addAnalysis(emptyIndex, doc);
 	assert.equal(index.stats.documentCount, 1);
+	assert.equal(nlp.search.query(index, "فرنسا")[0]?.docId, doc.toTextDoc().id);
 
 	assert.equal(nlp.corpus.resources().length, 0);
 	assert.equal(nlp.parallel.resources().length, 0);

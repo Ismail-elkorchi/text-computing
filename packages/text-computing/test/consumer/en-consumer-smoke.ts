@@ -10,6 +10,7 @@ test("English consumer workflow uses only the SDK plus textpack-en", async () =>
 	const nlp = await load(en, { reader: createNodeResourceReader() });
 	const text = "The French Republic recognizes France.";
 	const doc = await nlp(text, {
+		preset: "full",
 		entityMaxCandidates: 2,
 		lexiconMaxResults: 3,
 		morphologyMaxResults: 3,
@@ -46,8 +47,10 @@ test("English consumer workflow uses only the SDK plus textpack-en", async () =>
 
 	const entities = await nlp.kb.candidates("France", { maxCandidates: 2 });
 	assert.ok(entities.some((entity) => entity.label === "France"));
-	const index = await nlp.search.indexAnalysis(doc);
+	const emptyIndex = await nlp.search.createIndex();
+	const index = nlp.search.addAnalysis(emptyIndex, doc);
 	assert.equal(index.stats.documentCount, 1);
+	assert.equal(nlp.search.query(index, "france")[0]?.docId, doc.toTextDoc().id);
 
 	assert.equal(nlp.corpus.resources().length, 0);
 	assert.equal(nlp.parallel.resources().length, 0);

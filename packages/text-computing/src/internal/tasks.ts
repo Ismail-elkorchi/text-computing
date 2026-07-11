@@ -1,6 +1,9 @@
 import type { TextPack } from "@ismail-elkorchi/textpack";
 import { unsupportedTaskError } from "./errors.js";
-import type { TextComputingDocumentTask } from "./types.js";
+import type {
+	TextComputingDocumentTask,
+	TextComputingTaskPreset,
+} from "./types.js";
 
 export function assertRunnableTask(pack: TextPack, slot: string): void {
 	const capabilitySlot = pack.manifest.capabilitySlots.find(
@@ -13,17 +16,26 @@ export function assertRunnableTask(pack: TextPack, slot: string): void {
 
 export function planDocumentTasks(
 	tasks: readonly TextComputingDocumentTask[] | undefined,
+	preset: TextComputingTaskPreset = "core",
 ): ReadonlySet<TextComputingDocumentTask> {
+	if (tasks !== undefined) {
+		return new Set<TextComputingDocumentTask>([
+			"segmentation",
+			"normalization",
+			...tasks,
+		]);
+	}
+	const presetTasks: Readonly<
+		Record<TextComputingTaskPreset, readonly TextComputingDocumentTask[]>
+	> = {
+		core: ["search"],
+		lookup: ["lexicon", "morphology", "search"],
+		full: ["lexicon", "morphology", "kb", "search", "quality"],
+	};
 	return new Set<TextComputingDocumentTask>([
 		"segmentation",
 		"normalization",
-		...(tasks ?? [
-			"lexicon" as const,
-			"morphology" as const,
-			"kb" as const,
-			"search" as const,
-			"quality" as const,
-		]),
+		...presetTasks[preset],
 	]);
 }
 

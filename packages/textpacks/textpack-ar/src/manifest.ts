@@ -372,6 +372,38 @@ export const manifest: TextPackManifest = {
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "ar-msa-camel-morph-morphemes-lookup-index",
+			"kind": "dataset",
+			"path": "resources/camel-morph-msa.morphemes.lookup-index.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-4.0",
+			"citations": [
+				"CAMeL Morph MSA LREC-COLING 2024 release."
+			],
+			"schemaId": "textpack.lookup-index.v1",
+			"metadata": {
+				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexedResourceId": "ar-msa-camel-morph-morphemes",
+				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
+				"indexedResourceTextChecksum": "sha256:825277b95e8aa6b35ff718ae7ca07cfab84a4704e476ac29931ccd595b870d65",
+				"indexedResourceGzipBase64ByteLength": 15281477,
+				"lookupIndexGzipBase64ByteLength": 4692633,
+				"compressedSizeRatio": 0.30708,
+				"coordinateUnit": "utf16-code-unit",
+				"offsetBasis": "uncompressed-resource-text",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyOrdering": "unicode-code-unit",
+				"keyColumns": [
+					"surface",
+					"diacritizedForm",
+					"lexicalForm",
+					"stem"
+				],
+				"recordCount": 203199,
+				"spanCount": 429253
+			}
+		},
+		{
 			"id": "wordnet-ar-lexical-entries",
 			"kind": "lexicon",
 			"path": "resources/wordnet-ar.lexical-entries.tsv.gz.b64",
@@ -562,7 +594,8 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "core",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"ar-core-language-profile",
 				"ar-core-orthography",
@@ -590,17 +623,20 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "corpus",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "foundation",
-			"status": "task-supported"
+			"status": "profiled",
+			"tier": "resource-only"
 		},
 		{
 			"slot": "kb",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"wordnet-ar-senses",
 				"wordnet-ar-synsets",
@@ -686,7 +722,8 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "language-registry",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"bcp47-language-subtags",
 				"bcp47-language-registry-summary"
@@ -698,6 +735,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "lexicon",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"wordnet-ar-lexical-entries",
 				"wordnet-ar-lexicon-canonical"
@@ -729,7 +767,8 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "locale-profile",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"cldr-48-likely-subtags",
 				"cldr-48-locale-aliases",
@@ -743,14 +782,23 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "morphology",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"ar-msa-camel-morph-features",
 				"ar-msa-camel-morph-defaults",
 				"ar-msa-camel-morph-morphemes",
 				"ar-msa-camel-morph-compatibility",
-				"ar-msa-camel-morphology-canonical"
+				"ar-msa-camel-morphology-canonical",
+				"ar-msa-camel-morph-morphemes-lookup-index"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "ar-msa-camel-morph-morphemes-lookup-index",
+					"schemaId": "textpack.lookup-index.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
 				{
 					"role": "primary",
 					"resourceId": "ar-msa-camel-morphology-canonical",
@@ -798,6 +846,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "normalization",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"ar-normalization-rules",
 				"ar-normalization-observed-codepoints",
@@ -837,6 +886,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "parallel",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -844,6 +894,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"ar-core-quality",
 				"ar-core-quality-profile",
@@ -958,6 +1009,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "search",
 			"status": "task-supported",
+			"tier": "baseline",
 			"resourceIds": [
 				"ar-search-profile"
 			],
@@ -981,6 +1033,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "segmentation",
 			"status": "task-supported",
+			"tier": "baseline",
 			"resourceIds": [
 				"ar-msa-camel-segmentation-canonical"
 			],
@@ -1004,13 +1057,15 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "syntax",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "unicode-profile",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"unicode-17-blocks",
 				"unicode-17-property-value-aliases",
@@ -1053,8 +1108,8 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:78d906f0c73d85650e1ff58aab0aa93a116dc7978756c724328785533464d0ef",
-		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},
 	"artifacts": [

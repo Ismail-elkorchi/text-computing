@@ -29,7 +29,12 @@ const manifest: TextPackManifest = {
 	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [{ id: "dataset-node", kind: "dataset" }],
 	capabilitySlots: [
-		{ slot: "corpus", status: "sampled", resourceIds: ["dataset-node"] },
+		{
+			slot: "corpus",
+			status: "sampled",
+			tier: "resource-only",
+			resourceIds: ["dataset-node"],
+		},
 	],
 };
 
@@ -56,6 +61,7 @@ const fileBackedManifest: TextPackManifest = {
 		{
 			slot: "corpus",
 			status: "sampled",
+			tier: "resource-only",
 			resourceIds: ["dataset-file-backed"],
 		},
 	],

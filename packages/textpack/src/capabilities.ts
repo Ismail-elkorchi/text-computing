@@ -25,7 +25,11 @@ const capabilityOrder = {
 export function capabilities(pack: TextPack): TextPackCapabilities {
 	return mergeCapabilities(
 		pack.manifest.capabilitySlots.flatMap((slot) =>
-			slot.capabilities === undefined ? [] : [slot.capabilities],
+			(slot.status !== "task-supported" &&
+				slot.status !== "feature-complete") ||
+			slot.capabilities === undefined
+				? []
+				: [slot.capabilities],
 		),
 	);
 }

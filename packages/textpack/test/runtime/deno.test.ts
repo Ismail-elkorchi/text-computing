@@ -14,7 +14,12 @@ Deno.test("textpack final API works in Deno", () => {
 		engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 		resources: [{ id: "dataset-deno", kind: "dataset" }],
 		capabilitySlots: [
-			{ slot: "corpus", status: "sampled", resourceIds: ["dataset-deno"] },
+			{
+				slot: "corpus",
+				status: "sampled",
+				tier: "resource-only",
+				resourceIds: ["dataset-deno"],
+			},
 		],
 	};
 	const pack = createPack(manifest, { "dataset-deno": "deno runtime" });

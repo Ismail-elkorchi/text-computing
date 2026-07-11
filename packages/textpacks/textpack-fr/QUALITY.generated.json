@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 1346783,
+  "acceptedRecordCount": 1749888,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -17,18 +17,21 @@
         "fr-core-basic-segmentation"
       ],
       "slot": "core",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "notes": [
         "Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "corpus",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "slot": "foundation",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "artifactIds": [
@@ -50,7 +53,8 @@
         "wikidata-fr-kb-canonical"
       ],
       "slot": "kb",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "notes": [
@@ -61,7 +65,8 @@
         "bcp47-language-registry-summary"
       ],
       "slot": "language-registry",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "notes": [
@@ -71,10 +76,12 @@
       "resourceIds": [
         "fr-lexique-entries",
         "fr-lexique-lemmas",
-        "fr-lexique-lexicon-canonical"
+        "fr-lexique-lexicon-canonical",
+        "fr-lexique-entries-lookup-index"
       ],
       "slot": "lexicon",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "notes": [
@@ -87,7 +94,8 @@
         "cldr-48-core-summary"
       ],
       "slot": "locale-profile",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "capabilities": {
@@ -101,15 +109,18 @@
         "fr-lexique-entries",
         "fr-lexique-pos-inventory",
         "fr-lexique-morphology-canonical",
+        "fr-lexique-entries-lookup-index",
         "fr-unimorph-paradigms",
         "fr-unimorph-lookup-analyzer",
         "fr-unimorph-lookup-generator",
         "fr-unimorph-feature-inventory",
         "fr-unimorph-pos-inventory",
-        "fr-unimorph-morphology-canonical"
+        "fr-unimorph-morphology-canonical",
+        "fr-unimorph-paradigms-lookup-index"
       ],
       "slot": "morphology",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "capabilities": {
@@ -126,14 +137,16 @@
         "fr-normalization-gold-cases"
       ],
       "slot": "normalization",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "notes": [
         "Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "parallel",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
@@ -162,7 +175,8 @@
         "wikidata-fr-quality-profile"
       ],
       "slot": "quality",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "capabilities": {
@@ -175,7 +189,8 @@
         "fr-lexique-search-profile"
       ],
       "slot": "search",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "baseline"
     },
     {
       "capabilities": {
@@ -192,14 +207,16 @@
         "fr-segmentation-elision-prefixes"
       ],
       "slot": "segmentation",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "notes": [
         "UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "syntax",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
@@ -212,10 +229,11 @@
         "unicode-17-core-summary"
       ],
       "slot": "unicode-profile",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     }
   ],
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "licenseWarnings": [],
   "mode": "source-backed",
@@ -227,7 +245,7 @@
   },
   "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 56,
+  "resourceCount": 58,
   "resourcePaths": [
     "resources/bcp47.language-registry.summary.json",
     "resources/bcp47.language-subtags.tsv.gz.b64",
@@ -243,6 +261,7 @@
     "resources/fr.core.quality-profile.json",
     "resources/fr.segmentation.grapheme.json",
     "resources/lexique-383.entries.tsv.gz.b64",
+    "resources/lexique-383.entries.lookup-index.tsv.gz.b64",
     "resources/lexique-383.lemmas.tsv.gz.b64",
     "resources/lexique-383.lexicon.json",
     "resources/lexique-383.morphology.json",
@@ -271,6 +290,7 @@
     "resources/unimorph-fra.lookup-generator.tsv.gz.b64",
     "resources/unimorph-fra.morphology.json",
     "resources/unimorph-fra.paradigms.tsv.gz.b64",
+    "resources/unimorph-fra.paradigms.lookup-index.tsv.gz.b64",
     "resources/unimorph-fra.pos.tsv",
     "resources/unimorph-fra.quality.json",
     "resources/unimorph-fra.quality-profile.json",
@@ -495,6 +515,20 @@
       "sizeClass": "small"
     },
     {
+      "byteLength": 1957881,
+      "checksum": "sha256:adc7d4445d1dbbd17ef9d1f656cc93d951a3d62fdbb8a46e5a0236ff31ac2c76",
+      "id": "fr-lexique-entries-lookup-index",
+      "kind": "dataset",
+      "lineCount": 128895,
+      "nonEmptyLineCount": 128894,
+      "path": "resources/lexique-383.entries.lookup-index.tsv.gz.b64",
+      "pipelineId": "french-lexique-383",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
+      "resourceTextByteLength": 3959811,
+      "sizeClass": "small"
+    },
+    {
       "byteLength": 710653,
       "checksum": "sha256:559c4bd7b10cb6ae17ea2e8686a3748b26115733888ebb0a2863899504cfadb6",
       "id": "fr-lexique-lemmas",
@@ -509,31 +543,31 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 385,
-      "checksum": "sha256:7c9bd51cdebf13e3c161d62d22bf81c4d7b527c4e71ab42c2f458349722d3606",
+      "byteLength": 511,
+      "checksum": "sha256:b15e5bb71b53eba9a55a237bd3e3f9a9a4f6e55d82cfa629fcd74aaafa562693",
       "id": "fr-lexique-lexicon-canonical",
       "kind": "lexicon",
-      "lineCount": 21,
-      "nonEmptyLineCount": 20,
+      "lineCount": 26,
+      "nonEmptyLineCount": 25,
       "path": "resources/lexique-383.lexicon.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
-      "resourceTextByteLength": 385,
+      "resourceTextByteLength": 511,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1451,
-      "checksum": "sha256:f03934f511c58be478643a5b6b6917142e91c10febc85f6b7d5bc5e2ed3150a2",
+      "byteLength": 1577,
+      "checksum": "sha256:7357891ea83da1b287390b19fdf969a0a76341f20f7f2a4a0c59fc7825c5bb8c",
       "id": "fr-lexique-morphology-canonical",
       "kind": "morphology",
-      "lineCount": 82,
-      "nonEmptyLineCount": 81,
+      "lineCount": 87,
+      "nonEmptyLineCount": 86,
       "path": "resources/lexique-383.morphology.json",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
-      "resourceTextByteLength": 1451,
+      "resourceTextByteLength": 1577,
       "sizeClass": "tiny"
     },
     {
@@ -859,17 +893,17 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 1650,
-      "checksum": "sha256:0490c0a1246de5e59e96cd6a001cbf59ad743a40be29b432b296c6d73de1c4eb",
+      "byteLength": 1779,
+      "checksum": "sha256:8c023956c9f416aa1f60fe9812e781d1625e3a09bdc05d767e1fb454615eaf3b",
       "id": "fr-unimorph-morphology-canonical",
       "kind": "morphology",
-      "lineCount": 84,
-      "nonEmptyLineCount": 83,
+      "lineCount": 89,
+      "nonEmptyLineCount": 88,
       "path": "resources/unimorph-fra.morphology.json",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
-      "resourceTextByteLength": 1650,
+      "resourceTextByteLength": 1779,
       "sizeClass": "tiny"
     },
     {
@@ -884,6 +918,20 @@
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
       "resourceTextByteLength": 25167521,
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 3450913,
+      "checksum": "sha256:b889e25c71741bd0fd56484ea4459696e1c2b802ddb7041f07ed3fae6cc3cca5",
+      "id": "fr-unimorph-paradigms-lookup-index",
+      "kind": "dataset",
+      "lineCount": 274194,
+      "nonEmptyLineCount": 274193,
+      "path": "resources/unimorph-fra.paradigms.lookup-index.tsv.gz.b64",
+      "pipelineId": "french-unimorph",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
+      "resourceTextByteLength": 7738450,
       "sizeClass": "small"
     },
     {
@@ -1007,7 +1055,7 @@
       "nonEmptyLineCount": 6102,
       "path": "resources/wikidata-fr.aliases.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "resourceTextByteLength": 339445,
       "sizeClass": "tiny"
@@ -1021,7 +1069,7 @@
       "nonEmptyLineCount": 9378,
       "path": "resources/wikidata-fr.entities.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "resourceTextByteLength": 1164021,
       "sizeClass": "tiny"
@@ -1035,23 +1083,23 @@
       "nonEmptyLineCount": 27,
       "path": "resources/wikidata-fr.kb.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "resourceTextByteLength": 523,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 969,
-      "checksum": "sha256:5e65208de66fd8a1aec1fbf81e635829c8d4ae134be16af5b25b973a69bd8c76",
+      "byteLength": 1118,
+      "checksum": "sha256:b376192b8dc6a1ed2c2d0514e1731b349d86901bd222a05270c297be1dcd09d0",
       "id": "wikidata-fr-quality",
       "kind": "quality-profile",
-      "lineCount": 27,
-      "nonEmptyLineCount": 26,
+      "lineCount": 30,
+      "nonEmptyLineCount": 29,
       "path": "resources/wikidata-fr.quality.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 969,
+      "resourceTextByteLength": 1118,
       "sizeClass": "tiny"
     },
     {
@@ -1063,7 +1111,7 @@
       "nonEmptyLineCount": 101,
       "path": "resources/wikidata-fr.quality-profile.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "resourceTextByteLength": 2789,
       "sizeClass": "tiny"
@@ -1077,7 +1125,7 @@
       "nonEmptyLineCount": 9378,
       "path": "resources/wikidata-fr.relations.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
       "resourceTextByteLength": 581510,
       "sizeClass": "tiny"

@@ -83,6 +83,31 @@ export function validateProcessorRequirement(
 			),
 		);
 	}
+	if (
+		requirement.providerId !== undefined &&
+		!isNonEmptyString(requirement.providerId)
+	) {
+		diagnostics.push(
+			diagnostic(
+				"TEXTPIPELINE_INVALID_REQUIREMENT_PROVIDER",
+				"processor requirement providerId must be a non-empty string.",
+				`${path}.providerId`,
+			),
+		);
+	}
+	if (
+		requirement.providerId !== undefined &&
+		requirement.layer === undefined &&
+		requirement.viewKind === undefined
+	) {
+		diagnostics.push(
+			diagnostic(
+				"TEXTPIPELINE_REQUIREMENT_PROVIDER_WITHOUT_DOCUMENT_OUTPUT",
+				"processor requirement providerId requires a layer or viewKind constraint.",
+				`${path}.providerId`,
+			),
+		);
+	}
 	return diagnostics;
 }
 

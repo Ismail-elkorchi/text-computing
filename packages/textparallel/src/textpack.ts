@@ -1,12 +1,12 @@
 import type { ParallelRecord } from "@ismail-elkorchi/textdata";
 import {
+	capabilityResourceIdsFromBindings,
 	openResourceTable,
 	type TextPack,
 	type TextPackMaterializedTable,
 	type TextPackResource,
 	type TextPackResourceReader,
 	type TextPackTaskResourceBindingRole,
-	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
 import {
 	createParallelCorpus,
@@ -89,7 +89,7 @@ export async function parallelTablesFromPack(
 	options: ParallelRowsFromPackOptions = {},
 ): Promise<readonly ParallelTableResource[]> {
 	const limit = rowLimit(options.maxRows);
-	const resourceIds = taskResourceIdsFromBindings(pack, {
+	const resourceIds = capabilityResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "parallel",
 		ownerPackage: "@ismail-elkorchi/textparallel",
 		schemaId: options.schemaIds ?? [

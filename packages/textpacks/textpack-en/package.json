@@ -69,6 +69,7 @@
 		"resources/scowl-v2.morphology.json",
 		"resources/scowl-v2.quality.json",
 		"resources/scowl-v2.quality-profile.json",
+		"resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
 		"resources/wordnet-en.lexical-entries.tsv.gz.b64",
 		"resources/wordnet-en.senses.tsv.gz.b64",
 		"resources/wordnet-en.synsets.tsv.gz.b64",

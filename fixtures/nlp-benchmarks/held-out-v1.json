@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "1",
+  "description": "Independently authored typed-text cases reserved for end-to-end public API evaluation.",
+  "holdoutPolicy": {
+    "separation": "forge-input-disjoint",
+    "exposure": "committed-public",
+    "changeControl": "linguistic-review-required"
+  },
+  "languages": [
+    {
+      "languageTag": "en",
+      "segmentation": [
+        {
+          "id": "en-seg-contraction",
+          "text": "Dr. Smith can’t attend.",
+          "lexicalUnits": ["Dr", ".", "Smith", "can’t", "attend", "."]
+        },
+        {
+          "id": "en-seg-decimal",
+          "text": "Café costs $5.50.",
+          "lexicalUnits": ["Café", "costs", "$", "5.50", "."]
+        }
+      ],
+      "normalization": [
+        {
+          "id": "en-norm-canonical-composition",
+          "text": "Café",
+          "expected": "café"
+        }
+      ],
+      "morphology": [
+        {
+          "id": "en-morph-irregular-plural",
+          "text": "children",
+          "tokens": [{ "startCU": 0, "endCU": 8, "lemmas": ["child"] }]
+        },
+        {
+          "id": "en-morph-past",
+          "text": "walked",
+          "tokens": [{ "startCU": 0, "endCU": 6, "lemmas": ["walk"] }]
+        },
+        {
+          "id": "en-morph-third-person",
+          "text": "recognizes",
+          "tokens": [{ "startCU": 0, "endCU": 10, "lemmas": ["recognize"] }]
+        }
+      ],
+      "entities": [
+        {
+          "id": "en-entity-france",
+          "text": "France signed.",
+          "mentions": [{ "startCU": 0, "endCU": 6, "entityIds": ["Q142"] }]
+        },
+        { "id": "en-entity-nil", "text": "ZzyzxNeverEntity", "mentions": [] }
+      ],
+      "search": [
+        {
+          "id": "en-search-casefold",
+          "text": "French REPUBLIC",
+          "tokens": [
+            { "term": "french", "startCU": 0, "endCU": 6 },
+            { "term": "republic", "startCU": 7, "endCU": 15 }
+          ]
+        }
+      ]
+    },
+    {
+      "languageTag": "fr",
+      "segmentation": [
+        {
+          "id": "fr-seg-elision",
+          "text": "L’État d’Israël reconnaît Paris.",
+          "lexicalUnits": ["L’", "État", "d’", "Israël", "reconnaît", "Paris", "."]
+        },
+        {
+          "id": "fr-seg-time",
+          "text": "M. Dupont arrive à 10 h 30.",
+          "lexicalUnits": ["M", ".", "Dupont", "arrive", "à", "10", "h", "30", "."]
+        }
+      ],
+      "normalization": [
+        {
+          "id": "fr-norm-apostrophe-accent",
+          "text": "L’ÉTAT",
+          "expected": "l'etat"
+        }
+      ],
+      "morphology": [
+        {
+          "id": "fr-morph-plural",
+          "text": "maisons",
+          "tokens": [{ "startCU": 0, "endCU": 7, "lemmas": ["maison"] }]
+        },
+        {
+          "id": "fr-morph-imperfect",
+          "text": "mangeaient",
+          "tokens": [{ "startCU": 0, "endCU": 10, "lemmas": ["manger"] }]
+        },
+        {
+          "id": "fr-morph-accented",
+          "text": "reconnaît",
+          "tokens": [{ "startCU": 0, "endCU": 9, "lemmas": ["reconnaître"] }]
+        }
+      ],
+      "entities": [
+        {
+          "id": "fr-entity-france",
+          "text": "Je visite la France.",
+          "mentions": [{ "startCU": 13, "endCU": 19, "entityIds": ["Q142"] }]
+        },
+        { "id": "fr-entity-nil", "text": "EntitéQuiNExisteJamais", "mentions": [] }
+      ],
+      "search": [
+        {
+          "id": "fr-search-accent-fold",
+          "text": "RÉPUBLIQUE française",
+          "tokens": [
+            { "term": "republique", "startCU": 0, "endCU": 10 },
+            { "term": "francaise", "startCU": 11, "endCU": 20 }
+          ]
+        }
+      ]
+    },
+    {
+      "languageTag": "ar",
+      "segmentation": [
+        {
+          "id": "ar-seg-punctuation",
+          "text": "والكتاب جديد.",
+          "lexicalUnits": ["والكتاب", "جديد", "."]
+        },
+        {
+          "id": "ar-seg-diacritics",
+          "text": "مَرْحَبًا بالعالم!",
+          "lexicalUnits": ["مَرْحَبًا", "بالعالم", "!"]
+        }
+      ],
+      "normalization": [
+        {
+          "id": "ar-norm-diacritics",
+          "text": "مَـرْحَبًا",
+          "expected": "مرحبا"
+        }
+      ],
+      "morphology": [
+        {
+          "id": "ar-morph-bare-book",
+          "text": "كتاب",
+          "tokens": [{ "startCU": 0, "endCU": 4, "lemmas": ["كِتَاب"] }]
+        },
+        {
+          "id": "ar-morph-definite-book",
+          "text": "الكتاب",
+          "tokens": [{ "startCU": 0, "endCU": 6, "lemmas": ["كِتَاب"] }]
+        },
+        {
+          "id": "ar-morph-conjoined-book",
+          "text": "والكتاب",
+          "tokens": [{ "startCU": 0, "endCU": 7, "lemmas": ["كِتَاب"] }]
+        }
+      ],
+      "entities": [
+        {
+          "id": "ar-entity-france",
+          "text": "زرت فرنسا اليوم.",
+          "mentions": [{ "startCU": 4, "endCU": 9, "entityIds": ["Q142"] }]
+        },
+        { "id": "ar-entity-nil", "text": "كيانغيرموجودأبدا", "mentions": [] }
+      ],
+      "search": [
+        {
+          "id": "ar-search-diacritics",
+          "text": "مَـرْحَبًا بالعالم",
+          "tokens": [
+            { "term": "مرحبا", "startCU": 0, "endCU": 5 },
+            { "term": "بالعالم", "startCU": 6, "endCU": 13 }
+          ]
+        }
+      ]
+    }
+  ]
+}

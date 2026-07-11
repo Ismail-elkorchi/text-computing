@@ -15,6 +15,7 @@ import {
   listResources,
   loadPack,
   openResourceJson,
+	openResourceLookupIndex,
   openResourceTable,
   validateManifest,
 } from "@ismail-elkorchi/textpack";
@@ -22,6 +23,14 @@ import {
 
 The final manifest shape is described by
 [`../../schemas/textpack-manifest.schema.json`](../../schemas/textpack-manifest.schema.json).
+
+Every capability slot declares both `status` and `tier`. Status reports availability; tier reports
+the strongest behavior the bound runtime actually executes. A shipped table is `resource-only`
+until an adapter performs the named task, finite keyed matching is `lookup`, and a trained model is
+`model-backed` only when that model runs. The complete contract is documented in
+[`../../docs/specs/textpack-capability-tiers.md`](../../docs/specs/textpack-capability-tiers.md).
+The `capabilities(pack)` summary includes only runnable slots; profile and artifact metadata cannot
+silently raise an executable capability level.
 
 ## Pack Modules
 
@@ -58,6 +67,14 @@ handles that require this explicit materialization step.
 Resource ids are exact. `getResource(pack, "x")` only returns the resource whose descriptor id is
 `"x"`.
 
+Generated large tables may declare a canonical `resourceRefs` entry with role `lookup-index` and
+schema `textpack.lookup-index.v1`. `openResourceLookupIndex()` validates the indexed source text's
+SHA-256 checksum, then exposes `rowsForNormalizedKey()` and row materialization without parsing the
+whole source table. The packed v1 index uses one UTF-16 code-unit-ordered row per key and base36,
+delta-coded source spans. Callers must supply keys already normalized as
+`NFKC-casefold-Unicode-17`; task adapters own that normalization so `textpack` stays independent of
+Unicode policy packages.
+
 ## Descriptor Queries And Materialization
 
 `textpack` queries descriptors and materializes resources. It does not own lexicon, KB, corpus,
@@ -79,6 +96,11 @@ only validates manifests, loads modules, composes resource maps, queries descrip
 text/JSON/table payloads from caller-provided resource values. `createFetchResourceReader()` is a
 runtime-neutral helper for file-backed generated resources whose descriptors include `packageRoot`
 and package-relative `path`; it uses `fetch`, not filesystem APIs.
+
+Use `requireTaskResourceBindings` only for an executable `task-supported` slot. Expert APIs that
+inspect a `profiled` or sampled dataset use `requireCapabilityResourceBindings`; this preserves
+access to corpus, parallel, and syntax annotations without misrepresenting resource access as NLP
+inference.
 
 If those assets are served separately from the generated module, rebase frozen handles at the
 reader boundary:

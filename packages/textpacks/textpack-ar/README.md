@@ -48,6 +48,7 @@ console.log(pack.manifest.resources.length);
 - `ar-msa-camel-morphology-canonical` (morphology, json)
 - `ar-msa-camel-segmentation-canonical` (segmentation-profile, json)
 - `ar-msa-camel-quality-profile` (quality-profile, json)
+- `ar-msa-camel-morph-morphemes-lookup-index` (dataset, tsv)
 - `wordnet-ar-lexical-entries` (lexicon, tsv)
 - `wordnet-ar-senses` (knowledge-base, tsv)
 - `wordnet-ar-synsets` (knowledge-base, tsv)

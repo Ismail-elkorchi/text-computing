@@ -225,16 +225,32 @@ function normalizeWithProfile(
 }
 
 function sourceView(doc: TextDocument) {
-	const view =
-		doc.views.raw ??
-		doc.views[
-			Object.keys(doc.views).sort((left, right) =>
-				left.localeCompare(right),
-			)[0] ?? ""
-		];
-	if (view === undefined)
-		throw new TypeError(`document ${doc.id} has no views.`);
-	return view;
+	const raw = doc.views.raw;
+	if (raw !== undefined) return raw;
+	const roots = Object.values(doc.views).filter(
+		(view) => view.sourceViewId === undefined,
+	);
+	const rawRoots = roots.filter(
+		(view) => view.kind === "raw" || view.kind === "decoded",
+	);
+	if (rawRoots.length === 1) return rawRoots[0] as (typeof rawRoots)[number];
+	if (rawRoots.length > 1) {
+		throw new TypeError(
+			`document ${doc.id} has ambiguous raw views: ${rawRoots
+				.map((view) => view.id)
+				.sort((left, right) => left.localeCompare(right))
+				.join(", ")}.`,
+		);
+	}
+	if (roots.length === 1) return roots[0] as (typeof roots)[number];
+	throw new TypeError(
+		roots.length === 0
+			? `document ${doc.id} has no source view.`
+			: `document ${doc.id} has ambiguous source views: ${roots
+					.map((view) => view.id)
+					.sort((left, right) => left.localeCompare(right))
+					.join(", ")}.`,
+	);
 }
 
 export async function normalizationProfileFromPack(

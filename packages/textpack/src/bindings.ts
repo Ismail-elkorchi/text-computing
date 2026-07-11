@@ -198,9 +198,23 @@ export function requireTaskResourceBindings(
 		);
 	}
 	assertRunnableSlot(pack, slot);
+	return requireDeclaredResourceBindings(
+		pack,
+		query,
+		queryResourceIds(query) === undefined ? true : undefined,
+	);
+}
+
+function requireDeclaredResourceBindings(
+	pack: TextPackTaskBindingSource,
+	query: TextPackTaskBindingQuery,
+	defaultRequired: boolean | undefined,
+): readonly TextPackTaskResourceBinding[] {
 	const effectiveQuery = {
 		...query,
-		required: query.required ?? true,
+		...(query.required === undefined && defaultRequired !== undefined
+			? { required: defaultRequired }
+			: {}),
 	} satisfies TextPackTaskBindingQuery;
 	const bindings = listTaskResourceBindings(pack, effectiveQuery);
 	assertRequestedResourcesAreBound(pack, effectiveQuery, bindings);
@@ -212,6 +226,28 @@ export function requireTaskResourceBindings(
 		);
 	}
 	return bindings;
+}
+
+export function requireCapabilityResourceBindings(
+	pack: TextPackTaskBindingSource,
+	query: TextPackTaskBindingQuery,
+): readonly TextPackTaskResourceBinding[] {
+	const slot = findSlot(pack, query.slot);
+	if (slot === undefined) {
+		throw new TypeError(
+			`Textpack ${packLabel(pack)} does not declare capability slot ${query.slot}.`,
+		);
+	}
+	if (
+		slot.status === "unsupported" ||
+		slot.status === "planned" ||
+		slot.status === "not-applicable"
+	) {
+		throw new TypeError(
+			`Textpack ${packLabel(pack)} slot ${slot.slot} is ${slot.status}, so it has no inspectable resources.${slotGapText(pack, slot.slot)}`,
+		);
+	}
+	return requireDeclaredResourceBindings(pack, query, undefined);
 }
 
 export function requireSingleTaskResourceBinding(
@@ -227,12 +263,36 @@ export function requireSingleTaskResourceBinding(
 	);
 }
 
+export function requireSingleCapabilityResourceBinding(
+	pack: TextPackTaskBindingSource,
+	query: TextPackTaskBindingQuery,
+): TextPackTaskResourceBinding {
+	const bindings = requireCapabilityResourceBindings(pack, query);
+	if (bindings.length === 1) return bindings[0] as TextPackTaskResourceBinding;
+	throw new TypeError(
+		`Textpack ${packLabel(pack)} has ambiguous capability resource bindings for ${bindingLabel(
+			query,
+		)}: ${bindings.map((binding) => binding.resourceId).join(", ")}.`,
+	);
+}
+
 export function taskResourceIdsFromBindings(
 	pack: TextPackTaskBindingSource,
 	query: TextPackTaskBindingQuery,
 ): readonly string[] {
 	return Object.freeze(
 		requireTaskResourceBindings(pack, query).map(
+			(binding) => binding.resourceId,
+		),
+	);
+}
+
+export function capabilityResourceIdsFromBindings(
+	pack: TextPackTaskBindingSource,
+	query: TextPackTaskBindingQuery,
+): readonly string[] {
+	return Object.freeze(
+		requireCapabilityResourceBindings(pack, query).map(
 			(binding) => binding.resourceId,
 		),
 	);

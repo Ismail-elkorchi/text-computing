@@ -1,15 +1,15 @@
 {
   "lexicalEntriesByPartOfSpeech": {
-    "": 32473,
-    "a": 14641,
-    "n": 78711,
-    "r": 3372,
+    "a": 21621,
+    "n": 98220,
+    "r": 4489,
     "s": 22,
-    "v": 6750
+    "v": 11617
   },
   "lexicalEntryCount": 135969,
+  "lexicalEntrySemanticIntegrityRatio": 1,
   "pipelineId": "open-english-wordnet-lmf",
-  "pipelineVersion": "0.1.0",
+  "pipelineVersion": "0.2.0",
   "recordsAccepted": 783681,
   "recordsRejected": 0,
   "relationCount": 355064,
@@ -47,6 +47,7 @@
   },
   "schemaVersion": "1",
   "senseCount": 185129,
+  "senseSemanticIntegrityRatio": 1,
   "sourceId": "source:wordnet:open-english-2025",
   "synsetCount": 107519,
   "warnings": []

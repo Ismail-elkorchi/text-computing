@@ -51,7 +51,8 @@
 						"compatibility-table",
 						"paradigm-table",
 						"analyzer",
-						"generator"
+						"generator",
+						"lookup-index"
 					]
 				},
 				"recordCount": { "type": "integer", "minimum": 0 }

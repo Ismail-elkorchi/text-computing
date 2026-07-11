@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 2607730,
+  "acceptedRecordCount": 2957710,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -20,21 +20,24 @@
         "en-core-basic-segmentation"
       ],
       "slot": "core",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "notes": [
         "Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "corpus",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
         "The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
       ],
       "slot": "foundation",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "artifactIds": [
@@ -61,7 +64,8 @@
         "wikidata-en-kb-canonical"
       ],
       "slot": "kb",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "notes": [
@@ -72,7 +76,8 @@
         "bcp47-language-registry-summary"
       ],
       "slot": "language-registry",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "capabilities": {
@@ -94,7 +99,8 @@
         "wordnet-en-lexicon-canonical"
       ],
       "slot": "lexicon",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "notes": [
@@ -107,7 +113,8 @@
         "cldr-48-core-summary"
       ],
       "slot": "locale-profile",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "capabilities": {
@@ -122,10 +129,12 @@
         "en-scowl-lookup-analyzer",
         "en-scowl-lookup-generator",
         "en-scowl-pos-inventory",
-        "en-scowl-inflection-morphology-canonical"
+        "en-scowl-inflection-morphology-canonical",
+        "en-scowl-inflection-entries-lookup-index"
       ],
       "slot": "morphology",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "capabilities": {
@@ -140,14 +149,16 @@
         "en-normalization-profile"
       ],
       "slot": "normalization",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "baseline"
     },
     {
       "notes": [
         "Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "parallel",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
@@ -177,7 +188,8 @@
         "wikidata-en-quality-profile"
       ],
       "slot": "quality",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "capabilities": {
@@ -191,7 +203,8 @@
         "en-esdb-wordlist-search-profile"
       ],
       "slot": "search",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "baseline"
     },
     {
       "capabilities": {
@@ -207,14 +220,16 @@
         "en-sentence-segmentation-profile"
       ],
       "slot": "segmentation",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "baseline"
     },
     {
       "notes": [
         "UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "syntax",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
@@ -227,10 +242,11 @@
         "unicode-17-core-summary"
       ],
       "slot": "unicode-profile",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     }
   ],
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "licenseWarnings": [],
   "mode": "source-backed",
@@ -242,7 +258,7 @@
   },
   "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 56,
+  "resourceCount": 57,
   "resourcePaths": [
     "resources/bcp47.language-registry.summary.json",
     "resources/bcp47.language-subtags.tsv.gz.b64",
@@ -270,6 +286,7 @@
     "resources/en.normalization.quality-profile.json",
     "resources/en.normalization-rules.tsv",
     "resources/scowl-v2.inflections.tsv.gz.b64",
+    "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
     "resources/scowl-v2.lexicon.json",
     "resources/scowl-v2.morphology.json",
     "resources/scowl-v2.quality.json",
@@ -679,31 +696,45 @@
       "sizeClass": "medium"
     },
     {
-      "byteLength": 412,
-      "checksum": "sha256:434af7796427f70752f91a1952078f1faff44440693669097ba7249934059007",
+      "byteLength": 4844105,
+      "checksum": "sha256:11aec2ff40bb2daa747c65ad3474675be6466f33eaba1c60f71f612837304055",
+      "id": "en-scowl-inflection-entries-lookup-index",
+      "kind": "dataset",
+      "lineCount": 349955,
+      "nonEmptyLineCount": 349954,
+      "path": "resources/scowl-v2.inflections.lookup-index.tsv.gz.b64",
+      "pipelineId": "scowl-v2-inflection",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+      "resourceTextByteLength": 8960130,
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 547,
+      "checksum": "sha256:1702a6a8ca33af5d3c3a4640f68a5d9e973ce1a23a73ee8fcdb8823ec1645d67",
       "id": "en-scowl-inflection-lexicon-canonical",
       "kind": "lexicon",
-      "lineCount": 21,
-      "nonEmptyLineCount": 20,
+      "lineCount": 26,
+      "nonEmptyLineCount": 25,
       "path": "resources/scowl-v2.lexicon.json",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "resourceTextByteLength": 412,
+      "resourceTextByteLength": 547,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1856,
-      "checksum": "sha256:546c40de190116857b21e009974063ae9b28d09980153cb7d2c42d04020708ca",
+      "byteLength": 1991,
+      "checksum": "sha256:a00c092d471a01a2a194df111bc597049e31f9f52bf75a957254f021144992c4",
       "id": "en-scowl-inflection-morphology-canonical",
       "kind": "morphology",
-      "lineCount": 97,
-      "nonEmptyLineCount": 96,
+      "lineCount": 102,
+      "nonEmptyLineCount": 101,
       "path": "resources/scowl-v2.morphology.json",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "resourceTextByteLength": 1856,
+      "resourceTextByteLength": 1991,
       "sizeClass": "tiny"
     },
     {
@@ -911,7 +942,7 @@
       "nonEmptyLineCount": 19782,
       "path": "resources/wikidata-en.aliases.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "resourceTextByteLength": 507718,
       "sizeClass": "tiny"
@@ -925,7 +956,7 @@
       "nonEmptyLineCount": 11619,
       "path": "resources/wikidata-en.entities.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "resourceTextByteLength": 1207330,
       "sizeClass": "tiny"
@@ -939,23 +970,23 @@
       "nonEmptyLineCount": 27,
       "path": "resources/wikidata-en.kb.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "resourceTextByteLength": 528,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 972,
-      "checksum": "sha256:799f427bf95894042df2a54225fefc958a095b9eed84220ae07737b499a94627",
+      "byteLength": 1121,
+      "checksum": "sha256:5a8d4ca5f27ba5340f15bf2cd99bffcf60bb29c67b3c35da8d97f976acc7d397",
       "id": "wikidata-en-quality",
       "kind": "quality-profile",
-      "lineCount": 27,
-      "nonEmptyLineCount": 26,
+      "lineCount": 30,
+      "nonEmptyLineCount": 29,
       "path": "resources/wikidata-en.quality.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 972,
+      "resourceTextByteLength": 1121,
       "sizeClass": "tiny"
     },
     {
@@ -967,7 +998,7 @@
       "nonEmptyLineCount": 101,
       "path": "resources/wikidata-en.quality-profile.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "resourceTextByteLength": 2794,
       "sizeClass": "tiny"
@@ -981,7 +1012,7 @@
       "nonEmptyLineCount": 11619,
       "path": "resources/wikidata-en.relations.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "resourceTextByteLength": 363996,
       "sizeClass": "tiny"
@@ -995,23 +1026,23 @@
       "nonEmptyLineCount": 27,
       "path": "resources/wordnet-en.kb.json",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "resourceTextByteLength": 518,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1347373,
-      "checksum": "sha256:ab4a31e2a2bb008aa968f2e482949be3ff3789eabe9eaa1e90e07aeb8032595e",
+      "byteLength": 1421145,
+      "checksum": "sha256:767ed0dde940e39b449a84ac828fc1fc2f5aaa46dc2a3bc78f2fc9d182dc1bf1",
       "id": "wordnet-en-lexical-entries",
       "kind": "lexicon",
       "lineCount": 135971,
       "nonEmptyLineCount": 135970,
       "path": "resources/wordnet-en.lexical-entries.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 4202454,
+      "resourceTextByteLength": 4485654,
       "sizeClass": "small"
     },
     {
@@ -1023,37 +1054,37 @@
       "nonEmptyLineCount": 15,
       "path": "resources/wordnet-en.lexicon.json",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "resourceTextByteLength": 292,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1401,
-      "checksum": "sha256:c20aa32a35394b476849490164227ba64237489bbc3de36498e50d146095db94",
+      "byteLength": 1466,
+      "checksum": "sha256:b5a30df459cc872696f009930b39b6abd138ac112a8b8445410858f465635678",
       "id": "wordnet-en-quality",
       "kind": "quality-profile",
-      "lineCount": 54,
-      "nonEmptyLineCount": 53,
+      "lineCount": 55,
+      "nonEmptyLineCount": 54,
       "path": "resources/wordnet-en.quality.json",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 1401,
+      "resourceTextByteLength": 1466,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 876,
-      "checksum": "sha256:681ae437d9d4b42caa837baedd35a08c5930d45b99ecc4059a75ba3b636ac6a8",
+      "byteLength": 1191,
+      "checksum": "sha256:c598bc33d743efdca6b8ce1057b228ddfe02a24c0865045d3814b6a6b80efac2",
       "id": "wordnet-en-quality-profile",
       "kind": "quality-profile",
-      "lineCount": 41,
-      "nonEmptyLineCount": 40,
+      "lineCount": 53,
+      "nonEmptyLineCount": 52,
       "path": "resources/wordnet-en.quality-profile.json",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 876,
+      "resourceTextByteLength": 1191,
       "sizeClass": "tiny"
     },
     {
@@ -1065,23 +1096,23 @@
       "nonEmptyLineCount": 355065,
       "path": "resources/wordnet-en.relations.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "resourceTextByteLength": 19570888,
       "sizeClass": "small"
     },
     {
-      "byteLength": 3919057,
-      "checksum": "sha256:5f52fe383c638d252aaf16899ee059b475d8e024315d87045e2a02edc86d2415",
+      "byteLength": 4012189,
+      "checksum": "sha256:162b523cfb9c1ea0efa887a8c80b000cd88f43e5802e22c716c35dfe0867bbd3",
       "id": "wordnet-en-senses",
       "kind": "knowledge-base",
       "lineCount": 185131,
       "nonEmptyLineCount": 185130,
       "path": "resources/wordnet-en.senses.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 13790166,
+      "resourceTextByteLength": 14299520,
       "sizeClass": "small"
     },
     {
@@ -1093,7 +1124,7 @@
       "nonEmptyLineCount": 107520,
       "path": "resources/wordnet-en.synsets.tsv.gz.b64",
       "pipelineId": "open-english-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "resourceTextByteLength": 13924959,
       "sizeClass": "medium"

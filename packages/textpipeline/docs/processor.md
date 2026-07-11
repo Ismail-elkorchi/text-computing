@@ -20,5 +20,7 @@ const processor = {
 ```
 
 Requirement objects are conjunctive. A processor that declares both `layer` and `viewKind` needs both. Resource requirements use final `textpack` `ResourceKind` values and exact capability strings.
+If more than one processor can produce a missing document requirement, planning fails as ambiguous;
+set `providerId` on the requirement to select the intended producer explicitly.
 
 Outputs describe what the processor adds or preserves. A processor must declare at least one output.

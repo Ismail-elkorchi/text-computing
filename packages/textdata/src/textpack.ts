@@ -1,4 +1,5 @@
 import {
+	capabilityResourceIdsFromBindings,
 	openResourceJson,
 	openResourceTable,
 	type TextPack,
@@ -109,7 +110,7 @@ export async function corpusRowsFromPack(
 	pack: TextPack,
 	options: TextDataRowsFromPackOptions = {},
 ): Promise<readonly TextDataTableResource[]> {
-	const resourceIds = taskResourceIdsFromBindings(pack, {
+	const resourceIds = capabilityResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "corpus",
 		...(options.ownerPackage === undefined
 			? {}

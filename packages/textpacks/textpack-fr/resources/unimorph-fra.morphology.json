@@ -76,6 +76,11 @@
       "recordCount": 19,
       "resourceId": "fr-unimorph-feature-inventory",
       "role": "feature-inventory"
+    },
+    {
+      "recordCount": 274192,
+      "resourceId": "fr-unimorph-paradigms-lookup-index",
+      "role": "lookup-index"
     }
   ],
   "schemaVersion": "1",

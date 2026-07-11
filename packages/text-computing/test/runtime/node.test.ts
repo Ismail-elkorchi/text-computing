@@ -62,6 +62,7 @@ test("merged morphology keeps all results when maxResults is omitted", async () 
 				{
 					slot: "morphology",
 					status: "task-supported",
+					tier: "lookup",
 					resourceIds: ["morphology-a", "morphology-b"],
 					bindings: [
 						{

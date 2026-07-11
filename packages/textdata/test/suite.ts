@@ -146,6 +146,7 @@ test("segmentation textpack resources expose a lexical-unit adapter", async () =
 				{
 					slot: "segmentation",
 					status: "task-supported" as const,
+					tier: "baseline" as const,
 					resourceIds: ["fr-token-profile", "fr-segmentation-elision-prefixes"],
 					bindings: [
 						{
@@ -220,7 +221,8 @@ test("UD annotation textpack resources become annotation-only datasets", async (
 			capabilitySlots: [
 				{
 					slot: "syntax",
-					status: "task-supported" as const,
+					status: "profiled" as const,
+					tier: "resource-only" as const,
 					resourceIds: ["syntax-canonical", "quality-evidence"],
 					bindings: [
 						{
@@ -333,7 +335,8 @@ test("textpack corpus adapter materializes canonical corpus resources", async ()
 			capabilitySlots: [
 				{
 					slot: "corpus",
-					status: "task-supported" as const,
+					status: "profiled" as const,
+					tier: "resource-only" as const,
 					resourceIds: ["corpus-en"],
 					bindings: [
 						{

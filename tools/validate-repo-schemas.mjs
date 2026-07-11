@@ -5,6 +5,10 @@ import Ajv2020 from "ajv/dist/2020.js";
 
 const ROOT = process.cwd();
 const SCHEMA_DIR = path.join(ROOT, "schemas");
+const NLP_BENCHMARK_PATH = path.join(
+	ROOT,
+	"fixtures/nlp-benchmarks/held-out-v1.json",
+);
 
 const DRAFT_07 = "http://json-schema.org/draft-07/schema#";
 const DRAFT_2020_12 = "https://json-schema.org/draft/2020-12/schema";
@@ -143,6 +147,32 @@ async function main() {
 		} catch (error) {
 			errors.push(`Canonicalization failed for ${file}: ${error.message}`);
 		}
+	}
+
+	try {
+		const benchmarkSchema = JSON.parse(
+			await fs.readFile(
+				path.join(SCHEMA_DIR, "nlp-benchmark-suite-v1.schema.json"),
+				"utf8",
+			),
+		);
+		const benchmark = JSON.parse(await fs.readFile(NLP_BENCHMARK_PATH, "utf8"));
+		assertIJsonValue(benchmark, "fixtures/nlp-benchmarks/held-out-v1.json");
+		const benchmarkValidator = validators.get(benchmarkSchema.$schema);
+		if (
+			benchmarkValidator === undefined ||
+			!benchmarkValidator.validate(benchmarkSchema, benchmark)
+		) {
+			const message =
+				benchmarkValidator === undefined
+					? `unsupported schema draft ${benchmarkSchema.$schema}`
+					: benchmarkValidator.errorsText(benchmarkValidator.errors, {
+							separator: "; ",
+						});
+			errors.push(`NLP benchmark fixture validation failed: ${message}`);
+		}
+	} catch (error) {
+		errors.push(`NLP benchmark fixture validation failed: ${error.message}`);
 	}
 
 	if (errors.length > 0) {

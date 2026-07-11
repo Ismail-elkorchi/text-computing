@@ -3,9 +3,9 @@
 	"snapshotId": "snapshot:source:wikidata:main:20260608",
 	"sourceId": "source:wikidata:main",
 	"version": "20260608",
-	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"retrievedAt": "2026-06-12T00:00:00.000Z",
 	"kind": "external",
-	"checksum": "sha256:14ac14a875bdf8abd72d64cbff21aac27d8ad14519efa16b59f33c9f27cb4403",
+	"checksum": "sha256:11d1f102728b5dbd9a88e8dfcbc33da952d956d4fc9c7a27390952db053dba14",
 	"files": [
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
@@ -36,8 +36,8 @@
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json",
 			"mediaType": "application/json",
-			"byteLength": 9171,
-			"checksum": "sha256:596b43b362c602f6acd1eb5c9bf39ca85176a693da3e3f8156c05f1c08db84e1"
+			"byteLength": 9230,
+			"checksum": "sha256:8fe9dd470501f6f2796788bd1f2d20def6bd8a5d1bb92a0d19fbb941d60fa401"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv.gz",
@@ -60,8 +60,8 @@
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-extract-metadata.json",
 			"mediaType": "application/json",
-			"byteLength": 9237,
-			"checksum": "sha256:134925ef0267b216f19f6e48a935f324fac5c6fccd8bc3807ef7166e627461c2"
+			"byteLength": 9296,
+			"checksum": "sha256:e61e9414df26965fa492b6a04ade617bfd9c4ee0c916316b473c0589574f2d3d"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-en-core-relations.tsv.gz",
@@ -84,8 +84,8 @@
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-extract-metadata.json",
 			"mediaType": "application/json",
-			"byteLength": 9173,
-			"checksum": "sha256:7d46ecdcaad81c6ef85139decbac517ee64c715e6a8069d6352d4d4b2725ca27"
+			"byteLength": 9232,
+			"checksum": "sha256:eaced311af6fc9317d3726c4acf057596799163ad590d1f0128eb09f2e18a11f"
 		},
 		{
 			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-fr-core-relations.tsv.gz",
@@ -94,5 +94,5 @@
 			"checksum": "sha256:5d34ef46865321833bb0f7d597cbe81250adb189f502ffb8cdd0262c28635e06"
 		}
 	],
-	"notes": "Pinned checksum sidecar files for the versioned Wikidata 2026-06-08 full JSON entity dump plus deterministic gzip-compressed local Arabic, English, and French core entity extracts generated from saved Wikidata Query Service result snapshots. The full raw dump remains artifact-backed."
+	"notes": "Co-located but independent evidence: pinned checksum sidecars for the Wikidata 2026-06-08 full JSON entity dump, plus deterministic gzip-compressed Arabic, English, and French core extracts retrieved independently from Wikidata Query Service on 2026-06-12. The query-service extracts are not claimed to derive from the full dump; the full raw dump remains artifact-backed."
 }

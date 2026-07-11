@@ -49,6 +49,7 @@ export function supportReport(pack: TextPack): TextComputingSupportReport {
 				Object.freeze({
 					slot: slot.slot,
 					status: slot.status,
+					tier: slot.tier,
 					resourceIds: Object.freeze([...(slot.resourceIds ?? [])]),
 					artifactIds: Object.freeze([...(slot.artifactIds ?? [])]),
 					readerRequired: slot.readerRequired ?? false,

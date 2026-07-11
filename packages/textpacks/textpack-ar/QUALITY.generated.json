@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 991815,
+  "acceptedRecordCount": 1195037,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -17,18 +17,21 @@
         "ar-core-basic-segmentation"
       ],
       "slot": "core",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "notes": [
         "Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "corpus",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "slot": "foundation",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "artifactIds": [
@@ -55,7 +58,8 @@
         "wikidata-ar-kb-canonical"
       ],
       "slot": "kb",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "notes": [
@@ -66,7 +70,8 @@
         "bcp47-language-registry-summary"
       ],
       "slot": "language-registry",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "capabilities": {
@@ -81,7 +86,8 @@
         "wordnet-ar-lexicon-canonical"
       ],
       "slot": "lexicon",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "lookup"
     },
     {
       "notes": [
@@ -94,7 +100,8 @@
         "cldr-48-core-summary"
       ],
       "slot": "locale-profile",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     },
     {
       "capabilities": {
@@ -108,10 +115,12 @@
         "ar-msa-camel-morph-defaults",
         "ar-msa-camel-morph-morphemes",
         "ar-msa-camel-morph-compatibility",
-        "ar-msa-camel-morphology-canonical"
+        "ar-msa-camel-morphology-canonical",
+        "ar-msa-camel-morph-morphemes-lookup-index"
       ],
       "slot": "morphology",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "capabilities": {
@@ -126,14 +135,16 @@
         "ar-normalization-profile"
       ],
       "slot": "normalization",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "notes": [
         "Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "parallel",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
@@ -160,7 +171,8 @@
         "ar-search-quality-profile"
       ],
       "slot": "quality",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "rule-based"
     },
     {
       "capabilities": {
@@ -173,7 +185,8 @@
         "ar-search-profile"
       ],
       "slot": "search",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "baseline"
     },
     {
       "capabilities": {
@@ -186,14 +199,16 @@
         "ar-msa-camel-segmentation-canonical"
       ],
       "slot": "segmentation",
-      "status": "task-supported"
+      "status": "task-supported",
+      "tier": "baseline"
     },
     {
       "notes": [
         "UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
       ],
       "slot": "syntax",
-      "status": "planned"
+      "status": "planned",
+      "tier": "none"
     },
     {
       "notes": [
@@ -206,10 +221,11 @@
         "unicode-17-core-summary"
       ],
       "slot": "unicode-profile",
-      "status": "task-supported"
+      "status": "profiled",
+      "tier": "resource-only"
     }
   ],
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "licenseWarnings": [],
   "mode": "source-backed",
@@ -221,7 +237,7 @@
   },
   "publishable": true,
   "rejectedRecordCount": 0,
-  "resourceCount": 47,
+  "resourceCount": 48,
   "resourcePaths": [
     "resources/ar.core.basic-segmentation.json",
     "resources/ar.core.language-profile.json",
@@ -233,6 +249,7 @@
     "resources/camel-morph-msa.defaults.tsv",
     "resources/camel-morph-msa.features.tsv",
     "resources/camel-morph-msa.morphemes.tsv.gz.b64",
+    "resources/camel-morph-msa.morphemes.lookup-index.tsv.gz.b64",
     "resources/camel-morph-msa.quality.json",
     "resources/camel-morph-msa.tokenizations.tsv",
     "resources/camel-morph-msa.morphology.json",
@@ -424,6 +441,20 @@
       "sizeClass": "medium"
     },
     {
+      "byteLength": 4692633,
+      "checksum": "sha256:227f955fcaa42bff7c0e518e9c67fd692b80fad3f28b853912bc5760fb7a1c91",
+      "id": "ar-msa-camel-morph-morphemes-lookup-index",
+      "kind": "dataset",
+      "lineCount": 203201,
+      "nonEmptyLineCount": 203200,
+      "path": "resources/camel-morph-msa.morphemes.lookup-index.tsv.gz.b64",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 8329010,
+      "sizeClass": "small"
+    },
+    {
       "byteLength": 1216,
       "checksum": "sha256:01b1a94f619c179273e03c5983894e587703299e0adaa4bbbe1ac74221d55da9",
       "id": "ar-msa-camel-morph-quality",
@@ -452,17 +483,17 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 10801,
-      "checksum": "sha256:8a54b71d3c60266980c818bc6046811a5877dc01f294b03020df6126efb844c8",
+      "byteLength": 10937,
+      "checksum": "sha256:20b601f78a66a748a2c3c26c2feeb070645143e64fdde06b9322e16b5c1c3ab7",
       "id": "ar-msa-camel-morphology-canonical",
       "kind": "morphology",
-      "lineCount": 666,
-      "nonEmptyLineCount": 665,
+      "lineCount": 671,
+      "nonEmptyLineCount": 670,
       "path": "resources/camel-morph-msa.morphology.json",
       "pipelineId": "camel-morph-msa",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-      "resourceTextByteLength": 10801,
+      "resourceTextByteLength": 10937,
       "sizeClass": "tiny"
     },
     {
@@ -754,7 +785,7 @@
       "nonEmptyLineCount": 2777,
       "path": "resources/wikidata-ar.aliases.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "resourceTextByteLength": 176372,
       "sizeClass": "tiny"
@@ -768,7 +799,7 @@
       "nonEmptyLineCount": 3010,
       "path": "resources/wikidata-ar.entities.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "resourceTextByteLength": 601526,
       "sizeClass": "tiny"
@@ -782,23 +813,23 @@
       "nonEmptyLineCount": 27,
       "path": "resources/wikidata-ar.kb.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "resourceTextByteLength": 523,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 968,
-      "checksum": "sha256:6b18694e3b24875a4b6268fbeb71ed978d17327b455e38d443124d801219dd40",
+      "byteLength": 1117,
+      "checksum": "sha256:8dd7436b44004586bd09f9ba45ff56006689789c247b57513aef2f6765d3207f",
       "id": "wikidata-ar-quality",
       "kind": "quality-profile",
-      "lineCount": 27,
-      "nonEmptyLineCount": 26,
+      "lineCount": 30,
+      "nonEmptyLineCount": 29,
       "path": "resources/wikidata-ar.quality.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
-      "resourceTextByteLength": 968,
+      "resourceTextByteLength": 1117,
       "sizeClass": "tiny"
     },
     {
@@ -810,7 +841,7 @@
       "nonEmptyLineCount": 101,
       "path": "resources/wikidata-ar.quality-profile.json",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "resourceTextByteLength": 2789,
       "sizeClass": "tiny"
@@ -824,7 +855,7 @@
       "nonEmptyLineCount": 3010,
       "path": "resources/wikidata-ar.relations.tsv.gz.b64",
       "pipelineId": "wikidata-main-artifact",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "resourceTextByteLength": 181440,
       "sizeClass": "tiny"
@@ -838,7 +869,7 @@
       "nonEmptyLineCount": 27,
       "path": "resources/wordnet-ar.kb.json",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "resourceTextByteLength": 518,
       "sizeClass": "tiny"
@@ -852,7 +883,7 @@
       "nonEmptyLineCount": 136042,
       "path": "resources/wordnet-ar.lexical-entries.tsv.gz.b64",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "resourceTextByteLength": 5814865,
       "sizeClass": "small"
@@ -866,37 +897,37 @@
       "nonEmptyLineCount": 15,
       "path": "resources/wordnet-ar.lexicon.json",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "resourceTextByteLength": 292,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1207,
-      "checksum": "sha256:ccc8e95b79a9be634efdd4d76dd9b3e6483ec5b70a7c0c46ae8e5629dfd0a046",
+      "byteLength": 1286,
+      "checksum": "sha256:cfafbc777348b21679c42c926c6fec888b99fd7f3eab8ed08806262b6878834e",
       "id": "wordnet-ar-quality",
       "kind": "quality-profile",
-      "lineCount": 46,
-      "nonEmptyLineCount": 45,
+      "lineCount": 48,
+      "nonEmptyLineCount": 47,
       "path": "resources/wordnet-ar.quality.json",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
-      "resourceTextByteLength": 1207,
+      "resourceTextByteLength": 1286,
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 876,
-      "checksum": "sha256:08b8157d6ea3f692751131a51219d318f301b077575d6fa72dab158a7e89b04a",
+      "byteLength": 1191,
+      "checksum": "sha256:c044911d946e2387688d00c6c61ad113e58b52e32c1e2bcd58522bfe155e94f5",
       "id": "wordnet-ar-quality-profile",
       "kind": "quality-profile",
-      "lineCount": 41,
-      "nonEmptyLineCount": 40,
+      "lineCount": 53,
+      "nonEmptyLineCount": 52,
       "path": "resources/wordnet-ar.quality-profile.json",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
-      "resourceTextByteLength": 876,
+      "resourceTextByteLength": 1191,
       "sizeClass": "tiny"
     },
     {
@@ -908,7 +939,7 @@
       "nonEmptyLineCount": 297151,
       "path": "resources/wordnet-ar.relations.tsv.gz.b64",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "resourceTextByteLength": 14510265,
       "sizeClass": "small"
@@ -922,7 +953,7 @@
       "nonEmptyLineCount": 184239,
       "path": "resources/wordnet-ar.senses.tsv.gz.b64",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "resourceTextByteLength": 14091110,
       "sizeClass": "medium"
@@ -936,7 +967,7 @@
       "nonEmptyLineCount": 120631,
       "path": "resources/wordnet-ar.synsets.tsv.gz.b64",
       "pipelineId": "arabic-wordnet-lmf",
-      "pipelineVersion": "0.1.0",
+      "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "resourceTextByteLength": 14041525,
       "sizeClass": "small"

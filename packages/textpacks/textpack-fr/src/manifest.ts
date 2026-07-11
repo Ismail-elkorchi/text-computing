@@ -512,6 +512,36 @@ export const manifest: TextPackManifest = {
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "fr-lexique-entries-lookup-index",
+			"kind": "dataset",
+			"path": "resources/lexique-383.entries.lookup-index.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-SA-4.0",
+			"citations": [
+				"Lexique 3.83, 2019-06-04."
+			],
+			"schemaId": "textpack.lookup-index.v1",
+			"metadata": {
+				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexedResourceId": "fr-lexique-entries",
+				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
+				"indexedResourceTextChecksum": "sha256:2364fefce469d493e6a7dda4c60e58e6de83129acf553d64546432cf1dd2d95b",
+				"indexedResourceGzipBase64ByteLength": 3070993,
+				"lookupIndexGzipBase64ByteLength": 1957881,
+				"compressedSizeRatio": 0.63754,
+				"coordinateUnit": "utf16-code-unit",
+				"offsetBasis": "uncompressed-resource-text",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyOrdering": "unicode-code-unit",
+				"keyColumns": [
+					"form",
+					"lemma"
+				],
+				"recordCount": 128893,
+				"spanCount": 238046
+			}
+		},
+		{
 			"id": "fr-unimorph-paradigms",
 			"kind": "morphology",
 			"path": "resources/unimorph-fra.paradigms.tsv.gz.b64",
@@ -600,6 +630,35 @@ export const manifest: TextPackManifest = {
 			"schemaId": "textquality.profile.v1"
 		},
 		{
+			"id": "fr-unimorph-paradigms-lookup-index",
+			"kind": "dataset",
+			"path": "resources/unimorph-fra.paradigms.lookup-index.tsv.gz.b64",
+			"format": "tsv",
+			"license": "CC-BY-SA-3.0",
+			"citations": [
+				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+			],
+			"schemaId": "textpack.lookup-index.v1",
+			"metadata": {
+				"indexFormat": "normalized-key-packed-row-spans-v1",
+				"indexedResourceId": "fr-unimorph-paradigms",
+				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
+				"indexedResourceTextChecksum": "sha256:0fcefb9d03bc51b09173b9b837f6491ad059bfc63e4ac64e6d64aae03879cb74",
+				"indexedResourceGzipBase64ByteLength": 4339245,
+				"lookupIndexGzipBase64ByteLength": 3450913,
+				"compressedSizeRatio": 0.79528,
+				"coordinateUnit": "utf16-code-unit",
+				"offsetBasis": "uncompressed-resource-text",
+				"keyNormalization": "NFKC-casefold-Unicode-17",
+				"keyOrdering": "unicode-code-unit",
+				"keyColumns": [
+					"form"
+				],
+				"recordCount": 274192,
+				"spanCount": 367732
+			}
+		},
+		{
 			"id": "wikidata-fr-entities",
 			"kind": "knowledge-base",
 			"path": "resources/wikidata-fr.entities.tsv.gz.b64",
@@ -669,7 +728,8 @@ export const manifest: TextPackManifest = {
 	"capabilitySlots": [
 		{
 			"slot": "core",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"fr-core-language-profile",
 				"fr-core-orthography",
@@ -697,17 +757,20 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "corpus",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "foundation",
-			"status": "task-supported"
+			"status": "profiled",
+			"tier": "resource-only"
 		},
 		{
 			"slot": "kb",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"wikidata-fr-entities",
 				"wikidata-fr-aliases",
@@ -760,7 +823,8 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "language-registry",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"bcp47-language-subtags",
 				"bcp47-language-registry-summary"
@@ -772,12 +836,21 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "lexicon",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"fr-lexique-entries",
 				"fr-lexique-lemmas",
-				"fr-lexique-lexicon-canonical"
+				"fr-lexique-lexicon-canonical",
+				"fr-lexique-entries-lookup-index"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "fr-lexique-entries-lookup-index",
+					"schemaId": "textpack.lookup-index.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
 				{
 					"role": "primary",
 					"resourceId": "fr-lexique-lexicon-canonical",
@@ -808,7 +881,8 @@ export const manifest: TextPackManifest = {
 		},
 		{
 			"slot": "locale-profile",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"cldr-48-likely-subtags",
 				"cldr-48-locale-aliases",
@@ -822,18 +896,35 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "morphology",
 			"status": "task-supported",
+			"tier": "lookup",
 			"resourceIds": [
 				"fr-lexique-entries",
 				"fr-lexique-pos-inventory",
 				"fr-lexique-morphology-canonical",
+				"fr-lexique-entries-lookup-index",
 				"fr-unimorph-paradigms",
 				"fr-unimorph-lookup-analyzer",
 				"fr-unimorph-lookup-generator",
 				"fr-unimorph-feature-inventory",
 				"fr-unimorph-pos-inventory",
-				"fr-unimorph-morphology-canonical"
+				"fr-unimorph-morphology-canonical",
+				"fr-unimorph-paradigms-lookup-index"
 			],
 			"bindings": [
+				{
+					"role": "index",
+					"resourceId": "fr-lexique-entries-lookup-index",
+					"schemaId": "textpack.lookup-index.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
+				{
+					"role": "index",
+					"resourceId": "fr-unimorph-paradigms-lookup-index",
+					"schemaId": "textpack.lookup-index.v1",
+					"required": true,
+					"ownerPackage": "@ismail-elkorchi/textlex"
+				},
 				{
 					"role": "primary",
 					"resourceId": "fr-lexique-morphology-canonical",
@@ -910,6 +1001,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "normalization",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"fr-normalization-rules",
 				"fr-normalization-profile",
@@ -965,6 +1057,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "parallel",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
@@ -972,6 +1065,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "quality",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"fr-core-quality",
 				"fr-core-quality-profile",
@@ -1102,6 +1196,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "search",
 			"status": "task-supported",
+			"tier": "baseline",
 			"resourceIds": [
 				"fr-lexique-search-profile"
 			],
@@ -1125,6 +1220,7 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "segmentation",
 			"status": "task-supported",
+			"tier": "rule-based",
 			"resourceIds": [
 				"fr-grapheme-segmentation-profile",
 				"fr-word-segmentation-profile",
@@ -1180,13 +1276,15 @@ export const manifest: TextPackManifest = {
 		{
 			"slot": "syntax",
 			"status": "planned",
+			"tier": "none",
 			"notes": [
 				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
 			]
 		},
 		{
 			"slot": "unicode-profile",
-			"status": "task-supported",
+			"status": "profiled",
+			"tier": "resource-only",
 			"resourceIds": [
 				"unicode-17-blocks",
 				"unicode-17-property-value-aliases",
@@ -1230,8 +1328,8 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:78d906f0c73d85650e1ff58aab0aa93a116dc7978756c724328785533464d0ef",
-		"generatedAt": "2026-06-08T00:00:00.000Z",
+		"lockfileChecksum": "sha256:bc2845cdb0a126c3cb684d47821c9733f6a718fc3884b7642485835f41e7b603",
+		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},
 	"artifacts": [

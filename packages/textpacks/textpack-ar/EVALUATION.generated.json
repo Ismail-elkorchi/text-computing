@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
     "corpus is planned in this source-backed self-contained language distribution.",
@@ -60,7 +60,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.orthography"
+      "taskType": "core.orthography",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -112,7 +113,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.basic-segmentation"
+      "taskType": "core.basic-segmentation",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -163,7 +165,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.language-profile"
+      "taskType": "core.language-profile",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "quality",
@@ -210,7 +213,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "core",
@@ -257,7 +261,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.punctuation"
+      "taskType": "core.punctuation",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "morphology",
@@ -307,7 +312,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.compatibility"
+      "taskType": "morphology.compatibility",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "morphology",
@@ -355,7 +361,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.lookup"
+      "taskType": "morphology.lookup",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -399,7 +406,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.unicode-profile"
+      "taskType": "segmentation.unicode-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "morphology",
@@ -443,7 +451,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.tokenization-scheme-data"
+      "taskType": "morphology.tokenization-scheme-data",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -486,7 +495,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -538,7 +548,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.source-evidence"
+      "taskType": "normalization.source-evidence",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -585,7 +596,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.locale-context"
+      "taskType": "normalization.locale-context",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -634,7 +646,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.profile"
+      "taskType": "normalization.profile",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "quality",
@@ -681,7 +694,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -728,7 +742,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.unicode-nfc-policy"
+      "taskType": "normalization.unicode-nfc-policy",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "search",
@@ -776,7 +791,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "search.analyzer-profile"
+      "taskType": "search.analyzer-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "quality",
@@ -819,7 +835,8 @@
       "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -861,7 +878,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.likely-subtags"
+      "taskType": "locale-profile.likely-subtags",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -899,7 +917,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.aliases"
+      "taskType": "locale-profile.aliases",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -937,7 +956,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.script-variants"
+      "taskType": "locale-profile.script-variants",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "language-registry",
@@ -987,7 +1007,8 @@
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "language-registry.bcp47"
+      "taskType": "language-registry.bcp47",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "language-registry",
@@ -1028,7 +1049,8 @@
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "language-registry.type-coverage"
+      "taskType": "language-registry.type-coverage",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1069,7 +1091,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.blocks"
+      "taskType": "unicode-profile.blocks",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1107,7 +1130,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.property-aliases"
+      "taskType": "unicode-profile.property-aliases",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1145,7 +1169,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.scripts"
+      "taskType": "unicode-profile.scripts",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "kb",
@@ -1192,7 +1217,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-aliases"
+      "taskType": "kb.entity-aliases",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1216,9 +1242,12 @@
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
+          "acquisitionMethod": "wikidata-query-service",
+          "derivedFromDumpArtifact": false,
+          "dumpArtifactVersion": "20260608",
           "endpoint": "https://query.wikidata.org/sparql",
           "extractId": "wikidata-ar-core-entity-extract-20260612",
-          "version": "20260608"
+          "extractRetrievedAt": "2026-06-12T00:00:00.000Z"
         },
         "resourceIds": [
           "wikidata-ar-entities",
@@ -1242,7 +1271,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-extract"
+      "taskType": "kb.entity-extract",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1288,7 +1318,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-relations"
+      "taskType": "kb.entity-relations",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "lexicon",
@@ -1335,7 +1366,8 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "lexicon.lookup"
+      "taskType": "lexicon.lookup",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1383,7 +1415,59 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.semantic-relations"
+      "taskType": "kb.semantic-relations",
+      "tier": "lookup"
+    },
+    {
+      "capabilitySlot": "lexicon",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0"
+        ],
+        "sourceIds": [
+          "source:wordnet:arabic-v4.1.0"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "observations": {
+          "lexicalEntrySemanticIntegrityRatio": 1,
+          "senseSemanticIntegrityRatio": 1
+        },
+        "resourceIds": [
+          "wordnet-ar-lexical-entries",
+          "wordnet-ar-senses",
+          "wordnet-ar-synsets"
+        ],
+        "sampleSize": 320279
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-ar; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "semanticIntegrityRatio",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "ratio",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "arabic-wordnet-lmf",
+      "recordId": "eval:wordnet-ar:semantic-integrity:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "lexicon.semantic-integrity",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1431,7 +1515,8 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.sense-linking"
+      "taskType": "kb.sense-linking",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1479,7 +1564,8 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.synset-linking"
+      "taskType": "kb.synset-linking",
+      "tier": "lookup"
     }
   ],
   "resourceSpecIds": [
@@ -1497,8 +1583,8 @@
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 32,
-    "recordCount": 32,
+    "passCount": 33,
+    "recordCount": 33,
     "status": "passed",
     "warningCount": 0
   }

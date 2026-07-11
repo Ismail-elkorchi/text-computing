@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "generatedAt": "2026-06-12T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
     "corpus is planned in this source-backed self-contained language distribution.",
@@ -55,7 +55,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.likely-subtags"
+      "taskType": "locale-profile.likely-subtags",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -93,7 +94,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.aliases"
+      "taskType": "locale-profile.aliases",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "locale-profile",
@@ -131,7 +133,8 @@
       "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "locale-profile.script-variants"
+      "taskType": "locale-profile.script-variants",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -187,7 +190,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.basic-segmentation"
+      "taskType": "core.basic-segmentation",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -242,7 +246,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.language-profile"
+      "taskType": "core.language-profile",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -293,7 +298,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.orthography"
+      "taskType": "core.orthography",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -345,7 +351,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.abbreviation-table"
+      "taskType": "core.abbreviation-table",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "core",
@@ -397,7 +404,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.stoplist-candidates"
+      "taskType": "core.stoplist-candidates",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "quality",
@@ -448,7 +456,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "core",
@@ -499,7 +508,8 @@
       "resourceSpecId": "resource-spec:textpack-en-core:english-core-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "core.punctuation"
+      "taskType": "core.punctuation",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "lexicon",
@@ -554,7 +564,8 @@
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "lexicon.spelling-wordlist"
+      "taskType": "lexicon.spelling-wordlist",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "search",
@@ -598,7 +609,8 @@
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "search.analyzer-profile"
+      "taskType": "search.analyzer-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "quality",
@@ -644,7 +656,8 @@
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "lexicon",
@@ -693,7 +706,8 @@
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "lexicon.spelling-wordlist"
+      "taskType": "lexicon.spelling-wordlist",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "normalization",
@@ -738,7 +752,8 @@
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.locale-context"
+      "taskType": "normalization.locale-context",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "normalization",
@@ -785,7 +800,8 @@
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.profile"
+      "taskType": "normalization.profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "quality",
@@ -830,7 +846,8 @@
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "normalization",
@@ -875,7 +892,8 @@
       "resourceSpecId": "resource-spec:textpack-en-normalization:english-normalization-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "normalization.unicode-nfc-policy"
+      "taskType": "normalization.unicode-nfc-policy",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "morphology",
@@ -919,7 +937,8 @@
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.inflection-inventory"
+      "taskType": "morphology.inflection-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -970,7 +989,8 @@
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.inflection-inventory"
+      "taskType": "morphology.inflection-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -1019,7 +1039,8 @@
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.lookup-analyzer"
+      "taskType": "morphology.lookup-analyzer",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -1068,7 +1089,8 @@
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.lookup-generator"
+      "taskType": "morphology.lookup-generator",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "morphology",
@@ -1111,7 +1133,8 @@
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "morphology.pos-inventory"
+      "taskType": "morphology.pos-inventory",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "quality",
@@ -1154,7 +1177,8 @@
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1199,7 +1223,8 @@
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.locale-context"
+      "taskType": "segmentation.locale-context",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1246,7 +1271,8 @@
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.grapheme-profile"
+      "taskType": "segmentation.grapheme-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1293,7 +1319,8 @@
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.sentence-profile"
+      "taskType": "segmentation.sentence-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "quality",
@@ -1338,7 +1365,8 @@
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "quality.transform-integrity"
+      "taskType": "quality.transform-integrity",
+      "tier": "rule-based"
     },
     {
       "capabilitySlot": "segmentation",
@@ -1385,7 +1413,8 @@
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "segmentation.word-profile"
+      "taskType": "segmentation.word-profile",
+      "tier": "baseline"
     },
     {
       "capabilitySlot": "language-registry",
@@ -1435,7 +1464,8 @@
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "language-registry.bcp47"
+      "taskType": "language-registry.bcp47",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "language-registry",
@@ -1476,7 +1506,8 @@
       "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "language-registry.type-coverage"
+      "taskType": "language-registry.type-coverage",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1517,7 +1548,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.blocks"
+      "taskType": "unicode-profile.blocks",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1555,7 +1587,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.property-aliases"
+      "taskType": "unicode-profile.property-aliases",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "unicode-profile",
@@ -1593,7 +1626,8 @@
       "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "unicode-profile.scripts"
+      "taskType": "unicode-profile.scripts",
+      "tier": "resource-only"
     },
     {
       "capabilitySlot": "kb",
@@ -1640,7 +1674,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-aliases"
+      "taskType": "kb.entity-aliases",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1664,9 +1699,12 @@
       "evaluationKind": "resource-conformance",
       "evidence": {
         "observations": {
+          "acquisitionMethod": "wikidata-query-service",
+          "derivedFromDumpArtifact": false,
+          "dumpArtifactVersion": "20260608",
           "endpoint": "https://query.wikidata.org/sparql",
           "extractId": "wikidata-en-core-entity-extract-20260612",
-          "version": "20260608"
+          "extractRetrievedAt": "2026-06-12T00:00:00.000Z"
         },
         "resourceIds": [
           "wikidata-en-entities",
@@ -1690,7 +1728,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-extract"
+      "taskType": "kb.entity-extract",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1736,7 +1775,8 @@
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.entity-relations"
+      "taskType": "kb.entity-relations",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "lexicon",
@@ -1783,7 +1823,8 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "lexicon.lookup"
+      "taskType": "lexicon.lookup",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1831,7 +1872,59 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.semantic-relations"
+      "taskType": "kb.semantic-relations",
+      "tier": "lookup"
+    },
+    {
+      "capabilitySlot": "lexicon",
+      "dataset": {
+        "languages": [
+          "en"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Latn"
+        ],
+        "snapshotIds": [
+          "snapshot:source:wordnet:open-english-2025:2025-edition"
+        ],
+        "sourceIds": [
+          "source:wordnet:open-english-2025"
+        ]
+      },
+      "evaluationKind": "integrity",
+      "evidence": {
+        "observations": {
+          "lexicalEntrySemanticIntegrityRatio": 1,
+          "senseSemanticIntegrityRatio": 1
+        },
+        "resourceIds": [
+          "wordnet-en-lexical-entries",
+          "wordnet-en-senses",
+          "wordnet-en-synsets"
+        ],
+        "sampleSize": 321098
+      },
+      "limitations": [
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-wordnet-en; the referenced payload is shipped directly in @ismail-elkorchi/textpack-en."
+      ],
+      "metric": {
+        "name": "semanticIntegrityRatio",
+        "operator": "eq",
+        "threshold": 1,
+        "unit": "ratio",
+        "value": 1
+      },
+      "packageName": "@ismail-elkorchi/textpack-en",
+      "pipelineId": "open-english-wordnet-lmf",
+      "recordId": "eval:wordnet-en:semantic-integrity:distribution:textpack-en",
+      "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "lexicon.semantic-integrity",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1879,7 +1972,8 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.sense-linking"
+      "taskType": "kb.sense-linking",
+      "tier": "lookup"
     },
     {
       "capabilitySlot": "kb",
@@ -1927,7 +2021,8 @@
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
       "result": "pass",
       "schemaVersion": "1",
-      "taskType": "kb.synset-linking"
+      "taskType": "kb.synset-linking",
+      "tier": "lookup"
     }
   ],
   "resourceSpecIds": [
@@ -1946,8 +2041,8 @@
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 41,
-    "recordCount": 41,
+    "passCount": 42,
+    "recordCount": 42,
     "status": "passed",
     "warningCount": 0
   }
