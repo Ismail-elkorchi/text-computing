@@ -1,0 +1,113 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-syntax-resource.schema.json",
+	"title": "TextpackSyntaxResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "syntaxId"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "syntax" },
+		"syntaxId": { "type": "string", "minLength": 1 },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"annotationScheme": { "type": "string", "minLength": 1 },
+		"resourceRefs": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/resourceRef" }
+		},
+		"tagsets": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/tagset" }
+		},
+		"features": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/feature" }
+		},
+		"dependencyLabels": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/dependencyLabel" }
+		},
+		"treebanks": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/treebank" }
+		}
+	},
+	"definitions": {
+		"resourceRef": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["resourceId", "role"],
+			"properties": {
+				"resourceId": { "type": "string", "minLength": 1 },
+				"role": {
+					"enum": [
+						"tagset",
+						"feature-inventory",
+						"dependency-labels",
+						"sentence-profile",
+						"annotation-table",
+						"grammar",
+						"model"
+					]
+				},
+				"recordCount": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"tagset": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["tagsetId", "tags"],
+			"properties": {
+				"tagsetId": { "type": "string", "minLength": 1 },
+				"tags": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/tag" }
+				}
+			}
+		},
+		"tag": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["tag", "count"],
+			"properties": {
+				"tag": { "type": "string", "minLength": 1 },
+				"secondaryTag": { "type": "string" },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"feature": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["feature", "value", "count"],
+			"properties": {
+				"feature": { "type": "string", "minLength": 1 },
+				"value": { "type": "string", "minLength": 1 },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"dependencyLabel": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["label", "count"],
+			"properties": {
+				"label": { "type": "string", "minLength": 1 },
+				"split": { "type": "string", "minLength": 1 },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"treebank": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["treebankId", "split", "sentenceCount", "tokenCount"],
+			"properties": {
+				"treebankId": { "type": "string", "minLength": 1 },
+				"split": { "type": "string", "minLength": 1 },
+				"sentenceCount": { "type": "integer", "minimum": 0 },
+				"tokenCount": { "type": "integer", "minimum": 0 },
+				"averageTokenCount": { "type": "number", "minimum": 0 },
+				"maxTokenCount": { "type": "integer", "minimum": 0 }
+			}
+		}
+	}
+}

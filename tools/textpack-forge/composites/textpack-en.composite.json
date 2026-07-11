@@ -1,0 +1,207 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-en",
+	"packageDir": "packages/textpacks/textpack-en",
+	"name": "English Developer Textpack",
+	"description": "Self-contained English resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Self-contained English distribution with foundation, core, normalization, segmentation, lexicon, lookup morphology, WordNet and Wikidata KB, search, and quality resources.",
+		"auditedLicense": "Selected IANA, Unicode, CLDR, ESDB, SCOWLv2, Open English WordNet, and Wikidata sources are approved for this distribution and retain generated attribution and license evidence.",
+		"declaredScope": "Ordinary typed-English document NLP. Large corpora, parallel alignments, and UD annotation datasets are deliberately excluded from the npm package and remain explicit forge acquisition inputs.",
+		"conformanceEvidence": [
+			"eval:language-registry:bcp47-record-volume:distribution:textpack-en",
+			"eval:en-core:iana-language-profile:distribution:textpack-en",
+			"eval:en-normalization:profile-rules:distribution:textpack-en",
+			"eval:en-segmentation:word-boundary-properties:distribution:textpack-en",
+			"eval:en-esdb-wordlist:word-volume:distribution:textpack-en",
+			"eval:en-scowl-inflection:indexed-analysis-volume:distribution:textpack-en",
+			"eval:wordnet-en:semantic-integrity:distribution:textpack-en",
+			"eval:wikidata-en:entity-extract:distribution:textpack-en",
+			"eval:en-esdb-wordlist:search-profile:distribution:textpack-en",
+			"eval:en-core:transform-rejections:distribution:textpack-en",
+			"docs:textpacks/language-distribution-readiness.generated.md#english-en"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-composite",
+	"supportLevel": "task-supported",
+	"display": {
+		"languageName": "English"
+	},
+	"targets": {
+		"languages": ["en"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
+	},
+	"buildUnits": [
+		{
+			"buildUnitId": "language-registry",
+			"reason": "BCP 47 language registry resources bundled into the English distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "unicode-17",
+			"reason": "Unicode 17 resources bundled into the English distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "cldr-core",
+			"reason": "CLDR core resources bundled into the English distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "en-core",
+			"reason": "English core language profile resources.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "en-normalization",
+			"reason": "English normalization policy and quality resources.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "en-segmentation",
+			"reason": "English segmentation profiles.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "en-wordlist-esdb",
+			"reason": "English spelling wordlists and search analyzer resources.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "en-inflection-scowl",
+			"reason": "English SCOWLv2 inflection table with indexed form and lemma lookup.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "wordnet-en",
+			"reason": "English WordNet lexical-semantic resources.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "wikidata-en",
+			"reason": "Local Wikidata English core entity extract.",
+			"licensePolicy": "default"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "foundation",
+			"status": "profiled",
+			"tier": "resource-only",
+			"notes": [
+				"The bundled distribution resources provide Unicode, CLDR, and BCP 47 foundation data."
+			]
+		},
+		{
+			"slot": "core",
+			"status": "profiled",
+			"tier": "resource-only",
+			"notes": [
+				"The bundled distribution resources provide the English core language profile."
+			]
+		},
+		{
+			"slot": "normalization",
+			"status": "task-supported",
+			"tier": "baseline",
+			"notes": [
+				"The bundled distribution resources provide English normalization data."
+			]
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"tier": "baseline",
+			"notes": [
+				"The bundled distribution resources provide English segmentation data."
+			]
+		},
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"tier": "lookup",
+			"notes": [
+				"The bundled distribution resources provide English spelling, inflection-inventory, and lexical-semantic lexicon data."
+			]
+		},
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"tier": "lookup",
+			"notes": [
+				"The bundled distribution resources provide English SCOWLv2 lookup morphology data; isolated UniMorph paradigm tables are not included."
+			]
+		},
+		{
+			"slot": "syntax",
+			"status": "planned",
+			"tier": "none",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "kb",
+			"status": "task-supported",
+			"tier": "lookup",
+			"notes": [
+				"The bundled distribution resources provide Open English WordNet data and a local Wikidata English core entity extract."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"tier": "baseline",
+			"notes": [
+				"The bundled distribution resources provide English search analyzer data."
+			]
+		},
+		{
+			"slot": "corpus",
+			"status": "planned",
+			"tier": "none",
+			"notes": [
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "parallel",
+			"status": "planned",
+			"tier": "none",
+			"notes": [
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"tier": "rule-based",
+			"notes": [
+				"The bundled distribution resources provide generated English quality evidence and coverage reports over the selected local build units."
+			]
+		}
+	],
+	"license": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"English Speller Database generated wordlist outputs, rel-2026.02.25.",
+		"SCOWLv2 rich text export, rel-2026.02.25.",
+		"Open English WordNet 2025.",
+		"Wikidata main structured data dump, 2026-06-08."
+	]
+}

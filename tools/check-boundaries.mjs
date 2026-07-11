@@ -23,6 +23,23 @@ const PACKAGE_DISCOVERY_SKIPPED_DIRS = new Set([
   "dist-test",
   "node_modules",
 ]);
+const TEXTPACK_RUNTIME_IMPORT_DENYLIST = new Set([
+  "@ismail-elkorchi/textclassical",
+  "@ismail-elkorchi/textcorpus",
+  "@ismail-elkorchi/textdata",
+  "@ismail-elkorchi/textdoc",
+  "@ismail-elkorchi/textfacts",
+  "@ismail-elkorchi/textfst",
+  "@ismail-elkorchi/textkb",
+  "@ismail-elkorchi/text-computing",
+  "@ismail-elkorchi/textlex",
+  "@ismail-elkorchi/textnorm",
+  "@ismail-elkorchi/textparallel",
+  "@ismail-elkorchi/textpipeline",
+  "@ismail-elkorchi/textquality",
+  "@ismail-elkorchi/textsearch",
+  "@ismail-elkorchi/textrules",
+]);
 const REMOVED_TEXTFACTS_SOURCE_DIRS = [...LEGACY_TEXTFACTS_SUBPATHS].map((subpath) =>
   path.join("packages", "textfacts", "src", subpath),
 );
@@ -154,6 +171,43 @@ function collectLegacyTextfactsSubpathImports(text) {
   return [...hits].sort();
 }
 
+function isTextpackPackageDir(packageDir) {
+  const relativePath = normalizePath(path.relative(ROOT, packageDir));
+  return relativePath.startsWith("packages/textpacks/");
+}
+
+function collectTextpackRuntimeImports(text) {
+  const hits = new Set();
+  const pattern = /(?:from\s+|import\s*\(\s*|import\s+)["']([^"']+)["']/g;
+  for (const match of text.matchAll(pattern)) {
+    const specifier = match[1];
+    if (specifier === undefined) continue;
+    const packageName = specifier.startsWith("@ismail-elkorchi/")
+      ? specifier.split("/").slice(0, 2).join("/")
+      : specifier;
+    if (TEXTPACK_RUNTIME_IMPORT_DENYLIST.has(packageName)) hits.add(packageName);
+  }
+  return [...hits].sort();
+}
+
+async function assertTextpackPackageDependencies(packageDir, errors) {
+  const packageJsonPath = path.join(packageDir, "package.json");
+  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+  const dependencyFields = ["dependencies", "peerDependencies", "optionalDependencies"];
+  for (const field of dependencyFields) {
+    for (const dependencyName of Object.keys(packageJson[field] ?? {})) {
+      const allowed =
+        dependencyName === "@ismail-elkorchi/textpack" ||
+        dependencyName.startsWith("@ismail-elkorchi/textpack-");
+      if (!allowed) {
+        errors.push(
+          `${normalizePath(path.relative(ROOT, packageJsonPath))} declares non-data textpack dependency ${dependencyName}.`,
+        );
+      }
+    }
+  }
+}
+
 async function main() {
   const errors = [];
   let scannedFiles = 0;
@@ -167,10 +221,21 @@ async function main() {
   for (const packageDir of packageDirs) {
     const tsFiles = [];
     await collectTypeScriptFiles(packageDir, tsFiles);
+    if (isTextpackPackageDir(packageDir)) {
+      await assertTextpackPackageDependencies(packageDir, errors);
+    }
 
     for (const filePath of tsFiles) {
       scannedFiles += 1;
       const text = await readFile(filePath, "utf8");
+      if (isTextpackPackageDir(packageDir)) {
+        const runtimeHits = collectTextpackRuntimeImports(text);
+        if (runtimeHits.length > 0) {
+          errors.push(
+            `${normalizePath(path.relative(ROOT, filePath))} imports runtime packages from a generated textpack: ${runtimeHits.join(", ")}`,
+          );
+        }
+      }
       const hits = collectCrossPackageSourceImports(text, filePath, packageDir, packageDirs);
       if (hits.length === 0) continue;
       errors.push(

@@ -1,0 +1,118 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-parallel:tatoeba-english-links-artifacts",
+	"packageName": "@ismail-elkorchi/textpack-en-parallel",
+	"pipelineId": "tatoeba-english-parallel-artifact",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:tatoeba:weekly-2026-06-06"],
+	"snapshotIds": ["snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/tatoeba-en-artifacts.json",
+			"checksum": "sha256:d6b9a01c9a875d05b3d7ecea9b35054ce1b1b7178a571a3830808bcb46820ebe"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ara_links.tsv.bz2",
+			"checksum": "sha256:c48698582a583ea1e259dceacdc4ed663c3f615d846ca7c1fc449397a1d8d3c1"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-deu_links.tsv.bz2",
+			"checksum": "sha256:7588e11c3088c648fd1a5cf60ca87bd809a08f45d1533f7d52c03174356eb94e"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-fra_links.tsv.bz2",
+			"checksum": "sha256:b3e2018d6afa03ca9efb11e907674dde519fcb288707ac130d5a1ca61989c23d"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-spa_links.tsv.bz2",
+			"checksum": "sha256:976715308d3d034a1487f056cb95ad6dc9cb67c6a5410bb5c60170366d4c024e"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ita_links.tsv.bz2",
+			"checksum": "sha256:47187cc3ddc4be8e0083a6a60f683c06e2341d1f459ce067f7dace9dd469ef4f"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-ell_links.tsv.bz2",
+			"checksum": "sha256:a711268471634a2b169c824a2fcdab336555d3a2d83a812bf8796ae3fcd8df08"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-grc_links.tsv.bz2",
+			"checksum": "sha256:b9659a219c5d8742257e60ca3876b2ad3869984f4437931f31419456126bada2"
+		},
+		{
+			"snapshotId": "snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
+			"path": "tools/textpack-forge/snapshots/data/tatoeba-weekly-2026-06-06/eng-lat_links.tsv.bz2",
+			"checksum": "sha256:83ffb4716016e7b8889b562c3ced046d0b168a8b81954f9994d88bfd83a8e2df"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-tatoeba-parallel-ara",
+			"path": "resources/tatoeba-en.parallel-ara.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-deu",
+			"path": "resources/tatoeba-en.parallel-deu.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-fra",
+			"path": "resources/tatoeba-en.parallel-fra.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-spa",
+			"path": "resources/tatoeba-en.parallel-spa.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-ita",
+			"path": "resources/tatoeba-en.parallel-ita.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-ell",
+			"path": "resources/tatoeba-en.parallel-ell.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-grc",
+			"path": "resources/tatoeba-en.parallel-grc.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-lat",
+			"path": "resources/tatoeba-en.parallel-lat.tsv.gz.b64",
+			"kind": "alignment-table",
+			"format": "text/tab-separated-values"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-quality",
+			"path": "resources/tatoeba-en.parallel-quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-tatoeba-parallel-quality-profile",
+			"path": "resources/tatoeba-en.parallel-quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

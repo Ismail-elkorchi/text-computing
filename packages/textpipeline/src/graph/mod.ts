@@ -1,4 +1,5 @@
 export type {
+	PipelineAmbiguousRequirement,
 	PipelineCycle,
 	PipelineMissingRequirement,
 	PipelinePlan,

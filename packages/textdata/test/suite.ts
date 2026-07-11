@@ -3,9 +3,18 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { parseConllu } from "../dist/conllu/mod.js";
 import {
+	corpusRowsFromPack,
 	readDataset,
+	readUdAnnotationDatasetFromPack,
+	readUdAnnotationDatasetFromPackAsync,
+	segmentationAdapterFromPack,
+	segmentationResourcesFromPack,
 	splitDataset,
 	streamRecords,
+	udAnnotationRecordsFromPack,
+	udAnnotationRecordsFromPackAsync,
+	udSyntaxResourcesFromPack,
+	udSyntaxResourcesFromPackAsync,
 	writeDataset,
 } from "../dist/index.js";
 import { parseSequenceLabel } from "../dist/iob/mod.js";
@@ -14,6 +23,42 @@ async function collect<T>(records: AsyncIterable<T>): Promise<T[]> {
 	const output: T[] = [];
 	for await (const record of records) output.push(record);
 	return output;
+}
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-data-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
 }
 
 test("plain text, JSONL, CSV, and writers work", async () => {
@@ -67,6 +112,260 @@ test("CoNLL-U creates token layers and dependency graphs", async () => {
 		3,
 	);
 	assert.equal(record?.document?.graphs.dependency?.kind, "dependency");
+});
+
+test("segmentation textpack resources expose a lexical-unit adapter", async () => {
+	const profileText = JSON.stringify({
+		schemaVersion: "1",
+		kind: "segmentation-profile",
+		profileId: "fr-token",
+		languageTag: "fr",
+		granularity: "token",
+	});
+	const elisionsText = "prefix\tobservedCount\nj\t1\nqu\t1\n";
+	const pack = {
+		manifest: {
+			id: "pack:fr-segmentation-test",
+			packageName: "@ismail-elkorchi/textpack-fr-segmentation-test",
+			targets: { languages: ["fr"] },
+			resources: [
+				{
+					id: "fr-token-profile",
+					kind: "segmentation-profile" as const,
+					format: "json",
+					schemaId: "textdata.segmentation-profile.v1",
+				},
+				{
+					id: "fr-segmentation-elision-prefixes",
+					kind: "segmentation-profile" as const,
+					format: "tsv",
+					schemaId: "textdata.segmentation-table.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "segmentation",
+					status: "task-supported" as const,
+					tier: "baseline" as const,
+					resourceIds: ["fr-token-profile", "fr-segmentation-elision-prefixes"],
+					bindings: [
+						{
+							role: "profile" as const,
+							resourceId: "fr-token-profile",
+							schemaId: "textdata.segmentation-profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata" as const,
+						},
+						{
+							role: "table" as const,
+							resourceId: "fr-segmentation-elision-prefixes",
+							schemaId: "textdata.segmentation-table.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: {
+			"fr-token-profile": await fileBackedTextResource(
+				"resources/fr-token.json",
+				profileText,
+			),
+			"fr-segmentation-elision-prefixes": await fileBackedTextResource(
+				"resources/fr-elisions.tsv",
+				elisionsText,
+			),
+		},
+	};
+	const reader = textResourceReader({
+		"resources/fr-token.json": profileText,
+		"resources/fr-elisions.tsv": elisionsText,
+	});
+	const resources = await segmentationResourcesFromPack(pack as never, {
+		reader,
+	});
+	assert.equal(resources.profiles[0]?.id, "fr-token-profile");
+	const adapter = await segmentationAdapterFromPack(pack as never, { reader });
+	assert.deepEqual(
+		adapter.lexicalUnits("J'en parle.").map((segment) => segment.text),
+		["J'", "en", "parle", "."],
+	);
+});
+
+test("UD annotation textpack resources become annotation-only datasets", async () => {
+	const pack = {
+		manifest: {
+			id: "pack:ud-fixture",
+			packageName: "@ismail-elkorchi/textpack-ud-fixture",
+			resources: [
+				{
+					id: "syntax-canonical",
+					kind: "grammar" as const,
+					schemaId: "textdata.syntax.v1",
+				},
+				{ id: "pos-profile", kind: "grammar" as const },
+				{ id: "feature-profile", kind: "morphology" as const },
+				{ id: "dependency-profile", kind: "grammar" as const },
+				{
+					id: "sentence-counts",
+					kind: "statistical-model" as const,
+				},
+				{ id: "annotation-rows", kind: "dataset" as const },
+				{
+					id: "quality-evidence",
+					kind: "quality-profile" as const,
+					schemaId: "textquality.evidence.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "syntax",
+					status: "profiled" as const,
+					tier: "resource-only" as const,
+					resourceIds: ["syntax-canonical", "quality-evidence"],
+					bindings: [
+						{
+							role: "primary" as const,
+							resourceId: "syntax-canonical",
+							schemaId: "textdata.syntax.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textdata" as const,
+						},
+						{
+							role: "evidence" as const,
+							resourceId: "quality-evidence",
+							schemaId: "textquality.evidence.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textquality" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: {
+			"syntax-canonical": JSON.stringify({
+				schemaVersion: "1",
+				kind: "syntax",
+				syntaxId: "renamed-fixture-syntax",
+				annotationScheme: "Universal Dependencies",
+				resourceRefs: [
+					{ resourceId: "pos-profile", role: "tagset" },
+					{ resourceId: "feature-profile", role: "feature-inventory" },
+					{
+						resourceId: "dependency-profile",
+						role: "dependency-labels",
+					},
+					{ resourceId: "sentence-counts", role: "sentence-profile" },
+					{ resourceId: "annotation-rows", role: "annotation-table" },
+				],
+			}),
+			"pos-profile": "upos\txpos\tcount\nNOUN\tNN\t1\n",
+			"feature-profile": "feature\tvalue\tcount\nNumber\tSing\t1\n",
+			"dependency-profile": "split\tdeprel\tcount\ntrain\troot\t1\n",
+			"sentence-counts":
+				"split\tsentenceCount\ttokenCount\taverageTokenCount\tmaxTokenCount\ntrain\t2\t4\t2\t3\n",
+			"annotation-rows": [
+				"split\tsentenceIndex\ttokenId\tupos\txpos\tfeatures\thead\tdeprel\tdeps\tmisc",
+				"train\t10\t1\tNOUN\tNN\tNumber=Sing\t0\troot\t0:root\t_",
+				"train\t2\t1\tNOUN\tNN\tNumber=Sing\t0\troot\t0:root\t_",
+				"train\t2\t10\tPUNCT\t.\t_\t1\tpunct\t1:punct\t_",
+				"train\t2\t2\tADJ\tJJ\t_\t1\tamod\t1:amod\t_",
+			].join("\n"),
+			"quality-evidence": '{"rawTextIncluded":false}',
+		},
+	};
+	const resources = udSyntaxResourcesFromPack(pack);
+	assert.equal(resources.upos[0]?.upos, "NOUN");
+	assert.equal(resources.features[0]?.feature, "Number");
+	assert.equal(resources.dependencies[0]?.deprel, "root");
+	assert.equal(resources.sentenceProfiles[0]?.tokenCount, 4);
+	assert.equal(resources.quality.rawTextIncluded, false);
+	const annotations = udAnnotationRecordsFromPack(pack);
+	assert.equal(annotations.length, 4);
+	assert.equal(annotations[0]?.upos, "NOUN");
+	assert.deepEqual(
+		annotations
+			.filter((record) => record.sentenceIndex === 2)
+			.map((record) => record.tokenId),
+		["1", "2", "10"],
+	);
+	const dataset = readUdAnnotationDatasetFromPack(pack, { id: "ud-fixture" });
+	const [record, laterRecord] = await collect(streamRecords(dataset));
+	assert.equal(record?.id, "ud:train:2");
+	assert.equal(laterRecord?.id, "ud:train:10");
+	assert.equal(record?.document, undefined);
+	assert.equal(record?.text, undefined);
+	assert.equal(record?.metadata?.rawTextIncluded, false);
+	const tokens = record?.fields?.tokens as readonly unknown[] | undefined;
+	assert.deepEqual(
+		tokens?.map((token) => (token as { tokenId?: string }).tokenId),
+		["1", "2", "10"],
+	);
+	const asyncResources = await udSyntaxResourcesFromPackAsync(pack);
+	assert.equal(asyncResources.quality.rawTextIncluded, false);
+	const asyncAnnotations = await udAnnotationRecordsFromPackAsync(pack);
+	assert.equal(asyncAnnotations.length, 4);
+	const asyncDataset = await readUdAnnotationDatasetFromPackAsync(pack, {
+		id: "ud-fixture-async",
+	});
+	const [asyncRecord] = await collect(streamRecords(asyncDataset));
+	assert.deepEqual(
+		(asyncRecord?.fields?.tokens as readonly { tokenId?: string }[]).map(
+			(token) => token.tokenId,
+		),
+		["1", "2", "10"],
+	);
+});
+
+test("textpack corpus adapter materializes canonical corpus resources", async () => {
+	const corpusText = "id\ttext\tlanguage\nc1\tHello world\ten\n";
+	const pack = {
+		manifest: {
+			id: "pack:corpus-fixture",
+			packageName: "@ismail-elkorchi/textpack-corpus-fixture",
+			targets: { languages: ["en"] },
+			resources: [
+				{
+					id: "corpus-en",
+					kind: "corpus" as const,
+					schemaId: "textdata.corpus.rows.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "corpus",
+					status: "profiled" as const,
+					tier: "resource-only" as const,
+					resourceIds: ["corpus-en"],
+					bindings: [
+						{
+							role: "table" as const,
+							resourceId: "corpus-en",
+							schemaId: "textdata.corpus.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textcorpus" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: {
+			"corpus-en": await fileBackedTextResource(
+				"resources/corpus.tsv",
+				corpusText,
+			),
+		},
+	};
+	const reader = textResourceReader({
+		"resources/corpus.tsv": corpusText,
+	});
+	const corpusTables = await corpusRowsFromPack(pack, { reader });
+	assert.deepEqual(corpusTables[0]?.rows[0], {
+		id: "c1",
+		language: "en",
+		text: "Hello world",
+	});
 });
 
 test("IOB/BIO/BILOU validates transitions and creates entities", async () => {
@@ -224,5 +523,6 @@ test("package source avoids forbidden sibling dependencies", async () => {
 	assert.deepEqual(Object.keys(packageJson.dependencies).sort(), [
 		"@ismail-elkorchi/textdoc",
 		"@ismail-elkorchi/textfacts",
+		"@ismail-elkorchi/textpack",
 	]);
 });

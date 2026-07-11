@@ -1,2 +1,0 @@
-rtl-arabic-default
-clitic-aware-tokenization

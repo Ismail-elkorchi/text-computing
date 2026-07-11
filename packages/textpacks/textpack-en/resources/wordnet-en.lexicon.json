@@ -1,0 +1,20 @@
+{
+  "entryCount": 135969,
+  "kind": "lexicon",
+  "languageTag": "en",
+  "lexiconId": "wordnet-en-lexicon",
+  "resourceRefs": [
+    {
+      "recordCount": 135969,
+      "resourceId": "wordnet-en-lexical-entries",
+      "role": "entries"
+    },
+    {
+      "recordCount": 127311,
+      "resourceId": "wordnet-en-lexical-entries-lookup-index",
+      "role": "lookup-index"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn"
+}

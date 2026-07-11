@@ -66,7 +66,9 @@ export function collocations(
 		{ node: string; collocate: string; count: number }
 	>();
 	let totalWindows = 0;
+	let corpusTokenCount = 0;
 	for (const record of state.records) {
+		corpusTokenCount += record.tokens.length;
 		for (const token of record.tokens) {
 			tokenCounts.set(
 				token.normalized,
@@ -111,6 +113,7 @@ export function collocations(
 					nodeCount,
 					collocateCount,
 					totalWindows,
+					corpusTokenCount,
 				),
 			};
 		})

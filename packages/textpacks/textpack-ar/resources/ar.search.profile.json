@@ -1,0 +1,41 @@
+{
+  "analyzerId": "ar-msa-lookup-search-analyzer",
+  "fields": [
+    {
+      "analyzerRole": "index",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "query",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "highlight",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "suggest",
+      "fieldName": "text"
+    }
+  ],
+  "kind": "search-profile",
+  "languageTag": "ar",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "tokenFilters": [
+    {
+      "componentId": "arabic-strip-tatweel-and-harakat",
+      "mode": "lookup-delete",
+      "options": {
+        "deleteHarakat": true,
+        "deleteTatweel": true
+      },
+      "type": "arabic-mark-policy"
+    }
+  ],
+  "tokenizer": {
+    "componentId": "unicode-word",
+    "mode": "default",
+    "type": "unicode-word-boundary"
+  }
+}

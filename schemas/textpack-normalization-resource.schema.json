@@ -1,0 +1,88 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-normalization-resource.schema.json",
+	"title": "TextpackNormalizationResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "profileId", "rules"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "normalization-profile" },
+		"profileId": { "type": "string", "minLength": 1 },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"unicodeNormalization": {
+			"enum": ["none", "NFC", "NFD", "NFKC", "NFKD"]
+		},
+		"casePolicy": {
+			"enum": ["preserve", "lower", "upper", "casefold"]
+		},
+		"rules": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/rule" }
+		},
+		"equivalenceClasses": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/equivalenceClass" }
+		}
+	},
+	"definitions": {
+		"rule": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["ruleId", "operation", "priority"],
+			"properties": {
+				"ruleId": { "type": "string", "minLength": 1 },
+				"operation": {
+					"enum": [
+						"replace",
+						"delete",
+						"compose",
+						"decompose",
+						"casefold",
+						"strip-diacritic",
+						"transliterate",
+						"map"
+					]
+				},
+				"priority": { "type": "integer", "minimum": 0 },
+				"input": { "type": "string" },
+				"output": { "type": "string" },
+				"pattern": { "type": "string", "minLength": 1 },
+				"conditions": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"equivalenceClass": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["classId", "members", "canonical"],
+			"properties": {
+				"classId": { "type": "string", "minLength": 1 },
+				"canonical": { "type": "string", "minLength": 1 },
+				"members": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

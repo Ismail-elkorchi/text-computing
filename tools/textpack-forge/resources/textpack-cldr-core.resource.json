@@ -1,0 +1,56 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+	"packageName": "@ismail-elkorchi/textpack-cldr-core",
+	"pipelineId": "cldr-core-foundation",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:unicode:cldr-core"
+	],
+	"snapshotIds": [
+		"snapshot:source:unicode:cldr-core:48.2.0"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/aliases.json",
+			"checksum": "sha256:b7011c866f27502ed6f160ca83f2a83fa42bce9fdc2176e60e2c6630961d877c"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/scriptData.json",
+			"checksum": "sha256:47c8d71bbe0aa22ff742f329a88a6c40b69e6220cdc29fc466a260d5238c7ec0"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "cldr-48-likely-subtags",
+			"path": "resources/cldr-48.likely-subtags.tsv",
+			"kind": "locale-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "cldr-48-locale-aliases",
+			"path": "resources/cldr-48.locale-aliases.tsv",
+			"kind": "locale-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "cldr-48-script-data",
+			"path": "resources/cldr-48.script-data.tsv",
+			"kind": "locale-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "cldr-48-core-summary",
+			"path": "resources/cldr-48.core.summary.json",
+			"kind": "locale-profile",
+			"format": "json"
+		}
+	]
+}

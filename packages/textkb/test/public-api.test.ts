@@ -10,6 +10,7 @@ import * as ontology from "../dist/ontology/mod.js";
 import * as semanticRelations from "../dist/semantic-relations/mod.js";
 import * as sense from "../dist/sense/mod.js";
 import * as term from "../dist/term/mod.js";
+import * as textpack from "../dist/textpack.js";
 import * as thesaurus from "../dist/thesaurus/mod.js";
 
 test("root exports the final textkb API only", () => {
@@ -23,6 +24,7 @@ test("root exports the final textkb API only", () => {
 			"buildAliasIndex",
 			"candidateConcepts",
 			"candidateEntities",
+			"candidateEntitiesFromPack",
 			"candidateSenses",
 			"cohesionFeatures",
 			"createConceptRecordStore",
@@ -31,11 +33,16 @@ test("root exports the final textkb API only", () => {
 			"createSemanticRelationStore",
 			"createSenseRecordStore",
 			"disambiguateSense",
+			"entityLinkerFromPack",
 			"explainCandidate",
 			"explainRelationPath",
 			"lexicalChains",
 			"linkEntities",
 			"linkTerms",
+			"knowledgeBaseFromPack",
+			"knowledgeBaseMentionKeyLengthsFromPack",
+			"knowledgeBaseSliceFromPack",
+			"normalizeKnowledgeBaseMention",
 			"ontologyGazetteer",
 			"packageName",
 			"parseAliasRows",
@@ -61,4 +68,5 @@ test("required final subpaths are importable", () => {
 	assert.equal(typeof link.linkEntities, "function");
 	assert.equal(typeof disambiguate.scoreDisambiguation, "function");
 	assert.equal(typeof semanticRelations.querySemanticRelations, "function");
+	assert.equal(typeof textpack.knowledgeBaseFromPack, "function");
 });

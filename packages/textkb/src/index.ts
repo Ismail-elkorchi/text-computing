@@ -65,6 +65,7 @@ export {
 	lexicalChains,
 	linkEntities,
 	linkTerms,
+	normalizeKnowledgeBaseMention,
 	ontologyGazetteer,
 	packageName,
 	parseAliasRows,
@@ -78,3 +79,17 @@ export {
 	thesaurusRelations,
 	traverseSemanticRelations,
 } from "./internal/core.js";
+export type {
+	EntityLinkerFromPackOptions,
+	KnowledgeBaseFromPackOptions,
+	KnowledgeBaseMentionKeyLengths,
+	KnowledgeBaseSliceFromPackOptions,
+	TextPackEntityLinker,
+} from "./textpack.js";
+export {
+	candidateEntitiesFromPack,
+	entityLinkerFromPack,
+	knowledgeBaseFromPack,
+	knowledgeBaseMentionKeyLengthsFromPack,
+	knowledgeBaseSliceFromPack,
+} from "./textpack.js";

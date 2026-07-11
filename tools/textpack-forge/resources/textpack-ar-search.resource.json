@@ -1,0 +1,40 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+	"packageName": "@ismail-elkorchi/textpack-ar-search",
+	"pipelineId": "arabic-search-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:unicode:cldr-core"
+	],
+	"snapshotIds": [
+		"snapshot:source:unicode:cldr-core:48.2.0"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-search-profile",
+			"path": "resources/ar.search.profile.json",
+			"kind": "search-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-search-quality",
+			"path": "resources/ar.search.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-search-quality-profile",
+			"path": "resources/ar.search.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

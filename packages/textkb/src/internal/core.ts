@@ -220,6 +220,10 @@ function normalizeAliasText(text: string): string {
 	return nfkcCaseFold(text).replace(/\s+/gu, " ").trim();
 }
 
+export function normalizeKnowledgeBaseMention(text: string): string {
+	return normalizeAliasText(text);
+}
+
 function normalizedTextTokens(text: string): readonly string[] {
 	const normalized = normalizeAliasText(text);
 	if (normalized.length === 0) return [];
@@ -906,12 +910,16 @@ export function buildAliasIndex(input: BuildAliasIndexInput = {}): AliasIndex {
 		entries.push(normalizeAliasEntryInput(alias, `aliases[${index}]`));
 	}
 	validateAliasTargets(entries, input);
-	const grouped: Record<string, AliasEntry[]> = {};
+	const grouped: Record<string, AliasEntry[]> = Object.create(null);
 	for (const entry of entries) {
 		if (entry.key.length === 0) continue;
-		grouped[entry.key] = [...(grouped[entry.key] ?? []), entry];
+		const bucket = Object.hasOwn(grouped, entry.key)
+			? (grouped[entry.key] ?? [])
+			: [];
+		bucket.push(entry);
+		grouped[entry.key] = bucket;
 	}
-	const output: Record<string, readonly AliasEntry[]> = {};
+	const output: Record<string, readonly AliasEntry[]> = Object.create(null);
 	for (const [key, values] of stableEntries(grouped)) {
 		output[key] = freezeArray(values.sort(compareAliasEntries));
 	}
@@ -1492,6 +1500,7 @@ function collectAliasMatches(
 	const matches: AliasMatch[] = [];
 	for (const entry of kb.aliases.entries[key] ?? []) {
 		if (entry.targetKind !== targetKind) continue;
+		if (!aliasLanguageMatches(entry.language, options.language)) continue;
 		matches.push({
 			entry,
 			matchKind: entry.alias === text ? "exact" : "normalized",
@@ -1506,6 +1515,7 @@ function collectAliasMatches(
 			if (distance === undefined) continue;
 			for (const entry of kb.aliases.entries[candidateKey] ?? []) {
 				if (entry.targetKind !== targetKind) continue;
+				if (!aliasLanguageMatches(entry.language, options.language)) continue;
 				matches.push({
 					entry,
 					matchKind: "fuzzy",
@@ -1516,6 +1526,17 @@ function collectAliasMatches(
 		}
 	}
 	return matches.sort(compareAliasMatches);
+}
+
+function aliasLanguageMatches(
+	entryLanguage: string | undefined,
+	requestedLanguage: string | undefined,
+): boolean {
+	if (entryLanguage === undefined || requestedLanguage === undefined)
+		return true;
+	const entry = entryLanguage.toLocaleLowerCase();
+	const requested = requestedLanguage.toLocaleLowerCase();
+	return entry === requested || entry.split("-")[0] === requested.split("-")[0];
 }
 
 function compareAliasMatches(left: AliasMatch, right: AliasMatch): number {
@@ -2234,6 +2255,7 @@ function entityMentions(
 		mentionSource: options.mentionSource ?? "both",
 		annotationLayerPrefix: "entity.",
 		aliasTargetKind: "entity",
+		language: options.language,
 	});
 }
 
@@ -2249,6 +2271,7 @@ function termMentions(
 		mentionSource: options.mentionSource ?? "both",
 		annotationLayerPrefix: "term.",
 		aliasTargetKind: "concept",
+		language: options.language,
 	});
 }
 
@@ -2302,6 +2325,7 @@ function collectMentions(
 		readonly mentionSource: "annotations" | "aliases" | "both";
 		readonly annotationLayerPrefix: string;
 		readonly aliasTargetKind: AliasEntry["targetKind"];
+		readonly language?: string | undefined;
 	},
 ): Mention[] {
 	const mentions: Mention[] = [];
@@ -2328,17 +2352,35 @@ function collectMentions(
 	}
 	if (config.mentionSource !== "annotations") {
 		const view = documentContext(doc, config.viewId);
-		const aliases = Object.values(kb.aliases.entries)
+		const aliasEntries = Object.values(kb.aliases.entries)
 			.flat()
-			.filter((entry) => entry.targetKind === config.aliasTargetKind)
-			.sort(compareAliasEntries);
-		for (const entry of aliases) {
-			for (const ref of scanAlias(view.text, view.viewId, entry.alias, true)) {
-				mentions.push({
-					text: view.text.slice(ref.span.start, ref.span.end),
-					ref,
-				});
-			}
+			.filter(
+				(entry) =>
+					entry.targetKind === config.aliasTargetKind &&
+					aliasLanguageMatches(entry.language, config.language),
+			);
+		const aliasKeys = new Set(aliasEntries.map((entry) => entry.key));
+		const mentionPriorityByKey = new Map<string, number>();
+		for (const entry of aliasEntries) {
+			const matchKindPriority =
+				entry.matchKind === "label" ? 2 : entry.matchKind === "lemma" ? 1 : 0;
+			const priority = matchKindPriority * 1_000_000 + (entry.priority ?? 0);
+			mentionPriorityByKey.set(
+				entry.key,
+				Math.max(mentionPriorityByKey.get(entry.key) ?? priority, priority),
+			);
+		}
+		for (const ref of scanAliasKeys(
+			view.text,
+			view.viewId,
+			aliasKeys,
+			true,
+			mentionPriorityByKey,
+		)) {
+			mentions.push({
+				text: view.text.slice(ref.span.start, ref.span.end),
+				ref,
+			});
 		}
 	}
 	return dedupeMentions(mentions);
@@ -2486,24 +2528,107 @@ function scanAlias(
 	alias: string,
 	boundary: boolean,
 ): SpanRef[] {
-	const length = alias.length;
-	if (length === 0 || length > text.length) return [];
 	const aliasKey = normalizeAliasText(alias);
-	const refs: SpanRef[] = [];
-	for (let start = 0; start <= text.length - length; start += 1) {
-		const end = start + length;
-		if (boundary && !isBoundary(text, start, end)) continue;
-		if (normalizeAliasText(text.slice(start, end)) !== aliasKey) continue;
-		refs.push({
-			viewId,
-			span: { start, end, unit: "utf16-code-unit" },
-		});
+	return scanAliasKeys(text, viewId, new Set([aliasKey]), boundary);
+}
+
+function nextCodePointBoundary(text: string, offset: number): number {
+	const codePoint = text.codePointAt(offset);
+	return offset + (codePoint !== undefined && codePoint > 0xffff ? 2 : 1);
+}
+
+function codePointAtOffset(text: string, offset: number): string | undefined {
+	if (offset < 0 || offset >= text.length) return undefined;
+	const codePoint = text.codePointAt(offset);
+	return codePoint === undefined ? undefined : String.fromCodePoint(codePoint);
+}
+
+function codePointBeforeOffset(
+	text: string,
+	offset: number,
+): string | undefined {
+	if (offset <= 0 || offset > text.length) return undefined;
+	const low = text.charCodeAt(offset - 1);
+	const start = low >= 0xdc00 && low <= 0xdfff ? offset - 2 : offset - 1;
+	return codePointAtOffset(text, start);
+}
+
+function scanAliasKeys(
+	text: string,
+	viewId: string,
+	keys: ReadonlySet<string>,
+	boundary: boolean,
+	priorityByKey: ReadonlyMap<string, number> = new Map(),
+): SpanRef[] {
+	const usableKeys = new Set([...keys].filter((key) => key.length > 0));
+	if (usableKeys.size === 0 || text.length === 0) return [];
+	const maxKeyLength = Math.max(...[...usableKeys].map((key) => key.length));
+	const candidates: { readonly priority: number; readonly ref: SpanRef }[] = [];
+	for (
+		let start = 0;
+		start < text.length;
+		start = nextCodePointBoundary(text, start)
+	) {
+		if (/^\p{White_Space}$/u.test(codePointAtOffset(text, start) ?? ""))
+			continue;
+		if (boundary && isWordChar(codePointBeforeOffset(text, start))) continue;
+		for (
+			let end = nextCodePointBoundary(text, start);
+			end <= text.length;
+			end = nextCodePointBoundary(text, end)
+		) {
+			if (/^\p{White_Space}$/u.test(codePointBeforeOffset(text, end) ?? ""))
+				continue;
+			const key = normalizeAliasText(text.slice(start, end));
+			if (key.length > maxKeyLength) break;
+			if (!usableKeys.has(key)) continue;
+			if (boundary && !isBoundary(text, start, end)) continue;
+			candidates.push({
+				priority: priorityByKey.get(key) ?? 0,
+				ref: {
+					viewId,
+					span: { start, end, unit: "utf16-code-unit" },
+				},
+			});
+			if (end === text.length) break;
+		}
 	}
-	return refs;
+	const selected: { readonly priority: number; readonly ref: SpanRef }[] = [];
+	for (const candidate of candidates.sort((left, right) => {
+		const leftLength = left.ref.span.end - left.ref.span.start;
+		const rightLength = right.ref.span.end - right.ref.span.start;
+		return (
+			compareNumbers(right.priority, left.priority) ||
+			compareNumbers(rightLength, leftLength) ||
+			compareNumbers(left.ref.span.start, right.ref.span.start) ||
+			compareNumbers(left.ref.span.end, right.ref.span.end)
+		);
+	})) {
+		if (
+			selected.some(
+				(existing) =>
+					existing.ref.span.start < candidate.ref.span.end &&
+					candidate.ref.span.start < existing.ref.span.end,
+			)
+		) {
+			continue;
+		}
+		selected.push(candidate);
+	}
+	return selected
+		.sort(
+			(left, right) =>
+				compareNumbers(left.ref.span.start, right.ref.span.start) ||
+				compareNumbers(left.ref.span.end, right.ref.span.end),
+		)
+		.map((candidate) => candidate.ref);
 }
 
 function isBoundary(text: string, start: number, end: number): boolean {
-	return !isWordChar(text[start - 1]) && !isWordChar(text[end]);
+	return (
+		!isWordChar(codePointBeforeOffset(text, start)) &&
+		!isWordChar(codePointAtOffset(text, end))
+	);
 }
 
 function isWordChar(char: string | undefined): boolean {
@@ -2611,8 +2736,11 @@ export interface EntityLinkValue extends JsonObject {
 	readonly label: string;
 	readonly entityTypes: readonly JsonValue[];
 	readonly matchedAlias: string;
+	readonly aliasMatchKind: AliasEntry["matchKind"];
+	readonly matchKind: "exact" | "normalized" | "fuzzy";
 	readonly score: number;
 	readonly rank: number;
+	readonly sourceEntityId?: string;
 	readonly sourceAnnotationId?: string;
 }
 
@@ -2621,6 +2749,8 @@ function entityLinkValue(
 	candidate: EntityCandidate,
 	mention: Mention,
 ): EntityLinkValue {
+	const sourceEntityId =
+		kb.entities.records[candidate.entityId]?.metadata?.sourceEntityId;
 	return stableJsonClone({
 		kind: "entity-link",
 		kbId: kb.id,
@@ -2628,8 +2758,11 @@ function entityLinkValue(
 		label: candidate.label,
 		entityTypes: candidate.types,
 		matchedAlias: candidate.matchedAlias,
+		aliasMatchKind: candidate.aliasMatchKind,
+		matchKind: candidate.matchKind,
 		score: candidate.score,
 		rank: candidate.rank,
+		...(typeof sourceEntityId === "string" ? { sourceEntityId } : {}),
 		...(mention.sourceAnnotationId !== undefined
 			? { sourceAnnotationId: mention.sourceAnnotationId }
 			: {}),
@@ -2731,6 +2864,8 @@ function candidateValue(kb: KnowledgeBase, candidate: Candidate): JsonObject {
 			label: candidate.label,
 			entityTypes: candidate.types,
 			matchedAlias: candidate.matchedAlias,
+			aliasMatchKind: candidate.aliasMatchKind,
+			matchKind: candidate.matchKind,
 			score: candidate.score,
 			rank: candidate.rank,
 		});

@@ -18,6 +18,8 @@ import {
 	createHistoricalView,
 	createNormalizedView,
 	historicalTargetViewKind,
+	normalizationProfileFromPack,
+	normalizationResourcesFromPack,
 	normalizeDocument,
 	spanMapFromEditScript,
 	transliterationScriptPair,
@@ -34,6 +36,42 @@ import {
 	spellingMap,
 	transliterationMap,
 } from "./fixtures/resources.ts";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-norm-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
+}
 
 await import("../dist/normalize/mod.js");
 await import("../dist/variant/mod.js");
@@ -62,6 +100,50 @@ const normalized = normalizeDocument(doc, {
 assert.equal(normalized.view.text, "ye old shop");
 assert.equal(normalized.spanMap.targetViewId, "norm");
 assert.equal(doc.views.norm, undefined);
+
+const unicodeComposed = normalizeDocument(createDocument("e\u0301 olde"), {
+	modes: ["spelling"],
+	resources: { spellingMaps: [spellingMap] },
+	unicodeForm: "NFC",
+});
+assert.equal(unicodeComposed.view.text, "é old");
+assert.equal(
+	unicodeComposed.spanMap.entries.at(-1)?.target.end,
+	unicodeComposed.view.text.length,
+);
+assert.notEqual(
+	unicodeComposed.view.transform?.optionsHash,
+	normalizeDocument(createDocument("e\u0301 olde"), {
+		modes: ["spelling"],
+		resources: { spellingMaps: [spellingMap] },
+		unicodeForm: "NFD",
+	}).view.transform?.optionsHash,
+);
+
+const overlappingMap = buildSpellingMap(
+	[
+		{ source: "can not", candidates: ["cannot"], kind: "spacing" },
+		{ source: "not", candidates: ["n't"], kind: "spacing" },
+	],
+	{ id: "overlap:test", kind: "spacing" },
+);
+assert.throws(
+	() =>
+		normalizeDocument(createDocument("can not"), {
+			modes: ["spacing"],
+			resources: { spacingMaps: [overlappingMap] },
+			overlapPolicy: "all",
+		}),
+	/overlapPolicy "all" cannot apply overlapping/,
+);
+assert.equal(
+	normalizeDocument(createDocument("can not"), {
+		modes: ["spacing"],
+		resources: { spacingMaps: [overlappingMap] },
+		overlapPolicy: "longest",
+	}).view.text,
+	"cannot",
+);
 
 const materialized = addViewWithSpanMap(
 	doc,
@@ -260,3 +342,147 @@ const kindSet = new Set(
 );
 for (const kind of allCandidateKinds)
 	assert.equal(kindSet.has(kind), true, kind);
+
+const normalizationText =
+	"kind\tsource\ttarget\nelision\tl'\tle\naccent\te\te\n";
+const normalizationPack = {
+	manifest: {
+		id: "pack:norm:table",
+		packageName: "@ismail-elkorchi/textpack-norm-table-test",
+		targets: { languages: ["fr"] },
+		resources: [
+			{
+				id: "normalization-fr-profile",
+				kind: "normalization-profile" as const,
+				format: "tsv",
+				schemaId: "textnorm.rules.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "normalization",
+				status: "task-supported" as const,
+				tier: "rule-based" as const,
+				resourceIds: ["normalization-fr-profile"],
+				bindings: [
+					{
+						role: "table" as const,
+						resourceId: "normalization-fr-profile",
+						schemaId: "textnorm.rules.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textnorm" as const,
+					},
+				],
+			},
+		],
+	},
+	resources: {
+		"normalization-fr-profile": await fileBackedTextResource(
+			"resources/normalization-fr.tsv",
+			normalizationText,
+		),
+	},
+};
+const normalizationResources = await normalizationResourcesFromPack(
+	normalizationPack,
+	{
+		reader: textResourceReader({
+			"resources/normalization-fr.tsv": normalizationText,
+		}),
+	},
+);
+const normalizationPayload = normalizationResources[0]?.payload;
+if (normalizationPayload?.type !== "table") {
+	throw new Error("normalization resource should materialize as a table");
+}
+assert.deepEqual(normalizationPayload.value.rows[0], {
+	kind: "elision",
+	source: "l'",
+	target: "le",
+});
+
+const normalizationProfileText = JSON.stringify({
+	schemaVersion: "1",
+	kind: "normalization-profile",
+	profileId: "fr-search-normalization",
+	languageTag: "fr",
+	script: "Latn",
+	unicodeNormalization: "NFC",
+	rules: [
+		{ ruleId: "unicode-nfc-compose", operation: "compose", priority: 10 },
+		{ ruleId: "unicode-casefold", operation: "casefold", priority: 20 },
+		{
+			ruleId: "french-apostrophe-normalize",
+			operation: "replace",
+			input: "’",
+			output: "'",
+			priority: 30,
+		},
+		{
+			ruleId: "french-accent-fold",
+			operation: "strip-diacritic",
+			priority: 40,
+		},
+	],
+});
+const normalizationProfilePack = {
+	manifest: {
+		id: "pack:norm:profile",
+		packageName: "@ismail-elkorchi/textpack-norm-profile-test",
+		targets: { languages: ["fr"] },
+		resources: [
+			{
+				id: "fr-normalization-profile",
+				kind: "normalization-profile" as const,
+				format: "json",
+				schemaId: "textnorm.profile.v1",
+			},
+		],
+		capabilitySlots: [
+			{
+				slot: "normalization",
+				status: "task-supported" as const,
+				tier: "rule-based" as const,
+				resourceIds: ["fr-normalization-profile"],
+				bindings: [
+					{
+						role: "profile" as const,
+						resourceId: "fr-normalization-profile",
+						schemaId: "textnorm.profile.v1",
+						required: true,
+						ownerPackage: "@ismail-elkorchi/textnorm" as const,
+					},
+				],
+			},
+		],
+	},
+	resources: {
+		"fr-normalization-profile": await fileBackedTextResource(
+			"resources/fr-normalization.json",
+			normalizationProfileText,
+		),
+	},
+};
+const compiledNormalization = await normalizationProfileFromPack(
+	normalizationProfilePack,
+	{
+		reader: textResourceReader({
+			"resources/fr-normalization.json": normalizationProfileText,
+		}),
+	},
+);
+assert.equal(compiledNormalization.normalizeText("Été ’", "search"), "ete '");
+assert.equal(compiledNormalization.normalizeText("Iİß", "search"), "iiss");
+const normalizedView = compiledNormalization.searchView(
+	createDocument("Été ’", { id: "doc:norm:profile" }),
+);
+assert.equal(normalizedView.view.text, "ete '");
+assert.equal(normalizedView.spanMap.sourceViewId, "raw");
+const customSourceView = compiledNormalization.searchView(
+	createDocument("Été ’", {
+		id: "doc:norm:custom-source-view",
+		rawViewId: "source-text",
+	}),
+);
+assert.equal(customSourceView.view.text, "ete '");
+assert.equal(customSourceView.spanMap.sourceViewId, "source-text");

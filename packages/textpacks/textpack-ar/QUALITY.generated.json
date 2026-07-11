@@ -1,0 +1,1416 @@
+{
+  "acceptedRecordCount": 991852,
+  "artifactRequirements": [],
+  "capabilitySlots": [
+    {
+      "capabilities": {
+        "normalization": "unicode",
+        "segmentation": "profile"
+      },
+      "notes": [
+        "Core profile resources cover modern typed Arabic identity, Arabic-script orthography, Unicode punctuation, and a basic UAX #29 segmentation baseline."
+      ],
+      "resourceIds": [
+        "ar-core-language-profile",
+        "ar-core-orthography",
+        "ar-core-punctuation",
+        "ar-core-basic-segmentation"
+      ],
+      "slot": "core",
+      "status": "profiled",
+      "tier": "resource-only"
+    },
+    {
+      "notes": [
+        "Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
+      ],
+      "slot": "corpus",
+      "status": "planned",
+      "tier": "none"
+    },
+    {
+      "slot": "foundation",
+      "status": "profiled",
+      "tier": "resource-only"
+    },
+    {
+      "artifactIds": [
+        "artifact:textpack-wikidata-ar:full:wikidata-entities-json:20260608"
+      ],
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "kb"
+      },
+      "notes": [
+        "The bundled distribution resources provide local Wikidata Arabic core entity rows plus Arabic WordNet lexical-semantic resources.",
+        "Arabic WordNet senses, synsets, and semantic relations are available as generated KB resources.",
+        "Wikidata Arabic entity labels, aliases, selected relations, and canonical KB metadata are materialized locally for the declared extract scope.",
+        "The local extract is scoped and does not claim complete Wikidata dump coverage."
+      ],
+      "resourceIds": [
+        "wordnet-ar-senses",
+        "wordnet-ar-synsets",
+        "wordnet-ar-relations",
+        "wordnet-ar-kb-canonical",
+        "wikidata-ar-entities",
+        "wikidata-ar-aliases",
+        "wikidata-ar-relations",
+        "wikidata-ar-kb-canonical",
+        "wikidata-ar-entities-lookup-index",
+        "wikidata-ar-aliases-lookup-index",
+        "wikidata-ar-relations-lookup-index"
+      ],
+      "slot": "kb",
+      "status": "task-supported",
+      "tier": "lookup"
+    },
+    {
+      "notes": [
+        "BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
+      ],
+      "resourceIds": [
+        "bcp47-language-subtags",
+        "bcp47-language-registry-summary"
+      ],
+      "slot": "language-registry",
+      "status": "profiled",
+      "tier": "resource-only"
+    },
+    {
+      "capabilities": {
+        "extraction": "gazetteer",
+        "terminology": "lexicon"
+      },
+      "notes": [
+        "Arabic WordNet lexical entries are available as generated lexicon resources."
+      ],
+      "resourceIds": [
+        "wordnet-ar-lexical-entries",
+        "wordnet-ar-lexicon-canonical",
+        "wordnet-ar-lexical-entries-lookup-index"
+      ],
+      "slot": "lexicon",
+      "status": "task-supported",
+      "tier": "lookup"
+    },
+    {
+      "notes": [
+        "CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
+      ],
+      "resourceIds": [
+        "cldr-48-likely-subtags",
+        "cldr-48-locale-aliases",
+        "cldr-48-script-data",
+        "cldr-48-core-summary"
+      ],
+      "slot": "locale-profile",
+      "status": "profiled",
+      "tier": "resource-only"
+    },
+    {
+      "capabilities": {
+        "morphology": "lookup"
+      },
+      "notes": [
+        "CAMeL Morph MSA morpheme inventory, feature inventory, defaults, and compatibility tables are available as generated lookup resources."
+      ],
+      "resourceIds": [
+        "ar-msa-camel-morph-features",
+        "ar-msa-camel-morph-defaults",
+        "ar-msa-camel-morph-morphemes",
+        "ar-msa-camel-morph-compatibility",
+        "ar-msa-camel-morphology-canonical",
+        "ar-msa-camel-morph-morphemes-lookup-index"
+      ],
+      "slot": "morphology",
+      "status": "task-supported",
+      "tier": "rule-based"
+    },
+    {
+      "capabilities": {
+        "normalization": "rules"
+      },
+      "notes": [
+        "Arabic MSA lookup normalization is generated from Unicode/CLDR policy plus CAMeL Morph MSA observed character evidence."
+      ],
+      "resourceIds": [
+        "ar-normalization-rules",
+        "ar-normalization-observed-codepoints",
+        "ar-normalization-profile"
+      ],
+      "slot": "normalization",
+      "status": "task-supported",
+      "tier": "rule-based"
+    },
+    {
+      "notes": [
+        "Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
+      ],
+      "slot": "parallel",
+      "status": "planned",
+      "tier": "none"
+    },
+    {
+      "notes": [
+        "The bundled distribution resources provide generated Arabic quality evidence and coverage reports over the selected local build units.",
+        "Generated quality profile records source coverage, accepted records, rejected records, and scope limitations.",
+        "Generated quality profile records source coverage, rule counts, observed codepoint evidence, accepted records, rejected records, and scope limitations.",
+        "Generated quality profile records source counts, accepted records, and transform warnings.",
+        "Generated quality profile records lexical-entry, sense, synset, and relation counts.",
+        "Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations.",
+        "Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations."
+      ],
+      "resourceIds": [
+        "ar-core-quality",
+        "ar-core-quality-profile",
+        "ar-normalization-quality",
+        "ar-normalization-quality-profile",
+        "ar-msa-camel-morph-quality",
+        "ar-msa-camel-quality-profile",
+        "wordnet-ar-quality",
+        "wordnet-ar-quality-profile",
+        "wikidata-ar-quality",
+        "wikidata-ar-quality-profile",
+        "ar-search-quality",
+        "ar-search-quality-profile"
+      ],
+      "slot": "quality",
+      "status": "task-supported",
+      "tier": "rule-based"
+    },
+    {
+      "capabilities": {
+        "search": "analyzer"
+      },
+      "notes": [
+        "The built-in Arabic analyzer executes Unicode word tokenization and removes tatweel and Arabic combining marks; it does not claim morphology, stemming, or synonym expansion."
+      ],
+      "resourceIds": [
+        "ar-search-profile"
+      ],
+      "slot": "search",
+      "status": "task-supported",
+      "tier": "baseline"
+    },
+    {
+      "capabilities": {
+        "segmentation": "profile"
+      },
+      "notes": [
+        "The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as expert morphology data and are not presented as executed dictionary segmentation."
+      ],
+      "resourceIds": [
+        "ar-msa-camel-segmentation-canonical"
+      ],
+      "slot": "segmentation",
+      "status": "task-supported",
+      "tier": "baseline"
+    },
+    {
+      "notes": [
+        "UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+      ],
+      "slot": "syntax",
+      "status": "planned",
+      "tier": "none"
+    },
+    {
+      "notes": [
+        "Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
+      ],
+      "resourceIds": [
+        "unicode-17-blocks",
+        "unicode-17-property-value-aliases",
+        "unicode-17-scripts",
+        "unicode-17-core-summary"
+      ],
+      "slot": "unicode-profile",
+      "status": "profiled",
+      "tier": "resource-only"
+    }
+  ],
+  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedBy": "tools/textpack-forge",
+  "licenseWarnings": [],
+  "mode": "source-backed",
+  "packageName": "@ismail-elkorchi/textpack-ar",
+  "publishability": {
+    "publishable": true,
+    "reasons": [],
+    "status": "publishable"
+  },
+  "publishable": true,
+  "rejectedRecordCount": 0,
+  "resourceCount": 52,
+  "resourcePaths": [
+    "resources/ar.core.basic-segmentation.json",
+    "resources/ar.core.language-profile.json",
+    "resources/ar.core.orthography.tsv",
+    "resources/ar.core.punctuation.tsv",
+    "resources/ar.core.quality-profile.json",
+    "resources/ar.core.quality.json",
+    "resources/ar.normalization-observed-codepoints.tsv",
+    "resources/ar.normalization-rules.tsv",
+    "resources/ar.normalization.json",
+    "resources/ar.normalization.quality-profile.json",
+    "resources/ar.normalization.quality.json",
+    "resources/ar.search.profile.json",
+    "resources/ar.search.quality-profile.json",
+    "resources/ar.search.quality.json",
+    "resources/bcp47.language-registry.summary.json",
+    "resources/bcp47.language-subtags.tsv.gz.b64",
+    "resources/camel-morph-msa.compatibility.tsv.gz.b64",
+    "resources/camel-morph-msa.defaults.tsv",
+    "resources/camel-morph-msa.features.tsv",
+    "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
+    "resources/camel-morph-msa.morphology.json",
+    "resources/camel-morph-msa.quality-profile.json",
+    "resources/camel-morph-msa.quality.json",
+    "resources/camel-morph-msa.segmentation.json",
+    "resources/camel-morph-msa.tokenizations.tsv",
+    "resources/cldr-48.core.summary.json",
+    "resources/cldr-48.likely-subtags.tsv.gz.b64",
+    "resources/cldr-48.locale-aliases.tsv",
+    "resources/cldr-48.script-data.tsv",
+    "resources/unicode-17.blocks.tsv",
+    "resources/unicode-17.core.summary.json",
+    "resources/unicode-17.property-value-aliases.tsv",
+    "resources/unicode-17.scripts.tsv.gz.b64",
+    "resources/wikidata-ar.aliases.lookup-index.v1.txt",
+    "resources/wikidata-ar.entities.lookup-index.v1.txt",
+    "resources/wikidata-ar.kb.json",
+    "resources/wikidata-ar.quality-profile.json",
+    "resources/wikidata-ar.quality.json",
+    "resources/wikidata-ar.relations.lookup-index.v1.txt",
+    "resources/wordnet-ar.kb.json",
+    "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt",
+    "resources/wordnet-ar.lexicon.json",
+    "resources/wordnet-ar.quality-profile.json",
+    "resources/wordnet-ar.quality.json",
+    "resources/wordnet-ar.relations.tsv.gz.b64",
+    "resources/wordnet-ar.senses.tsv.gz.b64",
+    "resources/wordnet-ar.synsets.tsv.gz.b64"
+  ],
+  "resourceSpecIds": [
+    "resource-spec:textpack-language-registry:iana-bcp47",
+    "resource-spec:textpack-unicode-17:ucd-core",
+    "resource-spec:textpack-cldr-core:cldr-core",
+    "resource-spec:textpack-ar-core:arabic-core-profile",
+    "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+    "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+    "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+    "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+    "resource-spec:textpack-ar-search:arabic-search-profile"
+  ],
+  "resources": [
+    {
+      "byteLength": 1397,
+      "checksum": "sha256:06d3f8347e25d6a388efaf3c43042eefd811f7daccee3c50bb8e83ca4705a920",
+      "id": "ar-core-basic-segmentation",
+      "kind": "segmentation-profile",
+      "lineCount": 61,
+      "logicalLineCount": 61,
+      "logicalNonEmptyLineCount": 60,
+      "logicalRecordCount": 60,
+      "logicalResourceTextByteLength": 1397,
+      "nonEmptyLineCount": 60,
+      "path": "resources/ar.core.basic-segmentation.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 1397,
+      "sharedStorageResourceIds": [
+        "ar-core-basic-segmentation"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 791,
+      "checksum": "sha256:2a5513ac6f821a6b213930e254844f174689d5a4e523341a8d9365494e52e12f",
+      "id": "ar-core-language-profile",
+      "kind": "locale-profile",
+      "lineCount": 32,
+      "logicalLineCount": 32,
+      "logicalNonEmptyLineCount": 31,
+      "logicalRecordCount": 31,
+      "logicalResourceTextByteLength": 791,
+      "nonEmptyLineCount": 31,
+      "path": "resources/ar.core.language-profile.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 791,
+      "sharedStorageResourceIds": [
+        "ar-core-language-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 7774,
+      "checksum": "sha256:908d7047d0d07c2ca72545f6d5c64da9e38d7b032106aeab51e1e694e5ae3b3e",
+      "id": "ar-core-orthography",
+      "kind": "locale-profile",
+      "lineCount": 97,
+      "logicalLineCount": 97,
+      "logicalNonEmptyLineCount": 96,
+      "logicalRecordCount": 96,
+      "logicalResourceTextByteLength": 7774,
+      "nonEmptyLineCount": 96,
+      "path": "resources/ar.core.orthography.tsv",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 7774,
+      "sharedStorageResourceIds": [
+        "ar-core-orthography"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 20036,
+      "checksum": "sha256:0fa27f5d4292a966193ae7829825909d5aa099afa725c77b109ac4a3883f4eec",
+      "id": "ar-core-punctuation",
+      "kind": "locale-profile",
+      "lineCount": 398,
+      "logicalLineCount": 398,
+      "logicalNonEmptyLineCount": 397,
+      "logicalRecordCount": 397,
+      "logicalResourceTextByteLength": 20036,
+      "nonEmptyLineCount": 397,
+      "path": "resources/ar.core.punctuation.tsv",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 20036,
+      "sharedStorageResourceIds": [
+        "ar-core-punctuation"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 985,
+      "checksum": "sha256:1f61bb905944b48309d0d449e4cc4d926b6e38be3a54e2610fbf1e8bb2af0146",
+      "id": "ar-core-quality",
+      "kind": "quality-profile",
+      "lineCount": 29,
+      "logicalLineCount": 29,
+      "logicalNonEmptyLineCount": 28,
+      "logicalRecordCount": 28,
+      "logicalResourceTextByteLength": 985,
+      "nonEmptyLineCount": 28,
+      "path": "resources/ar.core.quality.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 985,
+      "sharedStorageResourceIds": [
+        "ar-core-quality"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1100,
+      "checksum": "sha256:00a48bc0a66fe8118f429efe2f686ce096ec7e70215d57bd4a99e4dda89f6742",
+      "id": "ar-core-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 46,
+      "logicalLineCount": 46,
+      "logicalNonEmptyLineCount": 45,
+      "logicalRecordCount": 45,
+      "logicalResourceTextByteLength": 1100,
+      "nonEmptyLineCount": 45,
+      "path": "resources/ar.core.quality-profile.json",
+      "pipelineId": "arabic-core-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-core:arabic-core-profile",
+      "resourceTextByteLength": 1100,
+      "sharedStorageResourceIds": [
+        "ar-core-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 48029,
+      "checksum": "sha256:66131372dec38eee6893194ea4f924d9f3464a2854e9b1f9c1517af7841c3ae0",
+      "id": "ar-msa-camel-morph-compatibility",
+      "kind": "morphology",
+      "lineCount": 14825,
+      "logicalLineCount": 14825,
+      "logicalNonEmptyLineCount": 14824,
+      "logicalRecordCount": 14824,
+      "logicalResourceTextByteLength": 252024,
+      "nonEmptyLineCount": 14824,
+      "path": "resources/camel-morph-msa.compatibility.tsv.gz.b64",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 252024,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-compatibility"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 37757,
+      "checksum": "sha256:682a3dd5ed6a3b57aaa39c859049d34c4c825246ec17db931a399bb19a82e9ec",
+      "id": "ar-msa-camel-morph-defaults",
+      "kind": "morphology",
+      "lineCount": 1963,
+      "logicalLineCount": 1963,
+      "logicalNonEmptyLineCount": 1962,
+      "logicalRecordCount": 1962,
+      "logicalResourceTextByteLength": 37757,
+      "nonEmptyLineCount": 1962,
+      "path": "resources/camel-morph-msa.defaults.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 37757,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-defaults"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2333,
+      "checksum": "sha256:72a616b6e17508c29887148504f8bcd61c67bd6bc0590f181d2d35a491a6a648",
+      "id": "ar-msa-camel-morph-features",
+      "kind": "morphology",
+      "lineCount": 55,
+      "logicalLineCount": 55,
+      "logicalNonEmptyLineCount": 54,
+      "logicalRecordCount": 54,
+      "logicalResourceTextByteLength": 2333,
+      "nonEmptyLineCount": 54,
+      "path": "resources/camel-morph-msa.features.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 2333,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-features"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 19452834,
+      "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+      "id": "ar-msa-camel-morph-morphemes",
+      "kind": "morphology",
+      "lineCount": 3,
+      "logicalLineCount": 203742,
+      "logicalNonEmptyLineCount": 203741,
+      "logicalRecordCount": 203740,
+      "logicalResourceTextByteLength": 117913474,
+      "nonEmptyLineCount": 3,
+      "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 19452834,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-morphemes",
+        "ar-msa-camel-morph-morphemes-lookup-index"
+      ],
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 19452834,
+      "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+      "id": "ar-msa-camel-morph-morphemes-lookup-index",
+      "kind": "dataset",
+      "lineCount": 3,
+      "logicalLineCount": 3,
+      "logicalNonEmptyLineCount": 3,
+      "logicalRecordCount": 0,
+      "logicalResourceTextByteLength": 19452834,
+      "nonEmptyLineCount": 3,
+      "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 19452834,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-morphemes",
+        "ar-msa-camel-morph-morphemes-lookup-index"
+      ],
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 1216,
+      "checksum": "sha256:01b1a94f619c179273e03c5983894e587703299e0adaa4bbbe1ac74221d55da9",
+      "id": "ar-msa-camel-morph-quality",
+      "kind": "quality-profile",
+      "lineCount": 59,
+      "logicalLineCount": 59,
+      "logicalNonEmptyLineCount": 58,
+      "logicalRecordCount": 58,
+      "logicalResourceTextByteLength": 1216,
+      "nonEmptyLineCount": 58,
+      "path": "resources/camel-morph-msa.quality.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 1216,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-quality"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 122,
+      "checksum": "sha256:3887598c7c7dbc49300188708a27aeb944a1a704e16c1286c7b8b80744a84db7",
+      "id": "ar-msa-camel-morph-tokenizations",
+      "kind": "segmentation-profile",
+      "lineCount": 11,
+      "logicalLineCount": 11,
+      "logicalNonEmptyLineCount": 10,
+      "logicalRecordCount": 10,
+      "logicalResourceTextByteLength": 122,
+      "nonEmptyLineCount": 10,
+      "path": "resources/camel-morph-msa.tokenizations.tsv",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 122,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morph-tokenizations"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 10937,
+      "checksum": "sha256:0669b3c320abfcda22ef9503d0c6e634571a9c4c9f11686b6445cb460547ace7",
+      "id": "ar-msa-camel-morphology-canonical",
+      "kind": "morphology",
+      "lineCount": 671,
+      "logicalLineCount": 671,
+      "logicalNonEmptyLineCount": 670,
+      "logicalRecordCount": 670,
+      "logicalResourceTextByteLength": 10937,
+      "nonEmptyLineCount": 670,
+      "path": "resources/camel-morph-msa.morphology.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 10937,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-morphology-canonical"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 899,
+      "checksum": "sha256:8137ea877e03d9e445930c6640d754634bf76071fb2b1d9fabc8df3b7afb00e9",
+      "id": "ar-msa-camel-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 41,
+      "logicalLineCount": 41,
+      "logicalNonEmptyLineCount": 40,
+      "logicalRecordCount": 40,
+      "logicalResourceTextByteLength": 899,
+      "nonEmptyLineCount": 40,
+      "path": "resources/camel-morph-msa.quality-profile.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 899,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 212,
+      "checksum": "sha256:e794823519eb8c2e99f31c63d2097466746288f47a21d55f561af8fc1caf6618",
+      "id": "ar-msa-camel-segmentation-canonical",
+      "kind": "segmentation-profile",
+      "lineCount": 11,
+      "logicalLineCount": 11,
+      "logicalNonEmptyLineCount": 10,
+      "logicalRecordCount": 10,
+      "logicalResourceTextByteLength": 212,
+      "nonEmptyLineCount": 10,
+      "path": "resources/camel-morph-msa.segmentation.json",
+      "pipelineId": "camel-morph-msa",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
+      "resourceTextByteLength": 212,
+      "sharedStorageResourceIds": [
+        "ar-msa-camel-segmentation-canonical"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 162,
+      "checksum": "sha256:29d2973b1436014af335788e0e6b98f1f2f699d93be4ec38e23e7311807be094",
+      "id": "ar-normalization-observed-codepoints",
+      "kind": "normalization-profile",
+      "lineCount": 10,
+      "logicalLineCount": 10,
+      "logicalNonEmptyLineCount": 9,
+      "logicalRecordCount": 9,
+      "logicalResourceTextByteLength": 162,
+      "nonEmptyLineCount": 9,
+      "path": "resources/ar.normalization-observed-codepoints.tsv",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 162,
+      "sharedStorageResourceIds": [
+        "ar-normalization-observed-codepoints"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 5772,
+      "checksum": "sha256:815e26c0aa1d45f19e2fec5893932be98a7d0ecfd71326a6f82330beb9a5d240",
+      "id": "ar-normalization-profile",
+      "kind": "normalization-profile",
+      "lineCount": 198,
+      "logicalLineCount": 198,
+      "logicalNonEmptyLineCount": 197,
+      "logicalRecordCount": 197,
+      "logicalResourceTextByteLength": 5772,
+      "nonEmptyLineCount": 197,
+      "path": "resources/ar.normalization.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 5772,
+      "sharedStorageResourceIds": [
+        "ar-normalization-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 811,
+      "checksum": "sha256:94d1d277a949f8a692671c5f540ed19b80ff5544d793374316fb2b5996577e98",
+      "id": "ar-normalization-quality",
+      "kind": "quality-profile",
+      "lineCount": 25,
+      "logicalLineCount": 25,
+      "logicalNonEmptyLineCount": 24,
+      "logicalRecordCount": 24,
+      "logicalResourceTextByteLength": 811,
+      "nonEmptyLineCount": 24,
+      "path": "resources/ar.normalization.quality.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 811,
+      "sharedStorageResourceIds": [
+        "ar-normalization-quality"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1163,
+      "checksum": "sha256:5affbca0b05411e2868442f1a24dcf1958e4b787cb697c2edbd4a0fb87beb28d",
+      "id": "ar-normalization-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 46,
+      "logicalLineCount": 46,
+      "logicalNonEmptyLineCount": 45,
+      "logicalRecordCount": 45,
+      "logicalResourceTextByteLength": 1163,
+      "nonEmptyLineCount": 45,
+      "path": "resources/ar.normalization.quality-profile.json",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 1163,
+      "sharedStorageResourceIds": [
+        "ar-normalization-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1238,
+      "checksum": "sha256:6f774cf6f8c74b95465107f08c5efbd35afe2efcbbe5e46f493217f66bfc840f",
+      "id": "ar-normalization-rules",
+      "kind": "normalization-profile",
+      "lineCount": 12,
+      "logicalLineCount": 12,
+      "logicalNonEmptyLineCount": 11,
+      "logicalRecordCount": 11,
+      "logicalResourceTextByteLength": 1238,
+      "nonEmptyLineCount": 11,
+      "path": "resources/ar.normalization-rules.tsv",
+      "pipelineId": "arabic-normalization-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-normalization:arabic-normalization-profile",
+      "resourceTextByteLength": 1238,
+      "sharedStorageResourceIds": [
+        "ar-normalization-rules"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 816,
+      "checksum": "sha256:30727d134f32936313d32d3aecb2827b66292ef132ae1dd6468772e5e6896c88",
+      "id": "ar-search-profile",
+      "kind": "search-profile",
+      "lineCount": 42,
+      "logicalLineCount": 42,
+      "logicalNonEmptyLineCount": 41,
+      "logicalRecordCount": 41,
+      "logicalResourceTextByteLength": 816,
+      "nonEmptyLineCount": 41,
+      "path": "resources/ar.search.profile.json",
+      "pipelineId": "arabic-search-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "resourceTextByteLength": 816,
+      "sharedStorageResourceIds": [
+        "ar-search-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 624,
+      "checksum": "sha256:c05bb3c122826698a345003356a79d1b3d6d01a24e2731dca428134eeebeb251",
+      "id": "ar-search-quality",
+      "kind": "quality-profile",
+      "lineCount": 19,
+      "logicalLineCount": 19,
+      "logicalNonEmptyLineCount": 18,
+      "logicalRecordCount": 18,
+      "logicalResourceTextByteLength": 624,
+      "nonEmptyLineCount": 18,
+      "path": "resources/ar.search.quality.json",
+      "pipelineId": "arabic-search-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "resourceTextByteLength": 624,
+      "sharedStorageResourceIds": [
+        "ar-search-quality"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 922,
+      "checksum": "sha256:0769558eea5917ffb8c89e2143eac1628238bcca4da0f407e991ba47b3e32dc9",
+      "id": "ar-search-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 38,
+      "logicalLineCount": 38,
+      "logicalNonEmptyLineCount": 37,
+      "logicalRecordCount": 37,
+      "logicalResourceTextByteLength": 922,
+      "nonEmptyLineCount": 37,
+      "path": "resources/ar.search.quality-profile.json",
+      "pipelineId": "arabic-search-profile",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-ar-search:arabic-search-profile",
+      "resourceTextByteLength": 922,
+      "sharedStorageResourceIds": [
+        "ar-search-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 325,
+      "checksum": "sha256:14cb57e1bccb04a5fe9f2a7dec407044348b2887cdd0bc9f48dfd59e70c0667d",
+      "id": "bcp47-language-registry-summary",
+      "kind": "language-registry",
+      "lineCount": 17,
+      "logicalLineCount": 17,
+      "logicalNonEmptyLineCount": 16,
+      "logicalRecordCount": 16,
+      "logicalResourceTextByteLength": 325,
+      "nonEmptyLineCount": 16,
+      "path": "resources/bcp47.language-registry.summary.json",
+      "pipelineId": "iana-language-registry",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "resourceTextByteLength": 325,
+      "sharedStorageResourceIds": [
+        "bcp47-language-registry-summary"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 125893,
+      "checksum": "sha256:bf94c569b9adc9341439201748bc93cc6026fdd940858c799ef2d2bcdbbb4545",
+      "id": "bcp47-language-subtags",
+      "kind": "language-registry",
+      "lineCount": 9297,
+      "logicalLineCount": 9297,
+      "logicalNonEmptyLineCount": 9296,
+      "logicalRecordCount": 9296,
+      "logicalResourceTextByteLength": 408696,
+      "nonEmptyLineCount": 9296,
+      "path": "resources/bcp47.language-subtags.tsv.gz.b64",
+      "pipelineId": "iana-language-registry",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-language-registry:iana-bcp47",
+      "resourceTextByteLength": 408696,
+      "sharedStorageResourceIds": [
+        "bcp47-language-subtags"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 192,
+      "checksum": "sha256:274ed6518c70f5ea0f92990b53b3d64ff1834af03b2c655b33a7992bde5d0ff7",
+      "id": "cldr-48-core-summary",
+      "kind": "locale-profile",
+      "lineCount": 10,
+      "logicalLineCount": 10,
+      "logicalNonEmptyLineCount": 9,
+      "logicalRecordCount": 9,
+      "logicalResourceTextByteLength": 192,
+      "nonEmptyLineCount": 9,
+      "path": "resources/cldr-48.core.summary.json",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 192,
+      "sharedStorageResourceIds": [
+        "cldr-48-core-summary"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 65213,
+      "checksum": "sha256:70abb380d92a5f24d8480d383ed5b0e3e224ddbd72f2e405b2fc2d0f480526c6",
+      "id": "cldr-48-likely-subtags",
+      "kind": "locale-profile",
+      "lineCount": 7790,
+      "logicalLineCount": 7790,
+      "logicalNonEmptyLineCount": 7789,
+      "logicalRecordCount": 7789,
+      "logicalResourceTextByteLength": 126509,
+      "nonEmptyLineCount": 7789,
+      "path": "resources/cldr-48.likely-subtags.tsv.gz.b64",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 126509,
+      "sharedStorageResourceIds": [
+        "cldr-48-likely-subtags"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 36386,
+      "checksum": "sha256:9c4e018288bde0698003a52fcba6dad6b907f65ba4585bb142db8cc1c9733419",
+      "id": "cldr-48-locale-aliases",
+      "kind": "locale-profile",
+      "lineCount": 1308,
+      "logicalLineCount": 1308,
+      "logicalNonEmptyLineCount": 1307,
+      "logicalRecordCount": 1307,
+      "logicalResourceTextByteLength": 36386,
+      "nonEmptyLineCount": 1307,
+      "path": "resources/cldr-48.locale-aliases.tsv",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 36386,
+      "sharedStorageResourceIds": [
+        "cldr-48-locale-aliases"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 326,
+      "checksum": "sha256:e48aef1d01403e80be986717f4dcccda20064d7cf46a15436f1d921b617f4ab0",
+      "id": "cldr-48-script-data",
+      "kind": "locale-profile",
+      "lineCount": 17,
+      "logicalLineCount": 17,
+      "logicalNonEmptyLineCount": 16,
+      "logicalRecordCount": 16,
+      "logicalResourceTextByteLength": 326,
+      "nonEmptyLineCount": 16,
+      "path": "resources/cldr-48.script-data.tsv",
+      "pipelineId": "cldr-core-foundation",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-cldr-core:cldr-core",
+      "resourceTextByteLength": 326,
+      "sharedStorageResourceIds": [
+        "cldr-48-script-data"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 10002,
+      "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
+      "id": "unicode-17-blocks",
+      "kind": "unicode-profile",
+      "lineCount": 348,
+      "logicalLineCount": 348,
+      "logicalNonEmptyLineCount": 347,
+      "logicalRecordCount": 347,
+      "logicalResourceTextByteLength": 10002,
+      "nonEmptyLineCount": 347,
+      "path": "resources/unicode-17.blocks.tsv",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 10002,
+      "sharedStorageResourceIds": [
+        "unicode-17-blocks"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 181,
+      "checksum": "sha256:d0ad3bd0f0d98f21c8d8d1350d4c3e78186e9a0812f63fd49c37e5aa810fb213",
+      "id": "unicode-17-core-summary",
+      "kind": "unicode-profile",
+      "lineCount": 9,
+      "logicalLineCount": 9,
+      "logicalNonEmptyLineCount": 8,
+      "logicalRecordCount": 8,
+      "logicalResourceTextByteLength": 181,
+      "nonEmptyLineCount": 8,
+      "path": "resources/unicode-17.core.summary.json",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 181,
+      "sharedStorageResourceIds": [
+        "unicode-17-core-summary"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 28940,
+      "checksum": "sha256:02d11d047c9f3a334821a6ebd6f629937a4779826dbc11e26c13b6b52849e254",
+      "id": "unicode-17-property-value-aliases",
+      "kind": "unicode-profile",
+      "lineCount": 1196,
+      "logicalLineCount": 1196,
+      "logicalNonEmptyLineCount": 1195,
+      "logicalRecordCount": 1195,
+      "logicalResourceTextByteLength": 28940,
+      "nonEmptyLineCount": 1195,
+      "path": "resources/unicode-17.property-value-aliases.tsv",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 28940,
+      "sharedStorageResourceIds": [
+        "unicode-17-property-value-aliases"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 60233,
+      "checksum": "sha256:36410d853d44b364758dfdeb742e01af2b858b9c2c891cef61415a40a71ebfce",
+      "id": "unicode-17-scripts",
+      "kind": "unicode-profile",
+      "lineCount": 2289,
+      "logicalLineCount": 2289,
+      "logicalNonEmptyLineCount": 2288,
+      "logicalRecordCount": 2288,
+      "logicalResourceTextByteLength": 161356,
+      "nonEmptyLineCount": 2288,
+      "path": "resources/unicode-17.scripts.tsv.gz.b64",
+      "pipelineId": "unicode-17-core",
+      "pipelineVersion": "0.1.0",
+      "resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+      "resourceTextByteLength": 161356,
+      "sharedStorageResourceIds": [
+        "unicode-17-scripts"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 123649,
+      "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+      "id": "wikidata-ar-aliases",
+      "kind": "knowledge-base",
+      "lineCount": 3,
+      "logicalLineCount": 2778,
+      "logicalNonEmptyLineCount": 2777,
+      "logicalRecordCount": 2776,
+      "logicalResourceTextByteLength": 176372,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wikidata-ar.aliases.lookup-index.v1.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 123649,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-aliases",
+        "wikidata-ar-aliases-lookup-index"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 123649,
+      "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+      "id": "wikidata-ar-aliases-lookup-index",
+      "kind": "dataset",
+      "lineCount": 3,
+      "logicalLineCount": 3,
+      "logicalNonEmptyLineCount": 3,
+      "logicalRecordCount": 0,
+      "logicalResourceTextByteLength": 123649,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wikidata-ar.aliases.lookup-index.v1.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 123649,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-aliases",
+        "wikidata-ar-aliases-lookup-index"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 238909,
+      "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+      "id": "wikidata-ar-entities",
+      "kind": "knowledge-base",
+      "lineCount": 3,
+      "logicalLineCount": 3011,
+      "logicalNonEmptyLineCount": 3010,
+      "logicalRecordCount": 3009,
+      "logicalResourceTextByteLength": 601526,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wikidata-ar.entities.lookup-index.v1.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 238909,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-entities",
+        "wikidata-ar-entities-lookup-index"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 238909,
+      "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+      "id": "wikidata-ar-entities-lookup-index",
+      "kind": "dataset",
+      "lineCount": 3,
+      "logicalLineCount": 3,
+      "logicalNonEmptyLineCount": 3,
+      "logicalRecordCount": 0,
+      "logicalResourceTextByteLength": 238909,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wikidata-ar.entities.lookup-index.v1.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 238909,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-entities",
+        "wikidata-ar-entities-lookup-index"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 901,
+      "checksum": "sha256:b679139eb35937421dad6fe233d44f6cf953061735db680fbbc415e19b91febc",
+      "id": "wikidata-ar-kb-canonical",
+      "kind": "knowledge-base",
+      "lineCount": 43,
+      "logicalLineCount": 43,
+      "logicalNonEmptyLineCount": 42,
+      "logicalRecordCount": 42,
+      "logicalResourceTextByteLength": 901,
+      "nonEmptyLineCount": 42,
+      "path": "resources/wikidata-ar.kb.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 901,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-kb-canonical"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1117,
+      "checksum": "sha256:8dd7436b44004586bd09f9ba45ff56006689789c247b57513aef2f6765d3207f",
+      "id": "wikidata-ar-quality",
+      "kind": "quality-profile",
+      "lineCount": 30,
+      "logicalLineCount": 30,
+      "logicalNonEmptyLineCount": 29,
+      "logicalRecordCount": 29,
+      "logicalResourceTextByteLength": 1117,
+      "nonEmptyLineCount": 29,
+      "path": "resources/wikidata-ar.quality.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 1117,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-quality"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2789,
+      "checksum": "sha256:688883a208a912f996fef965c46d04720e4494295003542ed1cbc48d3601050d",
+      "id": "wikidata-ar-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 102,
+      "logicalLineCount": 102,
+      "logicalNonEmptyLineCount": 101,
+      "logicalRecordCount": 101,
+      "logicalResourceTextByteLength": 2789,
+      "nonEmptyLineCount": 101,
+      "path": "resources/wikidata-ar.quality-profile.json",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 2789,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 43733,
+      "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+      "id": "wikidata-ar-relations",
+      "kind": "knowledge-base",
+      "lineCount": 3,
+      "logicalLineCount": 3011,
+      "logicalNonEmptyLineCount": 3010,
+      "logicalRecordCount": 3009,
+      "logicalResourceTextByteLength": 181440,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wikidata-ar.relations.lookup-index.v1.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 43733,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-relations",
+        "wikidata-ar-relations-lookup-index"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 43733,
+      "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+      "id": "wikidata-ar-relations-lookup-index",
+      "kind": "dataset",
+      "lineCount": 3,
+      "logicalLineCount": 3,
+      "logicalNonEmptyLineCount": 3,
+      "logicalRecordCount": 0,
+      "logicalResourceTextByteLength": 43733,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wikidata-ar.relations.lookup-index.v1.txt",
+      "pipelineId": "wikidata-main-artifact",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+      "resourceTextByteLength": 43733,
+      "sharedStorageResourceIds": [
+        "wikidata-ar-relations",
+        "wikidata-ar-relations-lookup-index"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 518,
+      "checksum": "sha256:682ff3f41f8947e9cbbc6837113c720f28155bdb0311d5f6d618f89ea2023b90",
+      "id": "wordnet-ar-kb-canonical",
+      "kind": "knowledge-base",
+      "lineCount": 28,
+      "logicalLineCount": 28,
+      "logicalNonEmptyLineCount": 27,
+      "logicalRecordCount": 27,
+      "logicalResourceTextByteLength": 518,
+      "nonEmptyLineCount": 27,
+      "path": "resources/wordnet-ar.kb.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 518,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-kb-canonical"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 5890936,
+      "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+      "id": "wordnet-ar-lexical-entries",
+      "kind": "lexicon",
+      "lineCount": 3,
+      "logicalLineCount": 136043,
+      "logicalNonEmptyLineCount": 136042,
+      "logicalRecordCount": 136041,
+      "logicalResourceTextByteLength": 5814865,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 5890936,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-lexical-entries",
+        "wordnet-ar-lexical-entries-lookup-index"
+      ],
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 5890936,
+      "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+      "id": "wordnet-ar-lexical-entries-lookup-index",
+      "kind": "dataset",
+      "lineCount": 3,
+      "logicalLineCount": 3,
+      "logicalNonEmptyLineCount": 3,
+      "logicalRecordCount": 0,
+      "logicalResourceTextByteLength": 5890936,
+      "nonEmptyLineCount": 3,
+      "path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 5890936,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-lexical-entries",
+        "wordnet-ar-lexical-entries-lookup-index"
+      ],
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 426,
+      "checksum": "sha256:af8b93ac49aec878b7f6b9fadd44a6d004450c6f0d2824b195d7c1956416de36",
+      "id": "wordnet-ar-lexicon-canonical",
+      "kind": "lexicon",
+      "lineCount": 21,
+      "logicalLineCount": 21,
+      "logicalNonEmptyLineCount": 20,
+      "logicalRecordCount": 20,
+      "logicalResourceTextByteLength": 426,
+      "nonEmptyLineCount": 20,
+      "path": "resources/wordnet-ar.lexicon.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 426,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-lexicon-canonical"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1286,
+      "checksum": "sha256:cfafbc777348b21679c42c926c6fec888b99fd7f3eab8ed08806262b6878834e",
+      "id": "wordnet-ar-quality",
+      "kind": "quality-profile",
+      "lineCount": 48,
+      "logicalLineCount": 48,
+      "logicalNonEmptyLineCount": 47,
+      "logicalRecordCount": 47,
+      "logicalResourceTextByteLength": 1286,
+      "nonEmptyLineCount": 47,
+      "path": "resources/wordnet-ar.quality.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 1286,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-quality"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 1191,
+      "checksum": "sha256:c044911d946e2387688d00c6c61ad113e58b52e32c1e2bcd58522bfe155e94f5",
+      "id": "wordnet-ar-quality-profile",
+      "kind": "quality-profile",
+      "lineCount": 53,
+      "logicalLineCount": 53,
+      "logicalNonEmptyLineCount": 52,
+      "logicalRecordCount": 52,
+      "logicalResourceTextByteLength": 1191,
+      "nonEmptyLineCount": 52,
+      "path": "resources/wordnet-ar.quality-profile.json",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 1191,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 2334305,
+      "checksum": "sha256:d8231e9f75e0fc7e07f6fd0b658f1138ff4f5530977342b562e5e825d824b131",
+      "id": "wordnet-ar-relations",
+      "kind": "knowledge-base",
+      "lineCount": 297152,
+      "logicalLineCount": 297152,
+      "logicalNonEmptyLineCount": 297151,
+      "logicalRecordCount": 297151,
+      "logicalResourceTextByteLength": 14510265,
+      "nonEmptyLineCount": 297151,
+      "path": "resources/wordnet-ar.relations.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 14510265,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-relations"
+      ],
+      "sizeClass": "small"
+    },
+    {
+      "byteLength": 7406269,
+      "checksum": "sha256:37dbd21ab4ad9e56adee64927e8704cb83a3c2a4e7bf85fa08728effbe051b17",
+      "id": "wordnet-ar-senses",
+      "kind": "knowledge-base",
+      "lineCount": 184240,
+      "logicalLineCount": 184240,
+      "logicalNonEmptyLineCount": 184239,
+      "logicalRecordCount": 184239,
+      "logicalResourceTextByteLength": 14091110,
+      "nonEmptyLineCount": 184239,
+      "path": "resources/wordnet-ar.senses.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 14091110,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-senses"
+      ],
+      "sizeClass": "medium"
+    },
+    {
+      "byteLength": 4886241,
+      "checksum": "sha256:728d6dd0a936ca1c4e78f0a6bc71321a393a2066b798f2053251c3e8edf9ff91",
+      "id": "wordnet-ar-synsets",
+      "kind": "knowledge-base",
+      "lineCount": 120632,
+      "logicalLineCount": 120632,
+      "logicalNonEmptyLineCount": 120631,
+      "logicalRecordCount": 120631,
+      "logicalResourceTextByteLength": 14041525,
+      "nonEmptyLineCount": 120631,
+      "path": "resources/wordnet-ar.synsets.tsv.gz.b64",
+      "pipelineId": "arabic-wordnet-lmf",
+      "pipelineVersion": "0.2.0",
+      "resourceSpecId": "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
+      "resourceTextByteLength": 14041525,
+      "sharedStorageResourceIds": [
+        "wordnet-ar-synsets"
+      ],
+      "sizeClass": "small"
+    }
+  ],
+  "schemaVersion": "1",
+  "supportLevel": "task-supported",
+  "warnings": [
+    "corpus is planned in this source-backed self-contained language distribution.",
+    "parallel is planned in this source-backed self-contained language distribution.",
+    "syntax is planned in this source-backed self-contained language distribution."
+  ]
+}

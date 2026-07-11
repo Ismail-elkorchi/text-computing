@@ -1,0 +1,15 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:esdb:wordlist-diff-en-default-2026-02-25",
+	"family": "ENLEX",
+	"name": "English Speller Database default English wordlist outputs 2026.02.25",
+	"homepageUrl": "https://github.com/en-wl/wordlist-diff/tree/rel-2026.02.25",
+	"licenseEvidence": [
+		"https://github.com/en-wl/wordlist-diff/blob/rel-2026.02.25/Copyright"
+	],
+	"licenseExpression": "LicenseRef-ESDB-MIT-Like",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "English Speller Database generated wordlist outputs, rel-2026.02.25.",
+	"notes": "Pinned wordlist-diff generated outputs for default English regional spell-checker wordlists; this does not use unstable ESDB database internals."
+}

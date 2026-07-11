@@ -218,6 +218,7 @@ export interface TranslationMemoryHit {
 export interface BilingualTermOptions {
 	readonly maxCandidates?: number;
 	readonly minCount?: number;
+	readonly maxTermTokens?: number;
 	readonly stoplists?: readonly Wordlist[];
 	readonly producer?: string;
 	readonly optionsHash?: string;
@@ -318,6 +319,8 @@ interface PairCount {
 	readonly source: string;
 	readonly target: string;
 	readonly docIds: Set<string>;
+	readonly sourceCount: number;
+	readonly targetCount: number;
 	count: number;
 }
 
@@ -777,12 +780,6 @@ function tokenRefs(
 	return tokenRefsFromText(viewId, resolveView(doc, viewId).text);
 }
 
-function lengthSimilarity(left: string, right: string): number {
-	const longest = Math.max(left.length, right.length);
-	if (longest === 0) return 1;
-	return 1 - Math.abs(left.length - right.length) / longest;
-}
-
 function tokenOverlap(left: string, right: string): number {
 	const leftTokens = new Set(
 		textTokens(left).map((token) => normalizedToken(token.text)),
@@ -798,15 +795,191 @@ function tokenOverlap(left: string, right: string): number {
 	return (2 * shared) / (leftTokens.size + rightTokens.size);
 }
 
-function relationForPair(
+interface SentenceAlignmentStep {
+	readonly sourceStart: number;
+	readonly sourceCount: number;
+	readonly targetStart: number;
+	readonly targetCount: number;
+	readonly value: number;
+}
+
+function combinedRef(
+	refs: readonly SpanRef[],
+	start: number,
+	count: number,
+	viewId: string,
+	emptyOffset: number,
+): SpanRef {
+	if (count === 0) return zeroSpanRef(viewId, emptyOffset);
+	const first = refs[start];
+	const last = refs[start + count - 1];
+	if (first === undefined || last === undefined) {
+		fail(
+			"TEXTPARALLEL_ALIGNMENT_RANGE",
+			"alignment step is outside sentence spans",
+		);
+	}
+	return spanRef(viewId, first.span.start, last.span.end);
+}
+
+function sentenceStepScore(
 	sourceText: string,
 	targetText: string,
-	sourceIndex: number,
-	targetIndex: number,
-): AlignmentRelation {
-	if (sourceIndex !== targetIndex) return "reordered";
-	const length = lengthSimilarity(sourceText, targetText);
-	return length >= 0.55 ? "equivalent" : "partial";
+	sourceCount: number,
+	targetCount: number,
+	options: SentenceAlignOptions,
+): number {
+	const lengthWeight = finiteNumber(
+		options.lengthWeight ?? 0.7,
+		"lengthWeight",
+	);
+	const lexicalWeight = finiteNumber(
+		options.lexicalWeight ?? 0.3,
+		"lexicalWeight",
+	);
+	if (
+		lengthWeight < 0 ||
+		lexicalWeight < 0 ||
+		lengthWeight + lexicalWeight === 0
+	) {
+		fail(
+			"TEXTPARALLEL_ALIGNMENT_WEIGHT",
+			"sentence alignment weights must be non-negative with a positive sum",
+		);
+	}
+	if (sourceCount === 0 || targetCount === 0) {
+		return -0.45 * (lengthWeight + lexicalWeight);
+	}
+	const ratio = options.model?.averageLengthRatio ?? 1;
+	const expectedTargetLength = Math.max(1, sourceText.length * ratio);
+	const lengthScore = Math.max(
+		0,
+		1 -
+			Math.abs(targetText.length - expectedTargetLength) /
+				Math.max(targetText.length, expectedTargetLength),
+	);
+	const mergePenalty = 0.05 * Math.max(0, sourceCount + targetCount - 2);
+	return (
+		lengthWeight * lengthScore +
+		lexicalWeight * tokenOverlap(sourceText, targetText) -
+		mergePenalty
+	);
+}
+
+function dynamicSentenceSteps(
+	source: TextDocument,
+	target: TextDocument,
+	sourceRefs: readonly SpanRef[],
+	targetRefs: readonly SpanRef[],
+	sourceStart: number,
+	sourceEnd: number,
+	targetStart: number,
+	targetEnd: number,
+	options: SentenceAlignOptions,
+): SentenceAlignmentStep[] {
+	const sourceView = resolveView(source, options.sourceViewId);
+	const targetView = resolveView(target, options.targetViewId);
+	const sourceCount = sourceEnd - sourceStart;
+	const targetCount = targetEnd - targetStart;
+	const width = targetCount + 1;
+	const scores = Array.from(
+		{ length: (sourceCount + 1) * (targetCount + 1) },
+		() => Number.NEGATIVE_INFINITY,
+	);
+	const previous = new Map<number, SentenceAlignmentStep>();
+	scores[0] = 0;
+	const moves = Object.freeze([
+		[1, 1],
+		[1, 2],
+		[2, 1],
+		[1, 0],
+		[0, 1],
+	] as const);
+	for (let sourceOffset = 0; sourceOffset <= sourceCount; sourceOffset += 1) {
+		for (let targetOffset = 0; targetOffset <= targetCount; targetOffset += 1) {
+			const index = sourceOffset * width + targetOffset;
+			const base = scores[index] ?? Number.NEGATIVE_INFINITY;
+			if (!Number.isFinite(base)) continue;
+			for (const [sourceMove, targetMove] of moves) {
+				if (
+					sourceOffset + sourceMove > sourceCount ||
+					targetOffset + targetMove > targetCount
+				) {
+					continue;
+				}
+				const absoluteSource = sourceStart + sourceOffset;
+				const absoluteTarget = targetStart + targetOffset;
+				const sourceRef = combinedRef(
+					sourceRefs,
+					absoluteSource,
+					sourceMove,
+					sourceView.id,
+					sourceView.text.length,
+				);
+				const targetRef = combinedRef(
+					targetRefs,
+					absoluteTarget,
+					targetMove,
+					targetView.id,
+					targetView.text.length,
+				);
+				const value = sentenceStepScore(
+					sourceMove === 0 ? "" : textForRef(source, sourceRef),
+					targetMove === 0 ? "" : textForRef(target, targetRef),
+					sourceMove,
+					targetMove,
+					options,
+				);
+				const nextSource = sourceOffset + sourceMove;
+				const nextTarget = targetOffset + targetMove;
+				const nextIndex = nextSource * width + nextTarget;
+				const candidate = base + value;
+				if (candidate <= (scores[nextIndex] ?? Number.NEGATIVE_INFINITY)) {
+					continue;
+				}
+				scores[nextIndex] = candidate;
+				previous.set(nextIndex, {
+					sourceStart: absoluteSource,
+					sourceCount: sourceMove,
+					targetStart: absoluteTarget,
+					targetCount: targetMove,
+					value,
+				});
+			}
+		}
+	}
+	const steps: SentenceAlignmentStep[] = [];
+	let sourceOffset = sourceCount;
+	let targetOffset = targetCount;
+	while (sourceOffset > 0 || targetOffset > 0) {
+		const step = previous.get(sourceOffset * width + targetOffset);
+		if (step === undefined) {
+			fail(
+				"TEXTPARALLEL_ALIGNMENT_PATH",
+				"sentence alignment has no valid path",
+			);
+		}
+		steps.push(step);
+		sourceOffset -= step.sourceCount;
+		targetOffset -= step.targetCount;
+	}
+	return steps.reverse();
+}
+
+function anchorRange(
+	refs: readonly SpanRef[],
+	anchor: SpanRef,
+): readonly [number, number] | undefined {
+	const included = refs
+		.map((ref, index) => ({ ref, index }))
+		.filter(
+			({ ref }) =>
+				ref.viewId === anchor.viewId &&
+				ref.span.start >= anchor.span.start &&
+				ref.span.end <= anchor.span.end,
+		);
+	if (included.length === 0) return undefined;
+	return [included[0]?.index ?? 0, (included.at(-1)?.index ?? 0) + 1];
 }
 
 export function alignSentences(
@@ -831,6 +1004,8 @@ export function alignSentences(
 			sourceLayerId: options.sourceLayerId ?? "",
 			targetLayerId: options.targetLayerId ?? "",
 			modelId: options.model?.id ?? "",
+			lengthWeight: options.lengthWeight ?? 0.7,
+			lexicalWeight: options.lexicalWeight ?? 0.3,
 		});
 	const evidence = parallelEvidence([sourceView.id, targetView.id], {
 		mode: options.model === undefined ? "algorithm" : "statistical",
@@ -841,40 +1016,104 @@ export function alignSentences(
 			options.model === undefined ? undefined : [options.model.id],
 		optionsHash: hash,
 	});
+	const anchored = (options.anchors ?? [])
+		.map((link) => ({
+			link,
+			sourceRange: anchorRange(sourceRefs, link.source),
+			targetRange: anchorRange(targetRefs, link.target),
+		}))
+		.filter(
+			(
+				value,
+			): value is {
+				readonly link: AlignmentLink;
+				readonly sourceRange: readonly [number, number];
+				readonly targetRange: readonly [number, number];
+			} => value.sourceRange !== undefined && value.targetRange !== undefined,
+		)
+		.sort(
+			(left, right) =>
+				left.sourceRange[0] - right.sourceRange[0] ||
+				left.targetRange[0] - right.targetRange[0],
+		);
+	const steps: SentenceAlignmentStep[] = [];
 	const links: AlignmentLink[] = [];
-	const count = Math.max(sourceRefs.length, targetRefs.length);
-	for (let index = 0; index < count; index += 1) {
-		const sourceRef =
-			sourceRefs[index] ?? zeroSpanRef(sourceView.id, sourceView.text.length);
-		const targetRef =
-			targetRefs[index] ?? zeroSpanRef(targetView.id, targetView.text.length);
-		const hasSource = sourceRefs[index] !== undefined;
-		const hasTarget = targetRefs[index] !== undefined;
-		const sourceText = hasSource ? textForRef(source, sourceRef) : "";
-		const targetText = hasTarget ? textForRef(target, targetRef) : "";
-		const similarity =
-			0.7 * lengthSimilarity(sourceText, targetText) +
-			0.3 * tokenOverlap(sourceText, targetText);
-		const relation = !hasSource
-			? "inserted"
-			: !hasTarget
-				? "deleted"
-				: relationForPair(sourceText, targetText, index, index);
+	let sourceCursor = 0;
+	let targetCursor = 0;
+	for (const anchor of anchored) {
+		if (
+			anchor.sourceRange[0] < sourceCursor ||
+			anchor.targetRange[0] < targetCursor
+		) {
+			fail(
+				"TEXTPARALLEL_ANCHOR_ORDER",
+				"sentence anchors must be monotonic and non-overlapping",
+			);
+		}
+		steps.push(
+			...dynamicSentenceSteps(
+				source,
+				target,
+				sourceRefs,
+				targetRefs,
+				sourceCursor,
+				anchor.sourceRange[0],
+				targetCursor,
+				anchor.targetRange[0],
+				options,
+			),
+		);
+		links.push(anchor.link);
+		sourceCursor = anchor.sourceRange[1];
+		targetCursor = anchor.targetRange[1];
+	}
+	steps.push(
+		...dynamicSentenceSteps(
+			source,
+			target,
+			sourceRefs,
+			targetRefs,
+			sourceCursor,
+			sourceRefs.length,
+			targetCursor,
+			targetRefs.length,
+			options,
+		),
+	);
+	for (const step of steps) {
+		const sourceRef = combinedRef(
+			sourceRefs,
+			step.sourceStart,
+			step.sourceCount,
+			sourceView.id,
+			sourceView.text.length,
+		);
+		const targetRef = combinedRef(
+			targetRefs,
+			step.targetStart,
+			step.targetCount,
+			targetView.id,
+			targetView.text.length,
+		);
+		const relation: AlignmentRelation =
+			step.sourceCount === 0
+				? "inserted"
+				: step.targetCount === 0
+					? "deleted"
+					: step.sourceCount === 1 &&
+							step.targetCount === 1 &&
+							step.value >= 0.55
+						? "equivalent"
+						: "partial";
 		links.push(
 			buildAlignmentLink({
 				source: sourceRef,
 				target: targetRef,
 				relation,
-				score: score(
-					"weight",
-					relation === "inserted" || relation === "deleted" ? 0 : similarity,
-				),
+				score: score("weight", Math.max(0, step.value), "dynamic-programming"),
 				evidence,
 			}),
 		);
-	}
-	for (const anchor of options.anchors ?? []) {
-		links.push(anchor);
 	}
 	return Object.freeze(
 		links
@@ -952,10 +1191,10 @@ function wordPairScore(
 } {
 	const sourceKey = normalizedToken(sourceText);
 	const targetKey = normalizedToken(targetText);
-	for (const entry of dictionaryTargets(
-		sourceText,
-		options.dictionaries ?? [],
-	)) {
+	for (const entry of dictionaryTargets(sourceText, [
+		...(options.dictionaries ?? []),
+		...(options.model?.dictionary ?? []),
+	])) {
 		if (normalizedToken(entry.target) === targetKey) {
 			return {
 				value: 1.4 * entry.weight + 0.2 * positionScore,
@@ -976,6 +1215,77 @@ function wordPairScore(
 		return { value: 0.8 + 0.2 * positionScore, type: "surface" };
 	}
 	return { value: 0.2 * positionScore, type: "position" };
+}
+
+function maximumWeightAssignment(
+	weights: readonly (readonly number[])[],
+): readonly number[] {
+	const size = weights.length;
+	if (size === 0) return Object.freeze([]);
+	const u = Array.from({ length: size + 1 }, () => 0);
+	const v = Array.from({ length: size + 1 }, () => 0);
+	const matching = Array.from({ length: size + 1 }, () => 0);
+	const path = Array.from({ length: size + 1 }, () => 0);
+	for (let row = 1; row <= size; row += 1) {
+		matching[0] = row;
+		let column = 0;
+		const minimum = Array.from(
+			{ length: size + 1 },
+			() => Number.POSITIVE_INFINITY,
+		);
+		const used = Array.from({ length: size + 1 }, () => false);
+		do {
+			used[column] = true;
+			const matchedRow = matching[column] ?? 0;
+			let delta = Number.POSITIVE_INFINITY;
+			let nextColumn = 0;
+			for (
+				let candidateColumn = 1;
+				candidateColumn <= size;
+				candidateColumn += 1
+			) {
+				if (used[candidateColumn]) continue;
+				const cost =
+					-(weights[matchedRow - 1]?.[candidateColumn - 1] ?? 0) -
+					(u[matchedRow] ?? 0) -
+					(v[candidateColumn] ?? 0);
+				if (cost < (minimum[candidateColumn] ?? Number.POSITIVE_INFINITY)) {
+					minimum[candidateColumn] = cost;
+					path[candidateColumn] = column;
+				}
+				if ((minimum[candidateColumn] ?? Number.POSITIVE_INFINITY) < delta) {
+					delta = minimum[candidateColumn] ?? Number.POSITIVE_INFINITY;
+					nextColumn = candidateColumn;
+				}
+			}
+			for (
+				let candidateColumn = 0;
+				candidateColumn <= size;
+				candidateColumn += 1
+			) {
+				if (used[candidateColumn]) {
+					const matched = matching[candidateColumn] ?? 0;
+					u[matched] = (u[matched] ?? 0) + delta;
+					v[candidateColumn] = (v[candidateColumn] ?? 0) - delta;
+				} else {
+					minimum[candidateColumn] =
+						(minimum[candidateColumn] ?? Number.POSITIVE_INFINITY) - delta;
+				}
+			}
+			column = nextColumn;
+		} while ((matching[column] ?? 0) !== 0);
+		do {
+			const previousColumn = path[column] ?? 0;
+			matching[column] = matching[previousColumn] ?? 0;
+			column = previousColumn;
+		} while (column !== 0);
+	}
+	const assignment = Array.from({ length: size }, () => -1);
+	for (let column = 1; column <= size; column += 1) {
+		const row = matching[column] ?? 0;
+		if (row > 0) assignment[row - 1] = column - 1;
+	}
+	return Object.freeze(assignment);
 }
 
 export function alignWords(
@@ -1025,58 +1335,55 @@ export function alignWords(
 			options.model === undefined ? undefined : [options.model.id],
 		optionsHash: hash,
 	});
+	const minScore = finiteNumber(options.minScore ?? 0.35, "minScore");
+	const size = sourceTokens.length + targetTokens.length;
+	const candidates = sourceTokens.map((sourceToken, sourceIndex) =>
+		targetTokens.map((targetToken, targetIndex) => {
+			const distance = Math.abs(
+				(sourceIndex + 0.5) / Math.max(1, sourceTokens.length) -
+					(targetIndex + 0.5) / Math.max(1, targetTokens.length),
+			);
+			return wordPairScore(
+				sourceToken.text,
+				targetToken.text,
+				1 - Math.min(1, distance),
+				options,
+			);
+		}),
+	);
+	const weights = Array.from({ length: size }, (_row, row) =>
+		Array.from({ length: size }, (_column, column) => {
+			if (row >= sourceTokens.length || column >= targetTokens.length) return 0;
+			const value = candidates[row]?.[column]?.value ?? 0;
+			return value >= minScore ? value : 0;
+		}),
+	);
+	const assignment = maximumWeightAssignment(weights);
 	const usedTargets = new Set<number>();
 	const links: AlignmentLink[] = [];
 	for (const [sourceIndex, sourceToken] of sourceTokens.entries()) {
-		let selected:
-			| {
-					targetIndex: number;
-					value: number;
-					type: string;
-			  }
-			| undefined;
-		for (const [targetIndex, targetToken] of targetTokens.entries()) {
-			if (usedTargets.has(targetIndex)) continue;
-			const distance = Math.abs(
-				sourceIndex / Math.max(1, sourceTokens.length) -
-					targetIndex / Math.max(1, targetTokens.length),
+		const targetIndex = assignment[sourceIndex] ?? -1;
+		const selected =
+			targetIndex >= 0 && targetIndex < targetTokens.length
+				? candidates[sourceIndex]?.[targetIndex]
+				: undefined;
+		const targetToken = targetTokens[targetIndex];
+		if (
+			selected !== undefined &&
+			targetToken !== undefined &&
+			selected.value >= minScore
+		) {
+			usedTargets.add(targetIndex);
+			links.push(
+				buildAlignmentLink({
+					source: sourceToken.ref,
+					target: targetToken.ref,
+					relation: selected.type === "position" ? "unknown" : "equivalent",
+					score: score("weight", selected.value, selected.type),
+					evidence,
+				}),
 			);
-			const positionScore = 1 - Math.min(1, distance);
-			const candidate = wordPairScore(
-				sourceToken.text,
-				targetToken.text,
-				positionScore,
-				options,
-			);
-			if (
-				selected === undefined ||
-				candidate.value > selected.value ||
-				(candidate.value === selected.value &&
-					targetIndex < selected.targetIndex)
-			) {
-				selected = {
-					targetIndex,
-					value: candidate.value,
-					type: candidate.type,
-				};
-			}
-		}
-		const minScore = options.minScore ?? 0.35;
-		if (selected !== undefined && selected.value >= minScore) {
-			const targetToken = targetTokens[selected.targetIndex];
-			if (targetToken !== undefined) {
-				usedTargets.add(selected.targetIndex);
-				links.push(
-					buildAlignmentLink({
-						source: sourceToken.ref,
-						target: targetToken.ref,
-						relation: selected.type === "position" ? "unknown" : "equivalent",
-						score: score("weight", selected.value, selected.type),
-						evidence,
-					}),
-				);
-				continue;
-			}
+			continue;
 		}
 		if (options.allowNullLinks ?? true) {
 			links.push(
@@ -1152,12 +1459,40 @@ export function trainSentenceAligner(
 
 export function trainWordAligner(
 	examples: Iterable<ParallelDocument>,
-	options: { readonly id?: string; readonly metadata?: JsonObject } = {},
+	options: {
+		readonly id?: string;
+		readonly metadata?: JsonObject;
+		readonly iterations?: number;
+		readonly maxEntries?: number;
+		readonly minProbability?: number;
+	} = {},
 ): WordAlignmentModel {
-	const counts = new Map<
-		string,
-		{ source: string; target: string; count: number }
-	>();
+	const iterations = options.iterations ?? 8;
+	const maxEntries = options.maxEntries ?? 256;
+	const minProbability = options.minProbability ?? 0.01;
+	if (!Number.isInteger(iterations) || iterations <= 0) {
+		fail("TEXTPARALLEL_WORD_TRAINING", "iterations must be a positive integer");
+	}
+	if (!Number.isInteger(maxEntries) || maxEntries <= 0) {
+		fail("TEXTPARALLEL_WORD_TRAINING", "maxEntries must be a positive integer");
+	}
+	if (
+		!Number.isFinite(minProbability) ||
+		minProbability < 0 ||
+		minProbability > 1
+	) {
+		fail(
+			"TEXTPARALLEL_WORD_TRAINING",
+			"minProbability must be between zero and one",
+		);
+	}
+	const sentencePairs: Array<{
+		readonly source: readonly string[];
+		readonly target: readonly string[];
+	}> = [];
+	const sourceForms = new Map<string, string>();
+	const targetForms = new Map<string, string>();
+	const candidateTargets = new Map<string, Set<string>>();
 	let examplesCount = 0;
 	for (const doc of examples) {
 		for (const link of doc.links) {
@@ -1166,35 +1501,109 @@ export function trainWordAligner(
 			const sourceText = textForRef(doc.sourceDoc, link.source).trim();
 			const targetText = textForRef(doc.targetDoc, link.target).trim();
 			if (sourceText.length === 0 || targetText.length === 0) continue;
-			for (const sourceToken of textTokens(sourceText)) {
-				for (const targetToken of textTokens(targetText)) {
-					const key = `${normalizedToken(sourceToken.text)}\u0000${normalizedToken(targetToken.text)}`;
-					const item = counts.get(key) ?? {
-						source: sourceToken.text,
-						target: targetToken.text,
-						count: 0,
-					};
-					item.count += 1;
-					counts.set(key, item);
-				}
+			const sourceTokens = textTokens(sourceText).map((token) => {
+				const normalized = normalizedToken(token.text);
+				if (!sourceForms.has(normalized))
+					sourceForms.set(normalized, token.text);
+				return normalized;
+			});
+			const targetTokens = textTokens(targetText).map((token) => {
+				const normalized = normalizedToken(token.text);
+				if (!targetForms.has(normalized))
+					targetForms.set(normalized, token.text);
+				return normalized;
+			});
+			if (sourceTokens.length === 0 || targetTokens.length === 0) continue;
+			sentencePairs.push({ source: sourceTokens, target: targetTokens });
+			for (const sourceToken of new Set(sourceTokens)) {
+				const targets = candidateTargets.get(sourceToken) ?? new Set<string>();
+				for (const targetToken of targetTokens) targets.add(targetToken);
+				candidateTargets.set(sourceToken, targets);
 			}
 			examplesCount += 1;
 		}
 	}
+	let probabilities = new Map<string, number>();
+	for (const [sourceToken, targets] of candidateTargets) {
+		const initial = 1 / Math.max(1, targets.size);
+		for (const targetToken of targets) {
+			probabilities.set(`${sourceToken}\u0000${targetToken}`, initial);
+		}
+	}
+	for (let iteration = 0; iteration < iterations; iteration += 1) {
+		const expectedCounts = new Map<string, number>();
+		const sourceTotals = new Map<string, number>();
+		for (const pair of sentencePairs) {
+			for (
+				let targetIndex = 0;
+				targetIndex < pair.target.length;
+				targetIndex += 1
+			) {
+				const targetToken = pair.target[targetIndex] as string;
+				const contributions = pair.source.map((sourceToken, sourceIndex) => {
+					const lexical =
+						probabilities.get(`${sourceToken}\u0000${targetToken}`) ?? 0;
+					const distance = Math.abs(
+						(sourceIndex + 0.5) / pair.source.length -
+							(targetIndex + 0.5) / pair.target.length,
+					);
+					return lexical * Math.exp(-3 * distance);
+				});
+				const denominator = contributions.reduce(
+					(sum, value) => sum + value,
+					0,
+				);
+				if (denominator === 0) continue;
+				for (
+					let sourceIndex = 0;
+					sourceIndex < pair.source.length;
+					sourceIndex += 1
+				) {
+					const sourceToken = pair.source[sourceIndex] as string;
+					const key = `${sourceToken}\u0000${targetToken}`;
+					const contribution = (contributions[sourceIndex] ?? 0) / denominator;
+					expectedCounts.set(
+						key,
+						(expectedCounts.get(key) ?? 0) + contribution,
+					);
+					sourceTotals.set(
+						sourceToken,
+						(sourceTotals.get(sourceToken) ?? 0) + contribution,
+					);
+				}
+			}
+		}
+		probabilities = new Map(
+			[...expectedCounts].map(([key, count]) => {
+				const separator = key.indexOf("\u0000");
+				const sourceToken = key.slice(0, separator);
+				return [
+					key,
+					count / Math.max(1e-12, sourceTotals.get(sourceToken) ?? 0),
+				];
+			}),
+		);
+	}
 	const dictionary = Object.freeze(
-		[...counts.values()]
+		[...probabilities]
+			.map(([key, probability]) => {
+				const separator = key.indexOf("\u0000");
+				const source = key.slice(0, separator);
+				const target = key.slice(separator + 1);
+				return {
+					source: sourceForms.get(source) ?? source,
+					target: targetForms.get(target) ?? target,
+					weight: probability,
+				};
+			})
+			.filter((entry) => entry.weight >= minProbability)
 			.sort(
 				(left, right) =>
-					compareNumbers(right.count, left.count) ||
+					compareNumbers(right.weight, left.weight) ||
 					compareStrings(left.source, right.source) ||
 					compareStrings(left.target, right.target),
 			)
-			.slice(0, 128)
-			.map((item) => ({
-				source: item.source,
-				target: item.target,
-				weight: item.count,
-			})),
+			.slice(0, maxEntries),
 	);
 	const metadata = jsonObjectClone(options.metadata, "wordAligner.metadata");
 	return Object.freeze({
@@ -1202,6 +1611,7 @@ export function trainWordAligner(
 			options.id ??
 			stableId("word-aligner", {
 				examples: examplesCount,
+				iterations,
 				dictionary,
 				metadata,
 			}),
@@ -1583,30 +1993,88 @@ function stoplisted(term: string, stoplists: readonly Wordlist[]): boolean {
 
 function pairCountsFromLinks(
 	corpus: ParallelCorpus,
-	options: { readonly stoplists?: readonly Wordlist[] } = {},
+	options: BilingualTermOptions = {},
 ): readonly PairCount[] {
-	const counts = new Map<string, PairCount>();
+	const maxTermTokens = options.maxTermTokens ?? 3;
+	if (!Number.isInteger(maxTermTokens) || maxTermTokens <= 0) {
+		fail(
+			"TEXTPARALLEL_TERM_LENGTH",
+			"maxTermTokens must be a positive integer",
+		);
+	}
+	const counts = new Map<
+		string,
+		{ source: string; target: string; docIds: Set<string>; count: number }
+	>();
+	const sourceCounts = new Map<string, number>();
+	const targetCounts = new Map<string, number>();
 	for (const doc of corpus.documents) {
 		for (const link of doc.links) {
 			if (link.relation === "inserted" || link.relation === "deleted") continue;
-			const sourceText = textForRef(doc.sourceDoc, link.source).trim();
-			const targetText = textForRef(doc.targetDoc, link.target).trim();
-			if (sourceText.length === 0 || targetText.length === 0) continue;
-			if (stoplisted(sourceText, options.stoplists ?? [])) continue;
-			if (stoplisted(targetText, options.stoplists ?? [])) continue;
-			const key = `${normalizedText(sourceText)}\u0000${normalizedText(targetText)}`;
-			const item = counts.get(key) ?? {
-				source: sourceText,
-				target: targetText,
-				docIds: new Set<string>(),
-				count: 0,
-			};
-			item.count += 1;
-			item.docIds.add(doc.id);
-			counts.set(key, item);
+			const sourceTokens = textTokens(textForRef(doc.sourceDoc, link.source));
+			const targetTokens = textTokens(textForRef(doc.targetDoc, link.target));
+			if (sourceTokens.length === 0 || targetTokens.length === 0) continue;
+			for (let start = 0; start < sourceTokens.length; start += 1) {
+				for (
+					let length = 1;
+					length <= maxTermTokens && start + length <= sourceTokens.length;
+					length += 1
+				) {
+					const projectedStart = Math.min(
+						targetTokens.length - 1,
+						Math.floor((start / sourceTokens.length) * targetTokens.length),
+					);
+					const projectedEnd = Math.min(
+						targetTokens.length,
+						Math.max(
+							projectedStart + 1,
+							Math.ceil(
+								((start + length) / sourceTokens.length) * targetTokens.length,
+							),
+						),
+					);
+					const targetEnd = Math.min(
+						projectedEnd,
+						projectedStart + maxTermTokens,
+					);
+					const sourceText = sourceTokens
+						.slice(start, start + length)
+						.map((token) => token.text)
+						.join(" ");
+					const targetText = targetTokens
+						.slice(projectedStart, targetEnd)
+						.map((token) => token.text)
+						.join(" ");
+					if (stoplisted(sourceText, options.stoplists ?? [])) continue;
+					if (stoplisted(targetText, options.stoplists ?? [])) continue;
+					const sourceKey = normalizedText(sourceText);
+					const targetKey = normalizedText(targetText);
+					const key = `${sourceKey}\u0000${targetKey}`;
+					const item = counts.get(key) ?? {
+						source: sourceText,
+						target: targetText,
+						docIds: new Set<string>(),
+						count: 0,
+					};
+					item.count += 1;
+					item.docIds.add(doc.id);
+					counts.set(key, item);
+					sourceCounts.set(sourceKey, (sourceCounts.get(sourceKey) ?? 0) + 1);
+					targetCounts.set(targetKey, (targetCounts.get(targetKey) ?? 0) + 1);
+				}
+			}
 		}
 	}
-	return Object.freeze([...counts.values()]);
+	return Object.freeze(
+		[...counts].map(([key, item]) => {
+			const separator = key.indexOf("\u0000");
+			return {
+				...item,
+				sourceCount: sourceCounts.get(key.slice(0, separator)) ?? item.count,
+				targetCount: targetCounts.get(key.slice(separator + 1)) ?? item.count,
+			};
+		}),
+	);
 }
 
 export function extractBilingualTerms(
@@ -1619,6 +2087,7 @@ export function extractBilingualTerms(
 			task: "bilingual-terms",
 			corpusId: corpus.id,
 			minCount: options.minCount ?? 1,
+			maxTermTokens: options.maxTermTokens ?? 3,
 		});
 	const evidence = parallelEvidence([], {
 		mode: "corpus",
@@ -1629,18 +2098,28 @@ export function extractBilingualTerms(
 	});
 	const candidates = pairCountsFromLinks(corpus, options)
 		.filter((item) => item.count >= (options.minCount ?? 1))
+		.map((item) => {
+			const association =
+				(2 * item.count) / Math.max(1, item.sourceCount + item.targetCount);
+			return {
+				item,
+				association,
+				value:
+					association *
+					Math.log1p(item.count) *
+					(1 + item.docIds.size / Math.max(1, corpus.documents.length)),
+			};
+		})
 		.sort(
 			(left, right) =>
-				compareNumbers(right.count, left.count) ||
-				compareNumbers(right.docIds.size, left.docIds.size) ||
-				compareStrings(left.source, right.source) ||
-				compareStrings(left.target, right.target),
+				compareNumbers(right.value, left.value) ||
+				compareNumbers(right.item.count, left.item.count) ||
+				compareNumbers(right.item.docIds.size, left.item.docIds.size) ||
+				compareStrings(left.item.source, right.item.source) ||
+				compareStrings(left.item.target, right.item.target),
 		)
 		.slice(0, options.maxCandidates ?? 50)
-		.map((item, index): BilingualTermCandidate => {
-			const value =
-				item.count *
-				(1 + item.docIds.size / Math.max(1, corpus.documents.length));
+		.map(({ item, association, value }, index): BilingualTermCandidate => {
 			return {
 				id: stableId("biterm", {
 					corpusId: corpus.id,
@@ -1651,13 +2130,14 @@ export function extractBilingualTerms(
 				targetText: item.target,
 				count: item.count,
 				documentCount: item.docIds.size,
-				score: score("association", value, "count-doc-support"),
+				score: score("association", value, "aligned-ngram-dice"),
 				rank: index + 1,
 				evidence,
 				features: stableJsonClone({
 					corpusId: corpus.id,
 					sourceTokenCount: textTokens(item.source).length,
 					targetTokenCount: textTokens(item.target).length,
+					association,
 				}),
 			};
 		});

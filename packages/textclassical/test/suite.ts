@@ -248,9 +248,27 @@ const clusters = clusterDocuments(
 		featureSpaceId: "fs",
 		rowIds: ["a", "b", "c"],
 	},
-	{ k: 2 },
+	{ k: 2, seed: 13 },
 );
 assert.equal(clusters.clusters.length, 2);
+assert.equal(clusters.assignments[0], clusters.assignments[1]);
+assert.notEqual(clusters.assignments[0], clusters.assignments[2]);
+assert.throws(
+	() =>
+		clusterDocuments(
+			{
+				rowPointers: [0],
+				columnIds: [],
+				values: [],
+				rowCount: 0,
+				columnCount: 0,
+				featureSpaceId: "empty",
+				rowIds: [],
+			},
+			{ k: 1 },
+		),
+	/requires at least one row/,
+);
 
 const summaryDoc = createDocument("Alpha beta. Alpha gamma. Delta.", {
 	id: "summary",
@@ -265,10 +283,54 @@ assert.equal(
 	true,
 );
 
-const parser = trainClassicalParser(["dep"]);
+const parserTokens = [
+	{ id: "subject", text: "Dogs", pos: "NOUN" },
+	{ id: "predicate", text: "bark", pos: "VERB" },
+];
+const parser = trainClassicalParser(
+	[
+		{
+			id: "simple-clause",
+			tokens: parserTokens,
+			edges: [
+				{ head: "predicate", dependent: "subject", relation: "nsubj" },
+				{ head: "ROOT", dependent: "predicate", relation: "root" },
+			],
+		},
+	],
+	{ iterations: 20 },
+);
 assert.deepEqual(
-	parseDependencies(parser, [{ id: "t1", text: "Alpha" }])[0]?.head,
-	"ROOT",
+	parseDependencies(parser, parserTokens).map(
+		({ score: _score, ...edge }) => edge,
+	),
+	[
+		{ head: "predicate", dependent: "subject", relation: "nsubj" },
+		{ head: "ROOT", dependent: "predicate", relation: "root" },
+	],
+);
+assert.ok(
+	Object.values(parser.weights).some((row) => Object.keys(row).length > 0),
+);
+assert.throws(
+	() =>
+		trainClassicalParser([
+			{
+				tokens: [
+					{ id: "t1", text: "one" },
+					{ id: "t2", text: "two" },
+					{ id: "t3", text: "three" },
+					{ id: "t4", text: "four" },
+				],
+				edges: [
+					{ head: "t3", dependent: "t1", relation: "dep" },
+					{ head: "t4", dependent: "t2", relation: "dep" },
+					{ head: "ROOT", dependent: "t3", relation: "root" },
+					{ head: "t3", dependent: "t4", relation: "dep" },
+				],
+			},
+		]),
+	/non-projective/,
 );
 
 assert.throws(

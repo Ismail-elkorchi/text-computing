@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:ud:french-gsd-r2.18",
+	"family": "UD",
+	"name": "UD French GSD r2.18",
+	"homepageUrl": "https://github.com/UniversalDependencies/UD_French-GSD",
+	"licenseEvidence": [
+		"https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/LICENSE.txt",
+		"https://github.com/UniversalDependencies/UD_French-GSD/blob/r2.18/README.md"
+	],
+	"licenseExpression": "CC-BY-SA-4.0",
+	"redistributionPolicy": "share-alike-isolated",
+	"reviewState": "approved",
+	"citation": "Universal Dependencies French GSD r2.18 annotations.",
+	"notes": "Pinned UD French GSD release. The upstream license is CC-BY-SA-4.0, so generated packages must use the share-alike isolated -sa surface and remain outside default French composites."
+}

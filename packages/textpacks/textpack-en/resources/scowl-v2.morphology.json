@@ -1,0 +1,91 @@
+{
+  "analyzers": [
+    {
+      "analyzerId": "en-scowl-v2-paradigm-table",
+      "coverage": {
+        "analysisCandidateRowCount": 401709,
+        "derivedFormCount": 167029,
+        "entryCount": 401709,
+        "generationCandidateRowCount": 401709,
+        "uniqueFormCount": 358236,
+        "uniqueLemmaCount": 204268
+      },
+      "resourceIds": [
+        "en-scowl-inflection-entries",
+        "en-scowl-pos-inventory"
+      ],
+      "type": "paradigm-table"
+    }
+  ],
+  "featureInventory": [
+    {
+      "count": 22,
+      "feature": "partOfSpeech",
+      "values": [
+        "a",
+        "abbr",
+        "aj",
+        "aj_av",
+        "av",
+        "c",
+        "d",
+        "i",
+        "m",
+        "n",
+        "n_v",
+        "pl",
+        "pn",
+        "pp",
+        "pre",
+        "s",
+        "suf",
+        "unclassified",
+        "v",
+        "we",
+        "wp",
+        "x"
+      ]
+    },
+    {
+      "count": 13,
+      "feature": "posClass",
+      "values": [
+        "abbr",
+        "abbr?",
+        "demonym",
+        "name",
+        "name?",
+        "number",
+        "ordinal",
+        "person",
+        "place",
+        "surname",
+        "trademark",
+        "upper",
+        "upper?"
+      ]
+    }
+  ],
+  "kind": "morphology",
+  "languageTag": "en",
+  "morphologyId": "en-scowl-v2-inflection",
+  "resourceRefs": [
+    {
+      "recordCount": 401709,
+      "resourceId": "en-scowl-inflection-entries",
+      "role": "paradigm-table"
+    },
+    {
+      "recordCount": 103,
+      "resourceId": "en-scowl-pos-inventory",
+      "role": "feature-inventory"
+    },
+    {
+      "recordCount": 548801,
+      "resourceId": "en-scowl-inflection-entries-lookup-index",
+      "role": "lookup-index"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn"
+}

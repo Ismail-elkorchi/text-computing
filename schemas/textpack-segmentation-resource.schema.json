@@ -1,0 +1,103 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-segmentation-resource.schema.json",
+	"title": "TextpackSegmentationResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "profileId", "granularity"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "segmentation-profile" },
+		"profileId": { "type": "string", "minLength": 1 },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"granularity": {
+			"enum": [
+				"sentence",
+				"token",
+				"word",
+				"morpheme",
+				"grapheme",
+				"line",
+				"paragraph"
+			]
+		},
+		"schemes": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/scheme" }
+		},
+		"rules": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/rule" }
+		},
+		"dictionaryRefs": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		}
+	},
+	"definitions": {
+		"scheme": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["schemeId", "fields"],
+			"properties": {
+				"schemeId": { "type": "string", "minLength": 1 },
+				"description": { "type": "string", "minLength": 1 },
+				"fields": {
+					"type": "array",
+					"minItems": 1,
+					"items": { "$ref": "#/definitions/field" }
+				}
+			}
+		},
+		"field": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["order", "name"],
+			"properties": {
+				"order": { "type": "integer", "minimum": 1 },
+				"name": { "type": "string", "minLength": 1 }
+			}
+		},
+		"rule": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["ruleId", "operation", "priority"],
+			"properties": {
+				"ruleId": { "type": "string", "minLength": 1 },
+				"operation": {
+					"enum": [
+						"boundary-before",
+						"boundary-after",
+						"no-boundary",
+						"split",
+						"merge",
+						"label"
+					]
+				},
+				"priority": { "type": "integer", "minimum": 0 },
+				"pattern": { "type": "string", "minLength": 1 },
+				"replacement": { "type": "string" },
+				"label": { "type": "string", "minLength": 1 },
+				"conditions": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

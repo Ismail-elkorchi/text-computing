@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:ud:english-gumreddit-r2.18",
+	"family": "UD",
+	"name": "UD English GUMReddit r2.18",
+	"homepageUrl": "https://github.com/UniversalDependencies/UD_English-GUMReddit",
+	"licenseEvidence": [
+		"https://github.com/UniversalDependencies/UD_English-GUMReddit/blob/r2.18/LICENSE.txt",
+		"https://github.com/UniversalDependencies/UD_English-GUMReddit/blob/r2.18/README.md"
+	],
+	"licenseExpression": "CC-BY-4.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "Universal Dependencies English GUMReddit r2.18 annotations.",
+	"notes": "Pinned annotation-only UD release; source README states the repository contains annotations without underlying Reddit text."
+}

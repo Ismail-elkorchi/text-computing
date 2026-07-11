@@ -16,6 +16,10 @@
 			"types": "./dist/store/mod.d.ts",
 			"import": "./dist/store/mod.js"
 		},
+		"./textpack": {
+			"types": "./dist/textpack.d.ts",
+			"import": "./dist/textpack.js"
+		},
 		"./query": {
 			"types": "./dist/query/mod.d.ts",
 			"import": "./dist/query/mod.js"
@@ -69,7 +73,8 @@
 		"@ismail-elkorchi/textdata": "0.1.0",
 		"@ismail-elkorchi/textdoc": "0.1.0",
 		"@ismail-elkorchi/textfacts": "0.1.0",
-		"@ismail-elkorchi/textlex": "0.1.0"
+		"@ismail-elkorchi/textlex": "0.1.0",
+		"@ismail-elkorchi/textpack": "0.1.0"
 	},
 	"scripts": {
 		"clean": "node scripts/clean-build-output.mjs dist && node scripts/clean-build-output.mjs dist-test",

@@ -32,12 +32,13 @@ export function keyness(
 	reference: TextCorpus,
 	options: KeynessOptions = {},
 ): KeynessItem[] {
-	const focusFreq = frequency(focus, {
-		...(options.minCount !== undefined ? { minCount: options.minCount } : {}),
-	});
+	const allFocusFreq = frequency(focus, { minCount: 1 });
+	const focusFreq = allFocusFreq.filter(
+		(item) => item.count >= (options.minCount ?? 1),
+	);
 	const referenceFreq = frequency(reference, { minCount: 1 });
 	const referenceMap = new Map(referenceFreq.map((item) => [item.item, item]));
-	const focusTotal = focusFreq.reduce((sum, item) => sum + item.count, 0);
+	const focusTotal = allFocusFreq.reduce((sum, item) => sum + item.count, 0);
 	const referenceTotal = referenceFreq.reduce(
 		(sum, item) => sum + item.count,
 		0,
@@ -55,7 +56,9 @@ export function keyness(
 				measure === "difference"
 					? focusRelativeFrequency - referenceRelativeFrequency
 					: measure === "ratio"
-						? (item.count + 0.5) / Math.max(referenceCount, 0.5)
+						? (item.count + 0.5) /
+							(focusTotal + 1) /
+							((referenceCount + 0.5) / (referenceTotal + 1))
 						: logLikelihood(
 								item.count,
 								focusTotal,

@@ -1,0 +1,42 @@
+{
+  "analyzerId": "fr-lexique-383-analyzer",
+  "fields": [
+    {
+      "analyzerRole": "index",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "query",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "suggest",
+      "fieldName": "text"
+    }
+  ],
+  "kind": "search-profile",
+  "languageTag": "fr",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "tokenFilters": [
+    {
+      "componentId": "unicode-simple-casefold",
+      "mode": "unicode-simple",
+      "type": "casefold"
+    },
+    {
+      "componentId": "french-accent-fold",
+      "mode": "lookup-only",
+      "options": {
+        "normalization": "NFD",
+        "removeUnicodeMarks": true
+      },
+      "type": "diacritic-fold"
+    }
+  ],
+  "tokenizer": {
+    "componentId": "unicode-word",
+    "mode": "default",
+    "type": "unicode-word-boundary"
+  }
+}

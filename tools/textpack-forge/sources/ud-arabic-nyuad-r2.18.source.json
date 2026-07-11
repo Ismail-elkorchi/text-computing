@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:ud:arabic-nyuad-r2.18",
+	"family": "UD",
+	"name": "UD Arabic NYUAD r2.18",
+	"homepageUrl": "https://github.com/UniversalDependencies/UD_Arabic-NYUAD",
+	"licenseEvidence": [
+		"https://github.com/UniversalDependencies/UD_Arabic-NYUAD/blob/r2.18/LICENSE.txt",
+		"https://github.com/UniversalDependencies/UD_Arabic-NYUAD/blob/r2.18/README.md"
+	],
+	"licenseExpression": "CC-BY-SA-4.0",
+	"redistributionPolicy": "share-alike-isolated",
+	"reviewState": "approved",
+	"citation": "Universal Dependencies Arabic NYUAD r2.18 annotations.",
+	"notes": "Pinned annotation-only UD release; source README states the repository contains annotations without underlying LDC text."
+}

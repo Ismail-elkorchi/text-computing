@@ -1,0 +1,86 @@
+{
+  "analyzers": [
+    {
+      "analyzerId": "fr-lexique-383-form-lookup",
+      "coverage": {
+        "entryCount": 142694,
+        "inflectedVerbRowCount": 65017,
+        "lemmaCount": 51126
+      },
+      "resourceIds": [
+        "fr-lexique-entries",
+        "fr-lexique-lemmas"
+      ],
+      "type": "lookup"
+    }
+  ],
+  "featureInventory": [
+    {
+      "count": 23,
+      "feature": "partOfSpeech",
+      "values": [
+        "ADJ",
+        "ADJ:dem",
+        "ADJ:ind",
+        "ADJ:int",
+        "ADJ:num",
+        "ADJ:pos",
+        "ADV",
+        "ART:def",
+        "ART:ind",
+        "AUX",
+        "CON",
+        "LIA",
+        "NOM",
+        "ONO",
+        "PRE",
+        "PRO:dem",
+        "PRO:ind",
+        "PRO:int",
+        "PRO:per",
+        "PRO:pos",
+        "PRO:rel",
+        "unknown",
+        "VER"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "gender",
+      "values": [
+        "f",
+        "m"
+      ]
+    },
+    {
+      "count": 2,
+      "feature": "number",
+      "values": [
+        "p",
+        "s"
+      ]
+    }
+  ],
+  "kind": "morphology",
+  "languageTag": "fr",
+  "morphologyId": "fr-lexique-383-lookup",
+  "resourceRefs": [
+    {
+      "recordCount": 142694,
+      "resourceId": "fr-lexique-entries",
+      "role": "analyzer"
+    },
+    {
+      "recordCount": 23,
+      "resourceId": "fr-lexique-pos-inventory",
+      "role": "feature-inventory"
+    },
+    {
+      "recordCount": 172600,
+      "resourceId": "fr-lexique-entries-lookup-index",
+      "role": "lookup-index"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn"
+}

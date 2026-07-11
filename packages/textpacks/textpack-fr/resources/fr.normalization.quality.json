@@ -1,0 +1,41 @@
+{
+  "aliasKindCount": 6,
+  "aliasKinds": [
+    "languageAlias",
+    "scriptAlias",
+    "subdivisionAlias",
+    "territoryAlias",
+    "variantAlias",
+    "zoneAlias"
+  ],
+  "apostropheCounts": {
+    "'": 345202,
+    "’": 28765
+  },
+  "caseAliasRowCount": 10,
+  "contractionFormCount": 4,
+  "contractionObservationCount": 93425,
+  "elisionObservationCount": 373967,
+  "elisionPrefixCount": 16,
+  "languageTag": "fr",
+  "likelySubtag": "fr-Latn-FR",
+  "nfcQuickCheckValueCount": 3,
+  "normalizationGoldCaseCount": 16,
+  "pipelineId": "french-normalization-profile",
+  "pipelineVersion": "0.1.0",
+  "recordsAccepted": 7,
+  "recordsRejected": 0,
+  "ruleCount": 7,
+  "schemaVersion": "1",
+  "script": "Latn",
+  "sourceIds": [
+    "source:unicode:ucd",
+    "source:unicode:cldr-core",
+    "source:tatoeba:weekly-french-2026-06-06"
+  ],
+  "tatoebaSentenceRowCount": 718596,
+  "warnings": [
+    "This profile declares Unicode/CLDR-backed normalization policy for modern typed French text.",
+    "It adds Tatoeba-observed French apostrophe, elision-prefix, contraction-surface, and lookup accent-fold evidence; spelling correction, noisy-text cleanup, historical spelling normalization, transliteration, and OCR cleanup remain outside this component."
+  ]
+}

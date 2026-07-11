@@ -1,0 +1,40 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:fr:lexique-383:2019-06-04",
+	"sourceId": "source:fr:lexique-383",
+	"version": "3.83@2019-06-04",
+	"retrievedAt": "2026-06-11T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:decd9eac1556a68f6ed6e27c4dcdb3c4673349223c400388b0be6bc23dcedf76",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.tsv",
+			"mediaType": "text/tab-separated-values; charset=utf-8",
+			"byteLength": 25850780,
+			"checksum": "sha256:637ba37a767a66679c48371d673ece50cbf541b49a4e40e598963d4f3fbce52b",
+			"sourceUrl": "https://lexique.org/databases/Lexique383/Lexique383.zip#Lexique383.tsv"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/lexique-383/Lexique383.zip",
+			"mediaType": "application/zip",
+			"byteLength": 27243156,
+			"checksum": "sha256:e181d132b3b0d3d87efc98d376968441b517353933011cebea5366321a6024e6",
+			"sourceUrl": "https://lexique.org/databases/Lexique383/Lexique383.zip"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/lexique-383/README-Lexique.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 2135,
+			"checksum": "sha256:d624fc358ac0ffed27fe74eb07af4854301145cb03d27d2de60ec30060f5b4a1",
+			"sourceUrl": "https://lexique.org/databases/Lexique383/README-Lexique.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/lexique-383/RELEASE-NOTES-Lexique.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 5331,
+			"checksum": "sha256:86bc38429adaa1df4cc8c1e64e6946223154ce4a1cf826b4ef0126b3d9dd3d95",
+			"sourceUrl": "https://lexique.org/databases/Lexique383/RELEASE%20NOTES-Lexique.txt"
+		}
+	],
+	"notes": "Pinned Lexique 3.83 archive, extracted TSV, README, and release notes. The generated package must remain share-alike isolated."
+}

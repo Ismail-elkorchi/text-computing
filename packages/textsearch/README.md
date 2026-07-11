@@ -2,6 +2,8 @@
 
 Final runtime package for analyzers, in-memory lexical indexes, structured queries, ranking, filters, facets, highlights, suggestions, CQL parsing, and explanations.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Install
 
 ```sh

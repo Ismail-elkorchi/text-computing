@@ -21,14 +21,23 @@ function assertKeys(
 
 assertKeys("root exports", root, [
 	"TextDataError",
+	"corpusRowsFromPack",
 	"createDataset",
 	"mergeMetadata",
 	"normalizeDatasetManifest",
 	"packageName",
 	"packageVersion",
 	"readDataset",
+	"readUdAnnotationDatasetFromPack",
+	"readUdAnnotationDatasetFromPackAsync",
+	"segmentationAdapterFromPack",
+	"segmentationResourcesFromPack",
 	"splitDataset",
 	"streamRecords",
+	"udAnnotationRecordsFromPack",
+	"udAnnotationRecordsFromPackAsync",
+	"udSyntaxResourcesFromPack",
+	"udSyntaxResourcesFromPackAsync",
 	"validateDataset",
 	"writeDataset",
 ]);
@@ -77,7 +86,13 @@ assertKeys("conllu exports", conllu, [
 	"conlluSentenceToRecord",
 	"parseConllu",
 	"readConlluDataset",
+	"readUdAnnotationDatasetFromPack",
+	"readUdAnnotationDatasetFromPackAsync",
 	"serializeConllu",
+	"udAnnotationRecordsFromPack",
+	"udAnnotationRecordsFromPackAsync",
+	"udSyntaxResourcesFromPack",
+	"udSyntaxResourcesFromPackAsync",
 ]);
 
 assertKeys("iob exports", iob, [

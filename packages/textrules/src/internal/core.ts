@@ -9,6 +9,7 @@ import {
 	addLayer,
 	type Evidence,
 	type SpanMap,
+	type SpanMapEntry,
 	type SpanRef,
 	type TextDocument,
 	type TextView,
@@ -917,12 +918,28 @@ function sequenceResults(
 		evaluatePattern(doc, part, options),
 	);
 	if (parts.some((part) => part.length === 0)) return [];
-	const selected = parts
-		.map((part) => part[0])
-		.filter((part) => part !== undefined);
-	const merged = mergePatternResults(pattern, selected);
-	if (pattern.ordered !== false && !spansOrdered(merged.spans)) return [];
-	return [merged];
+	let combinations: readonly (readonly PatternResult[])[] = [[]];
+	for (const part of parts) {
+		const next: PatternResult[][] = [];
+		for (const combination of combinations) {
+			for (const result of part) {
+				const candidate = [...combination, result];
+				const merged = mergePatternResults(pattern, candidate);
+				if (pattern.ordered !== false && !spansOrdered(merged.spans)) continue;
+				next.push(candidate);
+				if (next.length >= (options.maxMatches ?? Number.POSITIVE_INFINITY)) {
+					break;
+				}
+			}
+			if (next.length >= (options.maxMatches ?? Number.POSITIVE_INFINITY))
+				break;
+		}
+		combinations = next;
+		if (combinations.length === 0) return [];
+	}
+	return combinations.map((combination) =>
+		mergePatternResults(pattern, combination),
+	);
 }
 
 function booleanResults(
@@ -1132,6 +1149,47 @@ function compareRuleMatch(left: RuleMatch, right: RuleMatch): number {
 	);
 }
 
+function matchesOverlap(left: RuleMatch, right: RuleMatch): boolean {
+	return left.spans.some((leftSpan) =>
+		right.spans.some(
+			(rightSpan) =>
+				leftSpan.viewId === rightSpan.viewId &&
+				leftSpan.span.unit === rightSpan.span.unit &&
+				leftSpan.span.start < rightSpan.span.end &&
+				rightSpan.span.start < leftSpan.span.end,
+		),
+	);
+}
+
+function matchLength(match: RuleMatch): number {
+	return match.spans.reduce(
+		(total, span) => total + Math.max(0, span.span.end - span.span.start),
+		0,
+	);
+}
+
+function resolveMatchConflicts(
+	matches: readonly RuleMatch[],
+	policy: RuleConflictPolicy,
+): readonly RuleMatch[] {
+	if (policy === "keep-all") return matches;
+	if (policy === "first") return matches.slice(0, 1);
+	const ordered =
+		policy === "longest"
+			? [...matches].sort(
+					(left, right) =>
+						matchLength(right) - matchLength(left) ||
+						compareRuleMatch(left, right),
+				)
+			: [...matches];
+	const selected: RuleMatch[] = [];
+	for (const match of ordered) {
+		if (selected.some((existing) => matchesOverlap(existing, match))) continue;
+		selected.push(match);
+	}
+	return selected.sort(compareRuleMatch);
+}
+
 export function matchRules(
 	doc: TextDocument,
 	rules: CompiledRuleSet,
@@ -1168,8 +1226,11 @@ export function matchRules(
 			});
 		}
 	}
-	return matches
-		.sort(compareRuleMatch)
+	const resolved = resolveMatchConflicts(
+		matches.sort(compareRuleMatch),
+		options.conflictPolicy ?? rules.conflictPolicy,
+	);
+	return resolved
 		.slice(0, options.maxMatches ?? matches.length)
 		.map((match, rank) => Object.freeze({ ...match, rank }));
 }
@@ -1247,30 +1308,178 @@ function addOrReplaceViewWithSpanMap(
 	};
 }
 
+interface RewriteResult {
+	readonly text: string;
+	readonly entries: readonly SpanMapEntry[];
+}
+
+function rewriteRelation(sourceLength: number, targetLength: number) {
+	if (sourceLength === 0) return "inserted" as const;
+	if (targetLength === 0) return "deleted" as const;
+	if (sourceLength < targetLength) return "expanded" as const;
+	if (sourceLength > targetLength) return "contracted" as const;
+	return "normalized" as const;
+}
+
+function rewriteEntry(
+	sourceStart: number,
+	sourceEnd: number,
+	targetStart: number,
+	targetEnd: number,
+	relation: SpanMapEntry["relation"],
+): SpanMapEntry {
+	return Object.freeze({
+		source: Object.freeze({
+			start: sourceStart,
+			end: sourceEnd,
+			unit: "utf16-code-unit" as const,
+		}),
+		target: Object.freeze({
+			start: targetStart,
+			end: targetEnd,
+			unit: "utf16-code-unit" as const,
+		}),
+		relation,
+	});
+}
+
+function spanRewrite(
+	source: string,
+	start: number,
+	end: number,
+	replacement: string,
+): RewriteResult {
+	const entries: SpanMapEntry[] = [];
+	if (start > 0) entries.push(rewriteEntry(0, start, 0, start, "identity"));
+	entries.push(
+		rewriteEntry(
+			start,
+			end,
+			start,
+			start + replacement.length,
+			rewriteRelation(end - start, replacement.length),
+		),
+	);
+	if (end < source.length) {
+		entries.push(
+			rewriteEntry(
+				end,
+				source.length,
+				start + replacement.length,
+				start + replacement.length + source.length - end,
+				"identity",
+			),
+		);
+	}
+	return {
+		text: `${source.slice(0, start)}${replacement}${source.slice(end)}`,
+		entries: Object.freeze(entries),
+	};
+}
+
+function literalRewrites(
+	source: string,
+	replacements: Readonly<Record<string, string>>,
+): RewriteResult | undefined {
+	const rules = Object.entries(replacements)
+		.filter(([input]) => input.length > 0)
+		.sort(
+			([left], [right]) =>
+				right.length - left.length || stableCompare(left, right),
+		);
+	if (rules.length === 0) return undefined;
+	const text: string[] = [];
+	const entries: SpanMapEntry[] = [];
+	let sourceCursor = 0;
+	let equalStart = 0;
+	let targetCursor = 0;
+	let changed = false;
+	while (sourceCursor < source.length) {
+		const rule = rules.find(([input]) =>
+			source.startsWith(input, sourceCursor),
+		);
+		if (rule === undefined) {
+			sourceCursor += 1;
+			continue;
+		}
+		const [input, output] = rule;
+		if (equalStart < sourceCursor) {
+			const equalText = source.slice(equalStart, sourceCursor);
+			text.push(equalText);
+			entries.push(
+				rewriteEntry(
+					equalStart,
+					sourceCursor,
+					targetCursor,
+					targetCursor + equalText.length,
+					"identity",
+				),
+			);
+			targetCursor += equalText.length;
+		}
+		text.push(output);
+		entries.push(
+			rewriteEntry(
+				sourceCursor,
+				sourceCursor + input.length,
+				targetCursor,
+				targetCursor + output.length,
+				rewriteRelation(input.length, output.length),
+			),
+		);
+		targetCursor += output.length;
+		sourceCursor += input.length;
+		equalStart = sourceCursor;
+		changed = changed || input !== output;
+	}
+	if (equalStart < source.length) {
+		const equalText = source.slice(equalStart);
+		text.push(equalText);
+		entries.push(
+			rewriteEntry(
+				equalStart,
+				source.length,
+				targetCursor,
+				targetCursor + equalText.length,
+				"identity",
+			),
+		);
+	}
+	return changed
+		? { text: text.join(""), entries: Object.freeze(entries) }
+		: undefined;
+}
+
 function rewrittenText(
 	source: string,
+	sourceViewId: string,
 	match: RuleMatch,
 	action: RewriteAction,
-): string {
+): RewriteResult {
 	if (action.replacement !== undefined) {
 		const span = match.spans[0];
-		if (span?.span.unit === "utf16-code-unit") {
-			return `${source.slice(0, span.span.start)}${action.replacement}${source.slice(span.span.end)}`;
+		if (span?.viewId === sourceViewId && span.span.unit === "utf16-code-unit") {
+			return spanRewrite(
+				source,
+				span.span.start,
+				span.span.end,
+				action.replacement,
+			);
 		}
-		return action.replacement;
+		return spanRewrite(source, 0, source.length, action.replacement);
 	}
-	let text = source;
-	for (const [input, output] of Object.entries(action.replacements ?? {}).sort(
-		([left], [right]) => stableCompare(left, right),
-	)) {
-		text = text.split(input).join(output);
-	}
-	if (text !== source) return text;
+	const rewritten = literalRewrites(source, action.replacements ?? {});
+	if (rewritten !== undefined) return rewritten;
 	const span = match.spans[0];
-	if (span?.span.unit === "utf16-code-unit") {
-		return `${source.slice(0, span.span.start)}${source.slice(span.span.end)}`;
+	if (span?.viewId === sourceViewId && span.span.unit === "utf16-code-unit") {
+		return spanRewrite(source, span.span.start, span.span.end, "");
 	}
-	return source;
+	return {
+		text: source,
+		entries: Object.freeze([
+			rewriteEntry(0, source.length, 0, source.length, "identity"),
+		]),
+	};
 }
 
 function applyRewrite(
@@ -1280,7 +1489,8 @@ function applyRewrite(
 	options: ApplyRuleOptions | RewriteViewOptions,
 ): TextDocument {
 	const sourceView = viewFor(doc, action.sourceViewId ?? options.sourceViewId);
-	const targetText = rewrittenText(sourceView.text, match, action);
+	const rewrite = rewrittenText(sourceView.text, sourceView.id, match, action);
+	const targetText = rewrite.text;
 	const targetViewId = options.targetViewId ?? action.targetViewId;
 	const spanMapId =
 		options.spanMapId ?? action.spanMapId ?? `${targetViewId}:span-map`;
@@ -1288,17 +1498,7 @@ function applyRewrite(
 		id: spanMapId,
 		sourceViewId: sourceView.id,
 		targetViewId,
-		entries: [
-			{
-				source: {
-					start: 0,
-					end: sourceView.text.length,
-					unit: "utf16-code-unit",
-				},
-				target: { start: 0, end: targetText.length, unit: "utf16-code-unit" },
-				relation: sourceView.text === targetText ? "identity" : "aligned",
-			},
-		],
+		entries: rewrite.entries,
 	};
 	return addOrReplaceViewWithSpanMap(
 		doc,

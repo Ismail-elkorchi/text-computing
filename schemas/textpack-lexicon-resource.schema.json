@@ -1,0 +1,88 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-lexicon-resource.schema.json",
+	"title": "TextpackLexiconResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind"],
+	"anyOf": [{ "required": ["entries"] }, { "required": ["resourceRefs"] }],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "lexicon" },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"lexiconId": { "type": "string", "minLength": 1 },
+		"entryCount": { "type": "integer", "minimum": 0 },
+		"resourceRefs": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/resourceRef" }
+		},
+		"entries": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/entry" }
+		}
+	},
+	"definitions": {
+		"resourceRef": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["resourceId", "role"],
+			"properties": {
+				"resourceId": { "type": "string", "minLength": 1 },
+				"role": {
+					"enum": [
+						"entries",
+						"forms",
+						"lemmas",
+						"gazetteer",
+						"termbase",
+						"abbreviations",
+						"stoplist",
+						"aliases",
+						"lookup-index"
+					]
+				},
+				"recordCount": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"entry": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["entryId", "form"],
+			"properties": {
+				"entryId": { "type": "string", "minLength": 1 },
+				"form": { "type": "string", "minLength": 1 },
+				"normalizedForm": { "type": "string", "minLength": 1 },
+				"lemma": { "type": "string", "minLength": 1 },
+				"languageTag": { "type": "string", "minLength": 1 },
+				"script": { "type": "string", "minLength": 1 },
+				"partOfSpeech": { "type": "string", "minLength": 1 },
+				"tags": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"features": { "$ref": "#/definitions/jsonObject" },
+				"frequency": { "type": "number", "minimum": 0 },
+				"sourceRef": { "type": "string", "minLength": 1 }
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

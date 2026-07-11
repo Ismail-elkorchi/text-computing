@@ -42,6 +42,15 @@ export {
 } from "./ocr/mod.js";
 export type { BuildConfusionTableOptions, OcrConfidence } from "./ocr/types.js";
 export {
+	type CompiledTextNormProfile,
+	normalizationProfileFromPack,
+	normalizationResourcesFromPack,
+	type TextNormPackResource,
+	type TextNormPackResourcePayload,
+	type TextNormProfileMode,
+	type TextNormResourcesFromPackOptions,
+} from "./resource/mod.js";
+export {
 	buildSpellingMap,
 	candidateFstSpellings,
 	candidateLexiconSpellings,

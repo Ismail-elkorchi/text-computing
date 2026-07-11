@@ -115,6 +115,43 @@ const rewriteRules = compileRuleSet({
 const rewritten = rewriteView(tokenDocument(), rewriteRules);
 assert.equal(rewritten.views.normalized?.text, "Alicia founded Acme.");
 assert.equal(rewritten.views.normalized?.spanMapId, "normalized:span-map");
+assert.deepEqual(
+	rewritten.spanMaps["normalized:span-map"]?.entries.map(
+		(entry) => entry.relation,
+	),
+	["expanded", "identity"],
+);
+
+const multiRewritten = rewriteView(
+	tokenDocument(),
+	compileRuleSet({
+		id: "rules:multi-rewrite",
+		version: "1.0.0",
+		rules: [
+			{
+				id: "rewrite:names",
+				when: { kind: "char", text: "Alice" },
+				action: [
+					{
+						kind: "rewrite",
+						targetViewId: "multi-normalized",
+						replacements: { Alice: "A", Acme: "Company" },
+					},
+				],
+			},
+		],
+	}),
+);
+assert.equal(
+	multiRewritten.views["multi-normalized"]?.text,
+	"A founded Company.",
+);
+assert.deepEqual(
+	multiRewritten.spanMaps["multi-normalized:span-map"]?.entries.map(
+		(entry) => entry.relation,
+	),
+	["contracted", "identity", "expanded", "identity"],
+);
 
 const replacedSpan = rewriteView(
 	tokenDocument(),
@@ -137,6 +174,57 @@ const replacedSpan = rewriteView(
 	}),
 );
 assert.equal(replacedSpan.views.alias?.text, "Alicia founded Acme.");
+
+const sequenceMatches = matchRules(
+	tokenDocument(),
+	compileRuleSet({
+		id: "rules:sequence",
+		version: "1.0.0",
+		rules: [
+			{
+				id: "sequence:combinations",
+				when: {
+					kind: "sequence",
+					patterns: [
+						{ kind: "char", pattern: "Alice|Acme" },
+						{ kind: "char", pattern: "founded|Acme" },
+					],
+				},
+				action: [{ kind: "feature", name: "sequence", value: true }],
+			},
+		],
+	}),
+);
+assert.equal(sequenceMatches.length, 2);
+
+const priorityMatches = matchRules(
+	tokenDocument(),
+	compileRuleSet(
+		{
+			id: "rules:conflicts",
+			version: "1.0.0",
+			rules: [
+				{
+					id: "lower",
+					priority: 1,
+					when: { kind: "char", text: "Alice" },
+					action: [{ kind: "feature", name: "lower", value: true }],
+				},
+				{
+					id: "higher",
+					priority: 2,
+					when: { kind: "char", text: "Alice" },
+					action: [{ kind: "feature", name: "higher", value: true }],
+				},
+			],
+		},
+		{ conflictPolicy: "priority" },
+	),
+);
+assert.deepEqual(
+	priorityMatches.map((match) => match.ruleId),
+	["higher"],
+);
 
 const tokenized = applyRules(
 	createDocument("Alice founded Acme.", { id: "doc:tokenize" }),

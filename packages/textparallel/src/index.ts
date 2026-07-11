@@ -57,3 +57,13 @@ export {
 	trainSentenceAligner,
 	trainWordAligner,
 } from "./internal/core.js";
+export type {
+	ParallelLinkRow,
+	ParallelRowsFromPackOptions,
+	ParallelTableResource,
+} from "./textpack.js";
+export {
+	parallelCorpusFromPack,
+	parallelLinkRowsFromPack,
+	parallelTablesFromPack,
+} from "./textpack.js";

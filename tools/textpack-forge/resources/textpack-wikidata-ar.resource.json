@@ -1,0 +1,86 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
+	"packageName": "@ismail-elkorchi/textpack-wikidata-ar",
+	"pipelineId": "wikidata-main-artifact",
+	"pipelineVersion": "0.2.0",
+	"sourceIds": [
+		"source:wikidata:main"
+	],
+	"snapshotIds": [
+		"snapshot:source:wikidata:main:20260608"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-sha1sums.txt",
+			"checksum": "sha256:a4b7efee9997d592e5abdd3e232ad7a66d19847343ac640adc1e9b12fe51b440"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-20260608-md5sums.txt",
+			"checksum": "sha256:7d94a889ae83b4c875df2b32d288df6cbd2c47f6da5e7a77218d26c6373e1edd"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-entities.tsv.gz",
+			"checksum": "sha256:51956d2b33efc6ba0131085c406e429927b2d620281f924deeae019699c86dbf"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-aliases.tsv.gz",
+			"checksum": "sha256:80a3a6a3265d5e6cfccae879ede9f615bfaa36c8e7e61de4fc8d26a8785732a9"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-relations.tsv.gz",
+			"checksum": "sha256:1aefa0de6acf094c990150179afe0c5d46b03a4a95f354aba4cae770009a8881"
+		},
+		{
+			"snapshotId": "snapshot:source:wikidata:main:20260608",
+			"path": "tools/textpack-forge/snapshots/data/wikidata-main-20260608/wikidata-ar-core-extract-metadata.json",
+			"checksum": "sha256:8fe9dd470501f6f2796788bd1f2d20def6bd8a5d1bb92a0d19fbb941d60fa401"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "wikidata-ar-entities",
+			"path": "resources/wikidata-ar.entities.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values",
+			"lookupKeyColumns": ["entityId", "label"]
+		},
+		{
+			"resourceId": "wikidata-ar-aliases",
+			"path": "resources/wikidata-ar.aliases.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values",
+			"lookupKeyColumns": ["alias", "entityId"]
+		},
+		{
+			"resourceId": "wikidata-ar-relations",
+			"path": "resources/wikidata-ar.relations.tsv.gz.b64",
+			"kind": "knowledge-base",
+			"format": "text/tab-separated-values",
+			"lookupKeyColumns": ["sourceId", "targetId"]
+		},
+		{
+			"resourceId": "wikidata-ar-kb-canonical",
+			"path": "resources/wikidata-ar.kb.json",
+			"kind": "knowledge-base",
+			"format": "json"
+		},
+		{
+			"resourceId": "wikidata-ar-quality",
+			"path": "resources/wikidata-ar.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "wikidata-ar-quality-profile",
+			"path": "resources/wikidata-ar.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

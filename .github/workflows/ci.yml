@@ -40,3 +40,9 @@ jobs:
 
       - name: Schema Validate
         run: npm run schema:validate
+
+      - name: Forge regression tests
+        run: npm run test:forge
+
+      - name: Held-out NLP benchmarks
+        run: npm run test:nlp

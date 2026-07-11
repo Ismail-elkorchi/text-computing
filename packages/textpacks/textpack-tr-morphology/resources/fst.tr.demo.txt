@@ -1,2 +1,0 @@
-noun+plural+possessive+case->surface
-verb+tense+person->surface

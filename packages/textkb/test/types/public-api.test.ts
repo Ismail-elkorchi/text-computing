@@ -5,6 +5,7 @@ import {
 	disambiguateSense,
 	type EntityCandidate,
 	type KnowledgeBase,
+	knowledgeBaseFromPack,
 	linkEntities,
 	linkTerms,
 	type SemanticRelation,
@@ -31,6 +32,6 @@ const doc: TextDocument = fixtureDocument();
 const linkedEntities: TextDocument = linkEntities(doc, kb);
 const linkedTerms: TextDocument = linkTerms(linkedEntities, kb);
 const linkedSenses: TextDocument = disambiguateSense(linkedTerms, kb);
-
 void candidates;
 void linkedSenses;
+void knowledgeBaseFromPack;

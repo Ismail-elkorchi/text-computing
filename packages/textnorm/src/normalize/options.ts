@@ -127,10 +127,25 @@ export function resolveTextNormOptions(
 	const targetViewKind =
 		options.targetViewKind ?? options.profile?.targetViewKind ?? "normalized";
 	assertTextNormViewKind(targetViewKind);
+	const optionsHash =
+		options.optionsHash ??
+		stableHashValue({
+			candidateOptionsHash: resolved.optionsHash,
+			targetViewId,
+			targetViewKind,
+			...(options.spanMapId !== undefined
+				? { spanMapId: options.spanMapId }
+				: {}),
+			...(options.unicodeForm !== undefined
+				? { unicodeForm: options.unicodeForm }
+				: {}),
+			retainRejectedCandidates: options.retainRejectedCandidates ?? true,
+		});
 	return Object.freeze({
 		...resolved,
 		targetViewId,
 		targetViewKind,
+		optionsHash,
 		...(options.spanMapId !== undefined
 			? { spanMapId: options.spanMapId }
 			: {}),

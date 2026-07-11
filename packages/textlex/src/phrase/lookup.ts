@@ -110,17 +110,16 @@ export function phraseLookup<TEntry extends LexicalEntry>(
 	for (let start = 0; start < keys.length; start += 1) {
 		const first = keys[start];
 		if (first === undefined) continue;
-		for (const { candidate, tokens } of candidatesForFirstToken(
-			lexicon,
-			first,
-			options,
-		)) {
-			if (tokens.length > maxPhraseLength) continue;
-			const end = start + tokens.length;
+		for (const {
+			candidate,
+			tokens: candidateTokenKeys,
+		} of candidatesForFirstToken(lexicon, first, options)) {
+			if (candidateTokenKeys.length > maxPhraseLength) continue;
+			const end = start + candidateTokenKeys.length;
 			if (end > keys.length) continue;
 			let ok = true;
-			for (let offset = 0; offset < tokens.length; offset += 1) {
-				if (keys[start + offset] !== tokens[offset]) {
+			for (let offset = 0; offset < candidateTokenKeys.length; offset += 1) {
+				if (keys[start + offset] !== candidateTokenKeys[offset]) {
 					ok = false;
 					break;
 				}

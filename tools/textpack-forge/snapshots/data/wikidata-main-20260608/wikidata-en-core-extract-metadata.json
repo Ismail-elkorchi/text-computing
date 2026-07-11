@@ -1,0 +1,138 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:wikidata:main",
+	"acquisitionMethod": "wikidata-query-service",
+	"derivedFromDumpArtifact": false,
+	"retrievedAt": "2026-06-12T00:00:00.000Z",
+	"endpoint": "https://query.wikidata.org/sparql",
+	"languageTag": "en",
+	"extractId": "wikidata-en-core-entity-extract-20260612",
+	"scope": "English labels, descriptions, aliases, enwiki sitelinks, and P31 type relations for countries, languages, writing systems, plus sitelink-thresholded cities, organizations, universities, films, books, albums, and programming languages.",
+	"classes": [
+		{
+			"typeId": "Q6256",
+			"typeLabel": "country",
+			"minSitelinks": 0
+		},
+		{
+			"typeId": "Q515",
+			"typeLabel": "city",
+			"minSitelinks": 50
+		},
+		{
+			"typeId": "Q43229",
+			"typeLabel": "organization",
+			"minSitelinks": 80
+		},
+		{
+			"typeId": "Q3918",
+			"typeLabel": "university",
+			"minSitelinks": 20
+		},
+		{
+			"typeId": "Q482994",
+			"typeLabel": "album",
+			"minSitelinks": 40
+		},
+		{
+			"typeId": "Q571",
+			"typeLabel": "book",
+			"minSitelinks": 40
+		},
+		{
+			"typeId": "Q11424",
+			"typeLabel": "film",
+			"minSitelinks": 80
+		},
+		{
+			"typeId": "Q34770",
+			"typeLabel": "language",
+			"minSitelinks": 0
+		},
+		{
+			"typeId": "Q34740",
+			"typeLabel": "writing system",
+			"minSitelinks": 0
+		},
+		{
+			"typeId": "Q9143",
+			"typeLabel": "programming language",
+			"minSitelinks": 10
+		}
+	],
+	"queries": [
+		{
+			"typeId": "Q6256",
+			"typeLabel": "country",
+			"minSitelinks": 0,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q6256 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 0)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 216
+		},
+		{
+			"typeId": "Q515",
+			"typeLabel": "city",
+			"minSitelinks": 50,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q515 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 50)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 1586
+		},
+		{
+			"typeId": "Q43229",
+			"typeLabel": "organization",
+			"minSitelinks": 80,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q43229 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 80)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 26
+		},
+		{
+			"typeId": "Q3918",
+			"typeLabel": "university",
+			"minSitelinks": 20,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q3918 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 20)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 375
+		},
+		{
+			"typeId": "Q482994",
+			"typeLabel": "album",
+			"minSitelinks": 40,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q482994 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 40)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 123
+		},
+		{
+			"typeId": "Q571",
+			"typeLabel": "book",
+			"minSitelinks": 40,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q571 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 40)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 0
+		},
+		{
+			"typeId": "Q11424",
+			"typeLabel": "film",
+			"minSitelinks": 80,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q11424 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 80)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 70
+		},
+		{
+			"typeId": "Q34770",
+			"typeLabel": "language",
+			"minSitelinks": 0,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q34770 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 0)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 8998
+		},
+		{
+			"typeId": "Q34740",
+			"typeLabel": "writing system",
+			"minSitelinks": 0,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q34740 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 0)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 0
+		},
+		{
+			"typeId": "Q9143",
+			"typeLabel": "programming language",
+			"minSitelinks": 10,
+			"query": "SELECT ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki (GROUP_CONCAT(DISTINCT STR(?alias); separator=\"|\") AS ?aliases) WHERE {\n  ?entity wdt:P31 wd:Q9143 ; wikibase:sitelinks ?sitelinks ; rdfs:label ?entityLabel .\n  FILTER(?sitelinks >= 10)\n  FILTER(LANG(?entityLabel) = \"en\")\n  OPTIONAL { ?entity schema:description ?entityDescription . FILTER(LANG(?entityDescription) = \"en\") }\n  OPTIONAL { ?enwiki schema:about ?entity ; schema:isPartOf <https://en.wikipedia.org/> . }\n  OPTIONAL { ?entity skos:altLabel ?alias . FILTER(LANG(?alias) = \"en\") }\n}\nGROUP BY ?entity ?entityLabel ?entityDescription ?sitelinks ?enwiki\nORDER BY ?entity\n",
+			"rowCount": 224
+		}
+	],
+	"entityRowCount": 11618,
+	"aliasRowCount": 19781,
+	"relationRowCount": 11618
+}

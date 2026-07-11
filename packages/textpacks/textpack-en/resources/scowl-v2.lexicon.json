@@ -1,0 +1,20 @@
+{
+  "entryCount": 358236,
+  "kind": "lexicon",
+  "languageTag": "en",
+  "lexiconId": "en-scowl-v2-inflection-lexicon",
+  "resourceRefs": [
+    {
+      "recordCount": 401709,
+      "resourceId": "en-scowl-inflection-entries",
+      "role": "forms"
+    },
+    {
+      "recordCount": 548801,
+      "resourceId": "en-scowl-inflection-entries-lookup-index",
+      "role": "lookup-index"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn"
+}

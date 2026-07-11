@@ -1,0 +1,97 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-quality-profile-resource.schema.json",
+	"title": "TextpackQualityProfileResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "kind", "profileId", "diagnostics", "metrics"],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "quality-profile" },
+		"profileId": { "type": "string", "minLength": 1 },
+		"languageTag": { "type": "string", "minLength": 1 },
+		"script": { "type": "string", "minLength": 1 },
+		"diagnostics": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/diagnostic" }
+		},
+		"metrics": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/metric" }
+		},
+		"thresholds": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/threshold" }
+		},
+		"evaluationRecordIds": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		}
+	},
+	"definitions": {
+		"diagnostic": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["diagnosticId", "task", "severity"],
+			"properties": {
+				"diagnosticId": { "type": "string", "minLength": 1 },
+				"task": { "type": "string", "minLength": 1 },
+				"severity": { "enum": ["info", "warning", "error"] },
+				"message": { "type": "string", "minLength": 1 },
+				"metadata": { "$ref": "#/definitions/jsonObject" }
+			}
+		},
+		"metric": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["metricId", "name", "value", "unit"],
+			"properties": {
+				"metricId": { "type": "string", "minLength": 1 },
+				"name": { "type": "string", "minLength": 1 },
+				"value": {
+					"anyOf": [
+						{ "type": "number" },
+						{ "type": "boolean" },
+						{ "type": "string" }
+					]
+				},
+				"unit": { "type": "string", "minLength": 1 },
+				"split": { "type": "string", "minLength": 1 }
+			}
+		},
+		"threshold": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["metricId", "operator", "value"],
+			"properties": {
+				"metricId": { "type": "string", "minLength": 1 },
+				"operator": { "enum": ["eq", "exists", "gt", "gte", "lt", "lte"] },
+				"value": {
+					"anyOf": [
+						{ "type": "number" },
+						{ "type": "boolean" },
+						{ "type": "string" }
+					]
+				},
+				"severity": { "enum": ["info", "warning", "error"] }
+			}
+		},
+		"jsonValue": {
+			"anyOf": [
+				{ "type": "null" },
+				{ "type": "boolean" },
+				{ "type": "number" },
+				{ "type": "string" },
+				{
+					"type": "array",
+					"items": { "$ref": "#/definitions/jsonValue" }
+				},
+				{ "$ref": "#/definitions/jsonObject" }
+			]
+		},
+		"jsonObject": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/jsonValue" }
+		}
+	}
+}

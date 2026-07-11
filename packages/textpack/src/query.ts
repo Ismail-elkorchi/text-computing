@@ -1,3 +1,4 @@
+import { capabilities } from "./capabilities.js";
 import { jsonEquals } from "./internal/json.js";
 import type {
 	ResourceKind,
@@ -51,9 +52,9 @@ function targetsForResource(
 
 function capabilityPresent(
 	pack: TextPack,
-	name: keyof TextPack["manifest"]["capabilities"],
+	name: NonNullable<ResourceQuery["capability"]>,
 ): boolean {
-	const value = pack.manifest.capabilities[name];
+	const value = capabilities(pack)[name];
 	return value !== undefined && value !== false && value !== "none";
 }
 
@@ -86,6 +87,7 @@ export function listResources(
 ): TextPackResource[] {
 	const ids = asStringSet(query.id);
 	const kinds = asKindSet(query.kind);
+	const schemaIds = asStringSet(query.schemaId);
 	const packageIds = asStringSet(query.packageId);
 	const packageNames = asStringSet(query.packageName);
 	const languages = asStringSet(query.languages);
@@ -101,6 +103,7 @@ export function listResources(
 		return (
 			matchesSet(resource.id, ids) &&
 			matchesSet(resource.kind, kinds) &&
+			matchesSet(resource.schemaId ?? "", schemaIds) &&
 			matchesSet(pack.manifest.id, packageIds) &&
 			matchesSet(pack.manifest.packageName, packageNames) &&
 			matchesAny(targets.languages, languages) &&

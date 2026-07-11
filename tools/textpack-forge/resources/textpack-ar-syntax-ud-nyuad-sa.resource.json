@@ -1,0 +1,82 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ar-syntax-ud-nyuad-sa:ud-conllu-profile",
+	"packageName": "@ismail-elkorchi/textpack-ar-syntax-ud-nyuad-sa",
+	"pipelineId": "ud-conllu-profile",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:ud:arabic-nyuad-r2.18"],
+	"snapshotIds": ["snapshot:source:ud:arabic-nyuad:r2.18"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-dev.conllu",
+			"checksum": "sha256:ac49fac056085ffbc29248d8cf3e30b8a504b5dedf27b09f33fb0cb4faa1ee3f"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-test.conllu",
+			"checksum": "sha256:bc4670763e0e3f282ef079b55af0c58d73ac541aafc421161eb4d904bbaca52b"
+		},
+		{
+			"snapshotId": "snapshot:source:ud:arabic-nyuad:r2.18",
+			"path": "tools/textpack-forge/snapshots/data/ud-arabic-nyuad-r2.18/ar_nyuad-ud-train.conllu",
+			"checksum": "sha256:2172eb1780eb1a0cb0276b84ba97cdb8d63065588d144ecfd7cee7a249e35167"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ar-ud-nyuad-upos",
+			"path": "resources/ud-nyuad.upos.tsv",
+			"kind": "grammar",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-features",
+			"path": "resources/ud-nyuad.features.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-dependencies",
+			"path": "resources/ud-nyuad.dependencies.tsv",
+			"kind": "grammar",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-sentence-profile",
+			"path": "resources/ud-nyuad.sentence-profile.tsv",
+			"kind": "statistical-model",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-annotations",
+			"path": "resources/ud-nyuad.annotations.tsv",
+			"kind": "dataset",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-quality",
+			"path": "resources/ud-nyuad.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-syntax-canonical",
+			"path": "resources/ud-nyuad.syntax.json",
+			"kind": "grammar",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-morphology-canonical",
+			"path": "resources/ud-nyuad.morphology.json",
+			"kind": "morphology",
+			"format": "json"
+		},
+		{
+			"resourceId": "ar-ud-nyuad-quality-profile",
+			"path": "resources/ud-nyuad.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

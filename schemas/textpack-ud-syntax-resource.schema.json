@@ -1,0 +1,118 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-ud-syntax-resource.schema.json",
+	"title": "TextpackUdSyntaxResource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"kind",
+		"upos",
+		"features",
+		"dependencies",
+		"sentenceProfiles",
+		"annotations"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"kind": { "const": "ud-syntax" },
+		"upos": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/upos" }
+		},
+		"features": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/feature" }
+		},
+		"dependencies": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/dependency" }
+		},
+		"sentenceProfiles": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/sentenceProfile" }
+		},
+		"annotations": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/annotation" }
+		}
+	},
+	"definitions": {
+		"upos": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["upos", "xpos", "count"],
+			"properties": {
+				"upos": { "type": "string", "minLength": 1 },
+				"xpos": { "type": "string" },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"feature": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["feature", "value", "count"],
+			"properties": {
+				"feature": { "type": "string", "minLength": 1 },
+				"value": { "type": "string", "minLength": 1 },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"dependency": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["split", "deprel", "count"],
+			"properties": {
+				"split": { "type": "string", "minLength": 1 },
+				"deprel": { "type": "string", "minLength": 1 },
+				"count": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"sentenceProfile": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"split",
+				"sentenceCount",
+				"tokenCount",
+				"averageTokenCount",
+				"maxTokenCount"
+			],
+			"properties": {
+				"split": { "type": "string", "minLength": 1 },
+				"sentenceCount": { "type": "integer", "minimum": 0 },
+				"tokenCount": { "type": "integer", "minimum": 0 },
+				"averageTokenCount": { "type": "number", "minimum": 0 },
+				"maxTokenCount": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"annotation": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"split",
+				"sentenceIndex",
+				"tokenId",
+				"upos",
+				"xpos",
+				"features",
+				"head",
+				"deprel",
+				"deps",
+				"misc"
+			],
+			"properties": {
+				"split": { "type": "string", "minLength": 1 },
+				"sentenceIndex": { "type": "integer", "minimum": 1 },
+				"tokenId": { "type": "string", "minLength": 1 },
+				"upos": { "type": "string", "minLength": 1 },
+				"xpos": { "type": "string" },
+				"features": { "type": "string" },
+				"head": { "type": "string" },
+				"deprel": { "type": "string", "minLength": 1 },
+				"deps": { "type": "string" },
+				"misc": { "type": "string" }
+			}
+		}
+	}
+}

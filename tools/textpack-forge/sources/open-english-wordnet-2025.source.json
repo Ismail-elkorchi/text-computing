@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:wordnet:open-english-2025",
+	"family": "WN",
+	"name": "Open English WordNet 2025",
+	"homepageUrl": "https://en-word.net/",
+	"licenseEvidence": [
+		"https://github.com/globalwordnet/english-wordnet/blob/2025-edition/LICENSE.md",
+		"https://github.com/globalwordnet/english-wordnet/blob/2025-edition/WNDB_License.txt"
+	],
+	"licenseExpression": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "Open English WordNet 2025.",
+	"notes": "Pinned 2025 LMF distribution from Open English WordNet; attribution includes Princeton WordNet lineage and Open English WordNet."
+}

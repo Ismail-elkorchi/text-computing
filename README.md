@@ -19,19 +19,31 @@
 - `@ismail-elkorchi/textkb` — knowledge resources, entity linking, sense linking, terminology KB lookup, ontology, thesaurus, and semantic relation package.
 - `@ismail-elkorchi/textquality` — text quality, noisy-text quality, OCR/ATR diagnostics, readability, style, corpus quality, annotation quality, and integrity package.
 - `@ismail-elkorchi/textparallel` — parallel corpus, alignment, translation memory, bilingual terminology, bilingual lexicon, and rule-based transfer package.
+- `@ismail-elkorchi/text-computing` — single developer-facing SDK over runtime engines and generated textpack data packages.
 
-## Reference packs
+## Developer entrypoint
 
-- `@ismail-elkorchi/textpack-en-core` — English core resources for Latin-script, space-delimited coverage.
-- `@ismail-elkorchi/textpack-en-legal` — English legal-domain resources.
-- `@ismail-elkorchi/textpack-fr-core` — French core resources for inflection-rich language coverage.
-- `@ismail-elkorchi/textpack-tr-morphology` — Turkish morphology resources for agglutinative-language coverage.
-- `@ismail-elkorchi/textpack-ar-core` — Arabic core resources for Semitic/root-pattern and right-to-left script coverage.
-- `@ismail-elkorchi/textpack-ja-segmentation` — Japanese segmentation resources for no-space text coverage.
-- `@ismail-elkorchi/textpack-fr-historical` — French historical spelling and normalization resources.
-- `@ismail-elkorchi/textpack-ocr-latin19c` — Latin nineteenth-century OCR/noisy-text resources.
-- `@ismail-elkorchi/textpack-kb-demo` — Knowledge-base and ontology demo resources.
-- `@ismail-elkorchi/textpack-corpus-demo-en` — Small English corpus and dataset demo resources.
+Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint. Generated `textpack-*` packages are data-only inputs.
+
+```ts
+import { createNodeResourceReader, load } from "@ismail-elkorchi/text-computing/node";
+import fr from "@ismail-elkorchi/textpack-fr";
+
+const nlp = await load(fr, { reader: createNodeResourceReader() });
+const doc = await nlp("L'Etat francais reconnait Paris.");
+```
+
+## Generated textpacks
+
+The forge publishes three self-contained language data packages:
+
+- `@ismail-elkorchi/textpack-en` — English resources for ordinary document NLP.
+- `@ismail-elkorchi/textpack-fr` — French resources for ordinary document NLP, including its declared share-alike data.
+- `@ismail-elkorchi/textpack-ar` — Arabic MSA resources for ordinary document NLP.
+
+Capability slices and source transforms are internal forge build units, not npm packages. Large corpus, parallel, and UD annotation datasets remain explicit acquisition inputs instead of default language-package payloads.
+
+Generated textpacks are non-publishable by default. A generated pack becomes an npm-publishable textpack only after the forge publishability gate records production-grade source coverage, audited license evidence, scoped capability claims, conformance/evaluation evidence, and generated reports. Descriptor-only packs are `artifact-backed`, not `task-supported`; sampled, demo, fixture-backed, and transitional packs are not part of the public package graph.
 
 ## Development
 
@@ -41,7 +53,12 @@ Run repository checks from the workspace root:
 npm run -s lint
 npm run -s build
 npm run -s schema:validate
+npm run -s test:nlp
 ```
+
+`test:nlp` executes the held-out English, French, and Arabic end-to-end cases in
+[`fixtures/nlp-benchmarks/`](fixtures/nlp-benchmarks/) through the public SDK. It fails on task
+regressions and warm-runtime budget violations; forge resource counts do not substitute for it.
 
 ## Repository structure
 
@@ -51,4 +68,4 @@ npm run -s schema:validate
 - [`docs/decisions/`](docs/decisions/) — accepted public technical decisions.
 - [`fixtures/`](fixtures/) — repository-level fixture inputs, expected outputs, reports, generated artifacts, and quarantined inputs.
 - [`schemas/`](schemas/) — repository-level JSON Schemas.
-- [`packages/textpacks/`](packages/textpacks/) — reference `textpack-*` resource packages.
+- [`packages/textpacks/`](packages/textpacks/) — the three generated language distribution outputs.

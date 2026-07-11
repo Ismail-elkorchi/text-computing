@@ -1,0 +1,52 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "wordnet-en-transform-warnings",
+      "message": "Open English WordNet transform completed without rejected records.",
+      "metadata": {
+        "warningCount": 0
+      },
+      "severity": "info",
+      "task": "kb.transform"
+    }
+  ],
+  "evaluationRecordIds": [],
+  "kind": "quality-profile",
+  "languageTag": "en",
+  "metrics": [
+    {
+      "metricId": "lexical-entry-semantic-integrity-ratio",
+      "name": "lexicalEntrySemanticIntegrityRatio",
+      "unit": "ratio",
+      "value": 1
+    },
+    {
+      "metricId": "sense-semantic-integrity-ratio",
+      "name": "senseSemanticIntegrityRatio",
+      "unit": "ratio",
+      "value": 1
+    },
+    {
+      "metricId": "lexical-entry-count",
+      "name": "lexicalEntryCount",
+      "unit": "records",
+      "value": 135969
+    },
+    {
+      "metricId": "sense-count",
+      "name": "senseCount",
+      "unit": "records",
+      "value": 185129
+    },
+    {
+      "metricId": "relation-count",
+      "name": "relationCount",
+      "unit": "records",
+      "value": 355064
+    }
+  ],
+  "profileId": "wordnet-en-quality",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "thresholds": []
+}

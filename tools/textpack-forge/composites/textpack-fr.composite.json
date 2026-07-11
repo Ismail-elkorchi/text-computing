@@ -1,0 +1,181 @@
+{
+	"schemaVersion": "1",
+	"mode": "source-backed",
+	"packageName": "@ismail-elkorchi/textpack-fr",
+	"packageDir": "packages/textpacks/textpack-fr",
+	"name": "French Developer Textpack",
+	"description": "Self-contained French resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"policySurface": "license-inclusive",
+	"publishable": true,
+	"publishabilityEvidence": {
+		"productionGradeSourceCoverage": "Self-contained French distribution with foundation, core, normalization, segmentation, Lexique and UniMorph lexicon/morphology, Wikidata KB, search, and quality resources.",
+		"auditedLicense": "Selected IANA, Unicode, CLDR, Wikidata, Tatoeba-derived profile evidence, Lexique, and UniMorph sources are approved and retain generated attribution and license evidence in this honestly share-alike distribution.",
+		"declaredScope": "Ordinary typed-French document NLP. Large corpora, parallel alignments, and UD annotation datasets are deliberately excluded from the npm package and remain explicit forge acquisition inputs.",
+		"conformanceEvidence": [
+			"eval:language-registry:bcp47-record-volume:distribution:textpack-fr",
+			"eval:fr-core:iana-language-profile:distribution:textpack-fr",
+			"eval:fr-normalization:profile-rules:distribution:textpack-fr",
+			"eval:fr-segmentation:word-boundary-properties:distribution:textpack-fr",
+			"eval:fr-lexique:entry-volume:distribution:textpack-fr",
+			"eval:fr-unimorph:indexed-analysis-volume:distribution:textpack-fr",
+			"eval:wikidata-fr:entity-extract:distribution:textpack-fr",
+			"eval:fr-lexique:search-profile:distribution:textpack-fr",
+			"eval:fr-core:transform-rejections:distribution:textpack-fr",
+			"docs:textpacks/language-distribution-readiness.generated.md#french-fr"
+		],
+		"generatedReports": [
+			"LICENSE.generated.md",
+			"NOTICE.generated.md",
+			"SOURCES.generated.json",
+			"ATTRIBUTION.generated.md",
+			"COVERAGE.generated.json",
+			"EVALUATION.generated.json",
+			"QUALITY.generated.json"
+		]
+	},
+	"version": "0.1.0",
+	"packClass": "language-composite",
+	"supportLevel": "task-supported",
+	"display": {
+		"languageName": "French"
+	},
+	"targets": {
+		"languages": ["fr"],
+		"scripts": ["Latn"],
+		"modalities": ["typed"]
+	},
+	"buildUnits": [
+		{
+			"buildUnitId": "language-registry",
+			"reason": "BCP 47 language registry resources bundled into the French distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "unicode-17",
+			"reason": "Unicode 17 resources bundled into the French distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "cldr-core",
+			"reason": "CLDR core resources bundled into the French distribution.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "fr-core",
+			"reason": "French core language profile resources.",
+			"licensePolicy": "default"
+		},
+		{
+			"buildUnitId": "fr-normalization",
+			"reason": "French normalization policy and quality resources.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "fr-segmentation",
+			"reason": "French segmentation profiles.",
+			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "fr-lexique-sa",
+			"reason": "French Lexique lexicon, morphology, frequency, and search resources.",
+			"licensePolicy": "allow-share-alike"
+		},
+		{
+			"buildUnitId": "fr-unimorph-sa",
+			"reason": "French UniMorph paradigm table with indexed form and lemma lookup.",
+			"licensePolicy": "allow-share-alike"
+		},
+		{
+			"buildUnitId": "wikidata-fr",
+			"reason": "Local Wikidata French core entity extract.",
+			"licensePolicy": "default"
+		}
+	],
+	"capabilitySlots": [
+		{
+			"slot": "foundation",
+			"status": "profiled",
+			"tier": "resource-only"
+		},
+		{
+			"slot": "core",
+			"status": "profiled",
+			"tier": "resource-only"
+		},
+		{
+			"slot": "normalization",
+			"status": "task-supported",
+			"tier": "rule-based"
+		},
+		{
+			"slot": "segmentation",
+			"status": "task-supported",
+			"tier": "rule-based"
+		},
+		{
+			"slot": "lexicon",
+			"status": "task-supported",
+			"tier": "lookup"
+		},
+		{
+			"slot": "morphology",
+			"status": "task-supported",
+			"tier": "lookup"
+		},
+		{
+			"slot": "syntax",
+			"status": "planned",
+			"tier": "none",
+			"notes": [
+				"UD annotation datasets are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "kb",
+			"status": "task-supported",
+			"tier": "lookup",
+			"notes": [
+				"The bundled distribution resources provide local Wikidata French core entity rows."
+			]
+		},
+		{
+			"slot": "search",
+			"status": "task-supported",
+			"tier": "baseline"
+		},
+		{
+			"slot": "corpus",
+			"status": "planned",
+			"tier": "none",
+			"notes": [
+				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "parallel",
+			"status": "planned",
+			"tier": "none",
+			"notes": [
+				"Large alignment payloads are explicit forge acquisitions, not part of the ordinary language package."
+			]
+		},
+		{
+			"slot": "quality",
+			"status": "task-supported",
+			"tier": "rule-based",
+			"notes": [
+				"The bundled distribution resources provide generated French quality evidence and coverage reports over the selected local build units."
+			]
+		}
+	],
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
+	"citations": [
+		"IANA Language Subtag Registry, File-Date 2026-05-05.",
+		"Unicode Character Database 17.0.0.",
+		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Tatoeba weekly French exports, 2026-06-06.",
+		"Lexique 3.83, 2019-06-04.",
+		"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
+	]
+}

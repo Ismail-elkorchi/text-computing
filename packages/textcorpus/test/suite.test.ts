@@ -5,6 +5,7 @@ import {
 	addDocuments,
 	collocations,
 	concordance,
+	corpusDocumentsFromPack,
 	corpusFingerprint,
 	corpusQuery,
 	createCorpus,
@@ -21,6 +22,7 @@ import {
 	lexicalDiversity,
 	ngrams,
 	stylometricProfile,
+	textCorpusFromPack,
 	wordSketch,
 } from "../dist/index.js";
 import { fixtureDocuments, makeDocument, token } from "./fixtures/documents.ts";
@@ -66,6 +68,61 @@ test("adds documents without mutating the original corpus", () => {
 	assert.equal(corpus.documents.length, 2);
 	assert.equal(next.documents.length, 3);
 	assert.equal(next.indexes.tokens, 20);
+});
+
+test("materializes bounded textpack corpus rows as documents and TextCorpus", async () => {
+	const pack = {
+		manifest: {
+			id: "textpack-corpus-fixture",
+			packageName: "@ismail-elkorchi/textpack-corpus-fixture",
+			version: "0.1.0",
+			schemaVersion: "1",
+			targets: { languages: ["en"], scripts: ["Latn"] },
+			license: "MIT",
+			resources: [
+				{
+					id: "fixture-corpus-rows",
+					kind: "corpus" as const,
+					schemaId: "textdata.corpus.rows.v1",
+					format: "tsv",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "corpus",
+					status: "profiled" as const,
+					tier: "resource-only" as const,
+					resourceIds: ["fixture-corpus-rows"],
+					bindings: [
+						{
+							role: "table" as const,
+							resourceId: "fixture-corpus-rows",
+							schemaId: "textdata.corpus.rows.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textcorpus" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: {
+			"fixture-corpus-rows":
+				"sentenceId\tlanguageTag\ttext\towner\ns1\ten\tHello world.\ta\ns2\ten\tCorpus adapters work.\tb\n",
+		},
+	};
+	const documents = await corpusDocumentsFromPack(pack, { maxDocuments: 1 });
+	assert.equal(documents.length, 1);
+	assert.equal(documents[0]?.id, "fixture-corpus-rows:s1");
+	assert.equal(documents[0]?.views.raw?.text, "Hello world.");
+	assert.equal(documents[0]?.metadata.languageTag, "en");
+
+	const corpus = await textCorpusFromPack(pack, {
+		maxDocuments: 2,
+		corpus: { id: "fixture-textpack-corpus" },
+	});
+	assert.equal(corpus.id, "fixture-textpack-corpus");
+	assert.equal(corpus.documents.length, 2);
+	assert.equal(corpus.indexes.tokens, 5);
 });
 
 test("runs structured token, lemma, annotation, metadata, partition, and boolean queries", () => {
@@ -173,12 +230,30 @@ test("produces concordances, frequency lists, ngrams, collocations, and keyness"
 		collocates.some((row) => row.collocate === "terms"),
 		true,
 	);
+	const chiSquareCollocates = collocations(
+		corpus,
+		{ kind: "lemma", lemma: "contract" },
+		{ measure: "chi-square" },
+	);
+	assert.equal(
+		chiSquareCollocates.every(
+			(row) => Number.isFinite(row.score) && row.score >= 0,
+		),
+		true,
+	);
 	const focus = createCorpus(docs.slice(0, 2));
 	const reference = createCorpus(docs.slice(2));
 	assert.equal(
 		keyness(focus, reference).some((row) => row.item === "the"),
 		true,
 	);
+	const filtered = keyness(focus, reference, {
+		minCount: 2,
+		measure: "ratio",
+	});
+	const contract = filtered.find((row) => row.item === "contract");
+	assert.equal(contract?.focusRelativeFrequency, 3 / 14);
+	assert.equal(Number.isFinite(contract?.score ?? Number.NaN), true);
 });
 
 test("computes dispersion, terms, lexicographic examples, stylometry, reuse, and diachrony", () => {
@@ -211,7 +286,14 @@ test("computes dispersion, terms, lexicographic examples, stylometry, reuse, and
 	assert.equal(profile.documents.length, 3);
 	assert.equal(documentSimilarityMatrix(corpus).length, 3);
 	assert.equal(Object.keys(lexicalDiversity(corpus)).length, 3);
-	assert.equal(detectReuse(corpus, { shingleSize: 2 }).length > 0, true);
+	const reuseMatches = detectReuse(corpus, { shingleSize: 2 });
+	assert.equal(reuseMatches.length > 0, true);
+	assert.equal(
+		(reuseMatches[0]?.sourceSpan?.span.end ?? 0) -
+			(reuseMatches[0]?.sourceSpan?.span.start ?? 0) >
+			(reuseMatches[0]?.text.split(" ")[0]?.length ?? 0),
+		true,
+	);
 	const trends = diachronicTrends(corpus, {
 		periodKey: "year",
 		query: { kind: "lemma", lemma: "contract" },

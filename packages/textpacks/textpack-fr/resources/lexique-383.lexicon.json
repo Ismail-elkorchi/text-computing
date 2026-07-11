@@ -1,0 +1,20 @@
+{
+  "entryCount": 142694,
+  "kind": "lexicon",
+  "languageTag": "fr",
+  "lexiconId": "fr-lexique-383",
+  "resourceRefs": [
+    {
+      "recordCount": 142694,
+      "resourceId": "fr-lexique-entries",
+      "role": "entries"
+    },
+    {
+      "recordCount": 172600,
+      "resourceId": "fr-lexique-entries-lookup-index",
+      "role": "lookup-index"
+    }
+  ],
+  "schemaVersion": "1",
+  "script": "Latn"
+}

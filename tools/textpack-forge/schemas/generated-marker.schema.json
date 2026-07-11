@@ -1,0 +1,79 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "TextpackGeneratedMarker",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"generatedBy",
+		"forgeVersion",
+		"mode",
+		"generatedAt",
+		"generatorCommand",
+		"lockfile",
+		"lockfileChecksum",
+		"packageName",
+		"packageVersion",
+		"policySurface",
+		"publishable",
+		"publishability",
+		"packSpecPath",
+		"outputChecksum",
+		"generatedFiles",
+		"fileDigests"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"generatedBy": { "const": "tools/textpack-forge" },
+		"forgeVersion": { "type": "string", "minLength": 1 },
+		"mode": { "const": "source-backed" },
+		"generatedAt": { "type": "string", "minLength": 1 },
+		"generatorCommand": { "type": "string", "minLength": 1 },
+		"lockfile": { "type": "string", "minLength": 1 },
+		"lockfileChecksum": { "type": "string", "minLength": 1 },
+		"packageName": { "type": "string", "minLength": 1 },
+		"packageVersion": { "type": "string", "minLength": 1 },
+		"policySurface": {
+			"enum": ["default", "license-inclusive"]
+		},
+		"publishable": { "type": "boolean" },
+		"publishability": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["publishable", "status", "reasons"],
+			"properties": {
+				"publishable": { "type": "boolean" },
+				"status": { "enum": ["publishable", "blocked"] },
+				"reasons": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"packSpecPath": { "type": "string", "minLength": 1 },
+		"outputChecksum": { "type": "string", "minLength": 1 },
+		"generatedFiles": {
+			"type": "array",
+			"minItems": 1,
+			"uniqueItems": true,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"fileDigests": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["path", "byteLength", "checksum"],
+				"properties": {
+					"path": { "type": "string", "minLength": 1 },
+					"byteLength": { "type": "integer", "minimum": 0 },
+					"checksum": {
+						"type": "string",
+						"pattern": "^sha256:[0-9a-f]{64}$"
+					}
+				}
+			}
+		}
+	}
+}

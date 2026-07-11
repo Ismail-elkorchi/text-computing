@@ -1,0 +1,56 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
+	"packageName": "@ismail-elkorchi/textpack-en-inflection-scowl",
+	"pipelineId": "scowl-v2-inflection",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:scowl:v2-rel-2026-02-25"],
+	"snapshotIds": ["snapshot:source:scowl:v2-rel-2026.02.25"],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:scowl:v2-rel-2026.02.25",
+			"path": "tools/textpack-forge/snapshots/data/scowl-v2-2026.02.25/scowl.txt",
+			"checksum": "sha256:3da811b80d7163069e9676537845c49161a33505f24ad6bfcead92fe2cf10e41"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-scowl-inflection-entries",
+			"path": "resources/scowl-v2.inflections.tsv.gz.b64",
+			"kind": "morphology",
+			"format": "tsv+gzip+base64",
+			"lookupKeyColumns": ["form", "lemma"],
+			"lookupPatternColumns": ["form"]
+		},
+		{
+			"resourceId": "en-scowl-pos-inventory",
+			"path": "resources/scowl-v2.pos.tsv",
+			"kind": "morphology",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-scowl-inflection-lexicon-canonical",
+			"path": "resources/scowl-v2.lexicon.json",
+			"kind": "lexicon",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-scowl-inflection-morphology-canonical",
+			"path": "resources/scowl-v2.morphology.json",
+			"kind": "morphology",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-scowl-inflection-quality",
+			"path": "resources/scowl-v2.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-scowl-inflection-quality-profile",
+			"path": "resources/scowl-v2.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

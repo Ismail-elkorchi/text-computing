@@ -8,3 +8,7 @@ dist-test
 coverage
 /tools/unicode/ucd
 /data/ucd
+/tools/textpack-forge/snapshots/data/*
+!/tools/textpack-forge/snapshots/data/wikidata-main-20260608/
+/tools/textpack-forge/snapshots/data/wikidata-main-20260608/*
+!/tools/textpack-forge/snapshots/data/wikidata-main-20260608/*.tsv.gz

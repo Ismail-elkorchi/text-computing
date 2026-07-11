@@ -110,7 +110,7 @@ function pushIndexValue(
 	key: string,
 	value: LexiconFormRef,
 ): void {
-	const values = index[key] ?? [];
+	const values = Object.hasOwn(index, key) ? (index[key] ?? []) : [];
 	values.push(value);
 	index[key] = values;
 }
@@ -129,9 +129,9 @@ function buildIndex(
 	entries: readonly LexicalEntry[],
 	options: LexiconOptions,
 ): LexiconIndex {
-	const exact: Record<string, LexiconFormRef[]> = {};
-	const normalized: Record<string, LexiconFormRef[]> = {};
-	const casefolded: Record<string, LexiconFormRef[]> = {};
+	const exact: Record<string, LexiconFormRef[]> = Object.create(null);
+	const normalized: Record<string, LexiconFormRef[]> = Object.create(null);
+	const casefolded: Record<string, LexiconFormRef[]> = Object.create(null);
 	const duplicateFormKeys = new Set<string>();
 	for (let entryIndex = 0; entryIndex < entries.length; entryIndex += 1) {
 		const entry = entries[entryIndex];

@@ -1,0 +1,237 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/textpack-coverage-report.schema.json",
+	"title": "TextpackCoverageReport",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"generatedAt",
+		"generatedBy",
+		"mode",
+		"packageName",
+		"publishable",
+		"publishability",
+		"targets",
+		"resourceKinds",
+		"resourceCoverage",
+		"capabilities",
+		"capabilitySlots",
+		"capabilityEvidence",
+		"coverageStatus",
+		"evaluationRecordIds",
+		"gapNotes",
+		"knownGaps"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"generatedAt": { "type": "string", "minLength": 1 },
+		"generatedBy": { "const": "tools/textpack-forge" },
+		"mode": { "const": "source-backed" },
+		"packageName": { "type": "string", "minLength": 1 },
+		"publishable": { "type": "boolean" },
+		"publishability": { "$ref": "#/definitions/publishability" },
+		"targets": { "$ref": "#/definitions/targets" },
+		"resourceKinds": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"resourceCoverage": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/resourceCoverage" }
+		},
+		"capabilities": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/capabilityValue" }
+		},
+		"capabilitySlots": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/capabilitySlot" }
+		},
+		"capabilityEvidence": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/capabilityEvidence" }
+		},
+		"coverageStatus": {
+			"enum": ["declared-only", "evaluated"]
+		},
+		"evaluationRecordIds": {
+			"type": "array",
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"gapNotes": {
+			"type": "array",
+			"items": { "type": "object" }
+		},
+		"knownGaps": {
+			"type": "array",
+			"items": { "type": "string" }
+		}
+	},
+	"definitions": {
+		"publishability": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["publishable", "status", "reasons"],
+			"properties": {
+				"publishable": { "type": "boolean" },
+				"status": { "enum": ["blocked", "publishable"] },
+				"reasons": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"targets": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"languages": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"scripts": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"regions": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"domains": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"modalities": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"resourceCoverage": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"resourceId",
+				"kind",
+				"path",
+				"byteLength",
+				"nonEmptyLineCount",
+				"logicalRecordCount",
+				"sharedStorageResourceIds",
+				"checksum",
+				"sizeClass"
+			],
+			"properties": {
+				"resourceId": { "type": "string", "minLength": 1 },
+				"kind": { "type": "string", "minLength": 1 },
+				"path": { "type": "string", "minLength": 1 },
+				"byteLength": { "type": "integer", "minimum": 0 },
+				"nonEmptyLineCount": { "type": "integer", "minimum": 0 },
+				"logicalRecordCount": { "type": "integer", "minimum": 0 },
+				"sharedStorageResourceIds": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"checksum": { "type": "string", "pattern": "^sha256:" },
+				"sizeClass": {
+					"enum": ["huge", "large", "medium", "small", "tiny"]
+				},
+				"resourceSpecId": { "type": "string", "minLength": 1 },
+				"pipelineId": { "type": "string", "minLength": 1 },
+				"pipelineVersion": { "type": "string", "minLength": 1 }
+			}
+		},
+		"capabilitySlot": {
+			"type": "object",
+			"additionalProperties": true,
+			"required": ["slot", "status", "tier"],
+			"properties": {
+				"slot": { "type": "string", "minLength": 1 },
+				"status": { "type": "string", "minLength": 1 },
+				"tier": {
+					"enum": [
+						"none",
+						"resource-only",
+						"baseline",
+						"lookup",
+						"rule-based",
+						"contextual",
+						"model-backed"
+					]
+				},
+				"resourceIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"artifactIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"notes": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"capabilities": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/definitions/capabilityValue" }
+				}
+			}
+		},
+		"capabilityValue": {
+			"anyOf": [{ "type": "string", "minLength": 1 }, { "type": "boolean" }]
+		},
+		"capabilityEvidence": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"slot",
+				"status",
+				"tier",
+				"resourceIds",
+				"evaluationRecordIds",
+				"evidenceLevel",
+				"limitations"
+			],
+			"properties": {
+				"slot": { "type": "string", "minLength": 1 },
+				"status": { "type": "string", "minLength": 1 },
+				"tier": {
+					"enum": [
+						"none",
+						"resource-only",
+						"baseline",
+						"lookup",
+						"rule-based",
+						"contextual",
+						"model-backed"
+					]
+				},
+				"resourceIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"evaluationRecordIds": {
+					"type": "array",
+					"items": { "type": "string", "minLength": 1 }
+				},
+				"evidenceLevel": {
+					"enum": [
+						"none",
+						"resource-inventory",
+						"resource-evaluated",
+						"artifact-descriptor",
+						"artifact-evaluated",
+						"task-evaluated"
+					]
+				},
+				"limitations": {
+					"type": "array",
+					"items": { "type": "string" }
+				}
+			}
+		}
+	}
+}

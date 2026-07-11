@@ -2,6 +2,8 @@
 
 Document, view, span, layer, annotation, graph, and evidence substrate for the text-computing runtime packages.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Install
 
 ```sh

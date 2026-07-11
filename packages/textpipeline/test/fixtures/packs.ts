@@ -3,13 +3,13 @@ import { createPack } from "@ismail-elkorchi/textpack";
 export function demoPack() {
 	return createPack(
 		{
+			schemaVersion: "1",
 			id: "pack:demo",
 			name: "Demo pipeline pack",
 			version: "1.0.0",
 			packageName: "@ismail-elkorchi/textpack-demo",
-			kind: ["lexicon"],
-			targets: { languages: ["en"] },
-			engines: { textpipeline: "0.1.0" },
+			targets: { languages: ["en"], modalities: ["typed"] },
+			engines: { "@ismail-elkorchi/textpipeline": "0.1.0" },
 			resources: [
 				{
 					id: "lexicon:demo",
@@ -18,7 +18,16 @@ export function demoPack() {
 					metadata: { entries: 1 },
 				},
 			],
-			capabilities: { terminology: "lexicon" },
+			capabilitySlots: [
+				{
+					slot: "lexicon",
+					status: "task-supported",
+					tier: "lookup",
+					resourceIds: ["lexicon:demo"],
+					capabilities: { terminology: "lexicon" },
+				},
+			],
+			license: "MIT",
 		},
 		{
 			"lexicon:demo": { hello: ["hi"] },

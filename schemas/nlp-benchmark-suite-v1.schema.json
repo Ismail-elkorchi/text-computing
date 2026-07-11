@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text-computing.dev/schemas/nlp-benchmark-suite-v1.schema.json",
+  "title": "Text Computing held-out NLP benchmark suite v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "description", "holdoutPolicy", "languages"],
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "description": { "type": "string", "minLength": 1 },
+    "holdoutPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["separation", "exposure", "changeControl"],
+      "properties": {
+        "separation": { "const": "forge-input-disjoint" },
+        "exposure": { "const": "committed-public" },
+        "changeControl": { "const": "linguistic-review-required" }
+      }
+    },
+    "languages": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/language" }
+    }
+  },
+  "$defs": {
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startCU", "endCU"],
+      "properties": {
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "segmentationCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "lexicalUnits"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "lexicalUnits": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "normalizationCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "expected"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "expected": { "type": "string" }
+      }
+    },
+    "morphologyCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "tokens"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "tokens": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/morphologyToken" }
+        }
+      }
+    },
+    "morphologyToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startCU", "endCU", "lemmas"],
+      "properties": {
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 1 },
+        "lemmas": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "entityCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "mentions"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "mentions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/entityMention" }
+        }
+      }
+    },
+    "entityMention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startCU", "endCU", "entityIds"],
+      "properties": {
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 1 },
+        "entityIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "searchCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "tokens"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "tokens": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/searchToken" }
+        }
+      }
+    },
+    "searchToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["term", "startCU", "endCU"],
+      "properties": {
+        "term": { "type": "string", "minLength": 1 },
+        "startCU": { "type": "integer", "minimum": 0 },
+        "endCU": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "language": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "languageTag",
+        "segmentation",
+        "normalization",
+        "morphology",
+        "entities",
+        "search"
+      ],
+      "properties": {
+        "languageTag": {
+          "type": "string",
+          "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+        },
+        "segmentation": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/segmentationCase" }
+        },
+        "normalization": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/normalizationCase" }
+        },
+        "morphology": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/morphologyCase" }
+        },
+        "entities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/entityCase" }
+        },
+        "search": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/searchCase" }
+        }
+      }
+    }
+  }
+}

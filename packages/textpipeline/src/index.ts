@@ -12,6 +12,7 @@ export {
 	validatePipelineCacheSnapshot,
 } from "./cache/mod.js";
 export type {
+	PipelineAmbiguousRequirement,
 	PipelineCycle,
 	PipelineMissingRequirement,
 	PipelinePlan,

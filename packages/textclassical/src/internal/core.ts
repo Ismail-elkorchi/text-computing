@@ -398,6 +398,8 @@ export interface SummaryOptions {
 export interface ParserToken {
 	readonly id: string;
 	readonly text: string;
+	readonly lemma?: string;
+	readonly pos?: string;
 }
 
 export interface DependencyParseEdge {
@@ -407,10 +409,40 @@ export interface DependencyParseEdge {
 	readonly score: Score;
 }
 
+export interface ParserTrainingEdge {
+	readonly head: string;
+	readonly dependent: string;
+	readonly relation: string;
+}
+
+export interface ParserTrainingSample {
+	readonly id?: string;
+	readonly tokens: readonly ParserToken[];
+	readonly edges: readonly ParserTrainingEdge[];
+	readonly weight?: number;
+	readonly metadata?: JsonValue;
+}
+
+export interface TrainParserOptions {
+	readonly labels?: readonly string[];
+	readonly iterations?: number;
+	readonly learningRate?: number;
+	readonly metadata?: JsonValue;
+}
+
+export type ParserAction =
+	| "SHIFT"
+	| `LEFT_ARC:${string}`
+	| `RIGHT_ARC:${string}`;
+
 export interface ClassicalParser {
 	readonly id: string;
 	readonly kind: "transition-perceptron";
 	readonly labels: readonly string[];
+	readonly actions: readonly ParserAction[];
+	readonly weights: Readonly<
+		Record<ParserAction, Readonly<Record<string, number>>>
+	>;
 	readonly metadata: ClassicalModelMetadata;
 }
 
@@ -2556,8 +2588,16 @@ export function clusterDocuments(
 	options: ClusterOptions,
 ): ClusterResult {
 	assertJsonValue(options.metadata ?? null);
-	const k = Math.max(1, Math.min(options.k, vectors.rowCount));
-	if (!Number.isInteger(k)) throw new RangeError("k must be an integer.");
+	if (vectors.rowCount <= 0) {
+		throw new Error("clusterDocuments requires at least one row.");
+	}
+	if (!Number.isInteger(options.k) || options.k <= 0) {
+		throw new RangeError("k must be a positive integer.");
+	}
+	if (options.seed !== undefined && !Number.isInteger(options.seed)) {
+		throw new RangeError("seed must be an integer.");
+	}
+	const k = Math.min(options.k, vectors.rowCount);
 	const rows = matrixRows(vectors);
 	const denseRows = rows.map((row) => denseVector(row, vectors.columnCount));
 	if (options.algorithm === "agglomerative") {
@@ -2568,6 +2608,7 @@ export function clusterDocuments(
 		vectors.rowIds,
 		k,
 		options.maxIterations ?? 25,
+		options.seed ?? 13,
 	);
 }
 
@@ -2576,16 +2617,62 @@ function kmeansCluster(
 	rowIds: readonly string[],
 	k: number,
 	maxIterations: number,
+	seed: number,
 ): ClusterResult {
-	let centroids = rows.slice(0, k).map((row) => [...row]);
-	let assignments = rows.map((row) => nearestCentroid(row, centroids));
+	if (!Number.isInteger(maxIterations) || maxIterations <= 0) {
+		throw new RangeError("maxIterations must be a positive integer.");
+	}
+	let centroids = initializeKmeansCentroids(rows, k, seed);
+	let assignments = rows.map(() => -1);
 	for (let iteration = 0; iteration < maxIterations; iteration += 1) {
 		const next = rows.map((row) => nearestCentroid(row, centroids));
-		if (next.every((value, index) => value === assignments[index])) break;
+		const converged = next.every(
+			(value, index) => value === assignments[index],
+		);
 		assignments = next;
-		centroids = recomputeCentroids(rows, assignments, k);
+		centroids = recomputeCentroids(rows, assignments, k, centroids);
+		if (converged) break;
 	}
 	return clusterResult("kmeans", assignments, centroids, rowIds);
+}
+
+function initializeKmeansCentroids(
+	rows: readonly (readonly number[])[],
+	k: number,
+	seed: number,
+): number[][] {
+	const random = makePrng(seed);
+	const selected = new Set<number>();
+	const first = Math.min(rows.length - 1, Math.floor(random() * rows.length));
+	selected.add(first);
+	const centroids: number[][] = [[...(rows[first] ?? [])]];
+	while (centroids.length < k) {
+		const distances = rows.map((row, index) =>
+			selected.has(index)
+				? 0
+				: Math.min(
+						...centroids.map((centroid) => squaredDistance(row, centroid)),
+					),
+		);
+		const total = distances.reduce((sum, distance) => sum + distance, 0);
+		let next = -1;
+		if (total > 0) {
+			let threshold = random() * total;
+			for (let index = 0; index < distances.length; index += 1) {
+				threshold -= distances[index] ?? 0;
+				if (threshold <= 0 && !selected.has(index)) {
+					next = index;
+					break;
+				}
+			}
+		}
+		if (next < 0) {
+			next = rows.findIndex((_row, index) => !selected.has(index));
+		}
+		selected.add(next);
+		centroids.push([...(rows[next] ?? [])]);
+	}
+	return centroids;
 }
 
 function agglomerativeCluster(
@@ -2670,6 +2757,7 @@ function recomputeCentroids(
 	rows: readonly (readonly number[])[],
 	assignments: readonly number[],
 	k: number,
+	previous?: readonly (readonly number[])[],
 ): number[][] {
 	const width = rows[0]?.length ?? 0;
 	const centroids = Array.from({ length: k }, () =>
@@ -2686,9 +2774,13 @@ function recomputeCentroids(
 		}
 	}
 	for (let cluster = 0; cluster < k; cluster += 1) {
-		const count = Math.max(1, counts[cluster] ?? 0);
+		const count = counts[cluster] ?? 0;
 		const centroid = centroids[cluster];
 		if (centroid === undefined) continue;
+		if (count === 0) {
+			centroids[cluster] = [...(previous?.[cluster] ?? centroid)];
+			continue;
+		}
 		for (let column = 0; column < width; column += 1) {
 			centroid[column] = (centroid[column] ?? 0) / count;
 		}
@@ -2890,17 +2982,429 @@ export function annotateSummary(
 	});
 }
 
+const parserRoot = -1;
+
+interface ParserState {
+	readonly stack: number[];
+	buffer: number;
+	readonly heads: (number | undefined)[];
+	readonly relations: (string | undefined)[];
+	readonly margins: (number | undefined)[];
+}
+
+interface GoldParse {
+	readonly heads: readonly number[];
+	readonly relations: readonly string[];
+}
+
+type MutableParserWeights = Record<string, Record<string, number>>;
+
+function validateParserTokens(
+	tokens: readonly ParserToken[],
+): Map<string, number> {
+	const ids = new Map<string, number>();
+	for (let index = 0; index < tokens.length; index += 1) {
+		const token = tokens[index] as ParserToken;
+		assertJsonString(token.id, `tokens[${index}].id`);
+		assertJsonString(token.text, `tokens[${index}].text`);
+		if (token.id.length === 0)
+			throw new Error("parser token ids must be non-empty.");
+		if (ids.has(token.id)) {
+			throw new Error(`parser token ids must be unique: ${token.id}`);
+		}
+		if (token.lemma !== undefined) {
+			assertJsonString(token.lemma, `tokens[${index}].lemma`);
+		}
+		if (token.pos !== undefined) {
+			assertJsonString(token.pos, `tokens[${index}].pos`);
+		}
+		ids.set(token.id, index);
+	}
+	return ids;
+}
+
+function goldParseFor(sample: ParserTrainingSample): GoldParse {
+	if (sample.tokens.length === 0) {
+		throw new Error("parser training samples must contain at least one token.");
+	}
+	assertJsonValue(sample.metadata ?? null);
+	const tokenIds = validateParserTokens(sample.tokens);
+	if (sample.edges.length !== sample.tokens.length) {
+		throw new Error(
+			"parser training samples require exactly one edge per token.",
+		);
+	}
+	const heads = Array.from({ length: sample.tokens.length }, () => -2);
+	const relations = Array.from({ length: sample.tokens.length }, () => "");
+	for (const edge of sample.edges) {
+		assertJsonString(edge.head, "parser edge head");
+		assertJsonString(edge.dependent, "parser edge dependent");
+		assertJsonString(edge.relation, "parser edge relation");
+		if (edge.relation.length === 0) {
+			throw new Error("parser edge relations must be non-empty.");
+		}
+		const dependent = tokenIds.get(edge.dependent);
+		if (dependent === undefined) {
+			throw new Error(`parser edge has unknown dependent: ${edge.dependent}`);
+		}
+		if ((heads[dependent] ?? -2) !== -2) {
+			throw new Error(`parser token has multiple heads: ${edge.dependent}`);
+		}
+		const head = edge.head === "ROOT" ? parserRoot : tokenIds.get(edge.head);
+		if (head === undefined) {
+			throw new Error(`parser edge has unknown head: ${edge.head}`);
+		}
+		if (head === dependent) {
+			throw new Error(`parser token cannot head itself: ${edge.dependent}`);
+		}
+		heads[dependent] = head;
+		relations[dependent] = edge.relation;
+	}
+	if (heads.filter((head) => head === parserRoot).length !== 1) {
+		throw new Error("parser training trees require exactly one ROOT edge.");
+	}
+	for (let dependent = 0; dependent < heads.length; dependent += 1) {
+		const seen = new Set<number>([dependent]);
+		let head = heads[dependent] as number;
+		while (head !== parserRoot) {
+			if (head < 0 || head >= heads.length) {
+				throw new Error("parser training tree contains an invalid head.");
+			}
+			if (seen.has(head)) {
+				throw new Error("parser training tree must be acyclic.");
+			}
+			seen.add(head);
+			head = heads[head] as number;
+		}
+	}
+	return { heads, relations };
+}
+
+function parserActions(labels: readonly string[]): readonly ParserAction[] {
+	return Object.freeze([
+		"SHIFT",
+		...labels.map((label) => `LEFT_ARC:${label}` as const),
+		...labels.map((label) => `RIGHT_ARC:${label}` as const),
+	]);
+}
+
+function initialParserState(tokenCount: number): ParserState {
+	return {
+		stack: [parserRoot],
+		buffer: 0,
+		heads: Array.from({ length: tokenCount }),
+		relations: Array.from({ length: tokenCount }),
+		margins: Array.from({ length: tokenCount }),
+	};
+}
+
+function relationForAction(action: ParserAction): string {
+	return action.slice(action.indexOf(":") + 1);
+}
+
+function validParserActions(
+	state: ParserState,
+	tokenCount: number,
+	labels: readonly string[],
+): readonly ParserAction[] {
+	const actions: ParserAction[] = [];
+	if (state.buffer < tokenCount) actions.push("SHIFT");
+	if (state.stack.length < 2) return actions;
+	const second = state.stack[state.stack.length - 2] as number;
+	const top = state.stack[state.stack.length - 1] as number;
+	if (second !== parserRoot && state.heads[second] === undefined) {
+		for (const label of labels) actions.push(`LEFT_ARC:${label}`);
+	}
+	if (
+		top !== parserRoot &&
+		state.heads[top] === undefined &&
+		(second !== parserRoot ||
+			(state.buffer === tokenCount && state.stack.length === 2))
+	) {
+		for (const label of labels) actions.push(`RIGHT_ARC:${label}`);
+	}
+	return actions;
+}
+
+function applyParserAction(
+	state: ParserState,
+	action: ParserAction,
+	margin = 0,
+): void {
+	if (action === "SHIFT") {
+		state.stack.push(state.buffer);
+		state.buffer += 1;
+		return;
+	}
+	const topIndex = state.stack.length - 1;
+	const secondIndex = topIndex - 1;
+	if (action.startsWith("LEFT_ARC:")) {
+		const dependent = state.stack[secondIndex] as number;
+		state.heads[dependent] = state.stack[topIndex] as number;
+		state.relations[dependent] = relationForAction(action);
+		state.margins[dependent] = margin;
+		state.stack.splice(secondIndex, 1);
+		return;
+	}
+	const dependent = state.stack[topIndex] as number;
+	state.heads[dependent] = state.stack[secondIndex] as number;
+	state.relations[dependent] = relationForAction(action);
+	state.margins[dependent] = margin;
+	state.stack.pop();
+}
+
+function parserFeatureValues(
+	tokens: readonly ParserToken[],
+	state: ParserState,
+): readonly string[] {
+	const stackToken = (offset: number): number | undefined =>
+		state.stack[state.stack.length - 1 - offset];
+	const bufferToken = (offset: number): number | undefined =>
+		state.buffer + offset < tokens.length ? state.buffer + offset : undefined;
+	const features = new Set<string>([
+		"bias",
+		`stack-size=${Math.min(3, state.stack.length)}`,
+		`buffer-empty=${state.buffer === tokens.length}`,
+	]);
+	const addToken = (prefix: string, index: number | undefined): void => {
+		if (index === parserRoot) {
+			features.add(`${prefix}:ROOT`);
+			return;
+		}
+		if (index === undefined) {
+			features.add(`${prefix}:NONE`);
+			return;
+		}
+		const token = tokens[index];
+		if (token === undefined) return;
+		const word = token.text.normalize("NFKC").toLocaleLowerCase("und");
+		features.add(`${prefix}:word=${word}`);
+		features.add(`${prefix}:shape=${tokenShape(token.text)}`);
+		if (token.lemma !== undefined)
+			features.add(`${prefix}:lemma=${token.lemma}`);
+		if (token.pos !== undefined) features.add(`${prefix}:pos=${token.pos}`);
+	};
+	const s0 = stackToken(0);
+	const s1 = stackToken(1);
+	const b0 = bufferToken(0);
+	addToken("s0", s0);
+	addToken("s1", s1);
+	addToken("b0", b0);
+	const tokenKey = (index: number | undefined): string => {
+		if (index === parserRoot) return "ROOT";
+		if (index === undefined) return "NONE";
+		return (
+			tokens[index]?.text.normalize("NFKC").toLocaleLowerCase("und") ?? "NONE"
+		);
+	};
+	features.add(`s1+s0=${tokenKey(s1)}|${tokenKey(s0)}`);
+	features.add(`s0+b0=${tokenKey(s0)}|${tokenKey(b0)}`);
+	return Object.freeze([...features].sort(compareText));
+}
+
+function parserActionScore(
+	weights: Readonly<Record<string, Readonly<Record<string, number>>>>,
+	action: ParserAction,
+	features: readonly string[],
+): number {
+	const row = weights[action] ?? {};
+	return features.reduce((sum, feature) => sum + (row[feature] ?? 0), 0);
+}
+
+function highestScoreParserAction(
+	weights: Readonly<Record<string, Readonly<Record<string, number>>>>,
+	actions: readonly ParserAction[],
+	features: readonly string[],
+): { readonly action: ParserAction; readonly margin: number } {
+	const scored = actions.map((action, index) => ({
+		action,
+		index,
+		score: parserActionScore(weights, action, features),
+	}));
+	scored.sort(
+		(left, right) => right.score - left.score || left.index - right.index,
+	);
+	const selected = scored[0];
+	if (selected === undefined)
+		throw new Error("parser reached a state with no valid action.");
+	return {
+		action: selected.action,
+		margin: Math.max(0, selected.score - (scored[1]?.score ?? selected.score)),
+	};
+}
+
+function goldParserAction(state: ParserState, gold: GoldParse): ParserAction {
+	const top = state.stack[state.stack.length - 1];
+	const second = state.stack[state.stack.length - 2];
+	const dependentsComplete = (head: number): boolean =>
+		gold.heads.every(
+			(goldHead, dependent) =>
+				goldHead !== head || state.heads[dependent] !== undefined,
+		);
+	if (
+		second !== undefined &&
+		top !== undefined &&
+		second !== parserRoot &&
+		gold.heads[second] === top &&
+		dependentsComplete(second)
+	) {
+		return `LEFT_ARC:${gold.relations[second] as string}`;
+	}
+	if (
+		second !== undefined &&
+		top !== undefined &&
+		top !== parserRoot &&
+		gold.heads[top] === second &&
+		dependentsComplete(top)
+	) {
+		return `RIGHT_ARC:${gold.relations[top] as string}`;
+	}
+	if (state.buffer < gold.heads.length) return "SHIFT";
+	throw new Error(
+		"parser training tree is non-projective or cannot be represented by arc-standard transitions.",
+	);
+}
+
+function updateParserWeights(
+	weights: MutableParserWeights,
+	action: ParserAction,
+	features: readonly string[],
+	delta: number,
+): void {
+	let row = weights[action];
+	if (row === undefined) {
+		row = {};
+		weights[action] = row;
+	}
+	for (const feature of features) {
+		const value = (row[feature] ?? 0) + delta;
+		if (value === 0) delete row[feature];
+		else row[feature] = finite(value, "parser weight");
+	}
+}
+
 export function trainClassicalParser(
-	labels: readonly string[] = ["dep"],
+	samples: Iterable<ParserTrainingSample>,
+	options: TrainParserOptions = {},
 ): ClassicalParser {
-	const stableLabels = validateLabels(sortedUnique(labels));
+	assertJsonValue(options.metadata ?? null);
+	const materialized = [...samples];
+	if (materialized.length === 0) {
+		throw new Error(
+			"trainClassicalParser requires at least one training sample.",
+		);
+	}
+	const gold = materialized.map((sample) => goldParseFor(sample));
+	const labels = validateLabels(
+		options.labels ??
+			sortedUnique(
+				materialized.flatMap((sample) =>
+					sample.edges.map((edge) => edge.relation),
+				),
+			),
+	);
+	const labelSet = new Set(labels);
+	for (const sample of materialized) {
+		if (
+			sample.weight !== undefined &&
+			(!Number.isFinite(sample.weight) || sample.weight <= 0)
+		) {
+			throw new RangeError(
+				"parser sample weights must be finite positive numbers.",
+			);
+		}
+		for (const edge of sample.edges) {
+			if (!labelSet.has(edge.relation)) {
+				throw new Error(
+					`parser edge relation is not declared: ${edge.relation}`,
+				);
+			}
+		}
+	}
+	const iterations = options.iterations ?? 12;
+	if (!Number.isInteger(iterations) || iterations <= 0) {
+		throw new RangeError("parser iterations must be a positive integer.");
+	}
+	const learningRate = options.learningRate ?? 1;
+	if (!Number.isFinite(learningRate) || learningRate <= 0) {
+		throw new RangeError("parser learningRate must be finite and positive.");
+	}
+	const actions = parserActions(labels);
+	const weights: MutableParserWeights = Object.fromEntries(
+		actions.map((action) => [action, {}]),
+	);
+	for (let iteration = 0; iteration < iterations; iteration += 1) {
+		for (
+			let sampleIndex = 0;
+			sampleIndex < materialized.length;
+			sampleIndex += 1
+		) {
+			const sample = materialized[sampleIndex] as ParserTrainingSample;
+			const sampleGold = gold[sampleIndex] as GoldParse;
+			const state = initialParserState(sample.tokens.length);
+			while (state.buffer < sample.tokens.length || state.stack.length > 1) {
+				const features = parserFeatureValues(sample.tokens, state);
+				const valid = validParserActions(state, sample.tokens.length, labels);
+				const predicted = highestScoreParserAction(
+					weights,
+					valid,
+					features,
+				).action;
+				const expected = goldParserAction(state, sampleGold);
+				if (!valid.includes(expected)) {
+					throw new Error(
+						"gold parser action is invalid for the current state.",
+					);
+				}
+				if (predicted !== expected) {
+					const delta = learningRate * (sample.weight ?? 1);
+					updateParserWeights(weights, expected, features, delta);
+					updateParserWeights(weights, predicted, features, -delta);
+				}
+				applyParserAction(state, expected);
+			}
+			if (
+				state.heads.some((head, index) => head !== sampleGold.heads[index]) ||
+				state.relations.some(
+					(relation, index) => relation !== sampleGold.relations[index],
+				)
+			) {
+				throw new Error(
+					"parser training tree is non-projective or cannot be represented by arc-standard transitions.",
+				);
+			}
+		}
+	}
+	const frozenWeights = orderedRecord(
+		actions.map(
+			(action) =>
+				[action, orderedRecord(Object.entries(weights[action] ?? {}))] as const,
+		),
+	) as Readonly<Record<ParserAction, Readonly<Record<string, number>>>>;
+	const trainingSignature: JsonValue[] = materialized.map((sample) => ({
+		...(sample.id !== undefined ? { id: sample.id } : {}),
+		tokens: sample.tokens.map((token) => ({
+			id: token.id,
+			text: token.text,
+			...(token.lemma !== undefined ? { lemma: token.lemma } : {}),
+			...(token.pos !== undefined ? { pos: token.pos } : {}),
+		})),
+		edges: sample.edges.map((edge) => ({ ...edge })),
+		weight: sample.weight ?? 1,
+	}));
 	const metadata = metadataFor("transition-perceptron-parser", {
-		labels: stableLabels,
+		labels,
+		iterations,
+		learningRate,
+		samples: trainingSignature,
+		metadata: options.metadata ?? null,
 	});
 	return {
 		id: metadata.id,
 		kind: "transition-perceptron",
-		labels: stableLabels,
+		labels,
+		actions,
+		weights: frozenWeights,
 		metadata,
 	};
 }
@@ -2909,14 +3413,33 @@ export function parseDependencies(
 	parser: ClassicalParser,
 	tokens: readonly ParserToken[],
 ): readonly DependencyParseEdge[] {
-	const relation = parser.labels[0] ?? "dep";
+	validateParserTokens(tokens);
+	if (tokens.length === 0) return Object.freeze([]);
+	const state = initialParserState(tokens.length);
+	while (state.buffer < tokens.length || state.stack.length > 1) {
+		const features = parserFeatureValues(tokens, state);
+		const valid = validParserActions(state, tokens.length, parser.labels);
+		const decision = highestScoreParserAction(parser.weights, valid, features);
+		applyParserAction(state, decision.action, decision.margin);
+	}
 	return Object.freeze(
-		tokens.map((token, index) => ({
-			head: index === 0 ? "ROOT" : (tokens[index - 1]?.id ?? "ROOT"),
-			dependent: token.id,
-			relation,
-			score: { kind: "margin", value: 1, scale: parser.kind } satisfies Score,
-		})),
+		tokens.map((token, dependent) => {
+			const head = state.heads[dependent];
+			const relation = state.relations[dependent];
+			if (head === undefined || relation === undefined) {
+				throw new Error(`parser failed to attach token: ${token.id}`);
+			}
+			return Object.freeze({
+				head: head === parserRoot ? "ROOT" : (tokens[head]?.id ?? "ROOT"),
+				dependent: token.id,
+				relation,
+				score: {
+					kind: "margin",
+					value: state.margins[dependent] ?? 0,
+					scale: parser.kind,
+				} satisfies Score,
+			});
+		}),
 	);
 }
 

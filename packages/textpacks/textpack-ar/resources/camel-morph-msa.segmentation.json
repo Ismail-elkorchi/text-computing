@@ -1,0 +1,10 @@
+{
+  "dictionaryRefs": [],
+  "granularity": "word",
+  "kind": "segmentation-profile",
+  "languageTag": "ar",
+  "profileId": "ar-msa-camel-segmentation",
+  "rules": [],
+  "schemaVersion": "1",
+  "script": "Arab"
+}

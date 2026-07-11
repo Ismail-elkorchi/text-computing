@@ -14,6 +14,7 @@ import * as reuse from "../dist/reuse/mod.js";
 import * as store from "../dist/store/mod.js";
 import * as stylometry from "../dist/stylometry/mod.js";
 import * as terms from "../dist/terms/mod.js";
+import * as textpack from "../dist/textpack.js";
 
 test("root exports the final textcorpus API only", () => {
 	assert.deepEqual(
@@ -24,6 +25,8 @@ test("root exports the final textcorpus API only", () => {
 			"collocations",
 			"concordance",
 			"corpusAsJson",
+			"corpusDatasetFromPack",
+			"corpusDocumentsFromPack",
 			"corpusFingerprint",
 			"corpusMetadataKey",
 			"corpusQuery",
@@ -44,6 +47,7 @@ test("root exports the final textcorpus API only", () => {
 			"ngrams",
 			"reuse",
 			"stylometricProfile",
+			"textCorpusFromPack",
 			"wordList",
 			"wordSketch",
 		].sort(),
@@ -52,6 +56,7 @@ test("root exports the final textcorpus API only", () => {
 
 test("required final subpaths are importable", () => {
 	assert.equal(typeof store.createCorpus, "function");
+	assert.equal(typeof textpack.textCorpusFromPack, "function");
 	assert.equal(typeof query.corpusQuery, "function");
 	assert.equal(typeof concordance.concordance, "function");
 	assert.equal(typeof frequency.frequency, "function");

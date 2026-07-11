@@ -30,6 +30,30 @@ function sortReuse(left: ReuseMatch, right: ReuseMatch): number {
 	return compareStrings(left.text, right.text);
 }
 
+function coveringSpan(
+	tokens: readonly { readonly span?: SpanRef }[],
+): SpanRef | undefined {
+	const first = tokens[0]?.span;
+	const last = tokens[tokens.length - 1]?.span;
+	if (
+		first === undefined ||
+		last === undefined ||
+		first.viewId !== last.viewId ||
+		first.span.unit !== "utf16-code-unit" ||
+		last.span.unit !== "utf16-code-unit"
+	) {
+		return undefined;
+	}
+	return Object.freeze({
+		viewId: first.viewId,
+		span: Object.freeze({
+			start: first.span.start,
+			end: last.span.end,
+			unit: "utf16-code-unit" as const,
+		}),
+	});
+}
+
 export function detectReuse(
 	corpus: TextCorpus,
 	options: ReuseOptions = {},
@@ -94,15 +118,13 @@ export function detectReuse(
 					targetEntry.tokenIndex,
 					targetEntry.tokenIndex + size,
 				);
+				const sourceSpan = coveringSpan(sourceTokens);
+				const targetSpan = coveringSpan(targetTokens);
 				matches.push({
 					sourceDocId,
 					targetDocId,
-					...(sourceTokens[0]?.span !== undefined
-						? { sourceSpan: sourceTokens[0].span }
-						: {}),
-					...(targetTokens[0]?.span !== undefined
-						? { targetSpan: targetTokens[0].span }
-						: {}),
+					...(sourceSpan === undefined ? {} : { sourceSpan }),
+					...(targetSpan === undefined ? {} : { targetSpan }),
 					text: sourceTokens.map((token) => token.text).join(" "),
 					tokens: key.split("\u0001"),
 					count: entries.length,

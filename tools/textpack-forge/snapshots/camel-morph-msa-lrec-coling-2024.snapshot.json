@@ -1,0 +1,33 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
+	"sourceId": "source:camel:morph-msa-lrec-coling-2024",
+	"version": "lrec-coling2024@5a202cf48f5e96e47a28c1e7dcbd1660520a00cf",
+	"retrievedAt": "2026-06-09T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:af17d9994d96c4978b59690dcf8eb8b6e92a85396e93359a8a828ff35bebc179",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/camel_morph_msa_v1.0.db",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 84959404,
+			"checksum": "sha256:110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60",
+			"sourceUrl": "https://raw.githubusercontent.com/CAMeL-Lab/camel_morph/5a202cf48f5e96e47a28c1e7dcbd1660520a00cf/official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/LICENSE",
+			"mediaType": "text/plain",
+			"byteLength": 1087,
+			"checksum": "sha256:7f0cbb516d44e20616b01195fb5e4ad7accfcfc8c20cd5939db5f23091cefe1d",
+			"sourceUrl": "https://raw.githubusercontent.com/CAMeL-Lab/camel_morph/5a202cf48f5e96e47a28c1e7dcbd1660520a00cf/LICENSE"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/camel-morph-msa-lrec-coling-2024/README.md",
+			"mediaType": "text/markdown",
+			"byteLength": 18002,
+			"checksum": "sha256:56326082bb9dc7cb45832f86edf047b84e90815ffbe040951cdc294ec8563196",
+			"sourceUrl": "https://raw.githubusercontent.com/CAMeL-Lab/camel_morph/5a202cf48f5e96e47a28c1e7dcbd1660520a00cf/README.md"
+		}
+	],
+	"notes": "Pinned official CAMeL Morph MSA release database."
+}

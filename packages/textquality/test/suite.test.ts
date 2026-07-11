@@ -10,8 +10,11 @@ import {
 import {
 	analyzeCorpusQuality,
 	analyzeDocumentQuality,
+	analyzeDocumentQualityFromPack,
 	annotateQuality,
 	assertJsonValue,
+	qualityProfileFromPack,
+	qualityResourcesFromPack,
 } from "../dist/index.js";
 import {
 	lexicalDiversityMetrics,
@@ -23,6 +26,42 @@ import {
 	conflictingAnnotationDocument,
 	noisyDocument,
 } from "./fixtures/documents.ts";
+
+async function sha256(text: string): Promise<string> {
+	const bytes = new TextEncoder().encode(text);
+	const digest = await crypto.subtle.digest("SHA-256", bytes);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
+
+async function fileBackedTextResource(path: string, text: string) {
+	return {
+		kind: "file-backed-resource",
+		packageName: "@ismail-elkorchi/textpack-quality-test",
+		packageRoot: "file:///fixture/",
+		path,
+		encoding: "utf8",
+		checksum: `sha256:${await sha256(text)}`,
+		byteLength: new TextEncoder().encode(text).byteLength,
+	} as const;
+}
+
+function textResourceReader(records: Readonly<Record<string, string>>) {
+	return {
+		readText({
+			descriptor,
+		}: {
+			readonly descriptor: { readonly path: string };
+		}): string {
+			const text = records[descriptor.path];
+			if (text === undefined) {
+				throw new Error(`missing fixture resource ${descriptor.path}`);
+			}
+			return text;
+		},
+	};
+}
 
 test("analyzes document quality across section 19 dimensions", () => {
 	const wordlist = buildWordlist(["Acme", "quality", "Footer", "line"], {
@@ -70,6 +109,79 @@ test("analyzes document quality across section 19 dimensions", () => {
 	assert.equal(Number.isFinite(report.metrics["findings.total"]), true);
 	assert.equal(Number.isFinite(report.metrics["readability.word_count"]), true);
 	assertJsonValue(report);
+});
+
+test("quality profile textpack resources materialize through the adapter", async () => {
+	const qualityText = JSON.stringify({
+		schemaVersion: "1",
+		kind: "quality-profile",
+		profileId: "fr-quality",
+		languageTag: "fr",
+		script: "Latn",
+		metrics: [{ metricId: "coverage.lexicon", value: 0.98 }],
+		thresholds: [{ metricId: "readiness.warning_count", value: 99 }],
+	});
+	const pack = {
+		manifest: {
+			id: "pack:quality:profile",
+			packageName: "@ismail-elkorchi/textpack-quality-profile-test",
+			targets: { languages: ["fr"] },
+			resources: [
+				{
+					id: "quality-fr-profile",
+					kind: "quality-profile" as const,
+					format: "json",
+					schemaId: "textquality.profile.v1",
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "quality",
+					status: "task-supported" as const,
+					tier: "rule-based" as const,
+					resourceIds: ["quality-fr-profile"],
+					bindings: [
+						{
+							role: "quality" as const,
+							resourceId: "quality-fr-profile",
+							schemaId: "textquality.profile.v1",
+							required: true,
+							ownerPackage: "@ismail-elkorchi/textquality" as const,
+						},
+					],
+				},
+			],
+		},
+		resources: {
+			"quality-fr-profile": await fileBackedTextResource(
+				"resources/quality-fr.json",
+				qualityText,
+			),
+		},
+	};
+	const resources = await qualityResourcesFromPack(pack, {
+		reader: textResourceReader({ "resources/quality-fr.json": qualityText }),
+	});
+	assert.deepEqual(resources[0]?.payload, {
+		type: "json",
+		value: {
+			schemaVersion: "1",
+			kind: "quality-profile",
+			profileId: "fr-quality",
+			languageTag: "fr",
+			script: "Latn",
+			metrics: [{ metricId: "coverage.lexicon", value: 0.98 }],
+			thresholds: [{ metricId: "readiness.warning_count", value: 99 }],
+		},
+	});
+	const profile = await qualityProfileFromPack(pack, {
+		reader: textResourceReader({ "resources/quality-fr.json": qualityText }),
+	});
+	assert.equal(profile.id, "fr-quality");
+	const report = await analyzeDocumentQualityFromPack(pack, noisyDocument(), {
+		reader: textResourceReader({ "resources/quality-fr.json": qualityText }),
+	});
+	assert.equal(report.target, "document");
 });
 
 test("adds quality annotations without removing existing layers", () => {

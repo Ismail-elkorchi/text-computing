@@ -1,0 +1,33 @@
+{
+  "analyzerId": "en-esdb-default-wordlist-analyzer",
+  "fields": [
+    {
+      "analyzerRole": "index",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "query",
+      "fieldName": "text"
+    },
+    {
+      "analyzerRole": "suggest",
+      "fieldName": "text"
+    }
+  ],
+  "kind": "search-profile",
+  "languageTag": "en",
+  "schemaVersion": "1",
+  "script": "Latn",
+  "tokenFilters": [
+    {
+      "componentId": "unicode-simple-casefold",
+      "mode": "unicode-simple",
+      "type": "casefold"
+    }
+  ],
+  "tokenizer": {
+    "componentId": "unicode-word",
+    "mode": "default",
+    "type": "unicode-word-boundary"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "entityCount": 3009,
+  "kbId": "wikidata-ar-entity-kb",
+  "kind": "knowledge-base",
+  "languageTags": [
+    "ar"
+  ],
+  "relationCount": 3009,
+  "resourceRefs": [
+    {
+      "recordCount": 3009,
+      "resourceId": "wikidata-ar-entities",
+      "role": "entities"
+    },
+    {
+      "recordCount": 2776,
+      "resourceId": "wikidata-ar-aliases",
+      "role": "aliases"
+    },
+    {
+      "recordCount": 3009,
+      "resourceId": "wikidata-ar-relations",
+      "role": "relations"
+    },
+    {
+      "recordCount": 5991,
+      "resourceId": "wikidata-ar-entities-lookup-index",
+      "role": "lookup-index"
+    },
+    {
+      "recordCount": 4012,
+      "resourceId": "wikidata-ar-aliases-lookup-index",
+      "role": "lookup-index"
+    },
+    {
+      "recordCount": 3014,
+      "resourceId": "wikidata-ar-relations-lookup-index",
+      "role": "lookup-index"
+    }
+  ],
+  "schemaVersion": "1"
+}

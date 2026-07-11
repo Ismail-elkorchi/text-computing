@@ -1,0 +1,33 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:unicode:cldr-core:48.2.0",
+	"sourceId": "source:unicode:cldr-core",
+	"version": "48.2.0",
+	"retrievedAt": "2026-06-08T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:83b04279e29beb9f0533bf13a5f5d20e6807f8e69fead74516ff9f4c9ea39083",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/aliases.json",
+			"mediaType": "application/json",
+			"byteLength": 137469,
+			"checksum": "sha256:b7011c866f27502ed6f160ca83f2a83fa42bce9fdc2176e60e2c6630961d877c",
+			"sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/aliases.json"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/likelySubtags.json",
+			"mediaType": "application/json",
+			"byteLength": 220093,
+			"checksum": "sha256:38345946ad457213fb39e9645ab50f36b61681bf674b2eef2979a3b58d04afc8",
+			"sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/likelySubtags.json"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/cldr-core-48.2/scriptData.json",
+			"mediaType": "application/json",
+			"byteLength": 1762,
+			"checksum": "sha256:47c8d71bbe0aa22ff742f329a88a6c40b69e6220cdc29fc466a260d5238c7ec0",
+			"sourceUrl": "https://unpkg.com/cldr-core@48.2.0/supplemental/scriptData.json"
+		}
+	],
+	"notes": "Pinned local snapshot of selected cldr-core supplemental JSON files."
+}

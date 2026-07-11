@@ -4,8 +4,14 @@ import type {
 	ResourceKind,
 	ResourceQuery,
 	TextPack,
+	TextPackArtifactDescriptor,
 	TextPackCapabilities,
+	TextPackCapabilitySlot,
+	TextPackCapabilityTier,
+	TextPackComponent,
 	TextPackDependency,
+	TextPackFetchResourceReaderOptions,
+	TextPackGapNote,
 	TextPackManifest,
 	TextPackResource,
 	TextPackTargets,
@@ -15,6 +21,11 @@ type PublicApiSmoke = {
 	kind: ResourceKind;
 	manifest: TextPackManifest;
 	resource: TextPackResource;
+	component: TextPackComponent;
+	artifact: TextPackArtifactDescriptor;
+	slot: TextPackCapabilitySlot;
+	tier: TextPackCapabilityTier;
+	gap: TextPackGapNote;
 	targets: TextPackTargets;
 	dependency: TextPackDependency;
 	resources: PackResourceMap;
@@ -22,6 +33,7 @@ type PublicApiSmoke = {
 	query: ResourceQuery;
 	options: PackComposeOptions;
 	capabilities: TextPackCapabilities;
+	fetchReaderOptions: TextPackFetchResourceReaderOptions;
 };
 
 export type { PublicApiSmoke };

@@ -1,0 +1,42 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "TextpackForgeSource",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"sourceId",
+		"family",
+		"name",
+		"licenseEvidence",
+		"licenseExpression",
+		"redistributionPolicy",
+		"reviewState"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"sourceId": { "type": "string", "minLength": 1 },
+		"family": { "type": "string", "minLength": 1 },
+		"name": { "type": "string", "minLength": 1 },
+		"homepageUrl": { "type": "string", "minLength": 1 },
+		"licenseEvidence": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"licenseExpression": { "type": "string", "minLength": 1 },
+		"redistributionPolicy": {
+			"enum": [
+				"redistributable",
+				"redistributable-with-attribution",
+				"share-alike-isolated",
+				"derived-only",
+				"local-only",
+				"blocked"
+			]
+		},
+		"reviewState": { "enum": ["approved", "pending", "blocked"] },
+		"citation": { "type": "string", "minLength": 1 },
+		"notes": { "type": "string", "minLength": 1 }
+	}
+}

@@ -1,0 +1,78 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
+	"packageName": "@ismail-elkorchi/textpack-en-wordlist-esdb",
+	"pipelineId": "esdb-wordlist-diff",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": ["source:esdb:wordlist-diff-en-default-2026-02-25"],
+	"snapshotIds": [
+		"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+			"path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_AU.txt",
+			"checksum": "sha256:d115ebf51c6dcd819c8624019b762c59e185a5c875b97247e5ad2d3d8efe6c1d"
+		},
+		{
+			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+			"path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_CA.txt",
+			"checksum": "sha256:905b1b6b0a98fcb3701c9c59290a090a4d6ab9127809017fefacbe9c2c6f15a4"
+		},
+		{
+			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+			"path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_GB-ise.txt",
+			"checksum": "sha256:82b22843c9958a1efac291e0ea7dbef22ce227dd4e5ca0fd84043cbc62e0a4f1"
+		},
+		{
+			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+			"path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_GB-ize.txt",
+			"checksum": "sha256:3ba9391531797b64bf48864f0921de2277596aee06c81e0c44118890338218f7"
+		},
+		{
+			"snapshotId": "snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
+			"path": "tools/textpack-forge/snapshots/data/esdb-wordlist-diff-2026.02.25/en_US.txt",
+			"checksum": "sha256:4ff7e0b6d86763e1e042ffd746e94cdf4432618702deac303a1669e2a838db04"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "en-esdb-default-wordlists",
+			"path": "resources/esdb-2026.default-wordlists.tsv.gz.b64",
+			"kind": "lexicon",
+			"format": "tsv+gzip+base64",
+			"lookupKeyColumns": ["word"],
+			"lookupPatternColumns": ["word"]
+		},
+		{
+			"resourceId": "en-esdb-default-profiles",
+			"path": "resources/esdb-2026.default-profiles.tsv",
+			"kind": "lexicon",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "en-esdb-wordlist-lexicon-canonical",
+			"path": "resources/esdb-2026.lexicon.json",
+			"kind": "lexicon",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-esdb-wordlist-search-profile",
+			"path": "resources/esdb-2026.search-profile.json",
+			"kind": "search-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-esdb-wordlist-quality",
+			"path": "resources/esdb-2026.quality.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "en-esdb-wordlist-quality-profile",
+			"path": "resources/esdb-2026.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

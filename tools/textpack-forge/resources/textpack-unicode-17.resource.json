@@ -1,0 +1,56 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-unicode-17:ucd-core",
+	"packageName": "@ismail-elkorchi/textpack-unicode-17",
+	"pipelineId": "unicode-17-core",
+	"pipelineVersion": "0.1.0",
+	"sourceIds": [
+		"source:unicode:ucd"
+	],
+	"snapshotIds": [
+		"snapshot:source:unicode:ucd:17.0.0"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/Blocks.txt",
+			"checksum": "sha256:c0edefaf1a19771e830a82735472716af6bf3c3975f6c2a23ffbe2580fbbcb15"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/PropertyValueAliases.txt",
+			"checksum": "sha256:64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a"
+		},
+		{
+			"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/Scripts.txt",
+			"checksum": "sha256:9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "unicode-17-blocks",
+			"path": "resources/unicode-17.blocks.tsv",
+			"kind": "unicode-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "unicode-17-property-value-aliases",
+			"path": "resources/unicode-17.property-value-aliases.tsv",
+			"kind": "unicode-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "unicode-17-scripts",
+			"path": "resources/unicode-17.scripts.tsv",
+			"kind": "unicode-profile",
+			"format": "tsv"
+		},
+		{
+			"resourceId": "unicode-17-core-summary",
+			"path": "resources/unicode-17.core.summary.json",
+			"kind": "unicode-profile",
+			"format": "json"
+		}
+	]
+}

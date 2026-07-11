@@ -1,0 +1,61 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:unicode:ucd:17.0.0",
+	"sourceId": "source:unicode:ucd",
+	"version": "17.0.0",
+	"retrievedAt": "2026-06-08T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:6c59bfb7ea97c24f50ca48eeb0ac7dcb599d5f88c9788e70ae0a78ef6f87370e",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/Blocks.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 11663,
+			"checksum": "sha256:c0edefaf1a19771e830a82735472716af6bf3c3975f6c2a23ffbe2580fbbcb15",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/Blocks.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/DerivedGeneralCategory.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 277514,
+			"checksum": "sha256:d62e5bab70ca74f099343f71224fa051cb1fdd61a1ab45c0488c44cfc0b6102e",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/extracted/DerivedGeneralCategory.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/GraphemeBreakProperty.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 99377,
+			"checksum": "sha256:d6b51d1d2ae5c33b451b7ed994b48f1f4dc62b2272a5831e7fd418514a6bae89",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/GraphemeBreakProperty.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/PropertyValueAliases.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 81858,
+			"checksum": "sha256:64e9a5f76f7a1e8b5a47d6a1f9a26522a251208f5276bdfa1559dac7cf2e827a",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/PropertyValueAliases.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/Scripts.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 192460,
+			"checksum": "sha256:9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/Scripts.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/SentenceBreakProperty.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 221233,
+			"checksum": "sha256:871c0c985ad95125e25b302414065a10839d068970bceb383ecec138f22a0a18",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/SentenceBreakProperty.txt"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/unicode-17/WordBreakProperty.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 114445,
+			"checksum": "sha256:72274cac1e6b919507db35655c3e175aa27274668a1ece95c28d2069f2ad9852",
+			"sourceUrl": "https://www.unicode.org/Public/17.0.0/ucd/auxiliary/WordBreakProperty.txt"
+		}
+	],
+	"notes": "Pinned local snapshot of selected Unicode 17.0.0 UCD files, including auxiliary segmentation and general category property files."
+}

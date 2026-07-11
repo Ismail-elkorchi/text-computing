@@ -6,6 +6,8 @@ Deterministic classical statistical NLP for the text-computing runtime packages.
 taggers, n-gram language models, LDA topic models, clustering, non-neural task wrappers, extractive
 summaries, and statistical `textdoc` annotations.
 
+This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+
 ## Install
 
 ```sh

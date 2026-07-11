@@ -91,3 +91,15 @@ export {
 	termVector,
 	wildcardQuery,
 } from "./internal/core.js";
+export type {
+	SearchAnalyzerFromPackOptions,
+	SearchAnalyzerResourcesFromPackOptions,
+	TextSearchPackResource,
+	TextSearchPackResourcePayload,
+} from "./textpack.js";
+export {
+	analyzerFromPack,
+	searchAnalyzerResourcesFromPack,
+	searchIndexFromPack,
+	searchIndexSchemaFromPack,
+} from "./textpack.js";

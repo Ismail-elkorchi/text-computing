@@ -5,7 +5,10 @@ import type {
 	TextPackCapabilityName,
 	TextPackResource,
 } from "@ismail-elkorchi/textpack";
-import { resourceKinds } from "@ismail-elkorchi/textpack";
+import {
+	resourceKinds,
+	capabilities as summarizeTextPackCapabilities,
+} from "@ismail-elkorchi/textpack";
 import { compareText, uniqueSorted } from "../internal/compare.js";
 import { fail } from "../internal/errors.js";
 import type { JsonValue } from "../internal/json.js";
@@ -48,9 +51,9 @@ function isNonEmptyString(value: unknown): value is string {
 
 function activeCapabilities(pack: TextPack): readonly string[] {
 	const values: string[] = [];
-	for (const [name, value] of Object.entries(pack.manifest.capabilities).sort(
-		([left], [right]) => compareText(left, right),
-	)) {
+	for (const [name, value] of Object.entries(
+		summarizeTextPackCapabilities(pack),
+	).sort(([left], [right]) => compareText(left, right))) {
 		if (value === false || value === "none" || value === undefined) continue;
 		values.push(name);
 		if (value === true) values.push(`${name}:true`);
@@ -60,8 +63,24 @@ function activeCapabilities(pack: TextPack): readonly string[] {
 }
 
 function valueFingerprint(value: unknown, path: string): string {
+	if (value instanceof ArrayBuffer) {
+		return stableHash64(`bytes:${bytesHex(new Uint8Array(value))}`);
+	}
+	if (ArrayBuffer.isView(value)) {
+		return stableHash64(
+			`bytes:${bytesHex(
+				new Uint8Array(value.buffer, value.byteOffset, value.byteLength),
+			)}`,
+		);
+	}
 	assertJsonValue(value, path);
 	return stableHash64(stableJsonStringify(value));
+}
+
+function bytesHex(bytes: Uint8Array): string {
+	let output = "";
+	for (const byte of bytes) output += byte.toString(16).padStart(2, "0");
+	return output;
 }
 
 function normalizeEntry(entry: PipelineResourceEntry): PipelineResourceEntry {
@@ -114,14 +133,6 @@ function entriesFromPack(pack: TextPack): readonly PipelineResourceEntry[] {
 			packageVersion: pack.manifest.version,
 			descriptor,
 			value: pack.resources[descriptor.id],
-			fingerprint: stableHash64(
-				stableJsonStringify({
-					packId: pack.manifest.id,
-					packageName: pack.manifest.packageName,
-					packageVersion: pack.manifest.version,
-					resource: descriptor as unknown as JsonValue,
-				}),
-			),
 			...(descriptor.citations !== undefined
 				? { citations: descriptor.citations }
 				: pack.manifest.citations === undefined

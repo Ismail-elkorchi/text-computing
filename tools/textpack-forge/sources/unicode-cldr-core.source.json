@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:unicode:cldr-core",
+	"family": "CLDR",
+	"name": "Unicode CLDR Core",
+	"homepageUrl": "https://cldr.unicode.org/",
+	"licenseEvidence": [
+		"https://www.unicode.org/license.txt",
+		"https://www.unicode.org/terms_of_use.html"
+	],
+	"licenseExpression": "Unicode-3.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "Unicode CLDR core data, cldr-core npm package 48.2.0.",
+	"notes": "Selected CLDR supplemental JSON files used for locale likely-subtag and alias foundation resources."
+}

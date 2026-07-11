@@ -23,6 +23,7 @@ test("package metadata keeps final section 19 boundaries", () => {
 		"@ismail-elkorchi/textfacts",
 		"@ismail-elkorchi/textlex",
 		"@ismail-elkorchi/textnorm",
+		"@ismail-elkorchi/textpack",
 	]);
 	assert.equal(pkg.optionalDependencies, undefined);
 	assert.equal(pkg.peerDependencies, undefined);
