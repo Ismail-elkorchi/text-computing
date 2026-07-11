@@ -227,7 +227,7 @@ async function bucketedLookupIndex(
 		fuzzyBuckets: [],
 		patternBuckets,
 	};
-	const indexText = `textpack.lookup-index.bucketed-rows.v2\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${patternPayloads.map((payload) => payload.encoded).join("")}`;
+	const indexText = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${patternPayloads.map((payload) => payload.encoded).join("")}`;
 	const indexedResourceTextByteLength = new TextEncoder().encode(
 		text,
 	).byteLength;
@@ -646,19 +646,19 @@ const generatedPack = {
 			{
 				id: "fr-lexicon-rows",
 				kind: "lexicon" as const,
-				path: "resources/fr-lexicon.indexed-table.v2.txt",
-				format: "textpack-indexed-table-v2",
+				path: "resources/fr-lexicon.indexed-table.v1.txt",
+				format: "textpack-indexed-table-v1",
 				schemaId: "textlex.morphology.rows.v1",
 				metadata: { lookupIndexResourceId: "fr-lexicon-rows-index" },
 			},
 			{
 				id: "fr-lexicon-rows-index",
 				kind: "dataset" as const,
-				path: "resources/fr-lexicon.indexed-table.v2.txt",
-				format: "textpack-indexed-table-v2",
-				schemaId: "textpack.lookup-index.v2",
+				path: "resources/fr-lexicon.indexed-table.v1.txt",
+				format: "textpack-indexed-table-v1",
+				schemaId: "textpack.lookup-index.v1",
 				metadata: {
-					indexFormat: "normalized-key-bucketed-rows-v2",
+					indexFormat: "normalized-key-bucketed-rows-v1",
 					indexedResourceId: "fr-lexicon-rows",
 					indexedResourceSchemaId: "textlex.morphology.rows.v1",
 					indexedResourceTextChecksum: `sha256:${await sha256(canonicalLexiconRows)}`,
@@ -691,19 +691,19 @@ const generatedPack = {
 			{
 				id: "fr-morph-paradigms",
 				kind: "morphology" as const,
-				path: "resources/fr-morph-paradigms.indexed-table.v2.txt",
-				format: "textpack-indexed-table-v2",
+				path: "resources/fr-morph-paradigms.indexed-table.v1.txt",
+				format: "textpack-indexed-table-v1",
 				schemaId: "textlex.morphology.rows.v1",
 				metadata: { lookupIndexResourceId: "fr-morph-paradigms-index" },
 			},
 			{
 				id: "fr-morph-paradigms-index",
 				kind: "dataset" as const,
-				path: "resources/fr-morph-paradigms.indexed-table.v2.txt",
-				format: "textpack-indexed-table-v2",
-				schemaId: "textpack.lookup-index.v2",
+				path: "resources/fr-morph-paradigms.indexed-table.v1.txt",
+				format: "textpack-indexed-table-v1",
+				schemaId: "textpack.lookup-index.v1",
 				metadata: {
-					indexFormat: "normalized-key-bucketed-rows-v2",
+					indexFormat: "normalized-key-bucketed-rows-v1",
 					indexedResourceId: "fr-morph-paradigms",
 					indexedResourceSchemaId: "textlex.morphology.rows.v1",
 					indexedResourceTextChecksum: `sha256:${await sha256(morphologyParadigmRows)}`,
@@ -767,11 +767,11 @@ const generatedPack = {
 			canonicalLexiconText,
 		),
 		"fr-lexicon-rows": await fileBackedTextResource(
-			"resources/fr-lexicon.indexed-table.v2.txt",
+			"resources/fr-lexicon.indexed-table.v1.txt",
 			canonicalLexiconIndexText,
 		),
 		"fr-lexicon-rows-index": await fileBackedTextResource(
-			"resources/fr-lexicon.indexed-table.v2.txt",
+			"resources/fr-lexicon.indexed-table.v1.txt",
 			canonicalLexiconIndexText,
 		),
 		"fr-morphology": await fileBackedTextResource(
@@ -779,20 +779,20 @@ const generatedPack = {
 			morphologyText,
 		),
 		"fr-morph-paradigms": await fileBackedTextResource(
-			"resources/fr-morph-paradigms.indexed-table.v2.txt",
+			"resources/fr-morph-paradigms.indexed-table.v1.txt",
 			morphologyParadigmIndex.text,
 		),
 		"fr-morph-paradigms-index": await fileBackedTextResource(
-			"resources/fr-morph-paradigms.indexed-table.v2.txt",
+			"resources/fr-morph-paradigms.indexed-table.v1.txt",
 			morphologyParadigmIndex.text,
 		),
 	},
 };
 const generatedReader = textResourceReader({
 	"resources/fr-lexicon.json": canonicalLexiconText,
-	"resources/fr-lexicon.indexed-table.v2.txt": canonicalLexiconIndexText,
+	"resources/fr-lexicon.indexed-table.v1.txt": canonicalLexiconIndexText,
 	"resources/fr-morphology.json": morphologyText,
-	"resources/fr-morph-paradigms.indexed-table.v2.txt":
+	"resources/fr-morph-paradigms.indexed-table.v1.txt":
 		morphologyParadigmIndex.text,
 });
 const mergedLexicon = await mergedLexiconFromPackAsync(generatedPack, {
@@ -821,7 +821,7 @@ assert.equal(
 		await lookupManyFromPackAsync(staleSourceChecksumPack, ["parle"], {
 			reader: textResourceReader({
 				"resources/fr-lexicon.json": canonicalLexiconText,
-				"resources/fr-lexicon.indexed-table.v2.txt": canonicalLexiconIndexText,
+				"resources/fr-lexicon.indexed-table.v1.txt": canonicalLexiconIndexText,
 			}),
 		})
 	).get("parle")?.[0]?.canonical,
@@ -838,14 +838,14 @@ const malformedIndexPack = {
 	resources: {
 		...generatedPack.resources,
 		"fr-lexicon-rows-index": await fileBackedTextResource(
-			"resources/fr-lexicon.indexed-table.v2.txt",
+			"resources/fr-lexicon.indexed-table.v1.txt",
 			malformedLexiconIndexText,
 		),
 	},
 };
 const malformedIndexReader = textResourceReader({
 	"resources/fr-lexicon.json": canonicalLexiconText,
-	"resources/fr-lexicon.indexed-table.v2.txt": malformedLexiconIndexText,
+	"resources/fr-lexicon.indexed-table.v1.txt": malformedLexiconIndexText,
 });
 await assert.rejects(
 	() =>
@@ -864,9 +864,9 @@ const targetedReads: string[] = [];
 const targetedReader = textResourceReader(
 	{
 		"resources/fr-lexicon.json": canonicalLexiconText,
-		"resources/fr-lexicon.indexed-table.v2.txt": canonicalLexiconIndexText,
+		"resources/fr-lexicon.indexed-table.v1.txt": canonicalLexiconIndexText,
 		"resources/fr-morphology.json": morphologyText,
-		"resources/fr-morph-paradigms.indexed-table.v2.txt":
+		"resources/fr-morph-paradigms.indexed-table.v1.txt":
 			morphologyParadigmIndex.text,
 	},
 	(path) => {
@@ -996,8 +996,8 @@ const camelPack = {
 			{
 				id: "ar-camel-morphemes",
 				kind: "morphology" as const,
-				path: "resources/ar-camel-morphemes.indexed-table.v2.txt",
-				format: "textpack-indexed-table-v2",
+				path: "resources/ar-camel-morphemes.indexed-table.v1.txt",
+				format: "textpack-indexed-table-v1",
 				schemaId: "textlex.morphology.rows.v1",
 				metadata: { lookupIndexResourceId: "ar-camel-morphemes-index" },
 			},
@@ -1010,11 +1010,11 @@ const camelPack = {
 			{
 				id: "ar-camel-morphemes-index",
 				kind: "dataset" as const,
-				path: "resources/ar-camel-morphemes.indexed-table.v2.txt",
-				format: "textpack-indexed-table-v2",
-				schemaId: "textpack.lookup-index.v2",
+				path: "resources/ar-camel-morphemes.indexed-table.v1.txt",
+				format: "textpack-indexed-table-v1",
+				schemaId: "textpack.lookup-index.v1",
 				metadata: {
-					indexFormat: "normalized-key-bucketed-rows-v2",
+					indexFormat: "normalized-key-bucketed-rows-v1",
 					indexedResourceId: "ar-camel-morphemes",
 					indexedResourceSchemaId: "textlex.morphology.rows.v1",
 					indexedResourceTextChecksum: `sha256:${await sha256(camelMorphemeRows)}`,
@@ -1061,7 +1061,7 @@ const camelPack = {
 			camelCanonicalText,
 		),
 		"ar-camel-morphemes": await fileBackedTextResource(
-			"resources/ar-camel-morphemes.indexed-table.v2.txt",
+			"resources/ar-camel-morphemes.indexed-table.v1.txt",
 			camelMorphemeIndex.text,
 		),
 		"ar-camel-compatibility": await fileBackedTextResource(
@@ -1069,7 +1069,7 @@ const camelPack = {
 			camelCompatibilityRows,
 		),
 		"ar-camel-morphemes-index": await fileBackedTextResource(
-			"resources/ar-camel-morphemes.indexed-table.v2.txt",
+			"resources/ar-camel-morphemes.indexed-table.v1.txt",
 			camelMorphemeIndex.text,
 		),
 	},
@@ -1080,7 +1080,7 @@ const camelReader = {
 		camelReads.set(descriptor.path, (camelReads.get(descriptor.path) ?? 0) + 1);
 		const records: Readonly<Record<string, string>> = {
 			"resources/ar-camel.json": camelCanonicalText,
-			"resources/ar-camel-morphemes.indexed-table.v2.txt":
+			"resources/ar-camel-morphemes.indexed-table.v1.txt":
 				camelMorphemeIndex.text,
 			"resources/ar-camel-compatibility.tsv": camelCompatibilityRows,
 		};
@@ -1115,7 +1115,7 @@ await morphologyAnalysesManyFromPackAsync(camelPack, ["الكتاب"], {
 	reader: camelReader,
 });
 assert.equal(
-	camelReads.get("resources/ar-camel-morphemes.indexed-table.v2.txt"),
+	camelReads.get("resources/ar-camel-morphemes.indexed-table.v1.txt"),
 	1,
 );
 assert.equal(camelReads.get("resources/ar-camel-compatibility.tsv"), 1);

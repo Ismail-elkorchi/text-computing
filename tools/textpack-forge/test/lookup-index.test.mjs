@@ -38,7 +38,7 @@ function bucketLines(texts) {
 	return texts.flatMap((text) => text.split("\n").filter(Boolean));
 }
 
-test("v2 indexes scope normalized keys by column and store each row once", () => {
+test("v1 indexes scope normalized keys by column and store each row once", () => {
 	const sourceText = [
 		"entryId\tform\tlemma\tforms",
 		"one\tCAFÉ\tcafé\tCafe|CAFÉ",
@@ -98,7 +98,7 @@ test("v2 indexes scope normalized keys by column and store each row once", () =>
 	assert.equal(normalizedLookupIndexKey("Straße"), "strasse");
 });
 
-test("v2 indexes preserve the empty CAMeL surface key without indexing empty lemmas", () => {
+test("v1 indexes preserve the empty CAMeL surface key without indexing empty lemmas", () => {
 	const sourceText = [
 		"section\tsurface\tlemma",
 		"PREFIXES\t\t",
@@ -129,7 +129,7 @@ test("v2 indexes preserve the empty CAMeL surface key without indexing empty lem
 	);
 });
 
-test("v2 lookup index integrity rejects stale sources, buckets, and metadata", () => {
+test("v1 lookup index integrity rejects stale sources, buckets, and metadata", () => {
 	const sourceText = "entryId\talias\tentityId\nQ1\tExample\tQ1\n";
 	const index = buildLookupIndex(sourceText, "textkb.knowledge-base.rows.v1", [
 		"alias",
@@ -192,7 +192,7 @@ test("v2 lookup index integrity rejects stale sources, buckets, and metadata", (
 	);
 });
 
-test("v2 bucket storage remains compact against large source text", () => {
+test("v1 bucket storage remains compact against large source text", () => {
 	const rows = Array.from({ length: 4_000 }, (_, index) => {
 		const id = String(index).padStart(5, "0");
 		return `entry-${id}\tform-${id}\tlemma-${index % 250}\tNOUN\t${"shared-feature;".repeat(6)}`;
@@ -239,7 +239,7 @@ test("v2 bucket storage remains compact against large source text", () => {
 	);
 });
 
-test("v2 scoped keys reject NUL delimiters", () => {
+test("v1 scoped keys reject NUL delimiters", () => {
 	assert.throws(
 		() =>
 			buildLookupIndex(

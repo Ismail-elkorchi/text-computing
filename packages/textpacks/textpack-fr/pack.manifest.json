@@ -421,15 +421,15 @@
 		{
 			"id": "fr-lexique-entries",
 			"kind": "lexicon",
-			"path": "resources/lexique-383.entries.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/lexique-383.entries.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
 			],
 			"schemaId": "textlex.lexicon.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "fr-lexique-entries-lookup-index",
 				"logicalFormat": "tsv+gzip+base64",
 				"logicalPath": "resources/lexique-383.entries.tsv.gz.b64",
@@ -518,15 +518,15 @@
 		{
 			"id": "fr-lexique-entries-lookup-index",
 			"kind": "dataset",
-			"path": "resources/lexique-383.entries.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/lexique-383.entries.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-SA-4.0",
 			"citations": [
 				"Lexique 3.83, 2019-06-04."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "fr-lexique-entries",
 				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
 				"indexedResourceTextChecksum": "sha256:2364fefce469d493e6a7dda4c60e58e6de83129acf553d64546432cf1dd2d95b",
@@ -554,15 +554,15 @@
 		{
 			"id": "fr-unimorph-paradigms",
 			"kind": "morphology",
-			"path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 			],
 			"schemaId": "textlex.morphology.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "fr-unimorph-paradigms-lookup-index",
 				"logicalFormat": "tsv+gzip+base64",
 				"logicalPath": "resources/unimorph-fra.paradigms.tsv.gz.b64",
@@ -629,15 +629,15 @@
 		{
 			"id": "fr-unimorph-paradigms-lookup-index",
 			"kind": "dataset",
-			"path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-SA-3.0",
 			"citations": [
 				"UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "fr-unimorph-paradigms",
 				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
 				"indexedResourceTextChecksum": "sha256:0fcefb9d03bc51b09173b9b837f6491ad059bfc63e4ac64e6d64aae03879cb74",
@@ -663,15 +663,15 @@
 		{
 			"id": "wikidata-fr-entities",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-fr.entities.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textkb.knowledge-base.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wikidata-fr-entities-lookup-index",
 				"logicalFormat": "text/tab-separated-values",
 				"logicalPath": "resources/wikidata-fr.entities.tsv.gz.b64",
@@ -683,15 +683,15 @@
 		{
 			"id": "wikidata-fr-aliases",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-fr.aliases.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textkb.knowledge-base.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wikidata-fr-aliases-lookup-index",
 				"logicalFormat": "text/tab-separated-values",
 				"logicalPath": "resources/wikidata-fr.aliases.tsv.gz.b64",
@@ -703,15 +703,15 @@
 		{
 			"id": "wikidata-fr-relations",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-fr.relations.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textkb.knowledge-base.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wikidata-fr-relations-lookup-index",
 				"logicalFormat": "text/tab-separated-values",
 				"logicalPath": "resources/wikidata-fr.relations.tsv.gz.b64",
@@ -756,15 +756,15 @@
 		{
 			"id": "wikidata-fr-entities-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-fr.entities.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wikidata-fr-entities",
 				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
 				"indexedResourceTextChecksum": "sha256:f787a6d0cb5950f59f9f02de22b97f1851ab29e7c6bc0123861ce62689a67d0b",
@@ -792,15 +792,15 @@
 		{
 			"id": "wikidata-fr-aliases-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-fr.aliases.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wikidata-fr-aliases",
 				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
 				"indexedResourceTextChecksum": "sha256:1b0ac6808e08a202f008a6c06c8fc95b03af18e075fe7255d033802126f05cb5",
@@ -828,15 +828,15 @@
 		{
 			"id": "wikidata-fr-relations-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-fr.relations.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wikidata-fr-relations",
 				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
 				"indexedResourceTextChecksum": "sha256:13ccc689fc907f4e1a812ad865c57360247f113dc8d6db8743b22cb4417498e1",
@@ -922,21 +922,21 @@
 				{
 					"role": "index",
 					"resourceId": "wikidata-fr-aliases-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textkb"
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-fr-entities-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textkb"
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-fr-relations-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textkb"
 				},
@@ -1006,7 +1006,7 @@
 				{
 					"role": "index",
 					"resourceId": "fr-lexique-entries-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -1071,14 +1071,14 @@
 				{
 					"role": "index",
 					"resourceId": "fr-lexique-entries-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
 				{
 					"role": "index",
 					"resourceId": "fr-unimorph-paradigms-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -1471,7 +1471,7 @@
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
+		"lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

@@ -973,7 +973,7 @@ function validateManifestReferences(
 		]);
 	}
 	for (const resource of resources.filter(
-		(candidate) => candidate.schemaId === "textpack.lookup-index.v2",
+		(candidate) => candidate.schemaId === "textpack.lookup-index.v1",
 	)) {
 		const metadata = requireRecord(
 			resource.metadata,
@@ -998,8 +998,8 @@ function validateManifestReferences(
 					);
 		if (
 			source === undefined ||
-			resource.format !== "textpack-indexed-table-v2" ||
-			source.format !== "textpack-indexed-table-v2" ||
+			resource.format !== "textpack-indexed-table-v1" ||
+			source.format !== "textpack-indexed-table-v1" ||
 			resource.path === undefined ||
 			resource.path !== source.path ||
 			shared.length !== 2 ||
@@ -1019,7 +1019,7 @@ function validateManifestReferences(
 		if (
 			shared.length !== 2 ||
 			shared.filter(
-				(resource) => resource.schemaId === "textpack.lookup-index.v2",
+				(resource) => resource.schemaId === "textpack.lookup-index.v1",
 			).length !== 1
 		) {
 			throw new TypeError(

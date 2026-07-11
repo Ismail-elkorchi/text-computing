@@ -3,10 +3,10 @@ import { gunzipSync, gzipSync } from "node:zlib";
 
 import { nfkcCaseFold } from "../../../packages/textfacts/src/casefold/mod.ts";
 
-export const LOOKUP_INDEX_SCHEMA_ID = "textpack.lookup-index.v2";
-export const LOOKUP_INDEX_FORMAT = "normalized-key-bucketed-rows-v2";
-export const LOOKUP_INDEX_MAGIC = "textpack.lookup-index.bucketed-rows.v2";
-export const LOOKUP_INDEX_STORAGE_FORMAT = "textpack-indexed-table-v2";
+export const LOOKUP_INDEX_SCHEMA_ID = "textpack.lookup-index.v1";
+export const LOOKUP_INDEX_FORMAT = "normalized-key-bucketed-rows-v1";
+export const LOOKUP_INDEX_MAGIC = "textpack.lookup-index.bucketed-rows.v1";
+export const LOOKUP_INDEX_STORAGE_FORMAT = "textpack-indexed-table-v1";
 
 const TARGET_SOURCE_BYTES_PER_BUCKET = 256 * 1024;
 const MAX_BUCKET_COUNT = 4096;
@@ -76,7 +76,7 @@ export function lookupIndexPath(sourcePath) {
 	const uncompressedPath = sourcePath.endsWith(".gz.b64")
 		? sourcePath.slice(0, -7)
 		: sourcePath;
-	return uncompressedPath.replace(/(?:\.[^./]+)?$/u, ".lookup-index.v2.txt");
+	return uncompressedPath.replace(/(?:\.[^./]+)?$/u, ".lookup-index.v1.txt");
 }
 
 function bucketCountFor(sourceText) {
@@ -516,13 +516,13 @@ function parseContainerDirectory(indexText, label = "lookup index") {
 		directoryEnd === -1 ||
 		indexText.slice(0, magicEnd) !== LOOKUP_INDEX_MAGIC
 	) {
-		throw new Error(`${label} has an invalid v2 header`);
+		throw new Error(`${label} has an invalid v1 header`);
 	}
 	let directory;
 	try {
 		directory = JSON.parse(indexText.slice(magicEnd + 1, directoryEnd));
 	} catch {
-		throw new Error(`${label} has an invalid v2 directory`);
+		throw new Error(`${label} has an invalid v1 directory`);
 	}
 	if (
 		directory === null ||
@@ -544,7 +544,7 @@ function parseContainerDirectory(indexText, label = "lookup index") {
 		!Array.isArray(directory.fuzzyBuckets) ||
 		!Array.isArray(directory.patternBuckets)
 	) {
-		throw new Error(`${label} has an invalid v2 directory shape`);
+		throw new Error(`${label} has an invalid v1 directory shape`);
 	}
 	return { dataStart: directoryEnd + 1, directory };
 }

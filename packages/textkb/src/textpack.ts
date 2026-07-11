@@ -300,7 +300,7 @@ function requiredLookupIndexForKbSource(
 				? (descriptor.metadata as Readonly<Record<string, unknown>>)
 				: undefined;
 		if (
-			descriptor.schemaId !== "textpack.lookup-index.v2" ||
+			descriptor.schemaId !== "textpack.lookup-index.v1" ||
 			typeof metadata?.indexedResourceId !== "string"
 		) {
 			throw new TypeError(
@@ -310,7 +310,7 @@ function requiredLookupIndexForKbSource(
 		if (metadata?.indexedResourceId === sourceResourceId) return ref.resourceId;
 	}
 	throw new TypeError(
-		`Canonical KB resource ${sourceResourceId} requires a textpack.lookup-index.v2 reference for targeted lookup.`,
+		`Canonical KB resource ${sourceResourceId} requires a textpack.lookup-index.v1 reference for targeted lookup.`,
 	);
 }
 

@@ -5,9 +5,9 @@ import {
 } from "./materialize.js";
 import type { TextPack, TextPackResource } from "./types.js";
 
-export const lookupIndexSchemaId = "textpack.lookup-index.v2" as const;
-export const lookupIndexFormat = "normalized-key-bucketed-rows-v2" as const;
-export const lookupIndexStorageFormat = "textpack-indexed-table-v2" as const;
+export const lookupIndexSchemaId = "textpack.lookup-index.v1" as const;
+export const lookupIndexFormat = "normalized-key-bucketed-rows-v1" as const;
+export const lookupIndexStorageFormat = "textpack-indexed-table-v1" as const;
 
 export interface TextPackLookupIndexRow {
 	readonly rowOrder: number;
@@ -395,10 +395,10 @@ function parseIndexFile(
 		magicEnd === -1 ||
 		directoryEnd === -1 ||
 		indexText.slice(0, magicEnd).replace(/\r$/u, "") !==
-			`textpack.lookup-index.bucketed-rows.v2`
+			`textpack.lookup-index.bucketed-rows.v1`
 	) {
 		throw new TypeError(
-			`Textpack lookup index ${indexResourceId} has an invalid v2 header.`,
+			`Textpack lookup index ${indexResourceId} has an invalid v1 header.`,
 		);
 	}
 	let parsed: unknown;
@@ -711,7 +711,7 @@ async function materializeLookupIndex(
 	const source = resource(pack, sourceResourceId);
 	const index = resource(pack, indexResourceId);
 	const metadata = lookupIndexMetadata(index, source);
-	// The v2 store is self-contained. Targeted lookups read its physical payload
+	// The v1 store is self-contained. Targeted lookups read its physical payload
 	// once and decompress only the selected key and row buckets.
 	const indexText = await openResourceText(pack, index.id, reader);
 	const { dataStart, directory } = parseIndexFile(

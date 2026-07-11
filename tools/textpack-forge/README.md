@@ -41,7 +41,7 @@ checksums, and snapshot locks after an intentional source refresh.
 publishability posture, default-distribution eligibility, and build-unit license
 policy.
 
-Declared TSV outputs use one v2 indexed-table store when their resource spec declares
+Declared TSV outputs use one v1 indexed-table store when their resource spec declares
 `lookupKeyColumns`. The logical source descriptor and its `lookup-index` view share that physical
 file, so rows are shipped once. The store contains column-scoped normalized key buckets, reusable
 row buckets, normalized fuzzy key catalogs for KB aliases and labels, and raw pattern catalogs only

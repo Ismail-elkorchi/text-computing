@@ -420,7 +420,7 @@
     },
     {
       "byteLength": 5000638,
-      "checksum": "sha256:bf76e33d8b8d7304e99a62023799e3c1da34408b46ab14baaf01ed0c441c175c",
+      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
       "citations": [
         "Lexique 3.83, 2019-06-04."
       ],
@@ -428,7 +428,7 @@
       "kind": "lexicon",
       "license": "CC-BY-SA-4.0",
       "logicalRecordCount": 142694,
-      "path": "resources/lexique-383.entries.lookup-index.v2.txt",
+      "path": "resources/lexique-383.entries.lookup-index.v1.txt",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
@@ -445,7 +445,7 @@
     },
     {
       "byteLength": 5000638,
-      "checksum": "sha256:bf76e33d8b8d7304e99a62023799e3c1da34408b46ab14baaf01ed0c441c175c",
+      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
       "citations": [
         "Lexique 3.83, 2019-06-04."
       ],
@@ -453,7 +453,7 @@
       "kind": "dataset",
       "license": "CC-BY-SA-4.0",
       "logicalRecordCount": 0,
-      "path": "resources/lexique-383.entries.lookup-index.v2.txt",
+      "path": "resources/lexique-383.entries.lookup-index.v1.txt",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
@@ -1150,7 +1150,7 @@
     },
     {
       "byteLength": 6267367,
-      "checksum": "sha256:d8629e7dcb96bc162552e49785fdef7dae4f0dfceb6edd27e9ca988c86abb77d",
+      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
       "citations": [
         "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
       ],
@@ -1158,7 +1158,7 @@
       "kind": "morphology",
       "license": "CC-BY-SA-3.0",
       "logicalRecordCount": 367732,
-      "path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
+      "path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
@@ -1175,7 +1175,7 @@
     },
     {
       "byteLength": 6267367,
-      "checksum": "sha256:d8629e7dcb96bc162552e49785fdef7dae4f0dfceb6edd27e9ca988c86abb77d",
+      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
       "citations": [
         "UniMorph French repository, commit f672f8cceb2d5f5a1e2241b5622c8845f8274635."
       ],
@@ -1183,7 +1183,7 @@
       "kind": "dataset",
       "license": "CC-BY-SA-3.0",
       "logicalRecordCount": 0,
-      "path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
+      "path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
@@ -1397,7 +1397,7 @@
     },
     {
       "byteLength": 248637,
-      "checksum": "sha256:994792f665b4a36df1dcb73c616a58f82c040a58398af5a4c626ad87d47ee1c8",
+      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
@@ -1405,7 +1405,7 @@
       "kind": "knowledge-base",
       "license": "CC0-1.0",
       "logicalRecordCount": 6101,
-      "path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
+      "path": "resources/wikidata-fr.aliases.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
@@ -1422,7 +1422,7 @@
     },
     {
       "byteLength": 248637,
-      "checksum": "sha256:994792f665b4a36df1dcb73c616a58f82c040a58398af5a4c626ad87d47ee1c8",
+      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
@@ -1430,7 +1430,7 @@
       "kind": "dataset",
       "license": "CC0-1.0",
       "logicalRecordCount": 0,
-      "path": "resources/wikidata-fr.aliases.lookup-index.v2.txt",
+      "path": "resources/wikidata-fr.aliases.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
@@ -1447,7 +1447,7 @@
     },
     {
       "byteLength": 558306,
-      "checksum": "sha256:90d004951fecae447519e3c6ce89920b1607424e96fef154daf03f3491ef67e2",
+      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
@@ -1455,7 +1455,7 @@
       "kind": "knowledge-base",
       "license": "CC0-1.0",
       "logicalRecordCount": 9377,
-      "path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
+      "path": "resources/wikidata-fr.entities.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
@@ -1472,7 +1472,7 @@
     },
     {
       "byteLength": 558306,
-      "checksum": "sha256:90d004951fecae447519e3c6ce89920b1607424e96fef154daf03f3491ef67e2",
+      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
@@ -1480,7 +1480,7 @@
       "kind": "dataset",
       "license": "CC0-1.0",
       "logicalRecordCount": 0,
-      "path": "resources/wikidata-fr.entities.lookup-index.v2.txt",
+      "path": "resources/wikidata-fr.entities.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
@@ -1569,7 +1569,7 @@
     },
     {
       "byteLength": 135481,
-      "checksum": "sha256:8943ca69ae27299a9bcebeed297628642ea0c88101e10e027ca67fbe74d90fd4",
+      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
@@ -1577,7 +1577,7 @@
       "kind": "knowledge-base",
       "license": "CC0-1.0",
       "logicalRecordCount": 9377,
-      "path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
+      "path": "resources/wikidata-fr.relations.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
@@ -1594,7 +1594,7 @@
     },
     {
       "byteLength": 135481,
-      "checksum": "sha256:8943ca69ae27299a9bcebeed297628642ea0c88101e10e027ca67fbe74d90fd4",
+      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08."
       ],
@@ -1602,7 +1602,7 @@
       "kind": "dataset",
       "license": "CC0-1.0",
       "logicalRecordCount": 0,
-      "path": "resources/wikidata-fr.relations.lookup-index.v2.txt",
+      "path": "resources/wikidata-fr.relations.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",

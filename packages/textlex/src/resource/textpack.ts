@@ -564,7 +564,7 @@ function requiredLookupIndexForSource(
 				? (descriptor.metadata as Readonly<Record<string, unknown>>)
 				: undefined;
 		if (
-			descriptor.schemaId !== "textpack.lookup-index.v2" ||
+			descriptor.schemaId !== "textpack.lookup-index.v1" ||
 			typeof metadata?.indexedResourceId !== "string"
 		) {
 			throw new TypeError(
@@ -574,7 +574,7 @@ function requiredLookupIndexForSource(
 		if (metadata?.indexedResourceId === sourceResourceId) return descriptor.id;
 	}
 	throw new TypeError(
-		`Canonical resource ${sourceResourceId} requires a textpack.lookup-index.v2 reference for targeted lookup.`,
+		`Canonical resource ${sourceResourceId} requires a textpack.lookup-index.v1 reference for targeted lookup.`,
 	);
 }
 

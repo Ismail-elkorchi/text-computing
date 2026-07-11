@@ -135,14 +135,14 @@
 					"if": {
 						"required": ["schemaId"],
 						"properties": {
-							"schemaId": { "const": "textpack.lookup-index.v2" }
+							"schemaId": { "const": "textpack.lookup-index.v1" }
 						}
 					},
 					"then": {
 						"required": ["format", "metadata"],
 						"properties": {
 							"kind": { "const": "dataset" },
-							"format": { "const": "textpack-indexed-table-v2" },
+							"format": { "const": "textpack-indexed-table-v1" },
 							"metadata": { "$ref": "#/definitions/lookupIndexMetadata" }
 						}
 					}
@@ -191,7 +191,7 @@
 			],
 			"properties": {
 				"indexFormat": {
-					"const": "normalized-key-bucketed-rows-v2"
+					"const": "normalized-key-bucketed-rows-v1"
 				},
 				"indexedResourceId": { "type": "string", "minLength": 1 },
 				"indexedResourceSchemaId": { "type": "string", "minLength": 1 },

@@ -2,7 +2,7 @@ interface IndexedTableDescriptor {
 	readonly id: string;
 	readonly kind: "morphology";
 	readonly path: string;
-	readonly format: "textpack-indexed-table-v2";
+	readonly format: "textpack-indexed-table-v1";
 	readonly schemaId: "textlex.morphology.rows.v1";
 	readonly metadata: Readonly<Record<string, unknown>>;
 }
@@ -11,8 +11,8 @@ interface IndexedTableIndexDescriptor {
 	readonly id: string;
 	readonly kind: "dataset";
 	readonly path: string;
-	readonly format: "textpack-indexed-table-v2";
-	readonly schemaId: "textpack.lookup-index.v2";
+	readonly format: "textpack-indexed-table-v1";
+	readonly schemaId: "textpack.lookup-index.v1";
 	readonly metadata: Readonly<Record<string, unknown>>;
 }
 
@@ -127,17 +127,17 @@ export async function indexedMorphologyTableFixture(
 		fuzzyBuckets: [],
 		patternBuckets: [],
 	};
-	const indexText = `textpack.lookup-index.bucketed-rows.v2\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}`;
+	const indexText = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}`;
 	const sourceByteLength = new TextEncoder().encode(text).byteLength;
 	const shippedByteLength = new TextEncoder().encode(indexText).byteLength;
 	const indexResourceId = `${resourceId}-lookup-index`;
-	const path = `resources/${resourceId}.lookup-index.v2.txt`;
+	const path = `resources/${resourceId}.lookup-index.v1.txt`;
 	return {
 		source: {
 			id: resourceId,
 			kind: "morphology",
 			path,
-			format: "textpack-indexed-table-v2",
+			format: "textpack-indexed-table-v1",
 			schemaId: "textlex.morphology.rows.v1",
 			metadata: { lookupIndexResourceId: indexResourceId },
 		},
@@ -145,10 +145,10 @@ export async function indexedMorphologyTableFixture(
 			id: indexResourceId,
 			kind: "dataset",
 			path,
-			format: "textpack-indexed-table-v2",
-			schemaId: "textpack.lookup-index.v2",
+			format: "textpack-indexed-table-v1",
+			schemaId: "textpack.lookup-index.v1",
 			metadata: {
-				indexFormat: "normalized-key-bucketed-rows-v2",
+				indexFormat: "normalized-key-bucketed-rows-v1",
 				indexedResourceId: resourceId,
 				indexedResourceSchemaId: "textlex.morphology.rows.v1",
 				indexedResourceTextChecksum: await sha256(text),

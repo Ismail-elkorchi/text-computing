@@ -62,7 +62,7 @@ const CANONICAL_RESOURCE_SCHEMA_IDS = new Set([
 	"textparallel.alignment.rows.v1",
 	"textquality.evidence.v1",
 	"textsearch.analyzer-table.v1",
-	"textpack.lookup-index.v2",
+	"textpack.lookup-index.v1",
 	"textpack.raw-resource.v1",
 ]);
 const GENERATED_PACKAGE_FILES = [
@@ -400,7 +400,7 @@ const RUNTIME_OWNER_SCHEMA_PREFIXES = [
 function runtimeOwnerPackageForSlotResource(slotName, resource) {
 	const descriptorSchemaId = resource?.schemaId ?? "";
 	const schemaId =
-		descriptorSchemaId === "textpack.lookup-index.v2" &&
+		descriptorSchemaId === "textpack.lookup-index.v1" &&
 		typeof resource?.metadata?.indexedResourceSchemaId === "string"
 			? resource.metadata.indexedResourceSchemaId
 			: descriptorSchemaId;
@@ -965,7 +965,7 @@ for (const packDir of packDirs) {
 	for (const [resourcePath, resources] of resourcesByPath) {
 		if (resources.length === 1) continue;
 		const indexes = resources.filter(
-			(resource) => resource.schemaId === "textpack.lookup-index.v2",
+			(resource) => resource.schemaId === "textpack.lookup-index.v1",
 		);
 		expect(
 			resources.length === 2 && indexes.length === 1,
@@ -975,8 +975,8 @@ for (const packDir of packDirs) {
 		const index = indexes[0];
 		const source = resources.find((resource) => resource !== index);
 		expect(
-			index?.format === "textpack-indexed-table-v2" &&
-				source?.format === "textpack-indexed-table-v2" &&
+			index?.format === "textpack-indexed-table-v1" &&
+				source?.format === "textpack-indexed-table-v1" &&
 				index.metadata?.indexedResourceId === source?.id &&
 				source?.metadata?.lookupIndexResourceId === index?.id &&
 				index.license === source?.license &&

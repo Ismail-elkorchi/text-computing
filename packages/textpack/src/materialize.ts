@@ -333,15 +333,15 @@ function linkedLookupIndexResourceId(
 	resource: TextPackResource,
 ): string | undefined {
 	if (
-		resource.format !== "textpack-indexed-table-v2" ||
-		resource.schemaId === "textpack.lookup-index.v2"
+		resource.format !== "textpack-indexed-table-v1" ||
+		resource.schemaId === "textpack.lookup-index.v1"
 	) {
 		return undefined;
 	}
 	const matches = pack.manifest.resources.filter((candidate) => {
 		if (
-			candidate.schemaId !== "textpack.lookup-index.v2" ||
-			candidate.format !== "textpack-indexed-table-v2" ||
+			candidate.schemaId !== "textpack.lookup-index.v1" ||
+			candidate.format !== "textpack-indexed-table-v1" ||
 			candidate.path !== resource.path ||
 			!isRecord(candidate.metadata)
 		) {

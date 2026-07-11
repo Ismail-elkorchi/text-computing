@@ -12,7 +12,7 @@
     },
     {
       "byteLength": 62866,
-      "checksum": "sha256:a02098702871378a01abb1ffb20871f25a942b5b2ef03f24fd649a868c69989b",
+      "checksum": "sha256:220fbb682b6c56ce6902e30ac35dfd5214b033e99a537d618fb6b4bf622aed5a",
       "path": "COVERAGE.generated.json"
     },
     {
@@ -37,22 +37,22 @@
     },
     {
       "byteLength": 45781,
-      "checksum": "sha256:7841f05d740d96c27864541abe440be4f2c756921d8f2ad16cc17d4138a1261e",
+      "checksum": "sha256:2441b459435ecb9c1a70517d1e7d664780cf9c880fe2d4a8fb2e2f0536886a88",
       "path": "pack.manifest.json"
     },
     {
       "byteLength": 3858,
-      "checksum": "sha256:56b3bc6bece77a0b4e21a4fb6046eab6d76e7ad628347bce422205c0147dec60",
+      "checksum": "sha256:ce5ac1e3e7b7ddddbca5687cd1ac901d46a3847fd4411e537ea1d95c56707e8c",
       "path": "package.json"
     },
     {
       "byteLength": 58360,
-      "checksum": "sha256:669b2b66141f412b68c33c534496db14d5ac5b588e2a13e1d7abe236847220c3",
+      "checksum": "sha256:24242212707d8eca9565b29e96410b07b4e988826c40dc67c71269d1751325f6",
       "path": "QUALITY.generated.json"
     },
     {
       "byteLength": 4103,
-      "checksum": "sha256:528bb428f403dd6aaa92f2537f12c27f735874b16d9459028f7b77786c8d73fe",
+      "checksum": "sha256:e70d1660c1a9e008b203326cfff709a549eda66e48f97ad4ec7d25f89929fc7b",
       "path": "README.md"
     },
     {
@@ -207,8 +207,8 @@
     },
     {
       "byteLength": 5000638,
-      "checksum": "sha256:bf76e33d8b8d7304e99a62023799e3c1da34408b46ab14baaf01ed0c441c175c",
-      "path": "resources/lexique-383.entries.lookup-index.v2.txt"
+      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
+      "path": "resources/lexique-383.entries.lookup-index.v1.txt"
     },
     {
       "byteLength": 710653,
@@ -277,8 +277,8 @@
     },
     {
       "byteLength": 6267367,
-      "checksum": "sha256:d8629e7dcb96bc162552e49785fdef7dae4f0dfceb6edd27e9ca988c86abb77d",
-      "path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt"
+      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
+      "path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt"
     },
     {
       "byteLength": 52,
@@ -297,13 +297,13 @@
     },
     {
       "byteLength": 248637,
-      "checksum": "sha256:994792f665b4a36df1dcb73c616a58f82c040a58398af5a4c626ad87d47ee1c8",
-      "path": "resources/wikidata-fr.aliases.lookup-index.v2.txt"
+      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
+      "path": "resources/wikidata-fr.aliases.lookup-index.v1.txt"
     },
     {
       "byteLength": 558306,
-      "checksum": "sha256:90d004951fecae447519e3c6ce89920b1607424e96fef154daf03f3491ef67e2",
-      "path": "resources/wikidata-fr.entities.lookup-index.v2.txt"
+      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
+      "path": "resources/wikidata-fr.entities.lookup-index.v1.txt"
     },
     {
       "byteLength": 902,
@@ -322,12 +322,12 @@
     },
     {
       "byteLength": 135481,
-      "checksum": "sha256:8943ca69ae27299a9bcebeed297628642ea0c88101e10e027ca67fbe74d90fd4",
-      "path": "resources/wikidata-fr.relations.lookup-index.v2.txt"
+      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
+      "path": "resources/wikidata-fr.relations.lookup-index.v1.txt"
     },
     {
       "byteLength": 87276,
-      "checksum": "sha256:2106a93a50c621e7265e0fd41a5bbc3e236ec2624585f0b5ddd3d2cb6e5bb273",
+      "checksum": "sha256:be1226207de0454552012052882f59f81ef2d161cd33c68b89e83cff3b9754f2",
       "path": "SOURCES.generated.json"
     },
     {
@@ -337,7 +337,7 @@
     },
     {
       "byteLength": 46037,
-      "checksum": "sha256:780bbcbc2e94301497b1c415697cadec59a6d2d561d1b3ec8d8549246ece0b10",
+      "checksum": "sha256:d852a3e278cf4e9faf0d1ef6ac972b8a4b7d9710ac1b129a8f8eee6c4db65cd6",
       "path": "src/manifest.ts"
     },
     {
@@ -347,7 +347,7 @@
     },
     {
       "byteLength": 24480,
-      "checksum": "sha256:2c8eadf34cc265dfb2149f2b3f4e515ed5e2168e90a28c87a7c84c3af472636d",
+      "checksum": "sha256:028c2c7840a2a558f8bde03adf67d0dbeb6d00ae8317007bf77b96e2efc0e101",
       "path": "src/resources.ts"
     },
     {
@@ -411,7 +411,7 @@
     "resources/fr.segmentation.sentence.json",
     "resources/fr.segmentation.token.json",
     "resources/fr.segmentation.word.json",
-    "resources/lexique-383.entries.lookup-index.v2.txt",
+    "resources/lexique-383.entries.lookup-index.v1.txt",
     "resources/lexique-383.lemmas.tsv.gz.b64",
     "resources/lexique-383.lexicon.json",
     "resources/lexique-383.morphology.json",
@@ -425,16 +425,16 @@
     "resources/unicode-17.scripts.tsv.gz.b64",
     "resources/unimorph-fra.features.tsv",
     "resources/unimorph-fra.morphology.json",
-    "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
+    "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
     "resources/unimorph-fra.pos.tsv",
     "resources/unimorph-fra.quality-profile.json",
     "resources/unimorph-fra.quality.json",
-    "resources/wikidata-fr.aliases.lookup-index.v2.txt",
-    "resources/wikidata-fr.entities.lookup-index.v2.txt",
+    "resources/wikidata-fr.aliases.lookup-index.v1.txt",
+    "resources/wikidata-fr.entities.lookup-index.v1.txt",
     "resources/wikidata-fr.kb.json",
     "resources/wikidata-fr.quality-profile.json",
     "resources/wikidata-fr.quality.json",
-    "resources/wikidata-fr.relations.lookup-index.v2.txt",
+    "resources/wikidata-fr.relations.lookup-index.v1.txt",
     "SOURCES.generated.json",
     "src/index.ts",
     "src/manifest.ts",
@@ -446,9 +446,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
+  "lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
   "mode": "source-backed",
-  "outputChecksum": "sha256:f69964f2b8df4aa863c259a1608fd7d0c268a57314005b6fc00671ce3e1f7a4e",
+  "outputChecksum": "sha256:6e551b523b275b29380e8013475bd078381f79ab6b094056e72cf15fb9754f48",
   "packSpecPath": "tools/textpack-forge/composites/textpack-fr.composite.json",
   "packageName": "@ismail-elkorchi/textpack-fr",
   "packageVersion": "0.1.0",

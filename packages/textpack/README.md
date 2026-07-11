@@ -68,8 +68,8 @@ Resource ids are exact. `getResource(pack, "x")` only returns the resource whose
 `"x"`.
 
 Generated large tables may declare a canonical `resourceRefs` entry with role `lookup-index` and
-schema `textpack.lookup-index.v2`. The logical source descriptor and lookup view share one
-`textpack-indexed-table-v2` physical store containing column-scoped key buckets, row buckets,
+schema `textpack.lookup-index.v1`. The logical source descriptor and lookup view share one
+`textpack-indexed-table-v1` physical store containing column-scoped key buckets, row buckets,
 optional alias/label fuzzy key catalogs, and raw pattern catalogs for lexicon expert lookup.
 `openResourceLookupIndex()` verifies the store and each bucket selected by a query; it never opens
 or reconstructs the full source table on a targeted lookup path. `openResourceText()` reconstructs

@@ -308,15 +308,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "ar-msa-camel-morph-morphemes",
 			"kind": "morphology",
-			"path": "resources/camel-morph-msa.morphemes.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
 			"schemaId": "textlex.morphology.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "ar-msa-camel-morph-morphemes-lookup-index",
 				"logicalFormat": "tsv+gzip+base64",
 				"logicalPath": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
@@ -383,15 +383,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "ar-msa-camel-morph-morphemes-lookup-index",
 			"kind": "dataset",
-			"path": "resources/camel-morph-msa.morphemes.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"CAMeL Morph MSA LREC-COLING 2024 release."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "ar-msa-camel-morph-morphemes",
 				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
 				"indexedResourceTextChecksum": "sha256:825277b95e8aa6b35ff718ae7ca07cfab84a4704e476ac29931ccd595b870d65",
@@ -421,15 +421,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wordnet-ar-lexical-entries",
 			"kind": "lexicon",
-			"path": "resources/wordnet-ar.lexical-entries.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
 			],
 			"schemaId": "textlex.lexicon.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wordnet-ar-lexical-entries-lookup-index",
 				"logicalFormat": "tsv",
 				"logicalPath": "resources/wordnet-ar.lexical-entries.tsv",
@@ -518,15 +518,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wordnet-ar-lexical-entries-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wordnet-ar.lexical-entries.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC-BY-4.0",
 			"citations": [
 				"Arabic WordNet 4.1.0."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wordnet-ar-lexical-entries",
 				"indexedResourceSchemaId": "textlex.lexicon.rows.v1",
 				"indexedResourceTextChecksum": "sha256:4254fb7dcd9bfa0a3b5b4d9512840a153970d9abdca1c0758d751a649eee74c5",
@@ -553,15 +553,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wikidata-ar-entities",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-ar.entities.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-ar.entities.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textkb.knowledge-base.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wikidata-ar-entities-lookup-index",
 				"logicalFormat": "text/tab-separated-values",
 				"logicalPath": "resources/wikidata-ar.entities.tsv.gz.b64",
@@ -573,15 +573,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wikidata-ar-aliases",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-ar.aliases.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-ar.aliases.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textkb.knowledge-base.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wikidata-ar-aliases-lookup-index",
 				"logicalFormat": "text/tab-separated-values",
 				"logicalPath": "resources/wikidata-ar.aliases.tsv.gz.b64",
@@ -593,15 +593,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wikidata-ar-relations",
 			"kind": "knowledge-base",
-			"path": "resources/wikidata-ar.relations.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-ar.relations.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
 			"schemaId": "textkb.knowledge-base.rows.v1",
 			"metadata": {
-				"storageFormat": "textpack-indexed-table-v2",
+				"storageFormat": "textpack-indexed-table-v1",
 				"lookupIndexResourceId": "wikidata-ar-relations-lookup-index",
 				"logicalFormat": "text/tab-separated-values",
 				"logicalPath": "resources/wikidata-ar.relations.tsv.gz.b64",
@@ -646,15 +646,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wikidata-ar-entities-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wikidata-ar.entities.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-ar.entities.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wikidata-ar-entities",
 				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
 				"indexedResourceTextChecksum": "sha256:733a21bc3defd8c8d277b507ea0b0ad1ec18869fcc13ba7d4d2c6a026c6fc45a",
@@ -682,15 +682,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wikidata-ar-aliases-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wikidata-ar.aliases.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-ar.aliases.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wikidata-ar-aliases",
 				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
 				"indexedResourceTextChecksum": "sha256:e110c4891c0e5115105c85a8449ab440a44a94e3f36dfd9a73ca38c84548ce7d",
@@ -718,15 +718,15 @@ export const manifest: TextPackManifest = {
 		{
 			"id": "wikidata-ar-relations-lookup-index",
 			"kind": "dataset",
-			"path": "resources/wikidata-ar.relations.lookup-index.v2.txt",
-			"format": "textpack-indexed-table-v2",
+			"path": "resources/wikidata-ar.relations.lookup-index.v1.txt",
+			"format": "textpack-indexed-table-v1",
 			"license": "CC0-1.0",
 			"citations": [
 				"Wikidata main structured data dump, 2026-06-08."
 			],
-			"schemaId": "textpack.lookup-index.v2",
+			"schemaId": "textpack.lookup-index.v1",
 			"metadata": {
-				"indexFormat": "normalized-key-bucketed-rows-v2",
+				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "wikidata-ar-relations",
 				"indexedResourceSchemaId": "textkb.knowledge-base.rows.v1",
 				"indexedResourceTextChecksum": "sha256:16e77e00bf6e1492f1be03b8ca003b781ffb17b87f0ea5c0a3eeabd6d7528ea1",
@@ -849,21 +849,21 @@ export const manifest: TextPackManifest = {
 				{
 					"role": "index",
 					"resourceId": "wikidata-ar-aliases-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textkb"
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-ar-entities-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textkb"
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-ar-relations-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textkb"
 				},
@@ -961,7 +961,7 @@ export const manifest: TextPackManifest = {
 				{
 					"role": "index",
 					"resourceId": "wordnet-ar-lexical-entries-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -1019,7 +1019,7 @@ export const manifest: TextPackManifest = {
 				{
 					"role": "index",
 					"resourceId": "ar-msa-camel-morph-morphemes-lookup-index",
-					"schemaId": "textpack.lookup-index.v2",
+					"schemaId": "textpack.lookup-index.v1",
 					"required": true,
 					"ownerPackage": "@ismail-elkorchi/textlex"
 				},
@@ -1332,7 +1332,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:ad731a6e2716924f4010022b85ab5db895645c15f4094d76a973450674e7b755",
+		"lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

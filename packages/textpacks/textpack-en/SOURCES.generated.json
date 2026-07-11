@@ -515,7 +515,7 @@
     },
     {
       "byteLength": 4064970,
-      "checksum": "sha256:48ff2648bb3eeb7c2fa58c6b63300b838f65a78bdffc486c5e458d689acc021c",
+      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
       "citations": [
         "English Speller Database generated wordlist outputs, rel-2026.02.25."
       ],
@@ -523,7 +523,7 @@
       "kind": "lexicon",
       "license": "LicenseRef-ESDB-MIT-Like",
       "logicalRecordCount": 548642,
-      "path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
+      "path": "resources/esdb-2026.default-wordlists.lookup-index.v1.txt",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
@@ -540,7 +540,7 @@
     },
     {
       "byteLength": 4064970,
-      "checksum": "sha256:48ff2648bb3eeb7c2fa58c6b63300b838f65a78bdffc486c5e458d689acc021c",
+      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
       "citations": [
         "English Speller Database generated wordlist outputs, rel-2026.02.25."
       ],
@@ -548,7 +548,7 @@
       "kind": "dataset",
       "license": "LicenseRef-ESDB-MIT-Like",
       "logicalRecordCount": 0,
-      "path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
+      "path": "resources/esdb-2026.default-wordlists.lookup-index.v1.txt",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
@@ -796,7 +796,7 @@
     },
     {
       "byteLength": 13687253,
-      "checksum": "sha256:3de1ad6ddb718d8eb8514e81541398f0712d13623a7a31bce3b506ce6878e159",
+      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
@@ -804,7 +804,7 @@
       "kind": "morphology",
       "license": "LicenseRef-ESDB-MIT-Like",
       "logicalRecordCount": 401709,
-      "path": "resources/scowl-v2.inflections.lookup-index.v2.txt",
+      "path": "resources/scowl-v2.inflections.lookup-index.v1.txt",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
@@ -821,7 +821,7 @@
     },
     {
       "byteLength": 13687253,
-      "checksum": "sha256:3de1ad6ddb718d8eb8514e81541398f0712d13623a7a31bce3b506ce6878e159",
+      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
@@ -829,7 +829,7 @@
       "kind": "dataset",
       "license": "LicenseRef-ESDB-MIT-Like",
       "logicalRecordCount": 0,
-      "path": "resources/scowl-v2.inflections.lookup-index.v2.txt",
+      "path": "resources/scowl-v2.inflections.lookup-index.v1.txt",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
@@ -1197,7 +1197,7 @@
     },
     {
       "byteLength": 651874,
-      "checksum": "sha256:5b3cc19902d532fd277e280d300f576fccbf786bb50618dff838089fe3aae636",
+      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1206,7 +1206,7 @@
       "kind": "knowledge-base",
       "license": "CC0-1.0",
       "logicalRecordCount": 19781,
-      "path": "resources/wikidata-en.aliases.lookup-index.v2.txt",
+      "path": "resources/wikidata-en.aliases.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -1223,7 +1223,7 @@
     },
     {
       "byteLength": 651874,
-      "checksum": "sha256:5b3cc19902d532fd277e280d300f576fccbf786bb50618dff838089fe3aae636",
+      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1232,7 +1232,7 @@
       "kind": "dataset",
       "license": "CC0-1.0",
       "logicalRecordCount": 0,
-      "path": "resources/wikidata-en.aliases.lookup-index.v2.txt",
+      "path": "resources/wikidata-en.aliases.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -1249,7 +1249,7 @@
     },
     {
       "byteLength": 661412,
-      "checksum": "sha256:93468c380b5867d6f4be41b59ec44a7a159aba17778edc0e26ced84dff73007f",
+      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1258,7 +1258,7 @@
       "kind": "knowledge-base",
       "license": "CC0-1.0",
       "logicalRecordCount": 11618,
-      "path": "resources/wikidata-en.entities.lookup-index.v2.txt",
+      "path": "resources/wikidata-en.entities.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -1275,7 +1275,7 @@
     },
     {
       "byteLength": 661412,
-      "checksum": "sha256:93468c380b5867d6f4be41b59ec44a7a159aba17778edc0e26ced84dff73007f",
+      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1284,7 +1284,7 @@
       "kind": "dataset",
       "license": "CC0-1.0",
       "logicalRecordCount": 0,
-      "path": "resources/wikidata-en.entities.lookup-index.v2.txt",
+      "path": "resources/wikidata-en.entities.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -1376,7 +1376,7 @@
     },
     {
       "byteLength": 153966,
-      "checksum": "sha256:78e2bc3e1a1aaae2084e3051be5ddd3428bf089b4f62d434bb4e8228c3693a0d",
+      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1385,7 +1385,7 @@
       "kind": "knowledge-base",
       "license": "CC0-1.0",
       "logicalRecordCount": 11618,
-      "path": "resources/wikidata-en.relations.lookup-index.v2.txt",
+      "path": "resources/wikidata-en.relations.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -1402,7 +1402,7 @@
     },
     {
       "byteLength": 153966,
-      "checksum": "sha256:78e2bc3e1a1aaae2084e3051be5ddd3428bf089b4f62d434bb4e8228c3693a0d",
+      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1411,7 +1411,7 @@
       "kind": "dataset",
       "license": "CC0-1.0",
       "logicalRecordCount": 0,
-      "path": "resources/wikidata-en.relations.lookup-index.v2.txt",
+      "path": "resources/wikidata-en.relations.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
@@ -1452,7 +1452,7 @@
     },
     {
       "byteLength": 3562564,
-      "checksum": "sha256:44b63fc08289c19fb42ba373941012565638b4ec16f76adba2703fd67efa3f40",
+      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
       "citations": [
         "Open English WordNet 2025."
       ],
@@ -1460,7 +1460,7 @@
       "kind": "lexicon",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
       "logicalRecordCount": 135969,
-      "path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
+      "path": "resources/wordnet-en.lexical-entries.lookup-index.v1.txt",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
@@ -1477,7 +1477,7 @@
     },
     {
       "byteLength": 3562564,
-      "checksum": "sha256:44b63fc08289c19fb42ba373941012565638b4ec16f76adba2703fd67efa3f40",
+      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
       "citations": [
         "Open English WordNet 2025."
       ],
@@ -1485,7 +1485,7 @@
       "kind": "dataset",
       "license": "LicenseRef-Princeton-WordNet AND CC-BY-4.0",
       "logicalRecordCount": 0,
-      "path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
+      "path": "resources/wordnet-en.lexical-entries.lookup-index.v1.txt",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",

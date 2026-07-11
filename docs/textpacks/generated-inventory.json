@@ -294,7 +294,7 @@
         },
         {
           "byteLength": 55044,
-          "checksum": "sha256:f3e36a889da92995d0e5d1e14a459c9f84db62d98108a62cd306bcf0c4da7ef6",
+          "checksum": "sha256:00cf9f82473a79f6e8840dd3705a272921a2de6087869f82260577e83d3fc9e3",
           "path": "COVERAGE.generated.json"
         },
         {
@@ -334,22 +334,22 @@
         },
         {
           "byteLength": 40572,
-          "checksum": "sha256:e79fe1958deb22f9541455ac4579a9a01291fce335824e30ca1e8797c11f6756",
+          "checksum": "sha256:e24bb18edf18c601cd2596140a7adde073d35c68d093b2276e6d031708ad22ca",
           "path": "pack.manifest.json"
         },
         {
           "byteLength": 3537,
-          "checksum": "sha256:43178bede0f53db469b90709d9bdfe3ad844276095870f5a717df50761a13862",
+          "checksum": "sha256:4cfd2275c862a8f9ee4257c04741aabbb54c3a77ac4f8b70910254c8a3bbe54d",
           "path": "package.json"
         },
         {
           "byteLength": 51923,
-          "checksum": "sha256:373aed972d2e32fd80a2a8b1c3cac0bc56d1b9512328c576fcec77dc1157635c",
+          "checksum": "sha256:a34f96243868c0e805bae848e640c82b4b8993863b6de2a32feda093e72e5db5",
           "path": "QUALITY.generated.json"
         },
         {
           "byteLength": 3653,
-          "checksum": "sha256:4d630332484544afeef3e02e37aeafe952f5004c59f43e1727976f04bd06a681",
+          "checksum": "sha256:ea10c215313f0eb24cd04b577a846d027a45d140e30c05edf4fd2a218c86e412",
           "path": "README.md"
         },
         {
@@ -449,8 +449,8 @@
         },
         {
           "byteLength": 19452834,
-          "checksum": "sha256:0231a135947dcb1228051bbc585f743f5a9e64b9297f8cc066d638ac6005cb69",
-          "path": "resources/camel-morph-msa.morphemes.lookup-index.v2.txt"
+          "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+          "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt"
         },
         {
           "byteLength": 10937,
@@ -519,13 +519,13 @@
         },
         {
           "byteLength": 123649,
-          "checksum": "sha256:5780129ec81200d6b0e52bfaa739709fa70c832e9be1c98a7d942a7d9b11c5d6",
-          "path": "resources/wikidata-ar.aliases.lookup-index.v2.txt"
+          "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+          "path": "resources/wikidata-ar.aliases.lookup-index.v1.txt"
         },
         {
           "byteLength": 238909,
-          "checksum": "sha256:0f57ef9899c7884e0e750252d35fd2f83e5a83189de8fc8bd15be2a02b875719",
-          "path": "resources/wikidata-ar.entities.lookup-index.v2.txt"
+          "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+          "path": "resources/wikidata-ar.entities.lookup-index.v1.txt"
         },
         {
           "byteLength": 901,
@@ -544,8 +544,8 @@
         },
         {
           "byteLength": 43733,
-          "checksum": "sha256:1758e9432c4d279afefd913e0226db4a5dbbbba888963214cac053822574f9c2",
-          "path": "resources/wikidata-ar.relations.lookup-index.v2.txt"
+          "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+          "path": "resources/wikidata-ar.relations.lookup-index.v1.txt"
         },
         {
           "byteLength": 518,
@@ -554,8 +554,8 @@
         },
         {
           "byteLength": 5890936,
-          "checksum": "sha256:bb3f52c87ac029b43fd06941254cfa5d7a7d0bf36a01dbbb102c63c7dabad630",
-          "path": "resources/wordnet-ar.lexical-entries.lookup-index.v2.txt"
+          "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+          "path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt"
         },
         {
           "byteLength": 426,
@@ -589,7 +589,7 @@
         },
         {
           "byteLength": 74341,
-          "checksum": "sha256:671d951b91351d3b432f752beff88b41ba46bbcff5b468656f50bea9c812ea5a",
+          "checksum": "sha256:e40e83aa0483b98dd988efbc3e5366a28811af391e64b5555d799234165c0096",
           "path": "SOURCES.generated.json"
         },
         {
@@ -599,7 +599,7 @@
         },
         {
           "byteLength": 40828,
-          "checksum": "sha256:23e9c8e160f0309b1a6636e63cc7f41bdc8b8189f3539be22417e4a8e0a3e348",
+          "checksum": "sha256:ac1e2cd8354f0a70457c3f0c58d33656555926f3b66e2fdc8ed75f4d18670778",
           "path": "src/manifest.ts"
         },
         {
@@ -609,7 +609,7 @@
         },
         {
           "byteLength": 21681,
-          "checksum": "sha256:9d194ad1d58652c870490b5271ee119f7f533c91b8cd59aba1963bc387c05630",
+          "checksum": "sha256:45d41533001150a7e520989b6cd048be6c1f23d8f8900cde7f2bfecdab573c64",
           "path": "src/resources.ts"
         },
         {
@@ -662,7 +662,7 @@
         "resources/camel-morph-msa.compatibility.tsv.gz.b64",
         "resources/camel-morph-msa.defaults.tsv",
         "resources/camel-morph-msa.features.tsv",
-        "resources/camel-morph-msa.morphemes.lookup-index.v2.txt",
+        "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
         "resources/camel-morph-msa.morphology.json",
         "resources/camel-morph-msa.quality-profile.json",
         "resources/camel-morph-msa.quality.json",
@@ -676,14 +676,14 @@
         "resources/unicode-17.core.summary.json",
         "resources/unicode-17.property-value-aliases.tsv",
         "resources/unicode-17.scripts.tsv.gz.b64",
-        "resources/wikidata-ar.aliases.lookup-index.v2.txt",
-        "resources/wikidata-ar.entities.lookup-index.v2.txt",
+        "resources/wikidata-ar.aliases.lookup-index.v1.txt",
+        "resources/wikidata-ar.entities.lookup-index.v1.txt",
         "resources/wikidata-ar.kb.json",
         "resources/wikidata-ar.quality-profile.json",
         "resources/wikidata-ar.quality.json",
-        "resources/wikidata-ar.relations.lookup-index.v2.txt",
+        "resources/wikidata-ar.relations.lookup-index.v1.txt",
         "resources/wordnet-ar.kb.json",
-        "resources/wordnet-ar.lexical-entries.lookup-index.v2.txt",
+        "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt",
         "resources/wordnet-ar.lexicon.json",
         "resources/wordnet-ar.quality-profile.json",
         "resources/wordnet-ar.quality.json",
@@ -706,7 +706,7 @@
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
       "npmShippedSizeBytes": 40857891,
-      "outputChecksum": "sha256:2b8e2190917e15d0bbeece696a96e262cd80e5ce489f84c3d0984064c8ad3f75",
+      "outputChecksum": "sha256:50696a9d72ce3d767c5cb9952a5ad5e8fce598772a5d168262eb7df54a0512ab",
       "packClass": "language-composite",
       "packageId": "textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
@@ -1061,7 +1061,7 @@
         },
         {
           "byteLength": 64984,
-          "checksum": "sha256:5e1c6c2fd7cbe379bc207bfaf7e0c55c8a6280d40139da153dd5c942426077e8",
+          "checksum": "sha256:deb77ca71e2649c312df0dbc7653ad3647398a1f172736ec64d496c28958d579",
           "path": "COVERAGE.generated.json"
         },
         {
@@ -1106,22 +1106,22 @@
         },
         {
           "byteLength": 49338,
-          "checksum": "sha256:3d4e12ea425ad260e33c6c8afdb44c6b781a27c77d64b17e70cba9397e2591da",
+          "checksum": "sha256:c85c4c97507247be131fab5700bb9e77750d7386ae687a7742f25f9e00715930",
           "path": "pack.manifest.json"
         },
         {
           "byteLength": 3809,
-          "checksum": "sha256:487dbd353dad451faa56eeeaac6a9e7df998b147e324af8f53b662fd1b2b13cf",
+          "checksum": "sha256:565cfd3c9be63eb2cd7c911b804389c7f6892df895e311288985c901872bde1b",
           "path": "package.json"
         },
         {
           "byteLength": 60388,
-          "checksum": "sha256:6c427904860ae624838ab821c2ec1e0ab9a19c99976d372d3044adacd6affa54",
+          "checksum": "sha256:b34458cd25787848f8be51e2df39f459ffce0aaadbb31a18e1b2e3dd28b9e1fb",
           "path": "QUALITY.generated.json"
         },
         {
           "byteLength": 4154,
-          "checksum": "sha256:79caa5ab5bb3b8020a4ab841ff06435d5989f9c793feb6a9b2c46de2e2fb67ed",
+          "checksum": "sha256:efecb1f8a0e0914efc774c585046fd091cd7f7c4c966e30c025fedb2dcef4c79",
           "path": "README.md"
         },
         {
@@ -1251,8 +1251,8 @@
         },
         {
           "byteLength": 4064970,
-          "checksum": "sha256:48ff2648bb3eeb7c2fa58c6b63300b838f65a78bdffc486c5e458d689acc021c",
-          "path": "resources/esdb-2026.default-wordlists.lookup-index.v2.txt"
+          "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
+          "path": "resources/esdb-2026.default-wordlists.lookup-index.v1.txt"
         },
         {
           "byteLength": 429,
@@ -1276,8 +1276,8 @@
         },
         {
           "byteLength": 13687253,
-          "checksum": "sha256:3de1ad6ddb718d8eb8514e81541398f0712d13623a7a31bce3b506ce6878e159",
-          "path": "resources/scowl-v2.inflections.lookup-index.v2.txt"
+          "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
+          "path": "resources/scowl-v2.inflections.lookup-index.v1.txt"
         },
         {
           "byteLength": 438,
@@ -1326,13 +1326,13 @@
         },
         {
           "byteLength": 651874,
-          "checksum": "sha256:5b3cc19902d532fd277e280d300f576fccbf786bb50618dff838089fe3aae636",
-          "path": "resources/wikidata-en.aliases.lookup-index.v2.txt"
+          "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
+          "path": "resources/wikidata-en.aliases.lookup-index.v1.txt"
         },
         {
           "byteLength": 661412,
-          "checksum": "sha256:93468c380b5867d6f4be41b59ec44a7a159aba17778edc0e26ced84dff73007f",
-          "path": "resources/wikidata-en.entities.lookup-index.v2.txt"
+          "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
+          "path": "resources/wikidata-en.entities.lookup-index.v1.txt"
         },
         {
           "byteLength": 909,
@@ -1351,8 +1351,8 @@
         },
         {
           "byteLength": 153966,
-          "checksum": "sha256:78e2bc3e1a1aaae2084e3051be5ddd3428bf089b4f62d434bb4e8228c3693a0d",
-          "path": "resources/wikidata-en.relations.lookup-index.v2.txt"
+          "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
+          "path": "resources/wikidata-en.relations.lookup-index.v1.txt"
         },
         {
           "byteLength": 518,
@@ -1361,8 +1361,8 @@
         },
         {
           "byteLength": 3562564,
-          "checksum": "sha256:44b63fc08289c19fb42ba373941012565638b4ec16f76adba2703fd67efa3f40",
-          "path": "resources/wordnet-en.lexical-entries.lookup-index.v2.txt"
+          "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
+          "path": "resources/wordnet-en.lexical-entries.lookup-index.v1.txt"
         },
         {
           "byteLength": 426,
@@ -1396,7 +1396,7 @@
         },
         {
           "byteLength": 88648,
-          "checksum": "sha256:fe018bd5f7bdb0d033c952e6a211d4c44b7f9d07892a888f8de1720ebf70d075",
+          "checksum": "sha256:63501cbcff34757239047d23313db5a2bd2b1561c171309bd75825a9fe1794c8",
           "path": "SOURCES.generated.json"
         },
         {
@@ -1406,7 +1406,7 @@
         },
         {
           "byteLength": 49594,
-          "checksum": "sha256:1fcc8ee5a3707072c3adb8f87a799dd1e419f5231e84ef390a770a35d078ae8a",
+          "checksum": "sha256:57b2208903fb6b4505f2cd4872d6f3b250b17c66cd1693fbd3d6cc0a5fb304b6",
           "path": "src/manifest.ts"
         },
         {
@@ -1416,7 +1416,7 @@
         },
         {
           "byteLength": 24964,
-          "checksum": "sha256:918a601540ef1ea20769e23eec7d031eab829fb724cc5d73555207050af8777e",
+          "checksum": "sha256:7818b56641ace9a9a8f2bc89437ccba646b9f3e0004438bbc5f4ff982c793e0e",
           "path": "src/resources.ts"
         },
         {
@@ -1476,12 +1476,12 @@
         "resources/en.segmentation.sentence.json",
         "resources/en.segmentation.word.json",
         "resources/esdb-2026.default-profiles.tsv",
-        "resources/esdb-2026.default-wordlists.lookup-index.v2.txt",
+        "resources/esdb-2026.default-wordlists.lookup-index.v1.txt",
         "resources/esdb-2026.lexicon.json",
         "resources/esdb-2026.quality-profile.json",
         "resources/esdb-2026.quality.json",
         "resources/esdb-2026.search-profile.json",
-        "resources/scowl-v2.inflections.lookup-index.v2.txt",
+        "resources/scowl-v2.inflections.lookup-index.v1.txt",
         "resources/scowl-v2.lexicon.json",
         "resources/scowl-v2.morphology.json",
         "resources/scowl-v2.pos.tsv",
@@ -1491,14 +1491,14 @@
         "resources/unicode-17.core.summary.json",
         "resources/unicode-17.property-value-aliases.tsv",
         "resources/unicode-17.scripts.tsv.gz.b64",
-        "resources/wikidata-en.aliases.lookup-index.v2.txt",
-        "resources/wikidata-en.entities.lookup-index.v2.txt",
+        "resources/wikidata-en.aliases.lookup-index.v1.txt",
+        "resources/wikidata-en.entities.lookup-index.v1.txt",
         "resources/wikidata-en.kb.json",
         "resources/wikidata-en.quality-profile.json",
         "resources/wikidata-en.quality.json",
-        "resources/wikidata-en.relations.lookup-index.v2.txt",
+        "resources/wikidata-en.relations.lookup-index.v1.txt",
         "resources/wordnet-en.kb.json",
-        "resources/wordnet-en.lexical-entries.lookup-index.v2.txt",
+        "resources/wordnet-en.lexical-entries.lookup-index.v1.txt",
         "resources/wordnet-en.lexicon.json",
         "resources/wordnet-en.quality-profile.json",
         "resources/wordnet-en.quality.json",
@@ -1521,7 +1521,7 @@
       ],
       "licenseExpression": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
       "npmShippedSizeBytes": 35535071,
-      "outputChecksum": "sha256:ff56277e0b5894d6ddb0b7702ce1544d4e3d7b4114137144d5c1bf58fdf3f07e",
+      "outputChecksum": "sha256:d42cf5c7da91759948e085a37b570bc016c6f3853e74444e70cf276b5a1db900",
       "packClass": "language-composite",
       "packageId": "textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
@@ -1858,7 +1858,7 @@
         },
         {
           "byteLength": 62866,
-          "checksum": "sha256:a02098702871378a01abb1ffb20871f25a942b5b2ef03f24fd649a868c69989b",
+          "checksum": "sha256:220fbb682b6c56ce6902e30ac35dfd5214b033e99a537d618fb6b4bf622aed5a",
           "path": "COVERAGE.generated.json"
         },
         {
@@ -1883,22 +1883,22 @@
         },
         {
           "byteLength": 45781,
-          "checksum": "sha256:7841f05d740d96c27864541abe440be4f2c756921d8f2ad16cc17d4138a1261e",
+          "checksum": "sha256:2441b459435ecb9c1a70517d1e7d664780cf9c880fe2d4a8fb2e2f0536886a88",
           "path": "pack.manifest.json"
         },
         {
           "byteLength": 3858,
-          "checksum": "sha256:56b3bc6bece77a0b4e21a4fb6046eab6d76e7ad628347bce422205c0147dec60",
+          "checksum": "sha256:ce5ac1e3e7b7ddddbca5687cd1ac901d46a3847fd4411e537ea1d95c56707e8c",
           "path": "package.json"
         },
         {
           "byteLength": 58360,
-          "checksum": "sha256:669b2b66141f412b68c33c534496db14d5ac5b588e2a13e1d7abe236847220c3",
+          "checksum": "sha256:24242212707d8eca9565b29e96410b07b4e988826c40dc67c71269d1751325f6",
           "path": "QUALITY.generated.json"
         },
         {
           "byteLength": 4103,
-          "checksum": "sha256:528bb428f403dd6aaa92f2537f12c27f735874b16d9459028f7b77786c8d73fe",
+          "checksum": "sha256:e70d1660c1a9e008b203326cfff709a549eda66e48f97ad4ec7d25f89929fc7b",
           "path": "README.md"
         },
         {
@@ -2053,8 +2053,8 @@
         },
         {
           "byteLength": 5000638,
-          "checksum": "sha256:bf76e33d8b8d7304e99a62023799e3c1da34408b46ab14baaf01ed0c441c175c",
-          "path": "resources/lexique-383.entries.lookup-index.v2.txt"
+          "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
+          "path": "resources/lexique-383.entries.lookup-index.v1.txt"
         },
         {
           "byteLength": 710653,
@@ -2123,8 +2123,8 @@
         },
         {
           "byteLength": 6267367,
-          "checksum": "sha256:d8629e7dcb96bc162552e49785fdef7dae4f0dfceb6edd27e9ca988c86abb77d",
-          "path": "resources/unimorph-fra.paradigms.lookup-index.v2.txt"
+          "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
+          "path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt"
         },
         {
           "byteLength": 52,
@@ -2143,13 +2143,13 @@
         },
         {
           "byteLength": 248637,
-          "checksum": "sha256:994792f665b4a36df1dcb73c616a58f82c040a58398af5a4c626ad87d47ee1c8",
-          "path": "resources/wikidata-fr.aliases.lookup-index.v2.txt"
+          "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
+          "path": "resources/wikidata-fr.aliases.lookup-index.v1.txt"
         },
         {
           "byteLength": 558306,
-          "checksum": "sha256:90d004951fecae447519e3c6ce89920b1607424e96fef154daf03f3491ef67e2",
-          "path": "resources/wikidata-fr.entities.lookup-index.v2.txt"
+          "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
+          "path": "resources/wikidata-fr.entities.lookup-index.v1.txt"
         },
         {
           "byteLength": 902,
@@ -2168,12 +2168,12 @@
         },
         {
           "byteLength": 135481,
-          "checksum": "sha256:8943ca69ae27299a9bcebeed297628642ea0c88101e10e027ca67fbe74d90fd4",
-          "path": "resources/wikidata-fr.relations.lookup-index.v2.txt"
+          "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
+          "path": "resources/wikidata-fr.relations.lookup-index.v1.txt"
         },
         {
           "byteLength": 87276,
-          "checksum": "sha256:2106a93a50c621e7265e0fd41a5bbc3e236ec2624585f0b5ddd3d2cb6e5bb273",
+          "checksum": "sha256:be1226207de0454552012052882f59f81ef2d161cd33c68b89e83cff3b9754f2",
           "path": "SOURCES.generated.json"
         },
         {
@@ -2183,7 +2183,7 @@
         },
         {
           "byteLength": 46037,
-          "checksum": "sha256:780bbcbc2e94301497b1c415697cadec59a6d2d561d1b3ec8d8549246ece0b10",
+          "checksum": "sha256:d852a3e278cf4e9faf0d1ef6ac972b8a4b7d9710ac1b129a8f8eee6c4db65cd6",
           "path": "src/manifest.ts"
         },
         {
@@ -2193,7 +2193,7 @@
         },
         {
           "byteLength": 24480,
-          "checksum": "sha256:2c8eadf34cc265dfb2149f2b3f4e515ed5e2168e90a28c87a7c84c3af472636d",
+          "checksum": "sha256:028c2c7840a2a558f8bde03adf67d0dbeb6d00ae8317007bf77b96e2efc0e101",
           "path": "src/resources.ts"
         },
         {
@@ -2254,7 +2254,7 @@
         "resources/fr.segmentation.sentence.json",
         "resources/fr.segmentation.token.json",
         "resources/fr.segmentation.word.json",
-        "resources/lexique-383.entries.lookup-index.v2.txt",
+        "resources/lexique-383.entries.lookup-index.v1.txt",
         "resources/lexique-383.lemmas.tsv.gz.b64",
         "resources/lexique-383.lexicon.json",
         "resources/lexique-383.morphology.json",
@@ -2268,16 +2268,16 @@
         "resources/unicode-17.scripts.tsv.gz.b64",
         "resources/unimorph-fra.features.tsv",
         "resources/unimorph-fra.morphology.json",
-        "resources/unimorph-fra.paradigms.lookup-index.v2.txt",
+        "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
         "resources/unimorph-fra.pos.tsv",
         "resources/unimorph-fra.quality-profile.json",
         "resources/unimorph-fra.quality.json",
-        "resources/wikidata-fr.aliases.lookup-index.v2.txt",
-        "resources/wikidata-fr.entities.lookup-index.v2.txt",
+        "resources/wikidata-fr.aliases.lookup-index.v1.txt",
+        "resources/wikidata-fr.entities.lookup-index.v1.txt",
         "resources/wikidata-fr.kb.json",
         "resources/wikidata-fr.quality-profile.json",
         "resources/wikidata-fr.quality.json",
-        "resources/wikidata-fr.relations.lookup-index.v2.txt",
+        "resources/wikidata-fr.relations.lookup-index.v1.txt",
         "SOURCES.generated.json",
         "src/index.ts",
         "src/manifest.ts",
@@ -2294,7 +2294,7 @@
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
       "npmShippedSizeBytes": 13331632,
-      "outputChecksum": "sha256:f69964f2b8df4aa863c259a1608fd7d0c268a57314005b6fc00671ce3e1f7a4e",
+      "outputChecksum": "sha256:6e551b523b275b29380e8013475bd078381f79ab6b094056e72cf15fb9754f48",
       "packClass": "language-composite",
       "packageId": "textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",

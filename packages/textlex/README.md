@@ -24,7 +24,7 @@ import { buildTrie } from "@ismail-elkorchi/textlex/trie";
 
 The package also exposes `./lexicon`, `./gazetteer`, `./term`, `./trie`, `./phrase`, `./fuzzy`, `./annotate`, and generated textpack resource adapters.
 
-Targeted textpack lookup requires the canonical resource's generated v2 `lookup-index`, opens only
+Targeted textpack lookup requires the canonical resource's generated v1 `lookup-index`, opens only
 the matching key and row buckets, and never materializes the full referenced table. Exact,
 normalized, and casefold modes use column-scoped Unicode 17 NFKC-casefold keys; prefix, suffix, and
 fuzzy expert modes use the lexicon's raw pattern buckets and preserve their public matching

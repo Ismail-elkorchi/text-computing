@@ -234,7 +234,7 @@ async function bucketedLookupIndex(
 		fuzzyBuckets,
 		patternBuckets: [],
 	};
-	const indexText = `textpack.lookup-index.bucketed-rows.v2\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${fuzzyPayloads.map((payload) => payload.encoded).join("")}`;
+	const indexText = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${fuzzyPayloads.map((payload) => payload.encoded).join("")}`;
 	const indexedResourceTextByteLength = new TextEncoder().encode(
 		text,
 	).byteLength;
@@ -275,7 +275,7 @@ async function fixtureLookupMetadata(
 	keyColumns: readonly string[],
 ) {
 	return {
-		indexFormat: "normalized-key-bucketed-rows-v2",
+		indexFormat: "normalized-key-bucketed-rows-v1",
 		indexedResourceId: sourceResourceId,
 		indexedResourceSchemaId: "textkb.knowledge-base.rows.v1",
 		indexedResourceTextChecksum: `sha256:${await sha256(sourceText)}`,
@@ -686,9 +686,9 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 		"targetId",
 	]);
 	const resourceTexts = {
-		"resources/wikidata-fr-entities.indexed-table.v2.txt": entityIndex.text,
-		"resources/wikidata-fr-aliases.indexed-table.v2.txt": aliasIndex.text,
-		"resources/wikidata-fr-relations.indexed-table.v2.txt": relationIndex.text,
+		"resources/wikidata-fr-entities.indexed-table.v1.txt": entityIndex.text,
+		"resources/wikidata-fr-aliases.indexed-table.v1.txt": aliasIndex.text,
+		"resources/wikidata-fr-relations.indexed-table.v1.txt": relationIndex.text,
 		"resources/wikidata-fr-kb-canonical.json": JSON.stringify({
 			schemaVersion: "1",
 			kind: "knowledge-base",
@@ -721,8 +721,8 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-entities",
 					kind: "knowledge-base" as const,
-					path: "resources/wikidata-fr-entities.indexed-table.v2.txt",
-					format: "textpack-indexed-table-v2",
+					path: "resources/wikidata-fr-entities.indexed-table.v1.txt",
+					format: "textpack-indexed-table-v1",
 					schemaId: "textkb.knowledge-base.rows.v1",
 					metadata: {
 						lookupIndexResourceId: "wikidata-fr-entities-lookup-index",
@@ -731,9 +731,9 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-entities-lookup-index",
 					kind: "dataset" as const,
-					path: "resources/wikidata-fr-entities.indexed-table.v2.txt",
-					format: "textpack-indexed-table-v2",
-					schemaId: "textpack.lookup-index.v2",
+					path: "resources/wikidata-fr-entities.indexed-table.v1.txt",
+					format: "textpack-indexed-table-v1",
+					schemaId: "textpack.lookup-index.v1",
 					metadata: await fixtureLookupMetadata(
 						entityIndex,
 						"wikidata-fr-entities",
@@ -744,8 +744,8 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-aliases",
 					kind: "knowledge-base" as const,
-					path: "resources/wikidata-fr-aliases.indexed-table.v2.txt",
-					format: "textpack-indexed-table-v2",
+					path: "resources/wikidata-fr-aliases.indexed-table.v1.txt",
+					format: "textpack-indexed-table-v1",
 					schemaId: "textkb.knowledge-base.rows.v1",
 					metadata: {
 						lookupIndexResourceId: "wikidata-fr-aliases-lookup-index",
@@ -754,9 +754,9 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-aliases-lookup-index",
 					kind: "dataset" as const,
-					path: "resources/wikidata-fr-aliases.indexed-table.v2.txt",
-					format: "textpack-indexed-table-v2",
-					schemaId: "textpack.lookup-index.v2",
+					path: "resources/wikidata-fr-aliases.indexed-table.v1.txt",
+					format: "textpack-indexed-table-v1",
+					schemaId: "textpack.lookup-index.v1",
 					metadata: await fixtureLookupMetadata(
 						aliasIndex,
 						"wikidata-fr-aliases",
@@ -767,8 +767,8 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-relations",
 					kind: "knowledge-base" as const,
-					path: "resources/wikidata-fr-relations.indexed-table.v2.txt",
-					format: "textpack-indexed-table-v2",
+					path: "resources/wikidata-fr-relations.indexed-table.v1.txt",
+					format: "textpack-indexed-table-v1",
 					schemaId: "textkb.knowledge-base.rows.v1",
 					metadata: {
 						lookupIndexResourceId: "wikidata-fr-relations-lookup-index",
@@ -777,9 +777,9 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				{
 					id: "wikidata-fr-relations-lookup-index",
 					kind: "dataset" as const,
-					path: "resources/wikidata-fr-relations.indexed-table.v2.txt",
-					format: "textpack-indexed-table-v2",
-					schemaId: "textpack.lookup-index.v2",
+					path: "resources/wikidata-fr-relations.indexed-table.v1.txt",
+					format: "textpack-indexed-table-v1",
+					schemaId: "textpack.lookup-index.v1",
 					metadata: await fixtureLookupMetadata(
 						relationIndex,
 						"wikidata-fr-relations",
@@ -798,19 +798,19 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 		},
 		resources: {
 			"wikidata-fr-aliases": await fileBackedTextResource(
-				"resources/wikidata-fr-aliases.indexed-table.v2.txt",
+				"resources/wikidata-fr-aliases.indexed-table.v1.txt",
 				aliasIndex.text,
 			),
 			"wikidata-fr-aliases-lookup-index": await fileBackedTextResource(
-				"resources/wikidata-fr-aliases.indexed-table.v2.txt",
+				"resources/wikidata-fr-aliases.indexed-table.v1.txt",
 				aliasIndex.text,
 			),
 			"wikidata-fr-entities-lookup-index": await fileBackedTextResource(
-				"resources/wikidata-fr-entities.indexed-table.v2.txt",
+				"resources/wikidata-fr-entities.indexed-table.v1.txt",
 				entityIndex.text,
 			),
 			"wikidata-fr-entities": await fileBackedTextResource(
-				"resources/wikidata-fr-entities.indexed-table.v2.txt",
+				"resources/wikidata-fr-entities.indexed-table.v1.txt",
 				entityIndex.text,
 			),
 			"wikidata-fr-kb-canonical": await fileBackedTextResource(
@@ -818,11 +818,11 @@ test("canonical Wikidata textpack resources become a runtime knowledge base", as
 				resourceTexts["resources/wikidata-fr-kb-canonical.json"],
 			),
 			"wikidata-fr-relations": await fileBackedTextResource(
-				"resources/wikidata-fr-relations.indexed-table.v2.txt",
+				"resources/wikidata-fr-relations.indexed-table.v1.txt",
 				relationIndex.text,
 			),
 			"wikidata-fr-relations-lookup-index": await fileBackedTextResource(
-				"resources/wikidata-fr-relations.indexed-table.v2.txt",
+				"resources/wikidata-fr-relations.indexed-table.v1.txt",
 				relationIndex.text,
 			),
 		},
