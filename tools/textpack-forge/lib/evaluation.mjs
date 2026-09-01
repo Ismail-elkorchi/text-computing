@@ -1516,7 +1516,7 @@ function frenchSegmentationEvaluationRecords(pack) {
 			operator: "gte",
 			threshold: 1,
 			limitations: [
-				"Abbreviation rows are reference candidates observed in Tatoeba; the built-in adapter delegates sentence boundaries to Intl.Segmenter and does not execute this table.",
+				"Abbreviation rows are reference candidates observed in Tatoeba. The built-in adapter executes the explicit sentence-boundary exceptions in the generated profile; it does not infer exceptions from this table.",
 			],
 		}),
 		evaluationRecord(pack, {
@@ -1536,7 +1536,7 @@ function frenchSegmentationEvaluationRecords(pack) {
 			operator: "gte",
 			threshold: 10,
 			limitations: [
-				"These generated cases document source-derived expectations; only Unicode segmentation and French elision-prefix splitting are executed by the built-in adapter.",
+				"These generated cases document source-derived expectations; the built-in adapter executes pinned Unicode segmentation, explicit sentence-boundary exceptions, and French elision-prefix splitting.",
 			],
 		}),
 	];

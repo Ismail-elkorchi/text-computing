@@ -56,17 +56,23 @@ function textResourceReader(
 	onRead?: (path: string) => void,
 ) {
 	return {
-		readText({
-			descriptor,
-		}: {
-			readonly descriptor: { readonly path: string };
-		}): string {
+		readText(
+			{
+				descriptor,
+			}: {
+				readonly descriptor: { readonly path: string };
+			},
+			range?: { readonly startByte: number; readonly endByte: number },
+		): string {
 			onRead?.(descriptor.path);
 			const text = records[descriptor.path];
 			if (text === undefined) {
 				throw new Error(`missing fixture resource ${descriptor.path}`);
 			}
-			return text;
+			if (range === undefined) return text;
+			return new TextDecoder("utf-8", { fatal: true }).decode(
+				new TextEncoder().encode(text).slice(range.startByte, range.endByte),
+			);
 		},
 	};
 }
@@ -95,6 +101,8 @@ async function bucketedLookupIndex(
 	readonly patternColumns: readonly string[];
 	readonly indexedResourceTextByteLength: number;
 	readonly lookupIndexShippedByteLength: number;
+	readonly lookupIndexHeaderByteLength: number;
+	readonly lookupIndexHeaderChecksum: string;
 	readonly storageBudgetByteLength: number;
 	readonly storageSizeRatio: number;
 	readonly maximumBucketByteLength: number;
@@ -234,7 +242,8 @@ async function bucketedLookupIndex(
 		fuzzyBuckets,
 		patternBuckets: [],
 	};
-	const indexText = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${fuzzyPayloads.map((payload) => payload.encoded).join("")}`;
+	const indexHeader = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n`;
+	const indexText = `${indexHeader}${keyEncoded}${rowEncoded}${fuzzyPayloads.map((payload) => payload.encoded).join("")}`;
 	const indexedResourceTextByteLength = new TextEncoder().encode(
 		text,
 	).byteLength;
@@ -258,6 +267,9 @@ async function bucketedLookupIndex(
 		patternColumns: [],
 		indexedResourceTextByteLength,
 		lookupIndexShippedByteLength,
+		lookupIndexHeaderByteLength: new TextEncoder().encode(indexHeader)
+			.byteLength,
+		lookupIndexHeaderChecksum: `sha256:${await sha256(indexHeader)}`,
 		storageBudgetByteLength: Math.max(
 			Math.ceil(indexedResourceTextByteLength * 1.3),
 			indexedResourceTextByteLength + 32 * 1024,
@@ -290,6 +302,8 @@ async function fixtureLookupMetadata(
 		rowReferenceCount: index.rowReferenceCount,
 		indexedResourceTextByteLength: index.indexedResourceTextByteLength,
 		lookupIndexShippedByteLength: index.lookupIndexShippedByteLength,
+		lookupIndexHeaderByteLength: index.lookupIndexHeaderByteLength,
+		lookupIndexHeaderChecksum: index.lookupIndexHeaderChecksum,
 		storageBudgetByteLength: index.storageBudgetByteLength,
 		storageSizeRatio: index.storageSizeRatio,
 		maximumBucketByteLength: index.maximumBucketByteLength,
@@ -985,6 +999,7 @@ test("links normalized aliases with language filtering and longest spans", () =>
 	);
 	const street = linkEntities(createDocument("STRASSE", { id: "street" }), kb, {
 		language: "de",
+		mentionSource: "aliases",
 	});
 	assert.equal(
 		Object.values(street.layers["link.entity"]?.annotations ?? {}).length,
@@ -992,6 +1007,7 @@ test("links normalized aliases with language filtering and longest spans", () =>
 	);
 	const city = linkEntities(createDocument("New York", { id: "city" }), kb, {
 		language: "en",
+		mentionSource: "aliases",
 	});
 	const links = Object.values(city.layers["link.entity"]?.annotations ?? {});
 	assert.equal(links.length, 1);
@@ -999,7 +1015,7 @@ test("links normalized aliases with language filtering and longest spans", () =>
 	const country = linkEntities(
 		createDocument("Je visite la France.", { id: "country" }),
 		kb,
-		{ language: "fr" },
+		{ language: "fr", mentionSource: "aliases" },
 	);
 	const countryLinks = Object.values(
 		country.layers["link.entity"]?.annotations ?? {},
@@ -1017,12 +1033,35 @@ test("links normalized aliases with language filtering and longest spans", () =>
 	const supplementaryBoundary = linkEntities(
 		createDocument("A𐐀", { id: "supplementary-boundary" }),
 		kb,
-		{ language: "en" },
+		{ language: "en", mentionSource: "aliases" },
 	);
 	assert.equal(
 		Object.values(
 			supplementaryBoundary.layers["link.entity"]?.annotations ?? {},
 		).length,
+		0,
+	);
+});
+
+test("does not infer entity mentions unless alias scanning is explicit", () => {
+	const kb = createKnowledgeBase({
+		entities: [
+			{
+				id: "Q-UP",
+				labels: { en: ["University of Pretoria"] },
+				aliases: { en: ["up"] },
+			},
+		],
+	});
+	const doc = linkEntities(
+		createDocument("The service is up.", { id: "safe" }),
+		kb,
+		{
+			language: "en",
+		},
+	);
+	assert.equal(
+		Object.keys(doc.layers["link.entity"]?.annotations ?? {}).length,
 		0,
 	);
 });

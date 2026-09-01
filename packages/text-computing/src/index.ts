@@ -21,8 +21,6 @@ export type {
 	TextComputingMorphologySummary,
 	TextComputingNlp,
 	TextComputingPackInspection,
-	TextComputingPipelineRun,
-	TextComputingPipelineRunOptions,
 	TextComputingQualityFindingSummary,
 	TextComputingQualityReportEvidence,
 	TextComputingQualitySummary,

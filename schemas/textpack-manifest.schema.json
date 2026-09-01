@@ -185,6 +185,8 @@
 				"rowReferenceCount",
 				"indexedResourceTextByteLength",
 				"lookupIndexShippedByteLength",
+				"lookupIndexHeaderByteLength",
+				"lookupIndexHeaderChecksum",
 				"storageBudgetByteLength",
 				"storageSizeRatio",
 				"maximumBucketByteLength"
@@ -229,6 +231,11 @@
 				"rowReferenceCount": { "type": "integer", "minimum": 1 },
 				"indexedResourceTextByteLength": { "type": "integer", "minimum": 1 },
 				"lookupIndexShippedByteLength": { "type": "integer", "minimum": 1 },
+				"lookupIndexHeaderByteLength": { "type": "integer", "minimum": 1 },
+				"lookupIndexHeaderChecksum": {
+					"type": "string",
+					"pattern": "^sha256:[0-9a-f]{64}$"
+				},
 				"storageBudgetByteLength": { "type": "integer", "minimum": 1 },
 				"storageSizeRatio": { "type": "number", "exclusiveMinimum": 0 },
 				"maximumBucketByteLength": { "type": "integer", "minimum": 1 }

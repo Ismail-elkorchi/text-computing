@@ -545,14 +545,16 @@ export const manifest: TextPackManifest = {
 				"patternColumns": [
 					"form"
 				],
-				"bucketCount": 64,
+				"bucketCount": 1024,
 				"sourceRowCount": 142694,
 				"recordCount": 172600,
 				"rowReferenceCount": 285388,
 				"indexedResourceTextByteLength": 11808198,
-				"lookupIndexShippedByteLength": 5000638,
+				"lookupIndexShippedByteLength": 5683269,
+				"lookupIndexHeaderByteLength": 405677,
+				"lookupIndexHeaderChecksum": "sha256:a5486e1275b14dbc31014731a871186be2bb6a43f9c793feab8687842e176a7d",
 				"storageBudgetByteLength": 15350658,
-				"storageSizeRatio": 0.42348866440078325,
+				"storageSizeRatio": 0.481298585948508,
 				"maximumBucketByteLength": 90148
 			}
 		},
@@ -654,15 +656,17 @@ export const manifest: TextPackManifest = {
 				"emptyKeyColumns": [],
 				"fuzzyColumns": [],
 				"patternColumns": [],
-				"bucketCount": 128,
+				"bucketCount": 2048,
 				"sourceRowCount": 367732,
 				"recordCount": 281727,
 				"rowReferenceCount": 735464,
 				"indexedResourceTextByteLength": 25167521,
-				"lookupIndexShippedByteLength": 6267367,
+				"lookupIndexShippedByteLength": 7820163,
+				"lookupIndexHeaderByteLength": 806087,
+				"lookupIndexHeaderChecksum": "sha256:fdcaef2349cb55eda6c0c849384f54e33450a5f17d28cf8b98f10d6b79807869",
 				"storageBudgetByteLength": 32717778,
-				"storageSizeRatio": 0.24902599664067032,
-				"maximumBucketByteLength": 35488
+				"storageSizeRatio": 0.3107244054748181,
+				"maximumBucketByteLength": 2704
 			}
 		},
 		{
@@ -783,15 +787,17 @@ export const manifest: TextPackManifest = {
 					"label"
 				],
 				"patternColumns": [],
-				"bucketCount": 8,
+				"bucketCount": 128,
 				"sourceRowCount": 9377,
 				"recordCount": 18600,
 				"rowReferenceCount": 18754,
 				"indexedResourceTextByteLength": 1164021,
-				"lookupIndexShippedByteLength": 558306,
+				"lookupIndexShippedByteLength": 679436,
+				"lookupIndexHeaderByteLength": 64452,
+				"lookupIndexHeaderChecksum": "sha256:003ead924f645e56d802e7abf4311e7d7733e7ecb052468e7c9a9e7958e7050b",
 				"storageBudgetByteLength": 1513228,
-				"storageSizeRatio": 0.47963567667593626,
-				"maximumBucketByteLength": 44532
+				"storageSizeRatio": 0.5836973731573571,
+				"maximumBucketByteLength": 6952
 			}
 		},
 		{
@@ -819,15 +825,17 @@ export const manifest: TextPackManifest = {
 					"alias"
 				],
 				"patternColumns": [],
-				"bucketCount": 2,
+				"bucketCount": 32,
 				"sourceRowCount": 6101,
 				"recordCount": 8943,
 				"rowReferenceCount": 12202,
 				"indexedResourceTextByteLength": 339445,
-				"lookupIndexShippedByteLength": 248637,
+				"lookupIndexShippedByteLength": 268797,
+				"lookupIndexHeaderByteLength": 25477,
+				"lookupIndexHeaderChecksum": "sha256:f7637c32a3aef9520f4427bc9220fa4b7168ae7259f7a25b6c2bc816b4e9717f",
 				"storageBudgetByteLength": 441279,
-				"storageSizeRatio": 0.732480961569621,
-				"maximumBucketByteLength": 49684
+				"storageSizeRatio": 0.7918720263960288,
+				"maximumBucketByteLength": 3808
 			}
 		},
 		{
@@ -853,15 +861,17 @@ export const manifest: TextPackManifest = {
 				"emptyKeyColumns": [],
 				"fuzzyColumns": [],
 				"patternColumns": [],
-				"bucketCount": 4,
+				"bucketCount": 64,
 				"sourceRowCount": 9377,
 				"recordCount": 9382,
 				"rowReferenceCount": 18754,
 				"indexedResourceTextByteLength": 581510,
-				"lookupIndexShippedByteLength": 135481,
+				"lookupIndexShippedByteLength": 168558,
+				"lookupIndexHeaderByteLength": 29046,
+				"lookupIndexHeaderChecksum": "sha256:908b6e3a233b66dd140ee1c326de5f0041918df8e5606af05db9ed1eba473e65",
 				"storageBudgetByteLength": 755963,
-				"storageSizeRatio": 0.23298137607263847,
-				"maximumBucketByteLength": 25324
+				"storageSizeRatio": 0.28986259909545836,
+				"maximumBucketByteLength": 6020
 			}
 		}
 	],
@@ -1415,7 +1425,8 @@ export const manifest: TextPackManifest = {
 			],
 			"readerRequired": true,
 			"notes": [
-				"The built-in adapter executes host Intl.Segmenter Unicode boundaries and applies the observed French elision-prefix table. Contraction, abbreviation, boundary-property, and gold-case resources are retained as quality/reference evidence rather than presented as executed rules."
+				"The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with conservative French elision and title-abbreviation tailoring.",
+				"The built-in adapter executes pinned Unicode 17 UAX #29 boundaries, the profile's conservative French elision-prefix policy, and explicit title-abbreviation sentence exceptions. Observed contraction and abbreviation candidates remain quality/reference evidence."
 			],
 			"capabilities": {
 				"segmentation": "profile"
@@ -1476,7 +1487,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
+		"lockfileChecksum": "sha256:6b6122f2755336925c27c15cdb988604e7e84f0adb01f6b450465570731ec283",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

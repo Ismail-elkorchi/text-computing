@@ -126,7 +126,7 @@
 			"status": "task-supported",
 			"tier": "baseline",
 			"notes": [
-				"The bundled distribution resources provide English segmentation data."
+				"The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with explicit title-abbreviation sentence exceptions."
 			]
 		},
 		{

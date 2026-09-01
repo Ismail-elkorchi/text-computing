@@ -33,11 +33,13 @@ export type {
 	TextPackResourceEncoding,
 	TextPackResourceReadContext,
 	TextPackResourceReader,
+	TextPackResourceReadRange,
 } from "./materialize.js";
 export {
 	createFetchResourceReader,
 	isFileBackedResource,
 	openResourceJson,
+	openResourceStorageTextRange,
 	openResourceTable,
 	openResourceText,
 	parseResourceTable,

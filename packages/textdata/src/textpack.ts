@@ -1,4 +1,9 @@
 import {
+	segmentGraphemes,
+	segmentSentences,
+	segmentWords,
+} from "@ismail-elkorchi/textfacts/segment";
+import {
 	capabilityResourceIdsFromBindings,
 	openResourceJson,
 	openResourceTable,
@@ -53,6 +58,7 @@ export interface TextDataSegmentationAdapter {
 	readonly lexicalUnits: (text: string) => readonly TextDataSegment[];
 	readonly words: (text: string) => readonly TextDataSegment[];
 	readonly sentences: (text: string) => readonly TextDataSegment[];
+	readonly graphemes: (text: string) => readonly TextDataSegment[];
 }
 
 function resourcesByBinding(
@@ -181,64 +187,49 @@ function profileLanguage(
 	return pack.manifest.targets.languages?.[0] ?? "und";
 }
 
-function frenchElisionPrefixes(
+function profileStringSet(
 	resources: TextDataSegmentationResources,
+	key: string,
+	languageTag: string,
 ): ReadonlySet<string> {
-	const prefixes = new Set<string>();
-	for (const table of resources.tables) {
-		if (!table.id.includes("elision-prefix")) continue;
-		for (const row of table.rows) {
-			const prefix = row.prefix;
-			if (typeof prefix === "string" && prefix.length > 0) {
-				prefixes.add(prefix.toLocaleLowerCase("fr"));
+	const values = new Set<string>();
+	for (const resource of resources.profiles) {
+		const entries = resource.profile[key];
+		if (!Array.isArray(entries)) continue;
+		for (const entry of entries) {
+			if (typeof entry === "string" && entry.length > 0) {
+				values.add(entry.toLocaleLowerCase(languageTag));
 			}
 		}
 	}
-	return prefixes;
+	return values;
 }
 
-function intlSegments(
+function pinnedSegments(
 	text: string,
-	languageTag: string,
 	granularity: "word" | "sentence" | "grapheme",
 ): readonly TextDataSegment[] {
-	if (typeof Intl.Segmenter !== "function") return [];
-	const segmenter = new Intl.Segmenter(languageTag, { granularity });
+	const spans =
+		granularity === "word"
+			? segmentWords(text)
+			: granularity === "sentence"
+				? segmentSentences(text)
+				: segmentGraphemes(text);
 	return Object.freeze(
-		[...segmenter.segment(text)].map((segment) =>
-			Object.freeze({
-				text: segment.segment,
-				startCU: segment.index,
-				endCU: segment.index + segment.segment.length,
-				granularity,
-				...(segment.isWordLike !== undefined
-					? { isWordLike: segment.isWordLike }
-					: {}),
-				source: "Intl.Segmenter",
-			}),
-		),
-	);
-}
-
-function fallbackLexicalSegments(text: string): readonly TextDataSegment[] {
-	const output: TextDataSegment[] = [];
-	const pattern =
-		/[\p{Letter}\p{Number}]+(?:['’][\p{Letter}\p{Number}]+)?|[^\p{White_Space}]/gu;
-	for (const match of text.matchAll(pattern)) {
-		const value = match[0];
-		const start = match.index;
-		output.push(
-			Object.freeze({
+		[...spans].map((span) => {
+			const value = text.slice(span.startCU, span.endCU);
+			return Object.freeze({
 				text: value,
-				startCU: start,
-				endCU: start + value.length,
-				granularity: "lexical-unit",
-				isWordLike: /[\p{Letter}\p{Number}]/u.test(value),
-				source: "textdata.fallback",
-			}),
-		);
-	}
-	return Object.freeze(output);
+				startCU: span.startCU,
+				endCU: span.endCU,
+				granularity,
+				...(granularity === "word"
+					? { isWordLike: /[\p{Letter}\p{Mark}\p{Number}]/u.test(value) }
+					: {}),
+				source: "textfacts.uax29.unicode-17",
+			});
+		}),
+	);
 }
 
 function splitFrenchElisions(
@@ -291,7 +282,7 @@ function lexicalSegments(
 	languageTag: string,
 	resources: TextDataSegmentationResources,
 ): readonly TextDataSegment[] {
-	const wordSegments = intlSegments(text, languageTag, "word")
+	const wordSegments = pinnedSegments(text, "word")
 		.filter((segment) => segment.text.trim().length > 0)
 		.map((segment) =>
 			Object.freeze({
@@ -299,11 +290,51 @@ function lexicalSegments(
 				granularity: "lexical-unit" as const,
 			}),
 		);
-	const base =
-		wordSegments.length > 0 ? wordSegments : fallbackLexicalSegments(text);
 	return languageTag === "fr"
-		? splitFrenchElisions(base, frenchElisionPrefixes(resources))
-		: Object.freeze(base);
+		? splitFrenchElisions(
+				wordSegments,
+				profileStringSet(resources, "elisionPrefixes", languageTag),
+			)
+		: Object.freeze(wordSegments);
+}
+
+function tailoredSentenceSegments(
+	text: string,
+	languageTag: string,
+	resources: TextDataSegmentationResources,
+): readonly TextDataSegment[] {
+	const base = pinnedSegments(text, "sentence").filter(
+		(segment) => segment.text.trim().length > 0,
+	);
+	const exceptions = profileStringSet(
+		resources,
+		"sentenceBoundaryExceptions",
+		languageTag,
+	);
+	if (exceptions.size === 0) return base;
+	const merged: TextDataSegment[] = [];
+	for (const segment of base) {
+		const previous = merged.at(-1);
+		const match = /([\p{Letter}][\p{Letter}.]*\.)[\p{White_Space}]*$/u.exec(
+			previous?.text ?? "",
+		);
+		if (
+			previous === undefined ||
+			match?.[1] === undefined ||
+			!exceptions.has(match[1].toLocaleLowerCase(languageTag))
+		) {
+			merged.push(segment);
+			continue;
+		}
+		merged[merged.length - 1] = Object.freeze({
+			text: text.slice(previous.startCU, segment.endCU),
+			startCU: previous.startCU,
+			endCU: segment.endCU,
+			granularity: "sentence",
+			source: "textdata.segmentation-profile",
+		});
+	}
+	return Object.freeze(merged);
 }
 
 export async function segmentationAdapterFromPack(
@@ -324,27 +355,10 @@ export async function segmentationAdapterFromPack(
 			);
 		},
 		sentences(text: string) {
-			const segments = intlSegments(text, languageTag, "sentence")
-				.filter((segment) => segment.text.trim().length > 0)
-				.map((segment) =>
-					Object.freeze({
-						...segment,
-						granularity: "sentence" as const,
-					}),
-				);
-			return Object.freeze(
-				segments.length > 0
-					? segments
-					: [
-							Object.freeze({
-								text,
-								startCU: 0,
-								endCU: text.length,
-								granularity: "sentence" as const,
-								source: "textdata.fallback",
-							}),
-						],
-			);
+			return tailoredSentenceSegments(text, languageTag, resources);
+		},
+		graphemes(text: string) {
+			return pinnedSegments(text, "grapheme");
 		},
 	});
 }

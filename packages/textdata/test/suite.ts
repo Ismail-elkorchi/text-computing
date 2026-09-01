@@ -121,6 +121,8 @@ test("segmentation textpack resources expose a lexical-unit adapter", async () =
 		profileId: "fr-token",
 		languageTag: "fr",
 		granularity: "token",
+		elisionPrefixes: ["j", "qu"],
+		sentenceBoundaryExceptions: ["m."],
 	});
 	const elisionsText = "prefix\tobservedCount\nj\t1\nqu\t1\n";
 	const pack = {
@@ -191,6 +193,17 @@ test("segmentation textpack resources expose a lexical-unit adapter", async () =
 		adapter.lexicalUnits("J'en parle.").map((segment) => segment.text),
 		["J'", "en", "parle", "."],
 	);
+	assert.deepEqual(
+		adapter.lexicalUnits("Aujourd’hui.").map((segment) => segment.text),
+		["Aujourd’hui", "."],
+	);
+	assert.deepEqual(
+		adapter
+			.sentences("M. Dupont arrive. Il repart.")
+			.map((segment) => segment.text),
+		["M. Dupont arrive. ", "Il repart."],
+	);
+	assert.equal(adapter.graphemes("e\u0301").length, 1);
 });
 
 test("UD annotation textpack resources become annotation-only datasets", async () => {

@@ -8,8 +8,8 @@ export const LOOKUP_INDEX_FORMAT = "normalized-key-bucketed-rows-v1";
 export const LOOKUP_INDEX_MAGIC = "textpack.lookup-index.bucketed-rows.v1";
 export const LOOKUP_INDEX_STORAGE_FORMAT = "textpack-indexed-table-v1";
 
-const TARGET_SOURCE_BYTES_PER_BUCKET = 256 * 1024;
-const MAX_BUCKET_COUNT = 4096;
+const TARGET_SOURCE_BYTES_PER_BUCKET = 16 * 1024;
+const MAX_BUCKET_COUNT = 16_384;
 export const LOOKUP_INDEX_MAX_STORE_SIZE_RATIO = 1.3;
 export const LOOKUP_INDEX_MAX_BUCKET_BYTES = 512 * 1024;
 export const LOOKUP_INDEX_MAX_FIXED_OVERHEAD_BYTES = 32 * 1024;
@@ -265,10 +265,11 @@ function buildBucketedContainer(
 	ordersByKey,
 	normalizedKeyByRawKey,
 	patternColumnNames,
+	requestedBucketCount = bucketCountFor(sourceText),
 ) {
 	const bucketCount = Math.max(
 		1,
-		Math.min(bucketCountFor(sourceText), rows.length, ordersByKey.size),
+		Math.min(requestedBucketCount, rows.length, ordersByKey.size),
 	);
 	const sortedKeyEntries = [...ordersByKey].sort(([left], [right]) =>
 		codeUnitCompare(left, right),
@@ -411,20 +412,29 @@ function buildBucketedContainer(
 			(descriptor) => descriptor.length,
 		),
 	);
+	const text = `${LOOKUP_INDEX_MAGIC}\n${JSON.stringify(directory)}\n${payloads.join("")}`;
+	const shippedByteLength = Buffer.byteLength(text, "utf8");
+	const sourceByteLength = Buffer.byteLength(sourceText, "utf8");
+	const storageSizeRatio = shippedByteLength / sourceByteLength;
+	if (shippedByteLength > storageBudgetByteLength(sourceByteLength)) {
+		if (bucketCount > 1) {
+			return buildBucketedContainer(
+				sourceText,
+				columns,
+				rows,
+				ordersByKey,
+				normalizedKeyByRawKey,
+				patternColumnNames,
+				Math.floor(bucketCount / 2),
+			);
+		}
+		throw new Error(
+			`lookup index storage ratio ${storageSizeRatio.toFixed(3)} exceeds ${LOOKUP_INDEX_MAX_STORE_SIZE_RATIO.toFixed(2)}`,
+		);
+	}
 	if (maximumBucketByteLength > LOOKUP_INDEX_MAX_BUCKET_BYTES) {
 		throw new Error(
 			`lookup index bucket ${maximumBucketByteLength} exceeds ${LOOKUP_INDEX_MAX_BUCKET_BYTES} bytes`,
-		);
-	}
-	const text = `${LOOKUP_INDEX_MAGIC}\n${JSON.stringify(directory)}\n${payloads.join("")}`;
-	const storageSizeRatio =
-		Buffer.byteLength(text, "utf8") / Buffer.byteLength(sourceText, "utf8");
-	if (
-		Buffer.byteLength(text, "utf8") >
-		storageBudgetByteLength(Buffer.byteLength(sourceText, "utf8"))
-	) {
-		throw new Error(
-			`lookup index storage ratio ${storageSizeRatio.toFixed(3)} exceeds ${LOOKUP_INDEX_MAX_STORE_SIZE_RATIO.toFixed(2)}`,
 		);
 	}
 	return {
@@ -790,6 +800,12 @@ export function lookupIndexMetadata({
 	];
 	const indexedResourceTextByteLength = Buffer.byteLength(sourceText, "utf8");
 	const lookupIndexShippedByteLength = Buffer.byteLength(indexText, "utf8");
+	const firstNewline = indexText.indexOf("\n");
+	const secondNewline = indexText.indexOf("\n", firstNewline + 1);
+	if (firstNewline < 0 || secondNewline < 0) {
+		throw new Error("lookup index has no readable header");
+	}
+	const lookupIndexHeader = indexText.slice(0, secondNewline + 1);
 	return {
 		indexFormat: LOOKUP_INDEX_FORMAT,
 		indexedResourceId: sourceResourceId,
@@ -806,6 +822,8 @@ export function lookupIndexMetadata({
 		rowReferenceCount,
 		indexedResourceTextByteLength,
 		lookupIndexShippedByteLength,
+		lookupIndexHeaderByteLength: Buffer.byteLength(lookupIndexHeader, "utf8"),
+		lookupIndexHeaderChecksum: sha256(lookupIndexHeader),
 		storageBudgetByteLength: storageBudgetByteLength(
 			indexedResourceTextByteLength,
 		),
@@ -825,6 +843,9 @@ export function assertLookupIndexIntegrity({
 	metadata,
 	label = "lookup index",
 }) {
+	const firstNewline = indexText.indexOf("\n");
+	const secondNewline = indexText.indexOf("\n", firstNewline + 1);
+	const header = indexText.slice(0, secondNewline + 1);
 	if (
 		metadata.indexFormat !== LOOKUP_INDEX_FORMAT ||
 		metadata.indexedResourceSchemaId !== schemaId
@@ -835,6 +856,15 @@ export function assertLookupIndexIntegrity({
 	if (
 		lookupIndexSourceText(indexText, label) !== sourceText ||
 		metadata.lookupIndexShippedByteLength > metadata.storageBudgetByteLength ||
+		!Number.isSafeInteger(metadata.lookupIndexHeaderByteLength) ||
+		metadata.lookupIndexHeaderByteLength <= 0 ||
+		metadata.lookupIndexHeaderByteLength >=
+			metadata.lookupIndexShippedByteLength ||
+		typeof metadata.lookupIndexHeaderChecksum !== "string" ||
+		!/^sha256:[0-9a-f]{64}$/u.test(metadata.lookupIndexHeaderChecksum) ||
+		Buffer.byteLength(header, "utf8") !==
+			metadata.lookupIndexHeaderByteLength ||
+		sha256(header) !== metadata.lookupIndexHeaderChecksum ||
 		metadata.maximumBucketByteLength > LOOKUP_INDEX_MAX_BUCKET_BYTES
 	) {
 		throw new Error(

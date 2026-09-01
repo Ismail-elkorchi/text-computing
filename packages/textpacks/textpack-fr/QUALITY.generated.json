@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 611334,
+  "acceptedRecordCount": 611356,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -198,7 +198,8 @@
         "segmentation": "profile"
       },
       "notes": [
-        "The built-in adapter executes host Intl.Segmenter Unicode boundaries and applies the observed French elision-prefix table. Contraction, abbreviation, boundary-property, and gold-case resources are retained as quality/reference evidence rather than presented as executed rules."
+        "The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with conservative French elision and title-abbreviation tailoring.",
+        "The built-in adapter executes pinned Unicode 17 UAX #29 boundaries, the profile's conservative French elision-prefix policy, and explicit title-abbreviation sentence exceptions. Observed contraction and abbreviation candidates remain quality/reference evidence."
       ],
       "resourceIds": [
         "fr-grapheme-segmentation-profile",
@@ -589,8 +590,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 5000638,
-      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
+      "byteLength": 5683269,
+      "checksum": "sha256:d24e2dce251faeaf05d95761919da9bfcd40c41c7fbde006ae5908cbe6330655",
       "id": "fr-lexique-entries",
       "kind": "lexicon",
       "lineCount": 3,
@@ -603,34 +604,34 @@
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
-      "resourceTextByteLength": 5000638,
+      "resourceTextByteLength": 5683269,
       "sharedStorageResourceIds": [
         "fr-lexique-entries",
         "fr-lexique-entries-lookup-index"
       ],
-      "sizeClass": "small"
+      "sizeClass": "medium"
     },
     {
-      "byteLength": 5000638,
-      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
+      "byteLength": 5683269,
+      "checksum": "sha256:d24e2dce251faeaf05d95761919da9bfcd40c41c7fbde006ae5908cbe6330655",
       "id": "fr-lexique-entries-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 5000638,
+      "logicalResourceTextByteLength": 5683269,
       "nonEmptyLineCount": 3,
       "path": "resources/lexique-383.entries.lookup-index.v1.txt",
       "pipelineId": "french-lexique-383",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-lexique-sa:lexique-383",
-      "resourceTextByteLength": 5000638,
+      "resourceTextByteLength": 5683269,
       "sharedStorageResourceIds": [
         "fr-lexique-entries",
         "fr-lexique-entries-lookup-index"
       ],
-      "sizeClass": "small"
+      "sizeClass": "medium"
     },
     {
       "byteLength": 710653,
@@ -1074,42 +1075,42 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1441,
-      "checksum": "sha256:79f6e12b93901c63fa6a6004420c1f71c4dd35dbfc9c92f143816dbd1499578a",
+      "byteLength": 1536,
+      "checksum": "sha256:d3140f58336e7d4fcd2fd544b6cc601c8390302d7fd84f3d3b12e64361a41a59",
       "id": "fr-sentence-segmentation-profile",
       "kind": "segmentation-profile",
-      "lineCount": 61,
-      "logicalLineCount": 61,
-      "logicalNonEmptyLineCount": 60,
-      "logicalRecordCount": 60,
-      "logicalResourceTextByteLength": 1441,
-      "nonEmptyLineCount": 60,
+      "lineCount": 68,
+      "logicalLineCount": 68,
+      "logicalNonEmptyLineCount": 67,
+      "logicalRecordCount": 67,
+      "logicalResourceTextByteLength": 1536,
+      "nonEmptyLineCount": 67,
       "path": "resources/fr.segmentation.sentence.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
-      "resourceTextByteLength": 1441,
+      "resourceTextByteLength": 1536,
       "sharedStorageResourceIds": [
         "fr-sentence-segmentation-profile"
       ],
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 2263,
-      "checksum": "sha256:f3792501962463ab04dd72ba3c587cb2c279ab7cc44cb2cb20223bb6799d596d",
+      "byteLength": 2427,
+      "checksum": "sha256:ed04c21b1edc609c411e7541aef6405ea44f0ae18e0a3405226f7e5064274c93",
       "id": "fr-token-segmentation-profile",
       "kind": "segmentation-profile",
-      "lineCount": 80,
-      "logicalLineCount": 80,
-      "logicalNonEmptyLineCount": 79,
-      "logicalRecordCount": 79,
-      "logicalResourceTextByteLength": 2263,
-      "nonEmptyLineCount": 79,
+      "lineCount": 95,
+      "logicalLineCount": 95,
+      "logicalNonEmptyLineCount": 94,
+      "logicalRecordCount": 94,
+      "logicalResourceTextByteLength": 2427,
+      "nonEmptyLineCount": 94,
       "path": "resources/fr.segmentation.token.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-segmentation:french-segmentation-profile",
-      "resourceTextByteLength": 2263,
+      "resourceTextByteLength": 2427,
       "sharedStorageResourceIds": [
         "fr-token-segmentation-profile"
       ],
@@ -1158,8 +1159,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 6267367,
-      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
+      "byteLength": 7820163,
+      "checksum": "sha256:9d08ed9f9e983454c8d52ca07ad70c9665773248aa459c8d645f2bce860c3279",
       "id": "fr-unimorph-paradigms",
       "kind": "morphology",
       "lineCount": 3,
@@ -1172,7 +1173,7 @@
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
-      "resourceTextByteLength": 6267367,
+      "resourceTextByteLength": 7820163,
       "sharedStorageResourceIds": [
         "fr-unimorph-paradigms",
         "fr-unimorph-paradigms-lookup-index"
@@ -1180,21 +1181,21 @@
       "sizeClass": "medium"
     },
     {
-      "byteLength": 6267367,
-      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
+      "byteLength": 7820163,
+      "checksum": "sha256:9d08ed9f9e983454c8d52ca07ad70c9665773248aa459c8d645f2bce860c3279",
       "id": "fr-unimorph-paradigms-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 6267367,
+      "logicalResourceTextByteLength": 7820163,
       "nonEmptyLineCount": 3,
       "path": "resources/unimorph-fra.paradigms.lookup-index.v1.txt",
       "pipelineId": "french-unimorph",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-fr-unimorph-sa:french-unimorph",
-      "resourceTextByteLength": 6267367,
+      "resourceTextByteLength": 7820163,
       "sharedStorageResourceIds": [
         "fr-unimorph-paradigms",
         "fr-unimorph-paradigms-lookup-index"
@@ -1370,8 +1371,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 248637,
-      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
+      "byteLength": 268797,
+      "checksum": "sha256:409e09d8cb2865d3b31731c7cc8d34aad702ca4c1122776f0397f3327ceff27f",
       "id": "wikidata-fr-aliases",
       "kind": "knowledge-base",
       "lineCount": 3,
@@ -1384,7 +1385,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 248637,
+      "resourceTextByteLength": 268797,
       "sharedStorageResourceIds": [
         "wikidata-fr-aliases",
         "wikidata-fr-aliases-lookup-index"
@@ -1392,21 +1393,21 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 248637,
-      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
+      "byteLength": 268797,
+      "checksum": "sha256:409e09d8cb2865d3b31731c7cc8d34aad702ca4c1122776f0397f3327ceff27f",
       "id": "wikidata-fr-aliases-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 248637,
+      "logicalResourceTextByteLength": 268797,
       "nonEmptyLineCount": 3,
       "path": "resources/wikidata-fr.aliases.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 248637,
+      "resourceTextByteLength": 268797,
       "sharedStorageResourceIds": [
         "wikidata-fr-aliases",
         "wikidata-fr-aliases-lookup-index"
@@ -1414,8 +1415,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 558306,
-      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
+      "byteLength": 679436,
+      "checksum": "sha256:c11930e54562819c1262d0273979b6bab6a31aed6392d27e7c18f2bc6e689c53",
       "id": "wikidata-fr-entities",
       "kind": "knowledge-base",
       "lineCount": 3,
@@ -1428,7 +1429,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 558306,
+      "resourceTextByteLength": 679436,
       "sharedStorageResourceIds": [
         "wikidata-fr-entities",
         "wikidata-fr-entities-lookup-index"
@@ -1436,21 +1437,21 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 558306,
-      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
+      "byteLength": 679436,
+      "checksum": "sha256:c11930e54562819c1262d0273979b6bab6a31aed6392d27e7c18f2bc6e689c53",
       "id": "wikidata-fr-entities-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 558306,
+      "logicalResourceTextByteLength": 679436,
       "nonEmptyLineCount": 3,
       "path": "resources/wikidata-fr.entities.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 558306,
+      "resourceTextByteLength": 679436,
       "sharedStorageResourceIds": [
         "wikidata-fr-entities",
         "wikidata-fr-entities-lookup-index"
@@ -1521,8 +1522,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 135481,
-      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
+      "byteLength": 168558,
+      "checksum": "sha256:b026ec06cee5a5d12964a0b7ede8b7b9cbfdf5d9d47b7ae09bc68e8cff5240b0",
       "id": "wikidata-fr-relations",
       "kind": "knowledge-base",
       "lineCount": 3,
@@ -1535,7 +1536,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 135481,
+      "resourceTextByteLength": 168558,
       "sharedStorageResourceIds": [
         "wikidata-fr-relations",
         "wikidata-fr-relations-lookup-index"
@@ -1543,21 +1544,21 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 135481,
-      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
+      "byteLength": 168558,
+      "checksum": "sha256:b026ec06cee5a5d12964a0b7ede8b7b9cbfdf5d9d47b7ae09bc68e8cff5240b0",
       "id": "wikidata-fr-relations-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 135481,
+      "logicalResourceTextByteLength": 168558,
       "nonEmptyLineCount": 3,
       "path": "resources/wikidata-fr.relations.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-fr:wikidata-main-artifact",
-      "resourceTextByteLength": 135481,
+      "resourceTextByteLength": 168558,
       "sharedStorageResourceIds": [
         "wikidata-fr-relations",
         "wikidata-fr-relations-lookup-index"

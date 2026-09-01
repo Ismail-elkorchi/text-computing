@@ -1,0 +1,112 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://text-computing.dev/schemas/nlp-external-robustness-suite-v1.schema.json",
+	"title": "Text Computing external NLP robustness suite v1",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"description",
+		"licenseExpression",
+		"citation",
+		"retrievedAt",
+		"selection",
+		"languages"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"description": { "type": "string", "minLength": 1 },
+		"licenseExpression": { "const": "CC-BY-2.0-FR" },
+		"citation": { "type": "string", "minLength": 1 },
+		"retrievedAt": {
+			"type": "string",
+			"pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+		},
+		"selection": { "$ref": "#/$defs/selection" },
+		"languages": {
+			"type": "array",
+			"minItems": 3,
+			"maxItems": 3,
+			"items": { "$ref": "#/$defs/language" }
+		}
+	},
+	"$defs": {
+		"selection": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"minimumAddedAt",
+				"minimumCodeUnits",
+				"maximumCodeUnits",
+				"ranking",
+				"countPerLanguage",
+				"separation"
+			],
+			"properties": {
+				"minimumAddedAt": {
+					"type": "string",
+					"pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+				},
+				"minimumCodeUnits": { "type": "integer", "minimum": 1 },
+				"maximumCodeUnits": { "type": "integer", "minimum": 1 },
+				"ranking": { "type": "string", "minLength": 1 },
+				"countPerLanguage": { "type": "integer", "minimum": 1 },
+				"separation": { "type": "string", "minLength": 1 }
+			}
+		},
+		"source": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["url", "checksum"],
+			"properties": {
+				"url": { "type": "string", "pattern": "^https://" },
+				"checksum": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+			}
+		},
+		"document": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"id",
+				"sentenceId",
+				"text",
+				"contributor",
+				"addedAt",
+				"modifiedAt"
+			],
+			"properties": {
+				"id": { "type": "string", "minLength": 1 },
+				"sentenceId": { "type": "string", "pattern": "^[0-9]+$" },
+				"text": { "type": "string", "minLength": 1 },
+				"contributor": { "type": "string", "minLength": 1 },
+				"addedAt": {
+					"type": "string",
+					"pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+				},
+				"modifiedAt": {
+					"anyOf": [
+						{
+							"type": "string",
+							"pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+						},
+						{ "type": "null" }
+					]
+				}
+			}
+		},
+		"language": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["languageTag", "source", "documents"],
+			"properties": {
+				"languageTag": { "enum": ["ar", "en", "fr"] },
+				"source": { "$ref": "#/$defs/source" },
+				"documents": {
+					"type": "array",
+					"minItems": 1,
+					"items": { "$ref": "#/$defs/document" }
+				}
+			}
+		}
+	}
+}

@@ -1,13 +1,4 @@
-import { corpusDocumentsFromPack } from "@ismail-elkorchi/textcorpus";
-import {
-	corpusRowsFromPack,
-	readUdAnnotationDatasetFromPackAsync,
-	segmentationAdapterFromPack,
-	type UdAnnotationRecord,
-	type UdSyntaxPackResources,
-	udAnnotationRecordsFromPackAsync,
-	udSyntaxResourcesFromPackAsync,
-} from "@ismail-elkorchi/textdata";
+import { segmentationAdapterFromPack } from "@ismail-elkorchi/textdata";
 import type { SpanRef, TextDocument } from "@ismail-elkorchi/textdoc";
 import {
 	candidateEntities,
@@ -38,12 +29,6 @@ import {
 	type TextPackResourceReader,
 	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
-import {
-	type ParallelRowsFromPackOptions,
-	parallelCorpusFromPack,
-	parallelLinkRowsFromPack,
-	parallelTablesFromPack,
-} from "@ismail-elkorchi/textparallel";
 import {
 	analyzeDocumentQuality,
 	type DocumentQualityOptions,
@@ -76,12 +61,7 @@ import type {
 	TextComputingDocument,
 	TextComputingDocumentAnalysisOptions,
 	TextComputingNlp,
-	TextComputingPipelineRunOptions,
 } from "./types.js";
-
-type UdAnnotationDataset = Awaited<
-	ReturnType<typeof readUdAnnotationDatasetFromPackAsync>
->;
 
 function readerOptions(reader: TextPackResourceReader | undefined) {
 	return reader === undefined ? {} : { reader };
@@ -453,11 +433,6 @@ export function createTextComputingNlp(
 		| undefined;
 	let normalizationPromise: Promise<CompiledTextNormProfile> | undefined;
 	let morphologyPromise: Promise<MorphologyIndex> | undefined;
-	let syntaxResourcesPromise: Promise<UdSyntaxPackResources> | undefined;
-	let syntaxAnnotationsPromise:
-		| Promise<readonly UdAnnotationRecord[]>
-		| undefined;
-	let syntaxDatasetPromise: Promise<UdAnnotationDataset> | undefined;
 	const kbMentionLengthsPromises = new Map<
 		string,
 		ReturnType<typeof knowledgeBaseMentionKeyLengthsFromPack>
@@ -591,6 +566,8 @@ export function createTextComputingNlp(
 					openSegmentation().then((adapter) => adapter.words(text)),
 				sentences: (text: string) =>
 					openSegmentation().then((adapter) => adapter.sentences(text)),
+				graphemes: (text: string) =>
+					openSegmentation().then((adapter) => adapter.graphemes(text)),
 			}),
 			normalization: Object.freeze({
 				normalizeText: (text: string, mode?: TextNormProfileMode) =>
@@ -654,26 +631,6 @@ export function createTextComputingNlp(
 							});
 				},
 			}),
-			syntax: Object.freeze({
-				resources() {
-					syntaxResourcesPromise ??= udSyntaxResourcesFromPackAsync(pack, {
-						...readerOptions(reader),
-					});
-					return syntaxResourcesPromise;
-				},
-				annotations() {
-					syntaxAnnotationsPromise ??= udAnnotationRecordsFromPackAsync(pack, {
-						...readerOptions(reader),
-					});
-					return syntaxAnnotationsPromise;
-				},
-				dataset() {
-					syntaxDatasetPromise ??= readUdAnnotationDatasetFromPackAsync(pack, {
-						...readerOptions(reader),
-					});
-					return syntaxDatasetPromise;
-				},
-			}),
 			kb: Object.freeze({
 				resources: () =>
 					inspectSchemaResources(pack, [
@@ -703,7 +660,7 @@ export function createTextComputingNlp(
 					}
 					const mentions = new Set(annotatedEntityMentions(doc, options));
 					let documentCandidates: readonly DocumentMentionCandidate[] = [];
-					if (options.mentionSource !== "annotations") {
+					if ((options.mentionSource ?? "annotations") !== "annotations") {
 						const view = entityLinkingView(doc, options.viewId);
 						const mentionLengths = await openKbMentionLengths(
 							options.language ?? languageTag,
@@ -733,6 +690,7 @@ export function createTextComputingNlp(
 					);
 					return linkEntities(doc, kb, {
 						...options,
+						mentionSource: options.mentionSource ?? "annotations",
 						mentionSpans: [
 							...(options.mentionSpans ?? []),
 							...fuzzyMentionSpans,
@@ -780,46 +738,6 @@ export function createTextComputingNlp(
 						),
 					),
 			}),
-			corpus: Object.freeze({
-				resources: () =>
-					inspectSchemaResources(pack, ["textdata.corpus.rows.v1"]),
-				rows() {
-					return corpusRowsFromPack(pack, {
-						...readerOptions(reader),
-					});
-				},
-				documents(options: { readonly maxDocuments: number }) {
-					return corpusDocumentsFromPack(pack, {
-						...options,
-						...readerOptions(reader),
-					});
-				},
-			}),
-			parallel: Object.freeze({
-				resources: () =>
-					inspectSchemaResources(pack, [
-						"textparallel.alignment.v1",
-						"textparallel.alignment.rows.v1",
-					]),
-				rows(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-					return parallelTablesFromPack(pack, {
-						...options,
-						...readerOptions(reader),
-					});
-				},
-				links(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-					return parallelLinkRowsFromPack(pack, {
-						...options,
-						...readerOptions(reader),
-					});
-				},
-				corpus(options: Omit<ParallelRowsFromPackOptions, "reader"> = {}) {
-					return parallelCorpusFromPack(pack, {
-						...options,
-						...readerOptions(reader),
-					});
-				},
-			}),
 			quality: Object.freeze({
 				resources: openQualityResources,
 				profiles: openQualityProfiles,
@@ -842,15 +760,6 @@ export function createTextComputingNlp(
 			document: Object.freeze({
 				analyzeText: documentRuntime.analyzeText,
 				analyzeDocument: documentRuntime.analyzeDocument,
-			}),
-			pipeline: Object.freeze({
-				createDocumentAnalysisPipeline:
-					documentRuntime.createDocumentAnalysisPipeline,
-				runText: (
-					text: string,
-					options: TextComputingPipelineRunOptions = {},
-				) => documentRuntime.runText(text, options),
-				runDocument: documentRuntime.runDocument,
 			}),
 		},
 	);

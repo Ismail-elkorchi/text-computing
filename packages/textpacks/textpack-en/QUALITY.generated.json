@@ -1,5 +1,5 @@
 {
-  "acceptedRecordCount": 1804339,
+  "acceptedRecordCount": 1804348,
   "artifactRequirements": [],
   "capabilitySlots": [
     {
@@ -214,8 +214,8 @@
         "segmentation": "profile"
       },
       "notes": [
-        "The bundled distribution resources provide English segmentation data.",
-        "The built-in adapter executes host Intl.Segmenter Unicode grapheme, word, and sentence segmentation for English. Generated UAX #29 property tables are conformance evidence, not a second unexecuted boundary engine."
+        "The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with explicit title-abbreviation sentence exceptions.",
+        "The built-in adapter executes pinned Unicode 17 UAX #29 grapheme, word, and sentence segmentation plus the profile's explicit title-abbreviation sentence exceptions."
       ],
       "resourceIds": [
         "en-grapheme-segmentation-profile",
@@ -647,8 +647,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 4064970,
-      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
+      "byteLength": 5071007,
+      "checksum": "sha256:f9b96ca7bd0bed21cfd194a857a4cef82c6902f11b85a24d38d796f5826d9417",
       "id": "en-esdb-default-wordlists",
       "kind": "lexicon",
       "lineCount": 3,
@@ -661,7 +661,7 @@
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
-      "resourceTextByteLength": 4064970,
+      "resourceTextByteLength": 5071007,
       "sharedStorageResourceIds": [
         "en-esdb-default-wordlists",
         "en-esdb-default-wordlists-lookup-index"
@@ -669,21 +669,21 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 4064970,
-      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
+      "byteLength": 5071007,
+      "checksum": "sha256:f9b96ca7bd0bed21cfd194a857a4cef82c6902f11b85a24d38d796f5826d9417",
       "id": "en-esdb-default-wordlists-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 4064970,
+      "logicalResourceTextByteLength": 5071007,
       "nonEmptyLineCount": 3,
       "path": "resources/esdb-2026.default-wordlists.lookup-index.v1.txt",
       "pipelineId": "esdb-wordlist-diff",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-wordlist-esdb:esdb-wordlist-diff",
-      "resourceTextByteLength": 4064970,
+      "resourceTextByteLength": 5071007,
       "sharedStorageResourceIds": [
         "en-esdb-default-wordlists",
         "en-esdb-default-wordlists-lookup-index"
@@ -880,8 +880,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 13687253,
-      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
+      "byteLength": 14811047,
+      "checksum": "sha256:1646cf1f471a42bf88afb33ab664545fd99e8e6873d7444385bc53818d99e1cb",
       "id": "en-scowl-inflection-entries",
       "kind": "morphology",
       "lineCount": 3,
@@ -894,7 +894,7 @@
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "resourceTextByteLength": 13687253,
+      "resourceTextByteLength": 14811047,
       "sharedStorageResourceIds": [
         "en-scowl-inflection-entries",
         "en-scowl-inflection-entries-lookup-index"
@@ -902,21 +902,21 @@
       "sizeClass": "medium"
     },
     {
-      "byteLength": 13687253,
-      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
+      "byteLength": 14811047,
+      "checksum": "sha256:1646cf1f471a42bf88afb33ab664545fd99e8e6873d7444385bc53818d99e1cb",
       "id": "en-scowl-inflection-entries-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 13687253,
+      "logicalResourceTextByteLength": 14811047,
       "nonEmptyLineCount": 3,
       "path": "resources/scowl-v2.inflections.lookup-index.v1.txt",
       "pipelineId": "scowl-v2-inflection",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-inflection-scowl:scowl-v2-inflection",
-      "resourceTextByteLength": 13687253,
+      "resourceTextByteLength": 14811047,
       "sharedStorageResourceIds": [
         "en-scowl-inflection-entries",
         "en-scowl-inflection-entries-lookup-index"
@@ -1092,21 +1092,21 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1389,
-      "checksum": "sha256:ea955841783eb674d2183b135898d30e0da48cd38f72270adbd3c45972a0daac",
+      "byteLength": 1507,
+      "checksum": "sha256:d40e6d4178d65d082796ae9e02fed8c4093e8a73695e63e4d47d9b4b2af7d228",
       "id": "en-sentence-segmentation-profile",
       "kind": "segmentation-profile",
-      "lineCount": 60,
-      "logicalLineCount": 60,
-      "logicalNonEmptyLineCount": 59,
-      "logicalRecordCount": 59,
-      "logicalResourceTextByteLength": 1389,
-      "nonEmptyLineCount": 59,
+      "lineCount": 69,
+      "logicalLineCount": 69,
+      "logicalNonEmptyLineCount": 68,
+      "logicalRecordCount": 68,
+      "logicalResourceTextByteLength": 1507,
+      "nonEmptyLineCount": 68,
       "path": "resources/en.segmentation.sentence.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
       "resourceSpecId": "resource-spec:textpack-en-segmentation:english-segmentation-profile",
-      "resourceTextByteLength": 1389,
+      "resourceTextByteLength": 1507,
       "sharedStorageResourceIds": [
         "en-sentence-segmentation-profile"
       ],
@@ -1218,8 +1218,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 651874,
-      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
+      "byteLength": 656947,
+      "checksum": "sha256:ca306f120054e03fbca88e0b4c50881c8395022d0e1f811f61b7ee00bda269e6",
       "id": "wikidata-en-aliases",
       "kind": "knowledge-base",
       "lineCount": 3,
@@ -1232,7 +1232,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 651874,
+      "resourceTextByteLength": 656947,
       "sharedStorageResourceIds": [
         "wikidata-en-aliases",
         "wikidata-en-aliases-lookup-index"
@@ -1240,21 +1240,21 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 651874,
-      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
+      "byteLength": 656947,
+      "checksum": "sha256:ca306f120054e03fbca88e0b4c50881c8395022d0e1f811f61b7ee00bda269e6",
       "id": "wikidata-en-aliases-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 651874,
+      "logicalResourceTextByteLength": 656947,
       "nonEmptyLineCount": 3,
       "path": "resources/wikidata-en.aliases.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 651874,
+      "resourceTextByteLength": 656947,
       "sharedStorageResourceIds": [
         "wikidata-en-aliases",
         "wikidata-en-aliases-lookup-index"
@@ -1262,8 +1262,8 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 661412,
-      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
+      "byteLength": 768146,
+      "checksum": "sha256:593931b8691dc6983772b96524eb720273b6f4ed8052afe492cbff20cdd0d501",
       "id": "wikidata-en-entities",
       "kind": "knowledge-base",
       "lineCount": 3,
@@ -1276,7 +1276,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 661412,
+      "resourceTextByteLength": 768146,
       "sharedStorageResourceIds": [
         "wikidata-en-entities",
         "wikidata-en-entities-lookup-index"
@@ -1284,21 +1284,21 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 661412,
-      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
+      "byteLength": 768146,
+      "checksum": "sha256:593931b8691dc6983772b96524eb720273b6f4ed8052afe492cbff20cdd0d501",
       "id": "wikidata-en-entities-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 661412,
+      "logicalResourceTextByteLength": 768146,
       "nonEmptyLineCount": 3,
       "path": "resources/wikidata-en.entities.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 661412,
+      "resourceTextByteLength": 768146,
       "sharedStorageResourceIds": [
         "wikidata-en-entities",
         "wikidata-en-entities-lookup-index"
@@ -1369,8 +1369,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 153966,
-      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
+      "byteLength": 158068,
+      "checksum": "sha256:1f497aba92acb6c7870095b9c21d65d8f9daac028e2c2d54b90e47466ced79af",
       "id": "wikidata-en-relations",
       "kind": "knowledge-base",
       "lineCount": 3,
@@ -1383,7 +1383,7 @@
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 153966,
+      "resourceTextByteLength": 158068,
       "sharedStorageResourceIds": [
         "wikidata-en-relations",
         "wikidata-en-relations-lookup-index"
@@ -1391,21 +1391,21 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 153966,
-      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
+      "byteLength": 158068,
+      "checksum": "sha256:1f497aba92acb6c7870095b9c21d65d8f9daac028e2c2d54b90e47466ced79af",
       "id": "wikidata-en-relations-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 153966,
+      "logicalResourceTextByteLength": 158068,
       "nonEmptyLineCount": 3,
       "path": "resources/wikidata-en.relations.lookup-index.v1.txt",
       "pipelineId": "wikidata-main-artifact",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wikidata-en:wikidata-main-artifact",
-      "resourceTextByteLength": 153966,
+      "resourceTextByteLength": 158068,
       "sharedStorageResourceIds": [
         "wikidata-en-relations",
         "wikidata-en-relations-lookup-index"
@@ -1434,8 +1434,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 3562564,
-      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
+      "byteLength": 3792047,
+      "checksum": "sha256:431b53f6eda3910405b87b7ea8ad339d46ff979359379b432785612fe77f38c6",
       "id": "wordnet-en-lexical-entries",
       "kind": "lexicon",
       "lineCount": 3,
@@ -1448,7 +1448,7 @@
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 3562564,
+      "resourceTextByteLength": 3792047,
       "sharedStorageResourceIds": [
         "wordnet-en-lexical-entries",
         "wordnet-en-lexical-entries-lookup-index"
@@ -1456,21 +1456,21 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 3562564,
-      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
+      "byteLength": 3792047,
+      "checksum": "sha256:431b53f6eda3910405b87b7ea8ad339d46ff979359379b432785612fe77f38c6",
       "id": "wordnet-en-lexical-entries-lookup-index",
       "kind": "dataset",
       "lineCount": 3,
       "logicalLineCount": 3,
       "logicalNonEmptyLineCount": 3,
       "logicalRecordCount": 0,
-      "logicalResourceTextByteLength": 3562564,
+      "logicalResourceTextByteLength": 3792047,
       "nonEmptyLineCount": 3,
       "path": "resources/wordnet-en.lexical-entries.lookup-index.v1.txt",
       "pipelineId": "open-english-wordnet-lmf",
       "pipelineVersion": "0.2.0",
       "resourceSpecId": "resource-spec:textpack-wordnet-en:open-english-wordnet-lmf",
-      "resourceTextByteLength": 3562564,
+      "resourceTextByteLength": 3792047,
       "sharedStorageResourceIds": [
         "wordnet-en-lexical-entries",
         "wordnet-en-lexical-entries-lookup-index"

@@ -33,6 +33,16 @@
 		"dictionaryRefs": {
 			"type": "array",
 			"items": { "type": "string", "minLength": 1 }
+		},
+		"elisionPrefixes": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string", "minLength": 1 }
+		},
+		"sentenceBoundaryExceptions": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": { "type": "string", "minLength": 1 }
 		}
 	},
 	"definitions": {

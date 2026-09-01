@@ -727,8 +727,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 19452834,
-      "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+      "byteLength": 27883330,
+      "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
       "kind": "morphology",
       "logicalRecordCount": 203740,
       "nonEmptyLineCount": 3,
@@ -744,8 +744,8 @@
       "sizeClass": "medium"
     },
     {
-      "byteLength": 19452834,
-      "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+      "byteLength": 27883330,
+      "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1129,8 +1129,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 123649,
-      "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+      "byteLength": 138473,
+      "checksum": "sha256:ba0191c8aeff5184b592d248ec8fbbe81e8152cfa03da921be306575efc1b784",
       "kind": "knowledge-base",
       "logicalRecordCount": 2776,
       "nonEmptyLineCount": 3,
@@ -1146,8 +1146,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 123649,
-      "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+      "byteLength": 138473,
+      "checksum": "sha256:ba0191c8aeff5184b592d248ec8fbbe81e8152cfa03da921be306575efc1b784",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1163,8 +1163,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 238909,
-      "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+      "byteLength": 320223,
+      "checksum": "sha256:2aaefbf1deac1cc46d46813e0394ba567f80b3102ec5630ad2854191910f2d05",
       "kind": "knowledge-base",
       "logicalRecordCount": 3009,
       "nonEmptyLineCount": 3,
@@ -1180,8 +1180,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 238909,
-      "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+      "byteLength": 320223,
+      "checksum": "sha256:2aaefbf1deac1cc46d46813e0394ba567f80b3102ec5630ad2854191910f2d05",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1245,8 +1245,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 43733,
-      "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+      "byteLength": 52003,
+      "checksum": "sha256:d6b9a62d2ef9a1801fb0d1195b33da260773365de49dbc557c5fbb238f408019",
       "kind": "knowledge-base",
       "logicalRecordCount": 3009,
       "nonEmptyLineCount": 3,
@@ -1262,8 +1262,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 43733,
-      "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+      "byteLength": 52003,
+      "checksum": "sha256:d6b9a62d2ef9a1801fb0d1195b33da260773365de49dbc557c5fbb238f408019",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1295,8 +1295,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 5890936,
-      "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+      "byteLength": 6554030,
+      "checksum": "sha256:48f66c79f5971ec907b7112d397cc9a4e1fb241353386bba4759069a9f9880f3",
       "kind": "lexicon",
       "logicalRecordCount": 136041,
       "nonEmptyLineCount": 3,
@@ -1312,8 +1312,8 @@
       "sizeClass": "medium"
     },
     {
-      "byteLength": 5890936,
-      "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+      "byteLength": 6554030,
+      "checksum": "sha256:48f66c79f5971ec907b7112d397cc9a4e1fb241353386bba4759069a9f9880f3",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,

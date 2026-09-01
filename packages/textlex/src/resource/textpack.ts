@@ -42,6 +42,10 @@ import type {
 	TextPackResourceLike,
 } from "./types.js";
 
+function compareStrings(left: string, right: string): number {
+	return left < right ? -1 : left > right ? 1 : 0;
+}
+
 function kindMatches(
 	resource: TextPackResourceLike,
 	kind: PackResourceQueryLike["kind"],
@@ -82,7 +86,7 @@ function findResource(
 				kindMatches(resource, queryOrResourceId.kind) &&
 				schemaMatches(resource, queryOrResourceId.schemaId),
 		)
-		.sort((left, right) => left.id.localeCompare(right.id))[0];
+		.sort((left, right) => compareStrings(left.id, right.id))[0];
 	if (found === undefined)
 		throw new TypeError("no textpack resource matches query.");
 	return found;
@@ -842,22 +846,35 @@ async function camelMorphemeRowsForForm(
 			surfaces.add(characters.slice(start, end).join(""));
 		}
 	}
-	const rowsBySurface = new Map(
-		await Promise.all(
-			[...surfaces].map(async (surface) => {
-				const normalizedSurface = normalizedLookupKey(surface);
-				const rows = (
-					await index.rowsForNormalizedKey("surface", normalizedSurface)
-				)
-					.map((row) => row.values)
-					.filter(
-						(row) =>
-							normalizedLookupKey(row.surface ?? "") === normalizedSurface,
-					);
-				return [surface, Object.freeze(rows)] as const;
-			}),
-		),
-	);
+	const rowsBySurface = new Map<
+		string,
+		readonly Readonly<Record<string, string>>[]
+	>();
+	const surfaceList = [...surfaces];
+	const surfaceLookupConcurrency = 4;
+	for (
+		let start = 0;
+		start < surfaceList.length;
+		start += surfaceLookupConcurrency
+	) {
+		const entries = await Promise.all(
+			surfaceList
+				.slice(start, start + surfaceLookupConcurrency)
+				.map(async (surface) => {
+					const normalizedSurface = normalizedLookupKey(surface);
+					const rows = (
+						await index.rowsForNormalizedKey("surface", normalizedSurface)
+					)
+						.map((row) => row.values)
+						.filter(
+							(row) =>
+								normalizedLookupKey(row.surface ?? "") === normalizedSurface,
+						);
+					return [surface, Object.freeze(rows)] as const;
+				}),
+		);
+		for (const [surface, rows] of entries) rowsBySurface.set(surface, rows);
+	}
 	return (section, surface) =>
 		Object.freeze(
 			(rowsBySurface.get(surface) ?? []).filter(
@@ -874,6 +891,25 @@ type CamelMorphemeRows = (
 function camelAnalysisProbability(analysis: MorphologyAnalysis): number {
 	const value = Number(analysis.features.lex_logprob);
 	return Number.isFinite(value) ? value : Number.NEGATIVE_INFINITY;
+}
+
+interface RankedCamelAnalysis {
+	readonly analysis: MorphologyAnalysis;
+	readonly identity: string;
+	readonly probability: number;
+	readonly lemma: string;
+	readonly features: string;
+}
+
+function compareRankedCamelAnalyses(
+	left: RankedCamelAnalysis,
+	right: RankedCamelAnalysis,
+): number {
+	return (
+		right.probability - left.probability ||
+		compareStrings(left.lemma, right.lemma) ||
+		compareStrings(left.features, right.features)
+	);
 }
 
 function camelComposedAnalyses(
@@ -897,8 +933,52 @@ function camelComposedAnalyses(
 		rowCache.set(key, indexed);
 		return indexed;
 	};
-	const output: MorphologyAnalysis[] = [];
-	const seen = new Set<string>();
+	const selected: RankedCamelAnalysis[] = [];
+	const selectedKeys = new Set<string>();
+	const retain = (analysis: MorphologyAnalysis) => {
+		const identity = JSON.stringify(analysis);
+		if (selectedKeys.has(identity)) return;
+		selectedKeys.add(identity);
+		selected.push({
+			analysis,
+			identity,
+			probability: camelAnalysisProbability(analysis),
+			lemma: analysis.lemma ?? "",
+			features: JSON.stringify(analysis.features),
+		});
+		selected.sort(compareRankedCamelAnalyses);
+		if (maxResults !== undefined && selected.length > maxResults) {
+			const removed = selected.pop();
+			if (removed !== undefined) selectedKeys.delete(removed.identity);
+		}
+	};
+	const stemRanks = new WeakMap<
+		Readonly<Record<string, string>>,
+		{ readonly probability: number; readonly lemma: string }
+	>();
+	const bundles = new WeakMap<
+		Readonly<Record<string, string>>,
+		Readonly<Record<string, string>>
+	>();
+	const bundle = (row: Readonly<Record<string, string>>) => {
+		const cached = bundles.get(row);
+		if (cached !== undefined) return cached;
+		const parsed = camelBundleFeatures(row);
+		bundles.set(row, parsed);
+		return parsed;
+	};
+	const stemRank = (stem: Readonly<Record<string, string>>) => {
+		const cached = stemRanks.get(stem);
+		if (cached !== undefined) return cached;
+		const value = Number(bundle(stem).lex_logprob);
+		const rank = {
+			probability: Number.isFinite(value) ? value : Number.NEGATIVE_INFINITY,
+			lemma:
+				firstNonEmpty(stem.lemma, stem.lexicalForm, stem.stem, stem.root) ?? "",
+		};
+		stemRanks.set(stem, rank);
+		return rank;
+	};
 	for (let prefixEnd = 0; prefixEnd < characters.length; prefixEnd += 1) {
 		const prefixRows = rows(
 			"PREFIXES",
@@ -920,9 +1000,29 @@ function camelComposedAnalyses(
 				characters.slice(suffixStart).join(""),
 			);
 			if (suffixRows.length === 0) continue;
+			const suffixOverridesProbability = suffixRows.some(
+				(suffix) => bundle(suffix).lex_logprob !== undefined,
+			);
 			for (const prefix of prefixRows) {
 				const prefixCategory = prefix.category ?? "";
+				const stemOwnsProbability =
+					bundle(prefix).lex_logprob === undefined &&
+					!suffixOverridesProbability;
 				for (const stem of stemRows) {
+					const worst =
+						maxResults !== undefined && selected.length === maxResults
+							? selected.at(-1)
+							: undefined;
+					if (worst !== undefined && stemOwnsProbability) {
+						const rank = stemRank(stem);
+						if (
+							rank.probability < worst.probability ||
+							(rank.probability === worst.probability &&
+								compareStrings(rank.lemma, worst.lemma) > 0)
+						) {
+							continue;
+						}
+					}
 					const stemCategory = stem.category ?? "";
 					for (const suffix of suffixRows) {
 						const suffixCategory = suffix.category ?? "";
@@ -944,25 +1044,14 @@ function camelComposedAnalyses(
 							sourceResourceId,
 						);
 						if (analysis === undefined) continue;
-						const key = JSON.stringify(analysis);
-						if (seen.has(key)) continue;
-						seen.add(key);
-						output.push(analysis);
+						retain(analysis);
 					}
 				}
 			}
 		}
 	}
-	const sorted = output.sort(
-		(left, right) =>
-			camelAnalysisProbability(right) - camelAnalysisProbability(left) ||
-			(left.lemma ?? "").localeCompare(right.lemma ?? "") ||
-			JSON.stringify(left.features).localeCompare(
-				JSON.stringify(right.features),
-			),
-	);
 	return Object.freeze(
-		maxResults === undefined ? sorted : sorted.slice(0, maxResults),
+		selected.sort(compareRankedCamelAnalyses).map((entry) => entry.analysis),
 	);
 }
 
@@ -1028,15 +1117,15 @@ function morphologyParadigms(
 	}
 	return Object.freeze(
 		[...byLemma.entries()]
-			.sort(([left], [right]) => left.localeCompare(right))
+			.sort(([left], [right]) => compareStrings(left, right))
 			.map(([entryLemma, entries]) =>
 				Object.freeze({
 					lemma: entryLemma,
 					entries: Object.freeze(
 						entries.sort(
 							(left, right) =>
-								left.form.localeCompare(right.form) ||
-								(left.entryId ?? "").localeCompare(right.entryId ?? ""),
+								compareStrings(left.form, right.form) ||
+								compareStrings(left.entryId ?? "", right.entryId ?? ""),
 						),
 					),
 				}),

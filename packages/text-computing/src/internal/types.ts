@@ -1,9 +1,4 @@
-import type {
-	TextDataSegment,
-	TextDataTableResource,
-	UdAnnotationRecord,
-	UdSyntaxPackResources,
-} from "@ismail-elkorchi/textdata";
+import type { TextDataSegment } from "@ismail-elkorchi/textdata";
 import type { TextDocument } from "@ismail-elkorchi/textdoc";
 import type {
 	EntityCandidate,
@@ -27,18 +22,6 @@ import type {
 	TextPackCapabilityTier,
 	TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
-import type {
-	ParallelCorpus,
-	ParallelLinkRow,
-	ParallelRowsFromPackOptions,
-	ParallelTableResource,
-} from "@ismail-elkorchi/textparallel";
-import type {
-	PipelineDiagnostic,
-	PipelineTraceEvent,
-	RunOptions,
-	TextPipeline,
-} from "@ismail-elkorchi/textpipeline";
 import type {
 	DocumentQualityOptions,
 	QualityProfile,
@@ -74,8 +57,7 @@ export interface TextComputingAnalyzeOptions extends TextComputingLoadOptions {
 	readonly tasks?: readonly TextComputingDocumentTask[];
 	readonly lexiconMaxResults?: number;
 	readonly morphologyMaxResults?: number;
-	readonly entityMaxCandidates?: number;
-	readonly entityLanguage?: string;
+	readonly entityLinking?: Omit<EntityLinkOptions, "mentionSource" | "viewId">;
 	readonly quality?: DocumentQualityOptions;
 }
 
@@ -86,8 +68,7 @@ export interface TextComputingDocumentAnalysisOptions {
 	readonly tasks?: readonly TextComputingDocumentTask[];
 	readonly lexiconMaxResults?: number;
 	readonly morphologyMaxResults?: number;
-	readonly entityMaxCandidates?: number;
-	readonly entityLanguage?: string;
+	readonly entityLinking?: Omit<EntityLinkOptions, "mentionSource" | "viewId">;
 	readonly quality?: DocumentQualityOptions;
 }
 
@@ -100,7 +81,7 @@ export type TextComputingDocumentTask =
 	| "search"
 	| "quality";
 
-export type TextComputingTaskPreset = "core" | "full" | "lookup";
+export type TextComputingTaskPreset = "core" | "lookup";
 
 export interface TextComputingMorphologySummary {
 	readonly tokenId: string;
@@ -238,22 +219,6 @@ export interface TextComputingDocumentJson {
 	readonly evidence: readonly TextComputingEvidence[];
 }
 
-export interface TextComputingPipelineRunOptions
-	extends TextComputingDocumentAnalysisOptions {
-	readonly run?: Omit<
-		RunOptions,
-		"cache" | "cachePolicy" | "diagnostics" | "resources" | "trace"
-	>;
-}
-
-export interface TextComputingPipelineRun {
-	readonly pipeline: TextPipeline;
-	readonly document: TextDocument;
-	readonly analysis: TextComputingDocument;
-	readonly diagnostics: readonly PipelineDiagnostic[];
-	readonly trace: readonly PipelineTraceEvent[];
-}
-
 export interface TextComputingSupportReport {
 	readonly packageName: string;
 	readonly packId: string;
@@ -314,6 +279,7 @@ export interface TextComputingNlp {
 		) => Promise<readonly TextDataSegment[]>;
 		readonly words: (text: string) => Promise<readonly TextDataSegment[]>;
 		readonly sentences: (text: string) => Promise<readonly TextDataSegment[]>;
+		readonly graphemes: (text: string) => Promise<readonly TextDataSegment[]>;
 	};
 	readonly normalization: {
 		readonly normalizeText: (
@@ -348,11 +314,6 @@ export interface TextComputingNlp {
 			lemma?: string,
 		) => Promise<readonly MorphologyParadigm[]>;
 	};
-	readonly syntax: {
-		readonly resources: () => Promise<UdSyntaxPackResources>;
-		readonly annotations: () => Promise<readonly UdAnnotationRecord[]>;
-		readonly dataset: () => Promise<unknown>;
-	};
 	readonly kb: {
 		readonly resources: () => readonly TextComputingResourceInspection[];
 		readonly candidates: (
@@ -385,25 +346,6 @@ export interface TextComputingNlp {
 			options?: SearchOptions,
 		) => readonly SearchResult[];
 	};
-	readonly corpus: {
-		readonly resources: () => readonly TextComputingResourceInspection[];
-		readonly rows: () => Promise<readonly TextDataTableResource[]>;
-		readonly documents: (options: {
-			readonly maxDocuments: number;
-		}) => Promise<readonly TextDocument[]>;
-	};
-	readonly parallel: {
-		readonly resources: () => readonly TextComputingResourceInspection[];
-		readonly rows: (
-			options?: Omit<ParallelRowsFromPackOptions, "reader">,
-		) => Promise<readonly ParallelTableResource[]>;
-		readonly links: (
-			options?: Omit<ParallelRowsFromPackOptions, "reader">,
-		) => Promise<readonly ParallelLinkRow[]>;
-		readonly corpus: (
-			options?: Omit<ParallelRowsFromPackOptions, "reader">,
-		) => Promise<ParallelCorpus>;
-	};
 	readonly quality: {
 		readonly resources: () => Promise<readonly TextQualityPackResource[]>;
 		readonly profiles: () => Promise<readonly QualityProfile[]>;
@@ -421,18 +363,5 @@ export interface TextComputingNlp {
 			doc: TextDocument,
 			options?: TextComputingDocumentAnalysisOptions,
 		) => Promise<TextComputingDocument>;
-	};
-	readonly pipeline: {
-		readonly createDocumentAnalysisPipeline: (
-			options?: TextComputingDocumentAnalysisOptions,
-		) => TextPipeline;
-		readonly runText: (
-			text: string,
-			options?: TextComputingPipelineRunOptions,
-		) => Promise<TextComputingPipelineRun>;
-		readonly runDocument: (
-			doc: TextDocument,
-			options?: TextComputingPipelineRunOptions,
-		) => Promise<TextComputingPipelineRun>;
 	};
 }

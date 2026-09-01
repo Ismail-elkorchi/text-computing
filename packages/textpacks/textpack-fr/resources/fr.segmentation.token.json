@@ -1,5 +1,20 @@
 {
   "dictionaryRefs": [],
+  "elisionPrefixes": [
+    "l",
+    "n",
+    "d",
+    "j",
+    "qu",
+    "c",
+    "s",
+    "m",
+    "t",
+    "jusqu",
+    "lorsqu",
+    "puisqu",
+    "quoiqu"
+  ],
   "granularity": "token",
   "kind": "segmentation-profile",
   "languageTag": "fr",

@@ -127,7 +127,8 @@ export async function indexedMorphologyTableFixture(
 		fuzzyBuckets: [],
 		patternBuckets: [],
 	};
-	const indexText = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}`;
+	const indexHeader = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n`;
+	const indexText = `${indexHeader}${keyEncoded}${rowEncoded}`;
 	const sourceByteLength = new TextEncoder().encode(text).byteLength;
 	const shippedByteLength = new TextEncoder().encode(indexText).byteLength;
 	const indexResourceId = `${resourceId}-lookup-index`;
@@ -166,6 +167,9 @@ export async function indexedMorphologyTableFixture(
 				),
 				indexedResourceTextByteLength: sourceByteLength,
 				lookupIndexShippedByteLength: shippedByteLength,
+				lookupIndexHeaderByteLength: new TextEncoder().encode(indexHeader)
+					.byteLength,
+				lookupIndexHeaderChecksum: await sha256(indexHeader),
 				storageBudgetByteLength: Math.max(
 					Math.ceil(sourceByteLength * 1.3),
 					sourceByteLength + 32 * 1024,

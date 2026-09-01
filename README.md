@@ -1,6 +1,8 @@
 # text-computing
 
-`text-computing` is the public workspace for deterministic text computing packages.
+`text-computing` is an alpha workspace for deterministic, resource-backed text
+computing. The project prioritizes reproducibility, inspectable evidence, and
+audited data over hidden host behavior or model services.
 
 ## Packages
 
@@ -35,7 +37,7 @@ const doc = await nlp("L'Etat francais reconnait Paris.");
 
 ## Generated textpacks
 
-The forge publishes three self-contained language data packages:
+The forge builds three self-contained alpha language data packages:
 
 - `@ismail-elkorchi/textpack-en` — English resources for ordinary document NLP.
 - `@ismail-elkorchi/textpack-fr` — French resources for ordinary document NLP, including its declared share-alike data.
@@ -43,7 +45,20 @@ The forge publishes three self-contained language data packages:
 
 Capability slices and source transforms are internal forge build units, not npm packages. Large corpus, parallel, and UD annotation datasets remain explicit acquisition inputs instead of default language-package payloads.
 
-Generated textpacks are non-publishable by default. A generated pack becomes an npm-publishable textpack only after the forge publishability gate records production-grade source coverage, audited license evidence, scoped capability claims, conformance/evaluation evidence, and generated reports. Descriptor-only packs are `artifact-backed`, not `task-supported`; sampled, demo, fixture-backed, and transitional packs are not part of the public package graph.
+Generated textpacks are non-publishable by default. Forge reports establish
+source provenance, license policy, deterministic generation, schema conformance,
+and runnable resource bindings. They do not establish general linguistic
+accuracy. A `task-supported` slot means the declared deterministic task is
+runnable for the pack's stated scope; it does not mean contextual model parity or
+production readiness. Descriptor-only packs are `artifact-backed`, not
+`task-supported`.
+
+The current packs are useful for controlled real-text workloads involving
+Unicode segmentation, normalization, lexical and morphology lookup, search
+analysis, explicit-mention KB linking, and rule-based quality diagnostics. They
+are not replacements for contextual NER, statistical tagging, dependency
+parsing, or neural NLP systems. See [Evaluation and readiness](docs/evaluation.md)
+for measured results and limitations.
 
 ## Development
 
@@ -56,9 +71,9 @@ npm run -s schema:validate
 npm run -s test:nlp
 ```
 
-`test:nlp` executes the held-out English, French, and Arabic end-to-end cases in
-[`fixtures/nlp-benchmarks/`](fixtures/nlp-benchmarks/) through the public SDK. It fails on task
-regressions and warm-runtime budget violations; forge resource counts do not substitute for it.
+`test:nlp` executes held-out task cases, a frozen 300-document external real-text
+robustness sample, warm latency checks, and isolated cold-start memory/time gates
+through the public SDK. Forge resource counts do not substitute for these gates.
 
 ## Repository structure
 

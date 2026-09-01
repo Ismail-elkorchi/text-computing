@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { open, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -25,7 +25,7 @@ export function createNodeResourceReader(
 	const fetchReader = createFetchResourceReader(options);
 	const packageRootOverride = options.packageRoot;
 	return {
-		async readText(context) {
+		async readText(context, range) {
 			const rootUrl = packageRootUrl(
 				packageRootOverride ?? context.descriptor.packageRoot,
 			);
@@ -36,9 +36,30 @@ export function createNodeResourceReader(
 				);
 			}
 			if (resourceUrl.protocol === "file:") {
+				if (range !== undefined) {
+					const length = range.endByte - range.startByte;
+					const bytes = new Uint8Array(length);
+					const handle = await open(fileURLToPath(resourceUrl), "r");
+					try {
+						const { bytesRead } = await handle.read(
+							bytes,
+							0,
+							length,
+							range.startByte,
+						);
+						if (bytesRead !== length) {
+							throw new TypeError(
+								`Textpack resource ${context.descriptor.path} ended inside the requested byte range.`,
+							);
+						}
+						return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+					} finally {
+						await handle.close();
+					}
+				}
 				return readFile(fileURLToPath(resourceUrl), "utf8");
 			}
-			return fetchReader.readText(context);
+			return fetchReader.readText(context, range);
 		},
 	};
 }

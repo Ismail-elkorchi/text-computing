@@ -105,10 +105,14 @@ export function registerTests(api: TestApi): void {
   });
 
   api.test("security exports confusable and mixed-script facts", async () => {
-    const { confusableSkeleton, mixedScriptTokenFacts } = await importTextfacts();
+    const { confusableSkeleton, hasMixedScriptToken, mixedScriptTokenFacts, scriptTokenFacts } =
+      await importTextfacts();
     api.assertEqual(confusableSkeleton("paypal"), confusableSkeleton("раураl"));
     const facts = [...mixedScriptTokenFacts("раyраl")];
     api.assertOk(facts.length > 0);
+    api.assertEqual(hasMixedScriptToken("مَرْحَبًا"), false);
+    api.assertEqual([...mixedScriptTokenFacts("مَرْحَبًا")].length, 0);
+    api.assertEqual([...scriptTokenFacts("مَرْحَبًا")][0]?.scripts[0], "Arabic");
   });
 
   api.test("root collation final names are deterministic", async () => {

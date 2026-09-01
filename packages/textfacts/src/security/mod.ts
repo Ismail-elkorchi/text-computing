@@ -13,25 +13,34 @@ export interface MixedScriptOptions {
 
 export type MixedScriptTokenFact = ScannedToken;
 
+export type ScriptTokenFact = ScannedToken;
+
 export { hasMixedScriptToken };
 
 export function confusableSkeleton(text: string, options: ConfusableOptions = {}): string {
   return confusableSkeletonImpl(text, options);
 }
 
-export function* mixedScriptTokenFacts(
+export function* scriptTokenFacts(
   text: string,
   options: MixedScriptOptions = {},
-): Iterable<MixedScriptTokenFact> {
+): Iterable<ScriptTokenFact> {
   const scanOptions: TokenScanOptions = {
     tokenizer: "uax29-word",
-    canonicalize: "skeleton",
+    canonicalize: "none",
     wordFilter: options.wordFilter ?? "word-like",
   };
   if (options.maxTokens !== undefined) {
     scanOptions.maxTokens = options.maxTokens;
   }
-  for (const token of scanTokens(text, scanOptions)) {
+  yield* scanTokens(text, scanOptions);
+}
+
+export function* mixedScriptTokenFacts(
+  text: string,
+  options: MixedScriptOptions = {},
+): Iterable<MixedScriptTokenFact> {
+  for (const token of scriptTokenFacts(text, options)) {
     if (token.hasMixedScript) yield token;
   }
 }

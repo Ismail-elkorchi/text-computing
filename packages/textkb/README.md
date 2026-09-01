@@ -31,7 +31,14 @@ const kb = createKnowledgeBase({
 });
 
 const doc = createDocument("Acme signed the contract.", { id: "doc-a" });
-const linked = linkEntities(doc, kb);
+const linked = linkEntities(doc, kb, {
+  mentionSpans: [
+    {
+      viewId: "raw",
+      span: { start: 0, end: 4, unit: "utf16-code-unit" },
+    },
+  ],
+});
 ```
 
 ## Public Imports
@@ -58,5 +65,11 @@ consistency. Mention keys use pinned Unicode 17 NFKC casefolding, and Wikidata I
 QIDs while the source identifier remains in provenance metadata.
 
 The runtime accepts caller-provided records, loaded resource rows, and final `TextDocument` values. It does not scan packages, read filesystem resources, fetch external KBs, train models, use embeddings, or replace corpus terminology extraction.
+
+`linkEntities` and `linkTerms` consume annotations and explicit mention spans by
+default. Whole-text alias scanning is an expert opt-in (`mentionSource:
+"aliases"` or `"both"`) and is candidate generation, not named-entity
+recognition. Short aliases and common words can otherwise produce convincing but
+incorrect links.
 
 Published runtime code is ESM, side-effect-free, deterministic, and portable across Node.js, Deno, Bun, browsers, and Cloudflare Workers.

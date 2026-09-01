@@ -32,3 +32,7 @@ await writeDataset(splits.train, { kind: "chunks", chunks: output }, { format: "
 Supported reader families include plain text, JSONL, CSV/TSV, CoNLL-style rows, CoNLL-U, IOB/BIO/BILOU, TEI/XML, basic HTML/XML, and parallel text with alignments.
 
 `textdata` does not compute corpus statistics, train models, run pipelines, build search indexes, or discover hidden resources.
+
+Textpack-backed segmentation uses the repository's pinned Unicode 17 word,
+sentence, and grapheme algorithms plus explicit pack tailoring. Results do not
+depend on the host runtime's `Intl.Segmenter` implementation.

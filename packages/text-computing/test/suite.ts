@@ -35,7 +35,7 @@ import { indexedMorphologyTableFixture } from "./fixtures/indexed-table.ts";
 
 function localGeneratedResourceReader(): TextPackResourceReader {
 	return {
-		readText({ descriptor }) {
+		async readText({ descriptor }, range) {
 			if (descriptor.packageRoot === undefined) {
 				throw new TypeError(
 					`Generated textpack resource ${descriptor.path} has no packageRoot.`,
@@ -52,7 +52,12 @@ function localGeneratedResourceReader(): TextPackResourceReader {
 					`Generated textpack resource path ${descriptor.path} escapes ${root.href}.`,
 				);
 			}
-			return readFile(resourceUrl, "utf8");
+			const text = await readFile(resourceUrl, "utf8");
+			if (range === undefined) return text;
+			const bytes = new TextEncoder().encode(text);
+			return new TextDecoder("utf-8", { fatal: true }).decode(
+				bytes.slice(range.startByte, range.endByte),
+			);
 		},
 	};
 }
@@ -177,8 +182,6 @@ test("runs lightweight task APIs over generated English, French, and Arabic pack
 			true,
 			`${languageTag} KB descriptors`,
 		);
-		assert.equal(nlp.corpus.resources().length, 0, `${languageTag} corpus`);
-		assert.equal(nlp.parallel.resources().length, 0, `${languageTag} parallel`);
 	}
 });
 
@@ -187,7 +190,6 @@ test("keeps default document analysis lightweight and token-aligned", async () =
 		const nlp = await load(pack, { reader: generatedReader });
 		const startedAt = performance.now();
 		const doc = await nlp(text, {
-			entityMaxCandidates: 2,
 			lexiconMaxResults: 2,
 			morphologyMaxResults: 2,
 			quality: { maxFindings: 3 },
@@ -443,7 +445,6 @@ test("analyzes an existing TextDocument through the SDK document namespace", asy
 		id: "text-computing-doc-test",
 	});
 	const doc = await nlp.document.analyzeDocument(source, {
-		entityMaxCandidates: 1,
 		lexiconMaxResults: 1,
 		morphologyMaxResults: 1,
 		tasks: ["search", "quality"],
@@ -452,14 +453,6 @@ test("analyzes an existing TextDocument through the SDK document namespace", asy
 
 	assert.equal(doc.toTextDoc().id, "text-computing-doc-test");
 	assert.equal(doc.tokens.length > 0, true);
-	const searchPipeline = nlp.pipeline.createDocumentAnalysisPipeline({
-		tasks: ["search"],
-	});
-	assert.deepEqual(searchPipeline.processors[0]?.provides, [
-		{ viewKind: "search" },
-		{ layer: "token.text-computing" },
-	]);
-
 	const expectedSearchView = await nlp.normalization.searchView(source);
 	const conflictingSearchDocument = addViewWithSpanMap(
 		source,
@@ -600,7 +593,15 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 	const nlp = await load(pack);
 	const doc = await nlp("Guinea-Bissau joined the meeting.", {
 		tasks: ["kb"],
-		entityMaxCandidates: 1,
+		entityLinking: {
+			maxCandidates: 1,
+			mentionSpans: [
+				{
+					viewId: "raw",
+					span: { start: 0, end: 13, unit: "utf16-code-unit" },
+				},
+			],
+		},
 	});
 
 	assert.equal(doc.entities.length, 1);
@@ -627,7 +628,15 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 	});
 	const customViewDoc = await nlp.document.analyzeDocument(customSource, {
 		tasks: ["kb"],
-		entityMaxCandidates: 1,
+		entityLinking: {
+			maxCandidates: 1,
+			mentionSpans: [
+				{
+					viewId: "source-text",
+					span: { start: 0, end: 13, unit: "utf16-code-unit" },
+				},
+			],
+		},
 	});
 	assert.equal(customViewDoc.sourceViewId, "source-text");
 	assert.equal(customViewDoc.toJSON().sourceViewId, "source-text");

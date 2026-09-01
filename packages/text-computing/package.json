@@ -39,15 +39,12 @@
 		"prepack": "npm run build"
 	},
 	"dependencies": {
-		"@ismail-elkorchi/textcorpus": "0.1.0",
 		"@ismail-elkorchi/textdata": "0.1.0",
 		"@ismail-elkorchi/textdoc": "0.1.0",
 		"@ismail-elkorchi/textkb": "0.1.0",
 		"@ismail-elkorchi/textlex": "0.1.0",
 		"@ismail-elkorchi/textnorm": "0.1.0",
 		"@ismail-elkorchi/textpack": "0.1.0",
-		"@ismail-elkorchi/textparallel": "0.1.0",
-		"@ismail-elkorchi/textpipeline": "0.1.0",
 		"@ismail-elkorchi/textquality": "0.1.0",
 		"@ismail-elkorchi/textsearch": "0.1.0"
 	},

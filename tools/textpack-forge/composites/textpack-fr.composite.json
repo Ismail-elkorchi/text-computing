@@ -110,7 +110,10 @@
 		{
 			"slot": "segmentation",
 			"status": "task-supported",
-			"tier": "rule-based"
+			"tier": "rule-based",
+			"notes": [
+				"The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with conservative French elision and title-abbreviation tailoring."
+			]
 		},
 		{
 			"slot": "lexicon",

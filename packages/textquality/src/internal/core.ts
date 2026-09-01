@@ -13,11 +13,18 @@ import {
 import { wordFrequencies } from "@ismail-elkorchi/textfacts/facts";
 import { stableHash64 } from "@ismail-elkorchi/textfacts/hash";
 import { scanIntegrityFindings } from "@ismail-elkorchi/textfacts/integrity";
-import { mixedScriptTokenFacts } from "@ismail-elkorchi/textfacts/security";
+import {
+	mixedScriptTokenFacts,
+	scriptTokenFacts,
+} from "@ismail-elkorchi/textfacts/security";
 import {
 	segmentSentences,
 	segmentWords,
 } from "@ismail-elkorchi/textfacts/segment";
+import {
+	isCommonOrInherited,
+	scriptNameAt,
+} from "@ismail-elkorchi/textfacts/unicode";
 import {
 	hasWord,
 	type Lexicon,
@@ -127,6 +134,7 @@ export interface AnnotationQualityOptions {
 	readonly requireEvidence?: boolean;
 	readonly allowNonUtf16Spans?: boolean;
 	readonly reportEmptyLayers?: boolean;
+	readonly nonOverlappingLayerIds?: readonly string[];
 }
 
 export interface NoisyTextOptions {
@@ -156,6 +164,7 @@ export interface DocumentQualityOptions {
 	readonly ocr?: OcrQualityOptions;
 	readonly noisy?: NoisyTextOptions;
 	readonly maxFindings?: number;
+	readonly maxFindingsPerKind?: number;
 	readonly strict?: boolean;
 	readonly producer?: string;
 	readonly optionsHash?: string;
@@ -539,6 +548,19 @@ function finding(input: FindingInput): QualityFinding {
 			unit: ref.span.unit,
 		})),
 		metrics,
+		evidence: {
+			mode: input.evidence.mode,
+			exactness: input.evidence.exactness,
+			producer: input.evidence.producer,
+			packageName: input.evidence.packageName,
+			packageVersion: input.evidence.packageVersion,
+			inputViewIds: input.evidence.inputViewIds,
+			resourceIds: input.evidence.resourceIds ?? [],
+			ruleIds: input.evidence.ruleIds ?? [],
+			statisticalModelIds: input.evidence.statisticalModelIds ?? [],
+			corpusIds: input.evidence.corpusIds ?? [],
+			optionsHash: input.evidence.optionsHash ?? "",
+		},
 	};
 	const result: QualityFinding = {
 		id: stableId("quality", payload),
@@ -604,7 +626,9 @@ export function buildQualityReport(
 	options: ReportBuildOptions,
 ): QualityReport {
 	const sortedFindings = Object.freeze(
-		[...findings].sort(compareQualityFindings),
+		[...new Map(findings.map((entry) => [entry.id, entry])).values()].sort(
+			compareQualityFindings,
+		),
 	);
 	const severityMetrics: Record<string, number> = {
 		"findings.total": sortedFindings.length,
@@ -1274,13 +1298,32 @@ function scriptMixQualityFindings(
 	}
 	const expectedScripts = options.profile?.expectedScripts ?? [];
 	if (expectedScripts.length > 0) {
-		const expected = new Set(expectedScripts);
-		for (const token of mixedScriptTokenFacts(text, {
+		const expected = expectedScripts.map((script) => {
+			try {
+				return new RegExp(`^\\p{Script_Extensions=${script}}$`, "u");
+			} catch {
+				return fail(
+					"TEXTQUALITY_EXPECTED_SCRIPT",
+					`quality profile contains an invalid Unicode script: ${script}`,
+				);
+			}
+		});
+		for (const token of scriptTokenFacts(text, {
 			maxTokens: 500,
 			wordFilter: "all",
 		})) {
-			for (const script of token.scripts) {
-				if (expected.has(script)) continue;
+			const unexpected = new Set<string>();
+			for (const character of token.raw) {
+				const codePoint = character.codePointAt(0) ?? 0;
+				if (
+					isCommonOrInherited(codePoint) ||
+					expected.some((pattern) => pattern.test(character))
+				) {
+					continue;
+				}
+				unexpected.add(scriptNameAt(codePoint));
+			}
+			for (const script of unexpected) {
 				findings.push(
 					finding({
 						targetId: doc.id,
@@ -2117,7 +2160,15 @@ export function annotationQualityFindings(
 					compareNumbers(left.ref.span.start, right.ref.span.start) ||
 					compareNumbers(left.ref.span.end, right.ref.span.end),
 			);
-		for (let index = 1; index < sorted.length; index += 1) {
+		const mustNotOverlap =
+			annotationOptions.nonOverlappingLayerIds?.includes(layer.id) === true ||
+			layer.type === "token" ||
+			layer.type.startsWith("token.");
+		for (
+			let index = mustNotOverlap ? 1 : sorted.length;
+			index < sorted.length;
+			index += 1
+		) {
 			const previous = sorted[index - 1];
 			const current = sorted[index];
 			if (
@@ -2206,6 +2257,15 @@ export function documentQualityFindings(
 	doc: TextDocument,
 	options: DocumentQualityOptions = {},
 ): readonly QualityFinding[] {
+	if (
+		options.maxFindings !== undefined &&
+		(!Number.isSafeInteger(options.maxFindings) || options.maxFindings < 0)
+	) {
+		fail(
+			"TEXTQUALITY_MAX_FINDINGS",
+			"maxFindings must be a non-negative safe integer",
+		);
+	}
 	const dimensions = new Set(selectedDimensions(options));
 	const findings: QualityFinding[] = [];
 	if (dimensions.has("unicode-integrity")) {
@@ -2283,8 +2343,27 @@ export function documentQualityFindings(
 			);
 		}
 	}
-	const max = options.maxFindings ?? findings.length;
-	return Object.freeze(findings.sort(compareQualityFindings).slice(0, max));
+	const maximumPerKind = options.maxFindingsPerKind ?? 25;
+	if (!Number.isSafeInteger(maximumPerKind) || maximumPerKind <= 0) {
+		fail(
+			"TEXTQUALITY_MAX_FINDINGS_PER_KIND",
+			"maxFindingsPerKind must be a positive safe integer",
+		);
+	}
+	const unique = [
+		...new Map(
+			findings.sort(compareQualityFindings).map((entry) => [entry.id, entry]),
+		).values(),
+	];
+	const kindCounts = new Map<string, number>();
+	const capped = unique.filter((entry) => {
+		const count = kindCounts.get(entry.kind) ?? 0;
+		if (count >= maximumPerKind) return false;
+		kindCounts.set(entry.kind, count + 1);
+		return true;
+	});
+	const max = options.maxFindings ?? capped.length;
+	return Object.freeze(capped.slice(0, max));
 }
 
 function documentMetrics(

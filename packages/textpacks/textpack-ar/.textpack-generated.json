@@ -12,7 +12,7 @@
     },
     {
       "byteLength": 55044,
-      "checksum": "sha256:00cf9f82473a79f6e8840dd3705a272921a2de6087869f82260577e83d3fc9e3",
+      "checksum": "sha256:0352ca6c34dfdb5bc04cea98e57ef68edcf096a9d049b662de4aa3845c16e8f6",
       "path": "COVERAGE.generated.json"
     },
     {
@@ -51,8 +51,8 @@
       "path": "NOTICE.generated.md"
     },
     {
-      "byteLength": 40572,
-      "checksum": "sha256:e24bb18edf18c601cd2596140a7adde073d35c68d093b2276e6d031708ad22ca",
+      "byteLength": 41323,
+      "checksum": "sha256:da06aeb35a02023a27a95707ebb111c10f11bc41b87cdef13fc388153edf730b",
       "path": "pack.manifest.json"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "byteLength": 51923,
-      "checksum": "sha256:a34f96243868c0e805bae848e640c82b4b8993863b6de2a32feda093e72e5db5",
+      "checksum": "sha256:a7443f1515cb0cd3e6c32f9b357af1acaffd7c4fb2af16447bed2c19a227962c",
       "path": "QUALITY.generated.json"
     },
     {
@@ -166,8 +166,8 @@
       "path": "resources/camel-morph-msa.features.tsv"
     },
     {
-      "byteLength": 19452834,
-      "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+      "byteLength": 27883330,
+      "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
       "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt"
     },
     {
@@ -236,13 +236,13 @@
       "path": "resources/unicode-17.scripts.tsv.gz.b64"
     },
     {
-      "byteLength": 123649,
-      "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+      "byteLength": 138473,
+      "checksum": "sha256:ba0191c8aeff5184b592d248ec8fbbe81e8152cfa03da921be306575efc1b784",
       "path": "resources/wikidata-ar.aliases.lookup-index.v1.txt"
     },
     {
-      "byteLength": 238909,
-      "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+      "byteLength": 320223,
+      "checksum": "sha256:2aaefbf1deac1cc46d46813e0394ba567f80b3102ec5630ad2854191910f2d05",
       "path": "resources/wikidata-ar.entities.lookup-index.v1.txt"
     },
     {
@@ -261,8 +261,8 @@
       "path": "resources/wikidata-ar.quality.json"
     },
     {
-      "byteLength": 43733,
-      "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+      "byteLength": 52003,
+      "checksum": "sha256:d6b9a62d2ef9a1801fb0d1195b33da260773365de49dbc557c5fbb238f408019",
       "path": "resources/wikidata-ar.relations.lookup-index.v1.txt"
     },
     {
@@ -271,8 +271,8 @@
       "path": "resources/wordnet-ar.kb.json"
     },
     {
-      "byteLength": 5890936,
-      "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+      "byteLength": 6554030,
+      "checksum": "sha256:48f66c79f5971ec907b7112d397cc9a4e1fb241353386bba4759069a9f9880f3",
       "path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt"
     },
     {
@@ -307,7 +307,7 @@
     },
     {
       "byteLength": 74341,
-      "checksum": "sha256:e40e83aa0483b98dd988efbc3e5366a28811af391e64b5555d799234165c0096",
+      "checksum": "sha256:3086caa98f68c355ca6958b2b26b845b49fd1fe3d3fc00a4a3a90e2fa0c0c703",
       "path": "SOURCES.generated.json"
     },
     {
@@ -316,8 +316,8 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 40828,
-      "checksum": "sha256:ac1e2cd8354f0a70457c3f0c58d33656555926f3b66e2fdc8ed75f4d18670778",
+      "byteLength": 41579,
+      "checksum": "sha256:13c527dc736177f4ec4cdff87ba1b20b719654a9c3a3aebbd133e7b754f172a9",
       "path": "src/manifest.ts"
     },
     {
@@ -327,7 +327,7 @@
     },
     {
       "byteLength": 21681,
-      "checksum": "sha256:45d41533001150a7e520989b6cd048be6c1f23d8f8900cde7f2bfecdab573c64",
+      "checksum": "sha256:66f5d9a17ae49235b6844a574cd843c3a9b7276420b3f3012e30f595037a613b",
       "path": "src/resources.ts"
     },
     {
@@ -422,9 +422,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
+  "lockfileChecksum": "sha256:6b6122f2755336925c27c15cdb988604e7e84f0adb01f6b450465570731ec283",
   "mode": "source-backed",
-  "outputChecksum": "sha256:50696a9d72ce3d767c5cb9952a5ad5e8fce598772a5d168262eb7df54a0512ab",
+  "outputChecksum": "sha256:4cf992613cc414466a99d806ee57243160a2c52d422a98dceb9dc7c447efab96",
   "packSpecPath": "tools/textpack-forge/composites/textpack-ar.composite.json",
   "packageName": "@ismail-elkorchi/textpack-ar",
   "packageVersion": "0.1.0",
