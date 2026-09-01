@@ -57,7 +57,7 @@
     },
     {
       "byteLength": 50252,
-      "checksum": "sha256:f1b0d59f676b6d55817a7ce4ccbe963bfad947b4029f48837a7a40264286c7e2",
+      "checksum": "sha256:22d529fa9aa5141058b180b371cb6c3e03f714d074f43800827a35b2cad563b5",
       "path": "pack.manifest.json"
     },
     {
@@ -357,7 +357,7 @@
     },
     {
       "byteLength": 50508,
-      "checksum": "sha256:b38e4db0816dbaf7a442dcc706aca9f5c371631b246ea00a15721d1b0f493fcc",
+      "checksum": "sha256:4dbe98d17c8022296c8d97cd86b328a2f6091b8a164b49047f54611150fbb937",
       "path": "src/manifest.ts"
     },
     {
@@ -470,9 +470,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:6b6122f2755336925c27c15cdb988604e7e84f0adb01f6b450465570731ec283",
+  "lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
   "mode": "source-backed",
-  "outputChecksum": "sha256:5a186f2bbb9a23ad4f76062be04585a30abdf2b0b0cc944326106afa732a7f76",
+  "outputChecksum": "sha256:cb9e3c25573be6065aaf2accb9ad2cb3bc861fd6ad67930bcd2129090371122f",
   "packSpecPath": "tools/textpack-forge/composites/textpack-en.composite.json",
   "packageName": "@ismail-elkorchi/textpack-en",
   "packageVersion": "0.1.0",

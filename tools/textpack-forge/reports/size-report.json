@@ -14,8 +14,8 @@
   "packages": [
     {
       "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 50055889,
-      "outputChecksum": "sha256:4cf992613cc414466a99d806ee57243160a2c52d422a98dceb9dc7c447efab96",
+      "npmShippedSizeBytes": 47465660,
+      "outputChecksum": "sha256:f84aa5be616c8490d32b32d5064d681b267ef7f0836e6792048f40bb774b9326",
       "packageDir": "packages/textpacks/textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
       "physicalStorage": [
@@ -172,8 +172,8 @@
           ]
         },
         {
-          "byteLength": 27883330,
-          "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
+          "byteLength": 25293101,
+          "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
           "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
           "resourceIds": [
             "ar-msa-camel-morph-morphemes",
@@ -182,7 +182,7 @@
         },
         {
           "byteLength": 10937,
-          "checksum": "sha256:0669b3c320abfcda22ef9503d0c6e634571a9c4c9f11686b6445cb460547ace7",
+          "checksum": "sha256:63041e9d25a4da7d3488e83efd860cb6e3f15a34ba302082e9f7124cac253a50",
           "path": "resources/camel-morph-msa.morphology.json",
           "resourceIds": [
             "ar-msa-camel-morphology-canonical"
@@ -598,21 +598,21 @@
           "sizeClass": "tiny"
         },
         {
-          "byteLength": 27883330,
-          "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
+          "byteLength": 25293101,
+          "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
           "id": "ar-msa-camel-morph-morphemes",
           "kind": "morphology",
           "lineCount": 3,
           "logicalLineCount": 203742,
           "logicalNonEmptyLineCount": 203741,
           "logicalRecordCount": 203740,
-          "logicalResourceTextByteLength": 117913474,
+          "logicalResourceTextByteLength": 121361861,
           "nonEmptyLineCount": 3,
           "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 27883330,
+          "resourceTextByteLength": 25293101,
           "sharedStorageResourceIds": [
             "ar-msa-camel-morph-morphemes",
             "ar-msa-camel-morph-morphemes-lookup-index"
@@ -620,21 +620,21 @@
           "sizeClass": "medium"
         },
         {
-          "byteLength": 27883330,
-          "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
+          "byteLength": 25293101,
+          "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
           "id": "ar-msa-camel-morph-morphemes-lookup-index",
           "kind": "dataset",
           "lineCount": 3,
           "logicalLineCount": 3,
           "logicalNonEmptyLineCount": 3,
           "logicalRecordCount": 0,
-          "logicalResourceTextByteLength": 27883330,
+          "logicalResourceTextByteLength": 25293101,
           "nonEmptyLineCount": 3,
           "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt",
           "pipelineId": "camel-morph-msa",
           "pipelineVersion": "0.1.0",
           "resourceSpecId": "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
-          "resourceTextByteLength": 27883330,
+          "resourceTextByteLength": 25293101,
           "sharedStorageResourceIds": [
             "ar-msa-camel-morph-morphemes",
             "ar-msa-camel-morph-morphemes-lookup-index"
@@ -685,7 +685,7 @@
         },
         {
           "byteLength": 10937,
-          "checksum": "sha256:0669b3c320abfcda22ef9503d0c6e634571a9c4c9f11686b6445cb460547ace7",
+          "checksum": "sha256:63041e9d25a4da7d3488e83efd860cb6e3f15a34ba302082e9f7124cac253a50",
           "id": "ar-msa-camel-morphology-canonical",
           "kind": "morphology",
           "lineCount": 671,
@@ -1516,7 +1516,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 38010412,
-      "outputChecksum": "sha256:5a186f2bbb9a23ad4f76062be04585a30abdf2b0b0cc944326106afa732a7f76",
+      "outputChecksum": "sha256:cb9e3c25573be6065aaf2accb9ad2cb3bc861fd6ad67930bcd2129090371122f",
       "packageDir": "packages/textpacks/textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
       "physicalStorage": [
@@ -3244,7 +3244,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 15741685,
-      "outputChecksum": "sha256:5ee8cff92cadd5bc6e5242038a8c286e547a4c275bfcf9cbda5d73191003387f",
+      "outputChecksum": "sha256:9cf9d65e7abf5c8a6ca9354a9fc261ce4686eccaca580c566ee99a3eb3686068",
       "packageDir": "packages/textpacks/textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",
       "physicalStorage": [

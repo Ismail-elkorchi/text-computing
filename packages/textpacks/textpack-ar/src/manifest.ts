@@ -320,8 +320,8 @@ export const manifest: TextPackManifest = {
 				"lookupIndexResourceId": "ar-msa-camel-morph-morphemes-lookup-index",
 				"logicalFormat": "tsv+gzip+base64",
 				"logicalPath": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
-				"logicalTextChecksum": "sha256:825277b95e8aa6b35ff718ae7ca07cfab84a4704e476ac29931ccd595b870d65",
-				"logicalTextByteLength": 117913474,
+				"logicalTextChecksum": "sha256:9c6b433c1b1ebaf842328e5e153a3258c3a4d833c25981fb9060e4fadc35962e",
+				"logicalTextByteLength": 121361861,
 				"logicalRowCount": 203740
 			}
 		},
@@ -394,30 +394,26 @@ export const manifest: TextPackManifest = {
 				"indexFormat": "normalized-key-bucketed-rows-v1",
 				"indexedResourceId": "ar-msa-camel-morph-morphemes",
 				"indexedResourceSchemaId": "textlex.morphology.rows.v1",
-				"indexedResourceTextChecksum": "sha256:825277b95e8aa6b35ff718ae7ca07cfab84a4704e476ac29931ccd595b870d65",
+				"indexedResourceTextChecksum": "sha256:9c6b433c1b1ebaf842328e5e153a3258c3a4d833c25981fb9060e4fadc35962e",
 				"keyNormalization": "NFKC-casefold-Unicode-17",
 				"keyColumns": [
-					"surface",
-					"diacritizedForm",
-					"lexicalForm",
-					"stem"
+					"sectionSurface",
+					"lexicalForm"
 				],
-				"emptyKeyColumns": [
-					"surface"
-				],
+				"emptyKeyColumns": [],
 				"fuzzyColumns": [],
 				"patternColumns": [],
 				"bucketCount": 8192,
 				"sourceRowCount": 203740,
-				"recordCount": 344712,
-				"rowReferenceCount": 583378,
-				"indexedResourceTextByteLength": 117913474,
-				"lookupIndexShippedByteLength": 27883330,
-				"lookupIndexHeaderByteLength": 3386994,
-				"lookupIndexHeaderChecksum": "sha256:b26bfceebd7612a6ab590b5dd977f86e52eaf4203b597e5c08057456984e497d",
-				"storageBudgetByteLength": 153287517,
-				"storageSizeRatio": 0.2364728054742921,
-				"maximumBucketByteLength": 3920
+				"recordCount": 200964,
+				"rowReferenceCount": 379712,
+				"indexedResourceTextByteLength": 121361861,
+				"lookupIndexShippedByteLength": 25293101,
+				"lookupIndexHeaderByteLength": 3435309,
+				"lookupIndexHeaderChecksum": "sha256:36d4edee3942667e8e81e9eaa6c856629b52ad382fda1cd163212b9dd483b449",
+				"storageBudgetByteLength": 157770420,
+				"storageSizeRatio": 0.20841062251014755,
+				"maximumBucketByteLength": 3460
 			}
 		},
 		{
@@ -1342,7 +1338,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:6b6122f2755336925c27c15cdb988604e7e84f0adb01f6b450465570731ec283",
+		"lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

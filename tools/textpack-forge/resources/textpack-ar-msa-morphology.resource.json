@@ -37,8 +37,7 @@
 			"path": "resources/camel-morph-msa.morphemes.tsv.gz.b64",
 			"kind": "morphology",
 			"format": "tsv+gzip+base64",
-			"lookupKeyColumns": ["surface", "diacritizedForm", "lexicalForm", "stem"],
-			"lookupEmptyKeyColumns": ["surface"]
+			"lookupKeyColumns": ["sectionSurface", "lexicalForm"]
 		},
 		{
 			"resourceId": "ar-msa-camel-morph-compatibility",

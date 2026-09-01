@@ -294,7 +294,7 @@
         },
         {
           "byteLength": 55044,
-          "checksum": "sha256:0352ca6c34dfdb5bc04cea98e57ef68edcf096a9d049b662de4aa3845c16e8f6",
+          "checksum": "sha256:cd6da4a9628f22f607ccf39ea4559b52d60a0027d7103ea678834b190e57765c",
           "path": "COVERAGE.generated.json"
         },
         {
@@ -333,8 +333,8 @@
           "path": "NOTICE.generated.md"
         },
         {
-          "byteLength": 41323,
-          "checksum": "sha256:da06aeb35a02023a27a95707ebb111c10f11bc41b87cdef13fc388153edf730b",
+          "byteLength": 41274,
+          "checksum": "sha256:9f5b74eb1e25f66a81c6f7710854695631b505b6c45c1d9608504ef7a6d1d58d",
           "path": "pack.manifest.json"
         },
         {
@@ -344,7 +344,7 @@
         },
         {
           "byteLength": 51923,
-          "checksum": "sha256:a7443f1515cb0cd3e6c32f9b357af1acaffd7c4fb2af16447bed2c19a227962c",
+          "checksum": "sha256:1349a5ab452bdfc821d9abd2a122c1284237575fbe83c12659e439757452a2e3",
           "path": "QUALITY.generated.json"
         },
         {
@@ -448,13 +448,13 @@
           "path": "resources/camel-morph-msa.features.tsv"
         },
         {
-          "byteLength": 27883330,
-          "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
+          "byteLength": 25293101,
+          "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
           "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt"
         },
         {
           "byteLength": 10937,
-          "checksum": "sha256:0669b3c320abfcda22ef9503d0c6e634571a9c4c9f11686b6445cb460547ace7",
+          "checksum": "sha256:63041e9d25a4da7d3488e83efd860cb6e3f15a34ba302082e9f7124cac253a50",
           "path": "resources/camel-morph-msa.morphology.json"
         },
         {
@@ -589,7 +589,7 @@
         },
         {
           "byteLength": 74341,
-          "checksum": "sha256:3086caa98f68c355ca6958b2b26b845b49fd1fe3d3fc00a4a3a90e2fa0c0c703",
+          "checksum": "sha256:04fe2c4e3cab9cfa597b9aa2cfa87903d2a302947f542607d096e22fbc011b90",
           "path": "SOURCES.generated.json"
         },
         {
@@ -598,8 +598,8 @@
           "path": "src/index.ts"
         },
         {
-          "byteLength": 41579,
-          "checksum": "sha256:13c527dc736177f4ec4cdff87ba1b20b719654a9c3a3aebbd133e7b754f172a9",
+          "byteLength": 41530,
+          "checksum": "sha256:b84c22b9435401671685e67972f8ad1f8b0a0ef106223476aa9879f785a6af33",
           "path": "src/manifest.ts"
         },
         {
@@ -609,7 +609,7 @@
         },
         {
           "byteLength": 21681,
-          "checksum": "sha256:66f5d9a17ae49235b6844a574cd843c3a9b7276420b3f3012e30f595037a613b",
+          "checksum": "sha256:6245396de42e6312127fcc98249b462683ddee1dc06c473a0eee4afae7e9f961",
           "path": "src/resources.ts"
         },
         {
@@ -705,8 +705,8 @@
         "syntax is planned in this source-backed self-contained language distribution."
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
-      "npmShippedSizeBytes": 50055889,
-      "outputChecksum": "sha256:4cf992613cc414466a99d806ee57243160a2c52d422a98dceb9dc7c447efab96",
+      "npmShippedSizeBytes": 47465660,
+      "outputChecksum": "sha256:f84aa5be616c8490d32b32d5064d681b267ef7f0836e6792048f40bb774b9326",
       "packClass": "language-composite",
       "packageId": "textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
@@ -1106,7 +1106,7 @@
         },
         {
           "byteLength": 50252,
-          "checksum": "sha256:f1b0d59f676b6d55817a7ce4ccbe963bfad947b4029f48837a7a40264286c7e2",
+          "checksum": "sha256:22d529fa9aa5141058b180b371cb6c3e03f714d074f43800827a35b2cad563b5",
           "path": "pack.manifest.json"
         },
         {
@@ -1406,7 +1406,7 @@
         },
         {
           "byteLength": 50508,
-          "checksum": "sha256:b38e4db0816dbaf7a442dcc706aca9f5c371631b246ea00a15721d1b0f493fcc",
+          "checksum": "sha256:4dbe98d17c8022296c8d97cd86b328a2f6091b8a164b49047f54611150fbb937",
           "path": "src/manifest.ts"
         },
         {
@@ -1521,7 +1521,7 @@
       ],
       "licenseExpression": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
       "npmShippedSizeBytes": 38010412,
-      "outputChecksum": "sha256:5a186f2bbb9a23ad4f76062be04585a30abdf2b0b0cc944326106afa732a7f76",
+      "outputChecksum": "sha256:cb9e3c25573be6065aaf2accb9ad2cb3bc861fd6ad67930bcd2129090371122f",
       "packClass": "language-composite",
       "packageId": "textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
@@ -1884,7 +1884,7 @@
         },
         {
           "byteLength": 46665,
-          "checksum": "sha256:f0c56fe112512bf938beb87c80046bbbdb8908f53b554e7d8796830c96cf1fff",
+          "checksum": "sha256:85a7952b3b01bc16ecbc5c21074380ea9d6965843648ce613931e14313282482",
           "path": "pack.manifest.json"
         },
         {
@@ -2184,7 +2184,7 @@
         },
         {
           "byteLength": 46921,
-          "checksum": "sha256:b74b0cbfb548e0b1a5f8c9c6d4a0a111e74c60efd16be3fa592efe68d3ae9c69",
+          "checksum": "sha256:5fc49d1de3fdead767711adca09702f803ff9d352faafebf271993f74be8b54d",
           "path": "src/manifest.ts"
         },
         {
@@ -2295,7 +2295,7 @@
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
       "npmShippedSizeBytes": 15741685,
-      "outputChecksum": "sha256:5ee8cff92cadd5bc6e5242038a8c286e547a4c275bfcf9cbda5d73191003387f",
+      "outputChecksum": "sha256:9cf9d65e7abf5c8a6ca9354a9fc261ce4686eccaca580c566ee99a3eb3686068",
       "packClass": "language-composite",
       "packageId": "textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",

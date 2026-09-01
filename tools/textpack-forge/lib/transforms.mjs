@@ -2736,6 +2736,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 			morphemeRows.push([
 				section,
 				surface,
+				`${section}:${surface}`,
 				category,
 				features.pos ?? "",
 				features.lex ?? "",
@@ -2947,6 +2948,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 				[
 					"section",
 					"surface",
+					"sectionSurface",
 					"category",
 					"partOfSpeech",
 					"lexicalForm",

@@ -968,19 +968,18 @@ assert.equal(
 );
 
 const camelMorphemeRows = [
-	"section\tsurface\tcategory\tpartOfSpeech\tlexicalForm\tdiacritizedForm\tfeatureBundle",
-	"PREFIXES\t\tP0\t\t\t\tprc0:0 prc2:0",
-	"PREFIXES\tال\tPA\t\t\tٱل#\tprc0:Al_det prc2:0",
-	"PREFIXES\tوال\tPA\t\t\tوَٱل#\tprc0:Al_det prc2:wa_conj",
-	"STEMS\tكتاب\tXV\tverb\tٱِكْتَأَب\tكْتَأَب\troot:ك.و.ب lex_logprob:-99",
-	"STEMS\tكتاب\tXN\tnoun\tكِتَاب\tكِتَاب\troot:ك.ت.ب num:s lex_logprob:-8",
-	"SUFFIXES\t\tS0\t\t\t\tenc0:0",
+	"section\tsurface\tsectionSurface\tcategory\tpartOfSpeech\tlexicalForm\tdiacritizedForm\tfeatureBundle",
+	"PREFIXES\t\tPREFIXES:\tP0\t\t\t\tprc0:0 prc2:0",
+	"PREFIXES\tال\tPREFIXES:ال\tPA\t\t\tٱل#\tprc0:Al_det prc2:0",
+	"PREFIXES\tوال\tPREFIXES:وال\tPA\t\t\tوَٱل#\tprc0:Al_det prc2:wa_conj",
+	"STEMS\tكتاب\tSTEMS:كتاب\tXV\tverb\tٱِكْتَأَب\tكْتَأَب\troot:ك.و.ب lex_logprob:-99",
+	"STEMS\tكتاب\tSTEMS:كتاب\tXN\tnoun\tكِتَاب\tكِتَاب\troot:ك.ت.ب num:s lex_logprob:-8",
+	"SUFFIXES\t\tSUFFIXES:\tS0\t\t\t\tenc0:0",
 ].join("\n");
-const camelMorphemeIndex = await bucketedLookupIndex(
-	camelMorphemeRows,
-	["surface", "lexicalForm"],
-	["surface"],
-);
+const camelMorphemeIndex = await bucketedLookupIndex(camelMorphemeRows, [
+	"sectionSurface",
+	"lexicalForm",
+]);
 const camelCanonicalText = JSON.stringify({
 	schemaVersion: "1",
 	kind: "morphology",

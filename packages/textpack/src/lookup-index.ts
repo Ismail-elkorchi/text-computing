@@ -278,12 +278,7 @@ function bucketDescriptor(value: unknown, label: string): BucketDescriptor {
 	) {
 		throw new TypeError(`${label} is invalid.`);
 	}
-	return Object.freeze({
-		offset: descriptor.offset,
-		length: descriptor.length,
-		textByteLength: descriptor.textByteLength,
-		textChecksum: descriptor.textChecksum,
-	});
+	return Object.freeze(descriptor) as unknown as BucketDescriptor;
 }
 
 function keyBucketDescriptors(
@@ -311,11 +306,8 @@ function keyBucketDescriptors(
 				throw new TypeError(`${label}[${String(index)}] has an invalid range.`);
 			}
 			previousLastKey = descriptor.lastKey;
-			return Object.freeze({
-				firstKey: descriptor.firstKey,
-				lastKey: descriptor.lastKey,
-				...bucketDescriptor(entry, `${label}[${String(index)}]`),
-			});
+			bucketDescriptor(entry, `${label}[${String(index)}]`);
+			return descriptor as unknown as KeyBucketDescriptor;
 		}),
 	);
 }
@@ -341,11 +333,8 @@ function rowBucketDescriptors(
 			throw new TypeError(`${label}[${String(index)}] has an invalid range.`);
 		}
 		nextRowOrder += descriptor.rowCount;
-		return Object.freeze({
-			firstRowOrder: descriptor.firstRowOrder,
-			rowCount: descriptor.rowCount,
-			...bucketDescriptor(entry, `${label}[${String(index)}]`),
-		});
+		bucketDescriptor(entry, `${label}[${String(index)}]`);
+		return descriptor as unknown as RowBucketDescriptor;
 	});
 	if (nextRowOrder !== sourceRowCount) {
 		throw new TypeError(`${label} does not cover every source row.`);
@@ -380,11 +369,8 @@ function fuzzyBucketDescriptors(
 				);
 			}
 			seen.add(key);
-			return Object.freeze({
-				column: descriptor.column,
-				codePointLength: descriptor.codePointLength,
-				...bucketDescriptor(entry, `${label}[${String(index)}]`),
-			});
+			bucketDescriptor(entry, `${label}[${String(index)}]`);
+			return descriptor as unknown as FuzzyBucketDescriptor;
 		}),
 	);
 }
@@ -455,19 +441,21 @@ function parseIndexFile(
 	const dataStart = new TextEncoder().encode(
 		indexText.slice(0, directoryEnd + 1),
 	).byteLength;
-	for (const descriptor of [
-		...keyBuckets,
-		...rowBuckets,
-		...fuzzyBuckets,
-		...patternBuckets,
+	for (const descriptors of [
+		keyBuckets,
+		rowBuckets,
+		fuzzyBuckets,
+		patternBuckets,
 	]) {
-		if (
-			dataStart + descriptor.offset + descriptor.length >
-			physicalByteLength
-		) {
-			throw new TypeError(
-				`Textpack lookup index ${indexResourceId} bucket range is invalid.`,
-			);
+		for (const descriptor of descriptors) {
+			if (
+				dataStart + descriptor.offset + descriptor.length >
+				physicalByteLength
+			) {
+				throw new TypeError(
+					`Textpack lookup index ${indexResourceId} bucket range is invalid.`,
+				);
+			}
 		}
 	}
 	return {
@@ -607,46 +595,56 @@ function unsignedBase36(value: string, label: string): number {
 	return parsed;
 }
 
-function keyBucketRows(text: string): ReadonlyMap<string, readonly number[]> {
-	const rows = new Map<string, readonly number[]>();
-	if (text.length === 0) return rows;
+function keyBucketOrders(text: string, targetKey: string): readonly number[] {
+	if (text.length > 0 && !text.endsWith("\n")) {
+		throw new TypeError("Textpack lookup key bucket must end with a newline.");
+	}
 	let previousKey: string | undefined;
-	for (const line of text.split("\n")) {
-		if (line.length === 0) continue;
-		const tab = line.indexOf("\t");
-		if (tab < 0 || line.indexOf("\t", tab + 1) !== -1) {
+	let lineStart = 0;
+	while (lineStart < text.length) {
+		const lineEnd = text.indexOf("\n", lineStart);
+		if (lineEnd < 0) break;
+		const tab = text.indexOf("\t", lineStart);
+		const nextTab = tab < 0 ? -1 : text.indexOf("\t", tab + 1);
+		if (
+			tab < lineStart ||
+			tab >= lineEnd ||
+			(nextTab >= 0 && nextTab < lineEnd)
+		) {
 			throw new TypeError("Textpack lookup key bucket row is malformed.");
 		}
-		const key = line.slice(0, tab);
-		const packedOrders = line.slice(tab + 1);
-		if (rows.has(key) || packedOrders.length === 0) {
-			throw new TypeError("Textpack lookup key bucket contains invalid keys.");
-		}
+		const key = text.slice(lineStart, tab);
 		if (previousKey !== undefined && previousKey >= key) {
 			throw new TypeError(
 				"Textpack lookup key bucket keys must be strictly increasing.",
 			);
 		}
 		previousKey = key;
-		let previousOrder = 0;
-		const orders = packedOrders.split(",").map((value, index) => {
-			const delta = unsignedBase36(value, "lookup row-order delta");
-			const order = index === 0 ? delta : previousOrder + delta;
-			previousOrder = order;
-			return order;
-		});
-		if (
-			orders.some(
-				(value, index) => index > 0 && value <= (orders[index - 1] ?? -1),
-			)
-		) {
-			throw new TypeError(
-				"Textpack lookup key bucket row orders must be unique and increasing.",
-			);
+		if (key > targetKey) return Object.freeze([]);
+		if (key === targetKey) {
+			const packedOrders = text.slice(tab + 1, lineEnd);
+			if (packedOrders.length === 0) {
+				throw new TypeError(
+					"Textpack lookup key bucket contains an empty row-order list.",
+				);
+			}
+			let previousOrder = 0;
+			const orders = packedOrders.split(",").map((value, index) => {
+				const delta = unsignedBase36(value, "lookup row-order delta");
+				const order = index === 0 ? delta : previousOrder + delta;
+				if (index > 0 && order <= previousOrder) {
+					throw new TypeError(
+						"Textpack lookup key bucket row orders must be unique and increasing.",
+					);
+				}
+				previousOrder = order;
+				return order;
+			});
+			return Object.freeze(orders);
 		}
-		rows.set(key, Object.freeze(orders));
+		lineStart = lineEnd + 1;
 	}
-	return rows;
+	return Object.freeze([]);
 }
 
 function catalogKeys(text: string): readonly string[] {
@@ -811,10 +809,7 @@ async function materializeLookupIndex(
 			`Textpack lookup index ${indexResourceId} physical metadata is stale.`,
 		);
 	}
-	const keyBucketCache = new Map<
-		number,
-		Promise<ReadonlyMap<string, readonly number[]>>
-	>();
+	const keyBucketCache = new Map<number, Promise<string>>();
 	const rowBucketCache = new Map<number, Promise<readonly string[]>>();
 	const fuzzyBucketCache = new Map<number, Promise<readonly string[]>>();
 	const patternBucketCache = new Map<
@@ -842,7 +837,7 @@ async function materializeLookupIndex(
 			readBucket(
 				descriptor,
 				`${indexResourceId}.keyBuckets[${String(bucket)}]`,
-			).then(keyBucketRows),
+			),
 		);
 	};
 	const openRowBucket = (bucket: number) => {
@@ -1025,8 +1020,8 @@ async function materializeLookupIndex(
 		return (async () => {
 			const bucket = keyBucketNumber(scopedKey);
 			if (bucket < 0) return Object.freeze([]);
-			const keyRows = await openKeyBucket(bucket);
-			return rowsForOrders(keyRows.get(scopedKey) ?? []);
+			const keyBucket = await openKeyBucket(bucket);
+			return rowsForOrders(keyBucketOrders(keyBucket, scopedKey));
 		})();
 	};
 	const rowsForNormalizedKeys = async (

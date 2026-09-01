@@ -318,8 +318,8 @@
       ]
     },
     {
-      "byteLength": 27883330,
-      "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
+      "byteLength": 25293101,
+      "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
       "citations": [
         "CAMeL Morph MSA LREC-COLING 2024 release."
       ],
@@ -343,8 +343,8 @@
       ]
     },
     {
-      "byteLength": 27883330,
-      "checksum": "sha256:8ca5cac23f8a8d67794e12fd2a05d3c882de1cb8f344efc81f97d27531c68e53",
+      "byteLength": 25293101,
+      "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
       "citations": [
         "CAMeL Morph MSA LREC-COLING 2024 release."
       ],
@@ -417,7 +417,7 @@
     },
     {
       "byteLength": 10937,
-      "checksum": "sha256:0669b3c320abfcda22ef9503d0c6e634571a9c4c9f11686b6445cb460547ace7",
+      "checksum": "sha256:63041e9d25a4da7d3488e83efd860cb6e3f15a34ba302082e9f7124cac253a50",
       "citations": [
         "CAMeL Morph MSA LREC-COLING 2024 release."
       ],

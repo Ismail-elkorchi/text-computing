@@ -277,6 +277,13 @@ function camelMorphemeKey(
 	return `${section}\u0000${normalizedLookupKey(surface)}`;
 }
 
+function camelSectionSurfaceLookupKey(
+	section: CamelMorphemeSection,
+	surface: string,
+): string {
+	return normalizedLookupKey(`${section}:${surface}`);
+}
+
 function camelCompatibilityKey(
 	table: CamelCompatibilityTable,
 	leftCategory: string,
@@ -719,6 +726,7 @@ function featureRecord(
 			[
 				"form",
 				"surface",
+				"sectionSurface",
 				"lemma",
 				"lexicalForm",
 				"stem",
@@ -840,47 +848,63 @@ async function camelMorphemeRowsForForm(
 	form: string,
 ): Promise<CamelMorphemeRows> {
 	const characters = [...form];
-	const surfaces = new Set<string>([""]);
+	const queries = new Map<
+		string,
+		{ readonly section: CamelMorphemeSection; readonly surface: string }
+	>();
+	const addQuery = (section: CamelMorphemeSection, surface: string) => {
+		queries.set(camelMorphemeKey(section, surface), { section, surface });
+	};
+	for (let end = 0; end < characters.length; end += 1) {
+		addQuery("PREFIXES", characters.slice(0, end).join(""));
+	}
 	for (let start = 0; start < characters.length; start += 1) {
 		for (let end = start + 1; end <= characters.length; end += 1) {
-			surfaces.add(characters.slice(start, end).join(""));
+			addQuery("STEMS", characters.slice(start, end).join(""));
 		}
 	}
-	const rowsBySurface = new Map<
+	for (let start = 1; start <= characters.length; start += 1) {
+		addQuery("SUFFIXES", characters.slice(start).join(""));
+	}
+	const rowsBySectionSurface = new Map<
 		string,
 		readonly Readonly<Record<string, string>>[]
 	>();
-	const surfaceList = [...surfaces];
+	const queryList = [...queries.values()];
 	const surfaceLookupConcurrency = 4;
 	for (
 		let start = 0;
-		start < surfaceList.length;
+		start < queryList.length;
 		start += surfaceLookupConcurrency
 	) {
 		const entries = await Promise.all(
-			surfaceList
+			queryList
 				.slice(start, start + surfaceLookupConcurrency)
-				.map(async (surface) => {
+				.map(async ({ section, surface }) => {
 					const normalizedSurface = normalizedLookupKey(surface);
 					const rows = (
-						await index.rowsForNormalizedKey("surface", normalizedSurface)
+						await index.rowsForNormalizedKey(
+							"sectionSurface",
+							camelSectionSurfaceLookupKey(section, surface),
+						)
 					)
 						.map((row) => row.values)
 						.filter(
 							(row) =>
+								row.section === section &&
 								normalizedLookupKey(row.surface ?? "") === normalizedSurface,
 						);
-					return [surface, Object.freeze(rows)] as const;
+					return [
+						camelMorphemeKey(section, surface),
+						Object.freeze(rows),
+					] as const;
 				}),
 		);
-		for (const [surface, rows] of entries) rowsBySurface.set(surface, rows);
+		for (const [key, rows] of entries) rowsBySectionSurface.set(key, rows);
 	}
 	return (section, surface) =>
-		Object.freeze(
-			(rowsBySurface.get(surface) ?? []).filter(
-				(row) => row.section === section,
-			),
-		);
+		rowsBySectionSurface.get(camelMorphemeKey(section, surface)) ??
+		Object.freeze([]);
 }
 
 type CamelMorphemeRows = (

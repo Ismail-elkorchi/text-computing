@@ -36,6 +36,7 @@ const keyColumnsBySchemaId = new Map([
 			"lemma",
 			"lexicalForm",
 			"root",
+			"sectionSurface",
 			"stem",
 			"surface",
 		]),

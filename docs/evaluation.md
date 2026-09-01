@@ -42,15 +42,16 @@ each language/preset pair:
 
 | Language | Preset | Time | Peak RSS | Budget |
 | --- | --- | ---: | ---: | --- |
-| English | core | 216 ms | 76 MiB | 1,500 ms / 140 MiB |
-| English | lookup | 464 ms | 118 MiB | 5,000 ms / 300 MiB |
-| French | core | 231 ms | 77 MiB | 1,500 ms / 140 MiB |
-| French | lookup | 362 ms | 102 MiB | 5,000 ms / 300 MiB |
-| Arabic | core | 213 ms | 76 MiB | 1,500 ms / 140 MiB |
-| Arabic | lookup | 1,754 ms | 289 MiB | 5,000 ms / 300 MiB |
+| English | core | 250 ms | 76 MiB | 1,500 ms / 140 MiB |
+| English | lookup | 494 ms | 115 MiB | 5,000 ms / 300 MiB |
+| French | core | 244 ms | 76 MiB | 1,500 ms / 140 MiB |
+| French | lookup | 432 ms | 102 MiB | 5,000 ms / 300 MiB |
+| Arabic | core | 228 ms | 76 MiB | 1,500 ms / 140 MiB |
+| Arabic | lookup | 809 ms | 133 MiB | 5,000 ms / 300 MiB |
 
 Timing and RSS vary by machine; the enforced budgets are the stable contract.
-Arabic morphology remains the heaviest path and has limited memory headroom.
+Arabic morphology remains the heaviest path, but its domain-scoped index keeps
+cold lookup well inside the same budget used by the other languages.
 
 ## Important limitations
 
