@@ -1519,6 +1519,15 @@ export const unicodeCldrLatinProfiles = {
 			word: "en-modern-typed-unicode-word-segmentation",
 			sentence: "en-modern-typed-unicode-sentence-segmentation",
 		},
+		sentenceBoundaryExceptions: [
+			"Dr.",
+			"Mr.",
+			"Mrs.",
+			"Ms.",
+			"Prof.",
+			"Sr.",
+			"Jr.",
+		],
 	},
 	fr: {
 		languageTag: "fr",
@@ -1549,6 +1558,22 @@ export const unicodeCldrLatinProfiles = {
 			word: "fr-modern-typed-unicode-word-segmentation",
 			sentence: "fr-modern-typed-unicode-sentence-segmentation",
 		},
+		elisionPrefixes: [
+			"l",
+			"n",
+			"d",
+			"j",
+			"qu",
+			"c",
+			"s",
+			"m",
+			"t",
+			"jusqu",
+			"lorsqu",
+			"puisqu",
+			"quoiqu",
+		],
+		sentenceBoundaryExceptions: ["M.", "Mme.", "Mlle.", "Dr.", "Pr."],
 	},
 };
 
@@ -2141,6 +2166,7 @@ function segmentationCanonicalProfile({
 	languageTag,
 	script,
 	scopeLabel,
+	sentenceBoundaryExceptions,
 }) {
 	return {
 		schemaVersion: "1",
@@ -2176,6 +2202,9 @@ function segmentationCanonicalProfile({
 			},
 		],
 		dictionaryRefs: [],
+		...(sentenceBoundaryExceptions === undefined
+			? {}
+			: { sentenceBoundaryExceptions }),
 	};
 }
 
@@ -2362,6 +2391,7 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 							},
 						},
 					],
+					elisionPrefixes: config.elisionPrefixes,
 					dictionaryRefs: [],
 				};
 	const segmentationScopeMessage =
@@ -2481,6 +2511,10 @@ function transformUnicodeCldrSegmentationProfile(resourceSpec, inputs, config) {
 						languageTag: config.languageTag,
 						script: config.script,
 						scopeLabel: config.scopeLabel,
+						sentenceBoundaryExceptions:
+							summary.granularity === "sentence"
+								? config.sentenceBoundaryExceptions
+								: undefined,
 					}),
 				),
 			),
@@ -2702,6 +2736,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 			morphemeRows.push([
 				section,
 				surface,
+				`${section}:${surface}`,
 				category,
 				features.pos ?? "",
 				features.lex ?? "",
@@ -2913,6 +2948,7 @@ function transformCamelMorphMsa(resourceSpec, inputs) {
 				[
 					"section",
 					"surface",
+					"sectionSurface",
 					"category",
 					"partOfSpeech",
 					"lexicalForm",

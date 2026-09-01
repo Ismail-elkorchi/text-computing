@@ -1,6 +1,6 @@
 # @ismail-elkorchi/text-computing
 
-Single-entrypoint SDK for Text Computing NLP workflows.
+Alpha single-entrypoint SDK for deterministic Text Computing NLP workflows.
 
 ```ts
 import { createNodeResourceReader, load } from "@ismail-elkorchi/text-computing/node";
@@ -17,11 +17,10 @@ console.log(doc.evidence.map((item) => item.id));
 `text-computing` is the developer-facing API package. `textpack-*` packages are data-only inputs, and expert users can still import lower-level runtime packages directly. Document analysis returns stable summaries plus evidence; use `doc.toTextDoc()` when you need the expert document object. Use the `/node` entrypoint for package-local files in Node. Browser, Worker, Deno, and Bun deployments can import the root entrypoint and use `createFetchResourceReader()` with served package assets.
 
 The default `core` preset runs segmentation, normalization, and search analysis.
-Expensive resource lookups are explicit:
+The only broader preset is `lookup`:
 
 ```ts
 const lookupDoc = await nlp("Les enfants jouent.", { preset: "lookup" });
-const fullDoc = await nlp("Paris est en France.", { preset: "full" });
 
 for (const token of lookupDoc.tokens) {
   console.log(token.text, token.normalizedText, token.lemmas, token.morphology);
@@ -30,7 +29,6 @@ for (const token of lookupDoc.tokens) {
 
 - `core` — segmentation, normalization, and search analysis.
 - `lookup` — `core` plus lexicon and morphology lookup.
-- `full` — `lookup` plus entity linking and document quality analysis.
 
 Passing `tasks` selects an explicit task set instead of a preset; segmentation and normalization
 remain foundational. Token, lemma, and morphology results are also written to
@@ -46,9 +44,39 @@ index before querying it.
 
 ```ts
 const empty = await nlp.search.createIndex();
-const index = nlp.search.addAnalysis(empty, fullDoc);
+const index = nlp.search.addAnalysis(empty, lookupDoc);
 const hits = nlp.search.query(index, "paris");
 ```
+
+Entity linking consumes explicit mention spans or existing `entity.*`
+annotations. Document analysis deliberately does not treat every KB alias as a
+named entity:
+
+```ts
+import { createDocument } from "@ismail-elkorchi/textdoc";
+
+const source = createDocument("Paris est en France.");
+const linked = await nlp.document.analyzeDocument(source, {
+  tasks: ["kb"],
+  entityLinking: {
+    mentionSpans: [
+      {
+        viewId: "raw",
+        span: { start: 0, end: 5, unit: "utf16-code-unit" },
+      },
+    ],
+  },
+});
+```
+
+Quality analysis is likewise explicit with `tasks: ["quality"]`. Corpus,
+parallel-text, syntax-dataset, and pipeline orchestration APIs live in their
+expert packages rather than this ordinary SDK.
+
+This SDK is suitable for controlled deterministic workflows, but it is not a
+contextual NER, POS-tagging, parsing, or neural inference system. See the
+repository's [evaluation report](../../docs/evaluation.md) before choosing it for
+a production workload.
 
 `nlp.support()` reports each slot's availability `status` separately from its linguistic `tier`.
 Use the tier when choosing between a surface baseline, finite lookup, language-specific rules,

@@ -3,6 +3,7 @@ import test from "node:test";
 import { createDocument } from "@ismail-elkorchi/textdoc";
 
 import {
+	analyzeDocumentQuality,
 	punctuationQualityFindings,
 	segmentationQualityFindings,
 	unicodeIntegrityQualityFindings,
@@ -29,6 +30,45 @@ test("document checks cover integrity whitespace punctuation and segmentation", 
 		segmentationQualityFindings(conflictingAnnotationDocument()).some(
 			(finding) => finding.kind === "segmentation.non-utf16-span",
 		),
+	);
+});
+
+test("script profiles use Unicode script semantics", () => {
+	const arabic = createDocument("مَرْحَبًا بالعالم ١٢٣", {
+		id: "arabic-script",
+		metadata: { language: "ar" },
+	});
+	const report = analyzeDocumentQuality(arabic, {
+		dimensions: ["script-mix"],
+		profile: { expectedScripts: ["Arab"] },
+	});
+	assert.equal(
+		report.findings.some(
+			(finding) =>
+				finding.kind === "script.mixed-token" ||
+				finding.kind === "script.unexpected",
+		),
+		false,
+	);
+});
+
+test("document findings have unique evidence-sensitive ids and bounded volume", () => {
+	const document = createDocument("x\u0001".repeat(100), {
+		id: "bounded-findings",
+	});
+	const report = analyzeDocumentQuality(document, {
+		dimensions: ["invisible-control"],
+		maxFindings: 12,
+		maxFindingsPerKind: 7,
+	});
+	assert.equal(report.findings.length, 7);
+	assert.equal(
+		new Set(report.findings.map((finding) => finding.id)).size,
+		report.findings.length,
+	);
+	assert.throws(
+		() => analyzeDocumentQuality(document, { maxFindings: -1 }),
+		/maxFindings must be a non-negative safe integer/u,
 	);
 });
 

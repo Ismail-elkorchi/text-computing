@@ -207,13 +207,13 @@
       ],
       "evidenceLevel": "resource-evaluated",
       "limitations": [
-        "Abbreviation rows are reference candidates observed in Tatoeba; the built-in adapter delegates sentence boundaries to Intl.Segmenter and does not execute this table.",
+        "Abbreviation rows are reference candidates observed in Tatoeba. The built-in adapter executes the explicit sentence-boundary exceptions in the generated profile; it does not infer exceptions from this table.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-core; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-lexique-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-normalization; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-segmentation; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr.",
         "Evaluated in internal build unit @ismail-elkorchi/textpack-fr-unimorph-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-fr.",
-        "These generated cases document source-derived expectations; only Unicode segmentation and French elision-prefix splitting are executed by the built-in adapter.",
+        "These generated cases document source-derived expectations; the built-in adapter executes pinned Unicode segmentation, explicit sentence-boundary exceptions, and French elision-prefix splitting.",
         "These observed contraction surfaces are reference evidence; the built-in adapter does not execute them as contraction rules."
       ],
       "resourceIds": [
@@ -505,7 +505,8 @@
         "segmentation": "profile"
       },
       "notes": [
-        "The built-in adapter executes host Intl.Segmenter Unicode boundaries and applies the observed French elision-prefix table. Contraction, abbreviation, boundary-property, and gold-case resources are retained as quality/reference evidence rather than presented as executed rules."
+        "The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with conservative French elision and title-abbreviation tailoring.",
+        "The built-in adapter executes pinned Unicode 17 UAX #29 boundaries, the profile's conservative French elision-prefix policy, and explicit title-abbreviation sentence exceptions. Observed contraction and abbreviation candidates remain quality/reference evidence."
       ],
       "resourceIds": [
         "fr-grapheme-segmentation-profile",
@@ -831,8 +832,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 5000638,
-      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
+      "byteLength": 5683269,
+      "checksum": "sha256:d24e2dce251faeaf05d95761919da9bfcd40c41c7fbde006ae5908cbe6330655",
       "kind": "lexicon",
       "logicalRecordCount": 142694,
       "nonEmptyLineCount": 3,
@@ -845,11 +846,11 @@
         "fr-lexique-entries",
         "fr-lexique-entries-lookup-index"
       ],
-      "sizeClass": "small"
+      "sizeClass": "medium"
     },
     {
-      "byteLength": 5000638,
-      "checksum": "sha256:98ce75a2fad710d19f75eb819929499387b94795952e54584532f6e141cbffb2",
+      "byteLength": 5683269,
+      "checksum": "sha256:d24e2dce251faeaf05d95761919da9bfcd40c41c7fbde006ae5908cbe6330655",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -862,7 +863,7 @@
         "fr-lexique-entries",
         "fr-lexique-entries-lookup-index"
       ],
-      "sizeClass": "small"
+      "sizeClass": "medium"
     },
     {
       "byteLength": 710653,
@@ -1201,11 +1202,11 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 1441,
-      "checksum": "sha256:79f6e12b93901c63fa6a6004420c1f71c4dd35dbfc9c92f143816dbd1499578a",
+      "byteLength": 1536,
+      "checksum": "sha256:d3140f58336e7d4fcd2fd544b6cc601c8390302d7fd84f3d3b12e64361a41a59",
       "kind": "segmentation-profile",
-      "logicalRecordCount": 60,
-      "nonEmptyLineCount": 60,
+      "logicalRecordCount": 67,
+      "nonEmptyLineCount": 67,
       "path": "resources/fr.segmentation.sentence.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
@@ -1217,11 +1218,11 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 2263,
-      "checksum": "sha256:f3792501962463ab04dd72ba3c587cb2c279ab7cc44cb2cb20223bb6799d596d",
+      "byteLength": 2427,
+      "checksum": "sha256:ed04c21b1edc609c411e7541aef6405ea44f0ae18e0a3405226f7e5064274c93",
       "kind": "segmentation-profile",
-      "logicalRecordCount": 79,
-      "nonEmptyLineCount": 79,
+      "logicalRecordCount": 94,
+      "nonEmptyLineCount": 94,
       "path": "resources/fr.segmentation.token.json",
       "pipelineId": "french-segmentation-profile",
       "pipelineVersion": "0.1.0",
@@ -1265,8 +1266,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 6267367,
-      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
+      "byteLength": 7820163,
+      "checksum": "sha256:9d08ed9f9e983454c8d52ca07ad70c9665773248aa459c8d645f2bce860c3279",
       "kind": "morphology",
       "logicalRecordCount": 367732,
       "nonEmptyLineCount": 3,
@@ -1282,8 +1283,8 @@
       "sizeClass": "medium"
     },
     {
-      "byteLength": 6267367,
-      "checksum": "sha256:67f8f2f6c7233954473950a4520364b4106d1adca308b1ef3710d5d505abf88a",
+      "byteLength": 7820163,
+      "checksum": "sha256:9d08ed9f9e983454c8d52ca07ad70c9665773248aa459c8d645f2bce860c3279",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1427,8 +1428,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 248637,
-      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
+      "byteLength": 268797,
+      "checksum": "sha256:409e09d8cb2865d3b31731c7cc8d34aad702ca4c1122776f0397f3327ceff27f",
       "kind": "knowledge-base",
       "logicalRecordCount": 6101,
       "nonEmptyLineCount": 3,
@@ -1444,8 +1445,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 248637,
-      "checksum": "sha256:2a99ebaec6a29f2dafb5f1c80693379d1a0fc0ae668f4a9ff4339daa5e116ba2",
+      "byteLength": 268797,
+      "checksum": "sha256:409e09d8cb2865d3b31731c7cc8d34aad702ca4c1122776f0397f3327ceff27f",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1461,8 +1462,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 558306,
-      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
+      "byteLength": 679436,
+      "checksum": "sha256:c11930e54562819c1262d0273979b6bab6a31aed6392d27e7c18f2bc6e689c53",
       "kind": "knowledge-base",
       "logicalRecordCount": 9377,
       "nonEmptyLineCount": 3,
@@ -1478,8 +1479,8 @@
       "sizeClass": "small"
     },
     {
-      "byteLength": 558306,
-      "checksum": "sha256:32b6a20f3d48d6d4b5126733a50a7b553039215fd1ce66d3026e4de3e6f1c052",
+      "byteLength": 679436,
+      "checksum": "sha256:c11930e54562819c1262d0273979b6bab6a31aed6392d27e7c18f2bc6e689c53",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,
@@ -1543,8 +1544,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 135481,
-      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
+      "byteLength": 168558,
+      "checksum": "sha256:b026ec06cee5a5d12964a0b7ede8b7b9cbfdf5d9d47b7ae09bc68e8cff5240b0",
       "kind": "knowledge-base",
       "logicalRecordCount": 9377,
       "nonEmptyLineCount": 3,
@@ -1560,8 +1561,8 @@
       "sizeClass": "tiny"
     },
     {
-      "byteLength": 135481,
-      "checksum": "sha256:3145618aef5e223318ac55a5372c47e1520d4f72ac514f99a9eaaf638734eeef",
+      "byteLength": 168558,
+      "checksum": "sha256:b026ec06cee5a5d12964a0b7ede8b7b9cbfdf5d9d47b7ae09bc68e8cff5240b0",
       "kind": "dataset",
       "logicalRecordCount": 0,
       "nonEmptyLineCount": 3,

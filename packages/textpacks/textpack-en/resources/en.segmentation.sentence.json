@@ -55,5 +55,14 @@
       "schemeId": "unicode-uax29-sentence"
     }
   ],
-  "script": "Latn"
+  "script": "Latn",
+  "sentenceBoundaryExceptions": [
+    "Dr.",
+    "Mr.",
+    "Mrs.",
+    "Ms.",
+    "Prof.",
+    "Sr.",
+    "Jr."
+  ]
 }

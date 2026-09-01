@@ -24,9 +24,15 @@ export interface TextPackResourceReadContext {
 	readonly descriptor: TextPackFileBackedResource;
 }
 
+export interface TextPackResourceReadRange {
+	readonly startByte: number;
+	readonly endByte: number;
+}
+
 export interface TextPackResourceReader {
 	readonly readText: (
 		context: TextPackResourceReadContext,
+		range?: TextPackResourceReadRange,
 	) => Promise<string> | string;
 }
 
@@ -138,7 +144,7 @@ export function createFetchResourceReader(
 		);
 	}
 	return {
-		async readText({ descriptor }) {
+		async readText({ descriptor }, range) {
 			const rootUrl =
 				packageRootOverride ?? packageRootUrl(descriptor.packageRoot);
 			const resourceUrl = new URL(descriptor.path, rootUrl);
@@ -147,10 +153,25 @@ export function createFetchResourceReader(
 					`Textpack resource path ${descriptor.path} escapes package root ${rootUrl.href}.`,
 				);
 			}
-			const response = await fetchResource(resourceUrl, options.requestInit);
+			const headers = new Headers(options.requestInit?.headers);
+			if (range !== undefined) {
+				headers.set(
+					"Range",
+					`bytes=${String(range.startByte)}-${String(range.endByte - 1)}`,
+				);
+			}
+			const response = await fetchResource(resourceUrl, {
+				...options.requestInit,
+				headers,
+			});
 			if (!response.ok) {
 				throw new TypeError(
 					`Textpack resource fetch failed for ${resourceUrl.href}: ${response.status} ${response.statusText}`.trim(),
+				);
+			}
+			if (range !== undefined && response.status !== 206) {
+				throw new TypeError(
+					`Textpack resource server ignored the byte range for ${resourceUrl.href}.`,
 				);
 			}
 			return response.text();
@@ -393,6 +414,60 @@ export async function openResourceText(
 		);
 		return index.sourceText();
 	});
+}
+
+export async function openResourceStorageTextRange(
+	pack: TextPack,
+	resourceId: string,
+	range: TextPackResourceReadRange,
+	reader?: TextPackResourceReader,
+): Promise<string> {
+	if (
+		!Number.isSafeInteger(range.startByte) ||
+		!Number.isSafeInteger(range.endByte) ||
+		range.startByte < 0 ||
+		range.endByte <= range.startByte
+	) {
+		throw new TypeError("Textpack resource byte range is invalid.");
+	}
+	const resource = resourceDescriptor(pack, resourceId);
+	const value = getResource(pack, resourceId);
+	if (typeof value === "string") {
+		const bytes = bytesForText(value);
+		if (range.endByte > bytes.byteLength) {
+			throw new TypeError(
+				`Textpack resource ${resourceId} byte range exceeds storage.`,
+			);
+		}
+		return utf8Decoder.decode(bytes.slice(range.startByte, range.endByte));
+	}
+	if (!isFileBackedResource(value) || value.encoding !== "utf8") {
+		throw new TypeError(
+			`Textpack resource ${resourceId} does not support byte-range text reads.`,
+		);
+	}
+	if (range.endByte > value.byteLength) {
+		throw new TypeError(
+			`Textpack resource ${resourceId} byte range exceeds storage.`,
+		);
+	}
+	if (reader === undefined) {
+		throw new TypeError(
+			`Textpack resource ${resourceId} is file-backed and requires a resource reader.`,
+		);
+	}
+	const text = await reader.readText(
+		{ pack, resource, descriptor: value },
+		range,
+	);
+	const actualLength = byteLength(text);
+	const expectedLength = range.endByte - range.startByte;
+	if (actualLength !== expectedLength) {
+		throw new TypeError(
+			`Textpack resource ${resourceId} range byte length mismatch: expected ${expectedLength}, got ${actualLength}.`,
+		);
+	}
+	return text;
 }
 
 export async function openResourceJson<T = unknown>(

@@ -56,5 +56,12 @@
       "schemeId": "unicode-uax29-sentence"
     }
   ],
-  "script": "Latn"
+  "script": "Latn",
+  "sentenceBoundaryExceptions": [
+    "M.",
+    "Mme.",
+    "Mlle.",
+    "Dr.",
+    "Pr."
+  ]
 }

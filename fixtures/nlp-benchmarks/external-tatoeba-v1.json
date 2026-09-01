@@ -1,0 +1,2444 @@
+{
+  "schemaVersion": "1",
+  "description": "External real-text robustness sample selected from Tatoeba detailed sentence exports.",
+  "licenseExpression": "CC-BY-2.0-FR",
+  "citation": "Tatoeba sentence exports; individual contributors are retained per row.",
+  "retrievedAt": "2026-08-31",
+  "selection": {
+    "minimumAddedAt": "2026-06-07",
+    "minimumCodeUnits": 20,
+    "maximumCodeUnits": 280,
+    "ranking": "ascending SHA-256 of <languageTag>:<sentenceId>",
+    "countPerLanguage": 100,
+    "separation": "Rows added after the 2026-06-06 forge snapshot cutoff; fixture text is not a forge input."
+  },
+  "languages": [
+    {
+      "languageTag": "en",
+      "source": {
+        "url": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2",
+        "checksum": "sha256:7569850570d434b58fdbdc95415dee526fd349c3878ad98267ddac172a76e38e"
+      },
+      "documents": [
+        {
+          "id": "tatoeba-en-13990014",
+          "sentenceId": "13990014",
+          "text": "Prominent figures in the literary world gathered together last night.",
+          "contributor": "LeviHighway",
+          "addedAt": "2026-07-23 16:25:25",
+          "modifiedAt": "2026-07-23 16:25:25"
+        },
+        {
+          "id": "tatoeba-en-13995687",
+          "sentenceId": "13995687",
+          "text": "You're in the prime of your life.",
+          "contributor": "rul",
+          "addedAt": "2026-07-28 19:06:26",
+          "modifiedAt": "2026-07-28 19:06:26"
+        },
+        {
+          "id": "tatoeba-en-13953298",
+          "sentenceId": "13953298",
+          "text": "The soldiers mocked the Geneva Conventions, calling them the \"Geneva suggestions.\"",
+          "contributor": "rul",
+          "addedAt": "2026-06-25 16:43:48",
+          "modifiedAt": "2026-06-25 16:43:48"
+        },
+        {
+          "id": "tatoeba-en-13963634",
+          "sentenceId": "13963634",
+          "text": "I saw my best friend sitting in my female teacher's office.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-02 21:59:48",
+          "modifiedAt": "2026-07-02 21:59:48"
+        },
+        {
+          "id": "tatoeba-en-13960738",
+          "sentenceId": "13960738",
+          "text": "Why don't you buzz off?",
+          "contributor": "rul",
+          "addedAt": "2026-07-01 12:11:46",
+          "modifiedAt": "2026-07-01 12:11:46"
+        },
+        {
+          "id": "tatoeba-en-13944601",
+          "sentenceId": "13944601",
+          "text": "Tom got yelled at because he saw Cookie pooping in the yard and decided to try it himself.",
+          "contributor": "rul",
+          "addedAt": "2026-06-18 10:15:19",
+          "modifiedAt": "2026-06-18 10:15:19"
+        },
+        {
+          "id": "tatoeba-en-14018065",
+          "sentenceId": "14018065",
+          "text": "This law applies to all, with no exception.",
+          "contributor": "haomakk",
+          "addedAt": "2026-08-18 13:51:32",
+          "modifiedAt": "2026-08-18 13:51:32"
+        },
+        {
+          "id": "tatoeba-en-13933660",
+          "sentenceId": "13933660",
+          "text": "I have to iron my dress made of silk because it is wrinkled.",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-06-07 09:52:42",
+          "modifiedAt": "2026-06-07 09:56:54"
+        },
+        {
+          "id": "tatoeba-en-13963346",
+          "sentenceId": "13963346",
+          "text": "She seems happier when she's with him.",
+          "contributor": "ddnktr",
+          "addedAt": "2026-07-02 19:40:45",
+          "modifiedAt": "2026-07-02 19:40:45"
+        },
+        {
+          "id": "tatoeba-en-14010907",
+          "sentenceId": "14010907",
+          "text": "That actually isn't what I meant but never mind.",
+          "contributor": "\\N",
+          "addedAt": "2026-08-10 17:49:45",
+          "modifiedAt": "2026-08-10 17:51:51"
+        },
+        {
+          "id": "tatoeba-en-13963563",
+          "sentenceId": "13963563",
+          "text": "Drunkenness is an ugly thing.",
+          "contributor": "IdiomHunter",
+          "addedAt": "2026-07-02 21:27:00",
+          "modifiedAt": "2026-07-02 21:27:00"
+        },
+        {
+          "id": "tatoeba-en-14019889",
+          "sentenceId": "14019889",
+          "text": "I need to button up my jacket.",
+          "contributor": "frpzzd",
+          "addedAt": "2026-08-20 11:21:06",
+          "modifiedAt": "2026-08-20 11:21:06"
+        },
+        {
+          "id": "tatoeba-en-14001456",
+          "sentenceId": "14001456",
+          "text": "Is it going to rain all day?",
+          "contributor": "rul",
+          "addedAt": "2026-08-02 09:32:18",
+          "modifiedAt": "2026-08-02 09:32:18"
+        },
+        {
+          "id": "tatoeba-en-13970811",
+          "sentenceId": "13970811",
+          "text": "I won't play with you.",
+          "contributor": "maaster",
+          "addedAt": "2026-07-07 11:16:06",
+          "modifiedAt": "2026-07-07 11:16:06"
+        },
+        {
+          "id": "tatoeba-en-13948025",
+          "sentenceId": "13948025",
+          "text": "You should stop acting so arrogant in front of other people.",
+          "contributor": "justpeachy",
+          "addedAt": "2026-06-21 05:29:01",
+          "modifiedAt": "2026-06-21 05:29:01"
+        },
+        {
+          "id": "tatoeba-en-13938572",
+          "sentenceId": "13938572",
+          "text": "She's two years younger than Tom.",
+          "contributor": "araneo",
+          "addedAt": "2026-06-12 06:42:01",
+          "modifiedAt": "2026-06-12 06:42:01"
+        },
+        {
+          "id": "tatoeba-en-14007410",
+          "sentenceId": "14007410",
+          "text": "What does a vegetable do?",
+          "contributor": "stoopeedhooman",
+          "addedAt": "2026-08-07 09:01:24",
+          "modifiedAt": "2026-08-07 09:01:24"
+        },
+        {
+          "id": "tatoeba-en-13990208",
+          "sentenceId": "13990208",
+          "text": "You get back what you put into the world.",
+          "contributor": "rul",
+          "addedAt": "2026-07-23 16:59:38",
+          "modifiedAt": "2026-07-23 16:59:38"
+        },
+        {
+          "id": "tatoeba-en-14011661",
+          "sentenceId": "14011661",
+          "text": "Was it you that took my washrag?",
+          "contributor": "menaud",
+          "addedAt": "2026-08-11 20:36:24",
+          "modifiedAt": "2026-08-11 20:36:24"
+        },
+        {
+          "id": "tatoeba-en-13963538",
+          "sentenceId": "13963538",
+          "text": "He hasn't even shaken my hand.",
+          "contributor": "IdiomHunter",
+          "addedAt": "2026-07-02 21:20:30",
+          "modifiedAt": "2026-07-02 21:20:30"
+        },
+        {
+          "id": "tatoeba-en-14008403",
+          "sentenceId": "14008403",
+          "text": "Why is the pot broken? Who threw this down?",
+          "contributor": "stoopeedhooman",
+          "addedAt": "2026-08-08 07:44:34",
+          "modifiedAt": "2026-08-08 07:44:39"
+        },
+        {
+          "id": "tatoeba-en-14015001",
+          "sentenceId": "14015001",
+          "text": "The guards were deceived.",
+          "contributor": "Vortarulo",
+          "addedAt": "2026-08-15 13:26:27",
+          "modifiedAt": "2026-08-15 13:26:27"
+        },
+        {
+          "id": "tatoeba-en-13961308",
+          "sentenceId": "13961308",
+          "text": "Straight people are entirely unnecessary for human reproduction, as bisexual people exist.",
+          "contributor": "rul",
+          "addedAt": "2026-07-01 16:52:38",
+          "modifiedAt": "2026-07-01 16:52:38"
+        },
+        {
+          "id": "tatoeba-en-13994847",
+          "sentenceId": "13994847",
+          "text": "Heads up! The server will shut down at midnight.",
+          "contributor": "jan_OkulaJu",
+          "addedAt": "2026-07-28 03:29:27",
+          "modifiedAt": "2026-07-28 03:29:27"
+        },
+        {
+          "id": "tatoeba-en-13990356",
+          "sentenceId": "13990356",
+          "text": "I make, and upload, Japanese video lessons to YouTube.",
+          "contributor": "CuteGirlLeia",
+          "addedAt": "2026-07-24 01:44:14",
+          "modifiedAt": "2026-07-24 01:44:14"
+        },
+        {
+          "id": "tatoeba-en-13961133",
+          "sentenceId": "13961133",
+          "text": "Please, just give me a little bit.",
+          "contributor": "IdiomHunter",
+          "addedAt": "2026-07-01 15:36:04",
+          "modifiedAt": "2026-07-01 15:36:04"
+        },
+        {
+          "id": "tatoeba-en-13997703",
+          "sentenceId": "13997703",
+          "text": "He was born in 1990.",
+          "contributor": "DataFlower",
+          "addedAt": "2026-07-30 07:33:42",
+          "modifiedAt": "2026-07-30 07:33:42"
+        },
+        {
+          "id": "tatoeba-en-13949067",
+          "sentenceId": "13949067",
+          "text": "Hollyhocks are blooming.",
+          "contributor": "jan_OkulaJu",
+          "addedAt": "2026-06-22 00:09:11",
+          "modifiedAt": "2026-06-22 00:09:11"
+        },
+        {
+          "id": "tatoeba-en-14007277",
+          "sentenceId": "14007277",
+          "text": "I need you to cooperate with Tom whether you like it or not.",
+          "contributor": "Ergulis",
+          "addedAt": "2026-08-07 05:36:15",
+          "modifiedAt": "2026-08-07 05:36:15"
+        },
+        {
+          "id": "tatoeba-en-13985247",
+          "sentenceId": "13985247",
+          "text": "There's been a lot of inflation.",
+          "contributor": "rul",
+          "addedAt": "2026-07-19 15:40:42",
+          "modifiedAt": "2026-07-19 15:40:42"
+        },
+        {
+          "id": "tatoeba-en-14009569",
+          "sentenceId": "14009569",
+          "text": "I've gotten my practice.",
+          "contributor": "rul",
+          "addedAt": "2026-08-09 10:53:29",
+          "modifiedAt": "2026-08-09 10:53:29"
+        },
+        {
+          "id": "tatoeba-en-14000377",
+          "sentenceId": "14000377",
+          "text": "My friend's name is Mario.",
+          "contributor": "rul",
+          "addedAt": "2026-08-01 08:27:35",
+          "modifiedAt": "2026-08-01 08:27:35"
+        },
+        {
+          "id": "tatoeba-en-13996773",
+          "sentenceId": "13996773",
+          "text": "Contrary to popular belief, the capital of Türkiye is Ankara, not Istanbul.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-29 15:28:00",
+          "modifiedAt": "2026-07-29 15:28:00"
+        },
+        {
+          "id": "tatoeba-en-13970158",
+          "sentenceId": "13970158",
+          "text": "I wonder why Tom is still hesitating.",
+          "contributor": "Ergulis",
+          "addedAt": "2026-07-06 16:21:47",
+          "modifiedAt": "2026-07-06 16:21:47"
+        },
+        {
+          "id": "tatoeba-en-13984363",
+          "sentenceId": "13984363",
+          "text": "\"You can have me.\" \"You I don't want. I want Tom and nobody else.\"",
+          "contributor": "araneo",
+          "addedAt": "2026-07-19 07:30:43",
+          "modifiedAt": "2026-07-19 07:30:43"
+        },
+        {
+          "id": "tatoeba-en-14015162",
+          "sentenceId": "14015162",
+          "text": "There will be a barbecue at my house tomorrow and you're invited.",
+          "contributor": "haomakk",
+          "addedAt": "2026-08-15 14:33:21",
+          "modifiedAt": "2026-08-15 14:33:21"
+        },
+        {
+          "id": "tatoeba-en-13970339",
+          "sentenceId": "13970339",
+          "text": "University campuses are misanthropic.",
+          "contributor": "mexicanhere",
+          "addedAt": "2026-07-06 18:51:57",
+          "modifiedAt": "2026-07-06 18:51:57"
+        },
+        {
+          "id": "tatoeba-en-13938118",
+          "sentenceId": "13938118",
+          "text": "She decided to do everything necessary, to the best of her ability, in order to live.",
+          "contributor": "Waldelfe",
+          "addedAt": "2026-06-11 17:05:09",
+          "modifiedAt": "2026-06-11 17:05:09"
+        },
+        {
+          "id": "tatoeba-en-14008591",
+          "sentenceId": "14008591",
+          "text": "Stop spying on the neighbors and get a life.",
+          "contributor": "OA",
+          "addedAt": "2026-08-08 11:44:46",
+          "modifiedAt": "2026-08-08 11:56:37"
+        },
+        {
+          "id": "tatoeba-en-13954295",
+          "sentenceId": "13954295",
+          "text": "There's a presumption of innocence.",
+          "contributor": "frpzzd",
+          "addedAt": "2026-06-26 14:46:18",
+          "modifiedAt": "2026-06-26 14:46:18"
+        },
+        {
+          "id": "tatoeba-en-13978540",
+          "sentenceId": "13978540",
+          "text": "Tom didn't flush the toilet after him.",
+          "contributor": "Ergulis",
+          "addedAt": "2026-07-14 11:31:11",
+          "modifiedAt": "2026-07-14 11:31:11"
+        },
+        {
+          "id": "tatoeba-en-13944014",
+          "sentenceId": "13944014",
+          "text": "If toe beans aren't meant to be touched, why are they so squishy?",
+          "contributor": "rul",
+          "addedAt": "2026-06-17 15:07:48",
+          "modifiedAt": "2026-06-17 15:07:48"
+        },
+        {
+          "id": "tatoeba-en-14011652",
+          "sentenceId": "14011652",
+          "text": "She had to experience many difficulties before becoming a successful CEO.",
+          "contributor": "OA",
+          "addedAt": "2026-08-11 20:31:15",
+          "modifiedAt": "2026-08-11 20:31:15"
+        },
+        {
+          "id": "tatoeba-en-13935622",
+          "sentenceId": "13935622",
+          "text": "Take me into your dream.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-06-09 11:16:28",
+          "modifiedAt": "2026-06-09 11:16:28"
+        },
+        {
+          "id": "tatoeba-en-13947563",
+          "sentenceId": "13947563",
+          "text": "If we get close, the dog will attack us.",
+          "contributor": "frpzzd",
+          "addedAt": "2026-06-20 16:49:53",
+          "modifiedAt": "2026-06-20 16:49:53"
+        },
+        {
+          "id": "tatoeba-en-13998731",
+          "sentenceId": "13998731",
+          "text": "I am Greek and was born in Athens, the capital of my country. My wife is Ukrainian and was born in Kyiv, the capital of her country. Greek is spoken in Greece. In Ukraine, besides Ukrainian—the official language—Russian is widely spoken.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-30 21:41:17",
+          "modifiedAt": "2026-07-30 21:41:17"
+        },
+        {
+          "id": "tatoeba-en-13990347",
+          "sentenceId": "13990347",
+          "text": "Mothers put their babies to sleep.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-24 00:45:40",
+          "modifiedAt": "2026-07-24 00:45:40"
+        },
+        {
+          "id": "tatoeba-en-13969806",
+          "sentenceId": "13969806",
+          "text": "I'm tired; can I go home?",
+          "contributor": "rul",
+          "addedAt": "2026-07-06 12:37:10",
+          "modifiedAt": "2026-07-06 12:37:10"
+        },
+        {
+          "id": "tatoeba-en-14015569",
+          "sentenceId": "14015569",
+          "text": "Do you think this movie is worth watching?",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-16 01:10:51",
+          "modifiedAt": "2026-08-16 01:10:51"
+        },
+        {
+          "id": "tatoeba-en-13941310",
+          "sentenceId": "13941310",
+          "text": "We still use the old machines.",
+          "contributor": "maaster",
+          "addedAt": "2026-06-15 05:23:02",
+          "modifiedAt": "2026-06-15 05:23:02"
+        },
+        {
+          "id": "tatoeba-en-13967734",
+          "sentenceId": "13967734",
+          "text": "Last night, the sky was clear.",
+          "contributor": "Leglaine",
+          "addedAt": "2026-07-05 04:22:57",
+          "modifiedAt": "2026-07-05 04:22:57"
+        },
+        {
+          "id": "tatoeba-en-13936770",
+          "sentenceId": "13936770",
+          "text": "But it isn't even worth calling stuff.",
+          "contributor": "jan_OkulaJu",
+          "addedAt": "2026-06-10 12:48:19",
+          "modifiedAt": "2026-06-10 12:48:19"
+        },
+        {
+          "id": "tatoeba-en-13963592",
+          "sentenceId": "13963592",
+          "text": "The hail has flattened the potato plants.",
+          "contributor": "IdiomHunter",
+          "addedAt": "2026-07-02 21:33:48",
+          "modifiedAt": "2026-07-02 21:33:48"
+        },
+        {
+          "id": "tatoeba-en-14007015",
+          "sentenceId": "14007015",
+          "text": "It has now been found.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-06 21:40:59",
+          "modifiedAt": "2026-08-06 21:40:59"
+        },
+        {
+          "id": "tatoeba-en-14009691",
+          "sentenceId": "14009691",
+          "text": "I almost got run over by a car while riding my bicycle.",
+          "contributor": "frpzzd",
+          "addedAt": "2026-08-09 12:10:26",
+          "modifiedAt": "2026-08-09 12:10:26"
+        },
+        {
+          "id": "tatoeba-en-14014282",
+          "sentenceId": "14014282",
+          "text": "He was so drunk that I had to take him home.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-14 22:16:05",
+          "modifiedAt": "2026-08-14 22:16:05"
+        },
+        {
+          "id": "tatoeba-en-13949844",
+          "sentenceId": "13949844",
+          "text": "The water coming out of this faucet is rusty.",
+          "contributor": "frpzzd",
+          "addedAt": "2026-06-22 20:41:51",
+          "modifiedAt": "2026-06-22 20:41:51"
+        },
+        {
+          "id": "tatoeba-en-13974564",
+          "sentenceId": "13974564",
+          "text": "The factory system deskills labor so that employees can be replaced more easily.",
+          "contributor": "rul",
+          "addedAt": "2026-07-10 19:38:52",
+          "modifiedAt": "2026-07-10 19:38:52"
+        },
+        {
+          "id": "tatoeba-en-14010522",
+          "sentenceId": "14010522",
+          "text": "You were blocking the way.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-10 09:25:10",
+          "modifiedAt": "2026-08-10 09:25:10"
+        },
+        {
+          "id": "tatoeba-en-13938842",
+          "sentenceId": "13938842",
+          "text": "I resigned myself to what appeared to be an inevitable fate: death.",
+          "contributor": "Waldelfe",
+          "addedAt": "2026-06-12 13:01:18",
+          "modifiedAt": "2026-06-12 13:01:42"
+        },
+        {
+          "id": "tatoeba-en-14011978",
+          "sentenceId": "14011978",
+          "text": "As my sister's daughter, she is my niece.",
+          "contributor": "Ergulis",
+          "addedAt": "2026-08-12 12:20:56",
+          "modifiedAt": "2026-08-12 12:21:17"
+        },
+        {
+          "id": "tatoeba-en-14015287",
+          "sentenceId": "14015287",
+          "text": "You can't stop people from having opinions about you.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-08-15 16:07:57",
+          "modifiedAt": "2026-08-15 16:07:57"
+        },
+        {
+          "id": "tatoeba-en-13935003",
+          "sentenceId": "13935003",
+          "text": "\"How much did you pay for that?\" \"Oh, I used the five-finger discount.\"",
+          "contributor": "rul",
+          "addedAt": "2026-06-08 17:11:57",
+          "modifiedAt": "2026-06-08 17:11:57"
+        },
+        {
+          "id": "tatoeba-en-14030495",
+          "sentenceId": "14030495",
+          "text": "Don't overanalyse it.",
+          "contributor": "menaud",
+          "addedAt": "2026-08-28 18:54:47",
+          "modifiedAt": "2026-08-28 18:54:47"
+        },
+        {
+          "id": "tatoeba-en-14018027",
+          "sentenceId": "14018027",
+          "text": "It's been weeks since I last saw my friends.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-18 13:10:58",
+          "modifiedAt": "2026-08-18 13:10:58"
+        },
+        {
+          "id": "tatoeba-en-13944041",
+          "sentenceId": "13944041",
+          "text": "As a rite of passage, all adult men learn the clan's secret language.",
+          "contributor": "rul",
+          "addedAt": "2026-06-17 15:19:16",
+          "modifiedAt": "2026-06-17 15:19:16"
+        },
+        {
+          "id": "tatoeba-en-13998601",
+          "sentenceId": "13998601",
+          "text": "I am Argentine and was born in Buenos Aires, the capital of my country. My wife is Chilean and was born in Santiago, the capital of her country. Spanish is spoken in Argentina and Chile.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-30 20:11:03",
+          "modifiedAt": "2026-07-30 20:11:03"
+        },
+        {
+          "id": "tatoeba-en-13943786",
+          "sentenceId": "13943786",
+          "text": "He can convince anyone to do anything.",
+          "contributor": "araneo",
+          "addedAt": "2026-06-17 12:23:35",
+          "modifiedAt": "2026-06-17 12:23:35"
+        },
+        {
+          "id": "tatoeba-en-14006427",
+          "sentenceId": "14006427",
+          "text": "I listened to that book as an audiobook.",
+          "contributor": "Ergulis",
+          "addedAt": "2026-08-06 11:55:20",
+          "modifiedAt": "2026-08-06 11:55:20"
+        },
+        {
+          "id": "tatoeba-en-13966009",
+          "sentenceId": "13966009",
+          "text": "Easter is approaching.",
+          "contributor": "Leglaine",
+          "addedAt": "2026-07-04 09:38:23",
+          "modifiedAt": "2026-07-04 09:38:23"
+        },
+        {
+          "id": "tatoeba-en-13979163",
+          "sentenceId": "13979163",
+          "text": "Tom decided to become a politician.",
+          "contributor": "araneo",
+          "addedAt": "2026-07-14 19:18:12",
+          "modifiedAt": "2026-07-14 19:18:12"
+        },
+        {
+          "id": "tatoeba-en-14025037",
+          "sentenceId": "14025037",
+          "text": "He swallowed down the wrong pipe.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-24 05:45:01",
+          "modifiedAt": "2026-08-24 05:45:01"
+        },
+        {
+          "id": "tatoeba-en-14008580",
+          "sentenceId": "14008580",
+          "text": "Why are you watching me cook? Don't you have better things to do?",
+          "contributor": "OA",
+          "addedAt": "2026-08-08 11:39:11",
+          "modifiedAt": "2026-08-08 11:59:53"
+        },
+        {
+          "id": "tatoeba-en-14010520",
+          "sentenceId": "14010520",
+          "text": "Any differentiable function is continuous.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-10 09:24:22",
+          "modifiedAt": "2026-08-10 09:24:22"
+        },
+        {
+          "id": "tatoeba-en-13983780",
+          "sentenceId": "13983780",
+          "text": "I remember its color code should be 39C5BB.",
+          "contributor": "jan_OkulaJu",
+          "addedAt": "2026-07-18 16:18:18",
+          "modifiedAt": "2026-07-18 16:20:56"
+        },
+        {
+          "id": "tatoeba-en-13934472",
+          "sentenceId": "13934472",
+          "text": "As an EU citizen, I don't have to apply for an work permit in order to work in Germany.",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-06-08 08:35:18",
+          "modifiedAt": "2026-06-08 08:35:18"
+        },
+        {
+          "id": "tatoeba-en-13948180",
+          "sentenceId": "13948180",
+          "text": "Tom suggested reorganizing the company.",
+          "contributor": "Ergulis",
+          "addedAt": "2026-06-21 10:08:19",
+          "modifiedAt": "2026-06-21 10:08:19"
+        },
+        {
+          "id": "tatoeba-en-13953736",
+          "sentenceId": "13953736",
+          "text": "Let's listen to music!",
+          "contributor": "jan_OkulaJu",
+          "addedAt": "2026-06-26 10:22:19",
+          "modifiedAt": "2026-06-26 10:22:27"
+        },
+        {
+          "id": "tatoeba-en-14018061",
+          "sentenceId": "14018061",
+          "text": "Could I perhaps speak to you in private?",
+          "contributor": "haomakk",
+          "addedAt": "2026-08-18 13:49:46",
+          "modifiedAt": "2026-08-18 13:49:46"
+        },
+        {
+          "id": "tatoeba-en-14006625",
+          "sentenceId": "14006625",
+          "text": "Grandma, can you bake us biscuits, please?",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-08-06 14:54:25",
+          "modifiedAt": "2026-08-06 14:56:47"
+        },
+        {
+          "id": "tatoeba-en-14005723",
+          "sentenceId": "14005723",
+          "text": "The odour closely resembled that of faeces.",
+          "contributor": "menaud",
+          "addedAt": "2026-08-05 16:27:49",
+          "modifiedAt": "2026-08-05 16:27:49"
+        },
+        {
+          "id": "tatoeba-en-13985116",
+          "sentenceId": "13985116",
+          "text": "It was what sounded right to me at the time.",
+          "contributor": "rul",
+          "addedAt": "2026-07-19 14:00:22",
+          "modifiedAt": "2026-07-19 14:00:22"
+        },
+        {
+          "id": "tatoeba-en-13941104",
+          "sentenceId": "13941104",
+          "text": "They clearly aren't in any hurry.",
+          "contributor": "glossboss",
+          "addedAt": "2026-06-14 21:00:35",
+          "modifiedAt": "2026-06-14 21:00:35"
+        },
+        {
+          "id": "tatoeba-en-14019911",
+          "sentenceId": "14019911",
+          "text": "You returned yesterday.",
+          "contributor": "frpzzd",
+          "addedAt": "2026-08-20 11:32:07",
+          "modifiedAt": "2026-08-20 11:32:07"
+        },
+        {
+          "id": "tatoeba-en-14025958",
+          "sentenceId": "14025958",
+          "text": "In Turkish, the stress generally falls on the last syllable of the word.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-24 21:21:06",
+          "modifiedAt": "2026-08-24 21:21:06"
+        },
+        {
+          "id": "tatoeba-en-14008927",
+          "sentenceId": "14008927",
+          "text": "Let’s go get some pizza. It's on me!",
+          "contributor": "OA",
+          "addedAt": "2026-08-08 16:24:13",
+          "modifiedAt": "2026-08-08 16:24:13"
+        },
+        {
+          "id": "tatoeba-en-14024519",
+          "sentenceId": "14024519",
+          "text": "I'm going out with my friends this afternoon. Are you joining us?",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-08-23 18:29:55",
+          "modifiedAt": "2026-08-23 18:29:55"
+        },
+        {
+          "id": "tatoeba-en-13942612",
+          "sentenceId": "13942612",
+          "text": "She was a beauty, and everybody fell in love with her.",
+          "contributor": "Waldelfe",
+          "addedAt": "2026-06-16 10:12:12",
+          "modifiedAt": "2026-06-16 10:12:12"
+        },
+        {
+          "id": "tatoeba-en-13963878",
+          "sentenceId": "13963878",
+          "text": "We sang songs together.",
+          "contributor": "araneo",
+          "addedAt": "2026-07-03 06:24:45",
+          "modifiedAt": "2026-07-03 06:24:45"
+        },
+        {
+          "id": "tatoeba-en-13934950",
+          "sentenceId": "13934950",
+          "text": "One day we will rot, unknown to anyone at all.",
+          "contributor": "rul",
+          "addedAt": "2026-06-08 16:47:56",
+          "modifiedAt": "2026-06-08 16:47:56"
+        },
+        {
+          "id": "tatoeba-en-13992403",
+          "sentenceId": "13992403",
+          "text": "Everyone has the right to say what they think.",
+          "contributor": "Vortarulo",
+          "addedAt": "2026-07-25 23:32:58",
+          "modifiedAt": "2026-07-25 23:32:58"
+        },
+        {
+          "id": "tatoeba-en-13949835",
+          "sentenceId": "13949835",
+          "text": "Where can I get my luggage?",
+          "contributor": "frpzzd",
+          "addedAt": "2026-06-22 20:19:46",
+          "modifiedAt": "2026-06-22 20:19:46"
+        },
+        {
+          "id": "tatoeba-en-13990365",
+          "sentenceId": "13990365",
+          "text": "I thought of studying at a cafe, but there where too many people and I couldn't relax.",
+          "contributor": "CuteGirlLeia",
+          "addedAt": "2026-07-24 02:38:30",
+          "modifiedAt": "2026-07-24 02:38:30"
+        },
+        {
+          "id": "tatoeba-en-14006907",
+          "sentenceId": "14006907",
+          "text": "Is the house a vivid red or a pale red?",
+          "contributor": "araneo",
+          "addedAt": "2026-08-06 19:32:24",
+          "modifiedAt": "2026-08-06 19:32:24"
+        },
+        {
+          "id": "tatoeba-en-13972292",
+          "sentenceId": "13972292",
+          "text": "How can you love someone like that?",
+          "contributor": "araneo",
+          "addedAt": "2026-07-08 19:02:32",
+          "modifiedAt": "2026-07-08 19:02:32"
+        },
+        {
+          "id": "tatoeba-en-14009812",
+          "sentenceId": "14009812",
+          "text": "Bad communication always hinders the progress of a team.",
+          "contributor": "OA",
+          "addedAt": "2026-08-09 13:07:58",
+          "modifiedAt": "2026-08-09 13:07:58"
+        },
+        {
+          "id": "tatoeba-en-13940380",
+          "sentenceId": "13940380",
+          "text": "Banker, BlackRock, Dwarf and Moron got together to decide publicly to continue the war and make the money disappear.",
+          "contributor": "maaster",
+          "addedAt": "2026-06-14 08:37:22",
+          "modifiedAt": "2026-06-17 07:11:15"
+        },
+        {
+          "id": "tatoeba-en-13987037",
+          "sentenceId": "13987037",
+          "text": "Private Jackson reporting for duty.",
+          "contributor": "rul",
+          "addedAt": "2026-07-21 11:20:01",
+          "modifiedAt": "2026-07-21 11:20:01"
+        },
+        {
+          "id": "tatoeba-en-13971874",
+          "sentenceId": "13971874",
+          "text": "If anything important comes up, tag me so I can see it right away when I check messages.",
+          "contributor": "jan_OkulaJu",
+          "addedAt": "2026-07-08 12:14:20",
+          "modifiedAt": "2026-07-08 12:14:20"
+        },
+        {
+          "id": "tatoeba-en-13975026",
+          "sentenceId": "13975026",
+          "text": "Mary is the most important person in the room.",
+          "contributor": "rul",
+          "addedAt": "2026-07-11 14:02:50",
+          "modifiedAt": "2026-07-11 14:02:50"
+        }
+      ]
+    },
+    {
+      "languageTag": "fr",
+      "source": {
+        "url": "https://downloads.tatoeba.org/exports/per_language/fra/fra_sentences_detailed.tsv.bz2",
+        "checksum": "sha256:c30cdbc1a1df461593664aed477c04305a94a0433cba5b08181da709f790eeee"
+      },
+      "documents": [
+        {
+          "id": "tatoeba-fr-13975344",
+          "sentenceId": "13975344",
+          "text": "Seule Marie comprit le poème.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-11 18:20:57",
+          "modifiedAt": "2026-07-11 18:20:57"
+        },
+        {
+          "id": "tatoeba-fr-14026861",
+          "sentenceId": "14026861",
+          "text": "Je fais confiance à ma femme. Elle a toujours raison.",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-08-25 17:33:10",
+          "modifiedAt": "2026-08-25 17:33:10"
+        },
+        {
+          "id": "tatoeba-fr-14029058",
+          "sentenceId": "14029058",
+          "text": "Lev Yachine était peut-être le plus grand gardien de but de l'histoire.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-27 14:20:24",
+          "modifiedAt": "2026-08-27 18:57:48"
+        },
+        {
+          "id": "tatoeba-fr-13936224",
+          "sentenceId": "13936224",
+          "text": "Arrête, ce n'est pas amusant du tout.",
+          "contributor": "madjidoumnia",
+          "addedAt": "2026-06-09 16:28:46",
+          "modifiedAt": "2026-06-09 16:28:46"
+        },
+        {
+          "id": "tatoeba-fr-13999108",
+          "sentenceId": "13999108",
+          "text": "On n'est pas obligé de penser la même chose.",
+          "contributor": "Rafik",
+          "addedAt": "2026-07-31 06:37:53",
+          "modifiedAt": "2026-07-31 06:37:53"
+        },
+        {
+          "id": "tatoeba-fr-13947441",
+          "sentenceId": "13947441",
+          "text": "Penses-tu qu'on pourrait leur demander de parler un peu plus bas ?",
+          "contributor": "calypsow",
+          "addedAt": "2026-06-20 14:32:20",
+          "modifiedAt": "2026-06-20 14:32:20"
+        },
+        {
+          "id": "tatoeba-fr-13953590",
+          "sentenceId": "13953590",
+          "text": "Les ruelles des villages sont étroites.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-06-26 07:29:58",
+          "modifiedAt": "2026-06-26 07:29:58"
+        },
+        {
+          "id": "tatoeba-fr-13958667",
+          "sentenceId": "13958667",
+          "text": "L'église en bois vieille de cinq cents ans fut incendiée durant l'ère communiste.",
+          "contributor": "Rovo",
+          "addedAt": "2026-06-29 19:36:03",
+          "modifiedAt": "2026-06-30 21:16:17"
+        },
+        {
+          "id": "tatoeba-fr-14005250",
+          "sentenceId": "14005250",
+          "text": "Certains se complaisent à forger des mensonges de toutes pièces.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-05 07:23:34",
+          "modifiedAt": "2026-08-05 07:23:34"
+        },
+        {
+          "id": "tatoeba-fr-14011496",
+          "sentenceId": "14011496",
+          "text": "Vous le leur avez totalement déformé.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-11 16:31:34",
+          "modifiedAt": "2026-08-11 16:31:34"
+        },
+        {
+          "id": "tatoeba-fr-14010050",
+          "sentenceId": "14010050",
+          "text": "Est-ce qu'il enseigne le piano ou non ?",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-09 16:51:31",
+          "modifiedAt": "2026-08-09 16:51:31"
+        },
+        {
+          "id": "tatoeba-fr-13960498",
+          "sentenceId": "13960498",
+          "text": "Les données ouvertes permettent aux citoyens de créer de nouveaux services.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 08:51:47",
+          "modifiedAt": "2026-07-01 08:51:47"
+        },
+        {
+          "id": "tatoeba-fr-13990618",
+          "sentenceId": "13990618",
+          "text": "J'ai peur de finir tout seul.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-07-24 10:33:50",
+          "modifiedAt": "2026-07-24 10:33:50"
+        },
+        {
+          "id": "tatoeba-fr-14020600",
+          "sentenceId": "14020600",
+          "text": "Tom ne peut pas le prouver.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-21 07:01:18",
+          "modifiedAt": "2026-08-21 07:01:18"
+        },
+        {
+          "id": "tatoeba-fr-13976122",
+          "sentenceId": "13976122",
+          "text": "La paresse est la mère de l'invention.",
+          "contributor": "rul",
+          "addedAt": "2026-07-12 14:23:57",
+          "modifiedAt": "2026-07-12 14:23:57"
+        },
+        {
+          "id": "tatoeba-fr-13945314",
+          "sentenceId": "13945314",
+          "text": "L'amour est la meilleure chose qu'offre la vie, et il se termine soit par une peine de cœur, soit par la mort.",
+          "contributor": "Rovo",
+          "addedAt": "2026-06-18 21:11:50",
+          "modifiedAt": "2026-06-18 21:11:50"
+        },
+        {
+          "id": "tatoeba-fr-14029633",
+          "sentenceId": "14029633",
+          "text": "« Le loup et l'agneau » est l'une de mes fables préférées.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-27 23:20:06",
+          "modifiedAt": "2026-08-27 23:20:06"
+        },
+        {
+          "id": "tatoeba-fr-14015362",
+          "sentenceId": "14015362",
+          "text": "Tu fais preuve de courage.",
+          "contributor": "Rovo",
+          "addedAt": "2026-08-15 17:56:49",
+          "modifiedAt": "2026-08-15 17:56:49"
+        },
+        {
+          "id": "tatoeba-fr-13940981",
+          "sentenceId": "13940981",
+          "text": "Nous n'inscrivons nos enfants qu'à l'école française.",
+          "contributor": "menaud",
+          "addedAt": "2026-06-14 18:20:42",
+          "modifiedAt": "2026-06-14 18:20:42"
+        },
+        {
+          "id": "tatoeba-fr-14010946",
+          "sentenceId": "14010946",
+          "text": "Elles te demanderont de l'argent.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-10 18:16:57",
+          "modifiedAt": "2026-08-10 18:16:57"
+        },
+        {
+          "id": "tatoeba-fr-14008545",
+          "sentenceId": "14008545",
+          "text": "On ne parle pas la même langue mais on se comprend.",
+          "contributor": "Rafik",
+          "addedAt": "2026-08-08 10:03:30",
+          "modifiedAt": "2026-08-08 10:03:30"
+        },
+        {
+          "id": "tatoeba-fr-13992180",
+          "sentenceId": "13992180",
+          "text": "Embauche quelques ingénieurs.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-25 18:50:08",
+          "modifiedAt": "2026-07-25 18:50:08"
+        },
+        {
+          "id": "tatoeba-fr-13948392",
+          "sentenceId": "13948392",
+          "text": "Tu ne donnes plus de tes nouvelles.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-06-21 14:52:04",
+          "modifiedAt": "2026-06-21 14:52:04"
+        },
+        {
+          "id": "tatoeba-fr-14003124",
+          "sentenceId": "14003124",
+          "text": "Ça n'aura aucun impact.",
+          "contributor": "madjidoumnia",
+          "addedAt": "2026-08-03 05:03:45",
+          "modifiedAt": "2026-08-03 05:03:45"
+        },
+        {
+          "id": "tatoeba-fr-14007308",
+          "sentenceId": "14007308",
+          "text": "Le froid lui est absolument intolérable.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-07 06:54:29",
+          "modifiedAt": "2026-08-07 06:54:29"
+        },
+        {
+          "id": "tatoeba-fr-13977199",
+          "sentenceId": "13977199",
+          "text": "Youba a l'air de mauvaise humeur.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-07-13 14:48:55",
+          "modifiedAt": "2026-07-13 14:48:55"
+        },
+        {
+          "id": "tatoeba-fr-13947539",
+          "sentenceId": "13947539",
+          "text": "Nous avons introduit un paywall.",
+          "contributor": "Myrano_",
+          "addedAt": "2026-06-20 16:35:18",
+          "modifiedAt": "2026-06-20 16:35:18"
+        },
+        {
+          "id": "tatoeba-fr-13934244",
+          "sentenceId": "13934244",
+          "text": "Il y a une montagne de choses à faire !",
+          "contributor": "RCendre",
+          "addedAt": "2026-06-08 01:57:15",
+          "modifiedAt": "2026-06-08 01:57:15"
+        },
+        {
+          "id": "tatoeba-fr-13960469",
+          "sentenceId": "13960469",
+          "text": "Une base de données peut contenir des millions d’enregistrements.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 08:33:12",
+          "modifiedAt": "2026-07-01 08:33:12"
+        },
+        {
+          "id": "tatoeba-fr-13998094",
+          "sentenceId": "13998094",
+          "text": "Enrobe-le de chapelure.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-30 15:16:01",
+          "modifiedAt": "2026-07-30 15:16:01"
+        },
+        {
+          "id": "tatoeba-fr-13964481",
+          "sentenceId": "13964481",
+          "text": "La vraie paix vient après les blessures. Après la pluie, le beau temps.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-03 17:58:48",
+          "modifiedAt": "2026-07-03 17:58:48"
+        },
+        {
+          "id": "tatoeba-fr-13947432",
+          "sentenceId": "13947432",
+          "text": "Tu sens toujours la noix de coco. C'est agréable.",
+          "contributor": "calypsow",
+          "addedAt": "2026-06-20 14:24:11",
+          "modifiedAt": "2026-06-20 14:24:11"
+        },
+        {
+          "id": "tatoeba-fr-14003466",
+          "sentenceId": "14003466",
+          "text": "Mon fils a pris sa retraite hier.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-03 13:34:57",
+          "modifiedAt": "2026-08-03 13:34:57"
+        },
+        {
+          "id": "tatoeba-fr-13988402",
+          "sentenceId": "13988402",
+          "text": "On peut dire qu'être athée signifie ne croire en aucune des idées concernant Dieu que l'humanité a élaborées à ce jour.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-22 18:51:38",
+          "modifiedAt": "2026-07-22 18:51:38"
+        },
+        {
+          "id": "tatoeba-fr-13948294",
+          "sentenceId": "13948294",
+          "text": "On n'entend plus sa voix.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-06-21 12:51:02",
+          "modifiedAt": "2026-06-21 12:51:02"
+        },
+        {
+          "id": "tatoeba-fr-13977912",
+          "sentenceId": "13977912",
+          "text": "Après m'être réveillé, je prends généralement une douche...",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-13 21:52:59",
+          "modifiedAt": "2026-07-13 21:52:59"
+        },
+        {
+          "id": "tatoeba-fr-13999313",
+          "sentenceId": "13999313",
+          "text": "Je vais au travail en taxi.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-31 09:41:46",
+          "modifiedAt": "2026-07-31 09:41:46"
+        },
+        {
+          "id": "tatoeba-fr-14029648",
+          "sentenceId": "14029648",
+          "text": "« Le Lièvre et la Tortue » est l'une des fables les plus connues.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-27 23:30:17",
+          "modifiedAt": "2026-08-27 23:30:17"
+        },
+        {
+          "id": "tatoeba-fr-14028153",
+          "sentenceId": "14028153",
+          "text": "Notre cours s'est terminé il y a une demi-heure.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-26 20:34:30",
+          "modifiedAt": "2026-08-26 20:34:30"
+        },
+        {
+          "id": "tatoeba-fr-13995803",
+          "sentenceId": "13995803",
+          "text": "Tu joues au démineur ?",
+          "contributor": "menaud",
+          "addedAt": "2026-07-28 19:47:29",
+          "modifiedAt": "2026-07-28 19:47:29"
+        },
+        {
+          "id": "tatoeba-fr-13977033",
+          "sentenceId": "13977033",
+          "text": "Tom, tu es important pour nous.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-13 11:47:21",
+          "modifiedAt": "2026-07-13 11:47:21"
+        },
+        {
+          "id": "tatoeba-fr-13999290",
+          "sentenceId": "13999290",
+          "text": "Je n'ai pas réussi à terminer la tâche.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-31 09:36:49",
+          "modifiedAt": "2026-07-31 09:36:49"
+        },
+        {
+          "id": "tatoeba-fr-13953069",
+          "sentenceId": "13953069",
+          "text": "Les gens ont changé.",
+          "contributor": "Rovo",
+          "addedAt": "2026-06-25 13:49:47",
+          "modifiedAt": "2026-06-25 13:49:47"
+        },
+        {
+          "id": "tatoeba-fr-13957537",
+          "sentenceId": "13957537",
+          "text": "Il fait preuve de la naïveté propre aux novices dans son travail.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-06-28 16:17:08",
+          "modifiedAt": "2026-06-28 16:17:42"
+        },
+        {
+          "id": "tatoeba-fr-13996761",
+          "sentenceId": "13996761",
+          "text": "Ça te dérangerait de venir avec moi ?",
+          "contributor": "ManuelJLAgo",
+          "addedAt": "2026-07-29 15:20:28",
+          "modifiedAt": "2026-07-29 15:20:28"
+        },
+        {
+          "id": "tatoeba-fr-14018151",
+          "sentenceId": "14018151",
+          "text": "Tu n'as jamais mérité que je sois gentil avec toi.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-18 14:57:15",
+          "modifiedAt": "2026-08-18 14:57:15"
+        },
+        {
+          "id": "tatoeba-fr-14024547",
+          "sentenceId": "14024547",
+          "text": "Bien que ce soit difficile, je peux le faire malgré tout.",
+          "contributor": "madjidoumnia",
+          "addedAt": "2026-08-23 18:41:01",
+          "modifiedAt": "2026-08-23 18:41:01"
+        },
+        {
+          "id": "tatoeba-fr-13999576",
+          "sentenceId": "13999576",
+          "text": "La femelle de l'âne s'appelle une ânesse.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-31 13:05:37",
+          "modifiedAt": "2026-07-31 13:05:37"
+        },
+        {
+          "id": "tatoeba-fr-13991005",
+          "sentenceId": "13991005",
+          "text": "Est-ce que vous êtes des Italiens ?",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-24 17:50:30",
+          "modifiedAt": "2026-07-24 17:50:30"
+        },
+        {
+          "id": "tatoeba-fr-14006352",
+          "sentenceId": "14006352",
+          "text": "Le voyage m'a beaucoup fatigué.",
+          "contributor": "Rafik",
+          "addedAt": "2026-08-06 10:28:36",
+          "modifiedAt": "2026-08-06 10:28:36"
+        },
+        {
+          "id": "tatoeba-fr-13977285",
+          "sentenceId": "13977285",
+          "text": "L'intelligence artificielle a la capacité d'améliorer ses propres algorithmes.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-07-13 16:17:50",
+          "modifiedAt": "2026-07-13 16:17:50"
+        },
+        {
+          "id": "tatoeba-fr-13933612",
+          "sentenceId": "13933612",
+          "text": "Tom est incapable de distinguer l'Irak de l'Iran.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-06-07 09:18:53",
+          "modifiedAt": "2026-06-07 09:18:53"
+        },
+        {
+          "id": "tatoeba-fr-13984442",
+          "sentenceId": "13984442",
+          "text": "Ce n'est qu'une broutille.",
+          "contributor": "lbdx",
+          "addedAt": "2026-07-19 08:03:14",
+          "modifiedAt": "2026-07-19 08:03:14"
+        },
+        {
+          "id": "tatoeba-fr-14005910",
+          "sentenceId": "14005910",
+          "text": "La carence en œstrogènes chez l'homme entraîne des troubles de l'érection.",
+          "contributor": "menaud",
+          "addedAt": "2026-08-05 18:55:41",
+          "modifiedAt": "2026-08-05 18:55:41"
+        },
+        {
+          "id": "tatoeba-fr-13961113",
+          "sentenceId": "13961113",
+          "text": "Les horaires des transports influencent les déplacements quotidiens.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 15:27:14",
+          "modifiedAt": "2026-07-01 15:27:14"
+        },
+        {
+          "id": "tatoeba-fr-13976633",
+          "sentenceId": "13976633",
+          "text": "Trouve la force de te relever chaque fois que tu tombes.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-07-12 21:50:39",
+          "modifiedAt": "2026-07-12 21:50:39"
+        },
+        {
+          "id": "tatoeba-fr-14004875",
+          "sentenceId": "14004875",
+          "text": "Les maths sont cool.",
+          "contributor": "menaud",
+          "addedAt": "2026-08-04 17:36:02",
+          "modifiedAt": "2026-08-04 17:36:02"
+        },
+        {
+          "id": "tatoeba-fr-13977223",
+          "sentenceId": "13977223",
+          "text": "Ils ont affirmé que la cathédrale est la demeure de Dieu.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-07-13 15:11:32",
+          "modifiedAt": "2026-07-13 15:11:32"
+        },
+        {
+          "id": "tatoeba-fr-14029337",
+          "sentenceId": "14029337",
+          "text": "Nous avons quitté le cours il y a une demi-heure.",
+          "contributor": "Rovo",
+          "addedAt": "2026-08-27 18:36:43",
+          "modifiedAt": "2026-08-27 18:36:43"
+        },
+        {
+          "id": "tatoeba-fr-14024613",
+          "sentenceId": "14024613",
+          "text": "Dis-moi, combien de temps peux-tu attendre encore ?",
+          "contributor": "madjidoumnia",
+          "addedAt": "2026-08-23 19:08:05",
+          "modifiedAt": "2026-08-23 19:08:05"
+        },
+        {
+          "id": "tatoeba-fr-13983628",
+          "sentenceId": "13983628",
+          "text": "Je dis les choses telles qu'elles sont.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-07-18 12:28:56",
+          "modifiedAt": "2026-07-18 12:28:56"
+        },
+        {
+          "id": "tatoeba-fr-13961231",
+          "sentenceId": "13961231",
+          "text": "Les langues doivent s'adapter aux nouveaux domaines scientifiques.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 16:17:22",
+          "modifiedAt": "2026-07-01 16:17:22"
+        },
+        {
+          "id": "tatoeba-fr-13975834",
+          "sentenceId": "13975834",
+          "text": "J'étais dans mon bain quand tu m'as appelée.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-12 08:01:53",
+          "modifiedAt": "2026-07-12 08:01:53"
+        },
+        {
+          "id": "tatoeba-fr-13946659",
+          "sentenceId": "13946659",
+          "text": "J'ai apporté le repas à l'étage.",
+          "contributor": "ninefi",
+          "addedAt": "2026-06-19 23:52:49",
+          "modifiedAt": "2026-06-19 23:52:49"
+        },
+        {
+          "id": "tatoeba-fr-13963097",
+          "sentenceId": "13963097",
+          "text": "L’efficacité énergétique consiste à réduire la consommation d’énergie tout en maintenant le même service.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-02 16:00:18",
+          "modifiedAt": "2026-07-02 16:00:18"
+        },
+        {
+          "id": "tatoeba-fr-13973999",
+          "sentenceId": "13973999",
+          "text": "Je me suis rendu à la capitale en question.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-07-10 10:04:00",
+          "modifiedAt": "2026-07-10 10:04:00"
+        },
+        {
+          "id": "tatoeba-fr-13981251",
+          "sentenceId": "13981251",
+          "text": "Qu'est ce qui peut diviser les membres d'une famille ?",
+          "contributor": "Aghanim",
+          "addedAt": "2026-07-16 18:22:25",
+          "modifiedAt": "2026-07-16 18:22:25"
+        },
+        {
+          "id": "tatoeba-fr-13998386",
+          "sentenceId": "13998386",
+          "text": "Un sourire éclaire constament leurs visages.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-07-30 18:34:20",
+          "modifiedAt": "2026-07-30 18:34:20"
+        },
+        {
+          "id": "tatoeba-fr-14024741",
+          "sentenceId": "14024741",
+          "text": "À la clinique, les étudiants en médecine apprennent auprès de médecins expérimentés comment examiner et traiter les patients.",
+          "contributor": "Rovo",
+          "addedAt": "2026-08-23 20:47:27",
+          "modifiedAt": "2026-08-23 20:47:27"
+        },
+        {
+          "id": "tatoeba-fr-14030526",
+          "sentenceId": "14030526",
+          "text": "En ce temps-là, la vie était difficile.",
+          "contributor": "Rovo",
+          "addedAt": "2026-08-28 19:18:05",
+          "modifiedAt": "2026-08-28 19:18:05"
+        },
+        {
+          "id": "tatoeba-fr-14009989",
+          "sentenceId": "14009989",
+          "text": "Marie, aimes-tu faire du bricolage ?",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-08-09 16:22:46",
+          "modifiedAt": "2026-08-09 16:22:46"
+        },
+        {
+          "id": "tatoeba-fr-13933532",
+          "sentenceId": "13933532",
+          "text": "Dix ans se sont écoulés depuis sa dernière visite dans son pays.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-06-07 08:07:17",
+          "modifiedAt": "2026-06-07 08:07:17"
+        },
+        {
+          "id": "tatoeba-fr-14006325",
+          "sentenceId": "14006325",
+          "text": "Qu'as-tu dit d'autre ?",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-06 08:05:43",
+          "modifiedAt": "2026-08-06 08:05:43"
+        },
+        {
+          "id": "tatoeba-fr-13935751",
+          "sentenceId": "13935751",
+          "text": "Notre chat n'aime pas chasser des souris.",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-06-09 13:12:35",
+          "modifiedAt": "2026-06-09 13:12:35"
+        },
+        {
+          "id": "tatoeba-fr-14024692",
+          "sentenceId": "14024692",
+          "text": "Il a froid, alors il a mis une couverture sur ses épaules.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-08-23 20:18:07",
+          "modifiedAt": "2026-08-23 20:18:07"
+        },
+        {
+          "id": "tatoeba-fr-13992179",
+          "sentenceId": "13992179",
+          "text": "Embauchez quelques ingénieurs.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-25 18:49:59",
+          "modifiedAt": "2026-07-25 18:49:59"
+        },
+        {
+          "id": "tatoeba-fr-13981246",
+          "sentenceId": "13981246",
+          "text": "L'argent est parfois une source de division entre frères.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-07-16 18:15:22",
+          "modifiedAt": "2026-07-16 18:15:22"
+        },
+        {
+          "id": "tatoeba-fr-13950462",
+          "sentenceId": "13950462",
+          "text": "Cette chronique médiévale décrit les grandes batailles du XIIIe siécle.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-06-23 12:03:36",
+          "modifiedAt": "2026-06-23 12:03:36"
+        },
+        {
+          "id": "tatoeba-fr-13967280",
+          "sentenceId": "13967280",
+          "text": "Les données devraient être réutilisables lorsque cela est possible.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-04 18:30:05",
+          "modifiedAt": "2026-07-04 18:30:05"
+        },
+        {
+          "id": "tatoeba-fr-13964551",
+          "sentenceId": "13964551",
+          "text": "L’homme aime tout ce qu’il a hérité de ses parents, sauf la mort.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-03 18:55:14",
+          "modifiedAt": "2026-07-03 18:55:14"
+        },
+        {
+          "id": "tatoeba-fr-13964504",
+          "sentenceId": "13964504",
+          "text": "Les paroles sont bonnes, mais le cœur est amer.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-03 18:11:59",
+          "modifiedAt": "2026-07-03 18:11:59"
+        },
+        {
+          "id": "tatoeba-fr-13939091",
+          "sentenceId": "13939091",
+          "text": "Je mène une enquête.",
+          "contributor": "Rovo",
+          "addedAt": "2026-06-12 19:19:40",
+          "modifiedAt": "2026-06-12 19:19:40"
+        },
+        {
+          "id": "tatoeba-fr-13972143",
+          "sentenceId": "13972143",
+          "text": "Aujourd'hui, je vais passer la nuit chez ma mémé.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-08 17:50:06",
+          "modifiedAt": "2026-07-08 17:50:06"
+        },
+        {
+          "id": "tatoeba-fr-14004436",
+          "sentenceId": "14004436",
+          "text": "J'ai été là-bas une fois, ça m'a beaucoup plu.",
+          "contributor": "Rafik",
+          "addedAt": "2026-08-04 09:07:57",
+          "modifiedAt": "2026-08-04 09:07:57"
+        },
+        {
+          "id": "tatoeba-fr-14018446",
+          "sentenceId": "14018446",
+          "text": "J'aime bien le gâteau au chocolat !",
+          "contributor": "Rovo",
+          "addedAt": "2026-08-18 19:01:09",
+          "modifiedAt": "2026-08-18 19:01:09"
+        },
+        {
+          "id": "tatoeba-fr-14011671",
+          "sentenceId": "14011671",
+          "text": "C'est toi qui as pris ma chemise en flanelle ?",
+          "contributor": "menaud",
+          "addedAt": "2026-08-11 20:50:23",
+          "modifiedAt": "2026-08-11 20:50:23"
+        },
+        {
+          "id": "tatoeba-fr-14006314",
+          "sentenceId": "14006314",
+          "text": "Comment ça va, au quotidien ?",
+          "contributor": "zogwarg",
+          "addedAt": "2026-08-06 07:26:00",
+          "modifiedAt": "2026-08-06 07:26:00"
+        },
+        {
+          "id": "tatoeba-fr-13940893",
+          "sentenceId": "13940893",
+          "text": "Elle nous a élevés dans la misère.",
+          "contributor": "Aghanim",
+          "addedAt": "2026-06-14 16:27:37",
+          "modifiedAt": "2026-06-14 16:27:37"
+        },
+        {
+          "id": "tatoeba-fr-13953596",
+          "sentenceId": "13953596",
+          "text": "J'envisage de faire des études de mathématiques.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-06-26 07:45:03",
+          "modifiedAt": "2026-06-26 07:45:03"
+        },
+        {
+          "id": "tatoeba-fr-14008949",
+          "sentenceId": "14008949",
+          "text": "Mes émotions ont fini par prendre le dessus.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-08 16:35:42",
+          "modifiedAt": "2026-08-08 16:35:42"
+        },
+        {
+          "id": "tatoeba-fr-14027992",
+          "sentenceId": "14027992",
+          "text": "Pourquoi ne me réponds-tu pas ?",
+          "contributor": "Ioan_Cristian",
+          "addedAt": "2026-08-26 18:34:15",
+          "modifiedAt": "2026-08-26 18:34:15"
+        },
+        {
+          "id": "tatoeba-fr-13952515",
+          "sentenceId": "13952515",
+          "text": "Tom n'est pas fier de son passé.",
+          "contributor": "mervert1",
+          "addedAt": "2026-06-25 00:25:57",
+          "modifiedAt": "2026-06-25 00:25:57"
+        },
+        {
+          "id": "tatoeba-fr-13980556",
+          "sentenceId": "13980556",
+          "text": "Tu seras probablement en retard pour le travail si tu ne te dépêches pas.",
+          "contributor": "zogwarg",
+          "addedAt": "2026-07-16 02:58:28",
+          "modifiedAt": "2026-07-16 02:58:48"
+        },
+        {
+          "id": "tatoeba-fr-13933538",
+          "sentenceId": "13933538",
+          "text": "Il faut que nous soyons prêts.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-06-07 08:20:49",
+          "modifiedAt": "2026-06-07 08:20:49"
+        },
+        {
+          "id": "tatoeba-fr-13937138",
+          "sentenceId": "13937138",
+          "text": "Jésus s'habillait comme un pauvre. Pourtant, il parlait comme un roi.",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-06-10 17:17:24",
+          "modifiedAt": "2026-06-10 17:17:24"
+        },
+        {
+          "id": "tatoeba-fr-13959049",
+          "sentenceId": "13959049",
+          "text": "Cela vous dérangerait-il de ne pas fumer ?",
+          "contributor": "zogwarg",
+          "addedAt": "2026-06-30 03:14:05",
+          "modifiedAt": "2026-06-30 03:14:05"
+        },
+        {
+          "id": "tatoeba-fr-14011526",
+          "sentenceId": "14011526",
+          "text": "Elles n'ont pas craché le chocolat.",
+          "contributor": "slahatuvelli",
+          "addedAt": "2026-08-11 16:53:50",
+          "modifiedAt": "2026-08-11 16:53:50"
+        },
+        {
+          "id": "tatoeba-fr-14008518",
+          "sentenceId": "14008518",
+          "text": "Cette famille m'a invité à manger avec eux.",
+          "contributor": "Rafik",
+          "addedAt": "2026-08-08 09:50:24",
+          "modifiedAt": "2026-08-08 09:50:24"
+        },
+        {
+          "id": "tatoeba-fr-13960483",
+          "sentenceId": "13960483",
+          "text": "Une base de données d’entraînement influence le comportement du modèle.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 08:45:11",
+          "modifiedAt": "2026-07-01 08:45:11"
+        },
+        {
+          "id": "tatoeba-fr-14015558",
+          "sentenceId": "14015558",
+          "text": "Pensez-vous que ce film vaut la peine d'être vu ?",
+          "contributor": "carlosalberto",
+          "addedAt": "2026-08-16 00:58:26",
+          "modifiedAt": "2026-08-16 00:58:26"
+        }
+      ]
+    },
+    {
+      "languageTag": "ar",
+      "source": {
+        "url": "https://downloads.tatoeba.org/exports/per_language/ara/ara_sentences_detailed.tsv.bz2",
+        "checksum": "sha256:b21453e5d213194311e0662c93701673254d1c2888d5a7a35426410a1c037c6f"
+      },
+      "documents": [
+        {
+          "id": "tatoeba-ar-13989655",
+          "sentenceId": "13989655",
+          "text": "The wine has nearly run out.",
+          "contributor": "wdhryry1",
+          "addedAt": "2026-07-23 11:48:02",
+          "modifiedAt": "2026-07-23 11:48:02"
+        },
+        {
+          "id": "tatoeba-ar-14013157",
+          "sentenceId": "14013157",
+          "text": "من لم يعرف عيوبه لم يكن مشفقاً على نفسه.",
+          "contributor": "cojiluc",
+          "addedAt": "2026-08-13 19:48:58",
+          "modifiedAt": "2026-08-13 19:48:58"
+        },
+        {
+          "id": "tatoeba-ar-13951752",
+          "sentenceId": "13951752",
+          "text": "انتهت تلك الرحلة رسميا.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 10:31:40",
+          "modifiedAt": "2026-06-24 10:31:40"
+        },
+        {
+          "id": "tatoeba-ar-13973243",
+          "sentenceId": "13973243",
+          "text": "الانزعاج الجندري يبدأ عادةً في مرحلة الطفولة.",
+          "contributor": "rul",
+          "addedAt": "2026-07-09 15:22:02",
+          "modifiedAt": "2026-07-09 15:22:02"
+        },
+        {
+          "id": "tatoeba-ar-13969371",
+          "sentenceId": "13969371",
+          "text": "جدتها في منتهى اللطف.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-05 22:16:29",
+          "modifiedAt": "2026-07-05 22:16:29"
+        },
+        {
+          "id": "tatoeba-ar-13975391",
+          "sentenceId": "13975391",
+          "text": "الموت أمر حتمي لا مفر منه.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-11 18:45:18",
+          "modifiedAt": "2026-07-11 18:45:18"
+        },
+        {
+          "id": "tatoeba-ar-13966532",
+          "sentenceId": "13966532",
+          "text": "بايثون سهلة التعلّم.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-04 12:13:17",
+          "modifiedAt": "2026-07-04 12:13:17"
+        },
+        {
+          "id": "tatoeba-ar-13960833",
+          "sentenceId": "13960833",
+          "text": "وجد راحة البال في القرية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:51:48",
+          "modifiedAt": "2026-07-01 12:51:48"
+        },
+        {
+          "id": "tatoeba-ar-13987109",
+          "sentenceId": "13987109",
+          "text": "رسالة موجهة إلى اهقار.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-21 12:09:13",
+          "modifiedAt": "2026-07-21 12:09:13"
+        },
+        {
+          "id": "tatoeba-ar-13974487",
+          "sentenceId": "13974487",
+          "text": "مرحبا بكم في تتويبا.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-10 18:25:38",
+          "modifiedAt": "2026-07-10 18:25:38"
+        },
+        {
+          "id": "tatoeba-ar-13987100",
+          "sentenceId": "13987100",
+          "text": "غصن واحد لا يبني الفناء.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-21 12:05:12",
+          "modifiedAt": "2026-07-21 12:05:12"
+        },
+        {
+          "id": "tatoeba-ar-13960953",
+          "sentenceId": "13960953",
+          "text": "لم تزرع الذرة بعد في حديقتها.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 14:04:33",
+          "modifiedAt": "2026-07-01 14:04:50"
+        },
+        {
+          "id": "tatoeba-ar-13981552",
+          "sentenceId": "13981552",
+          "text": "النقاش في موضوع العفو.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-16 22:02:38",
+          "modifiedAt": "2026-07-16 22:02:50"
+        },
+        {
+          "id": "tatoeba-ar-13960840",
+          "sentenceId": "13960840",
+          "text": "في الليل يحلّ السلام.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:55:47",
+          "modifiedAt": "2026-07-01 12:55:47"
+        },
+        {
+          "id": "tatoeba-ar-13980932",
+          "sentenceId": "13980932",
+          "text": "صاحب السؤال لا يضيع.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-16 12:56:08",
+          "modifiedAt": "2026-07-16 12:56:08"
+        },
+        {
+          "id": "tatoeba-ar-13960817",
+          "sentenceId": "13960817",
+          "text": "من حقي أن أجد السلام.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:46:29",
+          "modifiedAt": "2026-07-01 12:46:29"
+        },
+        {
+          "id": "tatoeba-ar-13951662",
+          "sentenceId": "13951662",
+          "text": "شاهدت الكثير من الأفلام الفرنسية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 10:07:04",
+          "modifiedAt": "2026-06-24 10:07:04"
+        },
+        {
+          "id": "tatoeba-ar-13960836",
+          "sentenceId": "13960836",
+          "text": "لا أراكم الله السلام.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:52:56",
+          "modifiedAt": "2026-07-01 12:52:56"
+        },
+        {
+          "id": "tatoeba-ar-13936549",
+          "sentenceId": "13936549",
+          "text": "2. التكبير من فجر يوم عرفة إلى آخر أيام التشريق:",
+          "contributor": "Tigre",
+          "addedAt": "2026-06-10 06:02:42",
+          "modifiedAt": "2026-06-10 06:02:42"
+        },
+        {
+          "id": "tatoeba-ar-13951669",
+          "sentenceId": "13951669",
+          "text": "لن تعود لاستعمال الحاسوب.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 10:08:59",
+          "modifiedAt": "2026-06-24 10:08:59"
+        },
+        {
+          "id": "tatoeba-ar-13951741",
+          "sentenceId": "13951741",
+          "text": "تركني في مفترق الطرق.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 10:25:58",
+          "modifiedAt": "2026-06-24 10:25:58"
+        },
+        {
+          "id": "tatoeba-ar-13951739",
+          "sentenceId": "13951739",
+          "text": "وحّدنا سواعدنا كي ندافع عن حقوقنا.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 10:23:43",
+          "modifiedAt": "2026-06-24 10:23:43"
+        },
+        {
+          "id": "tatoeba-ar-13985946",
+          "sentenceId": "13985946",
+          "text": "حلمي الاستقرار في مكة.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-20 14:55:50",
+          "modifiedAt": "2026-07-20 14:55:50"
+        },
+        {
+          "id": "tatoeba-ar-13955134",
+          "sentenceId": "13955134",
+          "text": "لماذا النباتات لونها أخضر؟",
+          "contributor": "Adelpa",
+          "addedAt": "2026-06-27 10:52:01",
+          "modifiedAt": "2026-06-27 10:52:01"
+        },
+        {
+          "id": "tatoeba-ar-13970932",
+          "sentenceId": "13970932",
+          "text": "كل إناء بما فيه ينضح.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-07 13:34:53",
+          "modifiedAt": "2026-07-07 13:34:53"
+        },
+        {
+          "id": "tatoeba-ar-13998285",
+          "sentenceId": "13998285",
+          "text": "غمرني غضبٌ جعل أطرافي ترتعد.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-30 17:20:11",
+          "modifiedAt": "2026-07-30 17:20:11"
+        },
+        {
+          "id": "tatoeba-ar-13938398",
+          "sentenceId": "13938398",
+          "text": "هناك تمساح في البحر.",
+          "contributor": "Tigre",
+          "addedAt": "2026-06-11 21:49:09",
+          "modifiedAt": "2026-06-11 21:49:09"
+        },
+        {
+          "id": "tatoeba-ar-13960609",
+          "sentenceId": "13960609",
+          "text": "أين كنتم هذا الصباح؟",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 10:04:37",
+          "modifiedAt": "2026-07-01 10:04:37"
+        },
+        {
+          "id": "tatoeba-ar-13960545",
+          "sentenceId": "13960545",
+          "text": "يمكن للذكاء الاصطناعي المساعدة في اكتشاف الأخبار الكاذبة.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 09:10:16",
+          "modifiedAt": "2026-07-01 09:10:16"
+        },
+        {
+          "id": "tatoeba-ar-13936551",
+          "sentenceId": "13936551",
+          "text": "“الله أكبر الله أكبر لا إله إلا الله، الله أكبر الله أكبر ولله الحمد.”",
+          "contributor": "Tigre",
+          "addedAt": "2026-06-10 06:04:07",
+          "modifiedAt": "2026-06-10 06:04:07"
+        },
+        {
+          "id": "tatoeba-ar-13964300",
+          "sentenceId": "13964300",
+          "text": "البيانات المفتوحة تعزز الشفافية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 13:31:59",
+          "modifiedAt": "2026-07-03 13:34:26"
+        },
+        {
+          "id": "tatoeba-ar-13987110",
+          "sentenceId": "13987110",
+          "text": "رسالة موجهة إلى ازواد.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-21 12:09:38",
+          "modifiedAt": "2026-07-21 12:09:38"
+        },
+        {
+          "id": "tatoeba-ar-13937553",
+          "sentenceId": "13937553",
+          "text": "أعمل كأمين صندوق في سوبر ماركت.",
+          "contributor": "ninefi",
+          "addedAt": "2026-06-11 05:42:20",
+          "modifiedAt": "2026-06-11 05:42:20"
+        },
+        {
+          "id": "tatoeba-ar-13960548",
+          "sentenceId": "13960548",
+          "text": "يمكن للتكنولوجيا أن تنشر المعلومات وتحارب التضليل في الوقت نفسه.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 09:11:01",
+          "modifiedAt": "2026-07-01 09:11:01"
+        },
+        {
+          "id": "tatoeba-ar-14012283",
+          "sentenceId": "14012283",
+          "text": "كل دين هو جسر إلى نفس المكان.",
+          "contributor": "rul",
+          "addedAt": "2026-08-12 22:37:28",
+          "modifiedAt": "2026-08-14 23:57:52"
+        },
+        {
+          "id": "tatoeba-ar-13960963",
+          "sentenceId": "13960963",
+          "text": "سأحجز طاولة في المطعم.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 14:13:07",
+          "modifiedAt": "2026-07-01 14:13:07"
+        },
+        {
+          "id": "tatoeba-ar-13960965",
+          "sentenceId": "13960965",
+          "text": "من الأفضل أن تبدأ الآن.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 14:13:57",
+          "modifiedAt": "2026-07-01 14:13:57"
+        },
+        {
+          "id": "tatoeba-ar-14007056",
+          "sentenceId": "14007056",
+          "text": "عام هجرة الرسول عليه افضل الصلوات و أزكى التسليم.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-06 22:52:05",
+          "modifiedAt": "2026-08-06 22:52:05"
+        },
+        {
+          "id": "tatoeba-ar-13965163",
+          "sentenceId": "13965163",
+          "text": "الدَّين التقني هو تكلفة مستقبلية ناتجة عن قرارات تقنية سريعة.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 21:53:06",
+          "modifiedAt": "2026-07-03 21:53:37"
+        },
+        {
+          "id": "tatoeba-ar-13968350",
+          "sentenceId": "13968350",
+          "text": "يرجع ذلك حسب حاجة كل واحد.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-05 09:07:15",
+          "modifiedAt": "2026-07-05 09:07:15"
+        },
+        {
+          "id": "tatoeba-ar-13987111",
+          "sentenceId": "13987111",
+          "text": "رسالة موجهة إلى ازواغ.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-21 12:10:01",
+          "modifiedAt": "2026-07-21 12:10:01"
+        },
+        {
+          "id": "tatoeba-ar-13966559",
+          "sentenceId": "13966559",
+          "text": "جافا لغة برمجة تعمل على الكثير من أنظمة التشغيل.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-04 12:19:56",
+          "modifiedAt": "2026-07-04 12:19:56"
+        },
+        {
+          "id": "tatoeba-ar-14007070",
+          "sentenceId": "14007070",
+          "text": "ولدت سنة 1418 من الهجرة النبوية.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-06 23:09:08",
+          "modifiedAt": "2026-08-06 23:09:08"
+        },
+        {
+          "id": "tatoeba-ar-13959883",
+          "sentenceId": "13959883",
+          "text": "ذلك الكتاب مهم فعلا.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-30 17:23:56",
+          "modifiedAt": "2026-06-30 17:23:56"
+        },
+        {
+          "id": "tatoeba-ar-13998257",
+          "sentenceId": "13998257",
+          "text": "سبح طوم مع سلاحف البحر.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-30 17:11:34",
+          "modifiedAt": "2026-07-30 17:11:34"
+        },
+        {
+          "id": "tatoeba-ar-14003325",
+          "sentenceId": "14003325",
+          "text": "منطقة أزواغ هي المكان الذي ولد فيه والدي.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-03 11:59:33",
+          "modifiedAt": "2026-08-03 11:59:33"
+        },
+        {
+          "id": "tatoeba-ar-13968288",
+          "sentenceId": "13968288",
+          "text": "هل أنت تتحدث الإنجليزية؟",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-05 08:34:12",
+          "modifiedAt": "2026-07-05 08:34:12"
+        },
+        {
+          "id": "tatoeba-ar-13960962",
+          "sentenceId": "13960962",
+          "text": "يساهم الذكاء الاصطناعي في تحليل بعض البيانات الطبية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 14:12:17",
+          "modifiedAt": "2026-07-01 14:12:17"
+        },
+        {
+          "id": "tatoeba-ar-13959365",
+          "sentenceId": "13959365",
+          "text": "هذه نهايةُ إمبراطوريّةٍ.",
+          "contributor": "rul",
+          "addedAt": "2026-06-30 10:04:06",
+          "modifiedAt": "2026-06-30 10:04:06"
+        },
+        {
+          "id": "tatoeba-ar-14005544",
+          "sentenceId": "14005544",
+          "text": "الموت هو الحقيقة المطلقة.",
+          "contributor": "rul",
+          "addedAt": "2026-08-05 12:59:46",
+          "modifiedAt": "2026-08-05 12:59:46"
+        },
+        {
+          "id": "tatoeba-ar-14003327",
+          "sentenceId": "14003327",
+          "text": "منطقة الهقار هي المكان الذي ولد فيه والدي.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-03 12:01:00",
+          "modifiedAt": "2026-08-03 12:01:00"
+        },
+        {
+          "id": "tatoeba-ar-13952137",
+          "sentenceId": "13952137",
+          "text": "الذكاء الاصطناعي أداة مهمة جدا لتطوير الأمازيغية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 15:20:28",
+          "modifiedAt": "2026-06-24 15:20:28"
+        },
+        {
+          "id": "tatoeba-ar-13976881",
+          "sentenceId": "13976881",
+          "text": "كان الناس دائمًا هكذا.",
+          "contributor": "rul",
+          "addedAt": "2026-07-13 06:08:39",
+          "modifiedAt": "2026-07-13 06:08:39"
+        },
+        {
+          "id": "tatoeba-ar-14004396",
+          "sentenceId": "14004396",
+          "text": "سهم الموت أينما ذهبت يتبعك.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-04 08:36:29",
+          "modifiedAt": "2026-08-04 08:36:29"
+        },
+        {
+          "id": "tatoeba-ar-13965535",
+          "sentenceId": "13965535",
+          "text": "يؤدي أعماله باستهتار.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-04 00:42:08",
+          "modifiedAt": "2026-07-04 00:42:08"
+        },
+        {
+          "id": "tatoeba-ar-13959350",
+          "sentenceId": "13959350",
+          "text": "طوم يعلم أنك قتلت قطهُ.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-30 09:59:47",
+          "modifiedAt": "2026-06-30 09:59:47"
+        },
+        {
+          "id": "tatoeba-ar-13976909",
+          "sentenceId": "13976909",
+          "text": "صدق من قال بأن الحروب هي أم الاختراع.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-13 06:33:48",
+          "modifiedAt": "2026-07-13 11:57:23"
+        },
+        {
+          "id": "tatoeba-ar-13960595",
+          "sentenceId": "13960595",
+          "text": "ستستعملون كلمات قبائلية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 09:50:57",
+          "modifiedAt": "2026-07-01 09:50:57"
+        },
+        {
+          "id": "tatoeba-ar-13964344",
+          "sentenceId": "13964344",
+          "text": "المنشورات العلمية ذات الوصول الحر أكثر مرئية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 14:07:25",
+          "modifiedAt": "2026-07-03 14:08:36"
+        },
+        {
+          "id": "tatoeba-ar-13980944",
+          "sentenceId": "13980944",
+          "text": "أكتب با تاوالَّمَّت تماجق.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-16 13:01:56",
+          "modifiedAt": "2026-07-16 13:01:56"
+        },
+        {
+          "id": "tatoeba-ar-13980990",
+          "sentenceId": "13980990",
+          "text": "تماجق او تماهق او تماشق شيء واحد.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-16 14:39:38",
+          "modifiedAt": "2026-07-16 14:39:38"
+        },
+        {
+          "id": "tatoeba-ar-13958545",
+          "sentenceId": "13958545",
+          "text": "لا أدري ما الذي حصل لي اليوم ولكني لا أستطيع التركيز.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-29 16:03:55",
+          "modifiedAt": "2026-06-29 16:03:55"
+        },
+        {
+          "id": "tatoeba-ar-13988910",
+          "sentenceId": "13988910",
+          "text": "أنا يهوديّة علمانيّة.",
+          "contributor": "rul",
+          "addedAt": "2026-07-22 23:50:29",
+          "modifiedAt": "2026-07-22 23:50:29"
+        },
+        {
+          "id": "tatoeba-ar-13951614",
+          "sentenceId": "13951614",
+          "text": "هل تريدين أن تصبحي غنية؟",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-24 09:56:34",
+          "modifiedAt": "2026-06-24 09:56:34"
+        },
+        {
+          "id": "tatoeba-ar-14029690",
+          "sentenceId": "14029690",
+          "text": "الأطفال عندهم كتاب قديم.",
+          "contributor": "ninefi",
+          "addedAt": "2026-08-28 01:20:59",
+          "modifiedAt": "2026-08-28 01:20:59"
+        },
+        {
+          "id": "tatoeba-ar-13976913",
+          "sentenceId": "13976913",
+          "text": "إذا كانت الحاجة أم الاختراع، فإن الكسل هو أبوه.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-13 06:57:42",
+          "modifiedAt": "2026-07-13 11:58:43"
+        },
+        {
+          "id": "tatoeba-ar-13961338",
+          "sentenceId": "13961338",
+          "text": "أينما رحلت، فإلى ربك المنتهى.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 17:14:58",
+          "modifiedAt": "2026-07-01 17:14:58"
+        },
+        {
+          "id": "tatoeba-ar-13960612",
+          "sentenceId": "13960612",
+          "text": "يبدو هذا الكلب وكأنه ميت.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 10:05:15",
+          "modifiedAt": "2026-07-01 10:05:15"
+        },
+        {
+          "id": "tatoeba-ar-13960844",
+          "sentenceId": "13960844",
+          "text": "مع الليل يأتي الهدوء.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:56:58",
+          "modifiedAt": "2026-07-01 12:57:04"
+        },
+        {
+          "id": "tatoeba-ar-13966516",
+          "sentenceId": "13966516",
+          "text": "تسمح لغة البرمجة بكتابة البرامج الحاسوبية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-04 12:09:42",
+          "modifiedAt": "2026-07-04 12:09:42"
+        },
+        {
+          "id": "tatoeba-ar-13998282",
+          "sentenceId": "13998282",
+          "text": "تملّكني غضب عارم حتى أخذ جسدي يرتجف.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-30 17:19:49",
+          "modifiedAt": "2026-07-30 17:19:49"
+        },
+        {
+          "id": "tatoeba-ar-13960748",
+          "sentenceId": "13960748",
+          "text": "أبي يشرب القهوة كل صباح.",
+          "contributor": "rul",
+          "addedAt": "2026-07-01 12:15:53",
+          "modifiedAt": "2026-07-01 12:15:53"
+        },
+        {
+          "id": "tatoeba-ar-13960339",
+          "sentenceId": "13960339",
+          "text": "كل-تماجق تركوا تماجق.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-01 06:30:41",
+          "modifiedAt": "2026-07-01 06:30:41"
+        },
+        {
+          "id": "tatoeba-ar-13988371",
+          "sentenceId": "13988371",
+          "text": "أريد أن أشتري تفاحًا.",
+          "contributor": "rul",
+          "addedAt": "2026-07-22 18:33:04",
+          "modifiedAt": "2026-07-22 18:33:04"
+        },
+        {
+          "id": "tatoeba-ar-13964032",
+          "sentenceId": "13964032",
+          "text": "كانوا عاشقين في الثانوية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 07:46:51",
+          "modifiedAt": "2026-07-03 07:46:51"
+        },
+        {
+          "id": "tatoeba-ar-13999067",
+          "sentenceId": "13999067",
+          "text": "إذا المَرءُ لَم يَدنَس مِنَ اللُؤمِ عِرضُهُ، فَكُلُّ رِداءٍ يَرتَديهِ جَميلُ؛ وَإن هُوَ لَم يَحمِل على النَفسِ ضَيمَها، فَلَيسَ إِلى حُسنِ الثَناءِ سَبيلُ.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-31 06:05:14",
+          "modifiedAt": "2026-07-31 06:05:14"
+        },
+        {
+          "id": "tatoeba-ar-13964309",
+          "sentenceId": "13964309",
+          "text": "تحفز البيانات المفتوحة الابتكار.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 13:37:10",
+          "modifiedAt": "2026-07-03 13:37:10"
+        },
+        {
+          "id": "tatoeba-ar-13958542",
+          "sentenceId": "13958542",
+          "text": "أخي الأكبر حصل على دراجة بمناسبة عيد ميلاده. أعطاني دراجته القديمة.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-29 16:00:05",
+          "modifiedAt": "2026-06-29 16:00:05"
+        },
+        {
+          "id": "tatoeba-ar-13960602",
+          "sentenceId": "13960602",
+          "text": "أتعجب كيف استطعت أن تُقبل في هارفارد.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 09:59:25",
+          "modifiedAt": "2026-07-01 14:09:43"
+        },
+        {
+          "id": "tatoeba-ar-13960613",
+          "sentenceId": "13960613",
+          "text": "شيء رائع أن تقرأ كتبا كثيرة.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 10:06:36",
+          "modifiedAt": "2026-07-01 10:06:36"
+        },
+        {
+          "id": "tatoeba-ar-13960837",
+          "sentenceId": "13960837",
+          "text": "عسى ألا تعرفوا السلام أبدًا.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:54:30",
+          "modifiedAt": "2026-07-01 12:54:30"
+        },
+        {
+          "id": "tatoeba-ar-14021528",
+          "sentenceId": "14021528",
+          "text": "\"قال لي سامي: قل لليلى إني أحبها.\"",
+          "contributor": "Tigre",
+          "addedAt": "2026-08-21 21:18:39",
+          "modifiedAt": "2026-08-21 21:18:39"
+        },
+        {
+          "id": "tatoeba-ar-13961341",
+          "sentenceId": "13961341",
+          "text": "أينما رحلت، فإلى ربك الرجعى.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 17:15:41",
+          "modifiedAt": "2026-07-01 17:15:41"
+        },
+        {
+          "id": "tatoeba-ar-14003320",
+          "sentenceId": "14003320",
+          "text": "منطقة كل-تماجق هي المكان الذي ولد فيه والدي.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-03 11:56:49",
+          "modifiedAt": "2026-08-03 11:56:49"
+        },
+        {
+          "id": "tatoeba-ar-13960842",
+          "sentenceId": "13960842",
+          "text": "تأتي مصحوبة بالسكينة.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 12:56:23",
+          "modifiedAt": "2026-07-01 12:56:23"
+        },
+        {
+          "id": "tatoeba-ar-14013876",
+          "sentenceId": "14013876",
+          "text": "إسبانيا لا تزال تملك مستعمرات في أفريقيا.",
+          "contributor": "rul",
+          "addedAt": "2026-08-14 13:52:07",
+          "modifiedAt": "2026-08-14 13:52:07"
+        },
+        {
+          "id": "tatoeba-ar-13960585",
+          "sentenceId": "13960585",
+          "text": "جمال ماري لا يضاهي جمال أليس.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 09:41:50",
+          "modifiedAt": "2026-07-01 17:35:37"
+        },
+        {
+          "id": "tatoeba-ar-13964324",
+          "sentenceId": "13964324",
+          "text": "يجب أن تكون نتائج البحث متاحة للجميع.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 13:58:29",
+          "modifiedAt": "2026-07-03 13:58:29"
+        },
+        {
+          "id": "tatoeba-ar-14021265",
+          "sentenceId": "14021265",
+          "text": "توم لم يعامل ماري بشكل جيد",
+          "contributor": "scalerize",
+          "addedAt": "2026-08-21 17:23:15",
+          "modifiedAt": "2026-08-21 17:23:15"
+        },
+        {
+          "id": "tatoeba-ar-14003322",
+          "sentenceId": "14003322",
+          "text": "منطقة أزواد هي المكان الذي ولد فيه والدي.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-08-03 11:58:00",
+          "modifiedAt": "2026-08-03 11:58:00"
+        },
+        {
+          "id": "tatoeba-ar-13987105",
+          "sentenceId": "13987105",
+          "text": "هذه هي الكيفية التي دخل بها.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-21 12:07:05",
+          "modifiedAt": "2026-07-21 12:07:05"
+        },
+        {
+          "id": "tatoeba-ar-13964303",
+          "sentenceId": "13964303",
+          "text": "يمكن للجميع إعادة استخدام البيانات المفتوحة.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 13:35:20",
+          "modifiedAt": "2026-07-03 13:35:20"
+        },
+        {
+          "id": "tatoeba-ar-13970631",
+          "sentenceId": "13970631",
+          "text": "أريد أن أتعلم اللغة الصينية ولكن رموزها التصويرية صعبة.",
+          "contributor": "Adelpa",
+          "addedAt": "2026-07-07 06:07:48",
+          "modifiedAt": "2026-07-07 06:07:48"
+        },
+        {
+          "id": "tatoeba-ar-13961034",
+          "sentenceId": "13961034",
+          "text": "تدرس الفيزياء النووية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 15:05:15",
+          "modifiedAt": "2026-07-01 15:05:22"
+        },
+        {
+          "id": "tatoeba-ar-13959516",
+          "sentenceId": "13959516",
+          "text": "أخوك إذا أعزّك هزّك.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-06-30 14:00:26",
+          "modifiedAt": "2026-06-30 14:00:26"
+        },
+        {
+          "id": "tatoeba-ar-14021522",
+          "sentenceId": "14021522",
+          "text": "\"قالت لي: قولي لها إني أحبها.",
+          "contributor": "Tigre",
+          "addedAt": "2026-08-21 21:13:25",
+          "modifiedAt": "2026-08-21 21:13:25"
+        },
+        {
+          "id": "tatoeba-ar-13987226",
+          "sentenceId": "13987226",
+          "text": "يُحتفل بـ \"يوم الإسبرانتو\" سنوياً في جميع أنحاء العالم إحياءً لذكرى صدور أول كتاب عن لغة الإسبرانتو في 26 يوليو 1887.",
+          "contributor": "Rovo",
+          "addedAt": "2026-07-21 13:43:57",
+          "modifiedAt": "2026-07-21 13:43:57"
+        },
+        {
+          "id": "tatoeba-ar-13964364",
+          "sentenceId": "13964364",
+          "text": "يسرع التعاون الدولي الاكتشافات العلمية.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-03 14:17:05",
+          "modifiedAt": "2026-07-03 14:17:05"
+        },
+        {
+          "id": "tatoeba-ar-13960600",
+          "sentenceId": "13960600",
+          "text": "أنا مندهش كيف استطعت أن تدخل لهارفارد.",
+          "contributor": "Naityahia",
+          "addedAt": "2026-07-01 09:58:41",
+          "modifiedAt": "2026-07-01 09:58:41"
+        },
+        {
+          "id": "tatoeba-ar-13987108",
+          "sentenceId": "13987108",
+          "text": "رسالة موجهة إلى اير.",
+          "contributor": "Tamajeq1286",
+          "addedAt": "2026-07-21 12:08:42",
+          "modifiedAt": "2026-07-21 12:08:42"
+        }
+      ]
+    }
+  ]
+}

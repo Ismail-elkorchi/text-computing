@@ -11,6 +11,7 @@ import {
 	type TextDocument,
 } from "@ismail-elkorchi/textdoc";
 import {
+	type EntityLinkOptions,
 	knowledgeBaseSliceFromPack,
 	linkEntities,
 } from "@ismail-elkorchi/textkb";
@@ -28,15 +29,6 @@ import type {
 	TextPack,
 	TextPackResourceReader,
 } from "@ismail-elkorchi/textpack";
-import {
-	createPipeline,
-	createPipelineResourceRegistry,
-	type PipelineDiagnostic,
-	type PipelineTraceEvent,
-	runPipeline,
-	type TextPipeline,
-	type TextProcessor,
-} from "@ismail-elkorchi/textpipeline";
 import {
 	analyzeDocumentQuality,
 	type QualityProfile,
@@ -57,8 +49,6 @@ import type {
 	TextComputingEvidence,
 	TextComputingLemmaSummary,
 	TextComputingMorphologySummary,
-	TextComputingPipelineRun,
-	TextComputingPipelineRunOptions,
 	TextComputingQualitySummary,
 	TextComputingSearchTokenSummary,
 	TextComputingToken,
@@ -86,17 +76,6 @@ export interface TextComputingDocumentRuntimeApi {
 		doc: TextDocument,
 		options?: TextComputingDocumentAnalysisOptions,
 	) => Promise<TextComputingDocument>;
-	readonly createDocumentAnalysisPipeline: (
-		options?: TextComputingDocumentAnalysisOptions,
-	) => TextPipeline;
-	readonly runText: (
-		text: string,
-		options?: TextComputingPipelineRunOptions,
-	) => Promise<TextComputingPipelineRun>;
-	readonly runDocument: (
-		doc: TextDocument,
-		options?: TextComputingPipelineRunOptions,
-	) => Promise<TextComputingPipelineRun>;
 }
 
 function sourceView(doc: TextDocument): TextDocument["views"][string] {
@@ -274,6 +253,44 @@ export function mentionCandidates(
 function isMentionJoiner(value: string): boolean {
 	if (value.length === 0) return true;
 	return /^[\p{White_Space}\u00ad\u058a\u05be\u2010-\u2015-]+$/u.test(value);
+}
+
+function entityMentionTexts(
+	doc: TextDocument,
+	options: Omit<EntityLinkOptions, "mentionSource" | "viewId">,
+): readonly string[] {
+	const mentions = new Set<string>();
+	const addSpan = (ref: Annotation["spans"][number]) => {
+		const view = doc.views[ref.viewId];
+		if (
+			view === undefined ||
+			ref.span.unit !== "utf16-code-unit" ||
+			ref.span.start < 0 ||
+			ref.span.end > view.text.length ||
+			ref.span.start >= ref.span.end
+		) {
+			throw new TypeError("Entity mention spans must be valid UTF-16 ranges.");
+		}
+		mentions.add(view.text.slice(ref.span.start, ref.span.end));
+	};
+	const sourceLayerIds = new Set(options.sourceLayerIds ?? []);
+	for (const layer of Object.values(doc.layers)) {
+		if (
+			sourceLayerIds.size > 0
+				? !sourceLayerIds.has(layer.id)
+				: !layer.id.startsWith("entity.") && !layer.type.startsWith("entity.")
+		) {
+			continue;
+		}
+		for (const annotation of Object.values(layer.annotations)) {
+			const ref = annotation.spans[0];
+			if (ref !== undefined) addSpan(ref);
+		}
+	}
+	for (const ref of options.mentionSpans ?? []) addSpan(ref);
+	return Object.freeze(
+		[...mentions].sort((left, right) => left.localeCompare(right)),
+	);
 }
 
 function documentJson(doc: TextComputingDocument): TextComputingDocumentJson {
@@ -745,10 +762,13 @@ export function createDocumentRuntime(
 		const lexicalUnits = segmentation.lexicalUnits(text);
 		const searchView = normalization.searchView(sourceDocument);
 		const normalizedDocument = ensureSearchView(sourceDocument, searchView);
-		const mentions =
-			tasks.has("lexicon") || tasks.has("kb")
-				? mentionCandidates(text, lexicalUnits)
-				: Object.freeze([]);
+		const mentions = tasks.has("lexicon")
+			? mentionCandidates(text, lexicalUnits)
+			: Object.freeze([]);
+		const entityLinking = options.entityLinking ?? {};
+		const entityMentions = tasks.has("kb")
+			? entityMentionTexts(normalizedDocument, entityLinking)
+			: Object.freeze([]);
 		const rawMorphologyForms = words
 			.filter((segment) => segment.isWordLike !== false)
 			.map((segment) => segment.text);
@@ -781,11 +801,14 @@ export function createDocumentRuntime(
 							options.morphologyMaxResults,
 						)
 					: new Map<string, readonly MorphologyAnalysis[]>(),
-				tasks.has("kb") && mentions.length > 0
+				tasks.has("kb") && entityMentions.length > 0
 					? knowledgeBaseSliceFromPack(pack, {
 							...readerOption(reader),
-							mentions,
-							language: options.entityLanguage ?? languageTag,
+							mentions: entityMentions,
+							language: entityLinking.language ?? languageTag,
+							...(entityLinking.maxEditDistance === undefined
+								? {}
+								: { maxEditDistance: entityLinking.maxEditDistance }),
 						})
 					: undefined,
 			]);
@@ -825,9 +848,10 @@ export function createDocumentRuntime(
 			documentKb === undefined
 				? annotatedDocument
 				: linkEntities(annotatedDocument, documentKb, {
+						...entityLinking,
 						viewId: sourceViewId,
-						language: options.entityLanguage ?? languageTag,
-						maxCandidates: options.entityMaxCandidates ?? 5,
+						mentionSource: "annotations",
+						language: entityLinking.language ?? languageTag,
 					});
 		const quality = tasks.has("quality")
 			? await (async () => {
@@ -929,97 +953,8 @@ export function createDocumentRuntime(
 			options,
 		);
 
-	const documentAnalysisProcessor = (
-		options: TextComputingDocumentAnalysisOptions = {},
-		onAnalysis?: (analysis: TextComputingDocument) => void,
-	): TextProcessor => {
-		const tasks = planDocumentTasks(options.tasks, options.preset);
-		return Object.freeze({
-			id: `${pack.manifest.id}:document-analysis`,
-			version: pack.manifest.version,
-			provides: Object.freeze([
-				Object.freeze({ viewKind: "search" as const }),
-				Object.freeze({ layer: "token.text-computing" }),
-				...(tasks.has("lexicon") || tasks.has("morphology")
-					? [Object.freeze({ layer: "lemma.text-computing" })]
-					: []),
-				...(tasks.has("morphology")
-					? [Object.freeze({ layer: "morph.text-computing" })]
-					: []),
-				...(tasks.has("kb") ? [Object.freeze({ layer: "link.entity" })] : []),
-			]),
-			async process(doc: TextDocument) {
-				const analysis = await analyzeDocument(doc, options);
-				onAnalysis?.(analysis);
-				return analysis.toTextDoc();
-			},
-		});
-	};
-
-	const createDocumentAnalysisPipeline = (
-		options: TextComputingDocumentAnalysisOptions = {},
-	) =>
-		createPipeline([documentAnalysisProcessor(options)], {
-			id: `${pack.manifest.id}:document-analysis`,
-			resources: createPipelineResourceRegistry({ packs: [pack] }),
-		});
-
-	const runDocument = async (
-		doc: TextDocument,
-		options: TextComputingPipelineRunOptions = {},
-	): Promise<TextComputingPipelineRun> => {
-		let analysis: TextComputingDocument | undefined;
-		const pipeline = createPipeline(
-			[
-				documentAnalysisProcessor(options, (result) => {
-					analysis = result;
-				}),
-			],
-			{
-				id: `${pack.manifest.id}:document-analysis`,
-				resources: createPipelineResourceRegistry({ packs: [pack] }),
-			},
-		);
-		const diagnostics: PipelineDiagnostic[] = [];
-		const trace: PipelineTraceEvent[] = [];
-		const document = await runPipeline(pipeline, doc, {
-			...(options.run ?? {}),
-			diagnostics,
-			trace,
-		});
-		if (analysis === undefined) {
-			throw new TypeError(
-				`Text Computing document analysis pipeline did not produce analysis for ${doc.id}.`,
-			);
-		}
-		return Object.freeze({
-			pipeline,
-			document,
-			analysis,
-			diagnostics: Object.freeze([...diagnostics]),
-			trace: Object.freeze([...trace]),
-		});
-	};
-
-	const runText = (
-		text: string,
-		options: TextComputingPipelineRunOptions = {},
-	) =>
-		runDocument(
-			createDocument(text, {
-				...(options.id === undefined ? {} : { id: options.id }),
-				...(options.metadata === undefined
-					? {}
-					: { metadata: options.metadata }),
-			}),
-			options,
-		);
-
 	return Object.freeze({
 		analyzeText,
 		analyzeDocument,
-		createDocumentAnalysisPipeline,
-		runText,
-		runDocument,
 	});
 }

@@ -7,7 +7,7 @@ import type { Span, TextInput } from "../internal/types.ts";
 import { segmentGraphemes } from "../segment/grapheme.ts";
 import { segmentSentencesDefault } from "../segment/sentence.ts";
 import { segmentWordsDefault } from "../segment/word.ts";
-import { SCRIPT_NAMES, Script, scriptExtAt, scriptIdAt } from "../unicode/script.ts";
+import { SCRIPT_NAMES, Script, scriptIdAt } from "../unicode/script.ts";
 import { WordBreakPropertyId, getWordBreakPropertyId } from "../unicode/word.ts";
 import { confusableSkeleton } from "./confusables.ts";
 
@@ -107,9 +107,8 @@ function collectScripts(token: string): { scripts: string[]; hasMixedScript: boo
   const scriptSet = new Set<number>();
   for (let codeUnitIndex = 0; codeUnitIndex < token.length; ) {
     const codePoint = token.codePointAt(codeUnitIndex) ?? 0;
-    const scriptExtensions = scriptExtAt(codePoint);
-    for (const scriptId of scriptExtensions) {
-      if (scriptId === Script.Common || scriptId === Script.Inherited) continue;
+    const scriptId = scriptIdAt(codePoint);
+    if (scriptId !== Script.Common && scriptId !== Script.Inherited) {
       scriptSet.add(scriptId);
     }
     codeUnitIndex += codePoint > 0xffff ? 2 : 1;

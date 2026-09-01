@@ -31,15 +31,24 @@ Validates repository-level schemas against their declared JSON Schema drafts,
 validates generated textpack packages, validates package schema registries such
 as `packages/textfacts/schemas/*.schema.json`, and enforces I-JSON safety.
 
-**Held-out multilingual NLP benchmark**
+**Multilingual NLP evaluation**
 ```sh
 npm run test:nlp
 ```
 
-Runs the committed English, French, and Arabic cases through the ordinary
-`@ismail-elkorchi/text-computing` entrypoint. Update expectations only when the
-task contract changes; do not derive benchmark cases from forge training or
-coverage inputs.
+Runs the committed English, French, and Arabic task cases, the frozen external
+Tatoeba robustness sample, and isolated cold-start gates through the ordinary
+`@ismail-elkorchi/text-computing` entrypoint. Update task expectations only when
+the task contract changes. External evaluation text must remain separated from
+forge inputs and must retain source, license, selection, and contributor
+metadata.
+
+To rebuild the frozen external fixture from the three checksummed Tatoeba
+exports (`eng.tsv.bz2`, `fra.tsv.bz2`, and `ara.tsv.bz2`):
+
+```sh
+node tools/build-external-nlp-evaluation.mjs <download-directory> fixtures/nlp-benchmarks/external-tatoeba-v1.json
+```
 
 **Documentation boundaries**
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.

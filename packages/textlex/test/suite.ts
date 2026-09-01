@@ -72,17 +72,23 @@ function textResourceReader(
 	onRead?: (path: string) => void,
 ) {
 	return {
-		readText({
-			descriptor,
-		}: {
-			readonly descriptor: { readonly path: string };
-		}): string {
+		readText(
+			{
+				descriptor,
+			}: {
+				readonly descriptor: { readonly path: string };
+			},
+			range?: { readonly startByte: number; readonly endByte: number },
+		): string {
 			onRead?.(descriptor.path);
 			const text = records[descriptor.path];
 			if (text === undefined) {
 				throw new Error(`missing fixture resource ${descriptor.path}`);
 			}
-			return text;
+			if (range === undefined) return text;
+			return new TextDecoder("utf-8", { fatal: true }).decode(
+				new TextEncoder().encode(text).slice(range.startByte, range.endByte),
+			);
 		},
 	};
 }
@@ -227,7 +233,8 @@ async function bucketedLookupIndex(
 		fuzzyBuckets: [],
 		patternBuckets,
 	};
-	const indexText = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n${keyEncoded}${rowEncoded}${patternPayloads.map((payload) => payload.encoded).join("")}`;
+	const indexHeader = `textpack.lookup-index.bucketed-rows.v1\n${JSON.stringify(directory)}\n`;
+	const indexText = `${indexHeader}${keyEncoded}${rowEncoded}${patternPayloads.map((payload) => payload.encoded).join("")}`;
 	const indexedResourceTextByteLength = new TextEncoder().encode(
 		text,
 	).byteLength;
@@ -254,6 +261,9 @@ async function bucketedLookupIndex(
 		),
 		indexedResourceTextByteLength,
 		lookupIndexShippedByteLength,
+		lookupIndexHeaderByteLength: new TextEncoder().encode(indexHeader)
+			.byteLength,
+		lookupIndexHeaderChecksum: `sha256:${await sha256(indexHeader)}`,
 		storageBudgetByteLength: Math.max(
 			Math.ceil(indexedResourceTextByteLength * 1.3),
 			indexedResourceTextByteLength + 32 * 1024,
@@ -675,6 +685,10 @@ const generatedPack = {
 						canonicalLexiconIndex.indexedResourceTextByteLength,
 					lookupIndexShippedByteLength:
 						canonicalLexiconIndex.lookupIndexShippedByteLength,
+					lookupIndexHeaderByteLength:
+						canonicalLexiconIndex.lookupIndexHeaderByteLength,
+					lookupIndexHeaderChecksum:
+						canonicalLexiconIndex.lookupIndexHeaderChecksum,
 					storageBudgetByteLength:
 						canonicalLexiconIndex.storageBudgetByteLength,
 					storageSizeRatio: canonicalLexiconIndex.storageSizeRatio,
@@ -720,6 +734,10 @@ const generatedPack = {
 						morphologyParadigmIndex.indexedResourceTextByteLength,
 					lookupIndexShippedByteLength:
 						morphologyParadigmIndex.lookupIndexShippedByteLength,
+					lookupIndexHeaderByteLength:
+						morphologyParadigmIndex.lookupIndexHeaderByteLength,
+					lookupIndexHeaderChecksum:
+						morphologyParadigmIndex.lookupIndexHeaderChecksum,
 					storageBudgetByteLength:
 						morphologyParadigmIndex.storageBudgetByteLength,
 					storageSizeRatio: morphologyParadigmIndex.storageSizeRatio,
@@ -950,19 +968,18 @@ assert.equal(
 );
 
 const camelMorphemeRows = [
-	"section\tsurface\tcategory\tpartOfSpeech\tlexicalForm\tdiacritizedForm\tfeatureBundle",
-	"PREFIXES\t\tP0\t\t\t\tprc0:0 prc2:0",
-	"PREFIXES\tال\tPA\t\t\tٱل#\tprc0:Al_det prc2:0",
-	"PREFIXES\tوال\tPA\t\t\tوَٱل#\tprc0:Al_det prc2:wa_conj",
-	"STEMS\tكتاب\tXV\tverb\tٱِكْتَأَب\tكْتَأَب\troot:ك.و.ب lex_logprob:-99",
-	"STEMS\tكتاب\tXN\tnoun\tكِتَاب\tكِتَاب\troot:ك.ت.ب num:s lex_logprob:-8",
-	"SUFFIXES\t\tS0\t\t\t\tenc0:0",
+	"section\tsurface\tsectionSurface\tcategory\tpartOfSpeech\tlexicalForm\tdiacritizedForm\tfeatureBundle",
+	"PREFIXES\t\tPREFIXES:\tP0\t\t\t\tprc0:0 prc2:0",
+	"PREFIXES\tال\tPREFIXES:ال\tPA\t\t\tٱل#\tprc0:Al_det prc2:0",
+	"PREFIXES\tوال\tPREFIXES:وال\tPA\t\t\tوَٱل#\tprc0:Al_det prc2:wa_conj",
+	"STEMS\tكتاب\tSTEMS:كتاب\tXV\tverb\tٱِكْتَأَب\tكْتَأَب\troot:ك.و.ب lex_logprob:-99",
+	"STEMS\tكتاب\tSTEMS:كتاب\tXN\tnoun\tكِتَاب\tكِتَاب\troot:ك.ت.ب num:s lex_logprob:-8",
+	"SUFFIXES\t\tSUFFIXES:\tS0\t\t\t\tenc0:0",
 ].join("\n");
-const camelMorphemeIndex = await bucketedLookupIndex(
-	camelMorphemeRows,
-	["surface", "lexicalForm"],
-	["surface"],
-);
+const camelMorphemeIndex = await bucketedLookupIndex(camelMorphemeRows, [
+	"sectionSurface",
+	"lexicalForm",
+]);
 const camelCanonicalText = JSON.stringify({
 	schemaVersion: "1",
 	kind: "morphology",
@@ -1031,6 +1048,10 @@ const camelPack = {
 						camelMorphemeIndex.indexedResourceTextByteLength,
 					lookupIndexShippedByteLength:
 						camelMorphemeIndex.lookupIndexShippedByteLength,
+					lookupIndexHeaderByteLength:
+						camelMorphemeIndex.lookupIndexHeaderByteLength,
+					lookupIndexHeaderChecksum:
+						camelMorphemeIndex.lookupIndexHeaderChecksum,
 					storageBudgetByteLength: camelMorphemeIndex.storageBudgetByteLength,
 					storageSizeRatio: camelMorphemeIndex.storageSizeRatio,
 					maximumBucketByteLength: camelMorphemeIndex.maximumBucketByteLength,
@@ -1076,7 +1097,10 @@ const camelPack = {
 };
 const camelReads = new Map<string, number>();
 const camelReader = {
-	readText({ descriptor }: { readonly descriptor: { readonly path: string } }) {
+	readText(
+		{ descriptor }: { readonly descriptor: { readonly path: string } },
+		range?: { readonly startByte: number; readonly endByte: number },
+	) {
 		camelReads.set(descriptor.path, (camelReads.get(descriptor.path) ?? 0) + 1);
 		const records: Readonly<Record<string, string>> = {
 			"resources/ar-camel.json": camelCanonicalText,
@@ -1086,7 +1110,10 @@ const camelReader = {
 		};
 		const text = records[descriptor.path];
 		if (text === undefined) throw new Error(`missing ${descriptor.path}`);
-		return text;
+		if (range === undefined) return text;
+		return new TextDecoder("utf-8", { fatal: true }).decode(
+			new TextEncoder().encode(text).slice(range.startByte, range.endByte),
+		);
 	},
 };
 const composedCamel = await morphologyAnalysesManyFromPackAsync(
@@ -1094,6 +1121,9 @@ const composedCamel = await morphologyAnalysesManyFromPackAsync(
 	["كتاب", "الكتاب", "والكتاب"],
 	{ reader: camelReader },
 );
+const camelMorphemeReadCount =
+	camelReads.get("resources/ar-camel-morphemes.indexed-table.v1.txt") ?? 0;
+assert.ok(camelMorphemeReadCount > 1);
 assert.equal(composedCamel.get("كتاب")?.[0]?.lemma, "كِتَاب");
 assert.equal(composedCamel.get("كتاب")?.[0]?.features.lex_logprob, "-8");
 for (const form of ["الكتاب", "والكتاب"]) {
@@ -1116,6 +1146,6 @@ await morphologyAnalysesManyFromPackAsync(camelPack, ["الكتاب"], {
 });
 assert.equal(
 	camelReads.get("resources/ar-camel-morphemes.indexed-table.v1.txt"),
-	1,
+	camelMorphemeReadCount,
 );
 assert.equal(camelReads.get("resources/ar-camel-compatibility.tsv"), 1);

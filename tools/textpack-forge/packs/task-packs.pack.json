@@ -2291,7 +2291,7 @@
 			"publishabilityEvidence": {
 				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots plus CLDR 48.2 English likely-subtag context transformed into modern typed-English Unicode segmentation profiles, property tables, canonical segmentation resources, and quality-profile resources.",
 				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence.",
-				"declaredScope": "Modern typed English segmentation through the built-in adapter's host Intl.Segmenter Unicode grapheme, word, and sentence behavior. Generated UAX #29 property tables are conformance evidence, not a separate executed engine. It does not claim dictionary tokenization, sentence-abbreviation tailoring, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-distribution coverage.",
+				"declaredScope": "Modern typed English segmentation through the built-in adapter's pinned Unicode 17 UAX #29 grapheme, word, and sentence algorithms, with explicit title-abbreviation sentence exceptions. It does not claim dictionary tokenization, broad abbreviation inference, social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus, parallel, or full language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:en-segmentation:grapheme-boundary-properties",
 					"eval:en-segmentation:word-boundary-properties",
@@ -2421,7 +2421,7 @@
 							"segmentation": "profile"
 						},
 						"notes": [
-							"The built-in adapter executes host Intl.Segmenter Unicode grapheme, word, and sentence segmentation for English. Generated UAX #29 property tables are conformance evidence, not a second unexecuted boundary engine."
+							"The built-in adapter executes pinned Unicode 17 UAX #29 grapheme, word, and sentence segmentation plus the profile's explicit title-abbreviation sentence exceptions."
 						]
 					},
 					{
@@ -3729,7 +3729,7 @@
 			"publishabilityEvidence": {
 				"productionGradeSourceCoverage": "Pinned Unicode 17 grapheme, word, and sentence break property snapshots, CLDR 48.2 French likely-subtag context, and the pinned Tatoeba French sentence snapshot transformed into modern typed-French Unicode segmentation profiles, a French token profile, observed elision/contraction/abbreviation evidence tables, canonical segmentation resources, quality-profile resources, and gold cases.",
 				"auditedLicense": "The Unicode UCD and CLDR source rows are approved with Unicode-3.0 license evidence; the exact Tatoeba French source row is approved as CC-BY-2.0-FR with attribution evidence.",
-				"declaredScope": "Modern typed French segmentation: the built-in adapter executes host Unicode grapheme/word/sentence boundaries and observed apostrophe elision-prefix splitting. Contraction surfaces, abbreviation candidates, boundary tables, and generated cases are reference/quality evidence, not additional executed rules. It does not claim social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus packaging, parallel packaging, or full language-distribution coverage.",
+				"declaredScope": "Modern typed French segmentation: the built-in adapter executes pinned Unicode 17 UAX #29 grapheme, word, and sentence boundaries, an explicit conservative elision-prefix policy, and explicit title-abbreviation sentence exceptions. Observed contraction and abbreviation candidates remain reference evidence. It does not claim social-text tokenization, historical segmentation, OCR segmentation, morphology, syntax, KB, corpus packaging, parallel packaging, or full language-distribution coverage.",
 				"conformanceEvidence": [
 					"eval:fr-segmentation:grapheme-boundary-properties",
 					"eval:fr-segmentation:word-boundary-properties",
@@ -3921,7 +3921,7 @@
 							"segmentation": "profile"
 						},
 						"notes": [
-							"The built-in adapter executes host Intl.Segmenter Unicode boundaries and applies the observed French elision-prefix table. Contraction, abbreviation, boundary-property, and gold-case resources are retained as quality/reference evidence rather than presented as executed rules."
+							"The built-in adapter executes pinned Unicode 17 UAX #29 boundaries, the profile's conservative French elision-prefix policy, and explicit title-abbreviation sentence exceptions. Observed contraction and abbreviation candidates remain quality/reference evidence."
 						]
 					},
 					{

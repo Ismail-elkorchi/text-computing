@@ -12,7 +12,7 @@
     },
     {
       "byteLength": 55044,
-      "checksum": "sha256:00cf9f82473a79f6e8840dd3705a272921a2de6087869f82260577e83d3fc9e3",
+      "checksum": "sha256:cd6da4a9628f22f607ccf39ea4559b52d60a0027d7103ea678834b190e57765c",
       "path": "COVERAGE.generated.json"
     },
     {
@@ -51,8 +51,8 @@
       "path": "NOTICE.generated.md"
     },
     {
-      "byteLength": 40572,
-      "checksum": "sha256:e24bb18edf18c601cd2596140a7adde073d35c68d093b2276e6d031708ad22ca",
+      "byteLength": 41274,
+      "checksum": "sha256:9f5b74eb1e25f66a81c6f7710854695631b505b6c45c1d9608504ef7a6d1d58d",
       "path": "pack.manifest.json"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "byteLength": 51923,
-      "checksum": "sha256:a34f96243868c0e805bae848e640c82b4b8993863b6de2a32feda093e72e5db5",
+      "checksum": "sha256:1349a5ab452bdfc821d9abd2a122c1284237575fbe83c12659e439757452a2e3",
       "path": "QUALITY.generated.json"
     },
     {
@@ -166,13 +166,13 @@
       "path": "resources/camel-morph-msa.features.tsv"
     },
     {
-      "byteLength": 19452834,
-      "checksum": "sha256:651298aab6669c91d1336ee428618b9241a780838dc44cb56303a38fb499e60b",
+      "byteLength": 25293101,
+      "checksum": "sha256:b164736c3a6a69c0b7ed60fbd87f6f1f283f3cca3be54ab3ba521166f57021b9",
       "path": "resources/camel-morph-msa.morphemes.lookup-index.v1.txt"
     },
     {
       "byteLength": 10937,
-      "checksum": "sha256:0669b3c320abfcda22ef9503d0c6e634571a9c4c9f11686b6445cb460547ace7",
+      "checksum": "sha256:63041e9d25a4da7d3488e83efd860cb6e3f15a34ba302082e9f7124cac253a50",
       "path": "resources/camel-morph-msa.morphology.json"
     },
     {
@@ -236,13 +236,13 @@
       "path": "resources/unicode-17.scripts.tsv.gz.b64"
     },
     {
-      "byteLength": 123649,
-      "checksum": "sha256:baace23b828d00a6fd7e44085ec5c8ef2d0bea44fcd44ec5296820efb8b9755b",
+      "byteLength": 138473,
+      "checksum": "sha256:ba0191c8aeff5184b592d248ec8fbbe81e8152cfa03da921be306575efc1b784",
       "path": "resources/wikidata-ar.aliases.lookup-index.v1.txt"
     },
     {
-      "byteLength": 238909,
-      "checksum": "sha256:7b20ece78ada187ec12b956dcc0a42a27230bc98ce95f400d93096250b778fa0",
+      "byteLength": 320223,
+      "checksum": "sha256:2aaefbf1deac1cc46d46813e0394ba567f80b3102ec5630ad2854191910f2d05",
       "path": "resources/wikidata-ar.entities.lookup-index.v1.txt"
     },
     {
@@ -261,8 +261,8 @@
       "path": "resources/wikidata-ar.quality.json"
     },
     {
-      "byteLength": 43733,
-      "checksum": "sha256:292a91eb076ac0a3fdd45ddfbefa93165006a2a37fdd7a2e0160a4afa04eb9e7",
+      "byteLength": 52003,
+      "checksum": "sha256:d6b9a62d2ef9a1801fb0d1195b33da260773365de49dbc557c5fbb238f408019",
       "path": "resources/wikidata-ar.relations.lookup-index.v1.txt"
     },
     {
@@ -271,8 +271,8 @@
       "path": "resources/wordnet-ar.kb.json"
     },
     {
-      "byteLength": 5890936,
-      "checksum": "sha256:0753f3b65734a5081411973efa4a2e7e20c63e7c688cec97f4ee7e0dc35a5108",
+      "byteLength": 6554030,
+      "checksum": "sha256:48f66c79f5971ec907b7112d397cc9a4e1fb241353386bba4759069a9f9880f3",
       "path": "resources/wordnet-ar.lexical-entries.lookup-index.v1.txt"
     },
     {
@@ -307,7 +307,7 @@
     },
     {
       "byteLength": 74341,
-      "checksum": "sha256:e40e83aa0483b98dd988efbc3e5366a28811af391e64b5555d799234165c0096",
+      "checksum": "sha256:04fe2c4e3cab9cfa597b9aa2cfa87903d2a302947f542607d096e22fbc011b90",
       "path": "SOURCES.generated.json"
     },
     {
@@ -316,8 +316,8 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 40828,
-      "checksum": "sha256:ac1e2cd8354f0a70457c3f0c58d33656555926f3b66e2fdc8ed75f4d18670778",
+      "byteLength": 41530,
+      "checksum": "sha256:b84c22b9435401671685e67972f8ad1f8b0a0ef106223476aa9879f785a6af33",
       "path": "src/manifest.ts"
     },
     {
@@ -327,7 +327,7 @@
     },
     {
       "byteLength": 21681,
-      "checksum": "sha256:45d41533001150a7e520989b6cd048be6c1f23d8f8900cde7f2bfecdab573c64",
+      "checksum": "sha256:6245396de42e6312127fcc98249b462683ddee1dc06c473a0eee4afae7e9f961",
       "path": "src/resources.ts"
     },
     {
@@ -422,9 +422,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
+  "lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
   "mode": "source-backed",
-  "outputChecksum": "sha256:50696a9d72ce3d767c5cb9952a5ad5e8fce598772a5d168262eb7df54a0512ab",
+  "outputChecksum": "sha256:f84aa5be616c8490d32b32d5064d681b267ef7f0836e6792048f40bb774b9326",
   "packSpecPath": "tools/textpack-forge/composites/textpack-ar.composite.json",
   "packageName": "@ismail-elkorchi/textpack-ar",
   "packageVersion": "0.1.0",

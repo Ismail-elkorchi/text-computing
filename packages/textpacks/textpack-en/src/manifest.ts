@@ -454,14 +454,16 @@ export const manifest: TextPackManifest = {
 				"patternColumns": [
 					"word"
 				],
-				"bucketCount": 128,
+				"bucketCount": 2048,
 				"sourceRowCount": 548642,
 				"recordCount": 111648,
 				"rowReferenceCount": 548642,
 				"indexedResourceTextByteLength": 20301511,
-				"lookupIndexShippedByteLength": 4064970,
+				"lookupIndexShippedByteLength": 5071007,
+				"lookupIndexHeaderByteLength": 799507,
+				"lookupIndexHeaderChecksum": "sha256:e85fcd2161d0adb22348305cbf89e5b0bea4c02827c7320965345fed79b58214",
 				"storageBudgetByteLength": 26391965,
-				"storageSizeRatio": 0.20022992377266893,
+				"storageSizeRatio": 0.24978470814315248,
 				"maximumBucketByteLength": 94700
 			}
 		},
@@ -565,14 +567,16 @@ export const manifest: TextPackManifest = {
 				"patternColumns": [
 					"form"
 				],
-				"bucketCount": 128,
+				"bucketCount": 2048,
 				"sourceRowCount": 401709,
 				"recordCount": 548801,
 				"rowReferenceCount": 800253,
 				"indexedResourceTextByteLength": 33487594,
-				"lookupIndexShippedByteLength": 13687253,
+				"lookupIndexShippedByteLength": 14811047,
+				"lookupIndexHeaderByteLength": 817067,
+				"lookupIndexHeaderChecksum": "sha256:dcf4bc0731f51a68aea8d7279635b4ac9c57f07447fab1d43f145710bbb1490e",
 				"storageBudgetByteLength": 43533873,
-				"storageSizeRatio": 0.40872607927580584,
+				"storageSizeRatio": 0.4422845964986317,
 				"maximumBucketByteLength": 265908
 			}
 		},
@@ -697,14 +701,16 @@ export const manifest: TextPackManifest = {
 				"patternColumns": [
 					"lemma"
 				],
-				"bucketCount": 32,
+				"bucketCount": 512,
 				"sourceRowCount": 135969,
 				"recordCount": 127311,
 				"rowReferenceCount": 135969,
 				"indexedResourceTextByteLength": 4485654,
-				"lookupIndexShippedByteLength": 3562564,
+				"lookupIndexShippedByteLength": 3792047,
+				"lookupIndexHeaderByteLength": 213911,
+				"lookupIndexHeaderChecksum": "sha256:e52fe20acfec9efeb6d94c0c63988768ec600f325a14dc62901e0012afed6048",
 				"storageBudgetByteLength": 5831351,
-				"storageSizeRatio": 0.7942128394209629,
+				"storageSizeRatio": 0.8453721575493786,
 				"maximumBucketByteLength": 77984
 			}
 		},
@@ -833,15 +839,17 @@ export const manifest: TextPackManifest = {
 					"label"
 				],
 				"patternColumns": [],
-				"bucketCount": 8,
+				"bucketCount": 128,
 				"sourceRowCount": 11618,
 				"recordCount": 23061,
 				"rowReferenceCount": 23236,
 				"indexedResourceTextByteLength": 1207330,
-				"lookupIndexShippedByteLength": 661412,
+				"lookupIndexShippedByteLength": 768146,
+				"lookupIndexHeaderByteLength": 60090,
+				"lookupIndexHeaderChecksum": "sha256:f66040ddc8725caf324c103e0111cb7af7f40fe31823f29142e3d7ada1cf76d9",
 				"storageBudgetByteLength": 1569529,
-				"storageSizeRatio": 0.5478303363620551,
-				"maximumBucketByteLength": 53844
+				"storageSizeRatio": 0.6362353291974854,
+				"maximumBucketByteLength": 8248
 			}
 		},
 		{
@@ -870,15 +878,17 @@ export const manifest: TextPackManifest = {
 					"alias"
 				],
 				"patternColumns": [],
-				"bucketCount": 2,
+				"bucketCount": 8,
 				"sourceRowCount": 19781,
 				"recordCount": 28613,
 				"rowReferenceCount": 39562,
 				"indexedResourceTextByteLength": 507718,
-				"lookupIndexShippedByteLength": 651874,
+				"lookupIndexShippedByteLength": 656947,
+				"lookupIndexHeaderByteLength": 16727,
+				"lookupIndexHeaderChecksum": "sha256:f37bede7c299705485d6c7273c1c8d5f1186ca7767f1dde3e48a461584778204",
 				"storageBudgetByteLength": 660034,
-				"storageSizeRatio": 1.2839292678219012,
-				"maximumBucketByteLength": 148000
+				"storageSizeRatio": 1.2939210349052033,
+				"maximumBucketByteLength": 38972
 			}
 		},
 		{
@@ -905,15 +915,17 @@ export const manifest: TextPackManifest = {
 				"emptyKeyColumns": [],
 				"fuzzyColumns": [],
 				"patternColumns": [],
-				"bucketCount": 2,
+				"bucketCount": 32,
 				"sourceRowCount": 11618,
 				"recordCount": 11623,
 				"rowReferenceCount": 23236,
 				"indexedResourceTextByteLength": 363996,
-				"lookupIndexShippedByteLength": 153966,
+				"lookupIndexShippedByteLength": 158068,
+				"lookupIndexHeaderByteLength": 12760,
+				"lookupIndexHeaderChecksum": "sha256:b30f7cfde297d99f6d413f708b570de1077bb811fc97cfbbeac7ae88d108a4fe",
 				"storageBudgetByteLength": 473195,
-				"storageSizeRatio": 0.42298816470510664,
-				"maximumBucketByteLength": 48508
+				"storageSizeRatio": 0.43425751931339907,
+				"maximumBucketByteLength": 8028
 			}
 		}
 	],
@@ -1481,8 +1493,8 @@ export const manifest: TextPackManifest = {
 			],
 			"readerRequired": true,
 			"notes": [
-				"The bundled distribution resources provide English segmentation data.",
-				"The built-in adapter executes host Intl.Segmenter Unicode grapheme, word, and sentence segmentation for English. Generated UAX #29 property tables are conformance evidence, not a second unexecuted boundary engine."
+				"The bundled distribution executes pinned Unicode 17 UAX #29 segmentation with explicit title-abbreviation sentence exceptions.",
+				"The built-in adapter executes pinned Unicode 17 UAX #29 grapheme, word, and sentence segmentation plus the profile's explicit title-abbreviation sentence exceptions."
 			],
 			"capabilities": {
 				"segmentation": "profile"
@@ -1544,7 +1556,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
+		"lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

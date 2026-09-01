@@ -30,7 +30,6 @@ export function planDocumentTasks(
 	> = {
 		core: ["search"],
 		lookup: ["lexicon", "morphology", "search"],
-		full: ["lexicon", "morphology", "kb", "search", "quality"],
 	};
 	return new Set<TextComputingDocumentTask>([
 		"segmentation",

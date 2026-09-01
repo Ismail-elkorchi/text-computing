@@ -1,5 +1,5 @@
 import {
-	openResourceText,
+	openResourceStorageTextRange,
 	resourceTextChecksum,
 	type TextPackResourceReader,
 } from "./materialize.js";
@@ -57,6 +57,8 @@ interface LookupIndexMetadata {
 	readonly rowReferenceCount: number;
 	readonly indexedResourceTextByteLength: number;
 	readonly lookupIndexShippedByteLength: number;
+	readonly lookupIndexHeaderByteLength: number;
+	readonly lookupIndexHeaderChecksum: string;
 	readonly storageBudgetByteLength: number;
 	readonly storageSizeRatio: number;
 	readonly maximumBucketByteLength: number;
@@ -224,6 +226,11 @@ function lookupIndexMetadata(
 		!positiveSafeInteger(metadata.rowReferenceCount) ||
 		!positiveSafeInteger(metadata.indexedResourceTextByteLength) ||
 		!positiveSafeInteger(metadata.lookupIndexShippedByteLength) ||
+		!positiveSafeInteger(metadata.lookupIndexHeaderByteLength) ||
+		metadata.lookupIndexHeaderByteLength >=
+			metadata.lookupIndexShippedByteLength ||
+		typeof metadata.lookupIndexHeaderChecksum !== "string" ||
+		!/^sha256:[0-9a-f]{64}$/u.test(metadata.lookupIndexHeaderChecksum) ||
 		!positiveSafeInteger(metadata.storageBudgetByteLength) ||
 		metadata.lookupIndexShippedByteLength > metadata.storageBudgetByteLength ||
 		typeof metadata.storageSizeRatio !== "number" ||
@@ -251,6 +258,8 @@ function lookupIndexMetadata(
 		rowReferenceCount: metadata.rowReferenceCount,
 		indexedResourceTextByteLength: metadata.indexedResourceTextByteLength,
 		lookupIndexShippedByteLength: metadata.lookupIndexShippedByteLength,
+		lookupIndexHeaderByteLength: metadata.lookupIndexHeaderByteLength,
+		lookupIndexHeaderChecksum: metadata.lookupIndexHeaderChecksum,
 		storageBudgetByteLength: metadata.storageBudgetByteLength,
 		storageSizeRatio: metadata.storageSizeRatio,
 		maximumBucketByteLength: metadata.maximumBucketByteLength,
@@ -269,12 +278,7 @@ function bucketDescriptor(value: unknown, label: string): BucketDescriptor {
 	) {
 		throw new TypeError(`${label} is invalid.`);
 	}
-	return Object.freeze({
-		offset: descriptor.offset,
-		length: descriptor.length,
-		textByteLength: descriptor.textByteLength,
-		textChecksum: descriptor.textChecksum,
-	});
+	return Object.freeze(descriptor) as unknown as BucketDescriptor;
 }
 
 function keyBucketDescriptors(
@@ -302,11 +306,8 @@ function keyBucketDescriptors(
 				throw new TypeError(`${label}[${String(index)}] has an invalid range.`);
 			}
 			previousLastKey = descriptor.lastKey;
-			return Object.freeze({
-				firstKey: descriptor.firstKey,
-				lastKey: descriptor.lastKey,
-				...bucketDescriptor(entry, `${label}[${String(index)}]`),
-			});
+			bucketDescriptor(entry, `${label}[${String(index)}]`);
+			return descriptor as unknown as KeyBucketDescriptor;
 		}),
 	);
 }
@@ -332,11 +333,8 @@ function rowBucketDescriptors(
 			throw new TypeError(`${label}[${String(index)}] has an invalid range.`);
 		}
 		nextRowOrder += descriptor.rowCount;
-		return Object.freeze({
-			firstRowOrder: descriptor.firstRowOrder,
-			rowCount: descriptor.rowCount,
-			...bucketDescriptor(entry, `${label}[${String(index)}]`),
-		});
+		bucketDescriptor(entry, `${label}[${String(index)}]`);
+		return descriptor as unknown as RowBucketDescriptor;
 	});
 	if (nextRowOrder !== sourceRowCount) {
 		throw new TypeError(`${label} does not cover every source row.`);
@@ -371,11 +369,8 @@ function fuzzyBucketDescriptors(
 				);
 			}
 			seen.add(key);
-			return Object.freeze({
-				column: descriptor.column,
-				codePointLength: descriptor.codePointLength,
-				...bucketDescriptor(entry, `${label}[${String(index)}]`),
-			});
+			bucketDescriptor(entry, `${label}[${String(index)}]`);
+			return descriptor as unknown as FuzzyBucketDescriptor;
 		}),
 	);
 }
@@ -384,6 +379,7 @@ function parseIndexFile(
 	indexText: string,
 	metadata: LookupIndexMetadata,
 	indexResourceId: string,
+	physicalByteLength = new TextEncoder().encode(indexText).byteLength,
 ): {
 	readonly dataStart: number;
 	readonly directory: LookupIndexDirectory;
@@ -442,17 +438,24 @@ function parseIndexFile(
 		metadata.patternColumns,
 		`${indexResourceId}.patternBuckets`,
 	);
-	const dataStart = directoryEnd + 1;
-	for (const descriptor of [
-		...keyBuckets,
-		...rowBuckets,
-		...fuzzyBuckets,
-		...patternBuckets,
+	const dataStart = new TextEncoder().encode(
+		indexText.slice(0, directoryEnd + 1),
+	).byteLength;
+	for (const descriptors of [
+		keyBuckets,
+		rowBuckets,
+		fuzzyBuckets,
+		patternBuckets,
 	]) {
-		if (dataStart + descriptor.offset + descriptor.length > indexText.length) {
-			throw new TypeError(
-				`Textpack lookup index ${indexResourceId} bucket range is invalid.`,
-			);
+		for (const descriptor of descriptors) {
+			if (
+				dataStart + descriptor.offset + descriptor.length >
+				physicalByteLength
+			) {
+				throw new TypeError(
+					`Textpack lookup index ${indexResourceId} bucket range is invalid.`,
+				);
+			}
 		}
 	}
 	return {
@@ -508,8 +511,7 @@ async function gunzip(bytes: Uint8Array): Promise<Uint8Array> {
 }
 
 async function openBucketText(
-	indexText: string,
-	dataStart: number,
+	encoded: string,
 	descriptor: BucketDescriptor,
 	label: string,
 ): Promise<string> {
@@ -519,10 +521,9 @@ async function openBucketText(
 		}
 		return "";
 	}
-	const encoded = indexText.slice(
-		dataStart + descriptor.offset,
-		dataStart + descriptor.offset + descriptor.length,
-	);
+	if (new TextEncoder().encode(encoded).byteLength !== descriptor.length) {
+		throw new TypeError(`${label} encoded byte length mismatch.`);
+	}
 	const decoded = await gunzip(base64Bytes(encoded));
 	if (decoded.byteLength !== descriptor.textByteLength) {
 		throw new TypeError(
@@ -536,6 +537,53 @@ async function openBucketText(
 	return text;
 }
 
+const lookupBucketCacheLimit = 24;
+const lookupBucketReadConcurrency = 8;
+
+async function mapWithConcurrency<Input, Output>(
+	values: readonly Input[],
+	maximumConcurrency: number,
+	map: (value: Input, index: number) => Promise<Output>,
+): Promise<readonly Output[]> {
+	const output = new Array<Output>(values.length);
+	let nextIndex = 0;
+	const worker = async () => {
+		while (nextIndex < values.length) {
+			const index = nextIndex;
+			nextIndex += 1;
+			output[index] = await map(values[index] as Input, index);
+		}
+	};
+	await Promise.all(
+		Array.from({ length: Math.min(maximumConcurrency, values.length) }, worker),
+	);
+	return output;
+}
+
+function cachedBucket<K, V>(
+	cache: Map<K, Promise<V>>,
+	key: K,
+	create: () => Promise<V>,
+): Promise<V> {
+	const cached = cache.get(key);
+	if (cached !== undefined) {
+		cache.delete(key);
+		cache.set(key, cached);
+		return cached;
+	}
+	const pending = create();
+	cache.set(key, pending);
+	while (cache.size > lookupBucketCacheLimit) {
+		const oldest = cache.keys().next().value;
+		if (oldest === undefined) break;
+		cache.delete(oldest);
+	}
+	void pending.catch(() => {
+		if (cache.get(key) === pending) cache.delete(key);
+	});
+	return pending;
+}
+
 function unsignedBase36(value: string, label: string): number {
 	if (!/^[0-9a-z]+$/u.test(value)) {
 		throw new TypeError(`${label} is not a packed unsigned integer.`);
@@ -547,46 +595,56 @@ function unsignedBase36(value: string, label: string): number {
 	return parsed;
 }
 
-function keyBucketRows(text: string): ReadonlyMap<string, readonly number[]> {
-	const rows = new Map<string, readonly number[]>();
-	if (text.length === 0) return rows;
+function keyBucketOrders(text: string, targetKey: string): readonly number[] {
+	if (text.length > 0 && !text.endsWith("\n")) {
+		throw new TypeError("Textpack lookup key bucket must end with a newline.");
+	}
 	let previousKey: string | undefined;
-	for (const line of text.split("\n")) {
-		if (line.length === 0) continue;
-		const tab = line.indexOf("\t");
-		if (tab < 0 || line.indexOf("\t", tab + 1) !== -1) {
+	let lineStart = 0;
+	while (lineStart < text.length) {
+		const lineEnd = text.indexOf("\n", lineStart);
+		if (lineEnd < 0) break;
+		const tab = text.indexOf("\t", lineStart);
+		const nextTab = tab < 0 ? -1 : text.indexOf("\t", tab + 1);
+		if (
+			tab < lineStart ||
+			tab >= lineEnd ||
+			(nextTab >= 0 && nextTab < lineEnd)
+		) {
 			throw new TypeError("Textpack lookup key bucket row is malformed.");
 		}
-		const key = line.slice(0, tab);
-		const packedOrders = line.slice(tab + 1);
-		if (rows.has(key) || packedOrders.length === 0) {
-			throw new TypeError("Textpack lookup key bucket contains invalid keys.");
-		}
+		const key = text.slice(lineStart, tab);
 		if (previousKey !== undefined && previousKey >= key) {
 			throw new TypeError(
 				"Textpack lookup key bucket keys must be strictly increasing.",
 			);
 		}
 		previousKey = key;
-		let previousOrder = 0;
-		const orders = packedOrders.split(",").map((value, index) => {
-			const delta = unsignedBase36(value, "lookup row-order delta");
-			const order = index === 0 ? delta : previousOrder + delta;
-			previousOrder = order;
-			return order;
-		});
-		if (
-			orders.some(
-				(value, index) => index > 0 && value <= (orders[index - 1] ?? -1),
-			)
-		) {
-			throw new TypeError(
-				"Textpack lookup key bucket row orders must be unique and increasing.",
-			);
+		if (key > targetKey) return Object.freeze([]);
+		if (key === targetKey) {
+			const packedOrders = text.slice(tab + 1, lineEnd);
+			if (packedOrders.length === 0) {
+				throw new TypeError(
+					"Textpack lookup key bucket contains an empty row-order list.",
+				);
+			}
+			let previousOrder = 0;
+			const orders = packedOrders.split(",").map((value, index) => {
+				const delta = unsignedBase36(value, "lookup row-order delta");
+				const order = index === 0 ? delta : previousOrder + delta;
+				if (index > 0 && order <= previousOrder) {
+					throw new TypeError(
+						"Textpack lookup key bucket row orders must be unique and increasing.",
+					);
+				}
+				previousOrder = order;
+				return order;
+			});
+			return Object.freeze(orders);
 		}
-		rows.set(key, Object.freeze(orders));
+		lineStart = lineEnd + 1;
 	}
-	return rows;
+	return Object.freeze([]);
 }
 
 function catalogKeys(text: string): readonly string[] {
@@ -668,12 +726,10 @@ function boundedEditDistance(
 	return distance <= maxDistance ? distance : undefined;
 }
 
-function rowBucketRows(
+function rowBucketLines(
 	text: string,
-	sourceColumns: readonly string[],
 	descriptor: RowBucketDescriptor,
-): ReadonlyMap<number, TextPackLookupIndexRow> {
-	const rows = new Map<number, TextPackLookupIndexRow>();
+): readonly string[] {
 	if (text.length > 0 && !text.endsWith("\n")) {
 		throw new TypeError("Textpack lookup row bucket must end with a newline.");
 	}
@@ -681,25 +737,26 @@ function rowBucketRows(
 	if (lines.length !== descriptor.rowCount) {
 		throw new TypeError("Textpack lookup row bucket count is invalid.");
 	}
-	for (const [offset, line] of lines.entries()) {
-		const cells = line.split("\t");
-		const rowOrder = descriptor.firstRowOrder + offset;
-		if (cells.length !== sourceColumns.length) {
-			throw new TypeError("Textpack lookup row bucket row is malformed.");
-		}
-		rows.set(
-			rowOrder,
-			Object.freeze({
-				rowOrder,
-				values: Object.freeze(
-					Object.fromEntries(
-						sourceColumns.map((column, index) => [column, cells[index] ?? ""]),
-					),
-				),
-			}),
-		);
+	return Object.freeze(lines);
+}
+
+function rowFromBucketLine(
+	line: string,
+	rowOrder: number,
+	sourceColumns: readonly string[],
+): TextPackLookupIndexRow {
+	const cells = line.split("\t");
+	if (cells.length !== sourceColumns.length) {
+		throw new TypeError("Textpack lookup row bucket row is malformed.");
 	}
-	return rows;
+	return Object.freeze({
+		rowOrder,
+		values: Object.freeze(
+			Object.fromEntries(
+				sourceColumns.map((column, index) => [column, cells[index] ?? ""]),
+			),
+		),
+	});
 }
 
 async function materializeLookupIndex(
@@ -711,125 +768,115 @@ async function materializeLookupIndex(
 	const source = resource(pack, sourceResourceId);
 	const index = resource(pack, indexResourceId);
 	const metadata = lookupIndexMetadata(index, source);
-	// The v1 store is self-contained. Targeted lookups read its physical payload
-	// once and decompress only the selected key and row buckets.
-	const indexText = await openResourceText(pack, index.id, reader);
-	const { dataStart, directory } = parseIndexFile(
-		indexText,
-		metadata,
-		indexResourceId,
+	const indexHeader = await openResourceStorageTextRange(
+		pack,
+		index.id,
+		{ startByte: 0, endByte: metadata.lookupIndexHeaderByteLength },
+		reader,
 	);
 	if (
-		new TextEncoder().encode(indexText).byteLength !==
-			metadata.lookupIndexShippedByteLength ||
+		(await resourceTextChecksum(indexHeader)) !==
+		metadata.lookupIndexHeaderChecksum
+	) {
+		throw new TypeError(
+			`Textpack lookup index ${indexResourceId} header checksum mismatch.`,
+		);
+	}
+	const { dataStart, directory } = parseIndexFile(
+		indexHeader,
+		metadata,
+		indexResourceId,
+		metadata.lookupIndexShippedByteLength,
+	);
+	const descriptors = [
+		...directory.keyBuckets,
+		...directory.rowBuckets,
+		...directory.fuzzyBuckets,
+		...directory.patternBuckets,
+	];
+	if (
+		dataStart !== metadata.lookupIndexHeaderByteLength ||
 		Math.max(
-			0,
-			...[
-				...directory.keyBuckets,
-				...directory.rowBuckets,
-				...directory.fuzzyBuckets,
-				...directory.patternBuckets,
-			].map((descriptor) => descriptor.length),
-		) !== metadata.maximumBucketByteLength
+			dataStart,
+			...descriptors.map(
+				(descriptor) => dataStart + descriptor.offset + descriptor.length,
+			),
+		) !== metadata.lookupIndexShippedByteLength ||
+		Math.max(0, ...descriptors.map((descriptor) => descriptor.length)) !==
+			metadata.maximumBucketByteLength
 	) {
 		throw new TypeError(
 			`Textpack lookup index ${indexResourceId} physical metadata is stale.`,
 		);
 	}
-	const keyBucketCache = new Map<
-		number,
-		Promise<ReadonlyMap<string, readonly number[]>>
-	>();
-	const rowBucketCache = new Map<
-		number,
-		Promise<ReadonlyMap<number, TextPackLookupIndexRow>>
-	>();
+	const keyBucketCache = new Map<number, Promise<string>>();
+	const rowBucketCache = new Map<number, Promise<readonly string[]>>();
 	const fuzzyBucketCache = new Map<number, Promise<readonly string[]>>();
 	const patternBucketCache = new Map<
 		number,
 		Promise<ReadonlyMap<string, string>>
 	>();
+	const readBucket = (descriptor: BucketDescriptor, label: string) =>
+		descriptor.length === 0
+			? openBucketText("", descriptor, label)
+			: openResourceStorageTextRange(
+					pack,
+					index.id,
+					{
+						startByte: dataStart + descriptor.offset,
+						endByte: dataStart + descriptor.offset + descriptor.length,
+					},
+					reader,
+				).then((encoded) => openBucketText(encoded, descriptor, label));
 	const openKeyBucket = (bucket: number) => {
-		let pending = keyBucketCache.get(bucket);
-		if (pending !== undefined) return pending;
 		const descriptor = directory.keyBuckets[bucket];
 		if (descriptor === undefined) {
 			throw new TypeError(`Textpack lookup key bucket ${bucket} is absent.`);
 		}
-		pending = openBucketText(
-			indexText,
-			dataStart,
-			descriptor,
-			`${indexResourceId}.keyBuckets[${String(bucket)}]`,
-		).then(keyBucketRows);
-		keyBucketCache.set(bucket, pending);
-		void pending.catch(() => {
-			if (keyBucketCache.get(bucket) === pending) keyBucketCache.delete(bucket);
-		});
-		return pending;
+		return cachedBucket(keyBucketCache, bucket, () =>
+			readBucket(
+				descriptor,
+				`${indexResourceId}.keyBuckets[${String(bucket)}]`,
+			),
+		);
 	};
 	const openRowBucket = (bucket: number) => {
-		let pending = rowBucketCache.get(bucket);
-		if (pending !== undefined) return pending;
 		const descriptor = directory.rowBuckets[bucket];
 		if (descriptor === undefined) {
 			throw new TypeError(`Textpack lookup row bucket ${bucket} is absent.`);
 		}
-		pending = openBucketText(
-			indexText,
-			dataStart,
-			descriptor,
-			`${indexResourceId}.rowBuckets[${String(bucket)}]`,
-		).then((text) => rowBucketRows(text, directory.sourceColumns, descriptor));
-		rowBucketCache.set(bucket, pending);
-		void pending.catch(() => {
-			if (rowBucketCache.get(bucket) === pending) rowBucketCache.delete(bucket);
-		});
-		return pending;
+		return cachedBucket(rowBucketCache, bucket, () =>
+			readBucket(
+				descriptor,
+				`${indexResourceId}.rowBuckets[${String(bucket)}]`,
+			).then((text) => rowBucketLines(text, descriptor)),
+		);
 	};
 	const openFuzzyBucket = (bucket: number) => {
-		let pending = fuzzyBucketCache.get(bucket);
-		if (pending !== undefined) return pending;
 		const descriptor = directory.fuzzyBuckets[bucket];
 		if (descriptor === undefined) {
 			throw new TypeError(`Textpack lookup fuzzy bucket ${bucket} is absent.`);
 		}
-		pending = openBucketText(
-			indexText,
-			dataStart,
-			descriptor,
-			`${indexResourceId}.fuzzyBuckets[${String(bucket)}]`,
-		).then(catalogKeys);
-		fuzzyBucketCache.set(bucket, pending);
-		void pending.catch(() => {
-			if (fuzzyBucketCache.get(bucket) === pending) {
-				fuzzyBucketCache.delete(bucket);
-			}
-		});
-		return pending;
+		return cachedBucket(fuzzyBucketCache, bucket, () =>
+			readBucket(
+				descriptor,
+				`${indexResourceId}.fuzzyBuckets[${String(bucket)}]`,
+			).then(catalogKeys),
+		);
 	};
 	const openPatternBucket = (bucket: number) => {
-		let pending = patternBucketCache.get(bucket);
-		if (pending !== undefined) return pending;
 		const descriptor = directory.patternBuckets[bucket];
 		if (descriptor === undefined) {
 			throw new TypeError(
 				`Textpack lookup pattern bucket ${bucket} is absent.`,
 			);
 		}
-		pending = openBucketText(
-			indexText,
-			dataStart,
-			descriptor,
-			`${indexResourceId}.patternBuckets[${String(bucket)}]`,
-		).then(patternCatalog);
-		patternBucketCache.set(bucket, pending);
-		void pending.catch(() => {
-			if (patternBucketCache.get(bucket) === pending) {
-				patternBucketCache.delete(bucket);
-			}
-		});
-		return pending;
+		return cachedBucket(patternBucketCache, bucket, () =>
+			readBucket(
+				descriptor,
+				`${indexResourceId}.patternBuckets[${String(bucket)}]`,
+			).then(patternCatalog),
+		);
 	};
 	const rowBucketNumber = (rowOrder: number) => {
 		if (rowOrder < 0 || rowOrder >= metadata.sourceRowCount) return -1;
@@ -875,15 +922,22 @@ async function materializeLookupIndex(
 			);
 		}
 		const bucketNumbers = [...new Set(bucketsForRows)];
-		const bucketEntries = await Promise.all(
-			bucketNumbers.map(
-				async (bucket) => [bucket, await openRowBucket(bucket)] as const,
-			),
+		const bucketEntries = await mapWithConcurrency(
+			bucketNumbers,
+			lookupBucketReadConcurrency,
+			async (bucket) => [bucket, await openRowBucket(bucket)] as const,
 		);
 		const buckets = new Map(bucketEntries);
-		const rows = rowOrders.map((rowOrder, index) =>
-			buckets.get(bucketsForRows[index] ?? -1)?.get(rowOrder),
-		);
+		const rows = rowOrders.map((rowOrder, index) => {
+			const bucket = bucketsForRows[index] ?? -1;
+			const descriptor = directory.rowBuckets[bucket];
+			const lines = buckets.get(bucket);
+			if (descriptor === undefined || lines === undefined) return undefined;
+			const line = lines[rowOrder - descriptor.firstRowOrder];
+			return line === undefined
+				? undefined
+				: rowFromBucketLine(line, rowOrder, directory.sourceColumns);
+		});
 		if (rows.some((row) => row === undefined)) {
 			throw new TypeError(
 				`Textpack lookup index ${indexResourceId} references a missing source row.`,
@@ -893,12 +947,22 @@ async function materializeLookupIndex(
 	};
 	let allRowsPromise: Promise<readonly TextPackLookupIndexRow[]> | undefined;
 	const allRows = () => {
-		allRowsPromise ??= Promise.all(
-			directory.rowBuckets.map((_descriptor, bucket) => openRowBucket(bucket)),
+		allRowsPromise ??= mapWithConcurrency(
+			directory.rowBuckets,
+			lookupBucketReadConcurrency,
+			(_descriptor, bucket) => openRowBucket(bucket),
 		).then((buckets) => {
-			const rows = buckets
-				.flatMap((bucket) => [...bucket.values()])
-				.sort((left, right) => left.rowOrder - right.rowOrder);
+			const rows = buckets.flatMap((lines, bucket) => {
+				const descriptor = directory.rowBuckets[bucket];
+				if (descriptor === undefined) return [];
+				return lines.map((line, offset) =>
+					rowFromBucketLine(
+						line,
+						descriptor.firstRowOrder + offset,
+						directory.sourceColumns,
+					),
+				);
+			});
 			if (
 				rows.length !== metadata.sourceRowCount ||
 				rows.some((row, index) => row.rowOrder !== index)
@@ -956,8 +1020,8 @@ async function materializeLookupIndex(
 		return (async () => {
 			const bucket = keyBucketNumber(scopedKey);
 			if (bucket < 0) return Object.freeze([]);
-			const keyRows = await openKeyBucket(bucket);
-			return rowsForOrders(keyRows.get(scopedKey) ?? []);
+			const keyBucket = await openKeyBucket(bucket);
+			return rowsForOrders(keyBucketOrders(keyBucket, scopedKey));
 		})();
 	};
 	const rowsForNormalizedKeys = async (
@@ -965,8 +1029,10 @@ async function materializeLookupIndex(
 		keys: ReadonlySet<string>,
 	) => {
 		const rows = (
-			await Promise.all(
-				[...keys].map((candidate) => rowsForNormalizedKey(column, candidate)),
+			await mapWithConcurrency(
+				[...keys],
+				lookupBucketReadConcurrency,
+				(candidate) => rowsForNormalizedKey(column, candidate),
 			)
 		).flat();
 		return Object.freeze(

@@ -162,7 +162,11 @@ test("resource specs index only targeted lookup tables", async () => {
 	const morphemes = camel.outputs.find(
 		(output) => output.resourceId === "ar-msa-camel-morph-morphemes",
 	);
-	assert.deepEqual(morphemes?.lookupEmptyKeyColumns, ["surface"]);
+	assert.deepEqual(morphemes?.lookupKeyColumns, [
+		"sectionSurface",
+		"lexicalForm",
+	]);
+	assert.equal(morphemes?.lookupEmptyKeyColumns, undefined);
 	assert.equal(morphemes?.lookupPatternColumns, undefined);
 
 	const scowl = await readSpec("textpack-en-inflection-scowl.resource.json");

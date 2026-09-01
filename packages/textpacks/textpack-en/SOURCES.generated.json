@@ -514,8 +514,8 @@
       ]
     },
     {
-      "byteLength": 4064970,
-      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
+      "byteLength": 5071007,
+      "checksum": "sha256:f9b96ca7bd0bed21cfd194a857a4cef82c6902f11b85a24d38d796f5826d9417",
       "citations": [
         "English Speller Database generated wordlist outputs, rel-2026.02.25."
       ],
@@ -539,8 +539,8 @@
       ]
     },
     {
-      "byteLength": 4064970,
-      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
+      "byteLength": 5071007,
+      "checksum": "sha256:f9b96ca7bd0bed21cfd194a857a4cef82c6902f11b85a24d38d796f5826d9417",
       "citations": [
         "English Speller Database generated wordlist outputs, rel-2026.02.25."
       ],
@@ -795,8 +795,8 @@
       ]
     },
     {
-      "byteLength": 13687253,
-      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
+      "byteLength": 14811047,
+      "checksum": "sha256:1646cf1f471a42bf88afb33ab664545fd99e8e6873d7444385bc53818d99e1cb",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
@@ -820,8 +820,8 @@
       ]
     },
     {
-      "byteLength": 13687253,
-      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
+      "byteLength": 14811047,
+      "checksum": "sha256:1646cf1f471a42bf88afb33ab664545fd99e8e6873d7444385bc53818d99e1cb",
       "citations": [
         "SCOWLv2 rich text export, rel-2026.02.25."
       ],
@@ -1046,8 +1046,8 @@
       ]
     },
     {
-      "byteLength": 1389,
-      "checksum": "sha256:ea955841783eb674d2183b135898d30e0da48cd38f72270adbd3c45972a0daac",
+      "byteLength": 1507,
+      "checksum": "sha256:d40e6d4178d65d082796ae9e02fed8c4093e8a73695e63e4d47d9b4b2af7d228",
       "citations": [
         "Unicode Character Database 17.0.0.",
         "Unicode CLDR core data, cldr-core npm package 48.2.0."
@@ -1055,7 +1055,7 @@
       "id": "en-sentence-segmentation-profile",
       "kind": "segmentation-profile",
       "license": "Unicode-3.0",
-      "logicalRecordCount": 59,
+      "logicalRecordCount": 68,
       "path": "resources/en.segmentation.sentence.json",
       "pipelineId": "english-segmentation-profile",
       "pipelineVersion": "0.1.0",
@@ -1196,8 +1196,8 @@
       ]
     },
     {
-      "byteLength": 651874,
-      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
+      "byteLength": 656947,
+      "checksum": "sha256:ca306f120054e03fbca88e0b4c50881c8395022d0e1f811f61b7ee00bda269e6",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1222,8 +1222,8 @@
       ]
     },
     {
-      "byteLength": 651874,
-      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
+      "byteLength": 656947,
+      "checksum": "sha256:ca306f120054e03fbca88e0b4c50881c8395022d0e1f811f61b7ee00bda269e6",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1248,8 +1248,8 @@
       ]
     },
     {
-      "byteLength": 661412,
-      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
+      "byteLength": 768146,
+      "checksum": "sha256:593931b8691dc6983772b96524eb720273b6f4ed8052afe492cbff20cdd0d501",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1274,8 +1274,8 @@
       ]
     },
     {
-      "byteLength": 661412,
-      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
+      "byteLength": 768146,
+      "checksum": "sha256:593931b8691dc6983772b96524eb720273b6f4ed8052afe492cbff20cdd0d501",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1375,8 +1375,8 @@
       ]
     },
     {
-      "byteLength": 153966,
-      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
+      "byteLength": 158068,
+      "checksum": "sha256:1f497aba92acb6c7870095b9c21d65d8f9daac028e2c2d54b90e47466ced79af",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1401,8 +1401,8 @@
       ]
     },
     {
-      "byteLength": 153966,
-      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
+      "byteLength": 158068,
+      "checksum": "sha256:1f497aba92acb6c7870095b9c21d65d8f9daac028e2c2d54b90e47466ced79af",
       "citations": [
         "Wikidata main structured data dump, 2026-06-08.",
         "Wikidata Query Service English core entity extract, retrieved 2026-06-12."
@@ -1451,8 +1451,8 @@
       ]
     },
     {
-      "byteLength": 3562564,
-      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
+      "byteLength": 3792047,
+      "checksum": "sha256:431b53f6eda3910405b87b7ea8ad339d46ff979359379b432785612fe77f38c6",
       "citations": [
         "Open English WordNet 2025."
       ],
@@ -1476,8 +1476,8 @@
       ]
     },
     {
-      "byteLength": 3562564,
-      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
+      "byteLength": 3792047,
+      "checksum": "sha256:431b53f6eda3910405b87b7ea8ad339d46ff979359379b432785612fe77f38c6",
       "citations": [
         "Open English WordNet 2025."
       ],

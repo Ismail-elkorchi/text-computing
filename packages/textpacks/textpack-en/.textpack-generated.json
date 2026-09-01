@@ -11,8 +11,8 @@
       "path": "CHANGELOG.md"
     },
     {
-      "byteLength": 64984,
-      "checksum": "sha256:deb77ca71e2649c312df0dbc7653ad3647398a1f172736ec64d496c28958d579",
+      "byteLength": 64993,
+      "checksum": "sha256:ab7a2bc7b2979c0ec81267e0a6648d8439e6258bccf96949c0914bb1c7beb7d2",
       "path": "COVERAGE.generated.json"
     },
     {
@@ -56,8 +56,8 @@
       "path": "NOTICE.generated.md"
     },
     {
-      "byteLength": 49338,
-      "checksum": "sha256:c85c4c97507247be131fab5700bb9e77750d7386ae687a7742f25f9e00715930",
+      "byteLength": 50252,
+      "checksum": "sha256:22d529fa9aa5141058b180b371cb6c3e03f714d074f43800827a35b2cad563b5",
       "path": "pack.manifest.json"
     },
     {
@@ -66,8 +66,8 @@
       "path": "package.json"
     },
     {
-      "byteLength": 60388,
-      "checksum": "sha256:b34458cd25787848f8be51e2df39f459ffce0aaadbb31a18e1b2e3dd28b9e1fb",
+      "byteLength": 60397,
+      "checksum": "sha256:7b6d24c0303e092fc2ff5f5a6aa79f6131a468ad772691b4207859d0a2467966",
       "path": "QUALITY.generated.json"
     },
     {
@@ -186,8 +186,8 @@
       "path": "resources/en.segmentation.quality.json"
     },
     {
-      "byteLength": 1389,
-      "checksum": "sha256:ea955841783eb674d2183b135898d30e0da48cd38f72270adbd3c45972a0daac",
+      "byteLength": 1507,
+      "checksum": "sha256:d40e6d4178d65d082796ae9e02fed8c4093e8a73695e63e4d47d9b4b2af7d228",
       "path": "resources/en.segmentation.sentence.json"
     },
     {
@@ -201,8 +201,8 @@
       "path": "resources/esdb-2026.default-profiles.tsv"
     },
     {
-      "byteLength": 4064970,
-      "checksum": "sha256:734196fead1b833ce39ca417d3ef2e443afd4b800953d3b3ff4b3501930ba4ea",
+      "byteLength": 5071007,
+      "checksum": "sha256:f9b96ca7bd0bed21cfd194a857a4cef82c6902f11b85a24d38d796f5826d9417",
       "path": "resources/esdb-2026.default-wordlists.lookup-index.v1.txt"
     },
     {
@@ -226,8 +226,8 @@
       "path": "resources/esdb-2026.search-profile.json"
     },
     {
-      "byteLength": 13687253,
-      "checksum": "sha256:c6c071e56406e7a9fac60de02aefe836606953124ab80ed8133a8e678f08cbce",
+      "byteLength": 14811047,
+      "checksum": "sha256:1646cf1f471a42bf88afb33ab664545fd99e8e6873d7444385bc53818d99e1cb",
       "path": "resources/scowl-v2.inflections.lookup-index.v1.txt"
     },
     {
@@ -276,13 +276,13 @@
       "path": "resources/unicode-17.scripts.tsv.gz.b64"
     },
     {
-      "byteLength": 651874,
-      "checksum": "sha256:bf3f0bbde84764784d0e06142b35203625ec09f089c2ff3b1d40955b69030c7c",
+      "byteLength": 656947,
+      "checksum": "sha256:ca306f120054e03fbca88e0b4c50881c8395022d0e1f811f61b7ee00bda269e6",
       "path": "resources/wikidata-en.aliases.lookup-index.v1.txt"
     },
     {
-      "byteLength": 661412,
-      "checksum": "sha256:65b9a40c02a184b7b95aad2d58582bef58bd25b53b0669c6f8a541f08e9b6ddf",
+      "byteLength": 768146,
+      "checksum": "sha256:593931b8691dc6983772b96524eb720273b6f4ed8052afe492cbff20cdd0d501",
       "path": "resources/wikidata-en.entities.lookup-index.v1.txt"
     },
     {
@@ -301,8 +301,8 @@
       "path": "resources/wikidata-en.quality.json"
     },
     {
-      "byteLength": 153966,
-      "checksum": "sha256:696a75a1938ce232e5c3ba4d80697c1f44eba5ac11c897bf94f0178a4a0173a2",
+      "byteLength": 158068,
+      "checksum": "sha256:1f497aba92acb6c7870095b9c21d65d8f9daac028e2c2d54b90e47466ced79af",
       "path": "resources/wikidata-en.relations.lookup-index.v1.txt"
     },
     {
@@ -311,8 +311,8 @@
       "path": "resources/wordnet-en.kb.json"
     },
     {
-      "byteLength": 3562564,
-      "checksum": "sha256:4c7c6406ce4f9825804b3310deb65483aa59c1b018fa608c7f9f27f2e8ba4142",
+      "byteLength": 3792047,
+      "checksum": "sha256:431b53f6eda3910405b87b7ea8ad339d46ff979359379b432785612fe77f38c6",
       "path": "resources/wordnet-en.lexical-entries.lookup-index.v1.txt"
     },
     {
@@ -347,7 +347,7 @@
     },
     {
       "byteLength": 88648,
-      "checksum": "sha256:63501cbcff34757239047d23313db5a2bd2b1561c171309bd75825a9fe1794c8",
+      "checksum": "sha256:09d543b2bf8432f3ce7481074415d16c54f6064b9e75aa271bc51294c6db99f9",
       "path": "SOURCES.generated.json"
     },
     {
@@ -356,8 +356,8 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 49594,
-      "checksum": "sha256:57b2208903fb6b4505f2cd4872d6f3b250b17c66cd1693fbd3d6cc0a5fb304b6",
+      "byteLength": 50508,
+      "checksum": "sha256:4dbe98d17c8022296c8d97cd86b328a2f6091b8a164b49047f54611150fbb937",
       "path": "src/manifest.ts"
     },
     {
@@ -367,7 +367,7 @@
     },
     {
       "byteLength": 24964,
-      "checksum": "sha256:7818b56641ace9a9a8f2bc89437ccba646b9f3e0004438bbc5f4ff982c793e0e",
+      "checksum": "sha256:c0bfcf826f2b3ab74296455af246f2180d0457157cf7bae33014e4174b3196cf",
       "path": "src/resources.ts"
     },
     {
@@ -470,9 +470,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:dfb156711a785e2d6a7f519fc50247ecd6586042117f5483022f52e32668c89b",
+  "lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
   "mode": "source-backed",
-  "outputChecksum": "sha256:d42cf5c7da91759948e085a37b570bc016c6f3853e74444e70cf276b5a1db900",
+  "outputChecksum": "sha256:cb9e3c25573be6065aaf2accb9ad2cb3bc861fd6ad67930bcd2129090371122f",
   "packSpecPath": "tools/textpack-forge/composites/textpack-en.composite.json",
   "packageName": "@ismail-elkorchi/textpack-en",
   "packageVersion": "0.1.0",
